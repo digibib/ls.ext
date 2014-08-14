@@ -1,0 +1,7 @@
+---
+# Pillar values to use in minion states
+
+koha:
+  instance: instancename
+  adminuser: admin
+  adminpass: secret
