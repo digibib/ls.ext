@@ -55,7 +55,7 @@ Vagrant.configure(2) do |config|
     end
 
     config.vm.synced_folder "test/salt", "/srv/salt"
-    config.vm.synced_folder "test", "/home/vagrant/ls-test"
+    config.vm.synced_folder "test", "/home/vagrant/ls.test"
 
     config.vm.network "private_network", ip: "192.168.50.11"
 
