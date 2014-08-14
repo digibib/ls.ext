@@ -1,0 +1,12 @@
+# https://github.com/cucumber/cucumber/wiki/cucumber.yml
+
+<% omit_wip = "--tags ~@wip" %>
+
+default: <%= omit_wip %> features
+
+html_report: <%= omit_wip %> --format html --out report/index.html
+
+wip: --tags @wip
+
+html_report_wip: --tags @wip --format html --out report/index_wip.html
+

@@ -1,0 +1,27 @@
+
+# TODO: Should pull report dir (if any) from cucumber command options
+REPORT_DIR = 'report'
+FileUtils.mkdir_p REPORT_DIR
+
+def filenameify(string, sep = '-')
+  filename = string.downcase
+  filename.gsub!(/[^a-z0-9\-_]+/, sep)
+  unless sep.nil? || sep.empty?
+    re_sep = Regexp.escape(sep)
+    filename.gsub!(/#{re_sep}{2,}/, sep)
+    filename.gsub!(/^#{re_sep}|#{re_sep}$/, '')
+  end
+  filename
+end
+
+def add_screenshot(name)
+  filename = "#{filenameify(name)}.png"
+  @browser.screenshot.save "#{REPORT_DIR}/#{filename}"
+  embed filename, 'image/png'
+end
+
+After do |scenario|
+  if scenario.failed? && @browser
+    add_screenshot(scenario.title)
+  end
+end
