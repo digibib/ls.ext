@@ -3,6 +3,7 @@ installpkgs:
     - pkgs:
       - ruby1.9.1-dev
       - phantomjs
+      - firefox
 
 {% for gem in
   'rspec',

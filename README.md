@@ -32,8 +32,11 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
         * You also need [git](http://git-scm.com/downloads)
         * ... and [make](http://gnuwin32.sourceforge.net/downlinks/make.php)
 2. From the command line run: `make` to bootstrap the environment and run the tests.
-   If you don't want ports to open (aka Jenkins CI and headless testing), disable with:
+3. If you don't want port forwarding and X forwarding (aka Jenkins CI and headless testing), disable with:
    `NO_PUBLIC_PORTS make`
+4. If you want different browser than headless phantomjs in testing, 
+   set browser key in pillar/koha/admin.sls
+
 See [Makefile](Makefile) for more commands.
 
 ## Setup Illustration

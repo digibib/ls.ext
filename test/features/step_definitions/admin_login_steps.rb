@@ -2,7 +2,12 @@
 require 'watir-webdriver'
 
 Gitt(/^at jeg er på Kohas interne forside$/) do
-  @browser = Watir::Browser.new :phantomjs
+  if SETTINGS['browser'] 
+    @browser = Watir::Browser.new SETTINGS['browser']
+  else
+    # Default to phantomjs headless
+    @browser = Watir::Browser.new :phantomjs
+  end
   @browser.goto 'http://192.168.50.10:8081'
 end
 

@@ -7,3 +7,5 @@ koha:
   adminpass: secret
   zebrauser: kohauser
   zebrapass: XXX
+
+browser: :phantomjs
