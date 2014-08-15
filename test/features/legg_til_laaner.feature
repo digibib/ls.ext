@@ -8,7 +8,7 @@ Egenskap: Legg til låner
 
   @wip
   Scenario: Admin-bruker registrerer en ny låner
-    Gitt at det finnes en admin-bruker
+    Gitt at admin-bruker er logget inn
     Når Admin-bruker legger inn "Knut" som ny låner
     Så registrerer systemet at "Knut" er låner
     
