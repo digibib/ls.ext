@@ -1,14 +1,14 @@
 # encoding: UTF-8
 # language: no
 
-Egenskap: Legg til bruker
+Egenskap: Legg til låner
   Som en person
   For å kunne låne bøker i biblioteket
-  Ønsker jeg å kunne registrere meg som bruker
+  Ønsker jeg å kunne registrere meg som låner
 
   @wip
-  Scenario: Admin-bruker registrerer en ny bruker
+  Scenario: Admin-bruker registrerer en ny låner
     Gitt at det finnes en admin-bruker
-    Når Admin-bruker legger inn "Knut" som ny bruker
-    Så registrerer systemet at "Knut" er bruker
+    Når Admin-bruker legger inn "Knut" som ny låner
+    Så registrerer systemet at "Knut" er låner
     
