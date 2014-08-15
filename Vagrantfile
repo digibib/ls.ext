@@ -12,6 +12,7 @@ Dir.glob(pillar_example_files).each do | example_file |
   end
 end
 
+
 Vagrant.configure(2) do |config|
 
   # **** ls.ext - System under test **** 
@@ -19,7 +20,10 @@ Vagrant.configure(2) do |config|
   config.vm.define "ls.ext" do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
-
+    
+    config.ssh.forward_x11 = true
+    config.ssh.forward_agent = true
+  
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
