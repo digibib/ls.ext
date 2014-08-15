@@ -10,6 +10,5 @@ Når(/^jeg forsøker å nå koha over http$/) do
 end
 
 Så(/^vil jeg få http ok tilbake$/) do
-  # pending #for å midlertidig disable denne før vi finner ut av problemet
   @last_response.kind_of?(Net::HTTPOK).should == true
 end
