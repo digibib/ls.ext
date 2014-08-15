@@ -2,28 +2,38 @@ ls.ext
 ======
 
 Deichman Library System - Extended
-Inneholder oppsett og konfigurasjon for biblioteksystem og eksterne komponenter, samt tester.
-Oppsettet er basert på SaltStack for provisionering og Vagrant for virtualisering. 
 
-## Bruk
+Setup and configuration for the (future) library system for the Deichman
+Library in Oslo, Norway.
 
-Testene kjøres ved hjelp av et multi-machine vagrant-oppsett.
+Uses Koha as a core component and extends it with more components.
 
-1. Installer virtualbox og vagrant:
+To make sure the entire system works, the configuration and development is
+driven by acceptance tests - using [Cucumber](http://cukes.info/). For 
+browser automation we use [Watir WebDriver](http://watirwebdriver.com).
+
+This setup uses [Vagrant](http://www.vagrantup.com/) for local virtualisation 
+and [SaltStack](http://docs.saltstack.com/) for automated provisioning.
+
+## Usage
+
+For local setup and to run tests, we use a multi-machine vagrant setup.
+
+1. Install virtualbox and vagrant:
     - Ubuntu: 
         * `apt-get install virtualbox`
-        * vagrant > 1.5 - installér deb-manuelt: https://www.vagrantup.com/downloads.html
-    - OSX: Anbefaler bruk av [homebrew](http://brew.sh/) og [homebrew cask](http://caskroom.io/)
+        * vagrant > 1.5 - install deb manually: https://www.vagrantup.com/downloads.html
+    - OSX: We recommend using [homebrew](http://brew.sh/) and [homebrew cask](http://caskroom.io/)
         * `brew cask install virtualbox`
         * `brew cask install vagrant`
-    - Windows: (ikke testet, YMMV)
+    - Windows: (untested, YMMV)
         * [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
         * [Vagrant](https://www.vagrantup.com/downloads)
-        * Må også ha [git](http://git-scm.com/downloads)
-        * ... og helst [make](http://gnuwin32.sourceforge.net/downlinks/make.php)
-2. Kjør `make` for å sette opp testmiljøet, systemet under test og kjøre testene.
+        * You also need [git](http://git-scm.com/downloads)
+        * ... and [make](http://gnuwin32.sourceforge.net/downlinks/make.php)
+2. From the command line run: `make` to bootstrap the environment and run the tests.
 
-Se [Makefile](Makefile) for mer spesifikke kommandoer.
+See [Makefile](Makefile) for more commands.
 
-## Oppsett
+## Setup Illustration
 ![Alt text](stack.png?raw=true "Stack")
