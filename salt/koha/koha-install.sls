@@ -25,8 +25,6 @@
 ##########
 
 # Create instance user and empty database if not already existant
-# Norwegian variants found in /usr/share/koha/intranet/cgi-bin/installer/data/mysql/nb-NO/1-Obligatorisk/
-{% set exists = salt['cmd.run']("id -u {{ pillar['koha']['instance'] }}-koha >/dev/null 2>&1") %}
 createkohadb:
   cmd.run:
     - unless: id -u {{ pillar['koha']['instance'] }}-koha >/dev/null 2>&1
@@ -44,6 +42,7 @@ default_sysprefs:
     - watch:
       - cmd: createkohadb
 
+# Norwegian variants found in /usr/share/koha/intranet/cgi-bin/installer/data/mysql/nb-NO/1-Obligatorisk/
 default_sysprefs_norwegian:
   cmd.wait:
     - name: koha-mysql {{ pillar['koha']['instance'] }} < /usr/share/koha/intranet/cgi-bin/installer/data/mysql/nb-NO/1-Obligatorisk/system_preferences.sql
