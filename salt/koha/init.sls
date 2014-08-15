@@ -4,11 +4,6 @@
 # PACKAGES
 ##########
 
-koharepo:
-  pkgrepo.managed:
-    - name: deb http://debian.koha-community.org/koha squeeze main
-    - key_url: http://debian.koha-community.org/koha/gpg.asc
-
 installdeps:
   pkg.installed:
     - pkgs:
@@ -105,18 +100,22 @@ apache2_service:
       - cmd: sudo a2dissite 000-default
       - file: /etc/apache2/ports.conf
 
+koharepo:
+  pkgrepo.managed:
+    - name: deb http://debian.koha-community.org/koha squeeze main
+    - key_url: http://debian.koha-community.org/koha/gpg.asc
+
 ##########
 # KOHA-COMMON
 ##########
 
-kohacommon:
+koha-common:
   pkg.installed:
-    - name: koha-common
     - skip_verify: True
     - require:
       - pkgrepo: koharepo
       - pkg: installdeps
-      - pkg: apache2
+      - pkg: install_apache2
 
 ##########
 # MYSQL
@@ -141,4 +140,3 @@ mysql:
       - pkg: installdeps
     - watch:
       - file: /etc/mysql/my.cnf
-

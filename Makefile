@@ -43,7 +43,7 @@ test: clean_report
 clean: clean_report clean_test clean_sut
 
 clean_report:
-	rm -r report || true
+	rm -r test/report || true
 
 clean_test: clean_report
 	vagrant destroy ls.test --force
