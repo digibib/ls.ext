@@ -27,8 +27,10 @@ Vagrant.configure(2) do |config|
 
     # config.vm.network :forwarded_port, guest: 80, host: 8000                      # MARC2RDF
     # config.vm.network :forwarded_port, guest: 6001, host: 6001                    # SIP2
-    config.vm.network :forwarded_port, guest: 8080, host: 8080  # OPAC
-    config.vm.network :forwarded_port, guest: 8081, host: 8081  # INTRA
+    unless ENV['NO_PUBLIC_PORTS']
+      config.vm.network :forwarded_port, guest: 8080, host: 8080  # OPAC
+      config.vm.network :forwarded_port, guest: 8081, host: 8081  # INTRA
+    end
     # config.vm.network :forwarded_port, guest: 3000, host: 3000                    # SPARQL
     
     config.vm.network "private_network", ip: "192.168.50.10"
