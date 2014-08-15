@@ -21,9 +21,6 @@ Vagrant.configure(2) do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
     
-    config.ssh.forward_x11 = true
-    config.ssh.forward_agent = true
-  
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
@@ -55,6 +52,9 @@ Vagrant.configure(2) do |config|
   config.vm.define "ls.test", primary: true do |config|
     config.vm.box = "ubuntu/trusty64"
 
+    config.ssh.forward_x11 = true
+    config.ssh.forward_agent = true
+  
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
