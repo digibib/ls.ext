@@ -34,10 +34,18 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
 2. From the command line run: `make` to bootstrap the environment and run the tests.
 3. If you don't want port forwarding and X forwarding (aka Jenkins CI and headless testing), disable with:
    `NO_PUBLIC_PORTS make`
-4. If you want different browser than headless phantomjs in testing, 
-   set browser key in pillar/koha/admin.sls
 
 See [Makefile](Makefile) for more commands.
+
+## Adding graphical browser support
+If you want a different browser than headless phantomjs in testing, 
+   set browser key in pillar/koha/admin.sls, e.g.:
+   `  browser: :firefox`
+
+   NB: Mac OS X (> 1.5) requires Xquartz (or other XWindows) in order for browser support to work, install 
+   `brew cask install xquartz`
+
+
 
 ## Setup Illustration
 ![Alt text](stack.png?raw=true "Stack")
