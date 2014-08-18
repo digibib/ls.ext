@@ -1,3 +1,4 @@
+# encoding: utf-8
 
 # TODO: Should pull report dir (if any) from cucumber command options
 REPORT_DIR = 'report'
