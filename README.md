@@ -42,7 +42,7 @@ If you want a different browser than headless phantomjs in testing,
    set browser key in pillar/koha/admin.sls, e.g.:
    `  browser: :firefox`
 
-   NB: Mac OS X (> 1.5) requires Xquartz (or other XWindows) in order for browser support to work, install 
+   NB: Mac OS X (> 1.5) requires Xquartz (or other XWindows)  
    `brew cask install xquartz`
 
 
