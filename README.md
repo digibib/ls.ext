@@ -50,5 +50,13 @@ To use you can either set `TESTBROWSER=firefox` as an environment variable on yo
 
 `make test TESTBROWSER=firefox`  (  -- or  `TESTBROWSER=firefox make test` )  
 
+### Running a single test 
+
+You can pass arguments to Cucumber, e g which feature to test, like this (you must include `TEST_PROFILE=wip` if it is a scenario which is still marked as work-in-progress (`@wip`):
+
+```
+make test TESTPROFILE=wip CUKE_ARGS='features/legg_til_avdeling.feature'
+```
+
 ## Illustration
 ![Alt text](stack.png?raw=true "Stack")
