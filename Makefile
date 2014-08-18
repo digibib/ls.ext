@@ -37,8 +37,12 @@ ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
 endif
 
+ifdef TESTBROWSER
+BROWSER_ARG=BROWSER=$(TESTBROWSER)
+endif
+
 test: clean_report
-	vagrant ssh ls.test -c 'cd ls.test && cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
+	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
 clean: clean_report clean_test clean_sut
 

@@ -37,15 +37,18 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
 
 See [Makefile](Makefile) for more commands.
 
-## Adding graphical browser support
-If you want a different browser than headless phantomjs in testing, 
-   set browser key in pillar/koha/admin.sls, e.g.:
-   `  browser: :firefox`
+### Adding graphical browser support
+If you want a different browser than headless phantomjs in testing, we have installed firefox in ls.test and use X11
+forwarding over ssh to show you the browser window as you run the test from inside ls.test.
 
-   NB: Mac OS X (> 1.5) requires Xquartz (or other XWindows)  
-   `brew cask install xquartz`
+If you host is OSX (> 1.5) or Windows you need to install XWindows support:
 
+ - OSX: `brew cask install xquartz`
+ - Windows: Install Cygwin/X (untested by us, but should in theory be possible)
 
+To use you can either set `TESTBROWSER=firefox` as an environment variable on your system or pass it to `make`:
 
-## Setup Illustration
+`make test TESTBROWSER=firefox`  (  -- or  `TESTBROWSER=firefox make test` )  
+
+## Illustration
 ![Alt text](stack.png?raw=true "Stack")
