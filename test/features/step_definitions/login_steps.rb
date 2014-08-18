@@ -2,7 +2,7 @@
 require 'watir-webdriver'
 
 Given(/^at jeg er på Kohas interne forside$/) do
-  @browser = Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym
+  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
   @browser.goto 'http://192.168.50.10:8081'
 end
 
