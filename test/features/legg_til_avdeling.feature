@@ -3,10 +3,15 @@
 
 Egenskap: Legge til avdeling
   Som adminbruker
+  For å kunne registrere brukere
   Ønsker jeg å kunne legge til en avdeling
 
-  @wip
+  Bibliotek har et navn og en kode i BaseBibliotek
+  Se: http://www.nb.no/BaseBibliotekSearch/search.jsf og søk på 'Deichman'
+
+  @wip @libraryCreated
   Scenario: Ny avdeling i biblioteksystemet
     Gitt at jeg er pålogget som adminbruker
-    Når jeg legger inn "Hjørnebiblioteket" som ny avdeling
-    Så finnes "Hjørnebiblioteket" i oversikten over avdelinger
+    Og er på administrasjonssiden for avdelinger
+    Når jeg legger inn "Hjørnebiblioteket" som ny avdeling med avdelingskode "DIGIBIB"
+    Så finnes avdelingen i oversikten over avdelinger
