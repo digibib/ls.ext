@@ -2,7 +2,6 @@
 Given(/^at jeg er pålogget som adminbruker$/) do
   step "at jeg er på Kohas interne forside"
   step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"
-  @context = {}
 end
 
 Given(/^er på administrasjonssiden for avdelinger$/) do

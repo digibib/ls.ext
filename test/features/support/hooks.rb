@@ -20,13 +20,17 @@ def add_screenshot(name)
   embed filename, 'image/png'
 end
 
+Before do
+  @context = {}
+end
+
 After do |scenario|
   if scenario.failed? && @browser
     add_screenshot(scenario.title)
   end
 end
 
-After('@libraryCreated') do |step| 
+After('@libraryCreated') do
   table = @browser.table(:id, "branchest")
   table.rows.each do | row |
     if row.text.include?("#{@context[:branchcode]}")
