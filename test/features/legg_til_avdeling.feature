@@ -12,6 +12,6 @@ Egenskap: Legge til avdeling
   @libraryCreated
   Scenario: Ny avdeling i biblioteksystemet
     Gitt at jeg er pålogget som adminbruker
-    Og er på administrasjonssiden for avdelinger
+    Og jeg er på administrasjonssiden for avdelinger
     Når jeg legger inn "Hjørnebiblioteket" som ny avdeling med avdelingskode "DIGIBIB"
     Så finnes avdelingen i oversikten over avdelinger

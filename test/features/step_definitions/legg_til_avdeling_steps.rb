@@ -1,10 +1,6 @@
 # encoding: UTF-8
-Given(/^at jeg er pålogget som adminbruker$/) do
-  step "at jeg er på Kohas interne forside"
-  step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"
-end
 
-Given(/^er på administrasjonssiden for avdelinger$/) do
+Given(/^jeg er på administrasjonssiden for avdelinger$/) do
   @browser.goto "http://192.168.50.10:8081/cgi-bin/koha/admin/branches.pl"
   @browser.link(:id => "newbranch").click
 end

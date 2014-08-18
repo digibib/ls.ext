@@ -8,6 +8,6 @@ Egenskap: Legg til bok
 
   @wip
   Scenario: Admin legger til ny bok
-    Gitt at det finnes en admin-bruker
-    Når Admin-bruker legger inn "Fargelegg byen!" som ny bok
-    Så registrerer systemet at "Fargelegg byen!" er en bok som kan lånes ut
+    Gitt at jeg er pålogget som adminbruker
+    Når jeg legger inn "Fargelegg byen!" som ny bok
+    Så viser systemet at "Fargelegg byen!" er en bok som kan lånes ut

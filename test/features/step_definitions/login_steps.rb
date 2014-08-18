@@ -13,6 +13,11 @@ When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
   @browser.button(:id => 'submit').click
 end
 
+Given(/^at jeg er pålogget som adminbruker$/) do
+  step "at jeg er på Kohas interne forside"
+  step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"
+end
+
 Then(/^har jeg kommet til førstesiden til koha$/) do
   @browser.body.id.should == "main_intranet-main"
 end
