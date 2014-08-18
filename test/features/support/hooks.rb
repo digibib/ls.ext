@@ -37,10 +37,4 @@ After('@libraryCreated') do |step|
   if form.text.include?("#{@context[:branchcode]}")
     form.submit
   end
-  # This was a dead end - No cookie handling...
-  # uri = URI.parse 'http://192.168.50.10:8081/cgi-bin/koha/admin/branches.pl'
-  # res = Net::HTTP.post_form(uri, 'op' => 'delete_confirmed', 
-  #   'branchcode' => @context[:branchcode], 
-  #   'branchname' => @context[:branchname])
-  # res.code.should == '200'
 end
