@@ -7,7 +7,8 @@ Given(/^at jeg er på Kohas interne forside$/) do
 end
 
 When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
-  @browser.text_field(:id => 'userid').set SETTINGS['koha']['adminuser']
+  @context[:user] = SETTINGS['koha']['adminuser']
+  @browser.text_field(:id => 'userid').set @context[:user]
   @browser.text_field(:id => 'password').set SETTINGS['koha']['adminpass']
   @browser.button(:id => 'submit').click
 end
@@ -18,5 +19,5 @@ end
 
 Then(/^vises det at jeg er pålogget$/) do
   @browser.span(:class => 'loggedinusername').should be_present
-  @browser.span(:class => 'loggedinusername').text.strip.should == SETTINGS['koha']['adminuser']
+  @browser.span(:class => 'loggedinusername').text.strip.should == @context[:user]
 end
