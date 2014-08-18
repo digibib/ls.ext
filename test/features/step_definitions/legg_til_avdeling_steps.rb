@@ -22,3 +22,8 @@ Then(/^finnes avdelingen i oversikten over avdelinger$/) do
   table.text.should include(@context[:branchcode])
 end
 
+Given(/^at det finnes en avdeling/) do
+  step 'at jeg er pålogget som adminbruker'
+  step 'er på administrasjonssiden for avdelinger'
+  step 'jeg legger inn "Knuts avdeling" som ny avdeling med avdelingskode "KNUTSBIB"'
+end
