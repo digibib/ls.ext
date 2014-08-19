@@ -4,7 +4,7 @@ require 'net/http'
 require 'uri'
 
 When(/^jeg forsøker å nå koha over http$/) do
-  uri = URI.parse(intranet)
+  uri = URI.parse(intranet(:home))
   @last_response = Net::HTTP.get_response(uri) #default is :follow_redirect => false
 end
 

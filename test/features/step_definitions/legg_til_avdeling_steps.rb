@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 Given(/^jeg er på administrasjonssiden for avdelinger$/) do
-  @browser.goto intranet("branches")
+  @browser.goto intranet(:branches)
   @browser.link(:id => "newbranch").click
 end
 
