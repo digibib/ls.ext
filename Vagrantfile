@@ -57,6 +57,10 @@ Vagrant.configure(2) do |config|
       config.ssh.forward_x11 = true
       config.ssh.forward_agent = true
     end
+
+    config.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "768"]
+    end
     
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
