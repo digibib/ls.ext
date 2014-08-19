@@ -18,8 +18,10 @@ install_chromedriver:
     - if_missing: /usr/local/bin/chromedriver
     - requires:
       - pkg: unzip
-  cmd.run:
-    - name: chmod +rx /usr/local/bin/chromedriver
+  file.managed:
+    - name: /usr/local/bin/chromedriver
+    - replace: False
+    - mode: 755
     - requires:
       - archive: install_chromedriver
 
