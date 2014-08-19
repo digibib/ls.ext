@@ -51,8 +51,11 @@ If you host is OSX (> 1.5) or Windows you need to install XWindows support:
  - OSX: `brew cask install xquartz`
  - Windows: Install Cygwin/X (untested by us, but should in theory be possible)
 
-To use you can either set `TESTBROWSER=firefox` as an environment variable on your system or pass it to `make`:
+To use you can either set `TESTBROWSER=<your favorite browser>` as an environment variable on your system or pass it to `make`. We currently support the following browsers:
+- firefox
+- chrome (we actually use chromium-browser)
 
+Example:
 `make test TESTBROWSER=firefox`  (  -- or  `TESTBROWSER=firefox make test` )  
 
 ### Running a single test 
