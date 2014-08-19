@@ -21,7 +21,7 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
 
 1. Install virtualbox and vagrant:
     - Ubuntu: 
-        * `apt-get install virtualbox`
+        * `sudo apt-get install virtualbox`
         * vagrant > 1.5 - install deb manually: https://www.vagrantup.com/downloads.html
     - OSX: We recommend using [homebrew](http://brew.sh/) and [homebrew cask](http://caskroom.io/)
         * `brew cask install virtualbox`
