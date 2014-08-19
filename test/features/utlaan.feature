@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Utlån av bok
   Som en låner Knut
   For å kunne lære om Oslo kommunes utsmykkinger

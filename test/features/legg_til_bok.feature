@@ -1,6 +1,6 @@
 # encoding: UTF-8
 # language: no
-
+@wip
 Egenskap: Legg til bok
   Som admin-bruker
   For å kunne låne ut bøker
