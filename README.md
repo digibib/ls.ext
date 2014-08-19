@@ -31,8 +31,13 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
         * [Vagrant](https://www.vagrantup.com/downloads)
         * You also need [git](http://git-scm.com/downloads)
         * ... and [make](http://gnuwin32.sourceforge.net/downlinks/make.php)
-2. From the command line run: `make` to bootstrap the environment and run the tests.
-3. If you don't want port forwarding and X forwarding (aka Jenkins CI and headless testing), disable with:
+2. Clone this repo from the command line (in a directory of your choice): `git clone https://github.com/digibib/ls.ext.git` 
+3. `cd ls.ext` into your cloned repo.
+4. From the command line run: `make` to bootstrap the environment and run the tests.
+
+### Running without public ports
+
+On an CI server you would not want to open uneccesary ports. This can be avoided by prefixing `make` with `NO_PUBLIC_PORTS`:
    `NO_PUBLIC_PORTS make`
 
 See [Makefile](Makefile) for more commands.
