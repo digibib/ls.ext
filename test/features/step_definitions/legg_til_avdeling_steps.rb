@@ -2,10 +2,10 @@
 
 Given(/^jeg er på administrasjonssiden for avdelinger$/) do
   @browser.goto intranet(:branches)
-  @browser.link(:id => "newbranch").click
 end
 
 When(/^jeg legger inn "(.*?)" som ny avdeling med avdelingskode "(.*?)"$/) do |name, code|
+  @browser.link(:id => "newbranch").click
   @context[:branchname] = name
   @context[:branchcode] = code
   form = @browser.form(:name => "Aform")
@@ -16,7 +16,7 @@ When(/^jeg legger inn "(.*?)" som ny avdeling med avdelingskode "(.*?)"$/) do |n
 end
 
 Then(/^finnes avdelingen i oversikten over avdelinger$/) do
-  table = @browser.table(:id, "branchest")
+  table = @browser.table(:id => "branchest")
   table.should be_present
   table.text.should include(@context[:branchname])
   table.text.should include(@context[:branchcode])
