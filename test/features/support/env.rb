@@ -9,3 +9,8 @@ if !File.exists? '/srv/pillar/koha/admin.sls'
 else
   SETTINGS = YAML.load_file('/srv/pillar/koha/admin.sls')
 end
+
+# Extending World object
+# Methods are inherited by all steps
+require_relative 'paths.rb'
+World { Paths.new }

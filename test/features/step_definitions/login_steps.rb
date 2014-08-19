@@ -3,7 +3,7 @@ require 'watir-webdriver'
 
 Given(/^at jeg er på Kohas interne forside$/) do
   @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-  @browser.goto 'http://192.168.50.10:8081'
+  @browser.goto intranet
 end
 
 When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do

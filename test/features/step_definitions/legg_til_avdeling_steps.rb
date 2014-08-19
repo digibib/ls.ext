@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 Given(/^jeg er på administrasjonssiden for avdelinger$/) do
-  @browser.goto "http://192.168.50.10:8081/cgi-bin/koha/admin/branches.pl"
+  @browser.goto intranet("branches")
   @browser.link(:id => "newbranch").click
 end
 
