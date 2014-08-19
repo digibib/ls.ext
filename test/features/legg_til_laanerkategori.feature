@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-
+@wip
 Egenskap: Legge til lånerkategori
   Som systemadministrator
   For å kunne legge til lånere

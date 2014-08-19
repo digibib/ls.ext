@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Legg til låner
   Som en person
   For å kunne låne bøker i biblioteket
