@@ -41,6 +41,10 @@ ifdef TESTBROWSER
 BROWSER_ARG=BROWSER=$(TESTBROWSER)
 endif
 
+ifdef FEATURE
+CUKE_ARGS=-n "$(FEATURE)"
+endif
+
 test: clean_report
 	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
