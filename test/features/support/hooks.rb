@@ -29,6 +29,7 @@ After do |scenario|
   if scenario.failed? && @browser
     add_screenshot(scenario.title)
   end
+  @browser.close if @browser
 end
 
 After('@libraryCreated') do
