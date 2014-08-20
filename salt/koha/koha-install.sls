@@ -30,42 +30,30 @@ createkohadb:
     - unless: id -u {{ pillar['koha']['instance'] }}-koha >/dev/null 2>&1
     - name: koha-create --create-db {{ pillar['koha']['instance'] }}
 
-default_schema:
-  cmd.wait:
-    - name: koha-mysql {{ pillar['koha']['instance'] }} < /usr/share/koha/intranet/cgi-bin/installer/data/mysql/kohastructure.sql
-    - watch:
-      - cmd: createkohadb
-
-default_sysprefs:
-  cmd.wait:
-    - name: koha-mysql {{ pillar['koha']['instance'] }} < /usr/share/koha/intranet/cgi-bin/installer/data/mysql/sysprefs.sql
-    - watch:
-      - cmd: createkohadb
-
-# Norwegian variants found in /usr/share/koha/intranet/cgi-bin/installer/data/mysql/nb-NO/1-Obligatorisk/
-default_sysprefs_norwegian:
-  cmd.wait:
-    - name: koha-mysql {{ pillar['koha']['instance'] }} < /usr/share/koha/intranet/cgi-bin/installer/data/mysql/nb-NO/1-Obligatorisk/system_preferences.sql
-    - watch:
-      - cmd: createkohadb
-
 ########
-# UPDATE DATABASE SCHEME
+# RUN KOHA WEBINSTALLER
 # Update koha syspref 'Version' manually, needed to bypass webinstaller
 # Update database if not up to date with koha-common version
 # Should not run it already up to date
 ########
+watir:
+  pkg.installed:
+  - pkgs:
+    - ruby1.9.1-dev
+    - phantomjs
+  gem.installed:
+    - name: watir-webdriver
+    - require: 
+      - pkg: watir
 
-# Set kohaversion from installed version of koha-common 
-/usr/share/koha/intranet/cgi-bin/kohaversion.pl:
-  file.exists
-
-update-koha-dbversion:
+run_webinstaller:
   cmd.script:
-    - source: {{ pillar['saltfiles'] }}/updatekohadbversion.sh
+    - source: {{ pillar['saltfiles'] }}/automated_webinstaller.rb
     - stateful: True
     - env:
-      - INSTANCE: {{ pillar['koha']['instance'] }}
+      - URL: "http://192.168.50.10:8081"
+      - USER: {{ pillar['koha']['adminuser'] }}
+      - PASS: {{ pillar['koha']['adminpass'] }}
     - watch:
-      - file: /usr/share/koha/intranet/cgi-bin/kohaversion.pl
+      - pkg: watir
       - cmd: createkohadb

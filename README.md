@@ -66,5 +66,13 @@ You can pass arguments to Cucumber, e g which feature to test, like this (you mu
 make test TESTPROFILE=wip CUKE_ARGS='features/legg_til_avdeling.feature'
 ```
 
+### Running a single test or scenario
+
+You can also run a single feature or scenario by title:
+
+```
+make test FEATURE="Title of feature|scenario"
+```
+
 ## Illustration
 ![Alt text](stack.png?raw=true "Stack")
