@@ -52,3 +52,14 @@ After('@libraryCreated') do
     form.submit
   end
 end
+
+After('@userCreated') do
+  @browser.goto intranet(:patrons)
+  @browser.a(:text => "K").click
+  #Phantomjs doesn't handle javascript popus, so we must override
+  #the confirm function to simulate "OK" click:
+  @browser.execute_script("window.confirm = function(msg){return true;}")
+  @browser.button(:text => "More").click
+  @browser.a(:id => "deletepatron").click
+  #@browser.alert.ok #works in chrome & firefox, but not phantomjs
+end

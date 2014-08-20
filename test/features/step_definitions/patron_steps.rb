@@ -24,10 +24,22 @@ Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
   table.text.should include(@context[:patron_category_code])
 end
 
-When(/^jeg legger inn "(.*?)" som ny låner$/) do |arg1|
-  @browser.body.id.should == "main_intranet-main"
-  @browser.link(:class, "icon_patrons").click
-  @browser.body.id.should == "pat_member"
-  pending # need story
+When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
+  @browser.goto intranet(:patrons)
+  @browser.button(:text => "New patron").click
+  @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a.click
+  form = @browser.form(:name => "form")
+  form.text_field(:id => "surname").set name
+  form.text_field(:id => "userid").set name
+  form.text_field(:id => "password").set name
+  form.text_field(:id => "password2").set name
+  form.submit
 end
 
+Så(/^viser systemet at "(.*?)" er låner$/) do |name|
+  @browser.goto intranet(:patrons)
+  @browser.a(:text => "K").click
+  # Koha will open the patron details page, as long as
+  # there is just one patron with surname starting with 'K'
+  @browser.title.should include name
+end
