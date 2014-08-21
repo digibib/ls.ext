@@ -21,11 +21,16 @@ Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
   table.text.should include(@context[:item_type_code])
 end
 
-Gitt(/^at jeg har rettigheter til å katalogisere$/) do
+Given(/^at jeg har rettigheter til å katalogisere$/) do
   @http = Net::HTTP.new(host, 8081)
   res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")
   res.body.should_not include("failed")
   @context[:svc_cookie] = res.response['set-cookie']
+end
+
+Given(/^at det finnes en materialtype for "(.*?)" med kode "(.*?)"$/) do |name, code|
+  step 'at jeg er pålogget som adminbruker'
+  step "jeg legger til en materialtype \"#{name}\" med kode \"#{code}\""
 end
 
 When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
