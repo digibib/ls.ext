@@ -2,6 +2,25 @@
 
 require 'net/http'
 
+When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code|
+  @browser.goto intranet(:item_types)
+  @browser.a(:id => "newitemtype").click
+  form = @browser.form(:id => "itemtypeentry")
+  form.text_field(:id => "itemtype").set code
+  form.text_field(:id => "description").set name
+  @context[:item_type_name] = name
+  @context[:item_type_code] = code
+  form.submit
+end
+
+Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
+  @browser.goto intranet(:item_types)
+  table = @browser.table(:id => "table_item_type")
+  table.should be_present
+  table.text.should include(@context[:item_type_name])
+  table.text.should include(@context[:item_type_code])
+end
+
 Gitt(/^at jeg har rettigheter til å katalogisere$/) do
   @http = Net::HTTP.new(host, 8081)
   res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")

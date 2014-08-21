@@ -64,6 +64,19 @@ After('@userCreated') do
   #@browser.alert.ok #works in chrome & firefox, but not phantomjs
 end
 
+After('@itemTypeCreated') do
+  @browser.goto intranet(:item_types)
+  table = @browser.table(:id => "table_item_type")
+  table.rows.each do |row|
+    if row.text.include?("#{@context[:item_type_name]}")
+      row.link(:href => /op=delete_confirm/).click
+      @browser.input(:value => "Delete this Item Type").click
+      break
+    end
+  end
+
+end
+
 After('@bookCreated') do
   # TODO delete the book
   # This cannot yet be done with the /svc endpoint, unless this patch is applied:
