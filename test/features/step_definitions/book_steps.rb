@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 require 'net/http'
-require 'rexml/document'
 
 Gitt(/^at jeg har rettigheter til å katalogisere$/) do
   @http = Net::HTTP.new(host, 8081)
