@@ -2,7 +2,6 @@
 require 'watir-webdriver'
 
 Given(/^at jeg er på Kohas interne forside$/) do
-  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
   @browser.goto intranet(:home)
 end
 

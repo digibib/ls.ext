@@ -6,7 +6,7 @@ Egenskap: Legg til bok
   For å kunne låne ut bøker
   Ønsker jeg å kunne legge til en bok i systemet
 
-  @bookCreated @libraryCreated
+  @bookCreated @libraryCreated @admin_logged_in
   Scenario: Admin legger til ny bok
     Gitt at jeg har rettigheter til å katalogisere
     Og at det finnes en materialtype for "Bok" med kode "L"

@@ -29,7 +29,6 @@ Given(/^at jeg har rettigheter til å katalogisere$/) do
 end
 
 Given(/^at det finnes en materialtype for "(.*?)" med kode "(.*?)"$/) do |name, code|
-  step 'at jeg er pålogget som adminbruker'
   step "jeg legger til en materialtype \"#{name}\" med kode \"#{code}\""
 end
 

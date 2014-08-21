@@ -27,7 +27,22 @@ Before do
   @context = {}
 end
 
-#  AFTER HOOKS will run in the opposite order of which they are registered.
+Before do
+  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+end
+
+Before('@admin_logged_in') do
+  @browser.goto intranet(:home)
+  @context[:user] = SETTINGS['koha']['adminuser']
+  @browser.text_field(:id => 'userid').set @context[:user]
+  @browser.text_field(:id => 'password').set SETTINGS['koha']['adminpass']
+  @browser.button(:id => 'submit').click
+  @browser.body.id.should == "main_intranet-main"
+  @browser.span(:class => 'loggedinusername').should be_present
+  @browser.span(:class => 'loggedinusername').text.strip.should == @context[:user]
+end
+
+#  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
 After do # The final hook
   @browser.close if @browser
