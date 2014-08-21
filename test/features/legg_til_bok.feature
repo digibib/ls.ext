@@ -4,7 +4,7 @@
 Egenskap: Legg til bok
   Som admin-bruker
   For å kunne låne ut bøker
-  Ønsker jeg å kunne legg til en bok i systemet
+  Ønsker jeg å kunne legge til en bok i systemet
 
   @bookCreated @libraryCreated
   Scenario: Admin legger til ny bok
