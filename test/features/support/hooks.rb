@@ -78,7 +78,15 @@ After('@itemTypeCreated') do
 end
 
 After('@bookCreated') do
-  # TODO delete the book
-  # This cannot yet be done with the /svc endpoint, unless this patch is applied:
-  # http://bugs.koha-community.org/bugzilla3/show_bug.cgi?id=12590
+  @browser.goto intranet(:bib_record)+@context[:book_id]
+
+  #delete book items
+  @browser.execute_script("window.confirm = function(msg){return true;}")
+  @browser.button(:text => "Edit").click
+  @browser.a(:id => "deleteallitems").click
+
+  #delete book record
+  @browser.execute_script("window.confirm = function(msg){return true;}")
+  @browser.button(:text => "Edit").click
+  @browser.a(:id => "deletebiblio").click
 end
