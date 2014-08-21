@@ -48,7 +48,7 @@ watir:
 
 run_webinstaller:
   cmd.script:
-    - source: {{ pillar['saltfiles'] }}/automated_webinstaller.rb
+    - source: {{ pillar['saltfiles'] }}/koha_automated_webinstaller.rb
     - stateful: True
     - env:
       - URL: "http://192.168.50.10:8081"

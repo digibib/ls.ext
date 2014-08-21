@@ -12,7 +12,8 @@ case last_response.code
   when '405' # Apache installed but no Koha instance found
     raise "Instance is not installed"
   when '200'
-    raise "Instance is already installed"
+    puts  "{\"comment\":\"Instance is already installed\"}"
+    exit 0
   when '302' # Redirect to webinstaller
     res = browser.goto ENV['URL']
     if browser.execute_script("return document.readyState") == "complete"
@@ -32,6 +33,7 @@ case last_response.code
         browser.form(:name => "frameworkselection").submit
         browser.form(:name => "frameworkselection").submit
         browser.form(:name => "finish").submit
+        puts "{\"comment\":\"Successfully completed the install process\"}"
         exit 0
       else
         raise "Installer not found at expected url #{ENV['URL']}"
