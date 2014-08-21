@@ -47,7 +47,6 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
 end
 
 Then(/^viser systemet at "(.*?)" er en bok som kan lånes ut$/) do |book|
-  #http://knakk:8080/cgi-bin/koha/opac-detail.pl?biblionumber=485597
   @browser.goto "http://#{host}:8080/cgi-bin/koha/opac-detail.pl?biblionumber=#{@context[:book_id]}"
   @browser.h1(:class => "title").text.should include(book)
   @browser.div(:id => "holdings").text.should include("Available")
