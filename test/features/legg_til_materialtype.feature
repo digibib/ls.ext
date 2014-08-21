@@ -1,8 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip
-Egenskap: Legge til materialtype
+Egenskap: Legg til materialtype
   Som katalogisator
   For å registrere en ny bok
   Trenger jeg en materialtype for bøker
