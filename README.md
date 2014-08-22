@@ -19,7 +19,7 @@ and [SaltStack](http://docs.saltstack.com/) for automated provisioning.
 
 For local setup and to run tests, we use a multi-machine vagrant setup.
 
-1. Install virtualbox and vagrant:
+1. Install virtualbox and vagrant (and X11-server on OSX/Windows - for development):
     - Ubuntu: 
         * `sudo apt-get install virtualbox`
         * vagrant > 1.5 - install deb manually: https://www.vagrantup.com/downloads.html
@@ -55,13 +55,9 @@ On an CI server you would not want to open uneccesary ports. This can be avoided
 See [Makefile](Makefile) for more commands.
 
 ### Adding graphical browser support
+
 If you want a different browser than headless phantomjs in testing, we have installed firefox in ls.test and use X11
 forwarding over ssh to show you the browser window as you run the test from inside ls.test.
-
-If you host is OSX (> 1.5) or Windows you need to install XWindows support:
-
- - OSX: `brew cask install xquartz`
- - Windows: Install Cygwin/X (untested by us, but should in theory be possible)
 
 To use you can either set `TESTBROWSER=<your favorite browser>` as an environment variable on your system or pass it to `make`. We currently support the following browsers:
 - firefox
@@ -69,6 +65,12 @@ To use you can either set `TESTBROWSER=<your favorite browser>` as an environmen
 
 Example:
 `make test TESTBROWSER=firefox`  (  -- or  `TESTBROWSER=firefox make test` )  
+
+### Running development tools from inside the ls.test virtual machine
+
+These tools also need support for X11 forwarding on the host.
+
+* Sublime: `make sublime`
 
 ### Running a single test 
 
@@ -85,6 +87,7 @@ You can also run a single feature or scenario by title:
 ```
 make test FEATURE="Title of feature|scenario"
 ```
+
 
 ## Illustration
 ![Alt text](stack.png?raw=true "Stack")

@@ -1,0 +1,10 @@
+{
+	"color_scheme": "Packages/Color Scheme - Default/Monokai.tmTheme",
+	"font_size": 11.0,
+    
+    //http://unix.stackexchange.com/questions/50388/sublime-command-line-open-it-twice
+	"hot_exit": false,
+    "remember_open_files": false,
+
+	"save_on_focus_lost": true // "Auto"save...
+}

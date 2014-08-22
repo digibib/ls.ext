@@ -59,3 +59,9 @@ clean_test: clean_report
 clean_sut:
 	vagrant destroy ls.ext --force
 
+sublime: install_sublime
+	vagrant ssh ls.test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &
+
+install_sublime:
+	vagrant ssh ls.test -c 'sudo salt-call --local state.sls sublime'
+
