@@ -26,7 +26,7 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
     - OSX: We recommend using [homebrew](http://brew.sh/) and [homebrew cask](http://caskroom.io/)
         * `brew cask install virtualbox`
         * `brew cask install vagrant`
-    - Windows: (untested, YMMV)
+    - Windows:
         * Download and install "VirtualBox platform package" for Window hosts: [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
         * Download and install Vagrant for Windows: [Vagrant Downloads](https://www.vagrantup.com/downloads)
         * Reboot your machine.
@@ -41,7 +41,7 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
             * tig
             * vim
             * wget
-        * After installing Cygwin/X  Windows users should use the program "Cygwin64 Terminal" for git, make etc. 
+        * After installing Cygwin/X Windows users should use the program "XWin Server" for commands like git, make etc. 
 2. Clone this repo from the command line (in a directory of your choice): 
    ```git clone https://github.com/digibib/ls.ext.git``` 
 3. `cd ls.ext` into your cloned repo.
