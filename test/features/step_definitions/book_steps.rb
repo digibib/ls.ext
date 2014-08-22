@@ -33,7 +33,7 @@ Given(/^at det finnes en materialtype for "(.*?)" med kode "(.*?)"$/) do |name, 
 end
 
 When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
-  data = File.read("features/support/#{book}.marc21")
+  data = File.read("features/upload-files/#{book}.marc21")
   headers = {
     'Cookie' => @context[:svc_cookie],
     'Content-Type' => 'text/xml'
