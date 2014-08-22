@@ -27,11 +27,22 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
         * `brew cask install virtualbox`
         * `brew cask install vagrant`
     - Windows: (untested, YMMV)
-        * [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
-        * [Vagrant](https://www.vagrantup.com/downloads)
-        * You also need [git](http://git-scm.com/downloads)
-        * ... and [make](http://gnuwin32.sourceforge.net/downlinks/make.php)
-2. Clone this repo from the command line (in a directory of your choice): `git clone https://github.com/digibib/ls.ext.git` 
+        * Download and install "VirtualBox platform package" for Window hosts: [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
+        * Download and install Vagrant for Windows: [Vagrant Downloads](https://www.vagrantup.com/downloads)
+        * Install Cygwin/X by following this procedure: [Setting Up Cygwin/X](http://x.cygwin.com/docs/ug/setup.html)
+          - Important! In step 15 you must also choose the following packages:
+            * git
+            * make
+            * openssh
+          - We also recommend these:
+            * curl
+            * git-completion
+            * tig
+            * vim
+            * wget
+        * After installing Cygwin/X  Windows users should use the program "Cygwin64 Terminal" for git, make etc. 
+2. Clone this repo from the command line (in a directory of your choice): 
+   ```git clone https://github.com/digibib/ls.ext.git``` 
 3. `cd ls.ext` into your cloned repo.
 4. From the command line run: `make` to bootstrap the environment and run the tests.
 
