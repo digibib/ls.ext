@@ -10,5 +10,6 @@ install_sublime:
     - name: /home/vagrant/.config/sublime-text-2/Packages/User
     - target: /vagrant/test/salt/sublime/Settings/
     - force: True
+    - makedirs: True
     - user: vagrant
     - group: vagrant
