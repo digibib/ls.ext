@@ -1,5 +1,9 @@
 # encoding: UTF-8
 
+Given "at det finnes en lånerkategori" do
+  step "jeg legger til en lånerkategori"
+end
+
 When(/^jeg legger til en lånerkategori$/) do
   @browser.goto intranet(:patron_categories)
   @browser.link(:id => "newcategory").click
@@ -14,16 +18,6 @@ When(/^jeg legger til en lånerkategori$/) do
   @browser.form(:name => "Aform").should_not be_present
 end
 
-Given "at det finnes en lånerkategori" do
-  step "jeg legger til en lånerkategori"
-end
-
-Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
-  table = @browser.table(:id => "table_categorie")
-  table.should be_present
-  table.text.should include(@context[:patron_category_code])
-end
-
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   @browser.goto intranet(:patrons)
   @browser.button(:text => "New patron").click
@@ -36,7 +30,13 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   form.submit
 end
 
-Så(/^viser systemet at "(.*?)" er låner$/) do |name|
+Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
+  table = @browser.table(:id => "table_categorie")
+  table.should be_present
+  table.text.should include(@context[:patron_category_code])
+end
+
+Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   @browser.goto intranet(:patrons)
   @browser.a(:text => "K").click
   # Koha will open the patron details page, as long as

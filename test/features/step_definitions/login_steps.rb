@@ -13,16 +13,16 @@ Given(/^at jeg er på Kohas interne forside$/) do
   @browser.goto intranet(:home)
 end
 
+Given(/^at jeg er pålogget som adminbruker$/) do
+  step "at jeg er på Kohas interne forside"
+  step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"
+end
+
 When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
   @context[:user] = SETTINGS['koha']['adminuser']
   @browser.text_field(:id => 'userid').set @context[:user]
   @browser.text_field(:id => 'password').set SETTINGS['koha']['adminpass']
   @browser.button(:id => 'submit').click
-end
-
-Given(/^at jeg er pålogget som adminbruker$/) do
-  step "at jeg er på Kohas interne forside"
-  step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"
 end
 
 Then(/^har jeg kommet til førstesiden til koha$/) do
