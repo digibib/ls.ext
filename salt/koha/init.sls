@@ -4,6 +4,10 @@
 # PACKAGES
 ##########
 
+Europe/Oslo:
+  timezone.system:
+    - utc: True
+
 installdeps:
   pkg.installed:
     - pkgs:
