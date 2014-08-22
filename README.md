@@ -29,6 +29,7 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
     - Windows: (untested, YMMV)
         * Download and install "VirtualBox platform package" for Window hosts: [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
         * Download and install Vagrant for Windows: [Vagrant Downloads](https://www.vagrantup.com/downloads)
+        * Reboot your machine.
         * Install Cygwin/X by following this procedure: [Setting Up Cygwin/X](http://x.cygwin.com/docs/ug/setup.html)
           - Important! In step 15 you must also choose the following packages:
             * git
