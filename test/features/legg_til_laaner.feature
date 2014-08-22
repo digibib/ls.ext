@@ -6,7 +6,10 @@ Egenskap: Legg til låner
   For å kunne låne bøker i biblioteket
   Ønsker jeg å kunne registrere meg som låner
 
-  @libraryCreated @userCreated @admin_logged_in
+  Bakgrunn:
+    Gitt at jeg er logget inn som adminbruker
+
+  @libraryCreated @userCreated
   Scenario: Admin-bruker registrerer en ny låner
     Og at det finnes en avdeling
     Og at det finnes en lånerkategori

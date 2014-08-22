@@ -5,7 +5,10 @@ Egenskap: Finn bok
   Som adminbruker
   Ønsker jeg å kunne finne en bok i systemet
 
-  @wip @admin_logged_in
+  Bakgrunn:
+    Gitt at jeg er logget inn som adminbruker
+
+  @wip
   Scenario: Admin-bruker finner en bok
     Gitt at det finnes en bok
     Så kan jeg søke opp boka

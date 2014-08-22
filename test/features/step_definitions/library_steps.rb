@@ -1,6 +1,11 @@
 # encoding: UTF-8
 
-Given(/^jeg er på administrasjonssiden for avdelinger$/) do
+Given(/^at det finnes en avdeling$/) do
+  step 'jeg er på administrasjonssiden for avdelinger'
+  step 'jeg legger inn "Knuts avdeling" som ny avdeling med avdelingskode "KNUTSBIB"'
+end
+
+When(/^jeg er på administrasjonssiden for avdelinger$/) do
   @browser.goto intranet(:branches)
 end
 
@@ -20,9 +25,4 @@ Then(/^finnes avdelingen i oversikten over avdelinger$/) do
   table.should be_present
   table.text.should include(@context[:branchname])
   table.text.should include(@context[:branchcode])
-end
-
-Given(/^at det finnes en avdeling/) do
-  step 'jeg er på administrasjonssiden for avdelinger'
-  step 'jeg legger inn "Knuts avdeling" som ny avdeling med avdelingskode "KNUTSBIB"'
 end

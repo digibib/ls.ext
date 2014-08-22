@@ -1,6 +1,14 @@
 # encoding: utf-8
 require 'watir-webdriver'
 
+Given(/^at jeg er logget inn som adminbruker$/) do
+  @browser.goto intranet(:home)
+  @context[:user] = SETTINGS['koha']['adminuser']
+  @browser.text_field(:id => 'userid').set @context[:user]
+  @browser.text_field(:id => 'password').set SETTINGS['koha']['adminpass']
+  @browser.button(:id => 'submit').click
+end
+
 Given(/^at jeg er på Kohas interne forside$/) do
   @browser.goto intranet(:home)
 end

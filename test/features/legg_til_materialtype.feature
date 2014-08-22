@@ -6,7 +6,10 @@ Egenskap: Legg til materialtype
   For å registrere en ny bok
   Trenger jeg en materialtype for bøker
 
-  @itemTypeCreated @admin_logged_in
+  Bakgrunn:
+    Gitt at jeg er logget inn som adminbruker
+
+  @itemTypeCreated
   Scenario: Legge til materialtype via webgrensesnitt
     Når jeg legger til en materialtype "Bok" med kode "L"
     Så kan jeg se materialtypen i listen over materialtyper
