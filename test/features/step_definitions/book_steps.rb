@@ -39,3 +39,21 @@ Then(/^viser systemet at "(.*?)" er en bok som kan lånes ut$/) do |book|
   @browser.h1(:class => "title").text.should include(book)
   @browser.div(:id => "holdings").text.should include("Available")
 end
+
+
+Given(/^at det finnes en bok$/) do
+  step "jeg legger til en materialtype \"Bok\" med kode \"L\""
+  step "at det finnes en avdeling"
+  step "jeg legger inn \"Fargelegg byen!\" som ny bok"
+end
+
+Then(/^kan jeg søke opp boka$/) do
+  @browser.goto intranet(:home)
+  @browser.a(:text => "Search the catalog").click
+  form = @browser.form(:id => "cat-search-block")
+  form.text_field(:id => "search-form").set("Fargelegg byen") # if we include the exclamation mark, we get no results
+  sleep 60
+  form.submit
+  @browser.text.should include("Fargelegg byen!")
+  @browser.text.should include("Available")
+end
