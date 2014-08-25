@@ -1,14 +1,5 @@
 # encoding: UTF-8
 
-require 'net/http'
-
-Given(/^at jeg har rettigheter til å katalogisere$/) do
-  @http = Net::HTTP.new(host, 8081)
-  res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")
-  res.body.should_not include("failed")
-  @context[:svc_cookie] = res.response['set-cookie']
-end
-
 Given(/^at det finnes en materialtype for "(.*?)" med kode "(.*?)"$/) do |name, code|
   step "jeg legger til en materialtype \"#{name}\" med kode \"#{code}\""
 end
@@ -24,25 +15,23 @@ When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code
   form.submit
 end
 
-When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
-  data = File.read("features/upload-files/#{book}.marc21")
-  headers = {
-    'Cookie' => @context[:svc_cookie],
-    'Content-Type' => 'text/xml'
-  }
-  res, data = @http.post("/cgi-bin/koha/svc/new_bib?items=1&import_mode=direct", data, headers)
-  res.body.should include("<status>ok</status>")
-
-  #Store the assigned id, so we can find the book in next step
-  @context[:book_id] = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
-end
-
 Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
   @browser.goto intranet(:item_types)
   table = @browser.table(:id => "table_item_type")
   table.should be_present
   table.text.should include(@context[:item_type_name])
   table.text.should include(@context[:item_type_code])
+end
+
+When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
+  @browser.goto intranet(:stage_marc)
+  @browser.file_field(:id => "fileToUpload").set("#{Dir.pwd}/features/upload-files/#{book}.mrc")
+  @browser.button(:text => "Upload file").click
+  @browser.button(:text => "Stage for import").when_present.click
+  @browser.link(:text => "Manage staged records").when_present.click
+  @browser.button(:name => "mainformsubmit").click
+  @browser.div(:text => "Completed import of records").wait_until_present
+  @context[:book_id] = @browser.a(:href => /cgi-bin\/koha\/catalogue\/detail/).when_present.text
 end
 
 Then(/^viser systemet at "(.*?)" er en bok som kan lånes ut$/) do |book|

@@ -16,7 +16,8 @@ class Paths
       :patrons => "/cgi-bin/koha/members/members-home.pl",
       :admin    => "/cgi-bin/koha/admin/admin-home.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
-      :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber="
+      :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
+      :stage_marc => "/cgi-bin/koha/tools/stage-marc-import.pl"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     return "http://#{host}:#{port}#{paths[path.to_sym]}"
