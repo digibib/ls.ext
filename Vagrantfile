@@ -78,8 +78,6 @@ Vagrant.configure(2) do |config|
 
     # push insecure private key to ls.test to allow ssh from ls.test to ls.ext
     insecure_private_key = File.read("#{ENV['HOME']}/.vagrant.d/insecure_private_key")
-    # avoid 'stdin: is not a tty' error:
-    config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'" 
     config.vm.provision "shell", inline: <<-SCRIPT
       printf "%s\n" "#{insecure_private_key}" > /home/vagrant/.ssh/insecure_private_key
       chmod 600 /home/vagrant/.ssh/insecure_private_key
