@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
     config.vm.network "private_network", ip: "192.168.50.11"
 
     # push insecure private key to ls.test to allow ssh from ls.test to ls.ext
-    insecure_private_key = File.read("#{ENV['HOME']}/.vagrant.d/insecure_private_key")
+    insecure_private_key = File.read("#{ENV["VAGRANT_HOME"]||ENV["HOME"]}/.vagrant.d/insecure_private_key")
     config.vm.provision "shell", inline: <<-SCRIPT
       printf "%s\n" "#{insecure_private_key}" > /home/vagrant/.ssh/insecure_private_key
       chmod 600 /home/vagrant/.ssh/insecure_private_key
