@@ -46,14 +46,20 @@ watir:
     - require: 
       - pkg: watir
 
+/tmp/KohaWebInstallAutomation.rb:
+  file.managed:
+    - source: {{ pillar['saltfiles'] }}/KohaWebInstallAutomation.rb
+
+
 run_webinstaller:
   cmd.script:
-    - source: {{ pillar['saltfiles'] }}/koha_automated_webinstaller.rb
+    - source: {{ pillar['saltfiles'] }}/updatekohadbversion.sh
     - stateful: True
     - env:
       - URL: "http://192.168.50.10:8081"
       - USER: {{ pillar['koha']['adminuser'] }}
       - PASS: {{ pillar['koha']['adminpass'] }}
+      - INSTANCE: {{ pillar['koha']['instance'] }}
     - watch:
       - pkg: watir
-      - cmd: createkohadb
+      - file: /tmp/KohaWebInstallAutomation.rb
