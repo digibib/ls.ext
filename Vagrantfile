@@ -20,7 +20,8 @@ Vagrant.configure(2) do |config|
   config.vm.define "ls.ext" do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
-    
+    config.vm.hostname = "ls-ext"
+ 
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
@@ -39,6 +40,7 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "salt", "/srv/salt"
     config.vm.synced_folder "pillar", "/srv/pillar"
 
+
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
@@ -51,7 +53,8 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "ls.test", primary: true do |config|
     config.vm.box = "ubuntu/trusty64"
-
+    config.vm.hostname = "ls-test"
+    
     # X forwarding for Firefox Browser
     unless ENV['NO_PUBLIC_PORTS']    
       config.ssh.forward_x11 = true
@@ -72,6 +75,15 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "test", "/home/vagrant/ls.test"
 
     config.vm.network "private_network", ip: "192.168.50.11"
+
+    # push insecure private key to ls.test to allow ssh from ls.test to ls.ext
+    insecure_private_key = File.read("#{ENV['HOME']}/.vagrant.d/insecure_private_key")
+    # avoid 'stdin: is not a tty' error:
+    config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'" 
+    config.vm.provision "shell", inline: <<-SCRIPT
+      printf "%s\n" "#{insecure_private_key}" > /home/vagrant/.ssh/insecure_private_key
+      chmod 600 /home/vagrant/.ssh/insecure_private_key
+    SCRIPT
 
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
