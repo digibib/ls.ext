@@ -8,7 +8,7 @@ Egenskap: Adminbruker låner ut bok
   Ønsker jeg å låne ut boka Fargelegg byen! til Knut
 
   @wip
-  Scenario: Adminbruker låner ut bok til
+  Scenario: Adminbruker låner ut bok til Knut
     Gitt at jeg er logget inn som adminbruker
     Og at "Knut" eksisterer som en låner
     Og at "Fargelegg byen!" er ei bok som finnes i biblioteket
