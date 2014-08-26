@@ -76,11 +76,11 @@ Vagrant.configure(2) do |config|
 
     config.vm.network "private_network", ip: "192.168.50.11"
 
-    # push insecure private key to ls.test to allow ssh from ls.test to ls.ext
-    insecure_private_key = File.read("#{ENV["VAGRANT_HOME"]||ENV["HOME"]+"/.vagrant.d"}/insecure_private_key")
+    # get vagrant insecure private key to ls.test to allow ssh from ls.test to ls.ext
     config.vm.provision "shell", inline: <<-SCRIPT
-      printf "%s\n" "#{insecure_private_key}" > /home/vagrant/.ssh/insecure_private_key
+      wget --no-check-certificate https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant -O /home/vagrant/.ssh/insecure_private_key
       chmod 600 /home/vagrant/.ssh/insecure_private_key
+      chown vagrant:vagrant /home/vagrant/.ssh/insecure_private_key
     SCRIPT
 
     config.vm.provision :salt do |salt|
