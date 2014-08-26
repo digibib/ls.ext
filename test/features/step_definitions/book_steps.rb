@@ -24,7 +24,9 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   res.body.should include("<status>ok</status>")
   @context[:book_id] = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
   # force rebuild zebra bibliographic index
-  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo koha-rebuild-zebra -v -b name'`
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 \
+    -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+    'sudo koha-rebuild-zebra -v -b name' 2> /dev/null`
 end
 
 When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code|
