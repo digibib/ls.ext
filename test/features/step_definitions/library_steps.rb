@@ -5,6 +5,12 @@ Given(/^at det finnes en avdeling$/) do
   step 'jeg legger inn "Knuts avdeling" som ny avdeling med avdelingskode "KNUTSBIB"'
 end
 
+Given(/^at det er valgt en avdeling$/) do
+  step 'at det finnes en avdeling'
+  @browser.goto intranet(:select_branch)
+  @browser.form(:action => "selectbranchprinter.pl").submit
+end
+
 When(/^jeg er på administrasjonssiden for avdelinger$/) do
   @browser.goto intranet(:branches)
 end

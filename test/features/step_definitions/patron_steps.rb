@@ -1,7 +1,12 @@
 # encoding: UTF-8
 
-Given "at det finnes en lånerkategori" do
+Given(/^at det finnes en lånerkategori$/) do
   step "jeg legger til en lånerkategori"
+end
+
+Given(/^at "(.*?)" eksisterer som en låner$/) do |name|
+  step "jeg legger inn \"#{name}\" som ny låner"
+  step "viser systemet at \"#{name}\" er låner"
 end
 
 When(/^jeg legger til en lånerkategori$/) do
@@ -42,4 +47,5 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   # Koha will open the patron details page, as long as
   # there is just one patron with surname starting with 'K'
   @browser.title.should include name
+  @context[:cardnumber] = @browser.title.match(/\((.*?)\)/)[1]
 end

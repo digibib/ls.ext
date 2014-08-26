@@ -10,6 +10,12 @@ Given(/^at det finnes en bok$/) do
   step "jeg legger inn \"Fargelegg byen!\" som ny bok"
 end
 
+Given(/^at "Fargelegg byen!" er ei bok som finnes i biblioteket$/) do
+  step "jeg legger til en materialtype \"Bok\" med kode \"L\""
+  step "at det finnes en avdeling"
+  step "jeg legger inn \"Fargelegg byen!\" som ny bok"
+end
+
 When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   @http = Net::HTTP.new(host, 8081)
   res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")
@@ -49,9 +55,12 @@ Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
 end
 
 Then(/^viser systemet at "(.*?)" er en bok som kan lånes ut$/) do |book|
-  @browser.goto "http://#{host}:8080/cgi-bin/koha/opac-detail.pl?biblionumber=#{@context[:book_id]}"
-  @browser.h1(:class => "title").text.should include(book)
-  @browser.div(:id => "holdings").text.should include("Available")
+  @browser.goto "http://#{host}:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber=#{@context[:book_id]}"
+  @browser.div(:id => "catalogue_detail_biblio").text.should include(book)
+  holdings = @browser.div(:id => "holdings")
+  holdings.text.should include("Available")
+  barcode = holdings.tbody.tr.td(:index => 7).text
+  @context[:barcode] = barcode
 end
 
 Then(/^kan jeg søke opp boka$/) do
