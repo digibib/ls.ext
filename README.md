@@ -88,6 +88,17 @@ You can also run a single feature or scenario by title:
 make test FEATURE="Title of feature|scenario"
 ```
 
+### Typical workflow
+
+@wip Arve
+
+```
+make test FEATURE="Title of feature|scenario"
+```
+
+
+
+
 
 ## Illustration
 ![Alt text](stack.png?raw=true "Stack")
