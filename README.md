@@ -117,6 +117,7 @@ So therefore I need (what you want to do)
 It often makes for bad grammar, but helps us focus on what we want to achieve, rather than how we achieve it.
 
 - Then you add the Scenario description. Add @wip before the scenario to make sure the test is not run until the feature is done.
+
 Format: 
   Scenario: Title of the scenario
   Gitt (condition og precondition)
@@ -126,7 +127,7 @@ Format:
   Så (expected result)
   Og (another expected result)
 
-(you can have none or several "Og" to each step)
+(you can have none or several "og" to each step)
 
 Please follow formatting and spacing rules from the other test descriptions
 
