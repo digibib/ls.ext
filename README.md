@@ -88,12 +88,73 @@ You can also run a single feature or scenario by title:
 make test FEATURE="Title of feature|scenario"
 ```
 
-### Typical workflow
+### Typical workflow for creating new feature test
 
 @wip Arve
 
+The first step for creating a new feature is authoring a test, in this case a verbal description of how you want the system to perform. This is a step-by-step decription of how you do this from your computer. You need to have completed the steps above to make this work.
+
+1) Open terminal
+Change directory to LS.ext by typing
 ```
-make test FEATURE="Title of feature|scenario"
+cd (foldername where you keep your projects)/LS.ext/test/features
+```
+Then type 
+```
+git up
+```
+
+2) Open the editor of your choice to create the test
+
+- create a file name for the feature you are writing a test for
+- start by adding a "Egenskap" that explains the feature in the simplest way
+- Then follows the typical "User story" format (with one change): 
+
+As a (role)
+I want to (what you want to accomplish)
+So therefore I need (what you want to do)
+
+It often makes for bad grammar, but helps us focus on what we want to achieve, rather than how we achieve it.
+
+- Then you add the Scenario description. Add @wip before the scenario to make sure the test is not run until the feature is done.
+Format: 
+  Scenario: Title of the scenario
+  Gitt (condition og precondition)
+  Og (another condition or precondition)
+  Når (user input)
+  Og (another user input)
+  Så (expected result)
+  Og (another expected result)
+
+(you can have none or several "Og" to each step)
+
+Please follow formatting and spacing rules from the other test descriptions
+
+3) Return to the terminal to ensure the test is in proper format
+
+```
+make test TESTPROFILE=wip
+```
+
+4) Stay in the terminal to commit the changes to github
+
+```
+git up
+```
+to check you have all the latest changes from github
+```
+git status
+```
+to check the difference between your version and the master
+```
+git add (the filename(s) you want to push to github)
+```
+```
+git commit -m "free text description of the change (less than 50 characters)"
+```
+and finally
+```
+git push
 ```
 
 
