@@ -120,11 +120,17 @@ It often makes for bad grammar, but helps us focus on what we want to achieve, r
 
 Format: 
   Scenario: Title of the scenario
+
   Gitt (condition og precondition)
+
   Og (another condition or precondition)
+
   Når (user input)
+
   Og (another user input)
+
   Så (expected result)
+  
   Og (another expected result)
 
 (you can have none or several "og" to each step)
