@@ -7,9 +7,6 @@ When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
 end
 
 When(/^jeg registrerer utlån av "(.*?)"/) do |book|
-  #form = @browser.form(:id => "circ_search")
-  #form.text_field(:id => "search-form").set(@context[:barcode])
-  #form.submit
   @browser.execute_script("printx_window = function() { return };") #Disable print slip popup
   form = @browser.form(:id => "mainform")
   form.text_field(:id => "barcode").set(@context[:barcode])
@@ -17,9 +14,15 @@ When(/^jeg registrerer utlån av "(.*?)"/) do |book|
 end
 
 Then(/^registrerer systemet at "(.*?)" er utlånt$/) do |book|
-  pending # express the regexp above with the code you wish you had
+  @browser.goto intranet(:home)
+  @browser.a(:text => "Search the catalog").click
+  form = @browser.form(:id => "cat-search-block")
+  form.text_field(:id => "search-form").set(book.gsub("!", ""))
+  form.submit
+  @browser.text.should include(book)
 end
 
 Then(/^at "(.*?)" låner "(.*?)"$/) do |name, book|
-  pending # express the regexp above with the code you wish you had
+  @browser.text.should include(book)
+  @browser.text.should include "Checked out to #{name}"
 end

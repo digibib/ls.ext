@@ -107,3 +107,11 @@ After('@bookCreated') do
     @browser.a(:id => "deletebiblio").click
   end
 end
+
+After('@bookCheckedOut') do
+  @browser.goto intranet(:select_branch)
+  @browser.form(:action => "selectbranchprinter.pl").submit
+  @browser.a(:href => "#checkin_search").click
+  @browser.text_field(:id => "ret_barcode").set @context[:barcode]
+  @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
+end
