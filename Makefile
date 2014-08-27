@@ -1,3 +1,4 @@
+.PHONY: all test clean
 
 all: reload provision test
 
