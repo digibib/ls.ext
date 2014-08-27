@@ -45,7 +45,7 @@ ifdef FEATURE
 CUKE_ARGS=-n "$(FEATURE)"
 endif
 
-test: clean_report
+test:
 	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
 clean: clean_report clean_test clean_sut
