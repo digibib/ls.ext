@@ -8,6 +8,7 @@ Egenskap: Adminbruker låner ut bok
 
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en avdeling
     Og at "Fargelegg byen!" er ei bok som finnes i biblioteket
     Og at "Knut" eksisterer som en låner
 

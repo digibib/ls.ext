@@ -10,10 +10,9 @@ Given(/^at det finnes en bok$/) do
   step "jeg legger inn \"Fargelegg byen!\" som ny bok"
 end
 
-Given(/^at "Fargelegg byen!" er ei bok som finnes i biblioteket$/) do
+Given(/^at "(.*?)" er ei bok som finnes i biblioteket$/) do |book|
   step "jeg legger til en materialtype \"Bok\" med kode \"L\""
-  step "at det finnes en avdeling"
-  step "jeg legger inn \"Fargelegg byen!\" som ny bok"
+  step "jeg legger inn \"#{book}\" som ny bok"
 end
 
 When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|

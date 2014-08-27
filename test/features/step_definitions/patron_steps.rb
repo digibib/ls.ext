@@ -5,6 +5,7 @@ Given(/^at det finnes en lånerkategori$/) do
 end
 
 Given(/^at "(.*?)" eksisterer som en låner$/) do |name|
+  step "at det finnes en lånerkategori"
   step "jeg legger inn \"#{name}\" som ny låner"
   step "viser systemet at \"#{name}\" er låner"
 end
