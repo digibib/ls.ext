@@ -26,13 +26,15 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
     'Cookie' => @context[:svc_cookie],
     'Content-Type' => 'text/xml'
   }
-  res, data = @http.post("/cgi-bin/koha/svc/new_bib?items=1&import_mode=direct", data, headers)
+  res, data = @http.post("/cgi-bin/koha/svc/new_bib?items=1", data, headers)
   res.body.should include("<status>ok</status>")
   @context[:book_id] = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
-  # force rebuild zebra bibliographic index
+  # force rebuild and restart zebra bibliographic index
   `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 \
     -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-    'sudo koha-rebuild-zebra -v -b name' 2> /dev/null`
+    'sudo koha-rebuild-zebra name -b -v \
+    && sudo koha-stop-zebra name \
+    && sudo koha-start-zebra name' > /dev/null 2>&1`
 end
 
 When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code|
