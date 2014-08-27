@@ -10,6 +10,7 @@ When(/^jeg registrerer utlån av "(.*?)"/) do |book|
   #form = @browser.form(:id => "circ_search")
   #form.text_field(:id => "search-form").set(@context[:barcode])
   #form.submit
+  @browser.execute_script("printx_window = function() { return };") #Disable print slip popup
   form = @browser.form(:id => "mainform")
   form.text_field(:id => "barcode").set(@context[:barcode])
   form.submit
