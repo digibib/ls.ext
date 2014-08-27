@@ -29,6 +29,7 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   res, data = @http.post("/cgi-bin/koha/svc/new_bib?items=1", data, headers)
   res.body.should include("<status>ok</status>")
   @context[:book_id] = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
+  @context[:barcode] = res.body.match(/<subfield code="p">(\d+)<\/subfield>/)[1]
   # force rebuild and restart zebra bibliographic index
   `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 \
     -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
@@ -62,7 +63,6 @@ Then(/^viser systemet at "(.*?)" er en bok som kan lånes ut$/) do |book|
   holdings = @browser.div(:id => "holdings")
   holdings.text.should include("Available")
   barcode = holdings.tbody.tr.td(:index => 7).text
-  @context[:barcode] = barcode
 end
 
 Then(/^kan jeg søke opp boka$/) do
