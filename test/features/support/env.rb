@@ -13,4 +13,5 @@ end
 # Extending World object
 # Methods are inherited by all steps
 require_relative 'paths.rb'
-World { Paths.new }
+require_relative 'featurestack.rb'
+World(Paths,FeatureStack)

@@ -8,7 +8,6 @@ Egenskap: Finn bok
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
 
-  @bookCreated @libraryCreated @itemTypeCreated
   Scenario: Admin-bruker finner en bok
     Gitt at det finnes en bok
     Så kan jeg søke opp boka

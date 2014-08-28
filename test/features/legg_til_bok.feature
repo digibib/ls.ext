@@ -9,7 +9,6 @@ Egenskap: Legg til bok
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
 
-  @bookCreated @libraryCreated
   Scenario: Admin legger til ny bok
     Gitt at det finnes en materialtype for "Bok" med kode "L"
     Og at det finnes en avdeling

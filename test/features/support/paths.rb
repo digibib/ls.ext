@@ -1,4 +1,4 @@
-class Paths
+module Paths
 
   def host
     "192.168.50.10"
@@ -11,9 +11,11 @@ class Paths
   def intranet(path=nil)
     paths = {
       :home     => "/",
+      :login    => "/cgi-bin/koha/mainpage.pl?logout.x=1",
       :branches => "/cgi-bin/koha/admin/branches.pl",
       :patron_categories => "/cgi-bin/koha/admin/categorie.pl",
       :patrons => "/cgi-bin/koha/members/members-home.pl",
+      :patron => "/cgi-bin/koha/members/moremember.pl?borrowernumber=",
       :admin    => "/cgi-bin/koha/admin/admin-home.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",

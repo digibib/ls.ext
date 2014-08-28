@@ -1,18 +1,24 @@
 # encoding: UTF-8
 
 Given(/^at det finnes en materialtype for "(.*?)" med kode "(.*?)"$/) do |name, code|
+  @browser.goto intranet(:item_types)
   step "jeg legger til en materialtype \"#{name}\" med kode \"#{code}\""
 end
 
 Given(/^at det finnes en bok$/) do
-  step "jeg legger til en materialtype \"Bok\" med kode \"L\""
-  step "at det finnes en avdeling"
-  step "jeg legger inn \"Fargelegg byen!\" som ny bok"
+  steps %Q{
+    Gitt at det finnes en avdeling
+    Når jeg legger til en materialtype "Bok" med kode "L"
+    Og jeg legger inn "Fargelegg byen!" som ny bok
+  }
 end
 
 Given(/^at "(.*?)" er ei bok som finnes i biblioteket$/) do |book|
-  step "jeg legger til en materialtype \"Bok\" med kode \"L\""
-  step "jeg legger inn \"#{book}\" som ny bok"
+  steps %Q{
+    Gitt at det finnes en avdeling
+    Når jeg legger til en materialtype "Bok" med kode "L"
+    Og jeg legger inn "#{book}" som ny bok
+  }
 end
 
 When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
@@ -25,16 +31,21 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
     'Cookie' => @context[:svc_cookie],
     'Content-Type' => 'text/xml'
   }
-  res, data = @http.post("/cgi-bin/koha/svc/new_bib?items=1", data, headers)
+  # NB! param items=1 means imports items from $952
+  # Branch codes in $952a/b MUST exist as Libraries in Koha for items,
+  # barcode, etc to be imported!
+  res = @http.post("/cgi-bin/koha/svc/new_bib?items=1", data, headers)
   res.body.should include("<status>ok</status>")
   @context[:book_id] = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
-  @context[:barcode] = res.body.match(/<subfield code="p">(\d+)<\/subfield>/)[1]
+  @context[:barcode] = res.body.match(/code=\"p\">(\d+)<\/subfield>/)[1]
   # force rebuild and restart zebra bibliographic index
   `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 \
     -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
     'sudo koha-rebuild-zebra name -b -v \
     && sudo koha-stop-zebra name \
     && sudo koha-start-zebra name' > /dev/null 2>&1`
+    # book created
+  @featureStack.push(bookCreated(@context[:book_id]))
 end
 
 When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code|
@@ -46,6 +57,8 @@ When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code
   @context[:item_type_name] = name
   @context[:item_type_code] = code
   form.submit
+  # item type created
+  @featureStack.push(itemTypeCreated(name))
 end
 
 Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
@@ -56,12 +69,18 @@ Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
   table.text.should include(@context[:item_type_code])
 end
 
-Then(/^viser systemet at "(.*?)" er en bok som kan lånes ut$/) do |book|
+Then(/^viser systemet at "(.*?)" er en bok som( ikke)? kan lånes ut$/) do |book, boolean|
   @browser.goto "http://#{host}:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber=#{@context[:book_id]}"
   @browser.div(:id => "catalogue_detail_biblio").text.should include(book)
   holdings = @browser.div(:id => "holdings")
-  holdings.text.should include("Available")
   barcode = holdings.tbody.tr.td(:index => 7).text
+  status = @browser.td(:text => @context[:barcode])
+  status = status.parent.cell(:index => 5)
+  if boolean
+    status.text.should_not include("Available")
+  else
+    status.text.should include("Available")
+  end
 end
 
 Then(/^kan jeg søke opp boka$/) do

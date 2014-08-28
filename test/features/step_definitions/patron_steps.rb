@@ -1,20 +1,24 @@
 # encoding: UTF-8
 
 Given(/^at det finnes en lånerkategori$/) do
-  step "jeg legger til en lånerkategori"
+  steps %Q{
+    Når jeg legger til en lånerkategori som heter "Voksen"
+  }
 end
 
 Given(/^at "(.*?)" eksisterer som en låner$/) do |name|
-  step "at det finnes en lånerkategori"
-  step "jeg legger inn \"#{name}\" som ny låner"
-  step "viser systemet at \"#{name}\" er låner"
+  steps %Q{
+    Gitt at det finnes en lånerkategori
+    Når jeg legger inn \"#{name}\" som ny låner
+    Så viser systemet at \"#{name}\" er låner
+  }
 end
 
-When(/^jeg legger til en lånerkategori$/) do
+When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
   @browser.goto intranet(:patron_categories)
   @browser.link(:id => "newcategory").click
-  @context[:patron_category_code] = 'VOKSEN'
-  @context[:patron_category_description] = 'Voksen'
+  @context[:patron_category_code] = name.upcase
+  @context[:patron_category_description] = name
   form = @browser.form(:name => "Aform")
   form.text_field(:id => "categorycode").set @context[:patron_category_code]
   form.text_field(:id => "description").set @context[:patron_category_description]
@@ -22,6 +26,8 @@ When(/^jeg legger til en lånerkategori$/) do
   form.text_field(:id => "enrolmentperiod").set "1"  # Months
   form.submit
   @browser.form(:name => "Aform").should_not be_present
+  # added patron category
+  @featureStack.push(patronCategoryCreated(name))
 end
 
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
@@ -34,6 +40,8 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   form.text_field(:id => "password").set name
   form.text_field(:id => "password2").set name
   form.submit
+  # added patron
+  @featureStack.push(userCreated(name))
 end
 
 Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do

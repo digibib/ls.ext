@@ -24,22 +24,12 @@ end
 # BEFORE HOOKS will run in the same order of which they are registered.
 
 Before do
-  @context = {}
+  @context = {}      # Context 
+  @featureStack = [] # A stack of operations to be undone in reversed order after feature
 end
 
 Before do
   @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-end
-
-Before('@admin_logged_in') do
-  @browser.goto intranet(:home)
-  @context[:user] = SETTINGS['koha']['adminuser']
-  @browser.text_field(:id => 'userid').set @context[:user]
-  @browser.text_field(:id => 'password').set SETTINGS['koha']['adminpass']
-  @browser.button(:id => 'submit').click
-  @browser.body.id.should == "main_intranet-main"
-  @browser.span(:class => 'loggedinusername').should be_present
-  @browser.span(:class => 'loggedinusername').text.strip.should == @context[:user]
 end
 
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
@@ -48,81 +38,9 @@ After do # The final hook
   @browser.close if @browser
 end
 
-After('@libraryCreated') do
-  @browser.goto intranet(:branches)
-  table = @browser.table(:id => "branchest")
-  table.wait_until_present
-  table.rows.each do | row |
-    if row.text.include?("#{@context[:branchcode]}")
-      row.link(:href => /op=delete/).click
-      break # the click will cause navigation so iterating more might fail
-    end
-  end
-  form = @browser.form(:action => "/cgi-bin/koha/admin/branches.pl")
-  if form.text.include?("#{@context[:branchcode]}")
-    form.submit
-  end
-end
-
-After('@patronCategoryCreated') do
-  if @context[:patron_category_code]
-    @browser.goto intranet(:patron_categories)
-    table = @browser.table(:id => "table_categorie")
-    table.rows.each do |row|
-      if row.text.include?("#{@context[:patron_category_code]}")
-        row.link(:href => /op=delete_confirm/).click
-        @browser.input(:value => "Delete this category").click
-        break
-      end
-    end
-  end
-end
-
-After('@userCreated') do
-  @browser.goto intranet(:patrons)
-  @browser.a(:text => "K").click
-  #Phantomjs doesn't handle javascript popus, so we must override
-  #the confirm function to simulate "OK" click:
-  @browser.execute_script("window.confirm = function(msg){return true;}")
-  @browser.button(:text => "More").click
-  @browser.a(:id => "deletepatron").click
-  #@browser.alert.ok #works in chrome & firefox, but not phantomjs
-end
-
-After('@itemTypeCreated') do
-  @browser.goto intranet(:item_types)
-  table = @browser.table(:id => "table_item_type")
-  table.rows.each do |row|
-    if row.text.include?("#{@context[:item_type_name]}")
-      row.link(:href => /op=delete_confirm/).click
-      @browser.input(:value => "Delete this Item Type").click
-      break
-    end
-  end
-end
-
-After('@bookCreated') do
-  if @context[:book_id]
-    @browser.goto intranet(:bib_record)+@context[:book_id]
-
-    #delete book items
-    @browser.execute_script("window.confirm = function(msg){return true;}")
-    @browser.button(:text => "Edit").click
-    @browser.a(:id => "deleteallitems").click
-
-    #delete book record
-    @browser.execute_script("window.confirm = function(msg){return true;}")
-    @browser.button(:text => "Edit").click
-    @browser.a(:id => "deletebiblio").click
-  end
-end
-
-After('@bookCheckedOut') do
-  @browser.goto intranet(:select_branch)
-  @browser.form(:action => "selectbranchprinter.pl").submit
-  @browser.a(:href => "#checkin_search").click
-  @browser.text_field(:id => "ret_barcode").set @context[:barcode]
-  @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
+After do # Login as admin and undo all feature mods - in reversed order
+  step "at jeg er logget inn som adminbruker"
+  @featureStack.reverse.each {|f| f.call }
 end
 
 After do |scenario|

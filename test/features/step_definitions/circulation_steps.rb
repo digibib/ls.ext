@@ -11,6 +11,8 @@ When(/^jeg registrerer utlån av "(.*?)"/) do |book|
   form = @browser.form(:id => "mainform")
   form.text_field(:id => "barcode").set(@context[:barcode])
   form.submit
+  # book checked out
+  @featureStack.push(bookCheckedOut(@context[:barcode]))
 end
 
 Then(/^registrerer systemet at "(.*?)" er utlånt$/) do |book|
