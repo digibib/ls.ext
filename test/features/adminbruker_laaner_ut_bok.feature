@@ -12,7 +12,7 @@ Egenskap: Adminbruker låner ut bok
     Og at "Fargelegg byen!" er ei bok som finnes i biblioteket
     Og at "Knut" eksisterer som en låner
 
-  @bookCreated @libraryCreated @itemTypeCreated @userCreated @bookCheckedOut
+  @bookCreated @libraryCreated @itemTypeCreated @userCreated @bookCheckedOut @patronCategoryCreated
   Scenario: Adminbruker låner ut bok til Knut
     Når jeg registrerer "Knut" som aktiv låner
     Og jeg registrerer utlån av "Fargelegg byen!"
