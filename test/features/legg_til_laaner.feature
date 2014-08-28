@@ -9,7 +9,7 @@ Egenskap: Legg til låner
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
 
-  @libraryCreated @userCreated
+  @libraryCreated @userCreated @patronCategoryCreated
   Scenario: Admin-bruker registrerer en ny låner
     Og at det finnes en avdeling
     Og at det finnes en lånerkategori

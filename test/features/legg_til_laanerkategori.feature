@@ -9,6 +9,7 @@ Egenskap: Legge til lånerkategori
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
 
+  @patronCategoryCreated
   Scenario: Legge til minimal lånerkategori via webgrensesnitt
     Når jeg legger til en lånerkategori
     Så kan jeg se kategorien i listen over lånerkategorier
