@@ -64,6 +64,20 @@ After('@libraryCreated') do
   end
 end
 
+After('@patronCategoryCreated') do
+  if @context[:patron_category_code]
+    @browser.goto intranet(:patron_categories)
+    table = @browser.table(:id => "table_categorie")
+    table.rows.each do |row|
+      if row.text.include?("#{@context[:patron_category_code]}")
+        row.link(:href => /op=delete_confirm/).click
+        @browser.input(:value => "Delete this category").click
+        break
+      end
+    end
+  end
+end
+
 After('@userCreated') do
   @browser.goto intranet(:patrons)
   @browser.a(:text => "K").click
@@ -85,7 +99,6 @@ After('@itemTypeCreated') do
       break
     end
   end
-
 end
 
 After('@bookCreated') do
