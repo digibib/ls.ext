@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'pp'
 
 # TODO: Should pull report dir (if any) from cucumber command options
 REPORT_DIR = 'report'
@@ -33,6 +34,10 @@ Before do
 end
 
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
+
+After do #dump the context
+  PP.pp @context
+end
 
 After do # The final hook
   @browser.close if @browser
