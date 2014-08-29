@@ -1,7 +1,11 @@
 base:
   '*':
-    # States to create a vanilla Koha install 
+    - common
     - koha
-    - koha.install
+    - koha.apache2
+    - koha.common
+    - mysql-server
+    - koha.sites-config
+    - koha.createdb
     - koha.webinstaller
     - koha.adminuser
