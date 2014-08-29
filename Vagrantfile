@@ -15,7 +15,7 @@ end
 
 Vagrant.configure(2) do |config|
 
-  # **** ls.ext - System under test **** 
+  # **** ls.ext - Library System - extended ****
 
   config.vm.define "ls.ext" do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
