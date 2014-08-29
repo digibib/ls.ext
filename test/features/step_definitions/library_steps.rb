@@ -29,8 +29,22 @@ When(/^jeg legger inn "(.*?)" som ny avdeling med avdelingskode "(.*?)"$/) do |n
   form.text_field(:id => "branchcode").set @context[:branchcode]
   form.submit
   @browser.form(:name => "Aform").should_not be_present
-  # added library
-  @featureStack.push(libraryCreated(code))
+
+  @cleanup.push(
+    lambda do
+      @browser.goto intranet(:branches)
+      @browser.table(:id => "branchest").rows.each do |row|
+        if row.text.include?(code)
+          row.link(:href => /op=delete/).click
+          break # the click will cause navigation so iterating more might fail
+        end
+      end
+      form = @browser.form(:action => "/cgi-bin/koha/admin/branches.pl")
+      if form.text.include?(code)
+        form.submit
+      end
+    end
+  )
 end
 
 Then(/^finnes avdelingen i oversikten over avdelinger$/) do

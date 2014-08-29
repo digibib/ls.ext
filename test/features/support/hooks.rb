@@ -24,8 +24,8 @@ end
 # BEFORE HOOKS will run in the same order of which they are registered.
 
 Before do
-  @context = {}      # Context 
-  @featureStack = [] # A stack of operations to be undone in reversed order after feature
+  @context = {}
+  @cleanup = [] # A stack of operations to be undone in reversed order after feature
 end
 
 Before do
@@ -40,7 +40,7 @@ end
 
 After do # Login as admin and undo all feature mods - in reversed order
   step "at jeg er logget inn som adminbruker"
-  @featureStack.reverse.each {|f| f.call }
+  @cleanup.reverse.each {|f| f.call }
 end
 
 After do |scenario|

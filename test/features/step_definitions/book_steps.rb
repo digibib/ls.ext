@@ -44,8 +44,22 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
     'sudo koha-rebuild-zebra name -b -v \
     && sudo koha-stop-zebra name \
     && sudo koha-start-zebra name' > /dev/null 2>&1`
-    # book created
-  @featureStack.push(bookCreated(@context[:book_id]))
+
+  @cleanup.push(
+    lambda do
+      @browser.goto intranet(:bib_record)+@context[:book_id]
+
+      #delete book items
+      @browser.execute_script("window.confirm = function(msg){return true;}")
+      @browser.button(:text => "Edit").click
+      @browser.a(:id => "deleteallitems").click
+
+      #delete book record
+      @browser.execute_script("window.confirm = function(msg){return true;}")
+      @browser.button(:text => "Edit").click
+      @browser.a(:id => "deletebiblio").click
+    end
+  )
 end
 
 When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code|
@@ -57,8 +71,20 @@ When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code
   @context[:item_type_name] = name
   @context[:item_type_code] = code
   form.submit
-  # item type created
-  @featureStack.push(itemTypeCreated(name))
+
+  @cleanup.push(
+    lambda do
+      @browser.goto intranet(:item_types)
+      table = @browser.table(:id => "table_item_type")
+      table.rows.each do |row|
+        if row.text.include?(name)
+          row.link(:href => /op=delete_confirm/).click
+          @browser.input(:value => "Delete this Item Type").click
+          break
+        end
+      end
+    end
+  )
 end
 
 Then(/^kan jeg se materialtypen i listen over materialtyper$/) do

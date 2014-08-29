@@ -26,8 +26,20 @@ When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
   form.text_field(:id => "enrolmentperiod").set "1"  # Months
   form.submit
   @browser.form(:name => "Aform").should_not be_present
-  # added patron category
-  @featureStack.push(patronCategoryCreated(name))
+
+  @cleanup.push(
+    lambda do
+      @browser.goto intranet(:patron_categories)
+      table = @browser.table(:id => "table_categorie")
+      table.rows.each do |row|
+        if row.text.include?(name)
+          row.link(:href => /op=delete_confirm/).click
+          @browser.input(:value => "Delete this category").click
+          break
+        end
+      end
+    end
+  )
 end
 
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
@@ -40,8 +52,20 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   form.text_field(:id => "password").set name
   form.text_field(:id => "password2").set name
   form.submit
-  # added patron
-  @featureStack.push(userCreated(name))
+
+  @cleanup.push(
+    lambda do
+      @browser.goto intranet(:patrons)
+      @browser.text_field(:id => "searchmember").set name
+      @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
+      #Phantomjs doesn't handle javascript popus, so we must override
+      #the confirm function to simulate "OK" click:
+      @browser.execute_script("window.confirm = function(msg){return true;}")
+      @browser.button(:text => "More").click
+      @browser.a(:id => "deletepatron").click
+      #@browser.alert.ok #works in chrome & firefox, but not phantomjs
+    end
+  )
 end
 
 Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
