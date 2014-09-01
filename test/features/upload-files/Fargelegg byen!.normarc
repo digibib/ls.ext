@@ -90,8 +90,8 @@
     <subfield code="c">L</subfield>
   </datafield>
   <datafield tag="952" ind1=" " ind2=" ">
-    <subfield code="a">KNUTSBIB</subfield>
-    <subfield code="b">KNUTSBIB</subfield>
+    <subfield code="a">__AVDELINGSKODE__</subfield>
+    <subfield code="b">__AVDELINGSKODE__</subfield>
     <subfield code="l">13</subfield>
     <subfield code="o">q 709.4821 Sør</subfield>
     <subfield code="p">03010922414001</subfield>

@@ -2,6 +2,7 @@
 
 require 'rspec'
 require 'yaml'
+require 'securerandom'
 
 if !File.exists? '/srv/pillar/koha/admin.sls'
   puts "missing koha minion admin.sls; aborting"
@@ -14,3 +15,9 @@ end
 # Methods are inherited by all steps
 require_relative 'paths.rb'
 World(Paths)
+
+#Length needs to be short enough
+def generateRandomString ()
+  return SecureRandom.hex(4)
+end
+

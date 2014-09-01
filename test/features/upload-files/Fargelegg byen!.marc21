@@ -457,8 +457,8 @@
 		<marc:subfield code="b">$aNorbok$bNB</marc:subfield>
 	</marc:datafield>
 	<marc:datafield tag="952" ind1=" " ind2=" ">
-		<marc:subfield code="a">KNUTSBIB</marc:subfield>
-		<marc:subfield code="b">KNUTSBIB</marc:subfield>
+		<marc:subfield code="a">__AVDELINGSKODE__</marc:subfield>
+		<marc:subfield code="b">__AVDELINGSKODE__</marc:subfield>
 		<marc:subfield code="o">q 709.4821 Sør</marc:subfield>
 		<marc:subfield code="p">03010922414001</marc:subfield>
 		<marc:subfield code="t">1</marc:subfield>

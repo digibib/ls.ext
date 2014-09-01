@@ -14,5 +14,5 @@ Egenskap: Legge til avdeling
 
   Scenario: Ny avdeling i biblioteksystemet
     Når jeg er på administrasjonssiden for avdelinger
-    Og jeg legger inn "Hjørnebiblioteket" som ny avdeling med avdelingskode "DIGIBIB"
+    Og jeg legger inn en ny avdeling med ny avdelingskode
     Så finnes avdelingen i oversikten over avdelinger

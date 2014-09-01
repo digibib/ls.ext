@@ -1,12 +1,12 @@
 # encoding: UTF-8
 
 Given(/^at det finnes en avdeling$/) do
-  step 'jeg legger inn "Knuts avdeling" som ny avdeling med avdelingskode "KNUTSBIB"'
+  step "jeg legger inn en ny avdeling med ny avdelingskode"
 end
 
 Given(/^at det finnes en avdeling som heter "(.*?)" med avdelingskode "(.*?)"$/) do |name,code|
   @browser.goto intranet(:branches)
-  step "jeg legger inn \"#{name}\" som ny avdeling med avdelingskode \"#{code}\""
+  step "jeg legger inn en ny avdeling med ny avdelingskode"
 end
 
 Given(/^at det er valgt en avdeling$/) do
@@ -19,11 +19,11 @@ When(/^jeg er på administrasjonssiden for avdelinger$/) do
   @browser.goto intranet(:branches)
 end
 
-When(/^jeg legger inn "(.*?)" som ny avdeling med avdelingskode "(.*?)"$/) do |name, code|
+When(/^jeg legger inn en ny avdeling med ny avdelingskode$/) do
   @browser.goto intranet(:branches)
   @browser.link(:id => "newbranch").click
-  @context[:branchname] = name
-  @context[:branchcode] = code
+  @context[:branchname] = generateRandomString
+  @context[:branchcode] = generateRandomString
   form = @browser.form(:name => "Aform")
   form.text_field(:id => "branchname").set @context[:branchname]
   form.text_field(:id => "branchcode").set @context[:branchcode]
@@ -33,14 +33,10 @@ When(/^jeg legger inn "(.*?)" som ny avdeling med avdelingskode "(.*?)"$/) do |n
   @cleanup.push(
     lambda do
       @browser.goto intranet(:branches)
-      @browser.table(:id => "branchest").rows.each do |row|
-        if row.text.include?(code)
-          row.link(:href => /op=delete/).click
-          break # the click will cause navigation so iterating more might fail
-        end
-      end
+      @browser.div(:id => "branchest_filter").text_field().set(@context[:branchname])
+      @browser.link(:href => "?branchcode=" + @context[:branchcode] + "&branchname=" + @context[:branchname] + "&op=delete").click
       form = @browser.form(:action => "/cgi-bin/koha/admin/branches.pl")
-      if form.text.include?(code)
+      if form.text.include?(@context[:branchcode])
         form.submit
       end
     end
@@ -48,6 +44,8 @@ When(/^jeg legger inn "(.*?)" som ny avdeling med avdelingskode "(.*?)"$/) do |n
 end
 
 Then(/^finnes avdelingen i oversikten over avdelinger$/) do
+  @browser.goto intranet(:branches)
+  @browser.div(:id => "branchest_filter").text_field().set(@context[:branchname])
   table = @browser.table(:id => "branchest")
   table.should be_present
   table.text.should include(@context[:branchname])

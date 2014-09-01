@@ -26,7 +26,8 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")
   res.body.should_not include("failed")
   @context[:svc_cookie] = res.response['set-cookie']
-  data = File.read("features/upload-files/#{book}.normarc")
+  data = File.read("features/upload-files/#{book}.normarc", :encoding => 'UTF-8')
+  data = data.gsub(/__AVDELINGSKODE__/, @context[:branchcode])
   headers = {
     'Cookie' => @context[:svc_cookie],
     'Content-Type' => 'text/xml'
