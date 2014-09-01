@@ -90,4 +90,37 @@ Vagrant.configure(2) do |config|
     end  
   end # ls.test
 
+  # **** ls.devops - Monitors the system logs **** 
+
+  config.vm.define "ls.devops" do |config|
+    config.vm.box = "ubuntu/trusty64"
+
+    # X forwarding for Firefox Browser
+    unless ENV['NO_PUBLIC_PORTS']    
+      config.ssh.forward_x11 = true
+      config.ssh.forward_agent = true
+    end
+
+    config.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
+    end
+    
+    # http://fgrehm.viewdocs.io/vagrant-cachier
+    if Vagrant.has_plugin?("vagrant-cachier")
+      config.cache.scope = :box
+    end
+
+    config.vm.synced_folder "devops/salt", "/srv/salt"
+    config.vm.synced_folder "pillar", "/srv/pillar"           # share pillar with ls.
+    config.vm.synced_folder "devops", "/home/vagrant/ls.devops"
+
+    config.vm.network "private_network", ip: "192.168.50.21"
+    
+    config.vm.provision :salt do |salt|
+      salt.minion_config = "salt/minion"
+      salt.run_highstate = true
+      salt.verbose = true
+    end  
+  end # ls.devops
+
 end

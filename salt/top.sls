@@ -1,6 +1,8 @@
 base:
   '*':
     - common
+    # States to install logstash-forwarder:
+    - koha.logstash-forwarder
     - koha
     - koha.apache2
     - koha.common
