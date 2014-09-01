@@ -164,8 +164,19 @@ and finally
 git push
 ```
 
+### Monitoring of logs with devops, a logserver
+
+You can start the virtual machine devops (aka logserver) to monitor your logs. Devops has the following stack running:
+- logstash: to collect and process log events from logstash-forwarder installed on the servers, in our case ls.ext
+- elasticsearch: to store and index the log events
+- kibana: to present a web interface for searching and visualizing the logs
 
 
+To fire up the logserver, simply do
+```
+make up_devops
+```
+and point your favorite browser to [http://192.168.50.21/kibana-3.1.0](http://192.168.50.21/kibana-3.1.0)
 
 
 ## Illustration
