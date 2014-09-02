@@ -265,8 +265,8 @@
  <template_cache_dir>/tmp</template_cache_dir>
  <db_scheme>mysql</db_scheme>
  <database>koha_{{ pillar['koha']['instance'] }}</database>
- <hostname>localhost</hostname>
- <port>3306</port>
+ <hostname>{{ pillar['koha']['dbhost'] }}</hostname>
+ <port>{{ pillar['koha']['dbport'] }}</port>
  <user>{{ pillar['koha']['adminuser'] }}</user>
  <pass>{{ pillar['koha']['adminpass'] }}</pass>
  <biblioserver>biblios</biblioserver>

@@ -17,7 +17,7 @@ and [SaltStack](http://docs.saltstack.com/) for automated provisioning.
 
 ## Usage
 
-For local setup and to run tests, we use a multi-machine vagrant setup.
+For local setup and to run tests, we use a multi-machine vagrant setup (see [Illustration](#illustration)).
 
 1. Install virtualbox and vagrant (and X11-server on OSX/Windows - for development):
     - Ubuntu: 
@@ -46,6 +46,10 @@ For local setup and to run tests, we use a multi-machine vagrant setup.
    ```git clone https://github.com/digibib/ls.ext.git``` 
 3. `cd ls.ext` into your cloned repo.
 4. From the command line run: `make` to bootstrap the environment and run the tests.
+
+### Cleaning the database
+
+The database virtual machine (ls.db) is not destroyed when running `make clean`, but needs a separate `make clean_db` (which will ask you for confimation). This is done so you can retain your database even if you need to rebuild the rest of your environment. After a `make clean_db` you must `make` or at least `make up_db provision_ext`.
 
 ### Running without public ports
 

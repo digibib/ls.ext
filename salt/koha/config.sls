@@ -1,6 +1,14 @@
 ###########
-# ADMINUSER STATE
+# CONFIG changes - e g to switch to external database
 ###########
+
+koha_common_cnf:
+  file.managed:
+    - name: /etc/mysql/koha-common.cnf
+    - source: {{ pillar['saltfiles'] }}/koha-common.cnf
+    - template: jinja
+    - require:
+      - pkg: koha-common
 
 # TODO: This should be parameterized or done with regex
 # koha config from template

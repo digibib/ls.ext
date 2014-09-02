@@ -1,12 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-require 'fileutils'  
+require 'fileutils'
 
 pillar_example_files = 'pillar/**/admin.sls.example'
 
 Dir.glob(pillar_example_files).each do | example_file |
+  example_file_prev = example_file + "_prev"
   pillar_file =  example_file.sub(/\.example$/, '')
-  if !File.file?(pillar_file)
+  if !File.file?(pillar_file) || FileUtils.compare_file(pillar_file, example_file_prev)
     puts "Note! Copying #{pillar_file} from #{example_file} ..."
     FileUtils.cp(example_file, pillar_file)
   end
@@ -14,6 +15,31 @@ end
 
 
 Vagrant.configure(2) do |config|
+
+  # **** ls.db - Database server ****
+
+  config.vm.define "ls.db" do |config|
+    # https://vagrantcloud.com/ubuntu/trusty64
+    config.vm.box = "ubuntu/trusty64"
+    config.vm.hostname = "ls-db"
+
+    # http://fgrehm.viewdocs.io/vagrant-cachier
+    if Vagrant.has_plugin?("vagrant-cachier")
+      config.cache.scope = :box
+    end
+
+    config.vm.network "private_network", ip: "192.168.50.12"
+    # Sync folders salt and pillar in virtualboxes
+    config.vm.synced_folder "salt", "/srv/salt"
+    config.vm.synced_folder "pillar", "/srv/pillar"
+
+    config.vm.provision :salt do |salt|
+      salt.minion_config = "salt/minion"
+      salt.run_highstate = true
+      salt.verbose = true
+      salt.pillar_data
+    end
+  end
 
   # **** ls.ext - Library System - extended ****
 

@@ -2,14 +2,14 @@
 
 all: reload provision test
 
-reload: reload_ext reload_test
+reload: halt up
 
 # halt + up is like a reload - except it should also work if there is no machine yet
 reload_ext: halt_ext up_ext
 
 reload_test: halt_test up_test
 
-halt: halt_ext halt_test
+halt: halt_test halt_ext halt_db
 
 reload_devops: halt_devops up_devops
 
@@ -19,10 +19,16 @@ halt_ext:
 halt_test:
 	vagrant halt ls.test
 
-up: up_ext up_test
+halt_db:
+	vagrant halt ls.db
+
+up: up_db up_ext up_test
 
 halt_devops:
 	vagrant halt ls.devops
+
+up_db:
+	vagrant up ls.db
 
 up_ext:
 	vagrant up ls.ext
@@ -30,12 +36,15 @@ up_ext:
 up_test:
 	vagrant up ls.test
 
-provision: provision_ext provision_test
+provision: provision_db provision_ext provision_test
 
 up_devops:
 	vagrant up ls.devops
 
 # should run vagrant provison but that would take longer as it reinstalls(?) salt
+provision_db:
+	vagrant ssh ls.db -c 'sudo salt-call --local state.highstate'
+
 provision_ext:
 	vagrant ssh ls.ext -c 'sudo salt-call --local state.highstate'
 
@@ -73,6 +82,9 @@ clean_ext:
 
 clean_devops:
 	vagrant destroy ls.devops --force
+
+clean_db:
+	vagrant destroy ls.db
 
 sublime: install_sublime
 	vagrant ssh ls.test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &

@@ -18,7 +18,6 @@ watir:
   file.managed:
     - source: {{ pillar['saltfiles'] }}/KohaWebInstallAutomation.rb
 
-
 run_webinstaller:
   cmd.script:
     - source: {{ pillar['saltfiles'] }}/updatekohadbversion.sh
