@@ -27,14 +27,14 @@ install_init_script:
 configure_logstash-forwarder:
    file.managed:
      - name: /etc/logstash-forwarder
-     - source: {{ pillar['saltfiles'] }}/logstash-forwarder.conf
+     - source: {{ pillar['koha']['saltfiles'] }}/logstash-forwarder.conf
      - template: jinja
 
 ###  - Copy certificates from devops to server
 install_logstash_certificates:
   file.managed:
      - name: /etc/pki/tls/certs/logstash-forwarder.crt
-     - source:  {{ pillar['saltfiles'] }}/logstash-forwarder.crt
+     - source:  {{ pillar['koha']['saltfiles'] }}/logstash-forwarder.crt
      - makedirs: True
 
 ##### start logstash-forwarder

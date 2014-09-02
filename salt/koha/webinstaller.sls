@@ -16,11 +16,11 @@ watir:
 
 /tmp/KohaWebInstallAutomation.rb:
   file.managed:
-    - source: {{ pillar['saltfiles'] }}/KohaWebInstallAutomation.rb
+    - source: {{ pillar['koha']['saltfiles'] }}/KohaWebInstallAutomation.rb
 
 run_webinstaller:
   cmd.script:
-    - source: {{ pillar['saltfiles'] }}/updatekohadbversion.sh
+    - source: {{ pillar['koha']['saltfiles'] }}/updatekohadbversion.sh
     - stateful: True
     - env:
       - URL: "http://192.168.50.10:8081"
