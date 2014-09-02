@@ -3,9 +3,9 @@
 
 @wip
 Egenskap: Import av låner
-  Som låner, registrert i gammelt system
-  For å kunne låne bøker fra Hjørnebiblioteket
-  Ønsker jeg å bli låner hos Hjørnebiblioteket
+  Som adminbruker
+  For å slippe å registrere eksisterende lånere på nytt
+  Ønsker jeg å importere lånerdata fra eksisterende system
 
   @wip
   Scenario:
