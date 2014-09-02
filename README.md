@@ -185,7 +185,7 @@ To fire up the logserver, simply do
 ```
 make up_devops
 ```
-and point your favorite browser to [http://192.168.50.21/kibana-3.1.0](http://192.168.50.21/kibana-3.1.0/index.html#/dashboard/file/logstash.json)
+and point your favorite browser to [http://192.168.50.21](http://192.168.50.21)
 
 If you're _really_ lazy you can fire up firefox to see the logstash dashboard by doing: 
 ```

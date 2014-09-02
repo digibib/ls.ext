@@ -2,16 +2,34 @@ installpkgs:
   pkg.installed:
     - pkgs:
       - apache2
-      - firefox
 
-logstash_repo:
-  pkgrepo.managed:
-    - name: deb http://packages.elasticsearch.org/logstash/1.4/debian stable main
-    - key_url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+##### configure apache2
+apache2:
+  pkg.installed
 
+sudo a2dissite 000-default:
+  cmd.run:
+    - require:
+      - pkg: apache2
+
+
+##### install elasticsearch #####
 elasticsearch_repo:
   pkgrepo.managed:
     - name: deb http://packages.elasticsearch.org/elasticsearch/1.3/debian stable main
+    - key_url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+
+install_elasticsearch:
+   pkg.installed:
+    - name: elasticsearch
+    - skip_verify: True
+    - require:
+      - pkgrepo: elasticsearch_repo
+
+#### install and configure logstash
+logstash_repo:
+  pkgrepo.managed:
+    - name: deb http://packages.elasticsearch.org/logstash/1.4/debian stable main
     - key_url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
    
 install_logstash:
@@ -63,14 +81,7 @@ install_logstash:
     - require:
       - pkg: logstash
 
-##### install elasticsearch #####
-install_elasticsearch:
-   pkg.installed:
-    - name: elasticsearch
-    - skip_verify: True
-    - require:
-      - pkgrepo: elasticsearch_repo
-
+##### install and configure kibana
 install_kibana:
   pkg.installed:
     - pkgs:
@@ -84,14 +95,11 @@ install_kibana:
     - requires:
       - pkg: unzip
 
-##### configure apache2
-apache2:
-  pkg.installed
-
-sudo a2dissite 000-default:
-  cmd.run:      
-    - require:
-      - pkg: apache2
+make_logstash_dashboard_default:
+  file.symlink:
+    - name: /var/www/kibana-3.1.0/app/dashboards/default.json
+    - target: /var/www/kibana-3.1.0/app/dashboards/logstash.json
+    - force: True
 
 kibana_apacheconfig:
   file.managed:
@@ -111,18 +119,6 @@ sudo a2ensite 100-kibana:
     - require:
       - pkg: apache2
 
-##### start apache2
-apache2_service:
-  service.running:
-    - name: apache2
-    - enable: True
-    - reload: True
-    - require:
-      - pkg: apache2
-    - watch:
-      - cmd: sudo a2dissite 000-default
-      - cmd: sudo a2ensite 100-kibana
-
 ##### start elasticsearch
 elasticsearch_service:
   service.running:
@@ -140,5 +136,17 @@ logstash_service:
       - file: /etc/logstash/conf.d/30-lumberjack-output.conf
     - require:
       - pkg: logstash
+
+##### start apache2
+apache2_service:
+  service.running:
+    - name: apache2
+    - enable: True
+    - reload: True
+    - require:
+      - pkg: apache2
+    - watch:
+      - cmd: sudo a2dissite 000-default
+      - cmd: sudo a2ensite 100-kibana
 
 #### TODO implement "smoke test", i.e. check that ops is running and is healthy
