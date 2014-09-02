@@ -7,6 +7,7 @@ Egenskap: Import av låner
   For å kunne låne bøker fra Hjørnebiblioteket
   Ønsker jeg å bli låner hos Hjørnebiblioteket
 
+  @wip
   Scenario:
     Gitt at det finnes data som beskriver en låner "Kari"
     Og at "Kari" ikke finnes som låner
