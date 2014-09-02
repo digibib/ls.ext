@@ -30,7 +30,7 @@ configure_logstash-forwarder:
      - source: {{ pillar['saltfiles'] }}/logstash-forwarder.conf
      - template: jinja
 
-###  - Copy certificates from devops to koha
+###  - Copy certificates from devops to server
 install_logstash_certificates:
   file.managed:
      - name: /etc/pki/tls/certs/logstash-forwarder.crt
