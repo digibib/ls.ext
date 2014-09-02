@@ -4,16 +4,16 @@
 @wip
 Egenskap: Innlevering av bok
   Som adminbruker
-  For å betjene låneren Knut
-  Ønsker jeg å registrere boka han har lånt som innlevert
+  For å betjene en låner
+  Ønsker jeg å registrere at låneren leverer en lånt bok
 
 Bakgrunn:
   Gitt at jeg er pålogget som adminbruker
-  Og at Knut eksisterer som en låner
-  Og at "Fargelegg byen!" er ei bok som finnes i biblioteket
+  Og at det finnes en låner
+  Og at det finnes en bok
 
   @wip
   Scenario:
-  	Gitt at "Fargelegg byen!" er utlånt til "Knut"
-  	Når "Fargelegg byen!" blir registrert innlevert
-  	Så registrerer systemet at Knut ikke låner "Fargelegg byen!"
+  	Gitt at en bok er utlånt til en låner
+  	Når boka blir registrert innlevert
+  	Så viser systemet at låneren ikke låner boka
