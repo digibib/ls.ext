@@ -69,8 +69,8 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
 end
 
 Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
-  table = @browser.table(:id => "table_categorie").wait_until_present
-  table.should be_present
+  table = @browser.table(:id => "table_categorie")
+  table.wait_until_present
   table.text.should include(@context[:patron_category_code])
 end
 
