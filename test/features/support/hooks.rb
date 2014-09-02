@@ -36,6 +36,7 @@ end
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
 After do #dump the context
+  @context[:featurename] = scenario.title
   PP.pp @context
 end
 
