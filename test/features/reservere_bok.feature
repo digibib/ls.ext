@@ -18,3 +18,10 @@ Bakgrunn:
     Og at boka er tilgjengelig
   	Når låneren reserverer boka
     Så viser systemet at boka er reservert av låneren
+
+  @wip
+  Scenario:
+    Gitt at bok er reservert av låner
+    Og at boka er utlånt
+    Når boka registreres innlevert
+    Så viser systemet at boka holdes av til låneren
