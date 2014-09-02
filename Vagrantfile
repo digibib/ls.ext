@@ -11,6 +11,9 @@ Dir.glob(pillar_example_files).each do | example_file |
     puts "Note! Copying #{pillar_file} from #{example_file} ..."
     FileUtils.cp(example_file, pillar_file)
   end
+  if !FileUtils.compare_file(pillar_file, example_file)
+    puts "Note: You are running a customized #{pillar_file}."
+  end
 end
 
 
