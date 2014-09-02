@@ -9,7 +9,7 @@ Egenskap: Import av låner
 
   @wip
   Scenario:
-    Gitt at det finnes data som beskriver en låner "Kari"
-    Og at "Kari" ikke finnes som låner
-    Når dataene importeres til systemet
-    Så viser systemet at "Kari" er låner
+    Gitt at det finnes data som beskriver en låner
+    Og at låneren ikke finnes som låner hos biblioteket fra før
+    Når dataene importeres
+    Så viser systemet at låneren er registrert som låner
