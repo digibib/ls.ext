@@ -24,14 +24,14 @@ install_logstash:
 ##### configure logstash #####
 /etc/logstash/conf.d/01-lumberjack-input.conf:
   file.managed:
-    - source: salt://files/01-lumberjack-input.conf
+    - source: {{ pillar['kibana']['saltfiles'] }}/01-lumberjack-input.conf
     - template: jinja
     - mode: 644
     - require:
       - pkg: logstash
 /etc/logstash/conf.d/10-syslog.conf:
   file.managed:
-    - source: salt://files/10-syslog.conf
+    - source: {{ pillar['kibana']['saltfiles'] }}/10-syslog.conf
     - template: jinja
     - mode: 644
     - require:
@@ -39,7 +39,7 @@ install_logstash:
 
 /etc/logstash/conf.d/30-lumberjack-output.conf:
   file.managed:
-    - source: salt://files/30-lumberjack-output.conf
+    - source: {{ pillar['kibana']['saltfiles'] }}/30-lumberjack-output.conf
     - template: jinja
     - mode: 644
     - require:
@@ -47,7 +47,7 @@ install_logstash:
 
 /etc/pki/tls/certs/logstash-forwarder.crt:
  file.managed:
-    - source: salt://files/tls/certs/logstash-forwarder.crt
+    - source: {{ pillar['kibana']['saltfiles'] }}/tls/certs/logstash-forwarder.crt
     - template: jinja
     - mode: 644
     - makedirs: True
@@ -56,7 +56,7 @@ install_logstash:
 
 /etc/pki/tls/private/logstash-forwarder.key:
  file.managed:
-    - source: salt://files/tls/private/logstash-forwarder.key
+    - source: {{ pillar['kibana']['saltfiles'] }}/tls/private/logstash-forwarder.key
     - template: jinja
     - mode: 644
     - makedirs: True
@@ -96,7 +96,7 @@ sudo a2dissite 000-default:
 kibana_apacheconfig:
   file.managed:
     - name: /etc/apache2/sites-available/100-kibana.conf
-    - source: salt://files/kibana_conf.tmpl
+    - source: {{ pillar['kibana']['saltfiles'] }}/kibana_conf.tmpl
     - template: jinja
     - mode: 644
     - context:

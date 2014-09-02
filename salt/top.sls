@@ -1,12 +1,13 @@
 base:
-  'ls-db':
+  '*':
     - common
+
+  'ls-db':
     - mysql-server
     - mysql-server.networked
     - koha.create_empty_db
 
   'ls-ext':
-    - common
     - koha.logstash-forwarder
     - koha
     - koha.apache2
@@ -16,3 +17,6 @@ base:
     - koha.createdb
     - koha.config # includes switching to db instance on ls.db
     - koha.webinstaller
+
+  'ls-devops':
+    - kibana

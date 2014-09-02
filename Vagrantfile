@@ -83,7 +83,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "ls.test", primary: true do |config|
     config.vm.box = "ubuntu/trusty64"
     config.vm.hostname = "ls-test"
-    
+
     # X forwarding for Firefox Browser
     unless ENV['NO_PUBLIC_PORTS']    
       config.ssh.forward_x11 = true
@@ -123,6 +123,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "ls.devops" do |config|
     config.vm.box = "ubuntu/trusty64"
+    config.vm.hostname = "ls-devops"
 
     # X forwarding for Firefox Browser
     unless ENV['NO_PUBLIC_PORTS']    
@@ -139,9 +140,8 @@ Vagrant.configure(2) do |config|
       config.cache.scope = :box
     end
 
-    config.vm.synced_folder "devops/salt", "/srv/salt"
-    config.vm.synced_folder "pillar", "/srv/pillar"           # share pillar with ls.
-    config.vm.synced_folder "devops", "/home/vagrant/ls.devops"
+    config.vm.synced_folder "salt", "/srv/salt"
+    config.vm.synced_folder "pillar", "/srv/pillar"
 
     config.vm.network "private_network", ip: "192.168.50.21"
     
