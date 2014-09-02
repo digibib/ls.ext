@@ -91,3 +91,9 @@ sublime: install_sublime
 
 install_sublime:
 	vagrant ssh ls.test -c 'sudo salt-call --local state.sls sublime'
+
+kibana: install_firefox_on_devops
+	vagrant ssh ls.devops -c 'firefox "http://localhost/" > firefox.log 2> firefox.err < /dev/null' &
+
+install_firefox_on_devops:
+	vagrant ssh ls.devops -c 'sudo salt-call --local state.sls firefox'

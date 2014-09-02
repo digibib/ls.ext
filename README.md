@@ -187,6 +187,10 @@ make up_devops
 ```
 and point your favorite browser to [http://192.168.50.21/kibana-3.1.0](http://192.168.50.21/kibana-3.1.0/index.html#/dashboard/file/logstash.json)
 
+If you're _really_ lazy you can fire up firefox to see the logstash dashboard by doing: 
+```
+make kibana
+```
 
 ## Illustration
 ![Alt text](stack.png?raw=true "Stack")
