@@ -12,4 +12,4 @@ Egenskap: Import av låner
     Gitt at det finnes data som beskriver en låner "Kari"
     Og at "Kari" ikke finnes som låner
     Når dataene importeres til systemet
-    Så registrerer systemet at "Kari" er låner
+    Så viser systemet at "Kari" er låner
