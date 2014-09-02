@@ -4,16 +4,17 @@
 @wip
 Egenskap: Reservering av bok
   Som låner
-  For å lære om Oslo kommunes utsmykkinger
-  Ønsker jeg å reservere boka "Fargelegg byen!"
+  For å få tak i en bestemt bok
+  Ønsker jeg å reservere boka
 
 Bakgrunn:
-  Gitt at Knut er pålogget som låner
-  Og at "Fargelegg byen!" er ei bok som finnes i biblioteket
+  Gitt at det finnes en låner
+  Og at det finnes en bok
 
   @wip
   Scenario:
-    Gitt at "Knut" er pålogget som låner
-    Og at "Knut" har funnet "Fargelegg byen!"
-  	Når "Knut" reserverer "Fargelegg byen!"
-    Så registrerer systemet at "Fargelegg byen!" er reservert av "Knut"
+    Gitt at låner er pålogget som låner
+    Og at låneren har funnet en bok
+    Og at boka er tilgjengelig
+  	Når låneren reserverer boka
+    Så viser systemet at boka er reservert av låneren
