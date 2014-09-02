@@ -8,7 +8,7 @@ Egenskap: Import av låner
   Ønsker jeg å importere lånerdata fra eksisterende system
 
   @wip
-  Scenario:
+  Scenario: Bibliofil-låner
     Gitt at det finnes data som beskriver en låner
     Og at låneren ikke finnes som låner hos biblioteket fra før
     Når dataene importeres
