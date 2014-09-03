@@ -62,7 +62,7 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
   STDOUT.puts("Scenario failed: #{scenario.exception}") if scenario.failed?
   STDOUT.puts("Cleanup failed: #{last_cleanup_exception}") if last_cleanup_exception
   STDOUT.puts "======================================================================================== "
-
+  STDOUT.flush
   raise Exception.new("Cleanup failed: #{last_cleanup_exception}") if !scenario.failed? && last_cleanup_exception
 end
 
