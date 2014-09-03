@@ -35,18 +35,35 @@ end
 
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
-After do |scenario| #dump the context
-  @context[:featurename] = scenario.title
-  PP.pp @context
-end
-
 After do # The final hook
   @browser.close if @browser
 end
 
-After do # Login as admin and undo all feature mods - in reversed order
+After do |scenario| # cleanup based on @cleanup - in reverse order
+  STDOUT.puts "--------------- Context and cleanup: #{scenario.title} "
+  STDOUT.puts @context.pretty_inspect
+
+  last_cleanup_exception = nil
+
   step "at jeg er logget inn som adminbruker"
-  @cleanup.reverse.each {|f| f.call }
+  @cleanup.reverse.each do |hash|
+    cleanup_desc = " cleanup '#{hash.keys.first}'"
+    cleanup_func = hash.values.first
+    begin
+      cleanup_func.call
+      STDOUT.puts "#{cleanup_desc} completed"
+    rescue Exception => e
+      last_cleanup_exception = e
+      STDOUT.puts "#{cleanup_desc} failed: #{e}"
+      e.backtrace.each_with_index { |line, i| STDOUT.puts("  #{line}") if i < 3 }
+    end
+  end
+
+  STDOUT.puts("Scenario failed: #{scenario.exception}") if scenario.failed?
+  STDOUT.puts("Cleanup failed: #{last_cleanup_exception}") if last_cleanup_exception
+  STDOUT.puts "======================================================================================== "
+
+  raise Exception.new("Cleanup failed: #{last_cleanup_exception}") if !scenario.failed? && last_cleanup_exception
 end
 
 After do |scenario|

@@ -12,7 +12,7 @@ When(/^jeg registrerer utlån av "(.*?)"/) do |book|
   form.text_field(:id => "barcode").set(@context[:barcode])
   form.submit
 
-  @cleanup.push(
+  @cleanup.push( "utlån #{@context[:barcode]}" =>
     lambda do
       @browser.goto intranet(:select_branch)
       @browser.form(:action => "selectbranchprinter.pl").submit

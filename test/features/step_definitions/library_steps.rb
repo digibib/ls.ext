@@ -30,7 +30,7 @@ When(/^jeg legger inn en ny avdeling med ny avdelingskode$/) do
   form.submit
   @browser.form(:name => "Aform").should_not be_present
 
-  @cleanup.push(
+  @cleanup.push( "avdeling #{@context[:branchname]}" =>
     lambda do
       @browser.goto intranet(:branches)
       @browser.div(:id => "branchest_filter").text_field().set(@context[:branchname])
