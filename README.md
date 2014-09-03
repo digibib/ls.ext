@@ -79,7 +79,7 @@ These tools also need support for X11 forwarding on the host.
 
 ### Running a single test 
 
-You can pass arguments to Cucumber, e g which feature to test, like this (you must include `TEST_PROFILE=wip` if it is a scenario which is still marked as work-in-progress (`@wip`):
+You can pass arguments to Cucumber, e g which feature to test, like this (you must include `TESTPROFILE=wip` if it is a scenario which is still marked as work-in-progress (`@wip`):
 
 ```
 make test TESTPROFILE=wip CUKE_ARGS='features/legg_til_avdeling.feature'
