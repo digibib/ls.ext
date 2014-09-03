@@ -42,9 +42,9 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   # force rebuild and restart zebra bibliographic index
   `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 \
     -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-    'sudo koha-rebuild-zebra name -b -v \
-    && sudo koha-stop-zebra name \
-    && sudo koha-start-zebra name' > /dev/null 2>&1`
+    "sudo koha-rebuild-zebra -f #{SETTINGS['koha']['instance']} \
+    && sudo koha-stop-zebra #{SETTINGS['koha']['instance']} \
+    && sudo koha-start-zebra #{SETTINGS['koha']['instance']}" > /dev/null 2>&1`
 
   @cleanup.push(
     lambda do
