@@ -40,7 +40,7 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   res.body.should include("<status>ok</status>")
   @context[:book_id] = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
   barcode_search = res.body.match(/code=\"p\">(\d+)<\/subfield>/)
-  STDOUT.puts "DEBUG PRINT res.body: #{res.body}" if barcode_search.length < 2
+  STDOUT.puts "DEBUG PRINT res.body: #{res.body}" if !barcode_search || barcode_search.length < 2
   @context[:barcode] = barcode_search[1]
   # force rebuild and restart zebra bibliographic index
   `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 \
