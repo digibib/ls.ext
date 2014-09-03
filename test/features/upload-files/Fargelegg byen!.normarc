@@ -13,7 +13,7 @@
     <subfield code="b">Dugnadsbasen i BIBLIOFIL</subfield>
   </datafield>
   <datafield tag="019" ind1=" " ind2=" ">
-    <subfield code="b">l</subfield>
+    <subfield code="b">{{ item_type_code }}</subfield>
   </datafield>
   <datafield tag="020" ind1=" " ind2=" ">
     <subfield code="a">9788290128642</subfield>
@@ -90,13 +90,13 @@
     <subfield code="c">L</subfield>
   </datafield>
   <datafield tag="952" ind1=" " ind2=" ">
-    <subfield code="a">__AVDELINGSKODE__</subfield>
-    <subfield code="b">__AVDELINGSKODE__</subfield>
+    <subfield code="a">{{ branchcode }}</subfield>
+    <subfield code="b">{{ branchcode }}</subfield>
     <subfield code="l">13</subfield>
     <subfield code="o">q 709.4821 Sør</subfield>
     <subfield code="p">03010922414001</subfield>
     <subfield code="t">1</subfield>
-    <subfield code="y">L</subfield>
+    <subfield code="y">{{ item_type_code }}</subfield>
   </datafield>
   <datafield tag="999" ind1=" " ind2=" ">
     <subfield code="c">922414</subfield>

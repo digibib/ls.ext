@@ -10,5 +10,5 @@ Egenskap: Legg til materialtype
     Gitt at jeg er logget inn som adminbruker
 
   Scenario: Legge til materialtype via webgrensesnitt
-    Når jeg legger til en materialtype "Bok" med kode "L"
+    Når jeg legger til en materialtype
     Så kan jeg se materialtypen i listen over materialtyper

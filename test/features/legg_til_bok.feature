@@ -10,7 +10,7 @@ Egenskap: Legg til bok
     Gitt at jeg er logget inn som adminbruker
 
   Scenario: Admin legger til ny bok
-    Gitt at det finnes en materialtype for "Bok" med kode "L"
+    Gitt at det finnes en materialtype
     Og at det finnes en avdeling
     Når jeg legger inn "Fargelegg byen!" som ny bok
     Så viser systemet at "Fargelegg byen!" er en bok som kan lånes ut
