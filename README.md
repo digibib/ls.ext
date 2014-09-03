@@ -23,9 +23,10 @@ For local setup and to run tests, we use a multi-machine vagrant setup (see [Ill
     - Ubuntu: 
         * `sudo apt-get install virtualbox`
         * vagrant > 1.5 - install deb manually: https://www.vagrantup.com/downloads.html
-    - OSX: We recommend using [homebrew](http://brew.sh/) and [homebrew cask](http://caskroom.io/)
-        * `brew cask install virtualbox`
-        * `brew cask install vagrant`
+    - OSX: We recommend using [homebrew](http://brew.sh/) and [homebrew cask](http://caskroom.io/), but you can install these manually if you prefer (see download links).
+        * `brew cask install virtualbox` -- or [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
+        * `brew cask install vagrant` -- or [Vagrant Downloads](https://www.vagrantup.com/downloads)
+        * `brew cask install xquartz` -- or [XQuartz Download](http://xquartz.macosforge.org/landing/) 
     - Windows:
         * Download and install "VirtualBox platform package" for Window hosts: [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
         * Download and install Vagrant for Windows: [Vagrant Downloads](https://www.vagrantup.com/downloads)
