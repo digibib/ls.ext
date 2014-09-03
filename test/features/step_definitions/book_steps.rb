@@ -26,9 +26,11 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")
   res.body.should_not include("failed")
   @context[:svc_cookie] = res.response['set-cookie']
+  @context[:item_barcode] = '0301%010d' % rand(10 ** 10)
   data = File.read("features/upload-files/#{book}.normarc", :encoding => 'UTF-8')
   data = data.gsub(/\{\{ branchcode \}\}/, @context[:branchcode])
   data = data.gsub(/\{\{ item_type_code \}\}/, @context[:item_type_code])
+  data = data.gsub(/\{\{ item_barcode \}\}/, @context[:item_barcode])
   headers = {
     'Cookie' => @context[:svc_cookie],
     'Content-Type' => 'text/xml'

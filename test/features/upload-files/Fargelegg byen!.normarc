@@ -94,7 +94,7 @@
     <subfield code="b">{{ branchcode }}</subfield>
     <subfield code="l">13</subfield>
     <subfield code="o">q 709.4821 Sør</subfield>
-    <subfield code="p">03010922414001</subfield>
+    <subfield code="p">{{ item_barcode }}</subfield>
     <subfield code="t">1</subfield>
     <subfield code="y">{{ item_type_code }}</subfield>
   </datafield>

@@ -460,7 +460,7 @@
 		<marc:subfield code="a">{{ branchcode }}</marc:subfield>
 		<marc:subfield code="b">{{ branchcode }}</marc:subfield>
 		<marc:subfield code="o">q 709.4821 Sør</marc:subfield>
-		<marc:subfield code="p">03010922414001</marc:subfield>
+		<marc:subfield code="p">{{ item_barcode }}</marc:subfield>
 		<marc:subfield code="t">1</marc:subfield>
 		<marc:subfield code="y">{{ item_type_code }}</marc:subfield>
 	</marc:datafield>
