@@ -46,7 +46,7 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
     && sudo koha-stop-zebra name \
     && sudo koha-start-zebra name' > /dev/null 2>&1`
 
-  @cleanup.push(
+  @cleanup.push( "bok #{@context[:book_id]}" =>
     lambda do
       @browser.goto intranet(:bib_record)+@context[:book_id]
 
@@ -73,7 +73,7 @@ When(/^jeg legger til en materialtype "(.*?)" med kode "(.*?)"$/) do |name, code
   @context[:item_type_code] = code
   form.submit
 
-  @cleanup.push(
+  @cleanup.push( "materialtype #{name}" =>
     lambda do
       @browser.goto intranet(:item_types)
       table = @browser.table(:id => "table_item_type")

@@ -27,7 +27,7 @@ When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
   form.submit
   @browser.form(:name => "Aform").should_not be_present
 
-  @cleanup.push(
+  @cleanup.push( "lånerkategori #{name}" =>
     lambda do
       @browser.goto intranet(:patron_categories)
       table = @browser.table(:id => "table_categorie")
@@ -53,7 +53,7 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   form.text_field(:id => "password2").set name
   form.submit
 
-  @cleanup.push(
+  @cleanup.push( "låner #{name}" =>
     lambda do
       @browser.goto intranet(:patrons)
       @browser.text_field(:id => "searchmember").set name
