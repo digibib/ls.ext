@@ -1,9 +1,9 @@
 .PHONY: all test clean help
 
+all: reload provision test                            ##
+
 help:                                                 ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
- 
-all: reload provision test                            ##
 
 reload: halt up                                       ##
 
