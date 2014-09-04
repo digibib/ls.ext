@@ -10,7 +10,9 @@ if [[ -n "$KOHAVERSION" ]] ; then
 
   #KOHADBVERSIONNEW = ''.join(kohaversion.rsplit('.', 2)) %}
 
-  if [[ ! -z $KOHADBVERSIONOLD && ${KOHADBVERSIONOLD+x} ]] && [[ $KOHADBVERSIONOLD = $KOHADBVERSION ]] && [[ $MARCTAGSTRUCTURE = "1" ]] ; then
+  if [[ ! -z $KOHADBVERSIONOLD && ${KOHADBVERSIONOLD+x} ]] && \
+     [[ $KOHADBVERSIONOLD = $KOHADBVERSION ]] && \
+     [[ $MARCTAGSTRUCTURE = "1" ]] ; then
     # Up to date!
     CMD=""
     CHANGED=no

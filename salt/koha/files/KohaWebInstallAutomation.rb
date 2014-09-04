@@ -4,6 +4,7 @@
 require 'watir-webdriver'
 require 'net/http'
 require 'uri'
+require 'cgi'
 
 class KohaWebInstallAutomation
 
@@ -12,7 +13,9 @@ class KohaWebInstallAutomation
     @uri = uri
     @user = user
     @pass = pass
-
+    @path = ''
+    @browser = Watir::Browser.new :phantomjs
+    @previousStep = 0
     test_response_code
 
   end
@@ -33,42 +36,96 @@ class KohaWebInstallAutomation
             raise "HTTPSuccess, but it is unclear how we got to" + @uri
         end
       when Net::HTTPRedirection
-        location = response['location']
-        clickthrough_installer location
+        @path = response['location']
+        clickthrough_installer
       else
         raise "The response code was " + response
     end
   end
 
-  def clickthrough_installer uri
+  def clickthrough_installer
 
     Watir.default_timeout = 5
-    browser = Watir::Browser.new :phantomjs
-    browser.goto @uri + uri
+    
+    @browser.goto @uri + @path
 
-    if browser.execute_script("return document.readyState") == "complete"
-      if browser.url == @uri + uri
-        form = browser.form(:id => "mainform")
-        form.text_field(:id => "userid").set @user
-        form.text_field(:id => "password").set @pass
-        form.submit
-        browser.form(:name => "language").submit
-        browser.form(:name => "checkmodules").submit
-        browser.form(:name => "checkinformation").submit
-        browser.form(:name => "checkdbparameters").submit
-        browser.form().submit
-        browser.form().submit
-        browser.link(:href => "install.pl?step=3&op=choosemarc").click
-        browser.radio(:name => "marcflavour", :value => "MARC21").set
-        browser.form(:name => "frameworkselection").submit
-        browser.form(:name => "frameworkselection").submit
-        browser.form(:name => "finish").submit
-        STDOUT.puts "{\"comment\":\"Successfully completed the install process\"}"
-        browser.close
-        exit 0
+    if @browser.execute_script("return document.readyState") == "complete"
+      if @browser.url == @uri + @path
+        step = CGI.parse(URI.parse(@uri + @path).query)["step"][0].to_i
+        case step
+        when 1
+          step_one
+        when 2
+          step_two
+        when 3
+          step_three
+        end
       else
-        raise "Installer not found at expected url " + @uri + uri + ", instead got " + browser.url.to_s
+        raise "Installer not found at expected url " + @uri + @path + ", instead got " + @browser.url.to_s
       end
     end
   end
+  
+  def do_login
+    form = @browser.form(:id => "mainform")
+    form.text_field(:id => "userid").set @user
+    form.text_field(:id => "password").set @pass
+    form.submit
+  end
+
+  def step_one
+    if @previousStep != 0
+      raise "Error step one: expected previous step to be 0, but got #{@previousStep}"
+    end
+    begin
+      do_login
+    rescue => e
+      raise "Error in webinstaller step one: #{e}"
+    end
+    @path = '/cgi-bin/koha/installer/install.pl?step=2'
+    @previousStep = 1
+    clickthrough_installer
+  end
+
+  def step_two
+    if @previousStep != 1
+      raise "Error step two: expected previous step to be 1, but got #{@previousStep}"
+    end
+    begin
+      @browser.form(:name => "language").submit
+      @browser.form(:name => "checkmodules").submit
+      @browser.form(:name => "checkinformation").submit
+      @browser.form(:name => "checkdbparameters").submit
+      @browser.form().submit
+      @browser.form().submit
+      @browser.link(:href => "install.pl?step=3&op=choosemarc").click
+      @browser.radio(:name => "marcflavour", :value => "MARC21").set
+      @browser.form(:name => "frameworkselection").submit
+      @browser.form(:name => "frameworkselection").submit
+    rescue => e
+      raise "Error in webinstaller step two: #{e}"
+    end
+    @path = '/cgi-bin/koha/installer/install.pl?step=3'
+    clickthrough_installer
+  end
+
+  def step_three
+
+    begin
+      if @previousStep == 0
+        do_login
+        @browser.link(:href => "install.pl?step=3&op=updatestructure").click
+      elsif @previousStep == 2
+        @browser.form(:name => "finish").submit
+      else
+        raise "Error step three: expected previous step to be 0 or 2, but got #{@previousStep}"
+      end
+    rescue => e
+      raise "Error in webinstaller step three: #{e}"
+    end
+    STDOUT.puts "{\"comment\":\"Successfully completed the install process\"}"
+    @browser.close
+    exit 0
+  end
+
 end
