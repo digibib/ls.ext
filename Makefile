@@ -89,10 +89,7 @@ clean_devops:                                          ##
 clean_db:                                              ##
 	vagrant destroy ls.db
 
-dump_db:                                               ## Dump database koha_name to koha_name_dump.sql
-	vagrant ssh ls.db -c 'sudo mysqldump --databases koha_name > /vagrant/koha_name_dump.sql'
-
-sublime: install_sublime
+sublime: install_sublime                               ##
 	vagrant ssh ls.test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &
 
 install_sublime:                                       ## 
