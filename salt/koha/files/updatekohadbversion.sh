@@ -8,8 +8,6 @@ if [[ -n "$KOHAVERSION" ]] ; then
   KOHADBVERSIONOLD=`echo -n "SELECT value as '' FROM systempreferences WHERE variable = 'Version';" | sudo koha-mysql $INSTANCE | tail -1`
   MARCTAGSTRUCTURE=`echo -n "SELECT COUNT(*) FROM koha_name.marc_tag_structure where tagfield = 008;" | sudo koha-mysql $INSTANCE | tail -1`
 
-  #KOHADBVERSIONNEW = ''.join(kohaversion.rsplit('.', 2)) %}
-
   if [[ ! -z $KOHADBVERSIONOLD && ${KOHADBVERSIONOLD+x} ]] && \
      [[ $KOHADBVERSIONOLD = $KOHADBVERSION ]] && \
      [[ $MARCTAGSTRUCTURE = "1" ]] ; then
@@ -20,7 +18,6 @@ if [[ -n "$KOHAVERSION" ]] ; then
 
     # return Salt State line
     echo  # an empty line here so the next line will be the last.
-    #echo "changed=$CHANGED comment=$COMMENT version=$KOHADBVERSION cmd=$CMD instance=$INSTANCE kohadbversionold=$KOHADBVERSIONOLD"
     echo "{\"changed\":\"$CHANGED\",\
           \"comment\":\"$COMMENT\",\
           \"cmd\":\"$CMD\",\
@@ -29,7 +26,7 @@ if [[ -n "$KOHAVERSION" ]] ; then
           \"olddbversion\":\"$KOHADBVERSIONOLD\"\
           }"
   else
-     ruby -r "/tmp/KohaWebInstallAutomation.rb" -e "KohaWebInstallAutomation.new \"${URL}\",\"${USER}\",\"${PASS}\""
+     ruby -r "/usr/local/bin/KohaWebInstallAutomation.rb" -e "KohaWebInstallAutomation.new \"${URL}\",\"${USER}\",\"${PASS}\""
   fi
 else
   echo "{\"ERROR\":\"MISSING INSTANCENAME OR NO KOHAVERSION!\"}"
