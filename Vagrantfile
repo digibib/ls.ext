@@ -22,8 +22,8 @@ Vagrant.configure(2) do |config|
   # **** ls.db - Database server ****
 
   config.vm.define "ls.db" do |config|
-    # https://vagrantcloud.com/ubuntu/trusty64
-    config.vm.box = "ubuntu/trusty64"
+    # https://vagrantcloud.com/inflection/ubuntu-1404-salt
+    config.vm.box = "inflection/ubuntu-1404-salt"
     config.vm.hostname = "ls-db"
 
     # http://fgrehm.viewdocs.io/vagrant-cachier
@@ -47,8 +47,7 @@ Vagrant.configure(2) do |config|
   # **** ls.ext - Library System - extended ****
 
   config.vm.define "ls.ext" do |config|
-    # https://vagrantcloud.com/ubuntu/trusty64
-    config.vm.box = "ubuntu/trusty64"
+    config.vm.box = "inflection/ubuntu-1404-salt"
     config.vm.hostname = "ls-ext"
  
     # http://fgrehm.viewdocs.io/vagrant-cachier
@@ -81,7 +80,7 @@ Vagrant.configure(2) do |config|
   # **** ls.test - Feature test runner **** 
 
   config.vm.define "ls.test", primary: true do |config|
-    config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "inflection/ubuntu-1404-salt"
     config.vm.hostname = "ls-test"
 
     # X forwarding for Firefox Browser
@@ -122,7 +121,7 @@ Vagrant.configure(2) do |config|
   # **** ls.devops - Monitors the system logs **** 
 
   config.vm.define "ls.devops" do |config|
-    config.vm.box = "ubuntu/trusty64"
+    config.vm.box = "inflection/ubuntu-1404-salt"
     config.vm.hostname = "ls-devops"
 
     # X forwarding for Firefox Browser
