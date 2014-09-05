@@ -48,6 +48,8 @@ For local setup and to run tests, we use a multi-machine vagrant setup (see [Ill
 3. `cd ls.ext` into your cloned repo.
 4. From the command line run: `make` to bootstrap the environment and run the tests.
 
+Run `make help` for more commands.
+
 ### Cleaning the database
 
 The database virtual machine (ls.db) is not destroyed when running `make clean`, but needs a separate `make clean_db` (which will ask you for confimation). This is done so you can retain your database even if you need to rebuild the rest of your environment. After a `make clean_db` you must `make` or at least `make up_db provision_ext`.
@@ -56,8 +58,6 @@ The database virtual machine (ls.db) is not destroyed when running `make clean`,
 
 On an CI server you would not want to open uneccesary ports. This can be avoided by prefixing `make` with `NO_PUBLIC_PORTS`:
    `NO_PUBLIC_PORTS make`
-
-See [Makefile](Makefile) for more commands.
 
 ### Adding graphical browser support
 

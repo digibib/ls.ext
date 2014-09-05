@@ -1,22 +1,22 @@
 .PHONY: all test clean help
 
-all: reload provision test                            ##
+all: reload provision test                            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
 
 help:                                                 ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-reload: halt up                                       ##
+reload: halt up                                       ## Reload vagrant boxes.
 
 # halt + up is like a reload - except it should also work if there is no machine yet
-reload_ext: halt_ext up_ext                           ##
+reload_ext: halt_ext up_ext                           ## Reload ls.ext box.
 
-reload_test: halt_test up_test                        ##
+reload_test: halt_test up_test                        ## Reload ls.test box.
 
-halt: halt_test halt_ext halt_db                      ##
+halt: halt_test halt_ext halt_db                      ## Halt boxes (except ls.devops).
 
-reload_devops: halt_devops up_devops                  ##
+reload_devops: halt_devops up_devops                  ## 
 
-halt_ext:                                             ##
+halt_ext:                                             ## 
 	vagrant halt ls.ext
 
 halt_test:                                            ##
@@ -25,7 +25,7 @@ halt_test:                                            ##
 halt_db:                                              ##
 	vagrant halt ls.db
 
-up: up_db up_ext up_test                              ##
+up: up_db up_ext up_test                              ## Start boxes (except ls.devops).
 
 halt_devops:                                          ##
 	vagrant halt ls.devops
@@ -39,7 +39,7 @@ up_ext:                                               ##
 up_test:                                              ##
 	vagrant up ls.test
 
-provision: provision_db provision_ext provision_test  ##
+provision: provision_db provision_ext provision_test  ## Reprovision boxes (except ls.devops).
 
 up_devops:                                            ##
 	vagrant up ls.devops
@@ -69,37 +69,37 @@ ifdef FEATURE
 CUKE_ARGS=-n "$(FEATURE)"
 endif
 
-test:                                                  ##
+test:                                                  ## Run cucmber tests.
 	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
-clean: clean_report clean_test clean_ext               ## 
+clean: clean_report clean_test clean_ext               ## Destroy boxes (except ls.devops).
 
-clean_report:                                          ## 
+clean_report:                                          ## Clean cucumber reports.
 	rm -rf test/report || true
 
-clean_test: clean_report                               ##
+clean_test: clean_report                               ## Destroy ls.test box.
 	vagrant destroy ls.test --force
 
-clean_ext:                                             ##
+clean_ext:                                             ## Destroy ls.ext box.
 	vagrant destroy ls.ext --force
 
-clean_devops:                                          ## 
+clean_devops:                                          ## Destroy ls.devops box.
 	vagrant destroy ls.devops --force
 
-clean_db:                                              ##
+clean_db:                                              ## Destroy ls.db box. Prompts for ok.
 	vagrant destroy ls.db
 
 dump_db:                                               ## Dump database koha_name to koha_name_dump.sql
 	vagrant ssh ls.db -c 'sudo mysqldump --databases koha_name > /vagrant/koha_name_dump.sql'
 
-sublime: install_sublime
+sublime: install_sublime                               ## Run sublime from within ls.ext.
 	vagrant ssh ls.test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &
 
-install_sublime:                                       ## 
+install_sublime:
 	vagrant ssh ls.test -c 'sudo salt-call --local state.sls sublime'
 
-kibana: install_firefox_on_devops                      ##
+kibana: install_firefox_on_devops                      ## Run kibanas web ui from inside devops.
 	vagrant ssh ls.devops -c 'firefox "http://localhost/" > firefox.log 2> firefox.err < /dev/null' &
 
-install_firefox_on_devops:                             ## 
+install_firefox_on_devops:
 	vagrant ssh ls.devops -c 'sudo salt-call --local state.sls firefox'
