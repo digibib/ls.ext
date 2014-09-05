@@ -14,7 +14,7 @@ watir:
     - require:
       - pkg: watir
 
-/tmp/KohaWebInstallAutomation.rb:
+/usr/local/bin/KohaWebInstallAutomation.rb:
   file.managed:
     - source: {{ pillar['koha']['saltfiles'] }}/KohaWebInstallAutomation.rb
 
@@ -29,4 +29,4 @@ run_webinstaller:
       - INSTANCE: {{ pillar['koha']['instance'] }}
     - watch:
       - pkg: watir
-      - file: /tmp/KohaWebInstallAutomation.rb
+      - file: /usr/local/bin/KohaWebInstallAutomation.rb
