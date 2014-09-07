@@ -1,10 +1,11 @@
 # PILLAR TOP
 base:
-  'ls-ext,ls-db':
-    - match: list
+  'P@nodename:ls-(ext|db)':
+    - match: compound
     - koha
     - koha.admin
 
-  'ls-devops':
+  'nodename:ls-devops':
+    - match: grain
     - kibana
 

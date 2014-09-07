@@ -2,12 +2,14 @@ base:
   '*':
     - common
 
-  'ls-db':
+  'nodename:ls-db':
+    - match: grain
     - mysql-server
     - mysql-server.networked
     - koha.create_empty_db
 
-  'ls-ext':
+  'nodename:ls-ext':
+    - match: grain
     - koha.logstash-forwarder
     - koha
     - koha.apache2
@@ -18,5 +20,6 @@ base:
     - koha.config # includes switching to db instance on ls.db
     - koha.webinstaller
 
-  'ls-devops':
+  'nodename:ls-devops':
+    - match: grain
     - kibana
