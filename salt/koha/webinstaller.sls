@@ -27,6 +27,7 @@ run_webinstaller:
       - USER: {{ pillar['koha']['adminuser'] }}
       - PASS: {{ pillar['koha']['adminpass'] }}
       - INSTANCE: {{ pillar['koha']['instance'] }}
-    - watch:
+    - require:
       - pkg: watir
+    - watch:
       - file: /usr/local/bin/KohaWebInstallAutomation.rb
