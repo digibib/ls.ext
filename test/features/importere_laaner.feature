@@ -8,7 +8,8 @@ Egenskap: Import av låner
   Ønsker jeg å importere lånerdata fra eksisterende system
 
   Bakgrunn:
-    Gitt at en låner ikke finnes som låner hos biblioteket fra før
+    Gitt at jeg er logget inn som adminbruker
+    Og at en låner ikke finnes som låner hos biblioteket fra før
     Og at det finnes data som beskriver en låner
 
   @wip

@@ -7,13 +7,13 @@ class Migration
 
   def initialize(mapping)
     @mapping = {}
-    parse_to_map(mapping)
+    parse_csv_to_map(mapping)
   end
 
   # Small utility method to convert structured csv to map, where:
   #   first column   = map id
   #   column headers = keys  
-  def parse_to_map(mapping)
+  def parse_csv_to_map(mapping)
     begin
       CSV.foreach(mapping, {
         :headers => true, 

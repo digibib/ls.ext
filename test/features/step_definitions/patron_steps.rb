@@ -1,4 +1,15 @@
 # encoding: UTF-8
+require 'csv'
+require 'net/http'
+require 'uri'
+require_relative '../support/migration.rb'
+ 
+Given(/^at en låner ikke finnes som låner hos biblioteket fra før$/) do
+  steps %Q{
+    Gitt at det finnes en lånerkategori
+    Og at det finnes en avdeling
+  }
+end
 
 Given(/^at det finnes en lånerkategori$/) do
   steps %Q{
@@ -12,6 +23,43 @@ Given(/^at "(.*?)" eksisterer som en låner$/) do |name|
     Når jeg legger inn \"#{name}\" som ny låner
     Så viser systemet at \"#{name}\" er låner
   }
+end
+
+Given(/^at det finnes data som beskriver en låner$/) do
+  @patron = []
+  @csv = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
+end
+
+Given(/^at det finnes en mapping for konvertering$/) do
+  @map = Migration.new(@csv)
+  STDOUT.puts @map.inspect
+end
+
+When(/^lånerdata migreres$/) do
+  res = Net::HTTP.post_form(URI.parse(intranet(:patron_import)),
+    { 'matchpoint' => 'cardnumber',
+      'overwrite_cardnumberyes' => 1, 
+      'upload' => @csv })
+  STDOUT.puts res.body
+=begin
+  @cleanup.push( "låner #{name}" =>
+    lambda do
+      @browser.goto intranet(:patrons)
+      @browser.text_field(:id => "searchmember").set name
+      @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
+      #Phantomjs doesn't handle javascript popus, so we must override
+      #the confirm function to simulate "OK" click:
+      @browser.execute_script("window.confirm = function(msg){return true;}")
+      @browser.button(:text => "More").click
+      @browser.a(:id => "deletepatron").click
+      #@browser.alert.ok #works in chrome & firefox, but not phantomjs
+    end
+  )
+=end
+end
+
+Then(/^samsvarer de migrerte lånerdata med mapping$/) do
+  pending # express the regexp above with the code you wish you had
 end
 
 When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
