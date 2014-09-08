@@ -51,7 +51,12 @@ class KohaWebInstallAutomation
 
     if @browser.execute_script("return document.readyState") == "complete"
       if @browser.url == @uri + @path
-        step = CGI.parse(URI.parse(@uri + @path).query)["step"][0].to_i
+        begin
+          step = CGI.parse(URI.parse(@uri + @path).query)["step"][0].to_i
+        rescue
+          #
+        end
+
         case step
         when 1
           step_one
@@ -59,6 +64,8 @@ class KohaWebInstallAutomation
           step_two
         when 3
           step_three
+        else
+          step_one # default to step one
         end
       else
         raise "Installer not found at expected url " + @uri + @path + ", instead got " + @browser.url.to_s
@@ -82,8 +89,10 @@ class KohaWebInstallAutomation
     rescue => e
       raise "Error in webinstaller step one: #{e}"
     end
-    @path = '/cgi-bin/koha/installer/install.pl?step=2'
     @previousStep = 1
+    @browser.form(:name => "language").submit
+    @browser.form(:name => "checkmodules").submit
+    @path = '/cgi-bin/koha/installer/install.pl?step=2'
     clickthrough_installer
   end
 
@@ -92,8 +101,6 @@ class KohaWebInstallAutomation
       raise "Error step two: expected previous step to be 1, but got #{@previousStep}"
     end
     begin
-      @browser.form(:name => "language").submit
-      @browser.form(:name => "checkmodules").submit
       @browser.form(:name => "checkinformation").submit
       @browser.form(:name => "checkdbparameters").submit
       @browser.form().submit
@@ -105,8 +112,8 @@ class KohaWebInstallAutomation
     rescue => e
       raise "Error in webinstaller step two: #{e}"
     end
-    @path = '/cgi-bin/koha/installer/install.pl?step=3'
-    clickthrough_installer
+    @previousStep = 2
+    step_three # need to run step 3 directly
   end
 
   def step_three
@@ -116,7 +123,7 @@ class KohaWebInstallAutomation
         do_login
         @browser.link(:href => "install.pl?step=3&op=updatestructure").click
       elsif @previousStep == 2
-        @browser.form(:name => "finish").submit
+        @browser.form().submit
       else
         raise "Error step three: expected previous step to be 0 or 2, but got #{@previousStep}"
       end

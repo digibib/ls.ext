@@ -18,6 +18,16 @@ koha_db_grant_on_{{ pillar['koha']['instance'] }}:
   module.run:
     - name: mysql.grant_add
     - grant: 'ALL PRIVILEGES'
-    - database: 'koha_{{ pillar['koha']['instance'] }}.*'
+    - database: koha_{{ pillar['koha']['instance'] }}.*
     - user: {{ pillar['koha']['adminuser'] }}
     - host: 192.168.50.10 # Where can this user do this from
+    - escape: False
+
+koha_webinstaller_db_grant_on_{{ pillar['koha']['instance'] }}:
+  module.run:
+    - name: mysql.grant_add
+    - grant: 'ALL PRIVILEGES'
+    - database: koha_{{ pillar['koha']['instance'] }}.*
+    - user: {{ pillar['koha']['adminuser'] }}
+    - host: 192.168.50.12 # Koha Webinstaller needs this connection
+    - escape: False
