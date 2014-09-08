@@ -31,6 +31,10 @@ Vagrant.configure(2) do |config|
       config.cache.scope = :box
     end
 
+    config.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+
     config.vm.network "private_network", ip: "192.168.50.12"
     # Sync folders salt and pillar in virtualboxes
     config.vm.synced_folder "salt", "/srv/salt"

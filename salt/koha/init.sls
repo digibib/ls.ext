@@ -9,5 +9,4 @@ installdeps:
       - software-properties-common
       - libnet-ssleay-perl 
       - libcrypt-ssleay-perl
-      - mysql-client
     - skip_verify: True
