@@ -32,18 +32,25 @@ end
 
 Given(/^at det finnes en mapping for konvertering$/) do
   @map = Migration.new(@csv)
-  STDOUT.puts @map.inspect
+  @context[:cardnumber] = generateRandomString
+  @context[:surname] = generateRandomString
+  @map.import.values[0][:cardnumber] = @context[:cardnumber]
+  @map.import.values[0][:surname] = @context[:surname]
+  @map.import.values[0][:categorycode] = @context[:patron_category_code]
+  @map.import.values[0][:branchcode] = @context[:branchcode]
+  @map.to_csv
+  @map.export_csv('test.csv')
 end
 
 When(/^lånerdata migreres$/) do
   @browser.goto intranet(:patron_import)
   form = @browser.form(:action => "/cgi-bin/koha/tools/import_borrowers.pl")
-  form.file_field(:id => "uploadborrowers").set File.expand_path(@csv)
+  form.file_field(:id => "uploadborrowers").set File.expand_path('test.csv')
   form.select_list(:id => "matchpoint").select "Cardnumber"
   form.radio(:id => "overwrite_cardnumberyes", :value => "1").click
   form.submit
 =begin 
-  Would rather use net/http post... 
+  #Would rather use net/http post, but need to look into session cookies
   uri = URI.parse intranet(:patron_import)
   STDOUT.puts @browser.cookies.to_a
   headers = {
@@ -62,13 +69,10 @@ When(/^lånerdata migreres$/) do
   STDOUT.puts res.inspect
   STDOUT.puts res.body
 =end
-  STDOUT.puts @browser.url
-  STDOUT.puts @browser.html
-=begin
-  @cleanup.push( "låner #{name}" =>
+  @cleanup.push( "lånernummer #{@context[:cardnumber]}" =>
     lambda do
       @browser.goto intranet(:patrons)
-      @browser.text_field(:id => "searchmember").set name
+      @browser.text_field(:id => "searchmember").set @context[:cardnumber]
       @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
       #Phantomjs doesn't handle javascript popus, so we must override
       #the confirm function to simulate "OK" click:
@@ -78,11 +82,14 @@ When(/^lånerdata migreres$/) do
       #@browser.alert.ok #works in chrome & firefox, but not phantomjs
     end
   )
-=end
 end
 
 Then(/^samsvarer de migrerte lånerdata med mapping$/) do
-  pending # express the regexp above with the code you wish you had
+  @browser.goto intranet(:patrons)
+  @browser.text_field(:id => "searchmember").set @context[:cardnumber]
+  @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
+  @browser.title.should include @context[:surname]
+  STDOUT.puts @browser.html
 end
 
 When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
