@@ -49,26 +49,26 @@ When(/^lånerdata migreres$/) do
   form.select_list(:id => "matchpoint").select "Cardnumber"
   form.radio(:id => "overwrite_cardnumberyes", :value => "1").click
   form.submit
-=begin 
+
   #Would rather use net/http post, but need to look into session cookies
-  uri = URI.parse intranet(:patron_import)
-  STDOUT.puts @browser.cookies.to_a
-  headers = {
-    'Cookie' => @browser.cookies.to_a.first[:value],
-    'Content-Type' => 'application/x-www-form-urlencoded'
-  }
-  http = Net::HTTP.new(uri.host, uri.port) 
-  req = Net::HTTP::Post.new(uri.request_uri, headers)
-  query = { 'matchpoint' => 'cardnumber',
-      'overwrite_cardnumberyes' => 1, 
-      'uploadborrowers' => @csv }
-  req.set_form_data(query)
-  req['User-Agent'] = 'Mozilla'
-  res = http.request(req)
+#  uri = URI.parse intranet(:patron_import)
+#  STDOUT.puts @browser.cookies.to_a
+#  headers = {
+#    'Cookie' => @browser.cookies.to_a.first[:value],
+#    'Content-Type' => 'application/x-www-form-urlencoded'
+#  }
+#  http = Net::HTTP.new(uri.host, uri.port) 
+#  req = Net::HTTP::Post.new(uri.request_uri, headers)
+#  query = { 'matchpoint' => 'cardnumber',
+#      'overwrite_cardnumberyes' => 1, 
+#      'uploadborrowers' => @csv }
+#  req.set_form_data(query)
+#  req['User-Agent'] = 'Mozilla'
+#  res = http.request(req)
   #res = Net::HTTP.post_form(URI.parse(intranet(:patron_import)), )
-  STDOUT.puts res.inspect
-  STDOUT.puts res.body
-=end
+#  STDOUT.puts res.inspect
+#  STDOUT.puts res.body
+
   @cleanup.push( "lånernummer #{@context[:cardnumber]}" =>
     lambda do
       @browser.goto intranet(:patrons)
