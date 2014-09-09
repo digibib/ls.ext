@@ -20,6 +20,6 @@ Egenskap: Import av låner
 
   @wip
   Scenario: Import av konverterte lånerdata
-    Gitt at det finnes konverterte data
+    Gitt at det finnes konverterte lånerdata
     Når lånerdata importeres i admingrensesnittet
-    Så viser systemet at låneren er låner
+    Så viser systemet at låneren er importert

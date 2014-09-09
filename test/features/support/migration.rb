@@ -4,11 +4,10 @@
 require 'csv'
 
 class Migration
-  attr_accessor :import, :csv, :file
+  attr_accessor :import, :csv
 
   def initialize(csv)
     @import = {}
-    @headers = []
     csv_to_map(csv)
   end
 
@@ -16,7 +15,7 @@ class Migration
   #   first column in row = map id
   #   column headers      = keys
   #   next columns in row = values
-  # e.g: @map.import["<id>"]["cardname"]
+  # e.g: @map.import["<user id>"]["cardname"]
   def csv_to_map(csv)
     begin
       CSV.foreach(csv, {
@@ -37,7 +36,7 @@ class Migration
       ids.each_with_index do |id, idx|
         @import[id][:old_id] = id                    # append old id
         csv << @import.values.first.keys if idx == 0 # headers row
-        csv << @import[id].values                    # append values map
+        csv << @import[id].values                    # append key,values map
       end
     end
   end

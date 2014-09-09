@@ -26,48 +26,64 @@ Given(/^at "(.*?)" eksisterer som en låner$/) do |name|
 end
 
 Given(/^at det finnes data som beskriver en låner$/) do
-  @patron = []
   @csv = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
 end
 
 Given(/^at det finnes en mapping for konvertering$/) do
-  @map = Migration.new(@csv)
+  @map = File.join(File.dirname(__FILE__), '..', 'upload-files', 'mapping_patrons.csv')
+end
+
+Given(/^at det finnes konverterte lånerdata$/) do
+  steps %Q{
+    Gitt at det finnes en mapping for konvertering
+  }
+  @patrons = Migration.new(@csv)
   @context[:cardnumber] = generateRandomString
   @context[:surname] = generateRandomString
-  @map.import.values[0][:cardnumber] = @context[:cardnumber]
-  @map.import.values[0][:surname] = @context[:surname]
-  @map.import.values[0][:categorycode] = @context[:patron_category_code]
-  @map.import.values[0][:branchcode] = @context[:branchcode]
-  @map.to_csv
-  @map.export_csv('test.csv')
+  # map the first borrower for testing
+  @context[:borrower_id] = @patrons.import.keys.first
+  id = @context[:borrower_id]
+  @patrons.import[id][:cardnumber] = @context[:cardnumber]
+  @patrons.import[id][:surname] = @context[:surname]
+  @patrons.import[id][:categorycode] = @context[:patron_category_code]
+  @patrons.import[id][:branchcode] = @context[:branchcode]
+  @patrons.to_csv
 end
 
 When(/^lånerdata migreres$/) do
-  @browser.goto intranet(:patron_import)
-  form = @browser.form(:action => "/cgi-bin/koha/tools/import_borrowers.pl")
-  form.file_field(:id => "uploadborrowers").set File.expand_path('test.csv')
-  form.select_list(:id => "matchpoint").select "Cardnumber"
-  form.radio(:id => "overwrite_cardnumberyes", :value => "1").click
-  form.submit
+  pending
+end
 
-  #Would rather use net/http post, but need to look into session cookies
-#  uri = URI.parse intranet(:patron_import)
-#  STDOUT.puts @browser.cookies.to_a
-#  headers = {
-#    'Cookie' => @browser.cookies.to_a.first[:value],
-#    'Content-Type' => 'application/x-www-form-urlencoded'
-#  }
-#  http = Net::HTTP.new(uri.host, uri.port) 
-#  req = Net::HTTP::Post.new(uri.request_uri, headers)
-#  query = { 'matchpoint' => 'cardnumber',
-#      'overwrite_cardnumberyes' => 1, 
-#      'uploadborrowers' => @csv }
-#  req.set_form_data(query)
-#  req['User-Agent'] = 'Mozilla'
-#  res = http.request(req)
-  #res = Net::HTTP.post_form(URI.parse(intranet(:patron_import)), )
-#  STDOUT.puts res.inspect
-#  STDOUT.puts res.body
+When(/^lånerdata importeres i admingrensesnittet$/) do
+  uri = URI.parse intranet(:patron_import)
+
+  # Generate multipart form
+  form_boundary = generateRandomString
+  data = []
+  data << "--#{form_boundary}\r\n"
+  data << "Content-Disposition: form-data; name=\"uploadborrowers\"; filename=\"patrons.csv\"\r\n"
+  data << "Content-Type: text/csv\r\n"
+  data << "\r\n"
+  data << @patrons.csv
+  data << "--#{form_boundary}\r\n"
+  data << "Content-Disposition: form-data; name=\"matchpoint\"\r\n"
+  data << "\r\n"
+  data << "cardnumber\r\n"
+  data << "--#{form_boundary}\r\n"
+  data << "Content-Disposition: form-data; name=\"overwrite_cardnumber\"\r\n"
+  data << "\r\n"
+  data << "1\r\n"
+  data << "--#{form_boundary}--\r\n"
+
+  session_cookie = "CGISESSID=#{@browser.cookies["CGISESSID"][:value]}"
+  headers = {
+   "Cookie" => session_cookie,
+   "Content-Type" => "multipart/form-data, boundary=#{form_boundary}"
+  }
+  http = Net::HTTP.new(uri.host, uri.port) 
+  req = Net::HTTP::Post.new(uri.request_uri, headers)
+  req.body = data.join
+  res = http.request(req)
 
   @cleanup.push( "lånernummer #{@context[:cardnumber]}" =>
     lambda do
@@ -82,14 +98,6 @@ When(/^lånerdata migreres$/) do
       #@browser.alert.ok #works in chrome & firefox, but not phantomjs
     end
   )
-end
-
-Then(/^samsvarer de migrerte lånerdata med mapping$/) do
-  @browser.goto intranet(:patrons)
-  @browser.text_field(:id => "searchmember").set @context[:cardnumber]
-  @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
-  @browser.title.should include @context[:surname]
-  STDOUT.puts @browser.html
 end
 
 When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
@@ -159,4 +167,39 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   # there is just one patron with surname starting with 'K'
   @browser.title.should include name
   @context[:cardnumber] = @browser.title.match(/\((.*?)\)/)[1]
+end
+
+Then(/^samsvarer de migrerte lånerdata med mapping$/) do
+
+end
+
+Then(/^viser systemet at låneren er importert$/) do
+  @browser.goto intranet(:patrons)
+  @browser.text_field(:id => "searchmember").set @context[:cardnumber]
+  @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
+  @browser.title.should include @context[:surname]
+  @browser.link(:id => "editpatron").click
+  # iterate patron advanced edit form and check for values
+  patronform = @browser.form(:id => "entryform")
+  @patrons.import[@context[:borrower_id]].each do |key,value|
+    if value
+      case "#{key}"
+      when "dateofbirth"
+        label = patronform.label(:for => "#{key}")
+        label.parent.html.should include(Date.parse(value).strftime("%m/%d/%Y"))
+      when "branchcode"
+        @browser.select_list(:id => "libraries").selected?(@context[:branchname]).should == true
+      when "categorycode"
+        @browser.select_list(:id => "categorycode").selected?(@context[:patron_category_description]).should == true
+      when "smsalertnumber"
+        label = patronform.label(:for => "phone")
+        label.parent.html.should include(value)
+      when "sex","password","fnr","patron_attributes","old_id"
+        # TODO
+      else
+        label = patronform.label(:for => "#{key}")
+        label.parent.html.should include(value)
+      end
+    end
+  end
 end
