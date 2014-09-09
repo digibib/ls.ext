@@ -36,11 +36,34 @@ Given(/^at det finnes en mapping for konvertering$/) do
 end
 
 When(/^lånerdata migreres$/) do
-  res = Net::HTTP.post_form(URI.parse(intranet(:patron_import)),
-    { 'matchpoint' => 'cardnumber',
+  @browser.goto intranet(:patron_import)
+  form = @browser.form(:action => "/cgi-bin/koha/tools/import_borrowers.pl")
+  form.file_field(:id => "uploadborrowers").set File.expand_path(@csv)
+  form.select_list(:id => "matchpoint").select "Cardnumber"
+  form.radio(:id => "overwrite_cardnumberyes", :value => "1").click
+  form.submit
+=begin 
+  Would rather use net/http post... 
+  uri = URI.parse intranet(:patron_import)
+  STDOUT.puts @browser.cookies.to_a
+  headers = {
+    'Cookie' => @browser.cookies.to_a.first[:value],
+    'Content-Type' => 'application/x-www-form-urlencoded'
+  }
+  http = Net::HTTP.new(uri.host, uri.port) 
+  req = Net::HTTP::Post.new(uri.request_uri, headers)
+  query = { 'matchpoint' => 'cardnumber',
       'overwrite_cardnumberyes' => 1, 
-      'upload' => @csv })
+      'uploadborrowers' => @csv }
+  req.set_form_data(query)
+  req['User-Agent'] = 'Mozilla'
+  res = http.request(req)
+  #res = Net::HTTP.post_form(URI.parse(intranet(:patron_import)), )
+  STDOUT.puts res.inspect
   STDOUT.puts res.body
+=end
+  STDOUT.puts @browser.url
+  STDOUT.puts @browser.html
 =begin
   @cleanup.push( "låner #{name}" =>
     lambda do
