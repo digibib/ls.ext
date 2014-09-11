@@ -25,6 +25,10 @@ Given(/^at "(.*?)" eksisterer som en låner$/) do |name|
   }
 end
 
+Given(/^at det finnes en låner$/) do
+  step "at \"Knut\" eksisterer som en låner"
+end
+
 Given(/^at det finnes data som beskriver en låner$/) do
   @csv = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
 end
