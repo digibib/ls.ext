@@ -4,11 +4,11 @@
 require 'csv'
 
 class Migration
-  attr_accessor :import, :csv
+  attr_accessor :map, :import, :out
 
-  def initialize(csv)
-    @import = {}
-    csv_to_map(csv)
+  def initialize(map, import)
+    @map    = csv_to_hash(map)
+    @import = csv_to_hash(import)
   end
 
   # Small utility method to convert structured csv to map for testing, where:
@@ -16,32 +16,38 @@ class Migration
   #   column headers      = keys
   #   next columns in row = values
   # e.g: @map.import["<user id>"]["cardname"]
-  def csv_to_map(csv)
+  def csv_to_hash(csv)
+    hash = {}
     begin
       CSV.foreach(csv, {
         :headers => true, 
         :encoding => 'UTF-8',
         :header_converters => :symbol
       }) do |row|
-        @import[row.fields[0]] = Hash[row.headers[1..-1].zip(row.fields[1..-1])]
+        hash[row.fields[0]] = Hash[row.headers[1..-1].zip(row.fields[1..-1])]
       end
+      return hash
     rescue => e
       raise "Error in csv file: " + e
     end
   end
 
-  def to_csv
-    ids = @import.keys
-    @csv = CSV.generate do |csv|
+  def to_csv(hash)
+    ids = hash.keys
+    csv = CSV.generate do |c|
       ids.each_with_index do |id, idx|
-        @import[id][:old_id] = id                    # append old id
-        csv << @import.values.first.keys if idx == 0 # headers row
-        csv << @import[id].values                    # append key,values map
+        hash[id][:old_id] = id                    # append old id
+        c << hash.values.first.keys if idx == 0 # headers row
+        c << hash[id].values                    # append key,values map
       end
     end
+    return csv
   end
 
   def export_csv(file)
-    File.open(file, "w") { |file| file.write @csv.to_s }
+    csv = to_csv(@import)
+    File.open(file, "w") do |file| 
+      file.write csv.to_s
+    end
   end
 end

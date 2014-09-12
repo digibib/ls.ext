@@ -30,7 +30,7 @@ Given(/^at det finnes en låner$/) do
 end
 
 Given(/^at det finnes data som beskriver en låner$/) do
-  @csv = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
+  @import = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
 end
 
 Given(/^at det finnes en mapping for konvertering$/) do
@@ -40,8 +40,12 @@ end
 Given(/^at det finnes konverterte lånerdata$/) do
   steps %Q{
     Gitt at det finnes en mapping for konvertering
+    Når lånerdata migreres
   }
-  @patrons = Migration.new(@csv)
+end
+
+When(/^lånerdata migreres$/) do
+  @patrons = Migration.new(@map, @import)
   @context[:cardnumber] = generateRandomString
   @context[:surname] = generateRandomString
   # map the first borrower for testing
@@ -51,11 +55,6 @@ Given(/^at det finnes konverterte lånerdata$/) do
   @patrons.import[id][:surname] = @context[:surname]
   @patrons.import[id][:categorycode] = @context[:patron_category_code]
   @patrons.import[id][:branchcode] = @context[:branchcode]
-  @patrons.to_csv
-end
-
-When(/^lånerdata migreres$/) do
-  pending
 end
 
 When(/^lånerdata importeres i admingrensesnittet$/) do
@@ -68,7 +67,7 @@ When(/^lånerdata importeres i admingrensesnittet$/) do
   data << "Content-Disposition: form-data; name=\"uploadborrowers\"; filename=\"patrons.csv\"\r\n"
   data << "Content-Type: text/csv\r\n"
   data << "\r\n"
-  data << @patrons.csv
+  data << @patrons.to_csv(@patrons.import)
   data << "--#{form_boundary}\r\n"
   data << "Content-Disposition: form-data; name=\"matchpoint\"\r\n"
   data << "\r\n"
@@ -174,7 +173,11 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
 end
 
 Then(/^samsvarer de migrerte lånerdata med mapping$/) do
-
+  @patrons.map.each do |field,map|
+    if map[:teststatus] && map[:teststatus].downcase == 'ok'
+      @patrons.import[@context[:borrower_id]].keys.to_s.should include(map[:plassering_i_koha])
+    end
+  end
 end
 
 Then(/^viser systemet at låneren er importert$/) do
