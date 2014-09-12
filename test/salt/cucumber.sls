@@ -38,3 +38,7 @@ install_chromedriver:
     - requires:
       - pkg: ruby1.9.1-dev
 {% endfor %}
+
+selenium-webdriver:
+  cmd.run:
+    - name: gem install --version '>= 2.43.0' selenium-webdriver
