@@ -19,6 +19,7 @@ base:
     - koha.createdb
     - koha.config # includes switching to db instance on ls.db
     - koha.webinstaller
+    - koha.restful
 
   'nodename:ls-devops':
     - match: grain

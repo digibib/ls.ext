@@ -7,4 +7,5 @@ install_common_pkgs:
     - pkgs:
       - language-pack-nb
       - openssh-server
+      - git
     - skip_verify: True
