@@ -75,7 +75,7 @@ test:                                                  ## Run cucumber tests.
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
 	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) "features/utlaan_via_adminbruker.feature"'
 
-clean: clean_report clean_test clean_ext               ## Destroy boxes (except ls.devops).
+clean: clean_report clean_test clean_ext               ## Destroy boxes (except ls.db and ls.devops).
 
 clean_report:                                          ## Clean cucumber reports.
 	rm -rf test/report || true
