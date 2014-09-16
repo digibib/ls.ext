@@ -95,6 +95,9 @@ clean_db:                                              ## Destroy ls.db box. Pro
 dump_db:                                               ## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
 	vagrant ssh ls.db -c 'sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host 192.168.50.12 --port 3306 --databases koha_name > /vagrant/koha_name_dump.sql'
 
+login_db:                                              ## DEV: Login to database from ls.ext (standard admin.sls only)
+	vagrant ssh ls.ext -c 'sudo mysql --user admin --password=secret --host 192.168.50.12 --port 3306'
+
 sublime: install_sublime                               ## Run sublime from within ls.ext.
 	vagrant ssh ls.test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &
 
