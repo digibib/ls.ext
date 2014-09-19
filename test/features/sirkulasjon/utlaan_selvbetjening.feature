@@ -2,28 +2,26 @@
 # language: no
 
 @wip
-Egenskap: Utlån av bok
+Egenskap: Selvbetjent utlån av bok
   Som en låner Knut
   For å kunne lære om Oslo kommunes utsmykkinger
   Ønsker jeg å kunne låne boken Fargelegg byen!
   
   Bakgrunn:
-    Gitt at jeg er logget inn som adminbruker
-    Og at "Fargelegg byen!" er ei bok som finnes i biblioteket
+    Gitt at det finnes en låner
 
   @wip
-  Scenario: Eksisterende bruker som låner bok han har funnet
-    Gitt at "Knut" eksisterer som en låner
-    Og at "Knut" har funnet boken
-    Når "Knut" vil registrere lånet
-    Så registrerer systemet at "Fargelegg byen" er utlånt
-    Og at "Knut" låner "Fargelegg byen"
+  Scenario: Autentisering av eksisterende låner for utlån på automat
+    Gitt at det finnes en utlånsautomat
+    Når låneren velger å låne på automaten
+    Og låner identifiserer seg med lånekort og PIN
+    Så får låneren mulighet til å registrere lån på automaten
 
   @wip
-  Scenario: Ny bruker som låner bok som finnes
-    Gitt at "Knut" vil registrere seg som en låner
-    Og at "Knut" har funnet boken
-    Når "Knut" vil registrere lånet
-    Så registrerer systemet at "Fargelegg byen" er utlånt
-    Og at "Knut" låner "Fargelegg byen"
-
+  Scenario: Eksisterende låner låner bok på automat
+    Gitt at låneren har identifisert seg for å låne på utlånsautomaten
+    Og at låneren har en bok
+    Og at boka har en RFID-brikke
+    Når låneren legger boka på automaten
+    Så registrerer systemet at låneren låner boka
+    Og at boka er utlånt
