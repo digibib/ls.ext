@@ -6,92 +6,45 @@ Egenskap: Selvbetjent innlevering
   Som en låner Knut
   For å unngå purregebyr fra biblioteket
   Ønsker jeg å levere tilbake filmen Ringenes herre
-  
+
   Bakgrunn:
     Gitt at det finnes en låner
-    Og at låneren ikke har utestående purregebyr
     Og at låneren ikke har aktiv innkrevingssak
-    Og at låneren ikke er fratatt lånerretten
 
   @wip
-  Scenario: Autentisering av eksisterende låner for utlån på automat
+  Scenario: Låner forsøker å levere tilbake materiale med feil antall brikker på utlånsautomat
     Gitt at det finnes en utlånsautomat
-    Når låneren velger å låne på automaten
-    Og låner identifiserer seg med gydlig lånekort
-    Og låner taster riktig PIN
-    Så får låneren mulighet til å registrere lån på automaten
-
-  @wip
-  Scenario: Låner uten gyldig lånekort prøver å låne på automat
-    Gitt at det finnes en utlånsautomat
-    Og at låneren ikke har gyldig lånekort
-    Når låneren velger å låne på automaten
-    Og forsøker å autentisere seg med lånekort
-    Så får låneren beskjed om at lånekort ikke er gyldig
-
-  @wip
-  Scenario: Låner prøver å låne på automat med feil PIN
-    Gitt at det finnes en utlånsautomat
-    Når låneren velger å låne på automaten
-    Og låner identifiserer seg med gydlig lånekort
-    Og låner taster feil PIN
-    Så får låneren beskjed om at PIN ikke er riktig
-
-  @wip
-  Scenario: Eksisterende låner forsøker å låne materiale med feil antall RFID-brikker
-    Gitt at låneren har identifisert seg for å låne på utlånsautomaten
-    Og at låneren har materiale han ønsker å låne
-    Og at materialet ikke har riktig antall RFID-brikker
-    Når låneren legger materialet på automaten
+    Og at låneren har materiale han vil levere inn
+    Og at materialet ikke har riktig antall brikker
+    Når låneren velger å levere inn på automaten
+    Og låneren legger materialet på automaten
     Så får låneren beskjed om at materialet ikke er komplett
+    Og systemet viser at materialet fortsatt er utlånt til låner
+
+  @wip
+  Scenario: Låner leverer tilbake lånt materiale på utlånsautomat, materialet skal på hylla
+    Gitt at det finnes en utlånsautomat
+    Og at låneren har materiale han vil levere inn
+    Og at materialet har riktig antall brikker
+    Og at materialet ikke er reservert
+    Og at materialet ikke tilhører annen avdeling
+    Når låneren velger å levere inn på automaten
+    Og låneren legger materialet på automaten
+    Så får låneren beskjed om at materialet er innlevert
+    Og låneren får beskjed om at materialet skal plasseres på hylle for innlevert materiale 
+    Og systemet viser at låneren ikke låner materialet
     Og systemet viser at materialet ikke er utlånt
 
   @wip
-  Scenario: Eksisterende låner forsøker å låne materiale som ikke er til utlån
-    Gitt at låneren har identifisert seg for å låne på utlånsautomaten
-    Og at låneren har materiale han ønsker å låne
-    Og at materialet ikke er til utlån
-    Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke er til utlån
-    Og systemet viser at materialet ikke er utlånt
+  Scenario: Levert materiale skal på innlevert-hylle
+    Gitt at låner har levert tilbake lånt materiale på utlånsautomat
+    Og at materialet ikke er reservert til annen låner
+    Og at at materialet ikke tilhører en annen avdeling
+    Så får låner beskjed om at materialet skal plasseres på hylle for innlevert materiale
 
   @wip
-  Scenario: Eksisterende låner forsøker å låne materiale som er holdt av til annen låner
-    Gitt at låneren har identifisert seg for å låne på utlånsautomaten
-    Og at låneren har materiale han ønsker å låne
-    Og at materialet er holdt av til annen låner
-    Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes
-    Og systemet viser at materialet fortsatt er holdt av til den andre låneren
-
-  @wip
-  Scenario: Eksisterende låner med maks antall lån forsøker å låne materiale
-    Gitt at låneren har identifisert seg for å låne på utlånsautomaten
-    Og at låneren har materiale han ønsker å låne
-    Og at låneren har et antall lån som ikke er under maksgrense for antall lån
-    Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes
-    Og systemet viser at materialet ikke er utlånt
-
-  @wip
-  Scenario: Eksisterende låner forsøker å låne materiale med for høy aldersgrense
-    Gitt at låneren har identifisert seg for å låne på utlånsautomaten
-    Og at låneren har materiale han ønsker å låne
-    Og at aldersgrensen på materialet er høyere enn lånerens alder
-    Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes
-    Og systemet viser at materialet ikke er utlånt
-
-  @wip
-  Scenario: Eksisterende låner låner materiale på automat
-    Gitt at låneren har identifisert seg for å låne på utlånsautomaten
-    Og at låneren har materiale han ønsker å låne
-    Og at materialet har riktig antall RFID-brikker
-    Og at materialet er til utlån
-    Og at materialet ikke er holdt av til en annen låner
-    Og at låneren ikke overskrider maksgrense for antall lån
-    Og at materialet ikke har aldersgrense høyere enn lånerens alder
-    Når låneren legger materialet på automaten
-    Så registrerer systemet at låneren låner materialet
-    Og at materialet er utlånt
-    Og at alarm er deaktivert
+  Scenario: Levert materiale er reservert
+    Gitt at låner har levert tilbake lånt materiale på utlånsautomat
+    Og at materialet er reservert til annen låner
+    Og at at materialet ikke tilhører en annen avdeling
+    Så får låner beskjed om at materialet skal plasseres på hylle for innlevert materiale
