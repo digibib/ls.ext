@@ -92,6 +92,7 @@ Egenskap: Selvbetjent utlån
     Og at låneren ikke overskrider maksgrense for antall lån
     Og at materialet ikke har aldersgrense høyere enn lånerens alder
     Når låneren legger materialet på automaten
-    Så registrerer systemet at låneren låner materialet
-    Og at materialet er utlånt
-    Og at alarm er deaktivert
+    Så får låneren beskjed om at materialet er registrert utlånt
+    Og systemet viser at låneren låner materialet
+    Og systemet viser at materialet er utlånt
+    Og systemet viser at alarm er deaktivert
