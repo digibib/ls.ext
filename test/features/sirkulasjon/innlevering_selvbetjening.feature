@@ -4,8 +4,8 @@
 @wip
 Egenskap: Selvbetjent innlevering
   Som en låner Knut
-  For å unngå purregebyr fra biblioteket
-  Ønsker jeg å levere tilbake filmen Ringenes herre
+  Fordi jeg har sett filmen jeg lånte
+  Ønsker jeg å levere den tilbake til biblioteket
 
   Bakgrunn:
     Gitt at det finnes en låner
