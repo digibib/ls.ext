@@ -11,14 +11,14 @@ mysql_docker_image:
 
 koha_mysql_container_stop_if_old:
   cmd.run:
-    - name: docker stop koha_mysql_container # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
+    - name: docker stop koha_mysql_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
     - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_mysql_container | grep $(docker images | egrep "mysql[[:space:]]*5\.6[[:space:]]+" | awk '{ print $3 }')
     - require:
       - docker: mysql_docker_image
 
 koha_mysql_container_remove_if_old:
   cmd.run:
-    - name: docker rm koha_mysql_container
+    - name: docker rm koha_mysql_container|| true
     - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_mysql_container | grep $(docker images | egrep "mysql[[:space:]]*5\.6[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: koha_mysql_container_stop_if_old
