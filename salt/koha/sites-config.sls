@@ -16,6 +16,3 @@
     - source: {{ pillar['koha']['saltfiles'] }}/passwd
     - mode: 0600
     - template: jinja
-    - context:
-      ServerName: {{ pillar['koha']['instance'] }}
-
