@@ -73,7 +73,7 @@ test:                                                  ## Run cucumber tests.
 	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
-	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) "features/utlaan_via_adminbruker.feature"'
+	vagrant ssh ls.test -c 'cd ls.test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) "features/sirkulasjon/utlaan_via_adminbruker.feature"'
 
 clean: clean_report clean_test clean_ext               ## Destroy boxes (except ls.db and ls.devops).
 
