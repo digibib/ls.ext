@@ -1,14 +1,14 @@
 # PILLAR TOP
 base:
-  'nodename:ls-db':
+  'nodename:vm-ship':
     - match: grain
 
-  'P@nodename:ls-(ext|db)':
+  'P@nodename:vm-(ext|ship)':
     - match: compound
     - koha
     - koha.admin
 
-  'nodename:ls-devops':
+  'nodename:vm-devops':
     - match: grain
     - kibana
 

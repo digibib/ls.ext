@@ -2,12 +2,12 @@ base:
   '*':
     - common
 
-  'nodename:ls-db':
+  'nodename:vm-ship':
     - match: grain
     - common.docker
     - mysql.dockerized
 
-  'nodename:ls-ext':
+  'nodename:vm-ext':
     - match: grain
     - koha.logstash-forwarder
     - koha
@@ -17,10 +17,10 @@ base:
     - mysql.server  # need this to run createdb (which does more than create a db)
     - koha.sites-config
     - koha.createdb
-    - koha.config # includes switching to db instance on ls.db
+    - koha.config # includes switching to db instance on vm-ship
     - koha.webinstaller
     - koha.restful
 
-  'nodename:ls-devops':
+  'nodename:vm-devops':
     - match: grain
     - kibana

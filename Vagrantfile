@@ -19,12 +19,12 @@ end
 
 Vagrant.configure(2) do |config|
 
-  # **** ls.db - Database server ****
+  # **** vm-ship - Docker container ship ****
 
-  config.vm.define "ls.db" do |config|
+  config.vm.define "vm-ship" do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "ls-db"
+    config.vm.hostname = "vm-ship"
 
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
@@ -51,13 +51,13 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # **** ls.ext - Library System - extended ****
+  # **** vm-ext - Library System - extended (basically Koha)****
 
-  config.vm.define "ls.ext" do |config|
+  config.vm.define "vm-ext" do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "ls-ext"
- 
+    config.vm.hostname = "vm-ext"
+
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
@@ -70,7 +70,7 @@ Vagrant.configure(2) do |config|
       config.vm.network :forwarded_port, guest: 8081, host: 8081  # INTRA
     end
     # config.vm.network :forwarded_port, guest: 3000, host: 3000                    # SPARQL
-    
+
     config.vm.network "private_network", ip: "192.168.50.10"
     # Sync folders salt and pillar in virtualboxes
     config.vm.synced_folder "salt", "/srv/salt"
@@ -88,14 +88,14 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # **** ls.test - Feature test runner **** 
+  # **** vm-test - Feature test runner ****
 
-  config.vm.define "ls.test", primary: true do |config|
+  config.vm.define "vm-test", primary: true do |config|
     config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "ls-test"
+    config.vm.hostname = "vm-test"
 
     # X forwarding for Firefox Browser
-    unless ENV['NO_PUBLIC_PORTS']    
+    unless ENV['NO_PUBLIC_PORTS']
       config.ssh.forward_x11 = true
       config.ssh.forward_agent = true
     end
@@ -103,19 +103,19 @@ Vagrant.configure(2) do |config|
     config.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--memory", "768"]
     end
-    
+
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
     end
 
     config.vm.synced_folder "test/salt", "/srv/salt"
-    config.vm.synced_folder "pillar", "/srv/pillar"           # share pillar with ls.ext
-    config.vm.synced_folder "test", "/home/vagrant/ls.test"
+    config.vm.synced_folder "pillar", "/srv/pillar"           # share pillar with vm-ext
+    config.vm.synced_folder "test", "/home/vagrant/vm-test"
 
     config.vm.network "private_network", ip: "192.168.50.11"
 
-    # get vagrant insecure private key to ls.test to allow ssh from ls.test to ls.ext
+    # get vagrant insecure private key to vm-test to allow ssh from vm-test to vm-ext
     config.vm.provision "shell", inline: <<-SCRIPT
       wget --no-check-certificate https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant -O /home/vagrant/.ssh/insecure_private_key
       chmod 600 /home/vagrant/.ssh/insecure_private_key
@@ -126,20 +126,20 @@ Vagrant.configure(2) do |config|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
       salt.install_type = "git"
+      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
       salt.install_args = "v2014.1.10"
     end
-  end # ls.test
+  end # vm-test
 
-  # **** ls.devops - Monitors the system logs **** 
+  # **** vm-devops - Monitors the system logs ****
 
-  config.vm.define "ls.devops" do |config|
+  config.vm.define "vm-devops" do |config|
     config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "ls-devops"
+    config.vm.hostname = "vm-devops"
 
     # X forwarding for Firefox Browser
-    unless ENV['NO_PUBLIC_PORTS']    
+    unless ENV['NO_PUBLIC_PORTS']
       config.ssh.forward_x11 = true
       config.ssh.forward_agent = true
     end
@@ -147,7 +147,7 @@ Vagrant.configure(2) do |config|
     config.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]
     end
-    
+
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
@@ -157,15 +157,15 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "pillar", "/srv/pillar"
 
     config.vm.network "private_network", ip: "192.168.50.21"
-    
+
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
       salt.install_type = "git"
+      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
       salt.install_args = "v2014.1.10"
     end
-  end # ls.devops
+  end # vm-devops
 
 end
