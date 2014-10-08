@@ -45,6 +45,9 @@ Vagrant.configure(2) do |config|
       salt.run_highstate = true
       salt.verbose = true
       salt.pillar_data
+      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
+      salt.install_type = "git"
+      salt.install_args = "v2014.1.10"
     end
   end
 
@@ -79,6 +82,9 @@ Vagrant.configure(2) do |config|
       salt.run_highstate = true
       salt.verbose = true
       salt.pillar_data
+      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
+      salt.install_type = "git"
+      salt.install_args = "v2014.1.10"
     end
   end
 
@@ -120,7 +126,10 @@ Vagrant.configure(2) do |config|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-    end  
+      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
+      salt.install_type = "git"
+      salt.install_args = "v2014.1.10"
+    end
   end # ls.test
 
   # **** ls.devops - Monitors the system logs **** 
@@ -153,7 +162,10 @@ Vagrant.configure(2) do |config|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-    end  
+      salt.bootstrap_options = "-g http://github.com/saltstack/salt.git"
+      salt.install_type = "git"
+      salt.install_args = "v2014.1.10"
+    end
   end # ls.devops
 
 end
