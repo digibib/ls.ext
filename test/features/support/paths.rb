@@ -1,7 +1,7 @@
 module Paths
 
   def host
-    "192.168.50.10"
+    "192.168.50.12"
   end
 
   def port
