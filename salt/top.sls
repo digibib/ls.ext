@@ -5,6 +5,7 @@ base:
   'nodename:vm-ship':
     - match: grain
     - common.docker
+    - common.nsenter
     - mysql.dockerized
 
   'nodename:vm-ext':
