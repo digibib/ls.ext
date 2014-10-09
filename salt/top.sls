@@ -7,6 +7,7 @@ base:
     - common.docker
     - common.nsenter
     - mysql.dockerized
+    - koha.dockerized
 
   'nodename:vm-ext':
     - match: grain
