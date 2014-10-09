@@ -75,6 +75,20 @@ test:                                                  ## Run cucumber tests.
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
 	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker låner ut bok til Knut"'
 
+stop_koha:
+	@echo "======= STOPPING KOHA CONTAINER ======\n"
+	vagrant ssh vm-ship -c 'sudo docker stop koha_container'
+
+delete_koha: stop_koha
+	vagrant ssh vm-ship -c 'sudo docker rm koha_container'
+
+stop_ship:
+	@echo "======= STOPPING KOHA CONTAINER ======\n"
+	vagrant ssh vm-ship -c '(sudo docker stop koha_container || true) && sudo docker stop koha_mysql_container'
+
+delete_ship: stop_ship
+	vagrant ssh vm-ship -c '(sudo docker rm koha_container || true) && sudo docker rm koha_mysql_container'
+
 clean: clean_report clean_test clean_ext               ## Destroy boxes (except vm-ship and vm-devops).
 
 clean_report:                                          ## Clean cucumber reports.

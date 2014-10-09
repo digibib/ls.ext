@@ -12,7 +12,7 @@ koha_container_stop_if_old:
 
 koha_container_remove_if_old:
   cmd.run:
-    - name: docker rm koha_container|| true
+    - name: docker rm koha_container || true
     - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha-salt-docker[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: koha_container_stop_if_old
