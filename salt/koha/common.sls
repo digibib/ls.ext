@@ -9,7 +9,7 @@ koharepo:
 koha-common:
   pkg.installed:
     - skip_verify: True
-    - version: "3.16.03"
+    - version: "3.16.04"
     - require:
       - pkgrepo: koharepo
       - pkg: installdeps
