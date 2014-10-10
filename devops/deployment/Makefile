@@ -7,6 +7,9 @@ dev_bootstrap:
 	vagrant ssh vm-devops -c 'sudo salt-key --accept-all --yes'
 	vagrant ssh vm-devops -c 'sudo salt "*" test.ping'
 
+dev_state_highstate:
+	vagrant ssh vm-devops -c 'sudo salt "*" state.highstate'
+
 prod_bootstrap_master: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s --'
 	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /var/lib/salt-master ] || sudo git clone https://github.com/digibib/ls.ext.git /var/lib/salt-master'
@@ -23,3 +26,6 @@ prod_bootstrap_minion: # You need to specify SUDOUSER, MASTER, MINION, MASTER_IP
 
 prod_ping_all: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" test.ping'
+
+prod_state_highstate: # You need to specify SUDOUSER, MASTER, GITREF
+	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) && sudo salt "*" state.highstate'
