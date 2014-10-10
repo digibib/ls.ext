@@ -2,9 +2,6 @@
 base:
   'nodename:vm-ship':
     - match: grain
-
-  'P@nodename:vm-(ext|ship)':
-    - match: compound
     - koha
     - koha.admin
 
