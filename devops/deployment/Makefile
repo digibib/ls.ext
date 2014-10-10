@@ -5,9 +5,11 @@ dev_bootstrap:
 	vagrant ssh vm-ship -c 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
 	vagrant ssh vm-ship -c 'sudo service salt-minion restart'
 	vagrant ssh vm-devops -c 'sudo salt-key --accept-all --yes'
+
+dev_ping_all:
 	vagrant ssh vm-devops -c 'sudo salt "*" test.ping'
 
-dev_state_highstate:
+dev_highstate:
 	vagrant ssh vm-devops -c 'sudo salt "*" state.highstate'
 
 prod_bootstrap_master: # You need to specify SUDOUSER, MASTER
@@ -27,5 +29,5 @@ prod_bootstrap_minion: # You need to specify SUDOUSER, MASTER, MINION, MASTER_IP
 prod_ping_all: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" test.ping'
 
-prod_state_highstate: # You need to specify SUDOUSER, MASTER, GITREF
+prod_highstate: # You need to specify SUDOUSER, MASTER, GITREF
 	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) && sudo salt "*" state.highstate'
