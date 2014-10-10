@@ -2,13 +2,11 @@ base:
   '*':
     - common
 
-  'P@nodename:(vm-ship|wombat)':
-    - match: compund
-    - common.docker
-    - mysql.dockerized
-
   'nodename:vm-ship':
+    - match: grain
+    - common.docker
     - common.nsenter
+    - mysql.dockerized
 
   'nodename:vm-ext':
     - match: grain
