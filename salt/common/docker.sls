@@ -37,7 +37,7 @@ docker_repo:
         - pkg: docker-python-pip
 
 lxc-docker:
-  pkg.latest:
+  pkg.installed:
     - require:
       - pkg: docker-dependencies
 
