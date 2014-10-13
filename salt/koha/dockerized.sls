@@ -2,6 +2,9 @@
 # KOHA DOCKER CONTAINER
 ##########
 
+apache2:
+  service.dead
+
 koha_container_stop_if_old:
   cmd.run:
     - name: docker stop koha_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
