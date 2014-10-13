@@ -10,7 +10,7 @@ dev_ping_all:
 	vagrant ssh vm-devops -c 'sudo salt "*" test.ping'
 
 dev_highstate:
-	vagrant ssh vm-devops -c 'sudo salt "*" state.highstate'
+	vagrant ssh vm-devops -c 'echo " ================ deploying =====================" >> deploy.log && sudo salt "*" state.highstate 2>&1 | sudo tee -a deploy.log'
 
 prod_bootstrap_master: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s --'
@@ -30,4 +30,4 @@ prod_ping_all: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" test.ping'
 
 prod_highstate: # You need to specify SUDOUSER, MASTER, GITREF
-	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) && sudo salt "*" state.highstate'
+	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt "*" state.highstate 2>&1 | sudo tee -a deploy.log'
