@@ -9,6 +9,37 @@ mysql_docker_image:
   docker.pulled:
     - name: mysql
 
+##########
+# MYSQL DATA VOLUME
+# - should never be running
+##########
+
+busybox_docker_image:
+  docker.pulled:
+    - name: busybox:latest
+
+mysql_data_volume:
+  docker.installed:
+    - name: koha_mysql_data
+    - image: busybox:latest
+    - port_bindings:
+        "3306/tcp":
+            HostIp: "0.0.0.0"
+            HostPort: "3306"
+    - volumes:
+      - /var/lib/mysql
+
+# No docker.stopped module yet
+mysql_data_volume_stopped:
+  cmd.run:
+    - name: docker stop koha_mysql_data || true
+    - require:
+      - docker: mysql_data_volume
+
+##########
+# MYSQL DOCKER CONTAINER
+##########
+
 koha_mysql_container_stop_if_old:
   cmd.run:
     - name: docker stop koha_mysql_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
@@ -18,7 +49,7 @@ koha_mysql_container_stop_if_old:
 
 koha_mysql_container_remove_if_old:
   cmd.run:
-    - name: docker rm koha_mysql_container|| true
+    - name: docker rm koha_mysql_container || true
     - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_mysql_container | grep $(docker images | egrep "mysql[[:space:]]*5\.6[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: koha_mysql_container_stop_if_old
@@ -34,11 +65,7 @@ koha_mysql_container_installed:
       - "MYSQL_PASSWORD": "{{ pillar['koha']['adminpass'] }}"
       - "MYSQL_DATABASE": "koha_{{ pillar['koha']['instance'] }}"
     - ports:
-        "3306/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "3306"
-    - volumes:
-        /var/lib/mysql: /var/lib/mysql
+      - "3306/tcp"
     - require:
       - docker: mysql_docker_image
 
@@ -49,7 +76,9 @@ koha_mysql_container_running:
         "3306/tcp":
             HostIp: "0.0.0.0"
             HostPort: "3306"
-    - binds:
-        /var/lib/mysql: /var/lib/mysql
+    - volumes_from:
+      - "koha_mysql_data"
     - watch:
+      - docker: mysql_data_volume
       - docker: koha_mysql_container_installed
+

@@ -1,3 +1,6 @@
+##########
+# KOHA DOCKER CONTAINER
+##########
 
 koha_docker_image:
   docker.pulled:
@@ -20,19 +23,14 @@ koha_container_remove_if_old:
 koha_container_installed:
   docker.installed:
     - name: koha_container
-    - image: digibib/koha-salt-docker:latest # Version MUST be in line with the one used in egrep expression above AND cannot be upped on an existing database without figuring out a way to run 'mysql_upgrade'
+    - image: digibib/koha-salt-docker:latest
+    - environment:
+      - "KOHA_ADMINPASS": "{{ pillar['koha']['adminpass'] }}"
+      - "KOHA_ADMINUSER": "{{ pillar['koha']['adminuser'] }}"
+      - "KOHA_INSTANCE": "{{ pillar['koha']['instance'] }}"
     - ports:
-        "80/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "80"
-        "8080/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "8080"
-        "8081/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "8081"
-    - links:
-        koha_mysql_container: db
+      - "8080/tcp"
+      - "8081/tcp"
     - require:
       - docker: koha_docker_image
 
@@ -40,16 +38,16 @@ koha_container_running:
   docker.running:
     - container: koha_container
     - port_bindings:
-        "80/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "80"
         "8080/tcp":
             HostIp: "0.0.0.0"
             HostPort: "8080"
         "8081/tcp":
             HostIp: "0.0.0.0"
             HostPort: "8081"
+    - check_is_running:
+      - "koha_mysql_container"
     - links:
         koha_mysql_container: db
     - watch:
       - docker: koha_container_installed
+      - docker: koha_mysql_container_running
