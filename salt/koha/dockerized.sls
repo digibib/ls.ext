@@ -5,17 +5,18 @@
 apache2:
   service.dead
 
+# Check if pulled koha image is newer than running container, if so: stop and delete running koha container
 koha_container_stop_if_old:
   cmd.run:
     - name: docker stop koha_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha[[:space:]]*{{ pillar['koha']['koha-image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha[[:space:]]+{{ pillar['koha']['koha-image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - require:
       - docker: mysql_docker_image
 
 koha_container_remove_if_old:
   cmd.run:
     - name: docker rm koha_container || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha[[:space:]]*{{ pillar['koha']['koha-image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha[[:space:]]+{{ pillar['koha']['koha-image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: koha_container_stop_if_old
 
