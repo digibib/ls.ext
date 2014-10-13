@@ -51,43 +51,6 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # **** vm-ext - Library System - extended (basically Koha)****
-
-  config.vm.define "vm-ext" do |config|
-    # https://vagrantcloud.com/ubuntu/trusty64
-    config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "vm-ext"
-
-    # http://fgrehm.viewdocs.io/vagrant-cachier
-    if Vagrant.has_plugin?("vagrant-cachier")
-      config.cache.scope = :box
-    end
-
-    # config.vm.network :forwarded_port, guest: 80, host: 8000                      # MARC2RDF
-    # config.vm.network :forwarded_port, guest: 6001, host: 6001                    # SIP2
-    unless ENV['NO_PUBLIC_PORTS']
-      config.vm.network :forwarded_port, guest: 8080, host: 8080  # OPAC
-      config.vm.network :forwarded_port, guest: 8081, host: 8081  # INTRA
-    end
-    # config.vm.network :forwarded_port, guest: 3000, host: 3000                    # SPARQL
-
-    config.vm.network "private_network", ip: "192.168.50.10"
-    # Sync folders salt and pillar in virtualboxes
-    config.vm.synced_folder "salt", "/srv/salt"
-    config.vm.synced_folder "pillar", "/srv/pillar"
-
-
-    config.vm.provision :salt do |salt|
-      salt.minion_config = "salt/minion"
-      salt.run_highstate = true
-      salt.verbose = true
-      salt.pillar_data
-      salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
-      salt.install_type = "git"
-      salt.install_args = "v2014.1.10"
-    end
-  end
-
   # **** vm-test - Feature test runner ****
 
   config.vm.define "vm-test", primary: true do |config|

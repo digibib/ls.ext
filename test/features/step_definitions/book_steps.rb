@@ -45,11 +45,11 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   STDOUT.puts "DEBUG PRINT res.body: #{res.body}" if !barcode_search || barcode_search.length < 2
   @context[:barcode] = barcode_search[1]
   # force rebuild and restart zebra bibliographic index
-  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.10 \
-    -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-    "sudo koha-rebuild-zebra -f #{SETTINGS['koha']['instance']} \
-    && sudo koha-stop-zebra #{SETTINGS['koha']['instance']} \
-    && sudo koha-start-zebra #{SETTINGS['koha']['instance']}" > /dev/null 2>&1`
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-rebuild-zebra -f name' > /dev/null 2>&1`
+    # stop zebra
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-stop-zebra name' > /dev/null 2>&1`
+    # start zebra
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-start-zebra name' > /dev/null 2>&1`
 
   @cleanup.push( "bok #{@context[:book_id]}" =>
     lambda do
