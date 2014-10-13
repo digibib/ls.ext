@@ -2,13 +2,16 @@ base:
   '*':
     - common
 
-  'nodename:vm-ship':
-    - match: grain
+  'wombat,vm-ship':
+    - match: list
     - common.docker
-    - common.nsenter
+    - mysql.pulled
+    - koha.pulled
     - mysql.dockerized
     - koha.dockerized
 
-  'nodename:vm-devops':
-    - match: grain
+  'vm-ship':
+    - common.nsenter
+
+  'vm-devops':
     - kibana

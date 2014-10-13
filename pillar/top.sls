@@ -1,11 +1,10 @@
 # PILLAR TOP
 base:
-  'nodename:vm-ship':
-    - match: grain
+  'vm-ship,wombat':
+    - match: list
     - koha
     - koha.admin
 
-  'nodename:vm-devops':
-    - match: grain
+  'vm-devops':
     - kibana
 

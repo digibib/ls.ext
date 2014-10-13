@@ -5,18 +5,10 @@ mysql:
   service:
     - dead
 
-mysql_docker_image:
-  docker.pulled:
-    - name: mysql
-
 ##########
 # MYSQL DATA VOLUME
 # - should never be running
 ##########
-
-busybox_docker_image:
-  docker.pulled:
-    - name: busybox:latest
 
 mysql_data_volume:
   docker.installed:

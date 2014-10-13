@@ -2,10 +2,6 @@
 # KOHA DOCKER CONTAINER
 ##########
 
-koha_docker_image:
-  docker.pulled:
-    - name: digibib/koha-salt-docker
-
 koha_container_stop_if_old:
   cmd.run:
     - name: docker stop koha_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
