@@ -25,6 +25,7 @@ kibana_container_installed:
       - LF_SSL_CERT_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/kibana/files/tls/certs/logstash-forwarder.crt
       - LOGSTASH_CONFIG_FILE: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/kibana/files/logstash.conf
     - ports:
+      - "5000/tcp" # lumberjack
       - "9292/tcp" # kibana
       - "9200/tcp" # elasticsearch
     - require:
@@ -34,6 +35,9 @@ kibana_container_running:
   docker.running:
     - container: kibana_container
     - port_bindings:
+        "5000/tcp":
+            HostIp: "0.0.0.0"
+            HostPort: "5000"
         "9292/tcp":
             HostIp: "0.0.0.0"
             HostPort: "9292"
