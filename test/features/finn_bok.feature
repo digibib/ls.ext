@@ -9,5 +9,5 @@ Egenskap: Finn bok
     Gitt at jeg er logget inn som adminbruker
 
   Scenario: Admin-bruker finner en bok
-    Gitt at det finnes en bok
+    Gitt at boka finnes i biblioteket
     Så kan jeg søke opp boka

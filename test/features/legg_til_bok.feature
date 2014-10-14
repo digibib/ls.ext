@@ -12,5 +12,5 @@ Egenskap: Legg til bok
   Scenario: Admin legger til ny bok
     Gitt at det finnes en materialtype
     Og at det finnes en avdeling
-    Når jeg legger inn "Fargelegg byen!" som ny bok
-    Så viser systemet at "Fargelegg byen!" er en bok som kan lånes ut
+    Når jeg legger inn boka som en ny bok
+    Så viser systemet at boka er en bok som kan lånes ut

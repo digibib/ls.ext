@@ -9,7 +9,7 @@ Egenskap: Reservering av bok
 
 Bakgrunn:
   Gitt at det finnes en låner
-  Og at det finnes en bok
+  Og at boka finnes i biblioteket
 
   @wip
   Scenario:

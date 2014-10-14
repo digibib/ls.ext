@@ -5,29 +5,24 @@ Given(/^at det finnes en materialtype$/) do
   step "jeg legger til en materialtype"
 end
 
-Given(/^at det finnes en bok$/) do
+Given(/^at boka finnes i biblioteket$/) do
   steps %Q{
     Gitt at det finnes en avdeling
     Når jeg legger til en materialtype
-    Og jeg legger inn "Fargelegg byen!" som ny bok
+    Og jeg legger inn boka som en ny bok
   }
 end
 
-Given(/^at "(.*?)" er ei bok som finnes i biblioteket$/) do |book|
-  steps %Q{
-    Gitt at det finnes en avdeling
-    Når jeg legger til en materialtype
-    Og jeg legger inn "#{book}" som ny bok
-  }
-end
 
-When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
+When(/^jeg legger inn boka som en ny bok$/) do
   @http = Net::HTTP.new(host, 8081)
   res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")
   res.body.should_not include("failed")
+  @context[:book_title] = generateRandomString  
   @context[:svc_cookie] = res.response['set-cookie']
   @context[:item_barcode] = '0301%010d' % rand(10 ** 10)
-  data = File.read("features/upload-files/#{book}.normarc", :encoding => 'UTF-8')
+  data = File.read("features/upload-files/Fargelegg byen!.normarc", :encoding => 'UTF-8')
+  data = data.gsub(/\{\{ book_title \}\}/, @context[:book_title])
   data = data.gsub(/\{\{ branchcode \}\}/, @context[:branchcode])
   data = data.gsub(/\{\{ item_type_code \}\}/, @context[:item_type_code])
   data = data.gsub(/\{\{ item_barcode \}\}/, @context[:item_barcode])
@@ -45,11 +40,11 @@ When(/^jeg legger inn "(.*?)" som ny bok$/) do |book|
   STDOUT.puts "DEBUG PRINT res.body: #{res.body}" if !barcode_search || barcode_search.length < 2
   @context[:barcode] = barcode_search[1]
   # force rebuild and restart zebra bibliographic index
-  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-rebuild-zebra -f name' > /dev/null 2>&1`
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-rebuild-zebra -f #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
     # stop zebra
-  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-stop-zebra name' > /dev/null 2>&1`
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-stop-zebra #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
     # start zebra
-  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-start-zebra name' > /dev/null 2>&1`
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo nsenter --target \`sudo docker inspect --format="{{.State.Pid}}" koha_container\` --mount --uts --ipc --net --pid -- sudo koha-start-zebra #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
 
   @cleanup.push( "bok #{@context[:book_id]}" =>
     lambda do
@@ -102,9 +97,9 @@ Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
   table.text.should include(@context[:item_type_desc])
 end
 
-Then(/^viser systemet at "(.*?)" er en bok som( ikke)? kan lånes ut$/) do |book, boolean|
+Then(/^viser systemet at boka er en bok som( ikke)? kan lånes ut$/) do |boolean|
   @browser.goto "http://#{host}:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber=#{@context[:book_id]}"
-  @browser.div(:id => "catalogue_detail_biblio").text.should include(book)
+  @browser.div(:id => "catalogue_detail_biblio").text.should include(@context[:book_title])
   holdings = @browser.div(:id => "holdings")
   barcode = holdings.tbody.tr.td(:index => 7).text
   status = @browser.td(:text => @context[:barcode])
@@ -120,8 +115,8 @@ Then(/^kan jeg søke opp boka$/) do
   @browser.goto intranet(:home)
   @browser.a(:text => "Search the catalog").click
   form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set("Fargelegg byen") # if we include the exclamation mark, we get no results
+  form.text_field(:id => "search-form").set(@context[:book_title]) 
   form.submit
-  @browser.text.should include("Fargelegg byen!")
+  @browser.text.should include(@context[:book_title])
   @browser.text.should include("vailable")
 end

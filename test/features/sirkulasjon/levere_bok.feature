@@ -8,7 +8,7 @@ Egenskap: Innlevering av bok
 
   Bakgrunn:
     Gitt at jeg er pålogget som adminbruker
-    Og at det finnes en bok
+    Og at boka finnes i biblioteket
     Og at det finnes en låner
 
   Scenario:

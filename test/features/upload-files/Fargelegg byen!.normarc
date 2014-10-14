@@ -36,8 +36,7 @@
     <subfield code="3">15194500</subfield>
   </datafield>
   <datafield tag="245" ind1="1" ind2="0">
-    <subfield code="a">Fargelegg byen!</subfield>
-    <subfield code="b">Oslo kommunes utsmykninger</subfield>
+    <subfield code="a">{{ book_title }}</subfield>
     <subfield code="c">Gunnar Sørensen</subfield>
   </datafield>
   <datafield tag="260" ind1=" " ind2=" ">

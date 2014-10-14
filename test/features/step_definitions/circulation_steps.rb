@@ -2,7 +2,7 @@
 
 Given(/^at en bok er utlånt til en låner$/) do
   step "jeg registrerer \"Knut\" som aktiv låner"
-  step "jeg registrerer utlån av \"Fargelegg byen!\""
+  step "jeg registrerer utlån av boka"
 end
 
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
@@ -11,7 +11,7 @@ When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
   @browser.form(:id => "patronsearch").submit
 end
 
-When(/^jeg registrerer utlån av "(.*?)"/) do |book|
+When(/^jeg registrerer utlån av boka$/) do
   @browser.execute_script("printx_window = function() { return };") #Disable print slip popup
   form = @browser.form(:id => "mainform")
   form.text_field(:id => "barcode").set(@context[:barcode])
@@ -37,17 +37,17 @@ When(/^boka blir registrert innlevert$/) do
 end
 
 
-Then(/^registrerer systemet at "(.*?)" er utlånt$/) do |book|
+Then(/^registrerer systemet at boka er utlånt$/) do
   @browser.goto intranet(:home)
   @browser.a(:text => "Search the catalog").click
   form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(book.gsub("!", ""))
+  form.text_field(:id => "search-form").set(@context[:book_title])
   form.submit
-  @browser.text.should include(book)
+  @browser.text.should include(@context[:book_title])
 end
 
-Then(/^at "(.*?)" låner "(.*?)"$/) do |name, book|
-  @browser.text.should include(book)
+Then(/^at "(.*?)" låner boka$/) do |name|
+  @browser.text.should include(@context[:book_title])
   @browser.text.should include "Checked out to #{name}"
 end
 
@@ -55,8 +55,8 @@ Then(/^viser systemet at låneren ikke låner boka$/) do
   @browser.goto intranet(:home)
   @browser.a(:text => "Search the catalog").click
   form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set("Fargelegg byen")
+  form.text_field(:id => "search-form").set(@context[:book_title])
   form.submit
-  @browser.text.should include("Fargelegg byen!")
+  @browser.text.should include(@context[:book_title])
   @browser.text.should_not include "Checked out to Knut"
 end
