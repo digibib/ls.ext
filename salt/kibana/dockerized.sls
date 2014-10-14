@@ -21,9 +21,15 @@ kibana_container_installed:
     - name: kibana_container
     - image: pblittle/docker-logstash
     - environment:
+<<<<<<< HEAD
       - LF_SSL_CERT_KEY_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/tls/private/logstash-forwarder.key
       - LF_SSL_CERT_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/tls/certs/logstash-forwarder.crt
       - LOGSTASH_CONFIG_URL: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/elk/files/logstash.conf
+=======
+      - LF_SSL_CERT_KEY_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/kibana/files/tls/private/logstash-forwarder.key
+      - LF_SSL_CERT_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/kibana/files/tls/certs/logstash-forwarder.crt
+      - LOGSTASH_CONFIG_URL: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/kibana/files/logstash.conf
+>>>>>>> Use correct environment variable name
     - ports:
       - "5000/tcp" # lumberjack
       - "9292/tcp" # kibana
