@@ -111,7 +111,7 @@ install_sublime:
 	vagrant ssh vm-test -c 'sudo salt-call --local state.sls sublime'
 
 kibana: install_firefox_on_devops                      ## Run kibanas web ui from inside devops.
-	vagrant ssh vm-devops -c 'firefox "http://localhost/" > firefox.log 2> firefox.err < /dev/null' &
+	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" > firefox.log 2> firefox.err < /dev/null' &
 
 install_firefox_on_devops:
 	vagrant ssh vm-devops -c 'sudo salt-call --local state.sls firefox'
