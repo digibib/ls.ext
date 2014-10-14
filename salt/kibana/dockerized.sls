@@ -23,7 +23,7 @@ kibana_container_installed:
     - environment:
       - LF_SSL_CERT_KEY_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/kibana/files/tls/private/logstash-forwarder.key
       - LF_SSL_CERT_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/kibana/files/tls/certs/logstash-forwarder.crt
-      #- LOGSTASH_CONFIG_FILE: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/kibana/files/logstash.conf
+      - LOGSTASH_CONFIG_FILE: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/kibana/files/logstash.conf
     - ports:
       - "9292/tcp" # kibana
       - "9200/tcp" # elasticsearch
