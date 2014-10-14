@@ -1,4 +1,21 @@
 ##########
+# KOHA LOGS VOLUME
+##########
+
+koha_logs_volume:
+  docker.installed:
+    - name: koha_logs_volume
+    - image: busybox
+    - volumes:
+      - /var/log
+
+koha_logs_volume_stopped:
+  cmd.run:
+    - name: docker stop koha_logs_volume || true
+    - require:
+      - docker: koha_logs_volume
+
+##########
 # KOHA DOCKER CONTAINER
 ##########
 
@@ -47,6 +64,8 @@ koha_container_running:
       - "koha_mysql_container"
     - links:
         koha_mysql_container: db
+    - volumes_from:
+      - "koha_logs_volume"
     - watch:
       - docker: koha_container_installed
       - docker: koha_mysql_container_running
