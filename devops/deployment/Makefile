@@ -30,4 +30,7 @@ prod_ping_all: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" test.ping'
 
 prod_highstate: # You need to specify SUDOUSER, MASTER, GITREF
-	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt "*" state.highstate 2>&1 | sudo tee -a deploy.log'
+	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt "*" --log-level info --log-file-level=debug state.highstate 2>&1 | sudo tee -a deploy.log'
+
+prod_deploy_log: # You need to specify SUDOUSER, MASTER
+	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && cat deploy.log'

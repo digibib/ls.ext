@@ -100,19 +100,26 @@ clean_devops:                                          ## Destroy vm-devops box.
 clean_ship:                                            ## Destroy vm-ship box. Prompts for ok.
 	vagrant destroy vm-ship
 
-# TODO these 3 DEV tasks must be updated to reflect that mysql & koha are dockerized:
+dump_ship:                                             ## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
+	vagrant ssh vm-ship -c 'sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host 192.168.50.12 --port 3306 --databases koha_name > /vagrant/koha_name_dump.sql'
 
-#dump_ship:                                             ## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
-#	vagrant ssh vm-ship -c 'sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host 192.168.50.12 --port 3306 --databases koha_name > /vagrant/koha_name_dump.sql'
+login_ship:                                            ## DEV: Login to database from vm-ext (standard admin.sls only)
+	vagrant ssh vm-ship -c 'sudo mysql --user admin --password=secret --host 192.168.50.12 --port 3306'
 
-#login_ship:                                            ## DEV: Login to database from vm-ext (standard admin.sls only)
-#	vagrant ssh vm-ext -c 'sudo mysql --user admin --password=secret --host 192.168.50.12 --port 3306'
+nsenter_koha:
+	vagrant ssh vm-ship -c 'sudo nsenter --target `sudo docker inspect --format="{{.State.Pid}}" koha_container` --mount --uts --ipc --net --pid '
 
-#sublime: install_sublime                               ## Run sublime from within vm-ext.
-#	vagrant ssh vm-test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &
+mysql_client:
+	vagrant ssh vm-ship -c 'sudo apt-get install mysql-client && sudo mysql --user MYadmin --password=MYsecret --host 192.168.50.12 --port 3306'
+
+sublime: install_sublime                               ## Run sublime from within vm-test.
+	vagrant ssh vm-test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &
 
 install_sublime:
 	vagrant ssh vm-test -c 'sudo salt-call --local state.sls sublime'
+
+open_intra:                                            ## Open Kohas intra-interface in firefox from vm-test.
+	vagrant ssh vm-test -c 'firefox "http://192.168.50.12:8081/" > firefox.log 2> firefox.err < /dev/null' &
 
 kibana: install_firefox_on_devops                      ## Run kibanas web ui from inside devops.
 	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" > firefox.log 2> firefox.err < /dev/null' &
