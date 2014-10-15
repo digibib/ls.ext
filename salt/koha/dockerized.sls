@@ -47,6 +47,8 @@ koha_container_installed:
     - ports:
       - "8080/tcp"
       - "8081/tcp"
+    - volumes:
+      - /var/log
     - require:
       - docker: koha_docker_image
 
