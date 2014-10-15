@@ -82,6 +82,10 @@ delete_ship: stop_ship
 delete_db:
 	vagrant ssh vm-ship -c 'sudo docker rm koha_mysql_data'
 
+delete_logs:
+	vagrant ssh vm-ship -c 'sudo docker rm koha_logs_volume'
+
+
 clean: clean_report clean_test                         ## Destroy boxes (except vm-ship and vm-devops).
 
 clean_report:                                          ## Clean cucumber reports.
