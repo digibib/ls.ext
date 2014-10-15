@@ -4,5 +4,5 @@
 
 koha_docker_image:
   docker.pulled:
-    - name: digibib/koha:latest
+    - name: digibib/koha:{{ pillar['koha']['koha-image-tag'] }}
     - force: True
