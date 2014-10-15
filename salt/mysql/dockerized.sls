@@ -7,26 +7,13 @@ mysql:
 
 ##########
 # MYSQL DATA VOLUME
-# - should never be running
+# - need to run manual command, as docker.installed doesn't actually create container
 ##########
 
 mysql_data_volume:
-  docker.installed:
-    - name: koha_mysql_data
-    - image: busybox:latest
-    - port_bindings:
-        "3306/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "3306"
-    - volumes:
-      - /var/lib/mysql
-
-# No docker.stopped module yet
-mysql_data_volume_stopped:
   cmd.run:
-    - name: docker stop koha_mysql_data || true
-    - require:
-      - docker: mysql_data_volume
+    - name: docker run --detach --volume=/var/lib/mysql --name=koha_mysql_data busybox echo "mysql data volume created"
+    - unless: docker inspect koha_mysql_data > /dev/null
 
 ##########
 # MYSQL DOCKER CONTAINER
@@ -71,6 +58,6 @@ koha_mysql_container_running:
     - volumes_from:
       - "koha_mysql_data"
     - watch:
-      - docker: mysql_data_volume
+      - cmd: mysql_data_volume
       - docker: koha_mysql_container_installed
 
