@@ -16,5 +16,5 @@ base:
   'vm-devops':
     - common.docker
     - common.nsenter
-    - kibana.pulled
-    - kibana.dockerized
+    - elk.pulled
+    - elk.dockerized
