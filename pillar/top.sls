@@ -6,5 +6,5 @@ base:
     - koha.admin
 
   'vm-devops':
-    - kibana
+    - elk
 
