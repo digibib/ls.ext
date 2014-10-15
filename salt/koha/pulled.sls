@@ -4,5 +4,5 @@
 
 koha_docker_image:
   docker.pulled:
-    - name: digibib/koha-salt-docker:latest
+    - name: digibib/koha:latest
     - force: True

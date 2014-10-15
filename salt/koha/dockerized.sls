@@ -27,21 +27,21 @@ apache2:
 koha_container_stop_if_old:
   cmd.run:
     - name: docker stop koha_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha-salt-docker[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
     - require:
       - docker: mysql_docker_image
 
 koha_container_remove_if_old:
   cmd.run:
     - name: docker rm koha_container || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha-salt-docker[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" koha_container | grep $(docker images | egrep "digibib/koha[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: koha_container_stop_if_old
 
 koha_container_installed:
   docker.installed:
     - name: koha_container
-    - image: digibib/koha-salt-docker:latest
+    - image: digibib/koha:latest
     - environment:
       - "KOHA_ADMINPASS": "{{ pillar['koha']['adminpass'] }}"
       - "KOHA_ADMINUSER": "{{ pillar['koha']['adminuser'] }}"
