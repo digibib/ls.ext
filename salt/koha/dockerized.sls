@@ -53,6 +53,7 @@ koha_container_installed:
       - /var/log
     - require:
       - docker: koha_docker_image
+      - docker: koha_logs_volume_installed
 
 koha_container_running:
   docker.running:
