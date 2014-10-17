@@ -15,6 +15,8 @@ halt: halt_test halt_ship                             ## Halt boxes (except vm-d
 
 reload_devops: halt_devops up_devops                  ##
 
+reload_ship: halt_ship up_ship                        ##
+
 halt_test:                                            ##
 	vagrant halt vm-test
 
