@@ -17,6 +17,12 @@ koha_logs_volume_run_once:
     - require:
       - docker: koha_logs_volume_installed
 
+koha_logs_volume_makedirs:
+  cmd.run:
+    - name: docker run --rm --volumes-from=koha_logs_volume busybox mkdir -p /var/log/apache2 /var/log/koha/name
+    - require:
+      - docker: koha_logs_volume_run_once
+
 ##########
 # KOHA DOCKER CONTAINER
 ##########
@@ -75,4 +81,4 @@ koha_container_running:
     - watch:
       - docker: koha_container_installed
       - docker: koha_mysql_container_running
-      - docker: koha_logs_volume_run_once
+      - cmd: koha_logs_volume_makedirs
