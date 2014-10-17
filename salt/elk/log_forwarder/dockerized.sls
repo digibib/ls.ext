@@ -28,7 +28,6 @@ lf_container_installed:
     - require:
       - docker: lf_image_built
 
-# FIX: container stops immedeately, but runs fine when started manually with 'sudo docker run lf_image'
 lf_container_running:
   docker.running:
     - container: lf_container
