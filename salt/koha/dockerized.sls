@@ -1,4 +1,29 @@
 ##########
+# KOHA LOGS VOLUME
+##########
+
+koha_logs_volume_installed:
+  docker.installed:
+    - name: koha_logs_volume
+    - image: busybox
+    - volumes:
+      - /var/log
+
+koha_logs_volume_run_once:
+  docker.running:
+    - name: koha_logs_volume
+    - volumes: /var/log
+    - check_is_running: False
+    - require:
+      - docker: koha_logs_volume_installed
+
+koha_logs_volume_makedirs:
+  cmd.run:
+    - name: docker run --rm --volumes-from=koha_logs_volume busybox mkdir -p /var/log/apache2 /var/log/koha/name
+    - require:
+      - docker: koha_logs_volume_run_once
+
+##########
 # KOHA DOCKER CONTAINER
 ##########
 
@@ -31,8 +56,11 @@ koha_container_installed:
     - ports:
       - "8080/tcp"
       - "8081/tcp"
+    - volumes:
+      - /var/log
     - require:
       - docker: koha_docker_image
+      - docker: koha_logs_volume_installed
 
 koha_container_running:
   docker.running:
@@ -48,6 +76,9 @@ koha_container_running:
       - "koha_mysql_container"
     - links:
         koha_mysql_container: db
+    - volumes_from:
+      - "koha_logs_volume"
     - watch:
       - docker: koha_container_installed
       - docker: koha_mysql_container_running
+      - cmd: koha_logs_volume_makedirs

@@ -5,6 +5,9 @@ base:
     - koha
     - koha.admin
 
+  'vm-ship':
+    - elk
+
   'vm-devops':
-    - kibana
+    - elk
 

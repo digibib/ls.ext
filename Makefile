@@ -15,6 +15,8 @@ halt: halt_test halt_ship                             ## Halt boxes (except vm-d
 
 reload_devops: halt_devops up_devops                  ##
 
+reload_ship: halt_ship up_ship                        ##
+
 halt_test:                                            ##
 	vagrant halt vm-test
 
@@ -67,7 +69,7 @@ test_one:                                              ## Run 'utlaan_via_adminb
 
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
-	vagrant ssh vm-ship -c 'sudo docker stop koha_container'
+	vagrant ssh vm-ship -c 'sudo docker stop koha_container lf_container'
 
 delete_koha: stop_koha
 	vagrant ssh vm-ship -c 'sudo docker rm koha_container'
@@ -81,6 +83,10 @@ delete_ship: stop_ship
 
 delete_db:
 	vagrant ssh vm-ship -c 'sudo docker rm koha_mysql_data'
+
+delete_logs:
+	vagrant ssh vm-ship -c 'sudo docker rm koha_logs_volume'
+
 
 clean: clean_report clean_test                         ## Destroy boxes (except vm-ship and vm-devops).
 
@@ -118,7 +124,7 @@ open_intra:                                            ## Open Kohas intra-inter
 	vagrant ssh vm-test -c 'firefox "http://192.168.50.12:8081/" > firefox.log 2> firefox.err < /dev/null' &
 
 kibana: install_firefox_on_devops                      ## Run kibanas web ui from inside devops.
-	vagrant ssh vm-devops -c 'firefox "http://localhost/" > firefox.log 2> firefox.err < /dev/null' &
+	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" > firefox.log 2> firefox.err < /dev/null' &
 
 install_firefox_on_devops:
 	vagrant ssh vm-devops -c 'sudo salt-call --local state.sls firefox'

@@ -12,6 +12,10 @@ base:
 
   'vm-ship':
     - common.nsenter
+    - elk.log_forwarder.dockerized
 
   'vm-devops':
-    - kibana
+    - common.docker
+    - common.nsenter
+    - elk.pulled
+    - elk.dockerized
