@@ -76,8 +76,8 @@ koha_container_running:
       - "koha_mysql_container"
     - links:
         koha_mysql_container: db
-    - volumes_from:
-      - "koha_logs_volume"
+    #- volumes_from:
+    #  - "koha_logs_volume"
     - watch:
       - docker: koha_container_installed
       - docker: koha_mysql_container_running
