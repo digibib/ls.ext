@@ -29,8 +29,21 @@ prod_bootstrap_minion: # You need to specify SUDOUSER, MASTER, MINION, MASTER_IP
 prod_ping_all: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" test.ping'
 
+prod_restart_minion: # You need to specify SUDOUSER, MINION
+	ssh -t $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
+
+prod_master_log: # You need to specify SUDOUSER, MASTER
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo tail -100f /var/log/salt/master'
+
+prod_minion_log: # You need to specify SUDOUSER, MINION
+	ssh -t $(SUDOUSER)@$(MINION) 'sudo tail -100f /var/log/salt/minion'
+
 prod_highstate: # You need to specify SUDOUSER, MASTER, GITREF
 	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt "*" --log-level info --log-file-level=debug state.highstate 2>&1 | sudo tee -a deploy.log'
 
+prod_command: # You need to specify SUDOUSER, MASTER, CMD
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" $(CMD)'
+
 prod_deploy_log: # You need to specify SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && cat deploy.log'
+
