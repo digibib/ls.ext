@@ -15,6 +15,14 @@ Given(/^at det er valgt en avdeling$/) do
   @browser.form(:action => "selectbranchprinter.pl").submit
 end
 
+Given(/^at jeg har en liste over avdelinger$/) do
+  @branches = File.join(File.dirname(__FILE__), '..', 'upload-files', 'branches.csv')
+end
+
+When(/^jeg velger å vise alle avdelinger$/) do
+  @browser.select_list(:name => "branchest_length").select_value("-1")
+end
+
 When(/^jeg er på administrasjonssiden for avdelinger$/) do
   @browser.goto intranet(:branches)
 end
@@ -50,4 +58,20 @@ Then(/^finnes avdelingen i oversikten over avdelinger$/) do
   table.should be_present
   table.text.should include(@context[:branchname])
   table.text.should include(@context[:branchcode])
+end
+
+
+Then(/^samsvarer listen i grensesnittet med liste over avdelinger$/) do
+  rows = @browser.table(:id => "branchest").tbody.rows
+  rows.each do |row|
+    CSV.foreach(@branches, {
+        :headers => true, 
+        :encoding => 'UTF-8',
+        :header_converters => :symbol
+      }) do |csv|
+        row[0].text.should include(csv[:branchname])
+        row[1].text.should include(csv[:branchcode])
+    end
+  end
+  pending # express the regexp above with the code you wish you had
 end
