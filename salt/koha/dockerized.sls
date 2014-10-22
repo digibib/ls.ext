@@ -37,6 +37,7 @@ koha_container_installed:
 koha_container_running:
   docker.running:
     - container: koha_container
+    - hostname: koha
     - port_bindings:
         "8080/tcp":
             HostIp: "0.0.0.0"
