@@ -21,9 +21,9 @@ elk_container_installed:
     - name: elk_container
     - image: pblittle/docker-logstash
     - environment:
-      - LF_SSL_CERT_KEY_URL: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/elk/files/tls/private/logstash-forwarder.key
-      - LF_SSL_CERT_URL: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/elk/files/tls/certs/logstash-forwarder.crt
-      - LOGSTASH_CONFIG_URL: https://raw.githubusercontent.com/digibib/ls.ext/logging/salt/elk/files/logstash.conf
+      - LF_SSL_CERT_KEY_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/tls/private/logstash-forwarder.key
+      - LF_SSL_CERT_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/tls/certs/logstash-forwarder.crt
+      - LOGSTASH_CONFIG_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/logstash.conf
     - ports:
       - "5000/tcp" # lumberjack
       - "9292/tcp" # kibana
