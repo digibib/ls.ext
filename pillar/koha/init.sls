@@ -1,4 +1,4 @@
 koha:
   saltfiles: salt://koha/files
   filerepo: http://datatest.deichman.no/saltfiles/koha/
-  koha-image-tag: 78b5cbef2a7e9fbc48e3679fb4300f9c2b3a6004
+  koha-image-tag: 451a64a687e7c8b2ee8e6b50c7db0341e53c3f36
