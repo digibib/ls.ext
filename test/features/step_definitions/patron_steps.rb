@@ -44,6 +44,43 @@ Given(/^at det finnes konverterte lånerdata$/) do
   }
 end
 
+Given(/^at jeg har en liste over lånerkategorier$/) do
+  @borrower_categories = File.join(File.dirname(__FILE__), '..', 'upload-files', 'borrower_categories.csv')
+end
+
+When(/^jeg er på administrasjonssiden for lånerkategorier$/) do
+  @browser.goto intranet(:patron_categories)
+end
+
+When(/^jeg velger å vise alle lånerkategorier$/) do
+  @browser.select_list(:name => "table_categorie_length").select_value("-1")
+end
+
+Then(/^samsvarer listen i grensesnittet med liste over lånerkategorier$/) do
+  rows = @browser.table(:id => "table_categorie").tbody.rows
+  orig = []
+  #rows.each do |row| 
+  #  orig << { :categorycode => row[0].text, :description => row[1].text }
+  #end
+  orig << { :categorycode => "one", :description => "two" }
+  csv = []
+  CSV.foreach(@borrower_categories, {
+      :headers => true, 
+      :encoding => 'UTF-8',
+      :header_converters => :symbol
+    }) do |c|
+      csv << { :categorycode => c[:categorycode], :description => c[:description] }
+  end
+  # Array comparison
+  a = (orig & csv == orig)
+  b = (csv & orig == csv)
+
+  a.should == true
+  b.should == true
+
+end
+
+
 When(/^lånerdata migreres$/) do
   @patrons = Migration.new(@map, @import)
   @context[:cardnumber] = generateRandomString
