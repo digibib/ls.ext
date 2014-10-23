@@ -59,10 +59,9 @@ end
 Then(/^samsvarer listen i grensesnittet med liste over lånerkategorier$/) do
   rows = @browser.table(:id => "table_categorie").tbody.rows
   orig = []
-  #rows.each do |row| 
-  #  orig << { :categorycode => row[0].text, :description => row[1].text }
-  #end
-  orig << { :categorycode => "one", :description => "two" }
+  rows.each do |row|
+    orig << { :categorycode => row[0].text, :description => row[1].text }
+  end
   csv = []
   CSV.foreach(@borrower_categories, {
       :headers => true, 
