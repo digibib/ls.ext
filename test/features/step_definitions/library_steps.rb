@@ -63,15 +63,24 @@ end
 
 Then(/^samsvarer listen i grensesnittet med liste over avdelinger$/) do
   rows = @browser.table(:id => "branchest").tbody.rows
-  rows.each do |row|
-    CSV.foreach(@branches, {
-        :headers => true, 
-        :encoding => 'UTF-8',
-        :header_converters => :symbol
-      }) do |csv|
-        row[0].text.should include(csv[:branchname])
-        row[1].text.should include(csv[:branchcode])
-    end
+  orig = []
+  rows.each do |row| 
+    orig << { :branchname => row[0].text, :branchcode => row[1].text }
   end
-  pending # express the regexp above with the code you wish you had
+  
+  csv = []
+  CSV.foreach(@branches, {
+      :headers => true, 
+      :encoding => 'UTF-8',
+      :header_converters => :symbol
+    }) do |c|
+      csv << { :branchname => c[:branchname], :branchcode => c[:branchcode] }
+  end
+  # Array comparison
+  a = (orig & csv == orig)
+  b = (csv & orig == csv)
+
+  a.should == true
+  b.should == true
+
 end
