@@ -1,5 +1,26 @@
 ##########
-# KIBANA DOCKER CONTAINER
+# ELK DATA VOLUME
+##########
+elk_data_volume_installed:
+  docker.installed:
+    - name: elk_data
+    - image: busybox
+    - volumes:
+      - /data/elasticsearch
+
+
+elk_data_volume_run_once:
+  docker.running:
+  - container: elk_data
+  - volumes:
+    - /data/elasticsearch
+  - check_is_running: False
+  - require:
+    - docker: elk_data_volume_installed
+
+
+##########
+# ELK CONTAINER
 ##########
 
 elk_container_stop_if_old:
@@ -46,5 +67,8 @@ elk_container_running:
             HostPort: "9200"
     - check_is_running:
       - "elk_container"
+    - volumes_from:
+      - "elk_data"
     - watch:
       - docker: elk_container_installed
+      - docker: elk_data_volume_run_once
