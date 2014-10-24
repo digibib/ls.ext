@@ -47,6 +47,8 @@ koha_container_running:
             HostPort: "8081"
     - check_is_running:
       - "koha_mysql_container"
+    - volumes_from:
+      - "koha_mysql_data"
     - links:
         koha_mysql_container: db
     - watch:

@@ -47,7 +47,7 @@ koha_mysql_container_remove_if_old:
 koha_mysql_container_installed:
   docker.installed:
     - name: koha_mysql_container
-    - command: ["mysqld", "--datadir=/var/lib/mysql", "--user=mysql", "--max_allowed_packet=64M", "--wait_timeout=6000", "--bind-address=0.0.0.0"]
+    - command: ["mysqld_safe", "--datadir=/var/lib/mysql", "--user=mysql", "--max_allowed_packet=64M", "--wait_timeout=6000", "--bind-address=0.0.0.0", "--log-error=/var/lib/mysql/mysql.err"]
     - image: mysql:5.6 # Version MUST be in line with the one used in koha_mysql_container_stop_if_old
     - environment:
       - "MYSQL_ROOT_PASSWORD": "{{ pillar['koha']['adminpass'] }}"
