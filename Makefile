@@ -69,7 +69,7 @@ test_one:                                              ## Run 'utlaan_via_adminb
 
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
-	vagrant ssh vm-ship -c 'sudo docker stop koha_container lf_container'
+	vagrant ssh vm-ship -c 'sudo docker stop koha_container'
 
 delete_koha: stop_koha
 	vagrant ssh vm-ship -c 'sudo docker rm koha_container'
