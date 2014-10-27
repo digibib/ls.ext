@@ -1,21 +1,16 @@
-docker-python-apt:
+dockerpy-prereqs:
   pkg.installed:
-    - name: python-apt
+    - pkgs:
+      - python-apt
+      - git
+      - python-pip
 
-docker-git:
-  pkg.installed:
-    - name: git
-
-docker-python-pip:
-  pkg.installed:
-    - name: python-pip
-
-docker-python-dockerpy:
+dockerpy:
   pip.installed:
     - name: docker-py
     - repo: git+https://github.com/dotcloud/docker-py.git
     - require:
-      - pkg: docker-python-pip
+      - pkg: dockerpy-prereqs
 
 docker-dependencies:
    pkg.installed:
@@ -31,10 +26,6 @@ docker_repo:
       - key_url: salt://common/docker.pgp
       - require_in:
           - pkg: lxc-docker
-      - require:
-        - pkg: docker-python-apt
-      - require:
-        - pkg: docker-python-pip
 
 lxc-docker:
   pkg.installed:
