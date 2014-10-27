@@ -57,7 +57,7 @@ dev_install_migration: ## You need to specify DOCKERHUBPWD
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.installed pillar="{deichman-at-docker-hub-password: $(DOCKERHUBPWD)}"'
 
 prod_install_migration: ## You need to specify SUDOUSER, MASTER, MINIONNAME, DOCKERHUBPWD
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level info state.sls migration.installed pillar="{deichman-at-docker-hub-password: $(DOCKERHUBPWD)}"'
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level info state.sls migration.installed pillar="{deichman-at-docker-hub-password: $(DOCKERHUBPWD)}" | sudo tee -a deploy.log'
 
 dev_get_dumps: ## You need to specify WOMBATUSER
 	vagrant ssh vm-ship -c 'mkdir -p /home/vagrant/bibliofildumps/'
@@ -66,10 +66,10 @@ dev_get_dumps: ## You need to specify WOMBATUSER
 # This could be done simpler as data is going from and to wombat, but this solves the general case where minion is unknown
 prod_get_dumps: ## You need to specify WOMBATUSER, SUDOUSER, MINION
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo mkdir -p /data/workdir'
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /data/workdir/'
+	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /data/workdir/ | sudo tee -a deploy.log'
 
 dev_import_patrons: ## 
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /home/vagrant/bibilofildumps}"'
 
 prod_import_patrons: ## SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /data/workdir}"'
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /data/workdir}" | sudo tee -a deploy.log'
