@@ -4,6 +4,7 @@ base:
     - match: list
     - koha
     - koha.admin
+    - migration
 
   'vm-ship':
     - elk
