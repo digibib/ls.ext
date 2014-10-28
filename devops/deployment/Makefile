@@ -44,14 +44,14 @@ dev_import_patrons:    ## Runs conversion and import of patrons
 
 # This could be done simpler as data is going from and to wombat, but this solves the general case where minion is unknown
 prod_install_migration: ## Installs migration in MININONAME - args:  SUDOUSER, MASTER, MINIONNAME, DOCKERHUBPWD
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level info state.sls migration.installed pillar="{deichman-at-docker-hub-password: $(DOCKERHUBPWD)}" | sudo tee -a deploy.log'
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.installed pillar="{deichman-at-docker-hub-password: $(DOCKERHUBPWD)}" | sudo tee -a deploy.log'
 
 prod_get_dumps: ## Downloads data dumps from wombat -args:  WOMBATUSER, SUDOUSER, MINION
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo mkdir -p /data/workdir'
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /data/workdir/ | sudo tee -a deploy.log'
 
 prod_import_patrons: ## Runs conversion and import of patrons - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /data/workdir}" | sudo tee -a deploy.log'
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.patrons_imported pillar="{migration-data-folder: /data/workdir}" | sudo tee -a deploy.log'
 
 ## 
 ## 
