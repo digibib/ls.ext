@@ -46,7 +46,7 @@ prod_restart_minion:    Ping all *connected* salt minions - args:  SUDOUSER, MIN
 prod_master_log:        Tail -f on master log - args:  SUDOUSER, MASTER
 prod_minion_log:        Tail -f on minion log - args: SUDOUSER, MINION
 prod_command:           Issues salt-command to ALL minions - args:  SUDOUSER, MASTER, CMD
-prod_deploy_log:       
+prod_deploy_log:        - args:  SUDOUSER, MASTER
  
  
 *******          BOOTSTRAPPING -- installing SALTSTACK --      *************

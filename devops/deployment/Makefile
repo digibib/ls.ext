@@ -84,8 +84,7 @@ prod_minion_log:       ## Tail -f on minion log - args: SUDOUSER, MINION
 prod_command:          ## Issues salt-command to ALL minions - args:  SUDOUSER, MASTER, CMD
 	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" $(CMD)'
 
-prod_deploy_log:       ##
-- args:  SUDOUSER, MASTER
+prod_deploy_log:       ## - args:  SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && cat deploy.log'
 
 ## 
