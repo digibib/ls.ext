@@ -6,43 +6,56 @@ Bootstrapping salt master / minons
 
  See Makefile for how to do this bootstrapping on the development vm's.
 
-## Install of salt master
-
-(stable):
-```ssh -t sudouser@master 'wget -O- --quiet https://bootstrap.saltstack.com | \
-   sudo sh -s -- -M -N'```
-
-(from git: v2014.1.10):
-NB: If remote server has firewall preventing git port, it can be circumvented by adding the
-`-g [git repo for salt]` flag to use https instead
-
-```ssh -t sudouser@master 'wget -O- --quiet https://bootstrap.saltstack.com | \
-   sudo sh -s -- -g https://github.com/saltstack/salt.git -M -N git v2014.1.10'```
-
-## Install salt minion
-
-1) install minion
-
-```ssh -t sudouser@minion 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -'```
-
-2) add master to minion
-
-add_master.py:
-
-```cat add_master.py | ssh -t sudouser@minion 'MASTER_IP=[add master ip here] python --'```
-
-3) remove any existing minion_master key
-
-```ssh -t sudouser@minion 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'```
-
-4) restart salt-minion
-
-```ssh -t sudouser@minion 'sudo service salt-minion restart'```
-
-## Accept minion keys on master
-
-```ssh -t suduser@master 'sudo salt-key --accept-all --yes'```
-
-## Test setup
-
-```ssh -t sudouser@master 'sudo salt "*" test.ping'```
+``` 
+****************        LS.ext DEVOPS Makefile      ************************
+ 
+help:                   Show this help.
+ 
+ 
+*******                      DEPLOYING                         *************
+ 
+------- DEV - tasks:                                           -------------
+dev_highstate:          Deploy current to your own local environment (vm-devops / vm-ship)
+ 
+------- PROD - tasks:                                          -------------
+prod_highstate:         Deploy specified version to production - args: SUDOUSER, MASTER, GITREF
+ 
+ 
+*******                     MIGRATING                          *************
+ 
+------- DEV - tasks:                                           -------------
+dev_install_migration:  Installs migration in vm-ship - args:  DOCKERHUBPWD
+dev_get_dumps:          Downloads data dumps from wombat - args: WOMBATUSER
+dev_import_patrons:     Runs conversion and import of patrons 
+ 
+------- PROD - tasks:                                          -------------
+prod_install_migration:  Installs migration in MININONAME - args:  SUDOUSER, MASTER, MINIONNAME, DOCKERHUBPWD
+prod_get_dumps:  Downloads data dumps from wombat -args:  WOMBATUSER, SUDOUSER, MINION
+prod_import_patrons:  Runs conversion and import of patrons - args: SUDOUSER, MASTER, MINIONNAME
+ 
+ 
+*******                 TROUBLESHOOTING                        *************
+ 
+------- DEV - tasks:                                           -------------
+dev_ping_all:           Ping all *connected* salt minions
+dev_restart_minion:     Restart minion - args: MINIONNAME 
+ 
+------- PROD - tasks:                                          -------------
+prod_ping_all:          Ping all *connected* salt minions - args: SUDOUSER, MASTER
+prod_restart_minion:    Ping all *connected* salt minions - args:  SUDOUSER, MINION
+prod_master_log:        Tail -f on master log - args:  SUDOUSER, MASTER
+prod_minion_log:        Tail -f on minion log - args: SUDOUSER, MINION
+prod_command:           Issues salt-command to ALL minions - args:  SUDOUSER, MASTER, CMD
+prod_deploy_log:       
+ 
+ 
+*******          BOOTSTRAPPING -- installing SALTSTACK --      *************
+ 
+------- DEV - tasks:                                           -------------
+dev_bootstrap:          Install salt-master+minion on vm-devops and minion on vm-ship
+ 
+------- PROD - tasks:                                          -------------
+prod_bootstrap_master:  Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
+prod_bootstrap_minion:  You need to specify SUDOUSER, MASTER, MINION, MASTER_IP
+ 	
+```
