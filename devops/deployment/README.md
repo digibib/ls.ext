@@ -24,12 +24,10 @@ prod_highstate:         Deploy specified version to production - args: SUDOUSER,
 *******                     MIGRATING                          *************
  
 ------- DEV - tasks:                                           -------------
-dev_install_migration:  Installs migration in vm-ship - args:  DOCKERHUBPWD
 dev_get_dumps:          Downloads data dumps from wombat - args: WOMBATUSER
 dev_import_patrons:     Runs conversion and import of patrons 
  
 ------- PROD - tasks:                                          -------------
-prod_install_migration:  Installs migration in MININONAME - args:  SUDOUSER, MASTER, MINIONNAME, DOCKERHUBPWD
 prod_get_dumps:  Downloads data dumps from wombat -args:  WOMBATUSER, SUDOUSER, MINION
 prod_import_patrons:  Runs conversion and import of patrons - args: SUDOUSER, MASTER, MINIONNAME
  

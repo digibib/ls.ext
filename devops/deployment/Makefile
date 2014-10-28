@@ -29,9 +29,6 @@ prod_highstate:        ## Deploy specified version to production - args: SUDOUSE
 ## 
 ##------- DEV - tasks:                                           -------------
 
-dev_install_migration: ## Installs migration in vm-ship - args:  DOCKERHUBPWD
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.installed pillar="{deichman-at-docker-hub-password: $(DOCKERHUBPWD)}"'
-
 dev_get_dumps:         ## Downloads data dumps from wombat - args: WOMBATUSER
 	vagrant ssh vm-ship -c 'mkdir -p /home/vagrant/bibliofildumps/'
 	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /home/vagrant/bibliofildumps/'
@@ -41,10 +38,6 @@ dev_import_patrons:    ## Runs conversion and import of patrons
 
 ## 
 ##------- PROD - tasks:                                          -------------
-
-# This could be done simpler as data is going from and to wombat, but this solves the general case where minion is unknown
-prod_install_migration: ## Installs migration in MININONAME - args:  SUDOUSER, MASTER, MINIONNAME, DOCKERHUBPWD
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.installed pillar="{deichman-at-docker-hub-password: $(DOCKERHUBPWD)}" | sudo tee -a deploy.log'
 
 prod_get_dumps: ## Downloads data dumps from wombat -args:  WOMBATUSER, SUDOUSER, MINION
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo mkdir -p /data/workdir'

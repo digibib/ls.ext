@@ -5,6 +5,7 @@ base:
     - koha
     - koha.admin
     - migration
+    - migration.admin
 
   'vm-ship':
     - elk

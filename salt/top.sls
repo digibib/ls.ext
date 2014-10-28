@@ -9,6 +9,7 @@ base:
     - koha.pulled
     - mysql.dockerized
     - koha.dockerized
+    - migration.dockerized
 
   'vm-ship':
     - common.nsenter
