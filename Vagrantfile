@@ -2,7 +2,9 @@
 # vi: set ft=ruby :
 require 'fileutils'
 
-koha_pillar_example = 'pillar/koha/admin.sls.example'
+vagrant_root = File.dirname(__FILE__)
+
+koha_pillar_example = "#{vagrant_root}/pillar/koha/admin.sls.example"
 
 koha_pillar_example_prev = koha_pillar_example + "_prev"
 pillar_file =  koha_pillar_example.sub(/\.example$/, '')
@@ -14,7 +16,7 @@ if !FileUtils.compare_file(pillar_file, koha_pillar_example)
   puts "Note: You are running a customized #{pillar_file}."
 end
 
-migration_pillar_example_file= 'pillar/migration/admin.sls.example'
+migration_pillar_example_file= "#{vagrant_root}/pillar/migration/admin.sls.example"
 migration_pillar_file =  migration_pillar_example_file.sub(/\.example$/, '')
 if !File.file?(migration_pillar_file) 
   raise "ERROR: You need to create a valid #{migration_pillar_file} based on #{migration_pillar_example_file}"
