@@ -118,10 +118,10 @@ install_sublime:
 	vagrant ssh vm-test -c 'sudo salt-call --local state.sls sublime'
 
 open_intra:                                            ## Open Kohas intra-interface in firefox from vm-test.
-	vagrant ssh vm-test -c 'firefox "http://192.168.50.12:8081/" > firefox.log 2> firefox.err < /dev/null' &
+	vagrant ssh vm-test -c 'firefox "http://192.168.50.12:8081/" -no-remote > firefox.log 2> firefox.err < /dev/null' &
 
 kibana: install_firefox_on_devops                      ## Run kibanas web ui from inside devops.
-	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" > firefox.log 2> firefox.err < /dev/null' &
+	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" -no-remote > firefox.log 2> firefox.err < /dev/null' &
 
 install_firefox_on_devops:
 	vagrant ssh vm-devops -c 'sudo salt-call --local state.sls firefox'
