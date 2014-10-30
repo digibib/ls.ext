@@ -87,9 +87,11 @@ prod_deploy_log:       ## - args:  SUDOUSER, MASTER
 ## 
 ##------- DEV - tasks:                                           -------------
 
-dev_bootstrap:         ## Install salt-master+minion on vm-devops and minion on vm-ship
-	vagrant ssh vm-devops -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git -M git v2014.1.10'
-	vagrant ssh vm-ship -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.10'
+dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on vm-ship
+	vagrant ssh vm-devops -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git -M git v2014.1.13'
+	vagrant ssh vm-ship -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+
+dev_bootstrap: dev_upgrade_salt  ## Install salt-master+minion on vm-devops and minion on vm-ship
 	cat add_master.py | vagrant ssh vm-ship -c 'MASTER_IP=192.168.50.21 python --'
 	vagrant ssh vm-ship -c 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
 	vagrant ssh vm-ship -c 'sudo service salt-minion restart'
@@ -98,14 +100,18 @@ dev_bootstrap:         ## Install salt-master+minion on vm-devops and minion on 
 ## 
 ##------- PROD - tasks:                                          -------------
 
-prod_bootstrap_master: ## Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s --'
+prod_upgrade_salt_master: ## Upgrade salt on master - args: SUDOUSER, MASTER
+	ssh -t $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+
+prod_upgrade_salt_minion: ## Upgrade salt on minion - args: SUDOUSER, MINION
+	ssh -t $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+
+prod_bootstrap_master : prod_upgrade_salt_master ## Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
 	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /var/lib/salt-master ] || sudo git clone https://github.com/digibib/ls.ext.git /var/lib/salt-master'
 	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /srv/salt ] || sudo ln -s /var/lib/salt-master/salt /srv'
 	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /srv/pillar ] || sudo ln -s /var/lib/salt-master/pillar /srv'
 
-prod_bootstrap_minion: ## You need to specify SUDOUSER, MASTER, MINION, MASTER_IP
-	ssh -t $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.10'
+prod_bootstrap_minion: prod_upgrade_salt_minion ## Install salt-minion and add to master - args: SUDOUSER, MASTER, MINION, MASTER_IP
 	scp add_master.py $(SUDOUSER)@$(MINION):adduser.py
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo MASTER_IP=$(MASTER_IP) python adduser.py'
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'

@@ -52,7 +52,7 @@ Vagrant.configure(2) do |config|
       salt.pillar_data
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
       salt.install_type = "git"
-      salt.install_args = "v2014.1.10"
+      salt.install_args = "v2014.1.13"
     end
   end
 
@@ -96,7 +96,7 @@ Vagrant.configure(2) do |config|
       salt.verbose = true
       salt.install_type = "git"
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
-      salt.install_args = "v2014.1.10"
+      salt.install_args = "v2014.1.13"
     end
   end # vm-test
 
@@ -132,7 +132,7 @@ Vagrant.configure(2) do |config|
       salt.verbose = true
       salt.install_type = "git"
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
-      salt.install_args = "v2014.1.10"
+      salt.install_args = "v2014.1.13"
     end
   end # vm-devops
 
