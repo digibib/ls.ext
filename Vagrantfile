@@ -34,7 +34,7 @@ Vagrant.configure(2) do |config|
       config.cache.scope = :box
     end
 
-    if config.vm.provider "virtualbox" do |vb|
+    config.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048"]
     end
 
