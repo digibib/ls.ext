@@ -29,7 +29,7 @@ docker_repo:
 
 lxc-docker:
   pkg.installed:
-    - version: "1.3.0-20141016165047-c78088f"
+    - version: "1.3.1"
     - require:
       - pkg: docker-dependencies
 
