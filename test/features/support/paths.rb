@@ -22,7 +22,9 @@ module Paths
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
       :stage_marc => "/cgi-bin/koha/tools/stage-marc-import.pl",
       :select_branch => "/cgi-bin/koha/circ/selectbranchprinter.pl",
-      :checkout => "/cgi-bin/koha/circ/circulation.pl"
+      :checkout => "/cgi-bin/koha/circ/circulation.pl",
+      :authorised_values => "/cgi-bin/koha/admin/authorised_values.pl",
+      :cataloguing => "/cgi-bin/koha/cataloguing/addbooks.pl"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     return "http://#{host}:#{port}#{paths[path.to_sym]}"
