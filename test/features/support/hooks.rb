@@ -40,7 +40,12 @@ After do # The final hook
 end
 
 After do |scenario| # cleanup based on @cleanup - in reverse order
-  STDOUT.puts "--------------- Context and cleanup: #{scenario.title} "
+  if (defined? scenario.title) 
+    title = scenario.title
+  else
+    title = scenario.scenario_outline.title
+  end
+  STDOUT.puts "--------------- Context and cleanup: #{title} "
   STDOUT.puts @context.pretty_inspect
 
   last_cleanup_exception = nil
