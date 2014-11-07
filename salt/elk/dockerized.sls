@@ -42,15 +42,16 @@ elk_container_installed:
     - name: elk_container
     - image: pblittle/docker-logstash
     - environment:
-      - LF_SSL_CERT_KEY_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/tls/private/logstash-forwarder.key
-      - LF_SSL_CERT_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/tls/certs/logstash-forwarder.crt
-      - LOGSTASH_CONFIG_URL: https://raw.githubusercontent.com/digibib/ls.ext/master/salt/elk/files/logstash.conf
+      - LF_SSL_CERT_KEY_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.key"
+      - LF_SSL_CERT_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.crt"
+      - LOGSTASH_CONFIG_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash.conf"
     - ports:
       - "5000/tcp" # lumberjack
       - "9292/tcp" # kibana
       - "9200/tcp" # elasticsearch
     - require:
       - docker: elk_docker_image
+      - docker: config_container_running
 
 elk_container_running:
   docker.running:
@@ -58,7 +59,7 @@ elk_container_running:
     - port_bindings:
         "5000/tcp":
             HostIp: "0.0.0.0"
-            HostPort: "5000"
+            HostPort: "{{ pillar['elk']['lumberjack-port'] }}"
         "9292/tcp":
             HostIp: "0.0.0.0"
             HostPort: "9292"

@@ -1,21 +1,26 @@
 base:
   '*':
     - common
+    - common.docker
+
+  'vm-ship,vm-devops':
+    - match: list
+    - common.nsenter
+
+  'dfb,vm-devops':
+    - match: list
+    - elk
+    - elk.configserver
+    - elk.pulled
+    - elk.dockerized
+    - elk.dockerlog-forwarder
 
   'wombat,vm-ship':
     - match: list
-    - common.docker
+    - elk
+    - elk.dockerlog-forwarder
     - mysql.pulled
     - koha.pulled
     - mysql.dockerized
     - koha.dockerized
     - migration.dockerized
-
-  'vm-ship':
-    - common.nsenter
-
-  'vm-devops':
-    - common.docker
-    - common.nsenter
-    - elk.pulled
-    - elk.dockerized
