@@ -24,7 +24,8 @@ module Paths
       :select_branch => "/cgi-bin/koha/circ/selectbranchprinter.pl",
       :checkout => "/cgi-bin/koha/circ/circulation.pl",
       :authorised_values => "/cgi-bin/koha/admin/authorised_values.pl",
-      :cataloguing => "/cgi-bin/koha/cataloguing/addbooks.pl"
+      :cataloguing => "/cgi-bin/koha/cataloguing/addbooks.pl",
+      :circulation_rules => "/cgi-bin/koha/admin/smart-rules.pl"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     return "http://#{host}:#{port}#{paths[path.to_sym]}"

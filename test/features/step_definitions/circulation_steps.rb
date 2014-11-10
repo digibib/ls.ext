@@ -1,5 +1,6 @@
 # encoding: UTF-8
 
+require 'pp'
 Given(/^at en bok er utlånt til en låner$/) do
   step "jeg registrerer \"Knut\" som aktiv låner"
   step "jeg registrerer utlån av boka"
@@ -61,7 +62,7 @@ Then(/^viser systemet at låneren ikke låner boka$/) do
   @browser.text.should_not include "Checked out to Knut"
 end
 
-Gitt(/^at status (.*?) er innstilt med data$/) do |status,table|
+Given(/^at status (.*?) er innstilt med data$/) do |status,table|
   @browser.goto intranet(:authorised_values)
   s = @browser.select_list :id => 'searchfield'
   s.select "#{status}"
@@ -78,19 +79,19 @@ Gitt(/^at status (.*?) er innstilt med data$/) do |status,table|
   table.diff!(p)
 end
 
-Når(/^jeg leter opp boka i katalogiseringssøk$/) do
+When(/^jeg leter opp boka i katalogiseringssøk$/) do
   @browser.goto intranet(:cataloguing)
   @browser.text_field(:name => 'q').set @context[:book_title]
   @browser.form(:name => 'search').submit
   @browser.text.include?("Add/Edit items") == true
 end
 
-Når(/^velger å redigere eksemplarstatus$/) do
+When(/^velger å redigere eksemplarstatus$/) do
   @browser.link(:text => 'Add/Edit items').click
   @browser.link(:text => 'Edit').click
 end
 
-Når(/^jeg stiller status til "(.*?)"$/) do |status|
+When(/^jeg stiller status til "(.*?)"$/) do |status|
   def selector (subfield,status)
     s = @browser.select_list(:id => /^tag_952_subfield_#{subfield}_[0-9]+$/)
     s.select "#{status}" 
@@ -108,9 +109,30 @@ Når(/^jeg stiller status til "(.*?)"$/) do |status|
   when "i bestilling","ny","til innbinding","til internt bruk","til katalogisering","til retting","vurderes kassert"
     selector(7,status)
   end
-
 end
 
-Så(/^viser systemet at eksemplaret har status "(.*?)"$/) do |status|
+Then(/^viser systemet at eksemplaret har status "(.*?)"$/) do |status|
   @browser.table(:id => "itemst").text.include?("#{status}").should == true
 end
+
+Given(/^at jeg er på sida for sirkulasjonsregler$/) do
+  @browser.goto intranet(:circulation_rules)
+end
+
+Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do |table|
+  table = table.raw()
+  rows = @browser.table(:id => "default-circulation-rules").tbody.rows
+  orig = []
+  rows.each do |row| 
+    orig << [row[0].text, row[1].text, row[2].text, row[3].text, row[4].text, row[5].text, row[6].text, row[7].text, row[8].text, row[9].text, row[10].text, row[11].text, row[12].text, row[13].text, row[14].text, row[15].text, row[16].text ]
+  end
+  orig.pop
+  a = (table & orig == table)
+  b = (orig & table == orig)
+
+  a.should == true
+  b.should == true
+
+end
+
+
