@@ -52,26 +52,26 @@ generate_logstash_crt_hash:
 
 nginx_docker_image:
   docker.pulled:
-    - name: nginx
+    - name: nginx:1.7.7
 
 config_container_stop_if_old:
   cmd.run:
     - name: docker stop config_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*1.7.7[[:space:]]+" | awk '{ print $3 }')
     - require:
       - docker: nginx_docker_image
 
 config_container_remove_if_old:
   cmd.run:
     - name: docker rm config_container || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*1.7.7[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: config_container_stop_if_old
 
 config_container_installed:
   docker.installed:
     - name: config_container
-    - image: nginx
+    - image: nginx:1.7.7
     - volumes:
       - /usr/share/nginx/html
     - require:
