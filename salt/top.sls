@@ -13,7 +13,6 @@ base:
     - elk.configserver
     - elk.pulled
     - elk.dockerized
-    - elk.dockerlog-forwarder
 
   'wombat,vm-ship':
     - match: list
