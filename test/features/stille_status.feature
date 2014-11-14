@@ -46,7 +46,7 @@ Egenskap: Test av statuser
     Abstrakt Scenario: Stille eksemplarstatus
       Gitt at boka finnes i biblioteket
       Når jeg leter opp boka i katalogiseringssøk
-      Og velger å redigere eksemplarstatus
+      Og velger å redigere eksemplaret
       Og jeg stiller status til "<Status>"
       Så viser systemet at eksemplaret har status "<Status>"
  

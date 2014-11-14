@@ -86,7 +86,7 @@ When(/^jeg leter opp boka i katalogiseringssøk$/) do
   @browser.text.include?("Add/Edit items") == true
 end
 
-When(/^velger å redigere eksemplarstatus$/) do
+When(/^velger å redigere eksemplaret$/) do
   @browser.link(:text => 'Add/Edit items').click
   @browser.link(:text => 'Edit').click
 end
