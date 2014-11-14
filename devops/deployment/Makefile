@@ -44,7 +44,7 @@ dev_get_dumps:         ## Downloads data dumps from wombat - args: WOMBATUSER
 	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /home/vagrant/bibliofildumps/'
 
 dev_import_patrons:    ## Runs conversion and import of patrons 
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /home/vagrant/bibilofildumps}"'
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /home/vagrant/bibliofildumps}"'
 
 ## 
 ##------- PROD - tasks:                                          -------------
