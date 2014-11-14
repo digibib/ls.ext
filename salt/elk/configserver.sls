@@ -15,11 +15,12 @@ openssl:
 generate_logstash_keys: # https://gist.github.com/sandstrom/a92a9d384999c659d96a
   cmd.run:
     - name: openssl req -x509 -config /etc/logstash/ssl.conf -batch -nodes -newkey rsa:2048 -keyout /etc/logstash/logstash-forwarder.key -out /etc/logstash/logstash-forwarder.crt -days 3650
-#    - unless: [ -f "/etc/logstash/logstash-forwarder.key" ]
+    - unless: [ -f "/etc/logstash/logstash-forwarder.crt" ]
     - require: 
       - pkg: openssl
-      - file: /etc/logstash/ssl.conf
       - file: /etc/logstash
+    - watch:
+      - file: /etc/logstash/ssl.conf
 
 generate_logstash_key_hash:
   cmd.run:
@@ -83,8 +84,6 @@ config_container_running:
         "80/tcp":
             HostIp: "0.0.0.0"
             HostPort: "{{ pillar['elk']['configserver-port'] }}"
-    - check_is_running:
-      - "config_container"
     - binds:
         /etc/logstash/:
           bind: /usr/share/nginx/html
