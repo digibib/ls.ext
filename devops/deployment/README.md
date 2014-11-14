@@ -19,7 +19,7 @@ dev_highstate:          Deploy current to your own local environment (vm-devops 
  
 ------- PROD - tasks:                                          -------------
 prod_highstate:         Deploy specified version to production - args: SUDOUSER, MASTER, GITREF
- 
+prod_revision:          Shows the currently checked out revision on MASTER - args: SUDOUSER, MASTER
  
 *******                     MIGRATING                          *************
  

@@ -26,6 +26,9 @@ prod_highstate:        ## Deploy specified version to production - args: SUDOUSE
 	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt "*" --log-level info --log-file-level=debug state.highstate 2>&1 | sudo tee -a deploy.log'
 
 
+prod_revision:         ## Shows the currently checked out revision on MASTER - args: SUDOUSER, MASTER
+	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git rev-parse HEAD'
+
 prod_highstate_dry_run:        ## Dry run deployment of specified version to production - args: SUDOUSER, MASTER, GITREF
 	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) && sudo salt "*" --log-level info --log-file-level=debug state.highstate test=True'
 
