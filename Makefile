@@ -106,7 +106,7 @@ login_ship:                                            ## DEV: Login to database
 	vagrant ssh vm-ship -c 'sudo mysql --user admin --password=secret --host 192.168.50.12 --port 3306'
 
 nsenter_koha:
-	vagrant ssh vm-ship -c 'sudo nsenter --target `sudo docker inspect --format="{{.State.Pid}}" koha_container` --mount --uts --ipc --net --pid '
+	vagrant ssh vm-ship -c 'sudo docker exec -it koha_container /bin/bash'
 
 mysql_client:
 	vagrant ssh vm-ship -c 'sudo apt-get install mysql-client && sudo mysql --user MYadmin --password=MYsecret --host 192.168.50.12 --port 3306'

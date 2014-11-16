@@ -5,7 +5,6 @@ base:
 
   'vm-ship,vm-devops':
     - match: list
-    - common.nsenter
 
   'dfb,vm-devops':
     - match: list
