@@ -14,8 +14,7 @@ openssl:
 
 generate_logstash_keys: # https://gist.github.com/sandstrom/a92a9d384999c659d96a
   cmd.run:
-    - name: openssl req -x509 -config /etc/logstash/ssl.conf -batch -nodes -newkey rsa:2048 -keyout /etc/logstash/logstash-forwarder.key -out /etc/logstash/logstash-forwarder.crt -days 3650
-    - unless: [ -f "/etc/logstash/logstash-forwarder.crt" ]
+    - name: '[ -f "/etc/logstash/logstash-forwarder.crt" ] || openssl req -x509 -config /etc/logstash/ssl.conf -batch -nodes -newkey rsa:2048 -keyout /etc/logstash/logstash-forwarder.key -out /etc/logstash/logstash-forwarder.crt -days 3650'
     - require: 
       - pkg: openssl
       - file: /etc/logstash
@@ -52,7 +51,7 @@ generate_logstash_crt_hash:
 
 nginx_docker_image:
   docker.pulled:
-    - name: nginx:1.7.7
+    - name: nginx:1.7.7 # http://nginx.com/blog/deploying-nginx-nginx-plus-docker/
 
 config_container_stop_if_old:
   cmd.run:
@@ -88,7 +87,7 @@ config_container_running:
         /etc/logstash/:
           bind: /usr/share/nginx/html
           ro: True
-    - watch:
+    - require:
       - docker: config_container_installed
       - file: /etc/logstash/logstash.conf
       - cmd: generate_logstash_keys
