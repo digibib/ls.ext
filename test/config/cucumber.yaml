@@ -2,11 +2,20 @@
 
 <% omit_wip = "--tags ~@wip" %>
 
-default: <%= omit_wip %> features
+<% omit_migration = "--tags ~@migration" %>
 
-html_report: <%= omit_wip %> --format html --out report/index.html
+default: <%= omit_migration %> <%= omit_wip %> features
 
-wip: --tags @wip
+html_report: <%= omit_migration %> <%= omit_wip %> --format html --out report/index.html
 
-html_report_wip: --tags @wip --format html --out report/index_wip.html
+wip: <%= omit_migration %> --tags @wip
 
+html_report_wip: <%= omit_migration %> --tags @wip --format html --out report/index_wip.html
+
+migration: <%= omit_wip %> --tags @migration
+
+html_report_migration: <%= omit_wip %> --tags @migration --format html --out report/index_migration.html
+
+migration_wip: --tags @wip --tags @migration
+
+html_report_migration_wip: --tags @wip --tags @migration --format html --out report/index_migration_wip.html
