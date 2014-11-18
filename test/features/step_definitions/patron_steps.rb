@@ -168,11 +168,13 @@ When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
 end
 
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
+  @context[:surname] = generateRandomString
   @browser.goto intranet(:patrons)
   @browser.button(:text => "New patron").click
   @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a.click
   form = @browser.form(:name => "form")
-  form.text_field(:id => "surname").set name
+  form.text_field(:id => "firstname").set name
+  form.text_field(:id => "surname").set @context[:surname] 
   form.text_field(:id => "userid").set name
   form.text_field(:id => "password").set name
   form.text_field(:id => "password2").set name
@@ -200,8 +202,11 @@ Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
 end
 
 Then(/^viser systemet at "(.*?)" er låner$/) do |name|
+  fullname = "#{name} #{@context[:surname]}"
+  #patron_search
   @browser.goto intranet(:patrons)
-  @browser.a(:text => "K").click
+  @browser.text_field(:id => "searchmember").set "#{fullname}"
+  @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
   # Koha will open the patron details page, as long as
   # there is just one patron with surname starting with 'K'
   @browser.title.should include name
