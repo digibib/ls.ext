@@ -6,13 +6,13 @@ base:
   'vm-ship,vm-devops':
     - match: list
 
-  'dfb,vm-devops':
+  'wombat,vm-devops':
     - match: list
     - elk
     - elk.configserver
     - elk.pulled
     - elk.dockerized
-    - elk.dockerlog-forwarder
+#    - elk.dockerlog-forwarder
 
   'wombat,vm-ship':
     - match: list
