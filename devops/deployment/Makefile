@@ -23,7 +23,7 @@ dev_highstate_dry_run:         ## Dry run deployment to your own local environme
 ##------- PROD - tasks:                                          -------------
 
 prod_highstate:        ## Deploy specified version to production - args: SUDOUSER, MASTER, GITREF
-	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt "*" --log-level info --log-file-level=debug state.highstate 2>&1 | sudo tee -a deploy.log'
+	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt -t 30 "*" --log-level info --log-file-level=debug state.highstate 2>&1 | sudo tee -a deploy.log'
 
 
 prod_revision:         ## Shows the currently checked out revision on MASTER - args: SUDOUSER, MASTER
@@ -64,7 +64,7 @@ prod_import_patrons: ## Runs conversion and import of patrons - args: SUDOUSER, 
 ##------- DEV - tasks:                                           -------------
 
 dev_ping_all:          ## Ping all *connected* salt minions
-	vagrant ssh vm-devops -c 'sudo salt "*" test.ping'
+	vagrant ssh vm-devops -c 'sudo salt -v "*" test.ping'
 
 dev_restart_minion:    ## Restart minion - args: MINIONNAME 
 	vagrant ssh $(MINIONNAME) -c 'sudo service salt-minion restart'
@@ -73,7 +73,7 @@ dev_restart_minion:    ## Restart minion - args: MINIONNAME
 ##------- PROD - tasks:                                          -------------
 
 prod_ping_all:         ## Ping all *connected* salt minions - args: SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" test.ping'
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt -t 30 -v "*" test.ping'
 
 prod_restart_minion:   ## Ping all *connected* salt minions - args:  SUDOUSER, MINION
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
