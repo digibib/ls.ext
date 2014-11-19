@@ -65,7 +65,7 @@ elk_container_running:
             HostPort: "9292"
         "9200/tcp":
             HostIp: "0.0.0.0"
-            HostPort: "9200"
+            HostPort: "9290"
     - check_is_running:
       - "elk_container"
     - volumes_from:
