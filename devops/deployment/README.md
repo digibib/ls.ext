@@ -2,7 +2,6 @@ Bootstrapping salt master / minons
 ======
 
  This How-To explains how to "automate" install of Salt Master, Salt Minion and keys
- Currently we use 2014.1.10 (last stable version without bad bugs)
 
  See Makefile for how to do this bootstrapping on the development vm's.
 
@@ -57,3 +56,6 @@ prod_bootstrap_master:  Install salt-master with ls.ext salt states and pillar d
 prod_bootstrap_minion:  You need to specify SUDOUSER, MASTER, MINION, MASTER_IP
  	
 ```
+
+Current deployment: ![Deployment illustration](deployment.png?raw=true "Deployment")
+
