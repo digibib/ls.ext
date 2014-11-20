@@ -8,7 +8,7 @@ end
 
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
   @browser.goto intranet(:home)
-  @browser.text_field(:id => "findborrower").set patron
+  @browser.text_field(:id => "findborrower").set "#{patron} #{@context[:surname]}"
   @browser.form(:id => "patronsearch").submit
 end
 

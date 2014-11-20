@@ -13,7 +13,7 @@ end
 
 Given(/^at det finnes en lånerkategori$/) do
   steps %Q{
-    Når jeg legger til en lånerkategori som heter "Voksen"
+    Når jeg legger til en lånerkategori
   }
 end
 
@@ -139,11 +139,12 @@ When(/^lånerdata importeres i admingrensesnittet$/) do
   )
 end
 
-When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
+When(/^jeg legger til en lånerkategori$/) do
   @browser.goto intranet(:patron_categories)
   @browser.link(:id => "newcategory").click
-  @context[:patron_category_code] = name.upcase
-  @context[:patron_category_description] = name
+  @context[:category_name] = generateRandomString
+  @context[:patron_category_code] = generateRandomString.upcase
+  @context[:patron_category_description] = generateRandomString
   form = @browser.form(:name => "Aform")
   form.text_field(:id => "categorycode").set @context[:patron_category_code]
   form.text_field(:id => "description").set @context[:patron_category_description]
@@ -152,12 +153,12 @@ When(/^jeg legger til en lånerkategori som heter "(.*?)"$/) do |name|
   form.submit
   @browser.form(:name => "Aform").should_not be_present
 
-  @cleanup.push( "lånerkategori #{name}" =>
+  @cleanup.push( "lånerkategori #{@context[:patron_category_description]}" =>
     lambda do
       @browser.goto intranet(:patron_categories)
       table = @browser.table(:id => "table_categorie")
       table.rows.each do |row|
-        if row.text.include?(name)
+        if row.text.include?(@context[:patron_category_description])
           row.link(:href => /op=delete_confirm/).click
           @browser.input(:value => "Delete this category").click
           break
@@ -171,19 +172,19 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   @context[:surname] = generateRandomString
   @browser.goto intranet(:patrons)
   @browser.button(:text => "New patron").click
-  @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a.click
+  @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => @context[:patron_category_description]).click
   form = @browser.form(:name => "form")
   form.text_field(:id => "firstname").set name
   form.text_field(:id => "surname").set @context[:surname] 
-  form.text_field(:id => "userid").set name
-  form.text_field(:id => "password").set name
-  form.text_field(:id => "password2").set name
-  form.submit
+  form.text_field(:id => "userid").set "#{name}.#{@context[:surname]}"
+  form.text_field(:id => "password").set @context[:surname]
+  form.text_field(:id => "password2").set @context[:surname]
+  form.button(:name => "save").click
 
-  @cleanup.push( "låner #{name}" =>
+  @cleanup.push( "låner #{name} #{@context[:surname]}" =>
     lambda do
       @browser.goto intranet(:patrons)
-      @browser.text_field(:id => "searchmember").set name
+      @browser.text_field(:id => "searchmember").set "#{name} #{@context[:surname]}"
       @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
       #Phantomjs doesn't handle javascript popus, so we must override
       #the confirm function to simulate "OK" click:
@@ -197,8 +198,9 @@ end
 
 Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
   table = @browser.table(:id => "table_categorie")
+  @browser.select_list(:name => "table_categorie_length").select_value("-1")
   table.wait_until_present
-  table.text.should include(@context[:patron_category_code])
+  table.text.should include @context[:patron_category_code]
 end
 
 Then(/^viser systemet at "(.*?)" er låner$/) do |name|
@@ -209,7 +211,7 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
   # Koha will open the patron details page, as long as
   # there is just one patron with surname starting with 'K'
-  @browser.title.should include name
+  @browser.title.should include fullname
   @context[:cardnumber] = @browser.title.match(/\((.*?)\)/)[1]
 end
 

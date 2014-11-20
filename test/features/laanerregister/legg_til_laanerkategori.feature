@@ -10,5 +10,5 @@ Egenskap: Legg til lånerkategori
     Gitt at jeg er logget inn som adminbruker
 
   Scenario: Legge til minimal lånerkategori via webgrensesnitt
-    Når jeg legger til en lånerkategori som heter "Voksen"
+    Når jeg legger til en lånerkategori
     Så kan jeg se kategorien i listen over lånerkategorier
