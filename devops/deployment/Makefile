@@ -32,6 +32,36 @@ prod_revision:         ## Shows the currently checked out revision on MASTER - a
 prod_highstate_dry_run:        ## Dry run deployment of specified version to production - args: SUDOUSER, MASTER, GITREF
 	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) && sudo salt "*" --log-level info --log-file-level=debug state.highstate test=True'
 
+
+
+##
+##
+##*******                     EXAMPLE DATA                       *************
+
+##
+##------- DEV - tasks:                                           -------------
+
+dev_extract_example_data:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
+	vagrant ssh vm-ship -c 'mkdir -p /home/vagrant/example_data/'
+	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /home/vagrant/example_data/'
+
+dev_load_example_data: dev_load_material_type ## Runs conversion and loads a complete set of example data
+
+dev_load_material_type: ## Loads example data of type itemtypes from csv-file
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.material_type_loaded pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
+##
+##------- PROD - tasks:                                          -------------
+
+prod_extract_example_data: ## Downloads complete set of example data from wombat -args:  WOMBATUSER, SUDOUSER, MINION
+	ssh -t $(SUDOUSER)@$(MINION) 'sudo mkdir -p /data/workdir'
+	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /data/workdir/ | sudo tee -a deploy.log'
+
+prod_load_example_data: prod_load_material_type ## Loads a complete set of example data
+
+prod_load_material_type: ## Loads example data of type itemtypes from csv-file - args: SUDOUSER, MASTER, MINIONNAME
+	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.material_type_loaded pillar="{migration-data-folder: /data/workdir}" | sudo tee -a deploy.log'
+
 ## 
 ## 
 ##*******                     MIGRATING                          *************
@@ -101,11 +131,13 @@ dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on vm-sh
 	vagrant ssh vm-devops -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git -M git v2014.1.13'
 	vagrant ssh vm-ship -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
 
-dev_bootstrap: dev_upgrade_salt  ## Install salt-master+minion on vm-devops and minion on vm-ship
+dev_connect_minions: ## Adds and connect minion
 	cat add_master.py | vagrant ssh vm-ship -c 'MASTER_IP=192.168.50.21 python --'
 	vagrant ssh vm-ship -c 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
 	vagrant ssh vm-ship -c 'sudo service salt-minion restart'
 	vagrant ssh vm-devops -c 'sudo salt-key --accept-all --yes'
+
+dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minion on vm-devops and minion on vm-ship
 
 ## 
 ##------- PROD - tasks:                                          -------------
@@ -121,10 +153,12 @@ prod_bootstrap_master : prod_upgrade_salt_master ## Install salt-master with ls.
 	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /srv/salt ] || sudo ln -s /var/lib/salt-master/salt /srv'
 	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /srv/pillar ] || sudo ln -s /var/lib/salt-master/pillar /srv'
 
-prod_bootstrap_minion: prod_upgrade_salt_minion ## Install salt-minion and add to master - args: SUDOUSER, MASTER, MINION, MASTER_IP
+prod_connect_minion: ## Adds and connect minion
 	scp add_master.py $(SUDOUSER)@$(MINION):adduser.py
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo MASTER_IP=$(MASTER_IP) python adduser.py'
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
 	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt-key --accept-all --yes'
+
+prod_bootstrap_minion: prod_upgrade_salt_minion prod_connect_minion ## Install salt-minion and add to master - args: SUDOUSER, MASTER, MINION, MASTER_IP
 ## 	
