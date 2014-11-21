@@ -41,14 +41,21 @@ prod_highstate_dry_run:        ## Dry run deployment of specified version to pro
 ##
 ##------- DEV - tasks:                                           -------------
 
-dev_extract_example_data:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
+dev_extract_example_data_full:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
 	vagrant ssh vm-ship -c 'mkdir -p /home/vagrant/example_data/'
-	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /home/vagrant/example_data/'
+	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /home/vagrant/example_data/'
+
+dev_extract_example_data_minimum:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
+	vagrant ssh vm-ship -c 'mkdir -p /home/vagrant/example_data/'
+	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /home/vagrant/example_data/'
 
 dev_load_example_data: dev_load_material_type ## Runs conversion and loads a complete set of example data
 
 dev_load_material_type: ## Loads example data of type itemtypes from csv-file
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.material_type_loaded pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
+dev_load_catalogue: ## Loads example data of type catalogue and exemplar
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.catalogue_loaded pillar="{migration-data-folder: /home/vagrant/example_data}"'
 
 ##
 ##------- PROD - tasks:                                          -------------
