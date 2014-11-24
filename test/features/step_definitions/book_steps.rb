@@ -92,6 +92,7 @@ end
 Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
   @browser.goto intranet(:item_types)
   table = @browser.table(:id => "table_item_type")
+  @browser.select_list(:name => "table_item_type_length").select_value("-1")
   table.wait_until_present
   table.text.should include(@context[:item_type_code])
   table.text.should include(@context[:item_type_desc])
