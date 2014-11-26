@@ -41,6 +41,9 @@ prod_highstate_dry_run:        ## Dry run deployment of specified version to pro
 ##
 ##------- DEV - tasks:                                           -------------
 
+dev_reset: ## Delete content from all relevant tables in koha
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.reset pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
 dev_extract_example_data_full:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
 	vagrant ssh vm-ship -c 'mkdir -p /home/vagrant/example_data/'
 	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /home/vagrant/example_data/'
@@ -49,13 +52,31 @@ dev_extract_example_data_minimum:  ## Downloads complete set of example data fro
 	vagrant ssh vm-ship -c 'mkdir -p /home/vagrant/example_data/'
 	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /home/vagrant/example_data/'
 
-dev_load_example_data: dev_load_material_type ## Runs conversion and loads a complete set of example data
+dev_load_example_data: dev_load_issuing_rules dev_load_authorised_values dev_load_patrons dev_load_material_type dev_load_catalogue  dev_load_loans dev_load_reservations ## Runs conversion and loads a complete set of example data
+
+dev_load_issuing_rules: ## Loads issuing rules
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
+dev_load_authorised_values: ## Loads authorised values
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.authorised_values_imported pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
+dev_load_branches: ## Loads data of type branches
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.branches_imported pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
+dev_load_patrons:    ## Loads example data of type patrons and exemplar
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /home/vagrant/example_data}"'
 
 dev_load_material_type: ## Loads example data of type itemtypes from csv-file
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.material_type_loaded pillar="{migration-data-folder: /home/vagrant/example_data}"'
 
 dev_load_catalogue: ## Loads example data of type catalogue and exemplar
 	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.catalogue_loaded pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
+dev_load_loans: ## Loads example data of type loans
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.loans_loaded pillar="{migration-data-folder: /home/vagrant/example_data}"'
+
+dev_load_reservations: ## Loads example data of type reservations
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.reservations_loaded pillar="{migration-data-folder: /home/vagrant/example_data}"'
 
 ##
 ##------- PROD - tasks:                                          -------------

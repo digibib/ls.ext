@@ -4,6 +4,7 @@ Europe/Oslo:
 
 install_common_pkgs:
   pkg.installed:
+    - refresh: True
     - pkgs:
       - openssh-server
       - git

@@ -1,5 +1,5 @@
 
-patrons_import:
+authorised_values_import:
   cmd.run:
     - name: docker run
               --rm
@@ -11,4 +11,4 @@ patrons_import:
               -v "{{ pillar['migration-data-folder'] }}:/migration/data"
               --link koha_mysql_container:db 
               deichman/migration:{{ pillar['migration']['image-tag'] }}
-              make --file /migration/sh/Makefile import_patrons
+              make --file /migration/sh/Makefile import_authorised_values
