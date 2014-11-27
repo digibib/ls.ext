@@ -1,2 +1,2 @@
 migration:
-  image-tag: 67844b764b06c7c943187c9242d0965e312dfb36
+  image-tag: cdd6c434c69b401bde15022ba7c1b72a5c8596a7
