@@ -28,11 +28,24 @@ koha_container_installed:
       - "KOHA_ADMINPASS": "{{ pillar['koha']['adminpass'] }}"
       - "KOHA_ADMINUSER": "{{ pillar['koha']['adminuser'] }}"
       - "KOHA_INSTANCE": "{{ pillar['koha']['instance'] }}"
+    - volumes:
+      - /var/migration_workdir
     - ports:
       - "8080/tcp"
       - "8081/tcp"
     - require:
       - docker: koha_docker_image
+
+/var/migration_workdir:
+  file.directory:
+    - user: root
+    - group: root
+    - dir_mode: 755
+    - file_mode: 644
+    - recurse:
+      - user
+      - group
+      - mode
 
 koha_container_running:
   docker.running:
@@ -47,6 +60,10 @@ koha_container_running:
             HostPort: "8081"
     - check_is_running:
       - "koha_mysql_container"
+    - binds:
+      /data/migration_workdir: 
+        bind: /var/migration_workdir
+        ro: false
     - volumes_from:
       - "koha_mysql_data"
     - links:
@@ -54,3 +71,5 @@ koha_container_running:
     - watch:
       - docker: koha_container_installed
       - docker: koha_mysql_container_running
+    - require:
+      - file: /var/migration_workdir

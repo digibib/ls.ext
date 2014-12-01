@@ -29,7 +29,7 @@ merge_catalogue_and_exemp:
 
 catalogue_bulkmarcimport:
   cmd.run:
-    - name: docker exec koha_container /bin/sh -c "PERL5LIB=/usr/share/koha/bin KOHA_CONF=/etc/koha/sites/name/koha-conf.xml perl /usr/share/koha/bin/migration_tools/bulkmarcimport.pl -fk -d -file /migration/data/out.marcxml  -v 1 -b -m=MARCXML"
+    - name: docker exec koha_container /bin/sh -c "PERL5LIB=/usr/share/koha/bin KOHA_CONF=/etc/koha/sites/name/koha-conf.xml perl /usr/share/koha/bin/migration_tools/bulkmarcimport.pl -fk -d -file /var/migration_workdir/out.marcxml  -v 1 -b -m=MARCXML"
     - require:
       - cmd: merge_catalogue_and_exemp
 
