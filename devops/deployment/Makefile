@@ -49,11 +49,11 @@ dev_clean_data: ## Delete content from all relevant tables in koha
 
 dev_extract_example_data_full:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
 	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir'
-	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir/'
+	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir'
 
 dev_extract_example_data_minimum:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
 	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir/'
-	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir/'
+	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
 dev_load_example_data: dev_load_issuing_rules dev_load_authorised_values dev_load_patrons dev_load_material_type dev_load_catalogue  dev_load_loans dev_load_reservations ## Runs conversion and loads a complete set of example data
 
@@ -86,7 +86,7 @@ dev_load_reservations: ## Loads example data of type reservations
 
 prod_extract_example_data: ## Downloads complete set of example data from wombat -args:  WOMBATUSER, SUDOUSER, MINION
 	ssh -t $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /var/migration_workdir/ | sudo tee -a deploy.log'
+	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /var/migration_workdir | sudo tee -a deploy.log'
 
 prod_load_example_data: prod_load_issuing_rules prod_load_authorised_values prod_load_patrons prod_load_material_type prod_load_catalogue  prod_load_loans prod_load_reservations  ## Loads a complete set of example data
 
