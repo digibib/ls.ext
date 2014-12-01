@@ -26,14 +26,14 @@ elk_data_volume_run_once:
 elk_container_stop_if_old:
   cmd.run:
     - name: docker stop elk_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "digibib/koha-salt-docker[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "pblittle/docker-logstash[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
     - require:
       - docker: elk_docker_image
 
 elk_container_remove_if_old:
   cmd.run:
     - name: docker rm elk_container || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "digibib/koha-salt-docker[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "pblittle/docker-logstash[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: elk_container_stop_if_old
 
