@@ -87,7 +87,7 @@ dev_load_reservations: ## Loads example data of type reservations
 
 prod_extract_example_data: ## Downloads complete set of example data from wombat -args:  WOMBATUSER, SUDOUSER, MINION
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) "sudo sh -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /var/migration_workdir | tee -a deploy.log'"
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) "sudo sh -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir | tee -a deploy.log'"
 
 prod_extract_example_data_minimum:  ## Downloads minimum set of example data from wombat - args: WOMBATUSER, SUDOUSER, MINION
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir/'
