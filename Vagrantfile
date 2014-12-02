@@ -2,6 +2,8 @@
 # vi: set ft=ruby :
 require 'fileutils'
 
+SALT_VERSION = "v2014.1.13"
+
 vagrant_root = File.dirname(__FILE__)
 
 koha_pillar_example = "#{vagrant_root}/pillar/koha/admin.sls.example"
@@ -52,7 +54,7 @@ Vagrant.configure(2) do |config|
       salt.pillar_data
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
       salt.install_type = "git"
-      salt.install_args = "v2014.1.13"
+      salt.install_args = SALT_VERSION
     end
   end
 
@@ -96,7 +98,7 @@ Vagrant.configure(2) do |config|
       salt.verbose = true
       salt.install_type = "git"
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
-      salt.install_args = "v2014.1.13"
+      salt.install_args = SALT_VERSION
     end
   end # vm-test
 
@@ -132,7 +134,7 @@ Vagrant.configure(2) do |config|
       salt.verbose = true
       salt.install_type = "git"
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
-      salt.install_args = "v2014.1.13"
+      salt.install_args = SALT_VERSION
     end
   end # vm-devops
 

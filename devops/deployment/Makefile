@@ -4,6 +4,8 @@ SSH_OPTS=-o PreferredAuthentications="password" -t
 ##****************        LS.ext DEVOPS Makefile      ************************
 ## 
 
+SALT_VERSION=v2014.1.13
+
 help:                  ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
@@ -182,8 +184,8 @@ prod_deploy_log:       ## - args:  SUDOUSER, MASTER
 ##------- DEV - tasks:                                           -------------
 
 dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on vm-ship
-	vagrant ssh vm-devops -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git -M git v2014.1.13'
-	vagrant ssh vm-ship -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+	vagrant ssh vm-devops -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git -M git $(SALT_VERSION)'
+	vagrant ssh vm-ship -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
 
 dev_connect_minions: ## Adds and connect minion
 	vagrant ssh vm-ship -c 'echo "master: 192.168.50.21" | sudo tee /etc/salt/minion > /dev/null'
@@ -197,10 +199,10 @@ dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minio
 ##------- PROD - tasks:                                          -------------
 
 prod_upgrade_salt_master: ## Upgrade salt on master - args: SUDOUSER, MASTER
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
 
 prod_upgrade_salt_minion: ## Upgrade salt on minion - args: SUDOUSER, MINION
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
 
 prod_bootstrap_master : prod_upgrade_salt_master ## Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /var/lib/salt-master ] || sudo git clone https://github.com/digibib/ls.ext.git /var/lib/salt-master'
