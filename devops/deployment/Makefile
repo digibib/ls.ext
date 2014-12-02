@@ -1,3 +1,4 @@
+SSH_OPTS=-o PreferredAuthentications="password" -t
 ## 
 ## 
 ##****************        LS.ext DEVOPS Makefile      ************************
@@ -23,14 +24,14 @@ dev_highstate_dry_run:         ## Dry run deployment to your own local environme
 ##------- PROD - tasks:                                          -------------
 
 prod_highstate:        ## Deploy specified version to production - args: SUDOUSER, MASTER, GITREF
-	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) 2>&1 | sudo tee -a deploy.log && sudo echo "======================== $(SUDOUSER) : deploying ref $(GITREF)" | sudo tee -a deploy.log && sudo date | sudo tee -a deploy.log && sudo salt -t 30 "*" --log-level info --log-file-level=debug state.highstate 2>&1 | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) 2>&1 | tee -a deploy.log && echo \"======================== $(SUDOUSER) : deploying ref $(GITREF)\" | tee -a deploy.log && date | tee -a deploy.log && salt -t 30 \"*\" --log-level info --log-file-level=debug state.highstate 2>&1 | tee -a deploy.log'"
 
 
 prod_revision:         ## Shows the currently checked out revision on MASTER - args: SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git rev-parse HEAD'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git rev-parse HEAD'
 
 prod_highstate_dry_run:        ## Dry run deployment of specified version to production - args: SUDOUSER, MASTER, GITREF
-	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git checkout master && sudo git pull && sudo git checkout $(GITREF) && sudo salt "*" --log-level info --log-file-level=debug state.highstate test=True'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) && salt \"*\" --log-level info --log-file-level=debug state.highstate test=True'"
 
 
 
@@ -85,31 +86,35 @@ dev_load_reservations: ## Loads example data of type reservations
 ##------- PROD - tasks:                                          -------------
 
 prod_extract_example_data: ## Downloads complete set of example data from wombat -args:  WOMBATUSER, SUDOUSER, MINION
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /var/migration_workdir | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) "sudo sh -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data/* /var/migration_workdir | tee -a deploy.log'"
+
+prod_extract_example_data_minimum:  ## Downloads minimum set of example data from wombat - args: WOMBATUSER, SUDOUSER, MINION
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir/'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
 prod_load_example_data: prod_load_issuing_rules prod_load_authorised_values prod_load_patrons prod_load_material_type prod_load_catalogue  prod_load_loans prod_load_reservations  ## Loads a complete set of example data
 
 prod_load_issuing_rules: ## Loads example data of type issuing-rules - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.issuing_rules_imported pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
-prod_load_authorized_values: ## Loads example data of type authorised-values - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.authorised_values_imported pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+prod_load_authorised_values: ## Loads example data of type authorised-values - args: SUDOUSER, MASTER, MINIONNAME
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.authorised_values_imported pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 prod_load_patrons: ## Loads example data of type patrons - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.patrons_imported pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.patrons_imported pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 prod_load_material_type: ## Loads example data of type itemtypes - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.material_type_loaded pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.material_type_loaded pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 prod_load_catalogue: ## Loads example data of type catalogue - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.catalogue_loaded pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.catalogue_loaded pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 prod_load_loans: ## Loads example data of type loans - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.loans_loaded pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.loans_loaded pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 prod_load_reservations: ## Loads example data of type reservations - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.reservations_loaded pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.reservations_loaded pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 ## 
 ## 
@@ -129,11 +134,11 @@ dev_import_patrons:    ## Runs conversion and import of patrons
 ##------- PROD - tasks:                                          -------------
 
 prod_get_dumps: ## Downloads data dumps from wombat -args:  WOMBATUSER, SUDOUSER, MINION
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /var/migration_workdir/ | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) "sudo sh -c 'scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /var/migration_workdir/ | tee -a deploy.log'"
 
 prod_import_patrons: ## Runs conversion and import of patrons - args: SUDOUSER, MASTER, MINIONNAME
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "$(MINIONNAME)" --log-level debug state.sls migration.patrons_imported pillar="{migration-data-folder: /var/migration_workdir}" | sudo tee -a deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.patrons_imported pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 ## 
 ## 
@@ -152,22 +157,22 @@ dev_restart_minion:    ## Restart minion - args: MINIONNAME
 ##------- PROD - tasks:                                          -------------
 
 prod_ping_all:         ## Ping all *connected* salt minions - args: SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt -t 30 -v "*" test.ping'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'sudo salt -t 30 -v "*" test.ping'
 
 prod_restart_minion:   ## Ping all *connected* salt minions - args:  SUDOUSER, MINION
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
 
 prod_master_log:       ## Tail -f on master log - args:  SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo tail -100f /var/log/salt/master'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'sudo tail -100f /var/log/salt/master'
 
 prod_minion_log:       ## Tail -f on minion log - args: SUDOUSER, MINION
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo tail -100f /var/log/salt/minion'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo tail -100f /var/log/salt/minion'
 
 prod_command:          ## Issues salt-command to ALL minions - args:  SUDOUSER, MASTER, CMD
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt "*" $(CMD)'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'sudo salt "*" $(CMD)'
 
 prod_deploy_log:       ## - args:  SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && cat deploy.log'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && cat deploy.log'
 
 ## 
 ## 
@@ -192,22 +197,22 @@ dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minio
 ##------- PROD - tasks:                                          -------------
 
 prod_upgrade_salt_master: ## Upgrade salt on master - args: SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
 
 prod_upgrade_salt_minion: ## Upgrade salt on minion - args: SUDOUSER, MINION
-	ssh -t $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git v2014.1.13'
 
 prod_bootstrap_master : prod_upgrade_salt_master ## Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
-	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /var/lib/salt-master ] || sudo git clone https://github.com/digibib/ls.ext.git /var/lib/salt-master'
-	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /srv/salt ] || sudo ln -s /var/lib/salt-master/salt /srv'
-	ssh -t $(SUDOUSER)@$(MASTER) '[ -d /srv/pillar ] || sudo ln -s /var/lib/salt-master/pillar /srv'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /var/lib/salt-master ] || sudo git clone https://github.com/digibib/ls.ext.git /var/lib/salt-master'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /srv/salt ] || sudo ln -s /var/lib/salt-master/salt /srv'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /srv/pillar ] || sudo ln -s /var/lib/salt-master/pillar /srv'
 
 prod_connect_minion: ## Adds and connect minion
 	scp add_master.py $(SUDOUSER)@$(MINION):adduser.py
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo MASTER_IP=$(MASTER_IP) python adduser.py'
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
-	ssh -t $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
-	ssh -t $(SUDOUSER)@$(MASTER) 'sudo salt-key --accept-all --yes'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo MASTER_IP=$(MASTER_IP) python adduser.py'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'sudo salt-key --accept-all --yes'
 
 prod_bootstrap_minion: prod_upgrade_salt_minion prod_connect_minion ## Install salt-minion and add to master - args: SUDOUSER, MASTER, MINION, MASTER_IP
-## 	
+##
