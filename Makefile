@@ -1,6 +1,6 @@
 .PHONY: all test clean help
 
-all: reload provision test                            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
+all: reload full_provision test                            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
 
 help:                                                 ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -34,12 +34,22 @@ up_ship:                                              ##
 up_test:                                              ##
 	vagrant up vm-test
 
-provision: provision_ship provision_test              ## Reprovision boxes (except vm-devops).
-
 up_devops:                                            ##
 	vagrant up vm-devops
 
-# should run vagrant provison but that would take longer as it reinstalls(?) salt
+full_provision: full_provision_ship full_provision_test  ## Full reprovision of boxes (except vm-devops).
+
+full_provision_ship:                                       ##
+	vagrant provision vm-ship
+
+full_provision_test:                                       ##
+	vagrant provision vm-test
+
+full_provision_devops:                                     ##
+	vagrant provision vm-devops
+
+provision: provision_ship provision_test              ## Quick re-provision of boxes (no salt-install) (except vm-devops).
+
 provision_ship:                                       ##
 	vagrant ssh vm-ship -c 'sudo salt-call --local state.highstate'
 

@@ -55,6 +55,7 @@ Vagrant.configure(2) do |config|
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
       salt.install_type = "git"
       salt.install_args = SALT_VERSION
+      salt.always_install = true
     end
   end
 
@@ -99,6 +100,7 @@ Vagrant.configure(2) do |config|
       salt.install_type = "git"
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
       salt.install_args = SALT_VERSION
+      salt.always_install = true
     end
   end # vm-test
 
@@ -135,6 +137,7 @@ Vagrant.configure(2) do |config|
       salt.install_type = "git"
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
       salt.install_args = SALT_VERSION
+      salt.always_install = true
     end
   end # vm-devops
 
