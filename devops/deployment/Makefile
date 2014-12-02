@@ -4,7 +4,7 @@ SSH_OPTS=-o PreferredAuthentications="password" -t
 ##****************        LS.ext DEVOPS Makefile      ************************
 ## 
 
-SALT_VERSION=v2014.1.13
+SALT_VERSION=v2014.7.0
 
 help:                  ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
