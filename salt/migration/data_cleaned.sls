@@ -1,4 +1,5 @@
 
 clean_data:
   cmd.run:
-    - name: rm -f data/*.csv data/*.sql data/*.txt data/*.marcxml
+    - cwd: {{ pillar['migration-data-folder'] }}
+    - name: rm -f *.csv *.sql *.txt *.marcxml
