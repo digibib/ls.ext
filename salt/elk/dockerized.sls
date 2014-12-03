@@ -45,6 +45,7 @@ elk_container_installed:
       - LF_SSL_CERT_KEY_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.key"
       - LF_SSL_CERT_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.crt"
       - LOGSTASH_CONFIG_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash.conf"
+      - LS_HEAP_SIZE: "2048m"
     - ports:
       - "5000/tcp" # lumberjack
       - "9292/tcp" # kibana
