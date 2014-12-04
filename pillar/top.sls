@@ -7,7 +7,7 @@ base:
     - migration
     - migration.admin
 
-  'wombat,dfb,vm-ship,vm-devops':
+  'wombat,vm-ship,vm-devops':
     - match: list
     - elk
 
@@ -15,6 +15,6 @@ base:
     - match: list
     - elk.dev
 
-  'wombat,dfb':
+  'wombat':
     - match: list
     - elk.prod
