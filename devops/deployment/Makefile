@@ -201,7 +201,7 @@ dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minio
 ##------- PROD - tasks:                                          -------------
 
 prod_upgrade_salt_master: ## Upgrade salt on master - args: SUDOUSER, MASTER
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com/develop | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
 
 prod_upgrade_salt_minion: ## Upgrade salt on minion - args: SUDOUSER, MINION
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
