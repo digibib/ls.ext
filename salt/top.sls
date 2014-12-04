@@ -2,6 +2,7 @@ base:
   '*':
     - common
     - common.docker
+    - resource_monitoring.collector
 
   'vm-ship,vm-devops':
     - match: list
@@ -13,6 +14,7 @@ base:
     - elk.pulled
     - elk.dockerized
 #    - elk.dockerlog-forwarder
+    - resource_monitoring.server
 
   'wombat,vm-ship':
     - match: list
