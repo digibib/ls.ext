@@ -188,9 +188,11 @@ dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on vm-sh
 	vagrant ssh vm-ship -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
 
 dev_connect_minions: ## Adds and connect minion
+	vagrant ssh vm-ship -c 'sudo service salt-minion stop'
 	vagrant ssh vm-ship -c 'echo "master: 192.168.50.21" | sudo tee /etc/salt/minion > /dev/null'
 	vagrant ssh vm-ship -c 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
-	vagrant ssh vm-ship -c 'sudo service salt-minion restart'
+	vagrant ssh vm-devops -c 'sudo salt-key -d vm-ship --yes'
+	vagrant ssh vm-ship -c 'sudo service salt-minion start'
 	vagrant ssh vm-devops -c 'sudo salt-key --accept-all --yes'
 
 dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minion on vm-devops and minion on vm-ship
@@ -209,11 +211,13 @@ prod_bootstrap_master : prod_upgrade_salt_master ## Install salt-master with ls.
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /srv/salt ] || sudo ln -s /var/lib/salt-master/salt /srv'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /srv/pillar ] || sudo ln -s /var/lib/salt-master/pillar /srv'
 
-prod_connect_minion: ## Adds and connect minion
+prod_connect_minion: ## Adds and connect minion, args: SUDOUSER, MASTER, MINION, MASTER_IP, MINION_NAME
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo service salt-minion stop'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'echo "master: $(MASTER_IP)" | sudo tee /etc/salt/minion > /dev/null'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo service salt-minion restart'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'sudo salt-key -d $(MINION_NAME) --yes'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo service salt-minion start'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'sudo salt-key --accept-all --yes'
 
-prod_bootstrap_minion: prod_upgrade_salt_minion prod_connect_minion ## Install salt-minion and add to master - args: SUDOUSER, MASTER, MINION, MASTER_IP
+prod_bootstrap_minion: prod_upgrade_salt_minion prod_connect_minion ## Install salt-minion and add to master - args: SUDOUSER, MASTER, MINION, MASTER_IP, MINION_NAME
 ##
