@@ -240,7 +240,7 @@ Then(/^viser systemet at låneren er importert$/) do
       when "branchcode"
         @browser.select_list(:id => "libraries").selected?(@context[:branchname]).should == true
       when "categorycode"
-        @browser.select_list(:id => "categorycode").selected?(@context[:patron_category_description]).should == true
+        @browser.select_list(:id => "categorycode_entry").selected?(@context[:patron_category_description]).should == true
       when "smsalertnumber"
         label = patronform.label(:for => "phone")
         label.parent.html.should include(value)
