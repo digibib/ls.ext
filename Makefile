@@ -1,6 +1,6 @@
 .PHONY: all test clean help
 
-all: reload full_provision test                            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
+all: reload provision test                            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
 
 help:                                                 ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
