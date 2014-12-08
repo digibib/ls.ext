@@ -44,8 +44,10 @@ prod_highstate_dry_run:        ## Dry run deployment of specified version to pro
 ##
 ##------- DEV - tasks:                                           -------------
 
-dev_reset: ## Delete content from all relevant tables in koha
+dev_reset_db: ## Delete content from all relevant tables in koha
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.reset pillar="{migration-data-folder: /var/migration_workdir}"'
+
+dev_reset: dev_reset_db dev_reindex_koha
 
 dev_clean_data: ## Delete content from all relevant tables in koha
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.data_cleaned pillar="{migration-data-folder: /var/migration_workdir}"'
@@ -58,7 +60,7 @@ dev_extract_example_data_minimum:  ## Downloads complete set of example data fro
 	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir/'
 	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
-dev_load_example_data: dev_load_issuing_rules dev_load_authorised_values dev_load_patrons dev_load_material_type dev_load_catalogue  dev_load_loans dev_load_reservations ## Runs conversion and loads a complete set of example data
+dev_load_example_data: dev_load_issuing_rules dev_load_authorised_values dev_load_patrons dev_load_material_type dev_load_catalogue  dev_load_loans dev_load_reservations dev_reindex_koha ## Runs conversion and loads a complete set of example data
 
 dev_load_issuing_rules: ## Loads issuing rules
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}"'
@@ -84,11 +86,15 @@ dev_load_loans: ## Loads example data of type loans
 dev_load_reservations: ## Loads example data of type reservations
 	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.reservations_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
 
+dev_reindex_koha: ## Reindexes koha by building zebra
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.koha_reindexed pillar="{migration-data-folder: /var/migration_workdir}"'
 ##
 ##------- PROD - tasks:                                          -------------
 
-prod_reset: ## Delete content from all relevant tables in koha
+prod_reset_db: ## Delete content from all relevant tables in koha
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.reset pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
+
+prod_reset: prod_reset_db prod_reindex_koha
 
 prod_extract_example_data: ## Downloads complete set of example data from wombat -args:  WOMBATUSER, SUDOUSER, MINION
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
@@ -98,7 +104,7 @@ prod_extract_example_data_minimum:  ## Downloads minimum set of example data fro
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir/'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
-prod_load_example_data: prod_load_issuing_rules prod_load_authorised_values prod_load_patrons prod_load_material_type prod_load_catalogue  prod_load_loans prod_load_reservations  ## Loads a complete set of example data
+prod_load_example_data: prod_load_issuing_rules prod_load_authorised_values prod_load_patrons prod_load_material_type prod_load_catalogue  prod_load_loans prod_load_reservations prod_reindex_koha ## Loads a complete set of example data
 
 prod_load_issuing_rules: ## Loads example data of type issuing-rules - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.issuing_rules_imported pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
@@ -120,6 +126,9 @@ prod_load_loans: ## Loads example data of type loans - args: SUDOUSER, MASTER, M
 
 prod_load_reservations: ## Loads example data of type reservations - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.reservations_loaded pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
+
+prod_reindex_koha: ## Reindexes koha by building zebra
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.koha_reindexed pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 ## 
 ## 
