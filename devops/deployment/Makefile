@@ -106,8 +106,8 @@ prod_extract_example_data_minimum:  ## Downloads minimum set of example data fro
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
 prod_load_example_data: ## Loads a complete set of example data - args: SUDOUSER, MASTER, MINIONNAME
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c '\
-		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.load_example_data pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log \
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c ' \
+		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.load_example_data pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log && \
 		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.notify_slack'"
 
 prod_load_issuing_rules: ## Loads example data of type issuing-rules - args: SUDOUSER, MASTER, MINIONNAME
