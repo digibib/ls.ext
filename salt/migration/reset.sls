@@ -11,3 +11,4 @@ reset:
               --link koha_mysql_container:db
               deichman/migration:{{ pillar['migration']['image-tag'] }}
               make --file /migration/sh/Makefile koha_reset
+    - failhard: True

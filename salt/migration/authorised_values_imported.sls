@@ -12,3 +12,4 @@ authorised_values_import:
               --link koha_mysql_container:db 
               deichman/migration:{{ pillar['migration']['image-tag'] }}
               make --file /migration/sh/Makefile import_authorised_values
+    - failhard: True

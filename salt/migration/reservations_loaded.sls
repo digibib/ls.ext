@@ -11,6 +11,7 @@ prepare_reservation_csv:
               --link koha_mysql_container:db
               deichman/migration:{{ pillar['migration']['image-tag'] }}
               make --file /migration/sh/Makefile prepare_reservation_csv
+    - failhard: True
 
 import_reservations:
   cmd.run:
@@ -26,3 +27,4 @@ import_reservations:
               make --file /migration/sh/Makefile import_reservations
     - require:
       - cmd: prepare_reservation_csv
+    - failhard: True

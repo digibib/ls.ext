@@ -11,6 +11,7 @@ prepare_loan_csv:
               --link koha_mysql_container:db
               deichman/migration:{{ pillar['migration']['image-tag'] }}
               make --file /migration/sh/Makefile prepare_loan_csv
+    - failhard: True
 
 import_loans:
   cmd.run:
@@ -26,6 +27,7 @@ import_loans:
               make --file /migration/sh/Makefile import_loans
     - require:
       - cmd: prepare_loan_csv
+    - failhard: True
 
 update_loans:
   cmd.run:
@@ -41,3 +43,4 @@ update_loans:
             make --file /migration/sh/Makefile update_loans
     - require:
       - cmd: import_loans
+    - failhard: True

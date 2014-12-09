@@ -60,7 +60,8 @@ dev_extract_example_data_minimum:  ## Downloads complete set of example data fro
 	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir/'
 	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
-dev_load_example_data: dev_load_issuing_rules dev_load_authorised_values dev_load_patrons dev_load_material_type dev_load_catalogue  dev_load_loans dev_load_reservations dev_reindex_koha ## Runs conversion and loads a complete set of example data
+dev_load_example_data:
+		vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_issuing_rules: ## Loads issuing rules
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}"'
@@ -104,7 +105,8 @@ prod_extract_example_data_minimum:  ## Downloads minimum set of example data fro
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir/'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
-prod_load_example_data: prod_load_issuing_rules prod_load_authorised_values prod_load_patrons prod_load_material_type prod_load_catalogue  prod_load_loans prod_load_reservations prod_reindex_koha ## Loads a complete set of example data
+prod_load_example_data: ## Loads a complete set of example data - args: SUDOUSER, MASTER, MINIONNAME
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.load_example_data pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 prod_load_issuing_rules: ## Loads example data of type issuing-rules - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.issuing_rules_imported pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"

@@ -11,3 +11,4 @@ material_type_load:
               --link koha_mysql_container:db
               deichman/migration:{{ pillar['migration']['image-tag'] }}
               make --file /migration/sh/Makefile load_material_type
+    - failhard: True

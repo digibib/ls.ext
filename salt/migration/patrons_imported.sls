@@ -12,3 +12,4 @@ patrons_import:
               --link koha_mysql_container:db 
               deichman/migration:{{ pillar['migration']['image-tag'] }}
               make --file /migration/sh/Makefile import_patrons
+    - failhard: True

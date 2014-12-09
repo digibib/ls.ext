@@ -11,6 +11,7 @@ prepare_catalogue:
               --link koha_mysql_container:db
               deichman/migration:{{ pillar['migration']['image-tag'] }}
               make --file /migration/sh/Makefile prepare_catalogue
+    - failhard: True
 
 merge_catalogue_and_exemp:
   cmd.run:
@@ -26,12 +27,14 @@ merge_catalogue_and_exemp:
               make --file /migration/sh/Makefile merge_catalogue_and_exemp
     - require:
       - cmd: prepare_catalogue
+    - failhard: True
 
 catalogue_bulkmarcimport:
   cmd.run:
     - name: docker exec koha_container /bin/sh -c "PERL5LIB=/usr/share/koha/bin KOHA_CONF=/etc/koha/sites/{{ pillar['koha']['instance'] }}/koha-conf.xml perl /usr/share/koha/bin/migration_tools/bulkmarcimport.pl -fk -d -file /var/migration_workdir/out.marcxml  -v 1 -b -m=MARCXML"
     - require:
       - cmd: merge_catalogue_and_exemp
+    - failhard: True
 
 update_biblioitemnumber:
   cmd.run:
@@ -47,6 +50,7 @@ update_biblioitemnumber:
             make --file /migration/sh/Makefile update_biblioitemnumber
     - require:
       - cmd: catalogue_bulkmarcimport
+    - failhard: True
 
 prepare_emarc:
   cmd.run:
@@ -62,6 +66,7 @@ prepare_emarc:
             make --file /migration/sh/Makefile prepare_load_of_emarc
     - require:
       - cmd: update_biblioitemnumber
+    - failhard: True
 
 load_emarc:
   cmd.run:
@@ -77,3 +82,4 @@ load_emarc:
             make --file /migration/sh/Makefile load_emarc
     - require:
       - cmd: prepare_emarc
+    - failhard: True
