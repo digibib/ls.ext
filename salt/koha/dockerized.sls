@@ -31,6 +31,7 @@ koha_container_installed:
     - volumes:
       - /var/migration_workdir
     - ports:
+      - "6001/tcp"
       - "8080/tcp"
       - "8081/tcp"
     - require:
@@ -52,6 +53,9 @@ koha_container_running:
     - container: koha_container
     - hostname: koha
     - port_bindings:
+        "6001/tcp":
+            HostIp: "0.0.0.0"
+            HostPort: "6001"
         "8080/tcp":
             HostIp: "0.0.0.0"
             HostPort: "8080"

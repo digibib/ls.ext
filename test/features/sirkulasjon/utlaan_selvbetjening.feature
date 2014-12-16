@@ -8,7 +8,8 @@ Egenskap: Selvbetjent utlån
   Ønsker jeg å låne filmen Ringenes herre
   
   Bakgrunn:
-    Gitt at det finnes en låner
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en låner
     Og at låneren ikke har utestående purregebyr
     Og at låneren ikke har aktiv innkrevingssak
     Og at låneren ikke er fratatt lånerretten
@@ -17,7 +18,7 @@ Egenskap: Selvbetjent utlån
   Scenario: Autentisering av eksisterende låner for utlån på automat
     Gitt at det finnes en utlånsautomat
     Når låneren velger å låne på automaten
-    Og låner identifiserer seg med gydlig lånekort
+    Og låner identifiserer seg med gyldig lånekort
     Og låner taster riktig PIN
     Så får låneren mulighet til å registrere lån på automaten
 

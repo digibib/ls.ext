@@ -6,6 +6,31 @@ Given(/^at en bok er utlånt til en låner$/) do
   step "jeg registrerer utlån av boka"
 end
 
+#############################
+# AUTOMATED CIRCULATION STEPS
+#############################
+
+Given(/^at det finnes en utlånsautomat$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+When(/^låneren velger å låne på automaten$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+When(/^låner identifiserer seg med gyldig lånekort$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+When(/^låner taster riktig PIN$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then(/^får låneren mulighet til å registrere lån på automaten$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
   @browser.goto intranet(:home)
   @browser.text_field(:id => "findborrower").set "#{patron} #{@context[:surname]}"

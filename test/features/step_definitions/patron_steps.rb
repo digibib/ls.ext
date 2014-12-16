@@ -48,6 +48,19 @@ Given(/^at jeg har en liste over lånerkategorier$/) do
   @borrower_categories = File.join(File.dirname(__FILE__), '..', 'upload-files', 'borrower_categories.csv')
 end
 
+Given(/^at låneren ikke har utestående purregebyr$/) do
+  @browser.div(:id => "finesholdsissues").table.should_not be_present
+end
+
+
+Given(/^at låneren ikke er fratatt lånerretten$/) do
+  @browser.div(:id => "reldebarments").table.should_not be_present
+end
+
+Given(/^at låneren ikke har aktiv innkrevingssak$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
 When(/^jeg er på administrasjonssiden for lånerkategorier$/) do
   @browser.goto intranet(:patron_categories)
 end
@@ -210,7 +223,6 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   @browser.text_field(:id => "searchmember").set "#{fullname}"
   @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
   # Koha will open the patron details page, as long as
-  # there is just one patron with surname starting with 'K'
   @browser.title.should include fullname
   @context[:cardnumber] = @browser.title.match(/\((.*?)\)/)[1]
 end
