@@ -3,20 +3,21 @@ require 'watir-webdriver'
 
 Given(/^at jeg er logget inn som adminbruker$/) do
   @browser.goto intranet(:login)
-  @context[:user] = SETTINGS['koha']['adminuser']
-  @browser.text_field(:id => 'userid').set @context[:user]
-  @browser.text_field(:id => 'password').set SETTINGS['koha']['adminpass']
-  @browser.button(:id => 'submit').click
+  step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"
+end
+
+When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
+  step "jeg logger på som bruker \"#{SETTINGS['koha']['adminuser']}\" med passord \"#{SETTINGS['koha']['adminpass']}\""
 end
 
 Given(/^at jeg er på Kohas interne forside$/) do
   @browser.goto intranet(:home)
 end
 
-Given(/^at jeg er logget inn som "(.*?)"$/) do |name|
-  @browser.goto intranet(:login)
-  @browser.text_field(:id => 'userid').set name
-  @browser.text_field(:id => 'password').set name
+Given(/^jeg logger på som bruker "(.*?)" med passord "(.*?)"$/) do |userid, password|
+  @context[:user] = userid
+  @browser.text_field(:id => 'userid').set @context[:user]
+  @browser.text_field(:id => 'password').set password
   @browser.button(:id => 'submit').click
 end
 
@@ -25,13 +26,6 @@ Given(/^at jeg er pålogget som adminbruker$/) do
     Gitt at jeg er på Kohas interne forside
     Når jeg fyller inn credentials for en adminbruker og trykker Logg inn
   }
-end
-
-When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
-  @context[:user] = SETTINGS['koha']['adminuser']
-  @browser.text_field(:id => 'userid').set @context[:user]
-  @browser.text_field(:id => 'password').set SETTINGS['koha']['adminpass']
-  @browser.button(:id => 'submit').click
 end
 
 Then(/^har jeg kommet til førstesiden til koha$/) do
