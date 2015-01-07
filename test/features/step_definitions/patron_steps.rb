@@ -142,6 +142,8 @@ When(/^lånerdata importeres i admingrensesnittet$/) do
       @browser.goto intranet(:patrons)
       @browser.text_field(:id => "searchmember").set @context[:cardnumber]
       @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
+      # wait for ajax call on search patrons to return
+      wait_for_ajax
       #Phantomjs doesn't handle javascript popus, so we must override
       #the confirm function to simulate "OK" click:
       @browser.execute_script("window.confirm = function(msg){return true;}")
@@ -199,6 +201,8 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
       @browser.goto intranet(:patrons)
       @browser.text_field(:id => "searchmember").set "#{name} #{@context[:surname]}"
       @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
+      # wait for ajax call on search patrons to return
+      wait_for_ajax
       #Phantomjs doesn't handle javascript popus, so we must override
       #the confirm function to simulate "OK" click:
       @browser.execute_script("window.confirm = function(msg){return true;}")
@@ -222,7 +226,8 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   @browser.goto intranet(:patrons)
   @browser.text_field(:id => "searchmember").set "#{fullname}"
   @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
-  # Koha will open the patron details page, as long as
+  # wait for ajax call on search patrons to return
+  wait_for_ajax
   @browser.title.should include fullname
   @context[:cardnumber] = @browser.title.match(/\((.*?)\)/)[1]
 end
