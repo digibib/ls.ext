@@ -61,6 +61,7 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
       last_cleanup_exception = e
       STDOUT.puts "#{cleanup_desc} failed: #{e}"
       e.backtrace.each_with_index { |line, i| STDOUT.puts("  #{line}") if i < 3 }
+      add_screenshot("#{cleanup_desc}")
     end
   end
 
