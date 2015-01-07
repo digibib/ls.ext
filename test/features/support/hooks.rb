@@ -40,13 +40,12 @@ After do # The final hook
   @browser.close if @browser
 end
 
+def title_of(scenario)
+  (defined? scenario.title) ? scenario.title : scenario.scenario_outline.title
+end
+
 After do |scenario| # cleanup based on @cleanup - in reverse order
-  if (defined? scenario.title) 
-    title = scenario.title
-  else
-    title = scenario.scenario_outline.title
-  end
-  STDOUT.puts "--------------- Context and cleanup: #{title} "
+  STDOUT.puts "--------------- Context and cleanup: #{title_of(scenario)} "
   STDOUT.puts @context.pretty_inspect
 
   last_cleanup_exception = nil
@@ -73,5 +72,5 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
 end
 
 After do |scenario|
-  add_screenshot(scenario.title) if scenario.failed? && @browser
+  add_screenshot(title_of(scenario)) if scenario.failed? && @browser
 end
