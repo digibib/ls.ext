@@ -18,8 +18,9 @@ end
 
 def add_screenshot(name)
   filename = "#{filenameify(name)}.png"
-  @browser.screenshot.save "#{REPORT_DIR}/#{filename}"
-  embed filename, 'image/png'
+  screenshot = @browser.screenshot
+  embed screenshot.base64, 'image/png', "Screenshot"
+  screenshot.save "#{REPORT_DIR}/#{filename}" # Keep on disk, as well
 end
 
 # BEFORE HOOKS will run in the same order of which they are registered.
