@@ -2,13 +2,13 @@
 # language: no
 
 @wip
-Egenskap: Selvbetjent utlån
+Egenskap: Selvbetjent utlån via utlånsautomat
   Som en låner Knut
   For å bli underholdt
   Ønsker jeg å låne filmen Ringenes herre
   
   Bakgrunn:
-    Gitt at jeg er logget inn som adminbruker
+    Gitt at det finnes en utlånsautomat
     Og at det finnes en låner
     Og at låneren ikke har utestående purregebyr
     Og at låneren ikke har aktiv innkrevingssak
@@ -16,7 +16,6 @@ Egenskap: Selvbetjent utlån
 
   @wip
   Scenario: Autentisering av eksisterende låner for utlån på automat
-    Gitt at det finnes en utlånsautomat
     Når låneren velger å låne på automaten
     Og låner identifiserer seg med gyldig lånekort
     Og låner taster riktig PIN
@@ -24,15 +23,13 @@ Egenskap: Selvbetjent utlån
 
   @wip
   Scenario: Låner uten gyldig lånekort prøver å låne på automat
-    Gitt at det finnes en utlånsautomat
-    Og at låneren ikke har gyldig lånekort
+    Gitt at låneren ikke har gyldig lånekort
     Når låneren velger å låne på automaten
     Og forsøker å autentisere seg med lånekort
     Så får låneren beskjed om at lånekort ikke er gyldig
 
   @wip
   Scenario: Låner prøver å låne på automat med feil PIN
-    Gitt at det finnes en utlånsautomat
     Når låneren velger å låne på automaten
     Og låner identifiserer seg med gydlig lånekort
     Og låner taster feil PIN
