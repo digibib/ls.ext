@@ -7,10 +7,52 @@ Given(/^at en bok er utlånt til en låner$/) do
 end
 
 #############################
-# AUTOMATED CIRCULATION STEPS
+# AUTOMAT CIRCULATION STEPS
 #############################
 
+# Automat user should not be deleted after creation
 Given(/^at det finnes en utlånsautomat$/) do
+  step "at jeg er logget inn som adminbruker"
+  unless user_exists?("Automat")
+
+    # prereq: library
+    @browser.goto intranet(:branches)
+    @browser.link(:id => "newbranch").click
+    form = @browser.form(:name => "Aform")
+    form.text_field(:id => "branchname").set generateRandomString
+    form.text_field(:id => "branchcode").set generateRandomString
+    form.submit
+
+    # prereq: patron category type
+    @browser.goto intranet(:patron_categories)
+    @browser.link(:id => "newcategory").click
+    form.text_field(:id => "categorycode").set generateRandomString
+    form.text_field(:id => "description").set generateRandomString
+    form.select_list(:id => "category_type").select "Staff"
+    form.text_field(:id => "enrolmentperiod").set "1"  # Months
+    form = @browser.form(:name => "Aform")
+
+    # user
+    @browser.goto intranet(:patrons)
+    @browser.button(:text => "New patron").click
+    @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => @context[:patron_category_description]).click
+    form = @browser.form(:name => "form")
+    form.text_field(:id => "firstname").set "Audun"
+    form.text_field(:id => "surname").set "Automat"
+    form.text_field(:id => "userid").set "autouser"
+    form.text_field(:id => "password").set "autopass"
+    form.text_field(:id => "password2").set "autopass"
+    form.button(:name => "save").click
+
+    step "at bruker \"Automat\" har rettighet \"circulate\""
+  end
+end
+
+Given(/^at det finnes materiale som er utlånt til låneren$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Given(/^at materialet har en eieravdeling$/) do
   pending # express the regexp above with the code you wish you had
 end
 
