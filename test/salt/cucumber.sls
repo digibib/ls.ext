@@ -40,5 +40,5 @@ install_chromedriver:
 {% endfor %}
 
 selenium-webdriver:
-  cmd.run:
-    - name: gem install --version '>= 2.43.0' selenium-webdriver
+  gem.installed:
+    - version: 2.44.0
