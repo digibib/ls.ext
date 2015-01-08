@@ -11,10 +11,13 @@ else
   SETTINGS = YAML.load_file('/srv/pillar/koha/admin.sls')
 end
 
-# Extending World object
-# Methods are inherited by all steps
+# Custom classes
+
+# Custom Modules extending Cucumber World Object
+# Methods are shared between all steps
+require_relative 'users.rb'
 require_relative 'paths.rb'
-World(Paths)
+World(Paths,Users)
 
 #Length needs to be short enough
 def generateRandomString ()
