@@ -22,6 +22,8 @@ base:
     - elk.dockerlog-forwarder
     - mysql.pulled
     - koha.pulled
+    - sip.pulled
     - mysql.dockerized
     - koha.dockerized
+    - sip.dockerized
     - migration.dockerized

@@ -4,6 +4,7 @@ base:
     - match: list
     - koha
     - koha.admin
+    - sip
     - migration
     - migration.admin
 
@@ -15,9 +16,11 @@ base:
   'vm-ship,vm-devops':
     - match: list
     - elk.dev
+    - sip.dev
     - resource_monitoring.dev
 
   'wombat':
     - match: list
     - elk.prod
+    - sip.prod
     - resource_monitoring.prod

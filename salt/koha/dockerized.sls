@@ -54,8 +54,8 @@ koha_container_running:
     - hostname: koha
     - port_bindings:
         "6001/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "6001"
+            HostIp: "{{ pillar['sip']['server']['binding'] }}"
+            HostPort: "{{ pillar['sip']['server']['port'] }}"
         "8080/tcp":
             HostIp: "0.0.0.0"
             HostPort: "8080"
