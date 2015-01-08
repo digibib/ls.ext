@@ -17,6 +17,7 @@ module Paths
       :patrons => "/cgi-bin/koha/members/members-home.pl",
       :patron => "/cgi-bin/koha/members/moremember.pl?borrowernumber=",
       :patron_import => "/cgi-bin/koha/tools/import_borrowers.pl",
+      :search_patrons => "/cgi-bin/koha/svc/members/search",
       :admin    => "/cgi-bin/koha/admin/admin-home.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
