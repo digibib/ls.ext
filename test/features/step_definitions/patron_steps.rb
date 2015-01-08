@@ -2,6 +2,7 @@
 require 'csv'
 require 'net/http'
 require 'uri'
+require 'json'
 require_relative '../support/migration.rb'
  
 Given(/^at en låner ikke finnes som låner hos biblioteket fra før$/) do
@@ -28,6 +29,12 @@ end
 Given(/^at det finnes en låner$/) do
   step "at \"Knut\" eksisterer som en låner"
 end
+
+Given(/^at låneren har et lånekort$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+
 
 Given(/^at det finnes data som beskriver en låner$/) do
   @import = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
@@ -58,6 +65,11 @@ Given(/^at låneren ikke er fratatt lånerretten$/) do
 end
 
 Given(/^at låneren ikke har aktiv innkrevingssak$/) do
+  next
+  pending # express the regexp above with the code you wish you had
+end
+
+When(/^låner identifiserer seg med lånekort$/) do
   pending # express the regexp above with the code you wish you had
 end
 

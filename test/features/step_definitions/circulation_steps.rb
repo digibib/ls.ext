@@ -14,28 +14,33 @@ end
 Given(/^at det finnes en utlånsautomat$/) do
   step "at jeg er logget inn som adminbruker"
   unless user_exists?("Automat")
-
     # prereq: library
+    branchcode   = generateRandomString
+    branchname   = generateRandomString
+    categorycode = generateRandomString
+    categorydesc = generateRandomString
+
     @browser.goto intranet(:branches)
     @browser.link(:id => "newbranch").click
     form = @browser.form(:name => "Aform")
-    form.text_field(:id => "branchname").set generateRandomString
-    form.text_field(:id => "branchcode").set generateRandomString
+    form.text_field(:id => "branchname").set branchname
+    form.text_field(:id => "branchcode").set branchcode
     form.submit
 
     # prereq: patron category type
     @browser.goto intranet(:patron_categories)
     @browser.link(:id => "newcategory").click
-    form.text_field(:id => "categorycode").set generateRandomString
-    form.text_field(:id => "description").set generateRandomString
+    form = @browser.form(:name => "Aform")
+    form.text_field(:id => "categorycode").set categorycode
+    form.text_field(:id => "description").set categorydesc
     form.select_list(:id => "category_type").select "Staff"
     form.text_field(:id => "enrolmentperiod").set "1"  # Months
-    form = @browser.form(:name => "Aform")
+    form.submit
 
     # user
     @browser.goto intranet(:patrons)
     @browser.button(:text => "New patron").click
-    @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => @context[:patron_category_description]).click
+    @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => categorydesc).click
     form = @browser.form(:name => "form")
     form.text_field(:id => "firstname").set "Audun"
     form.text_field(:id => "surname").set "Automat"
