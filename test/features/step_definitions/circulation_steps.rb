@@ -1,6 +1,8 @@
 # encoding: UTF-8
 
 require 'pp'
+require_relative '../support/SIP2Client.rb'
+
 Given(/^at en bok er utlånt til en låner$/) do
   step "jeg registrerer \"Knut\" som aktiv låner"
   step "jeg registrerer utlån av boka"
@@ -62,19 +64,32 @@ Given(/^at materialet har en eieravdeling$/) do
 end
 
 When(/^låneren velger å låne på automaten$/) do
-  pending # express the regexp above with the code you wish you had
+  sip = SIP2Client.new("192.168.50.12", 6001)
+  res = sip.connect
+  res.should eq("941\r\n")
+
+  res = sip.status
+  res.should include("98YYYYNN100005")
+
+  @context[:sip_client] = sip
+  @cleanup.push( "SIP2 connection" =>
+    lambda do
+      @context[:sip_client].close
+    end
+  )
 end
 
-When(/^låner identifiserer seg med gyldig lånekort$/) do
-  pending # express the regexp above with the code you wish you had
+When(/^låner identifiserer seg med lånekort$/) do
+  @context[:sip_patron_information] = @context[:sip_client].userlogin(@context[:branchcode],@context[:cardnumber],@context[:password])
+  @context[:sip_patron_information].should include("|AEKnut #{@context[:surname]}")
 end
 
 When(/^låner taster riktig PIN$/) do
-  pending # express the regexp above with the code you wish you had
+  @context[:sip_patron_information].should include("|BLY")
 end
 
 Then(/^får låneren mulighet til å registrere lån på automaten$/) do
-  pending # express the regexp above with the code you wish you had
+  @context[:sip_patron_information].should include("|AFGreetings from Koha.")
 end
 
 

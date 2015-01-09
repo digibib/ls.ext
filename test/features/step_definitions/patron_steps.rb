@@ -31,10 +31,13 @@ Given(/^at det finnes en låner$/) do
 end
 
 Given(/^at låneren har et lånekort$/) do
-  pending # express the regexp above with the code you wish you had
+  next # this should be parameterized in a Abstrakt Scenario
 end
 
-
+Given(/^at låneren har (u)?gyldig lånekort$/) do |boolean|
+  true # good case
+  #pending # express the regexp above with the code you wish you had
+end
 
 Given(/^at det finnes data som beskriver en låner$/) do
   @import = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
@@ -66,10 +69,6 @@ end
 
 Given(/^at låneren ikke har aktiv innkrevingssak$/) do
   next
-  pending # express the regexp above with the code you wish you had
-end
-
-When(/^låner identifiserer seg med lånekort$/) do
   pending # express the regexp above with the code you wish you had
 end
 
