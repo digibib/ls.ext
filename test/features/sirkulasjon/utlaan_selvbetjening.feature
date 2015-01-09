@@ -10,28 +10,33 @@ Egenskap: Selvbetjent utlån via utlånsautomat
   Bakgrunn:
     Gitt at det finnes en utlånsautomat
     Og at det finnes en låner
+    Og at låneren har et lånekort
     Og at låneren ikke har utestående purregebyr
     Og at låneren ikke har aktiv innkrevingssak
     Og at låneren ikke er fratatt lånerretten
+    Og låneren velger å låne på automaten
 
   @wip
   Scenario: Autentisering av eksisterende låner for utlån på automat
-    Når låneren velger å låne på automaten
-    Og låner identifiserer seg med gyldig lånekort
+    Gitt at låneren har gyldig lånekort
+    Når låner identifiserer seg med lånekort
     Og låner taster riktig PIN
     Så får låneren mulighet til å registrere lån på automaten
 
   @wip
   Scenario: Låner uten gyldig lånekort prøver å låne på automat
-    Gitt at låneren ikke har gyldig lånekort
-    Når låneren velger å låne på automaten
-    Og forsøker å autentisere seg med lånekort
+    Gitt at låneren har ugyldig lånekort
+      | navn    | kortnummer | registreringsdato | utløpsdato | dato       | pin  | input_pin |
+      | Knut    | 101        | 01/08/2015        | 10/08/2015 | 12/08/2015 | 1234 | 1234      |
+    Når låner identifiserer seg med lånekort
     Så får låneren beskjed om at lånekort ikke er gyldig
 
   @wip
   Scenario: Låner prøver å låne på automat med feil PIN
-    Når låneren velger å låne på automaten
-    Og låner identifiserer seg med gydlig lånekort
+    Gitt at låneren har gyldig lånekort
+      | navn    | kortnummer | registreringsdato | utløpsdato | dato       | pin  | input_pin |
+      | Knut    | 101        | 01/08/2015        | 10/08/2015 | 02/08/2015 | 1234 | 9999      |
+    Når låner identifiserer seg med lånekort
     Og låner taster feil PIN
     Så får låneren beskjed om at PIN ikke er riktig
 
