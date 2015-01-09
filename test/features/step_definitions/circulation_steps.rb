@@ -66,7 +66,7 @@ end
 When(/^låneren velger å låne på automaten$/) do
   sip = SIP2Client.new("192.168.50.12", 6001)
   res = sip.connect
-  res.should eq("941\r\n")
+  res.should eq("941\r")
 
   res = sip.status
   res.should include("98YYYYNN100005")
