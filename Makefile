@@ -50,8 +50,13 @@ full_provision_devops:                                     ##
 
 provision: provision_ship provision_test              ## Quick re-provision of boxes (no salt-install) (except vm-devops).
 
-provision_ship:                                       ##
+provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
+
+provision_ship_highstate:                             ## Run state.highstate on vm-ship
 	vagrant ssh vm-ship -c 'sudo salt-call --local state.highstate'
+
+wait_until_ready:                                     ## Checks if koha is up and running
+	vagrant ssh vm-ship -c 'sudo docker exec -t koha_container ./wait_until_ready.py'
 
 provision_test:                                       ##
 	vagrant ssh vm-test -c 'sudo salt-call --local state.highstate'
