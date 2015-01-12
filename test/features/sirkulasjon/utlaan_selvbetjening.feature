@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Selvbetjent utlån via utlånsautomat
   Som en låner Knut
   For å bli underholdt
@@ -16,7 +15,6 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Og at låneren ikke er fratatt lånerretten
     Og låneren velger å låne på automaten
 
-  @wip
   Scenario: Autentisering av eksisterende låner for utlån på automat
     Gitt at låneren har gyldig lånekort
     Når låner identifiserer seg med lånekort
