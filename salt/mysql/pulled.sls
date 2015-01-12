@@ -8,4 +8,4 @@ busybox_docker_image:
 
 mysql_docker_image:
   docker.pulled:
-    - name: mysql
+    - name: mysql:5.6.21
