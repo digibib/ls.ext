@@ -66,10 +66,13 @@ end
 When(/^låneren velger å låne på automaten$/) do
   sip = SIP2Client.new("192.168.50.12", 6001)
   res = sip.connect
-  res.should eq("941\r")
+  res[:statusCode].should eq("Login_Response")
+  res[:statusData].should eq("1")
 
   res = sip.status
-  res.should include("98YYYYNN100005")
+  res[:statusCode].should eq("ACS_Status")
+  res[:statusData].should include("YYYYNN100005")
+  res["BX"].should eq("YYYYYYYYYYYNYYYY")
 
   @context[:sip_client] = sip
   @cleanup.push( "SIP2 connection" =>
@@ -81,15 +84,15 @@ end
 
 When(/^låner identifiserer seg med lånekort$/) do
   @context[:sip_patron_information] = @context[:sip_client].userlogin(@context[:branchcode],@context[:cardnumber],@context[:password])
-  @context[:sip_patron_information].should include("|AEKnut #{@context[:surname]}")
+  @context[:sip_patron_information]["AE"].should include("Knut #{@context[:surname]}")
 end
 
 When(/^låner taster riktig PIN$/) do
-  @context[:sip_patron_information].should include("|BLY")
+  @context[:sip_patron_information]["BL"].should include("Y")
 end
 
 Then(/^får låneren mulighet til å registrere lån på automaten$/) do
-  @context[:sip_patron_information].should include("|AFGreetings from Koha.")
+  @context[:sip_patron_information]["AF"].should include("Greetings from Koha.")
 end
 
 
