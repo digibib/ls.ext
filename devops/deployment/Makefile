@@ -88,7 +88,7 @@ dev_load_reservations: ## Loads example data of type reservations
 	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.reservations_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_reindex_koha: ## Reindexes koha by building zebra
-	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.koha_reindexed pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls koha.reindexed'
 ##
 ##------- PROD - tasks:                                          -------------
 
@@ -132,7 +132,7 @@ prod_load_reservations: ## Loads example data of type reservations - args: SUDOU
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.reservations_loaded pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
 prod_reindex_koha: ## Reindexes koha by building zebra
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.koha_reindexed pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls koha.reindexed | tee -a deploy.log'"
 
 ## 
 ## 

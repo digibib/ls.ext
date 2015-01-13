@@ -12,4 +12,4 @@ include:
   - migration.catalogue_loaded
   - migration.loans_loaded
   - migration.reservations_loaded
-  - migration.koha_reindexed
+  - koha.reindexed
