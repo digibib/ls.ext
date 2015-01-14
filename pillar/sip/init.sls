@@ -1,2 +1,2 @@
 sip:
-  image-tag: cc645a433c8d9056acd0cca5cf514763ec036fdb
+  image-tag: 34a36c6e8dc6a0082e1102737df4b6f875485ea3 
