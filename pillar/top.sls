@@ -7,6 +7,7 @@ base:
     - sip
     - migration
     - migration.admin
+    - koha-restful
 
   'wombat,vm-ship,vm-devops':
     - match: list

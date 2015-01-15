@@ -70,10 +70,12 @@ koha_container_running:
           ro: false
     - volumes_from:
       - "koha_mysql_data"
+      - "koha_restful_container"
     - links:
         koha_mysql_container: db
     - watch:
       - docker: koha_container_installed
       - docker: koha_mysql_container_running
+      - docker: koha_restful_volume_run_once
     - require:
       - file: /var/migration_workdir
