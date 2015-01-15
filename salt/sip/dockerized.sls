@@ -18,7 +18,7 @@ sip_proxy_container_installed:
     - name: sip_proxy_container
     - image: digibib/biblio-sip2:{{ pillar['sip']['image-tag'] }} # Version MUST be in line with the one used in sip_proxy_container_stop_if_old
     - environment:
-      - "LISTEN_HOST_PORT": "{{ pillar['sip']['proxy']['binding'] }}:{{ pillar['sip']['proxy']['port'] }}"
+      - "USE_LOCAL_MODS": True
       - "SIPSERVER_HOST_PORT": "{{ pillar['sip']['server']['host'] }}:{{ pillar['sip']['server']['port'] }}"
     - ports:
       - "{{ pillar['sip']['proxy']['port'] }}/tcp"
