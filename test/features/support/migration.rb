@@ -32,22 +32,22 @@ class Migration
     end
   end
 
-  def to_csv(hash)
+  def export_csv(file)
+    csv = self.to_csv(@import)
+    File.open(file, "w") do |file|
+      file.write csv.to_s
+    end
+  end
+
+  def self.to_csv(hash)
     ids = hash.keys
     csv = CSV.generate do |c|
       ids.each_with_index do |id, idx|
-        hash[id][:old_id] = id                    # append old id
+        hash[id][:old_id] = id                  # append old id
         c << hash.values.first.keys if idx == 0 # headers row
         c << hash[id].values                    # append key,values map
       end
     end
     return csv
-  end
-
-  def export_csv(file)
-    csv = to_csv(@import)
-    File.open(file, "w") do |file| 
-      file.write csv.to_s
-    end
   end
 end
