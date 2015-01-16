@@ -56,24 +56,24 @@ class SIP2Client
     send("9900302.00")
   end
 
-  def userlogin(branch,user,pin)
+  def userlogin(branch,user,pin,date=nil)
     lang = "012" # Norwegian
-    timestamp = Time.now.strftime("%Y%m%d    %H%M%S")
+    timestamp = date ? Date.parse(date).strftime("%Y%m%d    %H%M%S") : Time.now.strftime("%Y%m%d    %H%M%S")
     send("63#{lang}#{timestamp}          AO#{branch}|AA#{user}|AC#{pin}|")
   end
 
-  def checkout(branch,user,pin,barcode)
-    timestamp = Time.now.strftime("%Y%m%d    %H%M%S")
+  def checkout(branch,user,pin,barcode,date=nil)
+    timestamp = date ? Date.parse(date).strftime("%Y%m%d    %H%M%S") : Time.now.strftime("%Y%m%d    %H%M%S")
     send("11YN#{timestamp}                  AO#{branch}|AA#{user}|AB#{barcode}|AC#{pin}|BON|BIN|")
   end
 
-  def checkin(branch,barcode)
-    timestamp = Time.now.strftime("%Y%m%d    %H%M%S")
+  def checkin(branch,barcode,date=nil)
+    timestamp = date ? Date.parse(date).strftime("%Y%m%d    %H%M%S") : Time.now.strftime("%Y%m%d    %H%M%S")
     send("09N#{timestamp}#{timestamp}AP|AO#{branch}|AB#{barcode}|AC|BIN|")
   end
 
-  def userlogout(branch,user)
-    timestamp = Time.now.strftime("%Y%m%d    %H%M%S")
+  def userlogout(branch,use,date=nil)
+    timestamp = date ? Date.parse(date).strftime("%Y%m%d    %H%M%S") : Time.now.strftime("%Y%m%d    %H%M%S")
     send("35#{timestamp}AO#{branch}|AA#{user}|")
   end
 
