@@ -82,17 +82,22 @@ When(/^låneren velger å låne på automaten$/) do
   )
 end
 
-When(/^låner identifiserer seg med lånekort$/) do
-  @context[:sip_patron_information] = @context[:sip_client].userlogin(@context[:branchcode],@context[:cardnumber],@context[:password])
+When(/^låneren identifiserer seg på automat med (riktig|feil) PIN på (u)?gyldig dato$/) do | validpin, validdate |
+  date = validdate ? "02/08/2015" : "11/08/2015"
+  validpin = "riktig" ? pin = @context[:password] : pin = "0000"
+  @context[:sip_patron_information] = @context[:sip_client].userlogin(@context[:branchcode],@context[:cardnumber],pin,date)
   @context[:sip_patron_information]["AE"].should include("Knut #{@context[:surname]}")
 end
 
+
+
 When(/^låner taster riktig PIN$/) do
-  @context[:sip_patron_information]["BL"].should include("Y")
+  @context[:sip_patron_information]["BL"].should be("Y")  # Valid pin
 end
 
 Then(/^får låneren mulighet til å registrere lån på automaten$/) do
   @context[:sip_patron_information]["AF"].should include("Greetings from Koha.")
+  @context[:sip_patron_information][:statusData][0...3].should_not include("Y") # 'Y' in any of these fields denote privileges denied
 end
 
 
