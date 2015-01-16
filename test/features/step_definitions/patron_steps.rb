@@ -30,13 +30,18 @@ Given(/^at det finnes en låner$/) do
   step "at \"Knut\" eksisterer som en låner"
 end
 
-Given(/^at låneren har et lånekort$/) do
-  next # this should be parameterized in a Abstrakt Scenario
-end
+Given(/^at det finnes en låner med lånekort$/) do |table|
+  steps %Q{
+    Gitt at det finnes en avdeling
+    Og at det finnes en lånerkategori
+  }
+  patrons = table.hashes
 
-Given(/^at låneren har (u)?gyldig lånekort$/) do |boolean|
-  true # good case
-  #pending # express the regexp above with the code you wish you had
+  patrons.each do |patron|
+    patron = patron.inject({}){|h,(k,v)| h.merge({ k.to_sym => v}) } # Symbolize keys
+    import_user_via_csv(patron)
+  end
+
 end
 
 Given(/^at det finnes data som beskriver en låner$/) do
@@ -127,7 +132,7 @@ When(/^lånerdata importeres i admingrensesnittet$/) do
   data << "Content-Disposition: form-data; name=\"uploadborrowers\"; filename=\"patrons.csv\"\r\n"
   data << "Content-Type: text/csv\r\n"
   data << "\r\n"
-  data << @patrons.to_csv(@patrons.import)
+  data << Migration.to_csv(@patrons.import)
   data << "--#{form_boundary}\r\n"
   data << "Content-Disposition: form-data; name=\"matchpoint\"\r\n"
   data << "\r\n"
