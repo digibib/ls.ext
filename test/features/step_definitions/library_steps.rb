@@ -4,11 +4,6 @@ Given(/^at det finnes en avdeling$/) do
   step "jeg legger inn en ny avdeling med ny avdelingskode"
 end
 
-Given(/^at det finnes en avdeling som heter "(.*?)" med avdelingskode "(.*?)"$/) do |name,code|
-  @browser.goto intranet(:branches)
-  step "jeg legger inn en ny avdeling med ny avdelingskode"
-end
-
 Given(/^at det er valgt en avdeling$/) do
   step 'at det finnes en avdeling'
   @browser.goto intranet(:select_branch)
