@@ -82,22 +82,29 @@ When(/^låneren velger å låne på automaten$/) do
   )
 end
 
-When(/^låneren identifiserer seg på automat med (riktig|feil) PIN på (u)?gyldig dato$/) do | validpin, validdate |
-  date = validdate ? "02/08/2015" : "11/08/2015"
-  validpin = "riktig" ? pin = @context[:password] : pin = "0000"
-  @context[:sip_patron_information] = @context[:sip_client].userlogin(@context[:branchcode],@context[:cardnumber],pin,date)
+When(/^låneren identifiserer seg på automat med (riktig|feil) PIN$/) do | pin |
+  pin == "riktig" ? pin = @context[:password] : pin = "0000"
+  @context[:sip_patron_information] = @context[:sip_client].userlogin(@context[:branchcode],@context[:cardnumber],pin)
   @context[:sip_patron_information]["AE"].should include("Knut #{@context[:surname]}")
 end
 
+Then(/^får låneren beskjed om at PIN( ikke)? er riktig$/) do |invalidpin|
+  validpin = invalidpin ? "N" : "Y"
+  @context[:sip_patron_information]["CQ"].should eq(validpin)
+end
 
+Then(/^får låneren beskjed om at lånekort( ikke)? er gyldig$/) do |invalidcard|
+  validcard = invalidcard ? "N" : "Y"
+  @context[:sip_patron_information]["BL"].should eq(validcard)
+end
 
-When(/^låner taster riktig PIN$/) do
-  @context[:sip_patron_information]["BL"].should be("Y")  # Valid pin
+Then(/^får låneren beskjed om at lånekort er sperret$/) do
+  @context[:sip_patron_information][:statusData][0...4].should eq("YYYY")
 end
 
 Then(/^får låneren mulighet til å registrere lån på automaten$/) do
   @context[:sip_patron_information]["AF"].should include("Greetings from Koha.")
-  @context[:sip_patron_information][:statusData][0...3].should_not include("Y") # 'Y' in any of these fields denote privileges denied
+  @context[:sip_patron_information][:statusData][0...4].should_not include("Y") # 'Y' in any of these fields denote privileges denied
 end
 
 
