@@ -73,7 +73,9 @@ module Users
     req.body = data.join
     res = http.request(req)
 
-    @context[:cardnumber] = user[:cardnumber]
+    # Merge user into context object
+    # TODO: handle multiple users by array of hashes?
+    @context.merge!(user)
 
     @cleanup.push( "lånernummer #{@context[:cardnumber]}" =>
       lambda do
