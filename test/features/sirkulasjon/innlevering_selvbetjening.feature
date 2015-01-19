@@ -8,15 +8,15 @@ Egenskap: Selvbetjent innlevering
   Ønsker jeg å levere den tilbake til biblioteket
 
   Bakgrunn:
-    Gitt at det finnes en låner med lånekort
+    Gitt at det finnes en utlånsautomat
+    Og at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
       | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     |          | 1234     | 0     |
     Og at låneren ikke har aktiv innkrevingssak
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling
-    Og at det finnes en utlånsautomat
 
-  @wip
+  @wip @ignore
   Scenario: Noen forsøker å levere tilbake materiale med feil antall brikker på utlånsautomat
     Gitt at materialet som forsøkes innlevert ikke har riktig antall brikker
     Når innlevering blir valgt på automaten

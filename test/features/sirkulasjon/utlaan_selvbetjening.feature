@@ -6,7 +6,7 @@ Egenskap: Selvbetjent utlån via utlånsautomat
   Som en låner Knut
   For å bli underholdt
   Ønsker jeg å låne filmen Ringenes herre
-  
+
   Bakgrunn:
     Gitt at det finnes en utlånsautomat
     Og at det finnes en låner med lånekort
@@ -17,7 +17,7 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Og at låneren ikke er fratatt lånerretten
     Når låneren velger å låne på automaten
 
-  @wip
+  @wip @ignore
   Scenario: Eksisterende låner forsøker å låne materiale med feil antall RFID-brikker
     Gitt at låneren har identifisert seg for å låne på utlånsautomaten
     Og at låneren har materiale han ønsker å låne
