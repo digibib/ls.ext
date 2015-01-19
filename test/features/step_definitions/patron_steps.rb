@@ -206,14 +206,9 @@ end
 
 Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   fullname = "#{name} #{@active[:patron].surname}"
-  #patron_search
-  @browser.goto intranet(:patrons)
-  @browser.text_field(:id => "searchmember").set "#{fullname}"
-  @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
-  @browser.div(:class => 'patroninfo').wait_until_present
-  patroninfo_header = @browser.div(:class => 'patroninfo').h5.text
-  patroninfo_header.should include fullname
-  @active[:patron].cardnumber = patroninfo_header.match(/\((.*?)\)/)[1]
+  patron_details = Home.new(@browser).go.search_patrons fullname
+  patron_details.header.should include fullname
+  @active[:patron].cardnumber = patron_details.card_number
 end
 
 Then(/^samsvarer de migrerte lånerdata med mapping$/) do

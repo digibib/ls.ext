@@ -90,21 +90,13 @@ When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
   @active[:item] = item
   @cleanup.push( "utlån #{barcode}" =>
     lambda do
-      @browser.goto intranet(:select_branch)
-      @browser.form(:action => "selectbranchprinter.pl").submit
-      @browser.a(:href => "#checkin_search").click
-      @browser.text_field(:id => "ret_barcode").set barcode
-      @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
+      Home.new(@browser).go.select_branch().checkin(book.items.first.barcode)
     end
   )
 end
 
 When(/^boka blir registrert innlevert$/) do
-  @browser.goto intranet(:select_branch)
-  @browser.form(:action => "selectbranchprinter.pl").submit
-  @browser.a(:href => "#checkin_search").click
-  @browser.text_field(:id => "ret_barcode").set @active[:book].items.first.barcode
-  @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
+  Home.new(@browser).go.select_branch().checkin(@active[:book].items.first.barcode)
 end
 
 Given(/^at materialet ikke er holdt av til en annen låner$/) do
@@ -305,11 +297,7 @@ Then(/^systemet viser at aldersgrenser for utlån av materiale er aktivert$/) do
 end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
-  @browser.goto intranet(:home)
-  @browser.a(:text => "Search the catalog").click
-  form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(@active[:book].title)
-  form.submit
+  Home.new(@browser).go.search_catalog @active[:book].title
   @browser.text.should include(@active[:book].title)
 end
 
@@ -333,11 +321,7 @@ Then(/^at "(.*?)" låner boka$/) do |name|
 end
 
 Then(/^viser systemet at låneren ikke låner boka$/) do
-  @browser.goto intranet(:home)
-  @browser.a(:text => "Search the catalog").click
-  form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(@active[:book].title)
-  form.submit
+  Home.new(@browser).search_catalog @active[:book].title
   @browser.text.should include(@active[:book].title)
   @browser.text.should_not include "Checked out to Knut"
 end

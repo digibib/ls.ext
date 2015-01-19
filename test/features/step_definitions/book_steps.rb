@@ -161,11 +161,7 @@ Then(/^viser systemet at boka er en bok som( ikke)? kan lånes ut$/) do |boolean
 end
 
 Then(/^kan jeg søke opp boka$/) do
-  @browser.goto intranet(:home)
-  @browser.a(:text => "Search the catalog").click
-  form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(@active[:book].title) 
-  form.submit
-  @browser.text.should include(@active[:book].title)
-  @browser.text.should include("vailable")
+  catalogue_detail = Home.new(@browser).search_catalog(@active[:book].title)
+  catalogue_detail.biblio_title.should include(@active[:book].title)
+  catalogue_detail.item_status.should include("vailable")
 end
