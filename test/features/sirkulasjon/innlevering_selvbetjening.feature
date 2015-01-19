@@ -8,7 +8,9 @@ Egenskap: Selvbetjent innlevering
   Ønsker jeg å levere den tilbake til biblioteket
 
   Bakgrunn:
-    Gitt at det finnes en låner
+    Gitt at det finnes en låner med lånekort
+      | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
+      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     |          | 1234     | 0     |
     Og at låneren ikke har aktiv innkrevingssak
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling

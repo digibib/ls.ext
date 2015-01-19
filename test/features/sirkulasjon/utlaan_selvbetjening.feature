@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Selvbetjent utlån via utlånsautomat
   Som en låner Knut
   For å bli underholdt
@@ -8,12 +9,13 @@ Egenskap: Selvbetjent utlån via utlånsautomat
   
   Bakgrunn:
     Gitt at det finnes en utlånsautomat
-    Og at det finnes en låner
-    Og at låneren har et lånekort
+    Og at det finnes en låner med lånekort
+      | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
+      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     | false    | 1234     | 0     |
     Og at låneren ikke har utestående purregebyr
     Og at låneren ikke har aktiv innkrevingssak
     Og at låneren ikke er fratatt lånerretten
-    Og låneren velger å låne på automaten
+    Når låneren velger å låne på automaten
 
   @wip
   Scenario: Eksisterende låner forsøker å låne materiale med feil antall RFID-brikker
