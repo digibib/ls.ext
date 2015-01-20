@@ -2,7 +2,7 @@
 # language: no
 
 @wip
-Egenskap: Legg til eksemplarstatus
+Egenskap: Legg til autorisert verdi
   Som katalogisator
   For å endre endre tilgjengelighet på eksemplarer
   Trenger jeg eksemplarstatus for bøker
