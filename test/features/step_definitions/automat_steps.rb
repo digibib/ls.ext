@@ -48,7 +48,36 @@ Given(/^at det finnes en utlånsautomat$/) do
   end
 end
 
-When(/^låneren velger å låne på automaten$/) do
+Given(/^at låneren har identifisert seg for å låne på utlånsautomaten$/) do
+  step "låneren velger \"låne\" på automaten"
+  step "låneren identifiserer seg på automat med riktig PIN"
+end
+
+Given(/^at materialet( ikke)? har riktig antall RFID\-brikker$/) do |bool|
+  next # This is actually handled by RFID adapter and is outside the scope of automats
+end
+
+Then(/^får låneren beskjed om at materialet ikke er komplett$/) do
+  next # This is actually handled by RFID adapter and is outside the scope of automats
+end
+
+When(/^låneren legger materialet på automaten$/) do
+  case @context[:sip_mode]
+  when "låne"
+    @context[:sip_transaction_response] = @context[:sip_client].checkout(@context[:branchcode],@context[:cardnumber],@context[:password],@context[:barcode])
+    @cleanup.push( "utlån #{@context[:barcode]}" =>
+      lambda do
+        @context[:sip_client].checkin(@context[:branchcode],@context[:barcode])
+      end
+    )
+  when "levere"
+    @context[:sip_transaction_response] = @context[:sip_client].checkin(@context[:branchcode],@context[:barcode])
+  else
+    raise Exception.new("Invalid SIP mode: #{@context[:sip_mode]}")
+  end
+end
+
+When(/^låneren velger "(.*?)" på automaten$/) do |mode|
   sip = SIP2Client.new("192.168.50.12", 6001)
   res = sip.connect
   res[:statusCode].should eq("Login_Response")
@@ -60,6 +89,7 @@ When(/^låneren velger å låne på automaten$/) do
   res["BX"].should eq("YYYYYYYYYYYNYYYY")
 
   @context[:sip_client] = sip
+  @context[:sip_mode]   = mode
   @cleanup.push( "SIP2 connection" =>
     lambda do
       @context[:sip_client].close
@@ -93,22 +123,21 @@ Then(/^får låneren mulighet til å registrere lån på automaten$/) do
 end
 
 Given(/^at materialet som forsøkes innlevert ikke har riktig antall brikker$/) do
-  next # This is actually handled by RFID adapter and is outside the scope of automats
-  pending # express the regexp above with the code you wish you had
+  next    # This is actually handled by RFID adapter and is outside the scope of automats
 end
 
 When(/^innlevering blir valgt på automaten$/) do
-  pending # express the regexp above with the code you wish you had
-end
-
-When(/^materialet blir lagt på automaten$/) do
-  pending # express the regexp above with the code you wish you had
-end
-
-Then(/^gis det beskjed om at materialet ikke er komplett$/) do
-  pending # express the regexp above with the code you wish you had
+  step "låneren velger \"levere\" på automaten"
 end
 
 Then(/^systemet viser at materialet fortsatt er utlånt til låner$/) do
   pending # express the regexp above with the code you wish you had
+end
+
+Then(/^får låneren beskjed om at materialet ikke er til utlån$/) do
+  @context[:sip_transaction_response][:statusData][0].should eq("0")  # NOT OK
+  @context[:sip_transaction_response][:statusData][1].should eq("N")  # Renewal OK?
+  @context[:sip_transaction_response][:statusData][2].should eq("U")  # Magnetic media?
+  @context[:sip_transaction_response][:statusData][3].should eq("N")  # Desensitize?
+  @context[:sip_transaction_response]["AF"].should include("NOT_FOR_LOAN")
 end

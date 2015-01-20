@@ -7,7 +7,27 @@ Given(/^at en bok er utlånt til en låner$/) do
   step "jeg registrerer utlån av boka"
 end
 
+Given(/^at låneren har materiale han ønsker å låne$/) do
+  step "jeg legger inn boka som en ny bok"
+end
+
 Given(/^at det finnes materiale som er utlånt til låneren$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Given(/^at materialet ikke er til utlån$/) do
+  step "det finnes en autorisert verdi for \"NOT_LOAN\""
+  step "kan jeg finne den autoriserte verdien i listen over autoriserte verdier"
+  step "jeg leter opp boka i katalogiseringssøk"
+  step "velger å redigere eksemplaret"
+
+  # Not for loan is $952_7
+  s = @browser.select_list(:id => /^tag_952_subfield_7_[0-9]+$/)
+  s.select @context[:authorised_value_description]
+  @browser.button(:value => "Save changes").click
+end
+
+Then(/^systemet viser at materialet ikke er utlånt$/) do
   pending # express the regexp above with the code you wish you had
 end
 
