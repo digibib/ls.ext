@@ -5,7 +5,7 @@ Egenskap: Autentisering på automat
   Som en låner Knut
   Fordi jeg liker å gjøre ting selv
   Ønsker jeg å bruke en selvbetjent automat
-  
+
   Bakgrunn:
     Gitt at det finnes en utlånsautomat
 
@@ -33,7 +33,7 @@ Egenskap: Autentisering på automat
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
       | Knut      | 01/08/2015   | 10/08/2015 | 0             | 1     | false    | 1234     | 0     |
     Når låneren velger å låne på automaten
-    Når låneren identifiserer seg på automat med riktig PIN
+    Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
 
   Scenario: Låner registrert med feil adresse prøver å låne på automat
@@ -41,7 +41,7 @@ Egenskap: Autentisering på automat
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
       | Knut      | 01/08/2015   | 10/08/2015 | 1             | 0     | false    | 1234     | 0     |
     Når låneren velger å låne på automaten
-    Når låneren identifiserer seg på automat med riktig PIN
+    Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
 
   Scenario: Låner registrert med sperret kort prøver å låne på automat
@@ -49,7 +49,7 @@ Egenskap: Autentisering på automat
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred   | password | flags |
       | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     | 2015-10-10 | 1234     | 0     |
     Når låneren velger å låne på automaten
-    Når låneren identifiserer seg på automat med riktig PIN
+    Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
 
   @wip
@@ -58,5 +58,5 @@ Egenskap: Autentisering på automat
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred   | password | flags |
       | Knut      | 01/08/2015   | 01/07/2015 | 0             | 0     | 0          | 1234     | 0     |
     Når låneren velger å låne på automaten
-    Når låneren identifiserer seg på automat med riktig PIN
+    Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
