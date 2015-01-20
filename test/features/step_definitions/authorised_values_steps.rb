@@ -1,16 +1,29 @@
 # encoding: UTF-8
 
-Given(/^det finnes en autorisert verdi$/) do
-  @context[:authorised_category] = generateRandomString
-  @context[:authorised_value]    = generateRandomString
+Given(/^det finnes en autorisert verdi for "(.*)"$/) do |category|
+  @context[:authorised_category]    = category
+  @context[:authorised_value]       = generateRandomString
+  @context[:authorised_description] = generateRandomString
   @browser.goto intranet(:authorised_values)
-  @browser.a(:id => "addcat").click
+
+  form = @browser.form(:id => "category")
+
+  category_exists = form.select.include?(@context[:authorised_category])
+  
+  if category_exists
+    form.select_list(:id => "searchfield").select_value @context[:authorised_category]
+    @browser.a(:id => "addauth").click
+  else
+    @browser.a(:id => "addcat").click
+  end
+
   form = @browser.form(:name => "Aform")
   form.text_field(:id => "category").set @context[:authorised_category]
   form.text_field(:id => "authorised_value").set @context[:authorised_value]
+  form.text_field(:id => "lib").set @context[:authorised_description]
   form.submit
 
-  @cleanup.push( "autorisert verdi #{@context[:authorised_value]}" =>
+  @cleanup.push( "autorisert verdi #{@context[:authorised_value]} for #{@context[:authorised_category]}" =>
     lambda do
       @browser.goto intranet(:authorised_values)
       form = @browser.form(:id => "category")
@@ -29,11 +42,14 @@ Given(/^det finnes en autorisert verdi$/) do
 end
 
 When(/jeg legger til en autorisert verdi/) do
-  step "det finnes en autorisert verdi"
+  step "det finnes en autorisert verdi for \"NOT_LOAN\""
 end
 
 Then(/^kan jeg finne den autoriserte verdien i listen over autoriserte verdier$/) do
   @browser.goto intranet(:authorised_values)
   form = @browser.form(:id => "category")
-  form.select_list(:id => "searchfield").include?(@context[:authorised_category]).should == true
+  form.select_list(:id => "searchfield").select_value @context[:authorised_category]
+  table = @browser.table(:id => "table_authorized_values")
+  table.wait_until_present
+  table.text.should include @context[:authorised_value]
 end
