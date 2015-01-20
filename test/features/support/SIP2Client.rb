@@ -58,7 +58,6 @@ class SIP2Client
 
   def userlogin(branch,user,pin,date=nil)
     lang = "012" # Norwegian
-    STDOUT.puts date
     timestamp = date ? Date.parse(date).strftime("%Y%m%d    %H%M%S") : Time.now.strftime("%Y%m%d    %H%M%S")
     send("63#{lang}#{timestamp}          AO#{branch}|AA#{user}|AD#{pin}|BP0000|BQ9999|")
   end
