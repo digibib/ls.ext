@@ -12,6 +12,7 @@ else
 end
 
 # Custom classes
+require_relative 'context_structs.rb'
 
 # Custom Modules extending Cucumber World Object
 # Methods are shared between all steps
