@@ -109,20 +109,20 @@ Then(/^samsvarer listen i grensesnittet med liste over lånerkategorier$/) do
 end
 
 When(/^lånerdata migreres$/) do
-  @patrons = Migration.new(@map, @import)
+  @migration = Migration.new(@map, @import)
   @context[:cardnumber] = generateRandomString
   @context[:surname] = generateRandomString
   # map the first borrower for testing
-  @context[:borrower_id] = @patrons.import.keys.first
+  @context[:borrower_id] = @migration.import.keys.first
   id = @context[:borrower_id]
-  @patrons.import[id][:cardnumber] = @context[:cardnumber]
-  @patrons.import[id][:surname] = @context[:surname]
-  @patrons.import[id][:categorycode] = @context[:patron_category_code]
-  @patrons.import[id][:branchcode] = @branch.code
+  @migration.import[id][:cardnumber] = @context[:cardnumber]
+  @migration.import[id][:surname] = @context[:surname]
+  @migration.import[id][:categorycode] = @context[:patron_category_code]
+  @migration.import[id][:branchcode] = @branch.code
 end
 
 When(/^lånerdata importeres i admingrensesnittet$/) do
-  import_user_via_csv(@patrons.import[@context[:borrower_id]])
+  import_user_via_csv(@migration.import[@context[:borrower_id]])
 end
 
 When(/^jeg legger til en lånerkategori$/) do
@@ -203,9 +203,9 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
 end
 
 Then(/^samsvarer de migrerte lånerdata med mapping$/) do
-  @patrons.map.each do |field,map|
+  @migration.map.each do |field,map|
     if map[:teststatus] && map[:teststatus].downcase == 'ok'
-      @patrons.import[@context[:borrower_id]].keys.to_s.should include(map[:plassering_i_koha])
+      @migration.import[@context[:borrower_id]].keys.to_s.should include(map[:plassering_i_koha])
     end
   end
 end
@@ -218,7 +218,7 @@ Then(/^viser systemet at låneren er importert$/) do
   @browser.link(:id => "editpatron").click
   # iterate patron advanced edit form and check for values
   patronform = @browser.form(:id => "entryform")
-  @patrons.import[@context[:borrower_id]].each do |key,value|
+  @migration.import[@context[:borrower_id]].each do |key,value|
     if value
       case "#{key}"
       when "dateofbirth"
