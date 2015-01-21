@@ -118,7 +118,7 @@ When(/^lånerdata migreres$/) do
   @patrons.import[id][:cardnumber] = @context[:cardnumber]
   @patrons.import[id][:surname] = @context[:surname]
   @patrons.import[id][:categorycode] = @context[:patron_category_code]
-  @patrons.import[id][:branchcode] = @context[:branchcode]
+  @patrons.import[id][:branchcode] = @branch.code
 end
 
 When(/^lånerdata importeres i admingrensesnittet$/) do
@@ -225,7 +225,7 @@ Then(/^viser systemet at låneren er importert$/) do
         label = patronform.label(:for => "#{key}")
         label.parent.html.should include(Date.parse(value).strftime("%m/%d/%Y"))
       when "branchcode"
-        @browser.select_list(:id => "libraries").selected?(@context[:branchname]).should == true
+        @browser.select_list(:id => "libraries").selected?(@branch.name).should == true
       when "categorycode"
         @browser.select_list(:id => "categorycode_entry").selected?(@context[:patron_category_description]).should == true
       when "smsalertnumber"

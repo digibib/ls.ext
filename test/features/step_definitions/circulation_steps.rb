@@ -44,15 +44,15 @@ end
 When(/^jeg registrerer utlån av boka$/) do
   @browser.execute_script("printx_window = function() { return };") #Disable print slip popup
   form = @browser.form(:id => "mainform")
-  form.text_field(:id => "barcode").set(@context[:barcode])
+  form.text_field(:id => "barcode").set(@book.items.first.barcode)
   form.submit
 
-  @cleanup.push( "utlån #{@context[:barcode]}" =>
+  @cleanup.push( "utlån #{@book.items.first.barcode}" =>
     lambda do
       @browser.goto intranet(:select_branch)
       @browser.form(:action => "selectbranchprinter.pl").submit
       @browser.a(:href => "#checkin_search").click
-      @browser.text_field(:id => "ret_barcode").set @context[:barcode]
+      @browser.text_field(:id => "ret_barcode").set @book.items.first.barcode
       @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
     end
   )
@@ -62,7 +62,7 @@ When(/^boka blir registrert innlevert$/) do
   @browser.goto intranet(:select_branch)
   @browser.form(:action => "selectbranchprinter.pl").submit
   @browser.a(:href => "#checkin_search").click
-  @browser.text_field(:id => "ret_barcode").set @context[:barcode]
+  @browser.text_field(:id => "ret_barcode").set @book.items.first.barcode
   @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
 end
 
@@ -71,13 +71,13 @@ Then(/^registrerer systemet at boka er utlånt$/) do
   @browser.goto intranet(:home)
   @browser.a(:text => "Search the catalog").click
   form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(@context[:book_title])
+  form.text_field(:id => "search-form").set(@book.title)
   form.submit
-  @browser.text.should include(@context[:book_title])
+  @browser.text.should include(@book.title)
 end
 
 Then(/^at "(.*?)" låner boka$/) do |name|
-  @browser.text.should include(@context[:book_title])
+  @browser.text.should include(@book.title)
   @browser.text.should include "Checked out to #{name}"
 end
 
@@ -85,9 +85,9 @@ Then(/^viser systemet at låneren ikke låner boka$/) do
   @browser.goto intranet(:home)
   @browser.a(:text => "Search the catalog").click
   form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(@context[:book_title])
+  form.text_field(:id => "search-form").set(@book.title)
   form.submit
-  @browser.text.should include(@context[:book_title])
+  @browser.text.should include(@book.title)
   @browser.text.should_not include "Checked out to Knut"
 end
 
@@ -110,7 +110,7 @@ end
 
 When(/^jeg leter opp boka i katalogiseringssøk$/) do
   @browser.goto intranet(:cataloguing)
-  @browser.text_field(:name => 'q').set @context[:book_title]
+  @browser.text_field(:name => 'q').set @book.title
   @browser.form(:name => 'search').submit
   @browser.text.include?("Add/Edit items") == true
 end

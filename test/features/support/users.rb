@@ -35,7 +35,7 @@ module Users
   # Method to import user hash via CSV in admin
   # Branch and patron category are randomized
   def import_user_via_csv(user)
-    user[:branchcode]   = @context[:branchcode]
+    user[:branchcode]   = @branch.code
     user[:categorycode] = @context[:patron_category_code]
     user[:cardnumber]   = generateRandomString
     user[:surname]      = generateRandomString
