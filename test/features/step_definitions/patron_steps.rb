@@ -174,7 +174,7 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   form.text_field(:id => "password2").set @patron.surname
   form.button(:name => "save").click
 
-  @context[:patron] = @patron
+  (@context[:patrons] ||= []) << @patron
   @cleanup.push( "låner #{name} #{@patron.surname}" =>
     lambda do
       @browser.goto intranet(:patrons)

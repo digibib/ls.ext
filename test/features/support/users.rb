@@ -89,7 +89,7 @@ module Users
     # Merge user into context object
     # TODO: handle multiple users by array of hashes?
 
-    @context[:patron] = @patron
+    (@context[:patrons] ||= []) << @patron
     @cleanup.push( "lånernummer #{@patron.cardnumber}" =>
       lambda do
         @browser.goto intranet(:patrons)
