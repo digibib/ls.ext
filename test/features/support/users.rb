@@ -33,13 +33,23 @@ module Users
   end
 
   # Method to import user hash via CSV in admin
-  # Branch and patron category are randomized
+  # @branch and @patroncategory need to exist be created in different steps
   def import_user_via_csv(user)
-    user[:branchcode]   = @branch.code         if @branch
-    user[:categorycode] = @patroncategory.code if @patroncategory
-    user[:cardnumber]   = @patron.cardnumber   if @patron
-    user[:surname]      = @patron.surname      if @patron
-
+    
+    if @patron  # if patron is already created, use @patron values to override
+      user[:branchcode]   = @branch.code
+      user[:categorycode] = @patroncategory.code
+      user[:cardnumber]   = @patron.cardnumber
+      user[:surname]      = @patron.surname
+    else        # else create new Patron and add user values
+      @patron = Patron.new
+      @patron.cardnumber = user[:cardnumber]
+      @patron.surname    = user[:surname]
+      @patron.password   = user[:password]
+      @patron.branch     = @branch
+      @patron.category   = @patroncategory
+    end
+STDOUT.puts user
     # To convert to CSV via Migration 
     importuser = { user[:cardnumber] => user }
 

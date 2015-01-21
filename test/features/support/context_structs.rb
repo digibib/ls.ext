@@ -35,7 +35,7 @@ ItemType = Struct.new(:code, :desc) do
   end
 end
 
-Patron = Struct.new(:name, :borrowernumber, :cardnumber, :surname, :branch, :category) do
+Patron = Struct.new(:name, :borrowernumber, :cardnumber, :surname, :branch, :category, :password) do
   def initialize
     self.cardnumber = generateRandomString
     self.surname    = generateRandomString

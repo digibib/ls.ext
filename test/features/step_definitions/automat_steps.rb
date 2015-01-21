@@ -64,7 +64,7 @@ end
 When(/^låneren legger materialet på automaten$/) do
   case @context[:sip_mode]
   when "låne"
-    @context[:sip_transaction_response] = @context[:sip_client].checkout(@branch.code,@context[:cardnumber],@context[:password],@book.items.first.barcode)
+    @context[:sip_transaction_response] = @context[:sip_client].checkout(@branch.code,@patron.cardnumber,@patron.password,@book.items.first.barcode)
     @cleanup.push( "utlån #{@book.items.first.barcode}" =>
       lambda do
         @context[:sip_client].checkin(@branch.code,@book.items.first.barcode)
@@ -99,7 +99,7 @@ end
 
 When(/^låneren identifiserer seg på automat med (riktig|feil) PIN$/) do | pin |
   pin == "riktig" ? pin = @context[:password] : pin = "0000"
-  @context[:sip_patron_information] = @context[:sip_client].userlogin(@branch.code,@context[:cardnumber],pin)
+  @context[:sip_patron_information] = @context[:sip_client].userlogin(@branch.code,@patron.cardnumber,pin)
   @context[:sip_patron_information]["AE"].should include("Knut #{@context[:surname]}")
 end
 
