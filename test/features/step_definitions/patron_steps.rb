@@ -115,8 +115,8 @@ When(/^lånerdata migreres$/) do
   @patron.branch   = @branch
 
   # map the first borrower for testing
-  @patron.borrowernumber = @migration.import.keys.first
-  id = @patron.borrowernumber
+  @patron.cardnumber = @migration.import.keys.first
+  id = @patron.cardnumber
   @migration.import[id][:cardnumber]   = @patron.cardnumber
   @migration.import[id][:surname]      = @patron.surname
   @migration.import[id][:categorycode] = @patron.category.code
@@ -125,7 +125,7 @@ end
 
 When(/^lånerdata importeres i admingrensesnittet$/) do
   # import_user_via_csv takes @patron Struct
-  import_user_via_csv(@migration.import[@patron.borrowernumber])
+  import_user_via_csv(@migration.import[@patron.cardnumber])
 end
 
 When(/^jeg legger til en lånerkategori$/) do
@@ -226,7 +226,7 @@ Then(/^viser systemet at låneren er importert$/) do
   @browser.link(:id => "editpatron").click
   # iterate patron advanced edit form and check for values
   patronform = @browser.form(:id => "entryform")
-  @migration.import[@patron.borrowernumber].each do |key,value|
+  @migration.import[@patron.cardnumber].each do |key,value|
     if value
       case "#{key}"
       when "dateofbirth"

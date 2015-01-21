@@ -98,9 +98,9 @@ When(/^låneren velger "(.*?)" på automaten$/) do |mode|
 end
 
 When(/^låneren identifiserer seg på automat med (riktig|feil) PIN$/) do | pin |
-  pin == "riktig" ? pin = @context[:password] : pin = "0000"
-  @context[:sip_patron_information] = @context[:sip_client].userlogin(@branch.code,@patron.cardnumber,pin)
-  @context[:sip_patron_information]["AE"].should include("Knut #{@context[:surname]}")
+  pin == "riktig" ? pin = @patron.password : pin = "0000"
+  @context[:sip_patron_information] = @context[:sip_client].userlogin(@patron.branch.code,@patron.cardnumber,pin)
+  @context[:sip_patron_information]["AE"].should include("Knut #{@patron.surname}")
 end
 
 Then(/^får låneren beskjed om at PIN( ikke)? er riktig$/) do |invalidpin|

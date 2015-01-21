@@ -36,20 +36,23 @@ module Users
   # @branch and @patroncategory need to exist be created in different steps
   def import_user_via_csv(user)
     
-    if @patron  # if patron is already created, use @patron values to override
-      user[:branchcode]   = @branch.code
-      user[:categorycode] = @patroncategory.code
-      user[:cardnumber]   = @patron.cardnumber
-      user[:surname]      = @patron.surname
-    else        # else create new Patron and add user values
-      @patron = Patron.new
-      @patron.cardnumber = user[:cardnumber]
-      @patron.surname    = user[:surname]
-      @patron.password   = user[:password]
-      @patron.branch     = @branch
-      @patron.category   = @patroncategory
-    end
-STDOUT.puts user
+    # This logic should be operated elsewhere
+    @branch = Branch.new unless @branch
+    @patron = Patron.new unless @parent
+    @patroncategory = PatronCategory.new unless @patroncategory
+
+    user[:branchcode]   = user[:branchcode]   ? user[:branchcode]   : @branch.code
+    user[:categorycode] = user[:categorycode] ? user[:categorycode] : @patroncategory.code
+    user[:cardnumber]   = user[:cardnumber]   ? user[:cardnumber]   : @patron.cardnumber
+    user[:surname]      = user[:surname]      ? user[:surname]      : @patron.surname
+    user[:password]     = user[:password]     ? user[:password]     : @patron.password
+
+    @patron.cardnumber = user[:cardnumber] if user[:cardnumber]
+    @patron.surname    = user[:surname]    if user[:surname]
+    @patron.password   = user[:password]
+    @patron.branch     = @branch
+    @patron.category   = @patroncategory
+
     # To convert to CSV via Migration 
     importuser = { user[:cardnumber] => user }
 
