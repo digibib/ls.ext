@@ -213,7 +213,7 @@ end
 Then(/^samsvarer de migrerte lånerdata med mapping$/) do
   @migration.map.each do |field,map|
     if map[:teststatus] && map[:teststatus].downcase == 'ok'
-      @migration.import[@patron.borrowernumber].keys.to_s.should include(map[:plassering_i_koha])
+      @migration.import[@patron.cardnumber].keys.to_s.should include(map[:plassering_i_koha])
     end
   end
 end
