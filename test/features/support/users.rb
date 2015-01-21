@@ -35,10 +35,10 @@ module Users
   # Method to import user hash via CSV in admin
   # Branch and patron category are randomized
   def import_user_via_csv(user)
-    user[:branchcode]   = @branch.code
-    user[:categorycode] = @context[:patron_category_code]
-    user[:cardnumber]   = generateRandomString
-    user[:surname]      = generateRandomString
+    user[:branchcode]   = @branch.code         if @branch
+    user[:categorycode] = @patroncategory.code if @patroncategory
+    user[:cardnumber]   = @patron.cardnumber   if @patron
+    user[:surname]      = @patron.surname      if @patron
 
     # To convert to CSV via Migration 
     importuser = { user[:cardnumber] => user }
@@ -75,12 +75,12 @@ module Users
 
     # Merge user into context object
     # TODO: handle multiple users by array of hashes?
-    @context.merge!(user)
 
-    @cleanup.push( "lånernummer #{@context[:cardnumber]}" =>
+    @context[:patron] = @patron
+    @cleanup.push( "lånernummer #{@patron.cardnumber}" =>
       lambda do
         @browser.goto intranet(:patrons)
-        @browser.text_field(:id => "searchmember").set @context[:cardnumber]
+        @browser.text_field(:id => "searchmember").set @patron.cardnumber
         @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
         @browser.div(:class => 'patroninfo').wait_until_present
         #Phantomjs doesn't handle javascript popus, so we must override

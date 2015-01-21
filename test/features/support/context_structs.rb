@@ -35,7 +35,7 @@ ItemType = Struct.new(:code, :desc) do
   end
 end
 
-Patron = Struct.new(:cardnumber, :surname, :branch, :category) do
+Patron = Struct.new(:name, :borrowernumber, :cardnumber, :surname, :branch, :category) do
   def initialize
     self.cardnumber = generateRandomString
     self.surname    = generateRandomString
@@ -44,9 +44,10 @@ Patron = Struct.new(:cardnumber, :surname, :branch, :category) do
   end
 end
 
-PatronCategory = Struct.new(:code, :name) do
+PatronCategory = Struct.new(:code, :name, :description) do
   def initialize
-    self.code   = generateRandomString
-    self.name   = generateRandomString
+    self.code        = generateRandomString.upcase
+    self.name        = generateRandomString
+    self.description = generateRandomString
   end
 end

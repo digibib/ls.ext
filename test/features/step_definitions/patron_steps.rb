@@ -110,41 +110,44 @@ end
 
 When(/^lånerdata migreres$/) do
   @migration = Migration.new(@map, @import)
-  @context[:cardnumber] = generateRandomString
-  @context[:surname] = generateRandomString
+  @patron = Patron.new
+  @patron.category = @patroncategory
+  @patron.branch   = @branch
+
   # map the first borrower for testing
-  @context[:borrower_id] = @migration.import.keys.first
-  id = @context[:borrower_id]
-  @migration.import[id][:cardnumber] = @context[:cardnumber]
-  @migration.import[id][:surname] = @context[:surname]
-  @migration.import[id][:categorycode] = @context[:patron_category_code]
-  @migration.import[id][:branchcode] = @branch.code
+  @patron.borrowernumber = @migration.import.keys.first
+  id = @patron.borrowernumber
+  @migration.import[id][:cardnumber]   = @patron.cardnumber
+  @migration.import[id][:surname]      = @patron.surname
+  @migration.import[id][:categorycode] = @patron.category.code
+  @migration.import[id][:branchcode]   = @patron.branch.code
 end
 
 When(/^lånerdata importeres i admingrensesnittet$/) do
-  import_user_via_csv(@migration.import[@context[:borrower_id]])
+  # import_user_via_csv takes @patron Struct
+  import_user_via_csv(@migration.import[@patron.borrowernumber])
 end
 
 When(/^jeg legger til en lånerkategori$/) do
   @browser.goto intranet(:patron_categories)
   @browser.link(:id => "newcategory").click
-  @context[:category_name] = generateRandomString
-  @context[:patron_category_code] = generateRandomString.upcase
-  @context[:patron_category_description] = generateRandomString
+  @patroncategory = PatronCategory.new
+
   form = @browser.form(:name => "Aform")
-  form.text_field(:id => "categorycode").set @context[:patron_category_code]
-  form.text_field(:id => "description").set @context[:patron_category_description]
+  form.text_field(:id => "categorycode").set @patroncategory.code
+  form.text_field(:id => "description").set @patroncategory.description
   form.select_list(:id => "category_type").select "Adult"
   form.text_field(:id => "enrolmentperiod").set "1"  # Months
   form.submit
   @browser.form(:name => "Aform").should_not be_present
 
-  @cleanup.push( "lånerkategori #{@context[:patron_category_description]}" =>
+  @context[:patroncategory] = @patroncategory
+  @cleanup.push( "lånerkategori #{@patroncategory.description}" =>
     lambda do
       @browser.goto intranet(:patron_categories)
       table = @browser.table(:id => "table_categorie")
       table.rows.each do |row|
-        if row.text.include?(@context[:patron_category_description])
+        if row.text.include?(@patroncategory.description)
           row.link(:href => /op=delete_confirm/).click
           @browser.input(:value => "Delete this category").click
           break
@@ -155,22 +158,27 @@ When(/^jeg legger til en lånerkategori$/) do
 end
 
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
-  @context[:surname] = generateRandomString
   @browser.goto intranet(:patrons)
+  @patron = Patron.new
+  # Branch and PatronCategory are prerequisites
+  @patron.branch   = @branch
+  @patron.category = @patroncategory
+
   @browser.button(:text => "New patron").click
-  @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => @context[:patron_category_description]).click
+  @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => @patron.category.description).click
   form = @browser.form(:name => "form")
   form.text_field(:id => "firstname").set name
-  form.text_field(:id => "surname").set @context[:surname] 
-  form.text_field(:id => "userid").set "#{name}.#{@context[:surname]}"
-  form.text_field(:id => "password").set @context[:surname]
-  form.text_field(:id => "password2").set @context[:surname]
+  form.text_field(:id => "surname").set @patron.surname
+  form.text_field(:id => "userid").set "#{name}.#{@patron.surname}"
+  form.text_field(:id => "password").set @patron.surname
+  form.text_field(:id => "password2").set @patron.surname
   form.button(:name => "save").click
 
-  @cleanup.push( "låner #{name} #{@context[:surname]}" =>
+  @context[:patron] = @patron
+  @cleanup.push( "låner #{name} #{@patron.surname}" =>
     lambda do
       @browser.goto intranet(:patrons)
-      @browser.text_field(:id => "searchmember").set "#{name} #{@context[:surname]}"
+      @browser.text_field(:id => "searchmember").set "#{name} #{@patron.surname}"
       @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
       @browser.div(:class => 'patroninfo').wait_until_present
       #Phantomjs doesn't handle javascript popus, so we must override
@@ -187,11 +195,11 @@ Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
   table = @browser.table(:id => "table_categorie")
   @browser.select_list(:name => "table_categorie_length").select_value("-1")
   table.wait_until_present
-  table.text.should include @context[:patron_category_code]
+  table.text.should include @patroncategory.code
 end
 
 Then(/^viser systemet at "(.*?)" er låner$/) do |name|
-  fullname = "#{name} #{@context[:surname]}"
+  fullname = "#{name} #{@patron.surname}"
   #patron_search
   @browser.goto intranet(:patrons)
   @browser.text_field(:id => "searchmember").set "#{fullname}"
@@ -199,26 +207,26 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   @browser.div(:class => 'patroninfo').wait_until_present
   patroninfo_header = @browser.div(:class => 'patroninfo').h5.text
   patroninfo_header.should include fullname
-  @context[:cardnumber] = patroninfo_header.match(/\((.*?)\)/)[1]
+  @patron.cardnumber = patroninfo_header.match(/\((.*?)\)/)[1]
 end
 
 Then(/^samsvarer de migrerte lånerdata med mapping$/) do
   @migration.map.each do |field,map|
     if map[:teststatus] && map[:teststatus].downcase == 'ok'
-      @migration.import[@context[:borrower_id]].keys.to_s.should include(map[:plassering_i_koha])
+      @migration.import[@patron.borrowernumber].keys.to_s.should include(map[:plassering_i_koha])
     end
   end
 end
 
 Then(/^viser systemet at låneren er importert$/) do
   @browser.goto intranet(:patrons)
-  @browser.text_field(:id => "searchmember").set @context[:cardnumber]
+  @browser.text_field(:id => "searchmember").set @patron.cardnumber
   @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
-  @browser.title.should include @context[:surname]
+  @browser.title.should include @patron.surname
   @browser.link(:id => "editpatron").click
   # iterate patron advanced edit form and check for values
   patronform = @browser.form(:id => "entryform")
-  @migration.import[@context[:borrower_id]].each do |key,value|
+  @migration.import[@patron.borrowernumber].each do |key,value|
     if value
       case "#{key}"
       when "dateofbirth"
@@ -227,7 +235,7 @@ Then(/^viser systemet at låneren er importert$/) do
       when "branchcode"
         @browser.select_list(:id => "libraries").selected?(@branch.name).should == true
       when "categorycode"
-        @browser.select_list(:id => "categorycode_entry").selected?(@context[:patron_category_description]).should == true
+        @browser.select_list(:id => "categorycode_entry").selected?(@patron.category.description).should == true
       when "smsalertnumber"
         label = patronform.label(:for => "phone")
         label.parent.html.should include(value)

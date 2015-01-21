@@ -10,9 +10,9 @@ Egenskap: Liste over lånerkategorier
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
     Og at jeg har en liste over lånerkategorier
-  
+
   @wip
   Scenario: Sjekke lånerkategorier
     Når jeg er på administrasjonssiden for lånerkategorier
     Og jeg velger å vise alle lånerkategorier
-    Så samsvarer listen i grensesnittet med liste over lånerkategorier 
+    Så samsvarer listen i grensesnittet med liste over lånerkategorier
