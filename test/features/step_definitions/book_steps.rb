@@ -49,8 +49,7 @@ When(/^jeg legger inn boka som en ny bok$/) do
     # start zebra
   `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-start-zebra #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
 
-  @context[:book] = @book
-
+  (@context[:books] ||= []) << @book
   @cleanup.push( "bok #{@book.biblionumber}" =>
     lambda do
       @browser.goto intranet(:bib_record)+@book.biblionumber
