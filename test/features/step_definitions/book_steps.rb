@@ -19,11 +19,14 @@ When(/^jeg legger inn boka som en ny bok$/) do
   res.body.should_not include("failed")
   @context[:svc_cookie] = res.response['set-cookie']
 
+  # Book item needs branch and itemtype before import
+  step "at det finnes en avdeling"       unless @branch
+  step "jeg legger til en materialtype"  unless @itemtype
   @book = Book.new
-  # Book needs branch and itemtype before import
   @book.addItem
   @book.items.first.branch   = @branch
   @book.items.first.itemtype = @itemtype
+
   data = File.read("features/upload-files/Fargelegg byen!.normarc", :encoding => 'UTF-8')
   data = data.gsub(/\{\{ book_title \}\}/, @book.title)
   data = data.gsub(/\{\{ branchcode \}\}/, @branch.code)
@@ -39,6 +42,7 @@ When(/^jeg legger inn boka som en ny bok$/) do
   res = @http.post("/cgi-bin/koha/svc/new_bib?items=1", data, headers)
   res.body.should include("<status>ok</status>")
   @book.biblionumber = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
+
   #barcode_search = res.body.match(/code=\"p\">(\d+)<\/subfield>/)
   #STDOUT.puts "DEBUG PRINT res.body: #{res.body}" if !barcode_search || barcode_search.length < 2
   #@book.items.first.barcode = barcode_search[1]
