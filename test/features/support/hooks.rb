@@ -27,6 +27,7 @@ end
 
 Before do
   @context = {}
+  @active  = {} # Hash of active context objects (Book, Patron, Branch, etc.)
   @cleanup = [] # A stack of operations to be undone in reversed order after feature
 end
 
@@ -45,11 +46,12 @@ def title_of(scenario)
 end
 
 After do |scenario| # cleanup based on @cleanup - in reverse order
-  STDOUT.puts "--------------- Context and cleanup: #{title_of(scenario)} "
+  STDOUT.puts "--------------- Context: #{title_of(scenario)} "
   STDOUT.puts @context.pretty_inspect
 
   last_cleanup_exception = nil
 
+  STDOUT.puts "--------------- Cleanup: #{title_of(scenario)} "
   step "at jeg er logget inn som adminbruker"
   @cleanup.reverse.each do |hash|
     cleanup_desc = " cleanup '#{hash.keys.first}'"
@@ -61,6 +63,8 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
       last_cleanup_exception = e
       STDOUT.puts "#{cleanup_desc} failed: #{e}"
       e.backtrace.each_with_index { |line, i| STDOUT.puts("  #{line}") if i < 3 }
+      STDOUT.puts "--------------- Active context upon failure: #{cleanup_desc} "
+      STDOUT.puts "#{@active.pretty_inspect}"
       add_screenshot("#{cleanup_desc}")
     end
   end
@@ -73,5 +77,9 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
 end
 
 After do |scenario|
-  add_screenshot(title_of(scenario)) if scenario.failed? && @browser
+  if scenario.failed? && @browser
+    add_screenshot(title_of(scenario))
+    STDOUT.puts "--------------- Active context upon failure: #{title_of(scenario)} "
+    STDOUT.puts "#{@active.pretty_inspect}"
+  end
 end
