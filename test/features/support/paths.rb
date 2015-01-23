@@ -21,6 +21,7 @@ module Paths
       :admin    => "/cgi-bin/koha/admin/admin-home.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
+      :reserve => "/cgi-bin/koha/reserve/request.pl?biblionumber=",
       :stage_marc => "/cgi-bin/koha/tools/stage-marc-import.pl",
       :select_branch => "/cgi-bin/koha/circ/selectbranchprinter.pl",
       :checkout => "/cgi-bin/koha/circ/circulation.pl",
