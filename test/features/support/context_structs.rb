@@ -13,7 +13,7 @@ Book = Struct.new(:title, :biblionumber, :items) do
   end
 end
 
-Item = Struct.new(:barcode, :branch, :itemtype) do
+Item = Struct.new(:barcode, :itemnumber, :branch, :itemtype) do
   def initialize
     self.barcode  = '0301%010d' % rand(10 ** 10)
     self.branch   = Branch.new
@@ -35,7 +35,7 @@ ItemType = Struct.new(:code, :desc) do
   end
 end
 
-Patron = Struct.new(:name, :borrowernumber, :cardnumber, :surname, :branch, :category, :password) do
+Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password) do
   def initialize
     self.cardnumber = generateRandomString
     self.surname    = generateRandomString
