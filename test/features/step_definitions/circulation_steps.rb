@@ -37,22 +37,23 @@ end
 
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
   @browser.goto intranet(:home)
-  @browser.text_field(:id => "findborrower").set "#{patron} #{@context[:surname]}"
+  @browser.text_field(:id => "findborrower").set "#{patron} #{@active[:patron].surname}"
   @browser.form(:id => "patronsearch").submit
 end
 
 When(/^jeg registrerer utlån av boka$/) do
+  book = @active[:book]
   @browser.execute_script("printx_window = function() { return };") #Disable print slip popup
   form = @browser.form(:id => "mainform")
-  form.text_field(:id => "barcode").set(@book.items.first.barcode)
+  form.text_field(:id => "barcode").set(book.items.first.barcode)
   form.submit
 
-  @cleanup.push( "utlån #{@book.items.first.barcode}" =>
+  @cleanup.push( "utlån #{book.items.first.barcode}" =>
     lambda do
       @browser.goto intranet(:select_branch)
       @browser.form(:action => "selectbranchprinter.pl").submit
       @browser.a(:href => "#checkin_search").click
-      @browser.text_field(:id => "ret_barcode").set @book.items.first.barcode
+      @browser.text_field(:id => "ret_barcode").set book.items.first.barcode
       @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
     end
   )
@@ -62,7 +63,7 @@ When(/^boka blir registrert innlevert$/) do
   @browser.goto intranet(:select_branch)
   @browser.form(:action => "selectbranchprinter.pl").submit
   @browser.a(:href => "#checkin_search").click
-  @browser.text_field(:id => "ret_barcode").set @book.items.first.barcode
+  @browser.text_field(:id => "ret_barcode").set @active[:book].items.first.barcode
   @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
 end
 
@@ -75,23 +76,23 @@ Given(/^at materialet er holdt av til annen låner$/) do
 end
 
 When(/^boka er reservert av "(.*?)"$/) do |name|
-  @browser.goto intranet(:reserve)+@book.biblionumber
+  book = @active[:book]
+  @browser.goto intranet(:reserve)+book.biblionumber
   user = get_user_info(name).first
-  STDOUT.puts user
   # lookup patron via holds
   form = @browser.form(:id => "holds_patronsearch")
   form.text_field(:id => "patron").set user["dt_cardnumber"]
   form.submit
   form = @browser.form(:id => "hold-request-form")
-  # TODO: place hold on specific item
+  # TODO: place hold on specific item?
   # form.radio(:value => @book.items.first.itemnumber).set
   form.submit
 
-  @cleanup.push( "reservering #{@book.biblionumber}" =>
+  @cleanup.push( "reservering #{book.biblionumber}" =>
     lambda do
-      @browser.goto intranet(:reserve)+@book.biblionumber
+      @browser.goto intranet(:reserve)+book.biblionumber
       form = @browser.form(:action => "modrequest.pl")
-      form.link(:href => /action=cancel.+biblionumber=#{@book.biblionumber}/).click
+      form.link(:href => /action=cancel.+biblionumber=#{book.biblionumber}/).click
     end
   )
 end
@@ -100,13 +101,13 @@ Then(/^registrerer systemet at boka er utlånt$/) do
   @browser.goto intranet(:home)
   @browser.a(:text => "Search the catalog").click
   form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(@book.title)
+  form.text_field(:id => "search-form").set(@active[:book].title)
   form.submit
-  @browser.text.should include(@book.title)
+  @browser.text.should include(@active[:book].title)
 end
 
 Then(/^at "(.*?)" låner boka$/) do |name|
-  @browser.text.should include(@book.title)
+  @browser.text.should include(@active[:book].title)
   @browser.text.should include "Checked out to #{name}"
 end
 
@@ -114,9 +115,9 @@ Then(/^viser systemet at låneren ikke låner boka$/) do
   @browser.goto intranet(:home)
   @browser.a(:text => "Search the catalog").click
   form = @browser.form(:id => "cat-search-block")
-  form.text_field(:id => "search-form").set(@book.title)
+  form.text_field(:id => "search-form").set(@active[:book].title)
   form.submit
-  @browser.text.should include(@book.title)
+  @browser.text.should include(@active[:book].title)
   @browser.text.should_not include "Checked out to Knut"
 end
 
@@ -139,7 +140,7 @@ end
 
 When(/^jeg leter opp boka i katalogiseringssøk$/) do
   @browser.goto intranet(:cataloguing)
-  @browser.text_field(:name => 'q').set @book.title
+  @browser.text_field(:name => 'q').set @active[:book].title
   @browser.form(:name => 'search').submit
   @browser.text.include?("Add/Edit items") == true
 end

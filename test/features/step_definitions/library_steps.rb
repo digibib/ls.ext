@@ -30,21 +30,24 @@ end
 When(/^jeg legger inn en ny avdeling med ny avdelingskode$/) do
   @browser.goto intranet(:branches)
   @browser.link(:id => "newbranch").click
-  @branch = Branch.new
+  branch = Branch.new
   form = @browser.form(:name => "Aform")
-  form.text_field(:id => "branchname").set @branch.name
-  form.text_field(:id => "branchcode").set @branch.code
+  form.text_field(:id => "branchname").set branch.name
+  form.text_field(:id => "branchcode").set branch.code
   form.submit
   @browser.form(:name => "Aform").should_not be_present
 
-  @context[:branch] = @branch
-  @cleanup.push( "avdeling #{@branch.code}" =>
+  @active[:branch] = branch
+  (@context[:branches] ||= []) << branch
+  @branch = branch
+  @cleanup.push( "avdeling #{branch.code}" =>
     lambda do
+      #branch = @context[:branches].find {|b| b.code == @branch.code }
       @browser.goto intranet(:branches)
-      @browser.div(:id => "branchest_filter").text_field().set(@branch.name)
-      @browser.link(:href => "?branchcode=" + @branch.code + "&branchname=" + @branch.name + "&op=delete").click
+      @browser.div(:id => "branchest_filter").text_field().set(branch.name)
+      @browser.link(:href => "?branchcode=" + branch.code + "&branchname=" + branch.name + "&op=delete").click
       form = @browser.form(:action => "/cgi-bin/koha/admin/branches.pl")
-      if form.text.include?(@branch.code)
+      if form.text.include?(branch.code)
         form.submit
       end
     end
@@ -53,11 +56,11 @@ end
 
 Then(/^finnes avdelingen i oversikten over avdelinger$/) do
   @browser.goto intranet(:branches)
-  @browser.div(:id => "branchest_filter").text_field().set(@branch.name)
+  @browser.div(:id => "branchest_filter").text_field().set(@active[:branch].name)
   table = @browser.table(:id => "branchest")
   table.should be_present
-  table.text.should include(@branch.name)
-  table.text.should include(@branch.code)
+  table.text.should include(@active[:branch].name)
+  table.text.should include(@active[:branch].code)
 end
 
 

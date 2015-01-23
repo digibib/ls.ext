@@ -63,16 +63,16 @@ module Users
     patron = Patron.new
     patron.password  = user[:password]
     patron.firstname = user[:firstname]
-    patron.branch    = @branch
-    patron.category  = @patroncategory
+    patron.branch    = @active[:branch]
+    patron.category  = @active[:patroncategory]
 
     # This logic should be operated elsewhere
     #@branch = Branch.new unless @branch
     #patron = Patron.new unless patron
     #patroncategory = PatronCategory.new unless patroncategory
 
-    user[:branchcode]   = @branch.code
-    user[:categorycode] = @patroncategory.code
+    user[:branchcode]   = @active[:branch].code
+    user[:categorycode] = @active[:patroncategory].code
     user[:cardnumber]   = patron.cardnumber
     user[:surname]      = patron.surname
     #user[:password]     = user[:password]     ? user[:password]     : patron.password
@@ -110,7 +110,7 @@ module Users
     req.body = data.join
     res = http.request(req)
 
-    @patron = patron
+    @active[:patron] = patron
     (@context[:patrons] ||= []) << patron
     @cleanup.push( "lånernummer #{patron.cardnumber}" =>
       lambda do

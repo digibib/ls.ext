@@ -62,16 +62,19 @@ Then(/^får låneren beskjed om at materialet ikke er komplett$/) do
 end
 
 When(/^låneren legger materialet på automaten$/) do
+  branch = @active[:branch]
+  patron = @active[:patron]
+  book   = @active[:book]
   case @context[:sip_mode]
   when "låne"
-    @context[:sip_transaction_response] = @context[:sip_client].checkout(@branch.code,@patron.cardnumber,@patron.password,@book.items.first.barcode)
-    @cleanup.push( "utlån #{@book.items.first.barcode}" =>
+    @context[:sip_transaction_response] = @context[:sip_client].checkout(branch.code, patron.cardnumber, patron.password, book.items.first.barcode)
+    @cleanup.push( "utlån #{book.items.first.barcode}" =>
       lambda do
-        @context[:sip_client].checkin(@branch.code,@book.items.first.barcode)
+        @context[:sip_client].checkin(branch.code,book.items.first.barcode)
       end
     )
   when "levere"
-    @context[:sip_transaction_response] = @context[:sip_client].checkin(@branch.code,@book.items.first.barcode)
+    @context[:sip_transaction_response] = @context[:sip_client].checkin(branch.code,book.items.first.barcode)
   else
     raise Exception.new("Invalid SIP mode: #{@context[:sip_mode]}")
   end
@@ -98,9 +101,11 @@ When(/^låneren velger "(.*?)" på automaten$/) do |mode|
 end
 
 When(/^låneren identifiserer seg på automat med (riktig|feil) PIN$/) do | pin |
-  pin == "riktig" ? pin = @patron.password : pin = "0000"
-  @context[:sip_patron_information] = @context[:sip_client].userlogin(@patron.branch.code,@patron.cardnumber,pin)
-  @context[:sip_patron_information]["AE"].should include("Knut #{@patron.surname}")
+  pin == "riktig" ? pin = @active[:patron].password : pin = "0000"
+  @context[:sip_patron_information] = @context[:sip_client].userlogin(@active[:patron].branch.code,
+                                                                      @active[:patron].cardnumber,
+                                                                      pin)
+  @context[:sip_patron_information]["AE"].should include("Knut #{@active[:patron].surname}")
 end
 
 Then(/^får låneren beskjed om at PIN( ikke)? er riktig$/) do |invalidpin|

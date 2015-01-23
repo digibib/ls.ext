@@ -15,8 +15,8 @@ Given(/^at jeg er på Kohas interne forside$/) do
 end
 
 Given(/^jeg logger på som bruker "(.*?)" med passord "(.*?)"$/) do |userid, password|
-  @context[:user] = userid
-  @browser.text_field(:id => 'userid').set @context[:user]
+  @context[:loginuser] = userid
+  @browser.text_field(:id => 'userid').set @context[:loginuser]
   @browser.text_field(:id => 'password').set password
   @browser.button(:id => 'submit').click
 end
@@ -34,5 +34,5 @@ end
 
 Then(/^vises det at jeg er pålogget$/) do
   @browser.span(:class => 'loggedinusername').should be_present
-  @browser.span(:class => 'loggedinusername').text.strip.should == @context[:user]
+  @browser.span(:class => 'loggedinusername').text.strip.should == @context[:loginuser]
 end
