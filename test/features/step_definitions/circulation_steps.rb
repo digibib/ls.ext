@@ -66,6 +66,35 @@ When(/^boka blir registrert innlevert$/) do
   @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
 end
 
+Given(/^at materialet er holdt av til annen låner$/) do
+  step "at det finnes en låner med lånekort", table(%{
+    | firstname | password |
+    | Ove       | 1234     |
+  })
+  step "boka er reservert av \"Ove\""
+end
+
+When(/^boka er reservert av "(.*?)"$/) do |name|
+  @browser.goto intranet(:reserve)+@book.biblionumber
+  user = get_user_info(name).first
+  STDOUT.puts user
+  # lookup patron via holds
+  form = @browser.form(:id => "holds_patronsearch")
+  form.text_field(:id => "patron").set user["dt_cardnumber"]
+  form.submit
+  # place hold on specific item
+  form = @browser.form(:id => "hold-request-form")
+  form.radio(:value => @book.item.itemnumber).set
+  form.submit
+
+  @cleanup.push( "reservering #{@book.biblionumber}" =>
+    lambda do
+      @browser.goto intranet(:reserve)+@book.biblionumber
+      form = @browser.form(:action => "modrequest.pl")
+      form.link(:href => /action=cancel.+biblionumber=#{@book.biblionumber}/).click
+    end
+  )
+end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
   @browser.goto intranet(:home)
