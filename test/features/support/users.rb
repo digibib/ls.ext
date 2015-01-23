@@ -110,6 +110,7 @@ module Users
     req.body = data.join
     res = http.request(req)
 
+    @patron = patron
     (@context[:patrons] ||= []) << patron
     @cleanup.push( "lånernummer #{patron.cardnumber}" =>
       lambda do

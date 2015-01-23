@@ -82,9 +82,9 @@ When(/^boka er reservert av "(.*?)"$/) do |name|
   form = @browser.form(:id => "holds_patronsearch")
   form.text_field(:id => "patron").set user["dt_cardnumber"]
   form.submit
-  # place hold on specific item
   form = @browser.form(:id => "hold-request-form")
-  form.radio(:value => @book.item.itemnumber).set
+  # TODO: place hold on specific item
+  # form.radio(:value => @book.items.first.itemnumber).set
   form.submit
 
   @cleanup.push( "reservering #{@book.biblionumber}" =>
