@@ -18,7 +18,8 @@ require_relative 'context_structs.rb'
 # Methods are shared between all steps
 require_relative 'users.rb'
 require_relative 'paths.rb'
-World(Paths,Users)
+require_relative 'preferences.rb'
+World(Paths,Users,Preferences)
 
 #Length needs to be short enough
 def generateRandomString ()
