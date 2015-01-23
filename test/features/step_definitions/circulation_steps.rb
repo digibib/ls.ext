@@ -76,6 +76,8 @@ Given(/^at materialet er holdt av til annen låner$/) do
 end
 
 When(/^boka er reservert av "(.*?)"$/) do |name|
+  step "at det er aktivert en standard sirkulasjonsregel"
+  step "at det er lov å reservere materiale"
   book = @active[:book]
   @browser.goto intranet(:reserve)+book.biblionumber
   user = get_user_info(name).first
@@ -85,7 +87,7 @@ When(/^boka er reservert av "(.*?)"$/) do |name|
   form.submit
   form = @browser.form(:id => "hold-request-form")
   # TODO: place hold on specific item?
-  # form.radio(:value => @book.items.first.itemnumber).set
+  # form.radio(:value => book.items.first.itemnumber).set
   form.submit
 
   @cleanup.push( "reservering #{book.biblionumber}" =>
@@ -95,6 +97,22 @@ When(/^boka er reservert av "(.*?)"$/) do |name|
       form.link(:href => /action=cancel.+biblionumber=#{book.biblionumber}/).click
     end
   )
+end
+
+Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
+  step "at jeg er på sida for sirkulasjonsregler"
+  table = @browser.table(:id => "default-circulation-rules")
+  row = table.tr(:index, -1)
+  row.select_list(:name => "categorycode").select_value "*"
+  row.select_list(:name => "itemtype").select_value "*"
+  row.text_field(:name => "maxissueqty").set "10"
+  row.text_field(:name => "issuelength").set "10"
+  row.text_field(:name => "reservesallowed").set "10"
+  row.input(:class => "submit").click
+end
+
+Given(/^at det er lov å reservere materiale$/) do
+  set_preference("pref_AllowOnShelfHolds", 1)
 end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
