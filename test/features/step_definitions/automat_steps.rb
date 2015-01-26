@@ -62,8 +62,12 @@ Then(/^får låneren beskjed om at materialet ikke er komplett$/) do
 end
 
 When(/^låneren legger materialet på automaten$/) do
+  step "\"Knut\" legger materialet på automaten"
+end
+
+When(/^"(.*?)" legger materialet på automaten$/) do |name|
   branch = @active[:branch]
-  patron = @active[:patron]
+  patron = @context[:patrons].find {|p| p.firstname == "#{name}" }
   book   = @active[:book]
   case @context[:sip_mode]
   when "låne"
@@ -139,10 +143,17 @@ Then(/^systemet viser at materialet fortsatt er utlånt til låner$/) do
   pending # express the regexp above with the code you wish you had
 end
 
-Then(/^får låneren beskjed om at materialet ikke er til utlån$/) do
-  @context[:sip_transaction_response][:statusData][0].should eq("0")  # NOT OK
-  @context[:sip_transaction_response][:statusData][1].should eq("N")  # Renewal OK?
-  @context[:sip_transaction_response][:statusData][2].should eq("U")  # Magnetic media?
-  @context[:sip_transaction_response][:statusData][3].should eq("N")  # Desensitize?
-  @context[:sip_transaction_response]["AF"].should include("NOT_FOR_LOAN")
+Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
+  if check =~ /^ikke/
+    @context[:sip_transaction_response][:statusData][0].should eq("0")  # NOT OK
+    @context[:sip_transaction_response][:statusData][1].should eq("N")  # Renewal OK?
+    @context[:sip_transaction_response][:statusData][2].should eq("U")  # Magnetic media?
+    @context[:sip_transaction_response][:statusData][3].should eq("N")  # Desensitize?
+  end
+
+  if check == "ikke er til utlån"
+    @context[:sip_transaction_response]["AF"].should include("NOT_FOR_LOAN")
+  elsif check == "ikke kan lånes"
+    @context[:sip_transaction_response]["AF"].should include("Item is on hold shelf for another patron")
+  end
 end
