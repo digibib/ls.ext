@@ -77,7 +77,15 @@ end
 
 When(/^boka er reservert av "(.*?)"$/) do |name|
   step "at det er aktivert en standard sirkulasjonsregel"
-  step "at det er lov å reservere materiale"
+  step "at det er lov å reservere materiale som er på hylla"
+  step "boka reserveres av \"#{name}\" på egen avdeling"
+  step "reserveringskøen kjøres"
+  step "viser systemet at boka er reservert"
+  step "vises boka i listen over bøker som skal plukkes"
+  step "boka plukkes og skannes inn"
+end
+
+When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   book = @active[:book]
   @browser.goto intranet(:reserve)+book.biblionumber
   user = get_user_info(name).first
@@ -85,18 +93,72 @@ When(/^boka er reservert av "(.*?)"$/) do |name|
   form = @browser.form(:id => "holds_patronsearch")
   form.text_field(:id => "patron").set user["dt_cardnumber"]
   form.submit
+
+  # place reservation on branch
   form = @browser.form(:id => "hold-request-form")
+  form.select_list(:name => "pickup").select_value @active[:branch].code
   # TODO: place hold on specific item?
   # form.radio(:value => book.items.first.itemnumber).set
   form.submit
+end
 
-  @cleanup.push( "reservering #{book.biblionumber}" =>
-    lambda do
-      @browser.goto intranet(:reserve)+book.biblionumber
-      form = @browser.form(:action => "modrequest.pl")
-      form.link(:href => /action=cancel.+biblionumber=#{book.biblionumber}/).click
-    end
-  )
+When(/^reserveringskøen kjøres$/) do
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null \
+    -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-foreach --enabled \
+    /usr/share/koha/bin/cronjobs/holds/build_holds_queue.pl' > /dev/null 2>&1`
+end
+
+When(/^boka plukkes og skannes inn$/) do
+  step "boka sjekkes inn på låners henteavdeling"
+  step "viser systemet at boka er reservert og skal holdes av"
+  step "det bekreftes at boka skal holdes av"
+  step "viser systemet at boka ligger til avhenting"
+end
+
+Then(/^viser systemet at boka er reservert$/) do
+  @browser.goto intranet(:pendingreserves)
+  table = @browser.table(:id => "holdst")
+  table.text.should include(@active[:book].title)
+end
+
+Then(/^viser systemet at boka er reservert og skal holdes av$/) do
+  @browser.div(:id => "hold-found2").text.should include(@active[:book].title)
+end
+
+When(/^boka sjekkes inn på låners henteavdeling$/) do
+  @browser.goto intranet(:select_branch)
+  form = @browser.form(:action => "selectbranchprinter.pl")
+  form.select_list(:name => "branch").select_value @active[:patron].branch.code
+  form.submit
+  @browser.a(:href => "#checkin_search").click
+  @browser.text_field(:id => "ret_barcode").set @active[:book].items.first.barcode
+  @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
+  add_screenshot("checkin")
+end
+
+When(/^det bekreftes at boka skal holdes av$/) do
+  add_screenshot("approve")
+  @browser.form(:class => "confirm").input(:class => "approve").click
+  add_screenshot("approved")
+end
+
+Then(/^viser systemet at boka ligger til avhenting$/) do
+  @browser.goto intranet(:waitingreserves)
+  book = @active[:book]
+  table = @browser.div(:id => "holdswaiting").table(:id => "holdst")
+  table.text.should include(@active[:book].title)
+end
+
+Then(/^systemet viser at materialet fortsatt er holdt av til den andre låneren$/) do
+  step "viser systemet at boka ligger til avhenting"
+end
+
+Then(/^vises boka i listen over bøker som skal plukkes$/) do
+  @browser.goto intranet(:holdsqueue)
+  @browser.form(:name => "f").submit
+  row = @browser.table(:id => "holdst").tbody.rows.first
+  row.td(:class => "hq-title").text.should include(@active[:book].title)
+  row.td(:class => "hq-patron").text.should include(@active[:patron].cardnumber)
 end
 
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
@@ -111,7 +173,7 @@ Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
   row.input(:class => "submit").click
 end
 
-Given(/^at det er lov å reservere materiale$/) do
+Given(/^at det er lov å reservere materiale som er på hylla$/) do
   set_preference("pref_AllowOnShelfHolds", 1)
 end
 
