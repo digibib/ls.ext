@@ -133,13 +133,10 @@ When(/^boka sjekkes inn på låners henteavdeling$/) do
   @browser.a(:href => "#checkin_search").click
   @browser.text_field(:id => "ret_barcode").set @active[:book].items.first.barcode
   @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
-  add_screenshot("checkin")
 end
 
 When(/^det bekreftes at boka skal holdes av$/) do
-  add_screenshot("approve")
   @browser.form(:class => "confirm").input(:class => "approve").click
-  add_screenshot("approved")
 end
 
 Then(/^viser systemet at boka ligger til avhenting$/) do
