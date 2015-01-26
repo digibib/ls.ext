@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Selvbetjent utlån via utlånsautomat
   Som en låner Knut
   For å bli underholdt
@@ -25,14 +24,12 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet ikke er komplett
     Og systemet viser at materialet ikke er utlånt
 
-  @wip
   Scenario: Eksisterende låner forsøker å låne materiale som ikke er til utlån
     Gitt at materialet ikke er til utlån
     Når låneren legger materialet på automaten
     Så får låneren beskjed om at materialet ikke er til utlån
     Og systemet viser at materialet ikke er utlånt
 
-  @wip
   Scenario: Eksisterende låner forsøker å låne materiale som er holdt av til annen låner
     Gitt at materialet er holdt av til annen låner
     Når låneren legger materialet på automaten
