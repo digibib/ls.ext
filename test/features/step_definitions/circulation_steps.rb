@@ -29,12 +29,12 @@ end
 
 Then(/^systemet viser at materialet ikke er utlånt$/) do
   book = @active[:book]
+  item = @active[:item] ||= book.items.first
   @browser.goto intranet(:bib_record)+book.biblionumber
   @browser.div(:id => "catalogue_detail_biblio").text.should include(book.title)
   holdings = @browser.div(:id => "holdings")
-  barcode = holdings.tbody.tr.td(:index => 7).text
-  status = @browser.td(:text => book.items.first.barcode)
-  status = status.parent.cell(:index => 5)
+  row_index = holdings.table.rows.to_a.index{ |row| row.text =~ /#{item.barcode}/ }
+  status = holdings.table.row(:index => row_index).td(:class => "status")
   status.text.should_not include("Checked out")
 end
 
