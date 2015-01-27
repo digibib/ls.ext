@@ -97,7 +97,6 @@ end
 
 When(/^boka er reservert av "(.*?)"$/) do |name|
   step "at det er aktivert en standard sirkulasjonsregel"
-  step "at det er lov å reservere materiale som er på hylla"
   step "boka reserveres av \"#{name}\" på egen avdeling"
   step "reserveringskøen kjøres"
   step "viser systemet at boka er reservert"
@@ -179,15 +178,43 @@ Then(/^vises boka i listen over bøker som skal plukkes$/) do
 end
 
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
+  steps %Q{
+    Gitt at det er lov å reservere materiale som er på hylla
+    Og at det finnes følgende sirkulasjonsregler
+      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed |
+      | *            | *        | 10          | 10          | 10              |
+    }
+end
+
+Given(/^at låneren har et antall lån som ikke er under maksgrense for antall lån$/) do
+  item   = @active[:item] ||= @active[:book].items.first
+  patron = @active[:patron]
+  steps %Q{
+    Gitt at det er lov å reservere materiale som er på hylla
+    Og at det finnes følgende sirkulasjonsregler
+      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed |
+      | *            | *        | 1           | 1           | 1               |
+    Og materiale med strekkode "#{item.barcode}" lånes ut til "#{patron.cardnumber}"
+    Og jeg legger til et nytt eksemplar
+    }
+end
+
+Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
   step "at jeg er på sida for sirkulasjonsregler"
+
+  rules = ruletable.hashes
+
   table = @browser.table(:id => "default-circulation-rules")
-  row = table.tr(:index, -1)
-  row.select_list(:name => "categorycode").select_value "*"
-  row.select_list(:name => "itemtype").select_value "*"
-  row.text_field(:name => "maxissueqty").set "10"
-  row.text_field(:name => "issuelength").set "10"
-  row.text_field(:name => "reservesallowed").set "10"
-  row.input(:class => "submit").click
+  rules.each do |rule|
+    row = table.tr(:index, -1) # append to last row
+    row.select_list(:name => "categorycode").select_value "#{rule[:categorycode]}"
+    row.select_list(:name => "itemtype").select_value "#{rule[:itemtype]}"
+    row.text_field(:name => "maxissueqty").set "#{rule[:maxissueqty]}"
+    row.text_field(:name => "issuelength").set "#{rule[:issuelength]}"
+    row.text_field(:name => "reservesallowed").set "#{rule[:reservesallowed]}"
+    row.input(:class => "submit").click
+  end
+  add_screenshot("rules")
 end
 
 Given(/^at det er lov å reservere materiale som er på hylla$/) do
