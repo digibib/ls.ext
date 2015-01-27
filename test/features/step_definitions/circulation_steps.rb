@@ -28,7 +28,14 @@ Given(/^at materialet ikke er til utlån$/) do
 end
 
 Then(/^systemet viser at materialet ikke er utlånt$/) do
-  pending # express the regexp above with the code you wish you had
+  book = @active[:book]
+  @browser.goto intranet(:bib_record)+book.biblionumber
+  @browser.div(:id => "catalogue_detail_biblio").text.should include(book.title)
+  holdings = @browser.div(:id => "holdings")
+  barcode = holdings.tbody.tr.td(:index => 7).text
+  status = @browser.td(:text => book.items.first.barcode)
+  status = status.parent.cell(:index => 5)
+  status.text.should_not include("Checked out")
 end
 
 Given(/^at materialet har en eieravdeling$/) do
