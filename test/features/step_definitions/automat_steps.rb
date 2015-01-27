@@ -140,16 +140,22 @@ Then(/^systemet viser at materialet fortsatt er utlånt til låner$/) do
 end
 
 Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
-  if check =~ /^ikke/
+  if check =~ /^(ikke|overskrider)/
     @context[:sip_transaction_response][:statusData][0].should eq("0")  # NOT OK
     @context[:sip_transaction_response][:statusData][1].should eq("N")  # Renewal OK?
     @context[:sip_transaction_response][:statusData][2].should eq("U")  # Magnetic media?
     @context[:sip_transaction_response][:statusData][3].should eq("N")  # Desensitize?
+    @context[:sip_transaction_response]["AH"].should eq("")             # Empty due date
   end
 
-  if check == "ikke er til utlån"
+  case check
+  when "ikke er til utlån"
     @context[:sip_transaction_response]["AF"].should include("NOT_FOR_LOAN")
-  elsif check == "ikke kan lånes"
+  when "ikke er komplett"
+    next # This is handle by automat
+  when "ikke kan lånes"
     @context[:sip_transaction_response]["AF"].should include("Item is on hold shelf for another patron")
+  when "overskrider maksgrensen for lån"
+    @context[:sip_transaction_response]["AF"].should eq("1") # TODO! This should be a more meaningful response ?!?!
   end
 end
