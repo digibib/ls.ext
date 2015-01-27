@@ -42,6 +42,11 @@ Given(/^at materialet har en eieravdeling$/) do
   pending # express the regexp above with the code you wish you had
 end
 
+When(/^materiale med strekkode "(.*?)" lånes ut til "(.*?)"$/) do |barcode, patron|
+  step "jeg registrerer \"#{patron}\" som aktiv låner"
+  step "jeg registrerer utlån med strekkode \"#{barcode}\""
+end
+
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
   @browser.goto intranet(:home)
   @browser.text_field(:id => "findborrower").set "#{patron} #{@active[:patron].surname}"
@@ -50,17 +55,25 @@ end
 
 When(/^jeg registrerer utlån av boka$/) do
   book = @active[:book]
+  step "jeg registrerer utlån med strekkode \"#{book.items.first.barcode}\""
+end
+
+When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
+  book = @context[:books].find {|b| b.items.find {|i| i.barcode == "#{barcode}" } }
+  item = book[:items].find {|i| i.barcode == "#{barcode}" }
   @browser.execute_script("printx_window = function() { return };") #Disable print slip popup
   form = @browser.form(:id => "mainform")
-  form.text_field(:id => "barcode").set(book.items.first.barcode)
+  form.text_field(:id => "barcode").set(barcode)
   form.submit
 
-  @cleanup.push( "utlån #{book.items.first.barcode}" =>
+  @active[:book] = book
+  @active[:item] = item
+  @cleanup.push( "utlån #{barcode}" =>
     lambda do
       @browser.goto intranet(:select_branch)
       @browser.form(:action => "selectbranchprinter.pl").submit
       @browser.a(:href => "#checkin_search").click
-      @browser.text_field(:id => "ret_barcode").set book.items.first.barcode
+      @browser.text_field(:id => "ret_barcode").set barcode
       @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
     end
   )
