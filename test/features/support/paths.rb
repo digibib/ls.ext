@@ -22,6 +22,7 @@ module Paths
       :admin    => "/cgi-bin/koha/admin/admin-home.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
+      :add_item => "/cgi-bin/koha/cataloguing/additem.pl?biblionumber=",
       :reserve => "/cgi-bin/koha/reserve/request.pl?biblionumber=",
       :pendingreserves => "/cgi-bin/koha/circ/pendingreserves.pl",
       :holdsqueue => "/cgi-bin/koha/circ/view_holdsqueue.pl",
