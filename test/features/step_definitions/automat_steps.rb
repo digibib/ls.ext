@@ -57,10 +57,6 @@ Given(/^at materialet( ikke)? har riktig antall RFID\-brikker$/) do |bool|
   next # This is actually handled by RFID adapter and is outside the scope of automats
 end
 
-Then(/^får låneren beskjed om at materialet ikke er komplett$/) do
-  next # This is actually handled by RFID adapter and is outside the scope of automats
-end
-
 When(/^låneren legger materialet på automaten$/) do
   step "\"Knut\" legger materialet på automaten"
 end
@@ -68,17 +64,17 @@ end
 When(/^"(.*?)" legger materialet på automaten$/) do |name|
   branch = @active[:branch]
   patron = @context[:patrons].find {|p| p.firstname == "#{name}" }
-  book   = @active[:book]
+  item   = @active[:item] || @active[:book].items.first
   case @context[:sip_mode]
   when "låne"
-    @context[:sip_transaction_response] = @context[:sip_client].checkout(branch.code, patron.cardnumber, patron.password, book.items.first.barcode)
-    @cleanup.push( "utlån #{book.items.first.barcode}" =>
+    @context[:sip_transaction_response] = @context[:sip_client].checkout(branch.code, patron.cardnumber, patron.password, item.barcode)
+    @cleanup.push( "utlån #{item.barcode}" =>
       lambda do
-        @context[:sip_client].checkin(branch.code,book.items.first.barcode)
+        @context[:sip_client].checkin(branch.code,item.barcode)
       end
     )
   when "levere"
-    @context[:sip_transaction_response] = @context[:sip_client].checkin(branch.code,book.items.first.barcode)
+    @context[:sip_transaction_response] = @context[:sip_client].checkin(branch.code,item.barcode)
   else
     raise Exception.new("Invalid SIP mode: #{@context[:sip_mode]}")
   end
