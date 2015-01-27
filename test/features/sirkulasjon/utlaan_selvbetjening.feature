@@ -36,11 +36,10 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet ikke kan lånes
     Og systemet viser at materialet fortsatt er holdt av til den andre låneren
 
-  @wip
   Scenario: Eksisterende låner med maks antall lån forsøker å låne materiale
     Gitt at låneren har et antall lån som ikke er under maksgrense for antall lån
     Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes
+    Så får låneren beskjed om at materialet overskrider maksgrensen for lån
     Og systemet viser at materialet ikke er utlånt
 
   @wip
