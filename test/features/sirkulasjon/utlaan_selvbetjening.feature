@@ -42,11 +42,10 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet overskrider maksgrensen for lån
     Og systemet viser at materialet ikke er utlånt
 
-  @wip
   Scenario: Eksisterende låner forsøker å låne materiale med for høy aldersgrense
     Gitt at aldersgrensen på materialet er høyere enn lånerens alder
     Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes
+    Så får låneren beskjed om at materialet ikke kan lånes pga aldersbegrensning
     Og systemet viser at materialet ikke er utlånt
 
   @wip
