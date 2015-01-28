@@ -32,6 +32,7 @@ module Paths
       :checkout => "/cgi-bin/koha/circ/circulation.pl",
       :authorised_values => "/cgi-bin/koha/admin/authorised_values.pl",
       :cataloguing => "/cgi-bin/koha/cataloguing/addbooks.pl",
+      :koha2marc_mapping => "/cgi-bin/koha/admin/koha2marclinks.pl?op=add_form&tablename=",
       :circulation_rules => "/cgi-bin/koha/admin/smart-rules.pl"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
