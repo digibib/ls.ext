@@ -55,6 +55,9 @@
   <datafield tag="505" ind1=" " ind2=" ">
     <subfield code="a">Kronologi: s. 421-424</subfield>
   </datafield>
+  <datafield tag="521" ind1=" " ind2=" ">
+    <subfield code="a">Aldersgrense: 15</subfield>
+  </datafield>
   <datafield tag="590" ind1=" " ind2=" ">
     <subfield code="a">10-uke2a</subfield>
   </datafield>
