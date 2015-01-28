@@ -157,5 +157,7 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
     @context[:sip_transaction_response]["AF"].should include("Item is on hold shelf for another patron")
   when "overskrider maksgrensen for lån"
     @context[:sip_transaction_response]["AF"].should eq("1") # TODO! This should be a more meaningful response ?!?!
+  when "ikke kan lånes pga aldersbegrensning"
+    @context[:sip_transaction_response]["AF"].should eq("AGE_RESTRICTION: Aldersgrense: 15")
   end
 end
