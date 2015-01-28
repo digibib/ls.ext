@@ -199,6 +199,14 @@ Given(/^at låneren har et antall lån som ikke er under maksgrense for antall l
     }
 end
 
+Given(/^at aldersgrensen på materialet er høyere enn lånerens alder$/) do
+  steps %Q{
+    Gitt at det er aktivert en standard sirkulasjonsregel
+    Og at det finnes aldersgrenser for utlån av materiale
+    Og jeg legger til et nytt eksemplar
+    }
+end
+
 Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
   step "at jeg er på sida for sirkulasjonsregler"
 
@@ -219,6 +227,14 @@ end
 
 Given(/^at det er lov å reservere materiale som er på hylla$/) do
   set_preference("pref_AllowOnShelfHolds", 1)
+end
+
+Given(/^at det finnes aldersgrenser for utlån av materiale$/) do
+  set_preference("pref_AgeRestrictionMarker", "|Aldersgrense:|Age|")
+  @browser.goto intranet(:koha2marc_mapping)+"biblioitems&kohafield=agerestriction"
+  form = @browser.label(:text => "500s").parent
+  form.select_list(:name => "marc").select_value "521 a - Target audience note"
+  form.submit
 end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
