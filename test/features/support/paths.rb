@@ -23,6 +23,7 @@ module Paths
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
       :add_item => "/cgi-bin/koha/cataloguing/additem.pl?biblionumber=",
+      :mod_biblio => "/cgi-bin/koha/cataloguing/addbiblio.pl?biblionumber=",
       :reserve => "/cgi-bin/koha/reserve/request.pl?biblionumber=",
       :pendingreserves => "/cgi-bin/koha/circ/pendingreserves.pl",
       :holdsqueue => "/cgi-bin/koha/circ/view_holdsqueue.pl",
