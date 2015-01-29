@@ -211,25 +211,44 @@ Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
     }
 end
 
-Given(/^at låneren har et antall lån som ikke er under maksgrense for antall lån$/) do
+
+Given(/^at låneren har et antall lån som( ikke)? er under maksgrense for antall lån$/) do |maxloans|
   item   = @active[:item] ||= @active[:book].items.first
   patron = @active[:patron]
-  steps %Q{
-    Gitt at det er lov å reservere materiale som er på hylla
-    Og at det finnes følgende sirkulasjonsregler
+  step "at det er lov å reservere materiale som er på hylla"
+  if maxloans
+    step "at det finnes følgende sirkulasjonsregler", table(%{
       | categorycode | itemtype | maxissueqty | issuelength | reservesallowed |
       | *            | *        | 1           | 1           | 1               |
-    Og materiale med strekkode "#{item.barcode}" lånes ut til "#{patron.cardnumber}"
-    Og jeg legger til et nytt eksemplar
-    }
+      })
+  else
+    step "at det er aktivert en standard sirkulasjonsregel"
+  end
+  step "materiale med strekkode \"#{item.barcode}\" lånes ut til \"#{patron.cardnumber}\""
+  step "jeg legger til et nytt eksemplar"
 end
 
-Given(/^at aldersgrensen på materialet er høyere enn lånerens alder$/) do
+Given(/^at aldersgrensen på materialet( ikke)? er høyere enn lånerens alder$/) do |belowagelimit|
   steps %Q{
     Gitt at det er aktivert en standard sirkulasjonsregel
     Og at det finnes aldersgrenser for utlån av materiale
-    Og jeg legger til et nytt eksemplar
-    }
+  }
+  if belowagelimit
+    step "aldersgrense på materialet er \"3\" år"
+  else
+    step "aldersgrense på materialet er \"15\" år"
+  end
+end
+
+When(/^aldersgrense på materialet er "(.*?)" år$/) do |agelimit|
+  @browser.goto intranet(:mod_biblio)+@active[:book].biblionumber
+  @browser.div(:id => "addbibliotabs").link(:href => "#tab5XX").click
+  # remove mandatory javascript check
+  @browser.execute_script("window.AreMandatoriesNotOk = function(msg){return false;}")
+  @browser.textarea(:id => /^tag_521_subfield_a_[0-9_]+$/).set "Aldersgrense: #{agelimit}"
+  @browser.button(:id => "saverecord").click
+  # Need to reindex to pick up changes
+  step "katalogen reindekseres"
 end
 
 Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
