@@ -29,7 +29,18 @@ Given(/^at materialet ikke er til utlån$/) do
   s = @browser.select_list(:id => /^tag_952_subfield_7_[0-9]+$/)
   s.select_value @context[:authorised_value]
   @browser.button(:value => "Save changes").click
-  @browser.h2(:id => "additema").wait_until_present # Wait until saved
+  step "systemet viser at eksemplaret ikke er til utlån"
+end
+
+Then(/^systemet viser at eksemplaret ikke er til utlån$/) do
+  book = @active[:book]
+  item = @active[:item] ||= book.items.first
+  @browser.goto intranet(:add_item)+book.biblionumber
+  table = @browser.table(:id => "itemst")
+
+  row_index = table.rows.to_a.index{ |row| row.text =~ /#{item.barcode}/ }
+  cell = table.row(:index => row_index).td(:index => 5)
+  cell.text.should eq(@context[:authorised_value_description])
 end
 
 Then(/^systemet viser at materialet( ikke)? er utlånt$/) do |bool|
