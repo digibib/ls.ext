@@ -31,7 +31,7 @@ Given(/^at materialet ikke er til utlån$/) do
   @browser.button(:value => "Save changes").click
 end
 
-Then(/^systemet viser at materialet ikke er utlånt$/) do
+Then(/^systemet viser at materialet( ikke)? er utlånt$/) do |bool|
   book = @active[:book]
   item = @active[:item] ||= book.items.first
   @browser.goto intranet(:bib_record)+book.biblionumber
@@ -39,7 +39,11 @@ Then(/^systemet viser at materialet ikke er utlånt$/) do
   holdings = @browser.div(:id => "holdings")
   row_index = holdings.table.rows.to_a.index{ |row| row.text =~ /#{item.barcode}/ }
   status = holdings.table.row(:index => row_index).td(:class => "status")
-  status.text.should_not include("Checked out")
+  if bool
+    status.text.should_not include("Checked out")
+  else
+    status.text.should include("Checked out")
+  end
 end
 
 Given(/^at materialet har en eieravdeling$/) do
