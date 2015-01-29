@@ -289,6 +289,20 @@ Then(/^registrerer systemet at boka er utlånt$/) do
   @browser.text.should include(@active[:book].title)
 end
 
+Then(/^systemet viser at låneren låner materialet$/) do
+  @browser.goto intranet(:patrons)
+  form = @browser.form(:id => "searchform")
+  form.text_field(:id => "searchmember_filter").set @active[:patron].cardnumber
+  form.submit
+  @browser.div(:class => 'patroninfo').wait_until_present
+  # click the Show checkouts button
+  if @browser.link(:id => 'issues-table-load-now-button').exists?
+    @browser.link(:id => 'issues-table-load-now-button').click
+    @browser.tr(:id => "group-id-issues-table_-strong-today-s-checkouts-strong-").wait_until_present
+  end
+  @browser.div(:id => "checkouts").text.should include(@active[:item].barcode)
+end
+
 Then(/^at "(.*?)" låner boka$/) do |name|
   @browser.text.should include(@active[:book].title)
   @browser.text.should include "Checked out to #{name}"
