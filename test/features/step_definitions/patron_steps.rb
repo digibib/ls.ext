@@ -31,10 +31,9 @@ Given(/^at det finnes en låner$/) do
 end
 
 Given(/^at det finnes en låner med lånekort$/) do |table|
-  steps %Q{
-    Gitt at det finnes en avdeling
-    Og at det finnes en lånerkategori
-  }
+  step "at det finnes en avdeling"        unless @active[:branch]
+  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
+
   patrons = table.hashes
 
   patrons.each do |patron|

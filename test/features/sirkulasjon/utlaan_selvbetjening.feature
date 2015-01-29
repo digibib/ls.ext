@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Selvbetjent utlån via utlånsautomat
   Som en låner Knut
   For å bli underholdt
@@ -25,41 +24,36 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet ikke er komplett
     Og systemet viser at materialet ikke er utlånt
 
-  @wip
   Scenario: Eksisterende låner forsøker å låne materiale som ikke er til utlån
     Gitt at materialet ikke er til utlån
     Når låneren legger materialet på automaten
     Så får låneren beskjed om at materialet ikke er til utlån
     Og systemet viser at materialet ikke er utlånt
 
-  @wip
   Scenario: Eksisterende låner forsøker å låne materiale som er holdt av til annen låner
-    Gitt at materialet er holdt av til annen låner
+    Gitt at materialet er holdt av til en annen låner
     Når låneren legger materialet på automaten
     Så får låneren beskjed om at materialet ikke kan lånes
     Og systemet viser at materialet fortsatt er holdt av til den andre låneren
 
-  @wip
   Scenario: Eksisterende låner med maks antall lån forsøker å låne materiale
     Gitt at låneren har et antall lån som ikke er under maksgrense for antall lån
     Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes
+    Så får låneren beskjed om at materialet overskrider maksgrensen for lån
     Og systemet viser at materialet ikke er utlånt
 
-  @wip
   Scenario: Eksisterende låner forsøker å låne materiale med for høy aldersgrense
     Gitt at aldersgrensen på materialet er høyere enn lånerens alder
     Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes
+    Så får låneren beskjed om at materialet ikke kan lånes pga aldersbegrensning
     Og systemet viser at materialet ikke er utlånt
 
-  @wip
   Scenario: Eksisterende låner låner materiale på automat
     Gitt at materialet har riktig antall RFID-brikker
     Og at materialet er til utlån
     Og at materialet ikke er holdt av til en annen låner
-    Og at låneren ikke overskrider maksgrense for antall lån
-    Og at materialet ikke har aldersgrense høyere enn lånerens alder
+    Og at aldersgrensen på materialet ikke er høyere enn lånerens alder
+    Og at låneren har et antall lån som er under maksgrense for antall lån
     Når låneren legger materialet på automaten
     Så får låneren beskjed om at materialet er registrert utlånt
     Og systemet viser at låneren låner materialet

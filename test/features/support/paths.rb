@@ -22,12 +22,18 @@ module Paths
       :admin    => "/cgi-bin/koha/admin/admin-home.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
+      :add_item => "/cgi-bin/koha/cataloguing/additem.pl?biblionumber=",
+      :mod_biblio => "/cgi-bin/koha/cataloguing/addbiblio.pl?biblionumber=",
       :reserve => "/cgi-bin/koha/reserve/request.pl?biblionumber=",
+      :pendingreserves => "/cgi-bin/koha/circ/pendingreserves.pl",
+      :holdsqueue => "/cgi-bin/koha/circ/view_holdsqueue.pl",
+      :waitingreserves => "/cgi-bin/koha/circ/waitingreserves.pl?allbranches=1",
       :stage_marc => "/cgi-bin/koha/tools/stage-marc-import.pl",
       :select_branch => "/cgi-bin/koha/circ/selectbranchprinter.pl",
       :checkout => "/cgi-bin/koha/circ/circulation.pl",
       :authorised_values => "/cgi-bin/koha/admin/authorised_values.pl",
       :cataloguing => "/cgi-bin/koha/cataloguing/addbooks.pl",
+      :koha2marc_mapping => "/cgi-bin/koha/admin/koha2marclinks.pl?op=add_form&tablename=",
       :circulation_rules => "/cgi-bin/koha/admin/smart-rules.pl"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]

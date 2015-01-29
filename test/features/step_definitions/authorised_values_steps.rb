@@ -2,7 +2,7 @@
 
 Given(/^det finnes en autorisert verdi for "(.*)"$/) do |category|
   @context[:authorised_value_category]    = category
-  @context[:authorised_value]             = generateRandomString
+  @context[:authorised_value]             = String(rand(100))
   @context[:authorised_value_description] = generateRandomString
   @browser.goto intranet(:authorised_values)
 
@@ -13,12 +13,12 @@ Given(/^det finnes en autorisert verdi for "(.*)"$/) do |category|
   if category_exists
     form.select_list(:id => "searchfield").select_value @context[:authorised_value_category]
     @browser.a(:id => "addauth").click
+    form = @browser.form(:name => "Aform")
   else
     @browser.a(:id => "addcat").click
+    form = @browser.form(:name => "Aform")
+    form.text_field(:id => "category").set @context[:authorised_value_category]
   end
-
-  form = @browser.form(:name => "Aform")
-  form.text_field(:id => "category").set @context[:authorised_value_category]
   form.text_field(:id => "authorised_value").set @context[:authorised_value]
   form.text_field(:id => "lib").set @context[:authorised_value_description]
   form.submit

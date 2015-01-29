@@ -93,6 +93,21 @@ When(/^jeg legger inn boka som en ny bok$/) do
   )
 end
 
+When(/^jeg legger til et nytt eksemplar$/) do
+  book = @active[:book]
+  book.addItem
+  book.items[1].branch   = book.items[0].branch
+  book.items[1].itemtype = book.items[0].itemtype
+
+  @browser.goto intranet(:add_item) + book.biblionumber
+  @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set book.items[1].barcode
+  @browser.select_list(:id => /^tag_952_subfield_a_[0-9]+$/).select_value book.items[1].branch.code
+  @browser.select_list(:id => /^tag_952_subfield_b_[0-9]+$/).select_value book.items[1].branch.code
+  @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select_value book.items[1].itemtype.code
+  @browser.button(:name => "add_submit").click
+  @active[:item] = book.items[1]
+end
+
 When(/^jeg legger til en materialtype$/) do
   @browser.goto intranet(:item_types)
   @browser.a(:id => "newitemtype").click
@@ -132,7 +147,7 @@ end
 
 Then(/^viser systemet at boka er en bok som( ikke)? kan lånes ut$/) do |boolean|
   book = @active[:book]
-  @browser.goto "http://#{host}:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber=#{book.biblionumber}"
+  @browser.goto intranet(:bib_record) + book.biblionumber
   @browser.div(:id => "catalogue_detail_biblio").text.should include(book.title)
   holdings = @browser.div(:id => "holdings")
   barcode = holdings.tbody.tr.td(:index => 7).text
