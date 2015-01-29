@@ -97,7 +97,11 @@ When(/^boka blir registrert innlevert$/) do
   @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
 end
 
-Given(/^at materialet er holdt av til annen låner$/) do
+Given(/^at materialet ikke er holdt av til en annen låner$/) do
+  step "viser systemet at boka ikke er reservert"
+end
+
+Given(/^at materialet er holdt av til en annen låner$/) do
   step "at det finnes en låner med lånekort", table(%{
     | firstname | password |
     | Ove       | 1234     |
@@ -150,10 +154,15 @@ When(/^boka plukkes og skannes inn$/) do
   step "viser systemet at boka ligger til avhenting"
 end
 
-Then(/^viser systemet at boka er reservert$/) do
+Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
   @browser.goto intranet(:pendingreserves)
-  table = @browser.table(:id => "holdst")
-  table.text.should include(@active[:book].title)
+  if notreserved
+    if @browser.table(:id => "holdst").exists?
+      @browser.table(:id => "holdst").should_not include(@active[:book].title)
+    end
+  else
+    @browser.table(:id => "holdst").text.should include(@active[:book].title)
+  end
 end
 
 Then(/^viser systemet at boka er reservert og skal holdes av$/) do
