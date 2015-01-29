@@ -15,6 +15,10 @@ Given(/^at det finnes materiale som er utlånt til låneren$/) do
   pending # express the regexp above with the code you wish you had
 end
 
+Given(/^at materialet er til utlån$/) do
+  step "viser systemet at boka er en bok som kan lånes ut"
+end
+
 Given(/^at materialet ikke er til utlån$/) do
   step "det finnes en autorisert verdi for \"NOT_LOAN\""
   step "kan jeg finne den autoriserte verdien i listen over autoriserte verdier"
@@ -222,7 +226,6 @@ Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
     row.text_field(:name => "reservesallowed").set "#{rule[:reservesallowed]}"
     row.input(:class => "submit").click
   end
-  add_screenshot("rules")
 end
 
 Given(/^at det er lov å reservere materiale som er på hylla$/) do
