@@ -29,6 +29,8 @@ Given(/^at materialet ikke er til utlån$/) do
   s = @browser.select_list(:id => /^tag_952_subfield_7_[0-9]+$/)
   s.select @context[:authorised_value_description]
   @browser.button(:value => "Save changes").click
+  # Need to reindex to pick up changes
+  step "katalogen reindekseres"
 end
 
 Then(/^systemet viser at materialet( ikke)? er utlånt$/) do |bool|
@@ -133,6 +135,12 @@ When(/^reserveringskøen kjøres$/) do
   `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null \
     -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-foreach --enabled \
     /usr/share/koha/bin/cronjobs/holds/build_holds_queue.pl' > /dev/null 2>&1`
+end
+
+When(/^katalogen reindekseres$/) do
+  `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null \
+    -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra \
+    -f #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
 end
 
 When(/^boka plukkes og skannes inn$/) do
