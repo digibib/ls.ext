@@ -144,11 +144,17 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
     @context[:sip_transaction_response][:statusData][0].should eq("0")  # NOT OK
     @context[:sip_transaction_response][:statusData][1].should eq("N")  # Renewal OK?
     @context[:sip_transaction_response][:statusData][2].should eq("U")  # Magnetic media?
-    @context[:sip_transaction_response][:statusData][3].should eq("N")  # Desensitize?
+    step "systemet viser at alarm ikke er deaktivert"
     @context[:sip_transaction_response]["AH"].should eq("")             # Empty due date
+  else
+    @context[:sip_transaction_response][:statusData][0].should eq("1")  # OK
+    step "systemet viser at alarm er deaktivert"
   end
 
   case check
+  when "er registrert utlånt"
+    @context[:sip_transaction_response]["AF"].should == nil             # Empty message
+    @context[:sip_transaction_response]["AH"].should_not eq("")         # Due date
   when "ikke er til utlån"
     @context[:sip_transaction_response]["AF"].should include("NOT_FOR_LOAN")
   when "ikke er komplett"
@@ -159,5 +165,13 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
     @context[:sip_transaction_response]["AF"].should eq("1") # TODO! This should be a more meaningful response ?!?!
   when "ikke kan lånes pga aldersbegrensning"
     @context[:sip_transaction_response]["AF"].should eq("AGE_RESTRICTION: Aldersgrense: 15")
+  end
+end
+
+Then(/^systemet viser at alarm( ikke)? er deaktivert$/) do |bool|
+  if bool
+    @context[:sip_transaction_response][:statusData][3].should eq("N") # Not Desensitized
+  else
+    @context[:sip_transaction_response][:statusData][3].should eq("Y") # Desensitized
   end
 end
