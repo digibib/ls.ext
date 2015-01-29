@@ -2,7 +2,7 @@
 
 Given(/^det finnes en autorisert verdi for "(.*)"$/) do |category|
   @context[:authorised_value_category]    = category
-  @context[:authorised_value]             = generateRandomString
+  @context[:authorised_value]             = String(rand(100))
   @context[:authorised_value_description] = generateRandomString
   @browser.goto intranet(:authorised_values)
 
