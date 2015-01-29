@@ -27,10 +27,9 @@ Given(/^at materialet ikke er til utlån$/) do
 
   # Not for loan is $952_7
   s = @browser.select_list(:id => /^tag_952_subfield_7_[0-9]+$/)
-  s.select @context[:authorised_value_description]
+  s.select_value @context[:authorised_value]
   @browser.button(:value => "Save changes").click
-  # Need to reindex to pick up changes
-  step "katalogen reindekseres"
+  @browser.h2(:id => "additema").wait_until_present # Wait until saved
 end
 
 Then(/^systemet viser at materialet( ikke)? er utlånt$/) do |bool|
