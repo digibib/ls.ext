@@ -257,8 +257,17 @@ When(/^aldersgrense på materialet er "(.*?)" år$/) do |agelimit|
   @browser.execute_script("window.AreMandatoriesNotOk = function(msg){return false;}")
   @browser.textarea(:id => /^tag_521_subfield_a_[0-9_]+$/).set "Aldersgrense: #{agelimit}"
   @browser.button(:id => "saverecord").click
+
   # Need to reindex to pick up changes
   step "katalogen reindekseres"
+  step "systemet viser at materialet har aldersgrense \"#{agelimit}\" år"
+end
+
+Then(/^systemet viser at materialet har aldersgrense "(.*?)" år$/) do |agelimit|
+  book = @active[:book]
+  @browser.goto intranet(:bib_record)+book.biblionumber
+  @browser.link(:href => "#description").click
+  @browser.div(:id => "description").text.should include("Aldersgrense: "+agelimit)
 end
 
 Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
