@@ -258,8 +258,6 @@ When(/^aldersgrense på materialet er "(.*?)" år$/) do |agelimit|
   @browser.textarea(:id => /^tag_521_subfield_a_[0-9_]+$/).set "Aldersgrense: #{agelimit}"
   @browser.button(:id => "saverecord").click
 
-  # Need to reindex to pick up changes
-  step "katalogen reindekseres"
   step "systemet viser at materialet har aldersgrense \"#{agelimit}\" år"
 end
 
