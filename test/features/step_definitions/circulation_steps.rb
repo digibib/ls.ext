@@ -248,6 +248,7 @@ Given(/^at aldersgrensen på materialet( ikke)? er høyere enn lånerens alder$/
   else
     step "aldersgrense på materialet er \"15\" år"
   end
+  sleep 3 # Avvoid Checkout race condition with SIP2
 end
 
 When(/^aldersgrense på materialet er "(.*?)" år$/) do |agelimit|
