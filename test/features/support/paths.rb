@@ -19,6 +19,7 @@ module Paths
       :patron_import => "/cgi-bin/koha/tools/import_borrowers.pl",
       :search_patrons => "/cgi-bin/koha/svc/members/search",
       :preferences => "/cgi-bin/koha/svc/config/systempreferences/",
+      :search_preferences => "/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=",
       :admin    => "/cgi-bin/koha/admin/admin-home.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
       :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
