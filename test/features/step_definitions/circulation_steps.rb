@@ -295,6 +295,13 @@ Given(/^at det finnes aldersgrenser for utlån av materiale$/) do
   form = @browser.label(:text => "500s").parent
   form.select_list(:name => "marc").select_value "521 a - Target audience note"
   form.submit
+
+  step "systemet viser at aldersgrenser for utlån av materiale er aktivert"
+end
+
+Then(/^systemet viser at aldersgrenser for utlån av materiale er aktivert$/) do
+  @browser.goto intranet(:search_preferences)+"agerestriction"
+  @browser.text_field(:id => "pref_AgeRestrictionMarker").value.should eq("|Aldersgrense:|Age|")
 end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
