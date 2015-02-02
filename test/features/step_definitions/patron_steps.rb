@@ -76,7 +76,7 @@ Given(/^at låneren ikke har aktiv innkrevingssak$/) do
 end
 
 When(/^jeg er på administrasjonssiden for lånerkategorier$/) do
-  @browser.goto intranet(:patron_categories)
+  PatronCategories.new(@browser).go
 end
 
 When(/^jeg velger å vise alle lånerkategorier$/) do
@@ -108,9 +108,10 @@ end
 
 When(/^lånerdata migreres$/) do
   @migration = Migration.new(@map, @import)
-  patron = Patron.new
   step "at det finnes en avdeling"        unless @active[:branch]
   step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
+
+  patron = Patron.new
   patron.branch   = @active[:branch]
   patron.category = @active[:patroncategory]
 
@@ -130,31 +131,16 @@ When(/^lånerdata importeres i admingrensesnittet$/) do
 end
 
 When(/^jeg legger til en lånerkategori$/) do
-  @browser.goto intranet(:patron_categories)
-  @browser.link(:id => "newcategory").click
   patroncategory = PatronCategory.new
 
-  form = @browser.form(:name => "Aform")
-  form.text_field(:id => "categorycode").set patroncategory.code
-  form.text_field(:id => "description").set patroncategory.description
-  form.select_list(:id => "category_type").select "Adult"
-  form.text_field(:id => "enrolmentperiod").set "1"  # Months
-  form.submit
-  @browser.form(:name => "Aform").should_not be_present
+  PatronCategories.new(@browser).go.create(patroncategory.code, patroncategory.description)
 
   @active[:patroncategory] = patroncategory
   (@context[:patroncategories] ||= []) << patroncategory
+
   @cleanup.push( "lånerkategori #{patroncategory.description}" =>
     lambda do
-      @browser.goto intranet(:patron_categories)
-      table = @browser.table(:id => "table_categorie")
-      table.rows.each do |row|
-        if row.text.include?(patroncategory.description)
-          row.link(:href => /op=delete_confirm/).click
-          @browser.input(:value => "Delete this category").click
-          break
-        end
-      end
+      PatronCategories.new(@browser).go.delete(patroncategory.description)
     end
   )
 end

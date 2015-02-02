@@ -15,22 +15,8 @@ Given(/^at det finnes en utlånsautomat$/) do
     categorycode = generateRandomString
     categorydesc = generateRandomString
 
-    @browser.goto intranet(:branches)
-    @browser.link(:id => "newbranch").click
-    form = @browser.form(:name => "Aform")
-    form.text_field(:id => "branchname").set branchname
-    form.text_field(:id => "branchcode").set branchcode
-    form.submit
-
-    # prereq: patron category type
-    @browser.goto intranet(:patron_categories)
-    @browser.link(:id => "newcategory").click
-    form = @browser.form(:name => "Aform")
-    form.text_field(:id => "categorycode").set categorycode
-    form.text_field(:id => "description").set categorydesc
-    form.select_list(:id => "category_type").select "Staff"
-    form.text_field(:id => "enrolmentperiod").set "1"  # Months
-    form.submit
+    Branches.new(@browser).go.create(branchname, branchcode)
+    PatronCategories.new(@browser).go.create(categorycode, categorydesc, "Staff")
 
     # user
     @browser.goto intranet(:patrons)
