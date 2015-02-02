@@ -1,9 +1,6 @@
 # encoding: UTF-8
 require 'csv'
-require 'net/http'
-require 'uri'
-require 'json'
-require_relative '../support/migration.rb'
+require_relative '../support/services/csv/migration.rb'
  
 Given(/^at en låner ikke finnes som låner hos biblioteket fra før$/) do
   steps %Q{

@@ -16,9 +16,9 @@ require_relative 'context_structs.rb'
 
 # Custom Modules extending Cucumber World Object
 # Methods are shared between all steps
-require_relative 'users.rb'
+require_relative 'services/csv/users.rb'
 require_relative 'paths.rb'
-require_relative 'preferences.rb'
+require_relative 'services/svc/preferences.rb'
 World(Paths,Users,Preferences)
 
 #Length needs to be short enough
