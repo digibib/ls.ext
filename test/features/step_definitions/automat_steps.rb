@@ -17,18 +17,7 @@ Given(/^at det finnes en utlånsautomat$/) do
 
     Branches.new(@browser).go.create(branchname, branchcode)
     PatronCategories.new(@browser).go.create(categorycode, categorydesc, "Staff")
-
-    # user
-    @browser.goto intranet(:patrons)
-    @browser.button(:text => "New patron").click
-    @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => categorydesc).click
-    form = @browser.form(:name => "form")
-    form.text_field(:id => "firstname").set "Audun"
-    form.text_field(:id => "surname").set "Automat"
-    form.text_field(:id => "userid").set "autouser"
-    form.text_field(:id => "password").set "autopass"
-    form.text_field(:id => "password2").set "autopass"
-    form.button(:name => "save").click
+    Patrons.new(@browser).go.create(categorydesc, "Audun", "Automat", "autouser", "autopass")
 
     step "at bruker \"Automat\" har rettighet \"circulate\""
   end

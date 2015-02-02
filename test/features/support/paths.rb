@@ -14,7 +14,7 @@ module Paths
       :login    => "/cgi-bin/koha/mainpage.pl?logout.x=1",
 
       :patrons => "/cgi-bin/koha/members/members-home.pl",
-      :patron => "/cgi-bin/koha/members/moremember.pl?borrowernumber=",
+      :patron_details => "/cgi-bin/koha/members/moremember.pl?borrowernumber=",
 
       :select_branch => "/cgi-bin/koha/circ/selectbranchprinter.pl",
       :checkout => "/cgi-bin/koha/circ/circulation.pl",

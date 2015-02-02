@@ -146,36 +146,24 @@ When(/^jeg legger til en lånerkategori$/) do
 end
 
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
-  @browser.goto intranet(:patrons)
   patron = Patron.new
   # Branch and PatronCategory are prerequisites
   patron.branch   = @active[:branch]
   patron.category = @active[:patroncategory]
 
-  @browser.button(:text => "New patron").click
-  @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => patron.category.description).click
-  form = @browser.form(:name => "form")
-  form.text_field(:id => "firstname").set name
-  form.text_field(:id => "surname").set patron.surname
-  form.text_field(:id => "userid").set "#{name}.#{patron.surname}"
-  form.text_field(:id => "password").set patron.surname
-  form.text_field(:id => "password2").set patron.surname
-  form.button(:name => "save").click
+  Patrons.new(@browser).
+      go.
+      create(patron.category.description,
+             name,
+             patron.surname,
+             "#{name}.#{patron.surname}",
+             patron.surname)
 
   @active[:patron] = patron
   (@context[:patrons] ||= []) << patron
   @cleanup.push( "låner #{name} #{patron.surname}" =>
     lambda do
-      @browser.goto intranet(:patrons)
-      @browser.text_field(:id => "searchmember").set "#{name} #{patron.surname}"
-      @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
-      @browser.div(:class => 'patroninfo').wait_until_present
-      #Phantomjs doesn't handle javascript popus, so we must override
-      #the confirm function to simulate "OK" click:
-      @browser.execute_script("window.confirm = function(msg){return true;}")
-      @browser.button(:text => "More").click
-      @browser.a(:id => "deletepatron").click
-      #@browser.alert.ok #works in chrome & firefox, but not phantomjs
+      Patrons.new(@browser).go.delete(name, patron.surname)
     end
   )
 end
