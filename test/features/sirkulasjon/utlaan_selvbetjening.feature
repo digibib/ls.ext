@@ -17,11 +17,10 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Gitt at låneren har identifisert seg for å låne på utlånsautomaten
     Og at låneren har materiale han ønsker å låne
 
-  @wip @ignore
-  Scenario: Eksisterende låner forsøker å låne materiale med feil antall RFID-brikker
-    Gitt at materialet ikke har riktig antall RFID-brikker
+  Scenario: Eksisterende låner forsøker å låne materiale med for høy aldersgrense
+    Gitt at aldersgrensen på materialet er høyere enn lånerens alder
     Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke er komplett
+    Så får låneren beskjed om at materialet ikke kan lånes pga aldersbegrensning
     Og systemet viser at materialet ikke er utlånt
 
   Scenario: Eksisterende låner forsøker å låne materiale som ikke er til utlån
@@ -42,13 +41,7 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet overskrider maksgrensen for lån
     Og systemet viser at materialet ikke er utlånt
 
-  Scenario: Eksisterende låner forsøker å låne materiale med for høy aldersgrense
-    Gitt at aldersgrensen på materialet er høyere enn lånerens alder
-    Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan lånes pga aldersbegrensning
-    Og systemet viser at materialet ikke er utlånt
-
-  Scenario: Eksisterende låner låner materiale på automat
+ Scenario: Eksisterende låner låner materiale på automat
     Gitt at materialet har riktig antall RFID-brikker
     Og at materialet er til utlån
     Og at materialet ikke er holdt av til en annen låner
@@ -59,3 +52,10 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Og systemet viser at låneren låner materialet
     Og systemet viser at materialet er utlånt
     Og systemet viser at alarm er deaktivert
+
+  @wip @ignore
+  Scenario: Eksisterende låner forsøker å låne materiale med feil antall RFID-brikker
+    Gitt at materialet ikke har riktig antall RFID-brikker
+    Når låneren legger materialet på automaten
+    Så får låneren beskjed om at materialet ikke er komplett
+    Og systemet viser at materialet ikke er utlånt
