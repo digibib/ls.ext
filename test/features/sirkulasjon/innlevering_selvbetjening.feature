@@ -10,15 +10,15 @@ Egenskap: Selvbetjent innlevering
   Bakgrunn:
     Gitt at det finnes en utlånsautomat
     Og at det finnes en låner med lånekort
-      | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     |          | 1234     | 0     |
+      | firstname | dateenrolled | dateexpiry | password |
+      | Knut      | 01/08/2015   | 10/08/2015 | 1234     |
     Og at låneren ikke har aktiv innkrevingssak
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling
 
   @wip @ignore
   Scenario: Noen forsøker å levere tilbake materiale med feil antall brikker på utlånsautomat
-    Gitt at materialet som forsøkes innlevert ikke har riktig antall brikker
+    Gitt at materialet ikke har riktig antall RFID-brikker
     Når innlevering blir valgt på automaten
     Og materialet blir lagt på automaten
     Så gis det beskjed om at materialet ikke er komplett
@@ -26,7 +26,7 @@ Egenskap: Selvbetjent innlevering
 
   @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale på utlånsautomat
-    Gitt at materialet har riktig antall brikker
+    Gitt at materialet har riktig antall RFID-brikker
     Og at det ikke finnes en reservasjon på materialet
     Og at materialets henteavdeling er lik den avdelingen der materialet blir levert
     Når innlevering blir valgt på automaten
@@ -37,7 +37,7 @@ Egenskap: Selvbetjent innlevering
 
   @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale som tilhører annen avdeling på utlånsautomat
-    Gitt at materialet har riktig antall brikker
+    Gitt at materialet har riktig antall RFID-brikker
     Og at det ikke finnes en reservasjon på materialet
     Og at materialets eieravdeling er forskjellig fra avdelingen der materialet blir levert
     Når innlevering blir valgt på automaten
@@ -46,7 +46,7 @@ Egenskap: Selvbetjent innlevering
 
   @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale som er reservert på utlånsautomat
-    Gitt at materialet har riktig antall brikker
+    Gitt at materialet har riktig antall RFID-brikker
     Og at det finnes en reservasjon på materialet
     Når innlevering blir valgt på automaten
     Og materialet blir lagt på automaten
