@@ -31,7 +31,7 @@ When(/^jeg legger inn en ny avdeling med ny avdelingskode$/) do
 
   @cleanup.push( "avdeling #{branch.code}" =>
     lambda do
-      Branches.new(@browser).go.filter(@context[:branchname]).delete(branch.name, branch.code)
+      Branches.new(@browser).go.filter(branch.name).delete(branch.name, branch.code)
     end
   )
 end
