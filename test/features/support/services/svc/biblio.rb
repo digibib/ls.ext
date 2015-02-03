@@ -16,8 +16,6 @@ module SVC
       @context[:svc_cookie] = res.response['set-cookie']
 
       # Book item needs branch and itemtype before import
-      step "at det finnes en avdeling"       unless @active[:branch]
-      step "jeg legger til en materialtype"  unless @active[:itemtype]
       book = Book.new
       book.addItem
       book.items.first.branch   = @active[:branch]

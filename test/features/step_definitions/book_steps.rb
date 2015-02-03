@@ -18,9 +18,12 @@ Given(/^at boka er tilgjengelig$/) do
 end
 
 When(/^jeg legger inn boka som en ny bok$/) do
+  step "at det finnes en avdeling"       unless @active[:branch]
+  step "jeg legger til en materialtype"  unless @active[:itemtype]
   book = SVC::Biblio.new(@browser,@context,@active).add
 
   @active[:book] = book
+  @active[:item] = book.items.first
   (@context[:books] ||= []) << book
   @cleanup.push( "bok #{book.biblionumber}" =>
     lambda do
