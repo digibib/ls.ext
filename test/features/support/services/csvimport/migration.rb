@@ -2,8 +2,9 @@
 # encoding: utf-8
 
 require 'csv'
+require_relative '../service.rb'
 
-class Migration
+class Migration < Service
   attr_accessor :map, :import, :out
 
   def initialize(map, import)

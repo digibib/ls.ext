@@ -6,8 +6,9 @@
 
 require 'socket'
 require 'time'
+require_relative '../service.rb'
 
-class SIP2Client
+class SIP2Client < Service
   attr_accessor :socket
 
   def msgType(code)
