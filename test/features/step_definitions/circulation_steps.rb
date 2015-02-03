@@ -52,15 +52,14 @@ end
 Then(/^systemet viser at materialet( ikke)? er utlånt$/) do |bool|
   book = @active[:book]
   item = @active[:item] ||= book.items.first
-  @browser.goto intranet(:bib_record)+book.biblionumber
-  @browser.div(:id => "catalogue_detail_biblio").text.should include(book.title)
-  holdings = @browser.div(:id => "holdings")
-  row_index = holdings.table.rows.to_a.index{ |row| row.text =~ /#{item.barcode}/ }
-  status = holdings.table.row(:index => row_index).td(:class => "status")
+
+  biblio_detail = @site.BiblioDetail.visit(book.biblionumber)
+  biblio_detail.header.should include(book.title)
+
   if bool
-    status.text.should_not include("Checked out")
+    biblio_detail.item_status(item.barcode).should_not include("Checked out")
   else
-    status.text.should include("Checked out")
+    biblio_detail.item_status(item.barcode).should include("Checked out")
   end
 end
 
@@ -261,7 +260,7 @@ end
 
 Then(/^systemet viser at materialet har aldersgrense "(.*?)" år$/) do |agelimit|
   book = @active[:book]
-  @browser.goto intranet(:bib_record)+book.biblionumber
+  @browser.goto intranet(:biblio_detail)+book.biblionumber
   @browser.link(:href => "#description").click
   @browser.div(:id => "description").text.should include("Aldersgrense: "+agelimit)
 end

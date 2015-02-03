@@ -23,7 +23,7 @@ module Paths
       :pendingreserves => "/cgi-bin/koha/circ/pendingreserves.pl",
       :waitingreserves => "/cgi-bin/koha/circ/waitingreserves.pl?allbranches=1",
 
-      :bib_record => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
+      :biblio_detail => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
       :cataloguing => "/cgi-bin/koha/cataloguing/addbooks.pl",
       :add_item => "/cgi-bin/koha/cataloguing/additem.pl?biblionumber=",
       :mod_biblio => "/cgi-bin/koha/cataloguing/addbiblio.pl?biblionumber=",

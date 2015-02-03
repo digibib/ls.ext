@@ -9,7 +9,7 @@ class IntraPage < PageRoot
     form = @browser.form(:id => "cat-search-block")
     form.text_field(:id => "search-form").set query
     form.submit
-    @site.CatalogueDetail
+    @site.BiblioDetail
   end
 
   def select_branch(branch_name=nil)
