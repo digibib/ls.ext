@@ -173,7 +173,9 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
 end
 
 Then(/^gis det beskjed om at materialet skal legges i innleveringsboks$/) do
-  @context[:sip_checkout_response]["CL"].should == nil
+  @context[:sip_checkin_response]["CL"].should == nil
+  @context[:sip_checkin_response]["CV"].should eq("04")                       # Transfer alert
+  @context[:sip_checkin_response]["AQ"].should eq(@active[:item].branch.code) # Permanent location
 end
 
 Then(/^systemet viser at alarm( ikke)? er deaktivert$/) do |bool|

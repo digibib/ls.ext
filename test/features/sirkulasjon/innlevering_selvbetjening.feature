@@ -15,6 +15,7 @@ Egenskap: Selvbetjent innlevering
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling
 
+  @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale på utlånsautomat
     Gitt at materialet har riktig antall RFID-brikker
     Og at det ikke finnes en reservasjon på materialet
@@ -26,7 +27,6 @@ Egenskap: Selvbetjent innlevering
     Og systemet viser at låneren ikke låner materialet
     Og systemet viser at alarm er aktivert
 
-  @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale som tilhører annen avdeling på utlånsautomat
     Gitt at materialet har riktig antall RFID-brikker
     Og at det ikke finnes en reservasjon på materialet
