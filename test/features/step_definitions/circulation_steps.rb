@@ -13,11 +13,16 @@ Given(/^at låneren har materiale han ønsker å låne$/) do
 end
 
 Given(/^at det finnes materiale som er utlånt til låneren$/) do
-  pending # express the regexp above with the code you wish you had
+  step "at boka finnes i biblioteket"
+  step "materiale med strekkode \"#{@active[:item].barcode}\" lånes ut til \"#{@active[:patron].cardnumber}\""
 end
 
 Given(/^at materialet er til utlån$/) do
   step "viser systemet at boka er en bok som kan lånes ut"
+end
+
+Given(/^at det ikke finnes en reservasjon på materialet$/) do
+  step "viser systemet at boka ikke er reservert"
 end
 
 Given(/^at materialet ikke er til utlån$/) do
@@ -60,7 +65,7 @@ Then(/^systemet viser at materialet( ikke)? er utlånt$/) do |bool|
 end
 
 Given(/^at materialet har en eieravdeling$/) do
-  pending # express the regexp above with the code you wish you had
+  @active[:item].branch.should_not == nil
 end
 
 When(/^materiale med strekkode "(.*?)" lånes ut til "(.*?)"$/) do |barcode, patron|
@@ -282,6 +287,10 @@ Given(/^at det er lov å reservere materiale som er på hylla$/) do
   SVC::Preference.new(@browser).set("pref_AllowOnShelfHolds", 1)
 end
 
+Given(/^at materiale ikke automatisk overføres ved innlevering$/) do
+  SVC::Preference.new(@browser).set("pref_AutomaticItemReturn", 0)
+end
+
 Given(/^at det finnes aldersgrenser for utlån av materiale$/) do
   SVC::Preference.new(@browser).set("pref_AgeRestrictionMarker", "|Aldersgrense:|Age|")
   @browser.goto intranet(:koha2marc_mapping)+"biblioitems&kohafield=agerestriction"
@@ -303,12 +312,17 @@ Then(/^registrerer systemet at boka er utlånt$/) do
 end
 
 
-Then(/^systemet viser at låneren låner materialet$/) do
-  Patrons.new(@browser).
+Then(/^systemet viser at låneren( ikke)? låner materialet$/) do |bool|
+  text = Patrons.new(@browser).
       go.
       search(@active[:patron].cardnumber).
       show_checkouts.
-      checkouts_text.should include(@active[:item].barcode)
+      checkouts_text
+  if bool
+    text.should_not include(@active[:item].barcode)
+  else
+    text.should include(@active[:item].barcode)
+  end
 end
 
 Then(/^at "(.*?)" låner boka$/) do |name|

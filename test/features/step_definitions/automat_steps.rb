@@ -44,14 +44,14 @@ When(/^"(.*?)" legger materialet på automaten$/) do |name|
   item   = @active[:item] || @active[:book].items.first
   case @context[:sip_mode]
   when "låne"
-    @context[:sip_transaction_response] = @context[:sip_client].checkout(branch.code, patron.cardnumber, patron.password, item.barcode)
+    @context[:sip_checkout_response] = @context[:sip_client].checkout(branch.code, patron.cardnumber, patron.password, item.barcode)
     @cleanup.push( "utlån #{item.barcode}" =>
       lambda do
         @context[:sip_client].checkin(branch.code,item.barcode)
       end
     )
   when "levere"
-    @context[:sip_transaction_response] = @context[:sip_client].checkin(branch.code,item.barcode)
+    @context[:sip_checkin_response] = @context[:sip_client].checkin(branch.code,item.barcode)
   else
     raise Exception.new("Invalid SIP mode: #{@context[:sip_mode]}")
   end
@@ -108,47 +108,86 @@ Given(/^at materialet som forsøkes innlevert ikke har riktig antall brikker$/) 
   next    # This is actually handled by RFID adapter and is outside the scope of automats
 end
 
-When(/^innlevering blir valgt på automaten$/) do
-  step "låneren velger \"levere\" på automaten"
+Given(/^at materialets henteavdeling( ikke)? er lik den avdelingen der materialet blir levert$/) do |notsamebranch|
+  if notsamebranch
+    step "jeg legger inn en ny avdeling med ny avdelingskode"
+    @context[:checkinbranch] = @active[:branch].code
+  else
+    @context[:checkinbranch] = @active[:item].branch.code
+  end
 end
 
-Then(/^systemet viser at materialet fortsatt er utlånt til låner$/) do
-  pending # express the regexp above with the code you wish you had
+Then(/^det gis beskjed om at materialet skal settes på oppstillingshylle$/) do
+  @context[:sip_checkin_response]["AQ"].should eq(@context[:checkinbranch]) # AQ: Permanent location
+end
+
+When(/^innlevering blir valgt på automaten$/) do
+  step "låneren velger \"levere\" på automaten"
+  step "at materiale ikke automatisk overføres ved innlevering"
+end
+
+Then(/^systemet viser at materialet fortsatt er utlånt til låner$/) do |bool|
+  step "systemet viser at låneren ikke låner materialet"
 end
 
 Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
-  if check =~ /^(ikke|overskrider)/
-    @context[:sip_transaction_response][:statusData][0].should eq("0")  # NOT OK
-    @context[:sip_transaction_response][:statusData][1].should eq("N")  # Renewal OK?
-    @context[:sip_transaction_response][:statusData][2].should eq("U")  # Magnetic media?
-    step "systemet viser at alarm ikke er deaktivert"
-    @context[:sip_transaction_response]["AH"].should eq("")             # Empty due date
-  else
-    @context[:sip_transaction_response][:statusData][0].should eq("1")  # OK
-    step "systemet viser at alarm er deaktivert"
-  end
 
-  case check
-  when "er registrert utlånt"
-    @context[:sip_transaction_response]["AF"].should == nil             # Empty message
-    @context[:sip_transaction_response]["AH"].should_not eq("")         # Due date
-  when "ikke er til utlån"
-    @context[:sip_transaction_response]["AF"].should include("NOT_FOR_LOAN")
-  when "ikke er komplett"
-    next # This is handle by automat
-  when "ikke kan lånes"
-    @context[:sip_transaction_response]["AF"].should include("Item is on hold shelf for another patron")
-  when "overskrider maksgrensen for lån"
-    @context[:sip_transaction_response]["AF"].should eq("1") # TODO! This should be a more meaningful response ?!?!
-  when "ikke kan lånes pga aldersbegrensning"
-    @context[:sip_transaction_response]["AF"].should eq("AGE_RESTRICTION: Aldersgrense: 15")
+  # Checkout specific tests
+  if @context[:sip_mode] == "låne"
+    if check =~ /^(ikke|overskrider)/
+      @context[:sip_checkout_response][:statusData][0].should eq("0")  # NOT OK
+      @context[:sip_checkout_response][:statusData][1].should eq("N")  # Renewal OK?
+      @context[:sip_checkout_response][:statusData][2].should eq("U")  # Magnetic media?
+      step "systemet viser at alarm ikke er deaktivert"
+      @context[:sip_checkout_response]["AH"].should eq("")             # Empty due date
+    else
+      @context[:sip_checkout_response][:statusData][0].should eq("1")  # OK
+      step "systemet viser at alarm er deaktivert"
+    end
+
+    case check
+    when "er registrert utlånt"
+      @context[:sip_checkout_response]["AF"].should == nil             # Empty message
+      @context[:sip_checkout_response]["AH"].should_not eq("")         # Due date
+    when "ikke er til utlån"
+      @context[:sip_checkout_response]["AF"].should include("NOT_FOR_LOAN")
+    when "ikke er komplett"
+      next # This is handled by automat software
+    when "ikke kan lånes"
+      @context[:sip_checkout_response]["AF"].should include("Item is on hold shelf for another patron")
+    when "overskrider maksgrensen for lån"
+      @context[:sip_checkout_response]["AF"].should eq("1") # TODO! This should be a more meaningful response ?!?!
+    when "ikke kan lånes pga aldersbegrensning"
+      @context[:sip_checkout_response]["AF"].should eq("AGE_RESTRICTION: Aldersgrense: 15")
+    end
+
+  # Checkin specific tests
+  elsif @context[:sip_mode] == "levere"
+    case check
+    when "er registrert levert"
+      @context[:sip_checkin_response][:statusData][0].should eq("1")  # OK
+      @context[:sip_checkin_response][:statusData][3].should eq("N")  # Alert?
+      step "systemet viser at alarm er aktivert"
+    end
   end
+end
+
+Then(/^gis det beskjed om at materialet skal legges i innleveringsboks$/) do
+  @context[:sip_checkout_response]["CL"].should == nil
 end
 
 Then(/^systemet viser at alarm( ikke)? er deaktivert$/) do |bool|
   if bool
-    @context[:sip_transaction_response][:statusData][3].should eq("N") # Not Desensitized
+    @context[:sip_checkout_response][:statusData][3].should eq("N") # Not Desensitized
   else
-    @context[:sip_transaction_response][:statusData][3].should eq("Y") # Desensitized
+    @context[:sip_checkout_response][:statusData][3].should eq("Y") # Desensitized
+  end
+end
+
+Then(/^systemet viser at alarm( ikke)? er aktivert$/) do |bool|
+  if bool
+    @context[:sip_checkin_response][:statusData][1].should eq("N") # Not Resensitized
+  else
+    @context[:sip_checkin_response][:statusData][1].should eq("Y") # Resensitized
   end
 end
