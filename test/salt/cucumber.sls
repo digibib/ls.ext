@@ -32,6 +32,8 @@ install_chromedriver:
 {% for gem in
   'rspec',
   'cucumber',
+  'pry',
+  'pry-nav',
   'watir-webdriver' %}
 {{ gem }}:
   gem.installed:
