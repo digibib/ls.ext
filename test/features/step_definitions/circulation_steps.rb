@@ -1,5 +1,6 @@
 # encoding: UTF-8
-
+require_relative '../support/services/svc/preference.rb'
+require_relative '../support/services/svc/user.rb'
 require 'pp'
 
 Given(/^at en bok er utlånt til en låner$/) do
@@ -123,7 +124,7 @@ end
 When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   book = @active[:book]
   @browser.goto intranet(:reserve)+book.biblionumber
-  user = get_user_info(name).first
+  user = SVC::User.new(@browser).get(name).first
   # lookup patron via holds
   form = @browser.form(:id => "holds_patronsearch")
   form.text_field(:id => "patron").set user["dt_cardnumber"]
@@ -278,11 +279,11 @@ Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
 end
 
 Given(/^at det er lov å reservere materiale som er på hylla$/) do
-  set_preference("pref_AllowOnShelfHolds", 1)
+  SVC::Preference.new(@browser).set("pref_AllowOnShelfHolds", 1)
 end
 
 Given(/^at det finnes aldersgrenser for utlån av materiale$/) do
-  set_preference("pref_AgeRestrictionMarker", "|Aldersgrense:|Age|")
+  SVC::Preference.new(@browser).set("pref_AgeRestrictionMarker", "|Aldersgrense:|Age|")
   @browser.goto intranet(:koha2marc_mapping)+"biblioitems&kohafield=agerestriction"
   form = @browser.label(:text => "500s").parent
   form.select_list(:name => "marc").select_value "521 a - Target audience note"

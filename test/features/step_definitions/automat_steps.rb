@@ -1,5 +1,6 @@
 # encoding: UTF-8
 require_relative '../support/services/sip/SIP2Client.rb'
+require_relative '../support/services/svc/user.rb'
 
 #############################
 # AUTOMAT CIRCULATION STEPS
@@ -8,7 +9,8 @@ require_relative '../support/services/sip/SIP2Client.rb'
 # Automat user should not be deleted after creation
 Given(/^at det finnes en utlånsautomat$/) do
   step "at jeg er logget inn som adminbruker"
-  unless user_exists?("Automat")
+
+  unless SVC::User.new(@browser,@context,@active).exists?("Automat")
     # prereq: library
     branchcode   = generateRandomString
     branchname   = generateRandomString
