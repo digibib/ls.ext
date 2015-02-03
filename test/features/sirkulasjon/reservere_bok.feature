@@ -12,16 +12,16 @@ Bakgrunn:
   Og at boka finnes i biblioteket
 
   @wip
-  Scenario:
+  Scenario: Eksisterende låner reserverer bok
     Gitt at låner er pålogget som låner
     Og at låneren har funnet en bok
     Og at boka er tilgjengelig
-  	Når låneren reserverer boka
+    Når låneren reserverer boka
     Så viser systemet at boka er reservert av låneren
 
   @wip
-  Scenario:
+  Scenario: Innlevert bok som er reservert av låner blir holdt av
     Gitt at bok er reservert av låner
     Og at boka er utlånt
-    Når boka registreres innlevert
+    Når boka blir registrert innlevert
     Så viser systemet at boka holdes av til låneren

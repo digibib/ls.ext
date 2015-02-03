@@ -13,6 +13,10 @@ Given(/^at boka finnes i biblioteket$/) do
   }
 end
 
+Given(/^at boka er tilgjengelig$/) do
+  step "viser systemet at boka er en bok som kan lånes ut"
+end
+
 When(/^jeg legger inn boka som en ny bok$/) do
   @http = Net::HTTP.new(host, 8081)
   res = @http.get("/cgi-bin/koha/svc/authentication?userid=#{SETTINGS['koha']['adminuser']}&password=#{SETTINGS['koha']['adminpass']}")
