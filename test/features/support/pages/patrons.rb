@@ -25,7 +25,7 @@ class Patrons < IntraPage
     form.text_field(:id => "searchmember_filter").set query
     form.submit
     @browser.div(:class => 'patroninfo').wait_until_present
-    PatronDetails.new(@browser)
+    @site.PatronDetails
   end
 
   def delete(name, surname)

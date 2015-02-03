@@ -4,11 +4,12 @@ require 'rspec'
 
 require_relative '../paths.rb'
 
-class Page
+class PageRoot
   include Paths
   include RSpec::Matchers
 
-  def initialize(browser)
-    @browser = browser
+  def initialize(site)
+    @site = site
+    @browser = site.browser
   end
 end

@@ -17,9 +17,9 @@ Given(/^at det finnes en utlånsautomat$/) do
     categorycode = generateRandomString
     categorydesc = generateRandomString
 
-    Branches.new(@browser).go.create(branchname, branchcode)
-    PatronCategories.new(@browser).go.create(categorycode, categorydesc, "Staff")
-    Patrons.new(@browser).go.create(categorydesc, "Audun", "Automat", "autouser", "autopass")
+    @site.Branches.go.create(branchname, branchcode)
+    @site.PatronCategories.go.create(categorycode, categorydesc, "Staff")
+    @site.Patrons.go.create(categorydesc, "Audun", "Automat", "autouser", "autopass")
 
     step "at bruker \"Automat\" har rettighet \"circulate\""
   end

@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-require_relative 'page.rb'
+require_relative 'page_root.rb'
 
-class Login < Page
+class Login < PageRoot
   def go
     @browser.goto intranet(:login)
     self

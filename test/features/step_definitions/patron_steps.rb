@@ -44,7 +44,7 @@ Given(/^at det finnes en låner med lånekort$/) do |table|
 
     @cleanup.push( "låner #{user.firstname} #{user.surname}" =>
       lambda do
-        Patrons.new(@browser).go.delete(user.firstname, user.surname)
+        @site.Patrons.go.delete(user.firstname, user.surname)
       end
     )
   end
@@ -85,7 +85,7 @@ Given(/^at låneren ikke har aktiv innkrevingssak$/) do
 end
 
 When(/^jeg er på administrasjonssiden for lånerkategorier$/) do
-  PatronCategories.new(@browser).go
+  @site.PatronCategories.go
 end
 
 When(/^jeg velger å vise alle lånerkategorier$/) do
@@ -141,7 +141,7 @@ When(/^lånerdata importeres i admingrensesnittet$/) do
   patron = @active[:patron]
   @cleanup.push( "låner #{patron.firstname} #{patron.surname}" =>
     lambda do
-      Patrons.new(@browser).go.delete(patron.firstname, patron.surname)
+      @site.Patrons.go.delete(patron.firstname, patron.surname)
     end
   )
 end
@@ -149,14 +149,14 @@ end
 When(/^jeg legger til en lånerkategori$/) do
   patroncategory = PatronCategory.new
 
-  PatronCategories.new(@browser).go.create(patroncategory.code, patroncategory.description)
+  @site.PatronCategories.go.create(patroncategory.code, patroncategory.description)
 
   @active[:patroncategory] = patroncategory
   (@context[:patroncategories] ||= []) << patroncategory
 
   @cleanup.push( "lånerkategori #{patroncategory.description}" =>
     lambda do
-      PatronCategories.new(@browser).go.delete(patroncategory.description)
+      @site.PatronCategories.go.delete(patroncategory.description)
     end
   )
 end
@@ -167,7 +167,7 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   patron.branch   = @active[:branch]
   patron.category = @active[:patroncategory]
 
-  Patrons.new(@browser).
+  @site.Patrons.
       go.
       create(patron.category.description,
              name,
@@ -179,7 +179,7 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   (@context[:patrons] ||= []) << patron
   @cleanup.push( "låner #{name} #{patron.surname}" =>
     lambda do
-      Patrons.new(@browser).go.delete(name, patron.surname)
+      @site.Patrons.go.delete(name, patron.surname)
     end
   )
 end
@@ -193,7 +193,7 @@ end
 
 Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   fullname = "#{name} #{@active[:patron].surname}"
-  patron_details = Home.new(@browser).go.search_patrons fullname
+  patron_details = @site.Home.go.search_patrons fullname
   patron_details.header.should include fullname
   @active[:patron].cardnumber = patron_details.card_number
 end

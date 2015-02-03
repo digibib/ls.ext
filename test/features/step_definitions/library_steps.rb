@@ -6,7 +6,7 @@ end
 
 Given(/^at det er valgt en avdeling$/) do
   step 'at det finnes en avdeling'
-  Branches.new(@browser).go.select_branch()
+  @site.Branches.go.select_branch()
 end
 
 Given(/^at jeg har en liste over avdelinger$/) do
@@ -14,16 +14,16 @@ Given(/^at jeg har en liste over avdelinger$/) do
 end
 
 When(/^jeg velger å vise alle avdelinger$/) do
-  Branches.new(@browser).show_all
+  @site.Branches.show_all
 end
 
 When(/^jeg er på administrasjonssiden for avdelinger$/) do
-  Branches.new(@browser).go
+  @site.Branches.go
 end
 
 When(/^jeg legger inn en ny avdeling med ny avdelingskode$/) do
   branch = Branch.new
-  Branches.new(@browser).go.create(branch.name, branch.code)
+  @site.Branches.go.create(branch.name, branch.code)
 
   @active[:branch] = branch
   (@context[:branches] ||= []) << branch
@@ -31,16 +31,16 @@ When(/^jeg legger inn en ny avdeling med ny avdelingskode$/) do
 
   @cleanup.push( "avdeling #{branch.code}" =>
     lambda do
-      Branches.new(@browser).go.filter(branch.name).delete(branch.name, branch.code)
+      @site.Branches.go.filter(branch.name).delete(branch.name, branch.code)
     end
   )
 end
 
 Then(/^finnes avdelingen i oversikten over avdelinger$/) do
-  Branches.new(@browser).go.filter(@active[:branch].name).exists(@active[:branch].name, @active[:branch].code)
+  @site.Branches.go.filter(@active[:branch].name).exists(@active[:branch].name, @active[:branch].code)
 end
 
 
 Then(/^samsvarer listen i grensesnittet med liste over avdelinger$/) do
-  Branches.new(@browser).all_exists(@branches)
+  @site.Branches.all_exists(@branches)
 end

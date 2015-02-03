@@ -74,7 +74,7 @@ When(/^materiale med strekkode "(.*?)" lånes ut til "(.*?)"$/) do |barcode, pat
 end
 
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
-  @browser.goto intranet(:home)
+  @site.Home.go
   @browser.text_field(:id => "findborrower").set "#{patron} #{@active[:patron].surname}"
   @browser.form(:id => "patronsearch").submit
 end
@@ -96,13 +96,13 @@ When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
   @active[:item] = item
   @cleanup.push( "utlån #{barcode}" =>
     lambda do
-      Home.new(@browser).go.select_branch().checkin(book.items.first.barcode)
+      @site.Home.go.select_branch().checkin(book.items.first.barcode)
     end
   )
 end
 
 When(/^boka blir registrert innlevert$/) do
-  Home.new(@browser).go.select_branch().checkin(@active[:book].items.first.barcode)
+  @site.Home.go.select_branch().checkin(@active[:book].items.first.barcode)
 end
 
 Given(/^at materialet ikke er holdt av til en annen låner$/) do
@@ -307,7 +307,7 @@ Then(/^systemet viser at aldersgrenser for utlån av materiale er aktivert$/) do
 end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
-  Home.new(@browser).go.search_catalog @active[:book].title
+  @site.Home.go.search_catalog @active[:book].title
   @browser.text.should include(@active[:book].title)
 end
 
@@ -331,7 +331,7 @@ Then(/^at "(.*?)" låner boka$/) do |name|
 end
 
 Then(/^viser systemet at låneren ikke låner boka$/) do
-  Home.new(@browser).search_catalog @active[:book].title
+  @site.Home.search_catalog @active[:book].title
   @browser.text.should include(@active[:book].title)
   @browser.text.should_not include "Checked out to Knut"
 end

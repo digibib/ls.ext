@@ -1,19 +1,19 @@
 # encoding: utf-8
 
-require_relative 'page.rb'
+require_relative 'page_root.rb'
 
-class IntraPage < Page
+class IntraPage < PageRoot
 
   def search_catalog(query)
     @browser.a(:href => "#catalog_search").click
     form = @browser.form(:id => "cat-search-block")
     form.text_field(:id => "search-form").set query
     form.submit
-    CatalogueDetail.new(@browser)
+    @site.CatalogueDetail
   end
 
   def select_branch(branch_name=nil)
-    SelectBranch.new(@browser).go.select_branch(branch_name)
+    @site.SelectBranch.go.select_branch(branch_name)
   end
 
   def checkin(barcode)
@@ -28,7 +28,7 @@ class IntraPage < Page
     @browser.text_field(:id => "searchmember").set patron_query
     @browser.form(:action => "/cgi-bin/koha/members/member.pl").submit
     @browser.div(:class => 'patroninfo').wait_until_present
-    PatronDetails.new(@browser)
+    @site.PatronDetails
   end
 
   def logged_in (userid)

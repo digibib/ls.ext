@@ -10,11 +10,11 @@ When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
 end
 
 Given(/^at jeg er på Kohas interne forside$/) do
-  Home.new(@browser).go
+  @site.Home.go
 end
 
 Given(/^jeg logger på som bruker "(.*?)" med passord "(.*?)"$/) do |userid, password|
-  Login.new(@browser).go.login(userid, password)
+  @site.Login.go.login(userid, password)
   @context[:loginuser] = userid
 end
 
@@ -30,5 +30,5 @@ Then(/^har jeg kommet til førstesiden til koha$/) do
 end
 
 Then(/^vises det at jeg er pålogget$/) do
-  Home.new(@browser).logged_in(@context[:loginuser]).should == true
+  @site.Home.logged_in(@context[:loginuser]).should == true
 end

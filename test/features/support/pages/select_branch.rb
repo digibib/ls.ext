@@ -12,6 +12,6 @@ class SelectBranch < IntraPage
   def select_branch(branch_name=nil)
     raise "Todo: fix branch_name_argument" if branch_name
     @browser.form(:action => "selectbranchprinter.pl").submit
-    Circulation.new(@browser)
+    @site.Circulation
   end
 end

@@ -33,11 +33,13 @@ end
 
 Before do
   @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+  @site = @site || Site.new(@browser)
 end
 
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
 After do # The final hook
+  @site = nil
   @browser.close if @browser
 end
 
