@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Selvbetjent innlevering
   Som en låner Knut
   Fordi jeg har sett filmen jeg lånte
@@ -16,32 +15,24 @@ Egenskap: Selvbetjent innlevering
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling
 
-  @wip @ignore
-  Scenario: Noen forsøker å levere tilbake materiale med feil antall brikker på utlånsautomat
-    Gitt at materialet ikke har riktig antall RFID-brikker
-    Når innlevering blir valgt på automaten
-    Og materialet blir lagt på automaten
-    Så gis det beskjed om at materialet ikke er komplett
-    Og systemet viser at materialet fortsatt er utlånt til låner
-
-  @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale på utlånsautomat
     Gitt at materialet har riktig antall RFID-brikker
     Og at det ikke finnes en reservasjon på materialet
     Og at materialets henteavdeling er lik den avdelingen der materialet blir levert
     Når innlevering blir valgt på automaten
-    Og materialet blir lagt på automaten
-    Så gis det beskjed om at materialet er levert
+    Og låneren legger materialet på automaten
+    Så får låneren beskjed om at materialet er registrert levert
     Og det gis beskjed om at materialet skal settes på oppstillingshylle
-    Og systemet viser at materialet ikke er levert til låner
+    Og systemet viser at låneren ikke låner materialet
+    Og systemet viser at alarm er aktivert
 
   @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale som tilhører annen avdeling på utlånsautomat
     Gitt at materialet har riktig antall RFID-brikker
     Og at det ikke finnes en reservasjon på materialet
-    Og at materialets eieravdeling er forskjellig fra avdelingen der materialet blir levert
+    Og at materialets henteavdeling ikke er lik den avdelingen der materialet blir levert
     Når innlevering blir valgt på automaten
-    Og materialet blir lagt på automaten
+    Og låneren legger materialet på automaten
     Så gis det beskjed om at materialet skal legges i innleveringsboks
 
   @wip
@@ -49,7 +40,7 @@ Egenskap: Selvbetjent innlevering
     Gitt at materialet har riktig antall RFID-brikker
     Og at det finnes en reservasjon på materialet
     Når innlevering blir valgt på automaten
-    Og materialet blir lagt på automaten
+    Og låneren legger materialet på automaten
     Så gis det beskjed om at materialet skal legges i innleveringsboks
 
   @wip
@@ -78,7 +69,7 @@ Egenskap: Selvbetjent innlevering
     Så tar innleveringsboks imot materialet
     Og det gis beskjed om at materialet er innlevert
     Og systemet viser at materialet skal returneres til eieravdeling
-    Og systemet viser at materialet ikke er utlånt til låner
+    Og systemet viser at låneren ikke låner materialet
 
   @wip
   Scenario: Innleveringsboks får materiale som er reservert
@@ -89,4 +80,12 @@ Egenskap: Selvbetjent innlevering
     Så tar innleveringsboks imot materialet
     Og det gis beskjed om at materialet er innlevert
     Og systemet viser at materialet skal til henteavdeling
-    Og systemet viser at materialet ikke er utlånt til låner
+    Og systemet viser at låneren ikke låner materialet
+
+  @wip @ignore
+  Scenario: Noen forsøker å levere tilbake materiale med feil antall brikker på utlånsautomat
+    Gitt at materialet ikke har riktig antall RFID-brikker
+    Når innlevering blir valgt på automaten
+    Og materialet blir lagt på automaten
+    Så gis det beskjed om at materialet ikke er komplett
+    Og systemet viser at materialet fortsatt er utlånt til låner
