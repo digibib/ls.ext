@@ -3,7 +3,7 @@
 require_relative 'page_root.rb'
 
 class Login < PageRoot
-  def go
+  def visit
     @browser.goto intranet(:login)
     self
   end

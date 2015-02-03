@@ -3,7 +3,7 @@
 require_relative 'admin_page.rb'
 
 class AuthorizedValues < AdminPage
-  def go
+  def visit
     @browser.goto intranet(:authorised_values)
     self
   end

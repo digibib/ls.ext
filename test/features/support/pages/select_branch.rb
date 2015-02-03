@@ -4,7 +4,7 @@ require_relative 'intra_page.rb'
 
 class SelectBranch < IntraPage
 
-  def go
+  def visit
     @browser.goto intranet(:select_branch)
     self
   end

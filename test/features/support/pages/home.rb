@@ -3,7 +3,7 @@
 require_relative 'intra_page.rb'
 
 class Home < IntraPage
-  def go
+  def visit
     @browser.goto intranet(:home)
     self
   end

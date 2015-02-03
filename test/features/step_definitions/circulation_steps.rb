@@ -74,7 +74,7 @@ When(/^materiale med strekkode "(.*?)" lånes ut til "(.*?)"$/) do |barcode, pat
 end
 
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
-  @site.Home.go
+  @site.Home.visit
   @browser.text_field(:id => "findborrower").set "#{patron} #{@active[:patron].surname}"
   @browser.form(:id => "patronsearch").submit
 end
@@ -96,13 +96,13 @@ When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
   @active[:item] = item
   @cleanup.push( "utlån #{barcode}" =>
     lambda do
-      @site.Home.go.select_branch().checkin(book.items.first.barcode)
+      @site.Home.visit.select_branch().checkin(book.items.first.barcode)
     end
   )
 end
 
 When(/^boka blir registrert innlevert$/) do
-  @site.Home.go.select_branch().checkin(@active[:book].items.first.barcode)
+  @site.Home.visit.select_branch().checkin(@active[:book].items.first.barcode)
 end
 
 Given(/^at materialet ikke er holdt av til en annen låner$/) do
@@ -307,14 +307,14 @@ Then(/^systemet viser at aldersgrenser for utlån av materiale er aktivert$/) do
 end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
-  @site.Home.go.search_catalog @active[:book].title
+  @site.Home.visit.search_catalog @active[:book].title
   @browser.text.should include(@active[:book].title)
 end
 
 
 Then(/^systemet viser at låneren( ikke)? låner materialet$/) do |bool|
-  text = Patrons.new(@browser).
-      go.
+  text = @site.Patrons.
+      visit.
       search(@active[:patron].cardnumber).
       show_checkouts.
       checkouts_text

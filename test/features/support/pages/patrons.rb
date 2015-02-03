@@ -3,7 +3,7 @@
 require_relative 'intra_page.rb'
 
 class Patrons < IntraPage
-  def go
+  def visit
     @browser.goto intranet(:patrons)
     self
   end

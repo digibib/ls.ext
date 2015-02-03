@@ -4,7 +4,7 @@ require 'watir-webdriver'
 require_relative 'intra_page.rb'
 
 class Branches < IntraPage
-  def go
+  def visit
     @browser.goto intranet(:branches)
     self
   end

@@ -6,13 +6,13 @@ Given(/^det finnes en autorisert verdi for "(.*)"$/) do |category|
   @context[:authorised_value_description] = generateRandomString
 
   @site.AuthorizedValues.
-      go.
+      visit.
       add(@context[:authorised_value_category], @context[:authorised_value], @context[:authorised_value_description])
 
   @cleanup.push( "autorisert verdi #{@context[:authorised_value]} for #{@context[:authorised_value_category]}" =>
     lambda do
       @site.AuthorizedValues.
-          go.
+          visit.
           search(@context[:authorised_value_category]).
           delete_value @context[:authorised_value]
     end
@@ -25,7 +25,7 @@ end
 
 Then(/^kan jeg finne den autoriserte verdien i listen over autoriserte verdier$/) do
   @site.AuthorizedValues.
-      go.
+      visit.
       search(@context[:authorised_value_category]).
       values_text.should include @context[:authorised_value]
 end

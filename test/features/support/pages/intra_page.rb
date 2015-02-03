@@ -13,7 +13,7 @@ class IntraPage < PageRoot
   end
 
   def select_branch(branch_name=nil)
-    @site.SelectBranch.go.select_branch(branch_name)
+    @site.SelectBranch.visit.select_branch(branch_name)
   end
 
   def checkin(barcode)

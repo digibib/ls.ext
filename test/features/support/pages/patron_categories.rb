@@ -3,7 +3,7 @@
 require_relative 'admin_page.rb'
 
 class PatronCategories < AdminPage
-  def go
+  def visit
     @browser.goto intranet(:patron_categories)
     self
   end

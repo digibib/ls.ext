@@ -10,11 +10,11 @@ When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
 end
 
 Given(/^at jeg er på Kohas interne forside$/) do
-  @site.Home.go
+  @site.Home.visit
 end
 
 Given(/^jeg logger på som bruker "(.*?)" med passord "(.*?)"$/) do |userid, password|
-  @site.Login.go.login(userid, password)
+  @site.Login.visit.login(userid, password)
   @context[:loginuser] = userid
 end
 
