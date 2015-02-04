@@ -15,7 +15,6 @@ Egenskap: Selvbetjent innlevering
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling
 
-  @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale på utlånsautomat
     Gitt at materialet har riktig antall RFID-brikker
     Og at det ikke finnes en reservasjon på materialet
@@ -33,22 +32,23 @@ Egenskap: Selvbetjent innlevering
     Og at materialets henteavdeling ikke er lik den avdelingen der materialet blir levert
     Når innlevering blir valgt på automaten
     Og låneren legger materialet på automaten
-    Så gis det beskjed om at materialet skal legges i innleveringsboks
+    Så registrerer automaten at materialet tilhører annen avdeling
+    Og det gis beskjed om at materialet skal legges i innleveringsboks
 
-  @wip
   Scenario: Noen forsøker å levere tilbake lånt materiale som er reservert på utlånsautomat
     Gitt at materialet har riktig antall RFID-brikker
     Og at det finnes en reservasjon på materialet
     Når innlevering blir valgt på automaten
     Og låneren legger materialet på automaten
-    Så gis det beskjed om at materialet skal legges i innleveringsboks
+    Så registrerer automaten at materialet er reservert på annen avdeling
+    Og det gis beskjed om at materialet skal legges i innleveringsboks
 
   @wip
   Scenario: Innleveringsboks får feil materiale
     Gitt at noen har forsøkt å levere lånt materiale på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
     Når annet materiale blir lagt i innleveringsboks
-    Så gis det beskjed om at feil materiale er lagt i innleveringsboks
+    Så det gis beskjed om at feil materiale er lagt i innleveringsboks
     Og systemet viser at det lånte materialet fortsatt er utlånt til låner
 
   @wip
@@ -57,7 +57,7 @@ Egenskap: Selvbetjent innlevering
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
     Når lånt materiale blir lagt i innleveringsboks
     Og innleveringsboks registrerer at materialet har feil antall RFID-brikker
-    Så gis det beskjed om at materialet ikke er komplett
+    Så det gis beskjed om at materialet ikke er komplett
     Og systemet viser at det lånte materialet fortsatt er utlånt til låner
 
   @wip
