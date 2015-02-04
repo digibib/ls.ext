@@ -4,6 +4,8 @@ require_relative '../support/services/svc/user.rb'
 
 #############################
 # AUTOMAT CIRCULATION STEPS
+# SIP2: http://multimedia.3m.com/mws/media/355361O/sip2-protocol.pdf
+# SIP3: http://galecia.com/sites/default/files/SIP3_PartI.pdf
 #############################
 
 # Automat user should not be deleted after creation
@@ -51,6 +53,8 @@ When(/^"(.*?)" legger materialet på automaten$/) do |name|
       end
     )
   when "levere"
+    # TODO: to specify branch on checkin, koha must be patched to accept AO field
+    @context[:sip_checkin_branch]   = branch.code
     @context[:sip_checkin_response] = @context[:sip_client].checkin(branch.code,item.barcode)
   else
     raise Exception.new("Invalid SIP mode: #{@context[:sip_mode]}")
@@ -111,14 +115,14 @@ end
 Given(/^at materialets henteavdeling( ikke)? er lik den avdelingen der materialet blir levert$/) do |notsamebranch|
   if notsamebranch
     step "jeg legger inn en ny avdeling med ny avdelingskode"
-    @context[:checkinbranch] = @active[:branch].code
+    @context[:sip_checkin_branch] = @active[:branch].code
   else
-    @context[:checkinbranch] = @active[:item].branch.code
+    @context[:sip_checkin_branch] = @active[:item].branch.code
   end
 end
 
 Then(/^det gis beskjed om at materialet skal settes på oppstillingshylle$/) do
-  @context[:sip_checkin_response]["AQ"].should eq(@context[:checkinbranch]) # AQ: Permanent location
+  @context[:sip_checkin_response]["AQ"].should eq(@context[:sip_checkin_branch]) # AQ: Permanent location
 end
 
 When(/^innlevering blir valgt på automaten$/) do
@@ -166,16 +170,40 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
     case check
     when "er registrert levert"
       @context[:sip_checkin_response][:statusData][0].should eq("1")  # OK
-      @context[:sip_checkin_response][:statusData][3].should eq("N")  # Alert?
+      # TODO: to specify branch on checkin, koha must be patched to accept AO field
+      #@context[:sip_checkin_response][:statusData][3].should eq("N")  # No alert
       step "systemet viser at alarm er aktivert"
     end
   end
 end
 
-Then(/^gis det beskjed om at materialet skal legges i innleveringsboks$/) do
+Then(/^registrerer automaten at materialet (er reservert på|tilhører|er fjernlånt fra) (annen|samme) avdeling$/) do |type,branch|
+  case type
+  when "er reservert på"
+    patron = @active[:patron]
+    @context[:sip_checkin_response]["CY"].should eq(patron.cardnumber)
+    @context[:sip_checkin_response]["DA"].should eq("#{patron.firstname} #{patron.surname}")
+    if branch == "samme"
+      @context[:sip_checkin_response]["CV"].should eq("01")                     # Reserve on same branch
+    elsif branch == "annen"
+      @context[:sip_checkin_response]["CV"].should eq("02")                     # Reserve on diff branch
+      @context[:sip_checkin_response]["CT"].should eq(patron.branch.code)
+    end
+  when "er fjernlånt fra"
+    if branch == "annen"
+      @context[:sip_checkin_response]["CV"].should eq("03")                     # ILL transfer
+    end
+  when "tilhører"
+    @context[:sip_checkin_response]["AQ"].should eq(@active[:item].branch.code) # Permanent location
+    if branch == "annen"
+      @context[:sip_checkin_response]["CV"].should eq("04")                     # Transfer
+    end
+  end
+end
+
+Then(/^det gis beskjed om at materialet skal legges i innleveringsboks$/) do
   @context[:sip_checkin_response]["CL"].should == nil
-  @context[:sip_checkin_response]["CV"].should eq("04")                       # Transfer alert
-  @context[:sip_checkin_response]["AQ"].should eq(@active[:item].branch.code) # Permanent location
+  @context[:sip_checkin_response][:statusData][3].should eq("Y")                # Alert
 end
 
 Then(/^systemet viser at alarm( ikke)? er deaktivert$/) do |bool|

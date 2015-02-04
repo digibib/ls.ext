@@ -108,7 +108,11 @@ Given(/^at materialet ikke er holdt av til en annen låner$/) do
   step "viser systemet at boka ikke er reservert"
 end
 
-Given(/^at materialet er holdt av til en annen låner$/) do
+Given(/^at det finnes en reservasjon på materialet$/) do
+  step "at materialet er reservert av en annen låner"
+end
+
+Given(/^at materialet er reservert av en annen låner$/) do
   step "at det finnes en låner med lånekort", table(%{
     | firstname | password |
     | Ove       | 1234     |
@@ -120,7 +124,11 @@ When(/^boka er reservert av "(.*?)"$/) do |name|
   step "at det er aktivert en standard sirkulasjonsregel"
   step "boka reserveres av \"#{name}\" på egen avdeling"
   step "reserveringskøen kjøres"
-  step "viser systemet at boka er reservert"
+#  step "viser systemet at boka er reservert"
+end
+
+Given(/^at materialet er holdt av til en annen låner$/) do
+  step "at materialet er reservert av en annen låner"
   step "vises boka i listen over bøker som skal plukkes"
   step "boka plukkes og skannes inn"
 end
