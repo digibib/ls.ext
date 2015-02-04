@@ -73,9 +73,7 @@ When(/^materiale med strekkode "(.*?)" lånes ut til "(.*?)"$/) do |barcode, pat
 end
 
 When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
-  @site.Home.visit
-  @browser.text_field(:id => "findborrower").set "#{patron} #{@active[:patron].surname}"
-  @browser.form(:id => "patronsearch").submit
+  @site.Home.visit.find_patron_for_checkout("#{patron} #{@active[:patron].surname}")
 end
 
 When(/^jeg registrerer utlån av boka$/) do
@@ -86,10 +84,8 @@ end
 When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
   book = @context[:books].find {|b| b.items.find {|i| i.barcode == "#{barcode}" } }
   item = book[:items].find {|i| i.barcode == "#{barcode}" }
-  @browser.execute_script("printx_window = function() { return };") #Disable print slip popup
-  form = @browser.form(:id => "mainform")
-  form.text_field(:id => "barcode").set(barcode)
-  form.submit
+
+  @site.Checkout.checkout(barcode)
 
   @active[:book] = book
   @active[:item] = item
@@ -136,7 +132,9 @@ end
 When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   book = @active[:book]
   @browser.goto intranet(:reserve)+book.biblionumber
+
   user = SVC::User.new(@browser).get(name).first
+
   # lookup patron via holds
   form = @browser.form(:id => "holds_patronsearch")
   form.text_field(:id => "patron").set user["dt_cardnumber"]

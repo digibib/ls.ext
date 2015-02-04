@@ -31,6 +31,12 @@ class IntraPage < PageRoot
     @site.PatronDetails
   end
 
+  def find_patron_for_checkout(patron_query)
+    @browser.text_field(:id => "findborrower").set patron_query
+    @browser.form(:id => "patronsearch").submit
+    @site.Checkout
+  end
+
   def logged_in (userid)
     @browser.span(:class => 'loggedinusername').exists? &&
         @browser.span(:class => 'loggedinusername').text.strip == userid

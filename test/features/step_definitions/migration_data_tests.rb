@@ -1,8 +1,7 @@
 # encoding: UTF-8
 
 Given(/^at jeg er på side for materialtypeadministrasjon i administrasjonsgrensesnittet$/) do
-  @browser.goto intranet(:item_types)
-  @browser.select_list(:name => "table_item_type_length").select "All"
+  @site.ItemTypes.visit.show_all
 end
 
 Then(/^ser jeg at følgende materialtyper er tilgjengelig$/) do |table|

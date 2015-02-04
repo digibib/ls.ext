@@ -8,10 +8,14 @@ class ItemTypes < AdminPage
     self
   end
 
+  def show_all
+    @browser.select_list(:name => "table_item_type_length").select_value("-1")
+    self
+  end
+
   def create(code, desc)
     @browser.a(:id => "newitemtype").click
     form = @browser.form(:id => "itemtypeentry")
-
     form.text_field(:id => "itemtype").set code
     form.text_field(:id => "description").set desc
     form.submit
@@ -19,9 +23,7 @@ class ItemTypes < AdminPage
   end
 
   def delete(code)
-    table = @browser.table(:id => "table_item_type")
-    table.wait_until_present
-    table.rows.each do |row|
+    item_type_table.rows.each do |row|
       if row.text.include?(code)
         row.link(:href => /op=delete_confirm/).click
         @browser.input(:value => "Delete this Item Type").click
@@ -31,11 +33,16 @@ class ItemTypes < AdminPage
   end
 
   def exists(code, desc)
-    table = @browser.table(:id => "table_item_type")
-    @browser.select_list(:name => "table_item_type_length").select_value("-1")
-    table.wait_until_present
-    table.text.should include(code)
-    table.text.should include(desc)
+    text = item_type_table.text
+    text.should include(code)
+    text.should include(desc)
     self
   end
+
+  def item_type_table
+    table =  @browser.table(:id => "table_item_type")
+    table.wait_until_present
+    table
+  end
+
 end

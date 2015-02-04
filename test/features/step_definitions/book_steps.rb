@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 Given(/^at det finnes en materialtype$/) do
-  @browser.goto intranet(:item_types)
   step "jeg legger til en materialtype"
 end
 
@@ -55,21 +54,22 @@ When(/^jeg legger til en materialtype$/) do
 
   @cleanup.push( "materialtype #{itemtype.code}" =>
     lambda do
-      @site.ItemTypes.visit.delete(itemtype.code)
+      @site.ItemTypes.visit.show_all.delete(itemtype.code)
     end
   )
 end
 
 Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
-  @site.ItemTypes.visit.exists(@active[:itemtype].code, @active[:itemtype].desc)
+  @site.ItemTypes.visit.show_all.exists(@active[:itemtype].code, @active[:itemtype].desc)
 end
 
 Then(/^viser systemet at boka er en bok som( ikke)? kan lånes ut$/) do |boolean|
   book = @active[:book]
-  biblio = @site.BiblioDetail.visit(book.biblionumber)
-  biblio.header.should include(book.title)
 
-  item_status = biblio.item_status(book.items.first.barcode)
+  biblio_page = @site.BiblioDetail.visit(book.biblionumber)
+  biblio_page.header.should include(book.title)
+
+  item_status = biblio_page.item_status(book.items.first.barcode)
   if boolean
     item_status.should_not include("vailable")
   else
@@ -78,7 +78,7 @@ Then(/^viser systemet at boka er en bok som( ikke)? kan lånes ut$/) do |boolean
 end
 
 Then(/^kan jeg søke opp boka$/) do
-  biblio = @site.Home.search_catalog(@active[:book].title)
-  biblio.header.should include(@active[:book].title)
-  biblio.status.should include("vailable")
+  biblio_page = @site.Home.search_catalog(@active[:book].title)
+  biblio_page.header.should include(@active[:book].title)
+  biblio_page.status.should include("vailable")
 end
