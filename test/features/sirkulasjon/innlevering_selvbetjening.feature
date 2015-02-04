@@ -43,7 +43,7 @@ Egenskap: Selvbetjent innlevering
     Så registrerer automaten at materialet er reservert på annen avdeling
     Og det gis beskjed om at materialet skal legges i innleveringsboks
 
-  @wip
+  @wip @ignore
   Scenario: Innleveringsboks får feil materiale
     Gitt at noen har forsøkt å levere lånt materiale på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
@@ -51,7 +51,7 @@ Egenskap: Selvbetjent innlevering
     Så det gis beskjed om at feil materiale er lagt i innleveringsboks
     Og systemet viser at det lånte materialet fortsatt er utlånt til låner
 
-  @wip
+  @wip @ignore
   Scenario: Innleveringsboks får ukomplett materiale
     Gitt at noen har forsøkt å levere lånt materiale på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
@@ -60,7 +60,7 @@ Egenskap: Selvbetjent innlevering
     Så det gis beskjed om at materialet ikke er komplett
     Og systemet viser at det lånte materialet fortsatt er utlånt til låner
 
-  @wip
+  @wip @ignore
   Scenario: Innleveringsboks får materiale som tilhører annen avdeling
     Gitt at noen har forsøkt å levere lånt materiale som tilhører annen avdeling på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
@@ -71,7 +71,7 @@ Egenskap: Selvbetjent innlevering
     Og systemet viser at materialet skal returneres til eieravdeling
     Og systemet viser at låneren ikke låner materialet
 
-  @wip
+  @wip @ignore
   Scenario: Innleveringsboks får materiale som er reservert
     Gitt at noen har forsøkt å levere lånt materiale som er reservert på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
