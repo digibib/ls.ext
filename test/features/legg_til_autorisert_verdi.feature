@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Legg til autorisert verdi
   Som katalogisator
   For å endre endre tilgjengelighet på eksemplarer

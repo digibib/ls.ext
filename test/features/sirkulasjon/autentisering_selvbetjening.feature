@@ -52,7 +52,6 @@ Egenskap: Autentisering på automat
     Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
 
-  @wip
   Scenario: Låner prøver å låne på automat med kort som har utløpt
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred   | password | flags |
