@@ -41,12 +41,10 @@ end
 Then(/^systemet viser at eksemplaret ikke er til utlån$/) do
   book = @active[:book]
   item = @active[:item] ||= book.items.first
-  @browser.goto intranet(:add_item)+book.biblionumber
-  table = @browser.table(:id => "itemst")
 
-  row_index = table.rows.to_a.index{ |row| row.text =~ /#{item.barcode}/ }
-  cell = table.row(:index => row_index).td(:index => 5)
-  cell.text.should eq(@context[:authorised_value_description])
+  biblio_page = @site.AddItem.visit(book.biblionumber)
+  not_for_loan_text = biblio_page.not_for_loan_text(item.barcode)
+  not_for_loan_text.should eq(@context[:authorised_value_description])
 end
 
 Then(/^systemet viser at materialet( ikke)? er utlånt$/) do |bool|

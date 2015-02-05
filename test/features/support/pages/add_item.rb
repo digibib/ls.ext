@@ -17,4 +17,18 @@ class AddItem < IntraPage
     @browser.button(:name => "add_submit").click
   end
 
+  def not_for_loan_text(barcode)
+    item_row(barcode).td(:index => 5).text
+  end
+
+  def item_row(barcode)
+    items_table = items_table()
+    item_row_index = items_table.rows.to_a.index { |row| row.text =~ /#{barcode}/ }
+    items_table.row(:index => item_row_index)
+  end
+
+  def items_table
+    @browser.table(:id => "itemst")
+  end
+
 end
