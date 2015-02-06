@@ -23,9 +23,7 @@ base:
     - mysql.pulled
     - koha.pulled
     - sip.pulled
-    - koha-restful.pulled
     - mysql.dockerized
-    - koha-restful.dockerized
     - koha.dockerized
     - sip.dockerized
     - migration.dockerized
