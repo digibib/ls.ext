@@ -56,12 +56,12 @@ dev_extract_example_data_full:  ## Downloads complete set of example data from w
 	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir'
 	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir'
 
-dev_extract_example_data_minimum:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
-	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir/'
-	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
+dev_extract_example_data_minimum:  ## Downloads complete set of example data from migration image
+	vagrant ssh vm-ship -c 'sudo mkdir -p /var/migration_workdir/'
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.copy_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_example_data:
-		vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_issuing_rules: ## Loads issuing rules
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}"'
