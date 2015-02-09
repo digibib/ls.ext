@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip @migration
+@migration
 Egenskap: Test av materialtyper
   Som adminbruker
   Ønsker jeg å stille materialtyper på ting
@@ -9,7 +9,7 @@ Egenskap: Test av materialtyper
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
 
-    Scenario: Test at de ulike statusene er tilgjengelige
+    Scenario: Test at de ulike materialtypene er tilgjengelige
       Gitt at jeg er på side for materialtypeadministrasjon i administrasjonsgrensesnittet
       Så ser jeg at følgende materialtyper er tilgjengelig
       | Image | Code     | Description                                           | Not for loan | Charge | Checkin message | Actions     |
