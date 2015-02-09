@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip @migration
+@migration
 Egenskap: Liste over avdelinger
   Som adminbruker
   For å vite at alle avdelinger er registrerte
