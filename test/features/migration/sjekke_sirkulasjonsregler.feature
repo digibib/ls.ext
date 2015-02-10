@@ -50,4 +50,4 @@ Egenskap: Test av sirkulasjonsregler
       | All                    | Musikk-video                                | Unlimited | 14 | days | None defined | 0.00  | 21 | 0  |        | 0 |  | 3 | 14 |  | No | 20 |          | Edit |
       | All                    | Noter                                       | Unlimited | 28 | days | None defined | 0.00  | 21 | 0  |        | 0 |  | 3 | 28 |  | No | 20 |          | Edit |
       | All                    | Periodika                                   | Unlimited | 14 | days | None defined | 0.00  | 21 | 0  |        | 0 |  | 2 | 14 |  | No | 0  |          | Edit |
-      | All                    | All                                         | 10        | 10 | days | None defined | 0.00  | 0  | 0  |        | 0 |  | 0 | 0  |  | No | 10 | 0.000000 | Edit |
+      | All                    | All                                         | 20        | 28 | days | None defined | 0.00  | 14 | 7  |        | 0 |  | 2 | 14 |  | No | 20 |          | Edit |
