@@ -2,14 +2,14 @@
 # language: no
 
 @migration
-Egenskap: Test av materialtyper
+Egenskap: Sjekk av materialtyper
   Som adminbruker
-  Ønsker jeg å stille materialtyper på ting
+  Ønsker jeg å sjekke at relevante materialtyper er tilgjengelige
 
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
 
-    Scenario: Test at de ulike materialtypene er tilgjengelige
+    Scenario: Sjekk at de ulike materialtypene er tilgjengelige
       Gitt at jeg er på side for materialtypeadministrasjon i administrasjonsgrensesnittet
       Så ser jeg at følgende materialtyper er tilgjengelig
       | Image | Code     | Description                                           | Not for loan | Charge | Checkin message | Actions     |
@@ -122,119 +122,3 @@ Egenskap: Test av materialtyper
       |       | VO       | Vertikalordner                                        |              | 0.00   |                 | Edit Delete |
       |       | NL       | WMA                                                   |              | 0.00   |                 | Edit Delete |
       |       | NS       | WMV                                                   |              | 0.00   |                 | Edit Delete |
-
-    Abstrakt Scenario: Stille materialtype
-      Gitt at tingen finnes i biblioteket
-      Når jeg leter opp en ting i katalogiseringssøk
-      Så kan jeg velge å endre materialtypen til "<Type>"
-      Eksempler:
-      | Type                                                  |
-      | Artikler (i periodika eller bøker)                    |
-      | Atlas                                                 |
-      | Bok                                                   |
-      | Dataspill - Nintendo DS                               |
-      | Dataspill - Nintendo Wii                              |
-      | Dataspill - PC                                        |
-      | Dataspill - PC - CD-ROM                               |
-      | Dataspill - PC - DVD-ROM                              |
-      | Dataspill - Playstation 2                             |
-      | Dataspill - Playstation 3                             |
-      | Dataspill - Playstation 3 - Blu-ray-ROM               |
-      | Dataspill - Playstation portable                      |
-      | Dataspill - Playstation Portable - UMD                |
-      | Dataspill - Playstation2 - DVD-ROM                    |
-      | Dataspill - Wii-plate                                 |
-      | Dataspill - Xbox                                      |
-      | Dataspill - Xbox - DVD-ROM                            |
-      | Dataspill - Xbox 360                                  |
-      | Dataspill - Xbox 360 - DVD-ROM                        |
-      | DRM                                                   |
-      | E-bok                                                 |
-      | Elektroniske ressurser                                |
-      | Elektroniske ressurser - Blue-ray-ROM                 |
-      | Elektroniske ressurser - CD-ROM                       |
-      | Elektroniske ressurser - diskett                      |
-      | Elektroniske ressurser - DTBok                        |
-      | Elektroniske ressurser - DVD-ROM                      |
-      | Elektroniske ressurser - Lagringsbrikke               |
-      | Elektroniske ressurser - Lagringsbrikke - Nintendo DS |
-      | Elektroniske ressurser - Nettressurs                  |
-      | Elektroniske ressurser - UMD                          |
-      | EPUB                                                  |
-      | Film og video - 3D blu-ray                            |
-      | Film og video - blu-ray                               |
-      | Film og video - filmkassett                           |
-      | Film og video - filmsløyfe                            |
-      | Film og video - filmspole                             |
-      | Film og video - videokassett                          |
-      | Film og video - videokassett - for døve               |
-      | Film og video - videokassett - språkkurs              |
-      | Film og video - videoplate DVD                        |
-      | Film og video - videoplate DVD - for døve             |
-      | Film- og video - Videoplate DVD - lydbok              |
-      | Film- og video - Videoplate DVD - musikk              |
-      | Film- og video - Videoplate DVD - språkkurs           |
-      | Grafisk materiale - bilde                             |
-      | Grafisk materiale - bildebånd                         |
-      | Grafisk materiale - bildekort                         |
-      | Grafisk materiale - dias                              |
-      | Grafisk materiale - flippover-blokk                   |
-      | Grafisk materiale - fotografi                         |
-      | Grafisk materiale - grafisk blad                      |
-      | Grafisk materiale - hologram                          |
-      | Grafisk materiale - kunstreproduksjon                 |
-      | Grafisk materiale - ordkort                           |
-      | Grafisk materiale - originalt kunstverk               |
-      | Grafisk materiale - plakat                            |
-      | Grafisk materiale - plansje                           |
-      | Grafisk materiale - postkort                          |
-      | Grafisk materiale - røntgenbilde                      |
-      | Grafisk materiale - stereobilde                       |
-      | Grafisk materiale - studieplansje                     |
-      | Grafisk materiale - symbolkort                        |
-      | Grafisk materiale - teknisk tegning                   |
-      | Grafisk materiale - transparent                       |
-      | Kart                                                  |
-      | Kombidokument                                         |
-      | Lydopptak - annen tale, annet                         |
-      | Lydopptak - digibok                                   |
-      | Lydopptak - digibok - lydbok                          |
-      | Lydopptak - digikort - lydbok                         |
-      | Lydopptak - grammofonplate                            |
-      | Lydopptak - grammofonplate - annet                    |
-      | Lydopptak - grammofonplate - lydbok                   |
-      | Lydopptak - grammofonplate - musikk                   |
-      | Lydopptak - grammofonplate - språkkurs                |
-      | Lydopptak - kassett                                   |
-      | Lydopptak - kassett - annet                           |
-      | Lydopptak - kassett - lydbok                          |
-      | Lydopptak - kassett - musikk                          |
-      | Lydopptak - kassett - språkkurs                       |
-      | Lydopptak - kompaktplate                              |
-      | Lydopptak - kompaktplate - annet                      |
-      | Lydopptak - kompaktplate - lydbok                     |
-      | Lydopptak - kompaktplate - musikk                     |
-      | Lydopptak - kompaktplate - språkkurs                  |
-      | Lydopptak - kompaktplate MP3 - lydbok                 |
-      | Lydopptak - lydbok                                    |
-      | Lydopptak - mp3                                       |
-      | Lydopptak - musikk                                    |
-      | Lydopptak - språkkurs                                 |
-      | Manuskripter                                          |
-      | Mikroformer - mikro-opak                              |
-      | Mikroformer - mikrofilmkassett                        |
-      | Mikroformer - mikrofilmkort                           |
-      | Mikroformer - mikrofilmspole                          |
-      | Mikroformer - vinduskassettt                          |
-      | Musikk-video                                          |
-      | Nedlastbar e-bok, PDF                                 |
-      | Nedlastbar fil                                        |
-      | Nedlastbar musikk, MP3                                |
-      | Noter                                                 |
-      | PDF                                                   |
-      | Periodika                                             |
-      | Tredimensjonal gjenstander                            |
-      | Utkånstidskrift                                       |
-      | Vertikalordner                                        |
-      | WMA                                                   |
-      | WMV                                                   |
