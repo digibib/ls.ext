@@ -1,10 +1,10 @@
 # encoding: UTF-8
 # language: no
 
-@wip @migration
+@migration
 Egenskap: Test av statuser
   Som adminbruker
-  Ønsker jeg å stille status på en bok
+  Ønsker jeg å sjekke at relevante statuser er tilgjengelige
 
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
@@ -42,35 +42,3 @@ Egenskap: Test av statuser
 	      | Authorized value | Description       | Description (OPAC) | Icon | Branches limitations | Edit | Delete |
 	      | 1                | begrenset tilgang |                    |      | No limitation        | Edit | Delete |
 	      | 2                | referanseverk     |                    |      | No limitation        | Edit | Delete |
-
-    Abstrakt Scenario: Stille eksemplarstatus
-      Gitt at boka finnes i biblioteket
-      Når jeg leter opp boka i katalogiseringssøk
-      Og velger å redigere eksemplaret
-      Og jeg stiller status til "<Status>"
-      Så viser systemet at eksemplaret har status "<Status>"
- 
-      Eksempler:
-        | Status                          |
-        | trukket tilbake                 |
-        | borte i transport               |
-        | ikke på plass                   |
-        | påstått ikke lånt               |
-        | påstått levert                  |
-        | regnes som tapt                 |
-        | retur eieravdeling (ved import) |
-        | tapt                            |
-        | tapt og erstattet               |
-        | tapt, regning betalt            |
-        | til henteavdeling (ved import)  |
-        | vidvanke, registrert forsvunnet |
-        | skadet                          |
-        | begrenset tilgang               |
-        | referanseverk                   |
-        | i bestilling                    |
-        | ny                              |
-        | til innbinding                  |
-        | til internt bruk                |
-        | til katalogisering              |
-        | til retting                     |
-        | vurderes kassert                |
