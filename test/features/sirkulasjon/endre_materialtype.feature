@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Endring av materialtyper
   Som adminbruker
   Ønsker jeg å endre materialtyper på ting
