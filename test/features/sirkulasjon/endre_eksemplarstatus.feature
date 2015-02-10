@@ -2,9 +2,9 @@
 # language: no
 
 @wip
-Egenskap: Stille eksemplarstatus
+Egenskap: Endre eksemplarstatus
   Som adminbruker
-  Ønsker jeg å stille status til et eksemplar
+  Ønsker jeg å endre status til et eksemplar
 
   Merk: Denne testen bør splittes opp til å sjekke på de ulike status-typene:
   - "Withdrawn status"
@@ -17,7 +17,7 @@ Egenskap: Stille eksemplarstatus
     Gitt at jeg er logget inn som adminbruker
 
     @ignore
-    Abstrakt Scenario: Stille eksemplarstatus
+    Abstrakt Scenario: Endre eksemplarstatus
       Gitt at boka finnes i biblioteket
       Når jeg leter opp boka i katalogiseringssøk
       Og velger å redigere eksemplaret
