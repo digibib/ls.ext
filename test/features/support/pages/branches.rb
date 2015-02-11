@@ -66,7 +66,7 @@ class Branches < IntraPage
     a = (orig & csv == orig)
     b = (csv & orig == csv)
 
-    a.should_not == true
+    a.should == true
     b.should == true
     self
   end

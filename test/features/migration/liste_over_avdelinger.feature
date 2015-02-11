@@ -10,8 +10,7 @@ Egenskap: Liste over avdelinger
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
     Og at jeg har en liste over avdelinger
-  
-  @wip
+
   Scenario: Sjekke avdelinger
     Når jeg er på administrasjonssiden for avdelinger
     Og jeg velger å vise alle avdelinger
