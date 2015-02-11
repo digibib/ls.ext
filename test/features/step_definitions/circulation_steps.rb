@@ -368,7 +368,7 @@ When(/^velger å redigere eksemplaret$/) do
   @browser.link(:text => 'Edit').click
 end
 
-When(/^jeg stiller status til "(.*?)"$/) do |status|
+When(/^jeg endrer status til "(.*?)"$/) do |status|
   def selector (subfield,status)
     s = @browser.select_list(:id => /^tag_952_subfield_#{subfield}_[0-9]+$/)
     s.select "#{status}" 
