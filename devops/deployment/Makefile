@@ -49,14 +49,14 @@ dev_reset_db: ## Delete content from all relevant tables in koha
 
 dev_reset: dev_reset_db dev_reindex_koha
 
-dev_clean_data: ## Delete content from all relevant tables in koha
+dev_clean_data: ## Delete previously extracted files and temporary files from workdir
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.data_cleaned pillar="{migration-data-folder: /var/migration_workdir}"'
 
-dev_extract_example_data_full:  ## Downloads complete set of example data from wombat - args: WOMBATUSER
+dev_extract_example_data_full: dev_clean_data ## After cleaning previous files, downloads complete set of example data from wombat - args: WOMBATUSER
 	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir'
 	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir'
 
-dev_extract_example_data_minimum:  ## Downloads complete set of example data from migration image
+dev_extract_example_data_minimum: dev_clean_data ## After cleaning previous files, downloads complete set of example data from migration image
 	vagrant ssh vm-ship -c 'sudo mkdir -p /var/migration_workdir/'
 	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.copy_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
@@ -97,11 +97,14 @@ prod_reset_db: ## Delete content from all relevant tables in koha
 
 prod_reset: prod_reset_db prod_reindex_koha
 
-prod_extract_example_data: ## Downloads complete set of example data from wombat -args:  WOMBATUSER, SUDOUSER, MINION
+prod_clean_data: ## Delete previously extracted files and temporary files from workdir
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.data_cleaned pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
+
+prod_extract_example_data: prod_clean_data ## After cleaning previous files, downloads complete set of example data from wombat -args:  WOMBATUSER, SUDOUSER, MINION
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) "sudo sh -c 'scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir | tee -a deploy.log'"
 
-prod_extract_example_data_minimum:  ## Downloads minimum set of example data from wombat - args: WOMBATUSER, SUDOUSER, MINION
+prod_extract_example_data_minimum: prod_clean_data ## After cleaning previous files, downloads minimum set of example data from wombat - args: WOMBATUSER, SUDOUSER, MINION
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo mkdir -p /var/migration_workdir/'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_minimum/* /var/migration_workdir'
 
