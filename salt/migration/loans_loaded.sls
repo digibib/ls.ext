@@ -2,7 +2,6 @@
 prepare_loan_csv:
   cmd.run:
     - name: docker run
-              --rm
               -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
@@ -16,7 +15,6 @@ prepare_loan_csv:
 import_loans:
   cmd.run:
     - name: docker run
-              --rm
               -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
@@ -32,7 +30,6 @@ import_loans:
 update_loans:
   cmd.run:
     - name: docker run
-            --rm
             -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
             -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
             -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"

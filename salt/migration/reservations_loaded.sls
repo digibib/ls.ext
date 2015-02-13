@@ -2,7 +2,6 @@
 prepare_reservation_csv:
   cmd.run:
     - name: docker run
-              --rm
               -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
@@ -16,7 +15,6 @@ prepare_reservation_csv:
 import_reservations:
   cmd.run:
     - name: docker run
-              --rm
               -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"

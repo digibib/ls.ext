@@ -2,7 +2,6 @@
 reset:
   cmd.run:
     - name: docker run
-              --rm
               -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"

@@ -2,7 +2,6 @@
 prepare_catalogue:
   cmd.run:
     - name: docker run
-              --rm
               -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
@@ -16,7 +15,6 @@ prepare_catalogue:
 merge_catalogue_and_exemp:
   cmd.run:
     - name: docker run
-              --rm
               -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
@@ -39,7 +37,6 @@ catalogue_bulkmarcimport:
 update_biblioitemnumber:
   cmd.run:
     - name: docker run
-            --rm
             -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
             -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
             -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
@@ -55,7 +52,6 @@ update_biblioitemnumber:
 prepare_emarc:
   cmd.run:
     - name: docker run
-            --rm
             -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
             -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
             -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
@@ -71,7 +67,6 @@ prepare_emarc:
 load_emarc:
   cmd.run:
     - name: docker run
-            --rm
             -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
             -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}"
             -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"

@@ -2,8 +2,7 @@
 patrons_import:
   cmd.run:
     - name: docker run
-              --rm
-              -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}" 
+              -e "MYSQLPASS={{ pillar['koha']['adminpass'] }}"
               -e "MYSQLUSER={{ pillar['koha']['adminuser'] }}" 
               -e "KOHAINSTANCE={{ pillar['koha']['instance'] }}"
               -e "MYSQLHOST=db"
