@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip @issue-3
+@wip @issue-10
 Egenskap: Purring og innkreving automat
   Som en låner Knut
   For å bli underholdt
