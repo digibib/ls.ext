@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@issue-3
+@issue-2
 Egenskap: Autentisering på automat
   Som en låner Knut
   Fordi jeg liker å gjøre ting selv
