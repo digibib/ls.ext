@@ -16,7 +16,6 @@ Egenskap: Overføring til innleveringsboks ved selvbetjent innlevering
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling
 
-  @ignore
   Scenario: Innleveringsboks får feil materiale
     Gitt at noen har forsøkt å levere lånt materiale på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
@@ -24,7 +23,6 @@ Egenskap: Overføring til innleveringsboks ved selvbetjent innlevering
     Så det gis beskjed om at feil materiale er lagt i innleveringsboks
     Og systemet viser at det lånte materialet fortsatt er utlånt til låner
 
-  @ignore
   Scenario: Innleveringsboks får ukomplett materiale
     Gitt at noen har forsøkt å levere lånt materiale på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
@@ -33,7 +31,6 @@ Egenskap: Overføring til innleveringsboks ved selvbetjent innlevering
     Så det gis beskjed om at materialet ikke er komplett
     Og systemet viser at det lånte materialet fortsatt er utlånt til låner
 
-  @ignore
   Scenario: Innleveringsboks får materiale som tilhører annen avdeling
     Gitt at noen har forsøkt å levere lånt materiale som tilhører annen avdeling på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
@@ -44,7 +41,6 @@ Egenskap: Overføring til innleveringsboks ved selvbetjent innlevering
     Og systemet viser at materialet skal returneres til eieravdeling
     Og systemet viser at låneren ikke låner materialet
 
-  @ignore
   Scenario: Innleveringsboks får materiale som er reservert
     Gitt at noen har forsøkt å levere lånt materiale som er reservert på utlånsautomat
     Og at det er gitt beskjed om at materialet skal legges i innleveringsboks
@@ -55,7 +51,6 @@ Egenskap: Overføring til innleveringsboks ved selvbetjent innlevering
     Og systemet viser at materialet skal til henteavdeling
     Og systemet viser at låneren ikke låner materialet
 
-  @ignore
   Scenario: Noen forsøker å levere tilbake materiale med feil antall brikker på utlånsautomat
     Gitt at materialet ikke har riktig antall RFID-brikker
     Når innlevering blir valgt på automaten
