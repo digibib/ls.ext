@@ -31,12 +31,3 @@ Egenskap: Purring og innkreving automat
     Når låneren legger materialet på automaten
     Så får låneren beskjed om å ta kontakt med betjeningen
     Og systemet viser at materialet ikke er utlånt
-
-  @wip
-  Scenario: Låner forsøker å levere materiale som ikke er lånt ut
-    Gitt at låneren har valgt "levere" på utlånsautomaten
-    Og at låneren har materiale han ønsker å levere
-    Og at materialet ikke er holdt av til en annen låner
-    Og at materialet ikke er lånt ut til låner
-    Når låneren legger materialet på automaten
-    Så får låneren beskjed om at materialet ikke kan leveres
