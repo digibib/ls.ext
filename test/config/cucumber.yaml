@@ -1,21 +1,23 @@
 # https://github.com/cucumber/cucumber/wiki/cucumber.yml
 
+<% omit_ignore = "--tags ~@ignore" %>
+
 <% omit_wip = "--tags ~@wip" %>
 
 <% omit_migration = "--tags ~@migration" %>
 
-default: <%= omit_migration %> <%= omit_wip %> features
+default: <%= omit_ignore %> <%= omit_migration %> <%= omit_wip %> features
 
-html_report: <%= omit_migration %> <%= omit_wip %> --format html --out report/index.html
+html_report: <%= omit_ignore %> <%= omit_migration %> <%= omit_wip %> --format html --out report/index.html
 
-wip: <%= omit_migration %> --tags @wip
+wip: <%= omit_ignore %> <%= omit_migration %> --tags @wip
 
-html_report_wip: <%= omit_migration %> --tags @wip --format html --out report/index_wip.html
+html_report_wip: <%= omit_ignore %> <%= omit_migration %> --tags @wip --format html --out report/index_wip.html
 
-migration: <%= omit_wip %> --tags @migration
+migration: <%= omit_ignore %> <%= omit_wip %> --tags @migration
 
-html_report_migration: <%= omit_wip %> --tags @migration --format html --out report/index_migration.html
+html_report_migration: <%= omit_ignore %> <%= omit_wip %> --tags @migration --format html --out report/index_migration.html
 
-migration_wip: --tags @wip --tags @migration
+migration_wip: <%= omit_ignore %> --tags @wip --tags @migration
 
-html_report_migration_wip: --tags @wip --tags @migration --format html --out report/index_migration_wip.html
+html_report_migration_wip: <%= omit_ignore %> --tags @wip --tags @migration --format html --out report/index_migration_wip.html
