@@ -1,10 +1,11 @@
 # encoding: UTF-8
 # language: no
 
-@wip @ignore
+@wip @ignore @issue-3
 Egenskap: Overføring til innleveringsboks ved selvbetjent innlevering
-  Disse scenariene håndteres internt av automatenes software
-  Lar seg derfor ikke teste mot Koha og SIP2
+
+  Notat: Disse scenariene håndteres internt av automatenes software og
+  lar seg derfor ikke teste mot Koha og SIP2, men må testes manuelt.
 
   Bakgrunn:
     Gitt at det finnes en utlånsautomat

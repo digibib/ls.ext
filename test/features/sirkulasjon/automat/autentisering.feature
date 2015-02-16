@@ -1,10 +1,15 @@
 # encoding: UTF-8
 # language: no
 
+@issue-3
 Egenskap: Autentisering på automat
   Som en låner Knut
   Fordi jeg liker å gjøre ting selv
   Ønsker jeg å bruke en selvbetjent automat
+
+  Notat: Disse scenariene tester ikke egentlig automaten, men at dersom vi oppfører oss
+  som en automat så svarer Koha på en forutsigelig måte som passer for våre automater
+  etter at vi har lastet dem med riktig oppsett. Test med automat er manuell.
 
   Bakgrunn:
     Gitt at det finnes en utlånsautomat
