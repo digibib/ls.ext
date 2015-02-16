@@ -58,7 +58,8 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Og systemet viser at materialet er utlånt
     Og systemet viser at alarm er deaktivert
 
-  @wip @ignore
+  # Det neste scenariet er ikke mulig å teste automatisk, logikken er i automaten.
+  @ignore
   Scenario: Eksisterende låner forsøker å låne materiale med feil antall RFID-brikker
     Gitt at materialet ikke har riktig antall RFID-brikker
     Når låneren legger materialet på automaten
