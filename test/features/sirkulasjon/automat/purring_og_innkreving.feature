@@ -2,7 +2,7 @@
 # language: no
 
 @wip
-Egenskap: Avvikshåndtering automat
+Egenskap: Purring og innkreving automat
   Som en låner Knut
   For å bli underholdt
   Ønsker jeg å låne filmen Ringenes herre
