@@ -3,6 +3,23 @@
 
 @wip @issue-5
 Egenskap: Mine sider
+  Som en låner
+  For å kunne hente ut informasjon om mitt låneforhold (uten å bruke Internett ...)
+  Ønsker jeg "mine sider"-funksjonalitet tilgjengelig på utlånsautomat
+
+  Scenario: Til avhenting - se liste og skrive ut
+
+  Scenario: Reserveringer - se og slette
+
+  Scenario: Reserveringer - se og skrive ut liste
+
+  Scenario: Lån - se liste, forlenge lån og skrive ut liste
+
+  Scenario: Lån - se liste med ikke forlengbart lån og sende epost
+
+  Scenario: Skrive ut alt lånt materiale, til avhenting og reservert
+
+  Scenario: Sende epost med alt lånt materiale, til avhenting og reservert
 
 
 
