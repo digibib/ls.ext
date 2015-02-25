@@ -38,7 +38,7 @@ graphite_container_running:
             HostPort: "8088"
         "2003/tcp":
             HostIp: "0.0.0.0"
-            HostPort: "2003"
+            HostPort: "{{ pillar['resource-monitoring']['graphite-port'] }}"
         "2004/tcp":
             HostIp: "0.0.0.0"
             HostPort: "2004"
