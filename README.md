@@ -174,7 +174,7 @@ git commit -m "free text description of the change (less than 50 characters)"
 git push
 ```
 
-### Monitoring of logs with devops, a logserver
+### Monitoring of logs with devops, the logserver
 
 You can start the virtual machine devops (aka logserver) to monitor your logs. Devops has the following stack running:
 - logstash: to collect and process log events from logstash-forwarder installed on the servers, in our case vm-ext
