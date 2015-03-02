@@ -94,7 +94,7 @@ Vagrant.configure(2) do |config|
     SCRIPT
 
     config.vm.provision :salt do |salt|
-      salt.minion_config = "salt/minion"
+      salt.minion_config = "test/salt/minion"
       salt.run_highstate = true
       salt.verbose = true
       salt.install_type = "git"
