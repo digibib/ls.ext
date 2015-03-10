@@ -185,8 +185,11 @@ When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
 end
 
 Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
+  select_list =  @browser.select_list(:name => "table_categorie_length")
+  @browser.wait_until{ select_list.options.length > 0 }
+  select_list.select_value("-1")
+
   table = @browser.table(:id => "table_categorie")
-  @browser.select_list(:name => "table_categorie_length").select_value("-1")
   table.wait_until_present
   table.text.should include @active[:patroncategory].code
 end
