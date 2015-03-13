@@ -11,6 +11,7 @@ Vagrant.configure(2) do |config|
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
     end
+
+    config.vm.provision "shell", path: "upgrade_once.sh"
   end
-  config.vm.provision "shell", path: "upgrade_once.sh"
 end
