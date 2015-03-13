@@ -13,5 +13,6 @@ Vagrant.configure(2) do |config|
     end
 
     config.vm.provision "shell", path: "upgrade_once.sh"
+    config.vm.provision "shell", path: "install_docker.sh"
   end
 end
