@@ -1,0 +1,35 @@
+{
+  "name": "redef-patron-client",
+  "version": "0.0.1",
+  "description": "Patron cleint for the redef part of ls.ext.",
+  "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
+  "contributors": [{
+  "name": "akafred",
+  "email": "github@akafred.com"
+  }],
+  "scripts": {
+    "start" : "node hello.js"
+  },
+  "main": "hello.js",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/digibib/redef"
+  },
+  "bugs": {
+    "url": "https://github.com/digibib/redef/issues"
+  },
+    "keywords": [
+    "library",
+    "patron"
+  ],
+  "engines": {
+    "node": ">=0.12"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "private": true,
+  "analyze": true,
+  "license": "MIT"
+}

@@ -2,7 +2,7 @@ Redefining library systems.
 ===
 
 Modules
-==
+--
 
 Modules in this project:
 
@@ -11,7 +11,10 @@ Modules in this project:
 * [Service layer/backend](services/README.md)
 
 Development environment
-==
-We use Vagrant and Virtualbox
+--
 
-Start with 'vagrant up'.
+We use Vagrant and Virtualbox (prerequisites).
+
+To get started developing do `make run-dev`.
+
+See [Makefile](Makefile).
