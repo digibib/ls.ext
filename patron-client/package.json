@@ -1,7 +1,7 @@
 {
   "name": "redef-patron-client",
   "version": "0.0.1",
-  "description": "Patron cleint for the redef part of ls.ext.",
+  "description": "Patron client for the redef part of ls.ext.",
   "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
   "contributors": [{
   "name": "akafred",
