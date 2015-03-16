@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ command -v docker >/dev/null 2>&1 ]; then
+if [[ "command -v docker >/dev/null 2>&1" ]]; then
 	echo "Docker already installed.";
 else
   echo "Installing docker ..."
