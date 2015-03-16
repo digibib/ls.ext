@@ -16,5 +16,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", path: "upgrade_once.sh"
     config.vm.provision "shell", path: "install_docker.sh"
+    config.vm.provision "shell", path: "install_jdk.sh"
+    config.vm.provision "shell", path: "install_maven.sh"
   end
 end
