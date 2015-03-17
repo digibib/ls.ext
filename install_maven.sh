@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ command -v mvn >/dev/null 2>&1 ]; then
+if hash mvn 2>/dev/null; then
 	echo "Maven already installed.";
 else
   echo "Installing maven ..."

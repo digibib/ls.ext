@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ command -v javac >/dev/null 2>&1 ]; then
+if hash javac 2>/dev/null; then
 	echo "JDK already installed.";
 else
   echo "Installing jdk ..."
