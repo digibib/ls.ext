@@ -3,14 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package no.deichman.services;
+package no.deichman.services.resources;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import java.io.IOException;
 import javax.ws.rs.core.Response;
 import junit.framework.TestCase;
+import no.deichman.services.resources.Work;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -22,14 +28,20 @@ public class WorkTest extends TestCase {
         super(testName);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeClass
+    public static void setUpClass() throws Exception {
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
     }
 
     /**
@@ -41,6 +53,19 @@ public class WorkTest extends TestCase {
         Response expResult = null;
         Response result = instance.listWork();
         assertNotNull(result);
+        assertEquals(200, result.getStatus());
+        assertTrue(isValidJSON(result.getEntity().toString()));
+    }
+
+    /**
+     * Test of getWork method, of class Work.
+     */
+    @Test
+    public void testGetWork() {
+        System.out.println("getWork");
+        String workId = "1";
+        Work instance = new Work();
+        Response result = instance.getWork(workId);
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
@@ -61,4 +86,5 @@ public class WorkTest extends TestCase {
 
         return valid;
     }
+
 }

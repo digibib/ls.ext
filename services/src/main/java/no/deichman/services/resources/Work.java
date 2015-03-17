@@ -13,11 +13,24 @@ public class Work {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWork() {
-        return Response.ok(mockWorkObjectAsJSON()).build();
+        return Response.ok("{\"message\":\"Hello World!\"}")
+                .link("http://192.168.50.50:8080/work", "work")
+                .build();
     }
     
-    
+    @GET
+    @Path("/{workId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWork(String workId) {
+        return Response.ok(mockWorkObjectAsJSON())
+                .link(workId, workId)
+                .build();
+    }
+
+
+
     private String mockWorkObjectAsJSON() {
-        return "{\"message\":\"Hello,client!\"}";
+        final String WORK_MOCK = "{\"id\":\"work_00001\",\"properties\":[{\"Title\":\"Sult\"},{\"creator\":\"Knut Hamsun\"},{\"date\":\"1890\"},{\"editions\":[{\"id\":\"edition_00001\",\"properties\":[{\"isbn\":\"82-05-27748-6\"},{\"placement\":\"Voksenavdelingen, Hovedbiblioteket\"},{\"status\":\"På hylla\"}]}]}]}";
+        return WORK_MOCK;
     }
 }
