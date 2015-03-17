@@ -25,7 +25,7 @@ run: build rm
 	sudo docker run -d -p 8000:8000 --name redef-patron-client redef-patron-client
 
 lint: build
-	sudo docker run --rm redef-patron-client jslint **/*.js
+	sudo docker run --rm redef-patron-client jslint *.js **/*.js
 
 test: build
 	sudo docker run --rm redef-patron-client npm test
