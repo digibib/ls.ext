@@ -1,4 +1,4 @@
-package no.deichman.services;
+package no.deichman.services.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,7 +13,11 @@ public class Work {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWork() {
-        String jsonString = "{\"message\":\"Hello,client!\"}";
-        return Response.ok(jsonString).build();
+        return Response.ok(mockWorkObjectAsJSON()).build();
+    }
+    
+    
+    private String mockWorkObjectAsJSON() {
+        return "{\"message\":\"Hello,client!\"}";
     }
 }
