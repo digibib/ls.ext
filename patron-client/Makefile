@@ -34,7 +34,7 @@ module-test: build run-test-instance
 	sudo docker run --rm redef-patron-client npm run-script module-test
 
 run-dev: build rm
-	sudo docker run -it -v /vagrant/patron-client:/usr/src/myapp -w /usr/src/myapp -p 8000:8000 --name redef-patron-client redef-patron-client nodemon
+	sudo docker run -it -v /vagrant/patron-client:/usr/src/myapp -w /usr/src/myapp -p 8000:8000 --name redef-patron-client redef-patron-client npm run-script start-dev
 
 log-f:
 	sudo docker logs -f redef-patron-client

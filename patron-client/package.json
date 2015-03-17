@@ -10,7 +10,8 @@
   "scripts": {
     "start" : "node server.js",
     "test" : "mocha",
-    "module-test" : "mocha module-test"
+    "module-test" : "mocha module-test",
+    "start-dev" : "nodemon"
   },
   "main": "server.js",
   "repository": {
