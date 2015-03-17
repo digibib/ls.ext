@@ -36,6 +36,15 @@ module-test: build run-test-instance
 run-dev: build rm
 	sudo docker run -it -v /vagrant/patron-client:/usr/src/myapp -w /usr/src/myapp -p 8000:8000 --name redef-patron-client redef-patron-client npm run-script start-dev
 
+run-dev-debug: build rm
+	sudo docker run -it -v /vagrant/patron-client:/usr/src/myapp -w /usr/src/myapp -p 8000:8000 --name redef-patron-client redef-patron-client npm run-script start-dev-debug
+
+test-debug: build
+	sudo docker run -it --rm redef-patron-client npm run-script test-debug
+
+module-test-debug: build run-test-instance
+	sudo docker run -it --rm redef-patron-client npm run-script module-test-debug
+
 log-f:
 	sudo docker logs -f redef-patron-client
 

@@ -11,7 +11,10 @@
     "start" : "node server.js",
     "test" : "mocha",
     "module-test" : "mocha module-test",
-    "start-dev" : "nodemon"
+    "start-dev" : "nodemon",
+    "start-dev-debug" : "nodemon debug",
+    "test-debug" : "mocha debug",
+    "module-test-debug" : "mocha debug module-test"
   },
   "main": "server.js",
   "repository": {
