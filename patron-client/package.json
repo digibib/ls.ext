@@ -8,7 +8,9 @@
   "email": "github@akafred.com"
   }],
   "scripts": {
-    "start" : "node hello.js"
+    "start" : "node hello.js",
+    "test" : "mocha",
+    "module-test" : "mocha module-test"
   },
   "main": "hello.js",
   "repository": {
@@ -28,6 +30,8 @@
   "dependencies": {
   },
   "devDependencies": {
+    "chai" : "*",
+    "chai-http" : "*"
   },
   "private": true,
   "analyze": true,
