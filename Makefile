@@ -1,9 +1,9 @@
-all: run
+all: up test run
 
 up:
 	vagrant up
 
-run: up run-services run-patron-client
+run: run-services run-patron-client
 
 run-patron-client:
 	vagrant ssh -c 'cd /vagrant/patron-client && make run'
