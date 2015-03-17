@@ -15,6 +15,8 @@ public class Work {
     public Response listWork() {
         return Response.ok("{\"message\":\"Hello World!\"}")
                 .link("http://192.168.50.50:8080/work", "work")
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET")
                 .build();
     }
     
@@ -24,6 +26,8 @@ public class Work {
     public Response getWork(String workId) {
         return Response.ok(mockWorkObjectAsJSON())
                 .link(workId, workId)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET")
                 .build();
     }
 
