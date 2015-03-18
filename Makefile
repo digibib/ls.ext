@@ -1,7 +1,10 @@
-all: up test run
+all: up provision test run
 
 up:
 	vagrant up
+
+provision:
+	vagrant provision
 
 run: run-services run-patron-client
 
