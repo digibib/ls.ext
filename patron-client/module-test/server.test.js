@@ -25,7 +25,7 @@ describe('PatronClient', function () {
         });
     });
     describe('/', function () {
-        it('should find text "Sult av Knut Hamsun"', function (done) {
+        it('should find text "Sult av Knut Hamsun (1890)"', function (done) {
             http.get(parameters, function (res) {
                 var body = '',
                     $ = '';
@@ -34,7 +34,7 @@ describe('PatronClient', function () {
                 });
                 res.on('end', function () {
                     $ = cheerio.load(body);
-                    expect($('h1').text()).to.equal("Sult av Knut Hamsun");
+                    expect($('h1').text()).to.equal("Sult av Knut Hamsun (1890)");
                     done();
                 });
             }).on('error', function (e) {
