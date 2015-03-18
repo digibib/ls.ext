@@ -16,7 +16,6 @@ var render = function (data) {
     });
 };
 
-
 http.get(parameters, function (res) {
     var body = '';
     res.on('data', function (chunk) {
