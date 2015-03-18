@@ -2,16 +2,31 @@
 "use strict";
 
 var express = require('express'),
+    http = require('http'),
     hogan = require('fs-hogan').set({ templates: './templates' });
 var app = express();
 
-//http://192.168.50.50:8080/work/1
-var data = {"Title": "Sult", "creator": "Knut Hamsun", "date": "1890", "editions": [{"id": "edition_00001", "isbn": "82-05-27748-6", "placement": "Voksenavdelingen, Hovedbiblioteket", "shelf": "magasinet", "status": "På hylla"}, {"id": "edition_00001", "isbn": "82-05-27748-6", "placement": "Voksenavdelingen, Hovedbiblioteket", "status": "På hylla"}]};
+var parameters = {hostname: '192.168.50.50', port: '8080', path: '/work/1'};
 
-hogan.renderFile('index.hjs', data, function (err, text) {
-    app.get('/', function (req, res) {
-        res.send(text);
+var render = function (data) {
+    hogan.renderFile('index.hjs', data, function (err, text) {
+        app.get('/', function (req, res) {
+            res.send(text);
+        });
     });
+};
+
+
+http.get(parameters, function (res) {
+    var body = '';
+    res.on('data', function (chunk) {
+        body += chunk;
+    });
+    res.on('end', function () {
+        render(JSON.parse(body));
+    });
+}).on('error', function (e) {
+    console.log("Got error: ", e);
 });
 
 var server = app.listen(8000, function () {

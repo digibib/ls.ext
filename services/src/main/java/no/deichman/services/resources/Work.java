@@ -34,7 +34,7 @@ public class Work {
 
 
     private String mockWorkObjectAsJSON() {
-        final String WORK_MOCK = "{\"id\":\"work_00001\",\"properties\":[{\"Title\":\"Sult\"},{\"creator\":\"Knut Hamsun\"},{\"date\":\"1890\"},{\"editions\":[{\"id\":\"edition_00001\",\"properties\":[{\"isbn\":\"82-05-27748-6\"},{\"placement\":\"Voksenavdelingen, Hovedbiblioteket\"},{\"status\":\"På hylla\"}]}]}]}";
+        final String WORK_MOCK = "{\"id\": \"work_00001\", \"Title\": \"Sult\", \"creator\": \"Knut Hamsun\", \"date\": \"1890\", \"editions\": [{\"id\": \"edition_00001\", \"isbn\": \"82-05-27748-6\", \"placement\": \"Voksenavdelingen, Hovedbiblioteket\", \"shelf\": \"magasinet\", \"status\": \"På hylla\"}, {\"id\": \"edition_00001\", \"isbn\": \"82-05-27748-6\", \"placement\": \"Voksenavdelingen, Hovedbiblioteket\", \"status\": \"På hylla\"}]}";
         return WORK_MOCK;
     }
 }
