@@ -36,3 +36,10 @@ run-services:
 
 halt:
 	vagrant halt
+
+login: # needs EMAIL, PASSWORD, USER
+	@ vagrant ssh -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'
+
+TAG = "$(shell git rev-parse HEAD)"
+push:
+	vagrant ssh -c 'cd /vagrant/patron-client && make push TAG=$(TAG)'
