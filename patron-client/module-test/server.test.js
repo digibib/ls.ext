@@ -35,8 +35,8 @@ describe('PatronClient', function () {
                 res.on('end', function () {
                     $ = cheerio.load(body);
                     expect($('h1').text()).to.equal("Sult av Knut Hamsun");
+                    done();
                 });
-                done();
             }).on('error', function (e) {
                 console.log("Got error: ", e);
             });
