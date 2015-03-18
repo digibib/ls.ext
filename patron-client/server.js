@@ -14,8 +14,6 @@ hogan.renderFile('index.hjs', data, function (err, text) {
     });
 });
 
-
-
 var server = app.listen(8000, function () {
 
     var host = server.address().address,

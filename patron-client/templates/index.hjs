@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{Title}} av {{creator}} ({{date}})</title>
+  </head>
+  <body>
+    <h1>{{Title}} av {{creator}} ({{date}})</h1>
+    <h2>Vi har:</h2>
+    <ul>
+      {{#editions}}
+      <li><span>{{isbn}}</span> | <span>{{placement}}</span> | {{#shelf}}<span>{{shelf}}</span> |{{/shelf}} <span>{{status}}</span></li>
+      {{/editions}}
+    </ul>
+  </body>
+</html>
