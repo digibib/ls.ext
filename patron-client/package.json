@@ -36,7 +36,9 @@
   },
   "devDependencies": {
     "chai" : "*",
-    "chai-http" : "*"
+    "chai-http" : "*",
+    "http": "*",
+    "cheerio": "*"
   },
   "private": true,
   "analyze": true,
