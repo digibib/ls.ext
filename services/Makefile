@@ -13,6 +13,9 @@ rm: stop
 run: build rm
 	sudo docker run -d -p 8080:8080 --name redef-services redef-services
 
+test:
+	mvn test
+
 log-f:
 	sudo docker logs -f redef-services
 

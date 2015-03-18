@@ -13,8 +13,13 @@ run-dev: up run-services
 	echo "open http://192.168.50.50:8000/ for patron-client service in DEV mode"
 	vagrant ssh -c 'cd /vagrant/patron-client && make run-dev'
 
-test:
+test: test-patron-client test-services
+
+test-patron-client:
 	vagrant ssh -c 'cd /vagrant/patron-client && make lint test module-test'	
+
+test-services:
+	vagrant ssh -c 'cd /vagrant/services && make test'
 
 log-f:
 	vagrant ssh -c 'cd /vagrant/patron-client && make log-f'
