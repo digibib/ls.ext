@@ -32,7 +32,8 @@
     "node": ">=0.12"
   },
   "dependencies": {
-    "express":"*"
+    "express": "*",
+    "fs-hogan": "*"
   },
   "devDependencies": {
     "chai" : "*",
