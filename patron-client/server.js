@@ -18,6 +18,7 @@ app.get('/', function (request, response) {
         });
         res.on('end', function () {
             var data = JSON.parse(body);
+            console.log("Received from services for '" + parameters.path + "': " + body);
             response.render('index', data);
         });
     }).on('error', function (e) {

@@ -28,8 +28,8 @@ rm-test-instance: stop-test-instance
 run: build rm
 	sudo docker run -d -p 8000:8000 --name $(CONTAINER) $(IMAGE)
 
-run-test-instance: build rm-test-instance
-	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) $(IMAGE)
+run-test-instance: build_skeleton rm-test-instance
+	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE)
 
 lint: build_skeleton
 	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) jslint *.js **/*.js
@@ -38,7 +38,9 @@ test: build_skeleton
 	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) npm test
 
 module-test: build_skeleton run-test-instance
-	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run-script module-test
+	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app -p 8080:8080 $(SKELETON_IMAGE) npm run-script module-test
+	@echo "*** Log from module test container"
+	sudo docker logs $(MODULE_TEST_CONTAINER)
 
 run-dev: build_skeleton rm
 	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
