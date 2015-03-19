@@ -19,6 +19,7 @@ run-dev: up run-services
 test: test-patron-client test-services
 
 test-patron-client:
+	vagrant ssh -c 'cd /vagrant/services && make run'
 	vagrant ssh -c 'cd /vagrant/patron-client && make lint test module-test'	
 
 test-services:
