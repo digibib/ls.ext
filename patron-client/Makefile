@@ -1,10 +1,16 @@
 all: build run
 
+SKELETON_IMAGE=redef-patron-client-skeleton
 IMAGE=digibib/redef-patron-client
 CONTAINER=redef-patron-client
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
 
-build:
+build: build_skeleton build_app
+
+build_skeleton:
+	sudo docker build --tag $(SKELETON_IMAGE) --file="Dockerfile-skeleton" /vagrant/patron-client
+
+build_app:
 	sudo docker build --tag $(IMAGE) /vagrant/patron-client
 
 stop:
@@ -25,26 +31,26 @@ run: build rm
 run-test-instance: build rm-test-instance
 	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) $(IMAGE)
 
-lint: build
-	sudo docker run --rm $(IMAGE) jslint *.js **/*.js
+lint: build_skeleton
+	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) jslint *.js **/*.js
 
-test: build
-	sudo docker run --rm $(IMAGE) npm test
+test: build_skeleton
+	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) npm test
 
-module-test: build run-test-instance
-	sudo docker run --rm $(IMAGE) npm run-script module-test
+module-test: build_skeleton run-test-instance
+	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run-script module-test
 
-run-dev: build rm
-	sudo docker run -it -v /vagrant/patron-client:/usr/src/myapp -w /usr/src/myapp -p 8000:8000 --name $(CONTAINER) $(IMAGE) npm run-script start-dev
+run-dev: build_skeleton rm
+	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
 
-run-dev-debug: build rm
-	sudo docker run -it -v /vagrant/patron-client:/usr/src/myapp -w /usr/src/myapp -p 8000:8000 --name $(CONTAINER) $(IMAGE) npm run-script start-dev-debug
+run-dev-debug: build_skeleton rm
+	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
 
-test-debug: build
-	sudo docker run -it --rm $(IMAGE) npm run-script test-debug
+test-debug: build_skeleton
+	sudo docker run -it --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run-script test-debug
 
-module-test-debug: build run-test-instance
-	sudo docker run -it --rm $(IMAGE) npm run-script module-test-debug
+module-test-debug: build_skeleton run-test-instance
+	sudo docker run -it --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run-script module-test-debug
 
 log-f:
 	sudo docker logs -f $(CONTAINER)
