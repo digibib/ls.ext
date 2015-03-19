@@ -38,6 +38,11 @@ run-services:
 	vagrant ssh -c 'cd /vagrant/services && make'
 	echo "open http://192.168.50.50:8080/ for services service in PROD mode"
 
+
+stop-services:
+	vagrant ssh -c 'cd /vagrant/services && make stop'
+	echo "stopping http://192.168.50.50:8080/ services"
+
 halt:
 	vagrant halt
 
