@@ -7,13 +7,16 @@ package no.deichman.services.resources;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import java.io.IOException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import junit.framework.TestCase;
-import no.deichman.services.resources.Work;
+import no.deichman.services.resources.WorkResource;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,11 +25,8 @@ import org.junit.Test;
  *
  * @author sbd
  */
-public class WorkTest extends TestCase {
+public class WorkResourceTest{
 
-    public WorkTest(String testName) {
-        super(testName);
-    }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -45,11 +45,11 @@ public class WorkTest extends TestCase {
     }
 
     /**
-     * Test of listWork method, of class Work.
+     * Test of listWork method, of class WorkResource.
      */
     public void testListWork() {
         System.out.println("listWork");
-        Work instance = new Work();
+        WorkResource instance = new WorkResource();
         Response expResult = null;
         Response result = instance.listWork();
         assertNotNull(result);
@@ -58,16 +58,14 @@ public class WorkTest extends TestCase {
     }
 
     /**
-     * Test of getWork method, of class Work.
+     * Test of getWork method, of class WorkResource.
      */
-    @Test
+    @Test(expected = NotFoundException.class)
     public void testGetWork() {
         System.out.println("getWork");
         String workId = "1";
-        Work instance = new Work();
-        Response result = instance.getWork(workId);
-        assertEquals(200, result.getStatus());
-        assertTrue(isValidJSON(result.getEntity().toString()));
+        WorkResource instance = new WorkResource();
+        Response result = instance.getWorkJSON(workId);            
     }
 
     public boolean isValidJSON(final String json) {
