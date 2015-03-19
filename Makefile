@@ -52,3 +52,4 @@ login: # needs EMAIL, PASSWORD, USER
 TAG = "$(shell git rev-parse HEAD)"
 push:
 	vagrant ssh -c 'cd /vagrant/patron-client && make push TAG=$(TAG)'
+	vagrant ssh -c 'cd /vagrant/services && make push TAG=$(TAG)'
