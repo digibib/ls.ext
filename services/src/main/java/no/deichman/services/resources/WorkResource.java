@@ -20,7 +20,6 @@ public class WorkResource {
     private static final Service SERVICE = new ServiceDefault();
 
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWork() {
         StringWriter sw = new StringWriter();
