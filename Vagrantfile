@@ -7,12 +7,6 @@ Vagrant.configure(2) do |config|
     config.vm.box = "ubuntu/trusty64"
     config.vm.hostname = "redef-devbox"
 
-    # X forwarding for Firefox Browser
-    unless ENV['NO_PUBLIC_PORTS']
-      config.ssh.forward_x11 = true
-      config.ssh.forward_agent = true
-    end
-
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
