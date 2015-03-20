@@ -16,18 +16,26 @@ import org.apache.jena.riot.RDFDataMgr;
 
 @Path("/work")
 public class WorkResource {
-    
-     private static final Service SERVICE = new ServiceDefault();
+
+    private static final Service SERVICE = new ServiceDefault();
 
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWork() {
-        return Response.ok("{\"message\":\"Hello World!\"}")
-                .link("http://192.168.50.50:8080/work", "work")
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET")
-                .build();
+        StringWriter sw = new StringWriter();
+        Model model = SERVICE.listWork();
+        if (!model.isEmpty()) {
+            RDFDataMgr.write(sw, model, Lang.JSONLD);
+
+            String data = sw.toString();
+
+            return Response.ok()
+                    .entity(data)
+                    .build();
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @GET

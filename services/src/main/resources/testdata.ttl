@@ -40,3 +40,31 @@
 
 <http://deichman.no/status/available> a deichman:Status ;
   rdfs:label "På hylla"@no .
+
+<http://deichman.no/work/work_00002> a deichman:Work ;
+  dcterms:identifier "work_00002" ;
+  rdfs:label "Trist som faen" ;
+  dcterms:title "Trist som faen"@no ;
+  dcterms:creator <http://deichman.no/person/person_00002> ;
+  dcterms:date "1999"^^xsd:gYear ;
+  deichman:hasEditions <http://deichman.no/edition/edition_00003> .
+ 
+<http://deichman.no/edition/edition_00003> a deichman:Edition ;
+  bibo:isbn "82-05-26285-3" ;
+  deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
+  deichman:placement "magasinet" ;
+  deichman:status "På hylla" .
+
+<http://deichman.no/person/person_00002> a foaf:Person ;
+  rdfs:label "Ari Behn" ;
+  foaf:name "Ari Behn" ;
+  foaf:givenName "Ari" ;
+  foaf:familyName "Behn" ;
+  dbpedia-owl:birthDate "1972-09-30"^^xsd:gDate ;
+  owl:sameAs <http://dbpedia.org/page/Ari_Behn> .
+
+<http://deichman.no/department/d_00001> a deichman:Department ;
+  foaf:name "Voksenavdelingen, Hovedbiblioteket"@no .
+
+<http://deichman.no/status/available> a deichman:Status ;
+  rdfs:label "På hylla"@no .

@@ -16,4 +16,9 @@ public class ServiceDefault implements Service {
     public static void setRepository(Repository repository) {
         ServiceDefault.repository = repository;
     }
+
+    @Override
+    public Model listWork() {
+        return repository.listWork();
+    }
 }

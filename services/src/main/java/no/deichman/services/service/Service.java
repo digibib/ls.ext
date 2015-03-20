@@ -4,6 +4,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 public interface Service {
     
-     Model retriveWorkById(String id);
+    Model listWork();
+    Model retriveWorkById(String id);
     
 }

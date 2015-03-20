@@ -32,5 +32,19 @@ public class RepositoryInMemory implements Repository {
         qexec.close();
         return resultModel;
     }
+
+    @Override
+    public Model listWork() {
+        String queryString =  "PREFIX deichman: <http://deichman.no/ontology#>\n"
+                + "describe ?s where\n"
+                + " {\n"
+                + " ?s a deichman:Work"
+                + "}";
+        Query query = QueryFactory.create(queryString);
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
+        Model resultModel = qexec.execDescribe();
+        qexec.close();
+        return resultModel;
+    }
     
 }
