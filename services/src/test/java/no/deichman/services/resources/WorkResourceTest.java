@@ -37,6 +37,7 @@ public class WorkResourceTest{
     /**
      * Test of listWork method, of class WorkResource.
      */
+    @Test
     public void testListWork() {
         WorkResource instance = new WorkResource();
         Response expResult = null;
