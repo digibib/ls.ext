@@ -19,7 +19,7 @@ var parameters = {hostname: '192.168.50.50', port: '7000', path: '/'};
 describe('PatronClient', function () {
     describe('/', function () {
         // FIXME tests should not use same data, and shouldn't get more data than they require
-        servicesStub.getJson('/work/1',
+        servicesStub.getJson('/work/work_00001',
             {"id": "work_00001", "Title": "Sult", "creator": "Knut Hamsun", "date": "1890",
                 "editions": [
                     {"id": "edition_00001", "isbn": "82-05-27748-6", "placement": "Voksenavdelingen, Hovedbiblioteket", "shelf": "magasinet", "status": "På hylla"},

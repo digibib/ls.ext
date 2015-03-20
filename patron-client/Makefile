@@ -4,6 +4,7 @@ SKELETON_IMAGE=redef-patron-client-skeleton
 IMAGE=digibib/redef-patron-client
 CONTAINER=redef-patron-client
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
+SERVICES_PORT="tcp://192.168.50.50:8080"
 
 build: build_skeleton build_app
 
@@ -26,10 +27,10 @@ rm-test-instance: stop-test-instance
 	sudo docker rm $(MODULE_TEST_CONTAINER) || true
 
 run: build rm
-	sudo docker run -d -p 8000:8000 --name $(CONTAINER) $(IMAGE)
+	sudo docker run -d -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(IMAGE)
 
 run-test-instance: build_skeleton rm-test-instance
-	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE)
+	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE)
 
 lint: build_skeleton
 	sudo docker run --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) jslint *.js **/*.js
@@ -43,10 +44,10 @@ module-test: build_skeleton run-test-instance
 	sudo docker logs $(MODULE_TEST_CONTAINER)
 
 run-dev: build_skeleton rm
-	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
+	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
 
 run-dev-debug: build_skeleton rm
-	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
+	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
 
 test-debug: build_skeleton
 	sudo docker run -it --rm -v /vagrant/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run-script test-debug
