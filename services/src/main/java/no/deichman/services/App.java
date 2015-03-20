@@ -1,6 +1,5 @@
 package no.deichman.services;
 
-import java.util.Properties;
 import no.deichman.services.resources.WorkResource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -9,8 +8,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class App {
 
     public static void main(String[] args) throws Exception {
-        Properties props = System.getProperties();
-        props.setProperty("DEBUG", "true");
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
 
