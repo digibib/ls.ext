@@ -16,18 +16,30 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
  *
  * @author sbd
  */
-public class RepositoryDefault implements Repository {
+public class RepositoryInMemory implements Repository {
 
+    private Model model;
+    
+    public RepositoryInMemory() {
+    model = ModelFactory.createDefaultModel();
+    model.read("testdata.ttl", "TURTLE");
+    }
+    
     @Override
     public Model retrieveWorkById(String id) {
-        String uri = "http://192.168.50.50:3030/ds/sparql";
-        String queryString = "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
-                + "describe * where {$a dcterms:identifier 'work_00001'}";
+        String queryString = "PREFIX deichman: <http://deichman.no/ontology#>\n"
+                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+                + "DESCRIBE ?s\n"
+                + "WHERE\n"
+                + "{\n"
+                + " ?s a deichman:Work ;"
+                + " dcterms:identifier \"" + id + "\" ;"
+                + "}";
         Query query = QueryFactory.create(queryString);
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(uri, query);
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
         Model resultModel = qexec.execDescribe();
         qexec.close();
-
         return resultModel;
     }
+    
 }

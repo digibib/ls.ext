@@ -1,0 +1,42 @@
+@prefix deichman: <http://deichman.no/ontology#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbpedia-owl: <http://dbpedia.org/ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://deichman.no/work/work_00001> a deichman:Work ;
+  dcterms:identifier "work_00001" ;
+  rdfs:label "Sult" ;
+  dcterms:title "Sult"@no ;
+  dcterms:creator <http://deichman.no/person/person_00001> ;
+  dcterms:date "1890"^^xsd:gYear ;
+  deichman:hasEditions <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
+ 
+<http://deichman.no/edition/edition_00001> a deichman:Edition ;
+  bibo:isbn "82-05-27748-6" ;
+  deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
+  deichman:placement "magasinet" ;
+  deichman:status "På hylla" .
+
+<http://deichman.no/edition/edition_00002> a deichman:Edition ;
+  bibo:isbn "82-05-27748-6" ;
+  deichman:location <http://deichman.no/department/d_00001> ;
+  deichman:status <http://deichman.no/status/available> .
+
+<http://deichman.no/person/person_00001> a foaf:Person ;
+  rdfs:label "Knut Hamsun" ;
+  foaf:name "Knut Hamsun" ;
+  foaf:givenName "Knut" ;
+  foaf:familyName "Hamsun" ;
+  dbpedia-owl:birthDate "1859-08-04"^^xsd:gDate ;
+  dbpedia-owl:deathDate "1952-02-19"^^xsd:gDate ;
+  owl:sameAs <http://dbpedia.org/page/Knut_Hamsun> .
+
+<http://deichman.no/department/d_00001> a deichman:Department ;
+  foaf:name "Voksenavdelingen, Hovedbiblioteket"@no .
+
+<http://deichman.no/status/available> a deichman:Status ;
+  rdfs:label "På hylla"@no .

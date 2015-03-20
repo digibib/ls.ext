@@ -48,7 +48,6 @@ public class WorkResourceTest{
      * Test of listWork method, of class WorkResource.
      */
     public void testListWork() {
-        System.out.println("listWork");
         WorkResource instance = new WorkResource();
         Response expResult = null;
         Response result = instance.listWork();
@@ -60,12 +59,15 @@ public class WorkResourceTest{
     /**
      * Test of getWork method, of class WorkResource.
      */
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testGetWork() {
-        System.out.println("getWork");
-        String workId = "1";
+        String workId = "work_00001";
         WorkResource instance = new WorkResource();
         Response result = instance.getWorkJSON(workId);            
+        assertNotNull(result);
+        assertEquals(200, result.getStatus());
+        assertTrue(isValidJSON(result.getEntity().toString()));
+
     }
 
     public boolean isValidJSON(final String json) {

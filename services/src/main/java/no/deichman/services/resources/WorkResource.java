@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,7 +33,7 @@ public class WorkResource {
     @GET
     @Path("/{workId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getWorkJSON(String workId) {
+    public Response getWorkJSON(@PathParam("workId") String workId) {
 
         StringWriter sw = new StringWriter();
         Model model = SERVICE.retriveWorkById(workId);
