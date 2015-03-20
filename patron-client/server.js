@@ -2,15 +2,19 @@
 "use strict";
 
 var express = require('express'),
+    hogan = require('fs-hogan'),
     http = require('http'),
-    hogan = require('fs-hogan');
+    config = require('./lib/config');
 var app = express();
 
 app.set('view engine', 'hjs');
 app.engine('hjs', hogan.renderFile);
 
 app.get('/', function (request, response) {
-    var parameters = {hostname: '192.168.50.50', port: '8080', path: '/work/1'};
+
+    var parameters = config.get();
+    parameters.path = "/work/work_00001";
+
     http.get(parameters, function (res) {
         var body = '';
         res.on('data', function (chunk) {
@@ -26,8 +30,8 @@ app.get('/', function (request, response) {
     });
 });
 
-var server = app.listen(8000, function () {
-    var host = server.address().address,
-        port = server.address().port;
+var Server = app.listen(8000, function () {
+    var host = Server.address().address,
+        port = Server.address().port;
     console.log('Server listening at http://%s:%s', host, port);
 });
