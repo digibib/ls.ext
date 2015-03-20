@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import java.io.IOException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.resources.WorkResource;
+import no.deichman.services.service.ServiceDefault;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
@@ -21,6 +23,7 @@ public class WorkResourceTest{
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        ServiceDefault.setRepository(new RepositoryInMemory());
     }
 
     @AfterClass
