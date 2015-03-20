@@ -1,10 +1,13 @@
-all: up provision test run
+all: up provision build test run
 
 up:
 	vagrant up
 
 provision:
 	vagrant provision
+
+build:
+	vagrant ssh -c 'cd /vagrant/services && make build'
 
 run: run-services run-patron-client
 
