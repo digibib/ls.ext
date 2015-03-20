@@ -7,6 +7,8 @@ DB_CONTAINER=fuseki
 
 build:
 	mvn clean install
+
+build-docker:
 	sudo docker build --tag $(IMAGE) /vagrant/services
 
 stop: stop-db
@@ -15,7 +17,7 @@ stop: stop-db
 rm: stop rm-db run-db
 	sudo docker rm $(CONTAINER) || true
 
-run: build rm rm-db run-db
+run: build-docker rm rm-db run-db
 	sudo docker run -d -p 8080:8080 --name $(CONTAINER) $(IMAGE)
 
 stop-db:

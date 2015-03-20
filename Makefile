@@ -35,7 +35,7 @@ inspect-services:
 	vagrant ssh -c 'cd /vagrant/services && make inspect'
 
 run-services:
-	vagrant ssh -c 'cd /vagrant/services && make'
+	vagrant ssh -c 'cd /vagrant/services && make run'
 	echo "open http://192.168.50.50:8080/ for services service in PROD mode"
 
 run-db:
