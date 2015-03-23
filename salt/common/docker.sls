@@ -8,6 +8,7 @@ dockerpy-prereqs:
 dockerpy:
   pip.installed:
     - name: docker-py
+    - repo: git+https://github.com/dotcloud/docker-py.git@1.1.0-release
     - require:
       - pkg: dockerpy-prereqs
 
