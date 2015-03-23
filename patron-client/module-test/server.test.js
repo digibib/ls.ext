@@ -14,13 +14,13 @@ chai.use(chaiHttp);
 
 servicesStub.start(8080);
 
-var parameters = {hostname: '192.168.50.50', port: '7000', path: '/'};
+var parameters = {hostname: '192.168.50.50', port: '7000', path: '/work/work_00001'};
 
 describe('PatronClient', function () {
     describe('/', function () {
         // FIXME tests should not use same data, and shouldn't get more data than they require
         servicesStub.getJson('/work/work_00001',
-            {"id": "work_00001", "Title": "Sult", "creator": "Knut Hamsun", "date": "1890",
+            {"id": "work_00001", "title": "Sult", "creator": "Knut Hamsun", "date": "1890",
                 "editions": [
                     {"id": "edition_00001", "isbn": "82-05-27748-6", "placement": "Voksenavdelingen, Hovedbiblioteket", "shelf": "magasinet", "status": "På hylla"},
                     {"id": "edition_00001", "isbn": "82-05-27748-6", "placement": "Voksenavdelingen, Hovedbiblioteket", "status": "På hylla"}
