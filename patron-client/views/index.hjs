@@ -2,15 +2,28 @@
 <html lang="no">
   <head>
     <meta charset="UTF-8" />
-    <title>{{Title}} av {{creator}} ({{date}})</title>
+    <title>{{title}} av {{creator}} ({{date}})</title>
   </head>
   <body>
-    <h1>{{Title}} av {{creator}} ({{date}})</h1>
+    <h1>{{title}} av {{creator}} ({{date}})</h1>
+    {{#hasEditions.length}}
     <h2>Vi har:</h2>
     <ul>
-      {{#editions}}
-      <li><span>{{isbn}}</span> | <span>{{placement}}</span> | {{#shelf}}<span>{{shelf}}</span> |{{/shelf}} <span>{{status}}</span></li>
-      {{/editions}}
+      {{#hasEditions}}
+        <li><a href="{{.}}">{{.}}</a></li>
+      {{/hasEditions}}
     </ul>
+    {{/hasEditions.length}}
+    {{^hasEditions.length}}
+    {{#hasEditions}}
+    <h2>Vi har</h2>
+    <ul>
+        <li><a href="{{hasEditions}}">{{hasEditions}}</a></li>
+    </ul>
+    {{/hasEditions}}
+    {{^hasEditions}}
+    <h2>Vi har ingen eksemplarer</h2>
+    {{/hasEditions}}
+    {{/hasEditions.length}}
   </body>
 </html>

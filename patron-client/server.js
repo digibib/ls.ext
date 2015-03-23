@@ -10,10 +10,10 @@ var app = express();
 app.set('view engine', 'hjs');
 app.engine('hjs', hogan.renderFile);
 
-app.get('/', function (request, response) {
+app.get('/work/:id', function (request, response) {
 
     var parameters = config.get();
-    parameters.path = "/work/work_00001";
+    parameters.path = "/work/" + request.params.id;
 
     http.get(parameters, function (res) {
         var body = '';
