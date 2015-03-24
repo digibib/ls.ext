@@ -38,7 +38,7 @@ public class WorkResource {
     }
 
     @GET
-    @Path("/{workId}")
+    @Path("/{workId: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWorkJSON(@PathParam("workId") String workId) {
 
