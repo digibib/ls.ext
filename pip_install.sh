@@ -7,7 +7,7 @@ fi
 
 pip -v >/dev/null 2>&1
 if [ $? -eq 0 ] ; then
-    echo "pip installed."
+    echo "pip already installed and presumably working."
 else
 	echo "Installing pip using easy install ...";
 	sudo apt-get install --assume-yes --quiet python-setuptools
