@@ -3,7 +3,6 @@ dockerpy-prereqs:
     - pkgs:
       - python-apt
       - git
-      - python-pip
 
 dockerpy:
   pip.installed:

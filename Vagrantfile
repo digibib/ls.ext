@@ -47,6 +47,8 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "salt", "/srv/salt"
     config.vm.synced_folder "pillar", "/srv/pillar"
 
+    config.vm.provision "shell", path: "pip_install.sh"
+
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
