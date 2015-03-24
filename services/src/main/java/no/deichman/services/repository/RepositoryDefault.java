@@ -9,7 +9,7 @@ public class RepositoryDefault implements Repository {
     @Override
     public Model retrieveWorkById(String id) {
         String uri = "http://192.168.50.50:3030/ds/sparql";
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(uri, QueryBuilder.createQuery(id));
+        QueryExecution qexec = QueryExecutionFactory.sparqlService(uri, QueryBuilder.getGetWorkByIdQuery(id));
         Model resultModel = qexec.execConstruct();
         qexec.close();
 

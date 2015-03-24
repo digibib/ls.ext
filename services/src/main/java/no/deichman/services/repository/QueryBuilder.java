@@ -5,8 +5,9 @@ import com.hp.hpl.jena.query.QueryFactory;
 
 public class QueryBuilder {
 
-    public static Query createQuery(String id) {
-        String queryString = "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+    public static Query getGetWorkByIdQuery(String id) {
+        String queryString =
+                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "CONSTRUCT {\n"
@@ -31,7 +32,8 @@ public class QueryBuilder {
     }
 
     public static Query getListWorkQuery() {
-        String queryString = "PREFIX deichman: <http://deichman.no/ontology#>\n"
+        String queryString =
+                "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "describe ?s where\n"
                 + " {\n"
                 + " ?s a deichman:Work"

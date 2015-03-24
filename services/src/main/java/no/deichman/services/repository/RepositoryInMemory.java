@@ -16,7 +16,7 @@ public class RepositoryInMemory implements Repository {
     
     @Override
     public Model retrieveWorkById(String id) {
-        QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.createQuery(id), model);
+        QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.getGetWorkByIdQuery(id), model);
         Model resultModel = qexec.execConstruct();
         qexec.close();
         return resultModel;
