@@ -1,4 +1,5 @@
 .Trash-1000
 .vagrant
 deploy.log
-
+ssh/id_rsa
+ssh/id_rsa.pub

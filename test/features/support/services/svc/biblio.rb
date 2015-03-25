@@ -38,11 +38,11 @@ module SVC
       book.biblionumber = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
 
       # force rebuild and restart zebra bibliographic index
-      `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -f #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
+      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -f #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
         # stop zebra
-      `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-stop-zebra #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
+      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-stop-zebra #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
         # start zebra
-      `ssh -i ~/.ssh/insecure_private_key vagrant@192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-start-zebra #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
+      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-start-zebra #{SETTINGS['koha']['instance']}' > /dev/null 2>&1`
 
       return book
     end

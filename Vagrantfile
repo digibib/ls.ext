@@ -24,6 +24,8 @@ if !File.file?(migration_pillar_file)
   raise "ERROR: You need to create a valid #{migration_pillar_file} based on #{migration_pillar_example_file}"
 end
 
+`ssh/generate_keys.sh`
+
 Vagrant.configure(2) do |config|
 
   # **** vm-ship - Docker container ship ****
@@ -48,6 +50,8 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "pillar", "/srv/pillar"
 
     config.vm.provision "shell", path: "pip_install.sh"
+
+    config.vm.provision "shell", path: "ssh/accept_keys.sh"
 
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
@@ -88,12 +92,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.network "private_network", ip: "192.168.50.11"
 
-    # get vagrant insecure private key to vm-test to allow ssh from vm-test to vm-ext
-    config.vm.provision "shell", inline: <<-SCRIPT
-      wget --no-check-certificate https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant -O /home/vagrant/.ssh/insecure_private_key
-      chmod 600 /home/vagrant/.ssh/insecure_private_key
-      chown vagrant:vagrant /home/vagrant/.ssh/insecure_private_key
-    SCRIPT
+    config.vm.provision "shell", path: "ssh/add_keys.sh"
 
     config.vm.provision :salt do |salt|
       salt.minion_config = "test/salt/minion"
