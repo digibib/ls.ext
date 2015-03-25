@@ -26,6 +26,7 @@ app.get('/work/:id', function (request, response) {
     parameters.path = "/work/" + request.params.id;
 
     http.get(parameters, function (res) {
+        console.log(res);
         var body = '';
         res.on('data', function (chunk) {
             body += chunk;
@@ -36,8 +37,8 @@ app.get('/work/:id', function (request, response) {
                 console.log("Received from services for '" + parameters.path + "': " + body);
                 response.render('index', data.data);
             } else {
-                response.status("404");
-                response.render('error', data);
+                response.status(res.statusCode);
+                response.render('error', {data: res.statusMessage});
             }
         });
     }).on('error', function (e) {
