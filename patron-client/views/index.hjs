@@ -6,24 +6,24 @@
   </head>
   <body>
     <h1>{{title}} av {{creator}} ({{date}})</h1>
-    {{#hasEditions.length}}
+    {{#hasEdition.length}}
     <h2>Vi har:</h2>
     <ul>
-      {{#hasEditions}}
+      {{#hasEdition}}
         <li><a href="{{.}}">{{.}}</a></li>
-      {{/hasEditions}}
+      {{/hasEdition}}
     </ul>
-    {{/hasEditions.length}}
-    {{^hasEditions.length}}
-    {{#hasEditions}}
+    {{/hasEdition.length}}
+    {{^hasEdition.length}}
+    {{#hasEdition}}
     <h2>Vi har</h2>
     <ul>
-        <li><a href="{{hasEditions}}">{{hasEditions}}</a></li>
+        <li><a href="{{hasEdition}}">{{hasEdition}}</a></li>
     </ul>
-    {{/hasEditions}}
-    {{^hasEditions}}
+    {{/hasEdition}}
+    {{^hasEdition}}
     <h2>Vi har ingen eksemplarer</h2>
-    {{/hasEditions}}
-    {{/hasEditions.length}}
+    {{/hasEdition}}
+    {{/hasEdition.length}}
   </body>
 </html>
