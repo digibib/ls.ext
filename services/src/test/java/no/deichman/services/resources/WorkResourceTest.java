@@ -84,7 +84,7 @@ public class WorkResourceTest{
      */
     @Test
     public void should_return_201_when_work_created() {
-        String workId = "work_DOES_NOT_EXIST";
+        String workId = "work_IS_TO_BE_CREATED";
         WorkResource instance = new WorkResource();
         Response result = instance.createWork(workId);     
         assertNull(result.getEntity());
@@ -96,7 +96,7 @@ public class WorkResourceTest{
      */
     @Test
     public void should_return_the_new_work(){
-        String workId = "work_DOES_NOT_EXIST";
+        String workId = "work_IS_TO_BE_CREATED";
         WorkResource instance = new WorkResource();
         instance.createWork(workId);     
         Response result = instance.getWorkJSON(workId);            
