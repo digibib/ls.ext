@@ -2,8 +2,10 @@ package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import java.io.StringWriter;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,6 +20,14 @@ import org.apache.jena.riot.RDFDataMgr;
 public class WorkResource {
 
     private static final Service SERVICE = new ServiceDefault();
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createWork(String work) {
+        SERVICE.createWork(work);
+        return Response.created(null)
+                .build();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

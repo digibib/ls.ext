@@ -20,11 +20,11 @@ public class QueryBuilder {
                 + "} WHERE {\n"
                 + "?url a deichman:Work ;\n"
                 + "     dcterms:identifier \"" + id + "\" .\n"
-                + "OPTIONAL {?url dcterms:creator ?c}\n"
+                + "OPTIONAL {?url dcterms:creator ?c .\n"
+                + "?c foaf:name ?creator .}\n"
                 + "OPTIONAL {?url dcterms:title ?t}\n"
                 + "OPTIONAL {?url dcterms:date ?d}\n"
                 + "OPTIONAL {?url deichman:hasEditions ?edition}\n"
-                + "?c foaf:name ?creator .\n"
                 + "BIND (str(?d) as ?date)\n"
                 + "BIND (str(?t) as ?title)\n"
                 + "}";
@@ -39,6 +39,19 @@ public class QueryBuilder {
                 + " ?s a deichman:Work"
                 + "}";
         return QueryFactory.create(queryString);
+
+    }
+
+    public static String getCreateWorkQueryString(String work) {
+        String queryString =
+                "PREFIX deichman: <http://deichman.no/ontology#>\n"
+                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+                + "INSERT DATA {\n"
+                + " <http://deichman.no/work/"+ work + "> a deichman:Work ;\n"
+                + " dcterms:identifier \""+ work + "\";\n"
+                + "}";
+        System.out.println("queryString: " +  queryString);
+        return queryString;
 
     }
 }

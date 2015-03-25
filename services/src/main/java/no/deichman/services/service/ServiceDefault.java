@@ -21,4 +21,9 @@ public class ServiceDefault implements Service {
     public Model listWork() {
         return repository.listWork();
     }
+
+    @Override
+    public void createWork(String work) {
+        repository.createWork(work);
+    }
 }
