@@ -12,9 +12,9 @@ import org.junit.Test;
  *
  * @author sbd
  */
-public class KohaAdapterDefaultTest {
+public class KohaAdapterTest {
     
-    public KohaAdapterDefaultTest() {
+    public KohaAdapterTest() {
     }
     
     @BeforeClass
@@ -33,15 +33,6 @@ public class KohaAdapterDefaultTest {
     public void tearDown() {
     }
 
-     /**
-     * Test of getBiblio method, of class KohaAdapterDefault.
-     */
-    @Test
-    public void should_be_logged_in() {
-        System.out.println("getBiblio");
-        KohaAdapterDefault instance = new KohaAdapterDefault();
-        assertNotNull(instance.getCookies());
-    }
 
     /**
      * Test of getBiblio method, of class KohaAdapterDefault.
@@ -50,7 +41,7 @@ public class KohaAdapterDefaultTest {
     public void should_return_biblio() {
         System.out.println("getBiblio");
         String manifestationId = "1";
-        KohaAdapterDefault instance = new KohaAdapterDefault();
+        KohaAdapterMock instance = new KohaAdapterMock();
         Model expResult = null;
         Model result = instance.getBiblio(manifestationId);
         assertNotNull(result);
