@@ -50,7 +50,6 @@ public class QueryBuilder {
                 + " <http://deichman.no/work/"+ work + "> a deichman:Work ;\n"
                 + " dcterms:identifier \""+ work + "\";\n"
                 + "}";
-        System.out.println("queryString: " +  queryString);
         return queryString;
 
     }
