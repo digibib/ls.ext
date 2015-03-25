@@ -16,7 +16,7 @@ public class QueryBuilder {
                 + "     dcterms:creator ?creator ;\n"
                 + "     dcterms:date ?date ;\n"
                 + "     dcterms:title ?title ;\n"
-                + "     deichman:hasEditions ?edition .\n"
+                + "     deichman:hasEdition ?edition .\n"
                 + "} WHERE {\n"
                 + "?url a deichman:Work ;\n"
                 + "     dcterms:identifier \"" + id + "\" .\n"
@@ -24,7 +24,7 @@ public class QueryBuilder {
                 + "?c foaf:name ?creator .}\n"
                 + "OPTIONAL {?url dcterms:title ?t}\n"
                 + "OPTIONAL {?url dcterms:date ?d}\n"
-                + "OPTIONAL {?url deichman:hasEditions ?edition}\n"
+                + "OPTIONAL {?url deichman:hasEdition ?edition}\n"
                 + "BIND (str(?d) as ?date)\n"
                 + "BIND (str(?t) as ?title)\n"
                 + "}";

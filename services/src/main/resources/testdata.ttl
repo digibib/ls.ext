@@ -13,7 +13,7 @@
   dcterms:title "Sult"@no ;
   dcterms:creator <http://deichman.no/person/person_00001> ;
   dcterms:date "1890"^^xsd:gYear ;
-  deichman:hasEditions <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
+  deichman:hasEdition <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
  
 <http://deichman.no/edition/edition_00001> a deichman:Edition ;
   bibo:isbn "82-05-27748-6" ;
@@ -47,7 +47,7 @@
   dcterms:title "Trist som faen"@no ;
   dcterms:creator <http://deichman.no/person/person_00002> ;
   dcterms:date "1999"^^xsd:gYear ;
-  deichman:hasEditions <http://deichman.no/edition/edition_00003> .
+  deichman:hasEdition <http://deichman.no/edition/edition_00003> .
  
 <http://deichman.no/edition/edition_00003> a deichman:Edition ;
   bibo:isbn "82-05-26285-3" ;
