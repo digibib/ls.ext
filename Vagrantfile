@@ -24,7 +24,7 @@ if !File.file?(migration_pillar_file)
   raise "ERROR: You need to create a valid #{migration_pillar_file} based on #{migration_pillar_example_file}"
 end
 
-`ssh/generate_keys.sh`
+`VAGRANT_ROOT=#{vagrant_root} #{vagrant_root}/ssh/generate_keys.sh`
 
 Vagrant.configure(2) do |config|
 
