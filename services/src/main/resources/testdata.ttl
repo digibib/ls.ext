@@ -82,3 +82,22 @@
   foaf:givenName "Stephen" ;
   foaf:familyName "Tubs" ;
   dbpedia-owl:birthDate "1967-02-17"^^xsd:gDate .
+
+<http://deichman.no/work/work_00004> a deichman:Work ;
+  dcterms:identifier "work_00004" ;
+  rdfs:label "Berlinerpoplene" ;
+  dcterms:title "Berlinerpoplene"@no ;
+  dcterms:creator <http://deichman.no/person/person_00004> ;
+  dcterms:date "2004"^^xsd:gYear ;
+  deichman:hasEdition <http://deichman.no/edition/edition_00004> .
+
+<http://deichman.no/person/person_00004> a foaf:Person ;
+  rdfs:label "Anne B. Ragde" ;
+  foaf:name "Anne B. Ragde" ;
+  foaf:givenName "Anne B." ;
+  foaf:familyName "Ragde" ;
+  dbpedia-owl:birthDate "1957-12-03"^^xsd:gDate .
+
+<http://deichman.no/edition/edition_00004> a deichman:Edition ;
+  bibo:isbn "82-05-26285-3" ;
+  deichman:biblio "626460" .  

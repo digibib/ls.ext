@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.resources.WorkResource;
 import no.deichman.services.service.ServiceDefault;
@@ -28,6 +29,7 @@ public class WorkResourceTest{
     @BeforeClass
     public static void setUpClass() throws Exception {
         ServiceDefault.setRepository(new RepositoryInMemory());
+        ServiceDefault.setKohaAdapter(new KohaAdapterMock());
     }
 
     @AfterClass

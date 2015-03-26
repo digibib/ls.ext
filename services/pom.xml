@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty.version>9.2.10.v20150310</jetty.version>
         <jersey.version>2.16</jersey.version>
+        <jena.version>2.13.0</jena.version>
     </properties>
 
     <dependencies>
@@ -80,7 +81,7 @@
             <groupId>org.apache.jena</groupId>
             <artifactId>apache-jena-libs</artifactId>
             <type>pom</type>
-            <version>2.13.0</version>
+            <version>${jena.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -92,6 +93,19 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.10</version>
         </dependency>
+        <!-- marc4j -->
+        <dependency>
+            <groupId>info.freelibrary</groupId>
+            <artifactId>freelib-marc4j</artifactId>
+            <version>2.6.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
