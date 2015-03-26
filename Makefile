@@ -1,3 +1,5 @@
+.PHONY: build test run
+
 all: up provision build test run
 
 up:
