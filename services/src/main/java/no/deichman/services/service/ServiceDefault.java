@@ -14,6 +14,9 @@ public class ServiceDefault implements Service {
 
     @Override
     public Model retriveWorkById(String id) {
+        if (kohaAdapter.getCookies().isEmpty()) {
+            kohaAdapter.login();
+        }
         Model m = ModelFactory.createDefaultModel();
         m.add(repository.retrieveWorkById(id));
 

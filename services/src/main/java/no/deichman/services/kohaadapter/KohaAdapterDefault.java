@@ -29,8 +29,8 @@ public class KohaAdapterDefault implements KohaAdapter {
 
     private static Map<String, NewCookie> cookies = new HashMap<String, NewCookie>();
 
-    public KohaAdapterDefault() {
-
+    @Override
+    public void login() {
         String url = "http://192.168.50.12:8081/cgi-bin/koha/svc/authentication?userid=admin&password=secret";
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(url);
