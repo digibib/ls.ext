@@ -1,3 +1,5 @@
+.PHONY: build
+
 all: build run
 
 IMAGE=digibib/redef-services
@@ -6,7 +8,7 @@ DB_IMAGE=fisch42/fuseki
 DB_CONTAINER=fuseki
 
 build:
-	mvn clean install
+	./gradlew build oneJar
 
 build-docker:
 	sudo docker build --tag $(IMAGE) /vagrant/services
@@ -30,7 +32,7 @@ run-db: rm-db
 	sudo docker run -d -p 3030:3030 --name $(DB_CONTAINER) $(DB_IMAGE)
 
 test:
-	mvn test
+	./gradlew test
 
 log-f:
 	sudo docker logs -f $(CONTAINER)

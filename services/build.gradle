@@ -1,0 +1,63 @@
+apply plugin: 'java'
+apply plugin: 'gradle-one-jar'
+
+group = 'no.deichman.services'
+version = '1.0-SNAPSHOT'
+
+description = "services"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+}
+
+def version_jetty = '9.2.10.v20150310'
+def version_jersey = '2.16'
+def version_jackson = '1.9.11'
+def version_slf4j = '1.7.10'
+def version_jena = '2.13.0'
+
+dependencies {
+
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: version_jetty
+    compile group: 'org.eclipse.jetty', name: 'jetty-util', version: version_jetty
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: version_jetty
+    compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: version_jersey
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: version_jersey
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-jetty-http', version: version_jersey
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-moxy', version: version_jersey
+    compile group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: version_jackson
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: version_jackson
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
+    compile group: 'org.apache.jena', name: 'apache-jena-libs', version: version_jena
+    compile group: 'org.slf4j', name: 'slf4j-api', version: version_slf4j
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: version_slf4j
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: version_slf4j
+    compile ('info.freelibrary:freelib-marc4j:2.6.6') {
+        transitive = false
+    }
+
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+}
+
+task oneJar(type: OneJar) {
+    mainClass = 'no.deichman.services.App'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+buildscript {
+    dependencies {
+        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
