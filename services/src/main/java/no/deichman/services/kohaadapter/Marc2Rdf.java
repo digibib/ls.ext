@@ -2,68 +2,61 @@ package no.deichman.services.kohaadapter;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-import java.util.Iterator;
 import java.util.List;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
+import org.marc4j.marc.VariableField;
+
+import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
+import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
+import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
 
 public class Marc2Rdf {
 
-    static final String NS = "http://deichman.no/exemplar/";
-    static String resource;
-
     public static Model mapRecordToModel(Record record) {
+
+        final String NS = "http://deichman.no/exemplar/";
 
         Model model = ModelFactory.createDefaultModel();
 
         model.setNsPrefix("", NS);
         model.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
 
-        // Fetches all the items by getting all 952-fields:
-        List exemplars = record.getVariableFields("952");
-        Iterator i = exemplars.iterator();
-        while (i.hasNext()) {
-            DataField d = (DataField) i.next();
-            model.add(mapIdToStatement(d.getSubfield('p').getData()));
-            model.add(mapLocationToStatement(d.getSubfield('a').getData()));
-            if (d.getSubfield('q') != null) {
-                model.add(mapStatusToStatement(d.getSubfield('q').getData()));
-            }
+        List<VariableField> items = record.getVariableFields("952");
+
+        for (VariableField itemField : items) {
+
+            DataField itemData = (DataField) itemField;
+
+            String resource = NS + itemData.getSubfield('p').getData();
+
+            model.add(statement(
+                            resource,
+                            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                            "http://purl.org/vocab/frbr/core#Item")
+            );
+
+            model.add(statement(
+                            resource,
+                            "http://purl.org/deichman/status",
+                            itemData.getSubfield('y').getData())
+            );
+            model.add(statement(
+                            resource,
+                            "http://purl.org/deichman/location",
+                            itemData.getSubfield('a').getData())
+            );
         }
 
         return model;
     }
 
-    private static Statement mapIdToStatement(String id) {
-        setResource(id);
-        Resource s = ResourceFactory.createResource(resource);
-        Property p = ResourceFactory.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-        Resource o = ResourceFactory.createResource("http://purl.org/vocab/frbr/core#Item");
-
-        return ResourceFactory.createStatement(s, p, o);
-    }
-
-    private static Statement mapLocationToStatement(String location) {
-        Resource s = ResourceFactory.createResource(resource);
-        Property p = ResourceFactory.createProperty("http://purl.org/deichman/location");
-        Resource o = ResourceFactory.createResource(location);
-
-        return ResourceFactory.createStatement(s, p, o);
-    }
-
-    private static Statement mapStatusToStatement(String status) {
-        Resource s = ResourceFactory.createResource(resource);
-        Property p = ResourceFactory.createProperty("http://purl.org/deichman/status");
-        Resource o = ResourceFactory.createResource(status);
-
-        return ResourceFactory.createStatement(s, p, o);
-    }
-
-    static private void setResource(String id) {
-        resource = new String(NS + id);
+    private static Statement statement(String subject, String property, String object) {
+        return createStatement(
+                createResource(subject),
+                createProperty(property),
+                createResource(object)
+        );
     }
 }

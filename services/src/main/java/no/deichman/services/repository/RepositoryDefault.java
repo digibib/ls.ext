@@ -13,27 +13,22 @@ public class RepositoryDefault implements Repository {
     @Override
     public Model retrieveWorkById(final String id) {
         String uri = "http://192.168.50.50:3030/ds/sparql";
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(uri, QueryBuilder.getGetWorkByIdQuery(id));
-        Model resultModel = qexec.execConstruct();
-        qexec.close();
-
-        return resultModel;
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(uri, QueryBuilder.getGetWorkByIdQuery(id))) {
+            return qexec.execConstruct();
+        }
     }
 
     @Override
     public Model listWork() {
         String uri = "http://192.168.50.50:3030/ds/sparql";
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(uri, QueryBuilder.getListWorkQuery());
-        Model resultModel = qexec.execDescribe();
-        qexec.close();
-
-        return resultModel;
+        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(uri, QueryBuilder.getListWorkQuery())) {
+            return qexec.execDescribe();
+        }
     }
 
     @Override
     public void createWork(final String work) {
         String uri = "http://192.168.50.50:3030/ds/update";
         UpdateRequest updateRequest = UpdateFactory.create(QueryBuilder.getCreateWorkQueryString(work));
-        UpdateProcessor qexec = UpdateExecutionFactory.createRemote(updateRequest, uri);
-        qexec.execute();
+        UpdateExecutionFactory.createRemote(updateRequest, uri).execute();
     }}

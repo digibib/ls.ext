@@ -8,13 +8,11 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
-import no.deichman.services.resources.WorkResource;
 import no.deichman.services.service.ServiceDefault;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.After;
-import org.junit.AfterClass;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -25,6 +23,7 @@ import org.junit.Test;
 
 public class WorkResourceTest{
 
+    private WorkResource resource;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -32,82 +31,60 @@ public class WorkResourceTest{
         ServiceDefault.setKohaAdapter(new KohaAdapterMock());
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
 
     @Before
     public void setUp() throws Exception {
+        resource = new WorkResource();
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test of listWork method, of class WorkResource.
-     */
     @Test
     public void should_return_non_empty_json_list_of_Work() {
-        WorkResource instance = new WorkResource();
-        Response expResult = null;
-        Response result = instance.listWork();
+        Response result = resource.listWork();
+
         assertNotNull(result);
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
         assertNotNull(parseJSON(result.getEntity().toString()).findValue("@id"));
     }
 
-    /**
-     * Test of getWork method, of class WorkResource.
-     */
     @Test
     public void should_return_a_valid_json_work() {
         String workId = "work_00001";
-        WorkResource instance = new WorkResource();
-        Response result = instance.getWorkJSON(workId);            
+        Response result = resource.getWorkJSON(workId);
+
         assertNotNull(result);
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
-    /**
-     * Test of getWork method, of class WorkResource.
-     */
     @Test(expected = NotFoundException.class)
     public void should_throw_exception_when_work_is_not_found() {
         String workId = "work_DOES_NOT_EXIST";
-        WorkResource instance = new WorkResource();
-        Response result = instance.getWorkJSON(workId);            
+        resource.getWorkJSON(workId);
     }
 
-    /**
-     * Test of getWork method, of class WorkResource.
-     */
     @Test
     public void should_return_201_when_work_created() {
         String workId = "work_IS_TO_BE_CREATED";
-        WorkResource instance = new WorkResource();
-        Response result = instance.createWork(workId);     
+        Response result = resource.createWork(workId);
+
         assertNull(result.getEntity());
         assertEquals(201, result.getStatus());
     }
     
-    /**
-     * Test of getWork method, of class WorkResource.
-     */
     @Test
     public void should_return_the_new_work(){
         String workId = "work_IS_TO_BE_CREATED";
-        WorkResource instance = new WorkResource();
-        instance.createWork(workId);     
-        Response result = instance.getWorkJSON(workId);            
+
+        resource.createWork(workId);
+        Response result = resource.getWorkJSON(workId);
+
         assertNotNull(result);
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
     
-    public boolean isValidJSON(final String json) {
+    private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {
             final JsonParser parser = new ObjectMapper().getJsonFactory()

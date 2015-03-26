@@ -10,27 +10,25 @@ import com.hp.hpl.jena.update.UpdateRequest;
 
 public class RepositoryInMemory implements Repository {
 
-    private static Model model;
+    private Model model;
     
     public RepositoryInMemory() {
-    model = ModelFactory.createDefaultModel();
-    model.read("testdata.ttl", "TURTLE");
+        model = ModelFactory.createDefaultModel();
+        model.read("testdata.ttl", "TURTLE");
     }
     
     @Override
     public Model retrieveWorkById(String id) {
-        QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.getGetWorkByIdQuery(id), model);
-        Model resultModel = qexec.execConstruct();
-        qexec.close();
-        return resultModel;
+        try (QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.getGetWorkByIdQuery(id), model)) {
+            return qexec.execConstruct();
+        }
     }
 
     @Override
     public Model listWork() {
-        QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.getListWorkQuery(), model);
-        Model resultModel = qexec.execDescribe();
-        qexec.close();
-        return resultModel;
+        try (QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.getListWorkQuery(), model)) {
+            return qexec.execDescribe();
+        }
     }
 
     @Override

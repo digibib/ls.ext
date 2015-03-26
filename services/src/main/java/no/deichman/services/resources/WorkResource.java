@@ -25,45 +25,38 @@ public class WorkResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createWork(String work) {
         SERVICE.createWork(work);
-        return Response.created(null)
-                .build();
+        return Response.created(null).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWork() {
-        StringWriter sw = new StringWriter();
         Model model = SERVICE.listWork();
-        if (!model.isEmpty()) {
-            RDFDataMgr.write(sw, model, Lang.JSONLD);
 
-            String data = sw.toString();
-
-            return Response.ok()
-                    .entity(data)
-                    .build();
-        } else {
+        if (model.isEmpty()) {
             throw new NotFoundException();
         }
+
+        return Response.ok().entity(asJson(model)).build();
     }
 
     @GET
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWorkJSON(@PathParam("workId") String workId) {
-
-        StringWriter sw = new StringWriter();
         Model model = SERVICE.retriveWorkById(workId);
-        if (!model.isEmpty()) {
-            RDFDataMgr.write(sw, model, Lang.JSONLD);
 
-            String data = sw.toString();
-
-            return Response.ok()
-                    .entity(data)
-                    .build();
-        } else {
+        if (model.isEmpty()) {
             throw new NotFoundException();
         }
+
+        return Response.ok().entity(asJson(model)).build();
     }
+
+    private static String asJson(Model model) {
+        StringWriter sw = new StringWriter();
+        RDFDataMgr.write(sw, model, Lang.JSONLD);
+        return sw.toString();
+    }
+
 }

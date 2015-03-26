@@ -20,7 +20,6 @@ public class KohaAdapterDefaultIT {
     public void should_return_biblio() {
         String manifestationId = "626460";
         KohaAdapterDefault instance = new KohaAdapterDefault();
-        Model expResult = null;
         Model result = instance.getBiblio(manifestationId);
         assertNotNull(result);
         assertFalse(result.isEmpty());
