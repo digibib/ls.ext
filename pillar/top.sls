@@ -7,6 +7,7 @@ base:
     - sip
     - migration
     - migration.admin
+    - redef
 
   'wombat,vm-ship,vm-devops':
     - match: list
@@ -17,10 +18,12 @@ base:
     - match: list
     - elk.dev
     - sip.dev
+    - redef.dev
     - resource_monitoring.dev
 
   'wombat':
     - match: list
     - elk.prod
     - sip.prod
+    - redef.prod
     - resource_monitoring.prod

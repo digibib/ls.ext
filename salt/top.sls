@@ -23,7 +23,12 @@ base:
     - mysql.pulled
     - koha.pulled
     - sip.pulled
+    - redef.pulled
     - mysql.dockerized
     - koha.dockerized
     - sip.dockerized
     - migration.dockerized
+    - redef.fuseki
+    - redef.services
+    - redef.patron-client
+    - redef.catalinker
