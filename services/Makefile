@@ -8,7 +8,7 @@ DB_IMAGE=fisch42/fuseki
 DB_CONTAINER=fuseki
 
 build:
-	./gradlew build oneJar
+	./gradlew --daemon build oneJar
 
 build-docker:
 	sudo docker build --tag $(IMAGE) /vagrant/services
@@ -32,7 +32,7 @@ run-db: rm-db
 	sudo docker run -d -p 3030:3030 --name $(DB_CONTAINER) $(DB_IMAGE)
 
 test:
-	./gradlew test
+	./gradlew --daemon test
 
 log-f:
 	sudo docker logs -f $(CONTAINER)
