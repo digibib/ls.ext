@@ -11,6 +11,7 @@ dockerpy-prereqs:
 dockerpy:
   pip.installed:
     - name: git+https://github.com/dotcloud/docker-py.git@1.1.0-release
+    - unless: pip freeze | grep 'docker-py==1.1.0'
     - require:
       - pkg: dockerpy-prereqs
 
