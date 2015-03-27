@@ -7,11 +7,13 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 public class App {
 
+    private static final int SERVICES_PORT_NO = 8080;
+
     public static void main(String[] args) throws Exception {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
 
-        Server jettyServer = new Server(8080);
+        Server jettyServer = new Server(SERVICES_PORT_NO);
         jettyServer.setHandler(context);
 
         ServletHolder jerseyServlet = context.addServlet(
