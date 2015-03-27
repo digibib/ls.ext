@@ -131,6 +131,8 @@ Vagrant.configure(2) do |config|
 
     config.vm.network "private_network", ip: "192.168.50.21"
 
+    config.vm.provision "shell", path: "pip_install.sh"
+
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
