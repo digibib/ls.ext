@@ -5,7 +5,7 @@ if [ $? -eq 0 ] ; then
 	sudo apt-get purge --assume-yes --quiet python-pip
 fi
 
-pip -v >/dev/null 2>&1
+pip -V >/dev/null 2>&1
 if [ $? -eq 0 ] ; then
     echo "pip already installed and presumably working."
 else
