@@ -11,7 +11,7 @@ provision:
 build:
 	vagrant ssh -c 'cd /vagrant/services && make build'
 
-run: run-services run-patron-client
+run: run-services run-patron-client run-catalinker
 
 run-patron-client:
 	vagrant ssh -c 'cd /vagrant/patron-client && make run'
@@ -25,7 +25,7 @@ test: test-patron-client test-services
 
 test-patron-client:
 	vagrant ssh -c 'cd /vagrant/services && make stop || true'
-	vagrant ssh -c 'cd /vagrant/patron-client && make lint test module-test'	
+	vagrant ssh -c 'cd /vagrant/patron-client && make lint test module-test'
 
 test-services:
 	vagrant ssh -c 'cd /vagrant/services && make test'
@@ -55,6 +55,17 @@ stop-services:
 stop-db:
 	vagrant ssh -c 'cd /vagrant/services && make stop-db'
 	echo "stopping http://192.168.50.50:3030/ services db"
+
+run-catalinker:
+	vagrant ssh -c 'cd /vagrant/catalinker && make run'
+	echo "open http://192.168.50.50:8081/ for catalinker in PROD mode"
+
+stop-catalinker:
+	vagrant ssh -c 'cd /vagrant/catalinker && make stop'
+	echo "stopping http://192.168.50.50:8081/ catalinker"
+
+test-catalinker:
+	vagrant ssh -c 'cd /vagrant/catalinker && make test'
 
 halt:
 	vagrant halt
