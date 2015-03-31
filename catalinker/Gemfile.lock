@@ -1,10 +1,15 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    domain_name (0.5.23)
+      unf (>= 0.0.5, < 1.0.0)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     json-ld (1.1.8)
       rdf (~> 1.1, >= 1.1.7)
     link_header (0.0.8)
-    netrc (0.7.9)
+    mime-types (2.4.3)
+    netrc (0.10.3)
     power_assert (0.2.3)
     rack (1.6.0)
     rack-protection (1.5.3)
@@ -13,8 +18,10 @@ GEM
       rack (>= 1.0)
     rdf (1.1.10)
       link_header (~> 0.0, >= 0.0.8)
-    rest_client (1.8.3)
-      netrc (~> 0.7.7)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -22,6 +29,9 @@ GEM
     test-unit (3.0.9)
       power_assert
     tilt (2.0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.6)
 
 PLATFORMS
   ruby
@@ -30,6 +40,6 @@ DEPENDENCIES
   json-ld
   rack-test
   rdf
-  rest_client
+  rest-client
   sinatra
   test-unit
