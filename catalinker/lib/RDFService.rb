@@ -23,4 +23,8 @@ class RDFService
     return @current_model.dump(:jsonld, standard_prefixes: true)
   end
 
+  def initialize
+  	new_model
+  end
+
 end

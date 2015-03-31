@@ -13,7 +13,6 @@ class RDFServiceTest < Test::Unit::TestCase
   @@o = RDF::URI.new("http://deichman.no/vocab/Work")
 
   def populate_store (rdfservice, s, p, o)
-    rdfservice.new_model
     rdfservice.add_triple(s, p, o);
     g = rdfservice.get_model
     return g
