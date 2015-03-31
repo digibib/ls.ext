@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    json-ld (1.1.8)
+      rdf (~> 1.1, >= 1.1.7)
     link_header (0.0.8)
     netrc (0.7.9)
     power_assert (0.2.3)
@@ -25,6 +27,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  json-ld
   rack-test
   rdf
   rest_client

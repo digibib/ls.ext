@@ -22,4 +22,8 @@ class RDFService
     @currentModel << statement 
   end
 
+  def getJSONLD
+    return @currentModel.dump(:jsonld, standard_prefixes: true)
+  end
+
 end
