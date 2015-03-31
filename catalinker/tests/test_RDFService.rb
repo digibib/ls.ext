@@ -61,7 +61,7 @@ class RDFServiceTest < Test::Unit::TestCase
   
   def test_it_can_create_title
   	p = RDF::URI.new("http://purl.org/dc/terms/title")
-  	o = RDF::Literal.new("The meaning of Liff")
+  	o = RDF::Literal.new("The meaning of Liff", :language => :no)
     rdfservice = RDFService.new
     g = populateStore(rdfservice, @@s, p, o)
     assert(
@@ -71,7 +71,7 @@ class RDFServiceTest < Test::Unit::TestCase
         o)
       ), 
     "Model did not contain expected work data")
-  end 
+  end
   
   def test_it_can_provide_JSONLD
     rdfservice = RDFService.new
