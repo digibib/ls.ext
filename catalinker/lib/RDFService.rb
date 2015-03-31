@@ -15,10 +15,7 @@ class RDFService
   end
 
   def addTriple (s, p, o)
-    subject = RDF::URI.new(s)
-    predicate = RDF::URI.new(p)
-    object = RDF::URI.new(o)
-    statement = RDF::Statement.new(subject, predicate, object)
+    statement = RDF::Statement.new(s, p, o)
     @currentModel << statement 
   end
 
