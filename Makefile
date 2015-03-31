@@ -57,6 +57,7 @@ stop-db:
 	echo "stopping http://192.168.50.50:3030/ services db"
 
 run-catalinker:
+	cd catalinker && bundle install --path vendor/bundle && cd ..
 	vagrant ssh -c 'cd /vagrant/catalinker && make run'
 	echo "open http://192.168.50.50:8081/ for catalinker in PROD mode"
 
