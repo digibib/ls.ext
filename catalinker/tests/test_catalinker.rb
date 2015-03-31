@@ -3,7 +3,7 @@ require 'server'
 require 'test/unit'
 require 'rack/test'
 
-class HelloWorldTest < Test::Unit::TestCase
+class ServerTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
