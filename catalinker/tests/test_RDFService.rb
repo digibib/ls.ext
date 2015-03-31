@@ -71,6 +71,20 @@ class RDFServiceTest < Test::Unit::TestCase
       ), 
     "Model did not contain expected work data")
   end
+
+  def test_it_can_create_date
+    p = RDF::URI.new("http://purl.org/dc/terms/date")
+    o = RDF::Literal.new("1998", :datatype => RDF::XSD.gYear)
+    rdfservice = RDFService.new
+    g = populate_store(rdfservice, @@s, p, o)
+    assert(
+      g.has_statement?(
+        RDF::Statement.new(@@s, 
+        p, 
+        o)
+      ), 
+    "Model did not contain expected work data")
+  end
   
   def test_it_can_provide_JSONLD
     rdfservice = RDFService.new
