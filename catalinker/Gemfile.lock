@@ -1,12 +1,18 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    link_header (0.0.8)
+    netrc (0.7.9)
     power_assert (0.2.3)
     rack (1.6.0)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rdf (1.1.10)
+      link_header (~> 0.0, >= 0.0.8)
+    rest_client (1.8.3)
+      netrc (~> 0.7.7)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -20,5 +26,7 @@ PLATFORMS
 
 DEPENDENCIES
   rack-test
+  rdf
+  rest_client
   sinatra
   test-unit
