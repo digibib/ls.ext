@@ -12,16 +12,16 @@ class RDFServiceTest < Test::Unit::TestCase
   @@p = RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
   @@o = RDF::URI.new("http://deichman.no/vocab/Work")
 
-  def populateStore (rdfservice, s, p, o)
-    rdfservice.newModel
-    rdfservice.addTriple(s, p, o);
-    g = rdfservice.getModel
+  def populate_store (rdfservice, s, p, o)
+    rdfservice.new_model
+    rdfservice.add_triple(s, p, o);
+    g = rdfservice.get_model
     return g
   end
 
   def test_it_can_create_work
     rdfservice = RDFService.new
-    g = populateStore(rdfservice, @@s, @@p, @@o)
+    g = populate_store(rdfservice, @@s, @@p, @@o)
     assert(
       g.has_statement?(
         RDF::Statement.new(@@s, 
@@ -35,7 +35,7 @@ class RDFServiceTest < Test::Unit::TestCase
   	p = RDF::URI.new("http://deichman.no/vocab/hasManifestation")
   	o = RDF::URI.new("http://deichman.no/item/test_1234")
     rdfservice = RDFService.new
-    g = populateStore(rdfservice, @@s, p, o)
+    g = populate_store(rdfservice, @@s, p, o)
     assert(
       g.has_statement?(
         RDF::Statement.new(@@s, 
@@ -49,7 +49,7 @@ class RDFServiceTest < Test::Unit::TestCase
   	p = RDF::URI.new("http://purl.org/dc/terms/creator")
   	o = RDF::URI.new("http://deichman.no/person/test_1234")
     rdfservice = RDFService.new
-    g = populateStore(rdfservice, @@s, p, o)
+    g = populate_store(rdfservice, @@s, p, o)
     assert(
       g.has_statement?(
         RDF::Statement.new(@@s, 
@@ -63,7 +63,7 @@ class RDFServiceTest < Test::Unit::TestCase
   	p = RDF::URI.new("http://purl.org/dc/terms/title")
   	o = RDF::Literal.new("The meaning of Liff", :language => :no)
     rdfservice = RDFService.new
-    g = populateStore(rdfservice, @@s, p, o)
+    g = populate_store(rdfservice, @@s, p, o)
     assert(
       g.has_statement?(
         RDF::Statement.new(@@s, 
@@ -75,8 +75,8 @@ class RDFServiceTest < Test::Unit::TestCase
   
   def test_it_can_provide_JSONLD
     rdfservice = RDFService.new
-    g = populateStore(rdfservice, @@s, @@p, @@o)
-    json = rdfservice.getJSONLD
+    g = populate_store(rdfservice, @@s, @@p, @@o)
+    json = rdfservice.get_JSONLD
     RDF::Reader.for(:jsonld).new(json) do |reader|
       reader.each_statement do |statement|
         assert(

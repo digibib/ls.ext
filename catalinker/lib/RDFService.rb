@@ -2,25 +2,25 @@ require 'rdf'
 
 class RDFService
 
-  @currentModel = nil
+  @current_model = nil
 
-  def getModel
-    return @currentModel
+  def get_model
+    return @current_model
   end
 
-  def newModel
-    if @currentModel == nil
-      @currentModel = RDF::Graph.new
+  def new_model
+    if @current_model == nil
+      @current_model = RDF::Graph.new
     end
   end
 
-  def addTriple (s, p, o)
+  def add_triple (s, p, o)
     statement = RDF::Statement.new(s, p, o)
-    @currentModel << statement 
+    @current_model << statement 
   end
 
-  def getJSONLD
-    return @currentModel.dump(:jsonld, standard_prefixes: true)
+  def get_JSONLD
+    return @current_model.dump(:jsonld, standard_prefixes: true)
   end
 
 end
