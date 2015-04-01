@@ -39,7 +39,6 @@ class RDFServiceTest < Test::Unit::TestCase
 
     rs = RESTService.new
     output = rs.process_work data
-
     bijection = test.bijection_to output
 
     assert(bijection == nil, "The round-tripped models were not the same: #{bijection}")
