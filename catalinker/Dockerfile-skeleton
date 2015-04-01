@@ -1,0 +1,14 @@
+FROM ruby:2.2.1
+
+RUN mkdir -p /usr/src/app/
+
+WORKDIR /usr/src/
+COPY Gemfile /usr/src/
+RUN bundle install
+
+WORKDIR /usr/src/app/
+
+ENTRYPOINT ["bundle", "exec"]
+CMD ["rake", "start"]
+
+EXPOSE 4567

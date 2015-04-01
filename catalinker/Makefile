@@ -1,12 +1,17 @@
 all: build run
 
-PROJECT=catalinker
+SKELETON_IMAGE=redef-catalinker-skeleton
 IMAGE=digibib/redef-catalinker
 CONTAINER=redef-catalinker
 MODULE_TEST_CONTAINER=redef-catalinker-test-instance
 SERVICES_PORT="tcp://192.168.50.50:8080"
 
-build:
+build: build_skeleton build_app
+
+build_skeleton:
+	sudo docker build --tag $(SKELETON_IMAGE) --file="Dockerfile-skeleton" /vagrant/catalinker
+
+build_app:
 	sudo docker build --tag $(IMAGE) /vagrant/catalinker
 
 stop:
@@ -23,14 +28,20 @@ rm-test-instance: stop-test-instance
 
 run: build rm
 	sudo docker run -d -p 8081:4567 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(IMAGE)
+	echo "open http://192.168.50.50:8081/ for catalinker in PROD mode"
 
-run-test-instance: build rm-test-instance
-	sudo docker run -d -p 7081:4567 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/catalinker:/usr/src/app $(IMAGE)
+run-test-instance: build_skeleton rm-test-instance
+	sudo docker run -d -p 7081:4567 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE)
+	echo "open http://192.168.50.50:7081/ for catalinker in TEST mode"
+
+run-dev: build_skeleton rm
+	echo "open http://192.168.50.50:8081/ for catalinker in DEV mode"
+	sudo docker run -it -p 8081:4567 --name $(CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE)
 
 test: build
-	sudo docker run --rm -v /vagrant/catalinker:/usr/src/app $(IMAGE) rake test
+	sudo docker run --rm -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
 
-module-test: build run-test-instance
+module-test: run-test-instance
 	echo "To do: testing"
 
 log-f:

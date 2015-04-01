@@ -21,7 +21,7 @@ run-dev: up
 	echo "open http://192.168.50.50:8000/ for patron-client service in DEV mode"
 	vagrant ssh -c 'cd /vagrant/patron-client && make run-dev'
 
-test: test-patron-client test-services
+test: test-patron-client test-services test-catalinker
 
 test-patron-client:
 	vagrant ssh -c 'cd /vagrant/services && make stop || true'
@@ -57,13 +57,10 @@ stop-db:
 	echo "stopping http://192.168.50.50:3030/ services db"
 
 run-catalinker:
-	cd catalinker && bundle install --path vendor/bundle && cd ..
 	vagrant ssh -c 'cd /vagrant/catalinker && make run'
-	echo "open http://192.168.50.50:8081/ for catalinker in PROD mode"
 
 stop-catalinker:
 	vagrant ssh -c 'cd /vagrant/catalinker && make stop'
-	echo "stopping http://192.168.50.50:8081/ catalinker"
 
 test-catalinker:
 	vagrant ssh -c 'cd /vagrant/catalinker && make test'

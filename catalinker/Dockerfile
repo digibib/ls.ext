@@ -1,4 +1,11 @@
-FROM ruby:2.1-onbuild
+FROM redef-catalinker-skeleton
 
-CMD ["ruby","./lib/server.rb"]
+WORKDIR /usr/src/app/
+
+COPY . /usr/src/app/
+
+ENTRYPOINT ["bundle", "exec"]
+
+CMD ["rake", "start"]
+
 EXPOSE 4567
