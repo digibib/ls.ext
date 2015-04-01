@@ -17,15 +17,15 @@ class ServerTest < Test::Unit::TestCase
   end
 
   def test_it_has_a_work_page
-  	get '/work'
-  	assert last_response.ok?
-  	assert_equal 'Work', last_response.body
+    get '/work'
+    assert last_response.ok?
+    assert_equal 'Work', last_response.body
   end
 
   def test_it_has_a_item_page
-  	get '/item'
-  	assert last_response.ok?
-  	assert_equal 'Item', last_response.body
+    get '/item'
+    assert last_response.ok?
+    assert_equal 'Item', last_response.body
   end
 
 end

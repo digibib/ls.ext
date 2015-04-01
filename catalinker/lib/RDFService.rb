@@ -24,7 +24,7 @@ class RDFService
   end
 
   def initialize
-  	new_model
+    new_model
   end
 
 end

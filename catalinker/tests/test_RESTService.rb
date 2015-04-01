@@ -11,8 +11,8 @@ class RDFServiceTest < Test::Unit::TestCase
 
   def test_it_can_create_complete_work
 
-  	dcterms = RDF::Vocabulary.new("http://purl.org/dc/terms/")
-  	rdf = RDF::Vocabulary.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+    dcterms = RDF::Vocabulary.new("http://purl.org/dc/terms/")
+    rdf = RDF::Vocabulary.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
     repo = RDF::Repository.new
     test = repo.load('./tests/data/work_0001.nt')

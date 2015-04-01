@@ -11,10 +11,10 @@ class RESTService
 
   def process_work (data)
 
-  	id = data[:id]
-  	author = data[:author]
-  	title = data[:title]
-  	date = data[:date]
+    id = data[:id]
+    author = data[:author]
+    title = data[:title]
+    date = data[:date]
 
     s = RDF::URI.new(@@base + id)
 
@@ -23,13 +23,13 @@ class RESTService
     rdfservice.add_triple(s, RDF::URI.new(@@type), RDF::URI.new(@@base + "Work"))
 
     if !author.empty?
-    	rdfservice.add_triple(s, RDF::URI.new(@@dcterms + "creator"), RDF::URI.new(author))
+      rdfservice.add_triple(s, RDF::URI.new(@@dcterms + "creator"), RDF::URI.new(author))
     end
     if !title.empty?
-    	rdfservice.add_triple(s, RDF::URI.new(@@dcterms + "title"), RDF::Literal.new(title[:string], :language => "#{title[:language]}"))
+      rdfservice.add_triple(s, RDF::URI.new(@@dcterms + "title"), RDF::Literal.new(title[:string], :language => "#{title[:language]}"))
     end
     if !date.empty?
-    	rdfservice.add_triple(s, RDF::URI.new(@@dcterms + "date"), RDF::Literal.new(date[:string], :datatype => date[:datatype]))
+      rdfservice.add_triple(s, RDF::URI.new(@@dcterms + "date"), RDF::Literal.new(date[:string], :datatype => date[:datatype]))
     end
 
     return rdfservice.get_model

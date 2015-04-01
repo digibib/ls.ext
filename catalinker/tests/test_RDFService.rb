@@ -31,8 +31,8 @@ class RDFServiceTest < Test::Unit::TestCase
   end
 
   def test_it_can_create_item_reference
-  	p = RDF::URI.new("http://deichman.no/vocab/hasManifestation")
-  	o = RDF::URI.new("http://deichman.no/item/test_1234")
+    p = RDF::URI.new("http://deichman.no/vocab/hasManifestation")
+    o = RDF::URI.new("http://deichman.no/item/test_1234")
     rdfservice = RDFService.new
     g = populate_store(rdfservice, @@s, p, o)
     assert(
@@ -45,8 +45,8 @@ class RDFServiceTest < Test::Unit::TestCase
   end 
 
   def test_it_can_create_author_reference
-  	p = RDF::URI.new("http://purl.org/dc/terms/creator")
-  	o = RDF::URI.new("http://deichman.no/person/test_1234")
+    p = RDF::URI.new("http://purl.org/dc/terms/creator")
+    o = RDF::URI.new("http://deichman.no/person/test_1234")
     rdfservice = RDFService.new
     g = populate_store(rdfservice, @@s, p, o)
     assert(
@@ -59,8 +59,8 @@ class RDFServiceTest < Test::Unit::TestCase
   end 
   
   def test_it_can_create_title
-  	p = RDF::URI.new("http://purl.org/dc/terms/title")
-  	o = RDF::Literal.new("The meaning of Liff", :language => :no)
+    p = RDF::URI.new("http://purl.org/dc/terms/title")
+    o = RDF::Literal.new("The meaning of Liff", :language => :no)
     rdfservice = RDFService.new
     g = populate_store(rdfservice, @@s, p, o)
     assert(
