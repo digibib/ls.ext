@@ -10,7 +10,7 @@ class RDFService
 
   def new_model
     if @current_model == nil
-      @current_model = RDF::Graph.new
+      @current_model = RDF::Repository.new
     end
   end
 
