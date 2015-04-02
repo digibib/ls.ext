@@ -1,4 +1,3 @@
-require 'rest-client'
 require 'uri'
 require 'rdf'
 
