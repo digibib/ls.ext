@@ -31,7 +31,6 @@ install_chromedriver:
 
 {% for gem in
   'rspec',
-  'cucumber',
   'pry',
   'pry-nav',
   'watir-webdriver' %}
@@ -40,6 +39,10 @@ install_chromedriver:
     - requires:
       - pkg: ruby1.9.1-dev
 {% endfor %}
+
+cucumber:
+  gem.installed:
+    - version: 1.3.19 # tests broke because of 2.0.0?
 
 selenium-webdriver:
   gem.installed:
