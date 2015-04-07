@@ -5,8 +5,10 @@ KEYFILE=id_rsa
 
 if [ -e "$VAGRANT_ROOT/ssh/$KEYFILE" ]
 then
-    echo "$KEYFILE exists"
+    KEY=`cat $VAGRANT_ROOT/ssh/$KEYFILE.pub`
+    echo "$KEYFILE exists: $KEY"
 else
-    echo "generating key pair $KEYFILE"
     ssh-keygen -C "ls.ext - ssh key pair" -t rsa -P "" -f $VAGRANT_ROOT/ssh/$KEYFILE
+    KEY=`cat $VAGRANT_ROOT/ssh/$KEYFILE.pub`
+    echo "generated key pair $KEYFILE: $KEY"
 fi
