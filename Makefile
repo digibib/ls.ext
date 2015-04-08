@@ -76,3 +76,7 @@ push:
 	vagrant ssh -c 'cd /vagrant/patron-client && make push TAG=$(TAG)'
 	vagrant ssh -c 'cd /vagrant/services && make push TAG=$(TAG)'
 	vagrant ssh -c 'cd /vagrant/catalinker && make push TAG=$(TAG)'
+
+docker-cleanup:
+	@echo "cleaning up unused containers and images"
+	@vagrant ssh -c 'sudo /vagrant/docker_cleanup.sh'
