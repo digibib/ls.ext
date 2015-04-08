@@ -1,5 +1,8 @@
 FROM ruby:2.2.1
 
+MAINTAINER Oslo Public Library "digitalutvikling@gmail.com"
+ENV REFRESHED_AT 2015-04-08
+
 RUN mkdir -p /usr/src/app/
 
 WORKDIR /usr/src/

@@ -10,6 +10,8 @@ build: build_skeleton build_app
 
 build_skeleton:
 	sudo docker build --tag $(SKELETON_IMAGE) --file="Dockerfile-skeleton" /vagrant/catalinker
+	@echo "Gemfile.lock copied to workspace"
+	sudo docker run --rm $(SKELETON_IMAGE) "cat /usr/src/Gemfile.lock" > /vagrant/catalinker/Gemfile.lock
 
 build_app:
 	sudo docker build --tag $(IMAGE) /vagrant/catalinker
