@@ -1,7 +1,13 @@
 package no.deichman.services.repository;
 
+import java.io.StringWriter;
+
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.rdf.model.Model;
 
 public class QueryBuilder {
 
@@ -42,13 +48,17 @@ public class QueryBuilder {
 
     }
 
-    public static String getCreateWorkQueryString(String work) {
+    public static String getCreateWorkQueryString(Model work) {
+        StringWriter sw = new StringWriter();
+       	RDFDataMgr.write(sw, work, Lang.NTRIPLES);
+       	String data = sw.toString();
         String queryString =
                 "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "INSERT DATA {\n"
-                + " <http://deichman.no/work/"+ work + "> a deichman:Work ;\n"
-                + " dcterms:identifier \""+ work + "\";\n"
+                + "\n"
+                + data
+                + "\n"
                 + "}";
         return queryString;
 

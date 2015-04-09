@@ -9,8 +9,8 @@ import no.deichman.services.repository.RepositoryDefault;
 
 public class ServiceDefault implements Service {
 
-    private static Repository repository = new RepositoryDefault();
-    private static KohaAdapter kohaAdapter = new KohaAdapterDefault();
+    private Repository repository = new RepositoryDefault();
+    private KohaAdapter kohaAdapter = new KohaAdapterDefault();
 
     @Override
     public Model retriveWorkById(String id) {
@@ -30,12 +30,12 @@ public class ServiceDefault implements Service {
         return m;
     }
 
-    public static void setRepository(Repository repository) {
-        ServiceDefault.repository = repository;
+    public void setRepository(Repository repository) {
+        this.repository = repository;
     }
 
-    public static void setKohaAdapter(KohaAdapter kohaAdapter) {
-        ServiceDefault.kohaAdapter = kohaAdapter;
+    public void setKohaAdapter(KohaAdapter kohaAdapter) {
+        this.kohaAdapter = kohaAdapter;
     }
 
     @Override

@@ -1,8 +1,18 @@
 package no.deichman.services.repository;
 
+
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
@@ -33,6 +43,10 @@ public class RepositoryDefault implements Repository {
 
     @Override
     public void createWork(final String work) {
-        UpdateRequest updateRequest = UpdateFactory.create(QueryBuilder.getCreateWorkQueryString(work));
+    	InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
+    	Model model = ModelFactory.createDefaultModel();
+     	RDFDataMgr.read(model, stream, Lang.JSONLD);
+     	
+        UpdateRequest updateRequest = UpdateFactory.create(QueryBuilder.getCreateWorkQueryString(model));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
     }}

@@ -1,5 +1,12 @@
 package no.deichman.services.repository;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -33,7 +40,11 @@ public class RepositoryInMemory implements Repository {
 
     @Override
     public void createWork(String work) {
-        UpdateRequest updateRequest = UpdateFactory.create(QueryBuilder.getCreateWorkQueryString(work));
+        InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
+        Model tempModel = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
+
+        UpdateRequest updateRequest = UpdateFactory.create(QueryBuilder.getCreateWorkQueryString(tempModel));
         UpdateAction.execute(updateRequest, model);
     }   
 }
