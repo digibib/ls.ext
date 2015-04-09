@@ -18,8 +18,13 @@ class ServerTest < Test::Unit::TestCase
 
   def test_it_has_a_work_page
     get '/work'
+    follow_redirect!
     assert last_response.ok?
-    assert_equal 'Work', last_response.body
+  end
+
+  def test_it_has_a_work_data_service
+    post '/work', params = {:id => "work_THIS_EXISTS", :title => "This is a test", :creator => "http://example.com/person1", :date => "2009"}
+    assert last_response.ok?
   end
 
   def test_it_has_a_item_page

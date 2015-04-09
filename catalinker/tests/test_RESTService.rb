@@ -26,15 +26,23 @@ class RDFServiceTest < Test::Unit::TestCase
       }
     })
 
-    data = nil
+    title = Hash.new
+    date = Hash.new
+    data = Hash.new
     
     query.execute(repo) do |solution|
-      data = {
-        :id => solution.id.to_s,
-        :author => solution.creator.to_s,
-        :title => {:string => solution.title, :language => solution.title.language},
-        :date => {:string => solution.date, :datatype => solution.date.datatype}
-      }
+        
+        title['string'] = solution.title
+        title['language'] = solution.title.language
+        
+        date['string'] = solution.date
+        date['datatype'] = solution.date.datatype
+
+        data['id'] = solution.id.to_s
+        data['creator'] = solution.creator.to_s
+        data['title'] = title
+        data['date'] = date
+      
     end
 
     rs = RESTService.new
