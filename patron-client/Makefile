@@ -44,7 +44,7 @@ module-test: build_skeleton run-test-instance
 	sudo docker logs $(MODULE_TEST_CONTAINER)
 
 run-dev: build_skeleton rm
-	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
+	sudo docker run -d -v /vagrant/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
 
 run-dev-debug: build_skeleton rm
 	sudo docker run -it -v /vagrant/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
