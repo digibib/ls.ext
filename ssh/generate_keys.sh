@@ -3,7 +3,7 @@
 # Vagrant 1.7 no longer operates with a well know keypair so we generate our own.
 KEYFILE=id_rsa
 
-DIR=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+DIR=/vagrant/ssh
 
 if [ -e "$DIR/$KEYFILE" ]
 then

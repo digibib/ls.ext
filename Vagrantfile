@@ -24,8 +24,6 @@ if !File.file?(migration_pillar_file)
   raise "ERROR: You need to create a valid #{migration_pillar_file} based on #{migration_pillar_example_file}"
 end
 
-puts `#{vagrant_root}/ssh/generate_keys.sh`
-
 Vagrant.configure(2) do |config|
 
   # **** vm-ship - Docker container ship ****
@@ -51,6 +49,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", path: "pip_install.sh"
 
+    config.vm.provision "shell", path: "ssh/generate_keys.sh"
     config.vm.provision "shell", path: "ssh/accept_keys.sh"
 
     config.vm.provision :salt do |salt|
@@ -92,6 +91,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.network "private_network", ip: "192.168.50.11"
 
+    config.vm.provision "shell", path: "ssh/generate_keys.sh"
     config.vm.provision "shell", path: "ssh/add_keys.sh"
 
     config.vm.provision :salt do |salt|
