@@ -186,6 +186,7 @@ end
 
 Then(/^kan jeg se kategorien i listen over lånerkategorier$/) do
   select_list =  @browser.select_list(:name => "table_categorie_length")
+  select_list.wait_until_present
   @browser.wait_until{ select_list.options.length > 0 }
   select_list.select_value("-1")
 
