@@ -11,7 +11,7 @@ reload: halt up                                       ## Reload vagrant boxes.
 
 reload_test: halt_test up_test                        ## Reload vm-test box.
 
-halt: halt_test halt_ship                             ## Halt boxes (except vm-devops).
+halt: halt_test halt_ship halt_devops                 ## Halt boxes.
 
 reload_devops: halt_devops up_devops                  ##
 
@@ -23,7 +23,7 @@ halt_test:                                            ##
 halt_ship:                                            ##
 	vagrant halt vm-ship
 
-up: up_ship up_test                                   ## Start boxes (except vm-devops).
+up: up_devops up_ship up_test                         ## Start boxes.
 
 halt_devops:                                          ##
 	vagrant halt vm-devops
@@ -37,7 +37,7 @@ up_test:                                              ##
 up_devops:                                            ##
 	vagrant up vm-devops
 
-full_provision: full_provision_ship full_provision_test  ## Full reprovision of boxes (except vm-devops).
+full_provision: full_provision_devops full_provision_ship full_provision_test  ## Full reprovision of boxes
 
 full_provision_ship:                                       ##
 	vagrant provision vm-ship
@@ -48,7 +48,7 @@ full_provision_test:                                       ##
 full_provision_devops:                                     ##
 	vagrant provision vm-devops
 
-provision: provision_ship provision_test              ## Quick re-provision of boxes (no salt-install) (except vm-devops).
+provision: provision_devops provision_ship provision_test  ## Quick re-provision of boxes (only salt)
 
 provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
 
