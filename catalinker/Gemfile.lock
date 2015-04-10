@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.3.8)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
     domain_name (0.5.23)
       unf (>= 0.0.5, < 1.0.0)
     ebnf (0.3.7)
@@ -33,6 +36,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    safe_yaml (1.0.4)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -44,6 +48,9 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.6)
+    webmock (1.21.0)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
 
 PLATFORMS
   ruby
@@ -57,3 +64,4 @@ DEPENDENCIES
   rest-client
   sinatra
   test-unit
+  webmock

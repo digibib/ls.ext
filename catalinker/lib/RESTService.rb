@@ -4,14 +4,13 @@ require 'net/http'
 require_relative './RDFService'
 
 class RESTService
-  @@host = "http://192.168.50.50"
-  @@port = "8080"
-  @@target = "/work"
 
   @@base = "http://deichman.no/work/"
   @@dcterms = "http://purl.org/dc/terms/"
   @@deichman = "http://deichman.no/ontology#"
   @@type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+
+  @@uri = "http://192.168.50.50:8080/work"
 
   def process_work (data)
 
@@ -42,7 +41,7 @@ class RESTService
 
   def push_work (data)
 
-    uri = URI.parse("http://192.168.50.50:8080/work")
+    uri = URI.parse(@@uri)
 
     header = {'Content-Type' => 'application/json'}
 
