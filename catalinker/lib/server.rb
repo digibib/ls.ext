@@ -6,6 +6,7 @@ require_relative './RESTService.rb'
 
 set :bind, '0.0.0.0'
 enable :static
+set :public_folder, File.dirname(__FILE__) + '/public'
 
 get '/' do
   "Catalinker"
