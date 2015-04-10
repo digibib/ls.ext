@@ -5,6 +5,7 @@ require 'json/ld'
 require_relative './RESTService.rb'
 
 set :bind, '0.0.0.0'
+enable :static
 
 get '/' do
   "Catalinker"
