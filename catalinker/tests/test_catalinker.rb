@@ -2,6 +2,7 @@ ENV['RACK_ENV'] = 'test'
 require 'server'
 require 'test/unit'
 require 'rack/test'
+require 'webmock'
 
 class ServerTest < Test::Unit::TestCase
   include Rack::Test::Methods
