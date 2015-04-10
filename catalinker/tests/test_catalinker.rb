@@ -22,6 +22,7 @@ class ServerTest < Test::Unit::TestCase
   def test_it_has_a_work_page
     get '/work'
     follow_redirect!
+    STDOUT.puts last_response.inspect 
     assert last_response.ok?
   end
 
