@@ -3,6 +3,8 @@ require 'server'
 require 'test/unit'
 require 'rack/test'
 require 'webmock'
+require 'webmock/test_unit'
+
 
 class ServerTest < Test::Unit::TestCase
   include Rack::Test::Methods
