@@ -1,5 +1,6 @@
 ENV['RACK_ENV'] = 'test'
 require 'server'
+require 'sinatra'
 require 'test/unit'
 require 'rack/test'
 require 'webmock'
