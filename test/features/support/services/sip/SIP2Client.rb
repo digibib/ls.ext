@@ -73,7 +73,7 @@ class SIP2Client < Service
     send("09N#{timestamp}#{timestamp}AP|AO#{branch}|AB#{barcode}|AD|BIN|")
   end
 
-  def userlogout(branch,use,date=nil)
+  def userlogout(branch,user,date=nil)
     timestamp = date ? Date.parse(date).strftime("%Y%m%d    %H%M%S") : Time.now.strftime("%Y%m%d    %H%M%S")
     send("35#{timestamp}AO#{branch}|AA#{user}|")
   end
