@@ -80,9 +80,11 @@ class SIP2Client < Service
 
   def send(msg)
     begin
+      STDERR.puts "Sending SIP-msg: '#{msg}'"
       @socket.send(msg+"\r", 0)   # Add <CR> and infinite length
 
       result = @socket.recv(1024) # max buffer - 1024 bytes
+      STDERR.puts "Received SIP-msg: '#{result.strip}'"
       return renderSIPmessage(result)
     rescue SystemCallError => e
       raise e
