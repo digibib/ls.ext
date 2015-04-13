@@ -94,11 +94,13 @@ stop_ship:
 	vagrant ssh vm-ship -c '(sudo docker stop koha_container || true) && sudo docker stop koha_mysql_container'
 
 delete_ship: stop_ship
-	vagrant ssh vm-ship -c '(sudo docker rm koha_container || true) && sudo docker rm koha_mysql_container'
+	vagrant ssh vm-ship -c '(sudo docker rm koha_container || true) && sudo docker rm -v koha_mysql_container'
 
-delete_db:
+delete_db: stop_ship
 	vagrant ssh vm-ship -c 'sudo docker rm koha_mysql_data'
 
+wipe_db: delete_ship
+	vagrant ssh vm-ship -c 'sudo docker rm -v koha_mysql_data'
 
 clean: clean_report clean_test                         ## Destroy boxes (except vm-ship and vm-devops).
 
