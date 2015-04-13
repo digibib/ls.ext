@@ -8,16 +8,16 @@
 
 default: <%= omit_ignore %> <%= omit_migration %> <%= omit_wip %> features
 
-html_report: <%= omit_ignore %> <%= omit_migration %> <%= omit_wip %> --format html --out report/index.html
+html_report: <%= omit_ignore %> <%= omit_migration %> <%= omit_wip %> --format pretty --format html --out report/index.html
 
 wip: <%= omit_ignore %> <%= omit_migration %> --tags @wip
 
-html_report_wip: <%= omit_ignore %> <%= omit_migration %> --tags @wip --format html --out report/index_wip.html
+html_report_wip: <%= omit_ignore %> <%= omit_migration %> --tags @wip --format pretty --format html --out report/index_wip.html
 
 migration: <%= omit_ignore %> <%= omit_wip %> --tags @migration
 
-html_report_migration: <%= omit_ignore %> <%= omit_wip %> --tags @migration --format html --out report/index_migration.html
+html_report_migration: <%= omit_ignore %> <%= omit_wip %> --tags @migration --format pretty --format html --out report/index_migration.html
 
 migration_wip: <%= omit_ignore %> --tags @wip --tags @migration
 
-html_report_migration_wip: <%= omit_ignore %> --tags @wip --tags @migration --format html --out report/index_migration_wip.html
+html_report_migration_wip: <%= omit_ignore %> --tags @wip --tags @migration --format pretty --format html --out report/index_migration_wip.html
