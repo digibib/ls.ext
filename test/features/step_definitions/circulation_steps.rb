@@ -111,7 +111,7 @@ Given(/^at materialet er reservert av en annen låner$/) do
     | firstname | password |
     | Ove       | 1234     |
   })
-  step "boka er reservert av \"Ove\""
+  step "boka er reservert av \"#{@active[:patron].surname}\""
 end
 
 When(/^boka er reservert av "(.*?)"$/) do |name|
