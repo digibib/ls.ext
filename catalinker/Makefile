@@ -41,6 +41,9 @@ run-dev: build_skeleton rm
 	sudo docker run -d -p 8081:4567 --name $(CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE)
 
 test: build_skeleton
+	sudo docker run --rm -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
+
+test-dev: build_skeleton
 	sudo docker run -it --rm -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
 
 module-test: run-test-instance
