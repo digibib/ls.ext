@@ -68,8 +68,6 @@ koha_container_running:
         /var/migration_workdir: 
           bind: /var/migration_workdir
           ro: false
-    - volumes_from:
-      - "koha_mysql_data"
     - links:
         koha_mysql_container: db
     - watch:
