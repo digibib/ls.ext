@@ -40,8 +40,8 @@ run-dev: build_skeleton rm
 	echo "open http://192.168.50.50:8081/ for catalinker in DEV mode"
 	sudo docker run -d -p 8081:4567 --name $(CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE)
 
-test: build
-	sudo docker run --rm -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
+test: build_skeleton
+	sudo docker run -it --rm -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
 
 module-test: run-test-instance
 	echo "To do: testing"
