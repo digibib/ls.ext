@@ -95,6 +95,10 @@ class SIP2Client < Service
     hash   = {}
     arr    = string.strip.split("|")    # delimiter
     status = arr.shift                  # first obj is status
+    if !status then
+      STDERR.puts "Could not parse SIP-message status from: '#{string}'"
+      return hash
+    end
     hash[:statusCode] = msgType(status[0,2])  # Two first chars is Message Type
     hash[:statusData] = status[2..-1]         # Rest is status message
 
