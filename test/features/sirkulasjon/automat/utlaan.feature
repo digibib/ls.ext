@@ -46,8 +46,6 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet overskrider maksgrensen for lån
     Og systemet viser at materialet ikke er utlånt
 
-  # TODO FIXME denne ser ut til å skape trøbbel - usikker på hva som skjer - må følges opp
-  @ignore
   Scenario: Eksisterende låner låner materiale på automat
     Gitt at materialet har riktig antall RFID-brikker
     Og at materialet er til utlån
