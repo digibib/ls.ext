@@ -13,7 +13,7 @@ Given(/^at det finnes en utlånsautomat$/) do
   step "at jeg er logget inn som adminbruker"
 
   unless SVC::User.new(@browser,@context,@active).exists?("Automat")
-    # prereq: library
+    # prereq: library and patron category
     branchcode   = generateRandomString
     branchname   = generateRandomString
     categorycode = generateRandomString
@@ -22,8 +22,9 @@ Given(/^at det finnes en utlånsautomat$/) do
     @site.Branches.visit.create(branchname, branchcode)
     @site.PatronCategories.visit.create(categorycode, categorydesc, "Staff")
     @site.Patrons.visit.create(categorydesc, "Audun", "Automat", "autouser", "autopass")
-
-    step "at bruker \"Automat\" har rettighet \"circulate\""
+    @site.PatronDetails.set_permission("circulate")
+    # Maybe unneccessary step to validate automat user has correct permission
+    @site.Patrons.visit.check_permission("Audun Automat", "circulate")
   end
 end
 
