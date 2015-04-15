@@ -28,6 +28,14 @@ class Patrons < IntraPage
     @site.PatronDetails
   end
 
+  def set_permission(name, permission)
+    search("#{name}").set_permission(permission)
+  end
+
+  def check_permission(name, permission)
+    search("#{name}").check_permission(permission)
+  end
+
   def delete(name, surname)
     search("#{name} #{surname}").delete
   end

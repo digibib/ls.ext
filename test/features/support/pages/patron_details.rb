@@ -23,6 +23,21 @@ class PatronDetails < IntraPage
     @browser.div(:id => "checkouts").text
   end
 
+  def set_permission(permission)
+    @browser.button(:text => "More").click
+    @browser.a(:id => "patronflags").click
+    form = @browser.form(:action => "/cgi-bin/koha/members/member-flags.pl")
+    form.checkbox(:value => "#{permission}").set
+    form.submit
+  end
+
+  def check_permission(permission)
+    @browser.button(:text => "More").click
+    @browser.a(:id => "patronflags").click
+    permissions = @browser.ul(:id => "permissionstree")
+    permissions.checkbox(:value => "#{permission}").set?
+  end
+
   def delete
     #Phantomjs doesn't handle javascript popus, so we must override
     #the confirm function to simulate "OK" click:
