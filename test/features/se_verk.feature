@@ -13,4 +13,9 @@ Egenskap: Se verk
   @wip
   Scenario: Se på verksopplysninger på verkssiden
     Når jeg er på sida til verket
-    Så ser jeg på sida ser jeg informasjon som identifiserer verkets tittel, forfatter, utgivelsesår og en liste over eksemplarer i en menneskelesbar format
+    Så ser jeg informasjon som identifiserer verkets tittel, forfatter, utgivelsesår og en liste over eksemplarer i en menneskelesbar format
+
+  @wip
+  Scenario: Se på eksemplarer knyttet til verk
+    Når jeg er på sida til verket
+    Så ser jeg en liste over eksemplarer knyttet til verket
