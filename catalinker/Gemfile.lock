@@ -4,7 +4,7 @@ GEM
     addressable (2.3.8)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
-    domain_name (0.5.23)
+    domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     ebnf (0.3.7)
       haml (~> 4.0)
