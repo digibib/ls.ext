@@ -118,7 +118,7 @@ When(/^boka er reservert av "(.*?)"$/) do |name|
   step "at det er aktivert en standard sirkulasjonsregel"
   step "boka reserveres av \"#{name}\" på egen avdeling"
   step "reserveringskøen kjøres"
-#  step "viser systemet at boka er reservert"
+  step "vises boka i listen over bøker som skal plukkes"
 end
 
 Given(/^at materialet er holdt av til en annen låner$/) do
