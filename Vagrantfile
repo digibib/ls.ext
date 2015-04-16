@@ -37,10 +37,24 @@ Vagrant.configure(2) do |config|
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
       config.cache.scope = :box
+      config.cache.auto_detect = false
+      config.cache.enable :apt
     end
 
     config.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2048"]
+      if ENV['LSDEVMODE'] && ENV['LSDEVMODE'] == 'dev'
+        vb.customize ["modifyvm", :id, "--memory", "6000"]
+        vb.customize ["modifyvm", :id, "--cpus", 4]
+        if ENV['LSDEVIDE']
+          vb.gui = true
+          vb.customize ["modifyvm", :id, "--vram", 128]
+          vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+          vb.customize ["modifyvm", :id, "--ioapic", "on"]
+          vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
+        end
+      else
+        vb.customize ["modifyvm", :id, "--memory", "2048"]
+      end
     end
 
     config.vm.network "private_network", ip: "192.168.50.12"
@@ -57,7 +71,16 @@ Vagrant.configure(2) do |config|
       # this should be rewritten to salt-states?
       config.vm.provision "shell", path: "redef/upgrade_once.sh"
       config.vm.provision "shell", path: "redef/install_jdk.sh"
-      config.vm.provision "shell", path: "redef/install_git-up.sh"
+      if ENV['LSDEVMODE'] == 'dev' and ENV['LSDEVIDE']
+        config.ssh.forward_x11 = true
+        config.ssh.forward_agent = true
+        config.vm.provision "shell", path: "redef/install_git-up.sh"
+        config.vm.provision "shell", path: "redef/install_node_dev_env.sh"
+        config.vm.provision "shell", path: "redef/install_ruby_dev_env.sh"
+        config.vm.provision "shell", path: "redef/install_desktop.sh"
+        config.vm.synced_folder ".IntelliJIdea14", "/home/vagrant/.IntelliJIdea14"
+        config.vm.provision "shell", path: "redef/install_idea.sh"
+      end
     end
 
     if ENV['LSDEVMODE'] && ENV['LSDEVMODE'] == 'dev'
