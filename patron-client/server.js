@@ -26,7 +26,6 @@ app.get('/work/:id', function (request, response) {
     parameters.path = "/work/" + request.params.id;
 
     http.get(parameters, function (res) {
-        console.log(res);
         var body = '';
         res.on('data', function (chunk) {
             body += chunk;
