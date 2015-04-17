@@ -24,7 +24,7 @@ docker-dependencies:
 
 docker_repo:
     pkgrepo.managed:
-      - repo: 'deb http://get.docker.io/ubuntu docker main'
+      - repo: 'deb http://get.docker.com/ubuntu docker main'
       - file: '/etc/apt/sources.list.d/docker.list'
       - key_url: salt://common/docker.pgp
       - require_in:
@@ -33,7 +33,6 @@ docker_repo:
 lxc-docker:
   pkg.installed:
     - version: "1.6.0"
-    - skip_verify: true
     - require:
       - pkg: docker-dependencies
 
