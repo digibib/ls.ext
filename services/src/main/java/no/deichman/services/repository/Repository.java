@@ -4,9 +4,9 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 public interface Repository {
 
-    public void createWork(String work);
+    void createWork(String work);
     
-    public Model listWork();
+    Model listWork();
 
-    public Model retrieveWorkById(String id);
+    Model retrieveWorkById(String id);
 }
