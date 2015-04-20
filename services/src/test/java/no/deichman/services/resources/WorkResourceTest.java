@@ -1,6 +1,5 @@
 package no.deichman.services.resources;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class WorkResourceTest{
+
+    private static final Logger LOG = Logger.getLogger(WorkResourceTest.class.getName());
 
     private WorkResource resource;
 
@@ -80,13 +81,10 @@ public class WorkResourceTest{
     private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {
-            final JsonParser parser = new ObjectMapper().getJsonFactory()
-                    .createJsonParser(json);
+            final JsonParser parser = new ObjectMapper().getJsonFactory().createJsonParser(json);
             while (parser.nextToken() != null) {
             }
             valid = true;
-        } catch (JsonParseException jpe) {
-            jpe.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -96,10 +94,9 @@ public class WorkResourceTest{
 
     private JsonNode parseJSON(final String json) {
         try {
-            JsonNode node = new ObjectMapper().readTree(json);
-            return node;
+            return new ObjectMapper().readTree(json);
         } catch (IOException ex) {
-            Logger.getLogger(WorkResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
         return null;
     }
