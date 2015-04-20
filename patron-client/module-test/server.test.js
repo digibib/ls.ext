@@ -1,9 +1,9 @@
-/*global describe, it, chai, expect */
+/*jslint node: true */
+/*global describe, it */
 
 "use strict";
 
-var assert = require("assert"),
-    chai = require("chai"),
+var chai = require("chai"),
     expect = chai.expect,
     chaiHttp = require('chai-http'),
     http = require('http'),
