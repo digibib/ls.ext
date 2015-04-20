@@ -13,7 +13,7 @@ import org.marc4j.marc.Record;
 public class KohaAdapterMock implements KohaAdapter {
 
     private final Model model = ModelFactory.createDefaultModel();
-    private static Map<String, NewCookie> cookies = new HashMap<String, NewCookie>();
+    private static final Map<String, NewCookie> cookies = new HashMap<>();
 
     @Override
     public Model getBiblio(String biblioNo) {

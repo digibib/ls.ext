@@ -26,7 +26,7 @@ public class KohaAdapterDefault implements KohaAdapter {
     private static final String KOHA_USER = System.getProperty("KOHA_USER", "admin");
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_PASSWORD", "secret");
 
-    private static Map<String, NewCookie> cookies = new HashMap<String, NewCookie>();
+    private static Map<String, NewCookie> cookies = new HashMap<>();
 
     public KohaAdapterDefault() {
         System.out.println("Koha adapter started with KOHA_PORT: " + KOHA_PORT);
