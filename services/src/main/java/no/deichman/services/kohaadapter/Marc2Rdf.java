@@ -12,7 +12,7 @@ import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
 
-public class Marc2Rdf {
+class Marc2Rdf {
 
     public static Model mapRecordToModel(Record record) {
 

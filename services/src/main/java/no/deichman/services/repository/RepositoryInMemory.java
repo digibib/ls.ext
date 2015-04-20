@@ -17,7 +17,7 @@ import com.hp.hpl.jena.update.UpdateRequest;
 
 public class RepositoryInMemory implements Repository {
 
-    private Model model;
+    private final Model model;
     
     public RepositoryInMemory() {
         model = ModelFactory.createDefaultModel();

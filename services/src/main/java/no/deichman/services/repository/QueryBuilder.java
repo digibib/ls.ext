@@ -9,7 +9,7 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 
-public class QueryBuilder {
+class QueryBuilder {
 
     public static Query getGetWorkByIdQuery(String id) {
         String queryString =
@@ -52,15 +52,12 @@ public class QueryBuilder {
         StringWriter sw = new StringWriter();
        	RDFDataMgr.write(sw, work, Lang.NTRIPLES);
        	String data = sw.toString();
-        String queryString =
-                "PREFIX deichman: <http://deichman.no/ontology#>\n"
+        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "INSERT DATA {\n"
                 + "\n"
                 + data
                 + "\n"
                 + "}";
-        return queryString;
-
     }
 }

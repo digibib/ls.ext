@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
+import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -21,16 +22,19 @@ import org.apache.jena.riot.RDFDataMgr;
 @Path("/work")
 public class WorkResource {
 
-    private ServiceDefault service = new ServiceDefault();
+    private final Service service;
     
     public WorkResource() {
 		super();
+        service = new ServiceDefault();
     }
 
     public WorkResource(KohaAdapter kohaAdapter, Repository repository) {
 		super();
-		service.setKohaAdapter(kohaAdapter);
-		service.setRepository(repository);
+        ServiceDefault serviceDefault = new ServiceDefault();
+        serviceDefault.setKohaAdapter(kohaAdapter);
+        serviceDefault.setRepository(repository);
+        service = serviceDefault;
 	}
 
 	@POST
