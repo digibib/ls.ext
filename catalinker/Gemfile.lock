@@ -2,6 +2,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.8)
+    celluloid (0.16.0)
+      timers (~> 4.0.0)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
     domain_name (0.5.24)
@@ -10,13 +12,19 @@ GEM
       haml (~> 4.0)
       rdf (~> 1.1)
       sxp (~> 0.1, >= 0.1.3)
+    ffi (1.9.8)
     haml (4.0.6)
       tilt
+    hitimes (1.2.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     json-ld (1.1.8)
       rdf (~> 1.1, >= 1.1.7)
     link_header (0.0.8)
+    listen (2.10.0)
+      celluloid (~> 0.16.0)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
     mime-types (2.4.3)
     netrc (0.10.3)
     power_assert (0.2.3)
@@ -25,6 +33,9 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rb-fsevent (0.9.4)
+    rb-inotify (0.9.5)
+      ffi (>= 0.5.0)
     rdf (1.1.11)
       link_header (~> 0.0, >= 0.0.8)
     rdf-isomorphic (1.1.0)
@@ -32,6 +43,8 @@ GEM
     rdf-turtle (1.1.6)
       ebnf (~> 0.3, >= 0.3.6)
       rdf (~> 1.1, >= 1.1.10)
+    rerun (0.10.0)
+      listen (~> 2.7, >= 2.7.3)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -45,6 +58,8 @@ GEM
     test-unit (3.0.9)
       power_assert
     tilt (2.0.1)
+    timers (4.0.1)
+      hitimes
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
@@ -61,6 +76,7 @@ DEPENDENCIES
   rdf
   rdf-isomorphic
   rdf-turtle
+  rerun
   rest-client
   sinatra
   test-unit
