@@ -1,2 +1,2 @@
 redef:
-  image-tag: 9a3fbf5f919b100555b2444cd7888589cee4cc32
+  image-tag: 555ca729b60a0857d1cec61843031a9e38149e9f
