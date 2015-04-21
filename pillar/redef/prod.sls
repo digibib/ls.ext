@@ -6,7 +6,7 @@ redef:
     host: 10.172.2.160
     binding: 0.0.0.0
     port: 3030
-  server:
+  services:
     host: 10.172.2.160
     binding: 0.0.0.0
     port: 8005
