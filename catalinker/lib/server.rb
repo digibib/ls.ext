@@ -33,6 +33,7 @@ post '/work', :provides => 'text' do
   data['id'] = params['id']
   data['creator'] = params['creator']
   data['title'] = title
+  data['biblio'] = params['biblio']
   data['date'] = date
 
   r = RESTService.new

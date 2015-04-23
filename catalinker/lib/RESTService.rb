@@ -18,6 +18,7 @@ class RESTService
     author = data['creator']
     title = data['title']
     date = data['date']
+    biblio = data['biblio']
 
     s = RDF::URI.new(@@base + id)
 
@@ -34,7 +35,9 @@ class RESTService
     if !date.empty?
       rdfservice.add_triple(s, RDF::URI.new(@@dcterms + "date"), RDF::Literal.new(date['string'], :datatype => date['datatype']))
     end
-
+    if !biblio.empty?
+      rdfservice.add_triple(s, RDF::URI.new(@@deichman + "biblioId"), RDF::Literal.new(biblio))
+    end
     return rdfservice.get_model
 
   end
