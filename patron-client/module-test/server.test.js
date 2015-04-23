@@ -20,12 +20,17 @@ describe('PatronClient', function () {
     describe('/', function () {
         // FIXME tests should not use same data, and shouldn't get more data than they require
         servicesStub.getJson('/work/work_00001',
-            {"id": "work_00001", "title": "Sult", "creator": "Knut Hamsun", "date": "1890",
-                "editions": [
-                    {"id": "edition_00001", "isbn": "82-05-27748-6", "placement": "Voksenavdelingen, Hovedbiblioteket", "shelf": "magasinet", "status": "På hylla"},
-                    {"id": "edition_00001", "isbn": "82-05-27748-6", "placement": "Voksenavdelingen, Hovedbiblioteket", "status": "På hylla"}
-                ]
+            {
+                "@id" : "http://deichman.no/work/work_1231",
+                "@type" : "http://deichman.no/ontology#Work",
+                "http://deichman.no/ontology#biblioId" : "2",
+                "dcterms:date" : "1890",
+                "dcterms:title" : "Sult",
+                "dcterms:creator" : "Knut Hamsun",
+                "@context" : {
+                    "dcterms" : "http://purl.org/dc/terms/"
                 }
+            }
             );
 
         it('should return status OK', function (done) {
