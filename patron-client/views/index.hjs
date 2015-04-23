@@ -2,10 +2,10 @@
 <html lang="no">
   <head>
     <meta charset="UTF-8" />
-    <title>{{title}} av {{creator}} ({{date}})</title>
+    <title>{{dcterms:title}} av {{dcterms:creator}} ({{dcterms:date}})</title>
   </head>
   <body>
-    <h1>{{title}} av {{creator}} ({{date}})</h1>
+    <h1>{{dcterms:title}} av {{dcterms:creator}} ({{dcterms:date}})</h1>
     {{#hasEdition.length}}
     <h2>Vi har:</h2>
     <ul>
