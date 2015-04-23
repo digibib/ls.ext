@@ -13,6 +13,7 @@ class RDFServiceTest < Test::Unit::TestCase
 
     dcterms = RDF::Vocabulary.new("http://purl.org/dc/terms/")
     rdf = RDF::Vocabulary.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+    deichman = RDF::Vocabulary.new("http://deichman.no/ontology#")
 
     repo = RDF::Repository.new
     test = repo.load('./tests/data/work_0001.nt')
@@ -22,7 +23,9 @@ class RDFServiceTest < Test::Unit::TestCase
         rdf.type  => :type,
         dcterms.creator => :creator,
         dcterms.title => :title,
-        dcterms.date => :date
+        dcterms.date => :date,
+        deichman.biblioId => :biblio
+
       }
     })
 
@@ -42,6 +45,7 @@ class RDFServiceTest < Test::Unit::TestCase
         data['creator'] = solution.creator.to_s
         data['title'] = title
         data['date'] = date
+        data['biblio'] = date
       
     end
 
