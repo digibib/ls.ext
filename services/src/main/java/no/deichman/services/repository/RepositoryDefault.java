@@ -17,6 +17,8 @@ import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 
+import no.deichman.services.SPARQLQueryBuilder;
+
 public class RepositoryDefault implements Repository {
 
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
@@ -29,14 +31,14 @@ public class RepositoryDefault implements Repository {
 
     @Override
     public Model retrieveWorkById(final String id) {
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, QueryBuilder.getGetWorkByIdQuery(id))) {
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.getGetWorkByIdQuery(id))) {
             return qexec.execConstruct();
         }
     }
 
     @Override
     public Model listWork() {
-        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, QueryBuilder.getListWorkQuery())) {
+        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.getListWorkQuery())) {
             return qexec.execDescribe();
         }
     }
@@ -47,6 +49,6 @@ public class RepositoryDefault implements Repository {
     	Model model = ModelFactory.createDefaultModel();
      	RDFDataMgr.read(model, stream, Lang.JSONLD);
      	
-        UpdateRequest updateRequest = UpdateFactory.create(QueryBuilder.getCreateWorkQueryString(model));
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(model));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
     }}

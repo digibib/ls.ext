@@ -1,7 +1,17 @@
 package no.deichman.services.resources;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.github.jsonldjava.core.JsonLdError;
+import com.github.jsonldjava.core.JsonLdOptions;
+import com.github.jsonldjava.core.JsonLdProcessor;
+import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.rdf.model.Model;
+
+import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -25,19 +35,19 @@ public class WorkResource {
     private final Service service;
     
     public WorkResource() {
-		super();
+        super();
         service = new ServiceDefault();
     }
 
     public WorkResource(KohaAdapter kohaAdapter, Repository repository) {
-		super();
+        super();
         ServiceDefault serviceDefault = new ServiceDefault();
         serviceDefault.setKohaAdapter(kohaAdapter);
         serviceDefault.setRepository(repository);
         service = serviceDefault;
-	}
+    }
 
-	@POST
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createWork(String work) {
         service.createWork(work);
@@ -69,10 +79,44 @@ public class WorkResource {
         return Response.ok().entity(asJson(model)).build();
     }
 
+    @GET
+    @Path("/{workId: [a-zA-Z0-9_]+}/items")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getWorkItems(@PathParam("workId") String workId) {
+        Model model = service.retrieveWorkItemsById(workId);
+        if (model.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        return Response.ok().entity(asJson(model)).build();
+    }
+
     private String asJson(Model model) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, model, Lang.JSONLD);
-        return sw.toString();
+        String s = new String();
+        try {
+            Object jsonObject = JsonUtils.fromString(sw.toString());
+            JsonLdOptions options = new JsonLdOptions();
+            options.format = "application/jsonld";
+
+            final Map<String, Object> nses = new HashMap<String, Object>();
+            nses.put("dcterms", "http://purl.org/dc/terms/");
+            nses.put("deichman", "http://deichman.no/ontology#");
+            final Map<String, Object> ctx = new HashMap<String, Object>();
+            ctx.put("@context", nses);
+
+            Object compact = JsonLdProcessor.compact(jsonObject, ctx, options);
+
+            s = JsonUtils.toPrettyString(compact);
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JsonLdError e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 
 }

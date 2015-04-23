@@ -4,6 +4,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import java.util.List;
+import java.util.Optional;
+
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.VariableField;
@@ -36,11 +38,20 @@ class Marc2Rdf {
                             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
                             "http://purl.org/vocab/frbr/core#Item")
             );
-
+            model.add(statement(
+                    resource,
+                    "http://purl.org/deichman/format",
+                    itemData.getSubfield('y').getData())
+            );
+            String statusString = new String();
+            if (itemData.getSubfield('q') != null) {
+                statusString = itemData.getSubfield('q').getData();
+            } else {statusString = "AVAIL";}
             model.add(statement(
                             resource,
                             "http://purl.org/deichman/status",
-                            itemData.getSubfield('y').getData())
+                            statusString
+                            )
             );
             model.add(statement(
                             resource,

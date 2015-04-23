@@ -15,6 +15,8 @@ import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 
+import no.deichman.services.SPARQLQueryBuilder;
+
 public class RepositoryInMemory implements Repository {
 
     private final Model model;
@@ -26,14 +28,14 @@ public class RepositoryInMemory implements Repository {
     
     @Override
     public Model retrieveWorkById(String id) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.getGetWorkByIdQuery(id), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.getGetWorkByIdQuery(id), model)) {
             return qexec.execConstruct();
         }
     }
 
     @Override
     public Model listWork() {
-        try (QueryExecution qexec = QueryExecutionFactory.create(QueryBuilder.getListWorkQuery(), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.getListWorkQuery(), model)) {
             return qexec.execDescribe();
         }
     }
@@ -44,7 +46,7 @@ public class RepositoryInMemory implements Repository {
         Model tempModel = ModelFactory.createDefaultModel();
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(QueryBuilder.getCreateWorkQueryString(tempModel));
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(tempModel));
         UpdateAction.execute(updateRequest, model);
     }   
 }
