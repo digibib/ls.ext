@@ -58,4 +58,37 @@ module Paths
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     return "http://#{host}:#{port(:koha_intra)}#{paths[path.to_sym]}"
   end
+
+  def catalinker(path=nil)
+    paths = {
+      :work => "/work"
+    }
+    raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
+    return "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
+  end
+
+  def patron_client(path=nil)
+    paths = {
+      :work => "/work"
+    }
+    raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
+    return "http://#{host}:#{port(:patron_client)}#{paths[path.to_sym]}"
+  end
+
+  def services(path=nil)
+    paths = {
+      :work => "/work"
+    }
+    raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
+    return "http://#{host}:#{port(:services)}#{paths[path.to_sym]}"
+  end
+
+  def triplestore(path=nil)
+    paths = {
+      :work => "/sparql"
+    }
+    raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
+    return "http://#{host}:#{port(:triplestore)}#{paths[path.to_sym]}"
+  end
+
 end
