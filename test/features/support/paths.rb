@@ -4,8 +4,16 @@ module Paths
     "192.168.50.12"
   end
 
-  def port
-    8081
+  def port(port=nil)
+    ports = {
+      :koha_intra => 8081,
+      :catalinker => 8010,
+      :patron_client => 8000,
+      :services => 8005,
+      :triplestore => 3030
+    }
+    raise ArgumentError, "Invalid port argument" unless port && ports[port.to_sym]
+    return "#{ports[port.to_sym]}"
   end
 
   def intranet(path=nil)
@@ -45,8 +53,9 @@ module Paths
       # svc
       :search_patrons => "/cgi-bin/koha/svc/members/search",
       :preferences => "/cgi-bin/koha/svc/config/systempreferences/"
+
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    return "http://#{host}:#{port}#{paths[path.to_sym]}"
+    return "http://#{host}:#{port(:koha_intra)}#{paths[path.to_sym]}"
   end
 end
