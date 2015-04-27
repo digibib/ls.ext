@@ -5,7 +5,7 @@
     <title>{{dcterms:title}} av {{dcterms:creator}} ({{dcterms:date}})</title>
   </head>
   <body>
-    <h1>{{dcterms:title}} av {{dcterms:creator}} ({{dcterms:date}})</h1>
+    <h1><span data-automation-id="work_title">{{dcterms:title}}</span> / <span data-automation-id="work_author">{{dcterms:creator}}</span> <span>(<span data-automation-id="work_date">{{dcterms:date}}</span>)</span></h1>
     {{#hasEdition.length}}
     <h2>Vi har:</h2>
     <ul>
