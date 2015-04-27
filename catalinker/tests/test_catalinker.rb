@@ -28,9 +28,22 @@ class ServerTest < Test::Unit::TestCase
 
   def test_it_has_a_work_data_service
     stub_request(:post, "http://192.168.50.50:8080/work").
-                with(:body => "{\n  \"@context\": {\n    \"dc\": \"http://purl.org/dc/terms/\"\n  },\n  \"@id\": \"http://deichman.no/work/work_THIS_EXISTS\",\n  \"@type\": \"http://deichman.no/ontology#Work\",\n  \"dc:creator\": {\n    \"@id\": \"http://example.com/person1\"\n  },\n  \"dc:date\": \"2009\",\n  \"dc:identifier\": \"work_THIS_EXISTS\",\n  \"dc:title\": \"This is a test\",\n  \"http://deichman.no/ontology#biblioId\": \"2\"\n}",
-                     :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/json', 'User-Agent'=>'Ruby'}).
-                to_return(:status => 201, :body => "", :headers => {})
+        with(:body =>
+                 {
+                     "@context" => { "dc" => "http://purl.org/dc/terms/" },
+                     "@id" => "http://deichman.no/work/work_THIS_EXISTS",
+                     "@type" => "http://deichman.no/ontology#Work",
+                     "dc:creator" => { "@id" => "http://example.com/person1" },
+                     "dc:date" => "2009",
+                     "dc:identifier" => "work_THIS_EXISTS",
+                     "dc:title" => "This is a test",
+                     "http://deichman.no/ontology#biblioId" => "2"
+                 },
+         :headers => {'Accept'=>'*/*',
+                      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                      'Content-Type'=>'application/json',
+                      'User-Agent'=>'Ruby'}).
+    to_return(:status => 201, :body => "", :headers => {})
 
     post '/work', params = {:id => "work_THIS_EXISTS", :title => "This is a test", :creator => "http://example.com/person1", :date => "2009", :biblio => "2"}
     assert last_response.ok?
