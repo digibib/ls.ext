@@ -1,3 +1,3 @@
 redef:
-  image-tag: 49727e0200b03a401a39b6fefe78c015344c09e4
+  image-tag: 507380e4cf7e19dc525f83af903734960e1384aa
 
