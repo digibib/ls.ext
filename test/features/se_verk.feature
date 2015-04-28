@@ -8,14 +8,16 @@ Egenskap: Se verk
   Ønsker se opplysninger om verket
 
   Bakgrunn:
-    Gitt at jeg vet at det finnes en side for verket
+    Gitt at det finnes en side for et verk
 
   @wip
   Scenario: Se på verksopplysninger på verkssiden
     Når jeg er på sida til verket
-    Så ser jeg informasjon om verkets tittel, forfatter og utgivelsesår
+    Så ser jeg informasjon om verkets tittel og utgivelsesår
 
   @wip
   Scenario: Se på eksemplarer knyttet til verk
+    Gitt at det finnes et eksemplar av en bok registrert i Koha
+    Og at det finnes en side for et verk
     Når jeg er på sida til verket
     Så ser jeg en liste over eksemplarer knyttet til verket
