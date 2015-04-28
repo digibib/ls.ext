@@ -20,7 +20,7 @@ redef_catalinker_container_installed:
     - ports:
       - "4567/tcp" # catalinker
     - environment:
-      - "SERVICES_PORT": "tcp://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}"
+      - "SERVICES_PORT": "http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}"
     - require:
       - docker: redef_catalinker_docker_image
 
