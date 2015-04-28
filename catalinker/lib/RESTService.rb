@@ -10,7 +10,7 @@ class RESTService
   @@deichman = "http://deichman.no/ontology#"
   @@type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
-  @@uri = "http://192.168.50.50:8080/work"
+  @@uri = "#{ENV['SERVICES_PORT'] ||  "http://192.168.50.50:8080"}/work"
 
   def process_work (data)
 
