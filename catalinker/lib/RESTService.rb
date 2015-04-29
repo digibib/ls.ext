@@ -1,6 +1,6 @@
 require 'uri'
 require 'rdf'
-require 'net/http'
+require 'rest-client'
 require_relative './RDFService'
 
 class RESTService
@@ -10,7 +10,7 @@ class RESTService
   @@deichman = "http://deichman.no/ontology#"
   @@type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
-  @@uri = "#{ENV['SERVICES_PORT'] ||  "http://192.168.50.50:8080"}/work"
+  @@uri = (ENV['SERVICES_PORT'] ||  "http://192.168.50.50:8080").sub(/^tcp:\//, 'http:/' ) + "/work"
 
   def process_work (data)
 
@@ -43,19 +43,7 @@ class RESTService
   end
 
   def push_work (data)
-
-    uri = URI.parse(@@uri)
-
-    header = {'Content-Type' => 'application/json'}
-
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Post.new(uri.request_uri, header)
-    request.body = data
-
-    response = http.request(request)
-
-    return response
-
+    RestClient.post @@uri, data, :content_type => :json
   end
 
 end

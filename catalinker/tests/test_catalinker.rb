@@ -39,10 +39,7 @@ class ServerTest < Test::Unit::TestCase
                      "dc:title" => "This is a test",
                      "http://deichman.no/ontology#biblioId" => "2"
                  },
-         :headers => {'Accept'=>'*/*',
-                      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-                      'Content-Type'=>'application/json',
-                      'User-Agent'=>'Ruby'}).
+         :headers => {'Content-Type'=>'application/json'}).
     to_return(:status => 201, :body => "", :headers => {})
 
     post '/work', params = {:id => "work_THIS_EXISTS", :title => "This is a test", :creator => "http://example.com/person1", :date => "2009", :biblio => "2"}
