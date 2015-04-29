@@ -6,24 +6,16 @@
   </head>
   <body>
     <h1><span data-automation-id="work_title">{{dcterms:title}}</span> / <span data-automation-id="work_author">{{dcterms:creator}}</span> <span>(<span data-automation-id="work_date">{{dcterms:date}}</span>)</span></h1>
-    {{#hasEdition.length}}
+    {{#items.length}}
     <h2>Vi har:</h2>
     <ul>
-      {{#hasEdition}}
-        <li><a href="{{.}}">{{.}}</a></li>
-      {{/hasEdition}}
+      {{#items}}
+        <li><span data-automation-id="item_location">{{deichman:location.@id}}</span> | <span data-automation-id="item_status">{{deichman:status.@id}}</span></li>
+      {{/items}}
     </ul>
-    {{/hasEdition.length}}
-    {{^hasEdition.length}}
-    {{#hasEdition}}
-    <h2>Vi har</h2>
-    <ul>
-        <li><a href="{{hasEdition}}">{{hasEdition}}</a></li>
-    </ul>
-    {{/hasEdition}}
-    {{^hasEdition}}
+    {{/items.length}}
+    {{^items}}
     <h2>Vi har ingen eksemplarer</h2>
-    {{/hasEdition}}
-    {{/hasEdition.length}}
+    {{/items}}
   </body>
 </html>

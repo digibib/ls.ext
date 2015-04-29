@@ -33,6 +33,38 @@ describe('PatronClient', function () {
             }
             );
 
+        servicesStub.getJson('/work/work_00001/items',
+            {
+                "@graph": [
+                    {
+                        "@id": "_:b1",
+                        "@type": "deichman:Item",
+                        "deichman:location": {
+                            "@id": "hutl"
+                        },
+                        "deichman:status": {
+                            "@id": "AVAIL"
+                        }
+                    },
+                    {
+                        "@id": "http://deichman.no/work/x0123",
+                        "deichman:hasEdition": {
+                            "@list": [
+                                {
+                                    "@id": "_:b1"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "@context": {
+                    "deichman": "http://deichman.no/ontology#",
+                    "dcterms": "http://purl.org/dc/terms/"
+                }
+            }
+            );
+
+
         it('should return status OK', function (done) {
             chai.request('http://' + parameters.hostname + ':' + parameters.port).
                 get(parameters.path).
@@ -53,6 +85,22 @@ describe('PatronClient', function () {
                 res.on('end', function () {
                     $ = cheerio.load(body);
                     expect($('h1').text()).to.equal("Sult / Knut Hamsun (1890)");
+                    done();
+                });
+            }).on('error', function (e) {
+                console.log("Got error: ", e);
+            });
+        });
+        it('should find item status "hutl"', function (done) {
+            http.get(parameters, function (res) {
+                var body = '',
+                    $ = '';
+                res.on('data', function (chunk) {
+                    body += chunk;
+                });
+                res.on('end', function () {
+                    $ = cheerio.load(body);
+                    expect($('span[data-automation-id=item_location]').text()).to.equal("hutl");
                     done();
                 });
             }).on('error', function (e) {
