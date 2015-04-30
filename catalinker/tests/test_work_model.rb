@@ -5,6 +5,7 @@ require 'rack/test'
 require 'rdf'
 require 'rdf/turtle'
 require 'rdf/isomorphic'
+require 'pry'
 
 class TestWorkModel < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -32,7 +33,7 @@ class TestWorkModel < Test::Unit::TestCase
 
     query.execute(repo) do |solution|
       data = {
-          :id => solution.id.to_s,
+          :id => solution.id.to_s.gsub('http://deichman.no/work/',''),
           :creator => solution.creator.to_s,
           :title => {
             :string => solution.title,
@@ -47,9 +48,10 @@ class TestWorkModel < Test::Unit::TestCase
     end
 
     output = WorkModel.fromData(data)
-    bijection = test.bijection_to output
+    binding.pry
+    iso = test.isomorphic? output
 
-    assert(bijection == nil, "The round-tripped models were not the same: #{bijection}")
+    assert(iso == true, "The round-tripped models were not the same: #{iso}")
   end
 
 end
