@@ -19,6 +19,10 @@ get '/work' do
   redirect '/index.html'
 end
 
+get '/work/:id' do |id|
+  RESTService.pull(:work, id) # just passing on the content for now
+end
+
 get '/item' do
   "Item"
 end
