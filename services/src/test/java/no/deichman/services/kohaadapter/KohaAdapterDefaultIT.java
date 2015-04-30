@@ -11,12 +11,6 @@ import org.junit.Test;
 public class KohaAdapterDefaultIT {
 
     @Test
-    public void should_be_logged_in() {
-        KohaAdapterDefault instance = new KohaAdapterDefault();
-        assertNotNull(instance.getCookies());
-    }
-
-    @Test
     public void should_return_biblio() {
         String manifestationId = "626460";
         KohaAdapterDefault instance = new KohaAdapterDefault();

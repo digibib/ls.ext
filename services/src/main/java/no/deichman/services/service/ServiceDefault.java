@@ -20,6 +20,7 @@ public class ServiceDefault implements Service {
 
     private Repository repository = new RepositoryDefault();
     private KohaAdapter kohaAdapter = new KohaAdapterDefault();
+    public static final Property BIBLIO_ID = ResourceFactory.createProperty("http://deichman.no/ontology#biblioId");
 
     @Override
     public Model retriveWorkById(String id) {
@@ -50,28 +51,27 @@ public class ServiceDefault implements Service {
 
     @Override
     public Model retrieveWorkItemsById(String id) {
-        if (kohaAdapter.getCookies().isEmpty()) {
-            kohaAdapter.login();
-        }
-        Property p = ResourceFactory.createProperty("http://deichman.no/ontology#biblioId");
-        Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrieveWorkById(id));
-        ResIterator it = m.listSubjects();
-        Model itemModel = ModelFactory.createDefaultModel();
+        Model allItemsModel = ModelFactory.createDefaultModel();
 
-        while (it.hasNext()){
-            NodeIterator n = m.listObjectsOfProperty(p);
+        Model model = ModelFactory.createDefaultModel();
+        model.add(repository.retrieveWorkById(id));
+        ResIterator subjectsIterator = model.listSubjects();
+
+        while (subjectsIterator.hasNext()){
             Model tempModel = ModelFactory.createDefaultModel();
+
+            NodeIterator n = model.listObjectsOfProperty(BIBLIO_ID);
             while (n.hasNext()){
                 tempModel.add(kohaAdapter.getBiblio(n.next().toString()));
             }
 
-            Query query = SPARQLQueryBuilder.getItemsFromModelQuery(it.next().toString());
-
+            Query query = SPARQLQueryBuilder.getItemsFromModelQuery(subjectsIterator.next().toString());
             QueryExecution qexec = QueryExecutionFactory.create(query, tempModel);
-            itemModel.add(qexec.execConstruct());
+            Model itemsModel = qexec.execConstruct();
+
+            allItemsModel.add(itemsModel);
         }
 
-        return itemModel;
+        return allItemsModel;
     }
 }

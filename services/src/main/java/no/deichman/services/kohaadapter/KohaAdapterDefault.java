@@ -8,16 +8,17 @@ import org.marc4j.marc.Record;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+
 
 
 public class KohaAdapterDefault implements KohaAdapter {
@@ -25,62 +26,74 @@ public class KohaAdapterDefault implements KohaAdapter {
     private static final String KOHA_PORT = System.getProperty("KOHA_PORT", "http://192.168.50.12:8081");
     private static final String KOHA_USER = System.getProperty("KOHA_USER", "admin");
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_PASSWORD", "secret");
+    private static final String SESSION_COOKIE_KEY = "CGISESSID";
 
-    private static Map<String, NewCookie> cookies = new HashMap<>();
+    private NewCookie sessionCookie;
 
     public KohaAdapterDefault() {
         System.out.println("Koha adapter started with KOHA_PORT: " + KOHA_PORT);
     }
 
-    @Override
-    public void login() {
-        String url = KOHA_PORT + "/cgi-bin/koha/svc/authentication?userid=" + KOHA_USER + "&password=" + KOHA_PASSWORD;
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(url);
+    private void login() {
+        String url = KOHA_PORT + "/cgi-bin/koha/svc/authentication";
 
-        Invocation.Builder invocationBuilder
-                = webTarget.request();
+        Form form = new Form();
+        form.param("userid", KOHA_USER);
+        form.param("password", KOHA_PASSWORD);
 
-        Response response = invocationBuilder.get();
+        Response response = ClientBuilder.newClient()
+                .target(url)
+                .request()
+                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 
-        cookies = response.getCookies();
+        sessionCookie = response.getCookies() == null ? null : response.getCookies().get(SESSION_COOKIE_KEY);
+
+        if (response.getStatus() != 200 || sessionCookie == null) {
+            System.out.println(response);
+            throw new IllegalStateException("Cannot authenticate with Koha: " + response + ", sessionCookie: " + sessionCookie);
+        }
     }
 
     @Override
     public Model getBiblio(String id) {
+        // TODO Handle login in a filter / using template pattern
+        if (sessionCookie == null) {
+            login();
+        }
 
         Model model = ModelFactory.createDefaultModel();
-        Client client = ClientBuilder.newClient();
-
-        String url = KOHA_PORT + "/cgi-bin/koha/svc/"
-                + "bib/" + id + "?userid=" + KOHA_USER + "&password=" + KOHA_PASSWORD + "&items=1";
-        WebTarget webTarget = client.target(url);
-
-        Invocation.Builder invocationBuilder
-                = webTarget.request(MediaType.TEXT_XML);
-        invocationBuilder.cookie(cookies.get("CGISESSID").toCookie());
-
-        Response response = invocationBuilder.get();
-
+        Response response = requestItems(id);
+        // TODO Hack if we have timed out
+        if (response.getStatus() == 403) { // forbidden
+            login();
+            response = requestItems(id);
+        }
         if (response.getStatus() == 200) {
-            model = mapMarcToModel(id, response.readEntity(String.class));
+            model = mapMarcToModel(response.readEntity(String.class));
+        } else {
+            // FIXME !!
         }
         return model;
     }
 
-    private Model mapMarcToModel(String id, String marc21Xml) {
+    private Response requestItems(String id) {
+        Client client = ClientBuilder.newClient();
+        String url = KOHA_PORT + "/cgi-bin/koha/svc/bib/" + id + "?items=1";
+        WebTarget webTarget = client.target(url);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_XML);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.get();
+    }
+
+    private Model mapMarcToModel(String marc21Xml) {
         Model m = ModelFactory.createDefaultModel();
         System.out.println("DEBUG: Received marc from koha\n" + marc21Xml);
         InputStream in = new ByteArrayInputStream(marc21Xml.getBytes(StandardCharsets.UTF_8));
         MarcReader reader = new MarcXmlReader(in);
         while (reader.hasNext()) {
             Record record = reader.next();
-            m.add(Marc2Rdf.mapRecordToModel(record));
+            m.add(Marc2Rdf.mapItemsToModel(record.getVariableFields("952")));
         }
         return m;
-    }
-
-    public Map<String, NewCookie> getCookies() {
-        return cookies;
     }
 }
