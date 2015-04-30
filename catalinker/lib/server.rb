@@ -2,7 +2,9 @@
 require 'sinatra'
 require 'rdf'
 require 'json/ld'
-require_relative './RESTService.rb'
+require_relative './rest_service.rb'
+require_relative './work_model.rb'
+require 'pry'
 
 set :server, 'webrick'
 set :bind, '0.0.0.0'
@@ -22,25 +24,23 @@ get '/item' do
 end
 
 post '/work', :provides => 'text' do
-  title = Hash.new 
-  title['string'] = params['title']
-  title['language'] = params['language']
-  
-  date = Hash.new
-  date['string'] = params['date']
-  date['language'] = params['datatype']
 
-  data = Hash.new
-  data['id'] = params['id']
-  data['creator'] = params['creator']
-  data['title'] = title
-  data['biblio'] = params['biblio']
-  data['date'] = date
+  data =
+      { :id => params[:id],
+        :creator => params[:creator],
+        :title => {
+            :string => params[:title],
+            :language => params[:language]
+        },
+        :biblio => params[:biblio],
+        :date => {
+            :string => params[:date],
+            :datatype => params[:datatype]
+        }
+      }
 
-  r = RESTService.new
-  model = r.process_work(data)
-  resp = r.push_work(model.dump(:jsonld, standard_prefixes: true))
+  model = WorkModel.fromData(data)
+  resp = RESTService.push(:work, model.dump(:jsonld, standard_prefixes: true))
   m = model.dump(:jsonld, standard_prefixes: true)
   "Success: #{m}: #{resp.inspect}"
-  
 end

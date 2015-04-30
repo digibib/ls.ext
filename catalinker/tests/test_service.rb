@@ -1,5 +1,5 @@
 ENV['RACK_ENV'] = 'test'
-require 'server'
+require 'server.rb'
 require 'sinatra'
 require 'test/unit'
 require 'rack/test'

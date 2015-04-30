@@ -1,12 +1,12 @@
 ENV['RACK_ENV'] = 'test'
-require_relative '../lib/RESTService'
+require_relative '../lib/work_model'
 require 'test/unit'
 require 'rack/test'
 require 'rdf'
 require 'rdf/turtle'
 require 'rdf/isomorphic'
 
-class RDFServiceTest < Test::Unit::TestCase
+class TestWorkModel < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def test_it_can_create_complete_work
@@ -25,32 +25,28 @@ class RDFServiceTest < Test::Unit::TestCase
         dcterms.title => :title,
         dcterms.date => :date,
         deichman.biblioId => :biblio
-
       }
     })
 
-    title = Hash.new
-    date = Hash.new
-    data = Hash.new
-    
-    query.execute(repo) do |solution|
-        
-        title['string'] = solution.title
-        title['language'] = solution.title.language
-        
-        date['string'] = solution.date
-        date['datatype'] = solution.date.datatype
+    data = nil
 
-        data['id'] = solution.id.to_s
-        data['creator'] = solution.creator.to_s
-        data['title'] = title
-        data['date'] = date
-        data['biblio'] = date
-      
+    query.execute(repo) do |solution|
+      data = {
+          :id => solution.id.to_s,
+          :creator => solution.creator.to_s,
+          :title => {
+            :string => solution.title,
+            :language => solution.title.language
+          },
+          :date => {
+              :string => solution.date,
+              :datatype => solution.date.datatype
+          },
+          :biblio => solution.biblio.to_s
+      }
     end
 
-    rs = RESTService.new
-    output = rs.process_work data
+    output = WorkModel.fromData(data)
     bijection = test.bijection_to output
 
     assert(bijection == nil, "The round-tripped models were not the same: #{bijection}")
