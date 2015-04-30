@@ -18,34 +18,6 @@ class TestRDFRepo < Test::Unit::TestCase
     assert g.has_statement?(RDF::Statement.new(S, P, O)), "repo did not contain expected work data"
   end
 
-  def test_it_can_create_item_reference
-    p = RDF::URI.new("http://deichman.no/vocab/hasManifestation")
-    o = RDF::URI.new("http://deichman.no/item/test_1234")
-    g = RDFRepo.new.add_triple(S, p, o).get_model
-    assert g.has_statement?(RDF::Statement.new(S, p, o)), "repo did not contain expected work data"
-  end 
-
-  def test_it_can_create_author_reference
-    p = RDF::URI.new("http://purl.org/dc/terms/creator")
-    o = RDF::URI.new("http://deichman.no/person/test_1234")
-    g = RDFRepo.new.add_triple(S, p, o).get_model
-    assert g.has_statement?(RDF::Statement.new(S, p, o)), "repo did not contain expected work data"
-  end
-
-  def test_it_can_create_title
-    p = RDF::URI.new("http://purl.org/dc/terms/title")
-    o = RDF::Literal.new("The meaning of Liff", :language => :no)
-    g = RDFRepo.new.add_triple(S, p, o).get_model
-    assert g.has_statement?(RDF::Statement.new(S, p, o)), "repo did not contain expected work data"
-  end
-
-  def test_it_can_create_date
-    p = RDF::URI.new("http://purl.org/dc/terms/date")
-    o = RDF::Literal.new("1998", :datatype => RDF::XSD.gYear)
-    g = RDFRepo.new.add_triple(S, p, o).get_model
-    assert g.has_statement?(RDF::Statement.new(S, p, o)), "repo did not contain expected work data"
-  end
-  
   def test_it_can_provide_JSONLD
     repo = RDFRepo.new
     g = repo.add_triple(S, P, O).get_model
