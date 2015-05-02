@@ -5,7 +5,6 @@ require 'rack/test'
 require 'rdf'
 require 'rdf/turtle'
 require 'rdf/isomorphic'
-require 'pry'
 
 class TestWorkModel < Test::Unit::TestCase
   include Rack::Test::Methods
