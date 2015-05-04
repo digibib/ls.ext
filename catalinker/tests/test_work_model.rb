@@ -47,7 +47,6 @@ class TestWorkModel < Test::Unit::TestCase
     end
 
     output = WorkModel.fromData(data)
-    binding.pry
     iso = test.isomorphic? output
 
     assert(iso == true, "The round-tripped models were not the same: #{iso}")
