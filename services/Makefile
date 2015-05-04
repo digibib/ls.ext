@@ -46,4 +46,4 @@ ifndef TAG
 	exit 1
 endif
 	sudo docker tag -f $(IMAGE) $(IMAGE):$(TAG)
-	sudo docker push $(IMAGE)
+	sudo docker push $(IMAGE):$(TAG)
