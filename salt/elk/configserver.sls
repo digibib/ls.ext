@@ -49,28 +49,24 @@ generate_logstash_crt_hash:
     - require:
       - file: /etc/logstash
 
-nginx_docker_image:
-  docker.pulled:
-    - name: nginx:1.7.7 # http://nginx.com/blog/deploying-nginx-nginx-plus-docker/
-
 config_container_stop_if_old:
   cmd.run:
     - name: docker stop config_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*1.7.7[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*{{ pillar['elk']['configserver']['image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - require:
       - docker: nginx_docker_image
 
 config_container_remove_if_old:
   cmd.run:
     - name: docker rm config_container || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*1.7.7[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" config_container | grep $(docker images | egrep "nginx[[:space:]]*{{ pillar['elk']['configserver']['image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: config_container_stop_if_old
 
 config_container_installed:
   docker.installed:
     - name: config_container
-    - image: nginx:1.7.7
+    - image: nginx:{{ pillar['elk']['configserver']['image-tag'] }}
     - volumes:
       - /usr/share/nginx/html
     - require:

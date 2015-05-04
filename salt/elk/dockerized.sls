@@ -26,21 +26,21 @@ elk_data_volume_run_once:
 elk_container_stop_if_old:
   cmd.run:
     - name: docker stop elk_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "pblittle/docker-logstash[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "pblittle/docker-logstash[[:space:]]*{{ pillar['elk']['logstash']['image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - require:
       - docker: elk_docker_image
 
 elk_container_remove_if_old:
   cmd.run:
     - name: docker rm elk_container || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "pblittle/docker-logstash[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" elk_container | grep $(docker images | egrep "pblittle/docker-logstash[[:space:]]*{{ pillar['elk']['logstash']['image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - require:
       - cmd: elk_container_stop_if_old
 
 elk_container_installed:
   docker.installed:
     - name: elk_container
-    - image: pblittle/docker-logstash
+    - image: pblittle/docker-logstash:{{ pillar['elk']['logstash']['image-tag'] }}
     - environment:
       - LF_SSL_CERT_KEY_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.key"
       - LF_SSL_CERT_URL: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.crt"

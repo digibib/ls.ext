@@ -29,15 +29,16 @@
     - require:
       - file: /etc/logstash
 
-digitalwonderland/logstash-forwarder:
-  docker.pulled
+logstash-forwarder-image:
+  docker.pulled:
+    - name: digitalwonderland/logstash-forwarder:{{ pillar['elk']['logforwarder']['image-tag'] }}
 
 dockerlogs_forwarder_container_stop_if_old:
   cmd.run:
     - name: docker stop dockerlogs_forwarder_container || true # Next line baffling? http://jinja.pocoo.org/docs/dev/templates/#escaping - Note: egrep-expression must yield single line
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" dockerlogs_forwarder_container | grep $(docker images | egrep "digitalwonderland/logstash-forwarder[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" dockerlogs_forwarder_container | grep $(docker images | egrep "digitalwonderland/logstash-forwarder[[:space:]]*{{ pillar['elk']['logforwarder']['image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - require:
-      - docker: digitalwonderland/logstash-forwarder
+      - docker: logstash-forwarder-image
     - watch:
       - file: /etc/logstash/logstash-forwarder.crt
       - file: /etc/logstash/logstash-forwarder.key
@@ -46,7 +47,7 @@ dockerlogs_forwarder_container_stop_if_old:
 dockerlogs_forwarder_container_remove_if_old:
   cmd.run:
     - name: docker rm dockerlogs_forwarder_container || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" dockerlogs_forwarder_container | grep $(docker images | egrep "digitalwonderland/logstash-forwarder[[:space:]]*latest[[:space:]]+" | awk '{ print $3 }')
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" dockerlogs_forwarder_container | grep $(docker images | egrep "digitalwonderland/logstash-forwarder[[:space:]]*{{ pillar['elk']['logforwarder']['image-tag'] }}[[:space:]]+" | awk '{ print $3 }')
     - watch:
       - cmd: dockerlogs_forwarder_container_stop_if_old
       - file: /etc/logstash/logstash-forwarder.crt
@@ -56,7 +57,7 @@ dockerlogs_forwarder_container_remove_if_old:
 dockerlogs_forwarder_container_installed:
   docker.installed:
     - name: dockerlogs_forwarder_container
-    - image: digitalwonderland/logstash-forwarder
+    - image: digitalwonderland/logstash-forwarder:{{ pillar['elk']['logforwarder']['image-tag'] }}
     - command: ["-logstash", "{{ pillar['elk']['lumberjack-host'] }}:{{ pillar['elk']['lumberjack-port'] }}", "-lazyness", "60", "-config", "/etc/logstash/dockerlog-forwarder.conf"]
     - volumes:
       - /etc/logstash
