@@ -1,84 +1,88 @@
 .PHONY: build test run
 
+REDEF_HOME=/vagrant
+VAGRANT_BOX=redef-devbox
+VAGRANT_SSH_CMD=vagrant ssh $(VAGRANT_BOX) -c
+
 all: up provision build test run
 
 up:
-	vagrant up
+	vagrant up $(VAGRANT_BOX)
 
 provision:
-	vagrant provision
+	vagrant provision $(VAGRANT_BOX)
 
 build:
-	vagrant ssh -c 'cd /vagrant/services && make build'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make build'
 
 run: run-services run-patron-client run-catalinker
 
 run-patron-client:
-	vagrant ssh -c 'cd /vagrant/patron-client && make run'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/patron-client && make run'
 	echo "open http://192.168.50.50:8000/ for patron-client service in PROD mode"
 
 run-dev: up 
 	echo "open http://192.168.50.50:8000/ for patron-client service in DEV mode"
-	vagrant ssh -c 'cd /vagrant/patron-client && make run-dev'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)patron-client && make run-dev'
 	echo "open http://192.168.50.50:8081/ for catalinker service in DEV mode"
-	vagrant ssh -c 'cd /vagrant/catalinker && make run-dev'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/catalinker && make run-dev'
 
 test: test-patron-client test-services test-catalinker
 
 test-patron-client:
-	vagrant ssh -c 'cd /vagrant/services && make stop || true'
-	vagrant ssh -c 'cd /vagrant/patron-client && make lint test module-test'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make stop || true'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/patron-client && make lint test module-test'
 
 test-services:
-	vagrant ssh -c 'cd /vagrant/services && make test'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make test'
 
 log-f:
-	vagrant ssh -c 'cd /vagrant/patron-client && make log-f'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/patron-client && make log-f'
 
 inspect-patron-client:
-	vagrant ssh -c 'cd /vagrant/patron-client && make inspect'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/patron-client && make inspect'
 
 inspect-services:
-	vagrant ssh -c 'cd /vagrant/services && make inspect'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make inspect'
 
 run-services:
-	vagrant ssh -c 'cd /vagrant/services && make run'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make run'
 	echo "open http://192.168.50.50:8080/ for services service in PROD mode"
 
 run-db:
-	vagrant ssh -c 'cd /vagrant/services && make run-db'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make run-db'
 	echo "open http://192.168.50.50:3030/ for services db in PROD mode"
 
 
 stop-services:
-	vagrant ssh -c 'cd /vagrant/services && make stop'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make stop'
 	echo "stopping http://192.168.50.50:8080/ services"
 
 stop-db:
-	vagrant ssh -c 'cd /vagrant/services && make stop-db'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make stop-db'
 	echo "stopping http://192.168.50.50:3030/ services db"
 
 run-catalinker:
-	vagrant ssh -c 'cd /vagrant/catalinker && make run'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/catalinker && make run'
 
 stop-catalinker:
-	vagrant ssh -c 'cd /vagrant/catalinker && make stop'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/catalinker && make stop'
 
 test-catalinker:
-	vagrant ssh -c 'cd /vagrant/catalinker && make test'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/catalinker && make test'
 
 halt:
-	vagrant halt
+	vagrant halt $(VAGRANT_BOX)
 
 login: # needs EMAIL, PASSWORD, USER
-	@ vagrant ssh -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'
+	@ $(VAGRANT_SSH_CMD) 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'
 
 TAG = "$(shell git rev-parse HEAD)"
 push:
-	vagrant ssh -c 'cd /vagrant/patron-client && make push TAG=$(TAG)'
-	vagrant ssh -c 'cd /vagrant/services && make push TAG=$(TAG)'
-	vagrant ssh -c 'cd /vagrant/catalinker && make push TAG=$(TAG)'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/patron-client && make push TAG=$(TAG)'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make push TAG=$(TAG)'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/catalinker && make push TAG=$(TAG)'
 
 docker-cleanup:
 	@echo "cleaning up unused containers and images"
-	@vagrant ssh -c 'sudo /vagrant/docker_cleanup.sh'
+	@$(VAGRANT_SSH_CMD) 'sudo $(REDEF_HOME)/docker_cleanup.sh'
