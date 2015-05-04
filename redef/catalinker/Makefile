@@ -1,53 +1,26 @@
-all: build run
+all: build test run
 
-SKELETON_IMAGE=redef-catalinker-skeleton
+SKELETON_IMAGE=digibib/redef-catalinker-skeleton
+CONTAINER=redef_catalinker_skeleton_container
 IMAGE=digibib/redef-catalinker
-CONTAINER=redef-catalinker
-MODULE_TEST_CONTAINER=redef-catalinker-test-instance
-SERVICES_PORT="tcp://192.168.50.50:8080"
 
-build: build_skeleton build_app
+build:
+	sudo salt-call --local state.sls redef.catalinker.skeletonbuild
 
-build_skeleton:
-	sudo docker build --tag $(SKELETON_IMAGE) --file="Dockerfile-skeleton" /vagrant/catalinker
-	@echo "Gemfile.lock copied to workspace"
-	sudo docker run --rm $(SKELETON_IMAGE) "cat /usr/src/Gemfile.lock" > /vagrant/catalinker/Gemfile.lock
+test: build
+	sudo docker run --rm -v /vagrant/redef/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
 
-build_app:
-	sudo docker build --tag $(IMAGE) /vagrant/catalinker
+test-dev: build
+	sudo docker run -it --rm -v /vagrant/redef/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
+
+run: rm
+	sudo salt-call --local state.sls redef.catalinker.skeletonrun
 
 stop:
 	sudo docker stop $(CONTAINER) || true
 
-stop-test-instance:
-	sudo docker stop $(MODULE_TEST_CONTAINER) || true
-
 rm: stop
 	sudo docker rm $(CONTAINER) || true
-
-rm-test-instance: stop-test-instance 
-	sudo docker rm $(MODULE_TEST_CONTAINER) || true
-
-run: build rm
-	sudo docker run -d -p 8081:4567 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(IMAGE)
-	echo "open http://192.168.50.50:8081/ for catalinker in PROD mode"
-
-run-test-instance: build_skeleton rm-test-instance
-	sudo docker run -d -p 7081:4567 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE)
-	echo "open http://192.168.50.50:7081/ for catalinker in TEST mode"
-
-run-dev: build_skeleton rm
-	echo "open http://192.168.50.50:8081/ for catalinker in DEV mode"
-	sudo docker run -d -t -p 8081:4567 --name $(CONTAINER) -e "SERVICES_PORT=$(SERVICES_PORT)" -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rerun ruby lib/server.rb
-
-test: build_skeleton
-	sudo docker run --rm -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
-
-test-dev: build_skeleton
-	sudo docker run -it --rm -v /vagrant/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
-
-module-test: run-test-instance
-	echo "To do: testing"
 
 log-f:
 	sudo docker logs -f $(CONTAINER)

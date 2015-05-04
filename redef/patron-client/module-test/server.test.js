@@ -12,9 +12,9 @@ var chai = require("chai"),
 
 chai.use(chaiHttp);
 
-servicesStub.start(8080);
+servicesStub.start(6666);
 
-var parameters = {hostname: '192.168.50.50', port: '7000', path: '/work/work_00001'};
+var parameters = {hostname: '192.168.50.12', port: '7000', path: '/work/work_00001'};
 
 describe('PatronClient', function () {
     describe('/', function () {

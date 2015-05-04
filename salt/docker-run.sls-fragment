@@ -1,8 +1,10 @@
 
-{% set force_pull = tag == 'latest' %}
-{% set volumes_from = [data_volume['container']] if data_volume else [] %}
+# Data volume?
 
-{% if data_volume %}
+{% set volumes_from = [data_volume['container']] if data_volume is defined and data_volume else [] %}
+
+{% if data_volume is defined and data_volume %}
+
 {{ data_volume['container'] }}_volume_installed:
   docker.installed:
     - name: {{ data_volume['container'] }}
@@ -16,19 +18,15 @@
   - check_is_running: False
   - require:
     - docker: {{ data_volume['container'] }}_volume_installed
+
 {% endif %}
 
-{{ image }}_pulled:
-  docker.pulled:
-    - name: {{ repo }}/{{ image }}:{{ tag }}
-    - force: {{ force_pull }}
+# Restart if updated
 
 {{ container }}_stop_if_old:
   cmd.run:
     - name: docker stop {{ container }} || true
     - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" {{ container }} | grep $(docker history --quiet --no-trunc {{ repo }}/{{ image }}:{{ tag }} | head -n 1)
-    - require:
-      - docker: {{ image }}_pulled
 
 {{ container }}_remove_if_old:
   cmd.run:
@@ -43,17 +41,30 @@
     - image: {{ repo }}/{{ image }}:{{ tag }}
     - ports: {{ ports }}
     - environment: {{ environment }}
-    - require:
-      - docker: {{ image }}_pulled
+{% if command is defined and command %}
+    - command: {{ command }}
+{% endif %}
+{% if tty is defined and tty %}
+    - tty: {{ tty }}
+{% endif %}
+
 
 {{ container }}_running:
   docker.running:
     - container: {{ container }}
     - port_bindings: {{ port_bindings }}
+{% if host_volume_bindings is defined and host_volume_bindings %}
+    - binds:
+{% for binding in host_volume_bindings %}
+        {{ binding['host'] }}:
+          bind: {{ binding['container'] }}
+          ro: {{ binding['ro'] }}
+{% endfor %}
+{% endif %}
     - volumes_from: {{ volumes_from }}
     - watch:
       - docker: {{ container }}_installed
-{% if data_volume %}
+{% if data_volume is defined and data_volume %}
       - docker: {{ data_volume['container'] }}_volume_installed
       - docker: {{ data_volume['container'] }}_volume_run_once
 {% endif %}

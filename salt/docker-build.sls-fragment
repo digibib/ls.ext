@@ -1,0 +1,4 @@
+
+{{ image }}_built:
+  cmd.run:
+    - name: docker build --tag {{ repo }}/{{ image }} --file={{ build_context }}/{{ dockerfile }} {{ build_context }}

@@ -16,24 +16,30 @@ help:                  ## Show this help.
 ## 
 ##------- DEV - tasks:                                           -------------
 
+ifdef LSDEVMODE
+SHIP=$(LSDEVMODE)-ship
+else
+SHIP=vm-ship
+endif
+
 dev_highstate:         ## Deploy current to your own local environment (vm-devops / vm-ship)
-	vagrant ssh vm-devops -c 'echo " ================ deploying =====================" >> deploy.log && sudo salt "*" state.highstate 2>&1 | sudo tee -a deploy.log'
+	vagrant ssh vm-devops -c 'echo " ================ deploying =====================" >> deploy.log && sudo salt "*" state.highstate pillar="{'GITREF': 'latest'}" 2>&1 | sudo tee -a deploy.log'
 
-dev_highstate_dry_run:         ## Dry run deployment to your own local environment (vm-devops / vm-ship)
-	vagrant ssh vm-devops -c 'sudo salt "*" state.highstate test=True'
+dev_highstate_dry_run:         ## Dry run deployment to your own local environment (vm-devops / $(SHIP))
+	vagrant ssh vm-devops -c 'sudo salt "*" state.highstate pillar="{'GITREF': 'latest'}" test=True'
 
-## 
+##
 ##------- PROD - tasks:                                          -------------
 
 prod_highstate:        ## Deploy specified version to production - args: SUDOUSER, MASTER, GITREF
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) 2>&1 | tee -a deploy.log && echo \"======================== $(SUDOUSER) : deploying ref $(GITREF)\" | tee -a deploy.log && date | tee -a deploy.log && salt -t 30 \"*\" --log-level info --log-file-level=debug state.highstate 2>&1 | tee -a deploy.log'"
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) 2>&1 | tee -a deploy.log && echo \"======================== $(SUDOUSER) : deploying ref $(GITREF)\" | tee -a deploy.log && date | tee -a deploy.log && salt -t 30 \"*\" --log-level info --log-file-level=debug state.highstate pillar="{'GITREF': '$(GITREF)'}" 2>&1 | tee -a deploy.log'"
 
 
 prod_revision:         ## Shows the currently checked out revision on MASTER - args: SUDOUSER, MASTER
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git rev-parse HEAD'
 
 prod_highstate_dry_run:        ## Dry run deployment of specified version to production - args: SUDOUSER, MASTER, GITREF
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) && salt \"*\" --log-level info --log-file-level=debug state.highstate test=True'"
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) && salt \"*\" --log-level info --log-file-level=debug state.highstate pillar="{'GITREF': '$(GITREF)'}" test=True'"
 
 
 
@@ -45,50 +51,50 @@ prod_highstate_dry_run:        ## Dry run deployment of specified version to pro
 ##------- DEV - tasks:                                           -------------
 
 dev_reset_db: ## Delete content from all relevant tables in koha
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.reset pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.reset pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_reset: dev_reset_db dev_reindex_koha
 
 dev_clean_data: ## Delete previously extracted files and temporary files from workdir
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.data_cleaned pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.data_cleaned pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_extract_example_data_full: dev_clean_data ## After cleaning previous files, downloads complete set of example data from wombat - args: WOMBATUSER
-	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir'
-	vagrant ssh vm-ship -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir'
+	vagrant ssh $(SHIP) -c 'mkdir -p /var/migration_workdir'
+	vagrant ssh $(SHIP) -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir'
 
 dev_extract_example_data_minimum: dev_clean_data ## After cleaning previous files, downloads complete set of example data from migration image
-	vagrant ssh vm-ship -c 'sudo mkdir -p /var/migration_workdir/'
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.copy_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh $(SHIP) -c 'sudo mkdir -p /var/migration_workdir/'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.copy_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_example_data:
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_issuing_rules: ## Loads issuing rules
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_authorised_values: ## Loads authorised values
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.authorised_values_imported pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.authorised_values_imported pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_branches: ## Loads data of type branches
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.branches_imported pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.branches_imported pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_patrons:    ## Loads example data of type patrons and exemplar
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_material_type: ## Loads example data of type itemtypes from csv-file
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.material_type_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.material_type_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_catalogue: ## Loads example data of type catalogue and exemplar
-	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.catalogue_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "$(SHIP)" --log-level info state.sls migration.catalogue_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_loans: ## Loads example data of type loans
-	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.loans_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "$(SHIP)" --log-level info state.sls migration.loans_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_reservations: ## Loads example data of type reservations
-	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls migration.reservations_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "$(SHIP)" --log-level info state.sls migration.reservations_loaded pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_reindex_koha: ## Reindexes koha by building zebra
-	vagrant ssh vm-devops -c 'sudo salt -t 30 "vm-ship" --log-level info state.sls koha.reindexed'
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "$(SHIP)" --log-level info state.sls koha.reindexed'
 ##
 ##------- PROD - tasks:                                          -------------
 
@@ -145,11 +151,11 @@ prod_reindex_koha: ## Reindexes koha by building zebra
 ##------- DEV - tasks:                                           -------------
 
 dev_get_dumps:         ## Downloads data dumps from wombat - args: WOMBATUSER
-	vagrant ssh vm-ship -c 'mkdir -p /var/migration_workdir'
-	vagrant ssh vm-ship -c 'scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /var/migration_workdir/'
+	vagrant ssh $(SHIP) -c 'mkdir -p /var/migration_workdir'
+	vagrant ssh $(SHIP) -c 'scp $(WOMBATUSER)@10.172.2.160:/data/bibliofildumps/* /var/migration_workdir/'
 
 dev_import_patrons:    ## Runs conversion and import of patrons 
-	vagrant ssh vm-devops -c 'sudo salt "vm-ship" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /var/migration_workdir}"'
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.patrons_imported pillar="{migration-data-folder: /var/migration_workdir}"'
 
 ## 
 ##------- PROD - tasks:                                          -------------
@@ -202,19 +208,19 @@ prod_deploy_log:       ## - args:  SUDOUSER, MASTER
 ## 
 ##------- DEV - tasks:                                           -------------
 
-dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on vm-ship
+dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on $(SHIP)
 	vagrant ssh vm-devops -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git -M git $(SALT_VERSION)'
-	vagrant ssh vm-ship -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
+	vagrant ssh $(SHIP) -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
 
 dev_connect_minions: ## Adds and connect minion
-	vagrant ssh vm-ship -c 'sudo service salt-minion stop'
-	vagrant ssh vm-ship -c 'echo "master: 192.168.50.21" | sudo tee /etc/salt/minion > /dev/null'
-	vagrant ssh vm-ship -c 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
-	vagrant ssh vm-devops -c 'sudo salt-key -d vm-ship --yes'
-	vagrant ssh vm-ship -c 'sudo service salt-minion start'
+	vagrant ssh $(SHIP) -c 'sudo service salt-minion stop'
+	vagrant ssh $(SHIP) -c 'echo "master: 192.168.50.21" | sudo tee /etc/salt/minion > /dev/null'
+	vagrant ssh $(SHIP) -c 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
+	vagrant ssh vm-devops -c 'sudo salt-key -d $(SHIP) --yes'
+	vagrant ssh $(SHIP) -c 'sudo service salt-minion start'
 	vagrant ssh vm-devops -c 'sudo salt-key --accept-all --yes'
 
-dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minion on vm-devops and minion on vm-ship
+dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minion on vm-devops and minion on $(SHIP)
 
 ## 
 ##------- PROD - tasks:                                          -------------

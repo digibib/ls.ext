@@ -1,4 +1,4 @@
-FROM redef-catalinker-skeleton
+FROM digibib/redef-catalinker-skeleton
 
 MAINTAINER Oslo Public Library "digitalutvikling@gmail.com"
 ENV REFRESHED_AT 2015-04-21

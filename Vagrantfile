@@ -28,10 +28,11 @@ Vagrant.configure(2) do |config|
 
   # **** vm-ship - Docker container ship ****
 
-  config.vm.define "vm-ship" do |config|
+  ship_name = ( ENV['LSDEVMODE'] ||  "vm") + "-ship" # Set LSDEVMODE to 'dev' or 'build'
+  config.vm.define ship_name do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "vm-ship"
+    config.vm.hostname = ship_name
 
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
@@ -52,11 +53,19 @@ Vagrant.configure(2) do |config|
     config.vm.provision "shell", path: "ssh/generate_keys.sh"
     config.vm.provision "shell", path: "ssh/accept_keys.sh"
 
+    if ENV['LSDEVMODE']
+      # this should be rewritten to salt-states?
+      config.vm.provision "shell", path: "redef/upgrade_once.sh"
+      config.vm.provision "shell", path: "redef/install_jdk.sh"
+      config.vm.provision "shell", path: "redef/install_git-up.sh"
+    end
+
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
       salt.pillar_data
+      salt.pillar({ 'GITREF' => ENV['GITREF']}) if ENV['GITREF']
       salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
       salt.install_type = "git"
       salt.install_args = SALT_VERSION

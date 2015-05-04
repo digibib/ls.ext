@@ -1,21 +1,20 @@
 # PILLAR TOP
 base:
-  'wombat,vm-ship':
-    - match: list
+  '^(wombat|\w+-ship)$':
+    - match: pcre
     - koha
     - koha.admin
     - sip
     - migration
     - migration.admin
-    - redef
 
-  'wombat,vm-ship,vm-devops':
-    - match: list
+  '^(wombat|\w+-ship|vm-devops)$':
+    - match: pcre
     - elk
     - resource_monitoring
 
-  'vm-ship,vm-devops':
-    - match: list
+  '^(\w+-ship|vm-devops)$':
+    - match: pcre
     - elk.dev
     - sip.dev
     - redef.dev

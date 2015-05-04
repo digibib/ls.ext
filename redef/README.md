@@ -17,4 +17,4 @@ We use Vagrant and Virtualbox (prerequisites).
 
 To get started developing do `make run-dev`.
 
-See [Makefile](Makefile).
+See [Makefile](../Makefile).

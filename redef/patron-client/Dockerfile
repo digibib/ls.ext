@@ -1,4 +1,4 @@
-FROM redef-patron-client-skeleton
+FROM digibib/redef-patron-client-skeleton
 
 COPY . /usr/src/app
 WORKDIR /usr/src/app/

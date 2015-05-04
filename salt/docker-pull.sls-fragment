@@ -1,0 +1,5 @@
+
+{{ image }}_pulled:
+  docker.pulled:
+    - name: {{ repo }}/{{ image }}:{{ tag }}
+    - force: {{ tag == 'latest' }}

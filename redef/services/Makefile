@@ -3,9 +3,7 @@
 all: test build build-docker run
 
 IMAGE=digibib/redef-services
-CONTAINER=redef-services
-DB_IMAGE=fisch42/fuseki
-DB_CONTAINER=fuseki
+CONTAINER=redef-services-container
 
 KOHA_URL      ?= http://192.168.50.12:8081
 KOHA_USER     ?= admin
@@ -18,7 +16,7 @@ build:
 build-docker: build
 	sudo docker build --tag $(IMAGE) /vagrant/services
 
-stop: stop-db
+stop:
 	sudo docker stop $(CONTAINER) || true
 
 rm: stop rm-db run-db
@@ -32,14 +30,8 @@ run: build-docker rm rm-db run-db
 		-e FUSEKI_URL=$(FUSEKI_URL) \
 		--name $(CONTAINER) $(IMAGE)
 
-stop-db:
-	sudo docker stop $(DB_CONTAINER) || true
-
 rm-db: stop-db
 	sudo docker rm $(DB_CONTAINER) || true
-
-run-db: rm-db
-	sudo docker run -d -p 3030:3030 --name $(DB_CONTAINER) $(DB_IMAGE)
 
 test:
 	./gradlew --daemon test
