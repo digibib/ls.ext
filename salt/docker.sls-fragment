@@ -1,0 +1,59 @@
+
+{% set force_pull = tag == 'latest' %}
+{% set volumes_from = [data_volume['container']] if data_volume else [] %}
+
+{% if data_volume %}
+{{ data_volume['container'] }}_volume_installed:
+  docker.installed:
+    - name: {{ data_volume['container'] }}
+    - image: {{ data_volume['image'] }}:{{ data_volume['tag'] }}
+    - volumes: {{ data_volume['volumes'] }}
+
+{{ data_volume['container'] }}_volume_run_once:
+  docker.running:
+  - container: {{ data_volume['container'] }}
+  - volumes: {{ data_volume['volumes'] }}
+  - check_is_running: False
+  - require:
+    - docker: {{ data_volume['container'] }}_volume_installed
+{% endif %}
+
+{{ image }}_pulled:
+  docker.pulled:
+    - name: {{ repo }}/{{ image }}:{{ tag }}
+    - force: {{ force_pull }}
+
+{{ container }}_stop_if_old:
+  cmd.run:
+    - name: docker stop {{ container }} || true
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" {{ container }} | grep $(docker history --quiet --no-trunc {{ repo }}/{{ image }}:{{ tag }} | head -n 1)
+    - require:
+      - docker: {{ image }}_pulled
+
+{{ container }}_remove_if_old:
+  cmd.run:
+    - name: docker rm {{ container }} || true
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" {{ container }} | grep $(docker history --quiet --no-trunc {{ repo }}/{{ image }}:{{ tag }} | head -n 1)
+    - require:
+      - cmd: {{ container }}_stop_if_old
+
+{{ container }}_installed:
+  docker.installed:
+    - name: {{ container }}
+    - image: {{ repo }}/{{ image }}:{{ tag }}
+    - ports: {{ ports }}
+    - environment: {{ environment }}
+    - require:
+      - docker: {{ image }}_pulled
+
+{{ container }}_running:
+  docker.running:
+    - container: {{ container }}
+    - port_bindings: {{ port_bindings }}
+    - volumes_from: {{ volumes_from }}
+    - watch:
+      - docker: {{ container }}_installed
+{% if data_volume %}
+      - docker: {{ data_volume['container'] }}_volume_installed
+      - docker: {{ data_volume['container'] }}_volume_run_once
+{% endif %}
