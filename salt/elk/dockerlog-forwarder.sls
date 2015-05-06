@@ -64,7 +64,7 @@ dockerlogs_forwarder_container_installed:
       - /var/lib/docker
       - /var/run/docker.sock
     - watch:
-      - docker: digitalwonderland/logstash-forwarder
+      - docker: logstash-forwarder-image
       - file: /etc/logstash/logstash-forwarder.crt
       - file: /etc/logstash/logstash-forwarder.key
       - file: /etc/logstash/dockerlog-forwarder.conf
