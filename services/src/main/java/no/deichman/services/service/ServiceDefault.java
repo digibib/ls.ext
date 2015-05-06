@@ -45,8 +45,8 @@ public class ServiceDefault implements Service {
     }
 
     @Override
-    public void createWork(String work) {
-        repository.createWork(work);
+    public void updateWork(String work) {
+        repository.updateWork(work);
     }
 
     @Override
@@ -74,4 +74,9 @@ public class ServiceDefault implements Service {
 
         return allItemsModel;
     }
+
+	@Override
+	public String createWork() {
+		return repository.createWork();
+	}
 }

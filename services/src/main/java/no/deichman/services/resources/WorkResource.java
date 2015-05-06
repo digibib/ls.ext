@@ -9,6 +9,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -26,6 +29,8 @@ import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.utils.RandomStringDefault;
+
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
@@ -48,10 +53,17 @@ public class WorkResource {
     }
 
     @POST
+    public Response createWork() throws URISyntaxException {
+        String workId = service.createWork();
+        URI location = new URI(workId);
+        return Response.created(location).build();
+    }
+
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createWork(String work) {
-        service.createWork(work);
-        return Response.created(null).build();
+    public Response updateWork(String work) {
+        service.updateWork(work);
+        return Response.ok().build();
     }
 
     @GET

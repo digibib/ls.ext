@@ -4,9 +4,14 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 public interface Repository {
 
-    void createWork(String work);
-    
+	String createWork();
+
+    void updateWork(String work);
+
     Model listWork();
 
     Model retrieveWorkById(String id);
+
+    boolean askIfResourceExists(String uri);
+
 }

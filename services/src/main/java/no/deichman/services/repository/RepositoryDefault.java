@@ -18,6 +18,8 @@ import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 
 import no.deichman.services.SPARQLQueryBuilder;
+import no.deichman.services.utils.RandomString;
+import no.deichman.services.utils.RandomStringDefault;
 
 public class RepositoryDefault implements Repository {
 
@@ -44,11 +46,28 @@ public class RepositoryDefault implements Repository {
     }
 
     @Override
-    public void createWork(final String work) {
+    public void updateWork(final String work) {
     	InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
     	Model model = ModelFactory.createDefaultModel();
      	RDFDataMgr.read(model, stream, Lang.JSONLD);
      	
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(model));
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getUpdateWorkQueryString(model));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
-    }}
+    }
+
+	@Override
+	public boolean askIfResourceExists(String uri) {
+		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.checkIfResourceExists(uri))){
+		    return qexec.execAsk();
+		}
+	}
+
+	@Override
+	public String createWork() {
+		RandomString random = new RandomStringDefault();
+		String id = random.getNewURI("work", this);
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id));
+        UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
+		return id;
+	}
+}

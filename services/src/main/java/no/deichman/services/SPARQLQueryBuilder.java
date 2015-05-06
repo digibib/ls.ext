@@ -50,7 +50,7 @@ public class SPARQLQueryBuilder {
 
     }
 
-    public static String getCreateWorkQueryString(Model work) {
+    public static String getUpdateWorkQueryString(Model work) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);
         String data = sw.toString();
@@ -59,6 +59,17 @@ public class SPARQLQueryBuilder {
                 + "INSERT DATA {\n"
                 + "\n"
                 + data
+                + "\n"
+                + "}";
+    }
+
+    public static String getCreateWorkQueryString(String id) {
+
+        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
+                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+                + "INSERT DATA {\n"
+                + "\n"
+                + "<" + id + "> a deichman:Work ."
                 + "\n"
                 + "}";
     }
@@ -80,5 +91,10 @@ public class SPARQLQueryBuilder {
                 + "    d:status ?status .\n"
                 + "}";
        return QueryFactory.create(q);
+    }
+
+    public static Query checkIfResourceExists(String uri) {
+        String q = "ASK {<" + uri + "> ?p ?o}";
+        return QueryFactory.create(q);
     }
 }

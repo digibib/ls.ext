@@ -1,6 +1,7 @@
 package no.deichman.services.resources;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.NotFoundException;
@@ -56,24 +57,33 @@ public class WorkResourceTest{
     }
 
     @Test
-    public void should_return_201_when_work_created() {
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
-        Response result = resource.createWork(work);
+    public void should_return_201_when_work_created() throws URISyntaxException {
+        Response result = resource.createWork();
 
         assertNull(result.getEntity());
         assertEquals(201, result.getStatus());
     }
+
+    @Test
+    public void should_return_200_when_work_updated() {
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
+        Response result = resource.updateWork(work);
+
+        assertNull(result.getEntity());
+        assertEquals(200, result.getStatus());
+    }
+
     
     @Test
     public void should_return_the_new_work(){
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
         String workId = "work_SHOULD_EXIST";
 
-        Response createResponse = resource.createWork(work);
+        Response createResponse = resource.updateWork(work);
         Response result = resource.getWorkJSON(workId);
 
         assertNotNull(result);
-        assertEquals(201, createResponse.getStatus());
+        assertEquals(200, createResponse.getStatus());
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
@@ -83,10 +93,10 @@ public class WorkResourceTest{
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\",\"deichman:biblioId\":\"1\"}}";
         String workId = "work_SHOULD_EXIST";
 
-        Response createResponse = resource.createWork(work);
+        Response createResponse = resource.updateWork(work);
         Response result = resource.getWorkItems(workId);
 
-        assertEquals(201, createResponse.getStatus());
+        assertEquals(200, createResponse.getStatus());
         assertNotNull(result);
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
