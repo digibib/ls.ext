@@ -95,8 +95,3 @@ push:
 docker-cleanup:
 	@echo "cleaning up unused containers and images"
 	@$(VAGRANT_SSH_CMD) 'sudo $(REDEF_HOME)/docker_cleanup.sh'
-
-run-koha:
-	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/koha && make run \
-	-e KOHA_USER=$(KOHA_USER) \
-	-e KOHA_PASSWORD=$(KOHA_PASSWORD)'
