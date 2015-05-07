@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 public class KohaAdapterDefault implements KohaAdapter {
 
-    private static final String KOHA_URL = System.getProperty("KOHA_URL", "http://192.168.50.12:8081");
+    private static final String KOHA_PORT = System.getProperty("KOHA_PORT", "http://192.168.50.12:8081");
     private static final String KOHA_USER = System.getProperty("KOHA_USER", "admin");
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_PASSWORD", "secret");
     private static final String SESSION_COOKIE_KEY = "CGISESSID";
@@ -31,11 +31,11 @@ public class KohaAdapterDefault implements KohaAdapter {
     private NewCookie sessionCookie;
 
     public KohaAdapterDefault() {
-        System.out.println("Koha adapter started with KOHA_URL: " + KOHA_URL);
+        System.out.println("Koha adapter started with KOHA_PORT: " + KOHA_PORT);
     }
 
     private void login() {
-        String url = KOHA_URL + "/cgi-bin/koha/svc/authentication";
+        String url = KOHA_PORT + "/cgi-bin/koha/svc/authentication";
 
         Form form = new Form();
         form.param("userid", KOHA_USER);
@@ -78,7 +78,7 @@ public class KohaAdapterDefault implements KohaAdapter {
 
     private Response requestItems(String id) {
         Client client = ClientBuilder.newClient();
-        String url = KOHA_URL + "/cgi-bin/koha/svc/bib/" + id + "?items=1";
+        String url = KOHA_PORT + "/cgi-bin/koha/svc/bib/" + id + "?items=1";
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_XML);
         invocationBuilder.cookie(sessionCookie.toCookie());
