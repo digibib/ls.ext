@@ -23,7 +23,7 @@ run-patron-client:
 
 run-dev: up 
 	echo "open http://192.168.50.50:8000/ for patron-client service in DEV mode"
-	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)patron-client && make run-dev'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/patron-client && make run-dev'
 	echo "open http://192.168.50.50:8081/ for catalinker service in DEV mode"
 	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/catalinker && make run-dev'
 
