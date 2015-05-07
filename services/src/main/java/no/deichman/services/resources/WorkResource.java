@@ -29,7 +29,6 @@ import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
-import no.deichman.services.utils.PATCH;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -100,7 +99,7 @@ public class WorkResource {
 
         return Response.ok().entity(asJson(model))
                             .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "POST")
+                            .header("Access-Control-Allow-Methods", "GET")
                             .build();
     }
 
@@ -115,7 +114,7 @@ public class WorkResource {
 
         return Response.ok().entity(asJson(model))
                             .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "POST")
+                            .header("Access-Control-Allow-Methods", "GET")
                             .build();
     }
 
