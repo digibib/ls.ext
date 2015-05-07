@@ -6,11 +6,11 @@ IMAGE=digibib/redef-services
 CONTAINER=redef-services
 DB_IMAGE=fisch42/fuseki
 DB_CONTAINER=fuseki
-KOHA_URL=http://192.168.50.12:8081
-KOHA_USER=admin
-KOHA_PASSWORD=secret
-FUSEKI_URL=http://192.168.50.50:3030
 
+KOHA_URL      ?= http://192.168.50.12:8081
+KOHA_USER     ?= admin
+KOHA_PASSWORD ?= secret
+FUSEKI_URL    ?= http://192.168.50.50:3030
 
 build:
 	./gradlew --daemon build oneJar

@@ -4,6 +4,11 @@ REDEF_HOME=/vagrant
 VAGRANT_BOX=redef-devbox
 VAGRANT_SSH_CMD=vagrant ssh $(VAGRANT_BOX) -c
 
+KOHA_URL      ?= http://192.168.50.12:8081
+KOHA_USER     ?= admin
+KOHA_PASSWORD ?= secret
+FUSEKI_URL    ?= http://192.168.50.50:3030
+
 all: up provision build test run
 
 up:
@@ -46,7 +51,11 @@ inspect-services:
 	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make inspect'
 
 run-services:
-	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make run'
+	$(VAGRANT_SSH_CMD) 'cd $(REDEF_HOME)/services && make run \
+	-e KOHA_URL=$(KOHA_URL) \
+	-e KOHA_USER=$(KOHA_USER) \
+	-e KOHA_PASSWORD=$(KOHA_PASSWORD) \
+	-e FUSEKI_URL=$(FUSEKI_URL)'
 	echo "open http://192.168.50.50:8080/ for services service in PROD mode"
 
 run-db:
