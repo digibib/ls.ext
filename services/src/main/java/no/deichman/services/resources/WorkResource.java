@@ -29,7 +29,7 @@ import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
-import no.deichman.services.utils.RandomStringDefault;
+import no.deichman.services.utils.PATCH;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -56,14 +56,21 @@ public class WorkResource {
     public Response createWork() throws URISyntaxException {
         String workId = service.createWork();
         URI location = new URI(workId);
-        return Response.created(location).build();
+
+        return Response.created(location)
+                       .header("Access-Control-Allow-Origin", "*")
+                       .header("Access-Control-Allow-Methods", "POST")
+                       .build();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateWork(String work) {
         service.updateWork(work);
-        return Response.ok().build();
+        return Response.ok()
+                       .header("Access-Control-Allow-Origin", "*")
+                       .header("Access-Control-Allow-Methods", "PUT")
+                       .build();
     }
 
     @GET
@@ -75,7 +82,10 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(asJson(model)).build();
+        return Response.ok().entity(asJson(model))
+                       .header("Access-Control-Allow-Origin", "*")
+                       .header("Access-Control-Allow-Methods", "GET")
+                       .build();
     }
 
     @GET
@@ -88,7 +98,10 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(asJson(model)).build();
+        return Response.ok().entity(asJson(model))
+                            .header("Access-Control-Allow-Origin", "*")
+                            .header("Access-Control-Allow-Methods", "POST")
+                            .build();
     }
 
     @GET
@@ -100,7 +113,10 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(asJson(model)).build();
+        return Response.ok().entity(asJson(model))
+                            .header("Access-Control-Allow-Origin", "*")
+                            .header("Access-Control-Allow-Methods", "POST")
+                            .build();
     }
 
     private String asJson(Model model) {
