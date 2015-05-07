@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset='utf-8'>
+    <title>Katalogisering</title>
+    <style type="text/css">
+      body {width:100%; font-family: sans-serif; font-size: 1em;}
+      div.form-container {width:40em;}
+      input {width:20em; height:1em; position:absolute; left:10em; margin:0em;}
+      select.addition {position:absolute; width:6em; left:32em; margin-left:1em;}
+      input.submit {width:10em; height:2em; float:right; margin-top:2em;}
+      div.spacer {margin:1em; width:30em;}
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <form action="work" method="post" name="catalogue_work">
+        <div class="spacer">
+          <label for="id">Identifikator</label>
+          <input id="id" name="id" data-automation-id="work_id"/>
+        </div>
+        <div class="spacer">
+          <label for="title">Tittel</label>
+          <input id="title" name="title" data-automation-id="work_title"/>
+          <select class="addition" id="language" name="language" data-automation-id="work_title_language">
+            <option selected="selected" name="en" value="en">en</option>
+            <option name="no" value="no">no</option>
+          </select>
+        </div>
+        <div class="spacer">
+          <label for="creator">Skaper</label>
+          <input id="creator" name="creator" data-automation-id="work_creator"/>
+        </div>
+        <div class="spacer">
+          <label for="date">Dato</label>
+          <input id="date" name="date" data-automation-id="work_date"/>
+          <select class="addition" id="datatype" name="datatype" data-automation-id="work_date_datatype">
+            <option selected="selected" name="year" value="http://www.w3.org/2001/XMLSchema#gYear">År</option>
+            <option name="date" value="http://www.w3.org/2001/XMLSchema#date">Dato</option>
+          </select>
+        </div>
+        <div class="spacer">
+          <label for="biblio">biblioId</label>
+          <input id="biblio" name="biblio" data-automation-id="work_biblioId"/>
+        </div>
+        <div class="spacer">
+          <input class="submit" type="submit" value="Katalogisér"/>
+      </div>
+      </form>
+    </div>
+  </body>
+</html>

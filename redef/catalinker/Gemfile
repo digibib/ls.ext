@@ -1,0 +1,20 @@
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'rest-client'
+gem 'rdf'
+gem 'json-ld'
+gem 'rdf-turtle'
+gem 'rdf-isomorphic'
+
+group :test do
+  gem 'test-unit'
+  gem 'rack-test'
+  gem 'webmock'
+end
+
+group :development do
+  gem 'rerun'
+  gem 'pry'
+  gem 'pry-nav'
+end

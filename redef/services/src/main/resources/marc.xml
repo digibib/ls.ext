@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+    xmlns="http://www.loc.gov/MARC21/slim">
+
+  <leader>00631cam a22002291  4500</leader>
+  <controlfield tag="001">626460</controlfield>
+  <controlfield tag="008">040823                a          10nob 2</controlfield>
+  <datafield tag="015" ind1=" " ind2=" ">
+    <subfield code="a">0147191</subfield>
+    <subfield code="b">BIBBI</subfield>
+  </datafield>
+  <datafield tag="015" ind1=" " ind2=" ">
+    <subfield code="a">832303</subfield>
+    <subfield code="b">BibliofilID</subfield>
+  </datafield>
+  <datafield tag="019" ind1=" " ind2=" ">
+    <subfield code="b">l</subfield>
+    <subfield code="d">R</subfield>
+  </datafield>
+  <datafield tag="020" ind1=" " ind2=" ">
+    <subfield code="a">8249502728</subfield>
+    <subfield code="b">ib.</subfield>
+    <subfield code="c">Nkr 348.00</subfield>
+  </datafield>
+  <datafield tag="090" ind1=" " ind2=" ">
+    <subfield code="d">Rag</subfield>
+  </datafield>
+  <datafield tag="100" ind1=" " ind2="0">
+    <subfield code="a">Ragde, Anne B.</subfield>
+    <subfield code="c">forfatter</subfield>
+    <subfield code="d">1957-</subfield>
+    <subfield code="j">n.</subfield>
+    <subfield code="3">10834700</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Berlinerpoplene</subfield>
+    <subfield code="b">roman</subfield>
+    <subfield code="c">Anne Birkefeldt Ragde</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Oslo</subfield>
+    <subfield code="b">Oktober</subfield>
+    <subfield code="c">2004</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">313 s.</subfield>
+  </datafield>
+  <datafield tag="503" ind1=" " ind2=" ">
+    <subfield code="a">Forts. i: Eremittkrepsene</subfield>
+  </datafield>
+  <datafield tag="599" ind1=" " ind2=" ">
+    <subfield code="a">04x0823kh a04-14</subfield>
+  </datafield>
+  <datafield tag="699" ind1=" " ind2="2">
+    <subfield code="a">Familieforhold</subfield>
+    <subfield code="x">Fortellinger</subfield>
+    <subfield code="1">306.87</subfield>
+    <subfield code="2">BS</subfield>
+  </datafield>
+  <datafield tag="850" ind1=" " ind2=" ">
+    <subfield code="a">DEICHM</subfield>
+    <subfield code="s">n</subfield>
+  </datafield>
+  <datafield tag="942" ind1=" " ind2=" ">
+    <subfield code="c">L</subfield>
+  </datafield>
+  <datafield tag="999" ind1=" " ind2=" ">
+    <subfield code="c">626460</subfield>
+    <subfield code="d">626460</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">2</subfield>
+    <subfield code="a">flam</subfield>
+    <subfield code="b">flam</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">57</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460003</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">3</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">3</subfield>
+    <subfield code="a">fgam</subfield>
+    <subfield code="b">fgam</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">60</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460009</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">9</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">4</subfield>
+    <subfield code="a">froa</subfield>
+    <subfield code="b">froa</subfield>
+    <subfield code="c">Ladegfrist</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">69</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460014</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">14</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">5</subfield>
+    <subfield code="a">fgry</subfield>
+    <subfield code="b">fgry</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">74</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460015</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">15</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">6</subfield>
+    <subfield code="a">fsto</subfield>
+    <subfield code="b">fsto</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">53</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460016</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">16</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">7</subfield>
+    <subfield code="a">hutl</subfield>
+    <subfield code="b">hutl</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">85</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460017</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">17</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">8</subfield>
+    <subfield code="a">hutl</subfield>
+    <subfield code="b">hutl</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">74</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460018</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">18</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">9</subfield>
+    <subfield code="a">hutl</subfield>
+    <subfield code="b">hutl</subfield>
+    <subfield code="c">m</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">54</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460019</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">19</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">10</subfield>
+    <subfield code="a">fopp</subfield>
+    <subfield code="b">fopp</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">55</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460024</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">24</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">11</subfield>
+    <subfield code="a">fsme</subfield>
+    <subfield code="b">fsme</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">33</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460026</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">26</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">12</subfield>
+    <subfield code="a">fsto</subfield>
+    <subfield code="b">fsto</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">52</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460027</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">27</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">13</subfield>
+    <subfield code="a">hutl</subfield>
+    <subfield code="b">hutl</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">55</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460031</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">31</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">14</subfield>
+    <subfield code="a">ffur</subfield>
+    <subfield code="b">ffur</subfield>
+    <subfield code="c">UNDERHOLD</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">48</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460035</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">35</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">15</subfield>
+    <subfield code="a">fmaj</subfield>
+    <subfield code="b">fmaj</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">39</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460038</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">38</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">16</subfield>
+    <subfield code="a">from</subfield>
+    <subfield code="b">from</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">19</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460056</subfield>
+    <subfield code="q">2014-11-27</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">56</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">17</subfield>
+    <subfield code="a">fbol</subfield>
+    <subfield code="b">fbol</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">68</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460057</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">57</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">18</subfield>
+    <subfield code="a">fmaj</subfield>
+    <subfield code="b">fmaj</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">43</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460068</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">68</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">19</subfield>
+    <subfield code="a">fnor</subfield>
+    <subfield code="b">fnor</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">42</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460070</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">70</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">20</subfield>
+    <subfield code="a">ftor</subfield>
+    <subfield code="b">ftor</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">29</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460075</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">75</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">21</subfield>
+    <subfield code="a">fhol</subfield>
+    <subfield code="b">fhol</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">18</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460077</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">77</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">22</subfield>
+    <subfield code="a">fbjo</subfield>
+    <subfield code="b">fbjo</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">5</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460080</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">80</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">23</subfield>
+    <subfield code="a">hutl</subfield>
+    <subfield code="b">hutl</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">13</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460081</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">81</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">24</subfield>
+    <subfield code="a">fgam</subfield>
+    <subfield code="b">fgam</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">19</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460082</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">82</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">25</subfield>
+    <subfield code="a">fmaj</subfield>
+    <subfield code="b">fmaj</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">25</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460089</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">89</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">26</subfield>
+    <subfield code="a">fbju</subfield>
+    <subfield code="b">fbju</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">3</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460090</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">90</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">27</subfield>
+    <subfield code="a">fhol</subfield>
+    <subfield code="b">fhol</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">6</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460091</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">91</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">28</subfield>
+    <subfield code="a">ftor</subfield>
+    <subfield code="b">ftor</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">6</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460092</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">92</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">29</subfield>
+    <subfield code="a">frmm</subfield>
+    <subfield code="b">frmm</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">0</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460093</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">93</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">30</subfield>
+    <subfield code="a">frmm</subfield>
+    <subfield code="b">frmm</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">2</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460094</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">94</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">31</subfield>
+    <subfield code="a">fnyd</subfield>
+    <subfield code="b">fnyd</subfield>
+    <subfield code="c">m</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">0</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460095</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">95</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">32</subfield>
+    <subfield code="a">fnyd</subfield>
+    <subfield code="b">fnyd</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">0</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460096</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">96</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">33</subfield>
+    <subfield code="a">fnyd</subfield>
+    <subfield code="b">fnyd</subfield>
+    <subfield code="c">m</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">0</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460097</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">97</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">34</subfield>
+    <subfield code="a">fnyd</subfield>
+    <subfield code="b">fnyd</subfield>
+    <subfield code="c">m</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">0</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460098</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">98</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="0">0</subfield>
+    <subfield code="1">0</subfield>
+    <subfield code="4">0</subfield>
+    <subfield code="6">RAG</subfield>
+    <subfield code="7">0</subfield>
+    <subfield code="9">35</subfield>
+    <subfield code="a">fnyd</subfield>
+    <subfield code="b">fnyd</subfield>
+    <subfield code="c">m</subfield>
+    <subfield code="d">2015-03-26</subfield>
+    <subfield code="l">0</subfield>
+    <subfield code="o">Rag</subfield>
+    <subfield code="p">03010626460099</subfield>
+    <subfield code="r">2015-03-26</subfield>
+    <subfield code="t">99</subfield>
+    <subfield code="w">2015-03-26</subfield>
+    <subfield code="y">L</subfield>
+    <subfield code="z">Pocket</subfield>
+  </datafield>
+</record>
+

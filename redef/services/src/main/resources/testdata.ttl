@@ -1,0 +1,103 @@
+@prefix deichman: <http://deichman.no/ontology#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbpedia-owl: <http://dbpedia.org/ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://deichman.no/work/work_00001> a deichman:Work ;
+  dcterms:identifier "work_00001" ;
+  rdfs:label "Sult" ;
+  dcterms:title "Sult"@no ;
+  dcterms:creator <http://deichman.no/person/person_00001> ;
+  dcterms:date "1890"^^xsd:gYear ;
+  deichman:hasEdition <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
+ 
+<http://deichman.no/edition/edition_00001> a deichman:Edition ;
+  bibo:isbn "82-05-27748-6" ;
+  deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
+  deichman:placement "magasinet" ;
+  deichman:status "På hylla" .
+
+<http://deichman.no/edition/edition_00002> a deichman:Edition ;
+  bibo:isbn "82-05-27748-6" ;
+  deichman:location <http://deichman.no/department/d_00001> ;
+  deichman:status <http://deichman.no/status/available> .
+
+<http://deichman.no/person/person_00001> a foaf:Person ;
+  rdfs:label "Knut Hamsun" ;
+  foaf:name "Knut Hamsun" ;
+  foaf:givenName "Knut" ;
+  foaf:familyName "Hamsun" ;
+  dbpedia-owl:birthDate "1859-08-04"^^xsd:gDate ;
+  dbpedia-owl:deathDate "1952-02-19"^^xsd:gDate ;
+  owl:sameAs <http://dbpedia.org/page/Knut_Hamsun> .
+
+<http://deichman.no/department/d_00001> a deichman:Department ;
+  foaf:name "Voksenavdelingen, Hovedbiblioteket"@no .
+
+<http://deichman.no/status/available> a deichman:Status ;
+  rdfs:label "På hylla"@no .
+
+<http://deichman.no/work/work_00002> a deichman:Work ;
+  dcterms:identifier "work_00002" ;
+  rdfs:label "Trist som faen" ;
+  dcterms:title "Trist som faen"@no ;
+  dcterms:creator <http://deichman.no/person/person_00002> ;
+  dcterms:date "1999"^^xsd:gYear ;
+  deichman:hasEdition <http://deichman.no/edition/edition_00003> .
+ 
+<http://deichman.no/edition/edition_00003> a deichman:Edition ;
+  bibo:isbn "82-05-26285-3" ;
+  deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
+  deichman:placement "magasinet" ;
+  deichman:status "På hylla" .
+
+<http://deichman.no/person/person_00002> a foaf:Person ;
+  rdfs:label "Ari Behn" ;
+  foaf:name "Ari Behn" ;
+  foaf:givenName "Ari" ;
+  foaf:familyName "Behn" ;
+  dbpedia-owl:birthDate "1972-09-30"^^xsd:gDate ;
+  owl:sameAs <http://dbpedia.org/page/Ari_Behn> .
+
+<http://deichman.no/department/d_00001> a deichman:Department ;
+  foaf:name "Voksenavdelingen, Hovedbiblioteket"@no .
+
+<http://deichman.no/status/available> a deichman:Status ;
+  rdfs:label "På hylla"@no .
+
+<http://deichman.no/work/work_00003> a deichman:Work ;
+  dcterms:identifier "work_00003" ;
+  rdfs:label "A minimalist analysis trousers" ;
+  dcterms:title "A minimalist analysis of trousers"@en ;
+  dcterms:creator <http://deichman.no/person/person_00003> ;
+  dcterms:date "2004"^^xsd:gYear .
+
+<http://deichman.no/person/person_00003> a foaf:Person ;
+  rdfs:label "Stephen Tubs" ;
+  foaf:name "Stephen Tubs" ;
+  foaf:givenName "Stephen" ;
+  foaf:familyName "Tubs" ;
+  dbpedia-owl:birthDate "1967-02-17"^^xsd:gDate .
+
+<http://deichman.no/work/work_00004> a deichman:Work ;
+  dcterms:identifier "work_00004" ;
+  rdfs:label "Berlinerpoplene" ;
+  dcterms:title "Berlinerpoplene"@no ;
+  dcterms:creator <http://deichman.no/person/person_00004> ;
+  dcterms:date "2004"^^xsd:gYear ;
+  deichman:hasEdition <http://deichman.no/edition/edition_00004> .
+
+<http://deichman.no/person/person_00004> a foaf:Person ;
+  rdfs:label "Anne B. Ragde" ;
+  foaf:name "Anne B. Ragde" ;
+  foaf:givenName "Anne B." ;
+  foaf:familyName "Ragde" ;
+  dbpedia-owl:birthDate "1957-12-03"^^xsd:gDate .
+
+<http://deichman.no/edition/edition_00004> a deichman:Edition ;
+  bibo:isbn "82-05-26285-3" ;
+  deichman:biblio "626460" .  

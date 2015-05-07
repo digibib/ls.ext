@@ -1,0 +1,49 @@
+{
+  "name": "redef-patron-client",
+  "version": "0.0.1",
+  "description": "Patron client for the redef part of ls.ext.",
+  "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
+  "contributors": [{
+  "name": "akafred",
+  "email": "github@akafred.com"
+  }],
+  "scripts": {
+    "start" : "node server.js",
+    "test" : "mocha",
+    "module-test" : "mocha module-test",
+    "start-dev" : "nodemon",
+    "start-dev-debug" : "nodemon debug",
+    "test-debug" : "mocha debug",
+    "module-test-debug" : "mocha debug module-test"
+  },
+  "main": "server.js",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/digibib/redef"
+  },
+  "bugs": {
+    "url": "https://github.com/digibib/redef/issues"
+  },
+    "keywords": [
+    "library",
+    "patron"
+  ],
+  "engines": {
+    "node": ">=0.12"
+  },
+  "dependencies": {
+    "express": "*",
+    "fs-hogan": "*",
+    "http": "*"
+  },
+  "devDependencies": {
+    "chai" : "*",
+    "chai-http" : "*",
+    "http": "*",
+    "journey": "*",
+    "cheerio": "*"
+  },
+  "private": true,
+  "analyze": true,
+  "license": "MIT"
+}

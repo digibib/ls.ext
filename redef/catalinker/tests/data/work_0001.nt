@@ -1,0 +1,6 @@
+<http://deichman.no/work/work_0001> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://deichman.no/ontology#Work> .
+<http://deichman.no/work/work_0001> <http://purl.org/dc/terms/identifier> "work_0001" .
+<http://deichman.no/work/work_0001> <http://purl.org/dc/terms/creator> <http://deichman.no/person/p0001> .
+<http://deichman.no/work/work_0001> <http://purl.org/dc/terms/title> "The meaning of Liff"@en .
+<http://deichman.no/work/work_0001> <http://purl.org/dc/terms/date> "1998"^^<http://www.w3.org/2001/XMLSchema#gYear> .
+<http://deichman.no/work/work_0001> <http://deichman.no/ontology#biblioId> "2" .
