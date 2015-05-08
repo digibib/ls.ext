@@ -1,6 +1,6 @@
 all: build run
 
-SKELETON_IMAGE=redef-patron-client-skeleton
+SKELETON_IMAGE=digibib/redef-patron-client-skeleton
 IMAGE=digibib/redef-patron-client
 CONTAINER=redef-patron-client
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
