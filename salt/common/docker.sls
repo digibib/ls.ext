@@ -10,7 +10,7 @@ dockerpy-prereqs:
 
 dockerpy:
   pip.installed:
-    - name: git+https://github.com/dotcloud/docker-py.git@1.1.0-release
+    - name: git+https://github.com/docker/docker-py.git@1.1.0
     - unless: pip freeze | grep 'docker-py==1.1.0'
     - require:
       - pkg: dockerpy-prereqs
@@ -32,7 +32,7 @@ docker_repo:
 
 lxc-docker:
   pkg.installed:
-    - version: "1.6.0"
+    - version: "1.6.1"
     - require:
       - pkg: docker-dependencies
 
