@@ -91,7 +91,9 @@ ifdef FEATURE
 CUKE_ARGS=-n "$(FEATURE)"
 endif
 
-test: redef-test                                                 ## Run unit and cucumber tests.
+test: redef_test cuke_test                            ## Run unit and cucumber tests.
+
+cuke_test:
 	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
@@ -161,15 +163,15 @@ install_firefox_on_devops:
 
 # Commands for redef build
 
-redef-test: test-patron-client test-services test-catalinker
+redef_test: test_patron_client test_services test_catalinker
 
-test-patron-client:
+test_patron_client:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'
 
-test-services:
+test_services:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make test'
 
-test-catalinker:
+test_catalinker:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make test'
 
 login: # needs EMAIL, PASSWORD, USER
@@ -181,6 +183,6 @@ push:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make push TAG=$(TAG)'
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make push TAG=$(TAG)'
 
-docker-cleanup:
+docker_cleanup:
 	@echo "cleaning up unused containers and images"
 	@vagrant ssh $(SHIP) -c 'sudo /vagrant/redef/docker_cleanup.sh'
