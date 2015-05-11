@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -25,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
@@ -37,6 +39,24 @@ import org.apache.jena.riot.RDFDataMgr;
 
 @Path("/work")
 public class WorkResource {
+	
+	private String _corsHeaders;
+
+	private Response makeCORS(ResponseBuilder req, String returnMethod) {
+	   ResponseBuilder rb = req.header("Access-Control-Allow-Origin", "*")
+	      .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH");
+
+	   if (!"".equals(returnMethod)) {
+	      rb.header("Access-Control-Allow-Headers", returnMethod);
+	   }
+
+	   return rb.build();
+	}
+
+	private Response makeCORS(ResponseBuilder req) {
+	   return makeCORS(req, _corsHeaders);
+	}
+
 
     private final Service service;
     
@@ -124,21 +144,17 @@ public class WorkResource {
 
     @OPTIONS
     @Produces(MediaType.APPLICATION_JSON)
-    public Response corsWorkBase() {
-        return Response.ok().header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET, PATCH, PUT, POST, OPTIONS")
-                            .allow("OPTIONS")
-                            .build();
+    public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
+        _corsHeaders = reqHeader;
+        return makeCORS(Response.ok(), reqHeader);
     }
 
     @OPTIONS
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response corsWorkId(@PathParam("workId") String workId) {
-        return Response.ok().header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET, PATCH, PUT, POST, OPTIONS")
-                            .allow("OPTIONS")
-                            .build();
+    public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
+        _corsHeaders = reqHeader;
+        return makeCORS(Response.ok(), reqHeader);
     }
 
     @GET
