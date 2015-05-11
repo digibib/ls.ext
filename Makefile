@@ -91,7 +91,7 @@ ifdef FEATURE
 CUKE_ARGS=-n "$(FEATURE)"
 endif
 
-test: test_redef test cuke_test                            ## Run unit and cucumber tests.
+test: test_redef cuke_test                            ## Run unit and cucumber tests.
 
 cuke_test:
 	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
