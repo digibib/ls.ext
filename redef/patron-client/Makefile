@@ -4,15 +4,20 @@ SKELETON_IMAGE=digibib/redef-patron-client-skeleton
 IMAGE=digibib/redef-patron-client
 CONTAINER=redef-patron-client
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
-SERVICES_PORT="tcp://192.168.50.50:8080"
 
-build: build_skeleton build_app
+test: lint unit_test module-test
+
+run-dev:
+	sudo salt-call --local state.sls redef.patron-client.skeletonrun
+
+run:
+	sudo salt-call --local state.sls redef.patron-client.builtrun
+
+build:
+	sudo salt-call --local state.sls redef.patron-client.builtrun
 
 build_skeleton:
-	sudo docker build --tag $(SKELETON_IMAGE) --file="Dockerfile-skeleton" /vagrant/redef/patron-client
-
-build_app:
-	sudo docker build --tag $(IMAGE) /vagrant/redef/patron-client
+	sudo salt-call --local state.sls redef.patron-client.skeletonbuild
 
 stop:
 	sudo docker stop $(CONTAINER) || true
@@ -25,9 +30,6 @@ rm: stop
 
 rm-test-instance: stop-test-instance 
 	sudo docker rm $(MODULE_TEST_CONTAINER) || true
-
-run: build rm
-	sudo docker run -d -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(IMAGE)
 
 run-test-instance: build_skeleton rm-test-instance
 	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE)
@@ -42,11 +44,6 @@ module-test: run-test-instance
 	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app -p 7080:8080 -p 6666:6666 $(SKELETON_IMAGE) npm run-script module-test
 	@echo "*** Log from module test container"
 	sudo docker logs $(MODULE_TEST_CONTAINER)
-
-test: lint unit_test module-test
-
-run-dev: build_skeleton rm
-	sudo docker run -d -v /vagrant/redef/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
 
 run-dev-debug: build_skeleton rm
 	sudo docker run -it -v /vagrant/redef/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug

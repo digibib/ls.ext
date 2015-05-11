@@ -1,25 +1,34 @@
 .PHONY: build
 
-all: test build-docker run
+all: test build run
 
 IMAGE=digibib/redef-services
 CONTAINER=redef-services-container
 
-KOHA_URL      ?= http://192.168.50.12:8081
-KOHA_USER     ?= admin
-KOHA_PASSWORD ?= secret
-FUSEKI_URL    ?= http://192.168.50.50:3030
+test:
+	./gradlew --daemon test
 
-build:
-	./gradlew --daemon build oneJar
+run-dev: run
 
-build-docker: build
-	sudo docker build --tag $(IMAGE) /vagrant/redef/services
+run:
+	sudo salt-call --local state.sls redef.services.builtrun
 
 stop:
 	sudo docker stop $(CONTAINER) || true
 
-run: build-docker rm
+build-onejar:
+	./gradlew --daemon build oneJar
+
+build: build-onejar
+	sudo docker build --tag $(IMAGE) /vagrant/redef/services
+
+
+KOHA_URL      ?= http://192.168.50.12:8081
+KOHA_USER     ?= admin
+KOHA_PASSWORD ?= secret
+FUSEKI_URL    ?= http://192.168.50.12:3030
+
+run-alternative: build rm
 	sudo docker run -d -p 8080:8080 \
 		-e KOHA_URL=$(KOHA_URL) \
 		-e KOHA_USER=$(KOHA_USER) \
@@ -29,9 +38,6 @@ run: build-docker rm
 
 rm: stop
 	sudo docker rm $(CONTAINER) || true
-
-test:
-	./gradlew --daemon test
 
 log-f:
 	sudo docker logs -f $(CONTAINER)

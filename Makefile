@@ -161,9 +161,9 @@ install_firefox_on_devops:
 	vagrant ssh vm-devops -c 'sudo salt-call --local state.sls firefox'
 
 
-# Commands for redef build
+# Commands for redef build & dev
 
-redef_test: test_patron_client test_services test_catalinker
+test_redef: test_patron_client test_services test_catalinker
 
 test_patron_client:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'
@@ -173,6 +173,17 @@ test_services:
 
 test_catalinker:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make test'
+
+run_redef: run_patron_client run_services run_catalinker
+
+run_patron_client: test_patron_client
+	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make run-dev'
+
+run_services: test_services
+	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make run-dev'
+
+run_catalinker: test_catalinker
+	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make run-dev'
 
 login: # needs EMAIL, PASSWORD, USER
 	@ vagrant ssh $(SHIP) -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'

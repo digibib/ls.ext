@@ -10,11 +10,14 @@ build:
 test: build
 	sudo docker run --rm -v /vagrant/redef/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
 
+run-dev:
+	sudo salt-call --local state.sls redef.catalinker.skeletonrun
+
 test-dev: build
 	sudo docker run -it --rm -v /vagrant/redef/catalinker:/usr/src/app $(SKELETON_IMAGE) rake test
 
-run: rm
-	sudo salt-call --local state.sls redef.catalinker.skeletonrun
+run:
+	sudo salt-call --local state.sls redef.catalinker.builtrun
 
 stop:
 	sudo docker stop $(CONTAINER) || true
