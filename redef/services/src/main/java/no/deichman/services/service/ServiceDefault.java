@@ -76,7 +76,7 @@ public class ServiceDefault implements Service {
     }
 
 	@Override
-	public String createWork() {
-		return repository.createWork();
+	public String createWork(String work) {
+		return repository.createWork(work);
 	}
 }

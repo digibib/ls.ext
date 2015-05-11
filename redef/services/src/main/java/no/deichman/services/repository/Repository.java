@@ -4,7 +4,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 public interface Repository {
 
-	String createWork();
+	String createWork(String work);
 
     void updateWork(String work);
 

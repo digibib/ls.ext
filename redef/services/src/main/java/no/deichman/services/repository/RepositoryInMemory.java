@@ -12,7 +12,6 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.update.UpdateAction;
-import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 
@@ -61,11 +60,15 @@ public class RepositoryInMemory implements Repository {
 	}
 
 	@Override
-	public String createWork() {
-		RandomString random = new RandomStringDefault();
+	public String createWork(String work) {
+        InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
+        RandomString random = new RandomStringDefault();
 		String id = random.getNewURI("work", this);
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id));
+        Model model = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(model, stream, Lang.JSONLD);
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, model));
         UpdateAction.execute(updateRequest, model);
+
 		return id;
 	}
 }

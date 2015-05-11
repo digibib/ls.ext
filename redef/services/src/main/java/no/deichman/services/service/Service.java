@@ -8,5 +8,5 @@ public interface Service {
     Model listWork();
     Model retriveWorkById(String id);
     Model retrieveWorkItemsById(String id);
-	String createWork();
+	String createWork(String work);
 }

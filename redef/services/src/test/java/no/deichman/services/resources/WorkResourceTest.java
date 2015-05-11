@@ -58,7 +58,9 @@ public class WorkResourceTest{
 
     @Test
     public void should_return_201_when_work_created() throws URISyntaxException {
-        Response result = resource.createWork();
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
+
+        Response result = resource.createWork(work);
 
         assertNull(result.getEntity());
         assertEquals(201, result.getStatus());

@@ -29,6 +29,7 @@ import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.utils.PATCH;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -52,8 +53,9 @@ public class WorkResource {
     }
 
     @POST
-    public Response createWork() throws URISyntaxException {
-        String workId = service.createWork();
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createWork(String work) throws URISyntaxException {
+        String workId = service.createWork(work);
         URI location = new URI(workId);
 
         return Response.created(location)
@@ -69,6 +71,17 @@ public class WorkResource {
         return Response.ok()
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "PUT")
+                       .build();
+    }
+
+    @PATCH
+    @Consumes("application/n-triples")
+    public Response patchWork(String work) {
+//TODO        service.updateWork(work);
+
+        return Response.ok()
+                       .header("Access-Control-Allow-Origin", "*")
+                       .header("Access-Control-Allow-Methods", "PATCH")
                        .build();
     }
 

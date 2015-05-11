@@ -8,6 +8,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.update.UpdateAction;
 
 public class SPARQLQueryBuilder {
 
@@ -63,13 +64,31 @@ public class SPARQLQueryBuilder {
                 + "}";
     }
 
-    public static String getCreateWorkQueryString(String id) {
+    private static String renameWorkResource(String newURI) {
+        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
+                + "DELETE {\n"
+                + " ?s ?p ?o .\n"
+                + "}\n"
+                + "INSERT {\n"
+                + " <" + newURI + "> ?p ?o .\n"
+                + "}\n"
+                + "WHERE {\n"
+                + " ?s ?p ?o .\n"
+                + "}\n";
+    }
+
+    public static String getCreateWorkQueryString(String id, Model work) {
+
+        UpdateAction.parseExecute(renameWorkResource(id), work);
+        StringWriter sw = new StringWriter();
+        RDFDataMgr.write(sw, work, Lang.NTRIPLES);
+        String data = sw.toString();
 
         return "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "INSERT DATA {\n"
                 + "\n"
-                + "<" + id + "> a deichman:Work ."
+                + data
                 + "\n"
                 + "}";
     }

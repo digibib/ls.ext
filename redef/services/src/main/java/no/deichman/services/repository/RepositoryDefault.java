@@ -63,10 +63,14 @@ public class RepositoryDefault implements Repository {
 	}
 
 	@Override
-	public String createWork() {
+	public String createWork(String work) {
+        InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
 		RandomString random = new RandomStringDefault();
 		String id = random.getNewURI("work", this);
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id));
+        Model model = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(model, stream, Lang.JSONLD);
+
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, model));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
 		return id;
 	}
