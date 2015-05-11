@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -61,6 +62,7 @@ public class WorkResource {
         return Response.created(location)
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "POST")
+                       .allow("OPTIONS")
                        .build();
     }
 
@@ -71,6 +73,7 @@ public class WorkResource {
         return Response.ok()
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "PUT")
+                       .allow("OPTIONS")
                        .build();
     }
 
@@ -82,6 +85,7 @@ public class WorkResource {
         return Response.ok()
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "PATCH")
+                       .allow("OPTIONS")
                        .build();
     }
 
@@ -97,6 +101,7 @@ public class WorkResource {
         return Response.ok().entity(asJson(model))
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "GET")
+                       .allow("OPTIONS")
                        .build();
     }
 
@@ -113,6 +118,26 @@ public class WorkResource {
         return Response.ok().entity(asJson(model))
                             .header("Access-Control-Allow-Origin", "*")
                             .header("Access-Control-Allow-Methods", "GET")
+                            .allow("OPTIONS")
+                            .build();
+    }
+
+    @OPTIONS
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response corsWorkBase() {
+        return Response.ok().header("Access-Control-Allow-Origin", "*")
+                            .header("Access-Control-Allow-Methods", "GET, PATCH, PUT, POST, OPTIONS")
+                            .allow("OPTIONS")
+                            .build();
+    }
+
+    @OPTIONS
+    @Path("/{workId: [a-zA-Z0-9_]+}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response corsWorkId(@PathParam("workId") String workId) {
+        return Response.ok().header("Access-Control-Allow-Origin", "*")
+                            .header("Access-Control-Allow-Methods", "GET, PATCH, PUT, POST, OPTIONS")
+                            .allow("OPTIONS")
                             .build();
     }
 
@@ -128,6 +153,7 @@ public class WorkResource {
         return Response.ok().entity(asJson(model))
                             .header("Access-Control-Allow-Origin", "*")
                             .header("Access-Control-Allow-Methods", "GET")
+                            .allow("OPTIONS")
                             .build();
     }
 
