@@ -1,6 +1,6 @@
 .PHONY: build
 
-all: test build build-docker run
+all: test build-docker run
 
 IMAGE=digibib/redef-services
 CONTAINER=redef-services-container
@@ -14,15 +14,12 @@ build:
 	./gradlew --daemon build oneJar
 
 build-docker: build
-	sudo docker build --tag $(IMAGE) /vagrant/services
+	sudo docker build --tag $(IMAGE) /vagrant/redef/services
 
 stop:
 	sudo docker stop $(CONTAINER) || true
 
-rm: stop rm-db run-db
-	sudo docker rm $(CONTAINER) || true
-
-run: build-docker rm rm-db run-db
+run: build-docker rm
 	sudo docker run -d -p 8080:8080 \
 		-e KOHA_URL=$(KOHA_URL) \
 		-e KOHA_USER=$(KOHA_USER) \
@@ -30,8 +27,8 @@ run: build-docker rm rm-db run-db
 		-e FUSEKI_URL=$(FUSEKI_URL) \
 		--name $(CONTAINER) $(IMAGE)
 
-rm-db: stop-db
-	sudo docker rm $(DB_CONTAINER) || true
+rm: stop
+	sudo docker rm $(CONTAINER) || true
 
 test:
 	./gradlew --daemon test
