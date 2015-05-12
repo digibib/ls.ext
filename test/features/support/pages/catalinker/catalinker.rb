@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require_relative 'page_root.rb'
+require_relative '../page_root.rb'
 
 class Catalinker < PageRoot
     def visit

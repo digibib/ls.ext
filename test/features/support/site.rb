@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 # http://stackoverflow.com/questions/735073/best-way-to-require-all-files-from-a-directory-in-ruby
-Dir[File.dirname(__FILE__) + '/pages/*.rb'].each {|file| require file }
+Dir[File.dirname(__FILE__) + '/pages/**/*.rb'].each {|file| require file }
 
 class Site
 
