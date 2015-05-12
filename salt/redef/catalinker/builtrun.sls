@@ -6,7 +6,7 @@ include:
 {% set image = 'redef-catalinker' %}
 {% set tag = 'latest' %}
 {% set build_context = '/vagrant/redef/catalinker' %}
-{% set dockerfile = 'Dockerfile-skeleton' %}
+{% set dockerfile = 'Dockerfile' %}
 
 {% include 'docker-build.sls-fragment' %}
 
