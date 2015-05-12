@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip
+@wip @redef
 Egenskap: Låne et eksemplar av et bestemt verk
   Som bruker av biblioteket
   Siden jeg skal ha norsk muntlig eksamen i morgen tidlig om Knut Hamsun

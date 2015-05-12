@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip
+@wip @redef
 Egenskap: Se verk
   Som bruker av bibliotekets nettsider
   Siden jeg er interessert et bestemt verk

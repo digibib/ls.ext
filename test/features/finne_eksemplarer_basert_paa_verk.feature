@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip
+@wip @redef
 Egenskap: Finne eksemplarer basert på opplysninger om verk
   Som bruker av biblioteket
   Siden jeg er interessert i en bestemt periode

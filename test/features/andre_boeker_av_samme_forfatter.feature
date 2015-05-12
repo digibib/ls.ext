@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip
+@wip @redef
 Egenskap: Bruker finner andre bøker av samme forfatter
   Som bruker av biblioteket
   Siden jeg ble inspirert av en bok
