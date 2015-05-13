@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
@@ -64,6 +65,16 @@ public class WorkResourceTest{
 
         assertNull(result.getEntity());
         assertEquals(201, result.getStatus());
+    }
+
+    @Test
+    public void should_return_location_header_when_work_created() throws URISyntaxException {
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
+
+        Response result = resource.createWork(work);
+
+        assertNull(result.getEntity());
+        assertTrue(Pattern.matches("http://deichman.no/work/w\\d{12}", result.getHeaderString("Location")));
     }
 
     @Test
