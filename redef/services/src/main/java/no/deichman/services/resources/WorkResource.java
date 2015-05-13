@@ -177,7 +177,7 @@ public class WorkResource {
     private String asJson(Model model) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, model, Lang.JSONLD);
-        String s = new String();
+        String s = "";
         try {
             Object jsonObject = JsonUtils.fromString(sw.toString());
             JsonLdOptions options = new JsonLdOptions();

@@ -13,7 +13,7 @@ public class RandomStringDefault implements RandomString {
 	}
 	
 	private String getRandom(String type) {
-		String random = new String();
+		String random;
 		
 		switch (type) {
 		    case "work": random = "http://deichman.no/work/w" + getRandom();
@@ -32,7 +32,7 @@ public class RandomStringDefault implements RandomString {
 
 	@Override
 	public String getNewURI(String type, Repository repository) {
-		String random = new String();
+		String random = null;
 		boolean exists = true;
 
 		while (exists != false) {
