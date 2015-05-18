@@ -6,6 +6,7 @@ base:
 
   '^(\w+-ship|vm-devops)$':
     - match: pcre
+    - common.docker-aufs
 
   'wombat,vm-devops':
     - match: list
