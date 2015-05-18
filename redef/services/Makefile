@@ -3,7 +3,7 @@
 all: test build run
 
 IMAGE=digibib/redef-services
-CONTAINER=redef_services_container
+CONTAINER=redef-services-container
 
 test:
 	./gradlew --daemon test
