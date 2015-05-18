@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1" />
+    <title>Catalinker</title>
+    <link rel="stylesheet" href="catalinker.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+
+
+    <!-- Angular Material Dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.2/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.js"></script>
+
+    <!--scripts-->
+
+</head>
+<body ng-controller="appController" layout="column">
+
+    <section layout="row" flex>
+        <!--Left-->
+        <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+            <md-content layout-padding>
+                <md-input-container>
+                    <label>Søk</label>
+                    <md-input placeholder="Søk"></md-input>
+                </md-input-container>
+            </md-content>
+        </md-sidenav>
+
+        <!--Main-->
+        <md-content flex layout-padding>
+            <form name="entityForm">
+                <div layout="column">
+                        <md-button ng-click="newWork()">+ New Work</md-button>
+                    <md-content layout="column" layout-sm="column" ng-repeat="triple in triples">
+                        <md-input-container ng-switch on="triple.type" style="width:90%">
+                            <label>
+                                {{labels[triple.predicate]['no'] || triple.predicate}}
+                            </label>
+
+                            <input ng-switch-when="date" ng-model="triple.value" type="date" name="{{triple.id}}" />
+                            <input ng-switch-when="email" ng-model="triple.value" type="email" name="{{triple.id}}" />
+                            <input ng-switch-default ng-model="triple.value" name="{{triple.id}}" ng-blur="triple.save()" ng-disabled="triple.isReadOnly || triple.isSaving"/>
+
+                            <div ng-show ng-messages="entityForm.description.$error">
+                                <div ng-message="required">Dette er påkrevd.</div>
+                                <!--div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
+                            </div>
+
+                            <md-progress-linear md-mode="indeterminate" ng-show="triple.isSaving" style="position:absolute;top:44px"></md-progress-linear>
+                            <md-progress-linear md-mode="determinate" ng-show="triple.isNew" style="position:absolute;top:44px" class="md-accent"></md-progress-linear>
+                            <md-progress-linear md-mode="determinate" ng-show="!triple.isNew && triple.value !== triple.savedValue" style="position:absolute;top:44px" class="md-warn"></md-progress-linear>
+                            <md-button class="md-fab md-raised md-mini" style="position:absolute;right:0;font-size:small" ng-click="removeTriple(triple)" title="Slett">X</button>
+                        </md-input-container>
+
+                    </md-content>
+                </div>
+            </form>
+            <div layout="column">
+                <md-content layout-padding layout="row" layout-sm="column">
+                    <md-input-container>
+                        <md-select ng-model="predicate" placeholder="Predicate">
+                            <md-select-label>{{predicate || 'Velg Predikat'}}</md-select-label>
+                            <md-option ng-repeat="predicate in predicates" ng-value="predicate.value">{{predicate.label.default}}</md-option>
+                        </md-select>
+
+                    </md-input-container>
+                    <md-button ng-click="add()" ng-disabled="!predicate">+</md-button>
+
+                </md-content>
+            </div>
+        </md-content>
+    </section>
+
+</body>
+</html>
