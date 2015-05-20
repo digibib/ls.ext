@@ -1,5 +1,5 @@
 # encoding: UTF-8
-
+require_relative '../support/context_structs.rb'
 Given(/^at det finnes en materialtype$/) do
   step "jeg legger til en materialtype"
 end
@@ -36,6 +36,7 @@ When(/^jeg legger til et nytt eksemplar$/) do
   book.addItem
   book.items[1].branch   = book.items[0].branch
   book.items[1].itemtype = book.items[0].itemtype
+  book.items[1].barcode  = '0301%010d' % rand(10 ** 10)
 
   @site.AddItem.
       visit(book.biblionumber).
