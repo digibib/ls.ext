@@ -24,8 +24,8 @@ describe('PatronClient', function () {
                 "@id" : "http://deichman.no/work/work_1231",
                 "@type" : "http://deichman.no/ontology#Work",
                 "http://deichman.no/ontology#biblioId" : "2",
-                "dcterms:date" : "1890",
-                "dcterms:title" : "Sult",
+                "dcterms:date" : {"@value" : "1890", "@type" : "http://www.w3.org/2001/XMLSchema#gYear"},
+                "dcterms:title" : {"@value" : "Sult", "@lang" : "no"},
                 "dcterms:creator" : "Knut Hamsun",
                 "@context" : {
                     "dcterms" : "http://purl.org/dc/terms/"
