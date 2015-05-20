@@ -1,7 +1,5 @@
 package no.deichman.services.repository;
 
-
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -18,8 +16,9 @@ import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 
 import no.deichman.services.SPARQLQueryBuilder;
-import no.deichman.services.utils.RandomString;
-import no.deichman.services.utils.RandomStringDefault;
+import no.deichman.services.uridefaults.BaseURIDefault;
+import no.deichman.services.utils.UniqueURI;
+import no.deichman.services.utils.UniqueURIDefault;
 
 public class RepositoryDefault implements Repository {
 
@@ -33,8 +32,10 @@ public class RepositoryDefault implements Repository {
 
     @Override
     public Model retrieveWorkById(final String id) {
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.getGetWorkByIdQuery(id))) {
-            return qexec.execConstruct();
+        String uri = BaseURIDefault.getWorkURI() + id;
+        System.out.println("Attempting to retrieve: " + uri);
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.getGetWorkByIdQuery(uri))) {
+            return qexec.execDescribe();
         }
     }
 
@@ -65,12 +66,12 @@ public class RepositoryDefault implements Repository {
 	@Override
 	public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-		RandomString random = new RandomStringDefault();
-		String id = random.getNewURI("work", this);
-        Model model = ModelFactory.createDefaultModel();
-        RDFDataMgr.read(model, stream, Lang.JSONLD);
+		UniqueURI uri = new UniqueURIDefault();
+		String id = uri.getNewURI("work", this);
+        Model tempModel = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, model));
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, tempModel));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
 		return id;
 	}

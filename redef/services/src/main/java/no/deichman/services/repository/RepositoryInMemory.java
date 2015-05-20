@@ -16,8 +16,9 @@ import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 
 import no.deichman.services.SPARQLQueryBuilder;
-import no.deichman.services.utils.RandomString;
-import no.deichman.services.utils.RandomStringDefault;
+import no.deichman.services.uridefaults.BaseURIMock;
+import no.deichman.services.utils.UniqueURI;
+import no.deichman.services.utils.UniqueURIMock;
 
 public class RepositoryInMemory implements Repository {
 
@@ -30,8 +31,9 @@ public class RepositoryInMemory implements Repository {
     
     @Override
     public Model retrieveWorkById(String id) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.getGetWorkByIdQuery(id), model)) {
-            return qexec.execConstruct();
+        String uri = BaseURIMock.getWorkURI() + id;
+        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.getGetWorkByIdQuery(uri), model)) {
+            return qexec.execDescribe();
         }
     }
 
@@ -62,11 +64,12 @@ public class RepositoryInMemory implements Repository {
 	@Override
 	public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        RandomString random = new RandomStringDefault();
+        UniqueURI random = new UniqueURIMock();
 		String id = random.getNewURI("work", this);
-        Model model = ModelFactory.createDefaultModel();
-        RDFDataMgr.read(model, stream, Lang.JSONLD);
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, model));
+        Model tempModel = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
+
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, tempModel));
         UpdateAction.execute(updateRequest, model);
 
 		return id;

@@ -10,6 +10,8 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.update.UpdateAction;
 
+import no.deichman.services.uridefaults.BaseURI;
+
 public class SPARQLQueryBuilder {
 
     public static Query getGetWorkByIdQuery(String id) {
@@ -17,26 +19,7 @@ public class SPARQLQueryBuilder {
                 "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "CONSTRUCT {\n"
-                + "?url a deichman:Work ;\n"
-                + "     dcterms:identifier ?id ;\n"
-                + "     dcterms:creator ?creator ;\n"
-                + "     dcterms:date ?date ;\n"
-                + "     dcterms:title ?title ;\n"
-                + "     deichman:biblioId ?biblio ;\n"
-                + "     deichman:hasEdition ?edition .\n"
-                + "} WHERE {\n"
-                + "<http://deichman.no/work/" + id + "> a deichman:Work ;\n"
-                + "OPTIONAL {?url dcterms:identifier ?id .}\n"
-                + "OPTIONAL {?url dcterms:creator ?c .\n"
-                + "?c foaf:name ?creator .}\n"
-                + "OPTIONAL {?url deichman:biblioId ?biblio}\n"
-                + "OPTIONAL {?url dcterms:title ?t}\n"
-                + "OPTIONAL {?url dcterms:date ?d}\n"
-                + "OPTIONAL {?url deichman:hasEdition ?edition}\n"
-                + "BIND (str(?d) as ?date)\n"
-                + "BIND (str(?t) as ?title)\n"
-                + "}";
+                + "DESCRIBE <" + id + ">";
         return QueryFactory.create(queryString);
     }
 
