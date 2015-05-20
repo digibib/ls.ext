@@ -4,7 +4,6 @@ require 'rdf'
 require 'json/ld'
 require_relative './rest_service.rb'
 require_relative './work_model.rb'
-require 'pry'
 
 set :server, 'webrick'
 set :bind, '0.0.0.0'
@@ -16,11 +15,16 @@ get '/' do
 end
 
 get '/work' do
-  redirect '/index.html'
+  location = params['location']
+  if location then
+    RESTService.pull(:work, { :location => location })
+  else
+    redirect '/index.html'
+  end
 end
 
 get '/work/:id' do |id|
-  RESTService.pull(:work, id) # just passing on the content for now
+  RESTService.pull(:work, {:id => id }) # just passing on the content for now
 end
 
 get '/item' do
@@ -42,9 +46,10 @@ post '/work', :provides => 'text' do
             :datatype => params[:datatype]
         }
       }
-
+      puts data
   model = WorkModel.fromData(data)
-  resp = RESTService.push(:work, model.dump(:jsonld, standard_prefixes: true))
-  m = model.dump(:jsonld, standard_prefixes: true)
-  "Success: #{m}: #{resp.inspect}"
+  json = model.dump(:jsonld, standard_prefixes: true)
+  resp = RESTService.push("work", json)
+  location = resp.headers[:location]
+  redirect to("/work?location=#{location}")
 end

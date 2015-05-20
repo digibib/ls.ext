@@ -16,7 +16,7 @@ class TestWorkModel < Test::Unit::TestCase
     deichman = RDF::Vocabulary.new("http://deichman.no/ontology#")
 
     repo = RDF::Repository.new
-    test = repo.load('./tests/data/work_0001.nt')
+    input = repo.load('./tests/data/work_0001.nt')
 
     query = RDF::Query.new({
       :id => {
@@ -32,7 +32,7 @@ class TestWorkModel < Test::Unit::TestCase
 
     query.execute(repo) do |solution|
       data = {
-          :id => solution.id.to_s.gsub('http://deichman.no/work/',''),
+          :id => solution.id.to_s.gsub(/http:\/\/.*\/work\//,''),
           :creator => solution.creator.to_s,
           :title => {
             :string => solution.title,
@@ -47,7 +47,7 @@ class TestWorkModel < Test::Unit::TestCase
     end
 
     output = WorkModel.fromData(data)
-    iso = test.isomorphic? output
+    iso = input.isomorphic? output
 
     assert(iso == true, "The round-tripped models were not the same: #{iso}")
   end
