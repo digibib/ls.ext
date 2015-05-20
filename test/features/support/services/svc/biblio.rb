@@ -21,7 +21,7 @@ module SVC
       book.items.first.branch   = @active[:branch]
       book.items.first.itemtype = @active[:itemtype]
 
-      data = File.read("features/upload-files/Fargelegg byen!.normarc", :encoding => 'UTF-8')
+      data = File.read("features/upload-files/Fargelegg byen!.marc21", :encoding => 'UTF-8')
       data = data.gsub(/\{\{ book_title \}\}/, book.title)
       data = data.gsub(/\{\{ branchcode \}\}/, @active[:branch].code)
       data = data.gsub(/\{\{ item_type_code \}\}/, @active[:itemtype].code)
