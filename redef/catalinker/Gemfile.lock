@@ -41,7 +41,7 @@ GEM
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
-    rdf (1.1.12)
+    rdf (1.1.13)
       link_header (~> 0.0, >= 0.0.8)
     rdf-isomorphic (1.1.0)
       rdf (>= 1.1)
