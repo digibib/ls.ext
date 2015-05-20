@@ -2,7 +2,7 @@ all: build run
 
 SKELETON_IMAGE=digibib/redef-patron-client-skeleton
 IMAGE=digibib/redef-patron-client
-CONTAINER=redef-patron-client
+CONTAINER=redef_patron_client_skeleton_container
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
 
 test: lint unit_test module-test
