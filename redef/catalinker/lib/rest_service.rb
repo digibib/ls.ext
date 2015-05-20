@@ -9,8 +9,9 @@ class RESTService
     RestClient.post SERVICES_PORT + '/' + resource.to_s, data, :content_type => :json
   end
 
-  def self.pull (resource, id)
-    RestClient.get "#{SERVICES_PORT}/#{resource.to_s}/#{id}", :accept_encoding => :json
+  def self.pull (resource, params)
+    url = params[:location] || "#{SERVICES_PORT}/#{resource.to_s}/#{params[:id]}"
+    RestClient.get url, :accept_encoding => :json
   end
 
 end
