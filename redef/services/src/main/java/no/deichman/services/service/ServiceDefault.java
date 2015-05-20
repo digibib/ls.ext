@@ -1,5 +1,8 @@
 package no.deichman.services.service;
 
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -23,7 +26,7 @@ public class ServiceDefault implements Service {
     public static final Property BIBLIO_ID = ResourceFactory.createProperty("http://deichman.no/ontology#biblioId");
 
     @Override
-    public Model retriveWorkById(String id) {
+    public Model retrieveWorkById(String id) {
 
         Model m = ModelFactory.createDefaultModel();
         m.add(repository.retrieveWorkById(id));

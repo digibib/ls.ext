@@ -6,7 +6,7 @@ public interface Service {
     
     void updateWork(String work);
     Model listWork();
-    Model retriveWorkById(String id);
+    Model retrieveWorkById(String id);
     Model retrieveWorkItemsById(String id);
 	String createWork(String work);
 }

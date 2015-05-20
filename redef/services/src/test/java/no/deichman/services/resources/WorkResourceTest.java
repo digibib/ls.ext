@@ -9,6 +9,8 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.uridefaults.BaseURIMock;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -73,8 +75,10 @@ public class WorkResourceTest{
 
         Response result = resource.createWork(work);
 
+        String workURI = BaseURIMock.getWorkURI();
+
         assertNull(result.getEntity());
-        assertTrue(Pattern.matches("http://deichman.no/work/w\\d{12}", result.getHeaderString("Location")));
+        assertTrue(Pattern.matches(workURI + "w\\d{12}", result.getHeaderString("Location")));
     }
 
     @Test
@@ -88,15 +92,18 @@ public class WorkResourceTest{
 
     
     @Test
-    public void should_return_the_new_work(){
+    public void should_return_the_new_work() throws URISyntaxException{
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
-        String workId = "work_SHOULD_EXIST";
 
-        Response createResponse = resource.updateWork(work);
+        Response createResponse = resource.createWork(work);
+
+        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
+
         Response result = resource.getWorkJSON(workId);
+        System.out.println(result.getEntity());
 
         assertNotNull(result);
-        assertEquals(200, createResponse.getStatus());
+        assertEquals(201, createResponse.getStatus());
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
