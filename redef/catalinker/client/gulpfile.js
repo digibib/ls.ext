@@ -19,7 +19,7 @@ var debug = process.argv.indexOf('--debug') > 0,
     SRC = 'app/',
     SRC_LIB = 'lib/',
     SRC_NPM = 'node_modules/',
-    DEST = getArgumentValue('dest', '../lib/public/'),
+    DEST = getArgumentValue('dest', '../server/lib/public/'),
     libFiles = [
 //        SRC_NPM + 'angular2/angular2.js'
     ],

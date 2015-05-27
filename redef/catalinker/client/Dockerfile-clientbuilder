@@ -1,0 +1,15 @@
+FROM node:0.10
+
+MAINTAINER Oslo Public Library "digitalutvikling@gmail.com"
+ENV REFRESHED_AT 2015-05-26
+
+RUN npm install -g gulp@3.8.11
+RUN npm install -g karma@0.12.32
+
+RUN mkdir -p /usr/src/app
+COPY package.json /usr/src/
+WORKDIR /usr/src/
+RUN npm install
+
+VOLUME /usr/src/app/
+WORKDIR /usr/src/app/

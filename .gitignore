@@ -3,3 +3,7 @@
 deploy.log
 ssh/id_rsa
 ssh/id_rsa.pub
+*.iml
+.idea/
+.DS_Store
+npm-debug.log

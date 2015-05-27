@@ -5,7 +5,7 @@ include:
 {% set repo = 'digibib' %}
 {% set image = 'redef-catalinker' %}
 {% set tag = 'latest' %}
-{% set build_context = '/vagrant/redef/catalinker' %}
+{% set build_context = '/vagrant/redef/catalinker/server' %}
 {% set dockerfile = 'Dockerfile' %}
 
 {% include 'docker-build.sls-fragment' %}
