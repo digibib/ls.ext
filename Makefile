@@ -176,13 +176,13 @@ test_catalinker:
 
 run_redef: run_patron_client run_services run_catalinker
 
-run_patron_client: test_patron_client
+run_patron_client:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make run-dev'
 
-run_services: test_services
+run_services:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make run-dev'
 
-run_catalinker: test_catalinker
+run_catalinker:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make run-dev'
 
 login: # needs EMAIL, PASSWORD, USER
