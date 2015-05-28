@@ -163,7 +163,9 @@ install_firefox_on_devops:
 
 # Commands for redef build & dev
 
-test_redef: test_patron_client test_services test_catalinker
+test_redef: test_patron_client test_services test_catalinker cuke_redef
+
+cuke_redef:
 	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) --tags @redef $(CUKE_ARGS)'
 
 test_patron_client:
