@@ -1,7 +1,13 @@
 package no.deichman.services.resources;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -11,6 +17,9 @@ import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIMock;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -22,15 +31,18 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-public class WorkResourceTest{
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-    private static final Logger LOG = Logger.getLogger(WorkResourceTest.class.getName());
+public class ResourceTest{
 
-    private WorkResource resource;
+    private static final Logger LOG = Logger.getLogger(ResourceTest.class.getName());
+
+    private Resources resource;
 
     @Before
     public void setUp() throws Exception {
-        resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory());
+        resource = new Resources(new KohaAdapterMock(), new RepositoryInMemory());
     }
 
     @Test
@@ -120,9 +132,65 @@ public class WorkResourceTest{
         assertNotNull(result);
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
-
+    }
+    /*
+    @Test
+    public void should_patch_data() {
+    	String wrongWork = "<http://deichman.no/work/work_put_test> a deichman:Work ;\n"
+    		        + "  deichman:title \"Peer Gint\" ;"
+    	            + "  deichman:creator \"Henryk Ibsen\""
+    		        + "  deichman:date \"1876\"";
+    	String rightWork = "@prefix deichman: <http://deichman.no/ontology#> \n"
+	            + "<http://deichman.no/work/work_put_test> a deichman:Work ;\n"
+		        + "  deichman:title \"Peer Gint\" ;"
+	            + "  deichman:creator \"Henryk Ibsen\""
+		        + "  deichman:date \"1876\"";
+    	
+    	Response putResponse = resource.putWork(work);
+    	assertEquals(200, putResponse.getStatus());
+    	assertNotNull(putResponse.getEntity().toString());
+    }
+    */
+    
+    @Test
+    public void should_parse_patch() {
+    	String patchData = "{\"op\":\"add\",\"s\":\"http://deichman.no/work/work_WORK_TO_BE_PATCHED\",\"p\":\"http://deichman.no/ontology#title\",\"o\":{\"value\":\"Title\", \"lang\":\"en\"}}";
+        String expected = "INSERT DATA {<http://deichman.no/work/work_WORK_TO_BE_PATCHED><http://deichman.no/ontology#title> \"Title\"@en}";
+ //   	ParserResult pr = Parser.parse(patchData);
+ //   	assertTrue(pr.getLogicalOutput == expected);	
     }
     
+    @Test
+    public void should_patch_work() {
+    	
+    }
+    
+	@Test
+	public void should_get_ontology () throws FileNotFoundException {
+		 Response result = resource.getOntologyJSON();
+		 String entity = result.getEntity().toString();
+		 Model m = ModelFactory.createDefaultModel();
+		 Model comparison = ModelFactory.createDefaultModel();
+		 InputStream in = new ByteArrayInputStream(entity.getBytes(StandardCharsets.UTF_8));
+		 InputStream fromFile = new FileInputStream(new File("src/main/resources/ontology.ttl"));
+		 RDFDataMgr.read(m, in, Lang.JSONLD);
+		 RDFDataMgr.read(comparison, fromFile, Lang.TURTLE);
+		 assertEquals(200, result.getStatus());
+		 assertTrue(m.isIsomorphicWith(comparison));
+	}
+	
+	@Test
+	public void should_get_ontology_as_turtle () throws IOException {
+		Response result = resource.getOntologyTurtle();
+		String entity = result.getEntity().toString();
+		try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
+		    String fromFile = IOUtils.toString(fileInputStream);
+		    System.out.println(entity);
+		    assertTrue(entity.equals(fromFile));
+		}		
+
+	}
+	
     private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {
@@ -136,6 +204,7 @@ public class WorkResourceTest{
 
         return valid;
     }
+    
 
     private JsonNode parseJSON(final String json) {
         try {

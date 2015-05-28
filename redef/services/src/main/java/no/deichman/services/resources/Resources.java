@@ -1,6 +1,7 @@
 package no.deichman.services.resources;
 
 import com.fasterxml.jackson.core.JsonParseException;
+
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
@@ -33,9 +34,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
@@ -189,8 +190,8 @@ public class Resources {
     
     @Path("ontology")
     @GET
-    @Produces("application/LD+JSON")
-	public Response getOntology() throws FileNotFoundException {
+    @Produces("application/ld+json")
+	public Response getOntologyJSON() throws FileNotFoundException {
 
 		Model m = ModelFactory.createDefaultModel();
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");
@@ -202,5 +203,18 @@ public class Resources {
                 .allow("OPTIONS")
                 .build();
 	}
+    
+    @Path("ontology")
+    @GET
+    @Produces("text/turtle")
+	public Response getOntologyTurtle() throws IOException {
 
+		InputStream ontology = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");
+		String turtle = IOUtils.toString(ontology);
+        return Response.ok().entity(turtle)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET")
+                .allow("OPTIONS")
+                .build();
+	}
 }

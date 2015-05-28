@@ -21,7 +21,7 @@ def version_jackson = '1.9.11'
 def version_slf4j = '1.7.10'
 def version_jena = '2.13.0'
 def version_commons_lang = '2.6'
-def json_patch_version = '1.9'
+def version_commons_io = '2.4'
 
 dependencies {
 
@@ -39,6 +39,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: version_slf4j
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: version_slf4j
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: version_slf4j
+    compile group: 'commons-io', name: 'commons-io', version: version_commons_io
     compile group: 'commons-lang', name: 'commons-lang', version: version_commons_lang
     compile ('info.freelibrary:freelib-marc4j:2.6.6') {
         transitive = false
@@ -62,5 +63,8 @@ buildscript {
 
     repositories {
         mavenCentral()
+        maven {
+            url '~/.m2/repository'
+        }
     }
 }
