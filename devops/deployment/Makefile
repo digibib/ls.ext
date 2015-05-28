@@ -32,14 +32,14 @@ dev_highstate_dry_run:         ## Dry run deployment to your own local environme
 ##------- PROD - tasks:                                          -------------
 
 prod_highstate:        ## Deploy specified version to production - args: SUDOUSER, MASTER, GITREF
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) 2>&1 | tee -a deploy.log && echo \"======================== $(SUDOUSER) : deploying ref $(GITREF)\" | tee -a deploy.log && date | tee -a deploy.log && salt -t 30 \"*\" --log-level info --log-file-level=debug state.highstate pillar="{'GITREF': '$(GITREF)'}" 2>&1 | tee -a deploy.log'"
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) 2>&1 | tee -a deploy.log && echo \"======================== $(SUDOUSER) : deploying ref $(GITREF)\" | tee -a deploy.log && date | tee -a deploy.log && salt -t 30 \"*\" --log-level info --log-file-level=debug state.highstate pillar=\"{\"GITREF\": \"$(GITREF)\"}\" 2>&1 | tee -a deploy.log'"
 
 
 prod_revision:         ## Shows the currently checked out revision on MASTER - args: SUDOUSER, MASTER
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'cd /var/lib/salt-master && sudo git rev-parse HEAD'
 
 prod_highstate_dry_run:        ## Dry run deployment of specified version to production - args: SUDOUSER, MASTER, GITREF
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) && salt \"*\" --log-level info --log-file-level=debug state.highstate pillar="{'GITREF': '$(GITREF)'}" test=True'"
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'cd /var/lib/salt-master && git checkout master && git pull && git checkout $(GITREF) && salt \"*\" --log-level info --log-file-level=debug state.highstate pillar=\"{\"GITREF\": \"$(GITREF)\"}\" test=True'"
 
 
 
