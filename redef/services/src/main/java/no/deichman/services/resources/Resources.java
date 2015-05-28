@@ -6,8 +6,13 @@ import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,17 +33,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.PATCH;
 
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 
-@Path("/work")
-public class WorkResource {
+
+@Path("/")
+public class Resources {
 	
 	private String _corsHeaders;
 
@@ -60,12 +68,12 @@ public class WorkResource {
 
     private final Service service;
     
-    public WorkResource() {
+    public Resources() {
         super();
         service = new ServiceDefault();
     }
 
-    public WorkResource(KohaAdapter kohaAdapter, Repository repository) {
+    public Resources(KohaAdapter kohaAdapter, Repository repository) {
         super();
         ServiceDefault serviceDefault = new ServiceDefault();
         serviceDefault.setKohaAdapter(kohaAdapter);
@@ -73,6 +81,7 @@ public class WorkResource {
         service = serviceDefault;
     }
 
+    @Path("work")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createWork(String work) throws URISyntaxException {
@@ -87,6 +96,7 @@ public class WorkResource {
                        .build();
     }
 
+    @Path("work")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateWork(String work) {
@@ -98,6 +108,7 @@ public class WorkResource {
                        .build();
     }
 
+    @Path("work")
     @PATCH
     @Consumes("application/n-triples")
     public Response patchWork(String work) {
@@ -110,6 +121,7 @@ public class WorkResource {
                        .build();
     }
 
+    @Path("work")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWork() {
@@ -119,7 +131,7 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(asJson(model))
+        return Response.ok().entity(JSONLD.getJson(model))
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "GET")
                        .allow("OPTIONS")
@@ -127,7 +139,7 @@ public class WorkResource {
     }
 
     @GET
-    @Path("/{workId: [a-zA-Z0-9_]+}")
+    @Path("work/{workId: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWorkJSON(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkById(workId);
@@ -136,13 +148,14 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(asJson(model))
+        return Response.ok().entity(JSONLD.getJson(model))
                             .header("Access-Control-Allow-Origin", "*")
                             .header("Access-Control-Allow-Methods", "GET")
                             .allow("OPTIONS")
                             .build();
     }
 
+    @Path("work")
     @OPTIONS
     @Produces(MediaType.APPLICATION_JSON)
     public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
@@ -151,7 +164,7 @@ public class WorkResource {
     }
 
     @OPTIONS
-    @Path("/{workId: [a-zA-Z0-9_]+}")
+    @Path("work/{workId: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
         _corsHeaders = reqHeader;
@@ -159,7 +172,7 @@ public class WorkResource {
     }
 
     @GET
-    @Path("/{workId: [a-zA-Z0-9_]+}/items")
+    @Path("work/{workId: [a-zA-Z0-9_]+}/items")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWorkItems(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkItemsById(workId);
@@ -167,39 +180,27 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(asJson(model))
+        return Response.ok().entity(JSONLD.getJson(model))
                             .header("Access-Control-Allow-Origin", "*")
                             .header("Access-Control-Allow-Methods", "GET")
                             .allow("OPTIONS")
                             .build();
     }
+    
+    @Path("ontology")
+    @GET
+    @Produces("application/LD+JSON")
+	public Response getOntology() throws FileNotFoundException {
 
-    private String asJson(Model model) {
-        StringWriter sw = new StringWriter();
-        RDFDataMgr.write(sw, model, Lang.JSONLD);
-        String s = "";
-        try {
-            Object jsonObject = JsonUtils.fromString(sw.toString());
-            JsonLdOptions options = new JsonLdOptions();
-            options.format = "application/jsonld";
+		Model m = ModelFactory.createDefaultModel();
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");
+		RDFDataMgr.read(m, in, Lang.TURTLE);
 
-            final Map<String, Object> nses = new HashMap<String, Object>();
-            nses.put("dcterms", "http://purl.org/dc/terms/");
-            nses.put("deichman", "http://deichman.no/ontology#");
-            final Map<String, Object> ctx = new HashMap<String, Object>();
-            ctx.put("@context", nses);
-
-            Object compact = JsonLdProcessor.compact(jsonObject, ctx, options);
-
-            s = JsonUtils.toPrettyString(compact);
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JsonLdError e) {
-            e.printStackTrace();
-        }
-        return s;
-    }
+        return Response.ok().entity(JSONLD.getJson(m))
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET")
+                .allow("OPTIONS")
+                .build();
+	}
 
 }

@@ -1,6 +1,6 @@
 package no.deichman.services;
 
-import no.deichman.services.resources.WorkResource;
+import no.deichman.services.resources.Resources;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -22,7 +22,7 @@ public class App {
 
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
-                WorkResource.class.getCanonicalName());
+                Resources.class.getCanonicalName());
 
         try {
             jettyServer.start();
