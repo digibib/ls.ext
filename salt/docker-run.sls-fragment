@@ -40,7 +40,9 @@
     - name: {{ container }}
     - image: {{ repo }}/{{ image }}:{{ tag }}
     - ports: {{ ports }}
+{% if environment is defined and environment %}
     - environment: {{ environment }}
+{% endif %}
 {% if command is defined and command %}
     - command: {{ command }}
 {% endif %}
