@@ -11,11 +11,15 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import no.deichman.services.SPARQLQueryBuilder;
+import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
 import no.deichman.services.utils.UniqueURI;
 import no.deichman.services.utils.UniqueURIMock;
@@ -67,6 +71,11 @@ public class RepositoryInMemory implements Repository {
         UniqueURI random = new UniqueURIMock();
 		String id = random.getNewURI("work", this);
         Model tempModel = ModelFactory.createDefaultModel();
+        Statement workResource = ResourceFactory.createStatement(
+                ResourceFactory.createResource(random.toString()),
+                RDF.type,
+                ResourceFactory.createResource(BaseURIDefault.getOntologyURI() + "Work"));
+        tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
         UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, tempModel));

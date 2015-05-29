@@ -11,9 +11,12 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import no.deichman.services.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURIDefault;
@@ -69,6 +72,11 @@ public class RepositoryDefault implements Repository {
 		UniqueURI uri = new UniqueURIDefault();
 		String id = uri.getNewURI("work", this);
         Model tempModel = ModelFactory.createDefaultModel();
+        Statement workResource = ResourceFactory.createStatement(
+                ResourceFactory.createResource(uri.toString()),
+                RDF.type,
+                ResourceFactory.createResource(BaseURIDefault.getOntologyURI() + "Work"));
+        tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
         UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, tempModel));
