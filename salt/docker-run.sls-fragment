@@ -26,19 +26,19 @@
 {{ container }}_stop_if_old:
   cmd.run:
     - name: docker stop {{ container }} || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" {{ container }} | grep $(docker history --quiet --no-trunc {{ repo }}/{{ image }}:{{ tag }} | head -n 1)
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" {{ container }} | grep $(docker history --quiet --no-trunc {{ repo ~ '/' if repo is defined else '' }}{{ image }}:{{ tag }} | head -n 1)
 
 {{ container }}_remove_if_old:
   cmd.run:
     - name: docker rm {{ container }} || true
-    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" {{ container }} | grep $(docker history --quiet --no-trunc {{ repo }}/{{ image }}:{{ tag }} | head -n 1)
+    - unless: docker inspect --format "{{ '{{' }} .Image {{ '}}' }}" {{ container }} | grep $(docker history --quiet --no-trunc {{ repo ~ '/' if repo is defined else '' }}{{ image }}:{{ tag }} | head -n 1)
     - require:
       - cmd: {{ container }}_stop_if_old
 
 {{ container }}_installed:
   docker.installed:
     - name: {{ container }}
-    - image: {{ repo }}/{{ image }}:{{ tag }}
+    - image: {{ repo ~ '/' if repo is defined else '' }}{{ image }}:{{ tag }}
     - ports: {{ ports }}
 {% if environment is defined and environment %}
     - environment: {{ environment }}
