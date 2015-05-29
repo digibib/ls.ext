@@ -16,9 +16,12 @@ base:
   '^(\w+-ship|vm-devops)$':
     - match: pcre
     - elk.dev
+    - resource_monitoring.dev
+
+  '^(\w+-ship)$':
+    - match: pcre
     - sip.dev
     - redef.dev
-    - resource_monitoring.dev
 
   'wombat':
     - match: list
