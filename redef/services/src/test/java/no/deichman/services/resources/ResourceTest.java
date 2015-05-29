@@ -3,7 +3,6 @@ package no.deichman.services.resources;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -15,8 +14,10 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -166,15 +167,16 @@ public class ResourceTest{
     }
     
 	@Test
-	public void should_get_ontology () throws FileNotFoundException {
+	public void should_get_ontology () throws IOException {
 		 Response result = resource.getOntologyJSON();
 		 String entity = result.getEntity().toString();
 		 Model m = ModelFactory.createDefaultModel();
 		 Model comparison = ModelFactory.createDefaultModel();
 		 InputStream in = new ByteArrayInputStream(entity.getBytes(StandardCharsets.UTF_8));
-		 InputStream fromFile = new FileInputStream(new File("src/main/resources/ontology.ttl"));
+         String fromFile = FileUtils.readFileToString(new File("src/main/resources/ontology.ttl"));
+         InputStream inFromFile = new ByteArrayInputStream(fromFile.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI()).getBytes(StandardCharsets.UTF_8));
 		 RDFDataMgr.read(m, in, Lang.JSONLD);
-		 RDFDataMgr.read(comparison, fromFile, Lang.TURTLE);
+		 RDFDataMgr.read(comparison, inFromFile, Lang.TURTLE);
 		 assertEquals(200, result.getStatus());
 		 assertTrue(m.isIsomorphicWith(comparison));
 	}
@@ -186,7 +188,7 @@ public class ResourceTest{
 		try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
 		    String fromFile = IOUtils.toString(fileInputStream);
 		    System.out.println(entity);
-		    assertTrue(entity.equals(fromFile));
+		    assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI())));
 		}		
 
 	}

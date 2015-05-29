@@ -10,8 +10,6 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.update.UpdateAction;
 
-import no.deichman.services.uridefaults.BaseURI;
-
 public class SPARQLQueryBuilder {
 
     public static Query getGetWorkByIdQuery(String id) {

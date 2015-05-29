@@ -1,24 +1,15 @@
 package no.deichman.services.resources;
 
-import com.fasterxml.jackson.core.JsonParseException;
-
-import com.github.jsonldjava.core.JsonLdError;
-import com.github.jsonldjava.core.JsonLdOptions;
-import com.github.jsonldjava.core.JsonLdProcessor;
-import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -37,10 +28,13 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+
+import no.deichman.services.Ontology;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.PATCH;
 
@@ -191,11 +185,12 @@ public class Resources {
     @Path("ontology")
     @GET
     @Produces("application/ld+json")
-	public Response getOntologyJSON() throws FileNotFoundException {
+	public Response getOntologyJSON() throws IOException {
 
+        Ontology ontology = new Ontology();
+        InputStream stream = ontology.toInputStream();
 		Model m = ModelFactory.createDefaultModel();
-		InputStream in = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");
-		RDFDataMgr.read(m, in, Lang.TURTLE);
+		RDFDataMgr.read(m, stream, Lang.TURTLE);
 
         return Response.ok().entity(JSONLD.getJson(m))
                 .header("Access-Control-Allow-Origin", "*")
@@ -208,10 +203,9 @@ public class Resources {
     @GET
     @Produces("text/turtle")
 	public Response getOntologyTurtle() throws IOException {
+        Ontology ontology = new Ontology();
 
-		InputStream ontology = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");
-		String turtle = IOUtils.toString(ontology);
-        return Response.ok().entity(turtle)
+        return Response.ok().entity(ontology.toString())
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET")
                 .allow("OPTIONS")

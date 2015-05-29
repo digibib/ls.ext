@@ -25,9 +25,7 @@ public class JSONLD {
             JsonLdOptions options = new JsonLdOptions();
             options.format = "application/jsonld";
 
-            final Map<String, Object> nses = new HashMap<String, Object>();
-            nses.put("dcterms", "http://purl.org/dc/terms/");
-            nses.put("deichman", "http://deichman.no/ontology#");
+            final Map<String, String> nses = model.getNsPrefixMap();
             final Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("@context", nses);
 

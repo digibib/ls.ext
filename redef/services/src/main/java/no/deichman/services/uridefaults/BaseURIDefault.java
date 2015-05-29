@@ -10,4 +10,9 @@ public class BaseURIDefault implements BaseURI {
 		return getBaseURI() + "work/";
 	}
 
+	public static String getOntologyURI() {
+		// TODO Auto-generated method stub
+		return getBaseURI() + "ontology#";
+	}
+
 }
