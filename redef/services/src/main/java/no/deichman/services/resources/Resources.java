@@ -3,13 +3,10 @@ package no.deichman.services.resources;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,16 +22,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
-import no.deichman.services.Ontology;
 import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.ontology.OntologyDefault;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
-import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.PATCH;
 
@@ -187,7 +182,7 @@ public class Resources {
     @Produces("application/ld+json")
 	public Response getOntologyJSON() throws IOException {
 
-        Ontology ontology = new Ontology();
+        OntologyDefault ontology = new OntologyDefault();
         InputStream stream = ontology.toInputStream();
 		Model m = ModelFactory.createDefaultModel();
 		RDFDataMgr.read(m, stream, Lang.TURTLE);
@@ -203,7 +198,7 @@ public class Resources {
     @GET
     @Produces("text/turtle")
 	public Response getOntologyTurtle() throws IOException {
-        Ontology ontology = new Ontology();
+        OntologyDefault ontology = new OntologyDefault();
 
         return Response.ok().entity(ontology.toString())
                 .header("Access-Control-Allow-Origin", "*")

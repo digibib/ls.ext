@@ -173,12 +173,14 @@ public class ResourceTest{
 		 Model m = ModelFactory.createDefaultModel();
 		 Model comparison = ModelFactory.createDefaultModel();
 		 InputStream in = new ByteArrayInputStream(entity.getBytes(StandardCharsets.UTF_8));
-         String fromFile = FileUtils.readFileToString(new File("src/main/resources/ontology.ttl"));
-         InputStream inFromFile = new ByteArrayInputStream(fromFile.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI()).getBytes(StandardCharsets.UTF_8));
-		 RDFDataMgr.read(m, in, Lang.JSONLD);
-		 RDFDataMgr.read(comparison, inFromFile, Lang.TURTLE);
-		 assertEquals(200, result.getStatus());
-		 assertTrue(m.isIsomorphicWith(comparison));
+         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
+		     String fromFile = IOUtils.toString(fileInputStream).replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI());
+			 InputStream fileIn = new ByteArrayInputStream(fromFile.getBytes(StandardCharsets.UTF_8));
+             RDFDataMgr.read(m, in, Lang.JSONLD);
+		     RDFDataMgr.read(comparison, fileIn, Lang.TURTLE);
+		     assertEquals(200, result.getStatus());
+		     assertTrue(m.isIsomorphicWith(comparison));
+         }
 	}
 	
 	@Test

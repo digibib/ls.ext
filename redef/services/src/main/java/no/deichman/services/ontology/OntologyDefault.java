@@ -1,4 +1,4 @@
-package no.deichman.services;
+package no.deichman.services.ontology;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -9,11 +9,11 @@ import org.apache.commons.io.IOUtils;
 
 import no.deichman.services.uridefaults.BaseURIDefault;
 
-public class Ontology {
+public class OntologyDefault implements Ontology {
 	
 	String ontology = null;
 	
-	public Ontology() throws IOException {
+	public OntologyDefault() throws IOException {
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");
 		String turtle = IOUtils.toString(in);
 		ontology = turtle.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI());
