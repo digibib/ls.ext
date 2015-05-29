@@ -8,21 +8,8 @@ describe("Given user is logged in", function () {
         $window,
         $controller,
         controller,
-        work_w222557057913 = {
-             "@id": "http://deichman.no/work/w222557057913",
-             "@type": "http://data.deichman.no/lsext-model#Work",
-             "lsext:biblio": "2",
-             "lsext:date": "2015",
-             "lsext:creator": "http:example.com/person/p1",
-             "lsext:name": ["Title",
-                        {
-                     "@value": "Saker",
-                     "@lang": "nb"
-                 }],
-             "@context": {
-                 "lsext": "http://data.deichman.no/lsext-model#"
-             }
-        },
+        ontologyUri = 'mocks/ontology.json',
+        mocks = {},
         work_w222557057913_Uri = 'http://192.168.50.12:8005/work/w222557057913',
         newWorkUri = 'http://192.168.50.12:8005/work';
 
@@ -31,6 +18,17 @@ describe("Given user is logged in", function () {
             ctrl = $controller(name, { $scope: scope });
         ctrl.$scope = scope;
         return ctrl;
+    }
+    
+    function loadMocks() {
+        angular.forEach($window.__html__, function (val, path) {
+            if (!path || !$window.__html__.hasOwnProperty(path)) {
+                return;
+            }
+            var key = path.substr(path.lastIndexOf('/') + 1);
+            key = key.substr(0, key.length - 5); //strip .json
+            mocks[key] = val;
+        });
     }
 
     beforeEach(module('app'));
@@ -43,6 +41,8 @@ describe("Given user is logged in", function () {
         $window = $injector.get('$window');
         //$location.path('/');
         $controller = $injector.get('$controller');
+        $window = $injector.get('$window');
+        loadMocks();
     }));
 
     afterEach(function () {
@@ -52,9 +52,9 @@ describe("Given user is logged in", function () {
 
    describe("And the page is finished initialized", function () {
         beforeEach(function () {
-            $httpBackend.expectGET(work_w222557057913_Uri).respond(200, work_w222557057913);
+            $httpBackend.expectGET(ontologyUri).respond(200, mocks.ontology);
+            $httpBackend.expectGET(work_w222557057913_Uri).respond(200, mocks.work_w222557057913);
             controller = createController('appController');
-            $scope = controller.$scope;
             $scope = controller.$scope;
             $httpBackend.flush();
         });
@@ -67,7 +67,7 @@ describe("Given user is logged in", function () {
         });
 
         it("The first triple should have value '2'", function() {
-            expect($scope.triples[0].value).toBe('2')
+            expect($scope.triples[0].value).toBe('2');
         });
 
         it("The list of predicates should contain 8 items", function() {
@@ -140,7 +140,7 @@ describe("Given user is logged in", function () {
 
                         it("The save promise was resolved without http", function() {
                             expect(resolved).toBe(true);
-                        })
+                        });
 
                     });
 
@@ -283,14 +283,14 @@ describe("Given user is logged in", function () {
         describe("And the user clicks 'New Work' (success)", function() {
             beforeEach(function() {
                 $httpBackend.expectPOST(newWorkUri).respond(201,'', {'Location': work_w222557057913_Uri});
-                $httpBackend.expectGET(work_w222557057913_Uri).respond(200, work_w222557057913);
+                $httpBackend.expectGET(work_w222557057913_Uri).respond(200, mocks.work_w222557057913);
                 $scope.newWork();
                 $httpBackend.flush();
             });
 
-            it("The triples list should be 5 triples", function(){
+            it("The triples list should be 5 triples", function() {
                 expect($scope.triples.length).toBe(5);
-            })
+            });
         });
 
     });

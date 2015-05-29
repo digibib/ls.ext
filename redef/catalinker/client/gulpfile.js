@@ -46,6 +46,9 @@ var debug = process.argv.indexOf('--debug') > 0,
             SRC + 'app/views/**/*.js',
             SRC + 'specs/**/*Spec.js'
     ],
+    mockfiles = [
+        'specs/mocks/*.json'
+    ],
     //livereload = '<script>document.write(\' <script src="http://\' + (location.host || \'localhost\').split(\':\')[0] + \':35729/livereload.js?snipver=1"></\' + \'script>\')</script>';
     livereload = '<script>document.write(\' <script src="http://\' + \'localhost:35729/livereload.js?snipver=1"></\' + \'script>\')</script>';
 
@@ -108,15 +111,17 @@ gulp.task('buildApp', function () {
                 .pipe(gulp.dest(DEST));
         }));
 
-    
     gulp.src(styleFiles)
         .pipe(gulp.dest(DEST));
 
+    if (debug) {
+        gulp.src(mockfiles)
+            .pipe(gulp.dest(DEST + 'mocks/'));
+    }
     //copy('Shared/style/style.css', 'Shared/style/');
     //copy('Apps/Flows/style/flowsApp.css', 'Apps/Flows/style/');
     //copy('index.html');
     //copy('Apps/Flows/views/**/*.html', 'Apps/Flows/views/');
-    
 
 
 });

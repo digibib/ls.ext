@@ -16,7 +16,11 @@ module.exports = function (config) {
             'app/services/*.js',
             'app/directives/*.js',
             'app/views/**/*.js',
-            'specs/**/*Spec.js'
+            'specs/**/*Spec.js',
+
+            'specs/mocks/*.json*/'
+            //fixtures
+            //{pattern: 'specs/mocks/*.json', watched: true, served: true, included: false}
         ],
         exclude: ['app/directives/*.js'],
         
@@ -27,9 +31,9 @@ module.exports = function (config) {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
-            'app/**/*.js': ['coverage']
+            'app/**/*.js': ['coverage'],
+            '**/*.json': ['html2js']
         },
-        
         browsers: ['PhantomJS'],
         
         // optionally, configure the reporter

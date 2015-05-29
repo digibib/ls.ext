@@ -216,29 +216,27 @@
 
 
 
-        function newDescription(itemType) {
+        function newDescription(descriptionType) {
             var deferred = $q.defer(),
-                uri = baseUri + itemType,
+                uri = baseUri + descriptionType,
                 newObject;
 
             newObject = {
-                '@id': 'http://example.com/work1', //must be a valid url
-                '@type': 'http://deichman.no/ontology#' + itemType
+                '@id': 'http://example.com/work1', //must be a valid url. To be deprecated
+                '@type': 'http://deichman.no/ontology#' + descriptionType //Implicit in uri, To be deprecated
             };
 
-            $http.post(uri, newObject).success(function(data, status, headers, config) {
-                //todo: id is in location header
-                var uri = headers('Location').replace(baseId, baseUri);
-                //console.log('headers: ', headers());
+            $http.post(uri, newObject).success(function(data, status, headers) { //, config
+                var itemUri = headers('Location').replace(baseId, baseUri);
 
-                $http.get(uri).success(function(data, status, headers, config){
-                    var description = new Description(data, uri);
+                $http.get(itemUri).success(function(itemData) { //, status, headers, config
+                    var description = new Description(itemData, itemUri);
                     deferred.resolve(description);
-                }).error(function(data, status, headers, config) {
-                    deferred.reject(status);
+                }).error(function(errorData, errorStatus) { //,headers, config
+                    deferred.reject(errorStatus);
                 });
-            }).error(function(data, status, headers, config) {
-                deferred.reject();
+            }).error(function(data, status) { //, headers, config
+                deferred.reject(status);
             });
             return deferred.promise;
         }
