@@ -1,11 +1,19 @@
 module Paths
 
-  def host
-    "192.168.50.12"
+  def host(host=nil)
+    hosts = {
+        :overview => "192.168.50.21"
+    }
+    if host && hosts[host]
+      hosts[host]
+    else
+      "192.168.50.12"
+    end
   end
 
   def port(port=nil)
     ports = {
+      :overview => 80,
       :koha_intra => 8081,
       :catalinker => 8010,
       :patron_client => 8000,
@@ -14,6 +22,16 @@ module Paths
     }
     raise ArgumentError, "Invalid port argument" unless port && ports[port.to_sym]
     return "#{ports[port.to_sym]}"
+  end
+
+  # TODO Remove duplication
+
+  def overview(path=nil)
+    paths = {
+        :home => "/"
+    }
+    raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
+    return "http://#{host(:overview)}:#{port(:overview)}#{paths[path.to_sym]}"
   end
 
   def intranet(path=nil)

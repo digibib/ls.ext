@@ -57,11 +57,11 @@ koha_container_running:
             HostIp: "{{ pillar['sip']['server']['binding'] }}"
             HostPort: "{{ pillar['sip']['server']['port'] }}"
         "8080/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "8080"
+            HostIp: "{{ pillar['koha']['opac']['binding'] }}"
+            HostPort: "{{ pillar['koha']['opac']['port'] }}"
         "8081/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "8081"
+            HostIp: "{{ pillar['koha']['intra']['binding'] }}"
+            HostPort: "{{ pillar['koha']['intra']['port'] }}"
     - check_is_running:
       - "koha_mysql_container"
     - binds:

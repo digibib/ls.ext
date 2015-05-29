@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Oversikt LS.ext</title>
+</head>
+
+<body>
+
+<h1>Oversikt LS.ext - {{ pillar['overview']['env']['description'] }}</h1>
+
+{% set links = {
+            "Kohas OPAC": "http://" + pillar['overview']['koha']['host'] + ":" + pillar['koha']['opac']['port']|string
+    }
+%}
+
+<ul>
+{% for text, url in links.iteritems() %}
+    <li><a href="{{ url }}">{{ text }}</a></li>
+{% endfor %}
+</ul>
+
+</body>
+
+</html>

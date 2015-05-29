@@ -10,6 +10,7 @@ base:
 
   'wombat,vm-devops':
     - match: list
+    - overview
     - elk
     - elk.configserver
     - elk.pulled

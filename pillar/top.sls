@@ -23,8 +23,20 @@ base:
     - sip.dev
     - redef.dev
 
+  'wombat,vm-devops':
+    - match: list
+    - overview
+
+  'vm-devops':
+    - match: list
+    - overview.dev
+    - koha # needed by overview
+
   'wombat':
     - match: list
+    - overview
+    - overview.prod
+    - koha # needed by overview
     - elk.prod
     - sip.prod
     - redef.prod
