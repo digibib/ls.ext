@@ -54,7 +54,7 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
   last_cleanup_exception = nil
 
   STDOUT.puts "--------------- Cleanup: #{title_of(scenario)} "
-  step "at jeg er logget inn som adminbruker"
+  step "at jeg er logget inn som adminbruker" if @cleanup.length > 0 # TODO Only relevant for Koha-related cleanups
   @cleanup.reverse.each do |hash|
     cleanup_desc = " cleanup '#{hash.keys.first}'"
     cleanup_func = hash.values.first
