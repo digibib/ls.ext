@@ -8,11 +8,6 @@ Egenskap: Oversiktsside
 
   Scenario: Oversiktsside med en lenke
     Gitt at jeg er på oversiktssiden
-    Så skal jeg finne lenke til Kohas OPAC
-
-  @wip
-  Scenario: Oversiktsside med mange lenker
-    Gitt at jeg er på oversiktssiden
     Så skal jeg finne lenker til:
       | text         |
       | OPAC         |

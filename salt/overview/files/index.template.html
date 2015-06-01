@@ -47,16 +47,60 @@
         <h1>Oversikt Library System – Extended LS.ext</h1>
 
         <h2>{{ pillar['overview']['env']['description'] }}</h2>
-        {% set links = {
-        "Kohas OPAC": "http://" + pillar['overview']['koha']['host'] + ":" + pillar['koha']['opac']['port']|string
-        }
+
+        {% set links =
+            {
+                "patron": {
+                    "Kohas OPAC": "http://" + pillar['overview']['koha']['host'] + ":" + pillar['koha']['opac']['port']|string,
+                    "PatronClient": "http://" + pillar['overview']['redef']['patron-client']['host'] + ":" + pillar['redef']['patron-client']['port']|string
+                },
+                "internal": {
+                    "Kohas Intra": "http://" + pillar['overview']['koha']['host'] + ":" + pillar['koha']['intra']['port']|string,
+                    "Catalinker": "http://" + pillar['overview']['redef']['catalinker']['host'] + ":" + pillar['redef']['catalinker']['port']|string + "/index.html",
+                },
+                "ops": {
+                    "Kibana": "http://" + pillar['overview']['elk']['host'] + ":" + pillar['elk']['kibana']['port']|string + "/index.html#/dashboard/file/logstash.json",
+                    "Graphite": "http://" + pillar['overview']['resource-monitoring']['graphite-web']['host'] + ":" + pillar['resource-monitoring']['graphite-web']['port']|string
+                },
+                "tech": {
+                    "Services": "http://" + pillar['redef']['services']['host'] + ":" + pillar['redef']['services']['port']|string + "/work",
+                    "Fuseki": "http://" + pillar['redef']['fuseki']['host'] + ":" + pillar['redef']['fuseki']['port']|string
+                }
+            }
         %}
 
+        <h3>Brukertjenester</h3>
+
         <ul>
-            {% for text, url in links.iteritems() %}
+            {% for text, url in links["patron"].iteritems() %}
             <li><a href="{{ url }}">{{ text }}</a></li>
             {% endfor %}
         </ul>
+
+        <h3>Interne tjenester</h3>
+
+        <ul>
+            {% for text, url in links["internal"].iteritems() %}
+            <li><a href="{{ url }}">{{ text }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <h3>Driftsverktøy</h3>
+
+        <ul>
+            {% for text, url in links["ops"].iteritems() %}
+            <li><a href="{{ url }}">{{ text }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <h3>Tekniske grensesnitt</h3>
+
+        <ul>
+            {% for text, url in links["tech"].iteritems() %}
+            <li><a href="{{ url }}">{{ text }}</a></li>
+            {% endfor %}
+        </ul>
+
     </div>
 </div>
 <!-- /container -->
