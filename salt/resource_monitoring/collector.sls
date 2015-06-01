@@ -23,8 +23,8 @@ collectd_container_installed:
     - image: andreasjansson/collectd-write-graphite
     - environment:
       - "HOST_NAME": "{{ grains['fqdn'] }}"
-      - "GRAPHITE_HOST": "{{ pillar['resource-monitoring']['graphite-host'] }}"
-      - "GRAPHITE_PORT": "{{ pillar['resource-monitoring']['graphite-port'] }}"
+      - "GRAPHITE_HOST": "{{ pillar['resource-monitoring']['graphite-line-receiver']['host'] }}"
+      - "GRAPHITE_PORT": "{{ pillar['resource-monitoring']['graphite-line-receiver']['port'] }}"
     - require:
       - docker: collectd_docker_image
 

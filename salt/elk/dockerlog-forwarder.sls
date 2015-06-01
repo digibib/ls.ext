@@ -11,8 +11,8 @@
 
 /etc/logstash/logstash-forwarder.key:
   file.managed:
-    - source: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.key"
-    - source_hash: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.key.hash"
+    - source: "http://{{ pillar['elk']['configserver']['host'] }}:{{ pillar['elk']['configserver']['port'] }}/logstash-forwarder.key"
+    - source_hash: "http://{{ pillar['elk']['configserver']['host'] }}:{{ pillar['elk']['configserver']['port'] }}/logstash-forwarder.key.hash"
     - user: root
     - group: root
     - mode: 644
@@ -21,8 +21,8 @@
 
 /etc/logstash/logstash-forwarder.crt:
   file.managed:
-    - source: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.crt"
-    - source_hash: "http://{{ pillar['elk']['configserver-host'] }}:{{ pillar['elk']['configserver-port'] }}/logstash-forwarder.crt.hash"
+    - source: "http://{{ pillar['elk']['configserver']['host'] }}:{{ pillar['elk']['configserver']['port'] }}/logstash-forwarder.crt"
+    - source_hash: "http://{{ pillar['elk']['configserver']['host'] }}:{{ pillar['elk']['configserver']['port'] }}/logstash-forwarder.crt.hash"
     - user: root
     - group: root
     - mode: 644
@@ -58,7 +58,7 @@ dockerlogs_forwarder_container_installed:
   docker.installed:
     - name: dockerlogs_forwarder_container
     - image: digitalwonderland/logstash-forwarder:{{ pillar['elk']['logforwarder']['image-tag'] }}
-    - command: ["-logstash", "{{ pillar['elk']['lumberjack-host'] }}:{{ pillar['elk']['lumberjack-port'] }}", "-lazyness", "60", "-config", "/etc/logstash/dockerlog-forwarder.conf"]
+    - command: ["-logstash", "{{ pillar['elk']['lumberjack']['host'] }}:{{ pillar['elk']['lumberjack']['port'] }}", "-lazyness", "60", "-config", "/etc/logstash/dockerlog-forwarder.conf"]
     - volumes:
       - /etc/logstash
       - /var/lib/docker

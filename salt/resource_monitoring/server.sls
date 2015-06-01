@@ -34,17 +34,17 @@ graphite_container_running:
     - container: graphite_container
     - port_bindings:
         "80/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "8088"
+            HostIp: "{{ pillar['resource-monitoring']['graphite-web']['binding'] }}"
+            HostPort: "{{ pillar['resource-monitoring']['graphite-web']['port'] }}"
         "2003/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "{{ pillar['resource-monitoring']['graphite-port'] }}"
+            HostIp: "{{ pillar['resource-monitoring']['graphite-line-receiver']['binding'] }}"
+            HostPort: "{{ pillar['resource-monitoring']['graphite-line-receiver']['port'] }}"
         "2004/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "2004"
+            HostIp: "{{ pillar['resource-monitoring']['graphite-pickle-receiver']['binding'] }}"
+            HostPort: "{{ pillar['resource-monitoring']['graphite-pickle-receiver']['port'] }}"
         "7002/tcp":
-            HostIp: "0.0.0.0"
-            HostPort: "7002"
+            HostIp: "{{ pillar['resource-monitoring']['graphite-query']['binding'] }}"
+            HostPort: "{{ pillar['resource-monitoring']['graphite-query']['port'] }}"
     - check_is_running:
       - "graphite_container"
     - watch:

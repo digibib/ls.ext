@@ -21,23 +21,28 @@ base:
   '^(\w+-ship)$':
     - match: pcre
     - sip.dev
+    - redef
     - redef.dev
 
   'wombat,vm-devops':
     - match: list
-    - overview
-
-  'vm-devops':
-    - match: list
-    - overview.dev
-    - koha # needed by overview
+    - overview # overview
+    - koha # overview
+    - resource_monitoring # overview
+    - redef  # overview
 
   'wombat':
     - match: list
-    - overview
-    - overview.prod
-    - koha # needed by overview
     - elk.prod
     - sip.prod
     - redef.prod
     - resource_monitoring.prod
+    - overview.prod  # overview
+    - redef.prod  # overview
+    - elk.prod  # overview
+
+  'vm-devops':
+    - match: list
+    - overview.dev  # overview
+    - redef.dev  # overview
+    - elk.dev  # overview

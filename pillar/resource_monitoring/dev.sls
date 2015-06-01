@@ -1,2 +1,3 @@
 resource-monitoring:
-  graphite-host: 192.168.50.21
+  graphite-line-receiver:
+    host: 192.168.50.21
