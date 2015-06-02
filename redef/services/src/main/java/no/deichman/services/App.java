@@ -1,9 +1,12 @@
 package no.deichman.services;
 
-import no.deichman.services.resources.Resources;
+import no.deichman.services.resources.OntologyResource;
+import no.deichman.services.resources.WorkResource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
+import static java.util.Arrays.asList;
 
 public class App {
 
@@ -22,7 +25,10 @@ public class App {
 
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
-                Resources.class.getCanonicalName());
+                String.join(",", asList(
+                    WorkResource.class.getCanonicalName(),
+                    OntologyResource.class.getCanonicalName()
+                )));
 
         try {
             jettyServer.start();

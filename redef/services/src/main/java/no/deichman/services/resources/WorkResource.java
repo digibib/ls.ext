@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -33,10 +34,8 @@ import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.PATCH;
 
-
-
-@Path("/")
-public class Resources {
+@Path("/work")
+public class WorkResource {
 	
 	private String _corsHeaders;
 
@@ -58,12 +57,12 @@ public class Resources {
 
     private final Service service;
     
-    public Resources() {
+    public WorkResource() {
         super();
         service = new ServiceDefault();
     }
 
-    public Resources(KohaAdapter kohaAdapter, Repository repository) {
+    public WorkResource(KohaAdapter kohaAdapter, Repository repository) {
         super();
         ServiceDefault serviceDefault = new ServiceDefault();
         serviceDefault.setKohaAdapter(kohaAdapter);
@@ -71,7 +70,6 @@ public class Resources {
         service = serviceDefault;
     }
 
-    @Path("work")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createWork(String work) throws URISyntaxException {
@@ -86,7 +84,6 @@ public class Resources {
                        .build();
     }
 
-    @Path("work")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateWork(String work) {
@@ -98,7 +95,6 @@ public class Resources {
                        .build();
     }
 
-    @Path("work")
     @PATCH
     @Consumes("application/n-triples")
     public Response patchWork(String work) {
@@ -111,7 +107,6 @@ public class Resources {
                        .build();
     }
 
-    @Path("work")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWork() {
@@ -129,7 +124,7 @@ public class Resources {
     }
 
     @GET
-    @Path("work/{workId: [a-zA-Z0-9_]+}")
+    @Path("{workId: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWorkJSON(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkById(workId);
@@ -145,7 +140,6 @@ public class Resources {
                             .build();
     }
 
-    @Path("work")
     @OPTIONS
     @Produces(MediaType.APPLICATION_JSON)
     public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
@@ -154,7 +148,7 @@ public class Resources {
     }
 
     @OPTIONS
-    @Path("work/{workId: [a-zA-Z0-9_]+}")
+    @Path("{workId: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
         _corsHeaders = reqHeader;
@@ -162,7 +156,7 @@ public class Resources {
     }
 
     @GET
-    @Path("work/{workId: [a-zA-Z0-9_]+}/items")
+    @Path("{workId: [a-zA-Z0-9_]+}/items")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWorkItems(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkItemsById(workId);
@@ -176,34 +170,4 @@ public class Resources {
                             .allow("OPTIONS")
                             .build();
     }
-    
-    @Path("ontology")
-    @GET
-    @Produces("application/ld+json")
-	public Response getOntologyJSON() throws IOException {
-
-        OntologyDefault ontology = new OntologyDefault();
-        InputStream stream = ontology.toInputStream();
-		Model m = ModelFactory.createDefaultModel();
-		RDFDataMgr.read(m, stream, Lang.TURTLE);
-
-        return Response.ok().entity(JSONLD.getJson(m))
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET")
-                .allow("OPTIONS")
-                .build();
-	}
-    
-    @Path("ontology")
-    @GET
-    @Produces("text/turtle")
-	public Response getOntologyTurtle() throws IOException {
-        OntologyDefault ontology = new OntologyDefault();
-
-        return Response.ok().entity(ontology.toString())
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET")
-                .allow("OPTIONS")
-                .build();
-	}
 }

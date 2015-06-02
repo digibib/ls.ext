@@ -17,7 +17,6 @@ import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -35,15 +34,15 @@ import org.junit.Test;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-public class ResourceTest{
+public class WorkResourceTest {
 
-    private static final Logger LOG = Logger.getLogger(ResourceTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(WorkResourceTest.class.getName());
 
-    private Resources resource;
+    private WorkResource resource;
 
     @Before
     public void setUp() throws Exception {
-        resource = new Resources(new KohaAdapterMock(), new RepositoryInMemory());
+        resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory());
     }
 
     @Test
@@ -166,35 +165,6 @@ public class ResourceTest{
     	
     }
     
-	@Test
-	public void should_get_ontology () throws IOException {
-		 Response result = resource.getOntologyJSON();
-		 String entity = result.getEntity().toString();
-		 Model m = ModelFactory.createDefaultModel();
-		 Model comparison = ModelFactory.createDefaultModel();
-		 InputStream in = new ByteArrayInputStream(entity.getBytes(StandardCharsets.UTF_8));
-         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
-		     String fromFile = IOUtils.toString(fileInputStream).replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI());
-			 InputStream fileIn = new ByteArrayInputStream(fromFile.getBytes(StandardCharsets.UTF_8));
-             RDFDataMgr.read(m, in, Lang.JSONLD);
-		     RDFDataMgr.read(comparison, fileIn, Lang.TURTLE);
-		     assertEquals(200, result.getStatus());
-		     assertTrue(m.isIsomorphicWith(comparison));
-         }
-	}
-	
-	@Test
-	public void should_get_ontology_as_turtle () throws IOException {
-		Response result = resource.getOntologyTurtle();
-		String entity = result.getEntity().toString();
-		try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
-		    String fromFile = IOUtils.toString(fileInputStream);
-		    System.out.println(entity);
-		    assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI())));
-		}		
-
-	}
-	
     private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {
