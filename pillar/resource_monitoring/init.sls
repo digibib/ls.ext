@@ -10,5 +10,5 @@ resource-monitoring:
     port: 2003
   graphite-pickle-receiver: # the standard graphite protocol
     binding: 0.0.0.0
-    port: 7002
+    port: 2004
 
