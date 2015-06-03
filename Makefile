@@ -6,7 +6,7 @@ else
 SHIP=vm-ship
 endif
 
-all: reload full_provision test                            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
+all: reload shell_provision provision test            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
 
 help:                                                 ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -45,22 +45,27 @@ up_devops:                                            ##
 
 full_provision: full_provision_devops full_provision_ship full_provision_test  ## Full reprovision of boxes
 
-shell_provision_ship:                                      ##
+shell_provision_ship:                                 ## Run only shell provisioners
 	vagrant provision $(SHIP) --provision-with shell
 
-shell_provision_test:                                      ##
+shell_provision_test:                                 ## Run only shell provisioners
 	vagrant provision vm-test --provision-with shell
 
-shell_provision_devops:                                    ##
+shell_provision_devops:                               ## Run only shell provisioners
 	vagrant provision vm-devops --provision-with shell
 
-full_provision_ship: shell_provision_ship provision_ship  ##
+shell_provision: shell_provision_devops shell_provision_ship shell_provision_test  ## Run only shell provisioners
 
-full_provision_test: shell_provision_test provision_test  ##
+full_provision_ship:                                  ## Run full provisioning, including salt-install
+	vagrant provision $(SHIP)
 
-full_provision_devops: shell_provision_devops provision_devops  ##
+full_provision_test:                                  ## Run full provisioning, including salt-install
+	vagrant provision vm-test
 
-provision: provision_devops provision_ship provision_test  ## Quick re-provision of boxes (only salt)
+full_provision_devops:                                ## Run full provisioning, including salt-install
+	vagrant provision vm-devops
+
+provision: provision_devops provision_ship provision_test  ## Quick re-provision of boxes (only salt states)
 
 provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
 
@@ -73,10 +78,10 @@ provision_ship_highstate:                             ## Run state.highstate on 
 wait_until_ready:                                     ## Checks if koha is up and running
 	vagrant ssh $(SHIP) -c 'sudo docker exec -t koha_container ./wait_until_ready.py'
 
-provision_test:                                       ##
+provision_test:                                       ## Run state.highstate
 	vagrant ssh vm-test -c 'sudo salt-call --local state.highstate'
 
-provision_devops:                                     ##
+provision_devops:                                     ## Run state.highstate
 	vagrant ssh vm-devops -c 'sudo salt-call --local state.highstate'
 
 ifdef TESTPROFILE
