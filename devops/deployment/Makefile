@@ -213,7 +213,7 @@ dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on $(SHI
 	vagrant ssh $(SHIP) -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
 
 dev_connect_minions: ## Adds and connect minion
-	vagrant ssh $(SHIP) -c 'sudo service salt-minion stop'
+	vagrant ssh $(SHIP) -c 'sudo service salt-minion stop || true'
 	vagrant ssh $(SHIP) -c 'echo "master: 192.168.50.21" | sudo tee /etc/salt/minion > /dev/null'
 	vagrant ssh $(SHIP) -c 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
 	vagrant ssh vm-devops -c 'sudo salt-key -d $(SHIP) --yes'
@@ -237,7 +237,7 @@ prod_bootstrap_master : prod_upgrade_salt_master ## Install salt-master with ls.
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /srv/pillar ] || sudo ln -s /var/lib/salt-master/pillar /srv'
 
 prod_connect_minion: ## Adds and connect minion, args: SUDOUSER, MASTER, MINION, MASTER_IP, MINION_NAME
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo service salt-minion stop'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo service salt-minion stop || true'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'echo "master: $(MASTER_IP)" | sudo tee /etc/salt/minion > /dev/null'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'sudo rm -rf /etc/salt/pki/minion/minion_master.pub'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'sudo salt-key -d $(MINION_NAME) --yes'
