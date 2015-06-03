@@ -4,8 +4,10 @@
 
 busybox_docker_image:
   docker.pulled:
-    - name: busybox:latest
+    - name: busybox
+    - tag: latest
 
 mysql_docker_image:
   docker.pulled:
-    - name: mysql:5.6.21
+    - name: mysql
+    - tag: 5.6.21

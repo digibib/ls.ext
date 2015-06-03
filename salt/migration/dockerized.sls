@@ -12,5 +12,6 @@ migration_docker_image:
 #    - password: {{ pillar['migration']['deichman-at-docker-hub-password'] }}
 #    - email: digitalutvikling@gmail.com
 #  docker.pulled:
-#    - name: deichman/migration:{{ pillar['migration']['image-tag'] }}
+#    - name: deichman/migration
+#    - tag: {{ pillar['migration']['image-tag'] }}
 #    - force: True

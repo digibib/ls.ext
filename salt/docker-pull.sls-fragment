@@ -1,5 +1,6 @@
 
 {{ image }}_pulled:
   docker.pulled:
-    - name: {{ repo ~ '/' if repo is defined else '' }}{{ image }}:{{ tag }}
+    - name: {{ repo ~ '/' if repo is defined else '' }}{{ image }}
+    - tag: {{ tag }}
     - force: {{ tag == 'latest' }}

@@ -31,7 +31,8 @@
 
 logstash-forwarder-image:
   docker.pulled:
-    - name: digitalwonderland/logstash-forwarder:{{ pillar['elk']['logforwarder']['image-tag'] }}
+    - name: digitalwonderland/logstash-forwarder
+    - tag: {{ pillar['elk']['logforwarder']['image-tag'] }}
 
 dockerlogs_forwarder_container_stop_if_old:
   cmd.run:
