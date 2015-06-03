@@ -1,6 +1,6 @@
 overview:
   env:
-    description: Hjørnebiblioteket
+    description: Hj&oslash;rnebiblioteket
   koha:
     host: 10.192.2.160
   redef:
