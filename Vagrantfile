@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 require 'fileutils'
 
-SALT_VERSION = "v2014.7.0"
+SALT_VERSION = "v2014.7.6"
 
 vagrant_root = File.dirname(__FILE__)
 
