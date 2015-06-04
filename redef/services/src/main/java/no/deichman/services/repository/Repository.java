@@ -1,6 +1,7 @@
 package no.deichman.services.repository;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 public interface Repository {
 
@@ -13,5 +14,7 @@ public interface Repository {
     Model retrieveWorkById(String id);
 
     boolean askIfResourceExists(String uri);
+    boolean askIfStatementExists(Statement statement);
+    boolean askIfStatementExistsInGraph(Statement statement, String graph);
 
 }

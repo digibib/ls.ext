@@ -1,13 +1,23 @@
 package no.deichman.services;
 
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.CharSet;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
 
 public class SPARQLQueryBuilder {
@@ -96,5 +106,25 @@ public class SPARQLQueryBuilder {
     public static Query checkIfResourceExists(String uri) {
         String q = "ASK {<" + uri + "> ?p ?o}";
         return QueryFactory.create(q);
+    }
+
+    public static Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
+        String triple = statementToN3(statement);
+        String q = "ASK {" + triple + "}" ;
+		return QueryFactory.create(q);
+    }
+
+    public static Query checkIfStatementExistsInGraph(Statement statement, String graph) throws UnsupportedEncodingException {
+        String triple = statementToN3(statement);
+        String q = "ASK FROM <" + graph + "> {" + triple + "}" ;
+		return QueryFactory.create(q);
+    }
+
+    private static String statementToN3 (Statement statement) throws UnsupportedEncodingException {
+        Model tempExists = ModelFactory.createDefaultModel();
+        tempExists.add(statement);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        RDFDataMgr.write(baos, tempExists, Lang.NTRIPLES);
+        return baos.toString("UTF-8");
     }
 }

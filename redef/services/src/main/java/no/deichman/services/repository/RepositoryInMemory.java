@@ -2,6 +2,7 @@ package no.deichman.services.repository;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.jena.riot.Lang;
@@ -33,6 +34,10 @@ public class RepositoryInMemory implements Repository {
         model.read("testdata.ttl", "TURTLE");
     }
     
+    public void addData(Model newData){
+        model.add(newData);
+    }
+
     @Override
     public Model retrieveWorkById(String id) {
         String uri = BaseURIMock.getWorkURI() + id;
@@ -82,5 +87,26 @@ public class RepositoryInMemory implements Repository {
         UpdateAction.execute(updateRequest, model);
 
 		return id;
+	}
+
+	@Override
+	public boolean askIfStatementExists(Statement statement) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfStatementExists(statement), model)) {
+            return qexec.execAsk();
+        } catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean askIfStatementExistsInGraph(Statement statement, String graph) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfStatementExistsInGraph(statement, graph), model)) {
+            return qexec.execAsk();
+        } catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
