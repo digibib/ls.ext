@@ -36,16 +36,16 @@
         <md-content flex layout-padding>
             <form name="entityForm">
                 <div layout="column">
-                        <md-button ng-click="newWork()">+ New Work</md-button>
+                        <md-button data-automation-id="new_work_button" ng-click="newWork()">+ New Work</md-button>
                     <md-content layout="column" layout-sm="column" ng-repeat="triple in triples">
                         <md-input-container ng-switch on="triple.type" style="width:90%">
                             <label>
                                 {{labels[triple.predicate]['no'] || triple.predicate}}
                             </label>
 
-                            <input ng-switch-when="date" ng-model="triple.value" type="date" name="{{triple.id}}" />
-                            <input ng-switch-when="email" ng-model="triple.value" type="email" name="{{triple.id}}" />
-                            <input ng-switch-default ng-model="triple.value" name="{{triple.id}}" ng-blur="triple.save()" ng-disabled="triple.isReadOnly || triple.isSaving"/>
+                            <input ng-switch-when="date" data-ng-model="triple.value" type="date" name="{{triple.id}}" />
+                            <input ng-switch-when="email" data-ng-model="triple.value" type="email" name="{{triple.id}}" />
+                            <input ng-switch-default data-ng-model="triple.value" name="{{triple.id}}" ng-blur="triple.save()" ng-disabled="triple.isReadOnly || triple.isSaving"/>
 
                             <div ng-show ng-messages="entityForm.description.$error">
                                 <div ng-message="required">Dette er påkrevd.</div>
@@ -64,7 +64,7 @@
             <div layout="column">
                 <md-content layout-padding layout="row" layout-sm="column">
                     <md-input-container>
-                        <md-select ng-model="predicate" placeholder="Predicate">
+                        <md-select ng-model="predicate" data-automation-id="predicate_selector" placeholder="Predicate">
                             <md-select-label>{{predicate || 'Velg Predikat'}}</md-select-label>
                             <md-option ng-repeat="predicate in predicates" ng-value="predicate.value">{{predicate.label.default}}</md-option>
                         </md-select>
