@@ -26,6 +26,7 @@ end
 
 Vagrant.configure(2) do |config|
 
+
   # **** vm-ship - Docker container ship ****
 
   ship_name = ( ENV['LSDEVMODE'] ||  "vm") + "-ship" # Set LSDEVMODE to 'dev' or 'build'
@@ -33,6 +34,9 @@ Vagrant.configure(2) do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
     config.vm.hostname = ship_name
+
+    # need a ssh key allow boxes to run commands without password
+    config.ssh.insert_key = false # do not override insecure key
 
     # http://fgrehm.viewdocs.io/vagrant-cachier
     if Vagrant.has_plugin?("vagrant-cachier")
