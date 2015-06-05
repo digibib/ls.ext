@@ -1,17 +1,16 @@
 package no.deichman.services.ontology;
 
+import no.deichman.services.uridefaults.BaseURIDefault;
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
-
-import no.deichman.services.uridefaults.BaseURIDefault;
-
 public class OntologyDefault implements Ontology {
 	
-	String ontology = null;
+	private String ontology = null;
 	
 	public OntologyDefault() throws IOException {
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");

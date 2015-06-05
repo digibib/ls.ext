@@ -9,7 +9,6 @@ import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-
 import no.deichman.services.SPARQLQueryBuilder;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.KohaAdapterDefault;
@@ -20,7 +19,7 @@ public class ServiceDefault implements Service {
 
     private Repository repository = new RepositoryDefault();
     private KohaAdapter kohaAdapter = new KohaAdapterDefault();
-    public static final Property BIBLIO_ID = ResourceFactory.createProperty("http://deichman.no/ontology#biblioId");
+    private static final Property BIBLIO_ID = ResourceFactory.createProperty("http://deichman.no/ontology#biblioId");
 
     @Override
     public Model retrieveWorkById(String id) {

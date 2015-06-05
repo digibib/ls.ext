@@ -1,6 +1,8 @@
 package no.deichman.services.ontology;
 
-import static org.junit.Assert.assertTrue;
+import no.deichman.services.uridefaults.BaseURIDefault;
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -9,12 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.jena.riot.RDFDataMgr;
-import org.junit.Test;
-
-import no.deichman.services.ontology.OntologyDefault;
-import no.deichman.services.uridefaults.BaseURIDefault;
+import static org.junit.Assert.assertTrue;
 
 public class OntologyTest {
     @Test

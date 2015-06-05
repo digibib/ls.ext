@@ -1,14 +1,13 @@
 package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.repository.Repository;
+import no.deichman.services.service.Service;
+import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.utils.JSONLD;
+import no.deichman.services.utils.PATCH;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -22,17 +21,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-
-import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.ontology.OntologyDefault;
-import no.deichman.services.repository.Repository;
-import no.deichman.services.service.Service;
-import no.deichman.services.service.ServiceDefault;
-import no.deichman.services.utils.JSONLD;
-import no.deichman.services.utils.PATCH;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Path("/work")
 public class WorkResource {

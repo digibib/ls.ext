@@ -1,19 +1,17 @@
 package no.deichman.services.utils;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-
-import com.fasterxml.jackson.core.JsonParseException;
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JSONLD {
     public static String getJson(Model model) {
@@ -26,17 +24,13 @@ public class JSONLD {
             options.format = "application/jsonld";
 
             final Map<String, String> nses = model.getNsPrefixMap();
-            final Map<String, Object> ctx = new HashMap<String, Object>();
+            final Map<String, Object> ctx = new HashMap<>();
             ctx.put("@context", nses);
 
             Object compact = JsonLdProcessor.compact(jsonObject, ctx, options);
 
             s = JsonUtils.toPrettyString(compact);
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JsonLdError e) {
+        } catch (IOException | JsonLdError e) {
             e.printStackTrace();
         }
         return s;

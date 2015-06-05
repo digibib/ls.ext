@@ -3,8 +3,6 @@ package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import no.deichman.services.kohaadapter.KohaAdapterMock;
-import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
@@ -13,7 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;

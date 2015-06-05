@@ -1,38 +1,28 @@
 package no.deichman.services.resources;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
-import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import static org.junit.Assert.fail;
 
 public class WorkResourceTest {
 
@@ -152,7 +142,7 @@ public class WorkResourceTest {
     }
     */
     
-    @Test
+    @Ignore @Test
     public void should_parse_patch() {
     	String patchData = "{\"op\":\"add\",\"s\":\"http://deichman.no/work/work_WORK_TO_BE_PATCHED\",\"p\":\"http://deichman.no/ontology#title\",\"o\":{\"value\":\"Title\", \"lang\":\"en\"}}";
         String expected = "INSERT DATA {<http://deichman.no/work/work_WORK_TO_BE_PATCHED><http://deichman.no/ontology#title> \"Title\"@en}";
@@ -160,9 +150,9 @@ public class WorkResourceTest {
  //   	assertTrue(pr.getLogicalOutput == expected);	
     }
     
-    @Test
+    @Ignore @Test
     public void should_patch_work() {
-    	
+    	fail();
     }
     
     private boolean isValidJSON(final String json) {

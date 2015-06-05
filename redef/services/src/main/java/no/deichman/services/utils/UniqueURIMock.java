@@ -2,14 +2,12 @@ package no.deichman.services.utils;
 
 import no.deichman.services.repository.Repository;
 import no.deichman.services.uridefaults.BaseURIMock;
-
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class UniqueURIMock implements UniqueURI {
 
-	private String getRandom() {	
-		String random = RandomStringUtils.randomNumeric(12);
-		return random;
+	private String getRandom() {
+		return RandomStringUtils.randomNumeric(12);
 	}
 	
 	private String getRandom(String type) {
@@ -35,7 +33,7 @@ public class UniqueURIMock implements UniqueURI {
 		String random = null;
 		boolean exists = true;
 
-		while (exists != false) {
+		while (exists) {
 			random = getRandom(type);
 			exists = checkResourceExistence(random, repository);
 		}
