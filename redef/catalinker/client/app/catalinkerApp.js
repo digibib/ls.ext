@@ -19,7 +19,7 @@
                 $scope.triples = _description.triples;
                 description = _description;
             }, function (err) {
-                console.log('error!', err);
+                console.log('loading hardcoded work failed', err);
             });
             
             $vocabulary.promise.then(function () {
