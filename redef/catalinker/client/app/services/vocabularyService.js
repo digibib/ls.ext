@@ -1,5 +1,5 @@
 ﻿(function() {
-    var ontologyUri = 'mocks/ontology.json';//'http://192.168.50.12:8005/ontology';
+    var ontologyUri = 'http://192.168.50.12:8005/ontology';
 
 
     angular.module('app')
@@ -60,7 +60,7 @@
     */
 
 
-        $http.get(ontologyUri, { headers: { accept: 'application/ld + json' } })
+        $http.get(ontologyUri, { headers: { accept: 'application/ld+json' } })
         .success(function(data) {
             init(data);
         }).error(function() {

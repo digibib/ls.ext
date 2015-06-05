@@ -8,7 +8,7 @@ describe("Given user is logged in", function () {
         $window,
         $controller,
         controller,
-        ontologyUri = 'mocks/ontology.json',
+        ontologyUri = 'http://192.168.50.12:8005/ontology',
         mocks = {},
         work_w222557057913_Uri = 'http://192.168.50.12:8005/work/w222557057913',
         newWorkUri = 'http://192.168.50.12:8005/work';
