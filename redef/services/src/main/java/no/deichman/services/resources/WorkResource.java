@@ -26,12 +26,11 @@ import java.net.URISyntaxException;
 
 @Path("/work")
 public class WorkResource {
-	
-	private String _corsHeaders;
 
-	private Response makeCORS(ResponseBuilder req, String returnMethod) {
-	   ResponseBuilder rb = req.header("Access-Control-Allow-Origin", "*")
-	      .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH");
+	private Response makeCORS(ResponseBuilder resp, String returnMethod) {
+	   ResponseBuilder rb = resp
+               .header("Access-Control-Allow-Origin", "*")
+	           .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH");
 
 	   if (!"".equals(returnMethod)) {
 	      rb.header("Access-Control-Allow-Headers", returnMethod);
@@ -39,11 +38,6 @@ public class WorkResource {
 
 	   return rb.build();
 	}
-
-	private Response makeCORS(ResponseBuilder req) {
-	   return makeCORS(req, _corsHeaders);
-	}
-
 
     private final Service service;
     
@@ -131,17 +125,13 @@ public class WorkResource {
     }
 
     @OPTIONS
-    @Produces(MediaType.APPLICATION_JSON)
     public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        _corsHeaders = reqHeader;
         return makeCORS(Response.ok(), reqHeader);
     }
 
     @OPTIONS
     @Path("{workId: [a-zA-Z0-9_]+}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        _corsHeaders = reqHeader;
         return makeCORS(Response.ok(), reqHeader);
     }
 
