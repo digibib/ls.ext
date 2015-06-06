@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
+import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -27,16 +29,27 @@ import no.deichman.services.utils.UniqueURIMock;
 
 public class RepositoryInMemory implements Repository {
 
-    private final Model model;
+//    private final Model model;
+    private final Dataset model;
     
     public RepositoryInMemory() {
-        model = ModelFactory.createDefaultModel();
-        model.read("testdata.ttl", "TURTLE");
+        Model model2 = ModelFactory.createDefaultModel();
+        model2.read("testdata.ttl", "TURTLE");
+        model = DatasetFactory.createMem();
+        model.setDefaultModel(model2);
     }
     
     public void addData(Model newData){
-        model.add(newData);
+        model.getDefaultModel().add(newData);
     }
+    
+    public Model getModel() {
+    	return model.getDefaultModel();
+    }
+    
+	public Dataset getDataset() {
+		return model;
+	}
 
     @Override
     public Model retrieveWorkById(String id) {
@@ -66,6 +79,13 @@ public class RepositoryInMemory implements Repository {
 	@Override
 	public boolean askIfResourceExists(String uri) {
         try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfResourceExists(uri), model)) {
+            return qexec.execAsk();
+        }
+	}
+
+	@Override
+	public boolean askIfResourceExistsInGraph(String uri, String graph) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfResourceExistsInGraph(uri, graph), model)) {
             return qexec.execAsk();
         }
 	}
@@ -104,9 +124,49 @@ public class RepositoryInMemory implements Repository {
         try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfStatementExistsInGraph(statement, graph), model)) {
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 	}
+
+	@Override
+	public void update(Model inputModel) {
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateAdd(inputModel));
+        UpdateAction.execute(updateRequest, model);		
+	}
+
+	@Override
+	public void updateNamedGraph(Model inputModel, String graph) {
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateAddToGraph(inputModel, graph));
+        UpdateAction.execute(updateRequest, model);
+	}
+
+	@Override
+	public void delete(Model inputModel) {
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateDelete(inputModel));
+        UpdateAction.execute(updateRequest, model);
+	}
+
+	@Override
+	public void deleteFromNamedGraph(Model inputModel, String graph) {
+        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateDeleteFromGraph(inputModel, graph));
+        UpdateAction.execute(updateRequest, model);
+    }
+
+	public void addDataToNamedGraph(Model add, String named) {
+		model.addNamedModel(named, add);
+	}
+
+	@Override
+	public void dump() {
+		RDFDataMgr.write(System.out, model, Lang.TRIG);
+	}
+
+	@Override
+	public boolean askIfGraphExists(String graph) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.askIfGraphExists(graph), model)) {
+            return qexec.execAsk();
+		}
+	}
+
 }

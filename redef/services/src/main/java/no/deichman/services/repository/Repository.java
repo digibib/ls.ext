@@ -17,4 +17,13 @@ public interface Repository {
     boolean askIfStatementExists(Statement statement);
     boolean askIfStatementExistsInGraph(Statement statement, String graph);
 
+	void update(Model inputModel);
+	void updateNamedGraph(Model inputModel, String graph);
+	void delete(Model inputModel);
+	void deleteFromNamedGraph(Model inputModel, String graph);
+	void dump();
+	boolean askIfResourceExistsInGraph(String uri, String graph);
+
+	boolean askIfGraphExists(String graph);
+
 }

@@ -1,15 +1,9 @@
 package no.deichman.services;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.CharSet;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
@@ -22,7 +16,12 @@ import com.hp.hpl.jena.update.UpdateAction;
 
 public class SPARQLQueryBuilder {
 
-    public static Query getGetWorkByIdQuery(String id) {
+    public static Query dumpModel() {
+    	String q = "describe * where {?s ?p ?o}";
+    	return QueryFactory.create(q);
+    }
+
+	public static Query getGetWorkByIdQuery(String id) {
         String queryString =
                 "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "PREFIX deichman: <http://deichman.no/ontology#>\n"
@@ -108,7 +107,12 @@ public class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public static Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
+	public static Query checkIfResourceExistsInGraph(String uri, String graph) {
+        String q = "ASK {GRAPH <" + graph + ">  {<" + uri + "> ?p ?o}}";
+        return QueryFactory.create(q);
+	}
+
+	public static Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
         String q = "ASK {" + triple + "}" ;
 		return QueryFactory.create(q);
@@ -116,7 +120,7 @@ public class SPARQLQueryBuilder {
 
     public static Query checkIfStatementExistsInGraph(Statement statement, String graph) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
-        String q = "ASK FROM <" + graph + "> {" + triple + "}" ;
+        String q = "ASK {GRAPH <" + graph + "> {" + triple + "}}" ;
 		return QueryFactory.create(q);
     }
 
@@ -127,4 +131,67 @@ public class SPARQLQueryBuilder {
         RDFDataMgr.write(baos, tempExists, Lang.NTRIPLES);
         return baos.toString("UTF-8");
     }
+
+	public static String updateAdd(Model inputModel) {
+        StringWriter sw = new StringWriter();
+        RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
+        String data = sw.toString();
+
+        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
+                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+                + "INSERT DATA {\n"
+                + "\n"
+                + data
+                + "\n"
+                + "}";
+	}
+
+	public static String updateAddToGraph(Model inputModel, String graph) {
+        StringWriter sw = new StringWriter();
+        RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
+        String data = sw.toString();
+
+        String q = "INSERT DATA {\n"
+        		+ "GRAPH <" + graph + "> {\n"
+                + "\n"
+                + data
+                + "\n"
+                + "}\n"
+                + "}";
+       System.out.println(q);
+       return q;
+    }
+
+	public static String updateDelete(Model inputModel) {
+        StringWriter sw = new StringWriter();
+        RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
+        String data = sw.toString();
+
+        return "DELETE {\n"
+        		+ data
+        		+ "} WHERE {\n"
+                + "\n"
+                + data
+                + "\n"
+                + "}";
+	}
+
+	public static String updateDeleteFromGraph(Model inputModel, String graph) {
+        StringWriter sw = new StringWriter();
+        RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
+        String data = sw.toString();
+
+        return "DELETE DATA { GRAPH <" + graph + "> {\n"
+        + "\n"
+        + data
+        + "\n"
+        + "}\n"
+        + "}";
+	}
+
+	public static String askIfGraphExists(String graph) {
+        String q = "ASK {GRAPH <" + graph + "> {}}" ;
+		return q;
+	}
+
 }
