@@ -158,7 +158,6 @@ public class SPARQLQueryBuilder {
                 + "\n"
                 + "}\n"
                 + "}";
-       System.out.println(q);
        return q;
     }
 
