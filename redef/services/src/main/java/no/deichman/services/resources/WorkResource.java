@@ -80,7 +80,8 @@ public class WorkResource {
     }
 
     @PATCH
-    @Consumes("application/n-triples")
+    @Path("{workId: [a-zA-Z0-9_]+}")
+    // TODO @Consumes("application/n-triples")
     public Response patchWork(String work) {
 //TODO        service.updateWork(work);
 
