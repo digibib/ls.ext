@@ -46,7 +46,8 @@ For local setup and to run tests, we use a multi-machine vagrant setup (see [Ill
 2. Clone this repo from the command line (in a directory of your choice):
    ```git clone https://github.com/digibib/ls.ext.git```
 3. `cd ls.ext` into your cloned repo.
-4. From the command line run: `make` to bootstrap the environment and run the tests.
+4. Run `export LSDEVMODE=dev` in your shell. You will always want this environment variable to be set during development.
+5. From the command line run: `make` to bootstrap the environment and run the tests.
 
 Run `make help` for more commands.
 
