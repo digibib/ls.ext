@@ -249,4 +249,4 @@
     }]);
 
 
-}(angular.module('app')));
+}(angular.module('catalinker')));

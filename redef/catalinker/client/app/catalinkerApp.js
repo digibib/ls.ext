@@ -1,5 +1,5 @@
 ﻿(function(angular) {
-    angular.module('app', ['ngMaterial', 'ngRoute'])
+    angular.module('catalinker', ['ngMaterial', 'ngRoute'])
 
     .controller('appController', ['$scope', '$mdSidenav', '$vocabulary', '$tripleStore', function ($scope, $mdSidenav, $vocabulary, $tripleStore) {
         var Triple = $tripleStore.Triple,

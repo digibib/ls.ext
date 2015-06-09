@@ -31,7 +31,7 @@ describe("Given user is logged in", function () {
         });
     }
 
-    beforeEach(module('app'));
+    beforeEach(module('catalinker'));
 
     beforeEach(inject(function ($injector) {
         $httpBackend = $injector.get('$httpBackend');
