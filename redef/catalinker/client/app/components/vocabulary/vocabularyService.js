@@ -1,9 +1,8 @@
 ﻿(function() {
-    var ontologyUri = 'http://192.168.50.12:8005/ontology';
-
 
     angular.module('catalinker.vocabulary', [])
-    .factory('$vocabulary', ['$q', '$http', function($q, $http) {
+        .constant('ontologyUri', 'http://192.168.50.12:8005/ontology')
+        .factory('$vocabulary', ['$q', '$http', 'ontologyUri', function($q, $http, ontologyUri) {
         var context,
             reverseContext = {},
             vocab,
