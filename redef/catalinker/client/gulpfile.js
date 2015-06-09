@@ -26,7 +26,7 @@ var debug = process.argv.indexOf('--debug') > 0,
     appJsFiles = {
         app: [
             SRC + 'catalinkerApp.js',
-            SRC + 'services/*.js',
+            SRC + 'components/**/*.js',
             SRC + 'views/**/*.js'
         ]
     },
@@ -41,9 +41,7 @@ var debug = process.argv.indexOf('--debug') > 0,
             SRC + 'lib/*.js',
             SRC + 'specs/lib/angular-mocks.js',
             SRC + 'app/catalinkerApp.js',
-            SRC + 'app/services/*.js',
-            //'app/directives/*.js',
-            SRC + 'app/views/**/*.js',
+            SRC + 'app/components/**/*.js',
             SRC + 'specs/**/*Spec.js'
     ],
     mockfiles = [
