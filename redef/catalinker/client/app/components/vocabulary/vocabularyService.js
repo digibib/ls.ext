@@ -2,7 +2,7 @@
     var ontologyUri = 'http://192.168.50.12:8005/ontology';
 
 
-    angular.module('catalinker')
+    angular.module('catalinker.vocabulary', [])
     .factory('$vocabulary', ['$q', '$http', function($q, $http) {
         var context,
             reverseContext = {},
