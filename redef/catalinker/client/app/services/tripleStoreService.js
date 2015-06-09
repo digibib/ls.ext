@@ -7,7 +7,7 @@
     //
     // var work = {
     //     "@id": "http://deichman.no/work/work_1231",
-    //     "@type": ":work",
+    //     "@type": "http://data.deichman.no/lsext-model#Work",
     //     "lsext:biblio": "2",
     //     "lsext:date": "2015",
     //     "lsext:creator": "http:example.com/person/p1",
@@ -17,8 +17,7 @@
     //             "@lang": "nb"
     //         }],
     //     "@context": {
-    //         "lsext": "http://data.deichman.no/lsext-model#",
-    //         "": "http://data.deichman.no/lsext-model#"
+    //         "lsext": "http://data.deichman.no/lsext-model#"
     //     }
     // };
 
@@ -35,7 +34,7 @@
 
     Description.prototype.resolveContext = function(val) {
         var colon = val.indexOf(':'), cstring;
-        if (colon >= 0) {
+        if (colon > 0) {
             cstring = val.substr(0, colon);
             return this.context[cstring] + val.substr(colon + 1);
         }

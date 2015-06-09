@@ -3,11 +3,11 @@
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
-        "": "http://deichman.no/ontology#"
+        "ls-ext": "http://deichman.no/ontology#"
     },
     "@graph": [
         {
-            "@id": ":Work",
+            "@id": "http://deichman.no/ontology#Work",
             "@type": "rdfs:Class",
             "rdfs:comment": [
                 {
@@ -31,7 +31,7 @@
             ]
         },
         {
-            "@id": ":Person",
+            "@id": "http://deichman.no/ontology#Person",
             "@type": "rdfs:Class",
             "rdfs:comment": [
                 {
@@ -55,7 +55,7 @@
             ]
         },
         {
-            "@id": ":biblioId",
+            "@id": "http://deichman.no/ontology#biblioId",
             "@type": "rdfs:Property",
             "rdfs:comment": [
                 {
@@ -85,7 +85,7 @@
             }
         },
         {
-            "@id": ":name",
+            "@id": "http://deichman.no/ontology#name",
             "@type": "rdfs:Property",
             "rdfs:comment": [
                 {
@@ -115,7 +115,7 @@
             }
         },
         {
-            "@id": ":identifier",
+            "@id": "http://deichman.no/ontology#identifier",
             "@type": "rdfs:Property",
             "rdfs:comment": [
                 {
@@ -142,7 +142,7 @@
             }
         },
         {
-            "@id": ":creator",
+            "@id": "http://deichman.no/ontology#creator",
             "@type": "rdfs:Property",
             "rdfs:comment": [
                 {
@@ -155,7 +155,7 @@
                 }
             ],
             "rdfs:domain": {
-                "@id": ":Work"
+                "@id": "http://deichman.no/ontology#Work"
             },
             "rdfs:label": [
                 {
@@ -168,11 +168,11 @@
                 }
             ],
             "rdfs:range": {
-                "@id": ":Person"
+                "@id": "http://deichman.no/ontology#Person"
             }
         },
         {
-            "@id": ":date",
+            "@id": "http://deichman.no/ontology#date",
             "@type": "rdfs:Property",
             "rdfs:comment": [
                 {
@@ -185,7 +185,7 @@
                 }
             ],
             "rdfs:domain": {
-                "@id": ":Work"
+                "@id": "http://deichman.no/ontology#Work"
             },
             "rdfs:label": [
                 {
