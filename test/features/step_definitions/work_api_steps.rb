@@ -1,6 +1,5 @@
 # encoding: UTF-8
 
-require 'rdf/turtle'
 require_relative '../support/services/work_api/client.rb'
 require_relative '../support/context_structs.rb'
 
