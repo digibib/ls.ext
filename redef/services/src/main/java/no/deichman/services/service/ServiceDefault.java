@@ -78,4 +78,9 @@ public class ServiceDefault implements Service {
 	public String createWork(String work) {
 		return repository.createWork(work);
 	}
+
+    @Override
+    public void deleteWork(Model work) {
+        repository.delete(work);
+    }
 }

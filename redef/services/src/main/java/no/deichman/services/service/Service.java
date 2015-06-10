@@ -9,4 +9,5 @@ public interface Service {
     Model retrieveWorkById(String id);
     Model retrieveWorkItemsById(String id);
 	String createWork(String work);
+	void deleteWork(Model work);
 }

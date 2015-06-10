@@ -15,6 +15,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -128,6 +129,23 @@ public class WorkResource {
     @OPTIONS
     public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
         return makeCORS(Response.ok(), reqHeader);
+    }
+
+    @DELETE
+    @Path("{workId: [a-zA-Z0-9_]+}")
+    public Response deleteWork(@PathParam("workId") String workId) {
+        Model model = service.retrieveWorkById(workId);
+
+        if (model.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        service.deleteWork(model);
+
+        return Response.noContent().header("Access-Control-Allow-Origin", "*")
+                                   .header("Access-Control-Allow-Methods", "GET")
+                                   .allow("OPTIONS")
+                                   .build();
     }
 
     @OPTIONS
