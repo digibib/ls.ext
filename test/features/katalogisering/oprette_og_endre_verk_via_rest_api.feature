@@ -8,7 +8,7 @@ Egenskap: Legge til og endre verk
   Ønsker jeg å kunne legge til og endre verk via servicelagets API
 
   Scenario: Legge til verk
-    Gitt at jeg har en ontologi som beskriver et verk
+    Gitt at jeg har en ontologi som beskriver verk
     Når jeg legger inn et verk via APIet
     Så viser APIet at verket finnes
 
