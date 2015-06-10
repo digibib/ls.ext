@@ -33,7 +33,10 @@ install_chromedriver:
   'rspec',
   'pry',
   'pry-nav',
-  'watir-webdriver' %}
+  'watir-webdriver',
+  'rdf',
+  'rdf-turtle',
+  'json-ld' %}
 {{ gem }}:
   gem.installed:
     - requires:
