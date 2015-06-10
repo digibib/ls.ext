@@ -36,6 +36,6 @@ class WorkAPIClient < Service
  	end
 
  	def remove_work(work)
- 		Net::HTTP::new(self.addr).delete("/work/#{work}")
+ 		Net::HTTP::new(host, port(:services)).delete("/work/#{work}")
  	end
 end

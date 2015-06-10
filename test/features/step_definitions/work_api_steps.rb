@@ -21,8 +21,7 @@ When(/^jeg legger inn et verk via APIet$/) do
   @context[:work] = w
   @cleanup.push( "verk #{w.uri}" =>
     lambda do
-      # TODO uncomment when DELETE /work route in service API is implemented
-      # client = WorkAPIClient.new().remove_work(w.uri)
+      client = WorkAPIClient.new().remove_work(w.uri)
      end
      )
 end
