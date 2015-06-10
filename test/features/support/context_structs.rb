@@ -2,6 +2,8 @@
 # encoding: utf-8
 # This set of simple structs represents the @context objects
 
+require 'rdf'
+
 Book = Struct.new(:title, :biblionumber, :items) do
   def initialize
     self.title   = generateRandomString
@@ -10,6 +12,32 @@ Book = Struct.new(:title, :biblionumber, :items) do
 
   def addItem
     self.items << Item.new
+  end
+end
+
+Work = Struct.new(:uri, :literals, :ontology) do
+  def randomizer
+    {
+      RDF::XSD.string => generateRandomString,
+      RDF::XSD.gYear => rand(2015),
+      RDF::XSD.nonNegativeInteger => rand(9999)
+    }
+  end
+
+  def initialize(ontology)
+    self.literals = RDF::Graph.new
+    self.ontology = ontology
+    self.ontology.each_statement do |stmt|
+      if stmt.predicate == RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#range");
+        if randomizer[stmt.object]
+          self.literals << RDF::Statement.new(
+            RDF::URI.new(""), # We don't have any id for our work yet
+            stmt.subject,
+            randomizer[stmt.object]
+            )
+        end
+      end
+    end
   end
 end
 
