@@ -13,7 +13,6 @@ Given(/^at jeg har en ontologi som beskriver verk$/) do
       )
   @context[:ontology] = client.get_ontology()
   @context[:ontology].has_statement?(work_statement).should be true
-
 end
 
 When(/^jeg legger inn et verk via APIet$/) do

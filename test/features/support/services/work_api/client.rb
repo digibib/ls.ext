@@ -1,6 +1,5 @@
 # encoding: UTF-8
 
-require 'rdf/turtle'
 require 'json/ld'
 require 'uri'
 require 'net/http'
@@ -16,7 +15,7 @@ class WorkAPIClient < Service
   end
 
   def get_ontology()
-  	RDF::Graph.load("#{self.addr}/ontology", format:  :ttl)
+    RDF::Graph.load("#{self.addr}/ontology", format: :jsonld)
   end
 
  	def create_work(statements)

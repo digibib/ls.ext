@@ -35,7 +35,6 @@ install_chromedriver:
   'pry-nav',
   'watir-webdriver',
   'rdf',
-  'rdf-turtle',
   'json-ld' %}
 {{ gem }}:
   gem.installed:
