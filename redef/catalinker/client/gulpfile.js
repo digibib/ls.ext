@@ -8,6 +8,7 @@ var debug = process.argv.indexOf('--debug') > 0,
     uglify = require('gulp-uglify'),
     modify = require('gulp-modify'),
     replace = require('gulp-replace'),
+    jshint = require('gulp-jshint'),
     gulpif = require('gulp-if'),
     //minifycss = require('gulp-minify-css'),
     //sass = require('gulp-sass'),
@@ -43,6 +44,11 @@ var debug = process.argv.indexOf('--debug') > 0,
             SRC + 'app/catalinkerApp.js',
             SRC + 'app/components/**/*.js',
             SRC + 'specs/**/*Spec.js'
+    ],
+    jsSrcFiles = [
+        'app/**/*.js',
+        'specs/*.js',
+        'specs/components/**/*.js'
     ],
     mockfiles = [
         'specs/mocks/*.json'
@@ -128,6 +134,13 @@ gulp.task('clean', function() {
     rmdir(DEST, true);
 });
 
+gulp.task('lint', function() {
+    return gulp.src(jsSrcFiles)
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .pipe(jshint.reporter('fail'));
+});
+
 gulp.task('specs', function () {
     // Be sure to return the stream 
     return gulp.src(specfiles)
@@ -159,6 +172,7 @@ gulp.task('specs', function () {
 gulp.task('watch', function () {
     isWatching = true;
     debug = true; // always debug when in watch mode
+    gulp.watch(jsSrcFiles, ['lint']);
     gulp.watch([SRC + '**/*'], ['buildApp']);
     gulp.watch(SRC_LIB + '**/*', ['buildLibs']);
     gulp.start('specs');

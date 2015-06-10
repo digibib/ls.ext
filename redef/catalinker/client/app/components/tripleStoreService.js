@@ -1,4 +1,5 @@
 ﻿(function(module) {
+    "use strict";
 
     var baseUri = 'http://192.168.50.12:8005/',
         baseId = 'http://deichman.no/';
@@ -45,7 +46,7 @@
         var triples = [],
             description = this;
         angular.forEach(graph, function (value, key) {
-            if (key.indexOf('@') != 0) {
+            if (key.indexOf('@') !== 0) {
                 if (value instanceof Array) {
                     value.forEach(function (val) {
                         triples.push(new Triple(
@@ -78,7 +79,7 @@
 
         });
         return promise;
-    }
+    };
 
 
     function Triple(t) {
@@ -107,7 +108,7 @@
 
     Triple.prototype.validate = function() {
         this.isValid = true;
-    }
+    };
 
     var Patch = {
         add : function(triple) {
@@ -122,7 +123,7 @@
                 Patch.add(triple)
             ];
         }    
-    }
+    };
 
 
     module
@@ -196,7 +197,7 @@
             }, 1000);
     */
             return deferred.promise;
-        }
+        };
 
 
         function getDescription(itemType, id) {

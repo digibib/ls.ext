@@ -38,13 +38,13 @@
                     obj['rdfs:label'].forEach(function(l) {
                         label[l['@language']] = l['@value'];
                     });
-                    label['default'] = label['no'] || label['en'];
+                    label['default'] = label.no || label.en;
                 }
                 if (obj['rdfs:comment'] instanceof Array) {
                     obj['rdfs:comment'].forEach(function (c) {
                         comment[c['@language']] = c['@value'];
                     });
-                    comment['default'] = comment['no'] || comment['en'];
+                    comment['default'] = comment.no || comment.en;
                 }
                 //obj['@label']
                 labelIndex[obj['@id']] = label;

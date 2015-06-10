@@ -98,7 +98,7 @@ describe("Given user is logged in", function () {
                 });
 
                 afterEach(function() {
-                    needsFlush && $httpBackend.flush();
+                    if (needsFlush) $httpBackend.flush();
                 });
 
                 it("The promise is not resolved", function(){
@@ -212,7 +212,7 @@ describe("Given user is logged in", function () {
             });
 
             afterEach(function() {
-                needsFlush && $httpBackend.flush();
+                if (needsFlush) $httpBackend.flush();
             });
             
             it("The list of triples should still contain 5 items", function() {
@@ -251,7 +251,7 @@ describe("Given user is logged in", function () {
             });
 
             afterEach(function() {
-                needsFlush && $httpBackend.flush();
+                if (needsFlush) $httpBackend.flush();
             });            
             
             it("The list of triples should contain 5 items", function() {
