@@ -30,7 +30,6 @@ base:
     - sip.dockerized
     - redef.fuseki
     - migration.dockerized
-    - redef.fuseki
 
   'wombat,vm-ship':
     - match: list
