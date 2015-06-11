@@ -5,7 +5,7 @@
         .factory('ontologyFactory', ['$http', 'ontologyUri', function($http, ontologyUri) {
             return $http.get(ontologyUri, { headers: { accept: 'application/ld+json' } });
         }])
-        .factory('$vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
+        .factory('vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
             var context,
                 reverseContext = {},
                 vocab,

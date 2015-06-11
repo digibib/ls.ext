@@ -127,7 +127,7 @@
 
 
     module
-    .factory('$tripleStore', ['$http', '$q', '$timeout', function ($http, $q,  $timeout) {
+    .factory('tripleStore', ['$http', '$q', '$timeout', function ($http, $q,  $timeout) {
         
         Triple.prototype.save = function () {
             var self = this,

@@ -1,12 +1,12 @@
 ﻿(function(angular) {
     angular.module('catalinker', ['ngMaterial', 'ngRoute', 'catalinker.vocabulary'])
 
-    .controller('appController', ['$scope', '$mdSidenav', '$vocabulary', '$tripleStore', function ($scope, $mdSidenav, $vocabulary, $tripleStore) {
-        var Triple = $tripleStore.Triple,
+    .controller('appController', ['$scope', '$mdSidenav', 'vocabulary', 'tripleStore', function ($scope, $mdSidenav, vocabulary, tripleStore) {
+        var Triple = tripleStore.Triple,
             description = null;
         
         
-        $scope.labels = $vocabulary.labels;
+        $scope.labels = vocabulary.labels;
         $scope.triples = [];
         $scope.titles = {};
         $scope.predicate = '';
@@ -15,15 +15,15 @@
         
         function init() {
             
-            $tripleStore.getDescription('work', 'w222557057913').then(function (_description) {
+            tripleStore.getDescription('work', 'w222557057913').then(function (_description) {
                 $scope.triples = _description.triples;
                 description = _description;
             }, function (err) {
                 console.log('loading hardcoded work failed', err);
             });
             
-            $vocabulary.promise.then(function () {
-                angular.forEach($vocabulary.labels, function (label, key) {
+            vocabulary.promise.then(function () {
+                angular.forEach(vocabulary.labels, function (label, key) {
                     $scope.predicates.push({ label: label, value: key });
                 });
             });
@@ -40,7 +40,7 @@
         $scope.newWork = function () {
             description = null;
             $scope.triples = [];
-            $tripleStore.newDescription('work').then(function (desc) {
+            tripleStore.newDescription('work').then(function (desc) {
                 description = desc;
                 $scope.triples = desc.triples;
             }, function () {
