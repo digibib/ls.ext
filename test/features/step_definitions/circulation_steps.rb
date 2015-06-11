@@ -123,7 +123,6 @@ end
 
 Given(/^at materialet er holdt av til en annen låner$/) do
   step "at materialet er reservert av en annen låner"
-  step "vises boka i listen over bøker som skal plukkes"
   step "boka plukkes og skannes inn"
 end
 

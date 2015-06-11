@@ -13,8 +13,8 @@ Egenskap: Innlevering av ikke-utlånt materiale
   Bakgrunn:
     Gitt at det finnes en utlånsautomat
     Og at det finnes en låner med lånekort
-      | firstname | dateenrolled | dateexpiry | dateofbirth | gonenoaddress | lost  | debarred | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 2010-01-01  | 0             | 0     |          | 1234     | 0     |
+      | firstname | dateenrolled | dateexpiry | dateofbirth | gonenoaddress | lost  | password | flags |
+      | Knut      | 01/08/2015   | 10/08/2015 | 2010-01-01  | 0             | 0     | 1234     | 0     |
     Og at låneren har valgt "levere" på utlånsautomaten
     Og at låneren har materiale han ønsker å levere
     Og at materialet ikke er lånt ut til låner

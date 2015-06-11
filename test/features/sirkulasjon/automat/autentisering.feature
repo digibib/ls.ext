@@ -52,7 +52,7 @@ Egenskap: Autentisering på automat
   Scenario: Låner registrert med sperret kort prøver å låne på automat
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred   | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     | 2015-10-10 | 1234     | 0     |
+      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     | 9999-12-31 | 1234     | 0     |
     Når låneren velger "låne" på automaten
     Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
@@ -60,7 +60,7 @@ Egenskap: Autentisering på automat
   Scenario: Låner prøver å låne på automat med kort som har utløpt
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred   | password | flags |
-      | Knut      | 01/08/2015   | 01/07/2015 | 0             | 0     | 0          | 1234     | 0     |
+      | Knut      | 01/08/2015   | 01/07/2015 | 0             | 0     | false      | 1234     | 0     |
     Når låneren velger "låne" på automaten
     Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret

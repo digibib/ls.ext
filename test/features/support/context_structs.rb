@@ -63,12 +63,13 @@ ItemType = Struct.new(:code, :desc) do
   end
 end
 
-Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password) do
+Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password, :debarred) do
   def initialize
     self.cardnumber = generateRandomString
     self.surname    = generateRandomString
     self.branch     = Branch.new
     self.category   = PatronCategory.new
+    self.debarred   = false
   end
 end
 
