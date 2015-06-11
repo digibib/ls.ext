@@ -10,7 +10,7 @@ describe("catalinker.vocabulary", function () {
             expect(ontologyUri).toBe('http://192.168.50.12:8005/ontology');
         }));
 
-        describe("[slow test]", function() {
+        describe("ontologyService", function() {
             var originalTimeout;
 
             beforeEach(function() {
