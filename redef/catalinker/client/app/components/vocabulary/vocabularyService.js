@@ -10,7 +10,7 @@
             reverseContext = {},
             vocab,
             labelIndex = {},
-            deferred = $q.defer();
+            deferred;
         
         function replaceUriWithContext(uri) {
             var result = uri;
@@ -53,16 +53,17 @@
                 labelIndex[obj['@id']] = label;
                 labelIndex[replaceUriWithContext(obj['@id'])] = label;
             });
-            deferred.resolve();
         }
     /*
         function getLabel(predicate) {
             return labelIndex[predicate] || predicate;
         }
     */
+        deferred = $q.defer();
         ontologyJson
         .success(function(data) {
             init(data);
+            deferred.resolve();
         }).error(function() {
             deferred.reject();
         });
