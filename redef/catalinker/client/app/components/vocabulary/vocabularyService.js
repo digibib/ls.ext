@@ -2,10 +2,10 @@
 
     angular.module('catalinker.vocabulary', [])
         .constant('ontologyUri', 'http://192.168.50.12:8005/ontology')
-        .factory('ontologyJson', ['$http', 'ontologyUri', function($http, ontologyUri) {
+        .factory('ontologyFactory', ['$http', 'ontologyUri', function($http, ontologyUri) {
             return $http.get(ontologyUri, { headers: { accept: 'application/ld+json' } });
         }])
-        .factory('$vocabulary', ['$q', 'ontologyJson', function($q, ontologyJson) {
+        .factory('$vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
         var context,
             reverseContext = {},
             vocab,
@@ -60,7 +60,7 @@
         }
     */
         deferred = $q.defer();
-        ontologyJson
+        ontologyFactory
         .success(function(data) {
             init(data);
             deferred.resolve();

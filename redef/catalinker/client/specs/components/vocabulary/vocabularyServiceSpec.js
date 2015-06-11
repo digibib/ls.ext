@@ -37,8 +37,8 @@ describe("catalinker.vocabulary", function () {
                     $httpBackend.expectGET(ontologyUri).respond(200, "some content");
                 });
 
-                inject(function(ontologyJson) {
-                    ontologyJson.then(function(response) {
+                inject(function(ontologyFactory) {
+                    ontologyFactory.then(function(response) {
                         expect(response.data).toBe('some content');
                         done();
                     }, function(response) {
