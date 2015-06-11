@@ -2,7 +2,10 @@
 
     angular.module('catalinker.vocabulary', [])
         .constant('ontologyUri', 'http://192.168.50.12:8005/ontology')
-        .factory('$vocabulary', ['$q', '$http', 'ontologyUri', function($q, $http, ontologyUri) {
+        .factory('ontologyJson', ['$http', 'ontologyUri', function($http, ontologyUri) {
+            return $http.get(ontologyUri, { headers: { accept: 'application/ld+json' } });
+        }])
+        .factory('$vocabulary', ['$q', 'ontologyJson', function($q, ontologyJson) {
         var context,
             reverseContext = {},
             vocab,
@@ -57,9 +60,7 @@
             return labelIndex[predicate] || predicate;
         }
     */
-
-
-        $http.get(ontologyUri, { headers: { accept: 'application/ld+json' } })
+        ontologyJson
         .success(function(data) {
             init(data);
         }).error(function() {
