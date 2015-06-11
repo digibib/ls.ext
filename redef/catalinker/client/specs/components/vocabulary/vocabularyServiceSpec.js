@@ -10,7 +10,7 @@ describe("catalinker.vocabulary", function () {
             expect(ontologyUri).toBe('http://192.168.50.12:8005/ontology');
         }));
 
-        describe("ontologyService", function() {
+        describe("ontologyFactory", function() {
             var originalTimeout;
 
             beforeEach(function() {
@@ -38,11 +38,11 @@ describe("catalinker.vocabulary", function () {
                 });
 
                 inject(function(ontologyFactory) {
-                    ontologyFactory.then(function(response) {
-                        expect(response.data).toBe('some content');
+                    ontologyFactory.then(function(data) {
+                        expect(data).toBe('some content');
                         done();
-                    }, function(response) {
-                        fail(response);
+                    }, function(data) {
+                        fail(data);
                     });
                 });
                 $rootScope.$digest();
