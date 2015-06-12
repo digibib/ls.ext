@@ -73,12 +73,12 @@
         */
             deferred = $q.defer();
             ontologyFactory
-            .then(function(data) {
-                init(data);
-                deferred.resolve();
-            },function() {
-                deferred.reject();
-            });
+                .then(function(data) {
+                    init(data);
+                    deferred.resolve();
+                },function() {
+                    deferred.reject();
+                });
 
             return {
                 //getLabel: getLabel,
