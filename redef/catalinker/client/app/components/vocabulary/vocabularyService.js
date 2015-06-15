@@ -19,7 +19,7 @@
         .factory('vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
             var deferred;
 
-            function replaceUriWithContext(contextHash, uri) {
+            function replaceContextInUri(contextHash, uri) {
                 var result = null, prefix;
                 angular.forEach(contextHash, function (value, key) {
                     if (!result) {
@@ -53,7 +53,7 @@
                         });
                         label['default'] = label.no || label.en;
                     }
-                    result[replaceUriWithContext(get_context(ontology), obj['@id'])] = label;
+                    result[replaceContextInUri(get_context(ontology), obj['@id'])] = label;
                 });
                 return result;
             }
@@ -62,15 +62,14 @@
 
             ontologyFactory
                 .then(function(ontology) {
-                    deferred.resolve(
-                        {
-                            labels: extract_labels(ontology)
-                        }
-                    );
+                    deferred.resolve(extract_labels(ontology));
                 },function() {
                     deferred.reject();
                 });
 
-            return deferred.promise;
+            return {
+                replaceContextInUri: replaceContextInUri,
+                labels: deferred.promise
+            };
         }]);
 }());

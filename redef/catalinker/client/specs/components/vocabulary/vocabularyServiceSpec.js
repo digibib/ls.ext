@@ -59,6 +59,31 @@ describe("catalinker.vocabulary", function () {
 
         describe("vocabularyFactory", function () {
 
+            describe("replaceContextInUri", function() {
+
+                it("should replace context in uri", function() {
+                    var vocabulary,
+                        contextHash = {
+                        "something": "http://deichman.no/something#",
+                        "": "http://deichman.no/nothing#"
+                    };
+
+                    inject(function (_vocabulary_) {
+                        vocabulary = _vocabulary_;
+                    });
+
+                    expect(vocabulary.replaceContextInUri(contextHash, "something:something"))
+                        .toBe("http://deichman.no/something#something");
+
+                    expect(vocabulary.replaceContextInUri(contextHash, ":anything"))
+                        .toBe("http://deichman.no/nothing#anything");
+
+                    expect(vocabulary.replaceContextInUri(contextHash, "whatever:not_found"))
+                        .toBe("whatever:not_found");
+                });
+            });
+
+            describe("labels", function () {
             it("should convert minimal ontology into vocabulary", function (done) {
                 var minimalOntology = {
                     "@context": {
@@ -94,10 +119,10 @@ describe("catalinker.vocabulary", function () {
                 });
 
                 inject(function (vocabulary) {
-                    vocabulary.then(function(vocab) {
-                        expect(vocab.labels['http://deichman.no/ontology#Work']['default']).toBe('Verk');
-                        expect(vocab.labels['http://deichman.no/ontology#name']['default']).toBe('Name/navn');
-                        expect(Object.keys(vocab.labels).length).toBe(2);
+                    vocabulary.labels.then(function(labels) {
+                        expect(labels['http://deichman.no/ontology#Work']['default']).toBe('Verk');
+                        expect(labels['http://deichman.no/ontology#name']['default']).toBe('Name/navn');
+                        expect(Object.keys(labels).length).toBe(2);
                         done();
                     }, function() {
                         fail();
@@ -110,6 +135,6 @@ describe("catalinker.vocabulary", function () {
                 });
             });
         });
-
+        });
     });
 });
