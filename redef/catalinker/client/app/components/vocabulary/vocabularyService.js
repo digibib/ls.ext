@@ -33,12 +33,12 @@
             }
 
             function get_context(ontology) {
-                return ontology['@context'];
+                return ontology['@context'] || {};
             }
 
 
             function get_graph(ontology) {
-                return ontology['@graph'];
+                return ontology['@graph'] || [];
             }
 
             function extract_labels(ontology) {
