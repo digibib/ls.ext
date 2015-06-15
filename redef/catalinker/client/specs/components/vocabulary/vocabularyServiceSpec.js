@@ -55,5 +55,61 @@ describe("catalinker.vocabulary", function () {
                 jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
             });
         });
+
+
+        describe("vocabularyFactory", function () {
+
+            it("should convert minimal ontology into vocabulary", function (done) {
+                var minimalOntology = {
+                    "@context": {
+                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                        "ls-ext": "http://deichman.no/ontology#"
+                    },
+                    "@graph": [
+                        {
+                            "@id": "http://deichman.no/ontology#Work",
+                            "rdfs:label": [
+                                {
+                                    "@language": "en",
+                                    "@value": "Work"
+                                },
+                                {
+                                    "@language": "no",
+                                    "@value": "Verk"
+                                }
+                            ]
+                        },
+                        {
+                            "@id": "ls-ext:name",
+                            "rdfs:label": "Name/navn"
+                        }
+                    ]};
+
+                module(function ($provide) {
+                    $provide.factory('ontologyFactory', function ($q) {
+                        var dfd = $q.defer();
+                        dfd.resolve(minimalOntology);
+                        return dfd.promise;
+                    });
+                });
+
+                inject(function (vocabulary) {
+                    vocabulary.then(function(vocab) {
+                        expect(vocab.labels['http://deichman.no/ontology#Work']['default']).toBe('Verk');
+                        expect(vocab.labels['http://deichman.no/ontology#name']['default']).toBe('Name/navn');
+                        expect(Object.keys(vocab.labels).length).toBe(2);
+                        done();
+                    }, function() {
+                        fail();
+                    });
+                });
+
+                inject(function ($rootScope) {
+                    $rootScope.$apply();
+                    $rootScope.$digest();
+                });
+            });
+        });
+
     });
 });

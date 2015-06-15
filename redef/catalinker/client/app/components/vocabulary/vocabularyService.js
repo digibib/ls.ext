@@ -20,10 +20,11 @@
             var deferred;
 
             function replaceUriWithContext(context, uri) {
-                var result = uri;
-                angular.forEach(context, function(c) {
-                    if (uri.indexOf(c) === 0) {
-                        result = c; // TODO This is strange - the 'id' part of the uri is lost ...?
+                var result = uri, prefix;
+                angular.forEach(context, function (value, key) {
+                    prefix = new RegExp('^' + key + ":");
+                    if (prefix.test(uri)) {
+                        result = uri.replace(prefix, value);
                     }
                 });
                 return result;
@@ -50,8 +51,6 @@
                         });
                         label['default'] = label.no || label.en;
                     }
-                    // TODO This is strange - why are we adding both?
-                    result[obj['@id']] = label;
                     result[replaceUriWithContext(get_context(ontology), obj['@id'])] = label;
                 });
                 return result;

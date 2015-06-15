@@ -70,8 +70,8 @@ describe("Given user is logged in", function () {
             expect($scope.triples[0].value).toBe('2');
         });
 
-        it("The list of predicates should contain 8 items", function() {
-            expect($scope.predicates.length).toBe(8);
+        it("The list of predicates should contain 7 items", function() {
+            expect($scope.predicates.length).toBe(7);
         });        
 
         describe("And the user changes the date", function() {
