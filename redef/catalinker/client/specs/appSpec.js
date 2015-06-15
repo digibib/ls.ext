@@ -70,8 +70,8 @@ describe("Given user is logged in", function () {
             expect($scope.triples[0].value).toBe('2');
         });
 
-        it("The list of predicates should contain 7 items", function() {
-            expect($scope.predicates.length).toBe(7);
+        it("The list of fields should contain 7 items", function() {
+            expect($scope.fields.length).toBe(7);
         });        
 
         describe("And the user changes the date", function() {
@@ -151,7 +151,7 @@ describe("Given user is logged in", function () {
 
         describe("And we want to add a triple by first selecting a predicate", function() {
             beforeEach(function() {
-                $scope.predicate = $scope.predicates[0];
+                $scope.predicate = $scope.fields[0];
             });
             
             it("The selected predicate should be 'http://deichman.no/ontology#Work'", function() {

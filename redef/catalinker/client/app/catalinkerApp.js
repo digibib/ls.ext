@@ -10,7 +10,7 @@
         $scope.triples = [];
         $scope.titles = {};
         $scope.predicate = '';
-        $scope.predicates = [];
+        $scope.fields = [];
         
         
         function init() {
@@ -25,7 +25,7 @@
             vocabulary.labels.then(function(labels) {
                 $scope.labels = labels;
                 angular.forEach(labels, function (label, key) {
-                    $scope.predicates.push({ label: label, value: key });
+                    $scope.fields.push({ label: label, value: key });
                 });
             });
         }

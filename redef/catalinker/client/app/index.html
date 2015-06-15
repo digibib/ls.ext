@@ -66,7 +66,7 @@
                     <md-input-container>
                         <md-select ng-model="predicate" data-automation-id="predicate_selector" placeholder="Predicate">
                             <md-select-label>{{predicate.label.default || 'Velg Predikat'}}</md-select-label>
-                            <md-option ng-repeat="predicate in predicates" ng-value="predicate">{{predicate.label.default}}</md-option>
+                            <md-option ng-repeat="predicate in fields" ng-value="predicate">{{predicate.label.default}}</md-option>
                         </md-select>
 
                     </md-input-container>
