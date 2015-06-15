@@ -19,15 +19,17 @@
         .factory('vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
             var deferred;
 
-            function replaceUriWithContext(context, uri) {
-                var result = uri, prefix;
-                angular.forEach(context, function (value, key) {
-                    prefix = new RegExp('^' + key + ":");
-                    if (prefix.test(uri)) {
-                        result = uri.replace(prefix, value);
+            function replaceUriWithContext(contextHash, uri) {
+                var result = null, prefix;
+                angular.forEach(contextHash, function (value, key) {
+                    if (!result) {
+                        prefix = new RegExp('^' + key + ":");
+                        if (prefix.test(uri)) {
+                            result = uri.replace(prefix, value);
+                        }
                     }
                 });
-                return result;
+                return result || uri;
             }
 
             function get_context(ontology) {
