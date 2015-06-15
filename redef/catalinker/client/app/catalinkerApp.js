@@ -6,7 +6,7 @@
             description = null;
         
         
-        $scope.labels = vocabulary.labels;
+        $scope.labels = {};
         $scope.triples = [];
         $scope.titles = {};
         $scope.predicate = '';
@@ -22,8 +22,9 @@
                 console.log('loading hardcoded work failed', err);
             });
             
-            vocabulary.promise.then(function () {
-                angular.forEach(vocabulary.labels, function (label, key) {
+            vocabulary.then(function (vocab) {
+                $scope.labels = vocab.labels;
+                angular.forEach(vocab.labels, function (label, key) {
                     $scope.predicates.push({ label: label, value: key });
                 });
             });

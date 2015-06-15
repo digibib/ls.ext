@@ -17,53 +17,59 @@
             return asNormalPromise($q, $http.get(ontologyUri, {headers: {accept: 'application/ld+json'}}));
         }])
         .factory('vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
-            var context,
-                vocab,
-                labelIndex = {},
-                deferred;
+            var deferred;
 
-            function replaceUriWithContext(uri) {
+            function replaceUriWithContext(context, uri) {
                 var result = uri;
                 angular.forEach(context, function(c) {
                     if (uri.indexOf(c) === 0) {
-                        result = c;
+                        result = c; // TODO This is strange - the 'id' part of the uri is lost ...?
                     }
                 });
                 return result;
             }
 
-            function init(ontology) {
-                context = ontology['@context'];
-                vocab = ontology['@graph'];
+            function get_context(ontology) {
+                return ontology['@context'];
+            }
 
-                vocab.forEach(function (obj) {
+
+            function get_graph(ontology) {
+                return ontology['@graph'];
+            }
+
+            function extract_labels(ontology) {
+                var result = {};
+                get_graph(ontology).forEach(function (obj) {
                     var label = {
-                            'default': obj['rdfs:label']
-                        };
+                        'default': obj['rdfs:label']
+                    };
                     if (obj['rdfs:label'] instanceof Array) {
-                        obj['rdfs:label'].forEach(function(l) {
+                        obj['rdfs:label'].forEach(function (l) {
                             label[l['@language']] = l['@value'];
                         });
                         label['default'] = label.no || label.en;
                     }
-                    labelIndex[obj['@id']] = label;
-                    labelIndex[replaceUriWithContext(obj['@id'])] = label;
+                    // TODO This is strange - why are we adding both?
+                    result[obj['@id']] = label;
+                    result[replaceUriWithContext(get_context(ontology), obj['@id'])] = label;
                 });
+                return result;
             }
 
             deferred = $q.defer();
+
             ontologyFactory
-                .then(function(data) {
-                    init(data);
-                    deferred.resolve();
+                .then(function(ontology) {
+                    deferred.resolve(
+                        {
+                            labels: extract_labels(ontology)
+                        }
+                    );
                 },function() {
                     deferred.reject();
                 });
 
-            return {
-                labels: labelIndex,
-                vocabulary: vocab,
-                promise: deferred.promise
-            };
+            return deferred.promise;
         }]);
 }());
