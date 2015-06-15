@@ -9,9 +9,9 @@
         $scope.labels = {};
         $scope.triples = [];
         $scope.titles = {};
-        $scope.predicate = '';
         $scope.fields = [];
-        
+        $scope.selectedField = '';
+
         
         function init() {
             
@@ -25,13 +25,13 @@
             vocabulary.labels.then(function(labels) {
                 $scope.labels = labels;
                 angular.forEach(labels, function (label, key) {
-                    $scope.fields.push({ label: label, value: key });
+                    $scope.fields.push({ label: label, predicate: key });
                 });
             });
         }
         
         $scope.add = function () {
-            $scope.triples.push(new Triple({ subject: description.subject, predicate: $scope.predicate.value, value: "" }));
+            $scope.triples.push(new Triple({ subject: description.subject, predicate: $scope.selectedField.predicate, value: "" }));
         };
         
         $scope.removeTriple = function (t) {

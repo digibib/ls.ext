@@ -64,13 +64,13 @@
             <div layout="column">
                 <md-content layout-padding layout="row" layout-sm="column">
                     <md-input-container>
-                        <md-select ng-model="predicate" data-automation-id="predicate_selector" placeholder="Predicate">
-                            <md-select-label>{{predicate.label.default || 'Velg Predikat'}}</md-select-label>
-                            <md-option ng-repeat="predicate in fields" ng-value="predicate">{{predicate.label.default}}</md-option>
+                        <md-select ng-model="selectedField" data-automation-id="predicate_selector" placeholder="Felt">
+                            <md-select-label>{{selectedField.label.default || 'Velg felt'}}</md-select-label>
+                            <md-option ng-repeat="field in fields" ng-value="field">{{field.label.default}}</md-option>
                         </md-select>
 
                     </md-input-container>
-                    <md-button ng-click="add()" ng-disabled="!predicate">+</md-button>
+                    <md-button ng-click="add()" ng-disabled="!selectedField">+</md-button>
 
                 </md-content>
             </div>

@@ -149,13 +149,13 @@ describe("Given user is logged in", function () {
 
         }); 
 
-        describe("And we want to add a triple by first selecting a predicate", function() {
+        describe("And we want to add a triple by first selecting a field", function() {
             beforeEach(function() {
-                $scope.predicate = $scope.fields[0];
+                $scope.selectedField = $scope.fields[0];
             });
             
-            it("The selected predicate should be 'http://deichman.no/ontology#Work'", function() {
-                expect($scope.predicate.value).toBe('http://deichman.no/ontology#Work');
+            it("The selected field predicate should be 'http://deichman.no/ontology#Work'", function() {
+                expect($scope.selectedField.predicate).toBe('http://deichman.no/ontology#Work');
             });
 
             describe("And the user clicks the add button", function() {
@@ -167,8 +167,8 @@ describe("Given user is logged in", function () {
                 });
                 
 
-                it("The selected predicate should still be 'http://deichman.no/ontology#Work'", function() {
-                    expect($scope.predicate.value).toBe('http://deichman.no/ontology#Work');
+                it("The selected field predicate should still be 'http://deichman.no/ontology#Work'", function() {
+                    expect($scope.selectedField.predicate).toBe('http://deichman.no/ontology#Work');
                 });
 
                 it("The list of triples should contain 6 items", function() {
