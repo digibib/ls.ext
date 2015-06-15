@@ -40,7 +40,7 @@
                     <md-content layout="column" layout-sm="column" ng-repeat="triple in triples">
                         <md-input-container ng-switch on="triple.type" style="width:90%">
                             <label>
-                                {{labels[triple.predicate]['no'] || triple.predicate.label.default}}
+                                {{labels[triple.predicate]['default'] || triple.predicate}}
                             </label>
 
                             <input ng-switch-when="date" data-ng-model="triple.value" type="date" name="{{triple.id}}" />
