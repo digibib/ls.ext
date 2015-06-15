@@ -40,7 +40,7 @@
                     <md-content layout="column" layout-sm="column" ng-repeat="triple in triples">
                         <md-input-container ng-switch on="triple.type" style="width:90%">
                             <label>
-                                {{labels[triple.predicate]['no'] || triple.predicate}}
+                                {{labels[triple.predicate]['no'] || triple.predicate.label.default}}
                             </label>
 
                             <input ng-switch-when="date" data-ng-model="triple.value" type="date" name="{{triple.id}}" />
@@ -65,8 +65,8 @@
                 <md-content layout-padding layout="row" layout-sm="column">
                     <md-input-container>
                         <md-select ng-model="predicate" data-automation-id="predicate_selector" placeholder="Predicate">
-                            <md-select-label>{{predicate || 'Velg Predikat'}}</md-select-label>
-                            <md-option ng-repeat="predicate in predicates" ng-value="predicate.value">{{predicate.label.default}}</md-option>
+                            <md-select-label>{{predicate.label.default || 'Velg Predikat'}}</md-select-label>
+                            <md-option ng-repeat="predicate in predicates" ng-value="predicate">{{predicate.label.default}}</md-option>
                         </md-select>
 
                     </md-input-container>

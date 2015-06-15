@@ -31,7 +31,7 @@
         }
         
         $scope.add = function () {
-            $scope.triples.push(new Triple({ subject: description.subject, predicate: $scope.predicate, value: "" }));
+            $scope.triples.push(new Triple({ subject: description.subject, predicate: $scope.predicate.value, value: "" }));
         };
         
         $scope.removeTriple = function (t) {
