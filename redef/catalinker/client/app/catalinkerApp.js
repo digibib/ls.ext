@@ -22,7 +22,7 @@
                 console.log('loading hardcoded work failed', err);
             });
             
-            vocabulary.labels.then(function (labels) {
+            vocabulary.labels.then(function(labels) {
                 $scope.labels = labels;
                 angular.forEach(labels, function (label, key) {
                     $scope.predicates.push({ label: label, value: key });
