@@ -25,7 +25,7 @@
             vocabulary.labels.then(function(labels) {
                 $scope.labels = labels;
                 angular.forEach(labels, function (label, key) {
-                    $scope.fields.push({ label: label, predicate: key });
+                    $scope.fields.push({ predicate: key, label: label });
                 });
             });
         }
