@@ -123,36 +123,11 @@ public class WorkResourceTest {
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
-    /*
+
     @Test
-    public void should_patch_data() {
-    	String wrongWork = "<http://deichman.no/work/work_put_test> a deichman:Work ;\n"
-    		        + "  deichman:title \"Peer Gint\" ;"
-    	            + "  deichman:creator \"Henryk Ibsen\""
-    		        + "  deichman:date \"1876\"";
-    	String rightWork = "@prefix deichman: <http://deichman.no/ontology#> \n"
-	            + "<http://deichman.no/work/work_put_test> a deichman:Work ;\n"
-		        + "  deichman:title \"Peer Gint\" ;"
-	            + "  deichman:creator \"Henryk Ibsen\""
-		        + "  deichman:date \"1876\"";
-    	
-    	Response putResponse = resource.putWork(work);
-    	assertEquals(200, putResponse.getStatus());
-    	assertNotNull(putResponse.getEntity().toString());
-    }
-    */
-    
-    @Ignore @Test
-    public void should_parse_patch() {
-    	String patchData = "{\"op\":\"add\",\"s\":\"http://deichman.no/work/work_WORK_TO_BE_PATCHED\",\"p\":\"http://deichman.no/ontology#title\",\"o\":{\"value\":\"Title\", \"lang\":\"en\"}}";
-        String expected = "INSERT DATA {<http://deichman.no/work/work_WORK_TO_BE_PATCHED><http://deichman.no/ontology#title> \"Title\"@en}";
- //   	ParserResult pr = Parser.parse(patchData);
- //   	assertTrue(pr.getLogicalOutput == expected);	
-    }
-    
-    @Ignore @Test
-    public void should_patch_work() {
-    	fail();
+    public void patch_should_return_200() {
+        Response patchResponse = resource.patchWork(null);
+        assertEquals(200, patchResponse.getStatus());
     }
     
     private boolean isValidJSON(final String json) {
