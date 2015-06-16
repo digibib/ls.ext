@@ -8,8 +8,8 @@ import no.deichman.services.error.PatchParserException;
 
 public class Parser {
 	
-    private static String input = null;
-    private static IRIFactory iriFactory = IRIFactory.semanticWebImplementation();
+    private String input = null;
+    private IRIFactory iriFactory = IRIFactory.semanticWebImplementation();
 
     Parser () {
     }

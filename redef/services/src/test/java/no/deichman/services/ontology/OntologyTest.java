@@ -2,6 +2,7 @@ package no.deichman.services.ontology;
 
 import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -14,13 +15,19 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertTrue;
 
 public class OntologyTest {
+    BaseURIDefault bud;
+    
+    @Before
+    public void setUp(){
+        bud = new BaseURIDefault();
+    }
     @Test
     public void should_return_ontology_as_string() throws IOException {
         OntologyDefault ontology = new OntologyDefault();
         String onto = ontology.toString();
         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
             String fromFile = IOUtils.toString(fileInputStream);
-            assertTrue(onto.equals(fromFile.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI())));
+            assertTrue(onto.equals(fromFile.replace("http://data.deichman.no/lsext-model#",bud.getOntologyURI())));
         }
     }
 
@@ -30,7 +37,7 @@ public class OntologyTest {
         InputStream onto = ontology.toInputStream();
         
         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
-            String fromFile = IOUtils.toString(fileInputStream).replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI());
+            String fromFile = IOUtils.toString(fileInputStream).replace("http://data.deichman.no/lsext-model#",bud.getOntologyURI());
 			InputStream fileIn = new ByteArrayInputStream(fromFile.getBytes(StandardCharsets.UTF_8));
 
             assertTrue(IOUtils.contentEquals(onto, fileIn));

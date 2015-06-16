@@ -12,9 +12,9 @@ public class UniqueURIDefault implements UniqueURI {
 	
 	private String getRandom(String type) {
 		String random;
-		
+		BaseURIDefault bud = new BaseURIDefault();
 		switch (type) {
-		    case "work": random = BaseURIDefault.getWorkURI() + "w" + getRandom();
+		    case "work": random = bud.getWorkURI() + "w" + getRandom();
 		                 break;
 		    default:     random = null;
 		                 break;

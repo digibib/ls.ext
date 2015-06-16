@@ -21,7 +21,7 @@ class Marc2Rdf {
     private static final String DEICHMAN_STATUS = "http://purl.org/deichman/status";
     private static final String DEICHMAN_LOCATION = "http://purl.org/deichman/location";
 
-    public static Model mapItemsToModel(List<VariableField> itemsFields) {
+    public Model mapItemsToModel(List<VariableField> itemsFields) {
 
         Model model = ModelFactory.createDefaultModel();
 
@@ -39,7 +39,7 @@ class Marc2Rdf {
         return model;
     }
 
-    private static Statement stmt(String subject, String property, String object) {
+    private Statement stmt(String subject, String property, String object) {
         return createStatement(
                 createResource(subject),
                 createProperty(property),

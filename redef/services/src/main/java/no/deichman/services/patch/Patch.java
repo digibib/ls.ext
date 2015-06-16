@@ -4,9 +4,9 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 public class Patch {
 
-    private static String operation = null;
-    private static Statement statement = null;
-    private static String graph = null;
+    private String operation = null;
+    private Statement statement = null;
+    private String graph = null;
 
     public Patch(String operation, Statement statement, String graph){
         setOperation(operation);

@@ -22,9 +22,10 @@ public class KohaAdapterMock implements KohaAdapter {
         Model m = ModelFactory.createDefaultModel();
         InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
         MarcReader reader = new MarcXmlReader(in);
+        Marc2Rdf marcRdf = new Marc2Rdf();
         while (reader.hasNext()) {
             Record record = reader.next();
-            m.add(Marc2Rdf.mapItemsToModel(record.getVariableFields("952")));
+            m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
         }
         return m;
     }

@@ -63,8 +63,8 @@ public class ServiceDefault implements Service {
             while (n.hasNext()){
                 tempModel.add(kohaAdapter.getBiblio(n.next().toString()));
             }
-
-            Query query = SPARQLQueryBuilder.getItemsFromModelQuery(subjectsIterator.next().toString());
+            SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
+            Query query = sqb.getItemsFromModelQuery(subjectsIterator.next().toString());
             QueryExecution qexec = QueryExecutionFactory.create(query, tempModel);
             Model itemsModel = qexec.execConstruct();
 

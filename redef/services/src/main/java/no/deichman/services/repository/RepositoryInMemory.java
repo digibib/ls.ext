@@ -22,17 +22,20 @@ import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import no.deichman.services.SPARQLQueryBuilder;
-import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
 import no.deichman.services.utils.UniqueURI;
 import no.deichman.services.utils.UniqueURIMock;
 
 public class RepositoryInMemory implements Repository {
 
-//    private final Model model;
     private final Dataset model;
+    private final SPARQLQueryBuilder sqb;
+    private final BaseURIMock bud;
+
     
     public RepositoryInMemory() {
+        sqb = new SPARQLQueryBuilder();
+        bud = new BaseURIMock();
         Model model2 = ModelFactory.createDefaultModel();
         model2.read("testdata.ttl", "TURTLE");
         model = DatasetFactory.createMem();
@@ -53,15 +56,15 @@ public class RepositoryInMemory implements Repository {
 
     @Override
     public Model retrieveWorkById(String id) {
-        String uri = BaseURIMock.getWorkURI() + id;
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.getGetWorkByIdQuery(uri), model)) {
+        String uri = bud.getWorkURI() + id;
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.getGetWorkByIdQuery(uri), model)) {
             return qexec.execDescribe();
         }
     }
 
     @Override
     public Model listWork() {
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.getListWorkQuery(), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.getListWorkQuery(), model)) {
             return qexec.execDescribe();
         }
     }
@@ -72,20 +75,20 @@ public class RepositoryInMemory implements Repository {
         Model tempModel = ModelFactory.createDefaultModel();
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getUpdateWorkQueryString(tempModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getUpdateWorkQueryString(tempModel));
         UpdateAction.execute(updateRequest, model);
     }
 
 	@Override
 	public boolean askIfResourceExists(String uri) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfResourceExists(uri), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfResourceExists(uri), model)) {
             return qexec.execAsk();
         }
 	}
 
 	@Override
 	public boolean askIfResourceExistsInGraph(String uri, String graph) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfResourceExistsInGraph(uri, graph), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfResourceExistsInGraph(uri, graph), model)) {
             return qexec.execAsk();
         }
 	}
@@ -99,11 +102,11 @@ public class RepositoryInMemory implements Repository {
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(random.toString()),
                 RDF.type,
-                ResourceFactory.createResource(BaseURIDefault.getOntologyURI() + "Work"));
+                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, tempModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateWorkQueryString(id, tempModel));
         UpdateAction.execute(updateRequest, model);
 
 		return id;
@@ -111,7 +114,7 @@ public class RepositoryInMemory implements Repository {
 
 	@Override
 	public boolean askIfStatementExists(Statement statement) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfStatementExists(statement), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfStatementExists(statement), model)) {
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -121,7 +124,7 @@ public class RepositoryInMemory implements Repository {
 
 	@Override
 	public boolean askIfStatementExistsInGraph(Statement statement, String graph) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.checkIfStatementExistsInGraph(statement, graph), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfStatementExistsInGraph(statement, graph), model)) {
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -131,25 +134,25 @@ public class RepositoryInMemory implements Repository {
 
 	@Override
 	public void update(Model inputModel) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateAdd(inputModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAdd(inputModel));
         UpdateAction.execute(updateRequest, model);		
 	}
 
 	@Override
 	public void updateNamedGraph(Model inputModel, String graph) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateAddToGraph(inputModel, graph));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAddToGraph(inputModel, graph));
         UpdateAction.execute(updateRequest, model);
 	}
 
 	@Override
 	public void delete(Model inputModel) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateDelete(inputModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
         UpdateAction.execute(updateRequest, model);
 	}
 
 	@Override
 	public void deleteFromNamedGraph(Model inputModel, String graph) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateDeleteFromGraph(inputModel, graph));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDeleteFromGraph(inputModel, graph));
         UpdateAction.execute(updateRequest, model);
     }
 
@@ -164,7 +167,7 @@ public class RepositoryInMemory implements Repository {
 
 	@Override
 	public boolean askIfGraphExists(String graph) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(SPARQLQueryBuilder.askIfGraphExists(graph), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.askIfGraphExists(graph), model)) {
             return qexec.execAsk();
 		}
 	}

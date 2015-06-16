@@ -24,10 +24,12 @@ import static org.junit.Assert.assertTrue;
 public class OntologyResourceTest {
 
     private OntologyResource resource;
+    private BaseURIDefault bud;
 
     @Before
     public void setUp() throws Exception {
         resource = new OntologyResource();
+        bud = new BaseURIDefault();
     }
 
     @Test
@@ -38,7 +40,7 @@ public class OntologyResourceTest {
         Model comparison = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(entity.getBytes(StandardCharsets.UTF_8));
         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
-            String fromFile = IOUtils.toString(fileInputStream).replace("http://data.deichman.no/lsext-model#", BaseURIDefault.getOntologyURI());
+            String fromFile = IOUtils.toString(fileInputStream).replace("http://data.deichman.no/lsext-model#", bud.getOntologyURI());
             InputStream fileIn = new ByteArrayInputStream(fromFile.getBytes(StandardCharsets.UTF_8));
             RDFDataMgr.read(m, in, Lang.JSONLD);
             RDFDataMgr.read(comparison, fileIn, Lang.TURTLE);
@@ -54,7 +56,7 @@ public class OntologyResourceTest {
         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
             String fromFile = IOUtils.toString(fileInputStream);
             System.out.println(entity);
-            assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI())));
+            assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#",bud.getOntologyURI())));
         }
     }
 }

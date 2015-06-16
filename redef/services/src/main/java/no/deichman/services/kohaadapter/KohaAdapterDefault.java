@@ -90,9 +90,10 @@ public class KohaAdapterDefault implements KohaAdapter {
         System.out.println("DEBUG: Received marc from koha\n" + marc21Xml);
         InputStream in = new ByteArrayInputStream(marc21Xml.getBytes(StandardCharsets.UTF_8));
         MarcReader reader = new MarcXmlReader(in);
+        Marc2Rdf marcRdf = new Marc2Rdf();
         while (reader.hasNext()) {
             Record record = reader.next();
-            m.add(Marc2Rdf.mapItemsToModel(record.getVariableFields("952")));
+            m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
         }
         return m;
     }

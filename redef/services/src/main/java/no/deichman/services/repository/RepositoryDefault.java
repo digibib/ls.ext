@@ -29,23 +29,27 @@ public class RepositoryDefault implements Repository {
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private static final String UPDATE_URI = FUSEKI_PORT + "/ds/update";
     private static final String SPARQL_URI = FUSEKI_PORT + "/ds/sparql";
+    private final SPARQLQueryBuilder sqb ;
+    private final BaseURIDefault bud;
 
     public RepositoryDefault() {
         System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
+        sqb = new SPARQLQueryBuilder();
+        bud = new BaseURIDefault();
     }
 
     @Override
     public Model retrieveWorkById(final String id) {
-        String uri = BaseURIDefault.getWorkURI() + id;
+        String uri = bud.getWorkURI() + id;
         System.out.println("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.getGetWorkByIdQuery(uri))) {
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.getGetWorkByIdQuery(uri))) {
             return qexec.execDescribe();
         }
     }
 
     @Override
     public Model listWork() {
-        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.getListWorkQuery())) {
+        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.getListWorkQuery())) {
             return qexec.execDescribe();
         }
     }
@@ -56,20 +60,20 @@ public class RepositoryDefault implements Repository {
     	Model model = ModelFactory.createDefaultModel();
      	RDFDataMgr.read(model, stream, Lang.JSONLD);
      	
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getUpdateWorkQueryString(model));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getUpdateWorkQueryString(model));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
     }
 
 	@Override
 	public boolean askIfResourceExists(String uri) {
-		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.checkIfResourceExists(uri))){
+		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.checkIfResourceExists(uri))){
 		    return qexec.execAsk();
 		}
 	}
 
 	@Override
 	public boolean askIfResourceExistsInGraph(String uri, String graph) {
-		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.checkIfResourceExistsInGraph(uri, graph))){
+		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.checkIfResourceExistsInGraph(uri, graph))){
 		    return qexec.execAsk();
 		}
 	}
@@ -83,18 +87,18 @@ public class RepositoryDefault implements Repository {
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uri.toString()),
                 RDF.type,
-                ResourceFactory.createResource(BaseURIDefault.getOntologyURI() + "Work"));
+                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.getCreateWorkQueryString(id, tempModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateWorkQueryString(id, tempModel));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
 		return id;
 	}
 
 	@Override
 	public boolean askIfStatementExists(Statement statement) {
-		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.checkIfStatementExists(statement))){
+		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.checkIfStatementExists(statement))){
 		    return qexec.execAsk();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -104,7 +108,7 @@ public class RepositoryDefault implements Repository {
 
 	@Override
 	public boolean askIfStatementExistsInGraph(Statement statement, String graph) {
-		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.checkIfStatementExistsInGraph(statement, graph))){
+		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.checkIfStatementExistsInGraph(statement, graph))){
 		    return qexec.execAsk();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -114,38 +118,38 @@ public class RepositoryDefault implements Repository {
 
 	@Override
 	public void update(Model inputModel) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateAdd(inputModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAdd(inputModel));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
     }
 
 	@Override
 	public void updateNamedGraph(Model inputModel, String graph) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateAddToGraph(inputModel, graph));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAddToGraph(inputModel, graph));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
     }
 
 	@Override
 	public void delete(Model inputModel) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateDelete(inputModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
 	}
 
 	@Override
 	public void deleteFromNamedGraph(Model inputModel, String graph) {
-        UpdateRequest updateRequest = UpdateFactory.create(SPARQLQueryBuilder.updateDeleteFromGraph(inputModel, graph));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDeleteFromGraph(inputModel, graph));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
 	}
 
 	@Override
 	public void dump() {
-		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.dumpModel())){
+		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.dumpModel())){
 		    System.out.println(qexec.execDescribe());
 		}
 	}
 
 	@Override
 	public boolean askIfGraphExists(String graph) {
-		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, SPARQLQueryBuilder.askIfGraphExists(graph))){
+		try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.askIfGraphExists(graph))){
 		    return qexec.execAsk();
 		}
 	}

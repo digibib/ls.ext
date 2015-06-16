@@ -15,7 +15,8 @@ public class OntologyDefault implements Ontology {
 	public OntologyDefault() throws IOException {
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream("ontology.ttl");
 		String turtle = IOUtils.toString(in);
-		ontology = turtle.replace("http://data.deichman.no/lsext-model#",BaseURIDefault.getOntologyURI());
+		BaseURIDefault bud = new BaseURIDefault();
+		ontology = turtle.replace("http://data.deichman.no/lsext-model#",bud.getOntologyURI());
 	}
 	
 	public InputStream toInputStream() {

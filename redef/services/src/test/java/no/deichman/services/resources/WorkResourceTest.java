@@ -29,10 +29,12 @@ public class WorkResourceTest {
     private static final Logger LOG = Logger.getLogger(WorkResourceTest.class.getName());
 
     private WorkResource resource;
+    private BaseURIMock bum;
 
     @Before
     public void setUp() throws Exception {
         resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory());
+        bum = new BaseURIMock();
     }
 
     @Test
@@ -77,7 +79,7 @@ public class WorkResourceTest {
 
         Response result = resource.createWork(work);
 
-        String workURI = BaseURIMock.getWorkURI();
+        String workURI = bum.getWorkURI();
 
         assertNull(result.getEntity());
         assertTrue(Pattern.matches(workURI + "w\\d{12}", result.getHeaderString("Location")));

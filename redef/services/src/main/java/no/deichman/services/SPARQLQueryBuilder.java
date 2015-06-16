@@ -16,12 +16,12 @@ import com.hp.hpl.jena.update.UpdateAction;
 
 public class SPARQLQueryBuilder {
 
-    public static Query dumpModel() {
+    public Query dumpModel() {
     	String q = "describe * where {?s ?p ?o}";
     	return QueryFactory.create(q);
     }
 
-	public static Query getGetWorkByIdQuery(String id) {
+	public Query getGetWorkByIdQuery(String id) {
         String queryString =
                 "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "PREFIX deichman: <http://deichman.no/ontology#>\n"
@@ -30,7 +30,7 @@ public class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-    public static Query getListWorkQuery() {
+    public Query getListWorkQuery() {
         String queryString =
                 "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "describe ?s where\n"
@@ -41,7 +41,7 @@ public class SPARQLQueryBuilder {
 
     }
 
-    public static String getUpdateWorkQueryString(Model work) {
+    public String getUpdateWorkQueryString(Model work) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);
         String data = sw.toString();
@@ -54,7 +54,7 @@ public class SPARQLQueryBuilder {
                 + "}";
     }
 
-    private static String renameWorkResource(String newURI) {
+    private String renameWorkResource(String newURI) {
         return "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "DELETE {\n"
                 + " ?s ?p ?o .\n"
@@ -67,7 +67,7 @@ public class SPARQLQueryBuilder {
                 + "}\n";
     }
 
-    public static String getCreateWorkQueryString(String id, Model work) {
+    public String getCreateWorkQueryString(String id, Model work) {
 
         UpdateAction.parseExecute(renameWorkResource(id), work);
         StringWriter sw = new StringWriter();
@@ -83,7 +83,7 @@ public class SPARQLQueryBuilder {
                 + "}";
     }
 
-    public static Query getItemsFromModelQuery(String id) {
+    public Query getItemsFromModelQuery(String id) {
         String q = "PREFIX deichman: <http://deichman.no/ontology#>\n"
                 + "PREFIX d: <http://purl.org/deichman/>\n"
                 + "PREFIX frbr: <http://purl.org/vocab/frbr/core#>\n"
@@ -102,29 +102,29 @@ public class SPARQLQueryBuilder {
        return QueryFactory.create(q);
     }
 
-    public static Query checkIfResourceExists(String uri) {
+    public Query checkIfResourceExists(String uri) {
         String q = "ASK {<" + uri + "> ?p ?o}";
         return QueryFactory.create(q);
     }
 
-	public static Query checkIfResourceExistsInGraph(String uri, String graph) {
+	public Query checkIfResourceExistsInGraph(String uri, String graph) {
         String q = "ASK {GRAPH <" + graph + ">  {<" + uri + "> ?p ?o}}";
         return QueryFactory.create(q);
 	}
 
-	public static Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
+	public Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
         String q = "ASK {" + triple + "}" ;
 		return QueryFactory.create(q);
     }
 
-    public static Query checkIfStatementExistsInGraph(Statement statement, String graph) throws UnsupportedEncodingException {
+    public Query checkIfStatementExistsInGraph(Statement statement, String graph) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
         String q = "ASK {GRAPH <" + graph + "> {" + triple + "}}" ;
 		return QueryFactory.create(q);
     }
 
-    private static String statementToN3 (Statement statement) throws UnsupportedEncodingException {
+    private String statementToN3 (Statement statement) throws UnsupportedEncodingException {
         Model tempExists = ModelFactory.createDefaultModel();
         tempExists.add(statement);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -132,7 +132,7 @@ public class SPARQLQueryBuilder {
         return baos.toString("UTF-8");
     }
 
-	public static String updateAdd(Model inputModel) {
+	public String updateAdd(Model inputModel) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
@@ -146,7 +146,7 @@ public class SPARQLQueryBuilder {
                 + "}";
 	}
 
-	public static String updateAddToGraph(Model inputModel, String graph) {
+	public String updateAddToGraph(Model inputModel, String graph) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
@@ -161,7 +161,7 @@ public class SPARQLQueryBuilder {
        return q;
     }
 
-	public static String updateDelete(Model inputModel) {
+	public String updateDelete(Model inputModel) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
@@ -175,7 +175,7 @@ public class SPARQLQueryBuilder {
                 + "}";
 	}
 
-	public static String updateDeleteFromGraph(Model inputModel, String graph) {
+	public String updateDeleteFromGraph(Model inputModel, String graph) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
@@ -188,7 +188,7 @@ public class SPARQLQueryBuilder {
         + "}";
 	}
 
-	public static String askIfGraphExists(String graph) {
+	public String askIfGraphExists(String graph) {
         String q = "ASK {GRAPH <" + graph + "> {}}" ;
 		return q;
 	}

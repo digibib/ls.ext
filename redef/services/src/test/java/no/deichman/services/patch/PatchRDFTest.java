@@ -19,7 +19,7 @@ import no.deichman.services.error.PatchException;
 import no.deichman.services.repository.RepositoryInMemory;
 public class PatchRDFTest {
 	
-	private static RepositoryInMemory testRepository;
+	private RepositoryInMemory testRepository;
 	
 	@Before
 	public void init() {
