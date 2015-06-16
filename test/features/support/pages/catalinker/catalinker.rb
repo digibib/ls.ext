@@ -12,13 +12,13 @@ class Catalinker < PageRoot
       @browser.text_field(:data_automation_id => /work_title/).set(title)
       @browser.text_field(:data_automation_id => /work_creator/).set(author)
       @browser.text_field(:data_automation_id => /work_date/).set(date)
-      @browser.text_field(:data_automation_id => /work_biblioId/).set(biblio)
+      @browser.text_field(:data_automation_id => /work_biblioId/).set(biblio) if biblio
       @browser.button(:class => "submit").click
       self
     end
 
     def get_id()
       url = @browser.url
-      return /w[0-9]+/.match(url)[0].to_s
+      /w[0-9]+/.match(url)[0].to_s
     end
 end

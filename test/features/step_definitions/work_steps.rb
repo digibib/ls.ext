@@ -10,6 +10,16 @@ Given(/^at det finnes et verk$/) do
   @context[:identifier] = page.get_id
 end
 
+Given(/^at det finnes et verk \(ny klient\)$/) do
+  @context[:title]      = generateRandomString
+  @context[:author]     = generateRandomString
+  @context[:date]       = String(rand(9999))
+
+  @site.CatalinkerClient.visit
+  page = @site.CatalinkerClient.add(@context[:title],@context[:author],@context[:date],@context[:biblio])
+  @context[:identifier] = page.get_id
+end
+
 Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
   steps %Q{
     Gitt at jeg er logget inn som adminbruker
@@ -35,6 +45,6 @@ Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
   @site.PatronClient.getDate.should include(@context[:date])
 end
 
-Så(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
+Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
   @site.PatronClient.existsExemplar().should == true
 end
