@@ -54,8 +54,8 @@ describe("Given user is logged in", function () {
    describe("And the page is finished initialized", function () {
         beforeEach(function () {
             $httpBackend.expectGET(configUrl).respond(200, mocks.config);
-            $httpBackend.expectGET(work_w222557057913_Uri).respond(200, mocks.work_w222557057913);
             $httpBackend.expectGET(ontologyUri).respond(200, mocks.ontology);
+            $httpBackend.expectGET(work_w222557057913_Uri).respond(200, mocks.work_w222557057913);
             controller = createController('appController');
             $scope = controller.$scope;
             $httpBackend.flush();

@@ -7,7 +7,7 @@ require 'webmock'
 require 'webmock/test_unit'
 
 
-class TestService < Test::Unit::TestCase
+class TestServer < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
@@ -25,6 +25,12 @@ class TestService < Test::Unit::TestCase
     follow_redirect!
     assert last_response.ok?
   end
+
+  def test_it_serves_config_for_client
+    get '/config'
+    assert last_response.ok?
+  end
+
 
   def test_can_post_a_work
     stub_request(:post, "http://192.168.50.12:8080/work").

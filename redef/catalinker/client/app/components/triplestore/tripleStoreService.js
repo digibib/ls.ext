@@ -1,9 +1,6 @@
 ﻿(function() {
     "use strict";
 
-    var baseUri = 'http://192.168.50.12:8005/',
-        baseId = 'http://deichman.no/';
-
     // Leave this for reference
     //
     // var work = {
@@ -126,8 +123,8 @@
     };
 
 
-    angular.module('catalinker.triplestore', [])
-    .factory('tripleStore', ['$http', '$q', '$timeout', function ($http, $q,  $timeout) {
+    angular.module('catalinker.triplestore', ['catalinker.config'])
+    .factory('tripleStore', ['$http', '$q', '$timeout', 'tripleStoreUri', function ($http, $q,  $timeout, baseUri) {
         
         Triple.prototype.save = function () {
             var self = this,
@@ -201,25 +198,26 @@
 
 
         function getDescription(itemType, id) {
-            var deferred = $q.defer(),
-                uri = baseUri + itemType + '/' + id;
+            var deferred = $q.defer();
 
-            $http.get(uri).success(function(data, status, headers, config){
-                var description = new Description(data, uri);
-                deferred.resolve(description);
-            }).error(function(data, status, headers, config) {
-                deferred.reject(status);
+            baseUri.then(function (baseUri) {
+                var uri = baseUri + itemType + '/' + id;
+                $http.get(uri).success(function(data, status, headers, config){
+                    var description = new Description(data, uri);
+                    deferred.resolve(description);
+                }).error(function(data, status, headers, config) {
+                    deferred.reject(status);
+                });
+            }, function (error) {
+                deferred.reject(error);
             });
-
 
             return deferred.promise;
         }
 
-
-
         function newDescription(descriptionType) {
             var deferred = $q.defer(),
-                uri = baseUri + descriptionType,
+                baseId = 'http://deichman.no/',
                 newObject;
 
             newObject = {
@@ -227,17 +225,21 @@
                 '@type': 'http://deichman.no/ontology#' + descriptionType //Implicit in uri, To be deprecated
             };
 
-            $http.post(uri, newObject).success(function(data, status, headers) { //, config
-                var itemUri = headers('Location').replace(baseId, baseUri);
-
-                $http.get(itemUri).success(function(itemData) { //, status, headers, config
-                    var description = new Description(itemData, itemUri);
-                    deferred.resolve(description);
-                }).error(function(errorData, errorStatus) { //,headers, config
-                    deferred.reject(errorStatus);
+            baseUri.then(function (baseUri) {
+                var uri = baseUri + descriptionType;
+                $http.post(uri, newObject).success(function(data, status, headers) { //, config
+                    var itemUri = headers('Location').replace(baseId, baseUri);
+                    $http.get(itemUri).success(function(itemData) { //, status, headers, config
+                        var description = new Description(itemData, itemUri);
+                        deferred.resolve(description);
+                    }).error(function(errorData, errorStatus) { //,headers, config
+                        deferred.reject(errorStatus);
+                    });
+                }).error(function(data, status) { //, headers, config
+                    deferred.reject(status);
                 });
-            }).error(function(data, status) { //, headers, config
-                deferred.reject(status);
+            }, function (error) {
+                deferred.reject(error);
             });
             return deferred.promise;
         }
