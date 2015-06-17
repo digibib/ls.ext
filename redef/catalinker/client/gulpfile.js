@@ -102,7 +102,7 @@ gulp.task('buildApp', function () {
         .pipe(gulp.dest(DEST))
         .pipe(rename(function() { // i just care about the callback
             if (debug) {
-                console.log(jsfiles);
+                // console.log(jsfiles);
                     scripts = '<script src="app/libs.js?%version%"></script>' 
                             + '<script src="' + jsfiles.join('?%version%"></script>\n<script src="') + '?%version%"></script>' 
                             + livereload;
