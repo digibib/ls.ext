@@ -20,6 +20,7 @@ base:
 
   '^(\w+-ship)$':
     - match: pcre
+    - docker.dev
     - sip.dev
     - redef
     - redef.dev
@@ -33,6 +34,7 @@ base:
 
   'wombat':
     - match: list
+    - docker.prod
     - elk.prod
     - sip.prod
     - redef.prod
