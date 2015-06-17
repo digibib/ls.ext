@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'sinatra'
 require 'rdf'
+require 'json'
 require 'json/ld'
 require_relative './rest_service.rb'
 require_relative './work_model.rb'
@@ -12,6 +13,13 @@ set :public_folder, File.dirname(__FILE__) + '/public'
 
 get '/' do
   "Catalinker"
+end
+
+# Used by catalinker client
+get '/config' do
+  {
+      :ontologyUri => (ENV['SERVICES_PORT'] || 'http://192.168.50.12:8010').sub(/^tcp:\//, 'http:/' ) + '/ontology'
+  }.to_json
 end
 
 get '/work' do

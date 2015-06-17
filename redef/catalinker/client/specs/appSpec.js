@@ -9,6 +9,7 @@ describe("Given user is logged in", function () {
         $controller,
         controller,
         ontologyUri = 'http://192.168.50.12:8005/ontology',
+        configUrl = '/config',
         mocks = {},
         work_w222557057913_Uri = 'http://192.168.50.12:8005/work/w222557057913',
         newWorkUri = 'http://192.168.50.12:8005/work';
@@ -52,8 +53,9 @@ describe("Given user is logged in", function () {
 
    describe("And the page is finished initialized", function () {
         beforeEach(function () {
-            $httpBackend.expectGET(ontologyUri).respond(200, mocks.ontology);
+            $httpBackend.expectGET(configUrl).respond(200, mocks.config);
             $httpBackend.expectGET(work_w222557057913_Uri).respond(200, mocks.work_w222557057913);
+            $httpBackend.expectGET(ontologyUri).respond(200, mocks.ontology);
             controller = createController('appController');
             $scope = controller.$scope;
             $httpBackend.flush();

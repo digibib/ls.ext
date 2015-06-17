@@ -1,21 +1,6 @@
 ﻿(function() {
 
-    angular.module('catalinker.vocabulary', [])
-        .constant('ontologyUri', 'http://192.168.50.12:8005/ontology')
-        .factory('ontologyFactory', ['$q', '$http', 'ontologyUri', function($q, $http, ontologyUri) {
-            function asNormalPromise($q, httpPromise) {
-                var deferred = $q.defer();
-                httpPromise
-                    .success(function (data) {
-                        deferred.resolve(data);
-                    }).error(function (data, status, headers) {
-                        deferred.reject({status: status, headers: headers, data: data});
-                    });
-                return deferred.promise;
-            }
-
-            return asNormalPromise($q, $http.get(ontologyUri, {headers: {accept: 'application/ld+json'}}));
-        }])
+    angular.module('catalinker.vocabulary', ['catalinker.config'])
         .factory('vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
             var deferred;
 
