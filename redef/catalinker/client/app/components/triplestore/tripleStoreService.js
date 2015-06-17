@@ -1,4 +1,4 @@
-﻿(function(module) {
+﻿(function() {
     "use strict";
 
     var baseUri = 'http://192.168.50.12:8005/',
@@ -126,7 +126,7 @@
     };
 
 
-    module
+    angular.module('catalinker.triplestore', [])
     .factory('tripleStore', ['$http', '$q', '$timeout', function ($http, $q,  $timeout) {
         
         Triple.prototype.save = function () {
@@ -250,4 +250,4 @@
     }]);
 
 
-}(angular.module('catalinker')));
+}());
