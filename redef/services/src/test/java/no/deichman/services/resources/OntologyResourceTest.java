@@ -3,7 +3,8 @@ package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import no.deichman.services.uridefaults.BaseURIDefault;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -24,12 +25,12 @@ import static org.junit.Assert.assertTrue;
 public class OntologyResourceTest {
 
     private OntologyResource resource;
-    private BaseURIDefault bud;
+    private BaseURI bud;
 
     @Before
     public void setUp() throws Exception {
         resource = new OntologyResource();
-        bud = new BaseURIDefault();
+        bud = new BaseURIMock();
     }
 
     @Test

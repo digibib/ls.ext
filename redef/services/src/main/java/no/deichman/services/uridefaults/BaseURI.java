@@ -6,4 +6,5 @@ public interface BaseURI {
     
     String getWorkURI();
 
+    String getOntologyURI();
 }
