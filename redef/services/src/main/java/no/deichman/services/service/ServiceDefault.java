@@ -1,5 +1,9 @@
 package no.deichman.services.service;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -10,8 +14,13 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import no.deichman.services.SPARQLQueryBuilder;
+import no.deichman.services.error.PatchException;
+import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.KohaAdapterDefault;
+import no.deichman.services.patch.PatchObject;
+import no.deichman.services.patch.PatchParser;
+import no.deichman.services.patch.PatchRDF;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.repository.RepositoryDefault;
 
@@ -30,6 +39,7 @@ public class ServiceDefault implements Service {
         return m;
     }
 
+    @Override
     public void setRepository(Repository repository) {
         this.repository = repository;
     }
@@ -82,5 +92,22 @@ public class ServiceDefault implements Service {
     @Override
     public void deleteWork(Model work) {
         repository.delete(work);
+    }
+
+    @Override
+    public Model patchWork(String workId, String requestBody) throws UnsupportedEncodingException, PatchException, PatchParserException {
+        PatchParser patchParser = new PatchParser();
+        try {
+            patchParser.setPatchData(requestBody);
+        } catch (Exception e) {
+            throw new PatchParserException("Bad request");
+        }
+        List<PatchObject> patch = patchParser.parsePatch();
+        PatchRDF patchRDF = new PatchRDF();
+        Iterator<PatchObject> iter = patch.iterator();
+        while (iter.hasNext()) {
+            patchRDF.patch(repository, iter.next().toPatch());
+        }
+        return retrieveWorkById(workId);
     }
 }

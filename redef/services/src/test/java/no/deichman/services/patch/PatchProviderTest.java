@@ -16,6 +16,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import no.deichman.services.error.PatchParserException;
+
 public class PatchProviderTest {
 
     @Test
@@ -32,7 +34,7 @@ public class PatchProviderTest {
     }
 
     @Test
-    public void test_can_parse_plain_literal_data(){
+    public void test_can_parse_plain_literal_data() throws PatchParserException{
         List<PatchObject> expected = new ArrayList<PatchObject>();
         PatchObject po = new PatchObject();
         po.setOperation("add");
@@ -46,7 +48,7 @@ public class PatchProviderTest {
         assertEquals(t1.get(0).getObjectValue(), expected.get(0).getObjectValue());
     }
     @Test
-    public void test_can_parse_lang_literal(){
+    public void test_can_parse_lang_literal() throws PatchParserException{
         List<PatchObject> expected = new ArrayList<PatchObject>();
         PatchObject po = new PatchObject();
         po.setOperation("add");

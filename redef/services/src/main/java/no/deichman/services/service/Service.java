@@ -1,13 +1,21 @@
 package no.deichman.services.service;
 
+import java.io.UnsupportedEncodingException;
+
 import com.hp.hpl.jena.rdf.model.Model;
+
+import no.deichman.services.error.PatchException;
+import no.deichman.services.error.PatchParserException;
+import no.deichman.services.repository.Repository;
 
 public interface Service {
     
+    void setRepository(Repository repository);
     void updateWork(String work);
     Model listWork();
     Model retrieveWorkById(String id);
     Model retrieveWorkItemsById(String id);
 	String createWork(String work);
 	void deleteWork(Model work);
+    Model patchWork(String work, String requestBody) throws UnsupportedEncodingException, PatchException, PatchParserException;
 }

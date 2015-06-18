@@ -1,8 +1,12 @@
 package no.deichman.services.resources;
 
+import no.deichman.services.error.PatchException;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIMock;
+
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -10,10 +14,21 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -127,11 +142,50 @@ public class WorkResourceTest {
     }
 
     @Test
-    public void patch_should_return_200() {
-        Response patchResponse = resource.patchWork(null);
-        assertEquals(200, patchResponse.getStatus());
+    public void patch_should_return_status_400() throws Exception {
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
+        Response result = resource.createWork(work);
+        String workId = result.getLocation().getPath().substring(6);
+        String patchData = "{}";
+        try {
+            resource.patchWork(workId,patchData);
+            fail("HTTP 400 Bad Request");
+        } catch (BadRequestException bre) {
+            assertEquals("HTTP 400 Bad Request", bre.getMessage());
+        }
+
     }
-    
+
+    @Test
+    public void patched_work_should_persist_changes() throws Exception {
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
+        Response result = resource.createWork(work);
+        String workId = result.getLocation().getPath().substring(6);
+        String patchData = "{"
+                + "\"op\": \"add\","
+                + "\"s\": \"" + result.getLocation().toString() + "\","
+                + "\"p\": \"http://deichman.no/ontology#color\","
+                + "\"o\": {"
+                + "\"value\": \"red\""
+                + "}"
+                + "}";
+        Response patchResponse = resource.patchWork(workId,patchData);
+        Model testModel = ModelFactory.createDefaultModel();
+        Model comparison = ModelFactory.createDefaultModel();
+        String response = patchResponse.getEntity().toString();
+        InputStream in = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(testModel, in, Lang.JSONLD);
+        String adaptedWork = work.replace("/work_SHOULD_BE_PATCHABLE", "/" + workId);
+        InputStream in2 = new ByteArrayInputStream(adaptedWork.getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(comparison,in2, Lang.JSONLD);
+        comparison.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(result.getLocation().toString()), 
+                ResourceFactory.createProperty("http://deichman.no/ontology#color"), 
+                ResourceFactory.createPlainLiteral("red")));
+        assertTrue(testModel.isIsomorphicWith(comparison));
+
+    }
+
     private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {

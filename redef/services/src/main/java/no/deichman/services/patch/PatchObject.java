@@ -3,6 +3,10 @@ package no.deichman.services.patch;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+
 public class PatchObject {
 
     private String op;
@@ -58,5 +62,24 @@ public class PatchObject {
 
     public String getOperation() {
         return op;
+    }
+
+    public Patch toPatch() {
+        RDFNode rdfNode = null;
+        if (getObjectLanguage() != null){
+            rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectLanguage());
+        } else if (getObjectDatatype() != null) {
+            rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectDatatype());
+        } else {
+            rdfNode = ResourceFactory.createPlainLiteral(getObjectValue());
+        }
+
+        Statement statement = ResourceFactory.createStatement(
+                ResourceFactory.createResource(getSubject()),
+                ResourceFactory.createProperty(getPredicate()),
+                rdfNode);
+
+        Patch patch = new Patch(op, statement, null);
+        return patch;
     }
 }

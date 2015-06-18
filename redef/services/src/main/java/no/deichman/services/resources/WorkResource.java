@@ -1,6 +1,8 @@
 package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
+
+import no.deichman.services.error.PatchException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
@@ -8,6 +10,7 @@ import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.PATCH;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -22,6 +25,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -82,11 +87,16 @@ public class WorkResource {
 
     @PATCH
     @Path("{workId: [a-zA-Z0-9_]+}")
-    // TODO @Consumes("application/n-triples")
-    public Response patchWork(String work) {
-//TODO        service.updateWork(work);
+    @Consumes("application/ldpatch+json")
+    public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
+        Model m;
+        try {
+             m = service.patchWork(workId, requestBody);
+        } catch (Exception e) {
+            throw new BadRequestException();
+        }
 
-        return Response.ok()
+        return Response.ok().entity(JSONLD.getJson(m))
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "PATCH")
                        .allow("OPTIONS")

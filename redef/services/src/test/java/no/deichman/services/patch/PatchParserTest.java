@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import no.deichman.services.error.PatchParserException;
+
 public class PatchParserTest {
     @Test
     public void it_exists(){
@@ -24,7 +26,7 @@ public class PatchParserTest {
     }
     
     @Test
-    public void it_returns_list_of_patch_objects(){
+    public void it_returns_list_of_patch_objects() throws PatchParserException{
         List<PatchObject> lpo = new ArrayList<PatchObject>();
         PatchObject po = new PatchObject();
         po.setOperation("add");

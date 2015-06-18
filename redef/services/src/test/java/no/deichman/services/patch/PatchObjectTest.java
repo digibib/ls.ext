@@ -1,11 +1,14 @@
 package no.deichman.services.patch;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+
+import no.deichman.services.error.PatchParserException;
 
 public class PatchObjectTest {
 
@@ -71,14 +74,14 @@ public class PatchObjectTest {
     }
 
     @Test
-    public void test_can_get_object_value(){
+    public void test_can_get_object_value() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
         patchObject.setObject(datatype_object);
         assertEquals(datatype_object.get("value"),patchObject.getObjectValue());
     }
 
     @Test
-    public void test_can_set_object_value(){
+    public void test_can_set_object_value() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
         patchObject.setObjectValue("Cases");
         assertEquals("Cases",patchObject.getObjectValue());
@@ -97,4 +100,14 @@ public class PatchObjectTest {
         patchObject.setObject(language_literal);
         assertEquals(language_literal.get("lang"),patchObject.getObjectLanguage());
     }
+
+    @Test
+    public void test_can_convert_to_patch() throws PatchParserException{
+        PatchObject patchObject = new PatchObject();
+        patchObject.setSubject("http://example.org/work/w1");
+        patchObject.setPredicate("http://example.org/ontology#title");
+        patchObject.setObjectValue("Sult");
+        assertNotNull(patchObject.toPatch());
+    }
+
 }
