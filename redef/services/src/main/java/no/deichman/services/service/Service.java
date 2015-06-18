@@ -13,7 +13,6 @@ public interface Service {
     void setRepository(Repository repository);
     Repository getRepository();
     void updateWork(String work);
-    Model listWork();
     Model retrieveWorkById(String id);
     Model retrieveWorkItemsById(String id);
 	String createWork(String work);

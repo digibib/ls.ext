@@ -1,14 +1,11 @@
 package no.deichman.services.resources;
 
-import no.deichman.services.error.PatchException;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
-import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
@@ -17,8 +14,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import org.junit.rules.ExpectedException;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
@@ -27,11 +22,8 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
@@ -42,8 +34,6 @@ import static org.junit.Assert.fail;
 
 public class WorkResourceTest {
 
-    private static final Logger LOG = Logger.getLogger(WorkResourceTest.class.getName());
-
     private WorkResource resource;
     private BaseURIMock bum;
 
@@ -51,16 +41,6 @@ public class WorkResourceTest {
     public void setUp() throws Exception {
         resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
         bum = new BaseURIMock();
-    }
-
-    @Test
-    public void should_return_non_empty_json_list_of_Work() {
-        Response result = resource.listWork();
-
-        assertNotNull(result);
-        assertEquals(200, result.getStatus());
-        assertTrue(isValidJSON(result.getEntity().toString()));
-        assertNotNull(parseJSON(result.getEntity().toString()).findValue("@id"));
     }
 
     @Test
@@ -201,15 +181,5 @@ public class WorkResourceTest {
         }
 
         return valid;
-    }
-    
-
-    private JsonNode parseJSON(final String json) {
-        try {
-            return new ObjectMapper().readTree(json);
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
 }

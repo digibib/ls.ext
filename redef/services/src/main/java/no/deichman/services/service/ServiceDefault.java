@@ -54,11 +54,6 @@ public class ServiceDefault implements Service {
     }
 
     @Override
-    public Model listWork() {
-        return repository.listWork();
-    }
-
-    @Override
     public void updateWork(String work) {
         repository.updateWork(work);
     }
@@ -66,7 +61,6 @@ public class ServiceDefault implements Service {
     @Override
     public Model retrieveWorkItemsById(String id) {
         Model allItemsModel = ModelFactory.createDefaultModel();
-
         Model model = ModelFactory.createDefaultModel();
         model.add(repository.retrieveWorkById(id));
         ResIterator subjectsIterator = model.listSubjects();

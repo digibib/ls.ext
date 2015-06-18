@@ -2,14 +2,12 @@ package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
-import no.deichman.services.error.PatchException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.uridefaults.BaseURIMock;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.PATCH;
 
@@ -29,7 +27,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -108,22 +105,6 @@ public class WorkResource {
         return Response.ok().entity(JSONLD.getJson(m))
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "PATCH")
-                       .allow("OPTIONS")
-                       .build();
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response listWork() {
-        Model model = service.listWork();
-
-        if (model.isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        return Response.ok().entity(JSONLD.getJson(model))
-                       .header("Access-Control-Allow-Origin", "*")
-                       .header("Access-Control-Allow-Methods", "GET")
                        .allow("OPTIONS")
                        .build();
     }
