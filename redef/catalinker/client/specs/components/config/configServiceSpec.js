@@ -19,7 +19,7 @@ describe("catalinker.config", function () {
                 myConfigPath = '/someuri',
                 myConfig = {
                     "ontologyUri": "another_uri",
-                    "tripleStoreUri": "yet_another_uri"
+                    "resourceApiUri": "yet_another_uri"
                 };
 
             beforeEach(function () {
@@ -54,9 +54,9 @@ describe("catalinker.config", function () {
                 $httpBackend.verifyNoOutstandingRequest();
             });
 
-            it("should load tripleStoreUri", function(done) {
-                inject(function(tripleStoreUri) {
-                    tripleStoreUri.then(function(data) {
+            it("should load resourceApiUri", function(done) {
+                inject(function(resourceApiUri) {
+                    resourceApiUri.then(function(data) {
                         expect(data).toBe("yet_another_uri");
                         done();
                     }, function(data) {

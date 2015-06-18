@@ -33,8 +33,8 @@
                 $q, $http.get(configPath, {headers: {accept: 'application/json'}})
             );
         }])
-        .factory('tripleStoreUri', ['$q', 'config', function ($q, config) {
-            return promiseSelection($q, config, function (data) { return data.tripleStoreUri; });
+        .factory('resourceApiUri', ['$q', 'config', function ($q, config) {
+            return promiseSelection($q, config, function (data) { return data.resourceApiUri; });
         }])
         .factory('ontologyUri', ['$q', 'config', function ($q, config) {
             return promiseSelection($q, config, function (data) { return data.ontologyUri; });

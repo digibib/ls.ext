@@ -124,7 +124,7 @@
 
 
     angular.module('catalinker.triplestore', ['catalinker.config'])
-    .factory('tripleStore', ['$http', '$q', '$timeout', 'tripleStoreUri', function ($http, $q,  $timeout, baseUri) {
+    .factory('tripleStore', ['$http', '$q', '$timeout', 'resourceApiUri', function ($http, $q,  $timeout, baseUri) {
         
         Triple.prototype.save = function () {
             var self = this,
