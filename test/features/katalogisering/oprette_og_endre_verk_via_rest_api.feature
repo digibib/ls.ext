@@ -14,6 +14,6 @@ Egenskap: Legge til og endre verk
 
   @wip
   Scenario: Endre verk
-    Gitt at det finnes et verk
+    Gitt at det er opprettet et verk
     Når jeg sender inn endringer til APIet
     Så viser APIet at endringene er lagret

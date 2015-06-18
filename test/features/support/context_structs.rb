@@ -27,11 +27,14 @@ Work = Struct.new(:uri, :literals, :ontology) do
   def initialize(ontology)
     self.literals = RDF::Graph.new
     self.ontology = ontology
+  end
+
+  def gen_literals
     self.ontology.each_statement do |stmt|
       if stmt.predicate == RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#range");
         if randomizer[stmt.object]
           self.literals << RDF::Statement.new(
-            RDF::URI.new(""), # We don't have any id for our work yet
+            RDF::URI.new(self.uri),
             stmt.subject,
             randomizer[stmt.object]
             )

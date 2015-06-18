@@ -31,8 +31,20 @@ class WorkAPIClient < Service
     RDF::Graph.load(URI(work), format: :jsonld)
   end
 
-  def patch_work(diff)
-    # TODO
+  def patch_work(work, statements)
+    patches = []
+    statements.each { |stmt|
+      patches << {:op => "add",
+                  :s => stmt.subject,
+                  :p => stmt.predicate,
+                  :o => {:value => stmt.object } }
+    }
+    uri = URI(work)
+    req = Net::HTTP::Patch.new(uri.path)
+    req.add_field('Content-Type', 'application/ldpatch+json')
+    req.body = patches.to_json
+    res =  Net::HTTP.new(uri.host, uri.port).request(req) 
+    STDOUT.puts res.inspect
   end
 
   def remove_work(work)

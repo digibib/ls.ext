@@ -20,7 +20,7 @@ When(/^jeg legger inn et verk via APIet$/) do
   @context[:work] = w
   @cleanup.push( "verk #{w.uri}" =>
     lambda do
-      client = WorkAPIClient.new().remove_work(w.uri)
+      #client = WorkAPIClient.new().remove_work(w.uri)
      end
      )
 end
@@ -33,4 +33,21 @@ Then(/^viser APIet at verket finnes$/) do
     RDF::URI.new("#{client.addr}/ontology#Work")
       )
   client.get_work(@context[:work].uri).has_statement?(stmt).should be true
+end
+
+Given(/^at det er opprettet et verk$/) do
+  steps %Q{
+     Gitt at jeg har en ontologi som beskriver verk
+     Når jeg legger inn et verk via APIet
+  }
+end
+
+When(/^jeg sender inn endringer til APIet$/) do
+  w = @context[:work]
+  w.gen_literals
+  WorkAPIClient.new().patch_work(w.uri, w.literals)
+end
+
+Then(/^viser APIet at endringene er lagret$/) do
+  pending # express the regexp above with the code you wish you had
 end
