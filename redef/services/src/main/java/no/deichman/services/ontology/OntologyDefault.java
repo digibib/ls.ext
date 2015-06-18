@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class OntologyDefault implements Ontology {
+public class OntologyDefault {
 	
 	private String ontology = null;
 	
