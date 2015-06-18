@@ -55,7 +55,6 @@ public class OntologyResourceTest {
         String entity = result.getEntity().toString();
         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
             String fromFile = IOUtils.toString(fileInputStream);
-            System.out.println(entity);
             assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#",bud.getOntologyURI())));
         }
     }

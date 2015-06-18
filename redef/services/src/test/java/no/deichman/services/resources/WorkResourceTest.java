@@ -119,7 +119,6 @@ public class WorkResourceTest {
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
 
         Response result = resource.getWorkJSON(workId);
-        System.out.println(result.getEntity());
 
         assertNotNull(result);
         assertEquals(201, createResponse.getStatus());

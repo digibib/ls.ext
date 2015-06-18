@@ -30,7 +30,6 @@ public class ServiceDefaultTest {
     public void setup(){
         service = new ServiceDefault();
         service.setRepository(new RepositoryInMemory());
-
     }
 
     @Test
@@ -41,7 +40,6 @@ public class ServiceDefaultTest {
         String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_DEFAULT_PATCH\"}}";
         String workId = service.createWork(workData);
         String comparisonRDF = workData.replace("http://deichman.no/work/work_SHOULD_BE_PATCHABLE", workId);
-        System.out.println(comparisonRDF);
         InputStream oldIn = new ByteArrayInputStream(comparisonRDF.getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(oldModel, oldIn, Lang.JSONLD);
         Model data = service.retrieveWorkById(workId.replace("http://deichman.no/work/", ""));
