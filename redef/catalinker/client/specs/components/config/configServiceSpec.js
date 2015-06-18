@@ -13,35 +13,61 @@ describe("catalinker.config", function () {
             });
         });
 
-        it("should load ontologyUri from given configPath", function(done) {
+        describe("config values", function () {
             var $rootScope,
                 $httpBackend,
                 myConfigPath = '/someuri',
-                myConfig = { "ontologyUri": "another_uri"};
+                myConfig = {
+                    "ontologyUri": "another_uri",
+                    "tripleStoreUri": "yet_another_uri"
+                };
 
-            module(function($provide) {
-                $provide.constant('configPath', myConfigPath);
-            });
-
-            inject(function ($injector) {
-                $rootScope = $injector.get('$rootScope');
-                $httpBackend = $injector.get('$httpBackend');
-            });
-
-            $httpBackend.expectGET(myConfigPath).respond(200, myConfig);
-
-            inject(function(ontologyUri) {
-                ontologyUri.then(function(data) {
-                    expect(data).toBe("another_uri");
-                    done();
-                }, function(data) {
-                    fail(data);
+            beforeEach(function () {
+                module(function($provide) {
+                    $provide.constant('configPath', myConfigPath);
                 });
             });
-            $rootScope.$digest();
-            $httpBackend.flush();
-            $httpBackend.verifyNoOutstandingExpectation();
-            $httpBackend.verifyNoOutstandingRequest();
+
+            beforeEach(function () {
+                inject(function ($injector) {
+                    $rootScope = $injector.get('$rootScope');
+                    $httpBackend = $injector.get('$httpBackend');
+                });
+            });
+
+            beforeEach(function () {
+                $httpBackend.expectGET(myConfigPath).respond(200, myConfig);
+            });
+
+            it("should load ontologyUri", function(done) {
+                inject(function(ontologyUri) {
+                    ontologyUri.then(function(data) {
+                        expect(data).toBe("another_uri");
+                        done();
+                    }, function(data) {
+                        fail(data);
+                    });
+                });
+                $rootScope.$digest();
+                $httpBackend.flush();
+                $httpBackend.verifyNoOutstandingExpectation();
+                $httpBackend.verifyNoOutstandingRequest();
+            });
+
+            it("should load tripleStoreUri", function(done) {
+                inject(function(tripleStoreUri) {
+                    tripleStoreUri.then(function(data) {
+                        expect(data).toBe("yet_another_uri");
+                        done();
+                    }, function(data) {
+                        fail(data);
+                    });
+                });
+                $rootScope.$digest();
+                $httpBackend.flush();
+                $httpBackend.verifyNoOutstandingExpectation();
+                $httpBackend.verifyNoOutstandingRequest();
+            });
         });
 
         describe("ontologyFactory", function () {
