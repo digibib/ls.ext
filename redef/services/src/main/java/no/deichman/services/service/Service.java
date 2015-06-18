@@ -11,6 +11,7 @@ import no.deichman.services.repository.Repository;
 public interface Service {
     
     void setRepository(Repository repository);
+    Repository getRepository();
     void updateWork(String work);
     Model listWork();
     Model retrieveWorkById(String id);

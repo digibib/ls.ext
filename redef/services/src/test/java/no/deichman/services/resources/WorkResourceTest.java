@@ -3,6 +3,7 @@ package no.deichman.services.resources;
 import no.deichman.services.error.PatchException;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
 
 import org.apache.jena.riot.Lang;
@@ -11,13 +12,13 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import org.junit.rules.ExpectedException;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
@@ -48,7 +49,7 @@ public class WorkResourceTest {
 
     @Before
     public void setUp() throws Exception {
-        resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory());
+        resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
         bum = new BaseURIMock();
     }
 
@@ -152,7 +153,6 @@ public class WorkResourceTest {
         } catch (BadRequestException bre) {
             assertEquals("HTTP 400 Bad Request", bre.getMessage());
         }
-
     }
 
     @Test
@@ -182,7 +182,11 @@ public class WorkResourceTest {
                 ResourceFactory.createProperty("http://deichman.no/ontology#color"), 
                 ResourceFactory.createPlainLiteral("red")));
         assertTrue(testModel.isIsomorphicWith(comparison));
+    }
 
+    @Test(expected = NotFoundException.class)
+    public void patching_a_non_existing_resource_should_return_404() throws Exception {
+        resource.patchWork("a_missing_work1234", "{}");
     }
 
     private boolean isValidJSON(final String json) {

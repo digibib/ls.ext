@@ -7,6 +7,9 @@ import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIDefault;
+import no.deichman.services.uridefaults.BaseURIMock;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.PATCH;
 
@@ -46,18 +49,21 @@ public class WorkResource {
 	}
 
     private final Service service;
-    
+    private BaseURI baseURI;
+
     public WorkResource() {
         super();
         service = new ServiceDefault();
+        baseURI = new BaseURIDefault();
     }
 
-    public WorkResource(KohaAdapter kohaAdapter, Repository repository) {
+    public WorkResource(KohaAdapter kohaAdapter, Repository repository, BaseURI b) {
         super();
         ServiceDefault serviceDefault = new ServiceDefault();
         serviceDefault.setKohaAdapter(kohaAdapter);
         serviceDefault.setRepository(repository);
         service = serviceDefault;
+        baseURI = b;
     }
 
     @POST
@@ -89,6 +95,9 @@ public class WorkResource {
     @Path("{workId: [a-zA-Z0-9_]+}")
     @Consumes("application/ldpatch+json")
     public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
+        if ( !service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId) ) {
+            throw new NotFoundException();
+        }
         Model m;
         try {
              m = service.patchWork(workId, requestBody);
