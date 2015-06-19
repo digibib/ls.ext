@@ -12,12 +12,9 @@ docker_params_blockreplace:
     - marker_end: "### DOCKER PARAMS END --DO NOT EDIT-- ###"
     - content: |
         DOCKER_OPTS="\
-        {% for param in salt["pillar.get"]("docker-params", []) %}
-          --{{param}} \
-        {% else %}
-          \
-        {% endfor %}
-          "
+        {% for param in salt["pillar.get"]("docker-params", []) %}--{{param}} \
+        {% else %}\
+        {% endfor %}"
     - append_if_not_found: True
     - require:
       - file: docker_comment_other_params
