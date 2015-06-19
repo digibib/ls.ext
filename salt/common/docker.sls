@@ -37,4 +37,6 @@ lxc-docker:
       - pkg: docker-dependencies
 
 docker:
-  service.running
+  service.running:
+    - watch:
+      - pkg: lxc-docker
