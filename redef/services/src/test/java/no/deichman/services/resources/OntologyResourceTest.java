@@ -3,6 +3,7 @@ package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import no.deichman.services.ontology.OntologyService;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.commons.io.IOUtils;
@@ -29,8 +30,8 @@ public class OntologyResourceTest {
 
     @Before
     public void setUp() throws Exception {
-        resource = new OntologyResource();
         bud = new BaseURIMock();
+        resource = new OntologyResource(new OntologyService(bud));
     }
 
     @Test
@@ -56,7 +57,7 @@ public class OntologyResourceTest {
         String entity = result.getEntity().toString();
         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
             String fromFile = IOUtils.toString(fileInputStream);
-            assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#",bud.getOntologyURI())));
+            assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#", bud.getOntologyURI())));
         }
     }
 }

@@ -20,7 +20,15 @@ import java.nio.charset.StandardCharsets;
 @Path("ontology")
 public class OntologyResource {
 
-    private OntologyService ontologyService = new OntologyService(new BaseURIDefault());
+    private final OntologyService ontologyService;
+
+    public OntologyResource() {
+        this(new OntologyService(new BaseURIDefault()));
+    }
+
+    public OntologyResource(OntologyService ontologyService) {
+        this.ontologyService = ontologyService;
+    }
 
     @GET
     @Produces("text/turtle")
