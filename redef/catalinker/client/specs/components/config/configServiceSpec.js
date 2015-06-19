@@ -13,7 +13,7 @@ describe("catalinker.config", function () {
             });
         });
 
-        describe("config values", function () {
+        describe("when config values exist then it", function () {
             var $rootScope,
                 $httpBackend,
                 myConfigPath = '/someuri',
@@ -67,6 +67,41 @@ describe("catalinker.config", function () {
                 $httpBackend.flush();
                 $httpBackend.verifyNoOutstandingExpectation();
                 $httpBackend.verifyNoOutstandingRequest();
+            });
+        });
+
+        describe("when config value is missing then", function () {
+            var $rootScope,
+                myConfig = {
+                    "not_the_one_that_we_want": "shite"
+                };
+
+            beforeEach(function () {
+                module(function($provide) {
+                    $provide.factory('config', function ($q) {
+                        var deferred = $q.defer();
+                        deferred.resolve(myConfig);
+                        return deferred.promise;
+                    });
+                });
+            });
+
+            beforeEach(function () {
+                inject(function ($injector) {
+                    $rootScope = $injector.get('$rootScope');
+                });
+            });
+
+            it("should fail the ontologyUriPromise", function(done) {
+                inject(function(ontologyUri) {
+                    ontologyUri.then(function(data) {
+                        fail("should not have found: " + data);
+                    }, function(error) {
+                        // correctly failed
+                        done();
+                    });
+                });
+                $rootScope.$digest();
             });
         });
 

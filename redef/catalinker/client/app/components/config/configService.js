@@ -13,13 +13,18 @@
         return deferred.promise;
     }
 
-    function promiseSelection($q, config, selectionFunction) {
+    function promiseSelection($q, configPromise, selectionFunction) {
         var deferred = $q.defer();
         selectionFunction = selectionFunction || function (data) {
                 return data;
             };
-        config.then(function (data) {
-            deferred.resolve(selectionFunction(data));
+        configPromise.then(function (data) {
+            var selection = selectionFunction(data);
+            if (selection) {
+                deferred.resolve(selection);
+            } else {
+                deferred.reject("config data not found");
+            }
         }, function (error) {
             deferred.reject(error);
         });
