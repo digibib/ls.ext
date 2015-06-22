@@ -22,6 +22,11 @@ var debug = process.argv.indexOf('--debug') > 0,
     SRC_NPM = 'node_modules/',
     DEST = getArgumentValue('dest', '../server/lib/public/'),
     libFiles = [
+        SRC_LIB + 'angular.min.js',
+        SRC_LIB + 'angular-animate.min.js',
+        SRC_LIB + 'angular-aria.min.js',
+        SRC_LIB + 'angular-route.min.js',
+        SRC_LIB + '*.js'
 //        SRC_NPM + 'angular2/angular2.js'
     ],
     appJsFiles = {
@@ -76,12 +81,12 @@ gulp.task('buildLibs', function () {
     gulp.src(libFiles, { base: './' })
         .pipe(rename(function (path) {
             //    path.dirname = path.dirname.replace('ContentSrc', 'Content');
-    }))
+        }))
         //.pipe(sourcemaps.init())
         //.pipe(uglify())
-        .pipe(concat('libs.js'))
+        .pipe(concat('app/libs.js'))
         //.pipe(sourcemaps.write('', { includeContent: debug, sourceRoot: '/' }))
-        .pipe(gulp.dest(DEST + 'js/'));
+        .pipe(gulp.dest(DEST));
     
     //copy('Shared/style/style.css', 'Shared/style/');
 });
