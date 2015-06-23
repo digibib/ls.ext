@@ -14,10 +14,10 @@
 
     },
   "devDependencies": {
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
     "gulp-concat": "^2.5.2",
     "gulp-karma": "0.0.4",
-    "gulp-minify-css": "^1.1.1",
+    "gulp-minify-css": "^1.1.6",
     "gulp-modify": "0.1.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.1",
@@ -28,10 +28,11 @@
     "gulp-jshint": "1.11.0",
     "gulp-if": "^1.2.5",
     "jasmine-core": "^2.3.4",
-    "karma": "^0.12.33",
-    "karma-coverage": "^0.3.1",
+    "phantomjs": "^1.9.17",
+    "karma": "^0.12.36",
+    "karma-coverage": "^0.4.2",
     "karma-jasmine": "^0.3.5",
-    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-phantomjs-launcher": "^0.2.0",
     "karma-html2js-preprocessor": "0.1.0"
   }
 }
