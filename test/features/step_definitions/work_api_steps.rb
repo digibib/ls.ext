@@ -43,11 +43,14 @@ Given(/^at det er opprettet et verk$/) do
 end
 
 When(/^jeg sender inn endringer til APIet$/) do
+  @context[:work].gen_literals
   w = @context[:work]
-  w.gen_literals
   WorkAPIClient.new().patch_work(w.uri, w.literals)
 end
 
 Then(/^viser APIet at endringene er lagret$/) do
-  pending # express the regexp above with the code you wish you had
+  res = WorkAPIClient.new().get_work(@context[:work].uri)
+  @context[:work].literals.each do |stmt|
+    res.has_statement?(stmt).should be true
+  end
 end

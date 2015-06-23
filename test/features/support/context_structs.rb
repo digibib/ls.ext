@@ -19,8 +19,8 @@ Work = Struct.new(:uri, :literals, :ontology) do
   def randomizer
     {
       RDF::XSD.string => generateRandomString,
-      RDF::XSD.gYear => rand(2015),
-      RDF::XSD.nonNegativeInteger => rand(9999)
+      RDF::XSD.gYear => rand(2015).to_s,
+      RDF::XSD.nonNegativeInteger => rand(9999).to_s
     }
   end
 

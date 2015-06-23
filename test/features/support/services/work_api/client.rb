@@ -44,7 +44,6 @@ class WorkAPIClient < Service
     req.add_field('Content-Type', 'application/ldpatch+json')
     req.body = patches.to_json
     res =  Net::HTTP.new(uri.host, uri.port).request(req) 
-    STDOUT.puts res.inspect
   end
 
   def remove_work(work)
