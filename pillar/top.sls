@@ -15,12 +15,12 @@ base:
 
   '^(\w+-ship|vm-devops)$':
     - match: pcre
+    - docker.dev
     - elk.dev
     - resource_monitoring.dev
 
   '^(\w+-ship)$':
     - match: pcre
-    - docker.dev
     - sip.dev
     - redef
     - redef.dev
