@@ -2,7 +2,7 @@
 
     angular.module('catalinker.vocabulary', ['catalinker.config'])
         .factory('vocabulary', ['$q', 'ontologyFactory', function($q, ontologyFactory) {
-            var deferred;
+            var deferred = $q.defer();
 
             function replaceContextInUri(contextHash, uri) {
                 var result = null, prefix;
@@ -17,18 +17,17 @@
                 return result || uri;
             }
 
-            function get_context(ontology) {
+            function getContext(ontology) {
                 return ontology['@context'] || {};
             }
 
-
-            function get_graph(ontology) {
+            function getGraph(ontology) {
                 return ontology['@graph'] || [];
             }
 
-            function extract_labels(ontology) {
+            function extractLabels(ontology) {
                 var result = {};
-                get_graph(ontology).forEach(function (obj) {
+                getGraph(ontology).forEach(function (obj) {
                     var label = {
                         'default': obj['rdfs:label']
                     };
@@ -38,16 +37,14 @@
                         });
                         label['default'] = label.no || label.en;
                     }
-                    result[replaceContextInUri(get_context(ontology), obj['@id'])] = label;
+                    result[replaceContextInUri(getContext(ontology), obj['@id'])] = label;
                 });
                 return result;
             }
 
-            deferred = $q.defer();
-
             ontologyFactory
                 .then(function(ontology) {
-                    deferred.resolve(extract_labels(ontology));
+                    deferred.resolve(extractLabels(ontology));
                 },function() {
                     deferred.reject();
                 });
