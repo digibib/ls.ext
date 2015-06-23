@@ -11,7 +11,6 @@
         $scope.titles = {};
         $scope.fields = [];
         $scope.selectedField = '';
-
         
         function init() {
             
