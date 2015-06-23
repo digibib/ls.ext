@@ -77,6 +77,10 @@ function addTemplateTag(content) {
 }
 
 
+gulp.task('buildAll', ['buildLibs', 'buildApp'], function () {
+
+});
+
 gulp.task('buildLibs', function () {
     gulp.src(libFiles, { base: './' })
         .pipe(rename(function (path) {
