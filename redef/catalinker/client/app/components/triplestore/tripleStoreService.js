@@ -110,21 +110,21 @@
     var Patch = {
         add : function (triple) {
             var value = {
-                value: triple.value
+                "value": triple.value
             };
             if (triple.lang) {
                 value.lang = triple.lang;
             }
-            return {op: 'add', s: triple.subject, p: triple.predicate, o: value};
+            return {"op": "add", "s": triple.subject, "p": triple.predicate, "o": value};
         },
         remove : function (triple) {
             var value = {
-                value: triple.savedValue
+                "value": triple.savedValue
             };
             if (triple.lang) {
                 value.lang = triple.lang;
             }
-            return {op: 'del', s: triple.subject, p: triple.predicate, o: value};
+            return {"op": 'del', "s": triple.subject, "p": triple.predicate, "o": value};
         },
         modify : function(triple) {
             return [
@@ -157,7 +157,7 @@
             //console.log('saving...', this.predicate, this.value);
             patch = this.isNew ? Patch.add(this) : Patch.modify(this);
 
-            $http.patch(this.subject, patch, { headers: { Accept: 'text/html, application/json', 'Content-Type': 'ldpatch+json' } }).success(function() {
+            $http.patch(this.subject, patch, { headers: { Accept: 'text/html, application/json', 'Content-Type': 'application/ldpatch+json' } }).success(function() {
                 self.isSaving = false;
                 self.isNew = false;
                 self.savedValue = self.value;
