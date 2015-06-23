@@ -9,6 +9,7 @@ installpkgs:
       - phantomjs
       - firefox
       - chromium-browser
+      - xvfb
 
 install_chromedriver:
   pkg.installed:
@@ -30,6 +31,7 @@ install_chromedriver:
       - archive: install_chromedriver
 
 {% for gem in
+  'headless',
   'rspec',
   'pry',
   'pry-nav',

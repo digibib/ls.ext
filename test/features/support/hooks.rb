@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'pp'
+require 'headless'
 
 # TODO: Should pull report dir (if any) from cucumber command options
 REPORT_DIR = 'report'
@@ -31,8 +32,15 @@ Before do
   @cleanup = [] # A stack of operations to be undone in reversed order after feature
 end
 
-Before do
-  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+Before do |scenario|
+  if scenario.source_tag_names.include?("@xvfb") and !ENV['BROWSER']
+    # Run scenarios tagged @xvfb with firefox in a virual framebuffer
+    @headless = Headless.new
+    @headless.start
+    @browser = @browser || (Watir::Browser.new :firefox )
+  else
+    @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+  end
   @site = @site || Site.new(@browser)
 end
 
@@ -41,6 +49,7 @@ end
 After do # The final hook
   @site = nil
   @browser.close if @browser
+  @headless.destroy if @headless
 end
 
 def title_of(scenario)

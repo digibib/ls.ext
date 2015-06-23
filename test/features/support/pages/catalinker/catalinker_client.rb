@@ -30,6 +30,6 @@ class CatalinkerClient < PageRoot
     end
 
     def get_id()
-      throw "Not supported yet."
+      w = @browser.h2(:data_automation_id => "work_id").text
     end
 end

@@ -29,6 +29,7 @@
             <form name="entityForm">
                 <div layout="column">
                         <md-button data-automation-id="new_work_button" ng-click="newWork()">+ New Work</md-button>
+                        <h2 data-automation-id="work_id">{{id}}</h2>
                     <md-content layout="column" layout-sm="column" ng-repeat="triple in triples">
                         <md-input-container ng-switch on="triple.type" style="width:90%">
                             <label>

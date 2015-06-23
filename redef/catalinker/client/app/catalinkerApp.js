@@ -5,7 +5,7 @@
         var Triple = tripleStore.Triple,
             description = null;
         
-        
+        $scope.id = "<no id>";
         $scope.labels = {};
         $scope.triples = [];
         $scope.titles = {};
@@ -44,6 +44,7 @@
             tripleStore.newDescription('work').then(function (desc) {
                 description = desc;
                 $scope.triples = desc.triples;
+                $scope.id = desc.subject;
             }, function () {
             });
         };
