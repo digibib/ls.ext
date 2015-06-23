@@ -22,7 +22,11 @@ public class SPARQLQueryBuilder {
     }
 
 	public Query getGetWorkByIdQuery(String id) {
-        String queryString = "DESCRIBE <" + id + ">";
+        String queryString =
+                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+                + "PREFIX deichman: <http://deichman.no/ontology#>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "DESCRIBE <" + id + ">";
         return QueryFactory.create(queryString);
     }
 
