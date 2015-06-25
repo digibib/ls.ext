@@ -34,17 +34,13 @@ class TestWorkModel < Test::Unit::TestCase
       data = {
           :id => solution.id.to_s.gsub(/http:\/\/.*\/work\//,''),
           :creator => solution.creator.to_s,
-          :title => {
-            :string => solution.title,
-            :language => solution.title.language
-          },
-          :date => {
-              :string => solution.date,
-              :datatype => solution.date.datatype
-          },
+          :title => solution.title.to_s,
+          :date => solution.date.to_s,
           :biblio => solution.biblio.to_s
       }
     end
+
+    puts data
 
     output = WorkModel.fromData(data)
     iso = input.isomorphic? output
