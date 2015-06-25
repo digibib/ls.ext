@@ -2,8 +2,8 @@ require 'rdf'
 require_relative './rdf_repo'
 
 class WorkModel
-
-  DEICHMAN = 'http://deichman.no/ontology#'
+  
+  DEICHMAN = (ENV['SERVICES_PORT'] || 'http://deichman.no').sub(/^tcp:\//, 'http:/' ) + '/ontology#'
   TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
 
   def self.fromData(data)
