@@ -2,10 +2,10 @@
 <html lang="no">
   <head>
     <meta charset="UTF-8" />
-    <title>{{dcterms:title.@value}} av {{dcterms:creator}} ({{dcterms:date.@value}})</title>
+    <title>{{deichman:title}} av {{deichman:creator}} ({{deichman:date}})</title>
   </head>
   <body>
-    <h1><span data-automation-id="work_title">{{dcterms:title.@value}}</span> / <span data-automation-id="work_author">{{dcterms:creator}}</span> <span>(<span data-automation-id="work_date">{{dcterms:date.@value}}</span>)</span></h1>
+    <h1><span data-automation-id="work_title">{{deichman:title}}</span> / <span data-automation-id="work_author">{{deichman:creator}}</span> <span>(<span data-automation-id="work_date">{{deichman:date}}</span>)</span></h1>
     {{#items.length}}
     <h2>Vi har:</h2>
     <ul>
