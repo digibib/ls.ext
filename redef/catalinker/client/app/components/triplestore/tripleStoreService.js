@@ -153,8 +153,7 @@
                 return deferred.promise;   
             }
             this.isSaving = true;
-            //this.isNew = false; //todo: if save fails, set isNew back to what it was
-            //console.log('saving...', this.predicate, this.value);
+
             patch = this.isNew ? Patch.add(this) : Patch.modify(this);
 
             $http.patch(this.subject, patch, { headers: { Accept: 'text/html, application/json', 'Content-Type': 'application/ldpatch+json' } }).success(function() {
@@ -167,14 +166,7 @@
                 self.isNew = isNew;
                 deferred.reject();
             });
-    /*
-            $timeout(function() {//fake server async
-                self.isSaving = false;
-                self.savedValue = self.value;
 
-                deferred.resolve();
-            }, 1000);
-    */
             return deferred.promise;
         };
         
@@ -198,13 +190,6 @@
                 deferred.reject();
             });
 
-    /*
-            $timeout(function () {//fake server async
-                self.isSaving = false;
-                self.isNew = true;
-                deferred.resolve();
-            }, 1000);
-    */
             return deferred.promise;
         };
 
@@ -262,6 +247,5 @@
             newDescription: newDescription
         };
     }]);
-
 
 }());
