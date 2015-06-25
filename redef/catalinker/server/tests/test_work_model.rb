@@ -21,9 +21,9 @@ class TestWorkModel < Test::Unit::TestCase
     query = RDF::Query.new({
       :id => {
         rdf.type  => :type,
-        dcterms.creator => :creator,
-        dcterms.title => :title,
-        dcterms.date => :date,
+        deichman.creator => :creator,
+        deichman.title => :title,
+        deichman.date => :date,
         deichman.biblioId => :biblio
       }
     })
