@@ -55,7 +55,6 @@ post '/work', :provides => 'text' do
             :datatype => params[:datatype]
         }
       }
-      puts data
   model = WorkModel.fromData(data)
   json = model.dump(:jsonld, standard_prefixes: true)
   resp = RESTService.push("work", json)
