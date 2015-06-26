@@ -14,7 +14,6 @@ module.exports = function (config) {
             'specs/lib/angular-mocks.js',
             'app/catalinkerApp.js',
             'app/components/**/*.js',
-            'app/views/**/*.js',
             'specs/**/*Spec.js',
 
             'specs/mocks/*.json*/'

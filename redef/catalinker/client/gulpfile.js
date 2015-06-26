@@ -124,9 +124,6 @@ gulp.task('buildApp', function () {
                 .pipe(gulp.dest(DEST));
         }));
 
-    gulp.src(SRC + 'views/**/*.html')
-        .pipe(gulp.dest(DEST + 'app/views/'));
-
     gulp.src(styleFiles)
         .pipe(gulp.dest(DEST));
 
