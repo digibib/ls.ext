@@ -41,7 +41,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: version_slf4j
     compile group: 'commons-io', name: 'commons-io', version: version_commons_io
     compile group: 'commons-lang', name: 'commons-lang', version: version_commons_lang
-    compile ('info.freelibrary:freelib-marc4j:2.6.6') {
+    compile ('info.freelibrary:freelib-marc4j:2.6.7') {
         transitive = false
     }
     compile group: 'com.google.code.gson',name: 'gson', version: '2.3.1'
