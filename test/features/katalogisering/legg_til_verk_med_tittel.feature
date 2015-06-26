@@ -5,7 +5,7 @@
 Egenskap: Legg til verk med tittel
   Som katalogisator
   For at en låner skal kunne finne et verk med kjent tittel
-  Ønsker jeg å registrere et verk har en tittel
+  Ønsker jeg å registrere at et verk har en tittel
 
   Bakgrunn:
     Gitt at jeg er logget inn som katalogisator
