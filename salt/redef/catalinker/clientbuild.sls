@@ -14,6 +14,6 @@ clear_client:
 
 build_client:
   cmd.run:
-    - name: sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app -v /vagrant/redef/catalinker/server/lib/public:/usr/src/dest {{ repo }}/{{ image }} gulp buildAll --dest=/usr/src/dest
+    - name: sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app -v /vagrant/redef/catalinker/server/lib/public:/usr/src/dest {{ repo }}/{{ image }} gulp buildAll --dest=/usr/src/dest/
     - require:
       - cmd: clear_client
