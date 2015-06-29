@@ -15,39 +15,39 @@
   rdfs:comment "En person er et vesen som har attributtene generelt assosiert med personer"@no .
 
 :name a rdfs:Property ;
-  rdfs:label "name"@en ;
-  rdfs:label "navn"@no ;
+  rdfs:label "Name"@en ;
+  rdfs:label "Navn"@no ;
   rdfs:domain rdfs:Class ;
   rdfs:range xsd:string ;
   rdfs:comment "The relationship between a thing and what it is called"@en ;
   rdfs:comment "Relasjonen mellom en ting og det den er kalt"@en .
 
 :creator a rdfs:Property ;
-  rdfs:label "creator"@en ;
-  rdfs:label "skaper"@no ;
+  rdfs:label "Creator"@en ;
+  rdfs:label "Skaper"@no ;
   rdfs:domain :Work ;
   rdfs:range :Person ;
   rdfs:comment "The relationship between a creative work and the person who created it"@en ;
   rdfs:comment "Relasjonen mellom et kreativt arbeid og personen som har skapt det"@no .
 
-:date a rdfs:Property ;
-  rdfs:label "date"@en ;
-  rdfs:label "dato"@no ;
+:year a rdfs:Property ;
+  rdfs:label "Year"@en ;
+  rdfs:label "Årstall"@no ;
   rdfs:domain :Work ;
   rdfs:range xsd:gYear ;
   rdfs:comment "The relationship between a work and the year it was created"@en ;
   rdfs:comment "Relasjonen mellom et verk og året det ble skapt"@no .
 
 :identifier a rdfs:Property ;
-  rdfs:label "identifier"@en ;
-  rdfs:label "identifikator"@no ;
+  rdfs:label "Identifier"@en ;
+  rdfs:label "Identifikator"@no ;
   rdfs:range xsd:string ;
   rdfs:comment "The relationship between a thing and an attribute which uniquely identifies it in a given context"@en ;
   rdfs:comment "Relasjonen mellom en ting og en attribut som unikt identifiserer den i en gitt kontekst"@no .
 
 :biblio a rdfs:Property ;
-  rdfs:label "biblio ID"@en ;
-  rdfs:label "biblio ID"@no ;
+  rdfs:label "Biblio ID"@en ;
+  rdfs:label "Biblio ID"@no ;
   rdfs:domain :Work ;
   rdfs:range xsd:nonNegativeInteger ;
   rdfs:comment "The relationship between a work and a ls.ext-internal Koha-record identifier"@en ;
