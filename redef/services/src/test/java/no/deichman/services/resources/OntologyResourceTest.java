@@ -3,7 +3,6 @@ package no.deichman.services.resources;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import no.deichman.services.ontology.OntologyService;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.commons.io.IOUtils;
@@ -21,6 +20,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class OntologyResourceTest {
@@ -31,7 +31,12 @@ public class OntologyResourceTest {
     @Before
     public void setUp() throws Exception {
         bud = new BaseURIMock();
-        resource = new OntologyResource(new OntologyService(bud));
+        resource = new OntologyResource(bud);
+    }
+
+    @Test
+    public void test_it_exists(){
+        assertNotNull(new OntologyResource());
     }
 
     @Test
