@@ -4,11 +4,9 @@ package no.deichman.services.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 
 public class DefaultPrefixes {
 
