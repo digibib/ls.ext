@@ -48,13 +48,6 @@ public class RepositoryDefault implements Repository {
     }
 
     @Override
-    public Model listWork() {
-        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.getListWorkQuery())) {
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
     public void updateWork(final String work) {
     	InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
     	Model model = ModelFactory.createDefaultModel();

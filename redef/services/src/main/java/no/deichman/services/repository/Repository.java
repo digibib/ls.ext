@@ -8,9 +8,6 @@ public interface Repository {
 	String createWork(String work);
 
     void updateWork(String work);
-
-    Model listWork();
-
     Model retrieveWorkById(String id);
 
     boolean askIfResourceExists(String uri);

@@ -63,13 +63,6 @@ public class RepositoryInMemory implements Repository {
     }
 
     @Override
-    public Model listWork() {
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.getListWorkQuery(), model)) {
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
     public void updateWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         Model tempModel = ModelFactory.createDefaultModel();
