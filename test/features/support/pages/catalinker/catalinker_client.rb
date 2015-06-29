@@ -27,6 +27,7 @@ class CatalinkerClient < PageRoot
 
       input = @browser.text_field(:data_automation_id => field)
       input.set(value)
+      input.send_keys :tab
     end
 
     def get_id()
