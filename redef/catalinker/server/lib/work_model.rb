@@ -17,9 +17,9 @@ class WorkModel
     repo = RDFRepo.new
     repo.add_triple(s, RDF::URI.new(TYPE), RDF::URI.new(DEICHMAN + 'Work'))
     repo.add_triple(s, RDF::URI.new(DEICHMAN + 'creator'), RDF::Literal.new(creator)) unless creator.empty?
-    repo.add_triple(s, RDF::URI.new(DEICHMAN + 'title'), RDF::Literal.new(title)) unless title.empty?
+    repo.add_triple(s, RDF::URI.new(DEICHMAN + 'name'), RDF::Literal.new(title)) unless title.empty?
     repo.add_triple(s, RDF::URI.new(DEICHMAN + 'date'), RDF::Literal.new(date)) unless date.empty?
-    repo.add_triple(s, RDF::URI.new(DEICHMAN + 'biblioId'), RDF::Literal.new(biblio)) unless biblio.empty?
+    repo.add_triple(s, RDF::URI.new(DEICHMAN + 'biblio'), RDF::Literal.new(biblio)) unless biblio.empty?
     repo.get_model
   end
 

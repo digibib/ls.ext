@@ -100,7 +100,7 @@
 
 <http://deichman.no/edition/edition_00004> a deichman:Edition ;
   bibo:isbn "82-05-26285-3" ;
-  deichman:biblioId "626460" .
+  deichman:biblio "626460" .
 
 <http://deichman.no/work/work_TEST_KOHA_ITEMS_LINK> a deichman:Work ;
   rdfs:label "Berlinerpoplene" ;
@@ -108,4 +108,4 @@
   dcterms:creator <http://deichman.no/person/person_00004> ;
   dcterms:date "2004"^^xsd:gYear ;
   dcterms:identifier "work_TEST_KOHA_ITEMS_LINK" ;
-  deichman:biblioId "626460" .
+  deichman:biblio "626460" .

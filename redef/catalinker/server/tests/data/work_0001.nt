@@ -2,4 +2,4 @@
 <http://example.com/placeholder> <http://deichman.no/ontology#creator> "Sarah Smith" .
 <http://example.com/placeholder> <http://deichman.no/ontology#title> "The meaning of Liff" .
 <http://example.com/placeholder> <http://deichman.no/ontology#date> "1998" .
-<http://example.com/placeholder> <http://deichman.no/ontology#biblioId> "2" .
+<http://example.com/placeholder> <http://deichman.no/ontology#biblio> "2" .

@@ -24,7 +24,7 @@ class TestWorkModel < Test::Unit::TestCase
         deichman.creator => :creator,
         deichman.title => :title,
         deichman.date => :date,
-        deichman.biblioId => :biblio
+        deichman.biblio => :biblio
       }
     })
 

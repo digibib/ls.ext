@@ -41,7 +41,7 @@ class TestServer < Test::Unit::TestCase
                      "http://deichman.no/ontology#creator" => "Sarah Smith",
                      "http://deichman.no/ontology#date" => "2009",
                      "http://deichman.no/ontology#title" => "This is a test",
-                     "http://deichman.no/ontology#biblioId" => "2"
+                     "http://deichman.no/ontology#biblio" => "2"
                  },
          :headers => {'Content-Type'=>'application/json'}).
     to_return(:status => 201, :body => "", :headers => { 'Location' => 'http://192.168.50.12:8080/work/w12' })
@@ -58,7 +58,7 @@ class TestServer < Test::Unit::TestCase
         to_return(:status => 200, :body => '{
                                     "@id" : "http://192.168.50.12:8080/work/w12",
                                     "@type" : "http://deichman.no/ontology#Work",
-                                    "http://deichman.no/ontology#biblioId" : "3",
+                                    "http://deichman.no/ontology#biblio" : "3",
                                     "http://deichman.no/ontology#creator" : "Sarah Smith",
                                     "http://deichman.no/ontology#date" : "2015",
                                     "http://deichman.no/ontology#title" : "tittel-blah"
@@ -76,7 +76,7 @@ class TestServer < Test::Unit::TestCase
         to_return(:status => 200, :body => '{
                                     "@id" : "http://192.168.50.12:8080/work/work_THIS_EXISTS",
                                     "@type" : "http://deichman.no/ontology#Work",
-                                    "http://deichman.no/ontology#biblioId" : "3",
+                                    "http://deichman.no/ontology#biblio" : "3",
                                     "http://deichman.no/ontology#creator" : "Sarah Smith",
                                     "http://deichman.no/ontology#date" : "2015",
                                     "http://deichman.no/ontology#title" : "tittel-blah"

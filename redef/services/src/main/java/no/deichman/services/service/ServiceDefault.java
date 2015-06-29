@@ -67,7 +67,7 @@ public class ServiceDefault implements Service {
     }
 
     public void setBiblioIDProperty(String uri){
-        BIBLIO_ID = ResourceFactory.createProperty(uri + "biblioId");
+        BIBLIO_ID = ResourceFactory.createProperty(uri + "biblio");
     }
 
     @Override

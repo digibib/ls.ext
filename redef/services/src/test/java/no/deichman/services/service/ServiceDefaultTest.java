@@ -96,7 +96,7 @@ public class ServiceDefaultTest {
     @Test
     public void test_create_work(){
         Repository r = new RepositoryInMemory();
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblioId\":\"1\"}}";
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         service.setRepository(r);
         String workId = service.createWork(work);
         Statement s = ResourceFactory.createStatement(
@@ -107,7 +107,7 @@ public class ServiceDefaultTest {
     @Test
     public void test_delete_work(){
         Repository r = new RepositoryInMemory();
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblioId\":\"1\"}}";
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         service.setRepository(r);
         String workId = service.createWork(work);
         Statement s = ResourceFactory.createStatement(

@@ -23,7 +23,7 @@ describe('PatronClient', function () {
             {
                 "@id" : "http://deichman.no/work/work_1231",
                 "@type" : "http://deichman.no/ontology#Work",
-                "deichman:biblioId" : "2",
+                "deichman:biblio" : "2",
                 "deichman:date" : "1890",
                 "deichman:title" : "Sult",
                 "deichman:creator" : "Knut Hamsun",
