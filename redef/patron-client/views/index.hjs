@@ -10,7 +10,7 @@
     <h2>Vi har:</h2>
     <ul>
       {{#items}}
-        <li><span data-automation-id="item_location">{{deichman:location.@id}}</span> | <span data-automation-id="item_status">{{deichman:status.@id}}</span></li>
+        <li><span data-automation-id="item_location">{{deichman:location}}</span> | <span data-automation-id="item_status">{{deichman:status}}</span></li>
       {{/items}}
     </ul>
     {{/items.length}}

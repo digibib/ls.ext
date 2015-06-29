@@ -39,12 +39,8 @@ describe('PatronClient', function () {
                     {
                         "@id": "_:b1",
                         "@type": "deichman:Item",
-                        "deichman:location": {
-                            "@id": "hutl"
-                        },
-                        "deichman:status": {
-                            "@id": "AVAIL"
-                        }
+                        "deichman:location": "hutl",
+                        "deichman:status": "AVAIL"
                     },
                     {
                         "@id": "http://deichman.no/work/x0123",
