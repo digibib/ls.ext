@@ -1,5 +1,5 @@
 <http://example.com/placeholder> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://deichman.no/ontology#Work> .
 <http://example.com/placeholder> <http://deichman.no/ontology#creator> "Sarah Smith" .
-<http://example.com/placeholder> <http://deichman.no/ontology#title> "The meaning of Liff" .
+<http://example.com/placeholder> <http://deichman.no/ontology#name> "The meaning of Liff" .
 <http://example.com/placeholder> <http://deichman.no/ontology#date> "1998" .
 <http://example.com/placeholder> <http://deichman.no/ontology#biblio> "2" .

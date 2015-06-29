@@ -22,7 +22,7 @@ class TestWorkModel < Test::Unit::TestCase
       :id => {
         rdf.type  => :type,
         deichman.creator => :creator,
-        deichman.title => :title,
+        deichman.name => :title,
         deichman.date => :date,
         deichman.biblio => :biblio
       }
