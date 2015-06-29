@@ -37,7 +37,8 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
 end
 
 When(/^jeg er på sida til verket$/) do
-  @site.PatronClient.visit(@context[:identifier])
+  identifier = @context[:identifier].sub(services(:work).to_s + "/","")
+  @site.PatronClient.visit(identifier)
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do

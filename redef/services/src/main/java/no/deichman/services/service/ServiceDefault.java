@@ -23,12 +23,25 @@ import no.deichman.services.patch.PatchParser;
 import no.deichman.services.patch.PatchRDF;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.repository.RepositoryDefault;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIDefault;
 
 public class ServiceDefault implements Service {
 
     private Repository repository = new RepositoryDefault();
     private KohaAdapter kohaAdapter = new KohaAdapterDefault();
-    private static final Property BIBLIO_ID = ResourceFactory.createProperty("http://deichman.no/ontology#biblioId");
+    private BaseURI baseURI;
+    private Property BIBLIO_ID;
+
+    public ServiceDefault(){
+        baseURI = new BaseURIDefault();
+        setBiblioIDProperty(baseURI.getOntologyURI());
+    }
+
+    public ServiceDefault(BaseURI base){
+        baseURI = base;
+        setBiblioIDProperty(baseURI.getOntologyURI());
+    }
 
     @Override
     public Model retrieveWorkById(String id) {
@@ -53,6 +66,10 @@ public class ServiceDefault implements Service {
         this.kohaAdapter = kohaAdapter;
     }
 
+    public void setBiblioIDProperty(String uri){
+        BIBLIO_ID = ResourceFactory.createProperty(uri + "biblioId");
+    }
+
     @Override
     public void updateWork(String work) {
         repository.updateWork(work);
@@ -67,12 +84,11 @@ public class ServiceDefault implements Service {
 
         while (subjectsIterator.hasNext()){
             Model tempModel = ModelFactory.createDefaultModel();
-
             NodeIterator n = model.listObjectsOfProperty(BIBLIO_ID);
             while (n.hasNext()){
                 tempModel.add(kohaAdapter.getBiblio(n.next().toString()));
             }
-            SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
+            SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(baseURI);
             Query query = sqb.getItemsFromModelQuery(subjectsIterator.next().toString());
             QueryExecution qexec = QueryExecutionFactory.create(query, tempModel);
             Model itemsModel = qexec.execConstruct();

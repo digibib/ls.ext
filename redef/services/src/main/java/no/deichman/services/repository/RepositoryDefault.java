@@ -34,8 +34,8 @@ public class RepositoryDefault implements Repository {
 
     public RepositoryDefault() {
         System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
-        sqb = new SPARQLQueryBuilder();
         bud = new BaseURIDefault();
+        sqb = new SPARQLQueryBuilder(bud);
     }
 
     @Override

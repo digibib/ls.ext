@@ -34,8 +34,8 @@ public class RepositoryInMemory implements Repository {
 
     
     public RepositoryInMemory() {
-        sqb = new SPARQLQueryBuilder();
         bud = new BaseURIMock();
+        sqb = new SPARQLQueryBuilder(bud);
         Model model2 = ModelFactory.createDefaultModel();
         model2.read("testdata.ttl", "TURTLE");
         model = DatasetFactory.createMem();
