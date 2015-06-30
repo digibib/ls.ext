@@ -73,11 +73,11 @@
             "rdfs:label": [
                 {
                     "@language": "no",
-                    "@value": "biblio ID"
+                    "@value": "biblio"
                 },
                 {
                     "@language": "en",
-                    "@value": "biblio ID"
+                    "@value": "biblio"
                 }
             ],
             "rdfs:range": {

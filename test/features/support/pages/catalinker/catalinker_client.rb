@@ -12,9 +12,9 @@ class CatalinkerClient < PageRoot
       @browser.button(:data_automation_id => /new_work_button/).click
 
       addTriple("navn", title)
-      addTriple("skaper", author)
       addTriple("dato", date)
-      addTriple("biblio ID", biblio) if biblio
+      addTriple("biblio", biblio) if biblio
+      addTriple("skaper", author)
 
       self
     end
