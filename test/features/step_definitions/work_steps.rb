@@ -42,6 +42,7 @@ When(/^jeg er på sida til verket$/) do
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
+  @browser.refresh
   @site.PatronClient.getTitle.should include(@context[:title])
   @site.PatronClient.getDate.should include(@context[:date])
 end
