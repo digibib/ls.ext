@@ -43,7 +43,6 @@ describe("Given user is logged in", function () {
         $window = $injector.get('$window');
         //$location.path('/work/w222557057913');
         $controller = $injector.get('$controller');
-        $window = $injector.get('$window');
         loadMocks();
     }));
 
@@ -66,8 +65,7 @@ describe("Given user is logged in", function () {
             //expect(true).toBe(true);
             expect($location.url()).toBe('');
         });
-
-
+        
        describe("And the user navigates to /work/w222557057913", function() {
             beforeEach(function () {
                 //$httpBackend.expectGET('app/views/work/work.html').respond(200, '');
@@ -82,6 +80,10 @@ describe("Given user is logged in", function () {
             
             it("The path should be '/work/w222557057913'", function () {
                 expect($location.path()).toBe('/work/w222557057913');
+            });
+            
+            it("Language codes should be present", function () {
+                expect($scope.languageCodes.aa).toBeDefined();
             });
 
             it("The list of triples should contain 5 items", function () {

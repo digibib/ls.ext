@@ -172,7 +172,7 @@
             }
         },
         {
-            "@id": ":date",
+            "@id": ":year",
             "@type": "rdfs:Property",
             "rdfs:comment": [
                 {
@@ -190,11 +190,11 @@
             "rdfs:label": [
                 {
                     "@language": "en",
-                    "@value": "date"
+                    "@value": "Year"
                 },
                 {
                     "@language": "no",
-                    "@value": "dato"
+                    "@value": "Årstall"
                 }
             ],
             "rdfs:range": {

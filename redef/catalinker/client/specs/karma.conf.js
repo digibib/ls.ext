@@ -12,11 +12,10 @@ module.exports = function (config) {
             'lib/angular-route.min.js',
             'lib/*.js',
             'specs/lib/angular-mocks.js',
+            'app/services/*.js',
             'app/catalinkerApp.js',
-            'app/components/**/*.js',
             'app/views/**/*.js',
             'specs/**/*Spec.js',
-
             'specs/mocks/*.json*/'
             //fixtures
             //{pattern: 'specs/mocks/*.json', watched: true, served: true, included: false}
