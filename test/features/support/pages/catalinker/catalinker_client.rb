@@ -25,6 +25,10 @@ class CatalinkerClient < PageRoot
       predicate_selector.click
       predicate_selector.send_keys field, :tab, :enter
 
+      # Occasionaly the predicate dropdown lingers on, so we fire an extra tab key
+      # to make it disappair.
+      @browser.send_keys :tab
+
       input = @browser.text_field(:data_automation_id => field)
       input.set(value)
     end
