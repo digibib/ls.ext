@@ -10,6 +10,7 @@ set :server, 'webrick'
 set :bind, '0.0.0.0'
 enable :static
 set :public_folder, File.dirname(__FILE__) + '/public'
+use Rack::Deflater
 
 get '/' do
   "Catalinker"
