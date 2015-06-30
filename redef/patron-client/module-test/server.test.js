@@ -19,6 +19,7 @@ var parameters = {hostname: '192.168.50.12', port: '7000', path: '/work/work_000
 describe('PatronClient', function () {
     describe('/', function () {
         // FIXME tests should not use same data, and shouldn't get more data than they require
+        servicesStub.getJson('/', {});
         servicesStub.getJson('/work/work_00001',
             {
                 "@id" : "http://deichman.no/work/work_1231",
@@ -65,7 +66,7 @@ describe('PatronClient', function () {
                 get(parameters.path).
                 end(function (err, res) {
                     expect(err).to.equal(null);
-                    expect(res).to.have.status(200);
+                    expect(res.status).to.equal(200);
                     done();
                 });
         });

@@ -40,7 +40,8 @@
     "chai" : "*",
     "chai-http" : "*",
     "http": "*",
-    "journey": "*",
+    "router": "*",
+    "finalhandler": "*",
     "cheerio": "*"
   },
   "private": true,
