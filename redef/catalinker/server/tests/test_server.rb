@@ -39,14 +39,14 @@ class TestServer < Test::Unit::TestCase
                      "@id" => "http://example.com/placeholder",
                      "@type" => "http://deichman.no/ontology#Work",
                      "http://deichman.no/ontology#creator" => "Sarah Smith",
-                     "http://deichman.no/ontology#date" => "2009",
+                     "http://deichman.no/ontology#year" => "2009",
                      "http://deichman.no/ontology#name" => "This is a test",
                      "http://deichman.no/ontology#biblio" => "2"
                  },
          :headers => {'Content-Type'=>'application/json'}).
     to_return(:status => 201, :body => "", :headers => { 'Location' => 'http://192.168.50.12:8080/work/w12' })
 
-    post '/work', params = {:title => "This is a test", :creator => "Sarah Smith", :date => "2009", :biblio => "2"}
+    post '/work', params = {:title => "This is a test", :creator => "Sarah Smith", :year => "2009", :biblio => "2"}
 
     assert last_response.redirect?, 'Response from catalinker should be redirect'
     assert_equal URI.encode('http://example.org/work?location=http://192.168.50.12:8080/work/w12'), last_response['Location']
@@ -60,7 +60,7 @@ class TestServer < Test::Unit::TestCase
                                     "@type" : "http://deichman.no/ontology#Work",
                                     "http://deichman.no/ontology#biblio" : "3",
                                     "http://deichman.no/ontology#creator" : "Sarah Smith",
-                                    "http://deichman.no/ontology#date" : "2015",
+                                    "http://deichman.no/ontology#year" : "2015",
                                     "http://deichman.no/ontology#name" : "tittel-blah"
                                 }', :headers => {'Content-Type'=>'application/json'})
 
@@ -78,7 +78,7 @@ class TestServer < Test::Unit::TestCase
                                     "@type" : "http://deichman.no/ontology#Work",
                                     "http://deichman.no/ontology#biblio" : "3",
                                     "http://deichman.no/ontology#creator" : "Sarah Smith",
-                                    "http://deichman.no/ontology#date" : "2015",
+                                    "http://deichman.no/ontology#year" : "2015",
                                     "http://deichman.no/ontology#name" : "tittel-blah"
                                 }', :headers => {'Content-Type'=>'application/json'})
 

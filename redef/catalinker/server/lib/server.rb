@@ -48,7 +48,7 @@ post '/work', :provides => 'text' do
         :creator => params[:creator],
         :title => params[:title],
         :biblio => params[:biblio],
-        :date => params[:date]
+        :year => params[:year]
       }
   model = WorkModel.fromData(data)
   json = model.dump(:jsonld, standard_prefixes: true)

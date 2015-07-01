@@ -23,7 +23,7 @@ class TestWorkModel < Test::Unit::TestCase
         rdf.type  => :type,
         deichman.creator => :creator,
         deichman.name => :title,
-        deichman.date => :date,
+        deichman.year => :year,
         deichman.biblio => :biblio
       }
     })
@@ -35,7 +35,7 @@ class TestWorkModel < Test::Unit::TestCase
           :id => solution.id.to_s.gsub(/http:\/\/.*\/work\//,''),
           :creator => solution.creator.to_s,
           :title => solution.title.to_s,
-          :date => solution.date.to_s,
+          :year => solution.year.to_s,
           :biblio => solution.biblio.to_s
       }
     end
