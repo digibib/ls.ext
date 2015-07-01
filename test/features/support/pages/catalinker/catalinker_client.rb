@@ -3,6 +3,10 @@
 require_relative '../page_root.rb'
 
 class CatalinkerClient < PageRoot
+    def ontology_ns
+      "http://192.168.50.12:8005/ontology#"
+    end
+
     def visit
       @browser.goto catalinker_client(:home)
       self
@@ -11,25 +15,18 @@ class CatalinkerClient < PageRoot
     def add(title, author, date, biblio)
       @browser.button(:data_automation_id => /new_work_button/).click
 
-      addTriple("navn", title)
-      addTriple("dato", date)
+      addTriple("name", title)
+      addTriple("year", date)
       addTriple("biblio", biblio) if biblio
-      addTriple("skaper", author)
+      addTriple("creator", author)
 
       self
     end
 
     def addTriple(field, value)
-      predicate_selector = @browser.element(:data_automation_id => /predicate_selector/)
-      predicate_selector.wait_until_present
-      predicate_selector.click
-      predicate_selector.send_keys field, :tab, :enter
-
-      # Occasionaly the predicate dropdown lingers on, so we fire an extra tab key
-      # to make it disappair.
-      @browser.send_keys :tab
-
-      input = @browser.text_field(:data_automation_id => field)
+      @browser.select_list(:data_automation_id => /predicate_selector/).select_value(self.ontology_ns+field)
+      @browser.button(:text => "+").click
+      input = @browser.text_field(:data_automation_id => self.ontology_ns+field)
       input.set(value)
     end
 
