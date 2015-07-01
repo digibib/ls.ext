@@ -34,8 +34,8 @@ public class RepositoryInMemory implements Repository {
 
     
     public RepositoryInMemory() {
-        sqb = new SPARQLQueryBuilder();
         bud = new BaseURIMock();
+        sqb = new SPARQLQueryBuilder(bud);
         Model model2 = ModelFactory.createDefaultModel();
         model2.read("testdata.ttl", "TURTLE");
         model = DatasetFactory.createMem();
@@ -58,13 +58,6 @@ public class RepositoryInMemory implements Repository {
     public Model retrieveWorkById(String id) {
         String uri = bud.getWorkURI() + id;
         try (QueryExecution qexec = QueryExecutionFactory.create(sqb.getGetWorkByIdQuery(uri), model)) {
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
-    public Model listWork() {
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.getListWorkQuery(), model)) {
             return qexec.execDescribe();
         }
     }

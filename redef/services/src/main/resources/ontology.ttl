@@ -46,8 +46,8 @@
   rdfs:comment "Relasjonen mellom en ting og en attribut som unikt identifiserer den i en gitt kontekst"@no .
 
 :biblio a rdfs:Property ;
-  rdfs:label "Biblio ID"@en ;
-  rdfs:label "Biblio ID"@no ;
+  rdfs:label "Biblio"@en ;
+  rdfs:label "Biblio"@no ;
   rdfs:domain :Work ;
   rdfs:range xsd:nonNegativeInteger ;
   rdfs:comment "The relationship between a work and a ls.ext-internal Koha-record identifier"@en ;

@@ -19,16 +19,17 @@ var parameters = {hostname: '192.168.50.12', port: '7000', path: '/work/work_000
 describe('PatronClient', function () {
     describe('/', function () {
         // FIXME tests should not use same data, and shouldn't get more data than they require
+        servicesStub.getJson('/', {});
         servicesStub.getJson('/work/work_00001',
             {
                 "@id" : "http://deichman.no/work/work_1231",
                 "@type" : "http://deichman.no/ontology#Work",
-                "http://deichman.no/ontology#biblioId" : "2",
-                "dcterms:date" : {"@value" : "1890", "@type" : "http://www.w3.org/2001/XMLSchema#gYear"},
-                "dcterms:title" : {"@value" : "Sult", "@lang" : "no"},
-                "dcterms:creator" : "Knut Hamsun",
+                "deichman:biblio" : "2",
+                "deichman:date" : "1890",
+                "deichman:name" : "Sult",
+                "deichman:creator" : "Knut Hamsun",
                 "@context" : {
-                    "dcterms" : "http://purl.org/dc/terms/"
+                    "deichman" : "http://deichman.no/ontology#"
                 }
             }
             );
@@ -39,12 +40,8 @@ describe('PatronClient', function () {
                     {
                         "@id": "_:b1",
                         "@type": "deichman:Item",
-                        "deichman:location": {
-                            "@id": "hutl"
-                        },
-                        "deichman:status": {
-                            "@id": "AVAIL"
-                        }
+                        "deichman:location": "hutl",
+                        "deichman:status": "AVAIL"
                     },
                     {
                         "@id": "http://deichman.no/work/x0123",
@@ -58,8 +55,7 @@ describe('PatronClient', function () {
                     }
                 ],
                 "@context": {
-                    "deichman": "http://deichman.no/ontology#",
-                    "dcterms": "http://purl.org/dc/terms/"
+                    "deichman": "http://deichman.no/ontology#"
                 }
             }
             );
@@ -70,7 +66,7 @@ describe('PatronClient', function () {
                 get(parameters.path).
                 end(function (err, res) {
                     expect(err).to.equal(null);
-                    expect(res).to.have.status(200);
+                    expect(res.status).to.equal(200);
                     done();
                 });
         });

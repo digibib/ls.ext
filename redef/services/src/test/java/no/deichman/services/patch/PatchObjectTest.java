@@ -32,21 +32,51 @@ public class PatchObjectTest {
     }
 
     @Test
-    public void test_can_get_set_operation(){
+    public void test_can_get_set_operation() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
         patchObject.setOperation(operation);
         assertEquals(operation,patchObject.getOperation());
     }
 
+    @Test(expected=PatchParserException.class)
+    public void test_getting_null_operation_fails() throws PatchParserException{
+        PatchObject patchObject = new PatchObject();
+        patchObject.getOperation();
+    }
+
+    @Test(expected=PatchParserException.class)
+    public void test_getting_null_subject_fails() throws PatchParserException{
+        PatchObject patchObject = new PatchObject();
+        patchObject.getSubject();
+    }
+
+    @Test(expected=PatchParserException.class)
+    public void test_getting_null_predicate_fails() throws PatchParserException{
+        PatchObject patchObject = new PatchObject();
+        patchObject.getPredicate();
+    }
+
+    @Test(expected=PatchParserException.class)
+    public void test_getting_null_object_fails() throws PatchParserException{
+        PatchObject patchObject = new PatchObject();
+        patchObject.getObjectValue();
+    }
+
+    @Test(expected=PatchParserException.class)
+    public void test_getting_null_to_patch() throws PatchParserException{
+        PatchObject patchObject = new PatchObject();
+        patchObject.toPatch();
+    }
+
     @Test
-    public void test_can_get_set_subject(){
+    public void test_can_get_set_subject() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
         patchObject.setSubject(subject);
         assertEquals(subject,patchObject.getSubject());
     }
 
     @Test
-    public void test_can_get_set_predicate(){
+    public void test_can_get_set_predicate() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
         patchObject.setPredicate(predicate);
         assertEquals(predicate,patchObject.getPredicate());

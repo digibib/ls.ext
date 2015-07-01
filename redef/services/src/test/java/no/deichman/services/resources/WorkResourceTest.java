@@ -44,6 +44,11 @@ public class WorkResourceTest {
     }
 
     @Test
+    public void test_class_exists(){
+        assertNotNull(new WorkResource());
+    }
+
+    @Test
     public void should_return_a_valid_json_work() {
         String workId = "work_00001";
         Response result = resource.getWorkJSON(workId);
@@ -90,7 +95,7 @@ public class WorkResourceTest {
         assertEquals(200, result.getStatus());
     }
 
-    
+
     @Test
     public void should_return_the_new_work() throws URISyntaxException{
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
@@ -106,10 +111,10 @@ public class WorkResourceTest {
         assertEquals(200, result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
-    
+
     @Test
     public void should_return_list_of_items(){
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\",\"deichman:biblioId\":\"1\"}}";
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\",\"deichman:biblio\":\"1\"}}";
         String workId = "work_SHOULD_EXIST";
 
         Response createResponse = resource.updateWork(work);

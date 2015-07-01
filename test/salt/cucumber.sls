@@ -50,4 +50,4 @@ cucumber:
 
 selenium-webdriver:
   gem.installed:
-    - version: 2.44.0
+    - version: 2.46.2

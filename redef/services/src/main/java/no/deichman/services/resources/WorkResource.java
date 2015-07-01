@@ -47,20 +47,23 @@ public class WorkResource {
 
     private final Service service;
     private BaseURI baseURI;
+    private JSONLD jsonld;
 
     public WorkResource() {
         super();
-        service = new ServiceDefault();
         baseURI = new BaseURIDefault();
+        jsonld = new JSONLD(baseURI);
+        service = new ServiceDefault(baseURI);
     }
 
     public WorkResource(KohaAdapter kohaAdapter, Repository repository, BaseURI b) {
         super();
-        ServiceDefault serviceDefault = new ServiceDefault();
+        ServiceDefault serviceDefault = new ServiceDefault(b);
         serviceDefault.setKohaAdapter(kohaAdapter);
         serviceDefault.setRepository(repository);
         service = serviceDefault;
         baseURI = b;
+        jsonld = new JSONLD(b);
     }
 
     @POST
@@ -102,7 +105,7 @@ public class WorkResource {
             throw new BadRequestException();
         }
 
-        return Response.ok().entity(JSONLD.getJson(m))
+        return Response.ok().entity(jsonld.getJson(m))
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "PATCH")
                        .allow("OPTIONS")
@@ -119,7 +122,8 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(JSONLD.getJson(model))
+
+        return Response.ok().entity(jsonld.getJson(model))
                             .header("Access-Control-Allow-Origin", "*")
                             .header("Access-Control-Allow-Methods", "GET")
                             .allow("OPTIONS")
@@ -163,7 +167,7 @@ public class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(JSONLD.getJson(model))
+        return Response.ok().entity(jsonld.getJson(model))
                             .header("Access-Control-Allow-Origin", "*")
                             .header("Access-Control-Allow-Methods", "GET")
                             .allow("OPTIONS")

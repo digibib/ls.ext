@@ -6,7 +6,6 @@ var debug = process.argv.indexOf('--debug') > 0,
     concat = require('gulp-concat'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
-    modify = require('gulp-modify'),
     replace = require('gulp-replace'),
     jshint = require('gulp-jshint'),
     gulpif = require('gulp-if'),
@@ -31,8 +30,8 @@ var debug = process.argv.indexOf('--debug') > 0,
     ],
     appJsFiles = {
         app: [
+            SRC + 'services/*.js',
             SRC + 'catalinkerApp.js',
-            SRC + 'components/**/*.js',
             SRC + 'views/**/*.js'
         ]
     },
@@ -46,14 +45,17 @@ var debug = process.argv.indexOf('--debug') > 0,
             SRC + 'lib/angular-route.min.js',
             SRC + 'lib/*.js',
             SRC + 'specs/lib/angular-mocks.js',
+            SRC + 'app/services/*.js',
             SRC + 'app/catalinkerApp.js',
-            SRC + 'app/components/**/*.js',
-            SRC + 'specs/**/*Spec.js'
+            SRC + 'app/views/**/*.js',
+            SRC + 'specs/**/*Spec.js',
+            SRC + 'specs/mocks/*.json*/'
     ],
     jsSrcFiles = [
         'app/**/*.js',
         'specs/*.js',
-        'specs/components/**/*.js'
+        'specs/componentsSpecs/**/*.js',
+        'specs/servicesSpecs/**/*.js'
     ],
     mockfiles = [
         'specs/mocks/*.json'
@@ -67,15 +69,6 @@ function copy(src, dest) {
     gulp.src(SRC + src)
         .pipe(gulp.dest(dest));
 }
-
-function buildHtmlApp(indexhtml, views) {
-    gulp.src(SRC + indexhtml);
-}
-
-function addTemplateTag(content) {
-    return content;
-}
-
 
 gulp.task('buildAll', ['buildLibs', 'buildApp'], function () {
 

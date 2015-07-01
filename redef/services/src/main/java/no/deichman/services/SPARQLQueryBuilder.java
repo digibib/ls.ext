@@ -14,40 +14,35 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
 
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIDefault;
+
 public class SPARQLQueryBuilder {
+    private BaseURI baseURI;
+
+    SPARQLQueryBuilder(){
+        baseURI = new BaseURIDefault();
+    }
+
+    public SPARQLQueryBuilder(BaseURI base){
+        baseURI = base;
+    }
 
     public Query dumpModel() {
-    	String q = "describe * where {?s ?p ?o}";
+    	String q = "DESCRIBE * WHERE {?s ?p ?o}";
     	return QueryFactory.create(q);
     }
 
 	public Query getGetWorkByIdQuery(String id) {
-        String queryString =
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
-                + "PREFIX deichman: <http://deichman.no/ontology#>\n"
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "DESCRIBE <" + id + ">";
+        String queryString = "DESCRIBE <" + id + ">";
         return QueryFactory.create(queryString);
-    }
-
-    public Query getListWorkQuery() {
-        String queryString =
-                "PREFIX deichman: <http://deichman.no/ontology#>\n"
-                + "describe ?s where\n"
-                + " {\n"
-                + " ?s a deichman:Work"
-                + "}";
-        return QueryFactory.create(queryString);
-
     }
 
     public String getUpdateWorkQueryString(Model work) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);
         String data = sw.toString();
-        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
-                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
-                + "INSERT DATA {\n"
+        return "INSERT DATA {\n"
                 + "\n"
                 + data
                 + "\n"
@@ -55,8 +50,7 @@ public class SPARQLQueryBuilder {
     }
 
     private String renameWorkResource(String newURI) {
-        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
-                + "DELETE {\n"
+        return "DELETE {\n"
                 + " ?s ?p ?o .\n"
                 + "}\n"
                 + "INSERT {\n"
@@ -74,9 +68,7 @@ public class SPARQLQueryBuilder {
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);
         String data = sw.toString();
 
-        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
-                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
-                + "INSERT DATA {\n"
+        return "INSERT DATA {\n"
                 + "\n"
                 + data
                 + "\n"
@@ -84,9 +76,7 @@ public class SPARQLQueryBuilder {
     }
 
     public Query getItemsFromModelQuery(String id) {
-        String q = "PREFIX deichman: <http://deichman.no/ontology#>\n"
-                + "PREFIX d: <http://purl.org/deichman/>\n"
-                + "PREFIX frbr: <http://purl.org/vocab/frbr/core#>\n"
+        String q = "PREFIX deichman: <" + baseURI.getOntologyURI() + ">\n"
                 + "CONSTRUCT {\n"
                 + "  <" + id + "> deichman:hasEdition"
                 + "( ["
@@ -95,9 +85,9 @@ public class SPARQLQueryBuilder {
                 + "    deichman:status ?status"
                 + "  ])"
                 + "} WHERE { \n"
-                + "  ?uri a frbr:Item ;\n"
-                + "    d:location ?location;\n"
-                + "    d:status ?status .\n"
+                + "  ?uri a deichman:Item ;\n"
+                + "    deichman:location ?location;\n"
+                + "    deichman:status ?status .\n"
                 + "}";
        return QueryFactory.create(q);
     }
@@ -108,7 +98,7 @@ public class SPARQLQueryBuilder {
     }
 
 	public Query checkIfResourceExistsInGraph(String uri, String graph) {
-        String q = "ASK {GRAPH <" + graph + ">  {<" + uri + "> ?p ?o}}";
+        String q = "ASK {GRAPH <" + graph + "> {<" + uri + "> ?p ?o}}";
         return QueryFactory.create(q);
 	}
 
@@ -137,9 +127,7 @@ public class SPARQLQueryBuilder {
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
 
-        return "PREFIX deichman: <http://deichman.no/ontology#>\n"
-                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
-                + "INSERT DATA {\n"
+        return "INSERT DATA {\n"
                 + "\n"
                 + data
                 + "\n"

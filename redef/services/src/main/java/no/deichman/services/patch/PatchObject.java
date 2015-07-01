@@ -7,6 +7,8 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 
+import no.deichman.services.error.PatchParserException;
+
 public class PatchObject {
 
     private String op;
@@ -21,16 +23,23 @@ public class PatchObject {
         s = uri;
     }
 
-    public String getSubject() {
-        return s;
+    public String getSubject() throws PatchParserException {
+        if (s != null) {
+            return s;
+        } else {
+            throw new PatchParserException("No subject was found");
+        }
     }
 
     public void setPredicate(String pred) {
         p = pred;
     }
-    public String getPredicate() {
-        return p;
-    }
+    public String getPredicate() throws PatchParserException {
+        if (p != null) {
+            return p;
+        } else {
+            throw new PatchParserException("No predicate was found");
+        }    }
 
     public void setObjectValue(String obj) {
         o.put("value", obj);
@@ -44,8 +53,12 @@ public class PatchObject {
         o = object2;
     }
 
-    public String getObjectValue() {
-        return o.get("value").toString();
+    public String getObjectValue() throws PatchParserException {
+        if (o.get("value") != null) {
+            return o.get("value").toString();
+        } else {
+            throw new PatchParserException("No object value was found");
+        }
     }
 
     public String getObjectDatatype() {
@@ -60,18 +73,25 @@ public class PatchObject {
         op = operation2;
     }
 
-    public String getOperation() {
-        return op;
+    public String getOperation() throws PatchParserException {
+        if (op != null) {
+            return op;
+        } else {
+            throw new PatchParserException("No operation was found");
+        }
     }
 
-    public Patch toPatch() {
+    public Patch toPatch() throws PatchParserException {
+
         RDFNode rdfNode = null;
-        if (getObjectLanguage() != null){
+        if (getObjectLanguage() != null && getObjectValue() != null){
             rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectLanguage());
-        } else if (getObjectDatatype() != null) {
+        } else if (getObjectDatatype() != null && getObjectValue() != null) {
             rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectDatatype());
-        } else {
+        } else if (getObjectValue() != null) {
             rdfNode = ResourceFactory.createPlainLiteral(getObjectValue());
+        } else {
+            throw new PatchParserException("No object was found");
         }
 
         Statement statement = ResourceFactory.createStatement(

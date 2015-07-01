@@ -36,13 +36,12 @@ class TestServer < Test::Unit::TestCase
     stub_request(:post, "http://192.168.50.12:8080/work").
         with(:body =>
                  {
-                     "@context" => { "dc" => "http://purl.org/dc/terms/" },
                      "@id" => "http://example.com/placeholder",
                      "@type" => "http://deichman.no/ontology#Work",
-                     "dc:creator" => "Sarah Smith",
-                     "dc:date" => "2009",
-                     "dc:title" => "This is a test",
-                     "http://deichman.no/ontology#biblioId" => "2"
+                     "http://deichman.no/ontology#creator" => "Sarah Smith",
+                     "http://deichman.no/ontology#date" => "2009",
+                     "http://deichman.no/ontology#name" => "This is a test",
+                     "http://deichman.no/ontology#biblio" => "2"
                  },
          :headers => {'Content-Type'=>'application/json'}).
     to_return(:status => 201, :body => "", :headers => { 'Location' => 'http://192.168.50.12:8080/work/w12' })
@@ -58,15 +57,11 @@ class TestServer < Test::Unit::TestCase
         with(:headers => {'Accept-Encoding'=>'json'}).
         to_return(:status => 200, :body => '{
                                     "@id" : "http://192.168.50.12:8080/work/w12",
-                                    "@type" : "deichman:Work",
-                                    "deichman:biblioId" : "3",
-                                    "dcterms:creator" : "Sarah Smith",
-                                    "dcterms:date" : "2015",
-                                    "dcterms:title" : "tittel-blah",
-                                    "@context" : {
-                                      "deichman" : "http://deichman.no/ontology#",
-                                      "dcterms" : "http://purl.org/dc/terms/"
-                                    }
+                                    "@type" : "http://deichman.no/ontology#Work",
+                                    "http://deichman.no/ontology#biblio" : "3",
+                                    "http://deichman.no/ontology#creator" : "Sarah Smith",
+                                    "http://deichman.no/ontology#date" : "2015",
+                                    "http://deichman.no/ontology#name" : "tittel-blah"
                                 }', :headers => {'Content-Type'=>'application/json'})
 
     get 'work?location=http://192.168.50.12:8080/work/w12'
@@ -80,15 +75,11 @@ class TestServer < Test::Unit::TestCase
         with(:headers => {'Accept-Encoding'=>'json'}).
         to_return(:status => 200, :body => '{
                                     "@id" : "http://192.168.50.12:8080/work/work_THIS_EXISTS",
-                                    "@type" : "deichman:Work",
-                                    "deichman:biblioId" : "3",
-                                    "dcterms:creator" : "Sarah Smith",
-                                    "dcterms:date" : "2015",
-                                    "dcterms:title" : "tittel-blah",
-                                    "@context" : {
-                                      "deichman" : "http://deichman.no/ontology#",
-                                      "dcterms" : "http://purl.org/dc/terms/"
-                                    }
+                                    "@type" : "http://deichman.no/ontology#Work",
+                                    "http://deichman.no/ontology#biblio" : "3",
+                                    "http://deichman.no/ontology#creator" : "Sarah Smith",
+                                    "http://deichman.no/ontology#date" : "2015",
+                                    "http://deichman.no/ontology#name" : "tittel-blah"
                                 }', :headers => {'Content-Type'=>'application/json'})
 
     get 'work/work_THIS_EXISTS'

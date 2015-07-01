@@ -136,96 +136,104 @@
 
 
     angular.module('catalinker.triplestore', ['catalinker.config'])
-    .factory('tripleStore', ['$http', '$q', '$timeout', 'resourceApiUri', function ($http, $q,  $timeout, baseUri) {
-        
-        Triple.prototype.save = function () {
-            var self = this,
-                deferred = $q.defer(),
-                patch,
-                isNew = this.isNew;
-            if (this.value === this.savedValue && !this.isNew) { //value is not changed
-                deferred.resolve();
-                return deferred.promise;
-            }
-            this.validate();
-            if (!this.isValid) {
-                deferred.reject();
-                return deferred.promise;   
-            }
-            this.isSaving = true;
+        .factory('$tripleStore', ['$http', '$q', '$timeout', '$config', function ($http, $q,  $timeout, $config) {
+            var resourceApiUri,
+                tripleStoreDeferred = $q.defer();
 
-            patch = this.isNew ? Patch.add(this) : Patch.modify(this);
-
-            $http.patch(this.subject, patch, { headers: { Accept: 'text/html, application/json', 'Content-Type': 'application/ldpatch+json' } }).success(function() {
-                self.isSaving = false;
-                self.isNew = false;
-                self.savedValue = self.value;
-                deferred.resolve();
-            }).error(function() {
-                self.isSaving = false;
-                self.isNew = isNew;
-                deferred.reject();
+            $config.ready.then(function(cfg) {
+                resourceApiUri = cfg.resourceApiUri;
+                tripleStoreDeferred.resolve();
+            }, function() {
+                tripleStoreDeferred.reject();
             });
 
-            return deferred.promise;
-        };
-        
-        Triple.prototype.remove = function() {
-            var self = this,
-                deferred = $q.defer();
-            if (self.isNew) {
-                deferred.resolve();
-                return deferred.promise;
-            }        
+            Triple.prototype.save = function () {
+                var self = this,
+                    deferred = $q.defer(),
+                    patch,
+                    isNew = this.isNew;
+                if (this.value === this.savedValue && !this.isNew) { //value is not changed
+                    deferred.resolve();
+                    return deferred.promise;
+                }
+                this.validate();
+                if (!this.isValid) {
+                    deferred.reject();
+                    return deferred.promise;   
+                }
+                this.isSaving = true;
 
-            self.isSaving = true;
+                patch = this.isNew ? Patch.add(this) : Patch.modify(this);
 
-            $http.patch(this.subject, [Patch.remove(this)]).success(function() {
-                self.isSaving = false;
-                self.isNew = true;
-                deferred.resolve();
-            }).error(function(){
-                self.isSaving = false;
-                self.isNew = false;
-                deferred.reject();
-            });
-
-            return deferred.promise;
-        };
-
-
-        function getDescription(itemType, id) {
-            var deferred = $q.defer();
-
-            baseUri.then(function (baseUri) {
-                var uri = baseUri + itemType + '/' + id;
-                $http.get(uri).success(function(data, status, headers, config){
-                    var description = new Description(data, uri);
-                    deferred.resolve(description);
-                }).error(function(data, status, headers, config) {
-                    deferred.reject(status);
+                $http.patch(this.subject, patch, { headers: { Accept: 'text/html, application/json', 'Content-Type': 'application/ldpatch+json' } }).success(function() {
+                    self.isSaving = false;
+                    self.isNew = false;
+                    self.savedValue = self.value;
+                    deferred.resolve();
+                }).error(function() {
+                    self.isSaving = false;
+                    self.isNew = isNew;
+                    deferred.reject();
                 });
-            }, function (error) {
-                deferred.reject(error);
-            });
 
-            return deferred.promise;
-        }
+                return deferred.promise;
+            };
+        
+            Triple.prototype.remove = function() {
+                var self = this,
+                    deferred = $q.defer();
+                if (self.isNew) {
+                    deferred.resolve();
+                    return deferred.promise;
+                }        
 
-        function newDescription(descriptionType) {
-            var deferred = $q.defer(),
-                baseId = 'http://deichman.no/',
-                newObject;
+                self.isSaving = true;
 
-            newObject = {
-                '@id': 'http://example.com/work1', //must be a valid url. To be deprecated
-                '@type': 'http://deichman.no/ontology#' + descriptionType //Implicit in uri, To be deprecated
+                $http.patch(this.subject, [Patch.remove(this)]).success(function() {
+                    self.isSaving = false;
+                    self.isNew = true;
+                    deferred.resolve();
+                }).error(function(){
+                    self.isSaving = false;
+                    self.isNew = false;
+                    deferred.reject();
+                });
+
+                return deferred.promise;
             };
 
-            baseUri.then(function (baseUri) {
-                var uri = baseUri + descriptionType;
+
+            function getDescription(itemType, id) {
+                var deferred = $q.defer();
+
+                $config.ready.then(function (cfg) {
+                    var uri = cfg.resourceApiUri + itemType + '/' + id;
+                    $http.get(uri).success(function(data, status, headers, config){
+                        var description = new Description(data, uri);
+                        deferred.resolve(description);
+                    }).error(function(data, status, headers, config) {
+                        deferred.reject(status);
+                    });
+                }, function (error) {
+                    deferred.reject(error);
+                });
+
+                return deferred.promise;
+            }
+
+            function newDescription(descriptionType) {
+                var deferred = $q.defer(),
+                    baseId = 'http://deichman.no/',
+                    newObject;
+
+                newObject = {
+                    '@id': 'http://example.com/work1', //must be a valid url. To be deprecated
+                    '@type': 'http://deichman.no/ontology#' + descriptionType //Implicit in uri, To be deprecated
+                };
+
+                var uri = resourceApiUri + descriptionType;
                 $http.post(uri, newObject).success(function(data, status, headers) { //, config
-                    var itemUri = headers('Location').replace(baseId, baseUri);
+                    var itemUri = headers('Location').replace(baseId, resourceApiUri);
                     $http.get(itemUri).success(function(itemData) { //, status, headers, config
                         var description = new Description(itemData, itemUri);
                         deferred.resolve(description);
@@ -235,17 +243,15 @@
                 }).error(function(data, status) { //, headers, config
                     deferred.reject(status);
                 });
-            }, function (error) {
-                deferred.reject(error);
-            });
-            return deferred.promise;
-        }
+                return deferred.promise;
+            }
 
-        return {
-            Triple: Triple,
-            getDescription: getDescription,
-            newDescription: newDescription
-        };
+            return {
+                Triple: Triple,
+                getDescription: getDescription,
+                newDescription: newDescription,
+                ready: tripleStoreDeferred.promise
+            };
     }]);
 
 }());

@@ -1,6 +1,6 @@
 ﻿(function(angular) {
-    angular.module('catalinker', ['ngMaterial', 'ngRoute', 'catalinker.vocabulary', 'catalinker.triplestore'])
-    .controller('AppController', ['$scope', 'vocabulary', function($scope, vocabulary) {
+    angular.module('catalinker', ['ngMaterial', 'ngRoute', 'catalinker.vocabulary', 'catalinker.triplestore', 'catalinker.ontology', 'catalinker.languageCode'])
+    .controller('AppController', ['$scope', '$vocabulary', function($scope, $vocabulary) {
             
         }])
     .config(['$routeProvider', function ($routeProvider) {
@@ -21,4 +21,3 @@
             .dark();
     }]);
 }(angular));
-

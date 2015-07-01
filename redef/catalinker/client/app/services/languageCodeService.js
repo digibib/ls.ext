@@ -1,7 +1,7 @@
 ﻿(function(module) {
 
     module
-    .factory('$languageCode', [ function () {
+    .factory('$languageCode', [function () {
         return {
                 "aa" : "Afar",
                 "ab" : "Abkhasisk",
@@ -193,4 +193,4 @@
     }]);
 
 
-}(angular.module('catalinker')));
+}(angular.module('catalinker.languageCode',[])));

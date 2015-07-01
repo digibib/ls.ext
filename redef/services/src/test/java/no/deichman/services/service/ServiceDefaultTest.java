@@ -31,13 +31,14 @@ import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.uridefaults.BaseURIMock;
 
 public class ServiceDefaultTest {
     
     private ServiceDefault service;
     @Before
     public void setup(){
-        service = new ServiceDefault();
+        service = new ServiceDefault(new BaseURIMock());
         service.setRepository(new RepositoryInMemory());
         service.setKohaAdapter(new KohaAdapterMock());
     }
@@ -72,6 +73,7 @@ public class ServiceDefaultTest {
     @Test
     public void test_koha_adapter_is_set(){
         KohaAdapterMock ka = new KohaAdapterMock();
+        service.setBiblioIDProperty("http://deichman.no/ontology#");
         service.setKohaAdapter(ka);
         assertNotNull(service.retrieveWorkItemsById("626460"));
     }
@@ -79,6 +81,7 @@ public class ServiceDefaultTest {
     @Test
     public void test_retrieve_work_items_by_id(){
         Model m = service.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
+        RDFDataMgr.write(System.out, m, Lang.TURTLE);
         Property p = ResourceFactory.createProperty("http://deichman.no/ontology#hasEdition");
         NodeIterator ni = m.listObjectsOfProperty(p);
         
@@ -93,7 +96,7 @@ public class ServiceDefaultTest {
     @Test
     public void test_create_work(){
         Repository r = new RepositoryInMemory();
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblioId\":\"1\"}}";
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         service.setRepository(r);
         String workId = service.createWork(work);
         Statement s = ResourceFactory.createStatement(
@@ -104,7 +107,7 @@ public class ServiceDefaultTest {
     @Test
     public void test_delete_work(){
         Repository r = new RepositoryInMemory();
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblioId\":\"1\"}}";
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         service.setRepository(r);
         String workId = service.createWork(work);
         Statement s = ResourceFactory.createStatement(
@@ -145,4 +148,12 @@ public class ServiceDefaultTest {
                 "<"+ workId + "> <http://deichman.no/ontology#color> \"red\" .");
     }
 
+    @Test(expected=PatchParserException.class)
+    public void test_bad_patch_fails() throws UnsupportedEncodingException, PatchException, PatchParserException{
+        assertNotNull(service);
+        String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_DEFAULT_PATCH\"}}";
+        String workId = service.createWork(workData);
+        String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
+        Model patchedModel = service.patchWork(workId.replace("http://deichman.no/work/", ""),badPatchData);
+    }
 }

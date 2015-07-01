@@ -3,6 +3,7 @@ package no.deichman.services.resources;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import no.deichman.services.ontology.OntologyService;
+import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.utils.JSONLD;
 import org.apache.jena.riot.Lang;
@@ -21,9 +22,15 @@ import java.nio.charset.StandardCharsets;
 public class OntologyResource {
 
     private final OntologyService ontologyService;
+    private BaseURI baseURI;
 
-    public OntologyResource() {
-        this(new OntologyService(new BaseURIDefault()));
+    public OntologyResource(){
+        this(new BaseURIDefault());
+    }
+
+    public OntologyResource(BaseURI base) {
+        this(new OntologyService(base));
+        this.baseURI = base;
     }
 
     public OntologyResource(OntologyService ontologyService) {
@@ -50,11 +57,12 @@ public class OntologyResource {
                 .build();
     }
 
-    private static String asJson(String turtleOntology) {
+    private String asJson(String turtleOntology) {
         InputStream is = new ByteArrayInputStream(turtleOntology.getBytes(StandardCharsets.UTF_8));
         Model m = ModelFactory.createDefaultModel();
         RDFDataMgr.read(m, is, Lang.TURTLE);
-        return JSONLD.getJson(m);
+        JSONLD jsonld = new JSONLD(baseURI);
+        return jsonld.getJson(m);
     }
 
 }

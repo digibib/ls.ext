@@ -12,9 +12,9 @@ class CatalinkerClient < PageRoot
       @browser.button(:data_automation_id => /new_work_button/).click
 
       addTriple("navn", title)
-      addTriple("skaper", author)
       addTriple("dato", date)
-      addTriple("biblio ID", biblio) if biblio
+      addTriple("biblio", biblio) if biblio
+      addTriple("skaper", author)
 
       self
     end
@@ -24,6 +24,10 @@ class CatalinkerClient < PageRoot
       predicate_selector.wait_until_present
       predicate_selector.click
       predicate_selector.send_keys field, :tab, :enter
+
+      # Occasionaly the predicate dropdown lingers on, so we fire an extra tab key
+      # to make it disappair.
+      @browser.send_keys :tab
 
       input = @browser.text_field(:data_automation_id => field)
       input.set(value)

@@ -34,8 +34,8 @@ public class RepositoryDefault implements Repository {
 
     public RepositoryDefault() {
         System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
-        sqb = new SPARQLQueryBuilder();
         bud = new BaseURIDefault();
+        sqb = new SPARQLQueryBuilder(bud);
     }
 
     @Override
@@ -43,13 +43,6 @@ public class RepositoryDefault implements Repository {
         String uri = bud.getWorkURI() + id;
         System.out.println("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.getGetWorkByIdQuery(uri))) {
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
-    public Model listWork() {
-        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.getListWorkQuery())) {
             return qexec.execDescribe();
         }
     }
