@@ -11,23 +11,11 @@
     <!--scripts-->
 
 </head>
-<body ng-controller="AppController" layout="column">
-
-    <section layout="row" flex>
-        <!--Left-->
-        <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
-            <md-content layout-padding>
-                <md-input-container>
-                    <label>Søk</label>
-                    <md-input placeholder="Søk"></md-input>
-                </md-input-container>
-            </md-content>
-        </md-sidenav>
-
+<body ng-controller="AppController">
+    <section>
         <!--Main-->
-        <md-content flex layout-padding ng-view>
-        </md-content>
+        <div ng-view>
+        </div>
     </section>
-
 </body>
 </html>

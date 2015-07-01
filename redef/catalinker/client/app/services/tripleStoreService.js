@@ -89,7 +89,7 @@
         }
         this.subject = t.subject || '';
         this.type = t.type || t.predicate;
-        this.predicate = t.predicate;
+        this.predicate = t.predicate || '';
         this.value = value;
         this.savedValue = value;
         

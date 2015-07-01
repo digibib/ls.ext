@@ -1,5 +1,5 @@
 ﻿(function(angular) {
-    angular.module('catalinker', ['ngMaterial', 'ngRoute', 'catalinker.vocabulary', 'catalinker.triplestore', 'catalinker.ontology', 'catalinker.languageCode'])
+    angular.module('catalinker', ['ngRoute', 'catalinker.vocabulary', 'catalinker.triplestore', 'catalinker.ontology', 'catalinker.languageCode'])
     .controller('AppController', ['$scope', '$vocabulary', function($scope, $vocabulary) {
             
         }])
@@ -13,11 +13,5 @@
                 templateUrl: 'app/views/work/work.html',
                 controller: 'WorkController'
             });
-        }])
-    .config(['$mdThemingProvider', function ($mdThemingProvider) {
-        // Configure a dark theme with primary foreground yellow
-        $mdThemingProvider.theme('docs-dark', 'default')
-            .primaryPalette('yellow')
-            .dark();
-    }]);
+        }]);
 }(angular));

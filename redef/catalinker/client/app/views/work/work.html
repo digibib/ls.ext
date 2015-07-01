@@ -1,9 +1,9 @@
 ﻿<form name="entityForm">
     <div layout="column">
-        <md-button data-automation-id="new_work_button" ng-click="newWork()">+ New Work</md-button>
+        <button data-automation-id="new_work_button" ng-click="newWork()">+ New Work</button>
         <h2 data-automation-id="work_id">{{id}}</h2>
-        <md-content layout="column" layout-sm="column" ng-repeat="triple in triples">
-            <md-input-container ng-switch on="triple.type" style="width:90%">
+        <div ng-repeat="triple in triples">
+            <div ng-switch on="triple.type" style="width:90%">
                 <label>
                     {{labels[triple.predicate]['default'] || triple.predicate}}
                 </label>
@@ -17,25 +17,14 @@
                     <!--div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
                 </div>
 
-                <md-progress-linear md-mode="indeterminate" ng-show="triple.isSaving" style="position:absolute;top:44px"></md-progress-linear>
-                <md-progress-linear md-mode="determinate" ng-show="triple.isNew" style="position:absolute;top:44px" class="md-accent"></md-progress-linear>
-                <md-progress-linear md-mode="determinate" ng-show="!triple.isNew && triple.value !== triple.savedValue" style="position:absolute;top:44px" class="md-warn"></md-progress-linear>
-                <md-button class="md-fab md-raised md-mini" style="position:absolute;right:0;font-size:small" ng-click="removeTriple(triple)" title="Slett">X</md-button>
-            </md-input-container>
+                <button style="position:absolute;right:0;font-size:small" ng-click="removeTriple(triple)" title="Slett">X</button>
+            </div>
 
-        </md-content>
+        </div>
     </div>
 </form>
-<div layout="column">
-    <md-content layout-padding layout="row" layout-sm="column">
-        <md-input-container>
-            <md-select ng-model="selectedField" data-automation-id="predicate_selector" placeholder="Felt">
-                <md-select-label>{{selectedField.label.default || 'Velg felt'}}</md-select-label>
-                <md-option ng-repeat="field in fields" ng-value="field">{{field.label.default}}</md-option>
-            </md-select>
-
-        </md-input-container>
-        <md-button ng-click="add()" ng-disabled="!selectedField">+</md-button>
-
-    </md-content>
+<div>
+    <select ng-model="selectedField" data-automation-id="predicate_selector" placeholder="Felt" ng-options="field.label.default for field in fields track by field.predicate">
+    </select>
+    <button ng-click="add()" ng-disabled="!selectedField">+</button>
 </div>
