@@ -48,5 +48,6 @@ Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
 end
 
 Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
+  @browser.refresh
   @site.PatronClient.existsExemplar().should == true
 end
