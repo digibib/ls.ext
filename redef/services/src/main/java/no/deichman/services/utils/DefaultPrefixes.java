@@ -7,7 +7,7 @@ import java.util.Map;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 import no.deichman.services.uridefaults.BaseURI;
-
+    
 public class DefaultPrefixes {
 
     Map<String,String> prefixMapping = new HashMap<String,String>();
@@ -26,15 +26,15 @@ public class DefaultPrefixes {
         prefixMapping.put("deichman", this.baseURI.getOntologyURI());
     }
 
-    public void setPrefix(String prefix, String ns){
+    public void set(String prefix, String ns){
         prefixMapping.put(prefix, ns);
     }
 
-    public String getNS(String prefix) {
+    public String get(String prefix) {
         return prefixMapping.get(prefix);
     }
 
-    public Map<String, String> getDefaultNSes() {
+    public Map<String, String> getAll() {
         return prefixMapping;
     }
 }

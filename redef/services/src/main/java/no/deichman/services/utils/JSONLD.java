@@ -38,7 +38,7 @@ public class JSONLD {
 
             final Map<String, Object> ctx = new HashMap<>();
             DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI);
-            ctx.put("@context", defaultPrefixes.getDefaultNSes());
+            ctx.put("@context", defaultPrefixes.getAll());
 
             Object compact = JsonLdProcessor.compact(jsonObject, ctx, options);
 
