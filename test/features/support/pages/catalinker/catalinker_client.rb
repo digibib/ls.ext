@@ -25,6 +25,7 @@ class CatalinkerClient < PageRoot
 
     def addTriple(field, value)
       @browser.select_list(:data_automation_id => /predicate_selector/).select_value(self.ontology_ns+field)
+      Watir::Wait.until { @browser.button(:text => "+").enabled? }
       @browser.button(:text => "+").click
       input = @browser.text_field(:data_automation_id => self.ontology_ns+field)
       input.set(value)
