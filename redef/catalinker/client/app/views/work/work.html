@@ -8,9 +8,9 @@
                     {{labels[triple.predicate]['default'] || triple.predicate}}
                 </label>
 
-                <input ng-switch-when="date" data-ng-model="triple.value" data-automation-id="{{labels[triple.predicate]['default'] || triple.predicate}}" type="date" name="{{triple.id}}" />
-                <input ng-switch-when="email" data-ng-model="triple.value" data-automation-id="{{labels[triple.predicate]['default'] || triple.predicate}}" type="email" name="{{triple.id}}" />
-                <input ng-switch-default data-ng-model="triple.value" data-automation-id="{{labels[triple.predicate]['default'] || triple.predicate}}" name="{{triple.id}}" ng-blur="triple.save()" ng-disabled="triple.isReadOnly || triple.isSaving"/>
+                <input ng-switch-when="date" data-ng-model="triple.value" data-automation-id="{{triple.predicate}}" type="date" name="{{triple.id}}" />
+                <input ng-switch-when="email" data-ng-model="triple.value" data-automation-id="{{triple.predicate}}" type="email" name="{{triple.id}}" />
+                <input ng-switch-default data-ng-model="triple.value" data-automation-id="{{triple.predicate}}" name="{{triple.id}}" ng-blur="triple.save()" ng-disabled="triple.isReadOnly || triple.isSaving"/>
 
                 <div ng-show ng-messages="entityForm.description.$error">
                     <div ng-message="required">Dette er påkrevd.</div>
