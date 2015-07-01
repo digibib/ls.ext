@@ -126,6 +126,12 @@ public class WorkResourceTest {
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
+    @Test(expected=NotFoundException.class)
+    public void should_404_on_empty_items_list(){
+        Response result = resource.getWorkItems("DOES_NOT_EXIST");
+        assertEquals(result.getStatus(),404);
+    }
+
     @Test
     public void patch_should_return_status_400() throws Exception {
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
@@ -172,6 +178,56 @@ public class WorkResourceTest {
     @Test(expected = NotFoundException.class)
     public void patching_a_non_existing_resource_should_return_404() throws Exception {
         resource.patchWork("a_missing_work1234", "{}");
+    }
+
+    @Test
+    public void test_CORS_work_base(){
+        String reqHeader = "application/ld+json";
+        Response reponse = resource.corsWorkBase(reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    }
+
+    @Test
+    public void test_CORS_work_base_empty_request_header(){
+        String reqHeader = "";
+        Response response = resource.corsWorkBase(reqHeader);
+        assert(response.getHeaderString("Access-Control-Allow-Headers") == null);
+        assertEquals(response.getHeaderString("Access-Control-Allow-Origin"),"*");
+        assertEquals(response.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    }
+
+    @Test(expected=NotFoundException.class)
+    public void test_delete_work_raises_not_found_exception(){
+        resource.deleteWork("work_DOES_NOT_EXIST_AND_FAILS");
+    }
+
+    @Test
+    public void test_delete_work() throws URISyntaxException{
+        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
+        Response createResponse = resource.createWork(work);
+        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
+        Response response = resource.deleteWork(workId);
+        assertEquals(response.getStatus(),204);
+    }
+
+    @Test
+    public void test_CORS_work_id(){
+        String reqHeader = "application/ld+json";
+        Response reponse = resource.corsWorkId(reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    }
+
+    @Test
+    public void test_CORS_work_id_empty_request_header(){
+        String reqHeader = "";
+        Response response = resource.corsWorkId(reqHeader);
+        assert(response.getHeaderString("Access-Control-Allow-Headers") == null);
+        assertEquals(response.getHeaderString("Access-Control-Allow-Origin"),"*");
+        assertEquals(response.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
     }
 
     private boolean isValidJSON(final String json) {
