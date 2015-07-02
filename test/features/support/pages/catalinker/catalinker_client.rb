@@ -28,6 +28,7 @@ class CatalinkerClient < PageRoot
       Watir::Wait.until { @browser.button(:text => "+").enabled? }
       @browser.button(:text => "+").click
       input = @browser.text_field(:data_automation_id => self.ontology_ns+field)
+      input.wait_until_present
       input.set(value)
     end
 
