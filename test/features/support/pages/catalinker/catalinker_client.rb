@@ -15,6 +15,7 @@ class CatalinkerClient < PageRoot
     def add(title, author, date, biblio)
       btn = @browser.button(:data_automation_id => /new_work_button/)
       btn.wait_until_present
+      Watir::Wait.until { btn.enabled? }
       btn.click
 
       addTriple("name", title)
