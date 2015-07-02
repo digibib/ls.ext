@@ -86,7 +86,7 @@ Vagrant.configure(2) do |config|
     end
 
     config.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "768"]
+      vb.customize ["modifyvm", :id, "--memory", "1048"]
     end
 
     # http://fgrehm.viewdocs.io/vagrant-cachier
