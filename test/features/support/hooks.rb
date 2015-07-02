@@ -49,7 +49,13 @@ end
 After do # The final hook
   @site = nil
   @browser.close if @browser
-  @headless.destroy if @headless
+  if @headless
+    @headless.destroy
+    # We sleep a bit to make sure the firefox process is really closed before
+    # opening a new selenium connection. An attempt to Selenium error:
+    # "unable to obtain stable firefox connection in 60 seconds"
+    sleep 1
+  end
 end
 
 def title_of(scenario)
