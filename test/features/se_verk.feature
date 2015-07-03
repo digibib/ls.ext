@@ -18,13 +18,13 @@ Egenskap: Se verk
     Når jeg er på sida til verket
     Så ser jeg en liste over eksemplarer knyttet til verket
 
-  @xvfb
+  @wip
   Scenario: Se på verksopplysninger på verkssiden 2
     Gitt at det finnes et verk (ny klient)
     Når jeg er på sida til verket
     Så ser jeg informasjon om verkets tittel og utgivelsesår
 
-  @xvfb
+  @wip
   Scenario: Se på eksemplarer knyttet til verk 2
     Gitt at det finnes et eksemplar av en bok registrert i Koha
     Og at det finnes et verk (ny klient)

@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip @redef @xvfb
+@redef @wip
 Egenskap: Legg til verk med tittel
   Som katalogisator
   For at en låner skal kunne finne et verk med kjent tittel
