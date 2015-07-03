@@ -6,10 +6,11 @@ CONTAINER=redef_catalinker_skeleton_container
 IMAGE=digibib/redef-catalinker
 
 build_client: test_client
-	sudo salt-call --local state.sls redef.catalinker.clientbuild
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) browserify lib/catalinker.js -o main.js
+	cp client/main.js server/lib/public/catalinker.js
 
 test_client: build_clientbuilder
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) gulp specs
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) npm test
 
 build_clientbuilder:
 	sudo docker build --tag $(CLIENTBUILDER_IMAGE) --file="/vagrant/redef/catalinker/client/Dockerfile-clientbuilder" /vagrant/redef/catalinker/client

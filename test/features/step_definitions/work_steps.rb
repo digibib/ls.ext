@@ -36,6 +36,35 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
   )
 end
 
+Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
+  @site.Catalinker.visit
+end
+
+When(/^jeg vil legge til et nytt verk$/) do
+  true
+end
+
+Then(/^leverer systemet en ny ID for det nye verket$/) do
+  @site.Catalinker.get_id().should_not be_empty
+end
+
+Så(/^jeg kan legge til tittel for det nye verket$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+
+Gitt(/^at det er en feil i systemet som behandler katalogisering$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Når(/^jeg forsøker å registrere ett nytt verk$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Så(/^får jeg beskjed om at noe er feil$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
 When(/^jeg er på sida til verket$/) do
   identifier = @context[:identifier].sub(services(:work).to_s + "/","")
   @site.PatronClient.visit(identifier)

@@ -18,7 +18,6 @@ class Catalinker < PageRoot
     end
 
     def get_id()
-      url = @browser.url
-      /w[0-9]+/.match(url)[0].to_s
+      @browser.input(:data_automation_id => /work_uri/).value
     end
 end

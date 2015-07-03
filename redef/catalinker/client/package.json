@@ -2,36 +2,14 @@
     "name": "Catalinker",
     "version": "0.0.1",
     "private": true,
-    "scripts": {
-        "start": "node ./bin/www"
-    },
     "description": "Catalinker",
-    "author": {
-        "name": "jah",
-        "email": ""
+    "scripts": {
+        "test" : "mocha"
     },
     "dependencies": { 
-
     },
   "devDependencies": {
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-karma": "0.0.4",
-    "gulp-minify-css": "^1.2.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.0.3",
-    "gulp-sourcemaps": "^1.5.2",
-    "gulp-uglify": "^1.2.0",
-    "gulp-watch": "^4.2.4",
-    "gulp-replace": "^0.5.3",
-    "gulp-jshint": "1.11.0",
-    "gulp-if": "^1.2.5",
-    "jasmine-core": "^2.3.4",
     "phantomjs": "^1.9.17",
-    "karma": "^0.12.37",
-    "karma-coverage": "^0.4.2",
-    "karma-jasmine": "^0.3.5",
-    "karma-phantomjs-launcher": "^0.2.0",
-    "karma-html2js-preprocessor": "0.1.0"
+    "mocha":"*"
   }
 }
