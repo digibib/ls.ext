@@ -5,6 +5,9 @@ SKELETON_IMAGE=digibib/redef-catalinker-skeleton
 CONTAINER=redef_catalinker_skeleton_container
 IMAGE=digibib/redef-catalinker
 
+dev_client: build_clientbuilder
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) karma start karma.config.js
+
 build_client: test_client
 	cp client/app/lib.js server/lib/public/lib.js
 

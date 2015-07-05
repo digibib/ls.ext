@@ -1,7 +1,7 @@
 module.exports = function(config) {
   config.set({
     basePath: '..',
-    frameworks: ['mocha','chai'],
+    frameworks: ['mocha','chai','sinon'],
     files: ['app/test/*.js','app/app/lib.js'],
     port: 9876,
     runnerPort: 9100,

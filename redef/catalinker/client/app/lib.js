@@ -1,15 +1,11 @@
 var http = (function() {
   "use strict";
 
-  function plus(a,b) {
-    return a+b;
-  }
-
-  function doReq(method, path, onSuccess, onFailure ) {
+  function doReq(method, path, body, onSuccess, onFailure ) {
     var req = new XMLHttpRequest();
     req.open(method, path, true);
     req.setRequestHeader('Content-Type','application/json; charset=UTF-8');
-
+ 
     req.onload = function() {
      if (req.status >= 200 && req.status < 400) {
         onSuccess(req);
@@ -22,17 +18,25 @@ var http = (function() {
     // request didn't reach server
     req.onerror = onFailure;
 
-    req.send();
+    req.send(body);
   }
 
   // return exported functions
   return {
-    plus: plus,
-    get: function(path, onSuccess, onFailure) {
-      doReq("GET", path, onSuccess, onFailure);
+    get: function(path, onSuccess, onFailure) { 
+      doReq("GET", path, null, onSuccess, onFailure);
     },
-    post: function(path, onSuccess, onFailure) {
-      doReq("POST", path, onSuccess, onFailure);
+    post: function(path, body, onSuccess, onFailure) {
+      doReq("POST", path, body, onSuccess, onFailure);
+    },
+    put: function(path, body, onSuccess, onFailure) {
+      doReq("PUT", path, body, onSuccess, onFailure);
+    },
+    patch: function(path, body, onSuccess, onFailure) {
+      doReq("PATCH", path, body, onSuccess, onFailure);
+    },
+    delete: function(path, onSuccess, onFailure) {
+      doReq("DELETE", path, null, onSuccess, onFailure);
     }
   };
 }());

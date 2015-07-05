@@ -9,7 +9,10 @@ RUN npm install -g karma-phantomjs-launcher
 RUN npm install -g karma-mocha
 RUN npm install -g karma-chai
 RUN npm install -g chai
-RUN npm install -g jshint
+RUN npm install -g sinon
+RUN npm install -g karma-sinon
+RUN npm install -g karma-sinon
+RUN npm install -g karma-sinon-chai
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/
