@@ -1,8 +1,0 @@
-/obj
-node_modules
-/bin
-coverage
-Catalinker.njsproj
-Catalinker.v12.suo
-Catalinker.sln
-public

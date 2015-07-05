@@ -6,11 +6,10 @@ CONTAINER=redef_catalinker_skeleton_container
 IMAGE=digibib/redef-catalinker
 
 build_client: test_client
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) browserify lib/catalinker.js -o main.js
-	cp client/main.js server/lib/public/catalinker.js
+	cp client/app/lib.js server/lib/public/lib.js
 
 test_client: build_clientbuilder
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) npm test
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) karma start karma.config.js --single-run
 
 build_clientbuilder:
 	sudo docker build --tag $(CLIENTBUILDER_IMAGE) --file="/vagrant/redef/catalinker/client/Dockerfile-clientbuilder" /vagrant/redef/catalinker/client

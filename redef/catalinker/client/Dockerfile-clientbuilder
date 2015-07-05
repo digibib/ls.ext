@@ -3,12 +3,15 @@ FROM node:0.10
 MAINTAINER Oslo Public Library "digitalutvikling@gmail.com"
 ENV REFRESHED_AT 2015-07-03
 
-RUN npm install -g jslint
 RUN npm install -g mocha
-RUN npm install -g browserify
+RUN npm install -g karma
+RUN npm install -g karma-phantomjs-launcher
+RUN npm install -g karma-mocha
+RUN npm install -g karma-chai
+RUN npm install -g chai
+RUN npm install -g jshint
 
 RUN mkdir -p /usr/src/app
-COPY package.json /usr/src/
 WORKDIR /usr/src/
 
 VOLUME /usr/src/app/
