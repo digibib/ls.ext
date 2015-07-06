@@ -1,3 +1,2 @@
 .rakeTasks
-lib/public
-!lib/public/index.htm
+lib/public/*.js
