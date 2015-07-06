@@ -8,12 +8,12 @@
 
 clear_client:
   cmd.run:
-    - name: cd /vagrant/redef/catalinker/server/lib/public && find . -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' \; && find ! -name 'index.htm' -type f -exec rm -f '{}' \;
+    - name: cd /vagrant/redef/catalinker/server/lib/public && find . -mindepth 1 -maxdepth 1 -type d -exec rm -rf '{}' \; && find ! -name 'index.*' -type f -exec rm -f '{}' \;
     - watch:
       - cmd: {{ image }}_built
 
 build_client:
   cmd.run:
-    - name: sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app -v /vagrant/redef/catalinker/server/lib/public:/usr/src/dest {{ repo }}/{{ image }} gulp buildAll --dest=/usr/src/dest/
+    - name: cp /vagrant/redef/catalinker/client/app/lib.js /vagrant/redef/catalinker/server/lib/public/lib.js
     - require:
       - cmd: clear_client
