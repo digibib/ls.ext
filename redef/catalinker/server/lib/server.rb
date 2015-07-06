@@ -29,7 +29,7 @@ get '/work' do
   if location then
     RESTService.pull(:work, { :location => location })
   else
-    redirect '/index.htm'
+    redirect '/index.html'
   end
 end
 
