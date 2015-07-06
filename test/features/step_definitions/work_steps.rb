@@ -48,20 +48,23 @@ Then(/^leverer systemet en ny ID for det nye verket$/) do
   @site.Catalinker.get_id().should_not be_empty
 end
 
-Så(/^jeg kan legge til tittel for det nye verket$/) do
+Then(/^jeg kan legge til tittel for det nye verket$/) do
   pending # express the regexp above with the code you wish you had
 end
 
-
-Gitt(/^at det er en feil i systemet som behandler katalogisering$/) do
+Then(/^grensesnittet viser at tittelen er lagret$/) do
   pending # express the regexp above with the code you wish you had
 end
 
-Når(/^jeg forsøker å registrere ett nytt verk$/) do
+Given(/^at det er en feil i systemet som behandler katalogisering$/) do
   pending # express the regexp above with the code you wish you had
 end
 
-Så(/^får jeg beskjed om at noe er feil$/) do
+When(/^jeg forsøker å registrere ett nytt verk$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then(/^får jeg beskjed om at noe er feil$/) do
   pending # express the regexp above with the code you wish you had
 end
 

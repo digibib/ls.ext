@@ -5,6 +5,7 @@ require_relative '../page_root.rb'
 class Catalinker < PageRoot
     def visit
       @browser.goto catalinker(:work)
+      Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
       self
     end
 
@@ -18,6 +19,7 @@ class Catalinker < PageRoot
     end
 
     def get_id()
+      Watir::Wait.until { @browser.input(:data_automation_id => /work_uri/).value != "" }
       @browser.input(:data_automation_id => /work_uri/).value
     end
 end
