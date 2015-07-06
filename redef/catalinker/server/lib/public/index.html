@@ -21,6 +21,7 @@
         cfg = JSON.parse( response.responseText );
         http.get(cfg.ontologyUri,
           function( response ) {
+            console.log( response.responseText );
             ontology = JSON.parse( response.responseText );
           }),
           function( response ) {

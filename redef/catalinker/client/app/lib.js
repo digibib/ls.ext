@@ -4,7 +4,13 @@ var http = (function() {
   function doReq(method, path, body, onSuccess, onFailure ) {
     var req = new XMLHttpRequest();
     req.open(method, path, true);
-    req.setRequestHeader('Content-Type','application/json; charset=UTF-8');
+    req.setRequestHeader('Accept', 'application/ld+json');
+    switch (method) {
+      case "PATCH":
+        req.setRequestHeader('Content-Type','application/ldpatch+json');
+        break;
+      // etc
+    }
  
     req.onload = function() {
      if (req.status >= 200 && req.status < 400) {
