@@ -15,7 +15,6 @@ installpkgs:
       - ruby1.9.1-dev
       - firefox
       - chromium-browser
-      - xvfb
 
 install_chromedriver:
   pkg.installed:
@@ -37,7 +36,6 @@ install_chromedriver:
       - archive: install_chromedriver
 
 {% for gem in
-  'headless',
   'rspec',
   'pry',
   'pry-nav',
