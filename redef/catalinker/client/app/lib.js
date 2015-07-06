@@ -6,6 +6,9 @@ var http = (function() {
     req.open(method, path, true);
     req.setRequestHeader('Accept', 'application/ld+json');
     switch (method) {
+      case "POST":
+        req.setRequestHeader('Content-Type','application/json');
+        break;
       case "PATCH":
         req.setRequestHeader('Content-Type','application/ldpatch+json');
         break;
@@ -24,13 +27,17 @@ var http = (function() {
     // request didn't reach server
     req.onerror = onFailure;
 
-    req.send(body);
+    if ( body !== "" ) {
+      req.send(body);
+    } else {
+      req.send();
+    }
   }
 
   // return exported functions
   return {
     get: function(path, onSuccess, onFailure) { 
-      doReq("GET", path, null, onSuccess, onFailure);
+      doReq("GET", path, "", onSuccess, onFailure);
     },
     post: function(path, body, onSuccess, onFailure) {
       doReq("POST", path, body, onSuccess, onFailure);
@@ -42,8 +49,7 @@ var http = (function() {
       doReq("PATCH", path, body, onSuccess, onFailure);
     },
     delete: function(path, onSuccess, onFailure) {
-      doReq("DELETE", path, null, onSuccess, onFailure);
+      doReq("DELETE", path, "", onSuccess, onFailure);
     }
   };
 }());
-
