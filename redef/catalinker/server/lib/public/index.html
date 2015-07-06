@@ -1,24 +1,90 @@
 <!DOCTYPE html>
 <html>
   <head>
-  	<meta charset='utf-8'>
+  	<meta charset="utf-8">
     <title>Katalogisering</title>
     <style type="text/css">
-      body       { margin: 40px auto; max-width: 1250px; line-height: 1.6; font-size: 18px; color: #222; padding: 0 10px }
-      h1, h2, h3 { line-height: 1.2 }
-      fieldset   { border: 0; background: #eee;}
-      input      { width: 300px; padding: 3px; margin: 0 1em; }
-      label      { font-family: monospace;}
+      body        { margin: 40px auto; max-width: 1050px; line-height: 1.6; padding: 0 10px;
+                    font-family: sans-serif; font-size: 18px; color: #222; }
+      h1, h2, h3  { line-height: 1.2 }
+      fieldset    { border: 0; background: #eee;}
+      input       { width: 300px; padding: 3px; margin: 0 1em; }
+      label       { font-family: monospace; text-align: right; width: 160px; display: inline-block; }
+      #save-stat  { text-align: right; color: #888; margin: 0 4px; display: block; }
+      #save-stat:before  { content: "status: ";}
+      .prop-input { margin: 0.5em 0; }
     </style>
     <script src="lib.js"></script>
   </head>
   <body>
-    <fieldset>
-      <label>URI: </label><input id="work_uri" disabled="disabled" data-automation-id="work_uri" value=""></input>
-    </fieldset>
+    <div id="#container"></div>
+    <script id="template" type="text/ractive">
+      <h2>Katalogisering av verk</h2>
+      <div id="save-stat">{{save_status}}</div>
+      <fieldset>
+        <div class="prop-input">
+          <label>URI</label>
+          <input disabled="disabled" data-automation-id="work_uri" value="{{work_uri}}"/>
+        </div>
+        {{#each values}}
+          {{>input}}
+        {{/each}}
+      </fieldset>
+
+      {{#partial input}}
+        <div class="prop-input">
+          <label>{{label}} </label>
+          <input
+            on-blur='patchResource'
+            on-keyup="countdownToSave"
+            on-change="countdownToSave"
+            data-automation-id="{{predicate}}"
+            value="{{current.value}}" />
+        </div>
+      {{/partial}}
+    </script>
+    <script src="http://cdn.ractivejs.org/latest/ractive.min.js"></script>
     <script>
-      var ontology;
-      var work_uri;
+      var values = [];
+      var ractive = new Ractive({
+        el: "#container",
+        lang: "no",
+        template: "#template",
+        data: {
+          work_uri: "",
+          values: values,
+          ontology: null,
+          save_status: "nytt verk"
+        },
+      });
+
+      listener = ractive.on({
+        countdownToSave: function( event ) {
+          if ( event.context.current.value === "" && event.context.old.value === "" ) {
+            return;
+          }
+          ractive.set("save_status", "arbeider...");
+        },
+        patchResource: function( event ) {
+          if ( event.context.current.value === "" && event.context.old.value === "" ) {
+            return;
+          }
+          var patch = rdf.createPatch( ractive.get("work_uri"), event.context );
+          http.patch(ractive.get("work_uri"), patch,
+            function( response) {
+              // successfully patched resource
+
+              // store current value as old value
+              ractive.set(event.keypath+".old.value", event.context.current.value );
+
+              ractive.set("save_status", "alle endringer er lagret");
+            },
+            function( response) {
+              // failed to patch resource
+              console.log( response );
+            });
+        }
+      });
 
       http.get("/config",
         function( response ) {
@@ -27,25 +93,36 @@
           // fetch ontology
           http.get(cfg.ontologyUri,
             function( response ) {
-              ontology = JSON.parse( response.responseText );
+              var ontology = JSON.parse( response.responseText );
+              ractive.set( "ontology", ontology );
+              var props = rdf.propsByClass( ontology, "Work" );
+              for ( var i=0; i<props.length; i++ ) {
+                values.push({
+                  label: props[i]["rdfs:label"][0]["@value"],
+                  old: { value: "", type: "", lang: "" },
+                  current: { value: "", type: "", lang: "" },
+                  predicate: rdf.resolveURI( ontology,  props[i]["@id"]),
+                }); 
+              }
             },
-            function( response ) {
-              console.log( "GET ontology error: " + response );
+           function( response ) {
+             console.log( "GET ontology error: " + response );
           });
 
-          // fetch URI for work
-          http.post(cfg.resourceApiUri + "work", "{}",
-            function( response ) {
-              work_uri = response.getResponseHeader( "Location" );
-              document.getElementById( "work_uri" ).value = work_uri;
-            },
-            function( response ) {
-              console.log( "POST work error: " + response );
-          });
-        },
-        function( response ) {
-          console.log( "GET config error: " + response );
-      });
+         // fetch URI for work
+         http.post(cfg.resourceApiUri + "work", "{}",
+           function( response ) {
+             work_uri = response.getResponseHeader( "Location" );
+             ractive.set( "work_uri", work_uri );
+           },
+           function( response ) {
+             console.log( "POST work error: " + response );
+         });
+       },
+       function( response ) {
+         console.log( "GET config error: " + response );
+     });
+
     </script>
   </body>
 </html>

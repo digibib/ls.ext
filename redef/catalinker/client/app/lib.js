@@ -53,3 +53,63 @@ var http = (function() {
     }
   };
 }());
+
+
+
+
+var rdf = (function() {
+  "use strict";
+
+  function propsByClass( ontology, cls ) {
+    return ontology["@graph"].filter(function(e) {
+      return ( e["@type"] == "rdfs:Property" &&
+        ( e["rdfs:domain"] === undefined ||
+          e["rdfs:domain"]["@id"] === "rdfs:Class" || e["rdfs:domain"]["@id"] == "deichman:"+cls ) );
+    });
+  }
+
+  function resolveURI( ontology, uri ) {
+    var i = uri.indexOf(":");
+    var prefix = uri.substr( 0, i );
+    for ( var k in ontology["@context"] ) {
+      if ( prefix === k ) {
+        return ontology["@context"][k]+uri.substr(i+1);
+      }
+    }
+  }
+
+  function createPatch( subject, el ) {
+    var addPatch,
+        delPatch;
+
+    if ( el.current.value !== "") {
+      addPatch = { op: "add", s: subject, p: el.predicate, o: { value: el.current.value } }
+      if ( el.current.lang != "" ) {
+        addPatch.o.lang = el.current.lang;
+      }
+    }
+
+    if ( el.old.value !== "" ) {
+    delPatch = { op: "del", s: subject, p: el.predicate, o: { value: el.old.value } }
+      if ( el.old.lang != "" ) {
+      delPatch.o.lang = el.old.lang;
+      }
+    }
+
+
+    if (delPatch && addPatch) {
+      return JSON.stringify([delPatch,addPatch]);
+    } else if (delPatch) {
+      return JSON.stringify(delPatch);
+    } else {
+      return JSON.stringify(addPatch);
+    }
+  }
+
+  // exported functions
+  return {
+    propsByClass: propsByClass,
+    createPatch: createPatch,
+    resolveURI: resolveURI
+  };
+})();

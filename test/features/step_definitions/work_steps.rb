@@ -49,11 +49,12 @@ Then(/^leverer systemet en ny ID for det nye verket$/) do
 end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
-  pending # express the regexp above with the code you wish you had
+  @context[:title] = generateRandomString
+  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#name", @context[:title])
 end
 
 Then(/^grensesnittet viser at tittelen er lagret$/) do
-  pending # express the regexp above with the code you wish you had
+  Watir::Wait.until { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
 end
 
 Given(/^at det er en feil i systemet som behandler katalogisering$/) do

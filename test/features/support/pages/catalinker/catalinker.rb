@@ -9,12 +9,10 @@ class Catalinker < PageRoot
       self
     end
 
-    def add(title, author, date, biblio)
-      @browser.text_field(:data_automation_id => /work_title/).set(title)
-      @browser.text_field(:data_automation_id => /work_creator/).set(author)
-      @browser.text_field(:data_automation_id => /work_date/).set(date)
-      @browser.text_field(:data_automation_id => /work_biblioId/).set(biblio) if biblio
-      @browser.button(:class => "submit").click
+    def add_prop(predicate, value)
+      input = @browser.text_field(:data_automation_id => predicate)
+      input.set(value)
+      input.fire_event :blur
       self
     end
 
