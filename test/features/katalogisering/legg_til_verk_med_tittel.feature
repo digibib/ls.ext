@@ -10,6 +10,7 @@ Egenskap: Legg til verk med tittel
   Bakgrunn:
     Gitt at jeg er i katalogiseringsgrensesnittet
 
+  @wip
   Scenario: Katalogisator legger til nytt verk
     Når jeg vil legge til et nytt verk
     Så leverer systemet en ny ID for det nye verket
