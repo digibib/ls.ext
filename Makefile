@@ -101,6 +101,9 @@ test: test_redef cuke_test                            ## Run unit and cucumber t
 cuke_test:
 	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
+cuke_test_parallel:
+	vagrant ssh vm-test -c 'cd vm-test && parallel_cucumber -n 2 features/'
+
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
 	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker låner ut bok til Knut"'
 

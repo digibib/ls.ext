@@ -37,6 +37,7 @@ install_chromedriver:
 
 {% for gem in
   'rspec',
+  'paralell_tests',
   'pry',
   'pry-nav',
   'watir-webdriver',
