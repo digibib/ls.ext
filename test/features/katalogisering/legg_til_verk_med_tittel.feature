@@ -22,7 +22,6 @@ Egenskap: Legg til verk med tittel
     Så viser systemet at tittel på verket har blitt registrert
     Og verkets tittel vises på verks-siden
 
-  @wip
   Scenario: Katalogisator legger inn alternativ tittel på et verk
     Gitt at det finnes et verk
     Og at verket har en tittel

@@ -2,8 +2,6 @@
 
 Given(/^at det finnes et verk$/) do
   step "leverer systemet en ny ID for det nye verket"
-  step "jeg kan legge til tittel for det nye verket"
-  step "grensesnittet viser at tittelen er lagret"
 end
 
 Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
@@ -32,6 +30,20 @@ end
 
 Given(/^at det er en feil i systemet som behandler katalogisering$/) do
   pending # express the regexp above with the code you wish you had
+end
+
+Given(/^at verket har en tittel$/) do
+  step "jeg kan legge til tittel for det nye verket"
+  step "grensesnittet viser at tittelen er lagret"
+end
+
+When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
+  predicate = "http://192.168.50.12:8005/ontology#name"
+  @context[:alt_title] = generateRandomString
+  @browser.div(:class => predicate).button.click
+  input = @browser.text_field(:data_automation_id => predicate+"_1")
+  input.set(@context[:alt_title])
+  input.fire_event :blur
 end
 
 When(/^jeg legger til tittel for det nye verket$/) do
@@ -87,4 +99,14 @@ end
 Then(/^verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
   @site.PatronClient.getTitle.should include(@context[:title])
+end
+
+Then(/^viser systemet at alternativ tittel på verket har blitt registrert$/) do
+  step "grensesnittet viser at tittelen er lagret"
+end
+
+Then(/^verkets alternative tittel vises på verks\-siden$/) do
+  step "jeg er på sida til verket"
+  @browser.refresh
+  @site.PatronClient.getTitle.should include(@context[:alt_title])
 end

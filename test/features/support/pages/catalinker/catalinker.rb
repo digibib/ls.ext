@@ -10,7 +10,7 @@ class Catalinker < PageRoot
     end
 
     def add_prop(predicate, value)
-      input = @browser.text_field(:data_automation_id => predicate)
+      input = @browser.text_field(:data_automation_id => predicate+"_0")
       input.set(value)
       input.fire_event :blur
       self

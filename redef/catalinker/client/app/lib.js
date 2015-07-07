@@ -78,19 +78,19 @@ var rdf = (function() {
     }
   }
 
-  function createPatch( subject, el ) {
+  function createPatch( subject, predicate, el ) {
     var addPatch,
         delPatch;
 
     if ( el.current.value !== "") {
-      addPatch = { op: "add", s: subject, p: el.predicate, o: { value: el.current.value } }
+      addPatch = { op: "add", s: subject, p: predicate, o: { value: el.current.value } }
       if ( el.current.lang != "" ) {
         addPatch.o.lang = el.current.lang;
       }
     }
 
     if ( el.old.value !== "" ) {
-    delPatch = { op: "del", s: subject, p: el.predicate, o: { value: el.old.value } }
+    delPatch = { op: "del", s: subject, p: predicate, o: { value: el.old.value } }
       if ( el.old.lang != "" ) {
       delPatch.o.lang = el.old.lang;
       }

@@ -167,20 +167,18 @@ describe("Updating a resource", function() {
   it("can build patch requests adding properties", function() {
     var val = {
       old: { value: "", type: "", lang: "" },
-      current: { value: "a", type: "", lang: "no" },
-      predicate: "http://x.org/p1",
+      current: { value: "a", type: "", lang: "no" }
     }
-    assert.equal(rdf.createPatch("http://x.org/s/1", val),
+    assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
       '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}')
   });
 
   it("can build patch requests updating removing and adding properties", function() {
     var val = {
       old: { value: "b", type: "", lang: "en" },
-      current: { value: "a", type: "", lang: "no" },
-      predicate: "http://x.org/p1",
+      current: { value: "a", type: "", lang: "no" }
     }
-    assert.equal(rdf.createPatch("http://x.org/s/1", val),
+    assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
       '[{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en"}},{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}]')
   });
 
@@ -188,9 +186,8 @@ describe("Updating a resource", function() {
     var val = {
       old: { value: "b", type: "", lang: "en" },
       current: { value: "", type: "", lang: "" },
-      predicate: "http://x.org/p1",
     }
-    assert.equal(rdf.createPatch("http://x.org/s/1", val),
+    assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
       '{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en"}}')
   });
 });

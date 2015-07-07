@@ -12,7 +12,9 @@
       label       { font-family: monospace; text-align: right; width: 160px; display: inline-block; }
       #save-stat  { text-align: right; color: #888; margin: 0 4px; display: block; }
       #save-stat:before  { content: "status: ";}
-      .prop-input { margin: 0.5em 0; }
+      .prop-input   { clear:both ;}
+      .prop-details { width: 20%; float: left; text-align: right;}
+      .prop-values  { width: 80%; float:left;}
     </style>
     <script src="lib.js"></script>
   </head>
@@ -23,36 +25,46 @@
       <div id="save-stat">{{save_status}}</div>
       <fieldset>
         <div class="prop-input">
-          <label>URI</label>
-          <input disabled="disabled" data-automation-id="work_uri" value="{{work_uri}}"/>
+          <div class="prop-details">
+            <label>URI</label>
+          </div>
+          <div class="prop-values">
+            <input disabled="disabled" data-automation-id="work_uri" value="{{work_uri}}"/>
+          </div>
         </div>
-        {{#each values}}
-          {{>input}}
+        {{#each inputs}}
+          <div class="prop-input {{predicate}}">
+            <div class="prop-details">
+              <button on-click="addValue">+</button>
+              <label>{{label}}</label>
+            </div>
+            <div class="prop-values">
+              {{#each values}}
+                {{>input}}
+              {{/each}}
+            </div>
+          </div>
         {{/each}}
       </fieldset>
 
       {{#partial input}}
-        <div class="prop-input">
-          <label>{{label}} </label>
           <input
-            on-blur='patchResource'
+            on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
             on-change="countdownToSave"
-            data-automation-id="{{predicate}}"
-            value="{{current.value}}" />
-        </div>
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" /><br/>
       {{/partial}}
     </script>
     <script src="http://cdn.ractivejs.org/latest/ractive.min.js"></script>
     <script>
-      var values = [];
       var ractive = new Ractive({
         el: "#container",
         lang: "no",
         template: "#template",
         data: {
           work_uri: "",
-          values: values,
+          inputs: {},
           ontology: null,
           save_status: "nytt verk"
         },
@@ -65,11 +77,17 @@
           }
           ractive.set("save_status", "arbeider...");
         },
-        patchResource: function( event ) {
+        addValue: function( event ) {
+          ractive.get( event.keypath ).values.push({
+            old: { value: "", type: "", lang: "" },
+            current: { value: "", type: "", lang: "" }
+          });
+        },
+        patchResource: function( event, predicate ) {
           if ( event.context.current.value === "" && event.context.old.value === "" ) {
             return;
           }
-          var patch = rdf.createPatch( ractive.get("work_uri"), event.context );
+          var patch = rdf.createPatch( ractive.get("work_uri"), predicate, event.context );
           http.patch(ractive.get("work_uri"), patch,
             function( response) {
               // successfully patched resource
@@ -93,17 +111,21 @@
           // fetch ontology
           http.get(cfg.ontologyUri,
             function( response ) {
-              var ontology = JSON.parse( response.responseText );
+              var ontology = JSON.parse( response.responseText ),
+                  props = rdf.propsByClass( ontology, "Work" ),
+                  inputs = [];
+
               ractive.set( "ontology", ontology );
-              var props = rdf.propsByClass( ontology, "Work" );
+
               for ( var i=0; i<props.length; i++ ) {
-                values.push({
-                  label: props[i]["rdfs:label"][0]["@value"],
-                  old: { value: "", type: "", lang: "" },
-                  current: { value: "", type: "", lang: "" },
+                inputs.push({
                   predicate: rdf.resolveURI( ontology,  props[i]["@id"]),
-                }); 
+                  label:props[i]["rdfs:label"][0]["@value"],
+                  values: [{old: { value: "", type: "", lang: "" },
+                            current: { value: "", type: "", lang: "" }}]
+                });
               }
+              ractive.set( "inputs", inputs );
             },
            function( response ) {
              console.log( "GET ontology error: " + response );
