@@ -1,23 +1,9 @@
 # encoding: UTF-8
 
 Given(/^at det finnes et verk$/) do
-  @context[:title]      = generateRandomString
-  @context[:author]     = generateRandomString
-  @context[:date]       = String(rand(9999))
-
-  @site.Catalinker.visit
-  page = @site.Catalinker.add(@context[:title],@context[:author],@context[:date],@context[:biblio])
-  @context[:identifier] = page.get_id
-end
-
-Given(/^at det finnes et verk \(ny klient\)$/) do
-  @context[:title]      = generateRandomString
-  @context[:author]     = generateRandomString
-  @context[:date]       = String(rand(9999))
-
-  @site.CatalinkerClient.visit
-  page = @site.CatalinkerClient.add(@context[:title],@context[:author],@context[:date],@context[:biblio])
-  @context[:identifier] = page.get_id
+  step "leverer systemet en ny ID for det nye verket"
+  step "jeg kan legge til tittel for det nye verket"
+  step "grensesnittet viser at tittelen er lagret"
 end
 
 Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
