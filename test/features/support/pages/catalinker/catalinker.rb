@@ -20,4 +20,8 @@ class Catalinker < PageRoot
       Watir::Wait.until { @browser.input(:data_automation_id => /work_uri/).value != "" }
       @browser.input(:data_automation_id => /work_uri/).value
     end
+
+    def errors
+      @browser.div(:id => "errors").text
+    end
 end

@@ -36,7 +36,6 @@ Egenskap: Legg til verk med tittel
     Så viser systemet at språket til tittelen blitt registrert
     Og språket til verkets tittel vises på verks-siden
 
-  @wip
   Scenario: Katalogisator møter et system som feiler
     Gitt at det er en feil i systemet for katalogisering
     Når jeg forsøker å registrere ett nytt verk

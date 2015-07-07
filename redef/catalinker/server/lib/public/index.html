@@ -10,11 +10,17 @@
       fieldset    { border: 0; background: #eee;}
       input       { width: 300px; padding: 3px; margin: 0 1em; }
       label       { font-family: monospace; text-align: right; width: 160px; display: inline-block; }
+
+      #errors     { background: #F77F00; color: #fff; font-weight: bold; }
+      #errors p   { padding: 4px; }
+
       #save-stat  { text-align: right; color: #888; margin: 0 4px; display: block; }
       #save-stat:before  { content: "status: ";}
+
       .prop-input   { clear:both ;}
       .prop-details { width: 20%; float: left; text-align: right;}
       .prop-values  { width: 80%; float:left;}
+
     </style>
     <script src="lib.js"></script>
   </head>
@@ -22,6 +28,7 @@
     <div id="#container"></div>
     <script id="template" type="text/ractive">
       <h2>Katalogisering av verk</h2>
+      <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
       <div id="save-stat">{{save_status}}</div>
       <fieldset>
         <div class="prop-input">
@@ -69,11 +76,13 @@
     </script>
     <script src="http://cdn.ractivejs.org/latest/ractive.min.js"></script>
     <script>
+      var errors = [];
       var ractive = new Ractive({
         el: "#container",
         lang: "no",
         template: "#template",
         data: {
+          errors: errors,
           work_uri: "",
           inputs: {},
           ontology: null,
@@ -117,7 +126,7 @@
             },
             function( response) {
               // failed to patch resource
-              console.log( response );
+              errors.push( "Noe gikk galt! Fikk ikke lagret endringene" )
             });
         }
       });

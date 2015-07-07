@@ -24,6 +24,15 @@ Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
   @site.Catalinker.visit
 end
 
+Gitt(/^at det er en feil i systemet for katalogisering$/) do
+  `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker stop redef_services_container' >&2`
+  @cleanup.push("restarting redef_services_container" =>
+    lambda do
+      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker start redef_services_container' >&2`
+    end
+    )
+end
+
 Given(/^at systemet har returnert en ny ID for det nye verket$/) do
   step "leverer systemet en ny ID for det nye verket"
 end
@@ -60,7 +69,7 @@ When(/^jeg er på sida til verket$/) do
 end
 
 When(/^jeg forsøker å registrere ett nytt verk$/) do
-  pending # express the regexp above with the code you wish you had
+  step "jeg kan legge til tittel for det nye verket"
 end
 
 When(/^jeg velger språk for tittelen$/) do
@@ -93,7 +102,7 @@ Then(/^grensesnittet viser at tittelen er lagret$/) do
 end
 
 Then(/^får jeg beskjed om at noe er feil$/) do
-  pending # express the regexp above with the code you wish you had
+  @site.Catalinker.errors.should include("Noe gikk galt!")
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
