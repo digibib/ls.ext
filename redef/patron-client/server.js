@@ -10,6 +10,30 @@ var app = express();
 app.set('view engine', 'hjs');
 app.engine('hjs', hogan.renderFile);
 
+var titlesToString = function( titles ) {
+    if ( typeof titles === "string") {
+        return titles;
+    }
+    var res = [];
+    if ( Array.isArray(titles) ) {
+        for ( var i=0;i<titles.length;i++  ) {
+            if ( typeof titles[i] === "string") {
+                // simple literal
+                res.push(titles[i]);
+            } else {
+                // language tagged or explicitly datatyped literal
+                res.push('"' + titles[i]["@value"] + '"@' + titles[i]["@language"]);
+            }
+        }
+    } else if ( typeof title === "object" ) {
+        res.push('"' + titles["@value"] + '"@' + titles["@language"]);
+    } else {
+        return "";
+    }
+    return res.join(",");
+};
+
+
 function getData(body) {
     var data = {};
     try {
@@ -64,6 +88,7 @@ app.get('/work/:id', function (request, response) {
                 getItems(parameters, function (items) {
                     data.data.items = items;
                     console.log(data.data);
+                    data.data["deichman:name"] = titlesToString(data.data["deichman:name"]);
                     response.render('index', data.data);
                 });
                 console.log("Received from services for '" + parameters.path + "': " + body);
