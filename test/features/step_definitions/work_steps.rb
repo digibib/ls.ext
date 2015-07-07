@@ -29,7 +29,7 @@ Gitt(/^at det er en feil i systemet for katalogisering$/) do
   @cleanup.push("restarting redef_services_container" =>
     lambda do
       `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker start redef_services_container' >&2`
-      sleep 5 # give container time to get up running properly for next tests
+      sleep 15 # give container time to get up running properly for next tests
     end
     )
 end
