@@ -10,14 +10,15 @@ var app = express();
 app.set('view engine', 'hjs');
 app.engine('hjs', hogan.renderFile);
 
-var titlesToString = function( titles ) {
-    if ( typeof titles === "string") {
+var titlesToString = function (titles) {
+    if (typeof titles === "string") {
         return titles;
     }
-    var res = [];
-    if ( Array.isArray(titles) ) {
-        for ( var i=0;i<titles.length;i++  ) {
-            if ( typeof titles[i] === "string") {
+    var res = [],
+        i;
+    if (Array.isArray(titles)) {
+        for (i = 0; i < titles.length; i = i + 1) {
+            if (typeof titles[i] === "string") {
                 // simple literal
                 res.push(titles[i]);
             } else {
@@ -25,7 +26,7 @@ var titlesToString = function( titles ) {
                 res.push('"' + titles[i]["@value"] + '"@' + titles[i]["@language"]);
             }
         }
-    } else if ( typeof title === "object" ) {
+    } else if (typeof titles === "object") {
         res.push('"' + titles["@value"] + '"@' + titles["@language"]);
     } else {
         return "";
