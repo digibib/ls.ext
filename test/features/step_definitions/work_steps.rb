@@ -40,12 +40,34 @@ Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
   @site.Catalinker.visit
 end
 
+Given(/^at systemet har returnert en ny ID for det nye verket$/) do
+  step "leverer systemet en ny ID for det nye verket"
+end
+
+Given(/^at det er en feil i systemet som behandler katalogisering$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+When(/^jeg legger til tittel for det nye verket$/) do
+  step "jeg kan legge til tittel for det nye verket"
+end
+
 When(/^jeg vil legge til et nytt verk$/) do
   true
 end
 
+When(/^jeg er på sida til verket$/) do
+  identifier = @context[:identifier].sub(services(:work).to_s + "/","")
+  @site.PatronClient.visit(identifier)
+end
+
+When(/^jeg forsøker å registrere ett nytt verk$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
 Then(/^leverer systemet en ny ID for det nye verket$/) do
-  @site.Catalinker.get_id().should_not be_empty
+  @context[:identifier] = @site.Catalinker.get_id()
+  @context[:identifier].should_not be_empty
 end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
@@ -57,21 +79,8 @@ Then(/^grensesnittet viser at tittelen er lagret$/) do
   Watir::Wait.until { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
 end
 
-Given(/^at det er en feil i systemet som behandler katalogisering$/) do
-  pending # express the regexp above with the code you wish you had
-end
-
-When(/^jeg forsøker å registrere ett nytt verk$/) do
-  pending # express the regexp above with the code you wish you had
-end
-
 Then(/^får jeg beskjed om at noe er feil$/) do
   pending # express the regexp above with the code you wish you had
-end
-
-When(/^jeg er på sida til verket$/) do
-  identifier = @context[:identifier].sub(services(:work).to_s + "/","")
-  @site.PatronClient.visit(identifier)
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
@@ -83,4 +92,13 @@ end
 Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
   @browser.refresh
   @site.PatronClient.existsExemplar().should == true
+end
+
+Then(/^viser systemet at tittel på verket har blitt registrert$/) do
+  step "grensesnittet viser at tittelen er lagret"
+end
+
+Then(/^verkets tittel vises på verks\-siden$/) do
+  step "jeg er på sida til verket"
+  @site.PatronClient.getTitle.should include(@context[:title])
 end

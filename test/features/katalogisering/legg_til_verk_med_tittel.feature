@@ -16,7 +16,6 @@ Egenskap: Legg til verk med tittel
     Og jeg kan legge til tittel for det nye verket
     Og grensesnittet viser at tittelen er lagret
 
-  @wip
   Scenario: Katalogisator legger inn tittel for et verk
     Gitt at systemet har returnert en ny ID for det nye verket
     Når jeg legger til tittel for det nye verket
