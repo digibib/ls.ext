@@ -63,6 +63,21 @@ When(/^jeg forsøker å registrere ett nytt verk$/) do
   pending # express the regexp above with the code you wish you had
 end
 
+When(/^jeg velger språk for tittelen$/) do
+  predicate = "http://192.168.50.12:8005/ontology#name"
+  @context[:title_lang] = "no"
+  @browser.div(:class => predicate).select.select_value(@context[:title_lang])
+end
+
+Then(/^viser systemet at språket til tittelen blitt registrert$/) do
+  step "grensesnittet viser at tittelen er lagret"
+end
+
+Then(/^språket til verkets tittel vises på verks\-siden$/) do
+  step "jeg er på sida til verket"
+  @site.PatronClient.getTitle.should include("@" + @context[:title_lang])
+end
+
 Then(/^leverer systemet en ny ID for det nye verket$/) do
   @context[:identifier] = @site.Catalinker.get_id()
   @context[:identifier].should_not be_empty

@@ -175,11 +175,11 @@ describe("Updating a resource", function() {
 
   it("can build patch requests updating removing and adding properties", function() {
     var val = {
-      old: { value: "b", type: "", lang: "en" },
+      old: { value: "b", type: "", lang: "" },
       current: { value: "a", type: "", lang: "no" }
     }
     assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
-      '[{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en"}},{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}]')
+      '[{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b"}},{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}]')
   });
 
   it("ignores empty values", function() {

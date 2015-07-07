@@ -53,7 +53,18 @@
             on-keyup="countdownToSave"
             on-change="countdownToSave"
             data-automation-id="{{predicate}}_{{@index}}"
-            value="{{current.value}}" /><br/>
+            value="{{current.value}}" />
+            {{#range === "http://www.w3.org/2001/XMLSchema#string"}}
+              <select value="{{current.lang}}"
+                      on-change='patchResource:{{predicate}}'
+                      class="select_lang">
+                <option value="">velg språk</option>
+                <option value="no">norsk</option>
+                <option value="en">engelsk</option>
+                <option value="fr">fransk</option>
+              </select>
+            {{/}}
+            <br/>
       {{/partial}}
     </script>
     <script src="http://cdn.ractivejs.org/latest/ractive.min.js"></script>
@@ -96,8 +107,11 @@
             function( response) {
               // successfully patched resource
 
-              // store current value as old value
-              ractive.set(event.keypath+".old.value", event.context.current.value );
+              // keep the value in current.old - so we can do create delete triple patches later
+              var cur = ractive.get(event.keypath+".current");
+              ractive.set( event.keypath+".old.value", cur.value );
+              ractive.set( event.keypath+".old.lang", cur.lang );
+              ractive.set( event.keypath+".old.datatype", cur.datatypr );
 
               ractive.set("save_status", "alle endringer er lagret");
             },
@@ -125,6 +139,7 @@
               for ( var i=0; i<props.length; i++ ) {
                 inputs.push({
                   predicate: rdf.resolveURI( ontology,  props[i]["@id"]),
+                  range: props[i]["rdfs:range"]["@id"],
                   label:props[i]["rdfs:label"][0]["@value"],
                   values: [{old: { value: "", type: "", lang: "" },
                             current: { value: "", type: "", lang: "" }}]
