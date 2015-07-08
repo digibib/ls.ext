@@ -175,6 +175,7 @@
       // Observing input for instant validation:
       ractive.observe("inputs.*.values.*", function(newValue, oldValue, keypath) {
         if ( newValue.current.value === "" ) {
+          ractive.set( keypath+".error", false );
           return;
         }
         var parent = keypath.substr(0, keypath.substr(0,keypath.lastIndexOf(".")).lastIndexOf("."));
