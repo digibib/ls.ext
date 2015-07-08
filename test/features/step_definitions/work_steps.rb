@@ -79,6 +79,21 @@ When(/^jeg velger språk for tittelen$/) do
   @browser.div(:class => predicate).select.select_value(@context[:title_lang])
 end
 
+When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
+  @context[:year] = rand(2015).to_s
+  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+end
+
+Then(/^viser systemet at årstall for førsteutgave av verket har blitt registrert$/) do
+   step "grensesnittet viser at tittelen er lagret"
+end
+
+Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do
+  step "jeg er på sida til verket"
+  @site.PatronClient.getDate().should eq(@context[:year])
+end
+
+
 Then(/^viser systemet at språket til tittelen blitt registrert$/) do
   step "grensesnittet viser at tittelen er lagret"
 end
