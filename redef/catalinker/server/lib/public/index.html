@@ -70,6 +70,7 @@
 
       {{#partial input-string}}
           <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
             on-change="countdownToSave"
@@ -79,6 +80,7 @@
 
       {{#partial input-lang-string}}
           <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
             on-change="countdownToSave"
@@ -107,6 +109,7 @@
 
       {{#partial input-nonNegativeInteger}}
           <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
             on-change="countdownToSave"
