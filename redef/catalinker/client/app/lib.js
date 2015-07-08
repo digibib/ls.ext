@@ -86,7 +86,7 @@ var rdf = (function() {
         break;
       case "http://www.w3.org/2001/XMLSchema#gYear":
         // According to its specification, a xsd:gYear allows time-zone information, but
-        // we don't want that, and only accepts negative (BCE) or positive (BC) integers.
+        // we don't want that, and only accepts negative (BCE) or positive (CE) integers.
         // TODO shall we require 0-padding - i.e not allow "92" but require "0092"?
         return /^-?(\d){1,4}$/.test(value);
         break;
