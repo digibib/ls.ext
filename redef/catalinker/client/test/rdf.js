@@ -191,3 +191,30 @@ describe("Updating a resource", function() {
       '{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en"}}')
   });
 });
+
+describe("Validating RDF Literals", function() {
+  it("validates xsd:string literals", function() {
+    assert(rdf.validateLiteral("æøå 世界", "http://www.w3.org/2001/XMLSchema#string"));
+  });
+
+  it("validates a valid xsd:gYear", function() {
+    assert(rdf.validateLiteral("1981", "http://www.w3.org/2001/XMLSchema#gYear"));
+    assert(rdf.validateLiteral("50", "http://www.w3.org/2001/XMLSchema#gYear"));
+    assert(rdf.validateLiteral("-50", "http://www.w3.org/2001/XMLSchema#gYear"));
+  });
+
+  it("does not validate an invalid xsd:gYear", function() {
+    assert.notOk(rdf.validateLiteral("19999", "http://www.w3.org/2001/XMLSchema#gYear"));
+    assert.notOk(rdf.validateLiteral("+100", "http://www.w3.org/2001/XMLSchema#gYear"));
+    assert.notOk(rdf.validateLiteral("--100", "http://www.w3.org/2001/XMLSchema#gYear"));
+    assert.notOk(rdf.validateLiteral("200 b.c", "http://www.w3.org/2001/XMLSchema#gYear"));
+    assert.notOk(rdf.validateLiteral("500 f.kr", "http://www.w3.org/2001/XMLSchema#gYear"));
+  });
+
+  it("throws an error if it doesn't handle the given datatype", function() {
+    assert.throws(function() { rdf.validateLiteral("abc", "http://example.org1/MyCustomDataType") },
+      "don't know how to validate literal of range: <http://example.org1/MyCustomDataType>"
+    );
+  });
+
+});
