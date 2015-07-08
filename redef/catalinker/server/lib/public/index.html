@@ -4,11 +4,12 @@
   	<meta charset="utf-8">
     <title>Katalogisering</title>
     <style type="text/css">
+      *           { box-sizing: border-box; }
       body        { margin: 40px auto; max-width: 1050px; line-height: 1.6; padding: 0 10px;
                     font-family: sans-serif; font-size: 18px; color: #222; }
       h1, h2, h3  { line-height: 1.2 }
       fieldset    { border: 0; background: #eee;}
-      input       { width: 300px; padding: 3px; margin: 0 1em; }
+      input       { width: 300px; padding: 3px; margin: 0 }
       label       { font-family: monospace; text-align: right; width: 160px; display: inline-block; }
 
       #errors     { background: #F77F00; color: #fff; font-weight: bold; }
@@ -19,7 +20,10 @@
 
       .prop-input   { clear:both ;}
       .prop-details { width: 20%; float: left; text-align: right;}
-      .prop-values  { width: 80%; float:left;}
+      .prop-values  { padding-left: 1em; max-width: 80%; float:left;}
+
+      .invalid-input { border: 1px solid #F77F00;}
+      .invalid-msg   { color: #F77F00; font-size: 12px;}
 
     </style>
     <script src="lib.js"></script>
@@ -47,14 +51,33 @@
             </div>
             <div class="prop-values">
               {{#each values}}
-                {{>input}}
+                {{#range === "http://www.w3.org/2001/XMLSchema#string"}}
+                  {{>input-lang-string}}
+                {{elseif range === "http://www.w3.org/2001/XMLSchema#gYear"}}
+                  {{>input-gYear}}
+                {{elseif range === "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"}}
+                  {{>input-nonNegativeInteger}}
+                {{else}}
+                  {{>input-string}}
+                {{/}}
+                <br/>
+                <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
               {{/each}}
             </div>
           </div>
         {{/each}}
       </fieldset>
 
-      {{#partial input}}
+      {{#partial input-string}}
+          <input
+            on-blur='patchResource:{{predicate}}'
+            on-keyup="countdownToSave"
+            on-change="countdownToSave"
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" />
+      {{/partial}}
+
+      {{#partial input-lang-string}}
           <input
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
@@ -71,7 +94,24 @@
                 <option value="fr">fransk</option>
               </select>
             {{/}}
-            <br/>
+      {{/partial}}
+
+      {{#partial input-gYear}}
+          <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
+            on-blur='patchResource:{{predicate}}'
+            on-keyup="countdownToSave"
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" />
+      {{/partial}}
+
+      {{#partial input-nonNegativeInteger}}
+          <input
+            on-blur='patchResource:{{predicate}}'
+            on-keyup="countdownToSave"
+            on-change="countdownToSave"
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" />
       {{/partial}}
     </script>
     <script src="http://cdn.ractivejs.org/latest/ractive.min.js"></script>
@@ -93,6 +133,7 @@
       // Event handling functions responding to UI interactions:
       listener = ractive.on({
         countdownToSave: function( event ) {
+          // TODO find better name to this function
           if ( event.context.current.value === "" && event.context.old.value === "" ) {
             return;
           }
@@ -108,7 +149,7 @@
         // patchResource creates a patch request based on previous and current value of
         // input field, and sends this to the backend.
         patchResource: function( event, predicate ) {
-          if ( event.context.current.value === "" && event.context.old.value === "" ) {
+          if ( event.context.error || (event.context.current.value === "" && event.context.old.value === "" ) ) {
             return;
           }
           var patch = rdf.createPatch( ractive.get("work_uri"), predicate, event.context );
@@ -128,6 +169,26 @@
               // failed to patch resource
               errors.push( "Noe gikk galt! Fikk ikke lagret endringene" )
             });
+        }
+      });
+
+      // Observing input for instant validation:
+      ractive.observe("inputs.*.values.*", function(newValue, oldValue, keypath) {
+        if ( newValue.current.value === "" ) {
+          return;
+        }
+        var parent = keypath.substr(0, keypath.substr(0,keypath.lastIndexOf(".")).lastIndexOf("."));
+        var valid = false;
+        try {
+          valid = rdf.validateLiteral(newValue.current.value, ractive.get(parent).range);
+        } catch (e) {
+          console.log(e);
+          return;
+        }
+        if (valid ) {
+          ractive.set( keypath+".error", false );
+        } else {
+          ractive.set( keypath+".error", "ugyldig input" );
         }
       });
 

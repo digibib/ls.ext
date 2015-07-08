@@ -211,6 +211,20 @@ describe("Validating RDF Literals", function() {
     assert.notOk(rdf.validateLiteral("500 f.kr", "http://www.w3.org/2001/XMLSchema#gYear"));
   });
 
+  it("validates a valid xsd:nonNegativeInteger", function() {
+    assert(rdf.validateLiteral("0", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+    assert(rdf.validateLiteral("99", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+    assert(rdf.validateLiteral("+100", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+    assert(rdf.validateLiteral("54343", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+  });
+
+  it("does not validate an invalid xsd:nonNegativeInteger", function() {
+    assert.notOk(rdf.validateLiteral("-1", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+    assert.notOk(rdf.validateLiteral("3.14", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+    assert.notOk(rdf.validateLiteral("20e10", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+    assert.notOk(rdf.validateLiteral("abc", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+  });
+
   it("throws an error if it doesn't handle the given datatype", function() {
     assert.throws(function() { rdf.validateLiteral("abc", "http://example.org1/MyCustomDataType") },
       "don't know how to validate literal of range: <http://example.org1/MyCustomDataType>"

@@ -15,3 +15,9 @@ Egenskap: Legg til verk med dato
    Når jeg legger til et årstall for førsteutgave av nye verket
    Så viser systemet at årstall for førsteutgave av verket har blitt registrert
    Og verkets årstall førsteutgave av vises på verks-siden
+
+  Scenario: Katalogisator prøver å legge inn årstall som ikke er årstall
+   Gitt at systemet har returnert en ny ID for det nye verket
+   Når jeg legger inn "pølsevev" i feltet for førsteutgave av verket
+   Så viser systemet at "pølsevev" ikke er ett gyldig årstall
+   Og ordet "pølsevev" som førsteutgave vises IKKE på verks-siden

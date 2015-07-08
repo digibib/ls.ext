@@ -90,6 +90,9 @@ var rdf = (function() {
         // TODO shall we require 0-padding - i.e not allow "92" but require "0092"?
         return /^-?(\d){1,4}$/.test(value);
         break;
+      case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
+        return /^\+?(\d)+$/.test(value);
+        break;
       default:
         var err = "don't know how to validate literal of range: <" + range + ">";
         throw err;

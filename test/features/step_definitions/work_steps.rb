@@ -84,6 +84,21 @@ When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
 end
 
+When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
+  @context[:year] = arg1
+  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+end
+
+Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|
+  @browser.element(:text => "ugyldig input").present?
+end
+
+Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
+  step "jeg er på sida til verket"
+  @site.PatronClient.getDate().should_not include(@context[:year])
+end
+
+
 Then(/^viser systemet at årstall for førsteutgave av verket har blitt registrert$/) do
    step "grensesnittet viser at tittelen er lagret"
 end
@@ -93,13 +108,13 @@ Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do
   @site.PatronClient.getDate().should eq(@context[:year])
 end
 
-
 Then(/^viser systemet at språket til tittelen blitt registrert$/) do
   step "grensesnittet viser at tittelen er lagret"
 end
 
 Then(/^språket til verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
+  @browser.refresh
   @site.PatronClient.getTitle.should include("@" + @context[:title_lang])
 end
 
