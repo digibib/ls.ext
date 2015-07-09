@@ -1,18 +1,12 @@
 var http = (function() {
   "use strict";
 
-  function doReq(method, path, body, onSuccess, onFailure ) {
+  function doReq(method, path, headers, body, onSuccess, onFailure ) {
     var req = new XMLHttpRequest();
     req.open(method, path, true);
-    req.setRequestHeader('Accept', 'application/ld+json');
-    switch (method) {
-      case "POST":
-        req.setRequestHeader('Content-Type','application/json');
-        break;
-      case "PATCH":
-        req.setRequestHeader('Content-Type','application/ldpatch+json');
-        break;
-      // etc
+
+    for (var prop in headers) {
+      req.setRequestHeader(prop, headers[prop]);
     }
  
     req.onload = function() {
@@ -36,20 +30,20 @@ var http = (function() {
 
   // return exported functions
   return {
-    get: function(path, onSuccess, onFailure) { 
-      doReq("GET", path, "", onSuccess, onFailure);
+    get: function(path, headers, onSuccess, onFailure) { 
+      doReq("GET", path, headers, "", onSuccess, onFailure);
     },
-    post: function(path, body, onSuccess, onFailure) {
-      doReq("POST", path, body, onSuccess, onFailure);
+    post: function(path, headers, body, onSuccess, onFailure) {
+      doReq("POST", path, headers, body, onSuccess, onFailure);
     },
-    put: function(path, body, onSuccess, onFailure) {
-      doReq("PUT", path, body, onSuccess, onFailure);
+    put: function(path, headers, body, onSuccess, onFailure) {
+      doReq("PUT", path, headers, body, onSuccess, onFailure);
     },
-    patch: function(path, body, onSuccess, onFailure) {
-      doReq("PATCH", path, body, onSuccess, onFailure);
+    patch: function(path, headers, body, onSuccess, onFailure) {
+      doReq("PATCH", path, headers, body, onSuccess, onFailure);
     },
-    delete: function(path, onSuccess, onFailure) {
-      doReq("DELETE", path, "", onSuccess, onFailure);
+    delete: function(path, headers, onSuccess, onFailure) {
+      doReq("DELETE", path, headers, "", onSuccess, onFailure);
     }
   };
 }());

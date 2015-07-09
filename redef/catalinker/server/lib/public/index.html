@@ -119,6 +119,11 @@
     </script>
     <script src="http://cdn.ractivejs.org/latest/ractive.min.js"></script>
     <script>
+      // TODO move this function to libs.js?
+      function getURLParameter(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+      };
+
       var errors = [];
       var ractive = new Ractive({
         el: "#container",
@@ -156,7 +161,9 @@
             return;
           }
           var patch = rdf.createPatch( ractive.get("work_uri"), predicate, event.context );
-          http.patch(ractive.get("work_uri"), patch,
+          http.patch(ractive.get("work_uri"),
+            {"Accept": "application/ld+json", "Content-Type":"application/ldpatch+json"},
+            patch,
             function( response) {
               // successfully patched resource
 
@@ -197,12 +204,12 @@
       });
 
       // Application entrypoint - will fetch any resources (ontology etc) required to populate the UI.
-      http.get("/config",
+      http.get("/config", {"Accept": "application/ld+json"},
         function( response ) {
           cfg = JSON.parse( response.responseText );
 
           // fetch ontology
-          http.get(cfg.ontologyUri,
+          http.get(cfg.ontologyUri, {"Accept": "application/ld+json"},
             function( response ) {
               var ontology = JSON.parse( response.responseText ),
                   props = rdf.propsByClass( ontology, "Work" ),
@@ -225,15 +232,33 @@
              console.log( "GET ontology error: " + response );
           });
 
-         // fetch URI for work
-         http.post(cfg.resourceApiUri + "work", "{}",
-           function( response ) {
-             work_uri = response.getResponseHeader( "Location" );
-             ractive.set( "work_uri", work_uri );
-           },
-           function( response ) {
-             console.log( "POST work error: " + response );
-         });
+        // If resource URI is given in query string, it will be loaded for editing, otherwise we will
+        // request a new URI for working on a new resource.
+        var uri = getURLParameter("resource");
+        if (uri) {
+          // load existing resource
+          http.get(cfg.resourceApiUri + "work/"+uri.substr(uri.lastIndexOf("/")+1),
+            {"Accept": "application/json"},
+            function(response) {
+              console.log(response.responseText);
+            },
+            function(response) {
+              console.log(response);
+              //errors.push()
+            });
+        } else {
+          // fetch URI for work
+          http.post(cfg.resourceApiUri + "work",
+            {"Accept": "application/ld+json", "Content-Type":"application/json"},
+             "{}",
+            function( response ) {
+              work_uri = response.getResponseHeader( "Location" );
+              ractive.set( "work_uri", work_uri );
+            },
+            function( response ) {
+              console.log( "POST work error: " + response );
+          });
+        }
        },
        function( response ) {
          console.log( "GET config error: " + response );
