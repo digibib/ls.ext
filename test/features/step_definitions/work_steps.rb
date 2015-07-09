@@ -53,6 +53,37 @@ Given(/^at det finnes et verk med feil årstall$/) do
   step "jeg legger til et årstall for førsteutgave av nye verket"
 end
 
+Given(/^at jeg ser på et lagret verk$/) do
+  step "at jeg er i katalogiseringsgrensesnittet"
+  step "at systemet har returnert en ny ID for det nye verket"
+  step "jeg kan legge til tittel for det nye verket"
+  step "grensesnittet viser at tittelen er lagret"
+end
+
+Gitt(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
+  step "at det finnes et eksemplar av en bok registrert i Koha"
+  step "at jeg er i katalogiseringsgrensesnittet"
+  step "at jeg ser på et lagret verk"
+  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
+end
+
+When(/^jeg klikker på lenken til en biblio\-kobling$/) do
+  @browser.goto(@browser.div(:class => "http://192.168.50.12:8005/ontology#biblio").a(:class => "link").href)
+end
+
+When(/^jeg klikker på lenken til verks\-siden$/) do
+  @browser.goto(@site.Catalinker.get_link)
+end
+
+Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
+  Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
+  @site.PatronClient.getTitle.should include(@context[:title])
+end
+
+Så(/^kommer jeg til Koha's presentasjon av biblio$/) do
+  step "verkets tittel vises på verks-siden"
+end
+
 When(/^jeg åpner verket for redigering$/) do
   @site.Catalinker.open(@context[:identifier])
 end

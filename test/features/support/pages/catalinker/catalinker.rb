@@ -28,6 +28,10 @@ class Catalinker < PageRoot
       @browser.input(:data_automation_id => /work_uri/).value
     end
 
+    def get_link
+      @browser.a(:data_automation_id => "work_page_link").href
+    end
+
     def errors
       @browser.div(:id => "errors").text
     end
