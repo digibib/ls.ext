@@ -54,6 +54,9 @@ var http = (function() {
 var rdf = (function() {
   "use strict";
 
+  // propsByClass extract the properties from the ontology which are valid for a given class.
+  // This includes properties with unspecified domain (applicable for all classes), and those
+  // with specified range as the given class.
   function propsByClass( ontology, cls ) {
     return ontology["@graph"].filter(function(e) {
       return ( e["@type"] == "rdfs:Property" &&
@@ -62,6 +65,8 @@ var rdf = (function() {
     });
   }
 
+  // resolveURI resolves a URI in prefixed form to its full form, according to prefixes specified
+  // in the ontology.
   function resolveURI( ontology, uri ) {
     var i = uri.indexOf(":");
     var prefix = uri.substr( 0, i );
@@ -72,6 +77,7 @@ var rdf = (function() {
     }
   }
 
+  // validateLiteral checks that a given value conforms to it's xsd:range(datatype).
   function validateLiteral( value, range ) {
     switch (range) {
       case "http://www.w3.org/2001/XMLSchema#string":
@@ -93,6 +99,8 @@ var rdf = (function() {
     }
   }
 
+  // createPatch creates a patch request for a given subject, predicate and value (el)
+  // as it is represented in the client UI.
   function createPatch( subject, predicate, el ) {
     var addPatch,
         delPatch;
