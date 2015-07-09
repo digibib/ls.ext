@@ -47,6 +47,21 @@ Given(/^at verket har en tittel$/) do
   step "grensesnittet viser at tittelen er lagret"
 end
 
+Given(/^at det finnes et verk med feil årstall$/) do
+  step "at jeg er i katalogiseringsgrensesnittet"
+  step "at systemet har returnert en ny ID for det nye verket"
+  step "jeg legger til et årstall for førsteutgave av nye verket"
+end
+
+When(/^jeg åpner verket for redigering$/) do
+  @site.Catalinker.open(@context[:identifier])
+end
+
+Når(/^når jeg endrer årstall for førsteutgave til verket$/) do
+  step "jeg legger til et årstall for førsteutgave av nye verket"
+  step "grensesnittet viser at tittelen er lagret"
+end
+
 When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
   predicate = "http://192.168.50.12:8005/ontology#name"
   @context[:alt_title] = generateRandomString

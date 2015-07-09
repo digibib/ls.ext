@@ -240,11 +240,18 @@
           http.get(cfg.resourceApiUri + "work/"+uri.substr(uri.lastIndexOf("/")+1),
             {"Accept": "application/json"},
             function(response) {
-              console.log(response.responseText);
+              ractive.set("work_uri", uri);
+              var values = rdf.extractValues(JSON.parse(response.responseText));
+              for ( var n in ractive.get("inputs") ) {
+                var kp = "inputs." + n;
+                var input = ractive.get(kp);
+                if ( values[input.predicate] ) {
+                  ractive.set(kp+".values", values[input.predicate]);
+                }
+              }
             },
             function(response) {
               console.log(response);
-              //errors.push()
             });
         } else {
           // fetch URI for work

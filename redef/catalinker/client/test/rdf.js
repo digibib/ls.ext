@@ -166,8 +166,8 @@ describe("Parsing an ontology", function() {
 describe("Updating a resource", function() {
   it("can build patch requests adding properties", function() {
     var val = {
-      old: { value: "", type: "", lang: "" },
-      current: { value: "a", type: "", lang: "no" }
+      old: { value:"", datatype: "", lang: "" },
+      current: { value: "a", datatype: "", lang: "no" }
     }
     assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
       '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}')
@@ -175,8 +175,8 @@ describe("Updating a resource", function() {
 
   it("can build patch requests updating removing and adding properties", function() {
     var val = {
-      old: { value: "b", type: "", lang: "" },
-      current: { value: "a", type: "", lang: "no" }
+      old: { value: "b", datatype: "", lang: "" },
+      current: { value: "a", datatype: "", lang: "no" }
     }
     assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
       '[{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b"}},{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}]')
@@ -184,11 +184,20 @@ describe("Updating a resource", function() {
 
   it("ignores empty values", function() {
     var val = {
-      old: { value: "b", type: "", lang: "en" },
-      current: { value: "", type: "", lang: "" },
+      old: { value: "b", datatype: "", lang: "en" },
+      current: { value: "", datatype: "", lang: "" },
     }
     assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
       '{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en"}}')
+  });
+
+  it("builds patch with datatype", function() {
+    var val = {
+      old: { value: "", datatype: "", lang: "" },
+      current: { value: "a", datatype: "http://a/mytype", lang: "" }
+    }
+    assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
+      '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","datatype":"http://a/mytype"}}')
   });
 });
 
@@ -231,4 +240,24 @@ describe("Validating RDF Literals", function() {
     );
   });
 
+});
+
+describe("Parsing JSON-LD", function() {
+  it("converts the properties into a managble form", function() {
+    assert.equal(
+      JSON.stringify(rdf.extractValues(JSON.parse('{"@id":"http://192.168.50.12:8005/work/w392735109936","@type":"deichman:Work","deichman:creator":"petter","deichman:name":[{"@language":"en","@value":"the title"},{"@language":"no","@value":"tittelen"}],"deichman:year":"1981","@context":{"deichman":"http://192.168.50.12:8005/ontology#","rdfs":"http://www.w3.org/2000/01/rdf-schema#"}}'))),
+      JSON.stringify({
+        "http://192.168.50.12:8005/ontology#creator":
+          [{old: { value: "petter", type: "", lang: "" },
+            current: { value: "petter", type: "", lang: "" }}],
+        "http://192.168.50.12:8005/ontology#name":
+          [{old: { value: "the title", type: "", lang: "en" },
+            current: { value: "the title", type: "", lang: "en" }},
+           {old: { value: "tittelen", type: "", lang: "no" },
+                   current: { value: "tittelen", type: "", lang: "no" }}],
+        "http://192.168.50.12:8005/ontology#year":
+          [{old: { value: "1981", type: "", lang: "" },
+            current: { value: "1981", type: "", lang: "" }}],
+      }));
+  });
 });

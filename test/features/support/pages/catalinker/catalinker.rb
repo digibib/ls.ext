@@ -9,6 +9,13 @@ class Catalinker < PageRoot
       self
     end
 
+    def open(resource)
+      # TODO fungerer ikke, fordi phantomjs vil ikke åpne url med query parametere
+      @browser.goto "#{catalinker(:work)}?resource=#{resource}"
+      Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
+      self
+    end
+
     def add_prop(predicate, value)
       input = @browser.text_field(:data_automation_id => predicate+"_0")
       input.set(value)

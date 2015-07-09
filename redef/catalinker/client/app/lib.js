@@ -107,15 +107,21 @@ var rdf = (function() {
 
     if ( el.current.value !== "") {
       addPatch = { op: "add", s: subject, p: predicate, o: { value: el.current.value } }
-      if ( el.current.lang != "" ) {
+      if ( el.current.lang !== "" ) {
         addPatch.o.lang = el.current.lang;
+      }
+      if ( el.current.datatype !== "" ) {
+        addPatch.o.datatype = el.current.datatype;
       }
     }
 
     if ( el.old.value !== "" ) {
     delPatch = { op: "del", s: subject, p: predicate, o: { value: el.old.value } }
-      if ( el.old.lang != "" ) {
-      delPatch.o.lang = el.old.lang;
+      if ( el.old.lang !== "" ) {
+        delPatch.o.lang = el.old.lang;
+      }
+      if ( el.old.datatype !== "" ) {
+        delPatch.o.datatype = el.old.datatype;
       }
     }
 
@@ -129,11 +135,52 @@ var rdf = (function() {
     }
   }
 
+  // extractValues extracts the values (properties) from the given resource in JSON-LD format,
+  // and returns them in the format which the client UI uses.
+  // TODO evaluate JSON-LD messiness and ambiguity VS parsing N-Triples.
+  function extractValues(resource) {
+    var values = {};
+    for (var prop in resource) {
+      switch (prop) {
+        case "@id":
+        case "@type":
+        case "@context":
+          continue;
+        default:
+          var predicate = rdf.resolveURI(resource,  prop);
+          if (typeof resource[prop] === "string") {
+            // property has one value, a simple string literal
+            values[predicate] = [{old: { value: resource[prop], type: "", lang: "" },
+                                  current: { value: resource[prop], type: "", lang: "" }}];
+          } else if ( Array.isArray(resource[prop]) ) {
+            // property has several values
+            values[predicate] = [];
+            for ( var v in resource[prop] ) {
+              var val = resource[prop][v];
+              if (typeof val === "string") {
+                values[predicate].push({old: { value: val, type: "", lang: "" },
+                                       current: { value: val, type: "", lang: "" }});
+              } else if (typeof val === "object") {
+                values[predicate].push({old: { value: val["@value"], type: "", lang: val["@language"] },
+                                       current: { value: val["@value"], type: "", lang: val["@language"] }});
+              }
+            }
+          } else if (typeof resource[prop] === "object") {
+            // property has one value, with language tag or datatype
+            values[predicate] = [{old: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] },
+                                  current: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] }}];
+          }
+      }
+    }
+    return values;
+  }
+
   // exported functions
   return {
     propsByClass: propsByClass,
     createPatch: createPatch,
     resolveURI: resolveURI,
-    validateLiteral: validateLiteral
+    validateLiteral: validateLiteral,
+    extractValues: extractValues
   };
 })();
