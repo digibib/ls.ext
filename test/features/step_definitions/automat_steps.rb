@@ -164,6 +164,8 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
       @context[:sip_checkout_response]["AF"].should eq("1") # TODO! This should be a more meaningful response ?!?!
     when "ikke kan lånes pga aldersbegrensning"
       @context[:sip_checkout_response]["AF"].should eq("AGE_RESTRICTION: Aldersgrense: 15")
+    else
+      throw "You reached a step definition that is not yet implemented!"
     end
 
   # Checkin specific tests
@@ -174,6 +176,8 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
       # TODO: to specify branch on checkin, koha must be patched to accept AO field
       #@context[:sip_checkin_response][:statusData][3].should eq("N")  # No alert
       step "systemet viser at alarm er aktivert"
+    else
+      throw "You reached a step definition that is not yet implemented!"
     end
   end
 end
