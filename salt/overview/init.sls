@@ -1,5 +1,5 @@
 ﻿{% set image = 'nginx' %}
-{% set tag = 'latest' %}
+{% set tag = '1.9.2' %}
 
 {% include 'docker-pull.sls-fragment' %}
 
