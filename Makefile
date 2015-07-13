@@ -205,6 +205,9 @@ push:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make push TAG=$(TAG)'
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make push TAG=$(TAG)'
 
+phantom_catalinker_load:
+	vagrant ssh vm-test -c 'phantomjs vm-test/catalinker_load.js -v'
+
 docker_cleanup:
 	@echo "cleaning up unused containers and images"
 	@vagrant ssh $(SHIP) -c 'sudo /vagrant/redef/docker_cleanup.sh'
