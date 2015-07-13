@@ -11,6 +11,7 @@ base:
 
   'wombat,vm-devops':
     - match: list
+    - registry # not really used in vm-devops, just installed to make sure installation works
     - overview
     - elk
     - elk.configserver

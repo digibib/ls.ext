@@ -35,6 +35,7 @@ base:
   'wombat':
     - match: list
     - docker.prod
+    - registry.prod
     - elk.prod
     - sip.prod
     - redef.prod
@@ -45,6 +46,7 @@ base:
 
   'vm-devops':
     - match: list
+    - registry.dev
     - overview.dev  # overview
     - redef.dev  # overview
     - elk.dev  # overview
