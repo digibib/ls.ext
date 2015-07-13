@@ -1,18 +1,19 @@
-var http = (function() {
+var http = (function () {
   "use strict";
 
-  function doReq(method, path, headers, body, onSuccess, onFailure ) {
+  function doReq(method, path, headers, body, onSuccess, onFailure) {
     var req = new XMLHttpRequest();
     req.open(method, path, true);
 
     for (var prop in headers) {
       req.setRequestHeader(prop, headers[prop]);
     }
- 
-    req.onload = function() {
-     if (req.status >= 200 && req.status < 400) {
+
+    req.onload = function () {
+      if (req.status >= 200 && req.status < 400) {
         onSuccess(req);
-     } else {
+      } else {
+
         // request reached server, but we got an error
         onFailure(req.responseText);
       }
@@ -21,7 +22,7 @@ var http = (function() {
     // request didn't reach server
     req.onerror = onFailure;
 
-    if ( body !== "" ) {
+    if (body !== "") {
       req.send(body);
     } else {
       req.send();
@@ -30,69 +31,62 @@ var http = (function() {
 
   // return exported functions
   return {
-    get: function(path, headers, onSuccess, onFailure) { 
+    get: function (path, headers, onSuccess, onFailure) {
       doReq("GET", path, headers, "", onSuccess, onFailure);
     },
-    post: function(path, headers, body, onSuccess, onFailure) {
+    post: function (path, headers, body, onSuccess, onFailure) {
       doReq("POST", path, headers, body, onSuccess, onFailure);
     },
-    put: function(path, headers, body, onSuccess, onFailure) {
+    put: function (path, headers, body, onSuccess, onFailure) {
       doReq("PUT", path, headers, body, onSuccess, onFailure);
     },
-    patch: function(path, headers, body, onSuccess, onFailure) {
+    patch: function (path, headers, body, onSuccess, onFailure) {
       doReq("PATCH", path, headers, body, onSuccess, onFailure);
     },
-    delete: function(path, headers, onSuccess, onFailure) {
+    delete: function (path, headers, onSuccess, onFailure) {
       doReq("DELETE", path, headers, "", onSuccess, onFailure);
     }
   };
 }());
 
-
-
-
-var rdf = (function() {
+var rdf = (function () {
   "use strict";
 
   // propsByClass extract the properties from the ontology which are valid for a given class.
   // This includes properties with unspecified domain (applicable for all classes), and those
   // with specified range as the given class.
-  function propsByClass( ontology, cls ) {
-    return ontology["@graph"].filter(function(e) {
-      return ( e["@type"] == "rdfs:Property" &&
-        ( e["rdfs:domain"] === undefined ||
-          e["rdfs:domain"]["@id"] === "rdfs:Class" || e["rdfs:domain"]["@id"] == "deichman:"+cls ) );
+  function propsByClass(ontology, cls) {
+    return ontology["@graph"].filter(function (e) {
+      return (e["@type"] == "rdfs:Property" &&
+        (e["rdfs:domain"] === undefined ||
+          e["rdfs:domain"]["@id"] === "rdfs:Class" || e["rdfs:domain"]["@id"] == "deichman:" + cls));
     });
   }
 
   // resolveURI resolves a URI in prefixed form to its full form, according to prefixes specified
   // in the ontology.
-  function resolveURI( ontology, uri ) {
+  function resolveURI(ontology, uri) {
     var i = uri.indexOf(":");
-    var prefix = uri.substr( 0, i );
-    for ( var k in ontology["@context"] ) {
-      if ( prefix === k ) {
-        return ontology["@context"][k]+uri.substr(i+1);
+    var prefix = uri.substr(0, i);
+    for (var k in ontology["@context"]) {
+      if (prefix === k) {
+        return ontology["@context"][k] + uri.substr(i + 1);
       }
     }
   }
 
   // validateLiteral checks that a given value conforms to it's xsd:range(datatype).
-  function validateLiteral( value, range ) {
+  function validateLiteral(value, range) {
     switch (range) {
       case "http://www.w3.org/2001/XMLSchema#string":
-        // a javscript string is always valid as xsd:string
-        return true;
-        break;
+        return true; // a javscript string is always valid as xsd:string
       case "http://www.w3.org/2001/XMLSchema#gYear":
         // According to its specification, a xsd:gYear allows time-zone information, but
         // we don't want that, and only accepts negative (BCE) or positive (CE) integers.
         // TODO shall we require 0-padding - i.e not allow "92" but require "0092"?
         return /^-?(\d){1,4}$/.test(value);
-        break;
       case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
         return /^\+?(\d)+$/.test(value);
-        break;
       default:
         var err = "don't know how to validate literal of range: <" + range + ">";
         throw err;
@@ -101,33 +95,34 @@ var rdf = (function() {
 
   // createPatch creates a patch request for a given subject, predicate and value (el)
   // as it is represented in the client UI.
-  function createPatch( subject, predicate, el ) {
+  function createPatch(subject, predicate, el) {
     var addPatch,
         delPatch;
 
-    if ( el.current.value !== "") {
-      addPatch = { op: "add", s: subject, p: predicate, o: { value: el.current.value } }
-      if ( el.current.lang !== "" ) {
+    if (el.current.value !== "") {
+      addPatch = { op: "add", s: subject, p: predicate, o: { value: el.current.value } };
+      if (el.current.lang !== "") {
         addPatch.o.lang = el.current.lang;
       }
-      if ( el.current.datatype !== "" ) {
+
+      if (el.current.datatype !== "") {
         addPatch.o.datatype = el.current.datatype;
       }
     }
 
-    if ( el.old.value !== "" ) {
-    delPatch = { op: "del", s: subject, p: predicate, o: { value: el.old.value } }
-      if ( el.old.lang !== "" ) {
+    if (el.old.value !== "") {
+      delPatch = { op: "del", s: subject, p: predicate, o: { value: el.old.value } };
+      if (el.old.lang !== "") {
         delPatch.o.lang = el.old.lang;
       }
-      if ( el.old.datatype !== "" ) {
+
+      if (el.old.datatype !== "") {
         delPatch.o.datatype = el.old.datatype;
       }
     }
 
-
     if (delPatch && addPatch) {
-      return JSON.stringify([delPatch,addPatch]);
+      return JSON.stringify([delPatch, addPatch]);
     } else if (delPatch) {
       return JSON.stringify(delPatch);
     } else {
@@ -145,33 +140,37 @@ var rdf = (function() {
         case "@id":
         case "@type":
         case "@context":
-          continue;
+          break;
         default:
           var predicate = rdf.resolveURI(resource,  prop);
           if (typeof resource[prop] === "string") {
+
             // property has one value, a simple string literal
-            values[predicate] = [{old: { value: resource[prop], type: "", lang: "" },
-                                  current: { value: resource[prop], type: "", lang: "" }}];
-          } else if ( Array.isArray(resource[prop]) ) {
+            values[predicate] = [{ old: { value: resource[prop], type: "", lang: "" },
+                                  current: { value: resource[prop], type: "", lang: "" } }];
+          } else if (Array.isArray(resource[prop])) {
+
             // property has several values
             values[predicate] = [];
-            for ( var v in resource[prop] ) {
+            for (var v in resource[prop]) {
               var val = resource[prop][v];
               if (typeof val === "string") {
-                values[predicate].push({old: { value: val, type: "", lang: "" },
-                                       current: { value: val, type: "", lang: "" }});
+                values[predicate].push({ old: { value: val, type: "", lang: "" },
+                                       current: { value: val, type: "", lang: "" } });
               } else if (typeof val === "object") {
-                values[predicate].push({old: { value: val["@value"], type: "", lang: val["@language"] },
-                                       current: { value: val["@value"], type: "", lang: val["@language"] }});
+                values[predicate].push({ old: { value: val["@value"], type: "", lang: val["@language"] },
+                                       current: { value: val["@value"], type: "", lang: val["@language"] } });
               }
             }
           } else if (typeof resource[prop] === "object") {
+
             // property has one value, with language tag or datatype
-            values[predicate] = [{old: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] },
-                                  current: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] }}];
+            values[predicate] = [{ old: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] },
+                                  current: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] } }];
           }
       }
     }
+
     return values;
   }
 

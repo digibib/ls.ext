@@ -11,7 +11,11 @@ dev_client: build_clientbuilder
 build_client: test_client
 	cp client/app/lib.js server/lib/public/lib.js
 
-test_client: build_clientbuilder
+lint_client: build_clientbuilder
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) jscs . --fix
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) jshint .
+
+test_client: build_clientbuilder lint_client
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) karma start karma.config.js --single-run
 
 build_clientbuilder:

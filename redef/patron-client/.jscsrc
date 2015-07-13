@@ -1,0 +1,10 @@
+{
+  "preset": "crockford",
+  "maximumLineLength": {
+    "value": 180,
+    "tabSize": 2,
+    "allExcept": ["urlComments", "regex"]
+  },
+  "validateIndentation": 2,
+  "requireMultipleVarDecl": null
+}
