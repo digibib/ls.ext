@@ -1,6 +1,7 @@
 @prefix : <http://data.deichman.no/lsext-model#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 :Work a rdfs:Class ;
   rdfs:label "Work"@en ;
@@ -18,7 +19,7 @@
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
   rdfs:domain rdfs:Class ;
-  rdfs:range xsd:string ;
+  rdfs:range rdf:langString ;
   rdfs:comment "The relationship between a thing and what it is called"@en ;
   rdfs:comment "Relasjonen mellom en ting og det den er kalt"@en .
 
