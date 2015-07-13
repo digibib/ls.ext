@@ -53,10 +53,12 @@
             <div class="prop-values">
               {{#each values}}
                 {{#range === "http://www.w3.org/2001/XMLSchema#string"}}
+                  {{>input-string}}
+                {{elseif range === "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"}}
                   {{>input-lang-string}}
                 {{elseif range === "http://www.w3.org/2001/XMLSchema#gYear"}}
                   {{>input-gYear}}
-                {{elseif range === "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"}}
+                {{elseif range === "http:mak//www.w3.org/2001/XMLSchema#nonNegativeInteger"}}
                   {{>input-nonNegativeInteger}}
                 {{else}}
                   {{>input-string}}
@@ -90,16 +92,14 @@
             on-change="countdownToSave"
             data-automation-id="{{predicate}}_{{@index}}"
             value="{{current.value}}" />
-            {{#range === "http://www.w3.org/2001/XMLSchema#string"}}
-              <select value="{{current.lang}}"
-                      on-change='patchResource:{{predicate}}'
-                      class="select_lang">
-                <option value="">velg språk</option>
-                <option value="no">norsk</option>
-                <option value="en">engelsk</option>
-                <option value="fr">fransk</option>
-              </select>
-            {{/}}
+            <select value="{{current.lang}}"
+                    on-change='patchResource:{{predicate}}'
+                    class="select_lang">
+              <option value="">velg språk</option>
+              <option value="no">norsk</option>
+              <option value="en">engelsk</option>
+              <option value="fr">fransk</option>
+            </select>
       {{/partial}}
 
       {{#partial input-gYear}}
