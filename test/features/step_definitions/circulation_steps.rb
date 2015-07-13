@@ -8,12 +8,8 @@ Given(/^at en bok er utlånt til en låner$/) do
   step "jeg registrerer utlån av boka"
 end
 
-Given(/^at låneren har materiale han ønsker å (levere|låne)$/) do |action|
+Given(/^at låneren har materiale han ønsker å låne$/) do
   step "jeg legger inn boka som en ny bok"
-end
-
-Given(/^at materialet ikke er lånt ut til låner$/) do
-  step "at boka finnes i biblioteket"
 end
 
 Given(/^at det finnes materiale som er utlånt til låneren$/) do
@@ -110,10 +106,6 @@ Given(/^at det finnes en reservasjon på materialet$/) do
   step "at materialet er reservert av en annen låner"
 end
 
-Gitt(/^at det finnes en reservasjon på en annen avdeling$/) do
-  step "at materialet er reservert av en annen låner"
-end
-
 Given(/^at materialet er reservert av en annen låner$/) do
   step "at det finnes en låner med lånekort", table(%{
     | firstname | password |
@@ -172,9 +164,10 @@ end
 
 Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
   @browser.goto intranet(:pendingreserves)
-  @browser.table(:id => "holdst").wait_until_present
   if notreserved
-    @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
+    if @browser.table(:id => "holdst").exists?
+      @browser.table(:id => "holdst").should_not include(@active[:book].title)
+    end
   else
     @browser.table(:id => "holdst").text.should include(@active[:book].title)
   end
@@ -212,17 +205,17 @@ end
 Then(/^vises boka i listen over bøker som skal plukkes$/) do
   @browser.goto intranet(:holdsqueue)
   @browser.form(:name => "f").submit
-  @browser.table(:id => "holdst").wait_until_present
-  @browser.table(:id => "holdst").tbody.text.should include(@active[:book].title)
-  @browser.table(:id => "holdst").tbody.text.should include(@active[:patron].cardnumber)
+  row = @browser.table(:id => "holdst").tbody.rows.first
+  row.td(:class => "hq-title").text.should include(@active[:book].title)
+  row.td(:class => "hq-patron").text.should include(@active[:patron].cardnumber)
 end
 
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
   steps %Q{
     Gitt at det er lov å reservere materiale som er på hylla
     Og at det finnes følgende sirkulasjonsregler
-      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds |
-      | *            | *        | 10          | 10          | 10              | 1            |
+      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed |
+      | *            | *        | 10          | 10          | 10              |
     }
 end
 
@@ -233,8 +226,8 @@ Given(/^at låneren har et antall lån som( ikke)? er under maksgrense for antal
   step "at det er lov å reservere materiale som er på hylla"
   if maxloans
     step "at det finnes følgende sirkulasjonsregler", table(%{
-      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds |
-      | *            | *        | 1           | 1           | 1               | 1            |
+      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed |
+      | *            | *        | 1           | 1           | 1               |
       })
   else
     step "at det er aktivert en standard sirkulasjonsregel"
@@ -286,7 +279,6 @@ Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
     row.text_field(:name => "maxissueqty").set "#{rule[:maxissueqty]}"
     row.text_field(:name => "issuelength").set "#{rule[:issuelength]}"
     row.text_field(:name => "reservesallowed").set "#{rule[:reservesallowed]}"
-    row.select_list(:name => "onshelfholds").select_value "#{rule[:onshelfholds]}"
     row.input(:class => "submit").click
   end
 end
