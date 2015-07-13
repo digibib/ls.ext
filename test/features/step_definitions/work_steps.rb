@@ -1,7 +1,19 @@
 # encoding: UTF-8
 
 Given(/^at det finnes et verk$/) do
-  step "leverer systemet en ny ID for det nye verket"
+  steps %Q{
+   Gitt at jeg er i katalogiseringsgrensesnittet
+   Så leverer systemet en ny ID for det nye verket
+   Og jeg kan legge til tittel for det nye verket
+   Når jeg legger til et årstall for førsteutgave av nye verket
+   Så grensesnittet viser at tittelen er lagret
+  }
+end
+
+Given(/^at det finnes et verk med biblio-kobling$/) do
+  step "at det finnes et verk"
+  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
+  step "grensesnittet viser at tittelen er lagret"
 end
 
 Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
@@ -185,7 +197,7 @@ end
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
   @browser.refresh
   @site.PatronClient.getTitle.should include(@context[:title])
-  @site.PatronClient.getDate.should include(@context[:date])
+  @site.PatronClient.getDate.should include(@context[:year])
 end
 
 Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
