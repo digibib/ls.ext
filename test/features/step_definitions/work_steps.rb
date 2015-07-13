@@ -163,6 +163,7 @@ end
 
 Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do
   step "jeg er på sida til verket"
+  @browser.refresh
   @site.PatronClient.getDate().should eq(@context[:year])
 end
 
