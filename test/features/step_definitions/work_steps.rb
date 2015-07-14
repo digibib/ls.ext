@@ -109,9 +109,7 @@ When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
   predicate = "http://192.168.50.12:8005/ontology#name"
   @context[:alt_title] = generateRandomString
   @browser.div(:class => predicate).button.click
-  input = @browser.text_field(:data_automation_id => predicate+"_1")
-  input.set(@context[:alt_title])
-  input.fire_event :blur
+  @site.Catalinker.add_prop(predicate, @context[:alt_title], 1)
 end
 
 When(/^jeg legger til tittel for det nye verket$/) do

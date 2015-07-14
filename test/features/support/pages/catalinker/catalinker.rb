@@ -15,8 +15,10 @@ class Catalinker < PageRoot
       self
     end
 
-    def add_prop(predicate, value)
-      input = @browser.text_field(:data_automation_id => predicate+"_0")
+    def add_prop(predicate, value, nr=0)
+      input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
+      input.set("")
+      Watir::Wait.until { input.value == "" }
       input.set(value)
       input.fire_event :blur
       self
