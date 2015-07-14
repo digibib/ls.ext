@@ -223,4 +223,21 @@ public class PatchRDFTest {
             assertEquals("Triple does not exist",patchException.getMessage());
         }
     }
+
+    @Test
+    public void test_simultaneous_delete_and_add() throws UnsupportedEncodingException, PatchException{
+        Resource subject = ResourceFactory.createResource("http://example.com/test_adds_triple_to_named_graph");
+        Property predicate = ResourceFactory.createProperty("http://example.com/property");
+        RDFNode object = ResourceFactory.createPlainLiteral("House");
+        Statement statement = ResourceFactory.createStatement(subject, predicate, object);
+        String named = "http://example.com/p/named";
+        Model testModel = ModelFactory.createDefaultModel();
+        testRepository.updateNamedGraph(testModel.add(statement), named);
+        RDFNode object2 = ResourceFactory.createPlainLiteral("House2");
+        Statement statement2 = ResourceFactory.createStatement(subject, predicate, object2);
+        Patch patch = new Patch("add",statement2,named);
+        PatchRDF p = new PatchRDF();
+        p.patch(testRepository, patch);
+        assertTrue(testRepository.askIfStatementExistsInGraph(statement2, named));
+    }
 }

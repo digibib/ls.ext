@@ -2,6 +2,8 @@ package no.deichman.services;
 
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
@@ -14,6 +16,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
 
+import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
@@ -180,5 +183,33 @@ public class SPARQLQueryBuilder {
         String q = "ASK {GRAPH <" + graph + "> {}}" ;
 		return q;
 	}
+
+    public String patch(List<Patch> patches) throws Exception {
+        StringBuilder q = new StringBuilder();
+        Iterator<Patch> patchIterator = patches.iterator();
+        while (patchIterator.hasNext()) {
+            Patch currentPatch = patchIterator.next();
+            String sep = " ;\n";
+            String operation = null;
+            if (!patchIterator.hasNext()) {sep = "";}
+            switch (currentPatch.getOperation().toUpperCase()) {
+                case "ADD": operation = "INSERT";
+                            break;
+                case "DEL": operation = "DELETE";
+                            break;
+                default:
+                    throw new RuntimeException("Invalid patch operation");
+            }
+
+            Model temp = ModelFactory.createDefaultModel();
+            temp.add(currentPatch.getStatement());
+            StringWriter sw = new StringWriter();
+            RDFDataMgr.write(sw, temp, Lang.NTRIPLES);
+            String triple = sw.toString();
+            String phrase = operation + " DATA {" + triple.trim() + "}" + sep ;
+            q.append(phrase);
+        }
+        return q.toString();
+    }
 
 }

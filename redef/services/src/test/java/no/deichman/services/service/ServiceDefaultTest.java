@@ -121,7 +121,7 @@ public class ServiceDefaultTest {
     }
 
     @Test
-    public void test_patch_work_add() throws UnsupportedEncodingException, PatchException, PatchParserException{
+    public void test_patch_work_add() throws Exception{
         assertNotNull(service);
 
         Model oldModel = ModelFactory.createDefaultModel();
@@ -149,7 +149,7 @@ public class ServiceDefaultTest {
     }
 
     @Test(expected=PatchParserException.class)
-    public void test_bad_patch_fails() throws UnsupportedEncodingException, PatchException, PatchParserException{
+    public void test_bad_patch_fails() throws Exception{
         assertNotNull(service);
         String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_DEFAULT_PATCH\"}}";
         String workId = service.createWork(workData);

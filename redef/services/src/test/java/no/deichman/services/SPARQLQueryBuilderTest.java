@@ -2,30 +2,21 @@ package no.deichman.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Test;
 
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.update.Update;
-import com.hp.hpl.jena.update.UpdateAction;
-import com.hp.hpl.jena.update.UpdateFactory;
-import com.hp.hpl.jena.update.UpdateRequest;
 
+import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
 
 public class SPARQLQueryBuilderTest {
@@ -230,5 +221,69 @@ public class SPARQLQueryBuilderTest {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
         String expected = "ASK {GRAPH <" + graph + "> {}}" ;
         assertEquals(expected,sqb.askIfGraphExists(graph));
+    }
+
+    @Test
+    public void test_insert_patch() throws Exception{
+        List<Patch> patches = new ArrayList<Patch>();
+        Statement s = ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://example.com/a"),
+                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Patch patch = new Patch("add", s, null);
+        patches.add(patch);
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        String expected = "INSERT DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .}";
+        assertEquals(expected,sqb.patch(patches));
+    }
+
+    @Test
+    public void test_delete_patch() throws Exception{
+        List<Patch> patches = new ArrayList<Patch>();
+        Statement s = ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://example.com/a"),
+                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Patch patch = new Patch("del", s, null);
+        patches.add(patch);
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        String expected = "DELETE DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .}";
+        assertEquals(expected,sqb.patch(patches));
+    }
+
+    @Test
+    public void test_delete_add_multi_patch() throws Exception{
+        List<Patch> patches = new ArrayList<Patch>();
+        Statement s1 = ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://example.com/a"),
+                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Patch patch1 = new Patch("del", s1, null);
+        patches.add(patch1);
+        Statement s2 = ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://example.com/a"),
+                ResourceFactory.createProperty("http://example.com/ontology/test"), ResourceFactory.createPlainLiteral("json"));
+        Patch patch2 = new Patch("del", s2, null);
+        patches.add(patch2);
+        Statement s3 = ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://example.com/a"),
+                ResourceFactory.createProperty("http://example.com/ontology/cress"), ResourceFactory.createPlainLiteral("false fish"));
+        Patch patch3 = new Patch("add", s3, null);
+        patches.add(patch3);
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        String expected = "DELETE DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .} ;\n"
+                        + "DELETE DATA {<http://example.com/a> <http://example.com/ontology/test> \"json\" .} ;\n"
+                        + "INSERT DATA {<http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .}";
+
+        assertEquals(expected,sqb.patch(patches));
+    }
+
+    @Test(expected=Exception.class)
+    public void test_invalid_patch_fails() throws Exception{
+        List<Patch> patches = new ArrayList<Patch>();
+        Statement s = ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://example.com/a"),
+                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Patch patch = new Patch("fail", s, null);
+        patches.add(patch);
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        sqb.patch(patches);
     }
 }

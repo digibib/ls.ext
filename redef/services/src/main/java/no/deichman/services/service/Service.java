@@ -17,5 +17,5 @@ public interface Service {
     Model retrieveWorkItemsById(String id);
 	String createWork(String work);
 	void deleteWork(Model work);
-    Model patchWork(String work, String requestBody) throws UnsupportedEncodingException, PatchException, PatchParserException;
+    Model patchWork(String work, String requestBody) throws UnsupportedEncodingException, PatchException, PatchParserException, Exception;
 }

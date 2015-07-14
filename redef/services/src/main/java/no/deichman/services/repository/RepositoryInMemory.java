@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -22,6 +23,7 @@ import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import no.deichman.services.SPARQLQueryBuilder;
+import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
 import no.deichman.services.utils.UniqueURI;
 import no.deichman.services.utils.UniqueURIMock;
@@ -45,11 +47,11 @@ public class RepositoryInMemory implements Repository {
     public void addData(Model newData){
         model.getDefaultModel().add(newData);
     }
-    
+
     public Model getModel() {
-    	return model.getDefaultModel();
+        return model.getDefaultModel();
     }
-    
+
 	public Dataset getDataset() {
 		return model;
 	}
@@ -164,5 +166,11 @@ public class RepositoryInMemory implements Repository {
             return qexec.execAsk();
 		}
 	}
+
+    @Override
+    public void patch(List<Patch> patches) throws Exception {
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
+        UpdateAction.execute(updateRequest, model);
+    }
 
 }

@@ -1,7 +1,11 @@
 package no.deichman.services.repository;
 
+import java.util.List;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
+
+import no.deichman.services.patch.Patch;
 
 public interface Repository {
 
@@ -22,5 +26,6 @@ public interface Repository {
 	boolean askIfResourceExistsInGraph(String uri, String graph);
 
 	boolean askIfGraphExists(String graph);
+	void patch(List<Patch> patches) throws Exception;
 
 }

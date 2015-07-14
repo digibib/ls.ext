@@ -1,6 +1,7 @@
 package no.deichman.services.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import no.deichman.services.error.PatchException;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.KohaAdapterDefault;
+import no.deichman.services.patch.Patch;
 import no.deichman.services.patch.PatchObject;
 import no.deichman.services.patch.PatchParser;
 import no.deichman.services.patch.PatchRDF;
@@ -110,7 +112,7 @@ public class ServiceDefault implements Service {
     }
 
     @Override
-    public Model patchWork(String workId, String requestBody) throws UnsupportedEncodingException, PatchException, PatchParserException {
+    public Model patchWork(String workId, String requestBody) throws Exception {
         PatchParser patchParser = new PatchParser();
         try {
             patchParser.setPatchData(requestBody);
@@ -118,11 +120,12 @@ public class ServiceDefault implements Service {
             throw new PatchParserException("Bad request");
         }
         List<PatchObject> patch = patchParser.parsePatch();
-        PatchRDF patchRDF = new PatchRDF();
+        List<Patch> patches = new ArrayList<Patch>();
         Iterator<PatchObject> iter = patch.iterator();
         while (iter.hasNext()) {
-            patchRDF.patch(repository, iter.next().toPatch());
+            patches.add(iter.next().toPatch());
         }
+        repository.patch(patches);
         return retrieveWorkById(workId);
     }
 }
