@@ -1,11 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'rest-client'
-gem 'rdf'
-gem 'json-ld'
-gem 'rdf-turtle'
-gem 'rdf-isomorphic'
 
 group :test do
   gem 'test-unit'

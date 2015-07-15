@@ -1,10 +1,6 @@
 #!/usr/bin/env ruby
 require 'sinatra'
-require 'rdf'
 require 'json'
-require 'json/ld'
-require_relative './rest_service.rb'
-require_relative './work_model.rb'
 
 set :server, 'webrick'
 set :bind, '0.0.0.0'
@@ -25,34 +21,5 @@ get '/config' do
 end
 
 get '/work' do
-  location = params['location']
-  if location then
-    RESTService.pull(:work, { :location => location })
-  else
-    redirect '/index.html'
-  end
-end
-
-get '/work/:id' do |id|
-  RESTService.pull(:work, {:id => id }) # just passing on the content for now
-end
-
-get '/item' do
-  "Item"
-end
-
-post '/work', :provides => 'text' do
-
-  data =
-      { :id => params[:id],
-        :creator => params[:creator],
-        :title => params[:title],
-        :biblio => params[:biblio],
-        :year => params[:year]
-      }
-  model = WorkModel.fromData(data)
-  json = model.dump(:jsonld, standard_prefixes: true)
-  resp = RESTService.push("work", json)
-  location = resp.headers[:location]
-  redirect to("/work?location=#{location}")
+  redirect '/index.html'
 end
