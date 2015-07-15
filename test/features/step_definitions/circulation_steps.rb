@@ -172,11 +172,12 @@ end
 
 Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
   @browser.goto intranet(:pendingreserves)
-  @browser.table(:id => "holdst").wait_until_present
   if notreserved
-    @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
+    if @browser.table(:id => "holdst").exists?
+      @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
+    end
   else
-    @browser.table(:id => "holdst").text.should include(@active[:book].title)
+   @browser.table(:id => "holdst").text.should include(@active[:book].title)
   end
 end
 
