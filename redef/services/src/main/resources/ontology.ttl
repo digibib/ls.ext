@@ -39,13 +39,6 @@
   rdfs:comment "The relationship between a work and the year it was created"@en ;
   rdfs:comment "Relasjonen mellom et verk og året det ble skapt"@no .
 
-:identifier a rdfs:Property ;
-  rdfs:label "Identifier"@en ;
-  rdfs:label "Identifikator"@no ;
-  rdfs:range xsd:string ;
-  rdfs:comment "The relationship between a thing and an attribute which uniquely identifies it in a given context"@en ;
-  rdfs:comment "Relasjonen mellom en ting og en attribut som unikt identifiserer den i en gitt kontekst"@no .
-
 :biblio a rdfs:Property ;
   rdfs:label "Biblio"@en ;
   rdfs:label "Biblio"@no ;
