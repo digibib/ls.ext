@@ -36,7 +36,7 @@ Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
   @site.Catalinker.visit
 end
 
-Gitt(/^at det er en feil i systemet for katalogisering$/) do
+Given(/^at det er en feil i systemet for katalogisering$/) do
   `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker stop redef_services_container' >&2`
   @cleanup.push("restarting redef_services_container" =>
     lambda do
@@ -92,7 +92,7 @@ Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
   @site.PatronClient.getTitle.should include(@context[:title])
 end
 
-Så(/^kommer jeg til Koha's presentasjon av biblio$/) do
+Then(/^kommer jeg til Koha's presentasjon av biblio$/) do
   step "verkets tittel vises på verks-siden"
 end
 
@@ -100,7 +100,7 @@ When(/^jeg åpner verket for redigering$/) do
   @site.Catalinker.open(@context[:identifier])
 end
 
-Når(/^når jeg endrer årstall for førsteutgave til verket$/) do
+When(/^når jeg endrer årstall for førsteutgave til verket$/) do
   step "jeg legger til et årstall for førsteutgave av nye verket"
   step "grensesnittet viser at tittelen er lagret"
 end
