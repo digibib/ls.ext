@@ -38,13 +38,13 @@ public class OntologyResource {
     }
 
     @GET
-    @Produces("text/turtle")
+    @Produces("text/turtle" + "; charset=utf-8")
 	public Response getOntologyTurtle() throws IOException {
         return buildGetResponseWith(ontologyService.getOntologyTurtle());
 	}
 
     @GET
-    @Produces("application/ld+json")
+    @Produces("application/ld+json" + "; charset=utf-8")
 	public Response getOntologyJSON() throws IOException {
         return buildGetResponseWith(asJson(ontologyService.getOntologyTurtle()));
 	}

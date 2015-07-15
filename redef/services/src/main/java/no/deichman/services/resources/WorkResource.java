@@ -67,7 +67,7 @@ public class WorkResource {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON + "; charset=utf-8")
     public Response createWork(String work) throws URISyntaxException {
         String workId = service.createWork(work);
         URI location = new URI(workId);
@@ -81,7 +81,7 @@ public class WorkResource {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON + "; charset=utf-8")
     public Response updateWork(String work) {
         service.updateWork(work);
         return Response.ok()
@@ -93,7 +93,7 @@ public class WorkResource {
 
     @PATCH
     @Path("{workId: [a-zA-Z0-9_]+}")
-    @Consumes("application/ldpatch+json")
+    @Consumes("application/ldpatch+json" + "; charset=utf-8")
     public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
         if ( !service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId) ) {
             throw new NotFoundException();
@@ -114,7 +114,7 @@ public class WorkResource {
 
     @GET
     @Path("{workId: [a-zA-Z0-9_]+}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON + "; charset=utf-8")
     public Response getWorkJSON(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkById(workId);
 
@@ -160,7 +160,7 @@ public class WorkResource {
 
     @GET
     @Path("{workId: [a-zA-Z0-9_]+}/items")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON + "; charset=utf-8")
     public Response getWorkItems(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkItemsById(workId);
         if (model.isEmpty()) {
