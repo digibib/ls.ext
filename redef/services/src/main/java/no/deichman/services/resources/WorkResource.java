@@ -67,7 +67,7 @@ public class WorkResource {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON + "; charset=utf-8")
+    @Consumes("application/ld+json" + "; charset=utf-8")
     public Response createWork(String work) throws URISyntaxException {
         String workId = service.createWork(work);
         URI location = new URI(workId);
@@ -81,7 +81,7 @@ public class WorkResource {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON + "; charset=utf-8")
+    @Consumes("application/ld+json" + "; charset=utf-8")
     public Response updateWork(String work) {
         service.updateWork(work);
         return Response.ok()
@@ -114,7 +114,7 @@ public class WorkResource {
 
     @GET
     @Path("{workId: [a-zA-Z0-9_]+}")
-    @Produces(MediaType.APPLICATION_JSON + "; charset=utf-8")
+    @Produces("application/ld+json" + "; charset=utf-8")
     public Response getWorkJSON(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkById(workId);
 
@@ -160,7 +160,7 @@ public class WorkResource {
 
     @GET
     @Path("{workId: [a-zA-Z0-9_]+}/items")
-    @Produces(MediaType.APPLICATION_JSON + "; charset=utf-8")
+    @Produces("application/ld+json" + "; charset=utf-8")
     public Response getWorkItems(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkItemsById(workId);
         if (model.isEmpty()) {

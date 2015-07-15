@@ -21,7 +21,7 @@ class WorkAPIClient < Service
   def create_work(statements)
     uri = URI("#{self.addr}/work")
     req = Net::HTTP::Post.new(uri.path)
-    req.add_field('Content-Type', 'application/json')
+    req.add_field('Content-Type', 'application/ld+json')
     req.body = statements.dump(:jsonld, :standard_prefixes => true)
     res =  Net::HTTP.new(uri.host, uri.port).request(req)
     res['location']

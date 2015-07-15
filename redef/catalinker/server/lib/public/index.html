@@ -242,7 +242,7 @@
         if (uri) {
           // load existing resource
           http.get(cfg.resourceApiUri + "work/"+uri.substr(uri.lastIndexOf("/")+1),
-            {"Accept": "application/json"},
+            {"Accept": "application/ld+json"},
             function(response) {
               ractive.set("work_uri", uri);
               var values = rdf.extractValues(JSON.parse(response.responseText));
@@ -262,7 +262,7 @@
         } else {
           // fetch URI for work
           http.post(cfg.resourceApiUri + "work",
-            {"Accept": "application/ld+json", "Content-Type":"application/json"},
+            {"Accept": "application/ld+json", "Content-Type":"application/ld+json"},
              "{}",
             function( response ) {
               work_uri = response.getResponseHeader( "Location" );

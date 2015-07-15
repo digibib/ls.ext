@@ -34,7 +34,7 @@ public class JSONLD {
         try {
             Object jsonObject = JsonUtils.fromString(sw.toString());
             JsonLdOptions options = new JsonLdOptions();
-            options.format = "application/jsonld";
+            options.format = "application/ld+json";
 
             final Map<String, Object> ctx = new HashMap<>();
             DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI);
