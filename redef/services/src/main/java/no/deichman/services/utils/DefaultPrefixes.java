@@ -10,8 +10,8 @@ import no.deichman.services.uridefaults.BaseURI;
     
 public class DefaultPrefixes {
 
-    Map<String,String> prefixMapping = new HashMap<String,String>();
-    BaseURI baseURI;
+    private Map<String,String> prefixMapping = new HashMap<String,String>();
+    private BaseURI baseURI;
 
     DefaultPrefixes(){
     }

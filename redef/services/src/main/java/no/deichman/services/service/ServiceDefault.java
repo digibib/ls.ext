@@ -1,6 +1,5 @@
 package no.deichman.services.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,14 +14,12 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import no.deichman.services.SPARQLQueryBuilder;
-import no.deichman.services.error.PatchException;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.KohaAdapterDefault;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.patch.PatchObject;
 import no.deichman.services.patch.PatchParser;
-import no.deichman.services.patch.PatchRDF;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.repository.RepositoryDefault;
 import no.deichman.services.uridefaults.BaseURI;
