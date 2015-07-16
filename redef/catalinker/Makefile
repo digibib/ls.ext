@@ -10,6 +10,8 @@ dev_client: build_clientbuilder
 
 build_client: test_client
 	cp client/app/lib.js server/lib/public/lib.js
+	cp client/app/app.js server/lib/public/app.js
+	cp client/app/app.html server/lib/public/index.html
 
 lint_client: build_clientbuilder
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) jscs . --fix

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <title>Katalogisering</title>
+    <style type="text/css">
+      body        { margin: 40px auto; max-width: 1050px; line-height: 1.6; padding: 0 10px;
+                    font-family: sans-serif; font-size: 18px; color: #222; }
+      h1, h2, h3  { line-height: 1.2 }
+      fieldset    { border: 0; background: #eee;}
+      input       { width: 300px; padding: 3px; margin: 0 }
+      label       { font-family: monospace; text-align: right; width: 160px; display: inline-block; }
+
+      #errors     { background: #F77F00; color: #fff; font-weight: bold; }
+      #errors p   { padding: 4px; }
+
+      #save-stat  { text-align: right; color: #888; margin: 0 4px; display: block; }
+      #save-stat:before  { content: "status: ";}
+
+      .prop-input   { clear:both ;}
+      .prop-details { width: 20%; float: left; text-align: right;}
+      .prop-values  { padding-left: 1em; max-width: 60%; float:left;}
+      .link   { display:inline-block; width: 10px; height:10px; background-image: linear-gradient(transparent,transparent),url('data:image/svg+xml,<%3Fxml%20version%3D"1.0"%20encoding%3D"UTF-8"%3F><svg%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"%20width%3D"10"%20height%3D"10"><g%20transform%3D"translate%28-826.429%20-698.791%29"><rect%20width%3D"5.982"%20height%3D"5.982"%20x%3D"826.929"%20y%3D"702.309"%20fill%3D"%23fff"%20stroke%3D"%2306c"%2F><g><path%20d%3D"M831.194%20698.791h5.234v5.391l-1.571%201.545-1.31-1.31-2.725%202.725-2.689-2.689%202.808-2.808-1.311-1.311z"%20fill%3D"%2306f"%2F><path%20d%3D"M835.424%20699.795l.022%204.885-1.817-1.817-2.881%202.881-1.228-1.228%202.881-2.881-1.851-1.851z"%20fill%3D"%23fff"%2F><%2Fg><%2Fg><%2Fsvg>'); }
+
+      .invalid-input { border: 1px solid #F77F00;}
+      .invalid-msg   { color: #F77F00; font-size: 12px;}
+
+    </style>
+    <script src="lib.js"></script>
+  </head>
+  <body>
+    <div id="#container"></div>
+    <script id="template" type="text/ractive">
+      <h2>Katalogisering av verk</h2>
+      <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
+      <div id="save-stat">{{save_status}}</div>
+      <fieldset>
+        <div class="prop-input">
+          <div class="prop-details">
+            <label>URI</label>
+          </div>
+          <div class="prop-values">
+            <input disabled="disabled" data-automation-id="work_uri" value="{{work_uri}}"/>
+            <a data-automation-id="work_page_link" target="_blank" href="{{work_uri.replace(':8005',':8000')}}" class="link"></a>
+          </div>
+        </div>
+        {{#each inputs}}
+          <div class="prop-input {{predicate}}">
+            <div class="prop-details">
+              <button on-click="addValue">+</button>
+              <label>{{label}}</label>
+            </div>
+            <div class="prop-values">
+              {{#each values}}
+                {{#range === "http://www.w3.org/2001/XMLSchema#string"}}
+                  {{>input-string}}
+                {{elseif range === "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"}}
+                  {{>input-lang-string}}
+                {{elseif range === "http://www.w3.org/2001/XMLSchema#gYear"}}
+                  {{>input-gYear}}
+                {{elseif range === "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"}}
+                  {{>input-nonNegativeInteger}}
+                {{else}}
+                  {{>input-string}}
+                {{/}}
+                {{#predicate === "http://192.168.50.12:8005/ontology#biblio" && current.value !== ""}}
+                  <a target="_blank" href="http://192.168.50.12:8080/cgi-bin/koha/opac-detail.pl?biblionumber={{current.value}}" class="link"></a>
+                {{/}}
+                <br/>
+                <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+              {{/each}}
+            </div>
+          </div>
+        {{/each}}
+      </fieldset>
+
+      {{#partial input-string}}
+          <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
+            on-blur='patchResource:{{predicate}}'
+            on-keyup="countdownToSave"
+            on-change="countdownToSave"
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" />
+      {{/partial}}
+
+      {{#partial input-lang-string}}
+          <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
+            on-blur='patchResource:{{predicate}}'
+            on-keyup="countdownToSave"
+            on-change="countdownToSave"
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" />
+            <select value="{{current.lang}}"
+                    on-change='patchResource:{{predicate}}'
+                    class="select_lang">
+              <option value="">velg språk</option>
+              <option value="no">norsk</option>
+              <option value="en">engelsk</option>
+              <option value="fr">fransk</option>
+            </select>
+      {{/partial}}
+
+      {{#partial input-gYear}}
+          <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
+            on-blur='patchResource:{{predicate}}'
+            on-keyup="countdownToSave"
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" />
+      {{/partial}}
+
+      {{#partial input-nonNegativeInteger}}
+          <input
+            class="{{#error}}invalid-input{{else}}valid{{/error}}"
+            on-blur='patchResource:{{predicate}}'
+            on-keyup="countdownToSave"
+            on-change="countdownToSave"
+            data-automation-id="{{predicate}}_{{@index}}"
+            value="{{current.value}}" />
+      {{/partial}}
+    </script>
+    <script src="http://cdn.ractivejs.org/latest/ractive.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
