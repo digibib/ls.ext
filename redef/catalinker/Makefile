@@ -9,9 +9,7 @@ dev_client: build_clientbuilder
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) karma start karma.config.js
 
 build_client: test_client
-	cp client/app/lib.js server/lib/public/lib.js
-	cp client/app/app.js server/lib/public/app.js
-	cp client/app/app.html server/lib/public/index.html
+	sudo salt-call --local state.sls redef.catalinker.buildclient
 
 lint_client: build_clientbuilder
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) jscs . --fix
