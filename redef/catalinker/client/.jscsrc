@@ -6,5 +6,6 @@
 	"allExcept": ["urlComments", "regex"]
   },
   "validateIndentation": 2,
-  "requireMultipleVarDecl": null
+  "requireMultipleVarDecl": null,
+  "excludeFiles": ["app/ractive.min.js"]
 }

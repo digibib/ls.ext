@@ -13,7 +13,7 @@ test-client-dev: build-clienttools
 
 lint-client: build-clienttools
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) jscs . --fix
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) jshint .
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) jshint --exclude app/ractive.min.js .
 
 test-client: build-clienttools lint-client
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) karma start karma.config.js --single-run
