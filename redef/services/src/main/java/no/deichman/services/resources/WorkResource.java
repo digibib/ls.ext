@@ -32,6 +32,8 @@ import java.net.URISyntaxException;
 
 @Path("/work")
 public class WorkResource {
+    private static final String MIME_JSONLD = "application/ld+json";
+    private static final String ENCODING_UTF8 = "; charset=utf-8";
 
 	private Response makeCORS(ResponseBuilder resp, String returnMethod) {
 	   ResponseBuilder rb = resp
@@ -67,7 +69,7 @@ public class WorkResource {
     }
 
     @POST
-    @Consumes("application/ld+json" + "; charset=utf-8")
+    @Consumes(MIME_JSONLD)
     public Response createWork(String work) throws URISyntaxException {
         String workId = service.createWork(work);
         URI location = new URI(workId);
@@ -81,7 +83,7 @@ public class WorkResource {
     }
 
     @PUT
-    @Consumes("application/ld+json" + "; charset=utf-8")
+    @Consumes(MIME_JSONLD)
     public Response updateWork(String work) {
         service.updateWork(work);
         return Response.ok()
@@ -93,7 +95,7 @@ public class WorkResource {
 
     @PATCH
     @Path("{workId: [a-zA-Z0-9_]+}")
-    @Consumes("application/ldpatch+json" + "; charset=utf-8")
+    @Consumes(MIME_JSONLD)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
         if ( !service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId) ) {
             throw new NotFoundException();
@@ -114,7 +116,7 @@ public class WorkResource {
 
     @GET
     @Path("{workId: [a-zA-Z0-9_]+}")
-    @Produces("application/ld+json" + "; charset=utf-8")
+    @Produces(MIME_JSONLD + ENCODING_UTF8)
     public Response getWorkJSON(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkById(workId);
 
@@ -160,7 +162,7 @@ public class WorkResource {
 
     @GET
     @Path("{workId: [a-zA-Z0-9_]+}/items")
-    @Produces("application/ld+json" + "; charset=utf-8")
+    @Produces(MIME_JSONLD + ENCODING_UTF8)
     public Response getWorkItems(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkItemsById(workId);
         if (model.isEmpty()) {
