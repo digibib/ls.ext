@@ -23,7 +23,7 @@ test_client: build_clientbuilder lint_client
 build_clientbuilder:
 	sudo docker build --tag $(CLIENTBUILDER_IMAGE) --file="/vagrant/redef/catalinker/client/Dockerfile-clientbuilder" /vagrant/redef/catalinker/client
 
-build:
+build: build_client
 	sudo salt-call --local state.sls redef.catalinker.skeletonbuild
 
 test: test_client build
