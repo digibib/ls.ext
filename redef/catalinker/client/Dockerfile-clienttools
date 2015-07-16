@@ -15,9 +15,12 @@ RUN npm install -g karma-sinon
 RUN npm install -g karma-sinon-chai
 RUN npm install -g jscs
 RUN npm install -g jshint
+RUN npm install -g casperjs
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/
+
+RUN npm install express
 
 VOLUME /usr/src/app/
 WORKDIR /usr/src/app/
