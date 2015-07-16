@@ -1,33 +1,33 @@
 all: build test run
 
-CLIENTBUILDER_IMAGE=digibib/redef-catalinker-client-builder
+CLIENTTOOL_IMAGE=digibib/redef-catalinker-client-tools
 SKELETON_IMAGE=digibib/redef-catalinker-skeleton
 CONTAINER=redef_catalinker_skeleton_container
 IMAGE=digibib/redef-catalinker
 
-dev_client: build_clientbuilder
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) karma start karma.config.js
+build-clienttools:
+	sudo docker build --tag $(CLIENTTOOL_IMAGE) --file="/vagrant/redef/catalinker/client/Dockerfile-clienttools" /vagrant/redef/catalinker/client
 
-build_client: test_client
+test-client-dev: build-clienttools
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) karma start karma.config.js
+
+lint-client: build-clienttools
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) jscs . --fix
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) jshint .
+
+test-client: build-clienttools lint-client
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) karma start karma.config.js --single-run
+
+build-client: test-client
 	sudo salt-call --local state.sls redef.catalinker.buildclient
 
-lint_client: build_clientbuilder
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) jscs . --fix
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) jshint .
-
-test_client: build_clientbuilder lint_client
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTBUILDER_IMAGE) karma start karma.config.js --single-run
-
-build_clientbuilder:
-	sudo docker build --tag $(CLIENTBUILDER_IMAGE) --file="/vagrant/redef/catalinker/client/Dockerfile-clientbuilder" /vagrant/redef/catalinker/client
-
-build: build_client
+build: build-client
 	sudo salt-call --local state.sls redef.catalinker.skeletonbuild
 
-test: test_client build
+test: build
 	sudo docker run --rm -v /vagrant/redef/catalinker/server:/usr/src/app $(SKELETON_IMAGE) rake test
 
-run-dev:
+run-dev: build-client
 	sudo salt-call --local state.sls redef.catalinker.skeletonrun
 
 test-dev: build
