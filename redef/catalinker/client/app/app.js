@@ -1,7 +1,12 @@
- // TODO move this function to libs.js?
- function getURLParameter(name) {
-   return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
- };
+// TODO move this function to libs.js and test it!
+function getURLParameter(name) {
+  // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
+  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  var regexS = "[\\?&]" + name + "=([^&#]*)";
+  var regex = new RegExp(regexS);
+  var results = regex.exec(location.search);
+  return results === null ? null : results[1];
+}
 
 var errors = [];
 var ractive = new Ractive({
@@ -14,7 +19,7 @@ var ractive = new Ractive({
      inputs: {},
      ontology: null,
      save_status: "nytt verk"
-   },
+   }
  });
 
 // Event handling functions responding to UI interactions:
@@ -56,7 +61,7 @@ listener = ractive.on({
        },
        function (response) {
          // failed to patch resource
-         errors.push("Noe gikk galt! Fikk ikke lagret endringene")
+         errors.push("Noe gikk galt! Fikk ikke lagret endringene");
        });
    }
  });
