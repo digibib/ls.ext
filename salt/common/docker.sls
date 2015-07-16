@@ -32,7 +32,7 @@ docker_repo:
 
 lxc-docker:
   pkg.installed:
-    - version: "1.7.0"
+    - version: "1.7.1"
     - require:
       - pkg: docker-dependencies
 
