@@ -206,6 +206,10 @@ describe("Validating RDF Literals", function () {
     assert(rdf.validateLiteral("æøå 世界", "http://www.w3.org/2001/XMLSchema#string"));
   });
 
+  it("validates rdf:langString literals", function () {
+    assert(rdf.validateLiteral("æøå 世界", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+  });
+
   it("validates a valid xsd:gYear", function () {
     assert(rdf.validateLiteral("1981", "http://www.w3.org/2001/XMLSchema#gYear"));
     assert(rdf.validateLiteral("50", "http://www.w3.org/2001/XMLSchema#gYear"));

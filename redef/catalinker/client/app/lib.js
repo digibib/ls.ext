@@ -78,6 +78,7 @@ var rdf = (function () {
   // validateLiteral checks that a given value conforms to it's xsd:range(datatype).
   function validateLiteral(value, range) {
     switch (range) {
+      case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
       case "http://www.w3.org/2001/XMLSchema#string":
         return true; // a javscript string is always valid as xsd:string
       case "http://www.w3.org/2001/XMLSchema#gYear":
