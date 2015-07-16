@@ -14,7 +14,7 @@ public class PatchParser {
 
     private String patch_input;
     private List<PatchObject> raw_parse_object = new ArrayList<PatchObject>();
-    
+
     PatchParser(String input){
         setPatchData(input);
     }

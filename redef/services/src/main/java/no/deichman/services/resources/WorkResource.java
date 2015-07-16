@@ -34,17 +34,17 @@ public class WorkResource {
     private static final String MIME_JSONLD = "application/ld+json";
     private static final String ENCODING_UTF8 = "; charset=utf-8";
 
-	private Response makeCORS(ResponseBuilder resp, String returnMethod) {
-	   ResponseBuilder rb = resp
+    private Response makeCORS(ResponseBuilder resp, String returnMethod) {
+       ResponseBuilder rb = resp
                .header("Access-Control-Allow-Origin", "*")
-	           .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH");
+               .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH");
 
-	   if (!"".equals(returnMethod)) {
-	      rb.header("Access-Control-Allow-Headers", returnMethod);
-	   }
+       if (!"".equals(returnMethod)) {
+          rb.header("Access-Control-Allow-Headers", returnMethod);
+       }
 
-	   return rb.build();
-	}
+       return rb.build();
+    }
 
     private final Service service;
     private BaseURI baseURI;
@@ -122,7 +122,6 @@ public class WorkResource {
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
-
 
         return Response.ok().entity(jsonld.getJson(model))
                             .header("Access-Control-Allow-Origin", "*")

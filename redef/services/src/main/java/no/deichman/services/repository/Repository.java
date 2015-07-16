@@ -9,7 +9,7 @@ import no.deichman.services.patch.Patch;
 
 public interface Repository {
 
-	String createWork(String work);
+    String createWork(String work);
 
     void updateWork(String work);
     Model retrieveWorkById(String id);
@@ -18,14 +18,14 @@ public interface Repository {
     boolean askIfStatementExists(Statement statement);
     boolean askIfStatementExistsInGraph(Statement statement, String graph);
 
-	void update(Model inputModel);
-	void updateNamedGraph(Model inputModel, String graph);
-	void delete(Model inputModel);
-	void deleteFromNamedGraph(Model inputModel, String graph);
-	void dump();
-	boolean askIfResourceExistsInGraph(String uri, String graph);
+    void update(Model inputModel);
+    void updateNamedGraph(Model inputModel, String graph);
+    void delete(Model inputModel);
+    void deleteFromNamedGraph(Model inputModel, String graph);
+    void dump();
+    boolean askIfResourceExistsInGraph(String uri, String graph);
 
-	boolean askIfGraphExists(String graph);
-	void patch(List<Patch> patches) throws Exception;
+    boolean askIfGraphExists(String graph);
+    void patch(List<Patch> patches) throws Exception;
 
 }

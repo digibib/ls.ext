@@ -95,7 +95,6 @@ public class WorkResourceTest {
         assertEquals(200, result.getStatus());
     }
 
-
     @Test
     public void should_return_the_new_work() throws URISyntaxException{
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";

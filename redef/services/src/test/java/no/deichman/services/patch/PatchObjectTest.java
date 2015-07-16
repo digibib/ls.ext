@@ -17,15 +17,20 @@ public class PatchObjectTest {
     private static final String predicate = "http://www.example.com/predicate";
     private static final String uriObject = "http://www.example.com/object";
     private static final Map<String,String> object = new HashMap<String,String>();
+
     static {
-    	object.put("value", uriObject);
+        object.put("value", uriObject);
     }
+
     private static final Map<String,String> datatype_object = new HashMap<String,String>();
+
     static {
-    	datatype_object.put("value", uriObject);
-    	datatype_object.put("datatype", "http://www.example.com/z");
+        datatype_object.put("value", uriObject);
+        datatype_object.put("datatype", "http://www.example.com/z");
     }
+
     private static final Map<String,String> language_literal = new HashMap<String,String>();
+
     static {
         language_literal.put("value", "Hypothesis");
         language_literal.put("lang", "en");
@@ -139,5 +144,4 @@ public class PatchObjectTest {
         patchObject.setObjectValue("Sult");
         assertNotNull(patchObject.toPatch());
     }
-
 }

@@ -34,7 +34,6 @@ public class RepositoryInMemory implements Repository {
     private final SPARQLQueryBuilder sqb;
     private final BaseURIMock bud;
 
-    
     public RepositoryInMemory() {
         bud = new BaseURIMock();
         sqb = new SPARQLQueryBuilder(bud);
@@ -43,7 +42,7 @@ public class RepositoryInMemory implements Repository {
         model = DatasetFactory.createMem();
         model.setDefaultModel(model2);
     }
-    
+
     public void addData(Model newData){
         model.getDefaultModel().add(newData);
     }
@@ -52,9 +51,9 @@ public class RepositoryInMemory implements Repository {
         return model.getDefaultModel();
     }
 
-	public Dataset getDataset() {
-		return model;
-	}
+    public Dataset getDataset() {
+        return model;
+    }
 
     @Override
     public Model retrieveWorkById(String id) {
@@ -74,25 +73,25 @@ public class RepositoryInMemory implements Repository {
         UpdateAction.execute(updateRequest, model);
     }
 
-	@Override
-	public boolean askIfResourceExists(String uri) {
+    @Override
+    public boolean askIfResourceExists(String uri) {
         try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfResourceExists(uri), model)) {
             return qexec.execAsk();
         }
-	}
+    }
 
-	@Override
-	public boolean askIfResourceExistsInGraph(String uri, String graph) {
+    @Override
+    public boolean askIfResourceExistsInGraph(String uri, String graph) {
         try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfResourceExistsInGraph(uri, graph), model)) {
             return qexec.execAsk();
         }
-	}
+    }
 
-	@Override
-	public String createWork(String work) {
+    @Override
+    public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         UniqueURI random = new UniqueURIMock();
-		String id = random.getNewURI("work", this);
+        String id = random.getNewURI("work", this);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(random.toString()),
@@ -104,68 +103,68 @@ public class RepositoryInMemory implements Repository {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateWorkQueryString(id, tempModel));
         UpdateAction.execute(updateRequest, model);
 
-		return id;
-	}
+        return id;
+    }
 
-	@Override
-	public boolean askIfStatementExists(Statement statement) {
+    @Override
+    public boolean askIfStatementExists(Statement statement) {
         try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfStatementExists(statement), model)) {
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-	@Override
-	public boolean askIfStatementExistsInGraph(Statement statement, String graph) {
+    @Override
+    public boolean askIfStatementExistsInGraph(Statement statement, String graph) {
         try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfStatementExistsInGraph(statement, graph), model)) {
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-	@Override
-	public void update(Model inputModel) {
+    @Override
+    public void update(Model inputModel) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAdd(inputModel));
-        UpdateAction.execute(updateRequest, model);		
-	}
+        UpdateAction.execute(updateRequest, model);        
+    }
 
-	@Override
-	public void updateNamedGraph(Model inputModel, String graph) {
+    @Override
+    public void updateNamedGraph(Model inputModel, String graph) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAddToGraph(inputModel, graph));
         UpdateAction.execute(updateRequest, model);
-	}
+    }
 
-	@Override
-	public void delete(Model inputModel) {
+    @Override
+    public void delete(Model inputModel) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
         UpdateAction.execute(updateRequest, model);
-	}
+    }
 
-	@Override
-	public void deleteFromNamedGraph(Model inputModel, String graph) {
+    @Override
+    public void deleteFromNamedGraph(Model inputModel, String graph) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDeleteFromGraph(inputModel, graph));
         UpdateAction.execute(updateRequest, model);
     }
 
-	public void addDataToNamedGraph(Model add, String named) {
-		model.addNamedModel(named, add);
-	}
+    public void addDataToNamedGraph(Model add, String named) {
+        model.addNamedModel(named, add);
+    }
 
-	@Override
-	public void dump() {
-		RDFDataMgr.write(System.out, model, Lang.TRIG);
-	}
+    @Override
+    public void dump() {
+        RDFDataMgr.write(System.out, model, Lang.TRIG);
+    }
 
-	@Override
-	public boolean askIfGraphExists(String graph) {
+    @Override
+    public boolean askIfGraphExists(String graph) {
         try (QueryExecution qexec = QueryExecutionFactory.create(sqb.askIfGraphExists(graph), model)) {
             return qexec.execAsk();
-		}
-	}
+        }
+    }
 
     @Override
     public void patch(List<Patch> patches) throws Exception {

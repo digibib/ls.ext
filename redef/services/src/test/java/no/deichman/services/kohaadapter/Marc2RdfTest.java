@@ -30,7 +30,6 @@ public class Marc2RdfTest {
     public void test_it_exists(){
         assertNotNull(new Marc2Rdf());
     }
-    
 
     @Test
     public void test_baseURI_can_be_set_got(){
@@ -39,7 +38,7 @@ public class Marc2RdfTest {
         m2r.setBaseURI(base);
         assertNotNull(m2r.getBaseURI());
     }
-    
+
     @Test
     public void test_default_constructor_sets_baseURI(){
         Marc2Rdf m2r = new Marc2Rdf();

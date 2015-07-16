@@ -30,7 +30,7 @@ public class DefaultPrefixesTest {
         String p = def.get(prefix);
         assertEquals(ns,p);
     }
-    
+
     @Test
     public void test_it_returns_system_default_prefixes(){
         BaseURIMock bud = new BaseURIMock();

@@ -13,8 +13,8 @@ public class ParserTest {
 
     @Test
     public void test_parser_object(){
-    	Parser p = new Parser();
-    	assertNotNull(p);
+        Parser p = new Parser();
+        assertNotNull(p);
     }
 
     @Test

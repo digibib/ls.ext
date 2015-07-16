@@ -39,15 +39,15 @@ public class OntologyResource {
 
     @GET
     @Produces("text/turtle" + "; charset=utf-8")
-	public Response getOntologyTurtle() throws IOException {
+    public Response getOntologyTurtle() throws IOException {
         return buildGetResponseWith(ontologyService.getOntologyTurtle());
-	}
+    }
 
     @GET
     @Produces("application/ld+json" + "; charset=utf-8")
-	public Response getOntologyJSON() throws IOException {
+    public Response getOntologyJSON() throws IOException {
         return buildGetResponseWith(asJson(ontologyService.getOntologyTurtle()));
-	}
+    }
 
     private Response buildGetResponseWith(String result) {
         return Response.ok().entity(result)

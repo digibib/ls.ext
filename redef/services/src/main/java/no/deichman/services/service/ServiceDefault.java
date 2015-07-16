@@ -98,10 +98,10 @@ public class ServiceDefault implements Service {
         return allItemsModel;
     }
 
-	@Override
-	public String createWork(String work) {
-		return repository.createWork(work);
-	}
+    @Override
+    public String createWork(String work) {
+        return repository.createWork(work);
+    }
 
     @Override
     public void deleteWork(Model work) {

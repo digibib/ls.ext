@@ -12,11 +12,12 @@ import org.junit.Test;
 import no.deichman.services.error.PatchParserException;
 
 public class PatchParserTest {
+
     @Test
     public void it_exists(){
         assertNotNull(new PatchParser());
     }
-    
+
     @Test
     public void it_sets_gets_input_data(){
         PatchParser pp = new PatchParser();
@@ -24,7 +25,7 @@ public class PatchParserTest {
         pp.setPatchData(input);
         assertEquals(input,pp.getPatchInput());
     }
-    
+
     @Test
     public void it_returns_list_of_patch_objects() throws PatchParserException{
         List<PatchObject> lpo = new ArrayList<PatchObject>();

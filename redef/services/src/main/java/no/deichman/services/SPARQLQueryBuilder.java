@@ -32,11 +32,11 @@ public class SPARQLQueryBuilder {
     }
 
     public Query dumpModel() {
-    	String q = "DESCRIBE * WHERE {?s ?p ?o}";
-    	return QueryFactory.create(q);
+        String q = "DESCRIBE * WHERE {?s ?p ?o}";
+        return QueryFactory.create(q);
     }
 
-	public Query getGetWorkByIdQuery(String id) {
+    public Query getGetWorkByIdQuery(String id) {
         String queryString = "DESCRIBE <" + id + ">";
         return QueryFactory.create(queryString);
     }
@@ -100,21 +100,21 @@ public class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-	public Query checkIfResourceExistsInGraph(String uri, String graph) {
+    public Query checkIfResourceExistsInGraph(String uri, String graph) {
         String q = "ASK {GRAPH <" + graph + "> {<" + uri + "> ?p ?o}}";
         return QueryFactory.create(q);
-	}
+    }
 
-	public Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
+    public Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
         String q = "ASK {" + triple + "}" ;
-		return QueryFactory.create(q);
+        return QueryFactory.create(q);
     }
 
     public Query checkIfStatementExistsInGraph(Statement statement, String graph) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
         String q = "ASK {GRAPH <" + graph + "> {" + triple + "}}" ;
-		return QueryFactory.create(q);
+        return QueryFactory.create(q);
     }
 
     private String statementToN3 (Statement statement) throws UnsupportedEncodingException {
@@ -125,7 +125,7 @@ public class SPARQLQueryBuilder {
         return baos.toString("UTF-8");
     }
 
-	public String updateAdd(Model inputModel) {
+    public String updateAdd(Model inputModel) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
@@ -135,15 +135,15 @@ public class SPARQLQueryBuilder {
                 + data
                 + "\n"
                 + "}";
-	}
+    }
 
-	public String updateAddToGraph(Model inputModel, String graph) {
+    public String updateAddToGraph(Model inputModel, String graph) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
 
         String q = "INSERT DATA {\n"
-        		+ "GRAPH <" + graph + "> {\n"
+                + "GRAPH <" + graph + "> {\n"
                 + "\n"
                 + data
                 + "\n"
@@ -152,21 +152,21 @@ public class SPARQLQueryBuilder {
        return q;
     }
 
-	public String updateDelete(Model inputModel) {
+    public String updateDelete(Model inputModel) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
 
         return "DELETE {\n"
-        		+ data
-        		+ "} WHERE {\n"
+                + data
+                + "} WHERE {\n"
                 + "\n"
                 + data
                 + "\n"
                 + "}";
-	}
+    }
 
-	public String updateDeleteFromGraph(Model inputModel, String graph) {
+    public String updateDeleteFromGraph(Model inputModel, String graph) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
         String data = sw.toString();
@@ -177,12 +177,12 @@ public class SPARQLQueryBuilder {
         + "\n"
         + "}\n"
         + "}";
-	}
+    }
 
-	public String askIfGraphExists(String graph) {
+    public String askIfGraphExists(String graph) {
         String q = "ASK {GRAPH <" + graph + "> {}}" ;
-		return q;
-	}
+        return q;
+    }
 
     public String patch(List<Patch> patches) throws Exception {
         StringBuilder q = new StringBuilder();

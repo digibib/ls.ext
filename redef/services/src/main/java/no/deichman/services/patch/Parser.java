@@ -7,7 +7,7 @@ import org.apache.jena.iri.IRIFactory;
 import no.deichman.services.error.PatchParserException;
 
 public class Parser {
-	
+
     private String input = null;
     private IRIFactory iriFactory = IRIFactory.semanticWebImplementation();
 
@@ -17,7 +17,7 @@ public class Parser {
     public Parser(String input) {
         parse(input);
     }
-    
+
     public void parse(String in) {
         setInput(in);
     }

@@ -19,8 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-
-
 public class KohaAdapterDefault implements KohaAdapter {
 
     private static final String KOHA_PORT = System.getProperty("KOHA_PORT", "http://192.168.50.12:8081");

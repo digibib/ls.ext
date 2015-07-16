@@ -47,6 +47,7 @@ public class PatchProviderTest {
         List<PatchObject> t1 = p.parsePatch();
         assertEquals(t1.get(0).getObjectValue(), expected.get(0).getObjectValue());
     }
+
     @Test
     public void test_can_parse_lang_literal() throws PatchParserException{
         List<PatchObject> expected = new ArrayList<PatchObject>();
@@ -70,6 +71,5 @@ public class PatchProviderTest {
         JsonElement l1 = parser.parse(source);
         JsonElement l2 = parser.parse(target);
         assertEquals(l1,l2);
-        
     }
 }

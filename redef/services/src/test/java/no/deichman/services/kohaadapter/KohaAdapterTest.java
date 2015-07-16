@@ -13,5 +13,4 @@ public class KohaAdapterTest {
         Model result = instance.getBiblio(manifestationId);
         assertNotNull(result);
     }
-    
 }
