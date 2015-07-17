@@ -12,7 +12,7 @@ end
 
 Given(/^at det finnes et verk med biblio-kobling$/) do
   step "at det finnes et verk"
-  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
   step "grensesnittet viser at tittelen er lagret"
 end
 
@@ -33,7 +33,7 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
 end
 
 Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
-  @site.Catalinker.visit
+  @site.RegWork.visit
 end
 
 Given(/^at det er en feil i systemet for katalogisering$/) do
@@ -76,7 +76,7 @@ Gitt(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
   step "at det finnes et eksemplar av en bok registrert i Koha"
   step "at jeg er i katalogiseringsgrensesnittet"
   step "at jeg ser på et lagret verk"
-  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
 end
 
 When(/^jeg klikker på lenken til en biblio\-kobling$/) do
@@ -84,7 +84,7 @@ When(/^jeg klikker på lenken til en biblio\-kobling$/) do
 end
 
 When(/^jeg klikker på lenken til verks\-siden$/) do
-  @browser.goto(@site.Catalinker.get_link)
+  @browser.goto(@site.RegWork.get_link)
 end
 
 Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
@@ -97,7 +97,7 @@ Then(/^kommer jeg til Koha's presentasjon av biblio$/) do
 end
 
 When(/^jeg åpner verket for redigering$/) do
-  @site.Catalinker.open(@context[:identifier])
+  @site.RegWork.open(@context[:identifier])
 end
 
 When(/^når jeg endrer årstall for førsteutgave til verket$/) do
@@ -109,7 +109,7 @@ When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
   predicate = "http://192.168.50.12:8005/ontology#name"
   @context[:alt_title] = generateRandomString
   @browser.div(:class => predicate).button.click
-  @site.Catalinker.add_prop(predicate, @context[:alt_title], 1)
+  @site.RegWork.add_prop(predicate, @context[:alt_title], 1)
 end
 
 When(/^jeg legger til tittel for det nye verket$/) do
@@ -137,12 +137,12 @@ end
 
 When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @context[:year] = rand(2015).to_s
-  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
   @context[:year] = arg1
-  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
 end
 
 Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|
@@ -176,13 +176,13 @@ Then(/^språket til verkets tittel vises på verks\-siden$/) do
 end
 
 Then(/^leverer systemet en ny ID for det nye verket$/) do
-  @context[:identifier] = @site.Catalinker.get_id()
+  @context[:identifier] = @site.RegWork.get_id()
   @context[:identifier].should_not be_empty
 end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
   @context[:title] = generateRandomString
-  @site.Catalinker.add_prop("http://192.168.50.12:8005/ontology#name", @context[:title])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#name", @context[:title])
 end
 
 Then(/^grensesnittet viser at tittelen er lagret$/) do
@@ -190,7 +190,7 @@ Then(/^grensesnittet viser at tittelen er lagret$/) do
 end
 
 Then(/^får jeg beskjed om at noe er feil$/) do
-  @site.Catalinker.errors.should include("Noe gikk galt!")
+  @site.RegWork.errors.should include("Noe gikk galt!")
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
