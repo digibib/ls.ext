@@ -6,7 +6,7 @@ include:
 {% set repo = 'digibib' %}
 {% set image = 'redef-patron-client-skeleton' %}
 {% set tag = 'latest' %}
-{% set command = 'npm run-script start-dev' %}
+{% set command = 'npm start' %}
 {% set ports = ['8000/tcp'] %}
 {% set environment = { 'SERVICES_PORT': "tcp://{0}:{1}".format(pillar['redef']['services']['host'], pillar['redef']['services']['port']) } %}
 {% set port_bindings = {'8000/tcp': { 'HostIp': pillar['redef']['patron-client']['binding'], 'HostPort': pillar['redef']['patron-client']['port'] } } %}
