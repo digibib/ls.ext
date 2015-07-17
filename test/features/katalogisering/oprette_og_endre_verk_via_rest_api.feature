@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@rest
+@redef
 Egenskap: Legge til og endre verk
   Som katalogiseringsgrensesnitt
   For å kunne hjelpe katalogisator med å katalogisere
