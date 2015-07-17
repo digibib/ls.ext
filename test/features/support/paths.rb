@@ -21,7 +21,7 @@ module Paths
       :triplestore => 3030
     }
     raise ArgumentError, "Invalid port argument" unless port && ports[port.to_sym]
-    return "#{ports[port.to_sym]}"
+    "#{ports[port.to_sym]}"
   end
 
   # TODO Remove duplication
@@ -31,7 +31,7 @@ module Paths
         :home => "/"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    return "http://#{host(:overview)}:#{port(:overview)}#{paths[path.to_sym]}"
+    "http://#{host(:overview)}:#{port(:overview)}#{paths[path.to_sym]}"
   end
 
   def intranet(path=nil)
@@ -74,7 +74,7 @@ module Paths
 
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    return "http://#{host}:#{port(:koha_intra)}#{paths[path.to_sym]}"
+    "http://#{host}:#{port(:koha_intra)}#{paths[path.to_sym]}"
   end
 
   def catalinker(path=nil)
@@ -84,7 +84,7 @@ module Paths
       :edition => "/edition"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    return "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
+    "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
   end
 
   def patron_client(path=nil)
@@ -92,7 +92,7 @@ module Paths
       :work => "/work"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    return "http://#{host}:#{port(:patron_client)}#{paths[path.to_sym]}"
+    "http://#{host}:#{port(:patron_client)}#{paths[path.to_sym]}"
   end
 
   def services(path=nil)
@@ -100,7 +100,7 @@ module Paths
       :work => "/work"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    return "http://#{host}:#{port(:services)}#{paths[path.to_sym]}"
+    "http://#{host}:#{port(:services)}#{paths[path.to_sym]}"
   end
 
   def triplestore(path=nil)
@@ -108,7 +108,7 @@ module Paths
       :work => "/sparql"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    return "http://#{host}:#{port(:triplestore)}#{paths[path.to_sym]}"
+    "http://#{host}:#{port(:triplestore)}#{paths[path.to_sym]}"
   end
 
 end
