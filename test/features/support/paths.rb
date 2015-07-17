@@ -80,7 +80,8 @@ module Paths
   def catalinker(path=nil)
     paths = {
       :home => "/index.html",
-      :work => "/work"
+      :work => "/work",
+      :edition => "/edition"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     return "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
