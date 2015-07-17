@@ -41,7 +41,7 @@ class WorkAPIClient < Service
     }
     uri = URI(work)
     req = Net::HTTP::Patch.new(uri.path)
-    req.add_field('Content-Type', 'application/ld+json')
+    req.add_field('Content-Type', 'application/ldpatch+json')
     req.body = patches.to_json
     res =  Net::HTTP.new(uri.host, uri.port).request(req) 
   end
