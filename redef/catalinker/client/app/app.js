@@ -46,7 +46,7 @@ listener = ractive.on({
      }
      var patch = rdf.createPatch(ractive.get("work_uri"), predicate, event.context);
      http.patch(ractive.get("work_uri"),
-       {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
+       {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
        patch,
        function (response) {
          // successfully patched resource

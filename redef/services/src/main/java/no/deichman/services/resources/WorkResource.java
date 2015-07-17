@@ -33,6 +33,7 @@ import java.net.URISyntaxException;
 public class WorkResource {
     private static final String MIME_JSONLD = "application/ld+json";
     private static final String ENCODING_UTF8 = "; charset=utf-8";
+    private static final String MIME_LDPATCH_JSON = "application/ldpatch+json";
 
     private Response makeCORS(ResponseBuilder resp, String returnMethod) {
        ResponseBuilder rb = resp
@@ -94,7 +95,7 @@ public class WorkResource {
 
     @PATCH
     @Path("{workId: [a-zA-Z0-9_]+}")
-    @Consumes(MIME_JSONLD)
+    @Consumes(MIME_LDPATCH_JSON)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
         if ( !service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId) ) {
             throw new NotFoundException();
