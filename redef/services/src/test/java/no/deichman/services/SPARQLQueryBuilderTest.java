@@ -84,7 +84,7 @@ public class SPARQLQueryBuilderTest {
         m.add(s);
         String newSubject = "http://example.com/z";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        String query = sqb.getCreateWorkQueryString(newSubject, m);
+        String query = sqb.getCreateQueryString(newSubject, m);
         String expected = "INSERT DATA {\n"
                            + "\n"
                            + "<http://example.com/z> <http://example.com/b> <http://example.com/c> .\n"

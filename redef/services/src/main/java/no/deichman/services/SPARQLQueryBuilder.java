@@ -64,7 +64,7 @@ public class SPARQLQueryBuilder {
                 + "}\n";
     }
 
-    public String getCreateWorkQueryString(String id, Model work) {
+    public String getCreateQueryString(String id, Model work) {
 
         UpdateAction.parseExecute(renameWorkResource(id), work);
         StringWriter sw = new StringWriter();
