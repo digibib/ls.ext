@@ -109,7 +109,7 @@ public class RepositoryDefault implements Repository {
         Statement publicationResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uri.toString()),
                 RDF.type,
-                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
+                ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
         tempModel.add(publicationResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 

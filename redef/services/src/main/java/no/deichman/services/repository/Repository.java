@@ -14,6 +14,7 @@ public interface Repository {
 
     void updateWork(String work);
     Model retrieveWorkById(String id);
+    Model retrievePublicationById(String id);
 
     boolean askIfResourceExists(String uri);
     boolean askIfStatementExists(Statement statement);

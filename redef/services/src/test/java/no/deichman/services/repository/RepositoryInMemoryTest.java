@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,16 +24,22 @@ import no.deichman.services.uridefaults.BaseURIMock;
 public class RepositoryInMemoryTest {
     private RepositoryInMemory repository;
     private BaseURIMock bud;
-    private Statement testStmt;
+    private Statement testWorkStmt;
+    private Statement testPublicationStmt;
+
 
     @Before
     public void setup(){
         repository = new RepositoryInMemory();
         bud = new BaseURIMock();
-        testStmt = ResourceFactory.createStatement(
+        testWorkStmt = ResourceFactory.createStatement(
                         ResourceFactory.createResource(bud.getWorkURI() + "test_id_123"), 
                         ResourceFactory.createProperty("http://example.com/ontology/name"),
                         ResourceFactory.createPlainLiteral("Test"));
+        testPublicationStmt = ResourceFactory.createStatement(
+                ResourceFactory.createResource(bud.getPublicationURI() + "test_id_Publication"), 
+                ResourceFactory.createProperty("http://example.com/ontology/name"),
+                ResourceFactory.createPlainLiteral("Test"));
     }
 
     @Test
@@ -68,10 +76,20 @@ public class RepositoryInMemoryTest {
     public void test_retrieve_work_by_id(){
         String id = "test_id_123";
         Model temp = ModelFactory.createDefaultModel();
-        temp.add(testStmt);
+        temp.add(testWorkStmt);
         repository.addData(temp);
         Model testModel = repository.retrieveWorkById(id);
-        assertTrue(testModel.contains(testStmt));
+        assertTrue(testModel.contains(testWorkStmt));
+    }
+
+    @Test
+    public void test_retrieve_publication_by_id(){
+        String id = "test_id_Publication";
+        Model temp = ModelFactory.createDefaultModel();
+        temp.add(testPublicationStmt);
+        repository.addData(temp);
+        Model testModel = repository.retrievePublicationById(id);
+        assertTrue(testModel.contains(testPublicationStmt));
     }
 
     @Test
