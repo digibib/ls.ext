@@ -9,6 +9,10 @@
   rdfs:comment "A work is the result of a creative effort"@en ;
   rdfs:comment "Et verk er resultatet av kreativt arbeid"@no .
 
+:Publication a rdfs:Class ;
+  rdfs:label "Publication"@en ;
+  rdfs:label "Utgivelse"@no .
+
 :Person a rdfs:Class ;
   rdfs:label "Person"@en ;
   rdfs:label "Person"@no ;
@@ -46,3 +50,21 @@
   rdfs:range xsd:nonNegativeInteger ;
   rdfs:comment "The relationship between a work and a ls.ext-internal Koha-record identifier"@en ;
   rdfs:comment "Relasjonen mellom et verk og en ls.ext-intern identifikator for en Koha-post"@no .
+
+:language a rdfs:Property ;
+  rdfs:label "Language"@en ;
+  rdfs:label "Språk"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
+:format a rdfs:Property ;
+  rdfs:label "Format"@en ;
+  rdfs:label "Format"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
+:publicationOf a rdfs:Property ;
+  rdfs:label "Publication of"@en ;
+  rdfs:label "Utgivelse av"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range :Work .
