@@ -52,12 +52,12 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test 
-    public void get_work_by_id(){
+    public void get_resource_by_id(){
         Model m = ModelFactory.createDefaultModel();
         Statement s = getTestStatement();
         m.add(s);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        Query query = sqb.getGetWorkByIdQuery("http://example.com/a");
+        Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
         String expected = "DESCRIBE <http://example.com/a>";
         assertEquals(expected,query.toString().trim());
     }

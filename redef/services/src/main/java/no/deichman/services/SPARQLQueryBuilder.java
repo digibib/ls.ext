@@ -36,7 +36,7 @@ public class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public Query getGetWorkByIdQuery(String id) {
+    public Query getGetResourceByIdQuery(String id) {
         String queryString = "DESCRIBE <" + id + ">";
         return QueryFactory.create(queryString);
     }
