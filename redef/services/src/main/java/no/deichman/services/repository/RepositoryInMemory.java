@@ -100,7 +100,26 @@ public class RepositoryInMemory implements Repository {
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateWorkQueryString(id, tempModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
+        UpdateAction.execute(updateRequest, model);
+
+        return id;
+    }
+
+
+    public String createPublication(String publication) {
+        InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
+        UniqueURI random = new UniqueURIMock();
+        String id = random.getNewURI("publication", this);
+        Model tempModel = ModelFactory.createDefaultModel();
+        Statement publicationResource = ResourceFactory.createStatement(
+                ResourceFactory.createResource(random.toString()),
+                RDF.type,
+                ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
+        tempModel.add(publicationResource);
+        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
+
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
         UpdateAction.execute(updateRequest, model);
 
         return id;

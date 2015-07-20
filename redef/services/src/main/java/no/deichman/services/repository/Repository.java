@@ -10,6 +10,7 @@ import no.deichman.services.patch.Patch;
 public interface Repository {
 
     String createWork(String work);
+    String createPublication(String publication);
 
     void updateWork(String work);
     Model retrieveWorkById(String id);

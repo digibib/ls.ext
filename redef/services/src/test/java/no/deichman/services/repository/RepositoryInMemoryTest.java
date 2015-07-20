@@ -40,6 +40,12 @@ public class RepositoryInMemoryTest {
     }
 
     @Test
+    public void test_create_publication(){
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
+        assertNotNull(repository.createPublication(publication));
+    }
+
+    @Test
     public void test_add_data(){
         Model testModel = ModelFactory.createDefaultModel();
         Statement s = ResourceFactory.createStatement(

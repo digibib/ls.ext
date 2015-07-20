@@ -86,7 +86,25 @@ public class RepositoryDefault implements Repository {
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateWorkQueryString(id, tempModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
+        UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
+        return id;
+    }
+
+    @Override
+    public String createPublication(String publication) {
+        InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
+        UniqueURI uri = new UniqueURIDefault();
+        String id = uri.getNewURI("work", this);
+        Model tempModel = ModelFactory.createDefaultModel();
+        Statement publicationResource = ResourceFactory.createStatement(
+                ResourceFactory.createResource(uri.toString()),
+                RDF.type,
+                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
+        tempModel.add(publicationResource);
+        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
+
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
         return id;
     }
