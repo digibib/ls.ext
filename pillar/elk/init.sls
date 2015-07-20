@@ -3,7 +3,7 @@ elk:
   logstash:
     image-tag: latest
   configserver:
-    image-tag: 1.7.7
+    image-tag: 1.9.3
     binding: 0.0.0.0
     port: 9999
   busybox:
