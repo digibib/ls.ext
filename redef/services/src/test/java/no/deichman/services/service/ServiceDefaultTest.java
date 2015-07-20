@@ -145,6 +145,22 @@ public class ServiceDefaultTest {
     }
 
     @Test
+    public void test_delete_publication(){
+        Repository r = new RepositoryInMemory();
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_delete_publication\",\"deichman:biblio\":\"1\"}}";
+        service.setRepository(r);
+        String publicationId = service.createPublication(publication);
+        Statement s = ResourceFactory.createStatement(
+                ResourceFactory.createResource(publicationId), ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"), ResourceFactory.createPlainLiteral("publication_delete_publication"));
+        assertTrue(r.askIfStatementExists(s));
+        Model test = ModelFactory.createDefaultModel();
+        InputStream in = new ByteArrayInputStream(publication.replace("http://deichman.no/publication/publication_SHOULD_EXIST", publicationId).getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(test,in, Lang.JSONLD);
+        service.deleteWork(test);
+        assertFalse(r.askIfStatementExists(s));
+    }
+
+    @Test
     public void test_patch_work_add() throws Exception{
         assertNotNull(service);
 

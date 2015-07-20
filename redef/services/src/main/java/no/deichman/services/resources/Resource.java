@@ -187,6 +187,22 @@ public class Resource {
                                    .build();
     }
 
+    @DELETE
+    @Path("/work/{workId: [a-zA-Z0-9_]+}")
+    public Response deletePublication(@PathParam("publicationId") String publicationId) {
+        Model model = service.retrievePublicationById(publicationId);
+
+        if (model.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        service.deletePublication(model);
+
+        return Response.noContent().header("Access-Control-Allow-Origin", "*")
+                                   .header("Access-Control-Allow-Methods", "GET")
+                                   .allow("OPTIONS")
+                                   .build();
+    }
     @OPTIONS
     @Path("/work/{workId: [a-zA-Z0-9_]+}")
     public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {

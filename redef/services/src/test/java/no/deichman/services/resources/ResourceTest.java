@@ -238,6 +238,15 @@ public class ResourceTest {
     }
 
     @Test
+    public void test_delete_publication() throws URISyntaxException{
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_BE_PATCHABLE\"}}";
+        Response createResponse = resource.createPublication(publication);
+        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
+        Response response = resource.deletePublication(publicationId);
+        assertEquals(response.getStatus(),204);
+    }
+
+    @Test
     public void test_CORS_work_id(){
         String reqHeader = "application/ld+json";
         Response reponse = resource.corsWorkId(reqHeader);

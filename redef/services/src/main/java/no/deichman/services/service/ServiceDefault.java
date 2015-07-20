@@ -123,6 +123,11 @@ public class ServiceDefault implements Service {
     }
 
     @Override
+    public void deletePublication(Model publication) {
+        repository.delete(publication);
+    }
+
+    @Override
     public Model patchWork(String workId, String requestBody) throws Exception {
         PatchParser patchParser = new PatchParser();
         try {
