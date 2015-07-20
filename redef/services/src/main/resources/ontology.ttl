@@ -5,9 +5,7 @@
 
 :Work a rdfs:Class ;
   rdfs:label "Work"@en ;
-  rdfs:label "Verk"@no ;
-  rdfs:comment "A work is the result of a creative effort"@en ;
-  rdfs:comment "Et verk er resultatet av kreativt arbeid"@no .
+  rdfs:label "Verk"@no .
 
 :Publication a rdfs:Class ;
   rdfs:label "Publication"@en ;
@@ -17,33 +15,25 @@
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
   rdfs:domain rdfs:Class ;
-  rdfs:range rdf:langString ;
-  rdfs:comment "The relationship between a thing and what it is called"@en ;
-  rdfs:comment "Relasjonen mellom en ting og det den er kalt"@en .
+  rdfs:range rdf:langString .
 
 :creator a rdfs:Property ;
   rdfs:label "Creator"@en ;
   rdfs:label "Skaper"@no ;
   rdfs:domain :Work ;
-  rdfs:range xsd:string ;
-  rdfs:comment "The relationship between a creative work and the person who created it"@en ;
-  rdfs:comment "Relasjonen mellom et kreativt arbeid og personen som har skapt det"@no .
+  rdfs:range xsd:string .
 
 :year a rdfs:Property ;
   rdfs:label "Year"@en ;
   rdfs:label "Årstall"@no ;
   rdfs:domain :Work ;
-  rdfs:range xsd:gYear ;
-  rdfs:comment "The relationship between a work and the year it was created"@en ;
-  rdfs:comment "Relasjonen mellom et verk og året det ble skapt"@no .
+  rdfs:range xsd:gYear .
 
 :biblio a rdfs:Property ;
   rdfs:label "Biblio"@en ;
   rdfs:label "Biblio"@no ;
   rdfs:domain :Work ;
-  rdfs:range xsd:nonNegativeInteger ;
-  rdfs:comment "The relationship between a work and a ls.ext-internal Koha-record identifier"@en ;
-  rdfs:comment "Relasjonen mellom et verk og en ls.ext-intern identifikator for en Koha-post"@no .
+  rdfs:range xsd:nonNegativeInteger .
 
 :language a rdfs:Property ;
   rdfs:label "Language"@en ;
