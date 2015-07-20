@@ -16,7 +16,7 @@ public class UniqueURIMock implements UniqueURI {
         switch (type) {
             case "work":        random = bum.getWorkURI() + "w" + getRandom();
                                 break;
-            case "publication": random = bum.getWorkURI() + "p" + getRandom();
+            case "publication": random = bum.getPublicationURI() + "p" + getRandom();
             break;
             default:            random = null;
                                 break;

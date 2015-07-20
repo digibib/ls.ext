@@ -16,7 +16,7 @@ public class UniqueURIDefault implements UniqueURI {
         switch (type) {
             case "work":        random = bud.getWorkURI() + "w" + getRandom();
                                 break;
-            case "publication": random = bud.getWorkURI() + "p" + getRandom();
+            case "publication": random = bud.getPublicationURI() + "p" + getRandom();
                                 break;
             default:            random = null;
                                 break;

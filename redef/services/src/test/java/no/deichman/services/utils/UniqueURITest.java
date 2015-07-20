@@ -20,12 +20,16 @@ public class UniqueURITest {
 
     @Test
     public void should_return_new_work_ID() {
-        assertNotNull(randomString.getNewURI("work", new RepositoryInMemory()));
+        String uri = randomString.getNewURI("work", new RepositoryInMemory());
+        assertNotNull(uri);
+        assertTrue(uri.contains("/work"));
     }
 
     @Test
     public void should_return_new_publication_ID() {
-        assertNotNull(randomString.getNewURI("publication", new RepositoryInMemory()));
+        String uri = randomString.getNewURI("publication", new RepositoryInMemory());
+        assertNotNull(uri);
+        assertTrue(uri.contains("/publication"));
     }
 
     @Test
