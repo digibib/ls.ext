@@ -95,7 +95,7 @@ public class RepositoryDefault implements Repository {
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         UniqueURI uri = new UniqueURIDefault();
-        String id = uri.getNewURI("work", this);
+        String id = uri.getNewURI("publication", this);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uri.toString()),
