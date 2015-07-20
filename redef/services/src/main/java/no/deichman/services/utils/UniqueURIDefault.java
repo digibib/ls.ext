@@ -14,10 +14,12 @@ public class UniqueURIDefault implements UniqueURI {
         String random;
         BaseURIDefault bud = new BaseURIDefault();
         switch (type) {
-            case "work": random = bud.getWorkURI() + "w" + getRandom();
-                         break;
-            default:     random = null;
-                         break;
+            case "work":        random = bud.getWorkURI() + "w" + getRandom();
+                                break;
+            case "publication": random = bud.getWorkURI() + "p" + getRandom();
+                                break;
+            default:            random = null;
+                                break;
         }
         
         if (random == null) {

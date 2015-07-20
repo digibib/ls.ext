@@ -12,13 +12,14 @@ public class UniqueURIMock implements UniqueURI {
 
     private String getRandom(String type) {
         String random;
-
+        BaseURIMock bum = new BaseURIMock();
         switch (type) {
-            case "work": BaseURIMock bum = new BaseURIMock();
-                         random = bum.getWorkURI() + "w" + getRandom();
-                         break;
-            default:     random = null;
-                         break;
+            case "work":        random = bum.getWorkURI() + "w" + getRandom();
+                                break;
+            case "publication": random = bum.getWorkURI() + "p" + getRandom();
+            break;
+            default:            random = null;
+                                break;
         }
 
         if (random == null) {
