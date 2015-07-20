@@ -57,6 +57,19 @@ public class ServiceDefaultTest {
     }
 
     @Test
+    public void test_retrieve_publication_by_id(){
+        Repository repository = new RepositoryInMemory();
+        service.setRepository(repository);
+        String publicationData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"TEST_REPOSITORY_IS_SET\"}}";
+        String publicationId = service.createPublication(publicationData);
+        Model comparison = ModelFactory.createDefaultModel();
+        InputStream in = new ByteArrayInputStream(publicationData.replace("http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE", publicationId).getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(comparison, in, Lang.JSONLD);
+        Model test = service.retrievePublicationById(publicationId.replace("http://deichman.no/publication/", ""));
+        assertTrue(test.isIsomorphicWith(comparison));
+    }
+
+    @Test
     public void test_repository_can_be_set_got(){
         Repository repository = new RepositoryInMemory();
         String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"TEST_REPOSITORY_IS_SET\"}}";

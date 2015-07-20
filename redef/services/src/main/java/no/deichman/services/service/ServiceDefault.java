@@ -52,6 +52,15 @@ public class ServiceDefault implements Service {
     }
 
     @Override
+    public Model retrievePublicationById(String id) {
+
+        Model m = ModelFactory.createDefaultModel();
+        m.add(repository.retrievePublicationById(id));
+
+        return m;
+    }
+
+    @Override
     public void setRepository(Repository repository) {
         this.repository = repository;
     }
@@ -130,4 +139,5 @@ public class ServiceDefault implements Service {
         repository.patch(patches);
         return retrieveWorkById(workId);
     }
+
 }
