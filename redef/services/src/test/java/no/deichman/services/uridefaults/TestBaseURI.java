@@ -20,4 +20,10 @@ public class TestBaseURI {
         String base = bum.getWorkURI();
         assertEquals("http://deichman.no/work/", base);
     }
+
+    @Test
+    public void canGetPublicationURI() {
+        String base = bum.getPublicationURI();
+        assertEquals("http://deichman.no/publication/", base);
+    }
 }

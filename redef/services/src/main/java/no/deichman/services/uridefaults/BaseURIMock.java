@@ -13,4 +13,8 @@ public class BaseURIMock implements BaseURI {
     public String getOntologyURI() {
         return getBaseURI() + "ontology#";
     }
+
+    public String getPublicationURI() {
+        return getBaseURI() + "publication/";
+    }
 }

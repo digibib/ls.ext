@@ -14,4 +14,7 @@ public class BaseURIDefault implements BaseURI {
         return getBaseURI() + "ontology#";
     }
 
+    public String getPublicationURI() {
+        return getBaseURI() + "publication/";
+    }
 }
