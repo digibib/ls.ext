@@ -1,15 +1,12 @@
 # encoding: UTF-8
 
-require_relative '../support/services/work_api/client.rb'
+require_relative '../support/services/resource_api/client.rb'
 require_relative '../support/context_structs.rb'
 
-Given(/^at jeg har en ontologi som beskriver (verk|utgivelse)$/) do | onto_class |
-  class_map = { 'verk' => 'Work', 'utgivelse' => 'Publication'}
-  class_name = class_map[onto_class]
-
+Given(/^at jeg har en ontologi som beskriver (verk|utgivelse)$/) do | resource_name |
   client = ServicesAPIClient.new()
   class_statement = RDF::Statement::new(
-    RDF::URI.new("#{client.addr}/ontology##{class_name}"),
+    RDF::URI.new("#{client.addr}/ontology##{Resource.type_from_name(resource_name)}"),
     RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
     RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#Class")
       )
@@ -17,13 +14,13 @@ Given(/^at jeg har en ontologi som beskriver (verk|utgivelse)$/) do | onto_class
   @context[:ontology].has_statement?(class_statement).should be true
 end
 
-When(/^jeg legger inn et verk via APIet$/) do
-  w = Work.new(@context[:ontology])
-  w.uri = ServicesAPIClient.new().create_work(w.literals)
-  @context[:work] = w
-  @cleanup.push( "verk #{w.uri}" =>
+When(/^jeg legger inn (?:et|en) (verk|utgivelse) via APIet$/) do | resource_name |
+  resource = Resource.new(@context[:ontology], Resource.sym_from_name(resource_name))
+  @context[resource.type] = resource
+  resource.uri = ServicesAPIClient.new().create_resource(resource.type, resource.literals)
+  @cleanup.push( "#{resource.type} #{resource.uri}" =>
     lambda do
-      client = ServicesAPIClient.new().remove_work(w.uri)
+      ServicesAPIClient.new().remove_resource(resource.uri)
      end
      )
 end
@@ -45,13 +42,13 @@ Given(/^at det er opprettet et verk$/) do
   }
 end
 
-When(/^jeg sender inn endringer til APIet$/) do
+When(/^jeg sender inn endringer i verket til APIet$/) do
   @context[:work].gen_literals
   w = @context[:work]
   ServicesAPIClient.new().patch_work(w.uri, w.literals)
 end
 
-Then(/^viser APIet at endringene er lagret$/) do
+Then(/^viser APIet at endringene i verket er lagret$/) do
   res = ServicesAPIClient.new().get_work(@context[:work].uri)
   @context[:work].literals.each do |stmt|
     res.has_statement?(stmt).should be true

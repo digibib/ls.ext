@@ -18,12 +18,13 @@ class ServicesAPIClient < Service
     RDF::Graph.load("#{self.addr}/ontology", format: :jsonld)
   end
 
-  def create_work(statements)
-    uri = URI("#{self.addr}/work")
+  def create_resource(resource_type, statements)
+    uri = URI("#{self.addr}/#{resource_type.to_s}")
     req = Net::HTTP::Post.new(uri.path)
     req.add_field('Content-Type', 'application/ld+json')
     req.body = statements.dump(:jsonld, :standard_prefixes => true)
     res =  Net::HTTP.new(uri.host, uri.port).request(req)
+    expect(res.code).to eq("201"), "got unexpected #{res.code} when creating resource"
     res['location']
   end
 
@@ -46,8 +47,10 @@ class ServicesAPIClient < Service
     res =  Net::HTTP.new(uri.host, uri.port).request(req) 
   end
 
-  def remove_work(work)
-    uri = URI(work)
-    Net::HTTP::new(uri.host, uri.port).delete(uri.path)
+  def remove_resource(resource)
+    uri = URI(resource)
+    res = Net::HTTP::new(uri.host, uri.port).delete(uri.path)
+    expect(res.code).to eq("204"), "got unexpected #{res.code} when removing resource"
+    res
   end
 end

@@ -9,10 +9,10 @@ Egenskap: Legge til og endre utgivelse
 
   Scenario: Legge til utgivelse
     Gitt at jeg har en ontologi som beskriver utgivelse
-    Når jeg legger inn et utgivelse via APIet
-    Så viser APIet at utgivelseet finnes
+    Når jeg legger inn en utgivelse via APIet
+    Så viser APIet at utgivelsen finnes
 
   Scenario: Endre utgivelse
-    Gitt at det er opprettet et utgivelse
-    Når jeg sender inn endringer til APIet
-    Så viser APIet at endringene er lagret
+    Gitt at det er opprettet en utgivelse
+    Når jeg sender inn endringer i utgivelsen til APIet
+    Så viser APIet at endringene i utgivelsen er lagret

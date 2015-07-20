@@ -14,5 +14,5 @@ Egenskap: Legge til og endre verk
 
   Scenario: Endre verk
     Gitt at det er opprettet et verk
-    Når jeg sender inn endringer til APIet
-    Så viser APIet at endringene er lagret
+    Når jeg sender inn endringer i verket til APIet
+    Så viser APIet at endringene i verket er lagret

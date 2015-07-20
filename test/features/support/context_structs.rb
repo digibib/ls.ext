@@ -15,7 +15,16 @@ Book = Struct.new(:title, :biblionumber, :items) do
   end
 end
 
-Work = Struct.new(:uri, :literals, :ontology) do
+Resource = Struct.new(:uri, :literals, :ontology, :type) do
+  def self.type_from_name(name)
+    { 'verk' => 'Work',
+      'utgivelse' => 'Publication'}[name]
+  end
+
+  def self.sym_from_name(name)
+    self.type_from_name(name).downcase.to_sym
+  end
+
   def randomizer
     {
       RDF::XSD.string => generateRandomString,
@@ -24,7 +33,8 @@ Work = Struct.new(:uri, :literals, :ontology) do
     }
   end
 
-  def initialize(ontology)
+  def initialize(ontology, resource_sym)
+    self.type = resource_sym
     self.literals = RDF::Graph.new
     self.ontology = ontology
   end
