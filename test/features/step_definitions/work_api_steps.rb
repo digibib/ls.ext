@@ -3,15 +3,18 @@
 require_relative '../support/services/work_api/client.rb'
 require_relative '../support/context_structs.rb'
 
-Given(/^at jeg har en ontologi som beskriver verk$/) do
+Given(/^at jeg har en ontologi som beskriver (verk|utgivelse)$/) do | onto_class |
+  class_map = { 'verk' => 'Work', 'utgivelse' => 'Publication'}
+  class_name = class_map[onto_class]
+
   client = WorkAPIClient.new()
-  work_statement = RDF::Statement::new(
-    RDF::URI.new("#{client.addr}/ontology#Work"),
+  class_statement = RDF::Statement::new(
+    RDF::URI.new("#{client.addr}/ontology##{class_name}"),
     RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
     RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#Class")
       )
   @context[:ontology] = client.get_ontology()
-  @context[:ontology].has_statement?(work_statement).should be true
+  @context[:ontology].has_statement?(class_statement).should be true
 end
 
 When(/^jeg legger inn et verk via APIet$/) do
