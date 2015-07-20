@@ -28,7 +28,7 @@ build: build-client
 test: build
 	sudo docker run --rm -v /vagrant/redef/catalinker/server:/usr/src/app $(SKELETON_IMAGE) rake test
 
-run-dev: build-client
+run-dev: build-client stop
 	sudo salt-call --local state.sls redef.catalinker.skeletonrun
 
 test-dev: build
