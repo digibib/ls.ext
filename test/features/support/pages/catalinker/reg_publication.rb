@@ -2,8 +2,8 @@
 
 require_relative 'catalinker_page.rb'
 
-class RegEdition < CatalinkerPage
+class RegPublication < CatalinkerPage
   def visit
-    visit_sub_page(:edition)
+    visit_sub_page(:publication)
   end
 end
