@@ -13,12 +13,6 @@
   rdfs:label "Publication"@en ;
   rdfs:label "Utgivelse"@no .
 
-:Person a rdfs:Class ;
-  rdfs:label "Person"@en ;
-  rdfs:label "Person"@no ;
-  rdfs:comment "A person is a being that has the attributes generally associated with personhood"@en ;
-  rdfs:comment "En person er et vesen som har attributtene generelt assosiert med personer"@no .
-
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
@@ -31,7 +25,7 @@
   rdfs:label "Creator"@en ;
   rdfs:label "Skaper"@no ;
   rdfs:domain :Work ;
-  rdfs:range :Person ;
+  rdfs:range xsd:string ;
   rdfs:comment "The relationship between a creative work and the person who created it"@en ;
   rdfs:comment "Relasjonen mellom et kreativt arbeid og personen som har skapt det"@no .
 
