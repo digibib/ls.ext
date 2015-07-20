@@ -6,7 +6,7 @@ require 'net/http'
 
 require_relative '../service.rb'
 
-class WorkAPIClient < Service
+class ServicesAPIClient < Service
   def initialize()
   end
 

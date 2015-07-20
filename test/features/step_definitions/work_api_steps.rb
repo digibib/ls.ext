@@ -7,7 +7,7 @@ Given(/^at jeg har en ontologi som beskriver (verk|utgivelse)$/) do | onto_class
   class_map = { 'verk' => 'Work', 'utgivelse' => 'Publication'}
   class_name = class_map[onto_class]
 
-  client = WorkAPIClient.new()
+  client = ServicesAPIClient.new()
   class_statement = RDF::Statement::new(
     RDF::URI.new("#{client.addr}/ontology##{class_name}"),
     RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
@@ -19,17 +19,17 @@ end
 
 When(/^jeg legger inn et verk via APIet$/) do
   w = Work.new(@context[:ontology])
-  w.uri = WorkAPIClient.new().create_work(w.literals)
+  w.uri = ServicesAPIClient.new().create_work(w.literals)
   @context[:work] = w
   @cleanup.push( "verk #{w.uri}" =>
     lambda do
-      client = WorkAPIClient.new().remove_work(w.uri)
+      client = ServicesAPIClient.new().remove_work(w.uri)
      end
      )
 end
 
 Then(/^viser APIet at verket finnes$/) do
-  client = WorkAPIClient.new()
+  client = ServicesAPIClient.new()
   stmt = RDF::Statement::new(
     RDF::URI.new(@context[:work].uri),
     RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
@@ -48,11 +48,11 @@ end
 When(/^jeg sender inn endringer til APIet$/) do
   @context[:work].gen_literals
   w = @context[:work]
-  WorkAPIClient.new().patch_work(w.uri, w.literals)
+  ServicesAPIClient.new().patch_work(w.uri, w.literals)
 end
 
 Then(/^viser APIet at endringene er lagret$/) do
-  res = WorkAPIClient.new().get_work(@context[:work].uri)
+  res = ServicesAPIClient.new().get_work(@context[:work].uri)
   @context[:work].literals.each do |stmt|
     res.has_statement?(stmt).should be true
   end
