@@ -105,6 +105,17 @@ public class ServiceDefaultTest {
     }
 
     @Test
+    public void test_create_publication(){
+        Repository r = new RepositoryInMemory();
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_PUBLICATION\",\"deichman:biblio\":\"1\"}}";
+        service.setRepository(r);
+        String publicationId = service.createPublication(publication);
+        Statement s = ResourceFactory.createStatement(
+                ResourceFactory.createResource(publicationId), ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"), ResourceFactory.createPlainLiteral("publication_SERVICE_CREATE_PUBLICATION"));
+        assertTrue(r.askIfStatementExists(s));
+    }
+
+    @Test
     public void test_delete_work(){
         Repository r = new RepositoryInMemory();
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";

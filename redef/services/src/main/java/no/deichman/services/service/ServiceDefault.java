@@ -104,6 +104,11 @@ public class ServiceDefault implements Service {
     }
 
     @Override
+    public String createPublication(String publication) {
+        return repository.createPublication(publication);
+    }
+
+    @Override
     public void deleteWork(Model work) {
         repository.delete(work);
     }
