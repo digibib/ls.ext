@@ -32,20 +32,20 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class WorkResourceTest {
+public class ResourceTest {
 
-    private WorkResource resource;
+    private Resource resource;
     private BaseURIMock bum;
 
     @Before
     public void setUp() throws Exception {
-        resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
+        resource = new Resource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
         bum = new BaseURIMock();
     }
 
     @Test
     public void test_class_exists(){
-        assertNotNull(new WorkResource());
+        assertNotNull(new Resource());
     }
 
     @Test
@@ -69,6 +69,16 @@ public class WorkResourceTest {
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
 
         Response result = resource.createWork(work);
+
+        assertNull(result.getEntity());
+        assertEquals(201, result.getStatus());
+    }
+
+    @Test
+    public void should_return_201_when_publication_created() throws URISyntaxException{
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
+
+        Response result = resource.createPublication(publication);
 
         assertNull(result.getEntity());
         assertEquals(201, result.getStatus());
