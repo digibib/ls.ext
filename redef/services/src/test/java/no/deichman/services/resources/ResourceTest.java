@@ -122,6 +122,22 @@ public class ResourceTest {
     }
 
     @Test
+    public void should_return_the_new_publication() throws URISyntaxException{
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_EXIST\"}}";
+
+        Response createResponse = resource.createPublication(publication);
+
+        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
+
+        Response result = resource.getPublicationJSON(publicationId);
+
+        assertNotNull(result);
+        assertEquals(201, createResponse.getStatus());
+        assertEquals(200, result.getStatus());
+        assertTrue(isValidJSON(result.getEntity().toString()));
+    }
+
+    @Test
     public void should_return_list_of_items(){
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\",\"deichman:biblio\":\"1\"}}";
         String workId = "work_SHOULD_EXIST";

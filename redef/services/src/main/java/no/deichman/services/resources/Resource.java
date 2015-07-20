@@ -148,6 +148,23 @@ public class Resource {
                             .build();
     }
 
+    @GET
+    @Path("/publication/{publicationId: [a-zA-Z0-9_]+}")
+    @Produces(MIME_JSONLD + ENCODING_UTF8)
+    public Response getPublicationJSON(@PathParam("publicationId") String publicationId) {
+        Model model = service.retrievePublicationById(publicationId);
+
+        if (model.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        return Response.ok().entity(jsonld.getJson(model))
+                            .header("Access-Control-Allow-Origin", "*")
+                            .header("Access-Control-Allow-Methods", "GET")
+                            .allow("OPTIONS")
+                            .build();
+    }
+
     @OPTIONS
     public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
         return makeCORS(Response.ok(), reqHeader);
