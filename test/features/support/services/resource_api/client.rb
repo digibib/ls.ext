@@ -28,8 +28,8 @@ class ServicesAPIClient < Service
     res['location']
   end
 
-  def get_work(work)
-    RDF::Graph.load(URI(work), format: :jsonld)
+  def get_resource(resource)
+    RDF::Graph.load(URI(resource), format: :jsonld)
   end
 
   def patch_work(work, statements)

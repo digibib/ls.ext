@@ -25,24 +25,17 @@ When(/^jeg legger inn (?:et|en) (verk|utgivelse) via APIet$/) do | resource_name
      )
 end
 
-Then(/^viser APIet at verket finnes$/) do
+Then(/^viser APIet at (verk|utgivelse)(?:et|n) finnes$/) do | resource_name |
+  resource = Resource.new(@context[:ontology], Resource.sym_from_name(resource_name))
+  @context[resource.type] = resource
   client = ServicesAPIClient.new()
+  resource.uri = client.create_resource(resource.type, resource.literals)
   stmt = RDF::Statement::new(
-    RDF::URI.new(@context[:work].uri),
+    RDF::URI.new(resource.uri),
     RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-    RDF::URI.new("#{client.addr}/ontology#Work")
+    RDF::URI.new("#{client.addr}/ontology##{Resource.type_from_name(resource_name)}")
       )
-  client.get_work(@context[:work].uri).has_statement?(stmt).should be true
-end
-
-Then(/^viser APIet at utgivelsen finnes$/) do
-  client = ServicesAPIClient.new()
-  stmt = RDF::Statement::new(
-    RDF::URI.new(@context[:publication].uri),
-    RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-    RDF::URI.new("#{client.addr}/ontology#Publication")
-      )
-  client.get_work(@context[:publication].uri).has_statement?(stmt).should be true
+  client.get_resource(resource.uri).has_statement?(stmt).should be true
 end
 
 Given(/^at det er opprettet et verk$/) do
@@ -59,7 +52,7 @@ When(/^jeg sender inn endringer i verket til APIet$/) do
 end
 
 Then(/^viser APIet at endringene i verket er lagret$/) do
-  res = ServicesAPIClient.new().get_work(@context[:work].uri)
+  res = ServicesAPIClient.new().get_resource(@context[:work].uri)
   @context[:work].literals.each do |stmt|
     res.has_statement?(stmt).should be true
   end
