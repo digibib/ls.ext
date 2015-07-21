@@ -21,4 +21,5 @@ public interface Service {
     void deletePublication(Model publication);
     Model patchWork(String work, String requestBody) throws UnsupportedEncodingException, PatchException, PatchParserException, Exception;
     Model retrievePublicationById(String publicationId);
+    Model patchPublication(String publicationId, String requestBody) throws Exception;
 }

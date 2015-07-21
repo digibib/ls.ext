@@ -145,4 +145,23 @@ public class ServiceDefault implements Service {
         return retrieveWorkById(workId);
     }
 
+    @Override
+    public Model patchPublication(String publicationId, String requestBody) throws Exception {
+        PatchParser patchParser = new PatchParser();
+        try {
+            patchParser.setPatchData(requestBody);
+        } catch (Exception e) {
+            throw new PatchParserException("Bad request");
+        }
+        List<PatchObject> patch = patchParser.parsePatch();
+        List<Patch> patches = new ArrayList<Patch>();
+        Iterator<PatchObject> iter = patch.iterator();
+        while (iter.hasNext()) {
+            patches.add(iter.next().toPatch());
+        }
+        repository.patch(patches);
+        return retrievePublicationById(publicationId);
+
+    }
+
 }

@@ -183,6 +183,34 @@ public class ServiceDefaultTest {
                 "<"+ workId + "> <http://deichman.no/ontology#color> \"red\" .");
     }
 
+    @Test
+    public void test_patch_publication_add() throws Exception{
+        assertNotNull(service);
+
+        Model oldModel = ModelFactory.createDefaultModel();
+        String publicationData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SERVICE_DEFAULT_PATCH\"}}";
+        String publicationId = service.createPublication(publicationData);
+        String comparisonRDF = publicationData.replace("http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE", publicationId);
+        InputStream oldIn = new ByteArrayInputStream(comparisonRDF.getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(oldModel, oldIn, Lang.JSONLD);
+        Model data = service.retrievePublicationById(publicationId.replace("http://deichman.no/publication/", ""));
+        assertTrue(oldModel.isIsomorphicWith(data));
+        String patchData = "{"
+                + "\"op\": \"add\","
+                + "\"s\": \"" + publicationId + "\","
+                + "\"p\": \"http://deichman.no/ontology#color\","
+                + "\"o\": {"
+                + "\"value\": \"red\""
+                + "}"
+                + "}";
+        Model patchedModel = service.patchPublication(publicationId.replace("http://deichman.no/publication/", ""),patchData);
+        assertTrue(patchedModel.contains(ResourceFactory.createResource(publicationId), ResourceFactory.createProperty("http://deichman.no/ontology#color"), "red"));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        RDFDataMgr.write(baos,patchedModel.difference(oldModel),Lang.NT);
+        assertEquals(baos.toString().trim(),
+                "<"+ publicationId + "> <http://deichman.no/ontology#color> \"red\" .");
+    }
+
     @Test(expected=PatchParserException.class)
     public void test_bad_patch_fails() throws Exception{
         assertNotNull(service);
