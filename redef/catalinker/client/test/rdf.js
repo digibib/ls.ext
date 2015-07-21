@@ -274,4 +274,9 @@ describe("Parsing JSON-LD", function () {
             current: { value: "1981", type: "", lang: "" } }]
       }));
   });
+
+  it("extracts the resource label in desired language", function () {
+    assert.equal(rdf.resourceLabel(ontology, "Work", "en"), "Work");
+    assert.equal(rdf.resourceLabel(ontology, "Work", "no"), "Verk");
+  });
 });

@@ -175,12 +175,33 @@ var rdf = (function () {
     return values;
   }
 
+  function resourceLabel(ontology, cls, lang) {
+    return ontology["@graph"].filter(
+      function (e) {
+        return e["@id"] == "deichman:" + cls;
+      }
+           )[0]["rdfs:label"].filter(
+        function (e) {
+          return e["@language"] == lang;
+        })[0]["@value"];
+  }
+
   // exported functions
   return {
     propsByClass: propsByClass,
     createPatch: createPatch,
     resolveURI: resolveURI,
     validateLiteral: validateLiteral,
-    extractValues: extractValues
+    extractValues: extractValues,
+    resourceLabel: resourceLabel
   };
 })();
+
+var string = (function () {
+  "use strict";
+  return {
+    titelize: function (s) {
+      return s.charAt(0).toUpperCase() + s.substring(1);
+    }
+  };
+}());
