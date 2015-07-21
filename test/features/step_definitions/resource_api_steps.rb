@@ -36,22 +36,23 @@ Then(/^viser APIet at (verk|utgivelse)(?:et|n) finnes$/) do | resource_name |
   client.get_resource(resource_to_look_for.uri).has_statement?(stmt).should be true
 end
 
-Given(/^at det er opprettet et verk$/) do
+Given(/^at det er opprettet (?:et|en) (verk|utgivelse)$/) do | resource_name |
   steps %Q{
-     Gitt at jeg har en ontologi som beskriver verk
-     Når jeg legger inn et verk via APIet
+     Gitt at jeg har en ontologi som beskriver #{resource_name}
+     Når jeg legger inn et #{resource_name} via APIet
   }
 end
 
-When(/^jeg sender inn endringer i verket til APIet$/) do
-  @context[:work].gen_literals
-  w = @context[:work]
-  ServicesAPIClient.new().patch_work(w.uri, w.literals)
+When(/^jeg sender inn endringer i (verk|utgivelse)(?:et|n) til APIet$/) do | resource_name |
+  @context[Resource.sym_from_name(resource_name)].gen_literals
+  r = @context[Resource.sym_from_name(resource_name)]
+  ServicesAPIClient.new().patch_resource(r.uri, r.literals)
 end
 
-Then(/^viser APIet at endringene i verket er lagret$/) do
-  res = ServicesAPIClient.new().get_resource(@context[:work].uri)
-  @context[:work].literals.each do |stmt|
+Then(/^viser APIet at endringene i (verk|utgivelse)(?:et|n) er lagret$/) do | resource_name |
+  r = @context[Resource.sym_from_name(resource_name)]
+  res = ServicesAPIClient.new().get_resource(r.uri)
+  r.literals.each do |stmt|
     res.has_statement?(stmt).should be true
   end
 end

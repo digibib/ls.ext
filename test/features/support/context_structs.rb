@@ -40,14 +40,15 @@ Resource = Struct.new(:uri, :literals, :ontology, :type) do
   end
 
   def gen_literals
+    # TODO Fix me - I generate triples that don't apply!
     self.ontology.each_statement do |stmt|
-      if stmt.predicate == RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#range");
+      if stmt.predicate == RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#range")
         if randomizer[stmt.object]
           self.literals << RDF::Statement.new(
             RDF::URI.new(self.uri),
             stmt.subject,
             randomizer[stmt.object]
-            )
+          )
         end
       end
     end

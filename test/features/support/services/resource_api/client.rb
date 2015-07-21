@@ -3,6 +3,7 @@
 require 'json/ld'
 require 'uri'
 require 'net/http'
+require 'rdf'
 
 require_relative '../service.rb'
 
@@ -32,7 +33,7 @@ class ServicesAPIClient < Service
     RDF::Graph.load(URI(resource), format: :jsonld)
   end
 
-  def patch_work(work, statements)
+  def patch_resource(resource, statements)
     patches = []
     statements.each { |stmt|
       patches << {:op => "add",
@@ -40,11 +41,13 @@ class ServicesAPIClient < Service
                   :p => stmt.predicate,
                   :o => {:value => stmt.object } }
     }
-    uri = URI(work)
+    uri = URI(resource)
     req = Net::HTTP::Patch.new(uri.path)
     req.add_field('Content-Type', 'application/ldpatch+json')
     req.body = patches.to_json
-    res =  Net::HTTP.new(uri.host, uri.port).request(req) 
+    res = Net::HTTP.new(uri.host, uri.port).request(req)
+    expect(res.code).to eq("200"), "got unexpected #{res.code} when patching resource"
+    res
   end
 
   def remove_resource(resource)
