@@ -32,20 +32,20 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ResourceTest {
+public class WorkResourceTest {
 
-    private Resource resource;
+    private WorkResource resource;
     private BaseURIMock bum;
 
     @Before
     public void setUp() throws Exception {
-        resource = new Resource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
+        resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
         bum = new BaseURIMock();
     }
 
     @Test
     public void test_class_exists(){
-        assertNotNull(new Resource());
+        assertNotNull(new WorkResource());
     }
 
     @Test
@@ -69,16 +69,6 @@ public class ResourceTest {
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
 
         Response result = resource.createWork(work);
-
-        assertNull(result.getEntity());
-        assertEquals(201, result.getStatus());
-    }
-
-    @Test
-    public void should_return_201_when_publication_created() throws URISyntaxException{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
-
-        Response result = resource.createPublication(publication);
 
         assertNull(result.getEntity());
         assertEquals(201, result.getStatus());
@@ -114,22 +104,6 @@ public class ResourceTest {
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
 
         Response result = resource.getWorkJSON(workId);
-
-        assertNotNull(result);
-        assertEquals(201, createResponse.getStatus());
-        assertEquals(200, result.getStatus());
-        assertTrue(isValidJSON(result.getEntity().toString()));
-    }
-
-    @Test
-    public void should_return_the_new_publication() throws URISyntaxException{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_EXIST\"}}";
-
-        Response createResponse = resource.createPublication(publication);
-
-        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
-
-        Response result = resource.getPublicationJSON(publicationId);
 
         assertNotNull(result);
         assertEquals(201, createResponse.getStatus());
@@ -234,15 +208,6 @@ public class ResourceTest {
         Response createResponse = resource.createWork(work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response response = resource.deleteWork(workId);
-        assertEquals(response.getStatus(),204);
-    }
-
-    @Test
-    public void test_delete_publication() throws URISyntaxException{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_BE_PATCHABLE\"}}";
-        Response createResponse = resource.createPublication(publication);
-        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
-        Response response = resource.deletePublication(publicationId);
         assertEquals(response.getStatus(),204);
     }
 

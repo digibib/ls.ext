@@ -9,6 +9,7 @@ import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.utils.JSONLD;
+import no.deichman.services.utils.MimeType;
 import no.deichman.services.utils.PATCH;
 
 import javax.ws.rs.BadRequestException;
@@ -29,11 +30,11 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-@Path("/")
-public class Resource {
-    private static final String MIME_JSONLD = "application/ld+json";
+@Path("/work")
+public class WorkResource {
+    private static final String MIME_JSONLD = MimeType.JSONLD;
     private static final String ENCODING_UTF8 = "; charset=utf-8";
-    private static final String MIME_LDPATCH_JSON = "application/ldpatch+json";
+    private static final String MIME_LDPATCH_JSON = MimeType.LDPATCHJSON;
 
     private Response makeCORS(ResponseBuilder resp, String returnMethod) {
        ResponseBuilder rb = resp
@@ -51,14 +52,14 @@ public class Resource {
     private BaseURI baseURI;
     private JSONLD jsonld;
 
-    public Resource() {
+    public WorkResource() {
         super();
         baseURI = new BaseURIDefault();
         jsonld = new JSONLD(baseURI);
         service = new ServiceDefault(baseURI);
     }
 
-    public Resource(KohaAdapter kohaAdapter, Repository repository, BaseURI b) {
+    public WorkResource(KohaAdapter kohaAdapter, Repository repository, BaseURI b) {
         super();
         ServiceDefault serviceDefault = new ServiceDefault(b);
         serviceDefault.setKohaAdapter(kohaAdapter);
@@ -68,7 +69,6 @@ public class Resource {
         jsonld = new JSONLD(b);
     }
 
-    @Path("/work")
     @POST
     @Consumes(MIME_JSONLD)
     public Response createWork(String work) throws URISyntaxException {
@@ -83,22 +83,6 @@ public class Resource {
                        .build();
     }
 
-    @Path("/publication")
-    @POST
-    @Consumes(MIME_JSONLD)
-    public Response createPublication(String publication) throws URISyntaxException {
-        String workId = service.createPublication(publication);
-        URI location = new URI(workId);
-
-        return Response.created(location)
-                       .header("Access-Control-Allow-Origin", "*")
-                       .header("Access-Control-Allow-Methods", "POST")
-                       .header("Access-Control-Expose-Headers", "Location")
-                       .allow("OPTIONS")
-                       .build();
-    }
-
-    @Path("/work")
     @PUT
     @Consumes(MIME_JSONLD)
     public Response updateWork(String work) {
@@ -111,7 +95,7 @@ public class Resource {
     }
 
     @PATCH
-    @Path("/work/{workId: [a-zA-Z0-9_]+}")
+    @Path("/{workId: [a-zA-Z0-9_]+}")
     @Consumes(MIME_LDPATCH_JSON)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
         if ( !service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId) ) {
@@ -132,27 +116,10 @@ public class Resource {
     }
 
     @GET
-    @Path("/work/{workId: [a-zA-Z0-9_]+}")
+    @Path("/{workId: [a-zA-Z0-9_]+}")
     @Produces(MIME_JSONLD + ENCODING_UTF8)
     public Response getWorkJSON(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkById(workId);
-
-        if (model.isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        return Response.ok().entity(jsonld.getJson(model))
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET")
-                            .allow("OPTIONS")
-                            .build();
-    }
-
-    @GET
-    @Path("/publication/{publicationId: [a-zA-Z0-9_]+}")
-    @Produces(MIME_JSONLD + ENCODING_UTF8)
-    public Response getPublicationJSON(@PathParam("publicationId") String publicationId) {
-        Model model = service.retrievePublicationById(publicationId);
 
         if (model.isEmpty()) {
             throw new NotFoundException();
@@ -171,7 +138,7 @@ public class Resource {
     }
 
     @DELETE
-    @Path("/work/{workId: [a-zA-Z0-9_]+}")
+    @Path("/{workId: [a-zA-Z0-9_]+}")
     public Response deleteWork(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkById(workId);
 
@@ -187,30 +154,14 @@ public class Resource {
                                    .build();
     }
 
-    @DELETE
-    @Path("/publication/{publicationId: [a-zA-Z0-9_]+}")
-    public Response deletePublication(@PathParam("publicationId") String publicationId) {
-        Model model = service.retrievePublicationById(publicationId);
-
-        if (model.isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        service.deletePublication(model);
-
-        return Response.noContent().header("Access-Control-Allow-Origin", "*")
-                                   .header("Access-Control-Allow-Methods", "GET")
-                                   .allow("OPTIONS")
-                                   .build();
-    }
     @OPTIONS
-    @Path("/work/{workId: [a-zA-Z0-9_]+}")
+    @Path("/{workId: [a-zA-Z0-9_]+}")
     public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
         return makeCORS(Response.ok(), reqHeader);
     }
 
     @GET
-    @Path("/work/{workId: [a-zA-Z0-9_]+}/items")
+    @Path("/{workId: [a-zA-Z0-9_]+}/items")
     @Produces(MIME_JSONLD + ENCODING_UTF8)
     public Response getWorkItems(@PathParam("workId") String workId) {
         Model model = service.retrieveWorkItemsById(workId);
