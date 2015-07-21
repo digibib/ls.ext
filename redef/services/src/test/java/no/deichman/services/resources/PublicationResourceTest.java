@@ -68,6 +68,33 @@ public class PublicationResourceTest {
         assertEquals(response.getStatus(),204);
     }
 
+    @Test
+    public void test_CORS_publication_base(){
+        String reqHeader = "application/ld+json";
+        Response reponse = resource.corsPublicationBase(reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    }
+
+    @Test
+    public void test_CORS_publication_base_empty_request_header(){
+        String reqHeader = "";
+        Response response = resource.corsPublicationBase(reqHeader);
+        assert(response.getHeaderString("Access-Control-Allow-Headers") == null);
+        assertEquals(response.getHeaderString("Access-Control-Allow-Origin"),"*");
+        assertEquals(response.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    }
+
+    @Test
+    public void test_CORS_publication_id(){
+        String reqHeader = "application/ld+json";
+        Response reponse = resource.corsPublicationId(reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
+        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    }
+
     private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {

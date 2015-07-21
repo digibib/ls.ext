@@ -6,7 +6,9 @@ import java.net.URISyntaxException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,6 +23,7 @@ import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
+import no.deichman.services.utils.CORSProvider;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.MimeType;
 
@@ -33,12 +36,14 @@ public class PublicationResource {
     private final Service service;
     private BaseURI baseURI;
     private JSONLD jsonld;
+    private CORSProvider cors;
 
     public PublicationResource() {
         super();
         baseURI = new BaseURIDefault();
         jsonld = new JSONLD(baseURI);
         service = new ServiceDefault(baseURI);
+        cors = new CORSProvider();
     }
 
     public PublicationResource(KohaAdapter kohaAdapter, Repository repository, BaseURI b) {
@@ -49,6 +54,7 @@ public class PublicationResource {
         service = serviceDefault;
         baseURI = b;
         jsonld = new JSONLD(b);
+        cors = new CORSProvider();
     }
 
     @POST
@@ -97,5 +103,17 @@ public class PublicationResource {
                                    .header("Access-Control-Allow-Methods", "GET")
                                    .allow("OPTIONS")
                                    .build();
+    }
+
+    @OPTIONS
+    public Response corsPublicationBase(String reqHeader) {
+        Response response = cors.makeCORSResponse(Response.ok(), reqHeader);
+        return response;
+    }
+
+    @OPTIONS
+    @Path("/{publicationId: [a-zA-Z0-9_]+}")
+    public Response corsPublicationId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
+        return cors.makeCORSResponse(Response.ok(), reqHeader);
     }
 }

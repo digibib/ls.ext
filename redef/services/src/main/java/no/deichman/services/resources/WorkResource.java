@@ -8,6 +8,7 @@ import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
+import no.deichman.services.utils.CORSProvider;
 import no.deichman.services.utils.JSONLD;
 import no.deichman.services.utils.MimeType;
 import no.deichman.services.utils.PATCH;
@@ -36,27 +37,17 @@ public class WorkResource {
     private static final String ENCODING_UTF8 = "; charset=utf-8";
     private static final String MIME_LDPATCH_JSON = MimeType.LDPATCHJSON;
 
-    private Response makeCORS(ResponseBuilder resp, String returnMethod) {
-       ResponseBuilder rb = resp
-               .header("Access-Control-Allow-Origin", "*")
-               .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH");
-
-       if (!"".equals(returnMethod)) {
-          rb.header("Access-Control-Allow-Headers", returnMethod);
-       }
-
-       return rb.build();
-    }
-
     private final Service service;
     private BaseURI baseURI;
     private JSONLD jsonld;
+    private CORSProvider cors;
 
     public WorkResource() {
         super();
         baseURI = new BaseURIDefault();
         jsonld = new JSONLD(baseURI);
         service = new ServiceDefault(baseURI);
+        cors = new CORSProvider();
     }
 
     public WorkResource(KohaAdapter kohaAdapter, Repository repository, BaseURI b) {
@@ -67,6 +58,7 @@ public class WorkResource {
         service = serviceDefault;
         baseURI = b;
         jsonld = new JSONLD(b);
+        cors = new CORSProvider();
     }
 
     @POST
@@ -134,7 +126,7 @@ public class WorkResource {
 
     @OPTIONS
     public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return makeCORS(Response.ok(), reqHeader);
+        return cors.makeCORSResponse(Response.ok(), reqHeader);
     }
 
     @DELETE
@@ -157,7 +149,7 @@ public class WorkResource {
     @OPTIONS
     @Path("/{workId: [a-zA-Z0-9_]+}")
     public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return makeCORS(Response.ok(), reqHeader);
+        return cors.makeCORSResponse(Response.ok(), reqHeader);
     }
 
     @GET
