@@ -87,11 +87,6 @@ When(/^jeg klikker på lenken til verks\-siden$/) do
   @browser.goto(@site.RegWork.get_link)
 end
 
-Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
-  Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
-  @site.PatronClient.getTitle.should include(@context[:title])
-end
-
 Then(/^kommer jeg til Koha's presentasjon av biblio$/) do
   step "verkets tittel vises på verks-siden"
 end
@@ -120,11 +115,6 @@ When(/^jeg vil legge til et nytt verk$/) do
   true
 end
 
-When(/^jeg er på sida til verket$/) do
-  identifier = @context[:identifier].sub(services(:work).to_s + "/","")
-  @site.PatronClient.visit(identifier)
-end
-
 When(/^jeg forsøker å registrere ett nytt verk$/) do
   step "jeg kan legge til tittel for det nye verket"
 end
@@ -149,30 +139,12 @@ Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|
   @browser.element(:text => "ugyldig input").present?
 end
 
-Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
-  step "jeg er på sida til verket"
-  @site.PatronClient.getDate().should_not include(@context[:year])
-end
-
-
 Then(/^viser systemet at årstall for førsteutgave av verket har blitt registrert$/) do
    step "grensesnittet viser at tittelen er lagret"
 end
 
-Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do
-  step "jeg er på sida til verket"
-  @browser.refresh
-  @site.PatronClient.getDate().should eq(@context[:year])
-end
-
 Then(/^viser systemet at språket til tittelen blitt registrert$/) do
   step "grensesnittet viser at tittelen er lagret"
-end
-
-Then(/^språket til verkets tittel vises på verks\-siden$/) do
-  step "jeg er på sida til verket"
-  @browser.refresh
-  @site.PatronClient.getTitle.should include("@" + @context[:title_lang])
 end
 
 Then(/^leverer systemet en ny ID for det nye verket$/) do
@@ -193,12 +165,6 @@ Then(/^får jeg beskjed om at noe er feil$/) do
   @site.RegWork.errors.should include("Noe gikk galt!")
 end
 
-Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
-  @browser.refresh
-  @site.PatronClient.getTitle.should include(@context[:title])
-  @site.PatronClient.getDate.should include(@context[:year])
-end
-
 Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
   @browser.refresh
   @site.PatronClient.existsExemplar().should == true
@@ -208,17 +174,6 @@ Then(/^viser systemet at tittel på verket har blitt registrert$/) do
   step "grensesnittet viser at tittelen er lagret"
 end
 
-Then(/^verkets tittel vises på verks\-siden$/) do
-  step "jeg er på sida til verket"
-  @site.PatronClient.getTitle.should include(@context[:title])
-end
-
 Then(/^viser systemet at alternativ tittel på verket har blitt registrert$/) do
   step "grensesnittet viser at tittelen er lagret"
-end
-
-Then(/^verkets alternative tittel vises på verks\-siden$/) do
-  step "jeg er på sida til verket"
-  @browser.refresh
-  @site.PatronClient.getTitle.should include(@context[:alt_title])
 end
