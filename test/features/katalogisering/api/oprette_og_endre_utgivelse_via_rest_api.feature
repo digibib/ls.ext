@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@redef @wip
+@redef
 Egenskap: Legge til og endre utgivelse
   Som katalogiseringsgrensesnitt
   For å kunne hjelpe katalogisator med å katalogisere
@@ -12,6 +12,7 @@ Egenskap: Legge til og endre utgivelse
     Når jeg legger inn en utgivelse via APIet
     Så viser APIet at utgivelsen finnes
 
+  @wip
   Scenario: Endre utgivelse
     Gitt at det er opprettet en utgivelse
     Når jeg sender inn endringer i utgivelsen til APIet
