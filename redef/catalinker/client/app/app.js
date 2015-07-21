@@ -8,6 +8,9 @@ function getURLParameter(name) {
   return results === null ? null : results[1];
 }
 
+
+Ractive.DEBUG = false;
+
 var errors = [];
 var ractive = new Ractive({
    el: "#container",
