@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@wip @redef @xvfb
+@wip @redef
 Egenskap: Legg til verk med opphavsperson
   Som katalogisator
   For at en låner skal kunne finne et verk med kjent opphavsperson
