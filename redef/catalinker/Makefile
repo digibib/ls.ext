@@ -19,6 +19,9 @@ test-client: build-clienttools lint-client
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) karma start karma.config.js --single-run
 	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) node test/module-test/run.js
 
+test-client-module-dev:
+	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app digibib/redef-catalinker-client-tools node test/module-test/run.js
+
 build-client: test-client
 	sudo salt-call --local state.sls redef.catalinker.clientbuild
 
