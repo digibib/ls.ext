@@ -26,16 +26,14 @@ When(/^jeg legger inn (?:et|en) (verk|utgivelse) via APIet$/) do | resource_name
 end
 
 Then(/^viser APIet at (verk|utgivelse)(?:et|n) finnes$/) do | resource_name |
-  resource = Resource.new(@context[:ontology], Resource.sym_from_name(resource_name))
-  @context[resource.type] = resource
   client = ServicesAPIClient.new()
-  resource.uri = client.create_resource(resource.type, resource.literals)
+  resource_to_look_for = @context[Resource.sym_from_name(resource_name)]
   stmt = RDF::Statement::new(
-    RDF::URI.new(resource.uri),
-    RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-    RDF::URI.new("#{client.addr}/ontology##{Resource.type_from_name(resource_name)}")
-      )
-  client.get_resource(resource.uri).has_statement?(stmt).should be true
+      RDF::URI.new(resource_to_look_for.uri),
+      RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+      RDF::URI.new("#{client.addr}/ontology##{Resource.type_from_name(resource_name)}")
+  )
+  client.get_resource(resource_to_look_for.uri).has_statement?(stmt).should be true
 end
 
 Given(/^at det er opprettet et verk$/) do
