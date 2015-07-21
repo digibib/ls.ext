@@ -29,6 +29,14 @@ class TestServer < Test::Unit::TestCase
     get '/work'
     follow_redirect!
     assert last_response.ok?
+    assert last_response.body.include? "Katalogisering av verk"
+  end
+
+  def test_it_has_a_publication_page
+    get '/publication'
+    follow_redirect!
+    assert last_response.ok?
+    assert last_response.body.include? "Katalogisering av utgivelse"
   end
 
 end

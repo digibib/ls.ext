@@ -15,10 +15,12 @@ var ractive = new Ractive({
    template: "#template",
    data: {
      errors: errors,
-     work_uri: "",
+     resource_type: "",
+     resource_label: "",
+     resource_uri: "",
      inputs: {},
      ontology: null,
-     save_status: "nytt verk"
+     save_status: "ny ressurs"
    }
  });
 
@@ -44,8 +46,8 @@ listener = ractive.on({
      if (event.context.error || (event.context.current.value === "" && event.context.old.value === "")) {
        return;
      }
-     var patch = rdf.createPatch(ractive.get("work_uri"), predicate, event.context);
-     http.patch(ractive.get("work_uri"),
+     var patch = rdf.createPatch(ractive.get("resource_uri"), predicate, event.context);
+     http.patch(ractive.get("resource_uri"),
        {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
        patch,
        function (response) {
@@ -87,6 +89,10 @@ ractive.observe("inputs.*.values.*", function (newValue, oldValue, keypath) {
    }
  });
 
+
+// Find resource type from url path
+ractive.set("resource_type", string.titelize(location.pathname.substr(location.pathname.lastIndexOf("/") + 1)));
+
 // Application entrypoint - will fetch any resources (ontology etc) required to populate the UI.
 http.get("/config", {"Accept": "application/ld+json"},
    function (response) {
@@ -96,10 +102,12 @@ http.get("/config", {"Accept": "application/ld+json"},
      http.get(cfg.ontologyUri, {"Accept": "application/ld+json"},
        function (response) {
          var ontology = JSON.parse(response.responseText),
-             props = rdf.propsByClass(ontology, "Work"),
+             props = rdf.propsByClass(ontology, ractive.get("resource_type")),
              inputs = [];
 
          ractive.set("ontology", ontology);
+
+         ractive.set("resource_label", rdf.resourceLabel(ontology, ractive.get("resource_type"), "no").toLowerCase());
 
          for (var i = 0; i < props.length; i++) {
            inputs.push({
@@ -124,7 +132,7 @@ http.get("/config", {"Accept": "application/ld+json"},
        http.get(cfg.resourceApiUri + "work/" + uri.substr(uri.lastIndexOf("/") + 1),
          {"Accept": "application/ld+json"},
        function (response) {
-         ractive.set("work_uri", uri);
+         ractive.set("resource_uri", uri);
          var values = rdf.extractValues(JSON.parse(response.responseText));
          for (var n in ractive.get("inputs")) {
            var kp = "inputs." + n;
@@ -134,7 +142,7 @@ http.get("/config", {"Accept": "application/ld+json"},
            }
          }
 
-         ractive.set("save_status", "åpnet eksisterende verk");
+         ractive.set("save_status", "åpnet eksisterende ressurs");
        },
        function (response) {
          console.log(response);
@@ -145,8 +153,8 @@ http.get("/config", {"Accept": "application/ld+json"},
          {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
           "{}",
        function (response) {
-         work_uri = response.getResponseHeader("Location");
-         ractive.set("work_uri", work_uri);
+         resource_uri = response.getResponseHeader("Location");
+         ractive.set("resource_uri", resource_uri);
        },
        function (response) {
          console.log("POST work error: " + response);

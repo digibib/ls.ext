@@ -79,7 +79,7 @@ module Paths
 
   def catalinker(path=nil)
     paths = {
-      :home => "/index.html",
+      :home => "/cataloguing",
       :work => "/work",
       :publication => "/publication"
     }

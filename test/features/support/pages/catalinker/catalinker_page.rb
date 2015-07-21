@@ -10,8 +10,8 @@ class CatalinkerPage < PageRoot
       self
     end
 
-    def open(resource)
-      @browser.goto "#{catalinker(:home)}?resource=#{resource}"
+    def open(resource, res_type)
+      @browser.goto "#{catalinker(:home)}/#{res_type}?resource=#{resource}"
       Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
       self
     end

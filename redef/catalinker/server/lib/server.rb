@@ -12,6 +12,10 @@ get '/' do
   "Catalinker"
 end
 
+get '/cataloguing*' do
+  send_file File.join(settings.public_folder, 'index.html')
+end
+
 # Used by catalinker client
 get '/config' do
   {
@@ -21,5 +25,9 @@ get '/config' do
 end
 
 get '/work' do
-  redirect '/index.html'
+  redirect '/cataloguing/work'
+end
+
+get '/publication' do
+  redirect '/cataloguing/publication'
 end

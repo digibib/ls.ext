@@ -97,7 +97,7 @@ Then(/^kommer jeg til Koha's presentasjon av biblio$/) do
 end
 
 When(/^jeg åpner verket for redigering$/) do
-  @site.RegWork.open(@context[:identifier])
+  @site.RegWork.open(@context[:identifier], "work")
 end
 
 When(/^når jeg endrer årstall for førsteutgave til verket$/) do

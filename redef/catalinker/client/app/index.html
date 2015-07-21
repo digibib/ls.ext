@@ -26,12 +26,12 @@
       .invalid-msg   { color: #F77F00; font-size: 12px;}
 
     </style>
-    <script src="lib.js"></script>
+    <script src="/lib.js"></script>
   </head>
   <body>
     <div id="#container"></div>
     <script id="template" type="text/ractive">
-      <h2>Katalogisering av verk</h2>
+      <h2 data-automation-id="page-heading">Katalogisering av {{resource_label}}</h2>
       <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
       <div id="save-stat">{{save_status}}</div>
       <fieldset>
@@ -40,8 +40,8 @@
             <label>URI</label>
           </div>
           <div class="prop-values">
-            <input disabled="disabled" data-automation-id="work_uri" value="{{work_uri}}"/>
-            <a data-automation-id="work_page_link" target="_blank" href="{{work_uri.replace(':8005',':8000')}}" class="link"></a>
+            <input disabled="disabled" data-automation-id="work_uri" value="{{resource_uri}}"/>
+            <a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>
           </div>
         </div>
         {{#each inputs}}
@@ -121,7 +121,7 @@
             value="{{current.value}}" />
       {{/partial}}
     </script>
-    <script src="ractive.min.js"></script>
-    <script src="app.js"></script>
+    <script src="/ractive.min.js"></script>
+    <script src="/app.js"></script>
   </body>
 </html>
