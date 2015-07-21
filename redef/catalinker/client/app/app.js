@@ -23,6 +23,7 @@ var ractive = new Ractive({
      resource_uri: "",
      inputs: {},
      ontology: null,
+     ontologyUri: "",
      save_status: "ny ressurs"
    }
  });
@@ -100,6 +101,7 @@ ractive.set("resource_type", string.titelize(location.pathname.substr(location.p
 http.get("/config", {"Accept": "application/ld+json"},
    function (response) {
      cfg = JSON.parse(response.responseText);
+     ractive.set("ontologyUri", cfg.ontologyUri);
 
      // fetch ontology
      http.get(cfg.ontologyUri, {"Accept": "application/ld+json"},
@@ -132,7 +134,7 @@ http.get("/config", {"Accept": "application/ld+json"},
      var uri = getURLParameter("resource");
      if (uri) {
        // load existing resource
-       http.get(cfg.resourceApiUri + "work/" + uri.substr(uri.lastIndexOf("/") + 1),
+       http.get(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
          {"Accept": "application/ld+json"},
        function (response) {
          ractive.set("resource_uri", uri);
@@ -151,8 +153,8 @@ http.get("/config", {"Accept": "application/ld+json"},
          console.log(response);
        });
      } else {
-       // fetch URI for work
-       http.post(cfg.resourceApiUri + "work",
+       // fetch URI for new resource
+       http.post(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase(),
          {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
           "{}",
        function (response) {
@@ -160,7 +162,7 @@ http.get("/config", {"Accept": "application/ld+json"},
          ractive.set("resource_uri", resource_uri);
        },
        function (response) {
-         console.log("POST work error: " + response);
+         console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + response);
        });
      }
    },

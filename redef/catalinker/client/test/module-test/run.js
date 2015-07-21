@@ -155,7 +155,7 @@ app.get("/ontology", function (req, res) {
         }
       }],
       "@context" : {
-        "deichman" : "http://192.168.50.12:8005/ontology#",
+        "deichman" : "http://127.0.0.1:7777/ontology#",
         "rdfs" : "http://www.w3.org/2000/01/rdf-schema#"
       }
     }
@@ -166,6 +166,13 @@ app.post("/work", function (req, res) {
   res.send();
 });
 app.patch("/work/1", function (req, res) {
+  res.send(); // PATCH always 200 OK
+});
+app.post("/publication", function (req, res) {
+  res.setHeader("location", "http://127.0.0.1:7777/publication/1");
+  res.send();
+});
+app.patch("/publication/1", function (req, res) {
   res.send(); // PATCH always 200 OK
 });
 

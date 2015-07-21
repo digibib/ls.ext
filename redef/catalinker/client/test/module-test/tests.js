@@ -3,13 +3,22 @@ casper.on('remote.message', function (message) {
   //this.echo(message);
 });
 
-casper.test.begin("Catalinker grensesnitt (verk)", 3, function (test) {
+casper.test.begin("Catalinker grensesnitt (verk)", 4, function (test) {
   casper.start('http://127.0.0.1:7777/work', function () {
-    casper.waitForResource("/ontology");
-
     test.assertHttpStatus(200);
     test.assertTitle("Katalogisering", "har riktig tittel");
     test.assertSelectorHasText('h2[data-automation-id="page-heading"]', "Katalogisering av verk");
+  });
+
+  casper.waitFor(function check() {
+    return this.evaluate(function () {
+      return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value !== "";
+    });
+  }, function then() {
+    var resource_uri = this.evaluate(function () {
+      return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value;
+    });
+    test.assertEqual(resource_uri, "http://127.0.0.1:7777/work/1");
   });
 
   casper.run(function () {
@@ -19,13 +28,22 @@ casper.test.begin("Catalinker grensesnitt (verk)", 3, function (test) {
 });
 
 
-casper.test.begin("Catalinker grensesnitt (utgivelse)", 3, function (test) {
+casper.test.begin("Catalinker grensesnitt (utgivelse)", 4, function (test) {
   casper.start('http://127.0.0.1:7777/publication', function () {
-    casper.waitForResource("/ontology");
-
     test.assertHttpStatus(200);
     test.assertTitle("Katalogisering", "har riktig tittel");
     test.assertSelectorHasText('h2[data-automation-id="page-heading"]', "Katalogisering av utgivelse");
+  });
+
+  casper.waitFor(function check() {
+    return this.evaluate(function () {
+      return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value !== "";
+    });
+  }, function then() {
+    var resource_uri = this.evaluate(function () {
+      return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value;
+    });
+    test.assertEqual(resource_uri, "http://127.0.0.1:7777/publication/1");
   });
 
   casper.run(function () {
