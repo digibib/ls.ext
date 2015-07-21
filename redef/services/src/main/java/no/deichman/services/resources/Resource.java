@@ -188,7 +188,7 @@ public class Resource {
     }
 
     @DELETE
-    @Path("/work/{workId: [a-zA-Z0-9_]+}")
+    @Path("/publication/{publicationId: [a-zA-Z0-9_]+}")
     public Response deletePublication(@PathParam("publicationId") String publicationId) {
         Model model = service.retrievePublicationById(publicationId);
 
