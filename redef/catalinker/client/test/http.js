@@ -4,9 +4,9 @@ server.respondWith("GET", "/nok", [500, {}, JSON.stringify({ msg: "not ok" })]);
 
 describe("Performing HTTP requests", function () {
 
-  describe("when server responds with a succesfull status code", function () {
+  describe("when server responds with a successful status code", function () {
 
-    it("then the succes callback is called", function () {
+    it("then the success callback is called", function () {
       var cbOK = sinon.spy(),
           cbNotOK = sinon.spy();
 
