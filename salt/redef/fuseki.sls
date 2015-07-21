@@ -1,6 +1,7 @@
 {% set repo = 'fisch42' %}
 {% set image = 'fuseki' %}
 {% set tag = 'latest' %}
+{% set force_pull = false %}
 
 {% include 'docker-pull.sls-fragment' %}
 
