@@ -97,7 +97,8 @@ module Paths
 
   def services(path=nil)
     paths = {
-      :work => "/work"
+      :work => "/work",
+      :publication => "/publication"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{host}:#{port(:services)}#{paths[path.to_sym]}"

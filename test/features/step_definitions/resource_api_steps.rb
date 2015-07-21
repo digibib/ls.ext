@@ -35,6 +35,16 @@ Then(/^viser APIet at verket finnes$/) do
   client.get_work(@context[:work].uri).has_statement?(stmt).should be true
 end
 
+Then(/^viser APIet at utgivelsen finnes$/) do
+  client = ServicesAPIClient.new()
+  stmt = RDF::Statement::new(
+    RDF::URI.new(@context[:publication].uri),
+    RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+    RDF::URI.new("#{client.addr}/ontology#Publication")
+      )
+  client.get_work(@context[:publication].uri).has_statement?(stmt).should be true
+end
+
 Given(/^at det er opprettet et verk$/) do
   steps %Q{
      Gitt at jeg har en ontologi som beskriver verk
