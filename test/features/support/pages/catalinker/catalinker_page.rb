@@ -26,8 +26,8 @@ class CatalinkerPage < PageRoot
     end
 
     def get_id()
-      Watir::Wait.until { @browser.input(:data_automation_id => /work_uri/).value != "" }
-      @browser.input(:data_automation_id => /work_uri/).value
+      Watir::Wait.until { @browser.input(:data_automation_id => /resource_uri/).value != "" }
+      @browser.input(:data_automation_id => /resource_uri/).value
     end
 
     def errors
