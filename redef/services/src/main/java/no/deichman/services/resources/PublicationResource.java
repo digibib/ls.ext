@@ -106,9 +106,8 @@ public class PublicationResource {
     }
 
     @OPTIONS
-    public Response corsPublicationBase(String reqHeader) {
-        Response response = cors.makeCORSResponse(Response.ok(), reqHeader);
-        return response;
+    public Response corsPublicationBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
+        return cors.makeCORSResponse(Response.ok(), reqHeader);
     }
 
     @OPTIONS
