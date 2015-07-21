@@ -45,3 +45,9 @@ Then(/^verkets alternative tittel vises på verks\-siden$/) do
   @browser.refresh
   @site.PatronClient.getTitle.should include(@context[:alt_title])
 end
+
+
+When(/^vises opplysningene om utgivelsen på verkssiden$/) do
+  step "jeg er på sida til verket"
+  fail("not impleneted")
+end

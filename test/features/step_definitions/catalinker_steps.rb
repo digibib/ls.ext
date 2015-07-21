@@ -180,7 +180,14 @@ end
 
 When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   page = @site.RegPublication.visit
-  page.add_prop('Tittel', 'Sult')
-  page.add_prop('Format', 'Bok')
-  page.add_prop('Språk',  'Bokmål')
+  # TODO Ta vare på verdiene i context?
+  page.add_prop('http://192.168.50.12:8005/ontology#format', 'Bok')
+  page.add_prop('http://192.168.50.12:8005/ontology#language',  'Bokmål')
+  page.add_prop('http://192.168.50.12:8005/ontology#name',   'Blæh')
+end
+
+
+When(/^jeg knytter utgivelsen til verket$/) do
+  page = @site.RegPublication
+  page.add_prop('http://192.168.50.12:8005/ontology#publicationOf', @context[:identifier])
 end
