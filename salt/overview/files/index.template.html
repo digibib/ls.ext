@@ -23,7 +23,7 @@
                 },
                 "internal": {
                     "Kohas Intra": "http://" + pillar['overview']['koha']['host'] + ":" + pillar['koha']['intra']['port']|string,
-                    "Catalinker": "http://" + pillar['overview']['redef']['catalinker']['host'] + ":" + pillar['redef']['catalinker']['port']|string + "/index.html",
+                    "Catalinker": "http://" + pillar['overview']['redef']['catalinker']['host'] + ":" + pillar['redef']['catalinker']['port']|string,
                 },
                 "ops": {
                     "Kibana": "http://" + pillar['overview']['elk']['host'] + ":" + pillar['elk']['kibana']['port']|string + "/index.html#/dashboard/file/logstash.json",
