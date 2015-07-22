@@ -64,7 +64,7 @@
                   {{>input-string}}
                 {{/}}
                 {{#predicate === (ontologyUri + "#biblio") && current.value !== ""}}
-                  <a target="_blank" href="http://192.168.50.12:8080/cgi-bin/koha/opac-detail.pl?biblionumber={{current.value}}" class="link"></a>
+                  <a target="_blank" href="{{kohaUri}}/cgi-bin/koha/opac-detail.pl?biblionumber={{current.value}}" class="link"></a>
                 {{/}}
                 <br/>
                 <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>

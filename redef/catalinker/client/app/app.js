@@ -102,6 +102,7 @@ http.get("/config", {"Accept": "application/ld+json"},
    function (response) {
      cfg = JSON.parse(response.responseText);
      ractive.set("ontologyUri", cfg.ontologyUri);
+     ractive.set("kohaUri", cfg.kohaUri);
 
      // fetch ontology
      http.get(cfg.ontologyUri, {"Accept": "application/ld+json"},

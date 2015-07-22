@@ -19,6 +19,7 @@ end
 # Used by catalinker client
 get '/config' do
   {
+      :kohaUri => (ENV['KOHA_PORT'] || 'http://192.168.50.12:8080').sub(/^tcp:\//, 'http:/' ),
       :ontologyUri => (ENV['SERVICES_PORT'] || 'http://192.168.50.12:8010').sub(/^tcp:\//, 'http:/' ) + '/ontology',
       :resourceApiUri => (ENV['SERVICES_PORT'] || 'http://192.168.50.12:8010').sub(/^tcp:\//, 'http:/' ) + '/'
   }.to_json

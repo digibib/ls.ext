@@ -25,10 +25,10 @@ casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
     test.assertEqual(resource_uri, "http://127.0.0.1:7777/work/1");
   });
 
-  casper.then(function() {
-    test.assertNotExists('a[href="http://192.168.50.12:8080/cgi-bin/koha/opac-detail.pl?biblionumber=5"]');
+  casper.then(function () {
+    test.assertNotExists('a[href="http://koha.deichman.no/cgi-bin/koha/opac-detail.pl?biblionumber=5"]');
     addValue(this, "biblio", "5");
-    test.assertExists('a[href="http://192.168.50.12:8080/cgi-bin/koha/opac-detail.pl?biblionumber=5"]');
+    test.assertExists('a[href="http://koha.deichman.no/cgi-bin/koha/opac-detail.pl?biblionumber=5"]');
   });
 
   casper.run(function () {
