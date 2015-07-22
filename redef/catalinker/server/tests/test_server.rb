@@ -17,7 +17,7 @@ class TestServer < Test::Unit::TestCase
   def test_it_says_hello_world
     get '/'
     assert last_response.ok?
-    assert_equal 'Catalinker', last_response.body
+    assert last_response.body.include? 'Catalinker'
   end
 
   def test_it_serves_config_for_client
