@@ -10,7 +10,7 @@ describe("Performing HTTP requests", function () {
       var cbOK = sinon.spy(),
           cbNotOK = sinon.spy();
 
-      http.get("/ok", {}, cbOK, cbNotOK);
+      cl.http.get("/ok", {}, cbOK, cbNotOK);
       server.respond();
       sinon.assert.called(cbOK);
       sinon.assert.notCalled(cbNotOK);
@@ -24,7 +24,7 @@ describe("Performing HTTP requests", function () {
       var cbOK = sinon.spy(),
           cbNotOK = sinon.spy();
 
-      http.get("/nok", {}, cbOK, cbNotOK);
+      cl.http.get("/nok", {}, cbOK, cbNotOK);
       server.respond();
       sinon.assert.called(cbNotOK);
       sinon.assert.notCalled(cbOK);
@@ -38,7 +38,7 @@ describe("Performing HTTP requests", function () {
       var cbOK = sinon.spy(),
           cbNotOK = sinon.spy();
 
-      http.get("http://æøå.xyz/failing/path", {}, cbOK, cbNotOK);
+      cl.http.get("http://æøå.xyz/failing/path", {}, cbOK, cbNotOK);
       server.respond();
       sinon.assert.called(cbNotOK);
       sinon.assert.notCalled(cbOK);

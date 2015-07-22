@@ -50,8 +50,8 @@ listener = ractive.on({
      if (event.context.error || (event.context.current.value === "" && event.context.old.value === "")) {
        return;
      }
-     var patch = rdf.createPatch(ractive.get("resource_uri"), predicate, event.context);
-     http.patch(ractive.get("resource_uri"),
+     var patch = cl.rdf.createPatch(ractive.get("resource_uri"), predicate, event.context);
+     cl.http.patch(ractive.get("resource_uri"),
        {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
        patch,
        function (response) {
@@ -81,7 +81,7 @@ ractive.observe("inputs.*.values.*", function (newValue, oldValue, keypath) {
    var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
    var valid = false;
    try {
-     valid = rdf.validateLiteral(newValue.current.value, ractive.get(parent).range);
+     valid = cl.rdf.validateLiteral(newValue.current.value, ractive.get(parent).range);
    } catch (e) {
      console.log(e);
      return;
@@ -95,29 +95,29 @@ ractive.observe("inputs.*.values.*", function (newValue, oldValue, keypath) {
 
 
 // Find resource type from url path
-ractive.set("resource_type", string.titelize(location.pathname.substr(location.pathname.lastIndexOf("/") + 1)));
+ractive.set("resource_type", cl.string.titelize(location.pathname.substr(location.pathname.lastIndexOf("/") + 1)));
 
 // Application entrypoint - will fetch any resources (ontology etc) required to populate the UI.
-http.get("/config", {"Accept": "application/ld+json"},
+cl.http.get("/config", {"Accept": "application/ld+json"},
    function (response) {
      cfg = JSON.parse(response.responseText);
      ractive.set("ontologyUri", cfg.ontologyUri);
      ractive.set("kohaUri", cfg.kohaUri);
 
      // fetch ontology
-     http.get(cfg.ontologyUri, {"Accept": "application/ld+json"},
+     cl.http.get(cfg.ontologyUri, {"Accept": "application/ld+json"},
        function (response) {
          var ontology = JSON.parse(response.responseText),
-             props = rdf.propsByClass(ontology, ractive.get("resource_type")),
+             props = cl.rdf.propsByClass(ontology, ractive.get("resource_type")),
              inputs = [];
 
          ractive.set("ontology", ontology);
 
-         ractive.set("resource_label", rdf.resourceLabel(ontology, ractive.get("resource_type"), "no").toLowerCase());
+         ractive.set("resource_label", cl.rdf.resourceLabel(ontology, ractive.get("resource_type"), "no").toLowerCase());
 
          for (var i = 0; i < props.length; i++) {
            inputs.push({
-             predicate: rdf.resolveURI(ontology,  props[i]["@id"]),
+             predicate: cl.rdf.resolveURI(ontology,  props[i]["@id"]),
              range: props[i]["rdfs:range"]["@id"],
              label: props[i]["rdfs:label"][0]["@value"],
              values: [{old: { value: "", type: "", lang: "" },
@@ -135,11 +135,11 @@ http.get("/config", {"Accept": "application/ld+json"},
      var uri = getURLParameter("resource");
      if (uri) {
        // load existing resource
-       http.get(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
+       cl.http.get(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
          {"Accept": "application/ld+json"},
        function (response) {
          ractive.set("resource_uri", uri);
-         var values = rdf.extractValues(JSON.parse(response.responseText));
+         var values = cl.rdf.extractValues(JSON.parse(response.responseText));
          for (var n in ractive.get("inputs")) {
            var kp = "inputs." + n;
            var input = ractive.get(kp);
@@ -155,7 +155,7 @@ http.get("/config", {"Accept": "application/ld+json"},
        });
      } else {
        // fetch URI for new resource
-       http.post(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase(),
+       cl.http.post(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase(),
          {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
           "{}",
        function (response) {
