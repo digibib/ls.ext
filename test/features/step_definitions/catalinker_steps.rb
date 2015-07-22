@@ -180,10 +180,14 @@ end
 
 When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   page = @site.RegPublication.visit
-  # TODO Ta vare på verdiene i context?
-  page.add_prop('http://192.168.50.12:8005/ontology#format', 'Bok')
-  page.add_prop('http://192.168.50.12:8005/ontology#language',  'Bokmål')
-  page.add_prop('http://192.168.50.12:8005/ontology#name',   'Blæh')
+
+  @context[:publication_format] = 'Bok'
+  @context[:publication_language] = 'Bokmål'
+  @context[:publication_name] = 'Blæh'
+
+  page.add_prop('http://192.168.50.12:8005/ontology#format', @context[:publication_format])
+  page.add_prop('http://192.168.50.12:8005/ontology#language', @context[:publication_language])
+  page.add_prop('http://192.168.50.12:8005/ontology#name', @context[:publication_name])
 end
 
 

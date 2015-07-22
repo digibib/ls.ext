@@ -97,7 +97,7 @@ describe('PatronClient', function () {
         });
         res.on('end', function () {
           $ = cheerio.load(body);
-          expect($('span[data-automation-id=item_location]').text()).to.equal("hutl");
+          expect($('td[data-automation-id=item_location]').text()).to.equal("hutl");
           done();
         });
       }).on('error', function (e) {

@@ -21,7 +21,7 @@ class PatronClient < PageRoot
     end
 
     def existsExemplar
-      if @browser.span(:data_automation_id => /item_location/).text
+      if @browser.td(:data_automation_id => /item_location/).text
         location = true
       else
         location = false

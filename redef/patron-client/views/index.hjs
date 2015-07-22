@@ -39,7 +39,7 @@
       .cover-image { max-width: 100%; opacity: 0.2; display: block; margin-left: auto; margin-right: auto;}
       .item-actions { /*vertical-align: bottom; */}
       dt { font-weight: bold; }
-      .panel { background: #eee; }
+      .panel { background: #eee; padding-bottom: 2em; }
       tbody { background: #fff; }
       th { padding: 0.5em;}
       td { padding: 0.5em; }
@@ -90,6 +90,24 @@
       <div class="row">
         <div class="panel column full">
           <h2>Finnes i disse utgavene</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>tittel</th>
+                <th>språk</th>
+                <th>format</th>
+                <th>eksemplarer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-automation-id="publication_name">?</td>
+                <td data-automation-id="publication_language">?</td>
+                <td data-automation-id="publication_format">?</td>
+                <td>?</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="panel column full">
           {{#items.length}}
@@ -97,6 +115,8 @@
           <table>
             <thead>
               <tr>
+                <th>tittel</th>
+                <th>språk</th>
                 <th>format</th>
                 <th>plassering</th>
                 <th>status</th>
@@ -106,8 +126,10 @@
             {{#items}}
               <tr>
                 <td>?</td>
-                <td><span data-automation-id="item_location">{{deichman:location}}</span></td>
-                <td><span data-automation-id="item_status">{{deichman:status}}</span></td>
+                <td>?</td>
+                <td>?</td>
+                <td data-automation-id="item_location">{{deichman:location}}</td>
+                <td data-automation-id="item_status">{{deichman:status}}</td>
               </tr>
             {{/items}}
             </tbody>
@@ -116,7 +138,6 @@
           {{^items}}
           <h2>Vi har ingen eksemplarer</h2>
           {{/items}}
-          <p></p>
         </div>
       </div>
     </div>
