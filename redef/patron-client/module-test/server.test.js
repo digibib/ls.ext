@@ -70,7 +70,7 @@ describe('PatronClient', function () {
                 });
     });
 
-    it('should find text "Sult / Knut Hamsun (1890)"', function (done) {
+    it('should find title, author and date of work"', function (done) {
       http.get(parameters, function (res) {
         var body = '',
             $ = '';
@@ -79,7 +79,9 @@ describe('PatronClient', function () {
         });
         res.on('end', function () {
           $ = cheerio.load(body);
-          expect($('h1').text()).to.equal("Sult / Knut Hamsun (1890)");
+          expect($('h2[data-automation-id="work_title"]').text()).to.equal("Sult");
+          expect($('span[data-automation-id="work_date"]').text()).to.equal("1890");
+          expect($('p[data-automation-id="work_author"]').text()).to.equal("Knut Hamsun");
           done();
         });
       }).on('error', function (e) {

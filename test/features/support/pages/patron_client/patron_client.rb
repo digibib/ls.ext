@@ -9,7 +9,7 @@ class PatronClient < PageRoot
     end
 
     def getTitle
-      return @browser.span(:data_automation_id => /work_title/).text
+      return @browser.h2(:data_automation_id => /work_title/).text
     end
 
     def getAuthor

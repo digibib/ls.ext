@@ -10,6 +10,7 @@ var express = require('express'),
 
 app.set('view engine', 'hjs');
 app.engine('hjs', hogan.renderFile);
+app.use(express.static('public'));
 
 function titlesToString(titles) {
   if (typeof titles === "string") {
