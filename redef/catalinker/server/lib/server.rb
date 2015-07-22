@@ -9,7 +9,7 @@ set :public_folder, File.dirname(__FILE__) + '/public'
 use Rack::Deflater
 
 get '/' do
-  "Catalinker"
+  haml :index
 end
 
 get '/cataloguing*' do
@@ -31,3 +31,18 @@ end
 get '/publication' do
   redirect '/cataloguing/publication'
 end
+
+__END__
+
+@@ layout
+%html
+  = yield
+
+@@ index
+.title Catalinker - metadataregistrering med lenkede data
+.links
+  %ul
+    %li
+      %a{:href => 'work'} Registrere verk
+    %li
+      %a{:href => 'publication'} Registrere utgivelse

@@ -6,6 +6,7 @@ group :test do
   gem 'test-unit'
   gem 'rack-test'
   gem 'webmock'
+  gem 'haml'
 end
 
 group :development do

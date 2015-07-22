@@ -8,13 +8,15 @@ GEM
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
     ffi (1.9.10)
+    haml (4.0.6)
+      tilt
     hitimes (1.2.2)
     listen (2.10.1)
       celluloid (~> 0.16.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
     method_source (0.8.2)
-    power_assert (0.2.3)
+    power_assert (0.2.4)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -50,6 +52,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  haml
   pry
   pry-nav
   rack-test
