@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'gradle-one-jar'
+apply plugin: "checkstyle"
 
 group = 'no.deichman.services'
 version = '1.0-SNAPSHOT'
@@ -57,11 +58,19 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'com.puppycrawl.tools' && details.requested.name == 'checkstyle' && details.requested.version < '5.9') {
+            //prefer version that supports Java 8
+            details.useVersion '5.9'
+        }
+    }
+}
+
 buildscript {
     dependencies {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
     }
-
     repositories {
         mavenCentral()
         maven {
