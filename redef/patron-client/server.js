@@ -76,7 +76,7 @@ function getItems(uri, callback) {
 }
 
 app.get('/work/:id', function (request, response) {
-  var parameters = config.get();
+  var parameters = config.get(process.env);
   parameters.path = "/work/" + request.params.id;
 
   http.get(parameters, function (res) {
