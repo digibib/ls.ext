@@ -1,19 +1,20 @@
 package no.deichman.services.patch;
 
-import no.deichman.services.patch.PatchObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+/**
+ * Responsibility: TODO.
+ */
+public final class PatchParser {
 
-public class PatchParser {
-
-    private String patch_input;
-    private List<PatchObject> raw_parse_object = new ArrayList<PatchObject>();
+    private String patchInput;
+    private List<PatchObject> rawParseObject = new ArrayList<PatchObject>();
 
     PatchParser(String input){
         setPatchData(input);
@@ -28,20 +29,20 @@ public class PatchParser {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(patchObjectListType, new PatchObjectTypeAdapter())
                 .create();
-        rawPatches = gson.fromJson(patch_input,patchObjectListType);
-        raw_parse_object.addAll(rawPatches);
+        rawPatches = gson.fromJson(patchInput,patchObjectListType);
+        rawParseObject.addAll(rawPatches);
         return rawPatches;
     }
 
     public void setPatchData(String input){
-        patch_input = input;
+        patchInput = input;
     }
 
     public String getPatchInput() {
-        return patch_input;
+        return patchInput;
     }
 
     public List<PatchObject> getRawPatchObject() {
-        return raw_parse_object;
+        return rawParseObject;
     }
 }

@@ -1,31 +1,27 @@
 package no.deichman.services.repository;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.DatasetImpl;
 import com.hp.hpl.jena.vocabulary.RDF;
-
-import javassist.bytecode.Descriptor.Iterator;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class RepositoryInMemoryTest {
     private RepositoryInMemory repository;
-    private BaseURIMock bud;
     private Statement testWorkStmt;
     private Statement testPublicationStmt;
     private List<Statement> stmts;
@@ -35,9 +31,9 @@ public class RepositoryInMemoryTest {
     @Before
     public void setup(){
         repository = new RepositoryInMemory();
-        bud = new BaseURIMock();
+        BaseURIMock bud = new BaseURIMock();
         testWorkStmt = ResourceFactory.createStatement(
-                        ResourceFactory.createResource(bud.getWorkURI() + "test_id_123"), 
+                        ResourceFactory.createResource(bud.getWorkURI() + "test_id_123"),
                         ResourceFactory.createProperty("http://example.com/ontology/name"),
                         ResourceFactory.createPlainLiteral("Test"));
         testPublicationStmt = ResourceFactory.createStatement(

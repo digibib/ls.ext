@@ -1,21 +1,11 @@
 package no.deichman.services.resources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import no.deichman.services.kohaadapter.KohaAdapterMock;
+import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
@@ -23,13 +13,23 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
-import no.deichman.services.kohaadapter.KohaAdapterMock;
-import no.deichman.services.repository.RepositoryInMemory;
-import no.deichman.services.uridefaults.BaseURIMock;
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class PublicationResourceTest {
 
@@ -52,7 +52,7 @@ public class PublicationResourceTest {
         Response result = resource.createPublication(publication);
 
         assertNull(result.getEntity());
-        assertEquals(201, result.getStatus());
+        assertEquals(CREATED.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -66,8 +66,8 @@ public class PublicationResourceTest {
         Response result = resource.getPublicationJSON(publicationId);
 
         assertNotNull(result);
-        assertEquals(201, createResponse.getStatus());
-        assertEquals(200, result.getStatus());
+        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
+        assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
@@ -77,7 +77,7 @@ public class PublicationResourceTest {
         Response createResponse = resource.createPublication(publication);
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
         Response response = resource.deletePublication(publicationId);
-        assertEquals(response.getStatus(),204);
+        assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class PublicationResourceTest {
     public void patch_should_return_status_400() throws Exception {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_BE_PATCHABLE\"}}";
         Response result = resource.createPublication(publication);
-        String publicationId = result.getLocation().getPath().substring(13);
+        String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{}";
         try {
             resource.patchPublication(publicationId,patchData);
@@ -125,7 +125,7 @@ public class PublicationResourceTest {
     public void patched_publication_should_persist_changes() throws Exception {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_BE_PATCHABLE\"}}";
         Response result = resource.createPublication(publication);
-        String publicationId = result.getLocation().getPath().substring(13);
+        String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{"
                 + "\"op\": \"add\","
                 + "\"s\": \"" + result.getLocation().toString() + "\","
@@ -144,7 +144,7 @@ public class PublicationResourceTest {
         InputStream in2 = new ByteArrayInputStream(adaptedPublication.getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(comparison,in2, Lang.JSONLD);
         comparison.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(result.getLocation().toString()), 
+                ResourceFactory.createResource(result.getLocation().toString()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#color"), 
                 ResourceFactory.createPlainLiteral("red")));
         assertTrue(testModel.isIsomorphicWith(comparison));
@@ -160,6 +160,7 @@ public class PublicationResourceTest {
         try {
             final JsonParser parser = new ObjectMapper().getJsonFactory().createJsonParser(json);
             while (parser.nextToken() != null) {
+                // NOOP
             }
             valid = true;
         } catch (IOException ioe) {

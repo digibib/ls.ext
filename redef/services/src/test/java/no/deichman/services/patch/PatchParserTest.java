@@ -1,15 +1,13 @@
 package no.deichman.services.patch;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import no.deichman.services.error.PatchParserException;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.Test;
-
-import no.deichman.services.error.PatchParserException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class PatchParserTest {
 

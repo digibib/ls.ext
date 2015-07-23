@@ -1,20 +1,23 @@
 package no.deichman.services.uridefaults;
 
+/**
+ * Responsibility: TODO.
+ */
 public class BaseURIDefault implements BaseURI {
 
-    public String getBaseURI() {
+    public final String getBaseURI() {
         return System.getenv("DATA_BASEURI");
     }
 
-    public String getWorkURI() {
+    public final String getWorkURI() {
         return getBaseURI() + "work/";
     }
 
-    public String getOntologyURI() {
+    public final String getOntologyURI() {
         return getBaseURI() + "ontology#";
     }
 
-    public String getPublicationURI() {
+    public final String getPublicationURI() {
         return getBaseURI() + "publication/";
     }
 }

@@ -42,13 +42,13 @@ public class Marc2RdfTest {
     @Test
     public void test_default_constructor_sets_baseURI(){
         Marc2Rdf m2r = new Marc2Rdf();
-        assertEquals(m2r.getBaseURI().getClass(),BaseURIDefault.class);
+        assertEquals(m2r.getBaseURI().getClass(), BaseURIDefault.class);
     }
 
     @Test
     public void test_overloaded_constructor_sets_baseURI(){
         Marc2Rdf m2r = new Marc2Rdf(new BaseURIMock());
-        assertEquals(m2r.getBaseURI().getClass(),BaseURIMock.class);
+        assertEquals(m2r.getBaseURI().getClass(), BaseURIMock.class);
     }
 
     @Test

@@ -1,13 +1,11 @@
 package no.deichman.services.uridefaults;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import no.deichman.services.uridefaults.BaseURIMock;
+import static org.junit.Assert.assertEquals;
 
-public class TestBaseURI {
-    BaseURIMock bum = new BaseURIMock();
+public class BaseURITest {
+    private BaseURIMock bum = new BaseURIMock();
 
     @Test
     public void canGetBaseURI() {

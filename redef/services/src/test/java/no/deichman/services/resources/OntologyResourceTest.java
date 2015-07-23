@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -40,7 +41,7 @@ public class OntologyResourceTest {
     }
 
     @Test
-    public void should_get_ontology () throws IOException {
+    public void should_get_ontology() throws IOException {
         Response result = resource.getOntologyJSON();
         String entity = result.getEntity().toString();
         Model m = ModelFactory.createDefaultModel();
@@ -51,13 +52,13 @@ public class OntologyResourceTest {
             InputStream fileIn = new ByteArrayInputStream(fromFile.getBytes(StandardCharsets.UTF_8));
             RDFDataMgr.read(m, in, Lang.JSONLD);
             RDFDataMgr.read(comparison, fileIn, Lang.TURTLE);
-            assertEquals(200, result.getStatus());
+            assertEquals(OK.getStatusCode(), result.getStatus());
             assertTrue(m.isIsomorphicWith(comparison));
         }
     }
 
     @Test
-    public void should_get_ontology_as_turtle () throws IOException {
+    public void should_get_ontology_as_turtle() throws IOException {
         Response result = resource.getOntologyTurtle();
         String entity = result.getEntity().toString();
         try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){

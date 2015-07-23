@@ -6,7 +6,10 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class OntologyService {
+/**
+ * Responsibility: TODO.
+ */
+public final class OntologyService {
 
     private static final String BASE_URI_USED_IN_FILE = "http://data.deichman.no/lsext-model#";
     private static final String ONTOLOGY_TTL_FILE = "ontology.ttl";

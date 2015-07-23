@@ -9,9 +9,14 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 import static java.util.Arrays.asList;
 
-public class App {
+/**
+ * Responsibility: Start application (using embedded web server).
+ */
+public final class App {
 
     private static final int SERVICES_PORT_NO = 8080;
+
+    private App() { } // Not instantiable
 
     public static void main(String[] args) throws Exception {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

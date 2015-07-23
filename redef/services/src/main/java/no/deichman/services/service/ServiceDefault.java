@@ -1,9 +1,5 @@
 package no.deichman.services.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -25,12 +21,16 @@ import no.deichman.services.repository.RepositoryDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
-public class ServiceDefault implements Service {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public final class ServiceDefault implements Service {
 
     private Repository repository = new RepositoryDefault();
     private KohaAdapter kohaAdapter = new KohaAdapterDefault();
     private BaseURI baseURI;
-    private Property BIBLIO_ID;
+    private Property biblioId;
 
     public ServiceDefault(){
         baseURI = new BaseURIDefault();
@@ -75,7 +75,7 @@ public class ServiceDefault implements Service {
     }
 
     public void setBiblioIDProperty(String uri){
-        BIBLIO_ID = ResourceFactory.createProperty(uri + "biblio");
+        biblioId = ResourceFactory.createProperty(uri + "biblio");
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ServiceDefault implements Service {
 
         while (subjectsIterator.hasNext()){
             Model tempModel = ModelFactory.createDefaultModel();
-            NodeIterator n = model.listObjectsOfProperty(BIBLIO_ID);
+            NodeIterator n = model.listObjectsOfProperty(biblioId);
             while (n.hasNext()){
                 tempModel.add(kohaAdapter.getBiblio(n.next().toString()));
             }

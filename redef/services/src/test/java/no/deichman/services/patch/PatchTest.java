@@ -1,16 +1,15 @@
 package no.deichman.services.patch;
 
-import no.deichman.services.patch.Patch;
-
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class PatchTest {
     @Test

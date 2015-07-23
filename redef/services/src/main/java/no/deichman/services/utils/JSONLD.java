@@ -16,12 +16,14 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JSONLD {
+/**
+ * Responsibility: TODO.
+ */
+public final class JSONLD {
 
     private BaseURI baseURI;
 
-    public JSONLD(){
-    }
+    public JSONLD() {}
 
     public JSONLD(BaseURI base){
         baseURI = base;

@@ -6,12 +6,12 @@ import org.apache.jena.iri.IRIFactory;
 
 import no.deichman.services.error.PatchParserException;
 
-public class Parser {
+public final class Parser {
 
     private String input = null;
     private IRIFactory iriFactory = IRIFactory.semanticWebImplementation();
 
-    Parser () {
+    Parser() {
     }
 
     public Parser(String input) {

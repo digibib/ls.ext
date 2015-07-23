@@ -1,6 +1,9 @@
 package no.deichman.services.uridefaults;
 
-public class BaseURIMock implements BaseURI {
+/**
+ * Responsibility: TODO.
+ */
+public final class BaseURIMock implements BaseURI {
 
     public String getBaseURI() {
         return "http://deichman.no/";

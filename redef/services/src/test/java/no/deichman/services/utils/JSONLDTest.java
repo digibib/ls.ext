@@ -1,23 +1,21 @@
 package no.deichman.services.utils;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.vocabulary.RDFS;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIMock;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.junit.Test;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.vocabulary.RDFS;
-
-import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIMock;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class JSONLDTest {
 
@@ -37,7 +35,7 @@ public class JSONLDTest {
         RDFDataMgr.read(comparison, into, Lang.JSONLD);
         assertNotNull(result);
         assertTrue(m.isIsomorphicWith(comparison));
-        Map<String,String> ns = comparison.getNsPrefixMap();
+        Map<String, String> ns = comparison.getNsPrefixMap();
         assertTrue(ns.get("deichman").equals(bud.getOntologyURI()));
         assertTrue(ns.get("rdfs").equals(RDFS.getURI()));
     }

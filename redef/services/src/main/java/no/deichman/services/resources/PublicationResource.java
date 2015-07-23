@@ -1,7 +1,16 @@
 package no.deichman.services.resources;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.hp.hpl.jena.rdf.model.Model;
+import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.repository.Repository;
+import no.deichman.services.service.Service;
+import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIDefault;
+import no.deichman.services.utils.CORSProvider;
+import no.deichman.services.utils.JSONLD;
+import no.deichman.services.utils.MimeType;
+import no.deichman.services.utils.PATCH;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -15,19 +24,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
-import com.hp.hpl.jena.rdf.model.Model;
-
-import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.repository.Repository;
-import no.deichman.services.service.Service;
-import no.deichman.services.service.ServiceDefault;
-import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.utils.CORSProvider;
-import no.deichman.services.utils.JSONLD;
-import no.deichman.services.utils.MimeType;
-import no.deichman.services.utils.PATCH;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Path("/publication")
 public class PublicationResource {
@@ -60,7 +58,7 @@ public class PublicationResource {
     }
 
     @POST
-    @Consumes(MIME_JSONLD) 
+    @Consumes(MIME_JSONLD)
     public Response createPublication(String publication) throws URISyntaxException {
         String workId = service.createPublication(publication);
         URI location = new URI(workId);
@@ -123,7 +121,7 @@ public class PublicationResource {
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
     @Consumes(MimeType.LDPATCHJSON)
     public Response patchPublication(@PathParam("publicationId") String publicationId, String requestBody) throws Exception {
-        if ( !service.getRepository().askIfResourceExists(baseURI.getPublicationURI() + publicationId) ) {
+        if (!service.getRepository().askIfResourceExists(baseURI.getPublicationURI() + publicationId)) {
             throw new NotFoundException();
         }
         Model m;

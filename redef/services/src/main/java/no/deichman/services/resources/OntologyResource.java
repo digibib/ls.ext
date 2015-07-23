@@ -18,8 +18,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Responsibility: TODO.
+ */
 @Path("ontology")
-public class OntologyResource {
+public final class OntologyResource {
 
     private final OntologyService ontologyService;
     private BaseURI baseURI;

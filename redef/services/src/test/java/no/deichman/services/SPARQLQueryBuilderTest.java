@@ -15,8 +15,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
@@ -232,7 +230,7 @@ public class SPARQLQueryBuilderTest {
     public void test_ask_if_graph_exists(){
         String graph = "http://example.com/g";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        String expected = "ASK {GRAPH <" + graph + "> {}}" ;
+        String expected = "ASK {GRAPH <" + graph + "> {}}";
         assertEquals(expected,sqb.askIfGraphExists(graph));
     }
 

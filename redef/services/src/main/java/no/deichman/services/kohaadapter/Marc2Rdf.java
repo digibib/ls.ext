@@ -17,14 +17,17 @@ import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
 
+/**
+ * Responsibility: TODO.
+ */
 class Marc2Rdf {
 
     private static final String DEICHMAN_NS_EXEMPLAR = "http://deichman.no/exemplar/";
     private static final String RDF_SYNTAX_NS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-    private String DEICHMAN_FORMAT = "format";
-    private String DEICHMAN_ITEM = "Item";
-    private String DEICHMAN_STATUS = "status";
-    private String DEICHMAN_LOCATION = "location";
+    private static final String DEICHMAN_FORMAT = "format";
+    private static final String DEICHMAN_ITEM = "Item";
+    private static final String DEICHMAN_STATUS = "status";
+    private static final String DEICHMAN_LOCATION = "location";
     private BaseURI baseURI;
 
     public Marc2Rdf(){

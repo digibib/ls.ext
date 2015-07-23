@@ -1,9 +1,11 @@
 package no.deichman.services.resources;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIMock;
-
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
@@ -11,14 +13,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +23,10 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -54,7 +55,7 @@ public class WorkResourceTest {
         Response result = resource.getWorkJSON(workId);
 
         assertNotNull(result);
-        assertEquals(200, result.getStatus());
+        assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
@@ -71,7 +72,7 @@ public class WorkResourceTest {
         Response result = resource.createWork(work);
 
         assertNull(result.getEntity());
-        assertEquals(201, result.getStatus());
+        assertEquals(CREATED.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -92,7 +93,7 @@ public class WorkResourceTest {
         Response result = resource.updateWork(work);
 
         assertNull(result.getEntity());
-        assertEquals(200, result.getStatus());
+        assertEquals(OK.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -106,8 +107,8 @@ public class WorkResourceTest {
         Response result = resource.getWorkJSON(workId);
 
         assertNotNull(result);
-        assertEquals(201, createResponse.getStatus());
-        assertEquals(200, result.getStatus());
+        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
+        assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
@@ -119,23 +120,23 @@ public class WorkResourceTest {
         Response createResponse = resource.updateWork(work);
         Response result = resource.getWorkItems(workId);
 
-        assertEquals(200, createResponse.getStatus());
+        assertEquals(OK.getStatusCode(), createResponse.getStatus());
         assertNotNull(result);
-        assertEquals(200, result.getStatus());
+        assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
     @Test(expected=NotFoundException.class)
     public void should_404_on_empty_items_list(){
         Response result = resource.getWorkItems("DOES_NOT_EXIST");
-        assertEquals(result.getStatus(),404);
+        assertEquals(result.getStatus(), NOT_FOUND.getStatusCode());
     }
 
     @Test
     public void patch_should_return_status_400() throws Exception {
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
         Response result = resource.createWork(work);
-        String workId = result.getLocation().getPath().substring(6);
+        String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{}";
         try {
             resource.patchWork(workId,patchData);
@@ -149,7 +150,7 @@ public class WorkResourceTest {
     public void patched_work_should_persist_changes() throws Exception {
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
         Response result = resource.createWork(work);
-        String workId = result.getLocation().getPath().substring(6);
+        String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{"
                 + "\"op\": \"add\","
                 + "\"s\": \"" + result.getLocation().toString() + "\","
@@ -208,7 +209,7 @@ public class WorkResourceTest {
         Response createResponse = resource.createWork(work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response response = resource.deleteWork(workId);
-        assertEquals(response.getStatus(),204);
+        assertEquals(response.getStatus(), NO_CONTENT.getStatusCode());
     }
 
     @Test
@@ -234,6 +235,7 @@ public class WorkResourceTest {
         try {
             final JsonParser parser = new ObjectMapper().getJsonFactory().createJsonParser(json);
             while (parser.nextToken() != null) {
+                // NOOP
             }
             valid = true;
         } catch (IOException ioe) {

@@ -2,7 +2,10 @@ package no.deichman.services.patch;
 
 import com.hp.hpl.jena.rdf.model.Statement;
 
-public class Patch {
+/**
+ * Responsibility: TODO.
+ */
+public final class Patch {
 
     private String operation = null;
     private Statement statement = null;

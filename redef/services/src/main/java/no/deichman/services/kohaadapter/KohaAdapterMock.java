@@ -2,18 +2,19 @@ package no.deichman.services.kohaadapter;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-
 import no.deichman.services.uridefaults.BaseURIMock;
-
-import java.io.InputStream;
-
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 
-public class KohaAdapterMock implements KohaAdapter {
+import java.io.InputStream;
+
+/**
+ * Responsibility: TODO.
+ */
+public final class KohaAdapterMock implements KohaAdapter {
 
     private final Model model = ModelFactory.createDefaultModel();
 

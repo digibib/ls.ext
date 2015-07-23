@@ -1,26 +1,24 @@
 package no.deichman.services;
 
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
-
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 
-public class SPARQLQueryBuilder {
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
+
+public final class SPARQLQueryBuilder {
     private BaseURI baseURI;
 
     SPARQLQueryBuilder(){
@@ -118,17 +116,17 @@ public class SPARQLQueryBuilder {
 
     public Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
-        String q = "ASK {" + triple + "}" ;
+        String q = "ASK {" + triple + "}";
         return QueryFactory.create(q);
     }
 
     public Query checkIfStatementExistsInGraph(Statement statement, String graph) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
-        String q = "ASK {GRAPH <" + graph + "> {" + triple + "}}" ;
+        String q = "ASK {GRAPH <" + graph + "> {" + triple + "}}";
         return QueryFactory.create(q);
     }
 
-    private String statementToN3 (Statement statement) throws UnsupportedEncodingException {
+    private String statementToN3(Statement statement) throws UnsupportedEncodingException {
         Model tempExists = ModelFactory.createDefaultModel();
         tempExists.add(statement);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -191,7 +189,7 @@ public class SPARQLQueryBuilder {
     }
 
     public String askIfGraphExists(String graph) {
-        String q = "ASK {GRAPH <" + graph + "> {}}" ;
+        String q = "ASK {GRAPH <" + graph + "> {}}";
         return q;
     }
 
@@ -202,7 +200,9 @@ public class SPARQLQueryBuilder {
             Patch currentPatch = patchIterator.next();
             String sep = " ;\n";
             String operation = null;
-            if (!patchIterator.hasNext()) {sep = "";}
+            if (!patchIterator.hasNext()) {
+                sep = "";
+            }
             switch (currentPatch.getOperation().toUpperCase()) {
                 case "ADD": operation = "INSERT";
                             break;
@@ -217,7 +217,7 @@ public class SPARQLQueryBuilder {
             StringWriter sw = new StringWriter();
             RDFDataMgr.write(sw, temp, Lang.NTRIPLES);
             String triple = sw.toString();
-            String phrase = operation + " DATA {" + triple.trim() + "}" + sep ;
+            String phrase = operation + " DATA {" + triple.trim() + "}" + sep;
             q.append(phrase);
         }
         return q.toString();

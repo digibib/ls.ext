@@ -4,10 +4,12 @@ import no.deichman.services.repository.Repository;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.commons.lang3.RandomStringUtils;
 
-public class UniqueURIMock implements UniqueURI {
+public final class UniqueURIMock implements UniqueURI {
+
+    public static final int NO_OF_DIGITS = 12;
 
     private String getRandom() {
-        return RandomStringUtils.randomNumeric(12);
+        return RandomStringUtils.randomNumeric(NO_OF_DIGITS);
     }
 
     private String getRandom(String type) {

@@ -6,134 +6,129 @@ import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import no.deichman.services.error.PatchParserException;
 
 public class PatchObjectTest {
 
-    private static final String operation = "add";
-    private static final String subject = "http://www.example.com/subject";
-    private static final String predicate = "http://www.example.com/predicate";
-    private static final String uriObject = "http://www.example.com/object";
-    private static final Map<String,String> object = new HashMap<String,String>();
+    private static final String ADD = "add";
+    private static final String SUBJECT = "http://www.example.com/SUBJECT";
+    private static final String PREDICATE = "http://www.example.com/PREDICATE";
+    private static final String URI_OBJECT = "http://www.example.com/object";
 
-    static {
-        object.put("value", uriObject);
-    }
+    private Map<String, String> object;
+    private Map<String, String> datatypeObject;
+    private Map<String, String> languageLiteral;
 
-    private static final Map<String,String> datatype_object = new HashMap<String,String>();
+    @Before
+    public void setUp() {
+        object = new HashMap<>();
+        object.put("value", URI_OBJECT);
 
-    static {
-        datatype_object.put("value", uriObject);
-        datatype_object.put("datatype", "http://www.example.com/z");
-    }
+        datatypeObject = new HashMap<>();
+        datatypeObject.put("value", URI_OBJECT);
+        datatypeObject.put("datatype", "http://www.example.com/z");
 
-    private static final Map<String,String> language_literal = new HashMap<String,String>();
-
-    static {
-        language_literal.put("value", "Hypothesis");
-        language_literal.put("lang", "en");
+        languageLiteral = new HashMap<>();
+        languageLiteral.put("value", "Hypothesis");
+        languageLiteral.put("lang", "en");
     }
 
     @Test
     public void test_can_get_set_operation() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
-        patchObject.setOperation(operation);
-        assertEquals(operation,patchObject.getOperation());
+        patchObject.setOperation(ADD);
+        assertEquals(ADD, patchObject.getOperation());
     }
 
-    @Test(expected=PatchParserException.class)
+    @Test(expected = PatchParserException.class)
     public void test_getting_null_operation_fails() throws PatchParserException{
-        PatchObject patchObject = new PatchObject();
-        patchObject.getOperation();
+        new PatchObject().getOperation();
     }
 
-    @Test(expected=PatchParserException.class)
+    @Test(expected = PatchParserException.class)
     public void test_getting_null_subject_fails() throws PatchParserException{
-        PatchObject patchObject = new PatchObject();
-        patchObject.getSubject();
+        new PatchObject().getSubject();
     }
 
-    @Test(expected=PatchParserException.class)
+    @Test(expected = PatchParserException.class)
     public void test_getting_null_predicate_fails() throws PatchParserException{
-        PatchObject patchObject = new PatchObject();
-        patchObject.getPredicate();
+        new PatchObject().getPredicate();
     }
 
-    @Test(expected=PatchParserException.class)
+    @Test(expected = PatchParserException.class)
     public void test_getting_null_object_fails() throws PatchParserException{
-        PatchObject patchObject = new PatchObject();
-        patchObject.getObjectValue();
+        new PatchObject().getObjectValue();
     }
 
-    @Test(expected=PatchParserException.class)
+    @Test(expected = PatchParserException.class)
     public void test_getting_null_to_patch() throws PatchParserException{
-        PatchObject patchObject = new PatchObject();
-        patchObject.toPatch();
+        new PatchObject().toPatch();
     }
 
     @Test
     public void test_can_get_set_subject() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
-        patchObject.setSubject(subject);
-        assertEquals(subject,patchObject.getSubject());
+        patchObject.setSubject(SUBJECT);
+        assertEquals(SUBJECT, patchObject.getSubject());
     }
 
     @Test
     public void test_can_get_set_predicate() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
-        patchObject.setPredicate(predicate);
-        assertEquals(predicate,patchObject.getPredicate());
+        patchObject.setPredicate(PREDICATE);
+        assertEquals(PREDICATE, patchObject.getPredicate());
     }
 
     @Test
     public void test_can_get_set_uri_object(){
         PatchObject patchObject = new PatchObject();
-        patchObject.setObjectValue(uriObject);
-        assertEquals(object,patchObject.getObject());
+        patchObject.setObjectValue(URI_OBJECT);
+        assertEquals(object, patchObject.getObject());
     }
 
     @Test
     public void test_can_get_set_datatype_object(){
         PatchObject patchObject = new PatchObject();
-        patchObject.setObject(datatype_object);
-        assertEquals(datatype_object,patchObject.getObject());
+        patchObject.setObject(datatypeObject);
+        assertEquals(datatypeObject, patchObject.getObject());
     }
 
     @Test
     public void test_can_get_set_language_literal(){
         PatchObject patchObject = new PatchObject();
-        patchObject.setObject(language_literal);
-        assertEquals(language_literal,patchObject.getObject());
+        patchObject.setObject(languageLiteral);
+        assertEquals(languageLiteral, patchObject.getObject());
     }
 
     @Test
     public void test_can_get_object_value() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
-        patchObject.setObject(datatype_object);
-        assertEquals(datatype_object.get("value"),patchObject.getObjectValue());
+        patchObject.setObject(datatypeObject);
+        assertEquals(datatypeObject.get("value"), patchObject.getObjectValue());
     }
 
     @Test
     public void test_can_set_object_value() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
         patchObject.setObjectValue("Cases");
-        assertEquals("Cases",patchObject.getObjectValue());
+        assertEquals("Cases", patchObject.getObjectValue());
     }
 
     @Test
     public void test_can_get_object_datatype(){
         PatchObject patchObject = new PatchObject();
-        patchObject.setObject(datatype_object);
-        assertEquals(datatype_object.get("datatype"),patchObject.getObjectDatatype());
+        patchObject.setObject(datatypeObject);
+        assertEquals(datatypeObject.get("datatype"), patchObject.getObjectDatatype());
     }
 
     @Test
     public void test_can_get_object_language(){
         PatchObject patchObject = new PatchObject();
-        patchObject.setObject(language_literal);
-        assertEquals(language_literal.get("lang"),patchObject.getObjectLanguage());
+        patchObject.setObject(languageLiteral);
+        assertEquals(languageLiteral.get("lang"), patchObject.getObjectLanguage());
     }
 
     @Test

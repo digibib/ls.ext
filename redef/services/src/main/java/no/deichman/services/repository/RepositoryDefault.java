@@ -31,7 +31,7 @@ public class RepositoryDefault implements Repository {
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private static final String UPDATE_URI = FUSEKI_PORT + "/ds/update";
     private static final String SPARQL_URI = FUSEKI_PORT + "/ds/sparql";
-    private final SPARQLQueryBuilder sqb ;
+    private final SPARQLQueryBuilder sqb;
     private final BaseURIDefault bud;
 
     public RepositoryDefault() {

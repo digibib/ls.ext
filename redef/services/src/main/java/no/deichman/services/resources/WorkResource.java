@@ -10,7 +10,6 @@ import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.utils.CORSProvider;
 import no.deichman.services.utils.JSONLD;
-import no.deichman.services.utils.MimeType;
 import no.deichman.services.utils.PATCH;
 
 import javax.ws.rs.BadRequestException;
@@ -26,16 +25,18 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static no.deichman.services.utils.MimeType.JSONLD;
+import static no.deichman.services.utils.MimeType.LDPATCHJSON;
+
 @Path("/work")
 public class WorkResource {
-    private static final String MIME_JSONLD = MimeType.JSONLD;
+    private static final String MIME_JSONLD = JSONLD;
     private static final String ENCODING_UTF8 = "; charset=utf-8";
-    private static final String MIME_LDPATCH_JSON = MimeType.LDPATCHJSON;
+    private static final String MIME_LDPATCH_JSON = LDPATCHJSON;
 
     private final Service service;
     private BaseURI baseURI;
@@ -90,7 +91,7 @@ public class WorkResource {
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Consumes(MIME_LDPATCH_JSON)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
-        if ( !service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId) ) {
+        if (!service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId)) {
             throw new NotFoundException();
         }
         Model m;

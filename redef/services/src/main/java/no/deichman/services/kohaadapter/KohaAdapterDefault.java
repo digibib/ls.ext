@@ -19,6 +19,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.OK;
+
+/**
+ * Responsibility: TODO.
+ */
 public class KohaAdapterDefault implements KohaAdapter {
 
     private static final String KOHA_PORT = System.getProperty("KOHA_PORT", "http://192.168.50.12:8081");
@@ -46,7 +52,7 @@ public class KohaAdapterDefault implements KohaAdapter {
 
         sessionCookie = response.getCookies() == null ? null : response.getCookies().get(SESSION_COOKIE_KEY);
 
-        if (response.getStatus() != 200 || sessionCookie == null) {
+        if (response.getStatus() != OK.getStatusCode() || sessionCookie == null) {
             System.out.println(response);
             throw new IllegalStateException("Cannot authenticate with Koha: " + response + ", sessionCookie: " + sessionCookie);
         }
@@ -62,14 +68,14 @@ public class KohaAdapterDefault implements KohaAdapter {
         Model model = ModelFactory.createDefaultModel();
         Response response = requestItems(id);
         // TODO Hack if we have timed out
-        if (response.getStatus() == 403) { // forbidden
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             login();
             response = requestItems(id);
         }
-        if (response.getStatus() == 200) {
+        if (response.getStatus() == OK.getStatusCode()) {
             model = mapMarcToModel(response.readEntity(String.class));
         } else {
-            // FIXME !!
+            throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
         }
         return model;
     }

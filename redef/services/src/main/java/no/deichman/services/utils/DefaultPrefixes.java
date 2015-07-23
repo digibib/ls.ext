@@ -1,16 +1,18 @@
 package no.deichman.services.utils;
 
 
+import com.hp.hpl.jena.vocabulary.RDFS;
+import no.deichman.services.uridefaults.BaseURI;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hp.hpl.jena.vocabulary.RDFS;
+/**
+ * Responsibility: TODO.
+ */
+public final class DefaultPrefixes {
 
-import no.deichman.services.uridefaults.BaseURI;
-    
-public class DefaultPrefixes {
-
-    private Map<String,String> prefixMapping = new HashMap<String,String>();
+    private Map<String, String> prefixMapping = new HashMap<>();
     private BaseURI baseURI;
 
     DefaultPrefixes(){

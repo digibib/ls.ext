@@ -28,7 +28,10 @@ import no.deichman.services.uridefaults.BaseURIMock;
 import no.deichman.services.utils.UniqueURI;
 import no.deichman.services.utils.UniqueURIMock;
 
-public class RepositoryInMemory implements Repository {
+/**
+ * Responsibility: TODO.
+ */
+public final class RepositoryInMemory implements Repository {
 
     private final Dataset model;
     private final SPARQLQueryBuilder sqb;

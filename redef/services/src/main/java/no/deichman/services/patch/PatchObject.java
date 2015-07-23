@@ -9,7 +9,10 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 import no.deichman.services.error.PatchParserException;
 
-public class PatchObject {
+/**
+ * Responsibility: TODO.
+ */
+public final class PatchObject {
 
     private String op;
     private String s;
@@ -39,13 +42,14 @@ public class PatchObject {
             return p;
         } else {
             throw new PatchParserException("No predicate was found");
-        }    }
+        }
+    }
 
     public void setObjectValue(String obj) {
         o.put("value", obj);
     }
 
-    public Map<String,String> getObject() {
+    public Map<String, String> getObject() {
         return o;
     }
 
