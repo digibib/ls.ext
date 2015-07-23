@@ -23,7 +23,7 @@ var ractive = new Ractive({
      resource_uri: "",
      inputs: {},
      ontology: null,
-     ontologyUri: "",
+     config: {},
      save_status: "ny ressurs"
    }
  });
@@ -100,12 +100,10 @@ ractive.set("resource_type", cl.string.titelize(location.pathname.substr(locatio
 // Application entrypoint - will fetch any resources (ontology etc) required to populate the UI.
 cl.http.get("/config", {"Accept": "application/ld+json"},
    function (response) {
-     cfg = JSON.parse(response.responseText);
-     ractive.set("ontologyUri", cfg.ontologyUri);
-     ractive.set("kohaUri", cfg.kohaUri);
+     ractive.set("config", JSON.parse(response.responseText));
 
      // fetch ontology
-     cl.http.get(cfg.ontologyUri, {"Accept": "application/ld+json"},
+     cl.http.get(ractive.get("config.ontologyUri"), {"Accept": "application/ld+json"},
        function (response) {
          var ontology = JSON.parse(response.responseText),
              props = cl.rdf.propsByClass(ontology, ractive.get("resource_type")),
@@ -135,7 +133,7 @@ cl.http.get("/config", {"Accept": "application/ld+json"},
      var uri = getURLParameter("resource");
      if (uri) {
        // load existing resource
-       cl.http.get(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
+       cl.http.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
          {"Accept": "application/ld+json"},
        function (response) {
          ractive.set("resource_uri", uri);
@@ -155,7 +153,7 @@ cl.http.get("/config", {"Accept": "application/ld+json"},
        });
      } else {
        // fetch URI for new resource
-       cl.http.post(cfg.resourceApiUri + ractive.get("resource_type").toLowerCase(),
+       cl.http.post(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase(),
          {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
           "{}",
        function (response) {
