@@ -18,6 +18,7 @@ When(/^jeg legger inn (?:et|en) (verk|utgivelse) via APIet$/) do | resource_name
   resource = Resource.new(@context[:ontology], Resource.sym_from_name(resource_name))
   @context[resource.type] = resource
   resource.uri = ServicesAPIClient.new().create_resource(resource.type, resource.literals)
+  @context[:resourceURI] = resource.uri
   @cleanup.push( "#{resource.type} #{resource.uri}" =>
     lambda do
       ServicesAPIClient.new().remove_resource(resource.uri)
@@ -53,6 +54,26 @@ Then(/^viser APIet at endringene i (verk|utgivelse)(?:et|n) er lagret$/) do | re
   r = @context[Resource.sym_from_name(resource_name)]
   res = ServicesAPIClient.new().get_resource(r.uri)
   r.literals.each do |stmt|
+    res.has_statement?(stmt).should be true
+  end
+end
+
+When(/^kopler utgivelsen til verket$/) do
+  statements = Array.new
+  property = Resource.get_named_property("Publication of",@context[:ontology])
+  statements[0] = RDF::Statement.new(
+            RDF::URI.new(@context[:publication].uri),
+            RDF::URI.new(property),
+            RDF::Literal.new(@context[:work].uri)
+          )
+
+  ServicesAPIClient.new().patch_resource(@context[:publication].uri,statements)
+  @context[:pubWorkStmt] = statements
+end
+
+Then(/^viser APIet at verket har opplysninger om utgivelsen$/) do
+  res = ServicesAPIClient.new().get_resource(@context[:work].uri)
+  @context[:pubWorkStmt].each do |stmt|
     res.has_statement?(stmt).should be true
   end
 end

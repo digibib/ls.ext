@@ -44,5 +44,4 @@ public class PatchParserTest {
         assertEquals(list.get(0).getPredicate(),po.getPredicate());
         assertEquals(list.get(0).getObject(),po.getObject());
     }
-
 }

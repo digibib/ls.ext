@@ -58,7 +58,7 @@ public class RepositoryInMemory implements Repository {
     @Override
     public Model retrieveWorkById(String id) {
         String uri = bud.getWorkURI() + id;
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.getGetResourceByIdQuery(uri), model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.describeWorkAndLinkedPublication(uri), model)) {
             return qexec.execDescribe();
         }
     }

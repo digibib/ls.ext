@@ -41,6 +41,17 @@ public class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
+    public Query describeWorkAndLinkedPublication(String id){
+        String queryString = "PREFIX deichman: <" + baseURI.getOntologyURI() + ">\n"
+                            +"DESCRIBE <" + id + "> ?publication\n"
+                            +"WHERE {\n"
+                            +"<" + id + "> ?p ?o .\n"
+                            +"?publication deichman:publicationOf \"" + id + "\" .\n"
+                            +"?publication ?po ?ps ."
+                            +"}";
+        return QueryFactory.create(queryString);
+    }
+
     public String getUpdateWorkQueryString(Model work) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);

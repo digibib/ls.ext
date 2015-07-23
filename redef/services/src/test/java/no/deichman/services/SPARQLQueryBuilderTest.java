@@ -15,6 +15,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
@@ -53,12 +55,23 @@ public class SPARQLQueryBuilderTest {
 
     @Test 
     public void get_resource_by_id(){
-        Model m = ModelFactory.createDefaultModel();
-        Statement s = getTestStatement();
-        m.add(s);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
         Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
         String expected = "DESCRIBE <http://example.com/a>";
+        assertEquals(expected,query.toString().trim());
+    }
+
+    @Test
+    public void test_it_describes_work_and_publication(){
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        Query query = sqb.describeWorkAndLinkedPublication("http://example.com/a");
+        String expected = "PREFIX  deichman: <" + baseURI.getOntologyURI() + ">\n\n"
+                +"DESCRIBE ?publication <http://example.com/a>\n"
+                +"WHERE\n"
+                +"  { <http://example.com/a> ?p ?o .\n"
+                +"    ?publication deichman:publicationOf \"http://example.com/a\" .\n"
+                +"    ?publication ?po ?ps\n"
+                +"  }";
         assertEquals(expected,query.toString().trim());
     }
 

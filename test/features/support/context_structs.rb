@@ -39,6 +39,20 @@ Resource = Struct.new(:uri, :literals, :ontology, :type) do
     self.ontology = ontology
   end
 
+  def self.get_named_property(property_name, ontology)
+    graph = ontology
+    query = RDF::Query.new({
+      :property => {
+        RDF::RDFS.label => RDF::Literal.new(property_name, :language => :en)
+      }
+    })
+    arr = Array.new
+    query.execute(graph) do | solution |
+      arr.push solution.property
+    end
+    arr[0].value
+  end
+
   def gen_literals
     # TODO Fix me - I generate triples that don't apply!
     self.ontology.each_statement do |stmt|

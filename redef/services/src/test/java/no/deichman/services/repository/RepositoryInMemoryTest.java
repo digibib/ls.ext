@@ -17,7 +17,9 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.DatasetImpl;
+import com.hp.hpl.jena.vocabulary.RDF;
 
+import javassist.bytecode.Descriptor.Iterator;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
 
@@ -26,6 +28,8 @@ public class RepositoryInMemoryTest {
     private BaseURIMock bud;
     private Statement testWorkStmt;
     private Statement testPublicationStmt;
+    private List<Statement> stmts;
+
 
 
     @Before
@@ -40,6 +44,22 @@ public class RepositoryInMemoryTest {
                 ResourceFactory.createResource(bud.getPublicationURI() + "test_id_Publication"), 
                 ResourceFactory.createProperty("http://example.com/ontology/name"),
                 ResourceFactory.createPlainLiteral("Test"));
+        Statement testWork0 = ResourceFactory.createStatement(
+                ResourceFactory.createResource(bud.getWorkURI() + "test_id_1234"), 
+                RDF.type,
+                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
+        Statement testWork1 = ResourceFactory.createStatement(
+                ResourceFactory.createResource(bud.getPublicationURI() + "test_id_12345"), 
+                RDF.type,
+                ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
+        Statement testWork2 = ResourceFactory.createStatement(
+                ResourceFactory.createResource(bud.getPublicationURI() + "test_id_12345"), 
+                ResourceFactory.createProperty(bud.getOntologyURI() + "publicationOf"),
+                ResourceFactory.createResource(bud.getWorkURI() + "test_id_1234"));
+        stmts  = new ArrayList<Statement>();
+        stmts.add(testWork0);
+        stmts.add(testWork1);
+        stmts.add(testWork2);
     }
 
     @Test
@@ -80,6 +100,16 @@ public class RepositoryInMemoryTest {
         repository.addData(temp);
         Model testModel = repository.retrieveWorkById(id);
         assertTrue(testModel.contains(testWorkStmt));
+    }
+
+    @Test
+    public void test_retrieve_work_by_id2(){
+        String id = "test_id_1234";
+        Model temp = ModelFactory.createDefaultModel();
+        temp.add(stmts);
+        repository.addData(temp);
+        Model testModel = repository.retrieveWorkById(id);
+        stmts.forEach(stmt -> testModel.contains(stmt));
     }
 
     @Test

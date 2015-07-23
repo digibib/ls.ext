@@ -44,7 +44,7 @@ public class RepositoryDefault implements Repository {
     public Model retrieveWorkById(final String id) {
         String uri = bud.getWorkURI() + id;
         System.out.println("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.getGetResourceByIdQuery(uri))) {
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.describeWorkAndLinkedPublication(uri))) {
             return qexec.execDescribe();
         }
     }
