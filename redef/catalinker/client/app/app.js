@@ -30,141 +30,163 @@ var ractive = new Ractive({
 
 // Event handling functions responding to UI interactions:
 listener = ractive.on({
-   countdownToSave: function (event) {
-     // TODO find better name to this function
-     if (event.context.current.value === "" && event.context.old.value === "") {
-       return;
-     }
-     ractive.set("save_status", "arbeider...");
-   },
-   // addValue adds another input field for the predicate.
-   addValue: function (event) {
-     ractive.get(event.keypath).values.push({
-       old: { value: "", type: "", lang: "" },
-       current: { value: "", type: "", lang: "" }
-     });
-   },
-   // patchResource creates a patch request based on previous and current value of
-   // input field, and sends this to the backend.
-   patchResource: function (event, predicate) {
-     if (event.context.error || (event.context.current.value === "" && event.context.old.value === "")) {
-       return;
-     }
-     var patch = cl.rdf.createPatch(ractive.get("resource_uri"), predicate, event.context);
-     cl.http.patch(ractive.get("resource_uri"),
-       {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
-       patch,
-       function (response) {
-         // successfully patched resource
+  countdownToSave: function (event) {
+    // TODO find better name to this function
+    if (event.context.current.value === "" && event.context.old.value === "") {
+      return;
+    }
+    ractive.set("save_status", "arbeider...");
+  },
+  // addValue adds another input field for the predicate.
+  addValue: function (event) {
+    ractive.get(event.keypath).values.push({
+      old: { value: "", type: "", lang: "" },
+      current: { value: "", type: "", lang: "" }
+    });
+  },
+  // patchResource creates a patch request based on previous and current value of
+  // input field, and sends this to the backend.
+  patchResource: function (event, predicate) {
+    if (event.context.error || (event.context.current.value === "" && event.context.old.value === "")) {
+      return;
+    }
+    var patch = cl.rdf.createPatch(ractive.get("resource_uri"), predicate, event.context);
+    cl.http.patch(ractive.get("resource_uri"),
+      {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
+      patch,
+      function (response) {
+        // successfully patched resource
 
-         // keep the value in current.old - so we can do create delete triple patches later
-         var cur = ractive.get(event.keypath + ".current");
-         ractive.set(event.keypath + ".old.value", cur.value);
-         ractive.set(event.keypath + ".old.lang", cur.lang);
-         ractive.set(event.keypath + ".old.datatype", cur.datatype);
+        // keep the value in current.old - so we can do create delete triple patches later
+        var cur = ractive.get(event.keypath + ".current");
+        ractive.set(event.keypath + ".old.value", cur.value);
+        ractive.set(event.keypath + ".old.lang", cur.lang);
+        ractive.set(event.keypath + ".old.datatype", cur.datatype);
 
-         ractive.set("save_status", "alle endringer er lagret");
-       },
-       function (response) {
-         // failed to patch resource
-         errors.push("Noe gikk galt! Fikk ikke lagret endringene");
-       });
-   }
- });
+        ractive.set("save_status", "alle endringer er lagret");
+      },
+      function (response) {
+        // failed to patch resource
+
+        // TODO provide better error message (when we figure out how to deal with CORS responses)
+        errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+      });
+  }
+});
 
 // Observing input for instant validation:
 ractive.observe("inputs.*.values.*", function (newValue, oldValue, keypath) {
-   if (newValue.current.value === "") {
-     ractive.set(keypath + ".error", false);
-     return;
-   }
-   var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
-   var valid = false;
-   try {
-     valid = cl.rdf.validateLiteral(newValue.current.value, ractive.get(parent).range);
-   } catch (e) {
-     console.log(e);
-     return;
-   }
-   if (valid) {
-     ractive.set(keypath + ".error", false);
-   } else {
-     ractive.set(keypath + ".error", "ugyldig input");
-   }
- });
+  if (newValue.current.value === "") {
+    ractive.set(keypath + ".error", false);
+    return;
+  }
+  var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
+  var valid = false;
+  try {
+    valid = cl.rdf.validateLiteral(newValue.current.value, ractive.get(parent).range);
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+  if (valid) {
+    ractive.set(keypath + ".error", false);
+  } else {
+    ractive.set(keypath + ".error", "ugyldig input");
+  }
+});
 
+
+var loadExisitingResource = function (uri) {
+  cl.http.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
+    {"Accept": "application/ld+json"},
+  function (response) {
+    ractive.set("resource_uri", uri);
+    var values = cl.rdf.extractValues(JSON.parse(response.responseText));
+    for (var n in ractive.get("inputs")) {
+      var kp = "inputs." + n;
+      var input = ractive.get(kp);
+      if (values[input.predicate]) {
+        ractive.set(kp + ".values", values[input.predicate]);
+      }
+    }
+
+    ractive.set("save_status", "åpnet eksisterende ressurs");
+  },
+  function (response) {
+    console.log(response);
+  });
+};
+
+var createNewResource = function () {
+  // fetch URI for new resource
+  cl.http.post(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase(),
+    {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
+     "{}",
+  function (response) {
+    ractive.set("resource_uri", response.getResponseHeader("Location"));
+  },
+  function (response) {
+    console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + response);
+  });
+};
+
+var onOntologyLoad = function (response) {
+  var ontology = JSON.parse(response.responseText),
+      props = cl.rdf.propsByClass(ontology, ractive.get("resource_type")),
+      inputs = [];
+
+  ractive.set("ontology", ontology);
+
+  ractive.set("resource_label", cl.rdf.resourceLabel(ontology, ractive.get("resource_type"), "no").toLowerCase());
+
+  for (var i = 0; i < props.length; i++) {
+    inputs.push({
+      predicate: cl.rdf.resolveURI(ontology,  props[i]["@id"]),
+      range: props[i]["rdfs:range"]["@id"],
+      label: props[i]["rdfs:label"][0]["@value"],
+      values: [{old: { value: "", type: "", lang: "" },
+                current: { value: "", type: "", lang: "" }}]
+    });
+  }
+  ractive.set("inputs", inputs);
+
+  // If resource URI is given in query string, it will be loaded for editing, otherwise we will
+  // request a new URI for working on a new resource.
+  var uri = getURLParameter("resource");
+  if (uri) {
+    loadExisitingResource(uri);
+  } else {
+    createNewResource();
+  }
+};
+
+var onOntologyFailure = function (response) {
+  console.log("GET ontology error: " + response);
+};
+
+var onConfigFailure = function (response) {
+  console.log("GET config error: " + response);
+};
+
+var onConfigLoaded = function (response) {
+  ractive.set("config", JSON.parse(response.responseText));
+
+  // fetch ontology
+  cl.http.get(
+    ractive.get("config.ontologyUri"),
+    {"Accept": "application/ld+json"},
+    onOntologyLoad,
+    onOntologyFailure
+  );
+};
 
 // Find resource type from url path
 ractive.set("resource_type", cl.string.titelize(location.pathname.substr(location.pathname.lastIndexOf("/") + 1)));
 
-// Application entrypoint - will fetch any resources (ontology etc) required to populate the UI.
-cl.http.get("/config", {"Accept": "application/ld+json"},
-   function (response) {
-     ractive.set("config", JSON.parse(response.responseText));
-
-     // fetch ontology
-     cl.http.get(ractive.get("config.ontologyUri"), {"Accept": "application/ld+json"},
-       function (response) {
-         var ontology = JSON.parse(response.responseText),
-             props = cl.rdf.propsByClass(ontology, ractive.get("resource_type")),
-             inputs = [];
-
-         ractive.set("ontology", ontology);
-
-         ractive.set("resource_label", cl.rdf.resourceLabel(ontology, ractive.get("resource_type"), "no").toLowerCase());
-
-         for (var i = 0; i < props.length; i++) {
-           inputs.push({
-             predicate: cl.rdf.resolveURI(ontology,  props[i]["@id"]),
-             range: props[i]["rdfs:range"]["@id"],
-             label: props[i]["rdfs:label"][0]["@value"],
-             values: [{old: { value: "", type: "", lang: "" },
-                       current: { value: "", type: "", lang: "" }}]
-           });
-         }
-         ractive.set("inputs", inputs);
-       },
-      function (response) {
-        console.log("GET ontology error: " + response);
-      });
-
-     // If resource URI is given in query string, it will be loaded for editing, otherwise we will
-     // request a new URI for working on a new resource.
-     var uri = getURLParameter("resource");
-     if (uri) {
-       // load existing resource
-       cl.http.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
-         {"Accept": "application/ld+json"},
-       function (response) {
-         ractive.set("resource_uri", uri);
-         var values = cl.rdf.extractValues(JSON.parse(response.responseText));
-         for (var n in ractive.get("inputs")) {
-           var kp = "inputs." + n;
-           var input = ractive.get(kp);
-           if (values[input.predicate]) {
-             ractive.set(kp + ".values", values[input.predicate]);
-           }
-         }
-
-         ractive.set("save_status", "åpnet eksisterende ressurs");
-       },
-       function (response) {
-         console.log(response);
-       });
-     } else {
-       // fetch URI for new resource
-       cl.http.post(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase(),
-         {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
-          "{}",
-       function (response) {
-         resource_uri = response.getResponseHeader("Location");
-         ractive.set("resource_uri", resource_uri);
-       },
-       function (response) {
-         console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + response);
-       });
-     }
-   },
-  function (response) {
-    console.log("GET config error: " + response);
-  });
+// Application entrypoint - start with fetching config
+cl.http.get(
+  "/config",
+  {"Accept": "application/ld+json"},
+  onConfigLoaded,
+  onConfigFailure
+);
