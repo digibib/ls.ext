@@ -1,4 +1,4 @@
-/*jslint unparam: true, node: true */
+/*global require */
 "use strict";
 
 var url = require('url');

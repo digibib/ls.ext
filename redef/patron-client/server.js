@@ -1,4 +1,4 @@
-/*jslint unparam: true, node: true */
+/*globals process */
 "use strict";
 
 var express = require('express'),

@@ -1,4 +1,4 @@
-/*global describe, it */
+/*global require, it, describe */
 var assert = require("assert");
 
 describe('Array', function () {

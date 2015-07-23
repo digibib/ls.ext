@@ -1,5 +1,4 @@
-/*jslint unparam: true, node: true */
-
+/*global require */
 "use strict";
 
 var http = require('http'),

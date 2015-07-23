@@ -1,6 +1,4 @@
-/*jslint node: true */
-/*global describe, it */
-
+/*global require, it, describe */
 "use strict";
 
 var chai = require("chai"),
