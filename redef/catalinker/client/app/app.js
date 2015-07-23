@@ -61,7 +61,7 @@ listener = ractive.on({
          var cur = ractive.get(event.keypath + ".current");
          ractive.set(event.keypath + ".old.value", cur.value);
          ractive.set(event.keypath + ".old.lang", cur.lang);
-         ractive.set(event.keypath + ".old.datatype", cur.datatypr);
+         ractive.set(event.keypath + ".old.datatype", cur.datatype);
 
          ractive.set("save_status", "alle endringer er lagret");
        },
