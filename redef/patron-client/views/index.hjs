@@ -44,7 +44,7 @@
       th { padding: 0.5em;}
       td { padding: 0.5em; }
     </style>
-    <title>{{deichman:name}} ahv {{deichman:creator}} ({{deichman:date}})</title>
+    <title>{{deichman:name}} av {{deichman:creator}} ({{deichman:date}})</title>
   </head>
   <body>
     <div class="header">
