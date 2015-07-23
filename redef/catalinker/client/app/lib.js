@@ -1,7 +1,125 @@
 var cl = (function () {
+  "use strict";
+
+  var graph = (function () {
+
+    var Work = function (uri) {
+      this.uri = uri;
+      this.properties = [];
+      this.publications = [];
+    };
+
+    var Property = function (predicate, value, lang, datatype) {
+      this.predicate = predicate;
+      this.value = value;
+      if (lang && lang !== "") {
+        this.language =  lang;
+        this.datatype = "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString";
+      } else {
+        this.language = "";
+        this.datatype = datatype || "http://www.w3.org/2001/XMLSchema#string";
+      }
+    };
+
+    var Publication = function (uri) {
+      this.uri = uri;
+      this.properties = [];
+    };
+
+    var data = {};
+
+    function resolve(uri, context) {
+      var i = uri.indexOf(":");
+      var prefix = uri.substr(0, i);
+      for (var k in context) {
+        if (prefix === k) {
+          return context[k] + uri.substr(i + 1);
+        }
+      }
+      return uri; // not in context, return unmodified
+    }
+
+    function unifyProps(props) {
+      var res = [];
+      if (Array.isArray(props)) {
+        props.forEach(function (p) {
+          if (typeof p === "string") {
+            res.push({val: p, lang: "", dt: ""});
+          } else {
+            res.push({val: p["@value"], lang: p["@language"], dt: p["@type"]});
+          }
+        });
+      } else if (typeof props === "object") {
+        res.push({val: p["@value"], lang: p["@language"], dt: p["@type"]});
+      } else {
+        res.push({val: props, lang: "", dt: ""});
+      }
+      return res;
+    }
+
+    function extractProps(resource, context) {
+      var res = [];
+      for (var prop in resource) {
+        switch (prop) {
+          case "@id":
+          case "@type":
+          case "@context":
+            break;
+          default:
+            var props = unifyProps(resource[prop]);
+            for (var i = 0; i < props.length; i++) {
+              var p = props[i];
+              res.push(new Property(resolve(prop, context), p.val, p.lang, p.dt));
+            }
+        }
+      }
+      return res;
+    }
+
+    function attatchPublications(work, data) {
+      data["@graph"].forEach(function (resource) {
+        if (resource["deichman:publicationOf"] === work.uri) {
+          var p = new Publication(resource["@id"]);
+          p.properties = extractProps(resource, data["@context"]);
+          work.publications.push(p);
+        }
+      });
+    }
+
+    function parse(jsonld) {
+      data = JSON.parse(jsonld);
+
+      var works = [];
+
+      if (data["@graph"]) {
+        data["@graph"].forEach(function (resource) {
+          if (resource["@type"] === "deichman:Work") {
+            var w = new Work(resource["@id"]);
+            w.properties = extractProps(resource, data["@context"]);
+            attatchPublications(w, data);
+            works.push(w);
+          }
+        });
+      } else {
+        // graph holds just one resource
+        if (data["@type"] === "deichman:Work") {
+          var w = new Work(data["@id"]);
+          w.properties = extractProps(data, data["@context"]);
+          works.push(w);
+        }
+      }
+
+      return {
+        works: works
+      };
+    }
+
+    return {
+      parse: parse
+    };
+  }());
 
   var http = (function () {
-    "use strict";
 
     function doReq(method, path, headers, body, onSuccess, onFailure) {
       var req = new XMLHttpRequest();
@@ -52,7 +170,6 @@ var cl = (function () {
   }());
 
   var rdf = (function () {
-    "use strict";
 
     // propsByClass extract the properties from the ontology which are valid for a given class.
     // This includes properties with unspecified domain (applicable for all classes), and those
@@ -200,7 +317,6 @@ var cl = (function () {
   })();
 
   var string = (function () {
-    "use strict";
     return {
       titelize: function (s) {
         return s.charAt(0).toUpperCase() + s.substring(1);
@@ -211,6 +327,7 @@ var cl = (function () {
   return {
     http: http,
     rdf: rdf,
-    string: string
+    string: string,
+    graph: graph
   };
 })();
