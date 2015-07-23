@@ -34,6 +34,7 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet ikke er til utlån
     Og systemet viser at materialet ikke er utlånt
 
+  @wip @issue-11 @unstable
   Scenario: Eksisterende låner forsøker å låne materiale som er holdt av til annen låner
     Gitt at materialet er holdt av til en annen låner
     Når låneren legger materialet på automaten
@@ -46,6 +47,7 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet overskrider maksgrensen for lån
     Og systemet viser at materialet ikke er utlånt
 
+  @wip @issue-11 @unstable
   Scenario: Eksisterende låner låner materiale på automat
     Gitt at materialet har riktig antall RFID-brikker
     Og at materialet er til utlån

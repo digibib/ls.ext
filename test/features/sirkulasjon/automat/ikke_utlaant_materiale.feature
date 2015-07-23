@@ -26,6 +26,7 @@ Egenskap: Innlevering av ikke-utlånt materiale
     Når låneren legger materialet på automaten
     Så får låneren beskjed om at materialet er registrert levert
 
+  @wip @issue-11 @unstable
   Scenario: Låner forsøker å levere materiell som er reservert på samme avdeling
     Gitt at materialet har riktig antall RFID-brikker
     Og at det finnes en reservasjon på materialet
@@ -34,6 +35,7 @@ Egenskap: Innlevering av ikke-utlånt materiale
     Og får låneren beskjed om at materialet er registrert levert
     Og det gis beskjed om at materialet skal legges i innleveringsboks
 
+  @wip @issue-11 @unstable
   Scenario: Låner forsøker å levere materiell som er reservert på annen avdeling
     Gitt at materialet har riktig antall RFID-brikker
     Og at det finnes en reservasjon på en annen avdeling

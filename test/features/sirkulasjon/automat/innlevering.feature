@@ -40,6 +40,7 @@ Egenskap: Selvbetjent innlevering
     Så registrerer automaten at materialet tilhører annen avdeling
     Og det gis beskjed om at materialet skal legges i innleveringsboks
 
+  @wip @issue-11 @unstable
   Scenario: Noen forsøker å levere tilbake lånt materiale som er reservert på utlånsautomat
     Gitt at materialet har riktig antall RFID-brikker
     Og at det finnes en reservasjon på materialet
