@@ -1,14 +1,5 @@
 package no.deichman.services.repository;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -21,12 +12,17 @@ import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
-
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import no.deichman.services.SPARQLQueryBuilder;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
 import no.deichman.services.utils.UniqueURI;
-import no.deichman.services.utils.UniqueURIMock;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 
 /**
  * Responsibility: TODO.
@@ -101,8 +97,8 @@ public final class RepositoryInMemory implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        UniqueURI random = new UniqueURIMock();
-        String id = random.getNewURI("work", this);
+        UniqueURI random = new UniqueURI();
+        String id = random.getNewURI("work", this, new BaseURIMock());
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(random.toString()),
@@ -120,8 +116,8 @@ public final class RepositoryInMemory implements Repository {
 
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        UniqueURI random = new UniqueURIMock();
-        String id = random.getNewURI("publication", this);
+        UniqueURI random = new UniqueURI();
+        String id = random.getNewURI("publication", this, new BaseURIMock());
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(random.toString()),

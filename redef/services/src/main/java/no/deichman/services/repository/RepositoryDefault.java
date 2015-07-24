@@ -1,14 +1,5 @@
 package no.deichman.services.repository;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -19,12 +10,17 @@ import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
-
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import no.deichman.services.SPARQLQueryBuilder;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.utils.UniqueURI;
-import no.deichman.services.utils.UniqueURIDefault;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 
 public class RepositoryDefault implements Repository {
 
@@ -85,8 +81,8 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        UniqueURI uri = new UniqueURIDefault();
-        String id = uri.getNewURI("work", this);
+        UniqueURI uri = new UniqueURI();
+        String id = uri.getNewURI("work", this, new BaseURIDefault());
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uri.toString()),
@@ -103,8 +99,8 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        UniqueURI uri = new UniqueURIDefault();
-        String id = uri.getNewURI("publication", this);
+        UniqueURI uri = new UniqueURI();
+        String id = uri.getNewURI("publication", this, new BaseURIDefault());
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uri.toString()),
