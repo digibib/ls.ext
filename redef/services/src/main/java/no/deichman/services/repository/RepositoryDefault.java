@@ -27,11 +27,13 @@ public class RepositoryDefault implements Repository {
     private static final String SPARQL_URI = FUSEKI_PORT + "/ds/sparql";
     private final SPARQLQueryBuilder sqb;
     private final BaseURIDefault bud;
+    private final UniqueURIGenerator uriGenerator;
 
     public RepositoryDefault() {
         System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
         bud = new BaseURIDefault();
         sqb = new SPARQLQueryBuilder(bud);
+        uriGenerator = new UniqueURIGenerator(this, new BaseURIDefault());
     }
 
     @Override
@@ -79,7 +81,6 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        UniqueURIGenerator uriGenerator = new UniqueURIGenerator(this, new BaseURIDefault());
         String id = uriGenerator.getNewURI("work");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
@@ -97,7 +98,6 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        UniqueURIGenerator uriGenerator = new UniqueURIGenerator(this, new BaseURIDefault());
         String id = uriGenerator.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(

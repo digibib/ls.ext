@@ -30,6 +30,7 @@ public final class RepositoryInMemory implements Repository {
     private final Dataset model;
     private final SPARQLQueryBuilder sqb;
     private final BaseURIMock bud;
+    private final UniqueURIGenerator uriGenerator;
 
     public RepositoryInMemory() {
         bud = new BaseURIMock();
@@ -38,6 +39,7 @@ public final class RepositoryInMemory implements Repository {
         model2.read("testdata.ttl", "TURTLE");
         model = DatasetFactory.createMem();
         model.setDefaultModel(model2);
+        uriGenerator = new UniqueURIGenerator(this, new BaseURIMock());
     }
 
     public void addData(Model newData){
@@ -95,7 +97,6 @@ public final class RepositoryInMemory implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        UniqueURIGenerator uriGenerator = new UniqueURIGenerator(this, new BaseURIMock());
         String id = uriGenerator.getNewURI("work");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
@@ -114,7 +115,6 @@ public final class RepositoryInMemory implements Repository {
 
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        UniqueURIGenerator uriGenerator = new UniqueURIGenerator(this, new BaseURIMock());
         String id = uriGenerator.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
