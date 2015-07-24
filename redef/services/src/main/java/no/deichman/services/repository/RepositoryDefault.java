@@ -79,8 +79,8 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        UniqueURI uri = new UniqueURI();
-        String id = uri.getNewURI("work", this, new BaseURIDefault());
+        UniqueURI uri = new UniqueURI(this, new BaseURIDefault());
+        String id = uri.getNewURI("work");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uri.toString()),
@@ -97,8 +97,8 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        UniqueURI uri = new UniqueURI();
-        String id = uri.getNewURI("publication", this, new BaseURIDefault());
+        UniqueURI uri = new UniqueURI(this, new BaseURIDefault());
+        String id = uri.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uri.toString()),

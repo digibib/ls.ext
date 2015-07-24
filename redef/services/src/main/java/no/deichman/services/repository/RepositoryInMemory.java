@@ -95,8 +95,8 @@ public final class RepositoryInMemory implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        UniqueURI random = new UniqueURI();
-        String id = random.getNewURI("work", this, new BaseURIMock());
+        UniqueURI random = new UniqueURI(this, new BaseURIMock());
+        String id = random.getNewURI("work");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(random.toString()),
@@ -114,8 +114,8 @@ public final class RepositoryInMemory implements Repository {
 
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        UniqueURI random = new UniqueURI();
-        String id = random.getNewURI("publication", this, new BaseURIMock());
+        UniqueURI random = new UniqueURI(this, new BaseURIMock());
+        String id = random.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(random.toString()),

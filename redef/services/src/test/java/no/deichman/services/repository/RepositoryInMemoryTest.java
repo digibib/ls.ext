@@ -125,7 +125,7 @@ public class RepositoryInMemoryTest {
     public void test_patch() throws Exception{
         List<Patch> list = new ArrayList<Patch>();
         Statement s1 = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"), 
+                ResourceFactory.createResource("http://example.com/a"),
                 ResourceFactory.createProperty("http://example.com/ontology/name"),
                 ResourceFactory.createPlainLiteral("Test"));
         Patch patch1 = new Patch("add",s1,null);
@@ -138,4 +138,17 @@ public class RepositoryInMemoryTest {
         repository.patch(list2);
         assertFalse(repository.askIfStatementExists(s1));
     }
+
+    @Test
+    public void shouldReturnThatIDisAvailable() {
+        String test = "http://deichman.no/work/work_00009";
+        assertFalse(repository.askIfResourceExists(test));
+    }
+
+    @Test
+    public void shouldReturnThatIDisNotAvailable() {
+        String test = "http://deichman.no/work/work_00001";
+        assertTrue(repository.askIfResourceExists(test));
+    }
+
 }
