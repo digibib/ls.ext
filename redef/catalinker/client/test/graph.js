@@ -79,4 +79,12 @@ describe("Parsing JSON-LD as a graph", function () {
     assert.equal(name_props[1].value, "heizemuzik");
     assert.equal(name_props[1].datatype, "http://www.w3.org/2001/XMLSchema#string");
   });
+
+  it("can filter property of a work", function () {
+    var graph = cl.graph.parse(jsonld);
+    var work = graph.works[0];
+    var name_props = work.property("http://192.168.50.12:8005/ontology#name");
+    assert.equal(name_props.length, 1);
+    assert.equal(name_props[0].value, "heismusikk");
+  });
 });

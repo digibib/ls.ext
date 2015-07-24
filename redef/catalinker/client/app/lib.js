@@ -3,11 +3,37 @@ var cl = (function () {
 
   var graph = (function () {
 
-    var Work = function (uri) {
+    // Resources superclass. All domain classes(objects) inherits form this.
+    var Resource = function(uri) {
       this.uri = uri;
       this.properties = [];
+    };
+
+    // filter properties by predicate
+    Resource.prototype.property = function (predicate) {
+      var res = [];
+      this.properties.forEach(function (p) {
+        if (p.predicate === predicate) {
+          res.push({value: p.value, language: p.language, datatype: p.datatype});
+        }
+      });
+      return res;
+    };
+
+    function Work(uri) {
+      Resource.call(this, uri);
       this.publications = [];
     };
+
+    Work.prototype = Object.create(Resource.prototype);
+    Work.prototype.constructor = Work;
+
+    function Publication(uri) {
+      Resource.call(this, uri);
+    };
+
+    Publication.prototype = Object.create(Resource.prototype);
+    Publication.prototype.constructor = Publication;
 
     var Property = function (predicate, value, lang, datatype) {
       this.predicate = predicate;
@@ -19,21 +45,6 @@ var cl = (function () {
         this.language = "";
         this.datatype = datatype || "http://www.w3.org/2001/XMLSchema#string";
       }
-    };
-
-    var Publication = function (uri) {
-      this.uri = uri;
-      this.properties = [];
-    };
-
-    Publication.prototype.property = function (predicate) {
-      var res = [];
-      this.properties.forEach(function (p) {
-        if (p.predicate === predicate) {
-          res.push({value: p.value, language: p.language, datatype: p.datatype});
-        }
-      });
-      return res;
     };
 
     var data = {};
