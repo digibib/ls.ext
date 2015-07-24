@@ -3,9 +3,9 @@ package no.deichman.services.repository;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.RandomStringUtils;
 
-public class UniqueURI {
+class UniqueURI {
 
-    public static final int NO_OF_DIGITS = 12;
+    private static final int NO_OF_DIGITS = 12;
 
     private String getRandom() {
         return RandomStringUtils.randomNumeric(NO_OF_DIGITS);
@@ -29,7 +29,7 @@ public class UniqueURI {
 
     }
 
-    public String getNewURI(String type, Repository repository, BaseURI baseURI) {
+    String getNewURI(String type, Repository repository, BaseURI baseURI) {
         String random = null;
         boolean exists = true;
 
