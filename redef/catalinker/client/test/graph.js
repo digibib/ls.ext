@@ -83,7 +83,7 @@ describe("Parsing JSON-LD as a graph", function () {
   it("can filter property of a work", function () {
     var graph = cl.graph.parse(jsonld);
     var work = graph.works[0];
-    var name_props = work.property("http://192.168.50.12:8005/ontology#name");
+    var name_props = work.property(graph.resolve("deichman:name"));
     assert.equal(name_props.length, 1);
     assert.equal(name_props[0].value, "heismusikk");
   });

@@ -4,7 +4,7 @@ var cl = (function () {
   var graph = (function () {
 
     // Resources superclass. All domain classes(objects) inherits form this.
-    var Resource = function(uri) {
+    var Resource = function (uri) {
       this.uri = uri;
       this.properties = [];
     };
@@ -23,14 +23,14 @@ var cl = (function () {
     function Work(uri) {
       Resource.call(this, uri);
       this.publications = [];
-    };
+    }
 
     Work.prototype = Object.create(Resource.prototype);
     Work.prototype.constructor = Work;
 
     function Publication(uri) {
       Resource.call(this, uri);
-    };
+    }
 
     Publication.prototype = Object.create(Resource.prototype);
     Publication.prototype.constructor = Publication;
@@ -48,13 +48,14 @@ var cl = (function () {
     };
 
     var data = {};
+    data["@context"] = {};
 
-    function resolve(uri, context) {
+    function resolve(uri) {
       var i = uri.indexOf(":");
       var prefix = uri.substr(0, i);
-      for (var k in context) {
+      for (var k in data["@context"]) {
         if (prefix === k) {
-          return context[k] + uri.substr(i + 1);
+          return data["@context"][k] + uri.substr(i + 1);
         }
       }
       return uri; // not in context, return unmodified
@@ -78,7 +79,7 @@ var cl = (function () {
       return res;
     }
 
-    function extractProps(resource, context) {
+    function extractProps(resource) {
       var res = [];
       for (var prop in resource) {
         switch (prop) {
@@ -90,7 +91,7 @@ var cl = (function () {
             var props = unifyProps(resource[prop]);
             for (var i = 0; i < props.length; i++) {
               var p = props[i];
-              res.push(new Property(resolve(prop, context), p.val, p.lang, p.dt));
+              res.push(new Property(resolve(prop), p.val, p.lang, p.dt));
             }
         }
       }
@@ -101,7 +102,7 @@ var cl = (function () {
       data["@graph"].forEach(function (resource) {
         if (resource["deichman:publicationOf"] === work.uri) {
           var p = new Publication(resource["@id"]);
-          p.properties = extractProps(resource, data["@context"]);
+          p.properties = extractProps(resource);
           work.publications.push(p);
         }
       });
@@ -116,7 +117,7 @@ var cl = (function () {
         data["@graph"].forEach(function (resource) {
           if (resource["@type"] === "deichman:Work") {
             var w = new Work(resource["@id"]);
-            w.properties = extractProps(resource, data["@context"]);
+            w.properties = extractProps(resource);
             attatchPublications(w, data);
             works.push(w);
           }
@@ -125,13 +126,14 @@ var cl = (function () {
         // graph holds just one resource
         if (data["@type"] === "deichman:Work") {
           var w = new Work(data["@id"]);
-          w.properties = extractProps(data, data["@context"]);
+          w.properties = extractProps(data);
           works.push(w);
         }
       }
 
       return {
-        works: works
+        works: works,
+        resolve: resolve
       };
     }
 
