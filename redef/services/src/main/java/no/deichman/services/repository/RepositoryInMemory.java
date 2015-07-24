@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
-import no.deichman.services.utils.UniqueURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 

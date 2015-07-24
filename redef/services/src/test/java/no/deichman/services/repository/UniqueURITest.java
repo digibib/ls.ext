@@ -1,6 +1,5 @@
-package no.deichman.services.utils;
+package no.deichman.services.repository;
 
-import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIMock;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

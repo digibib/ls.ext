@@ -1,6 +1,5 @@
-package no.deichman.services.utils;
+package no.deichman.services.repository;
 
-import no.deichman.services.repository.Repository;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.RandomStringUtils;
 

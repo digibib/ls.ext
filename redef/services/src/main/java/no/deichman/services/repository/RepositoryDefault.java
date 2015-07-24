@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.utils.UniqueURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
