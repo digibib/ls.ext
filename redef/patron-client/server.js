@@ -86,15 +86,14 @@ app.get('/work/:id', function (request, response) {
     });
     res.on('end', function () {
       var data = getData(body);
+      console.log("Received reply from services for '" + parameters.path + "' with status code: " + res.statusCode);
       if (data.ok) {
         parameters.path += '/items';
         getItems(parameters, function (items) {
           data.data.items = items;
-          console.log(data.data);
           data.data["deichman:name"] = titlesToString(data.data["deichman:name"]);
           response.render('index', data.data);
         });
-        console.log("Received from services for '" + parameters.path + "': " + body);
       } else {
         response.status(res.statusCode);
         response.render('error', {data: res.statusMessage});
