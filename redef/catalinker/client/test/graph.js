@@ -71,6 +71,12 @@ describe("Parsing JSON-LD as a graph", function () {
     var graph = cl.graph.parse(jsonld);
     var pub = graph.works[0].publications[0];
 
-    assert.equal(pub.property("http://192.168.50.12:8005/ontology#name").length, 2);
+    var name_props = pub.property("http://192.168.50.12:8005/ontology#name");
+    assert.equal(name_props.length, 2);
+    assert.equal(name_props[0].value, "elevatormusic");
+    assert.equal(name_props[0].language, "en");
+    assert.equal(name_props[0].datatype, "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString");
+    assert.equal(name_props[1].value, "heizemuzik");
+    assert.equal(name_props[1].datatype, "http://www.w3.org/2001/XMLSchema#string");
   });
 });

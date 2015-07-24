@@ -26,6 +26,16 @@ var cl = (function () {
       this.properties = [];
     };
 
+    Publication.prototype.property = function (predicate) {
+      var res = [];
+      this.properties.forEach(function (p) {
+        if (p.predicate === predicate) {
+          res.push({value: p.value, language: p.language, datatype: p.datatype});
+        }
+      });
+      return res;
+    };
+
     var data = {};
 
     function resolve(uri, context) {
@@ -50,7 +60,7 @@ var cl = (function () {
           }
         });
       } else if (typeof props === "object") {
-        res.push({val: p["@value"], lang: p["@language"], dt: p["@type"]});
+        res.push({val: props["@value"], lang: props["@language"], dt: props["@type"]});
       } else {
         res.push({val: props, lang: "", dt: ""});
       }
