@@ -128,7 +128,7 @@ public final class ServiceDefault implements Service {
     }
 
     @Override
-    public Model patchWork(String workId, String requestBody) throws Exception {
+    public Model patchWork(String workId, String requestBody) throws PatchParserException {
         PatchParser patchParser = new PatchParser();
         try {
             patchParser.setPatchData(requestBody);
@@ -146,7 +146,7 @@ public final class ServiceDefault implements Service {
     }
 
     @Override
-    public Model patchPublication(String publicationId, String requestBody) throws Exception {
+    public Model patchPublication(String publicationId, String requestBody) throws PatchParserException {
         PatchParser patchParser = new PatchParser();
         try {
             patchParser.setPatchData(requestBody);

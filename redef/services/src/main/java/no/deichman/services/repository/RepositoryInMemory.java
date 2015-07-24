@@ -197,7 +197,7 @@ public final class RepositoryInMemory implements Repository {
     }
 
     @Override
-    public void patch(List<Patch> patches) throws Exception {
+    public void patch(List<Patch> patches) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
         UpdateAction.execute(updateRequest, model);
     }

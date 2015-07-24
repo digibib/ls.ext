@@ -28,6 +28,6 @@ public interface Repository {
     boolean askIfResourceExistsInGraph(String uri, String graph);
 
     boolean askIfGraphExists(String graph);
-    void patch(List<Patch> patches) throws Exception;
+    void patch(List<Patch> patches);
 
 }

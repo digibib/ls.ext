@@ -177,7 +177,7 @@ public class RepositoryDefault implements Repository {
     }
 
     @Override
-    public void patch(List<Patch> patches) throws Exception {
+    public void patch(List<Patch> patches) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
     }

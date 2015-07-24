@@ -193,7 +193,7 @@ public final class SPARQLQueryBuilder {
         return q;
     }
 
-    public String patch(List<Patch> patches) throws Exception {
+    public String patch(List<Patch> patches) {
         StringBuilder q = new StringBuilder();
         Iterator<Patch> patchIterator = patches.iterator();
         while (patchIterator.hasNext()) {
