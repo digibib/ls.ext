@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import no.deichman.services.SPARQLQueryBuilder;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.utils.UniqueURI;

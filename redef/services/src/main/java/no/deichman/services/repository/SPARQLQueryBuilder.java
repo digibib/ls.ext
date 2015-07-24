@@ -1,4 +1,4 @@
-package no.deichman.services;
+package no.deichman.services.repository;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
