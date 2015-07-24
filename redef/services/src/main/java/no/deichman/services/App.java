@@ -1,8 +1,8 @@
 package no.deichman.services;
 
-import no.deichman.services.resources.OntologyResource;
-import no.deichman.services.resources.PublicationResource;
-import no.deichman.services.resources.WorkResource;
+import no.deichman.services.rest.OntologyResource;
+import no.deichman.services.rest.PublicationResource;
+import no.deichman.services.rest.WorkResource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
