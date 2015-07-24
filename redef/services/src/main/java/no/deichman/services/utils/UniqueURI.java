@@ -42,7 +42,7 @@ public class UniqueURI {
 
     }
 
-    public boolean checkResourceExistence(String random, Repository repository) {
+    boolean checkResourceExistence(String random, Repository repository) {
         return repository.askIfResourceExists(random);
     }
 
