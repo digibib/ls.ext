@@ -13,10 +13,10 @@ public final class PatchObjectTypeAdapter implements JsonDeserializer<List<Patch
         List<PatchObject> vals = new ArrayList<PatchObject>();
         if (json.isJsonArray()) {
             for (JsonElement e : json.getAsJsonArray()) {
-                vals.add((PatchObject) ctx.deserialize(e, PatchObject.class));
+                vals.add(ctx.deserialize(e, PatchObject.class));
             }
         } else if (json.isJsonObject()) {
-            vals.add((PatchObject) ctx.deserialize(json, PatchObject.class));
+            vals.add(ctx.deserialize(json, PatchObject.class));
         } else {
             throw new RuntimeException("Unexpected JSON type: " + json.getClass());
         }
