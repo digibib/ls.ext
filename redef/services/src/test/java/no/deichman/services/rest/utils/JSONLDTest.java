@@ -1,4 +1,4 @@
-package no.deichman.services.utils;
+package no.deichman.services.rest.utils;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;

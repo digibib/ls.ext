@@ -5,7 +5,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import no.deichman.services.ontology.OntologyService;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.utils.JSONLD;
+import no.deichman.services.rest.utils.JSONLD;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 

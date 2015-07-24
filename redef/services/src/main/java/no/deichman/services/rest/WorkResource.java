@@ -8,9 +8,9 @@ import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.utils.CORSProvider;
-import no.deichman.services.utils.JSONLD;
-import no.deichman.services.utils.PATCH;
+import no.deichman.services.rest.utils.CORSProvider;
+import no.deichman.services.rest.utils.JSONLD;
+import no.deichman.services.rest.utils.PATCH;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -29,8 +29,8 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static no.deichman.services.utils.MimeType.JSONLD;
-import static no.deichman.services.utils.MimeType.LDPATCHJSON;
+import static no.deichman.services.rest.utils.MimeType.JSONLD;
+import static no.deichman.services.rest.utils.MimeType.LDPATCHJSON;
 
 @Path("/work")
 public class WorkResource {

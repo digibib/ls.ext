@@ -1,9 +1,9 @@
-package no.deichman.services.utils;
+package no.deichman.services.rest.utils;
 
 import org.junit.Test;
 
-import static no.deichman.services.utils.MimeType.JSONLD;
-import static no.deichman.services.utils.MimeType.LDPATCHJSON;
+import static no.deichman.services.rest.utils.MimeType.JSONLD;
+import static no.deichman.services.rest.utils.MimeType.LDPATCHJSON;
 import static org.junit.Assert.assertEquals;
 
 public class MimeTypeTest {

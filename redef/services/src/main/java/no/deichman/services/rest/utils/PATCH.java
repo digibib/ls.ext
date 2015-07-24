@@ -1,4 +1,4 @@
-package no.deichman.services.utils;
+package no.deichman.services.rest.utils;
 
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.NameBinding;

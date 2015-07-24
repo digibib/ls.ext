@@ -1,4 +1,4 @@
-package no.deichman.services.utils;
+package no.deichman.services.rest.utils;
 
 public final class MimeType {
 

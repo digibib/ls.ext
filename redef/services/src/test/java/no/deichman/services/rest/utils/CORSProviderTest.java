@@ -1,4 +1,4 @@
-package no.deichman.services.utils;
+package no.deichman.services.rest.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
