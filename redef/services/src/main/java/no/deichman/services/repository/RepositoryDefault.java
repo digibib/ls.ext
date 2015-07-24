@@ -79,11 +79,11 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        UniqueURI uri = new UniqueURI(this, new BaseURIDefault());
-        String id = uri.getNewURI("work");
+        UniqueURIGenerator uriGenerator = new UniqueURIGenerator(this, new BaseURIDefault());
+        String id = uriGenerator.getNewURI("work");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(uri.toString()),
+                ResourceFactory.createResource(uriGenerator.toString()),
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
         tempModel.add(workResource);
@@ -97,11 +97,11 @@ public class RepositoryDefault implements Repository {
     @Override
     public String createPublication(String publication) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        UniqueURI uri = new UniqueURI(this, new BaseURIDefault());
-        String id = uri.getNewURI("publication");
+        UniqueURIGenerator uriGenerator = new UniqueURIGenerator(this, new BaseURIDefault());
+        String id = uriGenerator.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(uri.toString()),
+                ResourceFactory.createResource(uriGenerator.toString()),
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
         tempModel.add(publicationResource);

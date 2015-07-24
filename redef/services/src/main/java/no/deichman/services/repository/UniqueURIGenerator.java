@@ -3,13 +3,13 @@ package no.deichman.services.repository;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.RandomStringUtils;
 
-class UniqueURI {
+class UniqueURIGenerator {
 
     private static final int NO_OF_DIGITS = 12;
     private Repository repository;
     private BaseURI baseURI;
 
-    public UniqueURI(Repository repository, BaseURI baseURI) {
+    UniqueURIGenerator(Repository repository, BaseURI baseURI) {
         this.repository = repository;
         this.baseURI = baseURI;
     }
