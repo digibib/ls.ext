@@ -110,34 +110,33 @@
           </table>
         </div>
         <div class="panel column full">
-          {{#items.length}}
-          <h2>Eksemplarer</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>tittel</th>
-                <th>språk</th>
-                <th>format</th>
-                <th>plassering</th>
-                <th>status</th>
-              </tr>
-            </thead>
-            <tbody>
-            {{#items}}
-              <tr>
-                <td>?</td>
-                <td>?</td>
-                <td>?</td>
-                <td data-automation-id="item_location">{{deichman:location}}</td>
-                <td data-automation-id="item_status">{{deichman:status}}</td>
-              </tr>
-            {{/items}}
-            </tbody>
-          </table>
-          {{/items.length}}
-          {{^items}}
-          <h2>Vi har ingen eksemplarer</h2>
-          {{/items}}
+          {{#if items.length}}
+            <h2>Eksemplarer</h2>
+            <table>
+              <thead>
+               <tr>
+                  <th>tittel</th>
+                  <th>språk</th>
+                  <th>format</th>
+                  <th>plassering</th>
+                  <th>status</th>
+                </tr>
+              </thead>
+              <tbody>
+              {{#each items}}
+                <tr>
+                  <td>?</td>
+                  <td>?</td>
+                  <td>?</td>
+                  <td data-automation-id="item_location">{{deichman:location}}</td>
+                  <td data-automation-id="item_status">{{deichman:status}}</td>
+                </tr>
+              {{/each}}
+              </tbody>
+           </table>
+          {{else}}
+            <h2>Vi har ingen eksemplarer</h2>
+          {{/if}}
         </div>
       </div>
     </div>

@@ -2,14 +2,13 @@
 "use strict";
 
 var express = require('express'),
-    hogan = require('fs-hogan'),
+    hbs = require('hbs'),
     http = require('http'),
     config = require('./lib/config'),
     app = express(),
     Server;
 
-app.set('view engine', 'hjs');
-app.engine('hjs', hogan.renderFile);
+app.set('view engine', 'hbs');
 app.use(express.static('public'));
 
 function titlesToString(titles) {

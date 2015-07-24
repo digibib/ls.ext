@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "express": "*",
-    "fs-hogan": "*",
+    "hbs": "*",
     "http": "*"
   },
   "devDependencies": {
