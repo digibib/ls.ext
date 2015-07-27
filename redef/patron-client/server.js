@@ -11,6 +11,33 @@ var express = require('express'),
 app.set('view engine', 'hbs');
 app.use(express.static('public'));
 
+hbs.registerHelper('firstValue', function (resource, property, graph) {
+  var props = resource.property(graph.resolve(property));
+  if (props.length > 0) {
+    if (props[0].language !== "") {
+      return '"' + props[0].value + '"@' + props[0].language;
+    }
+    return props[0].value;
+  }
+  return "";
+});
+
+hbs.registerHelper('allValues', function (resource, property, graph) {
+  return resource.property(graph.resolve(property));
+});
+
+hbs.registerHelper('allValuesConcat', function (resource, property, graph) {
+  var res = [];
+  resource.property(graph.resolve(property)).forEach(function (p) {
+    if (p.language !== "") {
+      res.push('"' + p.value + '"@' + p.language);
+    } else {
+      res.push(p.value);
+    }
+  });
+  return res.join(", ");
+});
+
 // TODO the graph module is copied from catlinker/lib.js - modularize and use requirejs
 var graph = (function () {
 
