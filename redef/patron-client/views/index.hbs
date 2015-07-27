@@ -44,7 +44,7 @@
       th { padding: 0.5em;}
       td { padding: 0.5em; }
     </style>
-    <title>{{deichman:name}} av {{deichman:creator}} ({{deichman:date}})</title>
+    <title>{{firstValue work "deichman:name" graph}} av {{firstValue work "deichman:creator" graph}} ({{firstValue work "deichman:year" graph}})</title>
   </head>
   <body>
     <div class="header">
@@ -66,10 +66,10 @@
           </div>
         </div>
         <div class="column half relative">
-          <h2 data-automation-id="work_title">{{deichman:name}}</h2>
-          <p data-automation-id="work_author">{{deichman:creator}}</p>
+          <h2 data-automation-id="work_title">{{firstValue work "deichman:name" graph}}</h2>
+          <p data-automation-id="work_author">{{firstValue work "deichman:creator" graph}}</p>
           <div class="small-text">
-            <p><b>Utgitt første gang: </b><span data-automation-id="work_date">{{deichman:year}}</span></p>
+            <p><b>Utgitt første gang: </b><span data-automation-id="work_date">{{firstValue work "deichman:year" graph}}</span></p>
             <p>Beskrivelse av verket kommer her ...</p>
           </div>
           <p>? ulike utgaver</p>
@@ -80,8 +80,8 @@
         </div>
         <div class="column fourth">
           <dl class="item-details small-text">
-            <dt>Originaltittel</dt><dd>{{deichman:name}}</dd>
-            <dt>Forfatter</dt><dd><u>{{deichman:creator}}</u></dd>
+            <dt>Originaltittel</dt><dd>{{firstValue work "deichman:name" graph}}</dd>
+            <dt>Forfatter</dt><dd><u>{{firstValue work "deichman:creator" graph}}</u></dd>
             <dt>Originalspråk</dt><dd>ukjent</dd>
             <dt>Emner</dt><dd></dd>
           </dl>
@@ -100,12 +100,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td data-automation-id="publication_name">?</td>
-                <td data-automation-id="publication_language">?</td>
-                <td data-automation-id="publication_format">?</td>
-                <td>?</td>
-              </tr>
+              {{#each work.publications as |pub|}}
+                <tr>
+                  <td data-automation-id="publication_name">{{allValuesConcat pub "deichman:name" ../graph}}</td>
+                  <td data-automation-id="publication_language">{{firstValue pub "deichman:language" ../graph}}</td>
+                  <td data-automation-id="publication_format">{{firstValue pub "deichman:format" ../graph}}</td>
+                  <td>?</td>
+                </tr>
+              {{/each}}
             </tbody>
           </table>
         </div>

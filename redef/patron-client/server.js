@@ -231,10 +231,12 @@ app.get('/work/:id', function (request, response) {
       var data = getData(body);
       console.log("Received reply from services for '" + parameters.path + "' with status code: " + res.statusCode);
       if (data.ok) {
+        data.data.graph = graph.parse(body);
+        data.data.work = data.data.graph.works[0];
+
         parameters.path += '/items';
         getItems(parameters, function (items) {
           data.data.items = items;
-          data.data["deichman:name"] = titlesToString(data.data["deichman:name"]);
           response.render('index', data.data);
         });
       } else {

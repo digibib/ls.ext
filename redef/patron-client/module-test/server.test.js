@@ -20,7 +20,7 @@ describe('PatronClient', function () {
     servicesStub.getJson('/work/work_00001',
             {
               "@id" : "http://deichman.no/work/work_1231",
-              "@type" : "http://deichman.no/ontology#Work",
+              "@type" : "deichman:Work",
               "deichman:biblio" : "2",
               "deichman:year" : "1890",
               "deichman:name" : "Sult",
