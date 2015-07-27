@@ -191,8 +191,9 @@ ps.stderr.on('data', function (data) {
 ps.on('error', function (err) {
   console.log("failed to launch casperjs: " + err);
 });
-ps.on('exit', function () {
+ps.on('exit', function (code) {
   if (process.argv.indexOf('--keepserver') === -1) {
     server.close();
+    process.exit(code);
   }
 });
