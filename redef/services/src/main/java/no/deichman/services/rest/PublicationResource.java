@@ -39,10 +39,7 @@ public class PublicationResource {
     private final CORSProvider cors;
 
     public PublicationResource() {
-        baseURI = new BaseURIDefault();
-        jsonldCreator = new JSONLDCreator(baseURI);
-        service = new ServiceDefault(baseURI, new RepositoryDefault(), new KohaAdapterDefault());
-        cors = new CORSProvider();
+        this(new BaseURIDefault(), new ServiceDefault(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault()));
     }
 
     public PublicationResource(BaseURI baseURI, Service service) {
