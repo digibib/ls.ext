@@ -17,19 +17,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Responsibility: TODO.
+ * Responsibility: Create Deichman-flavoured JSON-LD string from RDF-model.
  */
-public final class JSONLD {
+public final class JSONLDCreator {
 
     private BaseURI baseURI;
 
-    public JSONLD() {}
+    public JSONLDCreator() {}
 
-    public JSONLD(BaseURI base){
+    public JSONLDCreator(BaseURI base){
         baseURI = base;
     }
 
-    public String getJson(Model model) {
+    public String asJSONLD(Model model) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, model, Lang.JSONLD);
         String s = "";

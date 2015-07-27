@@ -1,21 +1,13 @@
 package no.deichman.services.rest.utils;
 
 import com.hp.hpl.jena.vocabulary.RDFS;
-import no.deichman.services.uridefaults.BaseURIMock;
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.Map;
-
+import no.deichman.services.uridefaults.BaseURIMock;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class DefaultPrefixesTest {
-
-    @Test
-    public void test_it_exists(){
-        assertNotNull(new DefaultPrefixes());
-    }
 
     @Test
     public void test_it_can_set_get_default_prefixes(){

@@ -8,7 +8,7 @@ import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import no.deichman.services.rest.utils.CORSProvider;
-import no.deichman.services.rest.utils.JSONLD;
+import no.deichman.services.rest.utils.JSONLDCreator;
 import no.deichman.services.rest.utils.MimeType;
 import no.deichman.services.rest.utils.PATCH;
 
@@ -35,25 +35,25 @@ public class PublicationResource {
 
     private final Service service;
     private BaseURI baseURI;
-    private JSONLD jsonld;
+    private JSONLDCreator jsonldCreator;
     private CORSProvider cors;
 
     public PublicationResource() {
         super();
         baseURI = new BaseURIDefault();
-        jsonld = new JSONLD(baseURI);
+        jsonldCreator = new JSONLDCreator(baseURI);
         service = new ServiceDefault(baseURI);
         cors = new CORSProvider();
     }
 
-    public PublicationResource(KohaAdapter kohaAdapter, Repository repository, BaseURI b) {
+    public PublicationResource(KohaAdapter kohaAdapter, Repository repository, BaseURI baseURI) {
         super();
-        ServiceDefault serviceDefault = new ServiceDefault(b);
+        ServiceDefault serviceDefault = new ServiceDefault(baseURI);
         serviceDefault.setKohaAdapter(kohaAdapter);
         serviceDefault.setRepository(repository);
         service = serviceDefault;
-        baseURI = b;
-        jsonld = new JSONLD(b);
+        this.baseURI = baseURI;
+        jsonldCreator = new JSONLDCreator(baseURI);
         cors = new CORSProvider();
     }
 
@@ -81,7 +81,7 @@ public class PublicationResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(jsonld.getJson(model))
+        return Response.ok().entity(jsonldCreator.asJSONLD(model))
                             .header("Access-Control-Allow-Origin", "*")
                             .header("Access-Control-Allow-Methods", "GET")
                             .allow("OPTIONS")
@@ -131,7 +131,7 @@ public class PublicationResource {
             throw new BadRequestException();
         }
 
-        return Response.ok().entity(jsonld.getJson(m))
+        return Response.ok().entity(jsonldCreator.asJSONLD(m))
                        .header("Access-Control-Allow-Origin", "*")
                        .header("Access-Control-Allow-Methods", "PATCH")
                        .allow("OPTIONS")

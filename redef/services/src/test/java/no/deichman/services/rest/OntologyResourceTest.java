@@ -1,69 +1,42 @@
 package no.deichman.services.rest;
 
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIMock;
-import org.apache.commons.io.IOUtils;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
+import java.io.IOException;
+import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.Status.OK;
+import no.deichman.services.ontology.OntologyService;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import static javax.ws.rs.core.Response.Status.OK;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class OntologyResourceTest {
 
+    public static final String THE_JSONLD = "jsonld-sorta..";
+    private static final String THE_TURTLE = "all the way down";
     private OntologyResource resource;
-    private BaseURI bud;
+    private OntologyService mockOntologyService;
 
     @Before
     public void setUp() throws Exception {
-        bud = new BaseURIMock();
-        resource = new OntologyResource(bud);
+        mockOntologyService = mock(OntologyService.class);
+        resource = new OntologyResource(mockOntologyService);
     }
 
     @Test
-    public void test_it_exists(){
-        assertNotNull(new OntologyResource());
-    }
-
-    @Test
-    public void should_get_ontology() throws IOException {
+    public void should_get_ontology_as_jsonld() throws IOException {
+        when(mockOntologyService.getOntologyJsonLD()).thenReturn(THE_JSONLD);
         Response result = resource.getOntologyJSON();
-        String entity = result.getEntity().toString();
-        Model m = ModelFactory.createDefaultModel();
-        Model comparison = ModelFactory.createDefaultModel();
-        InputStream in = new ByteArrayInputStream(entity.getBytes(StandardCharsets.UTF_8));
-        try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
-            String fromFile = IOUtils.toString(fileInputStream).replace("http://data.deichman.no/lsext-model#", bud.getOntologyURI());
-            InputStream fileIn = new ByteArrayInputStream(fromFile.getBytes(StandardCharsets.UTF_8));
-            RDFDataMgr.read(m, in, Lang.JSONLD);
-            RDFDataMgr.read(comparison, fileIn, Lang.TURTLE);
-            assertEquals(OK.getStatusCode(), result.getStatus());
-            assertTrue(m.isIsomorphicWith(comparison));
-        }
+        assertEquals(OK.getStatusCode(), result.getStatus());
+        assertEquals(THE_JSONLD, result.getEntity());
     }
 
     @Test
     public void should_get_ontology_as_turtle() throws IOException {
+        when(mockOntologyService.getOntologyTurtle()).thenReturn(THE_TURTLE);
         Response result = resource.getOntologyTurtle();
-        String entity = result.getEntity().toString();
-        try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
-            String fromFile = IOUtils.toString(fileInputStream);
-            assertTrue(entity.equals(fromFile.replace("http://data.deichman.no/lsext-model#", bud.getOntologyURI())));
-        }
+        assertEquals(OK.getStatusCode(), result.getStatus());
+        assertEquals(THE_TURTLE, result.getEntity());
     }
 }
