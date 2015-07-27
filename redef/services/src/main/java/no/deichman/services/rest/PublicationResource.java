@@ -122,8 +122,8 @@ public class PublicationResource {
         Model m;
         try {
              m = service.patchPublication(publicationId, requestBody);
-        } catch (Exception e) {
-            throw new BadRequestException();
+        } catch (PatchParserException e) {
+            throw new BadRequestException(e);
         }
 
         return Response.ok().entity(jsonldCreator.asJSONLD(m))
