@@ -22,7 +22,7 @@ import java.util.List;
  * Responsibility: TODO.
  */
 public final class SPARQLQueryBuilder {
-    private BaseURI baseURI;
+    private final BaseURI baseURI;
 
     SPARQLQueryBuilder(){
         baseURI = new BaseURIDefault();
