@@ -45,7 +45,7 @@ public class WorkResourceTest {
     }
 
     @Test
-    public void test_class_exists(){
+    public void should_have_default_constructor() {
         assertNotNull(new WorkResource());
     }
 

@@ -30,10 +30,15 @@ public class ServiceDefaultTest {
     
     private ServiceDefault service;
     @Before
-    public void setup(){
+    public void setup() {
         service = new ServiceDefault(new BaseURIMock());
         service.setRepository(new RepositoryInMemory());
         service.setKohaAdapter(new KohaAdapterMock());
+    }
+
+    @Test
+    public void should_have_default_constructor() {
+        assertNotNull(new ServiceDefault());
     }
 
     @Test

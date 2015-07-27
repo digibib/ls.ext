@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.ontology.OntologyService;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
@@ -22,6 +23,11 @@ public class OntologyResourceTest {
     public void setUp() throws Exception {
         mockOntologyService = mock(OntologyService.class);
         resource = new OntologyResource(mockOntologyService);
+    }
+
+    @Test
+    public void should_have_default_constructor() {
+        assertNotNull(new OntologyResource());
     }
 
     @Test
