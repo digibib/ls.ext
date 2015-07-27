@@ -407,7 +407,7 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
   rows = @browser.table(:id => "default-circulation-rules").tbody.rows
   orig = []
   rows.each do |row| 
-    orig << [row[0].text, row[1].text, row[2].text, row[3].text, row[4].text, row[5].text, row[6].text, row[7].text, row[8].text, row[9].text, row[10].text, row[11].text, row[12].text, row[13].text, row[14].text, row[15].text, row[16].text, row[17].text, row[18].text ]
+    orig << [row[0].text, row[1].text, row[2].text, row[3].text, row[4].text, row[5].text, row[6].text, row[7].text, row[8].text, row[9].text, row[10].text, row[11].text, row[12].text, row[13].text, row[14].text, row[15].text, row[16].text, row[17].text, row[18].text, row[19].text, row[20].text ]
   end
   orig.pop
   a = (table & orig == table)
@@ -415,5 +415,4 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
 
   a.should == true
   b.should == true
-
 end
