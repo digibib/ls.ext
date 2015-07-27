@@ -11,7 +11,6 @@ import no.deichman.services.repository.Repository;
 public interface Service {
     
     void setRepository(Repository repository);
-    Repository getRepository();
     void updateWork(String work);
     Model retrieveWorkById(String id);
     Model retrieveWorkItemsById(String id);
@@ -22,4 +21,5 @@ public interface Service {
     Model patchWork(String work, String requestBody) throws UnsupportedEncodingException, PatchException, PatchParserException;
     Model retrievePublicationById(String publicationId);
     Model patchPublication(String publicationId, String requestBody) throws PatchParserException;
+    boolean resourceExists(String resourceUri);
 }

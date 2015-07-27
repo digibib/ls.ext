@@ -73,7 +73,6 @@ public class ServiceDefaultTest {
                 ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"),
                 ResourceFactory.createPlainLiteral("TEST_REPOSITORY_IS_SET"));
         assertTrue(repository.askIfStatementExists(s));
-        assertTrue(service.getRepository().equals(repository));
     }
 
     @Test

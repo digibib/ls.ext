@@ -121,7 +121,7 @@ public class PublicationResource {
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
     @Consumes(MimeType.LDPATCHJSON)
     public Response patchPublication(@PathParam("publicationId") String publicationId, String requestBody) throws Exception {
-        if (!service.getRepository().askIfResourceExists(baseURI.getPublicationURI() + publicationId)) {
+        if (!service.resourceExists(baseURI.getPublicationURI() + publicationId)) {
             throw new NotFoundException();
         }
         Model m;

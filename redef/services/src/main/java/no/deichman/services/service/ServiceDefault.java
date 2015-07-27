@@ -65,11 +65,6 @@ public final class ServiceDefault implements Service {
         this.repository = repository;
     }
 
-    @Override
-    public Repository getRepository() {
-        return repository;
-    }
-
     public void setKohaAdapter(KohaAdapter kohaAdapter) {
         this.kohaAdapter = kohaAdapter;
     }
@@ -164,4 +159,8 @@ public final class ServiceDefault implements Service {
 
     }
 
+    @Override
+    public boolean resourceExists(String resourceUri) {
+        return repository.askIfResourceExists(resourceUri);
+    }
 }

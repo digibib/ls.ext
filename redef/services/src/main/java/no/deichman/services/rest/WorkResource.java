@@ -91,7 +91,7 @@ public class WorkResource {
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Consumes(MIME_LDPATCH_JSON)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
-        if (!service.getRepository().askIfResourceExists(baseURI.getWorkURI() + workId)) {
+        if (!service.resourceExists(baseURI.getWorkURI() + workId)) {
             throw new NotFoundException();
         }
         Model m;
