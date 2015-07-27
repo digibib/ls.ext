@@ -8,7 +8,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PatchObjectTypeAdapter implements JsonDeserializer<List<PatchObject>> {
+/**
+ * Responsibility: TODO.
+ */
+final class PatchObjectTypeAdapter implements JsonDeserializer<List<PatchObject>> {
     public List<PatchObject> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext ctx) {
         List<PatchObject> vals = new ArrayList<PatchObject>();
         if (json.isJsonArray()) {

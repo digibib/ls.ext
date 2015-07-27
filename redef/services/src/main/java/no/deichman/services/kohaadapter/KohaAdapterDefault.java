@@ -65,19 +65,17 @@ public class KohaAdapterDefault implements KohaAdapter {
             login();
         }
 
-        Model model = ModelFactory.createDefaultModel();
         Response response = requestItems(id);
         // TODO Hack if we have timed out
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             login();
             response = requestItems(id);
         }
-        if (response.getStatus() == OK.getStatusCode()) {
-            model = mapMarcToModel(response.readEntity(String.class));
-        } else {
+        if (OK.getStatusCode() != response.getStatus()) {
             throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
         }
-        return model;
+
+        return mapMarcToModel(response.readEntity(String.class));
     }
 
     private Response requestItems(String id) {

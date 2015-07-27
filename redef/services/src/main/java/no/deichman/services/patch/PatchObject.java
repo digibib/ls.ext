@@ -59,7 +59,7 @@ public final class PatchObject {
 
     public String getObjectValue() throws PatchParserException {
         if (o.get("value") != null) {
-            return o.get("value").toString();
+            return o.get("value");
         } else {
             throw new PatchParserException("No object value was found");
         }
@@ -87,7 +87,7 @@ public final class PatchObject {
 
     public Patch toPatch() throws PatchParserException {
 
-        RDFNode rdfNode = null;
+        RDFNode rdfNode;
         if (getObjectLanguage() != null && getObjectValue() != null){
             rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectLanguage());
         } else if (getObjectDatatype() != null && getObjectValue() != null) {

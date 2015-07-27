@@ -15,6 +15,7 @@ public final class PatchParser {
 
     private String patchInput;
     private List<PatchObject> rawParseObject = new ArrayList<>();
+    private static final Type PATCH_OBJECT_LIST_TYPE = new TypeToken<List<PatchObject>>() {}.getType();
 
     PatchParser(String input){
         setPatchData(input);
@@ -24,11 +25,10 @@ public final class PatchParser {
     }
 
     public List<PatchObject> parsePatch(){
-        Type patchObjectListType = new TypeToken<List<PatchObject>>() {}.getType();
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(patchObjectListType, new PatchObjectTypeAdapter())
+                .registerTypeAdapter(PATCH_OBJECT_LIST_TYPE, new PatchObjectTypeAdapter())
                 .create();
-        List<PatchObject> rawPatches = gson.fromJson(patchInput,patchObjectListType);
+        List<PatchObject> rawPatches = gson.fromJson(patchInput, PATCH_OBJECT_LIST_TYPE);
         rawParseObject.addAll(rawPatches);
         return rawPatches;
     }
