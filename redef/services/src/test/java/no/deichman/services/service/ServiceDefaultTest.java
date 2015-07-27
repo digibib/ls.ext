@@ -6,6 +6,10 @@ import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.Repository;
@@ -13,27 +17,22 @@ import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ServiceDefaultTest {
     
     private ServiceDefault service;
+    private Repository repository;
+
     @Before
-    public void setup() {
-        service = new ServiceDefault(new BaseURIMock());
-        service.setRepository(new RepositoryInMemory());
-        service.setKohaAdapter(new KohaAdapterMock());
+    public void setup(){
+        repository = new RepositoryInMemory();
+        service = new ServiceDefault(new BaseURIMock(), repository, new KohaAdapterMock());
     }
 
     @Test
@@ -43,8 +42,6 @@ public class ServiceDefaultTest {
 
     @Test
     public void test_retrieve_work_by_id(){
-        Repository repository = new RepositoryInMemory();
-        service.setRepository(repository);
         String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"TEST_REPOSITORY_IS_SET\"}}";
         String workId = service.createWork(workData);
         Model comparison = ModelFactory.createDefaultModel();
@@ -56,8 +53,6 @@ public class ServiceDefaultTest {
 
     @Test
     public void test_retrieve_publication_by_id(){
-        Repository repository = new RepositoryInMemory();
-        service.setRepository(repository);
         String publicationData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"TEST_REPOSITORY_IS_SET\"}}";
         String publicationId = service.createPublication(publicationData);
         Model comparison = ModelFactory.createDefaultModel();
@@ -69,23 +64,13 @@ public class ServiceDefaultTest {
 
     @Test
     public void test_repository_can_be_set_got(){
-        Repository repository = new RepositoryInMemory();
         String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"TEST_REPOSITORY_IS_SET\"}}";
-        service.setRepository(repository);
         String workId = service.createWork(workData);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(workId),
                 ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"),
                 ResourceFactory.createPlainLiteral("TEST_REPOSITORY_IS_SET"));
         assertTrue(repository.askIfStatementExists(s));
-    }
-
-    @Test
-    public void test_koha_adapter_is_set(){
-        KohaAdapterMock ka = new KohaAdapterMock();
-        service.setBiblioIDProperty("http://deichman.no/ontology#");
-        service.setKohaAdapter(ka);
-        assertNotNull(service.retrieveWorkItemsById("626460"));
     }
 
     @Test
@@ -106,62 +91,52 @@ public class ServiceDefaultTest {
 
     @Test
     public void test_create_work(){
-        Repository r = new RepositoryInMemory();
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        service.setRepository(r);
         String workId = service.createWork(work);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(workId), ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"), ResourceFactory.createPlainLiteral("work_SERVICE_CREATE_WORK"));
-        assertTrue(r.askIfStatementExists(s));
+        assertTrue(repository.askIfStatementExists(s));
     }
 
     @Test
     public void test_create_publication(){
-        Repository r = new RepositoryInMemory();
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_PUBLICATION\",\"deichman:biblio\":\"1\"}}";
-        service.setRepository(r);
         String publicationId = service.createPublication(publication);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationId), ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"), ResourceFactory.createPlainLiteral("publication_SERVICE_CREATE_PUBLICATION"));
-        assertTrue(r.askIfStatementExists(s));
+        assertTrue(repository.askIfStatementExists(s));
     }
 
     @Test
     public void test_delete_work(){
-        Repository r = new RepositoryInMemory();
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        service.setRepository(r);
         String workId = service.createWork(work);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(workId), ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"), ResourceFactory.createPlainLiteral("work_SERVICE_CREATE_WORK"));
-        assertTrue(r.askIfStatementExists(s));
+        assertTrue(repository.askIfStatementExists(s));
         Model test = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(work.replace("http://deichman.no/work/work_SHOULD_EXIST", workId).getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(test,in, Lang.JSONLD);
         service.deleteWork(test);
-        assertFalse(r.askIfStatementExists(s));
+        assertFalse(repository.askIfStatementExists(s));
     }
 
     @Test
     public void test_delete_publication(){
-        Repository r = new RepositoryInMemory();
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_delete_publication\",\"deichman:biblio\":\"1\"}}";
-        service.setRepository(r);
         String publicationId = service.createPublication(publication);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationId), ResourceFactory.createProperty("http://purl.org/dc/terms/identifier"), ResourceFactory.createPlainLiteral("publication_delete_publication"));
-        assertTrue(r.askIfStatementExists(s));
+        assertTrue(repository.askIfStatementExists(s));
         Model test = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(publication.replace("http://deichman.no/publication/publication_SHOULD_EXIST", publicationId).getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(test,in, Lang.JSONLD);
         service.deleteWork(test);
-        assertFalse(r.askIfStatementExists(s));
+        assertFalse(repository.askIfStatementExists(s));
     }
 
     @Test
     public void test_patch_work_add() throws Exception{
-        assertNotNull(service);
-
         Model oldModel = ModelFactory.createDefaultModel();
         String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_DEFAULT_PATCH\"}}";
         String workId = service.createWork(workData);
@@ -188,8 +163,6 @@ public class ServiceDefaultTest {
 
     @Test
     public void test_patch_publication_add() throws Exception{
-        assertNotNull(service);
-
         Model oldModel = ModelFactory.createDefaultModel();
         String publicationData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SERVICE_DEFAULT_PATCH\"}}";
         String publicationId = service.createPublication(publicationData);
@@ -216,10 +189,9 @@ public class ServiceDefaultTest {
 
     @Test(expected=PatchParserException.class)
     public void test_bad_patch_fails() throws Exception{
-        assertNotNull(service);
         String workData = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SERVICE_DEFAULT_PATCH\"}}";
         String workId = service.createWork(workData);
         String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
-        Model patchedModel = service.patchWork(workId.replace("http://deichman.no/work/", ""),badPatchData);
+        service.patchWork(workId.replace("http://deichman.no/work/", ""),badPatchData);
     }
 }

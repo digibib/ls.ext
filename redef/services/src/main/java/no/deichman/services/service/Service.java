@@ -2,11 +2,9 @@ package no.deichman.services.service;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import no.deichman.services.error.PatchParserException;
-import no.deichman.services.repository.Repository;
 
 public interface Service {
     
-    void setRepository(Repository repository);
     void updateWork(String work);
     Model retrieveWorkById(String id);
     Model retrieveWorkItemsById(String id);

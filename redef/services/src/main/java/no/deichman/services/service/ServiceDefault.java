@@ -9,7 +9,9 @@ import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import no.deichman.services.repository.SPARQLQueryBuilder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.KohaAdapterDefault;
@@ -18,28 +20,26 @@ import no.deichman.services.patch.PatchObject;
 import no.deichman.services.patch.PatchParser;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.repository.RepositoryDefault;
+import no.deichman.services.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public final class ServiceDefault implements Service {
 
-    private Repository repository = new RepositoryDefault();
-    private KohaAdapter kohaAdapter = new KohaAdapterDefault();
-    private BaseURI baseURI;
-    private Property biblioId;
+    private final Repository repository;
+    private final KohaAdapter kohaAdapter;
+    private final BaseURI baseURI;
+    private final Property biblioId;
 
     public ServiceDefault(){
-        baseURI = new BaseURIDefault();
-        setBiblioIDProperty(baseURI.getOntologyURI());
+        this(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault());
     }
 
-    public ServiceDefault(BaseURI base){
-        baseURI = base;
-        setBiblioIDProperty(baseURI.getOntologyURI());
+    public ServiceDefault(BaseURI baseURI, Repository repository, KohaAdapter kohaAdapter){
+        this.baseURI = baseURI;
+        biblioId = ResourceFactory.createProperty(this.baseURI.getOntologyURI() + "biblio");
+        this.repository = repository;
+        this.kohaAdapter = kohaAdapter;
     }
 
     @Override
@@ -60,18 +60,6 @@ public final class ServiceDefault implements Service {
         return m;
     }
 
-    @Override
-    public void setRepository(Repository repository) {
-        this.repository = repository;
-    }
-
-    public void setKohaAdapter(KohaAdapter kohaAdapter) {
-        this.kohaAdapter = kohaAdapter;
-    }
-
-    public void setBiblioIDProperty(String uri){
-        biblioId = ResourceFactory.createProperty(uri + "biblio");
-    }
 
     @Override
     public void updateWork(String work) {

@@ -1,17 +1,8 @@
 package no.deichman.services.rest;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.repository.Repository;
-import no.deichman.services.service.Service;
-import no.deichman.services.service.ServiceDefault;
-import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.rest.utils.CORSProvider;
-import no.deichman.services.rest.utils.JSONLDCreator;
-import no.deichman.services.rest.utils.MimeType;
-import no.deichman.services.rest.utils.PATCH;
-
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -24,8 +15,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.net.URISyntaxException;
+import no.deichman.services.error.PatchParserException;
+import no.deichman.services.kohaadapter.KohaAdapterDefault;
+import no.deichman.services.repository.RepositoryDefault;
+import no.deichman.services.rest.utils.CORSProvider;
+import no.deichman.services.rest.utils.JSONLDCreator;
+import no.deichman.services.rest.utils.MimeType;
+import no.deichman.services.rest.utils.PATCH;
+import no.deichman.services.service.Service;
+import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIDefault;
 
 @Path("/publication")
 public class PublicationResource {
@@ -34,24 +34,19 @@ public class PublicationResource {
     private static final String ENCODING_UTF8 = "; charset=utf-8";
 
     private final Service service;
-    private BaseURI baseURI;
-    private JSONLDCreator jsonldCreator;
-    private CORSProvider cors;
+    private final BaseURI baseURI;
+    private final JSONLDCreator jsonldCreator;
+    private final CORSProvider cors;
 
     public PublicationResource() {
-        super();
         baseURI = new BaseURIDefault();
         jsonldCreator = new JSONLDCreator(baseURI);
-        service = new ServiceDefault(baseURI);
+        service = new ServiceDefault(baseURI, new RepositoryDefault(), new KohaAdapterDefault());
         cors = new CORSProvider();
     }
 
-    public PublicationResource(KohaAdapter kohaAdapter, Repository repository, BaseURI baseURI) {
-        super();
-        ServiceDefault serviceDefault = new ServiceDefault(baseURI);
-        serviceDefault.setKohaAdapter(kohaAdapter);
-        serviceDefault.setRepository(repository);
-        service = serviceDefault;
+    public PublicationResource(BaseURI baseURI, Service service) {
+        this.service = service;
         this.baseURI = baseURI;
         jsonldCreator = new JSONLDCreator(baseURI);
         cors = new CORSProvider();

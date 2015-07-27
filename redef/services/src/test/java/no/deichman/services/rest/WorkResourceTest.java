@@ -5,6 +5,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -40,8 +41,8 @@ public class WorkResourceTest {
 
     @Before
     public void setUp() throws Exception {
-        resource = new WorkResource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
         bum = new BaseURIMock();
+        resource = new WorkResource(bum, new ServiceDefault(bum, new RepositoryInMemory(), new KohaAdapterMock()));
     }
 
     @Test

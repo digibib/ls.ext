@@ -3,33 +3,34 @@ package no.deichman.services.rest;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import no.deichman.services.kohaadapter.KohaAdapterMock;
-import no.deichman.services.repository.RepositoryInMemory;
-import no.deichman.services.uridefaults.BaseURIMock;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
+import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.kohaadapter.KohaAdapterMock;
+import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIMock;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.ObjectMapper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PublicationResourceTest {
 
@@ -37,7 +38,10 @@ public class PublicationResourceTest {
 
     @Before
     public void setUp() throws Exception {
-        resource = new PublicationResource(new KohaAdapterMock(), new RepositoryInMemory(), new BaseURIMock());
+        KohaAdapter notUsedHere = null;
+        BaseURI baseURI = new BaseURIMock();
+        ServiceDefault service = new ServiceDefault(baseURI, new RepositoryInMemory(), new KohaAdapterMock());
+        resource = new PublicationResource(baseURI, service);
     }
 
     @Test

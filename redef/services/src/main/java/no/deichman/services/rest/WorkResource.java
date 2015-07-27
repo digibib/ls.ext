@@ -1,36 +1,32 @@
 package no.deichman.services.rest;
 
 import com.hp.hpl.jena.rdf.model.Model;
-
-import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.repository.Repository;
-import no.deichman.services.service.Service;
-import no.deichman.services.service.ServiceDefault;
-import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.rest.utils.CORSProvider;
-import no.deichman.services.rest.utils.JSONLDCreator;
-import no.deichman.services.rest.utils.PATCH;
-
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
+import no.deichman.services.kohaadapter.KohaAdapterDefault;
+import no.deichman.services.repository.RepositoryDefault;
+import no.deichman.services.rest.utils.CORSProvider;
+import no.deichman.services.rest.utils.JSONLDCreator;
 import static no.deichman.services.rest.utils.MimeType.JSONLD;
 import static no.deichman.services.rest.utils.MimeType.LDPATCHJSON;
+import no.deichman.services.rest.utils.PATCH;
+import no.deichman.services.service.Service;
+import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.BaseURIDefault;
 
 @Path("/work")
 public class WorkResource {
@@ -39,25 +35,17 @@ public class WorkResource {
     private static final String MIME_LDPATCH_JSON = LDPATCHJSON;
 
     private final Service service;
-    private BaseURI baseURI;
-    private JSONLDCreator jsonldCreator;
-    private CORSProvider cors;
+    private final BaseURI baseURI;
+    private final JSONLDCreator jsonldCreator;
+    private final CORSProvider cors;
 
     public WorkResource() {
-        super();
-        baseURI = new BaseURIDefault();
-        jsonldCreator = new JSONLDCreator(baseURI);
-        service = new ServiceDefault(baseURI);
-        cors = new CORSProvider();
+        this(new BaseURIDefault(), new ServiceDefault(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault()));
     }
 
-    public WorkResource(KohaAdapter kohaAdapter, Repository repository, BaseURI baseURI) {
-        super();
-        ServiceDefault serviceDefault = new ServiceDefault(baseURI);
-        serviceDefault.setKohaAdapter(kohaAdapter);
-        serviceDefault.setRepository(repository);
-        service = serviceDefault;
+    public WorkResource(BaseURI baseURI, Service service) {
         this.baseURI = baseURI;
+        this.service = service;
         jsonldCreator = new JSONLDCreator(baseURI);
         cors = new CORSProvider();
     }
