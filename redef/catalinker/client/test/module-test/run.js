@@ -4,13 +4,15 @@ var path = require('path');
 
 // Serve application and mock service endpoints
 var app = express();
-app.use(express.static(path.join(__dirname, './../../app')));
+app.use("/", express.static(path.join(__dirname, './../../src')));
+app.use("/", express.static(path.join(__dirname, './../../lib')));
+
 var server = app.listen(7777);
 app.get("/work", function (req, res) {
-  res.sendFile(path.join(__dirname, './../../app/index.html'));
+  res.sendFile(path.join(__dirname, './../../src/index.html'));
 });
 app.get("/publication", function (req, res) {
-  res.sendFile(path.join(__dirname, './../../app/index.html'));
+  res.sendFile(path.join(__dirname, './../../src/index.html'));
 });
 app.get("/config", function (req, res) {
   res.json({
@@ -176,6 +178,7 @@ app.post("/publication", function (req, res) {
 app.patch("/publication/1", function (req, res) {
   res.send(); // PATCH always 200 OK
 });
+
 
 // Launches the CasperJS test suite in a subprocess
 var ps = cp.spawn('casperjs', ['--log-level=debug', 'test', 'test/module-test/tests.js']);

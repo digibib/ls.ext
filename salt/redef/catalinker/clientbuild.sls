@@ -4,6 +4,6 @@ clear_client:
 
 build_client:
   cmd.run:
-    - name: cp /vagrant/redef/catalinker/client/app/* /vagrant/redef/catalinker/server/lib/public/
+    - name: cp /vagrant/redef/catalinker/client/{lib/*,src/*} /vagrant/redef/catalinker/server/lib/public/
     - require:
       - cmd: clear_client

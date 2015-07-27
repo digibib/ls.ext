@@ -7,5 +7,5 @@
   },
   "validateIndentation": 2,
   "requireMultipleVarDecl": null,
-  "excludeFiles": ["app/ractive.min.js"]
+  "excludeFiles": ["lib/*.js", "test/test-main.js"]
 }

@@ -11,7 +11,9 @@ casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
   casper.start('http://127.0.0.1:7777/work', function () {
     test.assertHttpStatus(200);
     test.assertTitle("Katalogisering", "har riktig tittel");
-    test.assertSelectorHasText('h2[data-automation-id="page-heading"]', "Katalogisering av verk");
+    casper.waitForResource("/ontology").then(function () {
+      test.assertSelectorHasText('h2[data-automation-id="page-heading"]', "Katalogisering av verk");
+    });
   });
 
   casper.waitFor(function check() {
@@ -42,7 +44,9 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 4, function (test) {
   casper.start('http://127.0.0.1:7777/publication', function () {
     test.assertHttpStatus(200);
     test.assertTitle("Katalogisering", "har riktig tittel");
-    test.assertSelectorHasText('h2[data-automation-id="page-heading"]', "Katalogisering av utgivelse");
+    casper.waitForResource("/ontology").then(function () {
+      test.assertSelectorHasText('h2[data-automation-id="page-heading"]', "Katalogisering av utgivelse");
+    });
   });
 
   casper.waitFor(function check() {

@@ -26,7 +26,8 @@
       .invalid-msg   { color: #F77F00; font-size: 12px;}
 
     </style>
-    <script src="/lib.js"></script>
+    <script src="/ractive.min.js"></script>
+    <script data-main="/main" src="/require.js"></script>
   </head>
   <body>
     <div id="#container"></div>
@@ -121,7 +122,5 @@
             value="{{current.value}}" />
       {{/partial}}
     </script>
-    <script src="/ractive.min.js"></script>
-    <script src="/app.js"></script>
   </body>
 </html>
