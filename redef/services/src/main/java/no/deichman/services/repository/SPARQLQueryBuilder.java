@@ -18,6 +18,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Responsibility: TODO.
+ */
 public final class SPARQLQueryBuilder {
     private BaseURI baseURI;
 

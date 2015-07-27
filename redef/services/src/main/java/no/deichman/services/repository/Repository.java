@@ -7,6 +7,9 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 import no.deichman.services.patch.Patch;
 
+/**
+ * Responsibility: TODO.
+ */
 public interface Repository {
 
     String createWork(String work);

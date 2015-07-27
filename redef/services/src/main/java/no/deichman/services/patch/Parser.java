@@ -6,6 +6,9 @@ import org.apache.jena.iri.IRIFactory;
 
 import no.deichman.services.error.PatchParserException;
 
+/**
+ * Responsibility: TODO.
+ */
 public final class Parser {
 
     private String input = null;

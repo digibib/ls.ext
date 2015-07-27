@@ -3,6 +3,9 @@ package no.deichman.services.repository;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.RandomStringUtils;
 
+/**
+ * Responsibility: TODO.
+ */
 class UniqueURIGenerator {
 
     private static final int NO_OF_DIGITS = 12;
