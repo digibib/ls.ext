@@ -37,17 +37,6 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test
-    public void test_dump_model(){
-        Model m = ModelFactory.createDefaultModel();
-        Statement s = getTestStatement();
-        m.add(s);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        Query q = sqb.dumpModel();
-        String expected = "DESCRIBE *\nWHERE\n  { ?s ?p ?o}";
-        assertEquals(expected,q.toString().trim());
-    }
-
-    @Test 
     public void get_resource_by_id(){
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
         Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
@@ -132,60 +121,12 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test
-    public void test_resource_existence_in_graph_query(){
-        String graph = "http://example.com/g";
-        String uri = "http://example.com/a";
-        String test = "ASK {GRAPH <" + graph + "> {<" + uri + "> ?p ?o}}";
-        Query expected = QueryFactory.create(test);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        assertEquals(expected,sqb.checkIfResourceExistsInGraph(uri, graph));
-    }
-
-    @Test
     public void test_statement_exists() throws UnsupportedEncodingException{
         Statement s = getTestStatement();
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
         String test = "ASK {<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . }";
         Query expected = QueryFactory.create(test);
         assertEquals(expected,sqb.checkIfStatementExists(s));
-    }
-
-    @Test
-    public void test_statement_exists_in_graph() throws UnsupportedEncodingException{
-        Statement s = getTestStatement();
-        String graph = "http://example.com/g";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        String test = "ASK { GRAPH <" + graph  + "> {<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . }}";
-        Query expected = QueryFactory.create(test);
-        assertEquals(expected,sqb.checkIfStatementExistsInGraph(s, graph));
-    }
-
-    @Test
-    public void test_update_add(){
-        Statement s = getTestStatement();
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        Model m = ModelFactory.createDefaultModel();
-        m.add(s);
-        String expected = "INSERT DATA {\n\n<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> .\n\n}";
-        assertEquals(expected,sqb.updateAdd(m));
-    }
-
-    @Test
-    public void test_update_add_to_graph(){
-        Statement s = getTestStatement();
-        String graph = "http://example.com/g";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        Model m = ModelFactory.createDefaultModel();
-        m.add(s);
-        String triple = "<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> .";
-        String expected = "INSERT DATA {\n"
-                + "GRAPH <" + graph + "> {\n"
-                + "\n"
-                + triple
-                + "\n\n"
-                + "}\n"
-                + "}";
-        assertEquals(expected,sqb.updateAddToGraph(m, graph));
     }
 
     @Test
@@ -203,31 +144,6 @@ public class SPARQLQueryBuilderTest {
                 + "\n\n"
                 + "}";
         assertEquals(expected,sqb.updateDelete(m));
-    }
-
-    @Test
-    public void test_update_delete_from_graph(){
-        Statement s = getTestStatement();
-        String graph = "http://example.com/g";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        Model m = ModelFactory.createDefaultModel();
-        m.add(s);
-        String triple = "<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> .";
-        String expected = "DELETE DATA { GRAPH <" + graph + "> {\n"
-                + "\n"
-                + triple
-                + "\n\n"
-                + "}\n"
-                + "}";
-        assertEquals(expected,sqb.updateDeleteFromGraph(m, graph));
-    }
-
-    @Test
-    public void test_ask_if_graph_exists(){
-        String graph = "http://example.com/g";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        String expected = "ASK {GRAPH <" + graph + "> {}}";
-        assertEquals(expected,sqb.askIfGraphExists(graph));
     }
 
     @Test

@@ -88,13 +88,6 @@ public final class RepositoryInMemory implements Repository {
     }
 
     @Override
-    public boolean askIfResourceExistsInGraph(String uri, String graph) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfResourceExistsInGraph(uri, graph), model)) {
-            return qexec.execAsk();
-        }
-    }
-
-    @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         String id = uriGenerator.getNewURI("work");
@@ -141,53 +134,9 @@ public final class RepositoryInMemory implements Repository {
     }
 
     @Override
-    public boolean askIfStatementExistsInGraph(Statement statement, String graph) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfStatementExistsInGraph(statement, graph), model)) {
-            return qexec.execAsk();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public void update(Model inputModel) {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAdd(inputModel));
-        UpdateAction.execute(updateRequest, model);        
-    }
-
-    @Override
-    public void updateNamedGraph(Model inputModel, String graph) {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateAddToGraph(inputModel, graph));
-        UpdateAction.execute(updateRequest, model);
-    }
-
-    @Override
     public void delete(Model inputModel) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
         UpdateAction.execute(updateRequest, model);
-    }
-
-    @Override
-    public void deleteFromNamedGraph(Model inputModel, String graph) {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDeleteFromGraph(inputModel, graph));
-        UpdateAction.execute(updateRequest, model);
-    }
-
-    public void addDataToNamedGraph(Model add, String named) {
-        model.addNamedModel(named, add);
-    }
-
-    @Override
-    public void dump() {
-        RDFDataMgr.write(System.out, model, Lang.TRIG);
-    }
-
-    @Override
-    public boolean askIfGraphExists(String graph) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.askIfGraphExists(graph), model)) {
-            return qexec.execAsk();
-        }
     }
 
     @Override
