@@ -48,9 +48,9 @@ end
 
 
 When(/^vises opplysningene om utgivelsen på verkssiden$/) do
+  sleep 4 # TODO why does it take so long for previous step (knytte utgivelse til verket) to be persisted in DB?
   step "jeg er på sida til verket"
   @browser.td(:data_automation_id => /publication_format/).text.should eq(@context[:publication_format])
   @browser.td(:data_automation_id => /publication_language/).text.should eq(@context[:publication_language])
   @browser.td(:data_automation_id => /publication_name/).text.should eq(@context[:publication_name])
-
 end
