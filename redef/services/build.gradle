@@ -16,11 +16,6 @@ repositories {
     mavenCentral()
 }
 
-checkstyle {
-    configProperties = [samedir: "${rootDir}"]
-    toolVersion = 5.9
-}
-
 def version_jetty = '9.2.10.v20150310'
 def version_jersey = '2.16'
 def version_jackson = '1.9.11'
@@ -62,6 +57,11 @@ task oneJar(type: OneJar) {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
+}
+
+checkstyle {
+    configProperties = [samedir: "${rootDir}"]
+    toolVersion = 5.9
 }
 
 buildscript {
