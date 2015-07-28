@@ -1,10 +1,11 @@
 {
   "preset": "crockford",
   "maximumLineLength": {
-	"value": 180,
-	"tabSize": 2,
-	"allExcept": ["urlComments", "regex"]
+    "value": 180,
+    "tabSize": 2,
+    "allExcept": ["urlComments", "regex"]
   },
+  "requireVarDeclFirst": null,
   "validateIndentation": 2,
   "requireMultipleVarDecl": null,
   "excludeFiles": ["lib/*.js", "test/test-main.js"]

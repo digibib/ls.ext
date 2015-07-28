@@ -5,6 +5,7 @@
     "tabSize": 2,
     "allExcept": ["urlComments", "regex"]
   },
+  "requireVarDeclFirst": null,
   "validateIndentation": 2,
   "requireMultipleVarDecl": null
 }

@@ -1,7 +1,7 @@
 FROM node:0.10.38
 
 MAINTAINER Oslo Public Library "digitalutvikling@gmail.com"
-ENV REFRESHED_AT 2015-07-03
+ENV REFRESHED_AT 2015-07-28
 
 RUN npm install -g mocha
 RUN npm install -g karma

@@ -1,5 +1,7 @@
 FROM node:0.12
 
+ENV REFRESHED_AT 2015-07-28
+
 RUN npm install -g nodemon
 RUN npm install -g mocha
 RUN npm install -g jshint
