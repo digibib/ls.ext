@@ -1,4 +1,4 @@
-requirejs(['graph', 'http', 'rdf', 'string'], function (graph, http, rdf, string) {
+requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology, string) {
 
   // TODO move this function out and test it!
   function getURLParameter(name) {
@@ -52,7 +52,7 @@ requirejs(['graph', 'http', 'rdf', 'string'], function (graph, http, rdf, string
       if (event.context.error || (event.context.current.value === "" && event.context.old.value === "")) {
         return;
       }
-      var patch = rdf.createPatch(ractive.get("resource_uri"), predicate, event.context);
+      var patch = ontology.createPatch(ractive.get("resource_uri"), predicate, event.context);
       http.patch(ractive.get("resource_uri"),
         {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
         patch,
@@ -85,7 +85,7 @@ requirejs(['graph', 'http', 'rdf', 'string'], function (graph, http, rdf, string
     var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
     var valid = false;
     try {
-      valid = rdf.validateLiteral(newValue.current.value, ractive.get(parent).range);
+      valid = ontology.validateLiteral(newValue.current.value, ractive.get(parent).range);
     } catch (e) {
       console.log(e);
       return;
@@ -103,7 +103,7 @@ requirejs(['graph', 'http', 'rdf', 'string'], function (graph, http, rdf, string
       {"Accept": "application/ld+json"},
     function (response) {
       ractive.set("resource_uri", uri);
-      var values = rdf.extractValues(JSON.parse(response.responseText));
+      var values = ontology.extractValues(JSON.parse(response.responseText));
       for (var n in ractive.get("inputs")) {
         var kp = "inputs." + n;
         var input = ractive.get(kp);
@@ -133,17 +133,17 @@ requirejs(['graph', 'http', 'rdf', 'string'], function (graph, http, rdf, string
   };
 
   var onOntologyLoad = function (response) {
-    var ontology = JSON.parse(response.responseText),
-        props = rdf.propsByClass(ontology, ractive.get("resource_type")),
+    var ont = JSON.parse(response.responseText),
+        props = ontology.propsByClass(ont, ractive.get("resource_type")),
         inputs = [];
 
-    ractive.set("ontology", ontology);
+    ractive.set("ontology", ont);
 
-    ractive.set("resource_label", rdf.resourceLabel(ontology, ractive.get("resource_type"), "no").toLowerCase());
+    ractive.set("resource_label", ontology.resourceLabel(ont, ractive.get("resource_type"), "no").toLowerCase());
 
     for (var i = 0; i < props.length; i++) {
       inputs.push({
-        predicate: rdf.resolveURI(ontology,  props[i]["@id"]),
+        predicate: ontology.resolveURI(ont,  props[i]["@id"]),
         range: props[i]["rdfs:range"]["@id"],
         label: props[i]["rdfs:label"][0]["@value"],
         values: [{old: { value: "", type: "", lang: "" },

@@ -1,4 +1,4 @@
-var ontology = {
+var example_ontology = {
   "@graph": [{
     "@id": "deichman:Person",
     "@type": "rdfs:Class"
@@ -61,16 +61,16 @@ var ontology = {
   }
 };
 
-define(['rdf'], function (rdf) {
+define(['ontology'], function (ontology) {
 
   describe("Parsing an ontology", function () {
     it("can filter properties that are valid for a class", function () {
-      workProps = rdf.propsByClass(ontology, "Work");
+      workProps = ontology.propsByClass(example_ontology, "Work");
       assert.equal(workProps.length, 5);
     });
 
     it("can resolve URIs against the supplied prefixes", function () {
-      assert.equal(rdf.resolveURI(ontology, "deichman:Work"), "http://192.168.50.12:8005/ontology#Work");
+      assert.equal(ontology.resolveURI(example_ontology, "deichman:Work"), "http://192.168.50.12:8005/ontology#Work");
     });
   });
 
@@ -80,7 +80,7 @@ define(['rdf'], function (rdf) {
         old: { value: "", datatype: "", lang: "" },
         current: { value: "a", datatype: "", lang: "no" }
       };
-      assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
         '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}');
     });
 
@@ -89,7 +89,7 @@ define(['rdf'], function (rdf) {
         old: { value: "b", datatype: "", lang: "" },
         current: { value: "a", datatype: "", lang: "no" }
       };
-      assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
         '[{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b"}},{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}]');
     });
 
@@ -98,7 +98,7 @@ define(['rdf'], function (rdf) {
         old: { value: "b", datatype: "", lang: "en" },
         current: { value: "", datatype: "", lang: "" }
       };
-      assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
         '{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en"}}');
     });
 
@@ -107,51 +107,51 @@ define(['rdf'], function (rdf) {
         old: { value: "", datatype: "", lang: "" },
         current: { value: "a", datatype: "http://a/mytype", lang: "" }
       };
-      assert.equal(rdf.createPatch("http://x.org/s/1", "http://x.org/p1", val),
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
         '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","datatype":"http://a/mytype"}}');
     });
   });
 
   describe("Validating RDF Literals", function () {
     it("validates xsd:string literals", function () {
-      assert(rdf.validateLiteral("æøå 世界", "http://www.w3.org/2001/XMLSchema#string"));
+      assert(ontology.validateLiteral("æøå 世界", "http://www.w3.org/2001/XMLSchema#string"));
     });
 
     it("validates rdf:langString literals", function () {
-      assert(rdf.validateLiteral("æøå 世界", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+      assert(ontology.validateLiteral("æøå 世界", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
     });
 
     it("validates a valid xsd:gYear", function () {
-      assert(rdf.validateLiteral("1981", "http://www.w3.org/2001/XMLSchema#gYear"));
-      assert(rdf.validateLiteral("50", "http://www.w3.org/2001/XMLSchema#gYear"));
-      assert(rdf.validateLiteral("-50", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert(ontology.validateLiteral("1981", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert(ontology.validateLiteral("50", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert(ontology.validateLiteral("-50", "http://www.w3.org/2001/XMLSchema#gYear"));
     });
 
     it("does not validate an invalid xsd:gYear", function () {
-      assert.notOk(rdf.validateLiteral("19999", "http://www.w3.org/2001/XMLSchema#gYear"));
-      assert.notOk(rdf.validateLiteral("+100", "http://www.w3.org/2001/XMLSchema#gYear"));
-      assert.notOk(rdf.validateLiteral("--100", "http://www.w3.org/2001/XMLSchema#gYear"));
-      assert.notOk(rdf.validateLiteral("200 b.c", "http://www.w3.org/2001/XMLSchema#gYear"));
-      assert.notOk(rdf.validateLiteral("500 f.kr", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert.notOk(ontology.validateLiteral("19999", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert.notOk(ontology.validateLiteral("+100", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert.notOk(ontology.validateLiteral("--100", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert.notOk(ontology.validateLiteral("200 b.c", "http://www.w3.org/2001/XMLSchema#gYear"));
+      assert.notOk(ontology.validateLiteral("500 f.kr", "http://www.w3.org/2001/XMLSchema#gYear"));
     });
 
     it("validates a valid xsd:nonNegativeInteger", function () {
-      assert(rdf.validateLiteral("0", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
-      assert(rdf.validateLiteral("99", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
-      assert(rdf.validateLiteral("+100", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
-      assert(rdf.validateLiteral("54343", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert(ontology.validateLiteral("0", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert(ontology.validateLiteral("99", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert(ontology.validateLiteral("+100", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert(ontology.validateLiteral("54343", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
     });
 
     it("does not validate an invalid xsd:nonNegativeInteger", function () {
-      assert.notOk(rdf.validateLiteral("-1", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
-      assert.notOk(rdf.validateLiteral("3.14", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
-      assert.notOk(rdf.validateLiteral("20e10", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
-      assert.notOk(rdf.validateLiteral("abc", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert.notOk(ontology.validateLiteral("-1", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert.notOk(ontology.validateLiteral("3.14", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert.notOk(ontology.validateLiteral("20e10", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
+      assert.notOk(ontology.validateLiteral("abc", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"));
     });
 
     it("throws an error if it doesn't handle the given datatype", function () {
       assert.throws(function () {
-        rdf.validateLiteral("abc", "http://example.org1/MyCustomDataType");
+        ontology.validateLiteral("abc", "http://example.org1/MyCustomDataType");
       },
            "don't know how to validate literal of range: <http://example.org1/MyCustomDataType>"
          );
@@ -162,7 +162,7 @@ define(['rdf'], function (rdf) {
   describe("Parsing JSON-LD", function () {
     it("converts the properties into a managble form", function () {
       assert.equal(
-        JSON.stringify(rdf.extractValues({
+        JSON.stringify(ontology.extractValues({
           "@id": "http://192.168.50.12:8005/work/w392735109936",
           "@type": "deichman:Work",
           "deichman:creator": "petter",
@@ -187,8 +187,8 @@ define(['rdf'], function (rdf) {
     });
 
     it("extracts the resource label in desired language", function () {
-      assert.equal(rdf.resourceLabel(ontology, "Work", "en"), "Work");
-      assert.equal(rdf.resourceLabel(ontology, "Work", "no"), "Verk");
+      assert.equal(ontology.resourceLabel(example_ontology, "Work", "en"), "Work");
+      assert.equal(ontology.resourceLabel(example_ontology, "Work", "no"), "Verk");
     });
   });
 
