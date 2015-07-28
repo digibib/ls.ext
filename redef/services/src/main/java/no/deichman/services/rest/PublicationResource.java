@@ -27,8 +27,11 @@ import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
+/**
+ * Responsibility: Expose publication as a r/w REST resource.
+ */
 @Path("/publication")
-public class PublicationResource {
+public final class PublicationResource {
 
     private static final String MIME_JSONLD = MimeType.JSONLD;
     private static final String ENCODING_UTF8 = "; charset=utf-8";

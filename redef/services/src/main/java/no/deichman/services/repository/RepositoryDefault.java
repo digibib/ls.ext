@@ -20,7 +20,10 @@ import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
-public class RepositoryDefault implements Repository {
+/**
+ * Responsibility: TODO.
+ */
+public final class RepositoryDefault implements Repository {
 
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private static final String UPDATE_URI = FUSEKI_PORT + "/ds/update";

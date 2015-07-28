@@ -24,6 +24,9 @@ import no.deichman.services.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
+/**
+ * Responsibility: TODO.
+ */
 public final class ServiceDefault implements Service {
 
     private final Repository repository;

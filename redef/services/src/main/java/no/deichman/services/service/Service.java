@@ -3,6 +3,9 @@ package no.deichman.services.service;
 import com.hp.hpl.jena.rdf.model.Model;
 import no.deichman.services.error.PatchParserException;
 
+/**
+ * Responsibility: TODO.
+ */
 public interface Service {
     
     void updateWork(String work);

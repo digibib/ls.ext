@@ -28,8 +28,11 @@ import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
+/**
+ * Responsibility: Expose Work as a r/w REST resource.
+ */
 @Path("/work")
-public class WorkResource {
+public final class WorkResource {
     private static final String MIME_JSONLD = JSONLD;
     private static final String ENCODING_UTF8 = "; charset=utf-8";
     private static final String MIME_LDPATCH_JSON = LDPATCHJSON;

@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 /**
- * Responsibility: TODO.
+ * Responsibility: Expose ontology as a REST resource.
  */
 @Path("ontology")
 public final class OntologyResource {

@@ -1,5 +1,8 @@
 package no.deichman.services.rest.utils;
 
+/**
+ * Responsibility: TODO.
+ */
 public final class MimeType {
 
     private MimeType() {}
