@@ -16,6 +16,10 @@ repositories {
     mavenCentral()
 }
 
+checkstyle {
+    configProperties = [samedir: "${rootDir}"]
+}
+
 def version_jetty = '9.2.10.v20150310'
 def version_jersey = '2.16'
 def version_jackson = '1.9.11'

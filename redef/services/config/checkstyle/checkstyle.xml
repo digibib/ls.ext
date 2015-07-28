@@ -12,7 +12,7 @@
     -->
 
     <module name="SuppressionFilter">
-        <property name="file" value="config/checkstyle/suppressions.xml"/>
+        <property name="file" value="${samedir}/config/checkstyle/suppressions.xml"/>
     </module>
 
     <!--property name="fileExtensions" value="java, properties, xml"/-->
