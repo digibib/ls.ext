@@ -11,7 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import no.deichman.services.error.PatchParserException;
-import no.deichman.services.kohaadapter.KohaAdapterMock;
+import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.Repository;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.uridefaults.BaseURIMock;
@@ -23,6 +24,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.marc4j.MarcReader;
+import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.Record;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ServiceDefaultTest {
     
@@ -32,7 +38,7 @@ public class ServiceDefaultTest {
     @Before
     public void setup(){
         repository = new RepositoryInMemory();
-        service = new ServiceDefault(new BaseURIMock(), repository, new KohaAdapterMock());
+        service = new ServiceDefault(new BaseURIMock(), repository, null);
     }
 
     @Test
@@ -73,10 +79,27 @@ public class ServiceDefaultTest {
         assertTrue(repository.askIfStatementExists(s));
     }
 
+    private Model modelForBiblio() { // TODO return much simpler model
+        Model model = ModelFactory.createDefaultModel();
+        Model m = ModelFactory.createDefaultModel();
+        InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
+        MarcReader reader = new MarcXmlReader(in);
+        Marc2Rdf marcRdf = new Marc2Rdf(new BaseURIMock());
+        while (reader.hasNext()) {
+            Record record = reader.next();
+            m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
+        }
+        model.add(m);
+        return model;
+    }
+
     @Test
     public void test_retrieve_work_items_by_id(){
-        Model m = service.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
-        RDFDataMgr.write(System.out, m, Lang.TURTLE);
+        KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
+        when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
+
+        Service myService = new ServiceDefault(new BaseURIMock(), repository, mockKohaAdapter);
+        Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
         Property p = ResourceFactory.createProperty("http://deichman.no/ontology#hasEdition");
         NodeIterator ni = m.listObjectsOfProperty(p);
         

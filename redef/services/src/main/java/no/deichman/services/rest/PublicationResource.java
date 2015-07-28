@@ -16,7 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import no.deichman.services.error.PatchParserException;
-import no.deichman.services.kohaadapter.KohaAdapterDefault;
 import no.deichman.services.repository.RepositoryDefault;
 import no.deichman.services.rest.utils.CORSProvider;
 import no.deichman.services.rest.utils.JSONLDCreator;
@@ -42,7 +41,7 @@ public final class PublicationResource {
     private final CORSProvider cors;
 
     public PublicationResource() {
-        this(new BaseURIDefault(), new ServiceDefault(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault()));
+        this(new BaseURIDefault(), new ServiceDefault(new BaseURIDefault(), new RepositoryDefault(), null));
     }
 
     public PublicationResource(BaseURI baseURI, Service service) {

@@ -3,7 +3,21 @@ package no.deichman.services.rest;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import no.deichman.services.kohaadapter.KohaAdapterMock;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
+import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURIMock;
@@ -11,28 +25,18 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Pattern;
-
-import static javax.ws.rs.core.Response.Status.CREATED;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-import static javax.ws.rs.core.Response.Status.NO_CONTENT;
-import static javax.ws.rs.core.Response.Status.OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
+import org.marc4j.MarcReader;
+import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.Record;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class WorkResourceTest {
 
@@ -42,7 +46,7 @@ public class WorkResourceTest {
     @Before
     public void setUp() throws Exception {
         bum = new BaseURIMock();
-        resource = new WorkResource(bum, new ServiceDefault(bum, new RepositoryInMemory(), new KohaAdapterMock()));
+        resource = new WorkResource(bum, new ServiceDefault(bum, new RepositoryInMemory(), null));
     }
 
     @Test
@@ -113,13 +117,32 @@ public class WorkResourceTest {
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
+    private Model modelForBiblio() { // TODO return much simpler model
+        Model model = ModelFactory.createDefaultModel();
+        Model m = ModelFactory.createDefaultModel();
+        InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
+        MarcReader reader = new MarcXmlReader(in);
+        Marc2Rdf marcRdf = new Marc2Rdf(new BaseURIMock());
+        while (reader.hasNext()) {
+            Record record = reader.next();
+            m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
+        }
+        model.add(m);
+        return model;
+    }
+
     @Test
     public void should_return_list_of_items(){
+        KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
+        when(mockKohaAdapter.getBiblio("1")).thenReturn(modelForBiblio());
+
+        WorkResource myResource = new WorkResource(bum, new ServiceDefault(bum, new RepositoryInMemory(), mockKohaAdapter));
+
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\",\"deichman:biblio\":\"1\"}}";
         String workId = "work_SHOULD_EXIST";
 
-        Response createResponse = resource.updateWork(work);
-        Response result = resource.getWorkItems(workId);
+        Response createResponse = myResource.updateWork(work);
+        Response result = myResource.getWorkItems(workId);
 
         assertEquals(OK.getStatusCode(), createResponse.getStatus());
         assertNotNull(result);

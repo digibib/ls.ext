@@ -20,7 +20,7 @@ import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
 /**
  * Responsibility: TODO.
  */
-class Marc2Rdf {
+public final class Marc2Rdf {
 
     private static final String DEICHMAN_NS_EXEMPLAR = "http://deichman.no/exemplar/";
     private static final String RDF_SYNTAX_NS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
