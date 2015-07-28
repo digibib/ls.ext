@@ -18,6 +18,7 @@ repositories {
 
 checkstyle {
     configProperties = [samedir: "${rootDir}"]
+    toolVersion = 5.9
 }
 
 def version_jetty = '9.2.10.v20150310'
@@ -61,15 +62,6 @@ task oneJar(type: OneJar) {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'com.puppycrawl.tools' && details.requested.name == 'checkstyle' && details.requested.version < '5.9') {
-            //prefer version that supports Java 8
-            details.useVersion '5.9'
-        }
-    }
 }
 
 buildscript {
