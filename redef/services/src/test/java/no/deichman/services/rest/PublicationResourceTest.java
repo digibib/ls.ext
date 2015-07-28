@@ -15,7 +15,6 @@ import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.kohaadapter.KohaAdapterMock;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.service.ServiceDefault;
 import no.deichman.services.uridefaults.BaseURI;
@@ -40,7 +39,7 @@ public class PublicationResourceTest {
     public void setUp() throws Exception {
         KohaAdapter notUsedHere = null;
         BaseURI baseURI = new BaseURIMock();
-        ServiceDefault service = new ServiceDefault(baseURI, new RepositoryInMemory(), new KohaAdapterMock());
+        ServiceDefault service = new ServiceDefault(baseURI, new RepositoryInMemory(), notUsedHere);
         resource = new PublicationResource(baseURI, service);
     }
 
