@@ -1,12 +1,15 @@
 Catalinker
 ==========
-Catalinker provides an HTML cataloguing interface that interacts with [Services](../services/README.md).
+Catalinker provides a browser-based cataloguing interface.
 
-## Server
+The catalinker has a client which runs in the browser, and a simple server which serves the static files needed in the client.
+The client interacts with [Services](../services/README.md) layer.
+
+## Server details
 
 The server is a very basic HTTP server which servers the static resources (html, css, javascript) for the catalinker and exposes some variables in a /config endpoint.
 
-We are considering to extend the server with a proxy for the services endpoints, so that the catalinker only would commuicate with localhost.
+(We are considering to extend the server with a proxy for the services endpoints, so that the catalinker only would communicate with localhost.)
 
 ### Technologies used
 
@@ -14,9 +17,9 @@ We are considering to extend the server with a proxy for the services endpoints,
  * Sinatra
  * webmock (test)
 
-## Client
+## Client details
 
-The client gets some inital resource adresses the /config endpoint, so that it knows who to communicate with. It then fetches the ontology and adapts the user interface according to the type of resource.
+The client gets some initial resource addresses from the /config endpoint of the server. It then fetches the ontology and adapts the user interface according to the type of resource.
 
 Catalinker communicates with Services using HTTP POST and PATCH requests.
 

@@ -1,9 +1,8 @@
-#Patron client (node.js).
-===
+# Patron client
 
-Patron client is a viewer application for data from [Services](https://github.com/digibib/ls.ext/blob/master/redef/services/README.md).
+Patron client is a browser-based viewer (for now) for data from [Services](../services/README.md).
 
-##Technologies
+## Technologies used
 
 * [Node.JS](https://nodejs.org/)
 * Server
@@ -11,13 +10,15 @@ Patron client is a viewer application for data from [Services](https://github.co
   * [Express](http://expressjs.com/)
 * Templating
   * [Handlebars](http://handlebarsjs.com/)
+* Testing
+  * [Chai](http://chaijs.com/)
+  * [Cheerio](https://github.com/cheeriojs/cheerio)
+  * [Router](https://github.com/tildeio/router.js/)
 
-##Testing
-
-* [Chai](http://chaijs.com/)
-* [Cheerio](https://github.com/cheeriojs/cheerio)
-* [Router](https://github.com/tildeio/router.js/)
-
-##Build
+## Build
 
 See [Makefile](Makefile).
+
+## Troubleshooting
+
+Logging: TBW...
