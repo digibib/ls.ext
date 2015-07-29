@@ -29,10 +29,10 @@
   rdfs:domain :Work ;
   rdfs:range xsd:gYear .
 
-:biblio a rdfs:Property ;
-  rdfs:label "Biblio"@en ;
-  rdfs:label "Biblio"@no ;
-  rdfs:domain :Work ;
+:recordID a rdfs:Property ;
+  rdfs:label "Record ID"@en ;
+  rdfs:label "Post ID"@no ;
+  rdfs:domain :Publication ;
   rdfs:range xsd:nonNegativeInteger .
 
 :language a rdfs:Property ;
