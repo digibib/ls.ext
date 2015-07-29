@@ -19,7 +19,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.RepositoryInMemory;
-import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -46,7 +46,7 @@ public class WorkResourceTest {
     @Before
     public void setUp() throws Exception {
         bum = new BaseURIMock();
-        resource = new WorkResource(bum, new ServiceDefault(bum, new RepositoryInMemory(), null));
+        resource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), null));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class WorkResourceTest {
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("1")).thenReturn(modelForBiblio());
 
-        WorkResource myResource = new WorkResource(bum, new ServiceDefault(bum, new RepositoryInMemory(), mockKohaAdapter));
+        WorkResource myResource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), mockKohaAdapter));
 
         String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\",\"deichman:biblio\":\"1\"}}";
         String workId = "work_SHOULD_EXIST";

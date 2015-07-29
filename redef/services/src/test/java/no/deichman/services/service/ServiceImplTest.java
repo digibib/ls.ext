@@ -30,20 +30,20 @@ import org.marc4j.marc.Record;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ServiceDefaultTest {
+public class ServiceImplTest {
     
-    private ServiceDefault service;
+    private ServiceImpl service;
     private Repository repository;
 
     @Before
     public void setup(){
         repository = new RepositoryInMemory();
-        service = new ServiceDefault(new BaseURIMock(), repository, null);
+        service = new ServiceImpl(new BaseURIMock(), repository, null);
     }
 
     @Test
     public void should_have_default_constructor() {
-        assertNotNull(new ServiceDefault());
+        assertNotNull(new ServiceImpl());
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ServiceDefaultTest {
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        Service myService = new ServiceDefault(new BaseURIMock(), repository, mockKohaAdapter);
+        Service myService = new ServiceImpl(new BaseURIMock(), repository, mockKohaAdapter);
         Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
         Property p = ResourceFactory.createProperty("http://deichman.no/ontology#hasEdition");
         NodeIterator ni = m.listObjectsOfProperty(p);

@@ -24,7 +24,7 @@ import static no.deichman.services.rest.utils.MimeType.JSONLD;
 import static no.deichman.services.rest.utils.MimeType.LDPATCHJSON;
 import no.deichman.services.rest.utils.PATCH;
 import no.deichman.services.service.Service;
-import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
@@ -43,7 +43,7 @@ public final class WorkResource {
     private final CORSProvider cors;
 
     public WorkResource() {
-        this(new BaseURIDefault(), new ServiceDefault(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault()));
+        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault()));
     }
 
     public WorkResource(BaseURI baseURI, Service service) {

@@ -27,18 +27,18 @@ import no.deichman.services.uridefaults.BaseURIDefault;
 /**
  * Responsibility: TODO.
  */
-public final class ServiceDefault implements Service {
+public final class ServiceImpl implements Service {
 
     private final Repository repository;
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
     private final Property biblioId;
 
-    public ServiceDefault(){
+    public ServiceImpl(){
         this(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault());
     }
 
-    public ServiceDefault(BaseURI baseURI, Repository repository, KohaAdapter kohaAdapter){
+    public ServiceImpl(BaseURI baseURI, Repository repository, KohaAdapter kohaAdapter){
         this.baseURI = baseURI;
         biblioId = ResourceFactory.createProperty(this.baseURI.getOntologyURI() + "biblio");
         this.repository = repository;

@@ -22,7 +22,7 @@ import no.deichman.services.rest.utils.JSONLDCreator;
 import no.deichman.services.rest.utils.MimeType;
 import no.deichman.services.rest.utils.PATCH;
 import no.deichman.services.service.Service;
-import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 
@@ -41,7 +41,7 @@ public final class PublicationResource {
     private final CORSProvider cors;
 
     public PublicationResource() {
-        this(new BaseURIDefault(), new ServiceDefault(new BaseURIDefault(), new RepositoryDefault(), null));
+        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), null));
     }
 
     public PublicationResource(BaseURI baseURI, Service service) {

@@ -16,7 +16,7 @@ import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.RepositoryInMemory;
-import no.deichman.services.service.ServiceDefault;
+import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -39,7 +39,7 @@ public class PublicationResourceTest {
     public void setUp() throws Exception {
         KohaAdapter notUsedHere = null;
         BaseURI baseURI = new BaseURIMock();
-        ServiceDefault service = new ServiceDefault(baseURI, new RepositoryInMemory(), notUsedHere);
+        ServiceImpl service = new ServiceImpl(baseURI, new RepositoryInMemory(), notUsedHere);
         resource = new PublicationResource(baseURI, service);
     }
 
