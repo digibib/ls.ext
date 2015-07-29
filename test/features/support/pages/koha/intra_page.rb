@@ -11,9 +11,11 @@ class IntraPage < PageRoot
     form.submit
 
     # Sometimes we're a bit quick and reindexing hasn't completed so we'll retry ONCE
-    if @browser.div(:id => 'searchheader').h3.text == ("No results found")
-      sleep(2)
-      @browser.refresh
+    if @browser.div(:id => 'searchheader').h3.exists?
+      if @browser.div(:id => 'searchheader').h3.text == ("No results found")
+        sleep(2)
+        @browser.refresh
+      end
     end
 
     @site.BiblioDetail
