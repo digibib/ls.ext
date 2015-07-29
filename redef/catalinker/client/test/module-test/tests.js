@@ -65,29 +65,3 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 4, function (test) {
   });
 
 });
-
-casper.test.begin("Catalinker grensesnitt (bok)", 4, function (test) {
-  casper.start('http://127.0.0.1:7777/book', function () {
-    test.assertHttpStatus(200);
-    test.assertTitle("Katalogisering", "har riktig tittel");
-    casper.waitForText("Katalogisering av bok", function () {
-      test.assertSelectorHasText('h2[data-automation-id="page-heading"]', "Katalogisering av bok");
-    });
-  });
-
-  casper.waitFor(function check() {
-    return this.evaluate(function () {
-      return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value !== "";
-    });
-  }, function then() {
-    var resource_uri = this.evaluate(function () {
-      return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value;
-    });
-    test.assertEqual(resource_uri, "http://127.0.0.1:7777/book/1");
-  });
-
-  casper.run(function () {
-    test.done();
-  });
-
-});

@@ -33,10 +33,6 @@ get '/publication' do
   redirect '/cataloguing/publication'
 end
 
-get '/book' do
-  redirect '/cataloguing/book'
-end
-
 __END__
 
 @@ layout

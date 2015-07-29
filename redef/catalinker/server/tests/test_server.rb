@@ -37,10 +37,4 @@ class TestServer < Test::Unit::TestCase
     assert last_response.ok?
   end
 
-  def test_it_has_a_book_page
-    get '/book'
-    follow_redirect!
-    assert last_response.ok?
-  end
-
 end
