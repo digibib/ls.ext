@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.kohaadapter.KohaAdapterDefault;
+import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.patch.PatchObject;
 import no.deichman.services.patch.PatchParser;
@@ -35,7 +35,7 @@ public final class ServiceImpl implements Service {
     private final Property biblioId;
 
     public ServiceImpl(){
-        this(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault());
+        this(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterImpl());
     }
 
     public ServiceImpl(BaseURI baseURI, Repository repository, KohaAdapter kohaAdapter){

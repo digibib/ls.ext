@@ -25,7 +25,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 /**
  * Responsibility: TODO.
  */
-public final class KohaAdapterDefault implements KohaAdapter {
+public final class KohaAdapterImpl implements KohaAdapter {
 
     private static final String KOHA_PORT = System.getProperty("KOHA_PORT", "http://192.168.50.12:8081");
     private static final String KOHA_USER = System.getProperty("KOHA_USER", "admin");
@@ -34,7 +34,7 @@ public final class KohaAdapterDefault implements KohaAdapter {
 
     private NewCookie sessionCookie;
 
-    public KohaAdapterDefault() {
+    public KohaAdapterImpl() {
         System.out.println("Koha adapter started with KOHA_PORT: " + KOHA_PORT);
     }
 

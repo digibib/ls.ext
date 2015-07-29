@@ -16,7 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import no.deichman.services.kohaadapter.KohaAdapterDefault;
+import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.repository.RepositoryDefault;
 import no.deichman.services.rest.utils.CORSProvider;
 import no.deichman.services.rest.utils.JSONLDCreator;
@@ -43,7 +43,7 @@ public final class WorkResource {
     private final CORSProvider cors;
 
     public WorkResource() {
-        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterDefault()));
+        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterImpl()));
     }
 
     public WorkResource(BaseURI baseURI, Service service) {
