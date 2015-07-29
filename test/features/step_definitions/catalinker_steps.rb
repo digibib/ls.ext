@@ -205,17 +205,17 @@ Given(/^at det finnes en utgivelse koplet til verket$/) do
 end
 
 When(/^jeg registrerer opplysninger om boka$/) do
-  page = @Site.RegBook.visit
+  page = @site.RegBook.visit
 
-#  @context[:book_department] = 'Hjørnebiblioteket'
-#  @context[:book_barcode] = '123123123123123'
+  @context[:book_department] = 'Hjørnebiblioteket'
+  @context[:book_barcode] = '123123123123123'
 
-#  page.add_prop('http://192.168.50.12:8005/ontology#department', @context[:book_department])
-#  page.add_prop('http://192.168.50.12:8005/ontology#barcode', @context[:book_barcode])
+  page.add_prop('http://192.168.50.12:8005/ontology#belongsTo', @context[:book_department])
+  page.add_prop('http://192.168.50.12:8005/ontology#barcode', @context[:book_barcode])
 end
 
 When(/^jeg knytter boka til utgivelsen$/) do
-  page = @Site.RegBook
+  page = @site.RegBook
   page.add_prop('http://192.168.50.12:8005/ontology#copyOf', @context[:publication_identifier])
 end
 
