@@ -1,5 +1,6 @@
 package no.deichman.services.repository;
 
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -12,6 +13,7 @@ import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -110,11 +112,18 @@ public final class RepositoryInMemory implements Repository {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String id = uriGenerator.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
+        String publicationURI = uriGenerator.toString();
         Statement publicationResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(uriGenerator.toString()),
+                ResourceFactory.createResource(publicationURI),
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
+        String recordID = "123";
+        Statement recordLink = ResourceFactory.createStatement(
+                ResourceFactory.createResource(publicationURI),
+                ResourceFactory.createProperty(bud.getOntologyURI() + "recordID"),
+                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDnonNegativeInteger));
         tempModel.add(publicationResource);
+        tempModel.add(recordLink);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));

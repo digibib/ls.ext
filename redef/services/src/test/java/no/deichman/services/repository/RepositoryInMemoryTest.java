@@ -1,5 +1,9 @@
 package no.deichman.services.repository;
 
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -7,6 +11,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.core.DatasetImpl;
 import com.hp.hpl.jena.vocabulary.RDF;
 import no.deichman.services.patch.Patch;
+import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,13 +30,14 @@ public class RepositoryInMemoryTest {
     private Statement testWorkStmt;
     private Statement testPublicationStmt;
     private List<Statement> stmts;
+    private BaseURI bud;
 
 
 
     @Before
     public void setup(){
         repository = new RepositoryInMemory();
-        BaseURIMock bud = new BaseURIMock();
+        bud = new BaseURIMock();
         testWorkStmt = ResourceFactory.createStatement(
                         ResourceFactory.createResource(bud.getWorkURI() + "test_id_123"),
                         ResourceFactory.createProperty("http://example.com/ontology/name"),
@@ -66,9 +72,18 @@ public class RepositoryInMemoryTest {
     @Test
     public void test_create_publication(){
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        assertNotNull(repository.createPublication(publication));
+        String publicationId = repository.createPublication(publication);
+        assertNotNull(publicationId);
     }
 
+    @Test
+    public void test_publication_has_record_id() {
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
+        String publicationId = repository.createPublication(publication);
+        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + bud.getOntologyURI() +"recordID> ?value .}");
+        QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
+        assertTrue(qexec.execAsk());
+    }
     @Test
     public void test_add_data(){
         Model testModel = ModelFactory.createDefaultModel();
