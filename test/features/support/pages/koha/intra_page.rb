@@ -9,6 +9,13 @@ class IntraPage < PageRoot
     form = @browser.form(:id => "cat-search-block")
     form.text_field(:id => "search-form").set query
     form.submit
+
+    # Sometimes we're a bit quick and reindexing hasn't completed so we'll retry ONCE
+    if @browser.div(:id => 'searchheader').h3.text == ("No results found")
+      sleep(2)
+      @browser.refresh
+    end
+
     @site.BiblioDetail
   end
 

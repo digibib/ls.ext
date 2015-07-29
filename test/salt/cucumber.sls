@@ -51,7 +51,7 @@ install_chromedriver:
 
 cucumber:
   gem.installed:
-    - version: 1.3.19 # tests broke because of 2.0.0?
+    - version: 2.0.2
 
 selenium-webdriver:
   gem.installed:

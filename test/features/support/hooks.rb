@@ -44,7 +44,7 @@ After do # The final hook
 end
 
 def title_of(scenario)
-  (defined? scenario.title) ? scenario.title : scenario.scenario_outline.title
+  (defined? scenario.name) ? scenario.name : scenario.scenario_outline.name
 end
 
 After do |scenario| # cleanup based on @cleanup - in reverse order
