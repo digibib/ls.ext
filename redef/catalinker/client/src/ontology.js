@@ -20,7 +20,7 @@
     var res = [];
     ontology["@graph"].forEach(function (p) {
       if (p["@type"] === "rdfs:Property") {
-        if (p["rdfs:domain"] === undefined) {
+        if (p["rdfs:domain"] === undefined || p["rdfs:domain"]["@id"] === "rdfs:Class") {
           res.push(p);
         } else if (Array.isArray(p["rdfs:domain"])) {
           p["rdfs:domain"].forEach(function (q) {

@@ -35,7 +35,7 @@ var example_ontology = {
     "@id": "deichman:creator",
     "@type": "rdfs:Property",
     "rdfs:domain": {
-      "@id": "deichman:Work"
+      "@id": "rdfs:Class"
     },
     "rdfs:range": {
       "@id": "deichman:Person"
