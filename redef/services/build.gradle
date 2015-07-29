@@ -62,7 +62,7 @@ task wrapper(type: Wrapper) {
 
 checkstyle {
     configProperties = [samedir: "${rootDir}"]
-    toolVersion = 5.9
+    toolVersion = 6.5
 }
 
 buildscript {
