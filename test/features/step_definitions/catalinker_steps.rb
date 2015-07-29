@@ -181,7 +181,6 @@ end
 When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   page = @site.RegPublication.visit
 
-  @context[:publication_identifier] = page.get_id()
   @context[:publication_format] = 'Bok'
   @context[:publication_language] = 'Bokmål'
   @context[:publication_name] = 'Blæh'
@@ -195,30 +194,4 @@ end
 When(/^jeg knytter utgivelsen til verket$/) do
   page = @site.RegPublication
   page.add_prop('http://192.168.50.12:8005/ontology#publicationOf', @context[:identifier])
-end
-
-Given(/^at det finnes en utgivelse koplet til verket$/) do
-  steps %Q{
-    Gitt jeg registrerer inn opplysninger om utgivelsen
-    Og jeg knytter utgivelsen til verket
-  }
-end
-
-When(/^jeg registrerer opplysninger om boka$/) do
-  page = @Site.RegBook.visit
-
-#  @context[:book_department] = 'Hjørnebiblioteket'
-#  @context[:book_barcode] = '123123123123123'
-
-#  page.add_prop('http://192.168.50.12:8005/ontology#department', @context[:book_department])
-#  page.add_prop('http://192.168.50.12:8005/ontology#barcode', @context[:book_barcode])
-end
-
-When(/^jeg knytter boka til utgivelsen$/) do
-  page = @Site.RegBook
-  page.add_prop('http://192.168.50.12:8005/ontology#copyOf', @context[:publication_identifier])
-end
-
-Then(/^vises opplysningene om boka på verkssiden$/) do
-  step "ser jeg en liste over eksemplarer knyttet til verket"
 end

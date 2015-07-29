@@ -81,8 +81,7 @@ module Paths
     paths = {
       :home => "/cataloguing",
       :work => "/work",
-      :publication => "/publication",
-      :book => "/book"
+      :publication => "/publication"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
