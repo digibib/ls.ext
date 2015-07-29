@@ -16,10 +16,10 @@ repositories {
     mavenCentral()
 }
 
-def version_jetty = '9.2.10.v20150310'
-def version_jersey = '2.16'
-def version_jackson = '1.9.11'
-def version_slf4j = '1.7.10'
+def version_jetty = '9.3.1.v20150714'
+def version_jersey = '2.19'
+def version_jackson = '1.9.13'
+def version_slf4j = '1.7.12'
 def version_jena = '2.13.0'
 def version_commons_lang = '2.6'
 def version_commons_io = '2.4'
