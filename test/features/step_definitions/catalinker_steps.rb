@@ -79,6 +79,11 @@ Gitt(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
 end
 
+Given(/^at det finnes en utgivelse$/) do
+  step "jeg registrerer inn opplysninger om utgivelsen"
+  step "jeg knytter utgivelsen til verket"
+end
+
 When(/^jeg klikker på lenken til en biblio\-kobling$/) do
   @browser.goto(@browser.div(:class => "http://192.168.50.12:8005/ontology#biblio").a(:class => "link").href)
 end
@@ -133,6 +138,14 @@ end
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
   @context[:year] = arg1
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+end
+
+When(/^jeg legger til et eksemplar av utgivelsen$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then(/^vises eksemplaret på verkssiden$/) do
+  pending # express the regexp above with the code you wish you had
 end
 
 Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|
