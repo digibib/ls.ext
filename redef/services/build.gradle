@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'gradle-one-jar'
 apply plugin: "checkstyle"
+apply plugin: 'com.github.ben-manes.versions'
 
 group = 'no.deichman.services'
 version = '1.0-SNAPSHOT'
@@ -67,11 +68,13 @@ checkstyle {
 buildscript {
     dependencies {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
     }
     repositories {
         mavenCentral()
         maven {
             url '~/.m2/repository'
         }
+        jcenter()
     }
 }
