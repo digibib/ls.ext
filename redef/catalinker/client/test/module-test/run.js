@@ -14,6 +14,9 @@ app.get("/work", function (req, res) {
 app.get("/publication", function (req, res) {
   res.sendFile(path.join(__dirname, './../../src/index.html'));
 });
+app.get("/book", function (req, res) {
+  res.sendFile(path.join(__dirname, './../../src/index.html'));
+});
 app.get("/config", function (req, res) {
   res.json({
     "kohaUri": "http://koha.deichman.no",
@@ -43,6 +46,16 @@ app.get("/ontology", function (req, res) {
         }, {
           "@language" : "en",
           "@value" : "Work"
+        }]
+      }, {
+        "@id" : "deichman:Book",
+        "@type" : "rdfs:Class",
+        "rdfs:label" : [{
+          "@language" : "no",
+          "@value" : "Bok"
+        }, {
+          "@language" : "en",
+          "@value" : "Book"
         }]
       }, {
         "@id" : "deichman:biblio",
@@ -178,7 +191,13 @@ app.post("/publication", function (req, res) {
 app.patch("/publication/1", function (req, res) {
   res.send(); // PATCH always 200 OK
 });
-
+app.post("/book", function (req, res) {
+  res.setHeader("location", "http://127.0.0.1:7777/book/1");
+  res.send();
+});
+app.patch("/book/1", function (req, res) {
+  res.send(); // PATCH always 200 OK
+});
 
 // Launches the CasperJS test suite in a subprocess
 var ps = cp.spawn('casperjs', ['--log-level=debug', 'test', 'test/module-test/tests.js']);
