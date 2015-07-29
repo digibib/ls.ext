@@ -1,6 +1,6 @@
 python-pip:
   pkg.installed:
-    - unless: pip -v # if pip works leave it alone
+    - unless: pip -V # if pip works leave it alone
 
 dockerpy-prereqs:
   pkg.installed:
