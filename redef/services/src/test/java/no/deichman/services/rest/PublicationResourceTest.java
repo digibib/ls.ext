@@ -3,6 +3,8 @@ package no.deichman.services.rest;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +37,16 @@ public class PublicationResourceTest {
 
     private PublicationResource resource;
 
+    private String createTestPublicationJSON(String id) {
+        return "{\"@context\": "
+                + "{\"dcterms\": \"http://purl.org/dc/terms/\","
+                + "\"deichman\": \"http://deichman.no/ontology#\"},"
+                + "\"@graph\": "
+                + "{\"@id\": \"http://deichman.no/publication/" + id + "\","
+                + "\"@type\": \"deichman:Publication\","
+                + "\"dcterms:identifier\":\"" + id + "\"}}";
+    }
+
     @Before
     public void setUp() throws Exception {
         KohaAdapter notUsedHere = null;
@@ -50,19 +62,14 @@ public class PublicationResourceTest {
 
     @Test
     public void should_return_201_when_publication_created() throws URISyntaxException{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_EXIST\"}}";
-
-        Response result = resource.createPublication(publication);
-
+        Response result = resource.createPublication(createTestPublicationJSON("publication_SHOULD_EXIST"));
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
     }
 
     @Test
     public void should_return_the_new_publication() throws URISyntaxException{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_EXIST\"}}";
-
-        Response createResponse = resource.createPublication(publication);
+        Response createResponse = resource.createPublication(createTestPublicationJSON("publication_SHOULD_EXIST"));
 
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
 
@@ -76,8 +83,7 @@ public class PublicationResourceTest {
 
     @Test
     public void test_delete_publication() throws URISyntaxException{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_BE_PATCHABLE\"}}";
-        Response createResponse = resource.createPublication(publication);
+        Response createResponse = resource.createPublication(createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
         Response response = resource.deletePublication(publicationId);
         assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
@@ -112,8 +118,7 @@ public class PublicationResourceTest {
 
     @Test
     public void patch_should_return_status_400() throws Exception {
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_BE_PATCHABLE\"}}";
-        Response result = resource.createPublication(publication);
+        Response result = resource.createPublication(createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{}";
         try {
@@ -126,7 +131,7 @@ public class PublicationResourceTest {
 
     @Test
     public void patched_publication_should_persist_changes() throws Exception {
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Publication\",\"dcterms:identifier\":\"publication_SHOULD_BE_PATCHABLE\"}}";
+        String publication = createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE");
         Response result = resource.createPublication(publication);
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{"
@@ -139,18 +144,14 @@ public class PublicationResourceTest {
                 + "}";
         Response patchResponse = resource.patchPublication(publicationId,patchData);
         Model testModel = ModelFactory.createDefaultModel();
-        Model comparison = ModelFactory.createDefaultModel();
         String response = patchResponse.getEntity().toString();
         InputStream in = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(testModel, in, Lang.JSONLD);
-        String adaptedPublication = publication.replace("/publication_SHOULD_BE_PATCHABLE", "/" + publicationId);
-        InputStream in2 = new ByteArrayInputStream(adaptedPublication.getBytes(StandardCharsets.UTF_8));
-        RDFDataMgr.read(comparison,in2, Lang.JSONLD);
-        comparison.add(ResourceFactory.createStatement(
+        Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(result.getLocation().toString()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#color"), 
-                ResourceFactory.createPlainLiteral("red")));
-        assertTrue(testModel.isIsomorphicWith(comparison));
+                ResourceFactory.createPlainLiteral("red"));
+        assertTrue(testModel.contains(s));
     }
 
     @Test(expected = NotFoundException.class)
