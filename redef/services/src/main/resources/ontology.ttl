@@ -11,10 +11,6 @@
   rdfs:label "Publication"@en ;
   rdfs:label "Utgivelse"@no .
 
-:Book a rdfs:Class ;
-  rdfs:label "Book"@en ;
-  rdfs:label "Bok"@no .
-
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
