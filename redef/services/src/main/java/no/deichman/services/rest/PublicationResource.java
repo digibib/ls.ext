@@ -54,8 +54,8 @@ public final class PublicationResource {
     @POST
     @Consumes(MIME_JSONLD)
     public Response createPublication(String publication) throws URISyntaxException {
-        String workId = service.createPublication(publication);
-        URI location = new URI(workId);
+        String publicationId = service.createPublication(publication);
+        URI location = new URI(publicationId);
 
         return Response.created(location)
                        .header("Access-Control-Allow-Origin", "*")
