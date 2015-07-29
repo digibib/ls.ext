@@ -27,19 +27,26 @@ import static javax.ws.rs.core.Response.Status.OK;
  */
 public final class KohaAdapterImpl implements KohaAdapter {
 
-    private static final String KOHA_PORT = System.getProperty("KOHA_PORT", "http://192.168.50.12:8081");
+    private static final String DEFAULT_KOHA_PORT = "http://192.168.50.12:8081";
     private static final String KOHA_USER = System.getProperty("KOHA_USER", "admin");
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_PASSWORD", "secret");
-    private static final String SESSION_COOKIE_KEY = "CGISESSID";
+    public static final String SESSION_COOKIE_KEY = "CGISESSID";
+
+    private final String kohaPort;
 
     private NewCookie sessionCookie;
 
+    KohaAdapterImpl(String kohaPort) {
+        this.kohaPort = kohaPort;
+        System.out.println("Koha adapter started with kohaPort: " + kohaPort);
+    }
+
     public KohaAdapterImpl() {
-        System.out.println("Koha adapter started with KOHA_PORT: " + KOHA_PORT);
+        this(System.getProperty("KOHA_PORT", DEFAULT_KOHA_PORT));
     }
 
     private void login() {
-        String url = KOHA_PORT + "/cgi-bin/koha/svc/authentication";
+        String url = kohaPort + "/cgi-bin/koha/svc/authentication";
 
         Form form = new Form();
         form.param("userid", KOHA_USER);
@@ -80,7 +87,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     private Response requestItems(String id) {
         Client client = ClientBuilder.newClient();
-        String url = KOHA_PORT + "/cgi-bin/koha/svc/bib/" + id + "?items=1";
+        String url = kohaPort + "/cgi-bin/koha/svc/bib/" + id + "?items=1";
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_XML);
         invocationBuilder.cookie(sessionCookie.toCookie());
