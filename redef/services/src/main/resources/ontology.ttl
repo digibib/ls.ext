@@ -18,7 +18,7 @@
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Work, :Publication ;
+  rdfs:domain rdfs:Class ;
   rdfs:range rdf:langString .
 
 :creator a rdfs:Property ;
@@ -56,15 +56,3 @@
   rdfs:label "Utgivelse av"@no ;
   rdfs:domain :Publication ;
   rdfs:range :Work .
-
-:belongsTo a rdfs:Property ;
-  rdfs:label "Belongs to"@en ;
-  rdfs:label "Hører til"@no ;
-  rdfs:domain :Book ;
-  rdfs:range xsd:string .
-
-:barcode a rdfs:Property ;
-  rdfs:label "Barcode"@en ;
-  rdfs:label "Strekkode"@no ;
-  rdfs:domain :Book ;
-  rdfs:range xsd:string .
