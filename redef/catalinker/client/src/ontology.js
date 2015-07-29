@@ -17,11 +17,23 @@
   // This includes properties with unspecified domain (applicable for all classes), and those
   // with specified range as the given class.
   function propsByClass(ontology, cls) {
-    return ontology["@graph"].filter(function (e) {
-      return (e["@type"] == "rdfs:Property" &&
-        (e["rdfs:domain"] === undefined ||
-          e["rdfs:domain"]["@id"] === "rdfs:Class" || e["rdfs:domain"]["@id"] == "deichman:" + cls));
+    var res = [];
+    ontology["@graph"].forEach(function (p) {
+      if (p["@type"] === "rdfs:Property") {
+        if (p["rdfs:domain"] === undefined) {
+          res.push(p);
+        } else if (Array.isArray(p["rdfs:domain"])) {
+          p["rdfs:domain"].forEach(function (q) {
+            if (q["@id"] === ("deichman:" + cls)) {
+              res.push(p);
+            }
+          });
+        } else if (p["rdfs:domain"]["@id"] === ("deichman:" + cls)) {
+          res.push(p);
+        }
+      }
     });
+    return res;
   }
 
   // resolveURI resolves a URI in prefixed form to its full form, according to prefixes specified

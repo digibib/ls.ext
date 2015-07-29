@@ -13,6 +13,16 @@ var example_ontology = {
       "@value": "Work"
     }]
   }, {
+    "@id": "deichman:Book",
+    "@type": "rdfs:Class",
+    "rdfs:label": [{
+      "@language": "no",
+      "@value": "Bok"
+    }, {
+      "@language": "en",
+      "@value": "Book"
+    }]
+  }, {
     "@id": "deichman:biblio",
     "@type": "rdfs:Property",
     "rdfs:domain": {
@@ -39,9 +49,11 @@ var example_ontology = {
   }, {
     "@id": "deichman:name",
     "@type": "rdfs:Property",
-    "rdfs:domain": {
-      "@id": "rdfs:Class"
-    },
+    "rdfs:domain": [{
+      "@id" : "deichman:Publication"
+    }, {
+      "@id" : "deichman:Work"
+    }],
     "rdfs:range": {
       "@id": "http://www.w3.org/2001/XMLSchema#string"
     }
