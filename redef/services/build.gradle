@@ -63,7 +63,9 @@ task wrapper(type: Wrapper) {
 
 checkstyle {
     configProperties = [samedir: "${rootDir}"]
-    toolVersion = 6.5
+    // Cannot go higher as 6.8 breaks compatibility with the current Gradle checkstyle plugin
+    // See change to ChekStyleTask here: http://checkstyle.sourceforge.net/releasenotes.html#Release_6.8
+    toolVersion = 6.7
 }
 
 buildscript {
