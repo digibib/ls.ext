@@ -53,6 +53,11 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
 
   last_cleanup_exception = nil
 
+  if @browser && @browser.driver.manage.logs.get("browser").length > 0
+    STDOUT.puts "--------------- Messages to browser console:"
+    STDOUT.puts @browser.driver.manage.logs.get "browser"
+  end
+
   STDOUT.puts "--------------- Cleanup: #{title_of(scenario)} "
   step "at jeg er logget inn som adminbruker" if @cleanup.length > 0 # TODO Only relevant for Koha-related cleanups
   @cleanup.reverse.each do |hash|
