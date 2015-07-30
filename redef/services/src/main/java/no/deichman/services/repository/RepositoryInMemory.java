@@ -109,6 +109,8 @@ public final class RepositoryInMemory implements Repository {
 
 
     public String createPublication(String publication) {
+        String recordID = "123";
+
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String id = uriGenerator.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
@@ -117,11 +119,10 @@ public final class RepositoryInMemory implements Repository {
                 ResourceFactory.createResource(publicationURI),
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
-        String recordID = "123";
         Statement recordLink = ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationURI),
                 ResourceFactory.createProperty(bud.getOntologyURI() + "recordID"),
-                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDnonNegativeInteger));
+                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
         tempModel.add(publicationResource);
         tempModel.add(recordLink);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);

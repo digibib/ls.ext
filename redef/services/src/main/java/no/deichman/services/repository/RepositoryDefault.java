@@ -1,5 +1,6 @@
 package no.deichman.services.repository;
 
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -93,14 +94,20 @@ public final class RepositoryDefault implements Repository {
 
     @Override
     public String createPublication(String publication) {
+        String recordID = "123";
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String id = uriGenerator.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(uriGenerator.toString()),
+                ResourceFactory.createResource(id),
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
+        Statement recordLink = ResourceFactory.createStatement(
+                ResourceFactory.createResource(id),
+                ResourceFactory.createProperty(bud.getOntologyURI() + "recordID"),
+                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
         tempModel.add(publicationResource);
+        tempModel.add(recordLink);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
