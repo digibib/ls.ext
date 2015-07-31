@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'eclipse'
 apply plugin: 'gradle-one-jar'
 apply plugin: "checkstyle"
 apply plugin: 'com.github.ben-manes.versions'
