@@ -27,6 +27,7 @@ KOHA_URL      ?= http://192.168.50.12:8081
 KOHA_USER     ?= admin
 KOHA_PASSWORD ?= secret
 FUSEKI_URL    ?= http://192.168.50.12:3030
+DATA_BASEURI  ?= http://192.168.50.12:8005
 
 run-alternative: build rm
 	sudo docker run -d -p 8080:8080 \
@@ -34,6 +35,7 @@ run-alternative: build rm
 		-e KOHA_USER=$(KOHA_USER) \
 		-e KOHA_PASSWORD=$(KOHA_PASSWORD) \
 		-e FUSEKI_URL=$(FUSEKI_URL) \
+		-e DATA_BASEURI=$(DATA_BASEURI) \
 		--name $(CONTAINER) $(IMAGE)
 
 rm: stop

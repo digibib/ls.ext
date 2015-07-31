@@ -6,7 +6,7 @@ package no.deichman.services.uridefaults;
 public final class BaseURIDefault extends BaseURI {
 
     public String getBaseURI() {
-        return System.getenv("DATA_BASEURI");
+        return System.getProperty("DATA_BASEURI");
     }
 
 }
