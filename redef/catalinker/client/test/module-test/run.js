@@ -8,12 +8,15 @@ app.use("/", express.static(path.join(__dirname, './../../src')));
 app.use("/", express.static(path.join(__dirname, './../../lib')));
 
 var server = app.listen(7777);
+
 app.get("/work", function (req, res) {
   res.sendFile(path.join(__dirname, './../../src/index.html'));
 });
+
 app.get("/publication", function (req, res) {
   res.sendFile(path.join(__dirname, './../../src/index.html'));
 });
+
 app.get("/config", function (req, res) {
   res.json({
     "kohaUri": "http://koha.deichman.no",
@@ -21,6 +24,7 @@ app.get("/config", function (req, res) {
     "resourceApiUri": "http://127.0.0.1:7777/"
   });
 });
+
 app.get("/ontology", function (req, res) {
   res.json(
     {
@@ -164,17 +168,44 @@ app.get("/ontology", function (req, res) {
     }
   );
 });
+
 app.post("/work", function (req, res) {
   res.setHeader("location", "http://127.0.0.1:7777/work/1");
   res.send();
 });
+
 app.patch("/work/1", function (req, res) {
   res.send(); // PATCH always 200 OK
 });
+
+app.get("/work/1", function (req, res) {
+  res.send(JSON.stringify(
+    {
+      "@id" : "http://127.0.0.1:7777/work/1",
+      "@type" : "deichman:Work",
+      "@context" : {
+        "deichman" : "http://192.168.50.12:8005/ontology#"
+      }
+    }));
+});
+
 app.post("/publication", function (req, res) {
   res.setHeader("location", "http://127.0.0.1:7777/publication/1");
   res.send();
 });
+
+app.get("/publication/1", function (req, res) {
+  res.send(JSON.stringify(
+    {
+      "@id" : "http://127.0.0.1:7777/publication/1",
+      "@type" : "deichman:Publication",
+      "deichman:recordID" : "1001",
+      "@context" : {
+        "deichman" : "http://192.168.50.12:8005/ontology#"
+      }
+    }));
+});
+
 app.patch("/publication/1", function (req, res) {
   res.send(); // PATCH always 200 OK
 });

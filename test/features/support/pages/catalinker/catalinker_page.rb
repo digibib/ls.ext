@@ -6,7 +6,10 @@ class CatalinkerPage < PageRoot
 
     def visit_sub_page(page)
       @browser.goto catalinker(page)
-      Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
+      Watir::Wait.until {
+        @browser.url != catalinker(page) &&       # wait until we have been redirected
+        @browser.div(:id => "save-stat").present? # wait until dom-tree has been populated
+      }
       self
     end
 

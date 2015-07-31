@@ -8,7 +8,11 @@ function addValue(casper, property, value) {
 }
 
 casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
-  casper.start('http://127.0.0.1:7777/work', function () {
+  casper.start('http://127.0.0.1:7777/work');
+
+  casper.waitFor(function check() {
+    return this.getCurrentUrl() !== 'http://127.0.0.1:7777/work'; // make sure we have been redirected
+  }, function then() {
     test.assertHttpStatus(200);
     test.assertTitle("Katalogisering", "har riktig tittel");
     casper.waitForText("Katalogisering av verk", function () {
@@ -39,9 +43,12 @@ casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
 
 });
 
-
 casper.test.begin("Catalinker grensesnitt (utgivelse)", 4, function (test) {
-  casper.start('http://127.0.0.1:7777/publication', function () {
+  casper.start('http://127.0.0.1:7777/publication');
+
+  casper.waitFor(function check() {
+    return this.getCurrentUrl() !== 'http://127.0.0.1:7777/publication'; // make sure we have been redirected
+  }, function then() {
     test.assertHttpStatus(200);
     test.assertTitle("Katalogisering", "har riktig tittel");
     casper.waitForText("Katalogisering av utgivelse", function () {

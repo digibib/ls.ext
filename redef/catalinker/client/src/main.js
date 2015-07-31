@@ -112,7 +112,12 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
         }
       }
 
-      ractive.set("save_status", "åpnet eksisterende ressurs");
+      if (document.referrer === location.origin + location.pathname) {
+        // We've been redirected from create new resource page
+        ractive.set("save_status", "ny ressurs");
+      } else {
+        ractive.set("save_status", "åpnet eksisterende ressurs");
+      }
     },
     function (response) {
       console.log(response);
@@ -125,7 +130,8 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
       {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
        "{}",
     function (response) {
-      ractive.set("resource_uri", response.getResponseHeader("Location"));
+      // now that the resource exists - redirect to load the new resource
+      window.location.replace(location.href + "?resource=" + response.getResponseHeader("Location"));
     },
     function (response) {
       console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + response);
