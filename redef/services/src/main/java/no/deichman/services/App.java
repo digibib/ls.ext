@@ -40,6 +40,9 @@ public final class App {
         try {
             jettyServer.start();
             jettyServer.join();
+        } catch (Exception e) {
+            System.err.println("Embedded Jetty failed to start:");
+            e.printStackTrace(System.err);
         } finally {
             jettyServer.destroy();
         }
