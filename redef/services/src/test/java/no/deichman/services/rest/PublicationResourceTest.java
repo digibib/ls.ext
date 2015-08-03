@@ -4,7 +4,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -25,9 +23,12 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -91,31 +92,23 @@ public class PublicationResourceTest {
     }
 
     @Test
-    public void test_CORS_publication_base(){
-        String reqHeader = "application/ld+json";
-        Response reponse = resource.corsPublicationBase(reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    public void options_should_allow_POST_on_publication(){
+        Response response = resource.optionsPublication();
+        assertEquals(response.getHeaderString("Allow"), "POST");
     }
 
     @Test
-    public void test_CORS_publication_base_empty_request_header(){
-        String reqHeader = "";
-        Response response = resource.corsPublicationBase(reqHeader);
-        assert(response.getHeaderString("Access-Control-Allow-Headers") == null);
-        assertEquals(response.getHeaderString("Access-Control-Allow-Origin"),"*");
-        assertEquals(response.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    public void options_should_allow_methods_on_publication_item() {
+        Response response = resource.optionsPublicationItem();
+        assertThat(response.getHeaderString("Allow"),
+                allOf(
+                        containsString("GET"),
+                        containsString("POST"),
+                        containsString("DELETE")
+                )
+        );
     }
 
-    @Test
-    public void test_CORS_publication_id(){
-        String reqHeader = "application/ld+json";
-        Response reponse = resource.corsPublicationId(reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
-    }
 
     @Test
     public void patch_should_return_status_400() throws Exception {
@@ -150,7 +143,7 @@ public class PublicationResourceTest {
         RDFDataMgr.read(testModel, in, Lang.JSONLD);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(result.getLocation().toString()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#color"), 
+                ResourceFactory.createProperty("http://deichman.no/ontology#color"),
                 ResourceFactory.createPlainLiteral("red"));
         assertTrue(testModel.contains(s));
     }

@@ -6,7 +6,6 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -14,10 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.repository.RepositoryDefault;
-import no.deichman.services.rest.utils.CORSProvider;
 import no.deichman.services.rest.utils.JSONLDCreator;
 import no.deichman.services.rest.utils.MimeType;
 import no.deichman.services.rest.utils.PATCH;
@@ -38,7 +35,6 @@ public final class PublicationResource {
     private final Service service;
     private final BaseURI baseURI;
     private final JSONLDCreator jsonldCreator;
-    private final CORSProvider cors;
 
     public PublicationResource() {
         this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), null));
@@ -48,7 +44,6 @@ public final class PublicationResource {
         this.service = service;
         this.baseURI = baseURI;
         jsonldCreator = new JSONLDCreator(baseURI);
-        cors = new CORSProvider();
     }
 
     @POST
@@ -57,12 +52,7 @@ public final class PublicationResource {
         String publicationId = service.createPublication(publication);
         URI location = new URI(publicationId);
 
-        return Response.created(location)
-                       .header("Access-Control-Allow-Origin", "*")
-                       .header("Access-Control-Allow-Methods", "POST")
-                       .header("Access-Control-Expose-Headers", "Location")
-                       .allow("OPTIONS")
-                       .build();
+        return Response.created(location).build();
     }
 
     @GET
@@ -75,11 +65,7 @@ public final class PublicationResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(jsonldCreator.asJSONLD(model))
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET")
-                            .allow("OPTIONS")
-                            .build();
+        return Response.ok().entity(jsonldCreator.asJSONLD(model)).build();
     }
 
     @DELETE
@@ -93,23 +79,19 @@ public final class PublicationResource {
 
         service.deletePublication(model);
 
-        return Response.noContent().header("Access-Control-Allow-Origin", "*")
-                                   .header("Access-Control-Allow-Methods", "GET")
-                                   .allow("OPTIONS")
-                                   .build();
+        return Response.noContent().build();
     }
 
     @OPTIONS
-    public Response corsPublicationBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return cors.makeCORSResponse(Response.ok(), reqHeader);
+    public Response optionsPublication() {
+        return Response.ok().allow("POST").build();
     }
 
     @OPTIONS
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
-    public Response corsPublicationId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return cors.makeCORSResponse(Response.ok(), reqHeader);
+    public Response optionsPublicationItem() {
+        return Response.ok().allow("GET", "POST", "DELETE").build();
     }
-
 
     @PATCH
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
@@ -125,11 +107,7 @@ public final class PublicationResource {
             throw new BadRequestException(e);
         }
 
-        return Response.ok().entity(jsonldCreator.asJSONLD(m))
-                       .header("Access-Control-Allow-Origin", "*")
-                       .header("Access-Control-Allow-Methods", "PATCH")
-                       .allow("OPTIONS")
-                       .build();
+        return Response.ok().entity(jsonldCreator.asJSONLD(m)).build();
     }
 
 }
