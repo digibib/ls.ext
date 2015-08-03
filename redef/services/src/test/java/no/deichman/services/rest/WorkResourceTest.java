@@ -205,21 +205,15 @@ public class WorkResourceTest {
     }
 
     @Test
-    public void test_CORS_work_base(){
-        String reqHeader = "application/ld+json";
-        Response reponse = resource.corsWorkBase(reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    public void options_allow_POST_on_work() {
+        Response response = resource.optionsWork();
+        assertEquals(response.getHeaderString("Allow"), "POST");
     }
 
     @Test
-    public void test_CORS_work_base_empty_request_header(){
-        String reqHeader = "";
-        Response response = resource.corsWorkBase(reqHeader);
-        assert(response.getHeaderString("Access-Control-Allow-Headers") == null);
-        assertEquals(response.getHeaderString("Access-Control-Allow-Origin"),"*");
-        assertEquals(response.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
+    public void options_allow_methods_on_work_with_id() {
+        Response response = resource.optionsWorkItem();
+        assertEquals(response.getHeaderString("Allow"), "GET, PUT, PATCH, DELETE");
     }
 
     @Test(expected=NotFoundException.class)
@@ -234,24 +228,6 @@ public class WorkResourceTest {
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response response = resource.deleteWork(workId);
         assertEquals(response.getStatus(), NO_CONTENT.getStatusCode());
-    }
-
-    @Test
-    public void test_CORS_work_id(){
-        String reqHeader = "application/ld+json";
-        Response reponse = resource.corsWorkId(reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Headers"),reqHeader);
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Origin"),"*");
-        assertEquals(reponse.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
-    }
-
-    @Test
-    public void test_CORS_work_id_empty_request_header(){
-        String reqHeader = "";
-        Response response = resource.corsWorkId(reqHeader);
-        assert(response.getHeaderString("Access-Control-Allow-Headers") == null);
-        assertEquals(response.getHeaderString("Access-Control-Allow-Origin"),"*");
-        assertEquals(response.getHeaderString("Access-Control-Allow-Methods"),"GET, POST, OPTIONS, PUT, PATCH");
     }
 
     private boolean isValidJSON(final String json) {

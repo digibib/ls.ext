@@ -7,7 +7,6 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
@@ -18,7 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.repository.RepositoryDefault;
-import no.deichman.services.rest.utils.CORSProvider;
 import no.deichman.services.rest.utils.JSONLDCreator;
 import static no.deichman.services.rest.utils.MimeType.JSONLD;
 import static no.deichman.services.rest.utils.MimeType.LDPATCHJSON;
@@ -40,7 +38,6 @@ public final class WorkResource {
     private final Service service;
     private final BaseURI baseURI;
     private final JSONLDCreator jsonldCreator;
-    private final CORSProvider cors;
 
     public WorkResource() {
         this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterImpl()));
@@ -50,7 +47,6 @@ public final class WorkResource {
         this.baseURI = baseURI;
         this.service = service;
         jsonldCreator = new JSONLDCreator(baseURI);
-        cors = new CORSProvider();
     }
 
     @POST
@@ -59,29 +55,20 @@ public final class WorkResource {
         String workId = service.createWork(work);
         URI location = new URI(workId);
 
-        return Response.created(location)
-                       .header("Access-Control-Allow-Origin", "*")
-                       .header("Access-Control-Allow-Methods", "POST")
-                       .header("Access-Control-Expose-Headers", "Location")
-                       .allow("OPTIONS")
-                       .build();
+        return Response.created(location).build();
     }
 
     @PUT
     @Consumes(MIME_JSONLD)
     public Response updateWork(String work) {
         service.updateWork(work);
-        return Response.ok()
-                       .header("Access-Control-Allow-Origin", "*")
-                       .header("Access-Control-Allow-Methods", "PUT")
-                       .allow("OPTIONS")
-                       .build();
+        return Response.ok().build();
     }
 
     @PATCH
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Consumes(MIME_LDPATCH_JSON)
-    public Response patchWork(@PathParam("workId") String workId, String requestBody) throws Exception {
+    public Response patchWork(@PathParam("workId") String workId, String requestBody) {
         if (!service.resourceExists(baseURI.getWorkURI() + workId)) {
             throw new NotFoundException();
         }
@@ -92,11 +79,7 @@ public final class WorkResource {
             throw new BadRequestException(e); // FIXME - swallows root cause
         }
 
-        return Response.ok().entity(jsonldCreator.asJSONLD(m))
-                       .header("Access-Control-Allow-Origin", "*")
-                       .header("Access-Control-Allow-Methods", "PATCH")
-                       .allow("OPTIONS")
-                       .build();
+        return Response.ok().entity(jsonldCreator.asJSONLD(m)).build();
     }
 
     @GET
@@ -109,16 +92,12 @@ public final class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(jsonldCreator.asJSONLD(model))
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET")
-                            .allow("OPTIONS")
-                            .build();
+        return Response.ok().entity(jsonldCreator.asJSONLD(model)).build();
     }
 
     @OPTIONS
-    public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return cors.makeCORSResponse(Response.ok().allow("POST"), reqHeader);
+    public Response optionsWork() {
+        return Response.ok().allow("POST").build();
     }
 
     @DELETE
@@ -132,16 +111,13 @@ public final class WorkResource {
 
         service.deleteWork(model);
 
-        return Response.noContent().header("Access-Control-Allow-Origin", "*")
-                                   .header("Access-Control-Allow-Methods", "GET")
-                                   .allow("OPTIONS")
-                                   .build();
+        return Response.noContent().build();
     }
 
     @OPTIONS
     @Path("/{workId: [a-zA-Z0-9_]+}")
-    public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return cors.makeCORSResponse(Response.ok().allow("GET, PATCH, DELETE"), reqHeader);
+    public Response optionsWorkItem() {
+        return Response.ok().allow("GET, PUT, PATCH, DELETE").build();
     }
 
     @GET
@@ -153,10 +129,6 @@ public final class WorkResource {
             throw new NotFoundException();
         }
 
-        return Response.ok().entity(jsonldCreator.asJSONLD(model))
-                            .header("Access-Control-Allow-Origin", "*")
-                            .header("Access-Control-Allow-Methods", "GET")
-                            .allow("OPTIONS")
-                            .build();
+        return Response.ok().entity(jsonldCreator.asJSONLD(model)).build();
     }
 }
