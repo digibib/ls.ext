@@ -112,12 +112,8 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
         }
       }
 
-      if (document.referrer === location.origin + location.pathname) {
-        // We've been redirected from create new resource page
-        ractive.set("save_status", "ny ressurs");
-      } else {
-        ractive.set("save_status", "åpnet eksisterende ressurs");
-      }
+
+      ractive.set("save_status", "åpnet eksisterende ressurs");
     },
     function (response) {
       console.log(response);

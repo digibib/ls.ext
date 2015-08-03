@@ -6,7 +6,6 @@ require 'rack/test'
 require 'webmock'
 require 'webmock/test_unit'
 
-
 class TestServer < Test::Unit::TestCase
   include Rack::Test::Methods
 
@@ -26,12 +25,18 @@ class TestServer < Test::Unit::TestCase
   end
 
   def test_it_has_a_work_page
+    stub_request(:post, app.settings.config[:resourceApiUri] + "work").
+      to_return(:status => 201, :headers => {"Location" => "w123"})
+
     get '/work'
     follow_redirect!
     assert last_response.ok?
   end
 
   def test_it_has_a_publication_page
+    stub_request(:post, app.settings.config[:resourceApiUri] + "publication").
+      to_return(:status => 201, :headers => {"Location" => "p123"})
+
     get '/publication'
     follow_redirect!
     assert last_response.ok?
