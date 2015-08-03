@@ -28,6 +28,9 @@ public class KohaAdapterImplTest {
 
     private final KohaAdapterImpl kohaAdapter = new KohaAdapterImpl("http://localhost:" + CLIENTDRIVER_PORT);
 
+    @Rule
+    public final ClientDriverRule svcMock = new ClientDriverRule(CLIENTDRIVER_PORT);
+
     private void login(){
 
         String authenticationOKResponse = "<?xml version='1.0' standalone='yes'?>\n"
@@ -43,8 +46,6 @@ public class KohaAdapterImplTest {
                 .withHeader(HttpHeaders.SET_COOKIE, KohaAdapterImpl.SESSION_COOKIE_KEY + "=huh"));
 
     }
-    @Rule
-    public final ClientDriverRule svcMock = new ClientDriverRule(CLIENTDRIVER_PORT);
 
     @Test
     public void should_have_default_constructor() {
