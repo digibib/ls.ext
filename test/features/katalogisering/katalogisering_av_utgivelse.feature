@@ -7,7 +7,6 @@ Egenskap: Katalogisering av utgivelse
   For at brukere skal kunne finne rett utgivelse
   Ønsker jeg å registrere utgivelser med format og språk
 
-  @wip
   Scenario: Verk finnes - utgivelse finnes ikke
     Gitt at det finnes et verk
     Når jeg registrerer inn opplysninger om utgivelsen
