@@ -2,7 +2,6 @@ package no.deichman.services.rest;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.repository.RepositoryDefault;
 import no.deichman.services.rest.utils.CORSProvider;
@@ -53,7 +53,7 @@ public final class PublicationResource {
 
     @POST
     @Consumes(MIME_JSONLD)
-    public Response createPublication(String publication) throws URISyntaxException {
+    public Response createPublication(String publication) throws Exception {
         String publicationId = service.createPublication(publication);
         URI location = new URI(publicationId);
 

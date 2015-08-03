@@ -16,6 +16,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import javax.xml.xpath.XPathExpressionException;
+
+import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.jena.riot.Lang;
@@ -32,12 +37,14 @@ public final class RepositoryDefault implements Repository {
     private final SPARQLQueryBuilder sqb;
     private final BaseURIDefault bud;
     private final UniqueURIGenerator uriGenerator;
+    private final KohaAdapter kohaAdapter;
 
     public RepositoryDefault() {
         System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
         bud = new BaseURIDefault();
         sqb = new SPARQLQueryBuilder(bud);
         uriGenerator = new UniqueURIGenerator(this, new BaseURIDefault());
+        kohaAdapter = new KohaAdapterImpl();
     }
 
     @Override
@@ -93,8 +100,8 @@ public final class RepositoryDefault implements Repository {
     }
 
     @Override
-    public String createPublication(String publication) {
-        String recordID = "123";
+    public String createPublication(String publication) throws XPathExpressionException, Exception {
+        String recordID = kohaAdapter.getNewBiblio();
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String id = uriGenerator.getNewURI("publication");
         Model tempModel = ModelFactory.createDefaultModel();

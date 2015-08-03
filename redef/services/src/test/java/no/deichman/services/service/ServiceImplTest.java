@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
@@ -104,7 +105,7 @@ public class ServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_publication_by_id(){
+    public void test_retrieve_publication_by_id() throws Exception{
         String testId = "publication_SHOULD_EXIST";
         String publicationData = getTestJSON(testId,"publication");
         String publicationId = service.createPublication(publicationData);
@@ -173,7 +174,7 @@ public class ServiceImplTest {
     }
 
     @Test
-    public void test_create_publication(){
+    public void test_create_publication() throws Exception{
         String testId = "publication_SERVICE_CREATE_PUBLICATION";
         String publication = getTestJSON(testId, "publication");
         String publicationId = service.createPublication(publication);
@@ -204,7 +205,7 @@ public class ServiceImplTest {
     }
 
     @Test
-    public void test_delete_publication(){
+    public void test_delete_publication() throws Exception{
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
         String publicationId = service.createPublication(publication);

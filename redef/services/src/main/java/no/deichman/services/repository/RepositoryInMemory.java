@@ -19,6 +19,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import javax.xml.xpath.XPathExpressionException;
+
+import no.deichman.services.kohaadapter.KohaAdapter;
+import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -33,6 +38,7 @@ public final class RepositoryInMemory implements Repository {
     private final SPARQLQueryBuilder sqb;
     private final BaseURIMock bud;
     private final UniqueURIGenerator uriGenerator;
+    private final KohaAdapter kohaAdapter;
 
     public RepositoryInMemory() {
         bud = new BaseURIMock();
@@ -42,6 +48,7 @@ public final class RepositoryInMemory implements Repository {
         model = DatasetFactory.createMem();
         model.setDefaultModel(model2);
         uriGenerator = new UniqueURIGenerator(this, new BaseURIMock());
+        kohaAdapter = new KohaAdapterImpl();
     }
 
     public void addData(Model newData){
@@ -108,8 +115,8 @@ public final class RepositoryInMemory implements Repository {
     }
 
 
-    public String createPublication(String publication) {
-        String recordID = "123";
+    public String createPublication(String publication) throws XPathExpressionException, Exception {
+        String recordID = kohaAdapter.getNewBiblio();
 
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String id = uriGenerator.getNewURI("publication");

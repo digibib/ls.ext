@@ -70,14 +70,14 @@ public class RepositoryInMemoryTest {
     }
 
     @Test
-    public void test_create_publication(){
+    public void test_create_publication() throws Exception{
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         String publicationId = repository.createPublication(publication);
         assertNotNull(publicationId);
     }
 
     @Test
-    public void test_publication_has_record_id() {
+    public void test_publication_has_record_id() throws Exception {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         String publicationId = repository.createPublication(publication);
         Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + bud.getOntologyURI() +"recordID> ?value .}");

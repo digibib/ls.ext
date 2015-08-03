@@ -12,6 +12,7 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.KohaAdapterImpl;
@@ -99,7 +100,7 @@ public final class ServiceImpl implements Service {
     }
 
     @Override
-    public String createPublication(String publication) {
+    public String createPublication(String publication) throws Exception {
         return repository.createPublication(publication);
     }
 

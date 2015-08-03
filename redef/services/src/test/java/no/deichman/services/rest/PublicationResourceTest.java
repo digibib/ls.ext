@@ -8,11 +8,11 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -61,14 +61,14 @@ public class PublicationResourceTest {
     }
 
     @Test
-    public void should_return_201_when_publication_created() throws URISyntaxException{
+    public void should_return_201_when_publication_created() throws Exception{
         Response result = resource.createPublication(createTestPublicationJSON("publication_SHOULD_EXIST"));
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
     }
 
     @Test
-    public void should_return_the_new_publication() throws URISyntaxException{
+    public void should_return_the_new_publication() throws Exception{
         Response createResponse = resource.createPublication(createTestPublicationJSON("publication_SHOULD_EXIST"));
 
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
@@ -78,11 +78,12 @@ public class PublicationResourceTest {
         assertNotNull(result);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
         assertEquals(OK.getStatusCode(), result.getStatus());
+        assertTrue(result.getEntity().toString().contains("\"deichman:recordID\""));
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
     @Test
-    public void test_delete_publication() throws URISyntaxException{
+    public void test_delete_publication() throws Exception{
         Response createResponse = resource.createPublication(createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
         Response response = resource.deletePublication(publicationId);

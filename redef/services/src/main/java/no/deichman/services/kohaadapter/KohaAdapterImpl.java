@@ -2,9 +2,13 @@ package no.deichman.services.kohaadapter;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+
+import no.deichman.services.marc.MarcXmlProvider;
+
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
+import org.xml.sax.InputSource;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -15,6 +19,9 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -106,4 +113,47 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
         return m;
     }
+
+    private Response requestNew() {
+        MarcXmlProvider mxp = new MarcXmlProvider();
+        mxp.createRecord();
+        Client client = ClientBuilder.newClient();
+        String url = kohaPort + "/cgi-bin/koha/svc/new_bib";
+        WebTarget webTarget = client.target(url);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.post(Entity.entity(mxp.getMarcXml(),MediaType.TEXT_XML));
+    }
+
+    @Override
+    public String getNewBiblio() throws Exception {
+        // TODO Handle login in a filter / using template pattern
+        if (sessionCookie == null) {
+            login();
+        }
+
+        Response response = requestNew();
+        // TODO Hack if we have timed out
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            login();
+            response = requestNew();
+        }
+        if (OK.getStatusCode() != response.getStatus()) {
+            throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
+        }
+
+        InputSource inputSource = new InputSource(new ByteArrayInputStream(response.readEntity(String.class).getBytes()));
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        String biblioId = xpath.evaluate("//response/biblionumber", inputSource);
+
+        if (biblioId == "") {
+            System.out.println("LOG: Koha failed to create a new bibliographic record");
+            throw new Exception("Koha connection for new biblio failed");
+        } else {
+            System.out.println("LOG: Koha created a new bibliographic record with ID: " + biblioId);
+        }
+
+        return biblioId;
+    }
+
 }
