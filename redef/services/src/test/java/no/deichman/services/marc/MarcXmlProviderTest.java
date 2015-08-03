@@ -8,6 +8,7 @@ import org.junit.Test;
 public class MarcXmlProviderTest {
 
     private MarcXmlProvider mxp;
+
     @Before
     public void setup() {
         mxp = new MarcXmlProvider();
