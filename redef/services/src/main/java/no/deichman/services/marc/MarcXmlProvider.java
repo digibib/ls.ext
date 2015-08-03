@@ -15,13 +15,14 @@ import info.freelibrary.marc4j.impl.RecordImpl;
  */
 public final class MarcXmlProvider {
 
+    private static final String TWENTY_FOUR_SPACES = "                        ";
     private Record record;
 
     public MarcXmlProvider() {}
 
     private Leader createLeader() {
         Leader leader = new LeaderImpl();
-        leader.unmarshal("                        ");
+        leader.unmarshal(TWENTY_FOUR_SPACES);
         return leader;
     }
 
