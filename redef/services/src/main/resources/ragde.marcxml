@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim" 
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                 xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+  <marc:leader>00365cam a22001091  4500</marc:leader>
+  <marc:controlfield tag="001">626460</marc:controlfield>
+  <marc:controlfield tag="008">040823                a          10nob 2</marc:controlfield>
+  <marc:datafield tag="100" ind1=" " ind2="0">
+    <marc:subfield code="a">Ragde, Anne B.</marc:subfield>
+  </marc:datafield>
+  <marc:datafield tag="245" ind1="1" ind2="0">
+    <marc:subfield code="a">Berlinerpoplene</marc:subfield>
+    <marc:subfield code="c">Anne Birkefeldt Ragde</marc:subfield>
+  </marc:datafield>
+  <marc:datafield tag="260" ind1=" " ind2=" ">
+    <marc:subfield code="a">Oslo</marc:subfield>
+    <marc:subfield code="b">Oktober</marc:subfield>
+    <marc:subfield code="c">2004</marc:subfield>
+  </marc:datafield>
+  <marc:datafield tag="999" ind1=" " ind2=" ">
+    <marc:subfield code="c">626460</marc:subfield>
+    <marc:subfield code="d">626460</marc:subfield>
+  </marc:datafield>
+  <marc:datafield tag="952" ind1=" " ind2=" ">
+    <marc:subfield code="0">0</marc:subfield>
+    <marc:subfield code="1">0</marc:subfield>
+    <marc:subfield code="4">0</marc:subfield>
+    <marc:subfield code="6">RAG</marc:subfield>
+    <marc:subfield code="7">0</marc:subfield>
+    <marc:subfield code="9">2</marc:subfield>
+    <marc:subfield code="a">flam</marc:subfield>
+    <marc:subfield code="b">flam</marc:subfield>
+    <marc:subfield code="d">2015-03-26</marc:subfield>
+    <marc:subfield code="l">57</marc:subfield>
+    <marc:subfield code="o">Rag</marc:subfield>
+    <marc:subfield code="p">03010626460003</marc:subfield>
+    <marc:subfield code="r">2015-03-26</marc:subfield>
+    <marc:subfield code="t">3</marc:subfield>
+    <marc:subfield code="w">2015-03-26</marc:subfield>
+    <marc:subfield code="y">L</marc:subfield>
+  </marc:datafield>
+</marc:record>
