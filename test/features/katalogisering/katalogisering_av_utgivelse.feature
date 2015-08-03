@@ -17,7 +17,7 @@ Egenskap: Katalogisering av utgivelse
   Scenario: Verk finnes - utgivelse finnes ikke (2)
     Gitt at det finnes et verk
     Når jeg vil katalogisere en utgivelse
-    Så får utgivelsen tildelt en post-ID i Koba
+    Så får utgivelsen tildelt en post-ID i Koha
     Og det vises en lenke til posten i Koha i katalogiseringsgrensesnittet
 
   @wip
