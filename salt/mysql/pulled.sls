@@ -10,4 +10,4 @@ busybox_docker_image:
 mysql_docker_image:
   docker.pulled:
     - name: mysql
-    - tag: 5.6.26
+    - tag: 5.6.21

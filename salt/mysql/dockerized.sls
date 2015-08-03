@@ -33,14 +33,14 @@ mysql_data_volume_run_once:
 koha_mysql_container_stop_if_old:
   cmd.run:
     - name: docker stop koha_mysql_container || true
-    - unless: "docker inspect --format \"{{ '{{' }} .Image {{ '}}' }}\" koha_mysql_container | grep $(docker history --quiet --no-trunc mysql:5.6.26 | head -n 1)"
+    - unless: "docker inspect --format \"{{ '{{' }} .Image {{ '}}' }}\" koha_mysql_container | grep $(docker history --quiet --no-trunc mysql:5.6.21 | head -n 1)"
     - require:
       - docker: mysql_docker_image
 
 koha_mysql_container_remove_if_old:
   cmd.run:
     - name: docker rm koha_mysql_container || true
-    - unless: "docker inspect --format \"{{ '{{' }} .Image {{ '}}' }}\" koha_mysql_container | grep $(docker history --quiet --no-trunc mysql:5.6.26 | head -n 1)"
+    - unless: "docker inspect --format \"{{ '{{' }} .Image {{ '}}' }}\" koha_mysql_container | grep $(docker history --quiet --no-trunc mysql:5.6.21 | head -n 1)"
     - require:
       - cmd: koha_mysql_container_stop_if_old
 
@@ -48,7 +48,7 @@ koha_mysql_container_installed:
   docker.installed:
     - name: koha_mysql_container
     - command: ["mysqld", "--datadir=/var/lib/mysql", "--user=mysql", "--max_allowed_packet=64M", "--wait_timeout=6000", "--bind-address=0.0.0.0"]
-    - image: mysql:5.6.26 # Version MUST be in line with the one used in koha_mysql_container_stop_if_old
+    - image: mysql:5.6.21 # Version MUST be in line with the one used in koha_mysql_container_stop_if_old
     - environment:
       - "MYSQL_ROOT_PASSWORD": "{{ pillar['koha']['adminpass'] }}"
       - "MYSQL_USER": "{{ pillar['koha']['adminuser'] }}"
