@@ -34,21 +34,13 @@ public final class OntologyResource {
     @GET
     @Produces("text/turtle" + "; charset=utf-8")
     public Response getOntologyTurtle() throws IOException {
-        return buildGetResponseWith(ontologyService.getOntologyTurtle());
+        return Response.ok().entity(ontologyService.getOntologyTurtle()).build();
     }
 
     @GET
     @Produces("application/ld+json" + "; charset=utf-8")
     public Response getOntologyJSON() throws IOException {
-        return buildGetResponseWith(ontologyService.getOntologyJsonLD());
-    }
-
-    private Response buildGetResponseWith(String result) {
-        return Response.ok().entity(result)
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET")
-                .allow("OPTIONS")
-                .build();
+        return Response.ok().entity(ontologyService.getOntologyJsonLD()).build();
     }
 
 }
