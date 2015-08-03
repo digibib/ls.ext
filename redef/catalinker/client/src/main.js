@@ -1,5 +1,11 @@
 requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology, string) {
 
+  window.onerror = function (message, url, line) {
+    // Log any uncaught exceptions to assist debugging tests.
+    // TODO remove this when everything works perfectly (as if...)
+    console.log('ERROR: "' + message + '" in file: ' + url + ', line: ' + line);
+  };
+
   // TODO move this function out and test it!
   function getURLParameter(name) {
     // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
