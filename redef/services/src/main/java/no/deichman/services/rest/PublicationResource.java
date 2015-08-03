@@ -7,7 +7,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -80,17 +79,6 @@ public final class PublicationResource {
         service.deletePublication(model);
 
         return Response.noContent().build();
-    }
-
-    @OPTIONS
-    public Response optionsPublication() {
-        return Response.ok().allow("POST").build();
-    }
-
-    @OPTIONS
-    @Path("/{publicationId: [a-zA-Z0-9_]+}")
-    public Response optionsPublicationItem() {
-        return Response.ok().allow("GET", "POST", "DELETE").build();
     }
 
     @PATCH

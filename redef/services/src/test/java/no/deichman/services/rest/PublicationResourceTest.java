@@ -23,12 +23,9 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -90,25 +87,6 @@ public class PublicationResourceTest {
         Response response = resource.deletePublication(publicationId);
         assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
     }
-
-    @Test
-    public void options_should_allow_POST_on_publication(){
-        Response response = resource.optionsPublication();
-        assertEquals(response.getHeaderString("Allow"), "POST");
-    }
-
-    @Test
-    public void options_should_allow_methods_on_publication_item() {
-        Response response = resource.optionsPublicationItem();
-        assertThat(response.getHeaderString("Allow"),
-                allOf(
-                        containsString("GET"),
-                        containsString("POST"),
-                        containsString("DELETE")
-                )
-        );
-    }
-
 
     @Test
     public void patch_should_return_status_400() throws Exception {

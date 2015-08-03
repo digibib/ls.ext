@@ -8,7 +8,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -95,11 +94,6 @@ public final class WorkResource {
         return Response.ok().entity(jsonldCreator.asJSONLD(model)).build();
     }
 
-    @OPTIONS
-    public Response optionsWork() {
-        return Response.ok().allow("POST").build();
-    }
-
     @DELETE
     @Path("/{workId: [a-zA-Z0-9_]+}")
     public Response deleteWork(@PathParam("workId") String workId) {
@@ -112,12 +106,6 @@ public final class WorkResource {
         service.deleteWork(model);
 
         return Response.noContent().build();
-    }
-
-    @OPTIONS
-    @Path("/{workId: [a-zA-Z0-9_]+}")
-    public Response optionsWorkItem() {
-        return Response.ok().allow("GET, PUT, PATCH, DELETE").build();
     }
 
     @GET

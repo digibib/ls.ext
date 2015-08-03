@@ -204,18 +204,6 @@ public class WorkResourceTest {
         resource.patchWork("a_missing_work1234", "{}");
     }
 
-    @Test
-    public void options_allow_POST_on_work() {
-        Response response = resource.optionsWork();
-        assertEquals(response.getHeaderString("Allow"), "POST");
-    }
-
-    @Test
-    public void options_allow_methods_on_work_with_id() {
-        Response response = resource.optionsWorkItem();
-        assertEquals(response.getHeaderString("Allow"), "GET, PUT, PATCH, DELETE");
-    }
-
     @Test(expected=NotFoundException.class)
     public void test_delete_work_raises_not_found_exception(){
         resource.deleteWork("work_DOES_NOT_EXIST_AND_FAILS");
