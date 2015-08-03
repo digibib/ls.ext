@@ -60,6 +60,10 @@ Vagrant.configure(2) do |config|
       config.vm.provision "shell", path: "redef/install_git-up.sh"
     end
 
+    if ENV['LSDEVMODE'] && ENV['LSDEVMODE'] == 'dev'
+      config.vm.provision "shell", path: "redef/set_gradle_daemon.sh"
+    end
+
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
