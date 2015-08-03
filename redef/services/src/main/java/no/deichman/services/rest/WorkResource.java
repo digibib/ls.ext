@@ -89,7 +89,7 @@ public final class WorkResource {
         try {
              m = service.patchWork(workId, requestBody);
         } catch (Exception e) {
-            throw new BadRequestException();
+            throw new BadRequestException(e); // FIXME - swallows root cause
         }
 
         return Response.ok().entity(jsonldCreator.asJSONLD(m))
@@ -118,7 +118,7 @@ public final class WorkResource {
 
     @OPTIONS
     public Response corsWorkBase(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return cors.makeCORSResponse(Response.ok(), reqHeader);
+        return cors.makeCORSResponse(Response.ok().allow("POST"), reqHeader);
     }
 
     @DELETE
@@ -141,7 +141,7 @@ public final class WorkResource {
     @OPTIONS
     @Path("/{workId: [a-zA-Z0-9_]+}")
     public Response corsWorkId(@HeaderParam("Access-Control-Request-Headers") String reqHeader) {
-        return cors.makeCORSResponse(Response.ok(), reqHeader);
+        return cors.makeCORSResponse(Response.ok().allow("GET, PATCH, DELETE"), reqHeader);
     }
 
     @GET

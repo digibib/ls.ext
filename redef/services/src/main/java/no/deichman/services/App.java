@@ -1,13 +1,14 @@
 package no.deichman.services;
 
+import static java.util.Arrays.asList;
 import no.deichman.services.rest.OntologyResource;
 import no.deichman.services.rest.PublicationResource;
 import no.deichman.services.rest.WorkResource;
+import no.deichman.services.rest.utils.CORSResponseFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
-import static java.util.Arrays.asList;
+import org.glassfish.jersey.server.ServerProperties;
 
 /**
  * Responsibility: Start application (using embedded web server).
@@ -30,11 +31,12 @@ public final class App {
         jerseyServlet.setInitOrder(0);
 
         // Tells the Jersey Servlet which REST service/class to load.
-        jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
+        jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
                 String.join(",", asList(
                     WorkResource.class.getCanonicalName(),
                     OntologyResource.class.getCanonicalName(),
-                    PublicationResource.class.getCanonicalName()
+                    PublicationResource.class.getCanonicalName(),
+                    CORSResponseFilter.class.getCanonicalName()
                 )));
 
         try {
