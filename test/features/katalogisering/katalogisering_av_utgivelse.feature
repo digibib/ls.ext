@@ -20,11 +20,12 @@ Egenskap: Katalogisering av utgivelse
     Og det vises en lenke til posten i Koha i katalogiseringsgrensesnittet
 
   @wip
-  Scenario: Verk og utgivelse finnes — eksemplar finnes ikke
-    Gitt at det finnes et verk
-    Og at det finnes en utgivelse
-    Når jeg legger til et eksemplar av utgivelsen
-    Så vises eksemplaret på verkssiden
+  Scenario: Utgivelse med eksemplar
+    Gitt at det finnes et verk og en utgivelse
+    Når jeg ser på utgivelsen i katalogiseringsgrensesnittet
+    Og jeg følger lenken til posten i Koha
+    Så kan jeg opprette et eksemplar av utgivelsen
+    Og eksemplaret vises på verkssiden
 
   @wip
   Scenario: Verk og utgivelse finnes ikke
