@@ -27,7 +27,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,17 +87,12 @@ public class PublicationResourceTest {
         assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void patch_should_return_status_400() throws Exception {
         Response result = resource.createPublication(createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{}";
-        try {
-            resource.patchPublication(publicationId,patchData);
-            fail("HTTP 400 Bad Request");
-        } catch (BadRequestException bre) {
-            assertEquals("HTTP 400 Bad Request", bre.getMessage());
-        }
+        resource.patchPublication(publicationId, patchData);
     }
 
     @Test
