@@ -23,7 +23,14 @@ public class PatchObjectTypeAdapterTest {
     @Test
     public void test_it_handles_single_object(){
         List<PatchObject> list = new ArrayList<>();
-        String input = "{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\":{\"value\":\"Housea\"}}";
+
+        String input = "{"
+                + "  \"op\":\"add\","
+                + "  \"s\":\"http://example.com/a\","
+                + "  \"p\":\"http://example.com/title\","
+                + "  \"o\":{\"value\":\"Housea\"}"
+                + "}";
+
         Type patchType = new TypeToken<List<PatchObject>>() {}.getType();
         Gson gson = new GsonBuilder().registerTypeAdapter(patchType, new PatchObjectTypeAdapter()).create();
         list.addAll(gson.fromJson(input, patchType));
@@ -33,8 +40,20 @@ public class PatchObjectTypeAdapterTest {
     @Test
     public void test_it_handles_multiple_objects(){
         List<PatchObject> list = new ArrayList<>();
-        String input = "[{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\":{\"value\":\"Housea\"}},"
-                + "{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\":{\"value\":\"Houseb\"}}]";
+        String input = "["
+                     + "  {"
+                     + "    \"op\":\"add\","
+                     + "    \"s\":\"http://example.com/a\","
+                     + "    \"p\":\"http://example.com/title\","
+                     + "    \"o\":{\"value\":\"Housea\"}"
+                     + "  },"
+                     + "  {"
+                     + "    \"op\":\"add\","
+                     + "    \"s\":\"http://example.com/a\","
+                     + "    \"p\":\"http://example.com/title\","
+                     + "    \"o\":{\"value\":\"Houseb\"}"
+                     + "  }"
+                     + "]";
         Type patchType = new TypeToken<List<PatchObject>>() {}.getType();
         Gson gson = new GsonBuilder().registerTypeAdapter(patchType, new PatchObjectTypeAdapter()).create();
         list.addAll(gson.fromJson(input, patchType));
