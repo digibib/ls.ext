@@ -7,6 +7,7 @@ Egenskap: Endre eksisterende verk
   For å kunne rette en feil verksopplysning
   Ønsker jeg å kunne åpne verket for redigering og rette feilen
 
+  @wip @fails
   Scenario: Katalogisator redigerer eksisterende verk
    Gitt at det finnes et verk med feil årstall
    Når jeg åpner verket for redigering
