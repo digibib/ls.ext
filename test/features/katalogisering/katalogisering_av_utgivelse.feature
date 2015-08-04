@@ -13,7 +13,6 @@ Egenskap: Katalogisering av utgivelse
     Og jeg knytter utgivelsen til verket
     Så vises opplysningene om utgivelsen på verkssiden
 
-  @wip
   Scenario: Verk finnes - utgivelse finnes ikke (2)
     Gitt at det finnes et verk
     Når jeg vil katalogisere en utgivelse

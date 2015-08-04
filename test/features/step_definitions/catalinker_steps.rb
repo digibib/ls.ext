@@ -144,6 +144,20 @@ When(/^jeg legger til et eksemplar av utgivelsen$/) do
   pending # express the regexp above with the code you wish you had
 end
 
+When(/^jeg vil katalogisere en utgivelse$/) do
+  @site.RegPublication.visit
+end
+
+Then(/^får utgivelsen tildelt en post\-ID i Koha$/) do
+  @context[:record_id] = @site.RegPublication.get_record_id
+  @context[:record_id].should_not be_empty
+end
+
+Then(/^det vises en lenke til posten i Koha i katalogiseringsgrensesnittet$/) do
+  link = @browser.div(:class => "http://192.168.50.12:8005/ontology#recordID").a(:class => "link")
+  link.href.should eq("http://192.168.50.12:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber="+@context[:record_id])
+end
+
 Then(/^vises eksemplaret på verkssiden$/) do
   pending # express the regexp above with the code you wish you had
 end
