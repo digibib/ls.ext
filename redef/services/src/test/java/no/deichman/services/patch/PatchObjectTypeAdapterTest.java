@@ -22,37 +22,30 @@ public class PatchObjectTypeAdapterTest {
 
     @Test
     public void test_it_handles_single_object(){
-        List<PatchObject> list = new ArrayList<PatchObject>();
+        List<PatchObject> list = new ArrayList<>();
         String input = "{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\":{\"value\":\"Housea\"}}";
-        Type polt = new TypeToken<List<PatchObject>>() {}.getType();
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(polt, new PatchObjectTypeAdapter())
-                .create();
-        list.addAll(gson.fromJson(input,polt));
-        assertEquals(1,list.size());
+        Type patchType = new TypeToken<List<PatchObject>>() {}.getType();
+        Gson gson = new GsonBuilder().registerTypeAdapter(patchType, new PatchObjectTypeAdapter()).create();
+        list.addAll(gson.fromJson(input, patchType));
+        assertEquals(1, list.size());
     }
 
     @Test
     public void test_it_handles_multiple_objects(){
-        List<PatchObject> list = new ArrayList<PatchObject>();
+        List<PatchObject> list = new ArrayList<>();
         String input = "[{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\":{\"value\":\"Housea\"}},"
                 + "{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\":{\"value\":\"Houseb\"}}]";
-        Type polt = new TypeToken<List<PatchObject>>() {}.getType();
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(polt, new PatchObjectTypeAdapter())
-                .create();
-        list.addAll(gson.fromJson(input,polt));
-        assertEquals(2,list.size());
+        Type patchType = new TypeToken<List<PatchObject>>() {}.getType();
+        Gson gson = new GsonBuilder().registerTypeAdapter(patchType, new PatchObjectTypeAdapter()).create();
+        list.addAll(gson.fromJson(input, patchType));
+        assertEquals(2, list.size());
     }
 
     @Test(expected = JsonParseException.class)
     public void it_throws_when_unable_to_parse() {
-        List<PatchObject> list = new ArrayList<PatchObject>();
         String input = "notverygoodisit";
-        Type polt = new TypeToken<List<PatchObject>>() {}.getType();
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(polt, new PatchObjectTypeAdapter())
-                .create();
-        gson.fromJson(input,polt);
+        Type patchType = new TypeToken<List<PatchObject>>() {}.getType();
+        Gson gson = new GsonBuilder().registerTypeAdapter(patchType, new PatchObjectTypeAdapter()).create();
+        gson.fromJson(input, patchType);
     }
 }
