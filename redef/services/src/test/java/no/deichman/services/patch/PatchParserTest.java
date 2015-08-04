@@ -40,7 +40,12 @@ public class PatchParserTest {
         po.setPredicate("http://example.com/a");
         po.setObjectValue("Housec");
         lpo.add(po);
-        String input = "{\"op\":\"add\",\"s\":\"http://example.com/s\",\"p\":\"http://example.com/a\",\"o\":{\"value\":\"Housec\"}}";
+        String input = "{"
+                     + "  \"op\":\"add\","
+                     + "  \"s\":\"http://example.com/s\","
+                     + "  \"p\":\"http://example.com/a\","
+                     + "  \"o\":{\"value\":\"Housec\"}"
+                     + "}";
 
         PatchParser pp = new PatchParser(input);
         pp.parsePatch();
@@ -61,7 +66,12 @@ public class PatchParserTest {
         po.setPredicate("http://example.com/title");
         po.setObjectValue("Housea");
         expected.add(po);
-        String data = "{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\":{\"value\":\"Housea\"}}";
+        String data = "{"
+                    + "  \"op\":\"add\","
+                    + "  \"s\":\"http://example.com/a\","
+                    + "  \"p\":\"http://example.com/title\","
+                    + "  \"o\":{\"value\":\"Housea\"}"
+                    + "}";
 
         PatchParser p = new PatchParser(data);
         List<PatchObject> t1 = p.parsePatch();
@@ -81,7 +91,15 @@ public class PatchParserTest {
         object.put("lang", "en");
         po.setObject(object);
         expected.add(po);
-        String data2 = "{\"op\":\"add\",\"s\":\"http://example.com/a\",\"p\":\"http://example.com/title\",\"o\": {\"value\":\"House\",\"lang\":\"en\"}}";
+        String data2 = "{"
+                     + "  \"op\":\"add\","
+                     + "  \"s\":\"http://example.com/a\","
+                     + "  \"p\":\"http://example.com/title\","
+                     + "  \"o\": {"
+                     + "           \"value\":\"House\","
+                     + "           \"lang\":\"en\""
+                     + "         }"
+                     + "}";
 
         PatchParser p = new PatchParser(data2);
         List<PatchObject> l = p.parsePatch();
