@@ -67,6 +67,9 @@
                 {{#predicate === (config.ontologyUri + "#biblio") && current.value !== ""}}
                   <a target="_blank" href="{{config.kohaOpacUri}}/cgi-bin/koha/opac-detail.pl?biblionumber={{current.value}}" class="link"></a>
                 {{/}}
+                {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
+                  <a target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
+                {{/}}
                 <br/>
                 <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
               {{/each}}
