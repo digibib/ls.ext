@@ -34,7 +34,7 @@ public final class CORSResponseFilter implements ContainerResponseFilter {
 
 
     /**
-     * Somewhat inspired by http://www.html5rocks.com/static/images/cors_server_flowchart.png
+     * Somewhat inspired by http://www.html5rocks.com/static/images/cors_server_flowchart.png.
      */
     @Override
     public void filter(ContainerRequestContext reqCtx, ContainerResponseContext respCtx) throws IOException {
