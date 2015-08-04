@@ -4,6 +4,8 @@
 {% set build_context = '/vagrant/redef/services' %}
 {% set dockerfile = 'Dockerfile' %}
 
+{% set container = 'redef_services_container' %}
+
 {{ image }}_gradle_oneJar:
   cmd.run:
   - name: ./gradlew --daemon build oneJar
@@ -11,10 +13,10 @@
   - user: vagrant
   - require_in:
     - docker: {{ image }}_built
+    - cmd: {{ container }}_stop_if_old
 
 {% include 'docker-build.sls-fragment' %}
 
-{% set container = 'redef_services_container' %}
 {% set ports = ['8080/tcp'] %}
 {% set environment = { 'KOHA_PORT': "http://{0}:{1}".format(pillar['redef']['koha']['host'], pillar['redef']['koha']['port_intra']),
                        'KOHA_USER': pillar['koha']['adminuser'],

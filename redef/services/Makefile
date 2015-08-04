@@ -6,18 +6,18 @@ IMAGE=digibib/redef-services
 CONTAINER=redef_services_container
 
 test:
-	./gradlew --daemon test
+	./gradlew check test
 
 run-dev: run
 
 run:
-	sudo salt-call --local state.sls redef.services.builtrun
+	sudo salt-call --retcode-passthrough --local state.sls redef.services.builtrun
 
 stop:
 	sudo docker stop $(CONTAINER) || true
 
 build-onejar:
-	./gradlew --daemon build oneJar
+	./gradlew build oneJar
 
 build: build-onejar
 	sudo docker build --tag $(IMAGE) /vagrant/redef/services
