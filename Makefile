@@ -73,16 +73,16 @@ ifdef GITREF
 PILLAR = "pillar={\"GITREF\": \"$(GITREF)\"}"
 endif
 provision_ship_highstate:                             ## Run state.highstate on $(SHIP)
-	vagrant ssh $(SHIP) -c 'sudo salt-call --local state.highstate $(PILLAR)'
+	vagrant ssh $(SHIP) -c 'sudo salt-call --retcode-passthrough --local state.highstate $(PILLAR)'
 
 wait_until_ready:                                     ## Checks if koha is up and running
 	vagrant ssh $(SHIP) -c 'sudo docker exec -t koha_container ./wait_until_ready.py'
 
 provision_test:                                       ## Run state.highstate
-	vagrant ssh vm-test -c 'sudo salt-call --local state.highstate'
+	vagrant ssh vm-test -c 'sudo salt-call --retcode-passthrough --local state.highstate'
 
 provision_devops:                                     ## Run state.highstate
-	vagrant ssh vm-devops -c 'sudo salt-call --local state.highstate'
+	vagrant ssh vm-devops -c 'sudo salt-call --retcode-passthrough --local state.highstate'
 
 ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
@@ -157,7 +157,7 @@ sublime: install_sublime                               ## Run sublime from withi
 	vagrant ssh vm-test -c 'subl "/vagrant" > subl.log 2> subl.err < /dev/null' &
 
 install_sublime:
-	vagrant ssh vm-test -c 'sudo salt-call --local state.sls sublime'
+	vagrant ssh vm-test -c 'sudo salt-call --retcode-passthrough --local state.sls sublime'
 
 open_intra:                                            ## Open Kohas intra-interface in firefox from vm-test.
 	vagrant ssh vm-test -c 'firefox "http://192.168.50.12:8081/" -no-remote > firefox.log 2> firefox.err < /dev/null' &
@@ -166,7 +166,7 @@ kibana: install_firefox_on_devops                      ## Run kibanas web ui fro
 	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" -no-remote > firefox.log 2> firefox.err < /dev/null' &
 
 install_firefox_on_devops:
-	vagrant ssh vm-devops -c 'sudo salt-call --local state.sls firefox'
+	vagrant ssh vm-devops -c 'sudo salt-call --retcode-passthrough --local state.sls firefox'
 
 
 # Commands for redef build & dev
