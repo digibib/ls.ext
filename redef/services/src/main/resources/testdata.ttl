@@ -107,5 +107,8 @@
   dcterms:title "Berlinerpoplene"@no ;
   dcterms:creator <http://deichman.no/person/person_00004> ;
   dcterms:date "2004"^^xsd:gYear ;
-  dcterms:identifier "work_TEST_KOHA_ITEMS_LINK" ;
-  deichman:biblio "626460" .
+  dcterms:identifier "work_TEST_KOHA_ITEMS_LINK" .
+
+<http://deichman.no/publication/publication_TEST_KOHA_ITEMS_LINK> a deichman:Publication ;
+  deichman:recordID "626460" ;
+  deichman:publicationOf "http://deichman.no/work/work_TEST_KOHA_ITEMS_LINK" .

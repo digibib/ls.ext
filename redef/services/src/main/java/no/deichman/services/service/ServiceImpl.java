@@ -9,6 +9,8 @@ import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +35,7 @@ public final class ServiceImpl implements Service {
     private final Repository repository;
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
-    private final Property biblioId;
+    private final Property recordID;
 
     public ServiceImpl(){
         this(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterImpl());
@@ -41,7 +43,7 @@ public final class ServiceImpl implements Service {
 
     public ServiceImpl(BaseURI baseURI, Repository repository, KohaAdapter kohaAdapter){
         this.baseURI = baseURI;
-        biblioId = ResourceFactory.createProperty(this.baseURI.getOntologyURI() + "biblio");
+        recordID = ResourceFactory.createProperty(this.baseURI.getOntologyURI() + "recordID");
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
     }
@@ -75,13 +77,13 @@ public final class ServiceImpl implements Service {
         Model allItemsModel = ModelFactory.createDefaultModel();
         Model model = ModelFactory.createDefaultModel();
         model.add(repository.retrieveWorkById(id));
-        ResIterator subjectsIterator = model.listSubjects();
+        ResIterator subjectsIterator = model.listResourcesWithProperty(RDF.type, ResourceFactory.createResource(baseURI.getOntologyURI() + "Publication"));
 
         while (subjectsIterator.hasNext()){
             Model tempModel = ModelFactory.createDefaultModel();
-            NodeIterator n = model.listObjectsOfProperty(biblioId);
+            NodeIterator n = model.listObjectsOfProperty(recordID);
             while (n.hasNext()){
-                tempModel.add(kohaAdapter.getBiblio(n.next().toString()));
+                tempModel.add(kohaAdapter.getBiblio(n.next().asLiteral().getString()));
             }
             SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(baseURI);
             Query query = sqb.getItemsFromModelQuery(subjectsIterator.next().toString());

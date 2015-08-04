@@ -21,6 +21,7 @@ import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURIMock;
+
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
@@ -134,17 +135,15 @@ public class WorkResourceTest {
     @Test
     public void should_return_list_of_items(){
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
-        when(mockKohaAdapter.getBiblio("1")).thenReturn(modelForBiblio());
+        when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
         WorkResource myResource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), mockKohaAdapter));
 
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\",\"deichman:biblio\":\"1\"}}";
-        String workId = "work_SHOULD_EXIST";
+        String workId = "work_TEST_KOHA_ITEMS_LINK";
 
-        Response createResponse = myResource.updateWork(work);
         Response result = myResource.getWorkItems(workId);
+        System.out.println(result.getEntity().toString());
 
-        assertEquals(OK.getStatusCode(), createResponse.getStatus());
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(isValidJSON(result.getEntity().toString()));

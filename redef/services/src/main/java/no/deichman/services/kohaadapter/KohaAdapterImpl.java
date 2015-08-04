@@ -79,6 +79,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
             login();
         }
 
+        System.out.println("LOG: Attempting to retrieve " + id + " from Koha SVC");
         Response response = requestItems(id);
         // TODO Hack if we have timed out
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
