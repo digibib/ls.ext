@@ -15,7 +15,7 @@ import org.glassfish.jersey.server.ServerProperties;
  */
 public final class App {
 
-    private static final int SERVICES_PORT_NO = 8080;
+    private static final int SERVICES_PORT_NO = 8005;
 
     private App() { } // Not instantiable
 
