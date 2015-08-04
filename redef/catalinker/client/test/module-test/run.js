@@ -19,7 +19,8 @@ app.get("/publication", function (req, res) {
 
 app.get("/config", function (req, res) {
   res.json({
-    "kohaUri": "http://koha.deichman.no",
+    "kohaOpacUri": "http://koha.deichman.no",
+    "kohaIntraUri": "http://koha.deichman.no",
     "ontologyUri": "http://127.0.0.1:7777/ontology",
     "resourceApiUri": "http://127.0.0.1:7777/"
   });

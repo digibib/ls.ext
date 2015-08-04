@@ -23,7 +23,8 @@ helpers do
 end
 
 set :config,
-    { :kohaUri => (ENV['KOHA_PORT'] || 'http://192.168.50.12:8080').sub(/^tcp:\//, 'http:/' ),
+    { :kohaOpacUri => (ENV['KOHA_OPAC_PORT'] || 'http://192.168.50.12:8080').sub(/^tcp:\//, 'http:/' ),
+      :kohaIntraUri => (ENV['KOHA_INTRA_PORT'] || 'http://192.168.50.12:8081').sub(/^tcp:\//, 'http:/' ),
       :ontologyUri => (ENV['SERVICES_PORT'] || 'http://192.168.50.12:8010').sub(/^tcp:\//, 'http:/' ) + '/ontology',
       :resourceApiUri => (ENV['SERVICES_PORT'] || 'http://192.168.50.12:8010').sub(/^tcp:\//, 'http:/' ) + '/' }
 
