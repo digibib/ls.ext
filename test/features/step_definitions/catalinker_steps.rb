@@ -72,7 +72,7 @@ Given(/^at jeg ser på et lagret verk$/) do
   step "grensesnittet viser at tittelen er lagret"
 end
 
-Gitt(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
+Given(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
   step "at det finnes et eksemplar av en bok registrert i Koha"
   step "at jeg er i katalogiseringsgrensesnittet"
   step "at jeg ser på et lagret verk"
@@ -84,12 +84,33 @@ Given(/^at det finnes en utgivelse$/) do
   step "jeg knytter utgivelsen til verket"
 end
 
+Given(/^at det finnes et verk og en utgivelse$/) do
+  steps %Q{
+    Gitt at det finnes et verk
+    Og at det finnes en utgivelse
+  }
+end
+
+When(/^jeg ser på utgivelsen i katalogiseringsgrensesnittet$/) do
+  true
+end
+
 When(/^jeg klikker på lenken til en biblio\-kobling$/) do
   @browser.goto(@browser.div(:class => "http://192.168.50.12:8005/ontology#biblio").a(:class => "link").href)
 end
 
 When(/^jeg klikker på lenken til verks\-siden$/) do
   @browser.goto(@site.RegWork.get_link)
+end
+
+When(/^jeg følger lenken til posten i Koha$/) do
+  link = @browser.div(:class => "http://192.168.50.12:8005/ontology#recordID").a(:class => "link").href
+  steps %Q{
+    Gitt at jeg er logget inn som adminbruker
+    Gitt at det finnes en avdeling
+    Når jeg legger til en materialtype
+  }
+  @browser.goto(link)
 end
 
 Then(/^kommer jeg til Koha's presentasjon av biblio$/) do
@@ -146,6 +167,14 @@ end
 
 When(/^jeg vil katalogisere en utgivelse$/) do
   @site.RegPublication.visit
+end
+
+When(/^jeg oppretter et eksemplar av utgivelsen$/) do
+  @browser.button(:text => "New").click
+  @browser.link(:id => "newitem").click
+  @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
+  @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
+  @browser.button(:text => "Add item").click
 end
 
 Then(/^får utgivelsen tildelt en post\-ID i Koha$/) do

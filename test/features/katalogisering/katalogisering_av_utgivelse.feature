@@ -24,8 +24,8 @@ Egenskap: Katalogisering av utgivelse
     Gitt at det finnes et verk og en utgivelse
     Når jeg ser på utgivelsen i katalogiseringsgrensesnittet
     Og jeg følger lenken til posten i Koha
-    Så kan jeg opprette et eksemplar av utgivelsen
-    Og eksemplaret vises på verkssiden
+    Og jeg oppretter et eksemplar av utgivelsen
+    Så vises eksemplaret på verkssiden
 
   @wip
   Scenario: Verk og utgivelse finnes ikke
