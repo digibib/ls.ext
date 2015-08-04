@@ -1,5 +1,6 @@
 package no.deichman.services.patch;
 
+import com.google.gson.JsonParseException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -42,5 +43,16 @@ public class PatchObjectTypeAdapterTest {
                 .create();
         list.addAll(gson.fromJson(input,polt));
         assertEquals(2,list.size());
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void it_throws_when_unable_to_parse() {
+        List<PatchObject> list = new ArrayList<PatchObject>();
+        String input = "notverygoodisit";
+        Type polt = new TypeToken<List<PatchObject>>() {}.getType();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(polt, new PatchObjectTypeAdapter())
+                .create();
+        gson.fromJson(input,polt);
     }
 }
