@@ -15,7 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapterImpl;
-import no.deichman.services.repository.RepositoryDefault;
+import no.deichman.services.repository.FusekiRepository;
 import no.deichman.services.rest.utils.JSONLDCreator;
 import static no.deichman.services.rest.utils.MimeType.JSONLD;
 import static no.deichman.services.rest.utils.MimeType.LDPATCHJSON;
@@ -39,7 +39,7 @@ public final class WorkResource {
     private final JSONLDCreator jsonldCreator;
 
     public WorkResource() {
-        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), new KohaAdapterImpl()));
+        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new FusekiRepository(), new KohaAdapterImpl()));
     }
 
     public WorkResource(BaseURI baseURI, Service service) {

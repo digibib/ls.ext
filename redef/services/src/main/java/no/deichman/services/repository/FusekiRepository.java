@@ -29,7 +29,7 @@ import org.apache.jena.riot.RDFDataMgr;
 /**
  * Responsibility: TODO.
  */
-public final class RepositoryDefault implements Repository {
+public final class FusekiRepository implements Repository {
 
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private static final String UPDATE_URI = FUSEKI_PORT + "/ds/update";
@@ -39,7 +39,7 @@ public final class RepositoryDefault implements Repository {
     private final UniqueURIGenerator uriGenerator;
     private final KohaAdapter kohaAdapter;
 
-    public RepositoryDefault() {
+    public FusekiRepository() {
         System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
         bud = new BaseURIDefault();
         sqb = new SPARQLQueryBuilder(bud);

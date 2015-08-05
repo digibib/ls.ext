@@ -13,7 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import no.deichman.services.error.PatchParserException;
-import no.deichman.services.repository.RepositoryDefault;
+import no.deichman.services.repository.FusekiRepository;
 import no.deichman.services.rest.utils.JSONLDCreator;
 import no.deichman.services.rest.utils.MimeType;
 import no.deichman.services.rest.utils.PATCH;
@@ -36,7 +36,7 @@ public final class PublicationResource {
     private final JSONLDCreator jsonldCreator;
 
     public PublicationResource() {
-        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RepositoryDefault(), null));
+        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new FusekiRepository(), null));
     }
 
     public PublicationResource(BaseURI baseURI, Service service) {
