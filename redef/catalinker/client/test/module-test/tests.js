@@ -79,7 +79,6 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 6, function (test) {
       return document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#recordID_0"]')[0].disabled;
     });
     test.assertEqual(disabled, true);
-    casper.capture("test.png");
   });
 
   casper.run(function () {
