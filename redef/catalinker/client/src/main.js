@@ -75,8 +75,9 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
         },
         function (response) {
           // failed to patch resource
+          console.log("HTTP PATCH failed with: ");
+          console.log(response);
 
-          // TODO provide better error message (when we figure out how to deal with CORS responses)
           errors.push("Noe gikk galt! Fikk ikke lagret endringene");
         });
     }
@@ -122,6 +123,7 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
       ractive.set("save_status", "åpnet eksisterende ressurs");
     },
     function (response) {
+      console.log("HTTP GET existing resource failed with:");
       console.log(response);
     });
   };
