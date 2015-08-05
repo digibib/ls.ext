@@ -43,12 +43,10 @@ casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
 
 });
 
-casper.test.begin("Catalinker grensesnitt (utgivelse)", 4, function (test) {
-  casper.start('http://127.0.0.1:7777/publication');
+casper.test.begin("Catalinker grensesnitt (utgivelse)", 6, function (test) {
+  casper.start('http://127.0.0.1:7777/publication?resource=http://127.0.0.1:7777/publication/1');
 
-  casper.waitFor(function check() {
-    return this.getCurrentUrl() !== 'http://127.0.0.1:7777/publication'; // make sure we have been redirected
-  }, function then() {
+  casper.then(function () {
     test.assertHttpStatus(200);
     test.assertTitle("Katalogisering", "har riktig tittel");
     casper.waitForText("Katalogisering av utgivelse", function () {
@@ -65,6 +63,23 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 4, function (test) {
       return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value;
     });
     test.assertEqual(resource_uri, "http://127.0.0.1:7777/publication/1");
+  });
+
+  casper.waitFor(function check() {
+    return this.evaluate(function () {
+      return document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#recordID_0"]')[0].value !== "";
+    });
+  }, function then() {
+    var record_id = this.evaluate(function () {
+      return document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#recordID_0"]')[0].value;
+    });
+    test.assertEqual(record_id, "123");
+
+    var disabled = this.evaluate(function () {
+      return document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#recordID_0"]')[0].disabled;
+    });
+    test.assertEqual(disabled, true);
+    casper.capture("test.png");
   });
 
   casper.run(function () {

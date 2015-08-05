@@ -150,7 +150,13 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
     ractive.set("resource_label", ontology.resourceLabel(ont, ractive.get("resource_type"), "no").toLowerCase());
 
     for (var i = 0; i < props.length; i++) {
+      var disabled = false;
+      if (props[i]["http://data.deichman.no/ui#editable"] !== undefined && props[i]["http://data.deichman.no/ui#editable"] !== true) {
+        disabled = true;
+      }
+
       inputs.push({
+        disabled: disabled,
         predicate: ontology.resolveURI(ont,  props[i]["@id"]),
         range: props[i]["rdfs:range"]["@id"],
         label: props[i]["rdfs:label"][0]["@value"],

@@ -146,6 +146,20 @@ app.get("/ontology", function (req, res) {
           "@id" : "deichman:Work"
         }
       }, {
+        "@id" : "deichman:recordID",
+        "@type" : "rdfs:Property",
+        "rdfs:domain" : {
+          "@id" : "deichman:Publication"
+        },
+        "rdfs:label" : [{
+          "@language" : "no",
+          "@value" : "Koha post ID"
+        }],
+        "rdfs:range" : {
+          "@id" : "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        },
+        "http://data.deichman.no/ui#editable": false
+      }, {
         "@id" : "deichman:year",
         "@type" : "rdfs:Property",
         "rdfs:domain" : {
@@ -185,7 +199,7 @@ app.get("/work/1", function (req, res) {
       "@id" : "http://127.0.0.1:7777/work/1",
       "@type" : "deichman:Work",
       "@context" : {
-        "deichman" : "http://192.168.50.12:8005/ontology#"
+        "deichman" : "http://127.0.0.1:7777/ontology#"
       }
     }));
 });
@@ -200,9 +214,9 @@ app.get("/publication/1", function (req, res) {
     {
       "@id" : "http://127.0.0.1:7777/publication/1",
       "@type" : "deichman:Publication",
-      "deichman:recordID" : "1001",
+      "deichman:recordID" : "123",
       "@context" : {
-        "deichman" : "http://192.168.50.12:8005/ontology#"
+        "deichman" : "http://127.0.0.1:7777/ontology#"
       }
     }));
 });

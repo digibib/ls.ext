@@ -2,6 +2,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ui: <http://data.deichman.no/ui#> .
 
 :Work a rdfs:Class ;
   rdfs:label "Work"@en ;
@@ -30,6 +31,7 @@
   rdfs:range xsd:gYear .
 
 :recordID a rdfs:Property ;
+  ui:editable false ;
   rdfs:label "Record ID"@en ;
   rdfs:label "Post ID"@no ;
   rdfs:domain :Publication ;

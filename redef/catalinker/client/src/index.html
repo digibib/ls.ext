@@ -48,7 +48,7 @@
         {{#each inputs}}
           <div class="prop-input {{predicate}}">
             <div class="prop-details">
-              <button on-click="addValue">+</button>
+              {{^disabled}}<button on-click="addValue">+</button>{{/}}
               <label>{{label}}</label>
             </div>
             <div class="prop-values">
@@ -80,6 +80,7 @@
 
       {{#partial input-string}}
           <input
+            {{#disabled}} disabled="true" {{/}}
             class="{{#error}}invalid-input{{else}}valid{{/error}}"
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
@@ -90,6 +91,7 @@
 
       {{#partial input-lang-string}}
           <input
+            {{#disabled}} disabled="true" {{/}}
             class="{{#error}}invalid-input{{else}}valid{{/error}}"
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
@@ -108,6 +110,7 @@
 
       {{#partial input-gYear}}
           <input
+            {{#disabled}} disabled="true" {{/}}
             class="{{#error}}invalid-input{{else}}valid{{/error}}"
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
@@ -117,6 +120,7 @@
 
       {{#partial input-nonNegativeInteger}}
           <input
+            {{#disabled}} disabled="true" {{/}}
             class="{{#error}}invalid-input{{else}}valid{{/error}}"
             on-blur='patchResource:{{predicate}}'
             on-keyup="countdownToSave"
