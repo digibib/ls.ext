@@ -4,6 +4,7 @@
 
 require 'rdf'
 
+
 Book = Struct.new(:title, :biblionumber, :items) do
   def initialize
     self.title   = generateRandomString
@@ -13,7 +14,7 @@ Book = Struct.new(:title, :biblionumber, :items) do
   def addItem
     self.items << Item.new
   end
-end
+end unless defined?(Book)
 
 Resource = Struct.new(:uri, :literals, :ontology, :type) do
   def self.type_from_name(name)
@@ -67,7 +68,7 @@ Resource = Struct.new(:uri, :literals, :ontology, :type) do
       end
     end
   end
-end
+end unless defined?(Resource)
 
 Item = Struct.new(:barcode, :itemnumber, :branch, :itemtype) do
   def initialize
@@ -75,21 +76,21 @@ Item = Struct.new(:barcode, :itemnumber, :branch, :itemtype) do
     self.branch   = Branch.new
     self.itemtype = ItemType.new
   end
-end
+end unless defined?(Item)
 
 Branch = Struct.new(:code, :name) do
   def initialize
     self.code   = generateRandomString
     self.name   = generateRandomString
   end
-end
+end unless defined?(Branch)
 
 ItemType = Struct.new(:code, :desc) do
   def initialize
     self.code   = generateRandomString.upcase
     self.desc   = generateRandomString
   end
-end
+end unless defined?(ItemType)
 
 Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password, :debarred) do
   def initialize
@@ -99,7 +100,7 @@ Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch,
     self.category   = PatronCategory.new
     self.debarred   = false
   end
-end
+end unless defined?(Patron)
 
 PatronCategory = Struct.new(:code, :name, :description) do
   def initialize
@@ -107,4 +108,4 @@ PatronCategory = Struct.new(:code, :name, :description) do
     self.name        = generateRandomString
     self.description = generateRandomString
   end
-end
+end unless defined?(PatronCategory)
