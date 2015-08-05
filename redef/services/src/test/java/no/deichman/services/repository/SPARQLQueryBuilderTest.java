@@ -6,6 +6,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.update.UpdateAction;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,9 @@ public class SPARQLQueryBuilderTest {
         m.add(s);
         String newSubject = "http://example.com/z";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
-        String query = sqb.getCreateQueryString(newSubject, m);
+
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(newSubject), m);
+        String query = sqb.getCreateQueryString(m);
         String expected = "INSERT DATA {\n"
                            + "\n"
                            + "<http://example.com/z> <http://example.com/b> <http://example.com/c> .\n"

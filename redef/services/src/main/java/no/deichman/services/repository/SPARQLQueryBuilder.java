@@ -5,18 +5,16 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.update.UpdateAction;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Responsibility: TODO.
@@ -49,17 +47,10 @@ public final class SPARQLQueryBuilder {
     }
 
     public String getUpdateWorkQueryString(Model work) {
-        StringWriter sw = new StringWriter();
-        RDFDataMgr.write(sw, work, Lang.NTRIPLES);
-        String data = sw.toString();
-        return "INSERT DATA {\n"
-                + "\n"
-                + data
-                + "\n"
-                + "}";
+        return getCreateQueryString(work);
     }
 
-    private String renameWorkResource(String newURI) {
+    public String getReplaceSubjectQueryString(String newURI) {
         return "DELETE {\n"
                 + " ?s ?p ?o .\n"
                 + "}\n"
@@ -71,9 +62,7 @@ public final class SPARQLQueryBuilder {
                 + "}\n";
     }
 
-    public String getCreateQueryString(String id, Model work) {
-
-        UpdateAction.parseExecute(renameWorkResource(id), work);
+    public String getCreateQueryString(Model work) {
         StringWriter sw = new StringWriter();
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);
         String data = sw.toString();

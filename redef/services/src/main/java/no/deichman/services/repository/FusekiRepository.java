@@ -5,8 +5,10 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
@@ -34,6 +36,7 @@ public final class FusekiRepository implements Repository {
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private static final String UPDATE_URI = FUSEKI_PORT + "/ds/update";
     private static final String SPARQL_URI = FUSEKI_PORT + "/ds/sparql";
+    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
     private final SPARQLQueryBuilder sqb;
     private final BaseURIDefault bud;
     private final UniqueURIGenerator uriGenerator;
@@ -85,41 +88,44 @@ public final class FusekiRepository implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("work", this::askIfResourceExists);
+        String uri = uriGenerator.getNewURI("work", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(uriGenerator.toString()),
+                PLACEHOLDER_RESOURCE,
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
-        return id;
+        return uri;
     }
 
     @Override
     public String createPublication(String publication) throws XPathExpressionException, Exception {
         String recordID = kohaAdapter.getNewBiblio();
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("publication", this::askIfResourceExists);
+        String uri = uriGenerator.getNewURI("publication", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(id),
+                PLACEHOLDER_RESOURCE,
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
         Statement recordLink = ResourceFactory.createStatement(
-                ResourceFactory.createResource(id),
+                PLACEHOLDER_RESOURCE,
                 ResourceFactory.createProperty(bud.getOntologyURI() + "recordID"),
                 ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
         tempModel.add(publicationResource);
         tempModel.add(recordLink);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
+
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
         UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
-        return id;
+        return uri;
     }
 
     @Override

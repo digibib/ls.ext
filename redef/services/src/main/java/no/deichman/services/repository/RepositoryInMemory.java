@@ -7,6 +7,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
@@ -34,6 +35,7 @@ import org.apache.jena.riot.RDFDataMgr;
  */
 public final class RepositoryInMemory implements Repository {
 
+    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
     private final Dataset model;
     private final SPARQLQueryBuilder sqb;
     private final BaseURIMock bud;
@@ -99,19 +101,20 @@ public final class RepositoryInMemory implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("work", this::askIfResourceExists);
+        String uri = uriGenerator.getNewURI("work", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(uriGenerator.toString()),
+                PLACEHOLDER_RESOURCE,
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
         UpdateAction.execute(updateRequest, model);
 
-        return id;
+        return uri;
     }
 
 
@@ -119,25 +122,25 @@ public final class RepositoryInMemory implements Repository {
         String recordID = kohaAdapter.getNewBiblio();
 
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("publication", this::askIfResourceExists);
+        String uri = uriGenerator.getNewURI("publication", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
-        String publicationURI = uriGenerator.toString();
         Statement publicationResource = ResourceFactory.createStatement(
-                ResourceFactory.createResource(publicationURI),
+                PLACEHOLDER_RESOURCE,
                 RDF.type,
                 ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
         Statement recordLink = ResourceFactory.createStatement(
-                ResourceFactory.createResource(publicationURI),
+                PLACEHOLDER_RESOURCE,
                 ResourceFactory.createProperty(bud.getOntologyURI() + "recordID"),
                 ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
         tempModel.add(publicationResource);
         tempModel.add(recordLink);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(id, tempModel));
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
         UpdateAction.execute(updateRequest, model);
 
-        return id;
+        return uri;
     }
 
     @Override
