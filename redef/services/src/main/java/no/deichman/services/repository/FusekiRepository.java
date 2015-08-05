@@ -18,12 +18,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 import javax.xml.xpath.XPathExpressionException;
-
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.patch.Patch;
+import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -34,36 +33,52 @@ import org.apache.jena.riot.RDFDataMgr;
 public final class FusekiRepository implements Repository {
 
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
-    private static final String UPDATE_URI = FUSEKI_PORT + "/ds/update";
-    private static final String SPARQL_URI = FUSEKI_PORT + "/ds/sparql";
-    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
+    private static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
     private final SPARQLQueryBuilder sqb;
-    private final BaseURIDefault bud;
+    private final BaseURI baseURI;
     private final UniqueURIGenerator uriGenerator;
     private final KohaAdapter kohaAdapter;
+    private final String fusekiPort;
 
     public FusekiRepository() {
-        System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
-        bud = new BaseURIDefault();
-        sqb = new SPARQLQueryBuilder(bud);
-        uriGenerator = new UniqueURIGenerator(new BaseURIDefault());
-        kohaAdapter = new KohaAdapterImpl();
+        this(FUSEKI_PORT,
+                new UniqueURIGenerator(new BaseURIDefault()),
+                new SPARQLQueryBuilder(new BaseURIDefault()),
+                new KohaAdapterImpl(),
+                new BaseURIDefault());
+    }
+
+    FusekiRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, KohaAdapter kohaAdapter, BaseURI baseURI) {
+        this.fusekiPort = fusekiPort;
+        this.uriGenerator = uriGenerator;
+        sqb = sparqlQueryBuilder;
+        this.kohaAdapter = kohaAdapter;
+        this.baseURI = baseURI;
+        System.out.println("Repository started with FUSEKI_PORT: " + fusekiPort);
+    }
+
+    private String updateUri() {
+        return fusekiPort + "/ds/update";
+    }
+
+    private String sparqlUri() {
+        return fusekiPort + "/ds/sparql";
     }
 
     @Override
     public Model retrieveWorkById(final String id) {
-        String uri = bud.getWorkURI() + id;
+        String uri = baseURI.getWorkURI() + id;
         System.out.println("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.describeWorkAndLinkedPublication(uri))) {
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.describeWorkAndLinkedPublication(uri))) {
             return qexec.execDescribe();
         }
     }
 
     @Override
     public Model retrievePublicationById(final String id) {
-        String uri = bud.getPublicationURI() + id;
+        String uri = baseURI.getPublicationURI() + id;
         System.out.println("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.getGetResourceByIdQuery(uri))) {
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.getGetResourceByIdQuery(uri))) {
             return qexec.execDescribe();
         }
     }
@@ -72,15 +87,15 @@ public final class FusekiRepository implements Repository {
     public void updateWork(final String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         Model model = ModelFactory.createDefaultModel();
-         RDFDataMgr.read(model, stream, Lang.JSONLD);
+        RDFDataMgr.read(model, stream, Lang.JSONLD);
          
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getUpdateWorkQueryString(model));
-        UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
+        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
     }
 
     @Override
     public boolean askIfResourceExists(String uri) {
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.checkIfResourceExists(uri))){
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.checkIfResourceExists(uri))){
             return qexec.execAsk();
         }
     }
@@ -93,13 +108,13 @@ public final class FusekiRepository implements Repository {
         Statement workResource = ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
                 RDF.type,
-                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
+                ResourceFactory.createResource(baseURI.getOntologyURI() + "Work"));
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
-        UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
+        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
         return uri;
     }
 
@@ -112,10 +127,10 @@ public final class FusekiRepository implements Repository {
         Statement publicationResource = ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
                 RDF.type,
-                ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
+                ResourceFactory.createResource(baseURI.getOntologyURI() + "Publication"));
         Statement recordLink = ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(bud.getOntologyURI() + "recordID"),
+                ResourceFactory.createProperty(baseURI.getOntologyURI() + "recordID"),
                 ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
         tempModel.add(publicationResource);
         tempModel.add(recordLink);
@@ -124,13 +139,13 @@ public final class FusekiRepository implements Repository {
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
 
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
-        UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
+        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
         return uri;
     }
 
     @Override
     public boolean askIfStatementExists(Statement statement) {
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(SPARQL_URI, sqb.checkIfStatementExists(statement))){
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.checkIfStatementExists(statement))){
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -141,12 +156,12 @@ public final class FusekiRepository implements Repository {
     @Override
     public void delete(Model inputModel) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
-        UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
+        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
     }
 
     @Override
     public void patch(List<Patch> patches) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
-        UpdateExecutionFactory.createRemote(updateRequest, UPDATE_URI).execute();
+        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
     }
 }
