@@ -46,6 +46,10 @@ Then(/^verkets alternative tittel vises på verks\-siden$/) do
   @site.PatronClient.getTitle.should include(@context[:alt_title])
 end
 
+Then(/^vises eksemplaret på verkssiden$/) do
+  page = @site.PatronClient.visit(@context[:identifier].split("/").last)
+  page.existsExemplar.should be(true)
+end
 
 When(/^vises opplysningene om utgivelsen på verkssiden$/) do
   sleep 4 # TODO why does it take so long for previous step (knytte utgivelse til verket) to be persisted in DB?

@@ -88,6 +88,7 @@ Given(/^at det finnes et verk og en utgivelse$/) do
   steps %Q{
     Gitt at det finnes et verk
     Og at det finnes en utgivelse
+    Og får utgivelsen tildelt en post-ID i Koha
   }
 end
 
@@ -175,6 +176,18 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
   @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
   @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
   @browser.button(:text => "Add item").click
+  @cleanup.push( "delete items of bibilo" =>
+    lambda do
+      @browser.goto intranet(:biblio_detail)+@context[:record_id]
+
+      # delete all book items
+      @browser.execute_script("window.confirm = function(msg){return true;}")
+      @browser.button(:text => "Edit").click
+      @browser.a(:id => "deleteallitems").click
+
+      # TODO: deletion of biblio will be handled by services?
+    end
+  )
 end
 
 Then(/^får utgivelsen tildelt en post\-ID i Koha$/) do
@@ -185,10 +198,6 @@ end
 Then(/^det vises en lenke til posten i Koha i katalogiseringsgrensesnittet$/) do
   link = @browser.div(:class => "http://192.168.50.12:8005/ontology#recordID").a(:class => "link")
   link.href.should eq("http://192.168.50.12:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber="+@context[:record_id])
-end
-
-Then(/^vises eksemplaret på verkssiden$/) do
-  pending # express the regexp above with the code you wish you had
 end
 
 Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|

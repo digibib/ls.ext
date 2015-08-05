@@ -19,7 +19,6 @@ Egenskap: Katalogisering av utgivelse
     Så får utgivelsen tildelt en post-ID i Koha
     Og det vises en lenke til posten i Koha i katalogiseringsgrensesnittet
 
-  @wip
   Scenario: Utgivelse med eksemplar
     Gitt at det finnes et verk og en utgivelse
     Når jeg ser på utgivelsen i katalogiseringsgrensesnittet
