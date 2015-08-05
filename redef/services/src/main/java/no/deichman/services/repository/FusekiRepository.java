@@ -43,7 +43,7 @@ public final class FusekiRepository implements Repository {
         System.out.println("Repository started with FUSEKI_PORT: " + FUSEKI_PORT);
         bud = new BaseURIDefault();
         sqb = new SPARQLQueryBuilder(bud);
-        uriGenerator = new UniqueURIGenerator(this, new BaseURIDefault());
+        uriGenerator = new UniqueURIGenerator(new BaseURIDefault());
         kohaAdapter = new KohaAdapterImpl();
     }
 
@@ -85,7 +85,7 @@ public final class FusekiRepository implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("work");
+        String id = uriGenerator.getNewURI("work", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uriGenerator.toString()),
@@ -103,7 +103,7 @@ public final class FusekiRepository implements Repository {
     public String createPublication(String publication) throws XPathExpressionException, Exception {
         String recordID = kohaAdapter.getNewBiblio();
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("publication");
+        String id = uriGenerator.getNewURI("publication", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement publicationResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(id),

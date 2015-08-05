@@ -1,5 +1,6 @@
 package no.deichman.services.repository;
 
+import java.util.function.Predicate;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -9,11 +10,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 class UniqueURIGenerator {
 
     private static final int NO_OF_DIGITS = 12;
-    private Repository repository;
     private BaseURI baseURI;
 
-    UniqueURIGenerator(Repository repository, BaseURI baseURI) {
-        this.repository = repository;
+    UniqueURIGenerator(BaseURI baseURI) {
         this.baseURI = baseURI;
     }
 
@@ -33,13 +32,13 @@ class UniqueURIGenerator {
         return result;
     }
 
-    String getNewURI(String type) {
+    String getNewURI(String type, Predicate<String> existsChecker) {
         String random = null;
         boolean exists = true;
 
         while (exists) {
             random = buildUri(type, getRandom());
-            exists = repository.askIfResourceExists(random);
+            exists = existsChecker.test(random);
         }
         return random;
     }

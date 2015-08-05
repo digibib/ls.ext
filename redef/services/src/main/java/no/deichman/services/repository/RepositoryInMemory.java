@@ -47,7 +47,7 @@ public final class RepositoryInMemory implements Repository {
         model2.read("testdata.ttl", "TURTLE");
         model = DatasetFactory.createMem();
         model.setDefaultModel(model2);
-        uriGenerator = new UniqueURIGenerator(this, new BaseURIMock());
+        uriGenerator = new UniqueURIGenerator(new BaseURIMock());
         kohaAdapter = new KohaAdapterImpl();
     }
 
@@ -99,7 +99,7 @@ public final class RepositoryInMemory implements Repository {
     @Override
     public String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("work");
+        String id = uriGenerator.getNewURI("work", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
         Statement workResource = ResourceFactory.createStatement(
                 ResourceFactory.createResource(uriGenerator.toString()),
@@ -119,7 +119,7 @@ public final class RepositoryInMemory implements Repository {
         String recordID = kohaAdapter.getNewBiblio();
 
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        String id = uriGenerator.getNewURI("publication");
+        String id = uriGenerator.getNewURI("publication", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
         String publicationURI = uriGenerator.toString();
         Statement publicationResource = ResourceFactory.createStatement(

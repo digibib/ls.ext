@@ -12,19 +12,28 @@ public class UniqueURIGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        uriGenerator = new UniqueURIGenerator(new RepositoryInMemory(), new BaseURIMock());
+        uriGenerator = new UniqueURIGenerator(new BaseURIMock());
     }
 
     @Test
     public void should_return_new_work_ID() {
-        String uri = uriGenerator.getNewURI("work");
+        String uri = uriGenerator.getNewURI("work", s -> false);
         assertNotNull(uri);
         assertTrue(uri.contains("/work"));
     }
 
     @Test
-    public void should_return_new_publication_ID() {
-        String uri = uriGenerator.getNewURI("publication");
+    public void should_return_new_publication_id_even_if_first_attempt_fails() {
+        boolean[] existsFlag = new boolean[1];
+        existsFlag[0] = true;
+        String uri = uriGenerator.getNewURI(
+                "publication",
+                s -> {
+                    boolean result = existsFlag[0];
+                    existsFlag[0] = false;
+                    return result;
+                }
+        );
         assertNotNull(uri);
         assertTrue(uri.contains("/publication"));
     }
