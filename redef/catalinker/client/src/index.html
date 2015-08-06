@@ -42,7 +42,7 @@
           </div>
           <div class="prop-values">
             <input disabled="disabled" data-automation-id="resource_uri" value="{{resource_uri}}"/>
-            <a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>
+            {{#resource_type === "Work"}}<a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>{{/}}
           </div>
         </div>
         {{#each inputs}}
