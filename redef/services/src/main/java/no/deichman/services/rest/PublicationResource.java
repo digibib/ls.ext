@@ -14,7 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapterImpl;
-import no.deichman.services.repository.FusekiRepositoryImpl;
+import no.deichman.services.repository.RemoteRepository;
 import no.deichman.services.rest.utils.JSONLDCreator;
 import no.deichman.services.rest.utils.MimeType;
 import no.deichman.services.rest.utils.PATCH;
@@ -37,7 +37,7 @@ public final class PublicationResource {
     private final JSONLDCreator jsonldCreator;
 
     public PublicationResource() {
-        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new FusekiRepositoryImpl(), new KohaAdapterImpl()));
+        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RemoteRepository(), new KohaAdapterImpl()));
     }
 
     public PublicationResource(BaseURI baseURI, Service service) {

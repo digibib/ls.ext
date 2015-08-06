@@ -11,19 +11,19 @@ import no.deichman.services.uridefaults.BaseURIDefault;
 /**
  * Responsibility: Remotely calling a sparql endpoint to do queries and updates.
  */
-public final class FusekiRepositoryImpl extends FusekiRepository {
+public final class RemoteRepository extends RDFRepositoryBase {
 
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private final String fusekiPort;
 
-    public FusekiRepositoryImpl() {
+    public RemoteRepository() {
         this(FUSEKI_PORT,
                 new UniqueURIGenerator(new BaseURIDefault()),
                 new SPARQLQueryBuilder(new BaseURIDefault()),
                 new BaseURIDefault());
     }
 
-    FusekiRepositoryImpl(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
+    RemoteRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
         super(baseURI, sparqlQueryBuilder, uriGenerator);
         this.fusekiPort = fusekiPort;
         System.out.println("Repository started with FUSEKI_PORT: " + fusekiPort);

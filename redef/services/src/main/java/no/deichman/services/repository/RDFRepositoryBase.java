@@ -25,7 +25,7 @@ import org.apache.jena.riot.RDFDataMgr;
 /**
  * Responsibility: TODO.
  */
-public abstract class FusekiRepository implements Repository {
+public abstract class RDFRepositoryBase implements RDFRepository {
 
     public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
 
@@ -33,7 +33,7 @@ public abstract class FusekiRepository implements Repository {
     private final SPARQLQueryBuilder sqb;
     private final UniqueURIGenerator uriGenerator;
 
-    FusekiRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
+    RDFRepositoryBase(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         this.baseURI = baseURI;
         this.sqb = sqb;
         this.uriGenerator = uriGenerator;

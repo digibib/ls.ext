@@ -23,9 +23,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class RepositoryInMemoryTest {
+public class InMemoryRepositoryTest {
     public static final String A_BIBLIO_NO = "34567";
-    private RepositoryInMemory repository;
+    private InMemoryRepository repository;
     private Statement testWorkStmt;
     private Statement testPublicationStmt;
     private List<Statement> stmts;
@@ -33,7 +33,7 @@ public class RepositoryInMemoryTest {
 
     @Before
     public void setup(){
-        repository = new RepositoryInMemory();
+        repository = new InMemoryRepository();
         bud = new BaseURIMock();
         testWorkStmt = ResourceFactory.createStatement(
                         ResourceFactory.createResource(bud.getWorkURI() + "test_id_123"),
@@ -63,7 +63,7 @@ public class RepositoryInMemoryTest {
 
     @Test
     public void test_it_exists(){
-        assertNotNull(new RepositoryInMemory());
+        assertNotNull(new InMemoryRepository());
     }
 
     @Test
@@ -166,8 +166,8 @@ public class RepositoryInMemoryTest {
         assertTrue(repository.askIfResourceExists(test));
     }
 
-    public static RepositoryInMemory repositoryWithDataFrom(String fileName) {
-        final RepositoryInMemory repository = new RepositoryInMemory();
+    public static InMemoryRepository repositoryWithDataFrom(String fileName) {
+        final InMemoryRepository repository = new InMemoryRepository();
         Model testDataModel = ModelFactory.createDefaultModel();
         testDataModel.read(fileName, "TURTLE");
         repository.addData(testDataModel);

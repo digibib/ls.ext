@@ -14,14 +14,14 @@ import no.deichman.services.uridefaults.BaseURIMock;
 /**
  * Responsibility: Implement an in-memory RDF-repository.
  */
-public final class RepositoryInMemory extends FusekiRepository {
+public final class InMemoryRepository extends RDFRepositoryBase {
     private final Dataset model;
 
-    public RepositoryInMemory() {
+    public InMemoryRepository() {
         this(new BaseURIMock(), new SPARQLQueryBuilder(new BaseURIMock()), new UniqueURIGenerator(new BaseURIMock()));
     }
 
-    public RepositoryInMemory(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
+    public InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         super(baseURI, sqb, uriGenerator);
         model = DatasetFactory.createMem();
         System.out.println("In-memory repository started.");

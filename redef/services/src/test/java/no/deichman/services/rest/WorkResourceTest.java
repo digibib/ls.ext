@@ -18,8 +18,8 @@ import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
-import no.deichman.services.repository.RepositoryInMemory;
-import static no.deichman.services.repository.RepositoryInMemoryTest.repositoryWithDataFrom;
+import no.deichman.services.repository.InMemoryRepository;
+import static no.deichman.services.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -43,12 +43,12 @@ public class WorkResourceTest {
 
     private WorkResource resource;
     private BaseURIMock bum;
-    private RepositoryInMemory repository;
+    private InMemoryRepository repository;
 
     @Before
     public void setUp() throws Exception {
         bum = new BaseURIMock();
-        repository = new RepositoryInMemory();
+        repository = new InMemoryRepository();
         resource = new WorkResource(bum, new ServiceImpl(bum, repository, null));
     }
 

@@ -15,8 +15,8 @@ import java.nio.charset.StandardCharsets;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
-import no.deichman.services.repository.RepositoryInMemory;
-import static no.deichman.services.repository.RepositoryInMemoryTest.repositoryWithDataFrom;
+import no.deichman.services.repository.InMemoryRepository;
+import static no.deichman.services.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -40,7 +40,7 @@ public class ServiceImplTest {
 
     private static final String A_BIBLIO_ID = "234567";
     private ServiceImpl service;
-    private RepositoryInMemory repository;
+    private InMemoryRepository repository;
     private String ontologyURI;
     private String workURI;
     private String publicationURI;
@@ -52,7 +52,7 @@ public class ServiceImplTest {
     @Before
     public void setup(){
         BaseURI baseURI = new BaseURIMock();
-        repository = new RepositoryInMemory();
+        repository = new InMemoryRepository();
         service = new ServiceImpl(baseURI, repository, mockKohaAdapter);
         ontologyURI = baseURI.getOntologyURI();
         workURI = baseURI.getWorkURI();

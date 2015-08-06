@@ -8,7 +8,7 @@ import no.deichman.services.patch.Patch;
 /**
  * Responsibility: TODO.
  */
-public interface Repository {
+public interface RDFRepository {
 
     String createWork(String work);
     String createPublication(String publication, String recordID);

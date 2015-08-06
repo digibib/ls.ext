@@ -15,7 +15,7 @@ import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.repository.RepositoryInMemory;
+import no.deichman.services.repository.InMemoryRepository;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
@@ -57,7 +57,7 @@ public class PublicationResourceTest {
     @Before
     public void setUp() throws Exception {
         BaseURI baseURI = new BaseURIMock();
-        ServiceImpl service = new ServiceImpl(baseURI, new RepositoryInMemory(), mockKohaAdapter);
+        ServiceImpl service = new ServiceImpl(baseURI, new InMemoryRepository(), mockKohaAdapter);
         resource = new PublicationResource(baseURI, service);
     }
 
