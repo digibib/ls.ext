@@ -4,6 +4,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -20,5 +21,11 @@ public final class RDFModelUtil {
         Model m = ModelFactory.createDefaultModel();
         RDFDataMgr.read(m, is, lang);
         return m;
+    }
+
+    public static String stringFrom(Model in, Lang lang) {
+        final StringWriter out = new StringWriter();
+        RDFDataMgr.write(out, in, lang);
+        return out.toString();
     }
 }
