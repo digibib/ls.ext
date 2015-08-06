@@ -53,6 +53,9 @@ public class CORSResponseFilterTest {
     private final MultivaluedHashMap<String, String> fakeReqHeaderMap = new MultivaluedHashMap<>();
     private final MultivaluedMap<String, Object> fakeRespHeaderMap = new MultivaluedHashMap<>();
 
+    @Mock
+    private MultivaluedHashMap<String,String> mockRequestHeadersWithoutOrigin;
+
     private CORSResponseFilter filter;
 
     @Before
@@ -78,7 +81,6 @@ public class CORSResponseFilterTest {
     @Test @Ignore("TODO make this pass")
     public void should_not_add_headers_to_non_CORS_requests() throws IOException {
         // Setup for non-CORS-request
-        final MultivaluedHashMap mockRequestHeadersWithoutOrigin = mock(MultivaluedHashMap.class);
         when(mockRequestHeadersWithoutOrigin.containsKey(ORIGIN_HEADER_KEY)).thenReturn(NO_ORIGIN_HEADER);
 
         final ContainerRequestContext nonCORSRequestCtx = mock(ContainerRequestContext.class);
