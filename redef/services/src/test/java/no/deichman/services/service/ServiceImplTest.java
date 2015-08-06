@@ -43,38 +43,6 @@ public class ServiceImplTest {
     private String workURI;
     private String publicationURI;
 
-    private String getTestJSON(String id, String type) {
-        String resourceClass = null;
-        String resourceURI = null;
-
-        if (type.toLowerCase().equals("work")) {
-            resourceClass = "Work";
-            resourceURI = workURI;
-        } else if (type.toLowerCase().equals("publication")) {
-            resourceClass = "Publication";
-            resourceURI = publicationURI;
-        }
-
-        return "{\"@context\": "
-                + "{\"dcterms\": \"http://purl.org/dc/terms/\","
-                + "\"deichman\": \"" + ontologyURI + "\"},"
-                + "\"@graph\": "
-                + "{\"@id\": \"" + resourceURI + "" + id + "\","
-                + "\"@type\": \"deichman:" + resourceClass + "\","
-                + "\"dcterms:identifier\":\"" + id + "\"}}";
-    }
-
-    private String getTestPatch(String operation, String id) {
-        return "{"
-        + "\"op\": \"add\","
-        + "\"s\": \"" + id + "\","
-        + "\"p\": \"" + ontologyURI + "color\","
-        + "\"o\": {"
-        + "\"value\": \"red\""
-        + "}"
-        + "}";
-    }
-
     @Before
     public void setup(){
         BaseURI baseURI = new BaseURIMock();
@@ -270,4 +238,37 @@ public class ServiceImplTest {
         String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
         service.patchWork(workId.replace(workURI, ""),badPatchData);
     }
+
+    private String getTestJSON(String id, String type) {
+        String resourceClass = null;
+        String resourceURI = null;
+
+        if (type.toLowerCase().equals("work")) {
+            resourceClass = "Work";
+            resourceURI = workURI;
+        } else if (type.toLowerCase().equals("publication")) {
+            resourceClass = "Publication";
+            resourceURI = publicationURI;
+        }
+
+        return "{\"@context\": "
+                + "{\"dcterms\": \"http://purl.org/dc/terms/\","
+                + "\"deichman\": \"" + ontologyURI + "\"},"
+                + "\"@graph\": "
+                + "{\"@id\": \"" + resourceURI + "" + id + "\","
+                + "\"@type\": \"deichman:" + resourceClass + "\","
+                + "\"dcterms:identifier\":\"" + id + "\"}}";
+    }
+
+    private String getTestPatch(String operation, String id) {
+        return "{"
+                + "\"op\": \"add\","
+                + "\"s\": \"" + id + "\","
+                + "\"p\": \"" + ontologyURI + "color\","
+                + "\"o\": {"
+                + "\"value\": \"red\""
+                + "}"
+                + "}";
+    }
+
 }
