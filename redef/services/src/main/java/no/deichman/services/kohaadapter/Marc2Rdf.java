@@ -28,6 +28,7 @@ public final class Marc2Rdf {
     private static final String DEICHMAN_ITEM = "Item";
     private static final String DEICHMAN_STATUS = "status";
     private static final String DEICHMAN_LOCATION = "location";
+    private static final String DEICHMAN_BARCODE = "barcode";
     private BaseURI baseURI;
 
     public Marc2Rdf(){
@@ -60,6 +61,7 @@ public final class Marc2Rdf {
             model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_FORMAT, itemData.getSubfield('y').getData()));
             model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_STATUS, itemData.getSubfield('q') != null ? itemData.getSubfield('q').getData() : "AVAIL"));
             model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_LOCATION, itemData.getSubfield('a').getData()));
+            model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_BARCODE, itemData.getSubfield('p').getData()));
         }
         return model;
     }

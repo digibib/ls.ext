@@ -98,12 +98,14 @@ public class SPARQLQueryBuilderTest {
                 + "( ["
                 + "    a deichman:Item ;"
                 + "    deichman:location ?location ;"
-                + "    deichman:status ?status"
+                + "    deichman:status ?status ;"
+                + "    deichman:barcode ?barcode"
                 + "  ])"
                 + "} WHERE { \n"
                 + "  ?uri a deichman:Item ;\n"
                 + "    deichman:location ?location;\n"
-                + "    deichman:status ?status .\n"
+                + "    deichman:status ?status ;"
+                + "    deichman:barcode ?barcode .\n"
                 + "}";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
         Query query = sqb.getItemsFromModelQuery(uri);

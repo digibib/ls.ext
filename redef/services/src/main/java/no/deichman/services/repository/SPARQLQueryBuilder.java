@@ -92,12 +92,14 @@ public final class SPARQLQueryBuilder {
                 + "( ["
                 + "    a deichman:Item ;"
                 + "    deichman:location ?location ;"
-                + "    deichman:status ?status"
+                + "    deichman:status ?status ;"
+                + "    deichman:barcode ?barcode"
                 + "  ])"
                 + "} WHERE { \n"
                 + "  ?uri a deichman:Item ;\n"
                 + "    deichman:location ?location;\n"
-                + "    deichman:status ?status .\n"
+                + "    deichman:status ?status ;"
+                + "    deichman:barcode ?barcode .\n"
                 + "}";
        return QueryFactory.create(q);
     }
