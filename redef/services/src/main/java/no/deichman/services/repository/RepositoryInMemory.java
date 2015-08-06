@@ -1,48 +1,30 @@
 package no.deichman.services.repository;
 
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
+import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
-import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
-import com.hp.hpl.jena.vocabulary.RDF;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import no.deichman.services.patch.Patch;
+import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 
 /**
- * Responsibility: TODO.
+ * Responsibility: Implement an in-memory RDF-repository.
  */
-public final class RepositoryInMemory implements Repository {
-
-    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
+public final class RepositoryInMemory extends FusekiRepository {
     private final Dataset model;
-    private final SPARQLQueryBuilder sqb;
-    private final BaseURIMock bud;
-    private final UniqueURIGenerator uriGenerator;
 
     public RepositoryInMemory() {
-        bud = new BaseURIMock();
-        sqb = new SPARQLQueryBuilder(bud);
-        Model model2 = ModelFactory.createDefaultModel();
-        model2.read("testdata.ttl", "TURTLE");
+        this(new BaseURIMock(), new SPARQLQueryBuilder(new BaseURIMock()), new UniqueURIGenerator(new BaseURIMock()));
+    }
+
+    public RepositoryInMemory(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
+        super(baseURI, sqb, uriGenerator);
         model = DatasetFactory.createMem();
-        model.setDefaultModel(model2);
-        uriGenerator = new UniqueURIGenerator(new BaseURIMock());
+        System.out.println("In-memory repository started.");
     }
 
     public void addData(Model newData){
@@ -58,101 +40,12 @@ public final class RepositoryInMemory implements Repository {
     }
 
     @Override
-    public Model retrieveWorkById(String id) {
-        String uri = bud.getWorkURI() + id;
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.describeWorkAndLinkedPublication(uri), model)) {
-            return qexec.execDescribe();
-        }
+    protected QueryExecution getQueryExecution(Query query) {
+        return QueryExecutionFactory.create(query, model);
     }
 
     @Override
-    public Model retrievePublicationById(String id) {
-        String uri = bud.getPublicationURI() + id;
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.getGetResourceByIdQuery(uri), model)) {
-            return qexec.execDescribe();
-        }
+    protected void executeUpdate(UpdateRequest updateRequest) {
+        UpdateAction.execute(updateRequest, this.model);
     }
-
-    @Override
-    public void updateWork(String work) {
-        InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        Model tempModel = ModelFactory.createDefaultModel();
-        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
-
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getUpdateWorkQueryString(tempModel));
-        UpdateAction.execute(updateRequest, model);
-    }
-
-    @Override
-    public boolean askIfResourceExists(String uri) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfResourceExists(uri), model)) {
-            return qexec.execAsk();
-        }
-    }
-
-    @Override
-    public String createWork(String work) {
-        InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        String uri = uriGenerator.getNewURI("work", this::askIfResourceExists);
-        Model tempModel = ModelFactory.createDefaultModel();
-        Statement workResource = ResourceFactory.createStatement(
-                PLACEHOLDER_RESOURCE,
-                RDF.type,
-                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
-        tempModel.add(workResource);
-        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
-
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
-        UpdateAction.execute(updateRequest, model);
-
-        return uri;
-    }
-
-
-    @Override
-    public String createPublication(String publication, String recordID) {
-        InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        String uri = uriGenerator.getNewURI("publication", this::askIfResourceExists);
-        Model tempModel = ModelFactory.createDefaultModel();
-        Statement publicationResource = ResourceFactory.createStatement(
-                PLACEHOLDER_RESOURCE,
-                RDF.type,
-                ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
-        Statement recordLink = ResourceFactory.createStatement(
-                PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(bud.getOntologyURI() + "recordID"),
-                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
-        tempModel.add(publicationResource);
-        tempModel.add(recordLink);
-        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
-
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
-        UpdateAction.execute(updateRequest, model);
-        return uri;
-    }
-
-    @Override
-    public boolean askIfStatementExists(Statement statement) {
-        try (QueryExecution qexec = QueryExecutionFactory.create(sqb.checkIfStatementExists(statement), model)) {
-            return qexec.execAsk();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public void delete(Model inputModel) {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
-        UpdateAction.execute(updateRequest, model);
-    }
-
-    @Override
-    public void patch(List<Patch> patches) {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
-        UpdateAction.execute(updateRequest, model);
-    }
-
 }

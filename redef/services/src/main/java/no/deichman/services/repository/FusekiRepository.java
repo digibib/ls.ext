@@ -1,15 +1,14 @@
 package no.deichman.services.repository;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
-import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -20,82 +19,67 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
 /**
  * Responsibility: TODO.
  */
-public final class FusekiRepository implements Repository {
+public abstract class FusekiRepository implements Repository {
 
-    private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
-    private static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
-    private final SPARQLQueryBuilder sqb;
+    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
+
     private final BaseURI baseURI;
+    private final SPARQLQueryBuilder sqb;
     private final UniqueURIGenerator uriGenerator;
-    private final String fusekiPort;
 
-    public FusekiRepository() {
-        this(FUSEKI_PORT,
-                new UniqueURIGenerator(new BaseURIDefault()),
-                new SPARQLQueryBuilder(new BaseURIDefault()),
-                new BaseURIDefault());
-    }
-
-    FusekiRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
-        this.fusekiPort = fusekiPort;
-        this.uriGenerator = uriGenerator;
-        sqb = sparqlQueryBuilder;
+    FusekiRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         this.baseURI = baseURI;
-        System.out.println("Repository started with FUSEKI_PORT: " + fusekiPort);
+        this.sqb = sqb;
+        this.uriGenerator = uriGenerator;
     }
 
-    private String updateUri() {
-        return fusekiPort + "/ds/update";
-    }
+    protected abstract QueryExecution getQueryExecution(Query query);
 
-    private String sparqlUri() {
-        return fusekiPort + "/ds/sparql";
-    }
+    protected abstract void executeUpdate(UpdateRequest updateRequest);
 
     @Override
-    public Model retrieveWorkById(final String id) {
+    public final Model retrieveWorkById(String id) {
         String uri = baseURI.getWorkURI() + id;
         System.out.println("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.describeWorkAndLinkedPublication(uri))) {
+        try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedPublication(uri))) {
             return qexec.execDescribe();
         }
     }
 
     @Override
-    public Model retrievePublicationById(final String id) {
+    public final Model retrievePublicationById(final String id) {
         String uri = baseURI.getPublicationURI() + id;
         System.out.println("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.getGetResourceByIdQuery(uri))) {
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
             return qexec.execDescribe();
         }
     }
 
     @Override
-    public void updateWork(final String work) {
+    public final void updateWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         Model model = ModelFactory.createDefaultModel();
         RDFDataMgr.read(model, stream, Lang.JSONLD);
-         
+
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getUpdateWorkQueryString(model));
-        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
+        executeUpdate(updateRequest);
     }
 
     @Override
-    public boolean askIfResourceExists(String uri) {
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.checkIfResourceExists(uri))){
+    public final boolean askIfResourceExists(String uri) {
+        try (QueryExecution qexec = getQueryExecution(sqb.checkIfResourceExists(uri))){
             return qexec.execAsk();
         }
     }
 
     @Override
-    public String createWork(String work) {
+    public final String createWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         String uri = uriGenerator.getNewURI("work", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
@@ -108,12 +92,12 @@ public final class FusekiRepository implements Repository {
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
-        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
+        executeUpdate(updateRequest);
         return uri;
     }
 
     @Override
-    public String createPublication(String publication, String recordID) {
+    public final String createPublication(String publication, String recordID) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String uri = uriGenerator.getNewURI("publication", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
@@ -130,15 +114,14 @@ public final class FusekiRepository implements Repository {
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
-
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
-        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
+        executeUpdate(updateRequest);
         return uri;
     }
 
     @Override
-    public boolean askIfStatementExists(Statement statement) {
-        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(sparqlUri(), sqb.checkIfStatementExists(statement))){
+    public final boolean askIfStatementExists(Statement statement) {
+        try (QueryExecution qexec = getQueryExecution(sqb.checkIfStatementExists(statement))) {
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -147,14 +130,14 @@ public final class FusekiRepository implements Repository {
     }
 
     @Override
-    public void delete(Model inputModel) {
+    public final void delete(Model inputModel) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
-        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
+        executeUpdate(updateRequest);
     }
 
     @Override
-    public void patch(List<Patch> patches) {
+    public final void patch(List<Patch> patches) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
-        UpdateExecutionFactory.createRemote(updateRequest, updateUri()).execute();
+        executeUpdate(updateRequest);
     }
 }

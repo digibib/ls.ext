@@ -22,7 +22,7 @@ import no.deichman.services.patch.Patch;
 import no.deichman.services.patch.PatchObject;
 import no.deichman.services.patch.PatchParser;
 import no.deichman.services.repository.Repository;
-import no.deichman.services.repository.FusekiRepository;
+import no.deichman.services.repository.FusekiRepositoryImpl;
 import no.deichman.services.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
@@ -38,7 +38,7 @@ public final class ServiceImpl implements Service {
     private final Property recordID;
 
     public ServiceImpl(){
-        this(new BaseURIDefault(), new FusekiRepository(), new KohaAdapterImpl());
+        this(new BaseURIDefault(), new FusekiRepositoryImpl(), new KohaAdapterImpl());
     }
 
     public ServiceImpl(BaseURI baseURI, Repository repository, KohaAdapter kohaAdapter){

@@ -79,7 +79,7 @@ public class RepositoryInMemoryTest {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         String uri = repository.createPublication(publication, A_BIBLIO_NO);
         String publicationId = uri;
-        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + bud.getOntologyURI() +"recordID> ?value .}");
+        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + bud.getOntologyURI() + "recordID> ?value .}");
         QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
         assertTrue(qexec.execAsk());
     }
@@ -87,7 +87,7 @@ public class RepositoryInMemoryTest {
     public void test_add_data(){
         Model testModel = ModelFactory.createDefaultModel();
         Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"), 
+                ResourceFactory.createResource("http://example.com/a"),
                 ResourceFactory.createProperty("http://example.com/ontology/name"),
                 ResourceFactory.createPlainLiteral("Test"));
         repository.addData(testModel);
@@ -161,8 +161,18 @@ public class RepositoryInMemoryTest {
 
     @Test
     public void shouldReturnThatIDisNotAvailable() {
+        repository = repositoryWithDataFrom("testdata.ttl");
         String test = "http://deichman.no/work/work_00001";
         assertTrue(repository.askIfResourceExists(test));
     }
+
+    public static RepositoryInMemory repositoryWithDataFrom(String fileName) {
+        final RepositoryInMemory repository = new RepositoryInMemory();
+        Model testDataModel = ModelFactory.createDefaultModel();
+        testDataModel.read(fileName, "TURTLE");
+        repository.addData(testDataModel);
+        return repository;
+    }
+
 
 }

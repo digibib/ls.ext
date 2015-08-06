@@ -19,6 +19,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.RepositoryInMemory;
+import static no.deichman.services.repository.RepositoryInMemoryTest.repositoryWithDataFrom;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -42,11 +43,13 @@ public class WorkResourceTest {
 
     private WorkResource resource;
     private BaseURIMock bum;
+    private RepositoryInMemory repository;
 
     @Before
     public void setUp() throws Exception {
         bum = new BaseURIMock();
-        resource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), null));
+        repository = new RepositoryInMemory();
+        resource = new WorkResource(bum, new ServiceImpl(bum, repository, null));
     }
 
     @Test
@@ -55,8 +58,10 @@ public class WorkResourceTest {
     }
 
     @Test
-    public void should_return_a_valid_json_work() {
+    public void should_return_af_valid_json_work() {
+        resource = new WorkResource(bum, new ServiceImpl(bum, repositoryWithDataFrom("testdata.ttl"), null));
         String workId = "work_00001";
+
         Response result = resource.getWorkJSON(workId);
 
         assertNotNull(result);
@@ -136,11 +141,11 @@ public class WorkResourceTest {
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        WorkResource myResource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), mockKohaAdapter));
+        resource = new WorkResource(bum, new ServiceImpl(bum, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 
-        Response result = myResource.getWorkItems(workId);
+        Response result = resource.getWorkItems(workId);
         System.out.println(result.getEntity().toString());
 
         assertNotNull(result);

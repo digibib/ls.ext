@@ -15,8 +15,8 @@ import java.nio.charset.StandardCharsets;
 import no.deichman.services.error.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
-import no.deichman.services.repository.Repository;
 import no.deichman.services.repository.RepositoryInMemory;
+import static no.deichman.services.repository.RepositoryInMemoryTest.repositoryWithDataFrom;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -40,7 +40,7 @@ public class ServiceImplTest {
 
     private static final String A_BIBLIO_ID = "234567";
     private ServiceImpl service;
-    private Repository repository;
+    private RepositoryInMemory repository;
     private String ontologyURI;
     private String workURI;
     private String publicationURI;
@@ -121,8 +121,8 @@ public class ServiceImplTest {
     @Test
     public void test_retrieve_work_items_by_id(){
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
+        Service myService = new ServiceImpl(new BaseURIMock(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
-        Service myService = new ServiceImpl(new BaseURIMock(), repository, mockKohaAdapter);
         Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
         Property p = ResourceFactory.createProperty(ontologyURI + "hasEdition");
         NodeIterator ni = m.listObjectsOfProperty(p);
