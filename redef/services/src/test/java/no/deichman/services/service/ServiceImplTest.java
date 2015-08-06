@@ -26,27 +26,34 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
-import static org.mockito.Mockito.mock;
+import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ServiceImplTest {
 
+    private static final String A_BIBLIO_ID = "234567";
     private ServiceImpl service;
     private Repository repository;
     private String ontologyURI;
     private String workURI;
     private String publicationURI;
 
+
+    @Mock
+    private KohaAdapter mockKohaAdapter;
+
     @Before
     public void setup(){
         BaseURI baseURI = new BaseURIMock();
         repository = new RepositoryInMemory();
-        service = new ServiceImpl(baseURI, repository, null);
+        service = new ServiceImpl(baseURI, repository, mockKohaAdapter);
         ontologyURI = baseURI.getOntologyURI();
         workURI = baseURI.getWorkURI();
         publicationURI = baseURI.getPublicationURI();
@@ -71,8 +78,9 @@ public class ServiceImplTest {
         assertTrue(test.isIsomorphicWith(comparison));
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void test_retrieve_publication_by_id() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_EXIST";
         String publicationData = getTestJSON(testId,"publication");
         String publicationId = service.createPublication(publicationData);
@@ -112,7 +120,6 @@ public class ServiceImplTest {
 
     @Test
     public void test_retrieve_work_items_by_id(){
-        KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
         Service myService = new ServiceImpl(new BaseURIMock(), repository, mockKohaAdapter);
@@ -140,8 +147,9 @@ public class ServiceImplTest {
         assertTrue(repository.askIfStatementExists(s));
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void test_create_publication() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SERVICE_CREATE_PUBLICATION";
         String publication = getTestJSON(testId, "publication");
         String publicationId = service.createPublication(publication);
@@ -171,8 +179,9 @@ public class ServiceImplTest {
         assertFalse(repository.askIfStatementExists(s));
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void test_delete_publication() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
         String publicationId = service.createPublication(publication);
@@ -216,8 +225,9 @@ public class ServiceImplTest {
                 "<"+ workId + "> <" + ontologyURI + "color> \"red\" .");
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void test_patch_publication_add() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_PATCHABLE";
         String publicationData = getTestJSON(testId,"publication");
         String publicationId = service.createPublication(publicationData);

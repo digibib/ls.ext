@@ -28,10 +28,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PublicationResourceTest {
+
+    private static final String A_BIBLIO_ID = "1234";
 
     private PublicationResource resource;
 
@@ -45,11 +51,13 @@ public class PublicationResourceTest {
                 + "\"dcterms:identifier\":\"" + id + "\"}}";
     }
 
+    @Mock
+    private KohaAdapter mockKohaAdapter;
+
     @Before
     public void setUp() throws Exception {
-        KohaAdapter notUsedHere = null;
         BaseURI baseURI = new BaseURIMock();
-        ServiceImpl service = new ServiceImpl(baseURI, new RepositoryInMemory(), notUsedHere);
+        ServiceImpl service = new ServiceImpl(baseURI, new RepositoryInMemory(), mockKohaAdapter);
         resource = new PublicationResource(baseURI, service);
     }
 
@@ -58,15 +66,17 @@ public class PublicationResourceTest {
         assertNotNull(new PublicationResource());
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void should_return_201_when_publication_created() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         Response result = resource.createPublication(createTestPublicationJSON("publication_SHOULD_EXIST"));
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void should_return_the_new_publication() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         Response createResponse = resource.createPublication(createTestPublicationJSON("publication_SHOULD_EXIST"));
 
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
@@ -80,24 +90,27 @@ public class PublicationResourceTest {
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void test_delete_publication() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         Response createResponse = resource.createPublication(createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
         Response response = resource.deletePublication(publicationId);
         assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
     }
 
-    @Test(expected = BadRequestException.class) @Ignore("Koha not properly mocked")
+    @Test(expected = BadRequestException.class)
     public void patch_should_return_status_400() throws Exception {
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         Response result = resource.createPublication(createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{}";
         resource.patchPublication(publicationId, patchData);
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void patched_publication_should_persist_changes() throws Exception {
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String publication = createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE");
         Response result = resource.createPublication(publication);
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
