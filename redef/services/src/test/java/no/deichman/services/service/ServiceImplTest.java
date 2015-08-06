@@ -18,7 +18,6 @@ import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.InMemoryRepository;
 import static no.deichman.services.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import static org.junit.Assert.assertEquals;
@@ -51,12 +50,12 @@ public class ServiceImplTest {
 
     @Before
     public void setup(){
-        BaseURI baseURI = new BaseURIMock();
+        BaseURI baseURI = BaseURI.local();
         repository = new InMemoryRepository();
         service = new ServiceImpl(baseURI, repository, mockKohaAdapter);
-        ontologyURI = baseURI.getOntologyURI();
-        workURI = baseURI.getWorkURI();
-        publicationURI = baseURI.getPublicationURI();
+        ontologyURI = baseURI.ontology();
+        workURI = baseURI.work();
+        publicationURI = baseURI.publication();
     }
 
     @Test
@@ -109,7 +108,7 @@ public class ServiceImplTest {
         Model m = ModelFactory.createDefaultModel();
         InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
         MarcReader reader = new MarcXmlReader(in);
-        Marc2Rdf marcRdf = new Marc2Rdf(new BaseURIMock());
+        Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
         while (reader.hasNext()) {
             Record record = reader.next();
             m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
@@ -121,7 +120,7 @@ public class ServiceImplTest {
     @Test
     public void test_retrieve_work_items_by_id(){
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
-        Service myService = new ServiceImpl(new BaseURIMock(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
+        Service myService = new ServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
         Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
         Property p = ResourceFactory.createProperty(ontologyURI + "hasEdition");

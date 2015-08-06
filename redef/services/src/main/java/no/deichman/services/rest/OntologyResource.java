@@ -3,7 +3,6 @@ package no.deichman.services.rest;
 import no.deichman.services.ontology.FileBasedOntologyService;
 import no.deichman.services.ontology.OntologyService;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,7 +19,7 @@ public final class OntologyResource {
     private final OntologyService ontologyService;
 
     public OntologyResource(){
-        this(new BaseURIDefault());
+        this(BaseURI.remote());
     }
 
     public OntologyResource(BaseURI baseURI) {

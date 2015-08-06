@@ -1,21 +1,33 @@
 package no.deichman.services.uridefaults;
 
 /**
- * Responsibility: TODO.
+ * Responsibility: Provide base-URIs.
  */
-public abstract class BaseURI {
+public final class BaseURI {
 
-    abstract String getBaseURI();
+    private final String baseURI;
 
-    public final String getWorkURI() {
-        return getBaseURI() + "work/";
+    private BaseURI(String baseURI) {
+        this.baseURI = baseURI;
     }
 
-    public final String getOntologyURI() {
-        return getBaseURI() + "ontology#";
+    public static BaseURI local() {
+        return new BaseURI("http://deichman.no/");
     }
 
-    public final String getPublicationURI() {
-        return getBaseURI() + "publication/";
+    public static BaseURI remote() {
+        return new BaseURI(System.getProperty("DATA_BASEURI"));
+    }
+
+    public String work() {
+        return baseURI + "work/";
+    }
+
+    public String ontology() {
+        return baseURI + "ontology#";
+    }
+
+    public String publication() {
+        return baseURI + "publication/";
     }
 }

@@ -23,7 +23,6 @@ import no.deichman.services.rest.utils.PATCH;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 
 /**
  * Responsibility: Expose Work as a r/w REST resource.
@@ -39,7 +38,7 @@ public final class WorkResource {
     private final JSONLDCreator jsonldCreator;
 
     public WorkResource() {
-        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RemoteRepository(), new KohaAdapterImpl()));
+        this(BaseURI.remote(), new ServiceImpl(BaseURI.remote(), new RemoteRepository(), new KohaAdapterImpl()));
     }
 
     public WorkResource(BaseURI baseURI, Service service) {
@@ -68,7 +67,7 @@ public final class WorkResource {
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Consumes(MIME_LDPATCH_JSON)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) {
-        if (!service.resourceExists(baseURI.getWorkURI() + workId)) {
+        if (!service.resourceExists(baseURI.work() + workId)) {
             throw new NotFoundException();
         }
         Model m;

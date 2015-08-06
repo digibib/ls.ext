@@ -21,7 +21,7 @@ import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.InMemoryRepository;
 import static no.deichman.services.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import no.deichman.services.service.ServiceImpl;
-import no.deichman.services.uridefaults.BaseURIMock;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
@@ -42,14 +42,14 @@ import static org.mockito.Mockito.when;
 public class WorkResourceTest {
 
     private WorkResource resource;
-    private BaseURIMock bum;
+    private BaseURI baseURI;
     private InMemoryRepository repository;
 
     @Before
     public void setUp() throws Exception {
-        bum = new BaseURIMock();
+        baseURI = BaseURI.local();
         repository = new InMemoryRepository();
-        resource = new WorkResource(bum, new ServiceImpl(bum, repository, null));
+        resource = new WorkResource(baseURI, new ServiceImpl(baseURI, repository, null));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class WorkResourceTest {
 
     @Test
     public void should_return_af_valid_json_work() {
-        resource = new WorkResource(bum, new ServiceImpl(bum, repositoryWithDataFrom("testdata.ttl"), null));
+        resource = new WorkResource(baseURI, new ServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null));
         String workId = "work_00001";
 
         Response result = resource.getWorkJSON(workId);
@@ -91,7 +91,7 @@ public class WorkResourceTest {
 
         Response result = resource.createWork(work);
 
-        String workURI = bum.getWorkURI();
+        String workURI = baseURI.work();
 
         assertNull(result.getEntity());
         assertTrue(Pattern.matches(workURI + "w\\d{12}", result.getHeaderString("Location")));
@@ -127,7 +127,7 @@ public class WorkResourceTest {
         Model m = ModelFactory.createDefaultModel();
         InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
         MarcReader reader = new MarcXmlReader(in);
-        Marc2Rdf marcRdf = new Marc2Rdf(new BaseURIMock());
+        Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
         while (reader.hasNext()) {
             Record record = reader.next();
             m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
@@ -141,7 +141,7 @@ public class WorkResourceTest {
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        resource = new WorkResource(bum, new ServiceImpl(bum, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
+        resource = new WorkResource(baseURI, new ServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 

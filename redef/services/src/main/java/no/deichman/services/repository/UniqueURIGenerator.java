@@ -23,9 +23,9 @@ class UniqueURIGenerator {
     private String buildUri(String type, String uniquePart) {
         String result;
         switch (type) {
-            case "work":        result = baseURI.getWorkURI() + "w" + uniquePart;
+            case "work":        result = baseURI.work() + "w" + uniquePart;
                 break;
-            case "publication": result = baseURI.getPublicationURI() + "p" + uniquePart;
+            case "publication": result = baseURI.publication() + "p" + uniquePart;
                 break;
             default:            throw new IllegalArgumentException("Unknown URI-type");
         }

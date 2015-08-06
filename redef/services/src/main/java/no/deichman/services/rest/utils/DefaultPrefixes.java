@@ -18,7 +18,7 @@ final class DefaultPrefixes {
     DefaultPrefixes(BaseURI baseURI){
         this.baseURI = baseURI;
         prefixMapping.put("rdfs", RDFS.getURI());
-        prefixMapping.put("deichman", this.baseURI.getOntologyURI());
+        prefixMapping.put("deichman", this.baseURI.ontology());
     }
     
     void set(String prefix, String ns){

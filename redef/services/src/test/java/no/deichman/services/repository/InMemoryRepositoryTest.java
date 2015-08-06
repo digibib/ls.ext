@@ -8,14 +8,12 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.sparql.core.DatasetImpl;
 import com.hp.hpl.jena.vocabulary.RDF;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIMock;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -29,32 +27,32 @@ public class InMemoryRepositoryTest {
     private Statement testWorkStmt;
     private Statement testPublicationStmt;
     private List<Statement> stmts;
-    private BaseURI bud;
+    private BaseURI baseURI;
 
     @Before
     public void setup(){
         repository = new InMemoryRepository();
-        bud = new BaseURIMock();
+        baseURI = BaseURI.local();
         testWorkStmt = ResourceFactory.createStatement(
-                        ResourceFactory.createResource(bud.getWorkURI() + "test_id_123"),
+                        ResourceFactory.createResource(baseURI.work() + "test_id_123"),
                         ResourceFactory.createProperty("http://example.com/ontology/name"),
                         ResourceFactory.createPlainLiteral("Test"));
         testPublicationStmt = ResourceFactory.createStatement(
-                ResourceFactory.createResource(bud.getPublicationURI() + "test_id_Publication"), 
+                ResourceFactory.createResource(baseURI.publication() + "test_id_Publication"),
                 ResourceFactory.createProperty("http://example.com/ontology/name"),
                 ResourceFactory.createPlainLiteral("Test"));
         Statement testWork0 = ResourceFactory.createStatement(
-                ResourceFactory.createResource(bud.getWorkURI() + "test_id_1234"), 
+                ResourceFactory.createResource(baseURI.work() + "test_id_1234"),
                 RDF.type,
-                ResourceFactory.createResource(bud.getOntologyURI() + "Work"));
+                ResourceFactory.createResource(baseURI.ontology() + "Work"));
         Statement testWork1 = ResourceFactory.createStatement(
-                ResourceFactory.createResource(bud.getPublicationURI() + "test_id_12345"), 
+                ResourceFactory.createResource(baseURI.publication() + "test_id_12345"),
                 RDF.type,
-                ResourceFactory.createResource(bud.getOntologyURI() + "Publication"));
+                ResourceFactory.createResource(baseURI.ontology() + "Publication"));
         Statement testWork2 = ResourceFactory.createStatement(
-                ResourceFactory.createResource(bud.getPublicationURI() + "test_id_12345"), 
-                ResourceFactory.createProperty(bud.getOntologyURI() + "publicationOf"),
-                ResourceFactory.createResource(bud.getWorkURI() + "test_id_1234"));
+                ResourceFactory.createResource(baseURI.publication() + "test_id_12345"),
+                ResourceFactory.createProperty(baseURI.ontology() + "publicationOf"),
+                ResourceFactory.createResource(baseURI.work() + "test_id_1234"));
         stmts  = new ArrayList<Statement>();
         stmts.add(testWork0);
         stmts.add(testWork1);
@@ -69,17 +67,14 @@ public class InMemoryRepositoryTest {
     @Test
     public void test_create_publication() throws Exception{
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        String uri = repository.createPublication(publication, A_BIBLIO_NO);
-        String publicationId = uri;
-        assertNotNull(publicationId);
+        assertNotNull(repository.createPublication(publication, A_BIBLIO_NO));
     }
 
     @Test
     public void test_publication_has_record_id() throws Exception {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        String uri = repository.createPublication(publication, A_BIBLIO_NO);
-        String publicationId = uri;
-        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + bud.getOntologyURI() + "recordID> ?value .}");
+        String publicationId = repository.createPublication(publication, A_BIBLIO_NO);
+        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + baseURI.ontology() + "recordID> ?value .}");
         QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
         assertTrue(qexec.execAsk());
     }

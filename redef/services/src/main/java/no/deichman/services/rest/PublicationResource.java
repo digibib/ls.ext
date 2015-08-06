@@ -21,7 +21,6 @@ import no.deichman.services.rest.utils.PATCH;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 
 /**
  * Responsibility: Expose publication as a r/w REST resource.
@@ -37,7 +36,7 @@ public final class PublicationResource {
     private final JSONLDCreator jsonldCreator;
 
     public PublicationResource() {
-        this(new BaseURIDefault(), new ServiceImpl(new BaseURIDefault(), new RemoteRepository(), new KohaAdapterImpl()));
+        this(BaseURI.remote(), new ServiceImpl(BaseURI.remote(), new RemoteRepository(), new KohaAdapterImpl()));
     }
 
     public PublicationResource(BaseURI baseURI, Service service) {
@@ -86,7 +85,7 @@ public final class PublicationResource {
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
     @Consumes(MimeType.LDPATCHJSON)
     public Response patchPublication(@PathParam("publicationId") String publicationId, String requestBody) throws Exception {
-        if (!service.resourceExists(baseURI.getPublicationURI() + publicationId)) {
+        if (!service.resourceExists(baseURI.publication() + publicationId)) {
             throw new NotFoundException();
         }
         Model m;

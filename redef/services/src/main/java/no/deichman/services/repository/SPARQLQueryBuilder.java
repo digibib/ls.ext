@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -23,7 +22,7 @@ public final class SPARQLQueryBuilder {
     private final BaseURI baseURI;
 
     SPARQLQueryBuilder(){
-        baseURI = new BaseURIDefault();
+        baseURI = BaseURI.remote();
     }
 
     public SPARQLQueryBuilder(BaseURI base){
@@ -36,7 +35,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query describeWorkAndLinkedPublication(String id){
-        String queryString = "PREFIX deichman: <" + baseURI.getOntologyURI() + ">\n"
+        String queryString = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
                             +"DESCRIBE <" + id + "> ?publication\n"
                             +"WHERE {\n"
                             +"<" + id + "> ?p ?o .\n"
@@ -75,7 +74,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query getItemsFromModelQuery(String id) {
-        String q = "PREFIX deichman: <" + baseURI.getOntologyURI() + ">\n"
+        String q = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
                 + "CONSTRUCT {\n"
                 + "  <" + id + "> deichman:hasEdition"
                 + "( ["

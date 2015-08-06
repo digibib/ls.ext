@@ -1,6 +1,6 @@
 package no.deichman.services.repository;
 
-import no.deichman.services.uridefaults.BaseURIMock;
+import no.deichman.services.uridefaults.BaseURI;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -12,7 +12,7 @@ public class UniqueURIGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        uriGenerator = new UniqueURIGenerator(new BaseURIMock());
+        uriGenerator = new UniqueURIGenerator(BaseURI.local());
     }
 
     @Test

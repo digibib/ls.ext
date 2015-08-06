@@ -6,7 +6,6 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 
 /**
  * Responsibility: Remotely calling a sparql endpoint to do queries and updates.
@@ -18,9 +17,9 @@ public final class RemoteRepository extends RDFRepositoryBase {
 
     public RemoteRepository() {
         this(FUSEKI_PORT,
-                new UniqueURIGenerator(new BaseURIDefault()),
-                new SPARQLQueryBuilder(new BaseURIDefault()),
-                new BaseURIDefault());
+                new UniqueURIGenerator(BaseURI.remote()),
+                new SPARQLQueryBuilder(BaseURI.remote()),
+                BaseURI.remote());
     }
 
     RemoteRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {

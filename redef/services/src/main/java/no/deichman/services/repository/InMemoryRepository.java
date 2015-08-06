@@ -9,7 +9,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateRequest;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIMock;
 
 /**
  * Responsibility: Implement an in-memory RDF-repository.
@@ -18,7 +17,7 @@ public final class InMemoryRepository extends RDFRepositoryBase {
     private final Dataset model;
 
     public InMemoryRepository() {
-        this(new BaseURIMock(), new SPARQLQueryBuilder(new BaseURIMock()), new UniqueURIGenerator(new BaseURIMock()));
+        this(BaseURI.local(), new SPARQLQueryBuilder(BaseURI.local()), new UniqueURIGenerator(BaseURI.local()));
     }
 
     public InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {

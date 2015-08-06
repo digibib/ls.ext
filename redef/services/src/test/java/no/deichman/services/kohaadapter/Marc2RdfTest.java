@@ -22,8 +22,6 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
-import no.deichman.services.uridefaults.BaseURIMock;
 
 public class Marc2RdfTest {
     @Test
@@ -33,7 +31,7 @@ public class Marc2RdfTest {
 
     @Test
     public void test_baseURI_can_be_set_got(){
-        BaseURI base = new BaseURIMock();
+        BaseURI base = BaseURI.local();
         Marc2Rdf m2r = new Marc2Rdf();
         m2r.setBaseURI(base);
         assertNotNull(m2r.getBaseURI());
@@ -42,13 +40,13 @@ public class Marc2RdfTest {
     @Test
     public void test_default_constructor_sets_baseURI(){
         Marc2Rdf m2r = new Marc2Rdf();
-        assertEquals(m2r.getBaseURI().getClass(), BaseURIDefault.class);
+        assertEquals(m2r.getBaseURI().getClass(), BaseURI.class);
     }
 
     @Test
     public void test_overloaded_constructor_sets_baseURI(){
-        Marc2Rdf m2r = new Marc2Rdf(new BaseURIMock());
-        assertEquals(m2r.getBaseURI().getClass(), BaseURIMock.class);
+        Marc2Rdf m2r = new Marc2Rdf(BaseURI.local());
+        assertEquals(m2r.getBaseURI().getClass(), BaseURI.class);
     }
 
     @Test
@@ -61,7 +59,7 @@ public class Marc2RdfTest {
             itemsFields.addAll(record.getVariableFields("952"));
         }
 
-        Marc2Rdf m2r = new Marc2Rdf(new BaseURIMock());
+        Marc2Rdf m2r = new Marc2Rdf(BaseURI.local());
         Model m = m2r.mapItemsToModel(itemsFields);
         Resource s = ResourceFactory.createResource("http://deichman.no/exemplar/03010626460038");
         Property p = ResourceFactory.createProperty("http://deichman.no/ontology#format");

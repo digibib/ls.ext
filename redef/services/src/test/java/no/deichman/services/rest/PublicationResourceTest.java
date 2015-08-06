@@ -18,7 +18,6 @@ import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.InMemoryRepository;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
@@ -56,7 +55,7 @@ public class PublicationResourceTest {
 
     @Before
     public void setUp() throws Exception {
-        BaseURI baseURI = new BaseURIMock();
+        BaseURI baseURI = BaseURI.local();
         ServiceImpl service = new ServiceImpl(baseURI, new InMemoryRepository(), mockKohaAdapter);
         resource = new PublicationResource(baseURI, service);
     }

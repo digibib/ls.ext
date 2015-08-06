@@ -45,7 +45,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final Model retrieveWorkById(String id) {
-        String uri = baseURI.getWorkURI() + id;
+        String uri = baseURI.work() + id;
         System.out.println("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedPublication(uri))) {
             return qexec.execDescribe();
@@ -54,7 +54,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final Model retrievePublicationById(final String id) {
-        String uri = baseURI.getPublicationURI() + id;
+        String uri = baseURI.publication() + id;
         System.out.println("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
             return qexec.execDescribe();
@@ -86,7 +86,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         Statement workResource = ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
                 RDF.type,
-                ResourceFactory.createResource(baseURI.getOntologyURI() + "Work"));
+                ResourceFactory.createResource(baseURI.ontology() + "Work"));
         tempModel.add(workResource);
         RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
 
@@ -104,10 +104,10 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         Statement publicationResource = ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
                 RDF.type,
-                ResourceFactory.createResource(baseURI.getOntologyURI() + "Publication"));
+                ResourceFactory.createResource(baseURI.ontology() + "Publication"));
         Statement recordLink = ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(baseURI.getOntologyURI() + "recordID"),
+                ResourceFactory.createProperty(baseURI.ontology() + "recordID"),
                 ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
         tempModel.add(publicationResource);
         tempModel.add(recordLink);

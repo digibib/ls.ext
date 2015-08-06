@@ -25,7 +25,6 @@ import no.deichman.services.repository.RDFRepository;
 import no.deichman.services.repository.RemoteRepository;
 import no.deichman.services.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 
 /**
  * Responsibility: TODO.
@@ -38,12 +37,12 @@ public final class ServiceImpl implements Service {
     private final Property recordID;
 
     public ServiceImpl(){
-        this(new BaseURIDefault(), new RemoteRepository(), new KohaAdapterImpl());
+        this(BaseURI.remote(), new RemoteRepository(), new KohaAdapterImpl());
     }
 
     public ServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
         this.baseURI = baseURI;
-        recordID = ResourceFactory.createProperty(this.baseURI.getOntologyURI() + "recordID");
+        recordID = ResourceFactory.createProperty(this.baseURI.ontology() + "recordID");
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
     }
@@ -77,7 +76,7 @@ public final class ServiceImpl implements Service {
         Model allItemsModel = ModelFactory.createDefaultModel();
         Model model = ModelFactory.createDefaultModel();
         model.add(repository.retrieveWorkById(id));
-        ResIterator subjectsIterator = model.listResourcesWithProperty(RDF.type, ResourceFactory.createResource(baseURI.getOntologyURI() + "Publication"));
+        ResIterator subjectsIterator = model.listResourcesWithProperty(RDF.type, ResourceFactory.createResource(baseURI.ontology() + "Publication"));
 
         while (subjectsIterator.hasNext()){
             Model tempModel = ModelFactory.createDefaultModel();

@@ -11,14 +11,14 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import no.deichman.services.patch.Patch;
-import no.deichman.services.uridefaults.BaseURIMock;
+import no.deichman.services.uridefaults.BaseURI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 public class SPARQLQueryBuilderTest {
 
-    private BaseURIMock baseURI = new BaseURIMock();
+    private BaseURI baseURI = BaseURI.local();
 
     private Statement getTestStatement(){
         return ResourceFactory.createStatement(
@@ -34,12 +34,12 @@ public class SPARQLQueryBuilderTest {
 
     @Test
     public void overloaded_constructor_exists(){
-        assertNotNull(new SPARQLQueryBuilder(new BaseURIMock()));
+        assertNotNull(new SPARQLQueryBuilder(BaseURI.local()));
     }
 
     @Test
     public void get_resource_by_id(){
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
         String expected = "DESCRIBE <http://example.com/a>";
         assertEquals(expected,query.toString().trim());
@@ -47,9 +47,9 @@ public class SPARQLQueryBuilderTest {
 
     @Test
     public void test_it_describes_work_and_publication(){
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         Query query = sqb.describeWorkAndLinkedPublication("http://example.com/a");
-        String expected = "PREFIX  deichman: <" + baseURI.getOntologyURI() + ">\n\n"
+        String expected = "PREFIX  deichman: <" + baseURI.ontology() + ">\n\n"
                 +"DESCRIBE ?publication <http://example.com/a>\n"
                 +"WHERE\n"
                 +"  { <http://example.com/a> ?p ?o .\n"
@@ -64,7 +64,7 @@ public class SPARQLQueryBuilderTest {
         Model m = ModelFactory.createDefaultModel();
         Statement s = getTestStatement();
         m.add(s);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String query = sqb.getUpdateWorkQueryString(m);
         String expected = "INSERT DATA {\n"
                 + "\n"
@@ -80,7 +80,7 @@ public class SPARQLQueryBuilderTest {
         Statement s = getTestStatement();
         m.add(s);
         String newSubject = "http://example.com/z";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(newSubject), m);
         String query = sqb.getCreateQueryString(m);
@@ -95,7 +95,7 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_get_items_query(){
         String uri = "http://example.com/a";
-        String test = "PREFIX deichman: <" + baseURI.getOntologyURI() + ">\n"
+        String test = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
                 + "CONSTRUCT {\n"
                 + "  <" + uri + "> deichman:hasEdition"
                 + "( ["
@@ -110,7 +110,7 @@ public class SPARQLQueryBuilderTest {
                 + "    deichman:status ?status ;"
                 + "    deichman:barcode ?barcode .\n"
                 + "}";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         Query query = sqb.getItemsFromModelQuery(uri);
         Query expected = QueryFactory.create(test);
         assertEquals(expected,query);
@@ -121,14 +121,14 @@ public class SPARQLQueryBuilderTest {
         String uri = "http://example.com/a";
         String test = "ASK {<" + uri + "> ?p ?o}";
         Query expected = QueryFactory.create(test);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         assertEquals(expected,sqb.checkIfResourceExists(uri));
     }
 
     @Test
     public void test_statement_exists() throws UnsupportedEncodingException{
         Statement s = getTestStatement();
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String test = "ASK {<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . }";
         Query expected = QueryFactory.create(test);
         assertEquals(expected,sqb.checkIfStatementExists(s));
@@ -137,7 +137,7 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_update_delete(){
         Statement s = getTestStatement();
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         Model m = ModelFactory.createDefaultModel();
         m.add(s);
         String triple = "<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> .";
@@ -159,7 +159,7 @@ public class SPARQLQueryBuilderTest {
                 ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
         Patch patch = new Patch("add", s, null);
         patches.add(patch);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String expected = "INSERT DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .}";
         assertEquals(expected,sqb.patch(patches));
     }
@@ -172,7 +172,7 @@ public class SPARQLQueryBuilderTest {
                 ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
         Patch patch = new Patch("del", s, null);
         patches.add(patch);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String expected = "DELETE DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .}";
         assertEquals(expected,sqb.patch(patches));
     }
@@ -195,7 +195,7 @@ public class SPARQLQueryBuilderTest {
                 ResourceFactory.createProperty("http://example.com/ontology/cress"), ResourceFactory.createPlainLiteral("false fish"));
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String expected = "DELETE DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .} ;\n"
                         + "DELETE DATA {<http://example.com/a> <http://example.com/ontology/test> \"json\" .} ;\n"
                         + "INSERT DATA {<http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .}";
@@ -211,7 +211,7 @@ public class SPARQLQueryBuilderTest {
                 ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
         Patch patch = new Patch("fail", s, null);
         patches.add(patch);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(new BaseURIMock());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         sqb.patch(patches);
     }
 }

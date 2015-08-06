@@ -6,7 +6,6 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 
 import no.deichman.services.uridefaults.BaseURI;
-import no.deichman.services.uridefaults.BaseURIDefault;
 
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.VariableField;
@@ -32,7 +31,7 @@ public final class Marc2Rdf {
     private BaseURI baseURI;
 
     public Marc2Rdf(){
-        baseURI = new BaseURIDefault();
+        baseURI = BaseURI.remote();
     }
 
     public Marc2Rdf(BaseURI base) {
@@ -57,11 +56,11 @@ public final class Marc2Rdf {
         for (VariableField itemField : itemsFields) {
             DataField itemData = (DataField) itemField;
             String s = DEICHMAN_NS_EXEMPLAR + itemData.getSubfield('p').getData();
-            model.add(stmt(s, RDF_SYNTAX_NS_TYPE, baseURI.getOntologyURI() + DEICHMAN_ITEM));
-            model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_FORMAT, itemData.getSubfield('y').getData()));
-            model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_STATUS, itemData.getSubfield('q') != null ? itemData.getSubfield('q').getData() : "AVAIL"));
-            model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_LOCATION, itemData.getSubfield('a').getData()));
-            model.add(stmtLiteral(s, baseURI.getOntologyURI() + DEICHMAN_BARCODE, itemData.getSubfield('p').getData()));
+            model.add(stmt(s, RDF_SYNTAX_NS_TYPE, baseURI.ontology() + DEICHMAN_ITEM));
+            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_FORMAT, itemData.getSubfield('y').getData()));
+            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_STATUS, itemData.getSubfield('q') != null ? itemData.getSubfield('q').getData() : "AVAIL"));
+            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_LOCATION, itemData.getSubfield('a').getData()));
+            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_BARCODE, itemData.getSubfield('p').getData()));
         }
         return model;
     }

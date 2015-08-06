@@ -3,7 +3,7 @@ package no.deichman.services.rest.utils;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.HashMap;
 import java.util.Map;
-import no.deichman.services.uridefaults.BaseURIMock;
+import no.deichman.services.uridefaults.BaseURI;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -11,8 +11,8 @@ public class DefaultPrefixesTest {
 
     @Test
     public void test_it_can_set_get_default_prefixes(){
-        BaseURIMock bud = new BaseURIMock();
-        DefaultPrefixes def = new DefaultPrefixes(bud);
+        BaseURI baseURI = BaseURI.local();
+        DefaultPrefixes def = new DefaultPrefixes(baseURI);
         String prefix = "onto";
         String ns = "http://example.com/onto/";
         def.set(prefix,ns);
@@ -22,10 +22,10 @@ public class DefaultPrefixesTest {
 
     @Test
     public void test_it_returns_system_default_prefixes(){
-        BaseURIMock bud = new BaseURIMock();
-        DefaultPrefixes def = new DefaultPrefixes(bud);
+        BaseURI baseURI = BaseURI.local();
+        DefaultPrefixes def = new DefaultPrefixes(baseURI);
         String deichman = "deichman";
-        String deichmanNs = bud.getOntologyURI();
+        String deichmanNs = baseURI.ontology();
         String rdfs = "rdfs";
         String rdfsNs = RDFS.getURI();
         assertEquals(def.get(rdfs),rdfsNs);
@@ -34,10 +34,10 @@ public class DefaultPrefixesTest {
 
     @Test
     public void test_it_returns_prefixes(){
-        BaseURIMock bud = new BaseURIMock();
-        DefaultPrefixes def = new DefaultPrefixes(bud);
+        BaseURI baseURI = BaseURI.local();
+        DefaultPrefixes def = new DefaultPrefixes(baseURI);
         String deichman = "deichman";
-        String deichmanNs = bud.getOntologyURI();
+        String deichmanNs = baseURI.ontology();
         String rdfs = "rdfs";
         String rdfsNs = RDFS.getURI();
         Map<String,String> map = new HashMap<String,String>();

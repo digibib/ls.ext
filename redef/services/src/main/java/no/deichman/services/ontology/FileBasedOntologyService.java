@@ -41,7 +41,7 @@ public final class FileBasedOntologyService implements OntologyService {
         return readFromFile(ONTOLOGY_TTL_FILE)
                 .replace(
                         BASE_URI_USED_IN_FILE,
-                        baseUri.getOntologyURI());
+                        baseUri.ontology());
     }
 
     private String readFromFile(String ontologyFileName) {
