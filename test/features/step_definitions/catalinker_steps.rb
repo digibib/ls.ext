@@ -246,9 +246,9 @@ end
 When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   page = @site.RegPublication.visit
 
-  @context[:publication_format] = 'Bok'
-  @context[:publication_language] = 'Bokmål'
-  @context[:publication_name] = 'Blæh'
+  @context[:publication_format] = ['Bok', 'Lydbok (CD)', 'Lydbok (Kassett)', 'E-bok', 'Bok', 'Bok'].sample
+  @context[:publication_language] =  ['Bokmål', 'Baskisk', 'Finsk', 'Engelsk', 'Dansk', 'Svensk'].sample
+  @context[:publication_name] = generateRandomString
 
   page.add_prop('http://192.168.50.12:8005/ontology#format', @context[:publication_format])
   page.add_prop('http://192.168.50.12:8005/ontology#language', @context[:publication_language])
