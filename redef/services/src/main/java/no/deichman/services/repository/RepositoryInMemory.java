@@ -14,17 +14,13 @@ import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 import javax.xml.xpath.XPathExpressionException;
-
 import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -42,7 +38,7 @@ public final class RepositoryInMemory implements Repository {
     private final UniqueURIGenerator uriGenerator;
     private final KohaAdapter kohaAdapter;
 
-    public RepositoryInMemory() {
+    public RepositoryInMemory(KohaAdapter kohaAdapter) {
         bud = new BaseURIMock();
         sqb = new SPARQLQueryBuilder(bud);
         Model model2 = ModelFactory.createDefaultModel();
@@ -50,7 +46,7 @@ public final class RepositoryInMemory implements Repository {
         model = DatasetFactory.createMem();
         model.setDefaultModel(model2);
         uriGenerator = new UniqueURIGenerator(new BaseURIMock());
-        kohaAdapter = new KohaAdapterImpl();
+        this.kohaAdapter = kohaAdapter;
     }
 
     public void addData(Model newData){

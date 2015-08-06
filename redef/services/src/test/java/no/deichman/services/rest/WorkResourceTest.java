@@ -21,7 +21,6 @@ import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.RepositoryInMemory;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURIMock;
-
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
@@ -47,7 +46,7 @@ public class WorkResourceTest {
     @Before
     public void setUp() throws Exception {
         bum = new BaseURIMock();
-        resource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), null));
+        resource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(mock(KohaAdapter.class)), null));
     }
 
     @Test
@@ -137,7 +136,7 @@ public class WorkResourceTest {
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        WorkResource myResource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), mockKohaAdapter));
+        WorkResource myResource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(mockKohaAdapter), mockKohaAdapter));
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 
