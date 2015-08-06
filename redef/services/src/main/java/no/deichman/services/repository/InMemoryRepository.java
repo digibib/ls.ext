@@ -35,10 +35,6 @@ public final class InMemoryRepository extends RDFRepositoryBase {
         return model.getDefaultModel();
     }
 
-    public Dataset getDataset() {
-        return model;
-    }
-
     @Override
     protected QueryExecution getQueryExecution(Query query) {
         return QueryExecutionFactory.create(query, model);

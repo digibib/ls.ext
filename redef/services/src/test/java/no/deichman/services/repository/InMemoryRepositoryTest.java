@@ -98,11 +98,6 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void test_get_dataset(){
-        assertTrue(repository.getDataset().getClass() == DatasetImpl.class);
-    }
-
-    @Test
     public void test_retrieve_work_by_id(){
         String id = "test_id_123";
         Model temp = ModelFactory.createDefaultModel();
