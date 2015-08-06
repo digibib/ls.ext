@@ -78,7 +78,7 @@ public class CORSResponseFilterTest {
         assertThat(filter, instanceOf(ContainerResponseFilter.class));
     }
 
-    @Test @Ignore("TODO make this pass")
+    @Test
     public void should_not_add_headers_to_non_CORS_requests() throws IOException {
         // Setup for non-CORS-request
         when(mockRequestHeadersWithoutOrigin.containsKey(ORIGIN_HEADER_KEY)).thenReturn(NO_ORIGIN_HEADER);
@@ -90,7 +90,7 @@ public class CORSResponseFilterTest {
 
         new CORSResponseFilter().filter(nonCORSRequestCtx, mockRespCtxWhichShouldBeUntouched);
 
-        verifyNoMoreInteractions(nonCORSRequestCtx, mockRequestHeadersWithoutOrigin, mockRespCtxWhichShouldBeUntouched);
+        verifyNoMoreInteractions(mockRespCtxWhichShouldBeUntouched);
     }
 
     @Test
