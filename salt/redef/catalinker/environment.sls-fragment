@@ -1,0 +1,7 @@
+{%
+  set environment = {
+    'KOHA_INTRA_PORT': "http://{0}:{1}".format(pillar['redef']['koha']['host'], pillar['redef']['koha']['port_intra']),
+    'KOHA_OPAC_PORT': "http://{0}:{1}".format(pillar['redef']['koha']['host'], pillar['redef']['koha']['port_opac']),
+    'SERVICES_PORT': "http://{0}:{1}".format(pillar['redef']['services']['host'],pillar['redef']['services']['port'])
+  }
+%}

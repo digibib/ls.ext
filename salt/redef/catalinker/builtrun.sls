@@ -19,7 +19,7 @@ extend:
 
 {% set container = 'redef_catalinker_container' %}
 {% set ports = ["4567/tcp"] %}
-{% set environment = {'SERVICES_PORT': "http://{0}:{1}".format(pillar['redef']['services']['host'], pillar['redef']['services']['port']) }  %}
+{% include 'redef/catalinker/environment.sls-fragment' %}
 {% set port_bindings = {'4567/tcp': { 'HostIp': pillar['redef']['catalinker']['binding'], 'HostPort': pillar['redef']['catalinker']['port'] } } %}
 
 {% include 'docker-run.sls-fragment' %}
