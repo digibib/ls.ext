@@ -3,9 +3,6 @@ package no.deichman.services.patch;
 import org.apache.jena.iri.IRIException;
 import org.apache.jena.iri.IRIFactory;
 
-
-import no.deichman.services.error.PatchParserException;
-
 /**
  * Responsibility: TODO.
  */

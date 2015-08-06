@@ -7,8 +7,6 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import no.deichman.services.error.PatchParserException;
-
 public class ParserTest {
 
     @Test

@@ -1,4 +1,4 @@
-package no.deichman.services.error;
+package no.deichman.services.patch;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

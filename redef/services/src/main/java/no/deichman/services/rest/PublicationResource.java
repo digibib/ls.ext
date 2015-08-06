@@ -12,7 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import no.deichman.services.error.PatchParserException;
+import no.deichman.services.patch.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.repository.RemoteRepository;
 import no.deichman.services.rest.utils.JSONLDCreator;

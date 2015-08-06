@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import no.deichman.services.error.PatchParserException;
 import org.junit.Test;
 
 import java.util.ArrayList;

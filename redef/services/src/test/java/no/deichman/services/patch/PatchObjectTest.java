@@ -9,8 +9,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import no.deichman.services.error.PatchParserException;
-
 public class PatchObjectTest {
 
     private static final String ADD = "add";

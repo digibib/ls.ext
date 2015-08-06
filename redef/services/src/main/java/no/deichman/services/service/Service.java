@@ -3,7 +3,7 @@ package no.deichman.services.service;
 import javax.xml.xpath.XPathExpressionException;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import no.deichman.services.error.PatchParserException;
+import no.deichman.services.patch.PatchParserException;
 
 /**
  * Responsibility: TODO.

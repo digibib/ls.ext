@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import no.deichman.services.error.PatchParserException;
 
 /**
  * Responsibility: TODO.

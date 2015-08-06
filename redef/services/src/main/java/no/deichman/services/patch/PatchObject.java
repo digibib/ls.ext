@@ -7,8 +7,6 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 
-import no.deichman.services.error.PatchParserException;
-
 /**
  * Responsibility: TODO.
  */

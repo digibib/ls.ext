@@ -1,4 +1,4 @@
-package no.deichman.services.error;
+package no.deichman.services.patch;
 
 public class PatchParserException extends Exception {
     public PatchParserException(String message){
