@@ -43,7 +43,7 @@ casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
 
 });
 
-casper.test.begin("Catalinker grensesnitt (utgivelse)", 6, function (test) {
+casper.test.begin("Catalinker grensesnitt (utgivelse)", 8, function (test) {
   casper.start('http://127.0.0.1:7777/publication?resource=http://127.0.0.1:7777/publication/1');
 
   casper.then(function () {
@@ -79,6 +79,12 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 6, function (test) {
       return document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#recordID_0"]')[0].disabled;
     });
     test.assertEqual(disabled, true);
+  });
+
+  casper.then(function () {
+    test.assertNotExists('a[href="www.dummy.com"]');
+    addValue(this, "publicationOf", "www.dummy.com");
+    test.assertExists('a[href="www.dummy.com"]');
   });
 
   casper.run(function () {
