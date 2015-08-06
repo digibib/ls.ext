@@ -13,7 +13,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIMock;
@@ -23,9 +22,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.mockito.Mockito.mock;
 
 public class RepositoryInMemoryTest {
+    public static final String A_BIBLIO_NO = "34567";
     private RepositoryInMemory repository;
     private Statement testWorkStmt;
     private Statement testPublicationStmt;
@@ -34,7 +33,7 @@ public class RepositoryInMemoryTest {
 
     @Before
     public void setup(){
-        repository = new RepositoryInMemory(mock(KohaAdapter.class));
+        repository = new RepositoryInMemory();
         bud = new BaseURIMock();
         testWorkStmt = ResourceFactory.createStatement(
                         ResourceFactory.createResource(bud.getWorkURI() + "test_id_123"),
@@ -64,20 +63,22 @@ public class RepositoryInMemoryTest {
 
     @Test
     public void test_it_exists(){
-        assertNotNull(new RepositoryInMemory(mock(KohaAdapter.class)));
+        assertNotNull(new RepositoryInMemory());
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void test_create_publication() throws Exception{
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        String publicationId = repository.createPublication(publication);
+        String uri = repository.createPublication(publication, A_BIBLIO_NO);
+        String publicationId = uri;
         assertNotNull(publicationId);
     }
 
-    @Test @Ignore("Koha not properly mocked")
+    @Test
     public void test_publication_has_record_id() throws Exception {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        String publicationId = repository.createPublication(publication);
+        String uri = repository.createPublication(publication, A_BIBLIO_NO);
+        String publicationId = uri;
         Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + bud.getOntologyURI() +"recordID> ?value .}");
         QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
         assertTrue(qexec.execAsk());

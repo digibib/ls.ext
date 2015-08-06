@@ -1,12 +1,8 @@
 package no.deichman.services.repository;
 
-import java.util.List;
-
-import javax.xml.xpath.XPathExpressionException;
-
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
-
+import java.util.List;
 import no.deichman.services.patch.Patch;
 
 /**
@@ -15,13 +11,14 @@ import no.deichman.services.patch.Patch;
 public interface Repository {
 
     String createWork(String work);
-    String createPublication(String publication) throws XPathExpressionException, Exception;
+    String createPublication(String publication, String recordID);
 
     void updateWork(String work);
     Model retrieveWorkById(String id);
     Model retrievePublicationById(String id);
 
     boolean askIfResourceExists(String uri);
+
     boolean askIfStatementExists(Statement statement);
 
     void delete(Model inputModel);

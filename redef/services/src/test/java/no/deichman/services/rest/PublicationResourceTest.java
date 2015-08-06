@@ -30,7 +30,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.mockito.Mockito.mock;
 
 public class PublicationResourceTest {
 
@@ -50,7 +49,7 @@ public class PublicationResourceTest {
     public void setUp() throws Exception {
         KohaAdapter notUsedHere = null;
         BaseURI baseURI = new BaseURIMock();
-        ServiceImpl service = new ServiceImpl(baseURI, new RepositoryInMemory(mock(KohaAdapter.class)), notUsedHere);
+        ServiceImpl service = new ServiceImpl(baseURI, new RepositoryInMemory(), notUsedHere);
         resource = new PublicationResource(baseURI, service);
     }
 

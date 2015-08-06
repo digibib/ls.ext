@@ -46,7 +46,7 @@ public class WorkResourceTest {
     @Before
     public void setUp() throws Exception {
         bum = new BaseURIMock();
-        resource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(mock(KohaAdapter.class)), null));
+        resource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), null));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class WorkResourceTest {
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        WorkResource myResource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(mockKohaAdapter), mockKohaAdapter));
+        WorkResource myResource = new WorkResource(bum, new ServiceImpl(bum, new RepositoryInMemory(), mockKohaAdapter));
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 

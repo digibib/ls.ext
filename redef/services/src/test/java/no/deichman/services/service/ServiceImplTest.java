@@ -45,7 +45,7 @@ public class ServiceImplTest {
     @Before
     public void setup(){
         BaseURI baseURI = new BaseURIMock();
-        repository = new RepositoryInMemory(mock(KohaAdapter.class));
+        repository = new RepositoryInMemory();
         service = new ServiceImpl(baseURI, repository, null);
         ontologyURI = baseURI.getOntologyURI();
         workURI = baseURI.getWorkURI();

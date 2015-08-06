@@ -18,9 +18,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import javax.xml.xpath.XPathExpressionException;
-import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.BaseURIDefault;
@@ -37,22 +34,19 @@ public final class FusekiRepository implements Repository {
     private final SPARQLQueryBuilder sqb;
     private final BaseURI baseURI;
     private final UniqueURIGenerator uriGenerator;
-    private final KohaAdapter kohaAdapter;
     private final String fusekiPort;
 
     public FusekiRepository() {
         this(FUSEKI_PORT,
                 new UniqueURIGenerator(new BaseURIDefault()),
                 new SPARQLQueryBuilder(new BaseURIDefault()),
-                new KohaAdapterImpl(),
                 new BaseURIDefault());
     }
 
-    FusekiRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, KohaAdapter kohaAdapter, BaseURI baseURI) {
+    FusekiRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
         this.fusekiPort = fusekiPort;
         this.uriGenerator = uriGenerator;
         sqb = sparqlQueryBuilder;
-        this.kohaAdapter = kohaAdapter;
         this.baseURI = baseURI;
         System.out.println("Repository started with FUSEKI_PORT: " + fusekiPort);
     }
@@ -119,8 +113,7 @@ public final class FusekiRepository implements Repository {
     }
 
     @Override
-    public String createPublication(String publication) throws XPathExpressionException, Exception {
-        String recordID = kohaAdapter.getNewBiblio();
+    public String createPublication(String publication, String recordID) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String uri = uriGenerator.getNewURI("publication", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();

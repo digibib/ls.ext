@@ -103,7 +103,8 @@ public final class ServiceImpl implements Service {
 
     @Override
     public String createPublication(String publication) throws Exception {
-        return repository.createPublication(publication);
+        String recordId = kohaAdapter.getNewBiblio();
+        return repository.createPublication(publication, recordId);
     }
 
     @Override

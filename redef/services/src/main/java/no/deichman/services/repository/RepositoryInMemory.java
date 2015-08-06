@@ -19,8 +19,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import javax.xml.xpath.XPathExpressionException;
-import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.uridefaults.BaseURIMock;
 import org.apache.jena.riot.Lang;
@@ -36,9 +34,8 @@ public final class RepositoryInMemory implements Repository {
     private final SPARQLQueryBuilder sqb;
     private final BaseURIMock bud;
     private final UniqueURIGenerator uriGenerator;
-    private final KohaAdapter kohaAdapter;
 
-    public RepositoryInMemory(KohaAdapter kohaAdapter) {
+    public RepositoryInMemory() {
         bud = new BaseURIMock();
         sqb = new SPARQLQueryBuilder(bud);
         Model model2 = ModelFactory.createDefaultModel();
@@ -46,7 +43,6 @@ public final class RepositoryInMemory implements Repository {
         model = DatasetFactory.createMem();
         model.setDefaultModel(model2);
         uriGenerator = new UniqueURIGenerator(new BaseURIMock());
-        this.kohaAdapter = kohaAdapter;
     }
 
     public void addData(Model newData){
@@ -114,9 +110,8 @@ public final class RepositoryInMemory implements Repository {
     }
 
 
-    public String createPublication(String publication) throws XPathExpressionException, Exception {
-        String recordID = kohaAdapter.getNewBiblio();
-
+    @Override
+    public String createPublication(String publication, String recordID) {
         InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
         String uri = uriGenerator.getNewURI("publication", this::askIfResourceExists);
         Model tempModel = ModelFactory.createDefaultModel();
@@ -135,7 +130,6 @@ public final class RepositoryInMemory implements Repository {
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
         UpdateAction.execute(updateRequest, model);
-
         return uri;
     }
 
