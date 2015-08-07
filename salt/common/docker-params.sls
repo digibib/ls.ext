@@ -3,6 +3,8 @@ docker_comment_other_params:
   file.comment:
     - name: /etc/default/docker
     - regex: ^DOCKER_OPTS=\".+\"
+    - require:
+      - pkg: lxc-docker
 
 docker_params_blockreplace:
   file.blockreplace:
@@ -24,3 +26,5 @@ docker_reload_with_params:
     - name: docker
     - watch:
       - file: docker_params_blockreplace
+    - require_in:
+      - service: docker
