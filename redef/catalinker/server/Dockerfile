@@ -1,7 +1,7 @@
 FROM digibib/redef-catalinker-skeleton
 
 MAINTAINER Oslo Public Library "digitalutvikling@gmail.com"
-ENV REFRESHED_AT 2015-06-09
+ENV REFRESHED_AT 2015-07-07
 
 WORKDIR /usr/src/app/
 COPY . /usr/src/app/
