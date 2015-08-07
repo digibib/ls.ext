@@ -2,7 +2,7 @@
 docker_comment_other_params:
   file.comment:
     - name: /etc/default/docker
-    - regex: ^DOCKER_OPTS.+\"
+    - regex: ^DOCKER_OPTS=\".+\"
 
 docker_params_blockreplace:
   file.blockreplace:
