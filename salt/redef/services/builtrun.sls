@@ -8,7 +8,7 @@
 
 {{ image }}_gradle_oneJar:
   cmd.run:
-  - name: ./gradlew build oneJar
+  - name: ./gradlew --no-daemon build oneJar
   - cwd: {{ build_context }}
   - user: vagrant
   - require_in:
