@@ -1,4 +1,4 @@
-all: build test run
+all: build test stop run
 
 CLIENTTOOL_IMAGE=digibib/redef-catalinker-client-tools
 SKELETON_IMAGE=digibib/redef-catalinker-skeleton
