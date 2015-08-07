@@ -6,7 +6,13 @@ else
 SHIP=vm-ship
 endif
 
-all: reload shell_provision provision test            ## Run tests after (re)loading and (re)provisioning vagrant boxes.
+all: cycle_devops cycle_ship cycle_test test          ## Run tests after (re)loading and (re)provisioning vagrant boxes.
+
+cycle_devops: halt_devops up_devops shell_provision_devops provision_devops
+
+cycle_ship: halt_ship up_ship shell_provision_ship provision_ship
+
+cycle_test: halt_test up_test shell_provision_test provision_test
 
 help:                                                 ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
