@@ -5,13 +5,12 @@ import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.POST
 import com.github.restdriver.clientdriver.ClientDriverRule;
 import static com.github.restdriver.clientdriver.RestClientDriver.giveResponse;
 import static com.github.restdriver.clientdriver.RestClientDriver.onRequestTo;
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.Response.Status.OK;
+import no.deichman.services.testutil.PortSelector;
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -20,14 +19,7 @@ import org.junit.Test;
 
 public class KohaAdapterImplTest {
 
-    private final int clientdriverPort;
-    {
-        try (ServerSocket socket = new ServerSocket(0)) {
-            clientdriverPort = socket.getLocalPort();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+    private final int clientdriverPort = PortSelector.randomFree();
 
     private final KohaAdapterImpl kohaAdapter = new KohaAdapterImpl("http://localhost:" + clientdriverPort);
 
