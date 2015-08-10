@@ -28,6 +28,7 @@ Egenskap: Selvbetjent utlån via utlånsautomat
     Så får låneren beskjed om at materialet ikke kan lånes pga aldersbegrensning
     Og systemet viser at materialet ikke er utlånt
 
+  @wip @issue-11 @unstable
   Scenario: Eksisterende låner forsøker å låne materiale som ikke er til utlån
     Gitt at materialet ikke er til utlån
     Når låneren legger materialet på automaten
