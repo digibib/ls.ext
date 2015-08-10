@@ -10,6 +10,7 @@ end
 
 Given(/^at låneren har materiale han ønsker å (levere|låne)$/) do |action|
   step "jeg legger inn boka som en ny bok"
+  step "at boka er tilgjengelig"
 end
 
 Given(/^at materialet ikke er lånt ut til låner$/) do
@@ -126,6 +127,7 @@ When(/^boka er reservert av "(.*?)"$/) do |name|
   step "at det er aktivert en standard sirkulasjonsregel"
   step "boka reserveres av \"#{name}\" på egen avdeling"
   step "reserveringskøen kjøres"
+  step "viser systemet at boka er reservert"
   step "vises boka i listen over bøker som skal plukkes"
 end
 
@@ -220,7 +222,6 @@ end
 
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
   steps %Q{
-    Gitt at det er lov å reservere materiale som er på hylla
     Og at det finnes følgende sirkulasjonsregler
       | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds |
       | *            | *        | 10          | 10          | 10              | 1            |
@@ -231,7 +232,6 @@ end
 Given(/^at låneren har et antall lån som( ikke)? er under maksgrense for antall lån$/) do |maxloans|
   item   = @active[:item] ||= @active[:book].items.first
   patron = @active[:patron]
-  step "at det er lov å reservere materiale som er på hylla"
   if maxloans
     step "at det finnes følgende sirkulasjonsregler", table(%{
       | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds |
@@ -290,10 +290,6 @@ Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
     row.select_list(:name => "onshelfholds").select_value "#{rule[:onshelfholds]}"
     row.input(:class => "submit").click
   end
-end
-
-Given(/^at det er lov å reservere materiale som er på hylla$/) do
-  SVC::Preference.new(@browser).set("pref_AllowOnShelfHolds", 1)
 end
 
 Given(/^at materiale ikke automatisk overføres ved innlevering$/) do
