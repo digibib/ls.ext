@@ -65,7 +65,7 @@
             </div>
           </div>
         </div>
-        <div class="column half relative">
+        <div id="work" class="column half relative">
           <h2 data-automation-id="work_title">{{firstValue work "deichman:name" graph}}</h2>
           <p data-automation-id="work_author">{{firstValue work "deichman:creator" graph}}</p>
           <div class="small-text">
@@ -88,7 +88,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="panel column full">
+        <div id="publications" class="panel column full">
           {{#if work.publications}}
             <h2>Finnes i disse utgavene</h2>
             <table>
@@ -115,7 +115,7 @@
             <h2>Vi har ingen utgaver</h2>
           {{/if}}
         </div>
-        <div class="panel column full">
+        <div id="items" class="panel column full">
           {{#if work.items}}
             <h2>Eksemplarer</h2>
             <table>
