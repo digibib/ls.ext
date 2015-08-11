@@ -73,7 +73,7 @@
             <p>Beskrivelse av verket kommer her ...</p>
           </div>
           <p>{{work.publications.length}} ulike utgaver</p>
-          <p>Antall eksemplarer: <span class="green big-text">? ledige</span></p>
+          <p>Antall eksemplarer: <span class="green big-text">{{availableItems work.items graph}} ledige</span></p>
           <div class="item-actions">
             <button disabled='disabled'>Lån</button> <button disabled='disabled'>Legg i huskeliste</button>
           </div>
