@@ -89,30 +89,34 @@
       </div>
       <div class="row">
         <div class="panel column full">
-          <h2>Finnes i disse utgavene</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>tittel</th>
-                <th>språk</th>
-                <th>format</th>
-                <th>eksemplarer</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each work.publications as |pub|}}
+          {{#if work.publications}}
+            <h2>Finnes i disse utgavene</h2>
+            <table>
+              <thead>
                 <tr>
-                  <td data-automation-id="publication_name">{{allValuesConcat pub "deichman:name" ../graph}}</td>
-                  <td data-automation-id="publication_language">{{firstValue pub "deichman:language" ../graph}}</td>
-                  <td data-automation-id="publication_format">{{firstValue pub "deichman:format" ../graph}}</td>
-                  <td>?</td>
+                  <th>tittel</th>
+                  <th>språk</th>
+                  <th>format</th>
+                  <th>eksemplarer</th>
                 </tr>
-              {{/each}}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {{#each work.publications as |pub|}}
+                  <tr>
+                    <td data-automation-id="publication_name">{{allValuesConcat pub "deichman:name" ../graph}}</td>
+                    <td data-automation-id="publication_language">{{firstValue pub "deichman:language" ../graph}}</td>
+                    <td data-automation-id="publication_format">{{firstValue pub "deichman:format" ../graph}}</td>
+                    <td>?</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          {{else}}
+            <h2>Vi har ingen utgaver</h2>
+          {{/if}}
         </div>
         <div class="panel column full">
-          {{#if items.length}}
+          {{#if work.items}}
             <h2>Eksemplarer</h2>
             <table>
               <thead>
@@ -120,19 +124,23 @@
                   <th>tittel</th>
                   <th>språk</th>
                   <th>format</th>
+                  <th>strekkode</th>
                   <th>plassering</th>
                   <th>status</th>
                 </tr>
               </thead>
               <tbody>
-              {{#each items}}
-                <tr>
-                  <td>?</td>
-                  <td>?</td>
-                  <td>?</td>
-                  <td data-automation-id="item_location">{{deichman:location}}</td>
-                  <td data-automation-id="item_status">{{deichman:status}}</td>
-                </tr>
+              {{#each work.publications as |pub|}}
+                {{#each pub.items as |item|}}
+                  <tr>
+                    <td>?</td>
+                    <td>?</td>
+                    <td>?</td>
+                    <td data-automation-id="item_barcode">{{firstValue item "deichman:barcode" ../../graph}}</td>
+                    <td data-automation-id="item_location">{{firstValue item "deichman:location" ../../graph}}</td>
+                    <td data-automation-id="item_status">{{firstValue item "deichman:status" ../../graph}}</td>
+                  </tr>
+                {{/each}}
               {{/each}}
               </tbody>
            </table>
