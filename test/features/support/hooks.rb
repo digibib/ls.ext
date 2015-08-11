@@ -33,6 +33,7 @@ end
 
 Before do |scenario|
   @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+  @browser.window.resize_to(800, 600) unless ENV['BROWSER']
   @site = @site || Site.new(@browser)
 end
 
