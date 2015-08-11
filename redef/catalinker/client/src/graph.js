@@ -33,6 +33,7 @@
   function Work(uri) {
     Resource.call(this, uri);
     this.publications = [];
+    this.items        = [];
   }
 
   Work.prototype = Object.create(Resource.prototype);
@@ -40,10 +41,18 @@
 
   function Publication(uri) {
     Resource.call(this, uri);
+    this.items = [];
   }
 
   Publication.prototype = Object.create(Resource.prototype);
   Publication.prototype.constructor = Publication;
+
+  function Item(uri) {
+    Resource.call(this, uri);
+  }
+
+  Item.prototype = Object.create(Resource.prototype);
+  Item.prototype.constructor = Item;
 
   var Property = function (predicate, value, lang, datatype) {
     this.predicate = predicate;
@@ -57,15 +66,14 @@
     }
   };
 
-  var data = {};
-  data["@context"] = {};
+  var context = {};
 
   function resolve(uri) {
     var i = uri.indexOf(":");
     var prefix = uri.substr(0, i);
-    for (var k in data["@context"]) {
+    for (var k in context) {
       if (prefix === k) {
-        return data["@context"][k] + uri.substr(i + 1);
+        return context[k] + uri.substr(i + 1);
       }
     }
     return uri; // not in context, return unmodified
@@ -108,35 +116,56 @@
     return res;
   }
 
-  function attatchPublications(work, data) {
-    data["@graph"].forEach(function (resource) {
-      if (resource["deichman:publicationOf"] === work.uri) {
-        var p = new Publication(resource["@id"]);
-        p.properties = extractProps(resource);
+  function attachPublicationsAndItems(work, workdata, itemsdata) {
+    workdata["@graph"].forEach(function (workresource) {
+      if (workresource["deichman:publicationOf"] === work.uri) {
+        var p = new Publication(workresource["@id"]);
+        p.properties = extractProps(workresource);
+        if (itemsdata["@graph"]) {
+          itemsdata["@graph"].forEach(function (itemresource) {
+            if (p.uri === itemresource["@id"]) {
+              itemresource["deichman:hasEdition"]["@list"].forEach(function (i) {
+                itemsdata["@graph"].forEach(function (g) {
+                  if (g["@id"] === i["@id"]) {
+                    var item = new Item(g);
+                    item.properties = extractProps(g);
+                    p.items.push(item);
+                    work.items.push(item);
+                  }
+                });
+              });
+            }
+          });
+        }
         work.publications.push(p);
       }
     });
   }
 
-  function parse(jsonld) {
-    data = JSON.parse(jsonld);
+  function parse(workresponse, itemsresponse) {
+    var workdata = JSON.parse(workresponse);
+    var itemsdata = [];
+    context = workdata["@context"];  // set context to work
+    if (itemsresponse) {
+      itemsdata = JSON.parse(itemsresponse);
+    }
 
     var works = [];
 
-    if (data["@graph"]) {
-      data["@graph"].forEach(function (resource) {
+    if (workdata["@graph"]) {
+      workdata["@graph"].forEach(function (resource) {
         if (resource["@type"] === "deichman:Work") {
           var w = new Work(resource["@id"]);
           w.properties = extractProps(resource);
-          attatchPublications(w, data);
+          attachPublicationsAndItems(w, workdata, itemsdata);
           works.push(w);
         }
       });
     } else {
       // graph holds just one resource
-      if (data["@type"] === "deichman:Work") {
-        var w = new Work(data["@id"]);
-        w.properties = extractProps(data);
+      if (workdata["@type"] === "deichman:Work") {
+        var w = new Work(workdata["@id"]);
+        w.properties = extractProps(workdata);
         works.push(w);
       }
     }
