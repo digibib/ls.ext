@@ -15,6 +15,7 @@ module Paths
     ports = {
       :overview => 80,
       :koha_intra => 8081,
+      :koha_opac => 8080,
       :catalinker => 8010,
       :patron_client => 8000,
       :services => 8005,
@@ -32,6 +33,10 @@ module Paths
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{host(:overview)}:#{port(:overview)}#{paths[path.to_sym]}"
+  end
+
+  def opac
+    "http://#{host}:#{port(:koha_opac)}"
   end
 
   def intranet(path=nil)

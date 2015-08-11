@@ -43,6 +43,10 @@ Given(/^at materialet ikke er til utlån$/) do
   step "systemet viser at eksemplaret ikke er til utlån"
 end
 
+Given(/^at låneren har funnet en bok$/) do
+  @site.Opac.biblio_detail(@context[:books][0].biblionumber)
+end
+
 Then(/^systemet viser at eksemplaret ikke er til utlån$/) do
   book = @active[:book]
   item = @active[:item] ||= book.items.first
@@ -103,6 +107,16 @@ When(/^boka blir registrert innlevert$/) do
   @site.Home.visit.select_branch().checkin(@active[:book].items.first.barcode)
 end
 
+When(/^låneren reserverer boka$/) do
+  @browser.link(:class => "reserve").click
+  @browser.element(:class => "placehold").click
+end
+
+Then(/^viser systemet at boka er reservert av låneren$/) do
+  @browser.url.should eq("#{opac}/cgi-bin/koha/opac-user.pl#opac-user-holds")
+  @browser.link(:href => "/cgi-bin/koha/opac-detail.pl?biblionumber=#{@context[:books][0].biblionumber}").present?.should be true
+end
+
 Given(/^at materialet ikke er holdt av til en annen låner$/) do
   step "viser systemet at boka ikke er reservert"
 end
@@ -121,6 +135,13 @@ Given(/^at materialet er reservert av en annen låner$/) do
     | Ove       | 1234     |
   })
   step "boka er reservert av \"#{@active[:patron].surname}\""
+end
+
+Given(/^at det finnes en låner med passord$/) do
+  step "at det finnes en låner med lånekort", table(%{
+    | firstname | password |
+    | Petter    | 6666     |
+  })
 end
 
 When(/^boka er reservert av "(.*?)"$/) do |name|

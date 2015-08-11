@@ -1,21 +1,20 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Reservering av bok
   Som låner
   For å få tak i en bestemt bok
   Ønsker jeg å reservere boka
 
 Bakgrunn:
-  Gitt at det finnes en låner
+  Gitt at jeg er pålogget som adminbruker
   Og at boka finnes i biblioteket
+  Og at det finnes en låner med passord
 
-  @wip
   Scenario: Eksisterende låner reserverer bok
-    Gitt at låner er pålogget som låner
+    Gitt at låner er pålogget som låner (Opac)
     Og at låneren har funnet en bok
-    Og at boka er tilgjengelig
+    Og at boka er tilgjengelig (Opac)
     Når låneren reserverer boka
     Så viser systemet at boka er reservert av låneren
 

@@ -18,6 +18,12 @@ Given(/^jeg logger på som bruker "(.*?)" med passord "(.*?)"$/) do |userid, pas
   @context[:loginuser] = userid
 end
 
+Gitt(/^at låner er pålogget som låner \(Opac\)$/) do
+  user = @context[:patrons][0]
+  @site.Opac.visit.login(user.cardnumber, user.password)
+end
+
+
 Given(/^at jeg er pålogget som adminbruker$/) do
   steps %Q{
     Gitt at jeg er på Kohas interne forside

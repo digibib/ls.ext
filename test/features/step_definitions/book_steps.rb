@@ -16,6 +16,10 @@ Given(/^at boka er tilgjengelig$/) do
   step "viser systemet at boka er en bok som kan lånes ut"
 end
 
+Given(/^at boka er tilgjengelig \(Opac\)$/) do
+  @browser.table(:id => "DataTables_Table_0").tbody.tr.cells[4].text.should eq("Available")
+end
+
 When(/^jeg legger inn boka som en ny bok$/) do
   step "at det finnes en avdeling"       unless @active[:branch]
   step "jeg legger til en materialtype"  unless @active[:itemtype]
