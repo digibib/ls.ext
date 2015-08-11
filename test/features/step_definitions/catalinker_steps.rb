@@ -10,6 +10,51 @@ Given(/^at det finnes et verk$/) do
   }
 end
 
+Given(/^et verk med en utgivelse$/) do
+  step "at det finnes et verk"
+  step "at det finnes en utgivelse"
+end
+
+Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
+  step "at det finnes et verk"
+
+  # we need Koha to be set up
+  steps %Q{
+    Gitt at jeg er logget inn som adminbruker
+    Gitt at det finnes en avdeling
+    Når jeg legger til en materialtype
+  }
+
+  # Add 3 publications of the work, with 2 exemplars of each
+  3.times do
+    step "at det finnes en utgivelse"
+    step "får utgivelsen tildelt en post-ID i Koha" # needed to store :record_id in context
+    2.times do
+      # create new item
+      @browser.goto intranet(:biblio_detail)+@context[:record_id]
+      @browser.button(:text => "New").click
+      @browser.link(:id => "newitem").click
+      @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
+      @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
+      @browser.button(:text => "Add item").click
+    end
+    record_id = @context[:record_id]
+    @cleanup.push( "delete items of bibilo ##{record_id}" =>
+        lambda do
+          @browser.goto intranet(:biblio_detail)+record_id
+
+          # delete all book items
+          @browser.execute_script("window.confirm = function(msg){return true;}")
+          @browser.button(:text => "Edit").click
+          @browser.a(:id => "deleteallitems").click
+
+          # TODO: deletion of biblio will be handled by services?
+        end
+      )
+  end
+end
+
+
 Given(/^at det finnes et verk med biblio-kobling$/) do
   step "at det finnes et verk"
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
@@ -176,9 +221,10 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
   @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
   @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
   @browser.button(:text => "Add item").click
-  @cleanup.push( "delete items of bibilo" =>
+  record_id = @context[:record_id]
+  @cleanup.push( "delete items of bibilo ##{record_id}" =>
     lambda do
-      @browser.goto intranet(:biblio_detail)+@context[:record_id]
+      @browser.goto intranet(:biblio_detail)+record_id
 
       # delete all book items
       @browser.execute_script("window.confirm = function(msg){return true;}")
