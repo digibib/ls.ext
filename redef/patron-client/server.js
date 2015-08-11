@@ -39,6 +39,13 @@ hbs.registerHelper('allValuesConcat', function (resource, property, graph) {
   return res.join(", ");
 });
 
+hbs.registerHelper('availableItems', function (items, graph) {
+  return items.filter(function (item) {
+    return item.property(graph.resolve("deichman:status"))[0].value === "AVAIL";
+  }).length;
+
+});
+
 function getData(body) {
   var data = {};
   try {
