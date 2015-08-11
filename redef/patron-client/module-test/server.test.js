@@ -19,38 +19,51 @@ describe('PatronClient', function () {
     servicesStub.getJson('/', {});
     servicesStub.getJson('/work/work_00001',
             {
-              "@id" : "http://deichman.no/work/work_1231",
-              "@type" : "deichman:Work",
-              "deichman:biblio" : "2",
-              "deichman:year" : "1890",
-              "deichman:name" : "Sult",
-              "deichman:creator" : "Knut Hamsun",
-              "@context" : {
-                "deichman" : "http://deichman.no/ontology#"
-              }
+              "@graph": [
+                {
+                  "@id" : "http://deichman.no/work/work_1231",
+                  "@type" : "deichman:Work",
+                  "deichman:biblio" : "2",
+                  "deichman:year" : "1890",
+                  "deichman:name" : "Sult",
+                  "deichman:creator" : "Knut Hamsun",
+                  "@context" : {
+                    "deichman" : "http://deichman.no/ontology#"
+                  }
+                },
+                {
+                  "@id" : "http://deichman.no/publication/publication_1234",
+                  "@type" : "deichman:Publication",
+                  "deichman:format" : "bok",
+                  "deichman:language" : "engelsk",
+                  "deichman:publicationOf" : "http://deichman.no/work/work_1231",
+                  "deichman:name" : [{
+                    "@language" : "sv",
+                    "@value" : "Hungrig"
+                  }]
+                }
+              ]
             }
     );
 
     servicesStub.getJson('/work/work_00001/items',
             {
               "@graph": [
-                    {
-                      "@id": "_:b1",
-                      "@type": "deichman:Item",
-                      "deichman:location": "hutl",
-                      "deichman:status": "AVAIL"
-                    },
-                    {
-                      "@id": "http://deichman.no/work/x0123",
-                      "deichman:hasEdition": {
-                        "@list": [
-                                {
-                                  "@id": "_:b1"
-                                }
-                            ]
-                      }
-                    }
-                ],
+                {
+                  "@id" : "_:b1",
+                  "@type" : "deichman:Item",
+                  "deichman:barcode" : "12345",
+                  "deichman:location": "hutl",
+                  "deichman:status" : "AVAIL"
+                }, {
+                  "@id" : "http://deichman.no/publication/publication_1234",
+                  "deichman:hasEdition" : {
+                    "@list" : [{
+                      "@id" : "_:b1"
+                    }]
+                  }
+                }
+              ],
               "@context": {
                 "deichman": "http://deichman.no/ontology#"
               }
@@ -86,7 +99,7 @@ describe('PatronClient', function () {
         console.log("Got error: ", e);
       });
     });
-    it('should find item status "hutl"', function (done) {
+    it('should find item location "hutl"', function (done) {
       http.get(parameters, function (res) {
         var body = '',
             $ = '';

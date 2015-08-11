@@ -49,62 +49,52 @@ function getData(body) {
   return data;
 }
 
-function getItems(uri, callback) {
-  http.get(uri, function (res) {
-    var body = '';
-    res.on('data', function (chunk) {
-      body += chunk;
-    });
-    res.on('end', function () {
-      var data = getData(body),
-          items = [];
-      if (data.ok) {
-        console.log(body);
-        data.data['@graph'].forEach(function (item) {
-          if (item['@type'] && item['@type'] === 'deichman:Item') {
-            items.push(item);
-          }
-        });
-        console.log(items);
-        callback(items);
-      } else {
-        callback(null);
-      }
-    });
-  }).on('error', function (e) {
-    console.log("Got error: ", e, uri);
-    callback(null);
-  });
-}
-
 app.get('/work/:id', function (request, response) {
   var parameters = config.get(process.env);
   parameters.path = "/work/" + request.params.id;
 
+  // fetch work
   http.get(parameters, function (res) {
-    var body = '';
+    var workjson = '';
     res.on('data', function (chunk) {
-      body += chunk;
-    });
-    res.on('end', function () {
-      var data = getData(body);
+      workjson += chunk;
+    })
+    .on('end', function () {
+      var data = getData(workjson);
       console.log("Received reply from services for '" + parameters.path + "' with status code: " + res.statusCode);
       if (data.ok) {
-        data.data.graph = graph.parse(body);
-        data.data.work = data.data.graph.works[0];
-
+        // fetch items
         parameters.path += '/items';
-        getItems(parameters, function (items) {
-          data.data.items = items;
-          response.render('index', data.data);
+        http.get(parameters, function (res) {
+          var itemsjson = '';
+          res.on('data', function (chunk) {
+            itemsjson += chunk;
+          })
+          .on('end', function () {
+            var data = getData(itemsjson);
+            console.log("Received reply from services for '" + parameters.path + "' with status code: " + res.statusCode);
+            if (data.ok) {
+              data.data.graph = graph.parse(workjson, itemsjson);
+              data.data.work = data.data.graph.works[0];
+              response.render('index', data.data);
+            } else {  // no items response 404
+              data.data.graph = graph.parse(workjson);
+              data.data.work = data.data.graph.works[0];
+              response.render('index', data.data);
+            }
+          })
+          .on('error', function (e) {
+            console.log("Got error: ", e);
+          });
         });
       } else {
         response.status(res.statusCode);
         response.render('error', {data: res.statusMessage});
       }
+    })
+    .on('error', function (e) {
+      console.log("Got error: ", e);
     });
-  }).on('error', function (e) {
-    console.log("Got error: ", e);
   });
 });
 
