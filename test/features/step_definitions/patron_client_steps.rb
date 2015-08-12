@@ -64,6 +64,5 @@ Then(/^ser jeg format og språk for utgivelsen$/) do
 end
 
 When(/^ser jeg eksemplarene gruppert etter utgave m\/informasjon om format og språk$/) do
-  binding.pry
   pending # Write code here that turns the phrase above into concrete actions
 end
