@@ -34,6 +34,7 @@ koha_container_installed:
       - "6001/tcp"
       - "8080/tcp"
       - "8081/tcp"
+      - "5000/tcp"
     - require:
       - docker: koha_docker_image
 
@@ -62,6 +63,9 @@ koha_container_running:
         "8081/tcp":
             HostIp: "{{ pillar['koha']['intra']['binding'] }}"
             HostPort: "{{ pillar['koha']['intra']['port'] }}"
+        "5000/tcp":
+            HostIp: "{{ pillar['koha']['intra']['binding'] }}"
+            HostPort: "{{ pillar['koha']['intra']['plack_port'] }}"
     - check_is_running:
       - "koha_mysql_container"
     - binds:

@@ -102,10 +102,14 @@ ifdef FEATURE
 CUKE_ARGS=-n "$(FEATURE)"
 endif
 
+ifdef PLACK_INTRA
+PLACK_ARGS=PLACK_INTRA=true
+endif
+
 test: test_redef cuke_test                            ## Run unit and cucumber tests.
 
 cuke_test:
-	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
+	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) $(PLACK_ARGS) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
 
 cuke_test_parallel:
 	vagrant ssh vm-test -c 'cd vm-test && parallel_cucumber -n 2 features/'
@@ -180,7 +184,7 @@ install_firefox_on_devops:
 test_redef: test_patron_client test_services test_catalinker cuke_redef
 
 cuke_redef:
-	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) --tags @redef $(CUKE_ARGS)'
+	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) $(PLACK_ARGS) cucumber $(CUKE_PROFILE_ARG) --tags @redef $(CUKE_ARGS)'
 
 test_patron_client:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'

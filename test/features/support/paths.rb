@@ -21,6 +21,9 @@ module Paths
       :services => 8005,
       :triplestore => 3030
     }
+    if ENV['PLACK_INTRA']
+      ports[:koha_intra] = ENV['KOHA_PLACK_PORT'].to_i
+    end
     raise ArgumentError, "Invalid port argument" unless port && ports[port.to_sym]
     "#{ports[port.to_sym]}"
   end
