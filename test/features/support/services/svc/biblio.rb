@@ -38,7 +38,7 @@ module SVC
       book.biblionumber = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
 
       # force rebuild and restart zebra bibliographic index
-      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -v -f #{SETTINGS['koha']['instance']}' >&2`
+      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -v -f -b #{SETTINGS['koha']['instance']}' >&2`
       STDERR.puts "koha-rebuild-zebra has returned"
 
       return book
