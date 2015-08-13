@@ -17,10 +17,14 @@ public final class InMemoryRepository extends RDFRepositoryBase {
     private final Dataset model;
 
     public InMemoryRepository() {
-        this(BaseURI.local(), new SPARQLQueryBuilder(BaseURI.local()), new UniqueURIGenerator(BaseURI.local()));
+        this(BaseURI.local());
     }
 
-    public InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
+    public InMemoryRepository(BaseURI baseURI) {
+        this(baseURI, new SPARQLQueryBuilder(baseURI), new UniqueURIGenerator(baseURI));
+    }
+
+    private InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         super(baseURI, sqb, uriGenerator);
         model = DatasetFactory.createMem();
         System.out.println("In-memory repository started.");

@@ -2,14 +2,9 @@ package no.deichman.services.kohaadapter;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-
-import no.deichman.services.marc.MarcXmlProvider;
-
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
-import org.xml.sax.InputSource;
-
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -21,10 +16,11 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import no.deichman.services.marc.MarcXmlProvider;
+import org.marc4j.MarcReader;
+import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.Record;
+import org.xml.sax.InputSource;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -43,13 +39,13 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     private NewCookie sessionCookie;
 
-    KohaAdapterImpl(String kohaPort) {
-        this.kohaPort = kohaPort;
-        System.out.println("Koha adapter started with kohaPort: " + kohaPort);
+    public KohaAdapterImpl(String kohaPort) {
+        this.kohaPort = kohaPort != null ? kohaPort : System.getProperty("KOHA_PORT", DEFAULT_KOHA_PORT);
+        System.out.println("Koha adapter started with kohaPort: " + this.kohaPort);
     }
 
     public KohaAdapterImpl() {
-        this(System.getProperty("KOHA_PORT", DEFAULT_KOHA_PORT));
+        this(null);
     }
 
     private void login() {

@@ -16,16 +16,20 @@ public final class RemoteRepository extends RDFRepositoryBase {
     private final String fusekiPort;
 
     public RemoteRepository() {
-        this(FUSEKI_PORT,
-                new UniqueURIGenerator(BaseURI.remote()),
-                new SPARQLQueryBuilder(BaseURI.remote()),
-                BaseURI.remote());
+        this(FUSEKI_PORT);
     }
 
     RemoteRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
         super(baseURI, sparqlQueryBuilder, uriGenerator);
         this.fusekiPort = fusekiPort;
-        System.out.println("Repository started with FUSEKI_PORT: " + fusekiPort);
+        System.out.println("Repository started with FUSEKI_PORT: " + this.fusekiPort);
+    }
+
+    public RemoteRepository() {
+        this(FUSEKI_PORT,
+                new UniqueURIGenerator(BaseURI.remote()),
+                new SPARQLQueryBuilder(BaseURI.remote()),
+                BaseURI.remote());
     }
 
     @Override
