@@ -29,5 +29,11 @@ class PatronClient < PageRoot
       return location
     end
 
+    def getPublicationsTableRows
+      return @browser.div(:id=> "publications").table.tbody.rows
+    end
 
+    def getItemsTableRows
+      return @browser.div(:id=> "items").table.tbody.rows
+    end
 end

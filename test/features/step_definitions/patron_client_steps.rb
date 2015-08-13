@@ -54,9 +54,40 @@ end
 When(/^vises opplysningene om utgivelsen på verkssiden$/) do
   sleep 4 # TODO why does it take so long for previous step (knytte utgivelse til verket) to be persisted in DB?
   step "jeg er på sida til verket"
-  @browser.td(:data_automation_id => /publication_format/).text.should eq(@context[:publication_format])
-  @browser.td(:data_automation_id => /publication_language/).text.should eq(@context[:publication_language])
-  @browser.td(:data_automation_id => /publication_name/).text.should eq(@context[:publication_name])
+  @site.PatronClient.getPublicationsTableRows().each do |row|
+    row.td(:data_automation_id => "publication_name").text.should eq(@context[:publication_name])
+    row.td(:data_automation_id => "publication_format").text.should eq(@context[:publication_format])
+    row.td(:data_automation_id => "publication_language").text.should eq(@context[:publication_language])
+  end
+end
+
+Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
+  @browser.refresh
+  @site.PatronClient.existsExemplar().should == true
+end
+
+Then(/^har eksemplarene en identifikator \(strekkode\)$/) do
+  @site.PatronClient.getItemsTableRows().each do |row|
+    row.td(:data_automation_id => "item_barcode").text.should_not be_empty
+  end
+end
+
+Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$/) do
+  # TODO: Update this when services functions properly with multiple items
+  @site.PatronClient.getPublicationsTableRows().each do |row|
+    row.td(:data_automation_id => "publication_name").text.should_not be_empty
+    row.td(:data_automation_id => "publication_language").text.should_not be_empty
+    row.td(:data_automation_id => "publication_format").text.should_not be_empty
+  end
+
+  @site.PatronClient.getItemsTableRows().each do |row|
+    row.td(:data_automation_id => "item_title").text.should_not be_empty
+    row.td(:data_automation_id => "item_language").text.should_not be_empty
+    row.td(:data_automation_id => "item_format").text.should_not be_empty
+    row.td(:data_automation_id => "item_barcode").text.should_not be_empty
+    row.td(:data_automation_id => "item_location").text.should_not be_empty
+    row.td(:data_automation_id => "item_status").text.should_not be_empty
+  end
 end
 
 Then(/^ser jeg format og språk for utgivelsen$/) do

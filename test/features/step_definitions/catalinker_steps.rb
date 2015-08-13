@@ -276,38 +276,6 @@ Then(/^får jeg beskjed om at noe er feil$/) do
   @site.RegWork.errors.should include("Noe gikk galt!")
 end
 
-Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
-  @browser.refresh
-  @site.PatronClient.existsExemplar().should == true
-end
-
-Then(/^har eksemplarene en identifikator \(strekkode\)$/) do
-  table = @browser.div(:id=> "items").table
-  table.tbody.rows.each do |t|
-    t.td(:data_automation_id => "item_barcode").text.should_not be_empty
-  end
-end
-
-Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$/) do
-  # TODO: Update this when services functions properly with multiple items
-  publicationstable = @browser.div(:id=> "publications").table
-  publicationstable.tbody.rows.each do |t|
-    t.td(:data_automation_id => "publication_name").text.should_not be_empty
-    t.td(:data_automation_id => "publication_language").text.should_not be_empty
-    t.td(:data_automation_id => "publication_format").text.should_not be_empty
-  end
-
-  itemstable = @browser.div(:id=> "items").table
-  itemstable.tbody.rows.each do |t|
-    t.td(:data_automation_id => "item_title").text.should_not be_empty
-    t.td(:data_automation_id => "item_language").text.should_not be_empty
-    t.td(:data_automation_id => "item_format").text.should_not be_empty
-    t.td(:data_automation_id => "item_barcode").text.should_not be_empty
-    t.td(:data_automation_id => "item_location").text.should_not be_empty
-    t.td(:data_automation_id => "item_status").text.should_not be_empty
-  end
-end
-
 Then(/^viser systemet at tittel på verket har blitt registrert$/) do
   step "grensesnittet viser at tittelen er lagret"
 end
