@@ -1,4 +1,4 @@
 docker-params:
   - storage-driver=aufs
-  - registry-mirror=http://10.172.2.160:4000
-  - registry-mirror=http://registry-1.docker.com
+  - insecure-registry=http://10.172.2.160:4000
+  - insecure-registry=http://registry-1.docker.com
