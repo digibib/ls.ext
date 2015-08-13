@@ -12,18 +12,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import no.deichman.services.patch.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
+import no.deichman.services.patch.PatchParserException;
 import no.deichman.services.repository.InMemoryRepository;
-import static no.deichman.services.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +26,13 @@ import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static no.deichman.services.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceImplTest {
@@ -56,11 +56,6 @@ public class ServiceImplTest {
         ontologyURI = baseURI.ontology();
         workURI = baseURI.work();
         publicationURI = baseURI.publication();
-    }
-
-    @Test
-    public void should_have_default_constructor() {
-        assertNotNull(new ServiceImpl());
     }
 
     @Test

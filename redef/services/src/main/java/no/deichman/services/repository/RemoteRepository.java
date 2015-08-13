@@ -15,10 +15,6 @@ public final class RemoteRepository extends RDFRepositoryBase {
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private final String fusekiPort;
 
-    public RemoteRepository() {
-        this(FUSEKI_PORT);
-    }
-
     RemoteRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
         super(baseURI, sparqlQueryBuilder, uriGenerator);
         this.fusekiPort = fusekiPort;

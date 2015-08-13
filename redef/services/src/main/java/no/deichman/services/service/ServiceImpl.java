@@ -10,19 +10,15 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import no.deichman.services.patch.PatchParserException;
 import no.deichman.services.kohaadapter.KohaAdapter;
-import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.patch.Patch;
 import no.deichman.services.patch.PatchObject;
 import no.deichman.services.patch.PatchParser;
+import no.deichman.services.patch.PatchParserException;
 import no.deichman.services.repository.RDFRepository;
-import no.deichman.services.repository.RemoteRepository;
 import no.deichman.services.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
 
@@ -35,10 +31,6 @@ public final class ServiceImpl implements Service {
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
     private final Property recordID;
-
-    public ServiceImpl(){
-        this(BaseURI.remote(), new RemoteRepository(), new KohaAdapterImpl());
-    }
 
     public ServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
         this.baseURI = baseURI;
