@@ -40,12 +40,6 @@ module SVC
       # force rebuild and restart zebra bibliographic index
       `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -v -f #{SETTINGS['koha']['instance']}' >&2`
       STDERR.puts "koha-rebuild-zebra has returned"
-        # stop zebra
-      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-stop-zebra #{SETTINGS['koha']['instance']}' >&2`
-      STDERR.puts "koha-stop-zebra has returned"
-        # start zebra
-      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-start-zebra #{SETTINGS['koha']['instance']}' >&2`
-      STDERR.puts "koha-start-zebra has returned"
 
       return book
     end
