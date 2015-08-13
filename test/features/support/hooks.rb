@@ -32,16 +32,20 @@ Before do
 end
 
 Before do |scenario|
-  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-  @browser.window.resize_to(800, 600) unless ENV['BROWSER']
-  @site = @site || Site.new(@browser)
+  if !scenario.source_tag_names.include?("@no-browser")
+    @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+    @browser.window.resize_to(800, 600) unless ENV['BROWSER']
+    @site = @site || Site.new(@browser)
+  end
 end
 
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
-After do # The final hook
-  @site = nil
-  @browser.close if @browser
+After do |scenario| # The final hook
+  if !scenario.source_tag_names.include?("@no-browser")
+    @site = nil
+    @browser.close if @browser
+  end
 end
 
 def title_of(scenario)
@@ -60,7 +64,9 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
   end
 
   STDOUT.puts "--------------- Cleanup: #{title_of(scenario)} "
-  step "at jeg er logget inn som adminbruker" if @cleanup.length > 0 # TODO Only relevant for Koha-related cleanups
+  if !scenario.source_tag_names.include?("@no-browser")
+    step "at jeg er logget inn som adminbruker" if @cleanup.length > 0 # TODO Only relevant for Koha-related cleanups
+  end
   @cleanup.reverse.each do |hash|
     cleanup_desc = " cleanup '#{hash.keys.first}'"
     cleanup_func = hash.values.first
