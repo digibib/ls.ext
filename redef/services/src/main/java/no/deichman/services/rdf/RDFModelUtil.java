@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
 
 /**
  * Responsibility: Expose useful RDF model-related utility methods.
@@ -28,4 +29,11 @@ public final class RDFModelUtil {
         RDFDataMgr.write(out, in, lang);
         return out.toString();
     }
+
+    public static String stringFrom(Model in, RDFFormat format) {
+        final StringWriter out = new StringWriter();
+        RDFDataMgr.write(out, in, format);
+        return out.toString();
+    }
+
 }
