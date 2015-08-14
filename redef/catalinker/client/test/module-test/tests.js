@@ -7,7 +7,7 @@ function addValue(casper, property, value) {
   casper.sendKeys('input[data-automation-id="http://127.0.0.1:7777/ontology#' + property + '_0"]', value);
 }
 
-casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
+casper.test.begin("Catalinker grensesnitt (verk)", 4, function (test) {
   casper.start('http://127.0.0.1:7777/work');
 
   casper.waitFor(function check() {
@@ -29,12 +29,6 @@ casper.test.begin("Catalinker grensesnitt (verk)", 6, function (test) {
       return document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value;
     });
     test.assertEqual(resource_uri, "http://127.0.0.1:7777/work/1");
-  });
-
-  casper.then(function () {
-    test.assertNotExists('a[href="http://koha.deichman.no/cgi-bin/koha/opac-detail.pl?biblionumber=5"]');
-    addValue(this, "biblio", "5");
-    test.assertExists('a[href="http://koha.deichman.no/cgi-bin/koha/opac-detail.pl?biblionumber=5"]');
   });
 
   casper.run(function () {
