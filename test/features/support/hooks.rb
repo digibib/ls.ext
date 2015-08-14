@@ -62,7 +62,7 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
   end
 
   STDOUT.puts "--------------- Cleanup: #{title_of(scenario)} "
-  if !scenario.source_tag_names.include?("@no-browser")
+  if @browser
     step "at jeg er logget inn som adminbruker" if @cleanup.length > 0 # TODO Only relevant for Koha-related cleanups
   end
   @cleanup.reverse.each do |hash|
