@@ -6,7 +6,7 @@ Given(/^at jeg er logget inn som adminbruker$/) do
 end
 
 When(/^jeg fyller inn credentials for en adminbruker og trykker Logg inn$/) do
-  step "jeg logger på som bruker \"#{SETTINGS['koha']['adminuser']}\" med passord \"#{SETTINGS['koha']['adminpass']}\""
+  step "jeg logger på som bruker \"#{PILLAR['koha']['adminuser']}\" med passord \"#{PILLAR['koha']['adminpass']}\""
 end
 
 Given(/^at jeg er på Kohas interne forside$/) do

@@ -182,7 +182,7 @@ When(/^reserveringskøen kjøres$/) do
 end
 
 When(/^katalogen reindekseres$/) do
-  `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -v -b -f --wait-for-lock #{SETTINGS['koha']['instance']}' >&2`
+  `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -v -b -f --wait-for-lock #{PILLAR['koha']['instance']}' >&2`
   STDERR.puts "koha-rebuild-zebra has returned"
 end
 

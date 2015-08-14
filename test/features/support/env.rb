@@ -7,14 +7,14 @@ require 'rspec'
 require 'yaml'
 require 'securerandom'
 
-SETTINGS = YAML.load_file('/srv/pillar/koha/init.sls')
+PILLAR = YAML.load_file('/srv/pillar/koha/init.sls')
 
 # Merge in Koha credentials
 if !File.exists? '/srv/pillar/koha/admin.sls'
   puts "missing koha minion admin.sls; aborting"
   Cucumber.wants_to_quit = true
 else
-  SETTINGS["koha"].merge!(YAML.load_file('/srv/pillar/koha/admin.sls')["koha"])
+  PILLAR["koha"].merge!(YAML.load_file('/srv/pillar/koha/admin.sls')["koha"])
 end
 
 
