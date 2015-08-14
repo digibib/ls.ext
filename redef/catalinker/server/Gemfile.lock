@@ -8,7 +8,7 @@ GEM
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
     ffi (1.9.10)
-    haml (4.0.6)
+    haml (4.0.7)
       tilt
     hitimes (1.2.2)
     listen (2.10.1)
