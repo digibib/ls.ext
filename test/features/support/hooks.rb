@@ -44,6 +44,7 @@ end
 After do |scenario| # The final hook
   @site = nil
   @browser.close if @browser
+  Selenium::WebDriver.for(:phantomjs).quit # force PhantomJS to quit if stalled
 end
 
 def title_of(scenario)
