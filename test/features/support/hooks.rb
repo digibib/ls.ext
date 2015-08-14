@@ -42,10 +42,8 @@ end
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
 After do |scenario| # The final hook
-  if !scenario.source_tag_names.include?("@no-browser")
-    @site = nil
-    @browser.close if @browser
-  end
+  @site = nil
+  @browser.close if @browser
 end
 
 def title_of(scenario)
