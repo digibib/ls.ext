@@ -8,4 +8,4 @@ koha:
   intra:
     binding: 0.0.0.0
     port: 8081
-    plack_port: 5000
+    plack_port: 8082
