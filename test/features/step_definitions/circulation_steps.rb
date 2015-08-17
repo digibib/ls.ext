@@ -347,14 +347,11 @@ Then(/^systemet viser at låneren( ikke)? låner materialet$/) do |bool|
 end
 
 Then(/^at "(.*?)" låner boka$/) do |name|
-  @browser.text.should include(@active[:book].title)
-  @browser.text.should include "Checked out to #{name}"
+  step "systemet viser at låneren låner materialet"
 end
 
 Then(/^viser systemet at låneren ikke låner boka$/) do
-  @site.Home.search_catalog @active[:book].title
-  @browser.text.should include(@active[:book].title)
-  @browser.text.should_not include "Checked out to Knut"
+  step "systemet viser at låneren ikke låner materialet"
 end
 
 Given(/^at status (.*?) er innstilt med data$/) do |status,table|
