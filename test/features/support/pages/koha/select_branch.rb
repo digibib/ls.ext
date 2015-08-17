@@ -9,9 +9,12 @@ class SelectBranch < IntraPage
     self
   end
 
-  def select_branch(branch_name=nil)
-    raise "Todo: fix branch_name_argument" if branch_name
-    @browser.form(:action => "selectbranchprinter.pl").submit
+  def select_branch(branch_code=nil)
+    form = @browser.form(:action => "selectbranchprinter.pl")
+    if branch_code
+      form.select_list(:name => "branch").select_value(branch_code)
+    end
+    form.submit
     @site.Circulation
   end
 end

@@ -209,13 +209,8 @@ Then(/^viser systemet at boka er reservert og skal holdes av$/) do
 end
 
 When(/^boka sjekkes inn på låners henteavdeling$/) do
-  @browser.goto intranet(:select_branch)
-  form = @browser.form(:action => "selectbranchprinter.pl")
-  form.select_list(:name => "branch").select_value @active[:patron].branch.code
-  form.submit
-  @browser.a(:href => "#checkin_search").click
-  @browser.text_field(:id => "ret_barcode").set @active[:book].items.first.barcode
-  @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
+  @site.SelectBranch.visit.select_branch(@active[:patron].branch.code)
+  @site.IntraPage.checkin(@active[:book].items.first.barcode)
 end
 
 When(/^det bekreftes at boka skal holdes av$/) do

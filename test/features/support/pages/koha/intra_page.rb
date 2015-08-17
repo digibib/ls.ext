@@ -21,8 +21,8 @@ class IntraPage < PageRoot
     @site.BiblioDetail
   end
 
-  def select_branch(branch_name=nil)
-    @site.SelectBranch.visit.select_branch(branch_name)
+  def select_branch(branch_code=nil)
+    @site.SelectBranch.visit.select_branch(branch_code)
   end
 
   def checkin(barcode)
