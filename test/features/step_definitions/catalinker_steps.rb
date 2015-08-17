@@ -243,7 +243,7 @@ end
 
 Then(/^det vises en lenke til posten i Koha i katalogiseringsgrensesnittet$/) do
   link = @browser.div(:class => "http://192.168.50.12:8005/ontology#recordID").a(:class => "link")
-  link.href.should eq("http://192.168.50.12:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber="+@context[:record_id])
+  link.href.should eq(intranet(:biblio_detail)+@context[:record_id])
 end
 
 Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|
