@@ -228,11 +228,9 @@ Then(/^systemet viser at materialet fortsatt er holdt av til den andre låneren$
 end
 
 Then(/^vises boka i listen over bøker som skal plukkes$/) do
-  @browser.goto intranet(:holdsqueue)
-  @browser.form(:name => "f").submit
-  @browser.table(:id => "holdst").wait_until_present
-  @browser.table(:id => "holdst").tbody.text.should include(@active[:book].title)
-  @browser.table(:id => "holdst").tbody.text.should include(@active[:patron].cardnumber)
+  holds = @site.HoldsQueue.visit.get_holds
+  holds.text.should include(@active[:book].title)
+  holds.text.should include(@active[:patron].cardnumber)
 end
 
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
