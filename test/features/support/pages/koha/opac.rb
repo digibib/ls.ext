@@ -9,8 +9,9 @@ class Opac < PageRoot
   end
 
   def login(cardnr, password)
-    if @browser.link(:id => "logout").visible?
-      @browser.link(:id => "logout").click
+    logout_button = @browser.link(:id => "logout")
+    if logout_button.present? && logout_button.visible?
+      logout_button.click
     end
     @browser.text_field(:id => "userid").wait_until_present
     @browser.text_field(:id => "userid").set(cardnr)
