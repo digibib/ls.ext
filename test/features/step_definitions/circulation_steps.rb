@@ -218,10 +218,9 @@ When(/^det bekreftes at boka skal holdes av$/) do
 end
 
 Then(/^viser systemet at boka ligger til avhenting$/) do
-  @browser.goto intranet(:waitingreserves)
   book = @active[:book]
-  table = @browser.div(:id => "holdswaiting").table(:id => "holdst")
-  table.text.should include(@active[:book].title)
+  @site.WaitingReserves.visit.
+    get_waiting_reserves.text.should include(@active[:book].title)
 end
 
 Then(/^systemet viser at materialet fortsatt er holdt av til den andre låneren$/) do
