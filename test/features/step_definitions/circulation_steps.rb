@@ -194,7 +194,7 @@ When(/^boka plukkes og skannes inn$/) do
 end
 
 Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
-  @browser.goto intranet(:pendingreserves)
+  @site.PendingReserves.visit
   if notreserved
     if @browser.table(:id => "holdst").exists?
       @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
