@@ -58,9 +58,7 @@ describe('PatronClient', function () {
                 }, {
                   "@id" : "http://deichman.no/publication/publication_1234",
                   "deichman:hasEdition" : {
-                    "@list" : [{
-                      "@id" : "_:b1"
-                    }]
+                    "@id" : "_:b1"
                   }
                 }
               ],
