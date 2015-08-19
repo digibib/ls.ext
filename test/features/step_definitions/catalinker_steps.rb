@@ -1,4 +1,5 @@
 # encoding: UTF-8
+require 'uri'
 
 Given(/^at det finnes et verk$/) do
   steps %Q{
@@ -156,7 +157,7 @@ When(/^jeg følger lenken til posten i Koha$/) do
     Gitt at det finnes en avdeling
     Når jeg legger til en materialtype
   }
-  @browser.goto(link)
+  @browser.goto(@browser.url[0..@browser.url.index("/cgi-bin")] + link[link.index("/cgi-bin")+1..-1])
 end
 
 Then(/^kommer jeg til Koha's presentasjon av biblio$/) do
@@ -243,7 +244,7 @@ end
 
 Then(/^det vises en lenke til posten i Koha i katalogiseringsgrensesnittet$/) do
   link = @browser.div(:class => "http://192.168.50.12:8005/ontology#recordID").a(:class => "link")
-  link.href.should eq(intranet(:biblio_detail)+@context[:record_id])
+  link.href.end_with?("biblionumber=#{@context[:record_id]}").should be true
 end
 
 Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|
