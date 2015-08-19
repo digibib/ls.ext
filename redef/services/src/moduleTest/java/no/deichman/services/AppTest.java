@@ -80,63 +80,8 @@ public class AppTest {
         final HttpResponse<String> patchWorkIntoPublicationResponse = buildPatchRequest(publicationUri, workIntoPublicationPatch).asString();
         assertResponse(Status.OK, patchWorkIntoPublicationResponse);
 
-        final HttpResponse<JsonNode> getWorkResponse = buildGetRequest(workUri).asJson();
-
-        assertResponse(Status.OK, getWorkResponse);
-        final JsonNode work = getWorkResponse.getBody();
-        assertThat(work, notNullValue());
-
-        final Model workModel = RDFModelUtil.modelFrom(work.toString(), Lang.JSONLD);
-
-        final QueryExecution workPublicationLink = QueryExecutionFactory.create(
-                QueryFactory.create(
-                        "PREFIX deichman: <" + baseUri + "ontology#>"
-                                + "ASK { "
-                                + "<" + workUri + "> a deichman:Work ."
-                                + "<" + publicationUri + "> a deichman:Publication ."
-                                + "<" + publicationUri + "> deichman:publicationOf \"" + workUri + "\" ."
-                                + "}"), workModel);
-        assertTrue("model does not have a publication of work", workPublicationLink.execAsk());
-
-        // One publication with one item
-        kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 1);
-        final HttpResponse<JsonNode> getWorkItemsResponse = buildGetItemsRequest(workUri).asJson();
-
-        assertResponse(Status.OK, getWorkItemsResponse);
-
-        final JsonNode workItems = getWorkItemsResponse.getBody();
-        final Model workItemsModel = RDFModelUtil.modelFrom(workItems.toString(), Lang.JSONLD);
-
-        final QueryExecution publicationItemLink = QueryExecutionFactory.create(
-                QueryFactory.create(
-                        "PREFIX deichman: <" + baseUri + "ontology#>"
-                                + "ASK { "
-                                + "?item a deichman:Item ."
-                                + "<" + publicationUri + "> deichman:hasEdition (?item) ."
-                                + "}"), workItemsModel);
-        assertTrue("model does not have a publication with an item", publicationItemLink.execAsk());
-
-        // One publication with two items
-        kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 2);
-
-        final HttpResponse<JsonNode> getWorkWith2ItemsResponse = buildGetItemsRequest(workUri).asJson();
-        final JsonNode work2Items = getWorkWith2ItemsResponse.getBody();
-        final Model work2ItemsModel = RDFModelUtil.modelFrom(work2Items.toString(), Lang.JSONLD);
-
-        final QueryExecution work2ItemsLink = QueryExecutionFactory.create(
-                QueryFactory.create(
-                        "PREFIX deichman: <" + baseUri + "ontology#>"
-                                + "SELECT (COUNT (?item) AS ?noOfItems) { "
-                                + "?item a deichman:Item ."
-                                + "<" + publicationUri + "> deichman:hasEdition (?item) ."
-                                + "}"), work2ItemsModel);
-        assertThat("model does not have a publication with two items",
-                work2ItemsLink.execSelect().next().getLiteral("noOfItems").getInt(),
-                equalTo(2));
-
-        // Two publications on one work
         kohaSvcMock.addPostNewBiblioExpectation(SECOND_BIBLIO_ID);
+
         final HttpResponse<JsonNode> createSecondPublicationResponse = buildCreateRequest(baseUri + "publication").asJson();
         assertResponse(Status.CREATED, createSecondPublicationResponse);
         final String secondPublicationUri = getLocation(createSecondPublicationResponse);
@@ -165,8 +110,8 @@ public class AppTest {
                 workWith2PublicationsCount.execSelect().next().getLiteral("noOfPublications").getInt(),
                 equalTo(2));
 
-        // Two publications with one item each
-
+        // Two publications with a total of three items
+        kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 2);
         kohaSvcMock.addGetBiblioExpectation(SECOND_BIBLIO_ID, 1);
 
