@@ -1,5 +1,6 @@
 package no.deichman.services.rest;
 
+import javax.inject.Singleton;
 import no.deichman.services.ontology.FileBasedOntologyService;
 import no.deichman.services.ontology.OntologyService;
 import no.deichman.services.uridefaults.BaseURI;
@@ -13,6 +14,7 @@ import java.io.IOException;
 /**
  * Responsibility: Expose ontology as a REST resource.
  */
+@Singleton
 @Path("ontology")
 public final class OntologyResource {
 

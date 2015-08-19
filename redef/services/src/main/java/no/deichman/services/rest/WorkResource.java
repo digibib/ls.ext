@@ -3,6 +3,7 @@ package no.deichman.services.rest;
 import com.hp.hpl.jena.rdf.model.Model;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -26,6 +27,7 @@ import static no.deichman.services.rest.utils.MimeType.LDPATCHJSON;
 /**
  * Responsibility: Expose Work as a r/w REST resource.
  */
+@Singleton
 @Path("/work")
 public final class WorkResource extends ResourceBase {
     private static final String MIME_JSONLD = JSONLD;

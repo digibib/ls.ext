@@ -2,6 +2,7 @@ package no.deichman.services.rest;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import java.net.URI;
+import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -23,6 +24,7 @@ import no.deichman.services.uridefaults.BaseURI;
 /**
  * Responsibility: Expose publication as a r/w REST resource.
  */
+@Singleton
 @Path("/publication")
 public final class PublicationResource extends ResourceBase {
 
