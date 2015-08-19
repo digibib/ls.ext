@@ -1,5 +1,8 @@
 package no.deichman.services;
 
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -30,7 +33,8 @@ public class AppTest {
 
     private static final boolean USE_IN_MEMORY_REPO = true;
     private static final String LOCALHOST = "http://127.0.0.1";
-    public static final String BIBLIO_ID = "666";
+    public static final String FIRST_BIBLIO_ID = "111111";
+    public static final String SECOND_BIBLIO_ID = "222222";
     private String baseUri;
     private App app;
 
@@ -56,7 +60,7 @@ public class AppTest {
     public void happy_day_scenario() throws Exception {
 
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addPostNewBiblioExpectation(BIBLIO_ID);
+        kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
 
         final HttpResponse<JsonNode> createPublicationResponse = buildCreateRequest(baseUri + "publication").asJson();
 
@@ -84,26 +88,103 @@ public class AppTest {
         assertThat(work, notNullValue());
 
         final Model workModel = RDFModelUtil.modelFrom(work.toString(), Lang.JSONLD);
-        System.out.println(RDFModelUtil.stringFrom(workModel, RDFFormat.TURTLE_FLAT));
 
-        // TODO extend test
-        // add item to mock Koha
-        //kohaSvcMock.addGetBiblioExpectation(BIBLIO_ID, );
-        //final HttpResponse<String> getWorkItemsResponse =
-        buildGetItemsRequest(workUri).asString();
+        final QueryExecution workPublicationLink = QueryExecutionFactory.create(
+                QueryFactory.create(
+                        "PREFIX deichman: <" + baseUri + "ontology#>"
+                                + "ASK { "
+                                + "<" + workUri + "> a deichman:Work ."
+                                + "<" + publicationUri + "> a deichman:Publication ."
+                                + "<" + publicationUri + "> deichman:publicationOf \"" + workUri + "\" ."
+                                + "}"), workModel);
+        assertTrue("model does not have a publication of work", workPublicationLink.execAsk());
 
-        //assertResponse(Status.OK, getWorkItemsResponse);
+        // One publication with one item
+        kohaSvcMock.addLoginExpectation();
+        kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 1);
+        final HttpResponse<JsonNode> getWorkItemsResponse = buildGetItemsRequest(workUri).asJson();
 
-        //final Model workItemsModel = RDFModelUtil.modelFrom(work.toString(), Lang.JSONLD);
-        // System.out.println(RDFModelUtil.stringFrom(workItemsModel, RDFFormat.TURTLE_FLAT));
-        // assert one of each
-        // add another item
-        // assert two items
-        // add another publication
-        // assert two items and two publications
-        // add another item to second publication
-        // assert three items and two publications
+        assertResponse(Status.OK, getWorkItemsResponse);
 
+        final JsonNode workItems = getWorkItemsResponse.getBody();
+        final Model workItemsModel = RDFModelUtil.modelFrom(workItems.toString(), Lang.JSONLD);
+
+        final QueryExecution publicationItemLink = QueryExecutionFactory.create(
+                QueryFactory.create(
+                        "PREFIX deichman: <" + baseUri + "ontology#>"
+                                + "ASK { "
+                                + "?item a deichman:Item ."
+                                + "<" + publicationUri + "> deichman:hasEdition (?item) ."
+                                + "}"), workItemsModel);
+        assertTrue("model does not have a publication with an item", publicationItemLink.execAsk());
+
+        // One publication with two items
+        kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 2);
+
+        final HttpResponse<JsonNode> getWorkWith2ItemsResponse = buildGetItemsRequest(workUri).asJson();
+        final JsonNode work2Items = getWorkWith2ItemsResponse.getBody();
+        final Model work2ItemsModel = RDFModelUtil.modelFrom(work2Items.toString(), Lang.JSONLD);
+
+        final QueryExecution work2ItemsLink = QueryExecutionFactory.create(
+                QueryFactory.create(
+                        "PREFIX deichman: <" + baseUri + "ontology#>"
+                                + "SELECT (COUNT (?item) AS ?noOfItems) { "
+                                + "?item a deichman:Item ."
+                                + "<" + publicationUri + "> deichman:hasEdition (?item) ."
+                                + "}"), work2ItemsModel);
+        assertThat("model does not have a publication with two items",
+                work2ItemsLink.execSelect().next().getLiteral("noOfItems").getInt(),
+                equalTo(2));
+
+        // Two publications on one work
+        kohaSvcMock.addPostNewBiblioExpectation(SECOND_BIBLIO_ID);
+        final HttpResponse<JsonNode> createSecondPublicationResponse = buildCreateRequest(baseUri + "publication").asJson();
+        assertResponse(Status.CREATED, createSecondPublicationResponse);
+        final String secondPublicationUri = getLocation(createSecondPublicationResponse);
+
+        final JsonArray workIntoSecondPublicationPatch = buildLDPatch(buildPatchStatement("add", secondPublicationUri, baseUri + "ontology#publicationOf", workUri));
+        final HttpResponse<String> patchWorkIntoSecondPublicationResponse = buildPatchRequest(secondPublicationUri, workIntoSecondPublicationPatch).asString();
+        assertResponse(Status.OK, patchWorkIntoSecondPublicationResponse);
+
+        final HttpResponse<JsonNode> getWorkWithTwoPublications = buildGetRequest(workUri).asJson();
+
+        assertResponse(Status.OK, getWorkWithTwoPublications);
+        final JsonNode workWith2Publications = getWorkWithTwoPublications.getBody();
+        assertThat(workWith2Publications, notNullValue());
+
+        final Model workWith2PublicationsModel = RDFModelUtil.modelFrom(workWith2Publications.toString(), Lang.JSONLD);
+
+        final QueryExecution workWith2PublicationsCount = QueryExecutionFactory.create(
+                QueryFactory.create(
+                        "PREFIX deichman: <" + baseUri + "ontology#>"
+                                + "SELECT (COUNT (?publication) AS ?noOfPublications) { "
+                                + "<" + workUri + "> a deichman:Work ."
+                                + "?publication a deichman:Publication ."
+                                + "?publication deichman:publicationOf \"" + workUri + "\" ."
+                                + "}"), workWith2PublicationsModel);
+        assertThat("model does not have a work with two publications",
+                workWith2PublicationsCount.execSelect().next().getLiteral("noOfPublications").getInt(),
+                equalTo(2));
+
+        // Two publications with one item each
+
+        kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 2);
+        kohaSvcMock.addGetBiblioExpectation(SECOND_BIBLIO_ID, 1);
+
+        final HttpResponse<JsonNode> getWorkWith2Plus1ItemsResponse = buildGetItemsRequest(workUri).asJson();
+        final JsonNode work1Plus2Items = getWorkWith2Plus1ItemsResponse.getBody();
+        final Model work1Plus2ItemsModel = RDFModelUtil.modelFrom(work1Plus2Items.toString(), Lang.JSONLD);
+        System.out.println(RDFModelUtil.stringFrom(work1Plus2ItemsModel, RDFFormat.TURTLE_PRETTY));
+
+        final QueryExecution workWith1Plus2ItemsCount = QueryExecutionFactory.create(
+                QueryFactory.create(
+                        "PREFIX deichman: <" + baseUri + "ontology#>"
+                                + "SELECT (COUNT (?item) AS ?noOfItems) { "
+                                + "?item a deichman:Item ."
+                                + "}"), work1Plus2ItemsModel);
+        assertThat("model does not three publications",
+                workWith1Plus2ItemsCount.execSelect().next().getLiteral("noOfItems").getInt(),
+                equalTo(2 + 1));
     }
 
     private GetRequest buildGetItemsRequest(String workUri) {
