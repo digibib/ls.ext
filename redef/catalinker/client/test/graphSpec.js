@@ -56,19 +56,22 @@ var ìtems_response = JSON.stringify({
     "deichman:location" : "HUTL",
     "deichman:status" : "AVAIL"
   }, {
+    "@id" : "_:b3",
+    "@type" : "deichman:Item",
+    "deichman:barcode" : "88654",
+    "deichman:location" : "HUTL",
+    "deichman:status" : "AVAIL"
+  },  {
     "@id" : "http://192.168.50.12:8005/publication/p976722435911",
-    "deichman:hasEdition" : {
-      "@list" : [{
+    "deichman:hasEdition": {
         "@id" : "_:b1"
-      }]
-    }
+      }
   }, {
     "@id" : "http://192.168.50.12:8005/publication/p417291955314",
-    "deichman:hasEdition" : {
-      "@list" : [{
-        "@id" : "_:b2"
-      }]
-    }
+    "deichman:hasEdition" : [
+      { "@id" : "_:b2"},
+      { "@id" : "_:b3"}
+      ]
   }],
   "@context" : {
     "deichman" : "http://192.168.50.12:8005/ontology#",
@@ -143,12 +146,12 @@ define(['graph'], function (graph) {
     assert.equal(pub1.items[0].property(g.resolve("deichman:barcode"))[0].value, "12345");
     assert.equal(pub2.items[0].property(g.resolve("deichman:barcode"))[0].value, "67890");
     assert.equal(pub1.items.length, 1);
-    assert.equal(pub2.items.length, 1);
+    assert.equal(pub2.items.length, 2);
   });
 
   it("attaches items directly on work", function () {
     var g = graph.parse(work_response_with_publications, ìtems_response);
     var work = g.works[0];
-    assert.equal(work.items.length, 2);
+    assert.equal(work.items.length, 3);
   });
 });

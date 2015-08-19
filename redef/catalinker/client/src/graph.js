@@ -123,8 +123,12 @@
         p.properties = extractProps(workresource);
         if (itemsdata["@graph"]) {
           itemsdata["@graph"].forEach(function (itemresource) {
-            if (p.uri === itemresource["@id"]) {
-              itemresource["deichman:hasEdition"]["@list"].forEach(function (i) {
+            if (p.uri === itemresource["@id"] && itemresource["deichman:hasEdition"]) {
+              if (!Array.isArray(itemresource["deichman:hasEdition"])) {
+                // Force into array, even if its only one item
+                itemresource["deichman:hasEdition"] = [itemresource["deichman:hasEdition"]];
+              }
+              itemresource["deichman:hasEdition"].forEach(function (i) {
                 itemsdata["@graph"].forEach(function (g) {
                   if (g["@id"] === i["@id"]) {
                     var item = new Item(g);
