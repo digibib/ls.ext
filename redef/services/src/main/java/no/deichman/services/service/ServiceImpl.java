@@ -3,13 +3,14 @@ package no.deichman.services.service;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResIterator;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,24 +67,28 @@ public final class ServiceImpl implements Service {
     @Override
     public Model retrieveWorkItemsById(String id) {
         Model allItemsModel = ModelFactory.createDefaultModel();
-        Model model = ModelFactory.createDefaultModel();
-        model.add(repository.retrieveWorkById(id));
-        ResIterator subjectsIterator = model.listResourcesWithProperty(RDF.type, ResourceFactory.createResource(baseURI.ontology() + "Publication"));
 
-        while (subjectsIterator.hasNext()){
-            Model tempModel = ModelFactory.createDefaultModel();
-            NodeIterator n = model.listObjectsOfProperty(recordID);
-            while (n.hasNext()){
-                tempModel.add(kohaAdapter.getBiblio(n.next().asLiteral().getString()));
-            }
+        Model workModel = repository.retrieveWorkById(id);
+        QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
+                "PREFIX  deichman: <" + baseURI.ontology() + "> "
+                        + "SELECT  * "
+                        + "WHERE { ?publicationUri deichman:recordID ?biblioId }"), workModel);
+        ResultSet publicationSet = queryExecution.execSelect();
+
+        while (publicationSet.hasNext()) {
+            QuerySolution solution =  publicationSet.next();
+            RDFNode publicationUri = solution.get("publicationUri");
+            String biblioId = solution.get("biblioId").asLiteral().getString();
+
+            Model itemsForBiblio = kohaAdapter.getBiblio(biblioId);
+
             SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(baseURI);
-            Query query = sqb.getItemsFromModelQuery(subjectsIterator.next().toString());
-            QueryExecution qexec = QueryExecutionFactory.create(query, tempModel);
-            Model itemsModel = qexec.execConstruct();
+            Query query = sqb.getItemsFromModelQuery(publicationUri.toString());
+            QueryExecution qexec = QueryExecutionFactory.create(query, itemsForBiblio);
+            Model itemsModelWithBlankNodes = qexec.execConstruct();
 
-            allItemsModel.add(itemsModel);
+            allItemsModel.add(itemsModelWithBlankNodes);
         }
-
         return allItemsModel;
     }
 
