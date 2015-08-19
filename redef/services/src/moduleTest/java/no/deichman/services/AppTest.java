@@ -18,7 +18,6 @@ import no.deichman.services.kohaadapter.KohaSvcMock;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.testutil.PortSelector;
 import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -174,7 +173,6 @@ public class AppTest {
         final HttpResponse<JsonNode> getWorkWith2Plus1ItemsResponse = buildGetItemsRequest(workUri).asJson();
         final JsonNode work1Plus2Items = getWorkWith2Plus1ItemsResponse.getBody();
         final Model work1Plus2ItemsModel = RDFModelUtil.modelFrom(work1Plus2Items.toString(), Lang.JSONLD);
-        System.out.println(RDFModelUtil.stringFrom(work1Plus2ItemsModel, RDFFormat.TURTLE_PRETTY));
 
         final QueryExecution workWith1Plus2ItemsCount = QueryExecutionFactory.create(
                 QueryFactory.create(
