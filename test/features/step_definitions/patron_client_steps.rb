@@ -73,7 +73,6 @@ Then(/^har eksemplarene en identifikator \(strekkode\)$/) do
 end
 
 Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$/) do
-  # TODO: Update this when services functions properly with multiple items
   @site.PatronClient.getPublicationsTableRows().each do |row|
     row.td(:data_automation_id => "publication_name").text.should_not be_empty
     row.td(:data_automation_id => "publication_language").text.should_not be_empty

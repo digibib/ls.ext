@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@redef @wip
+@redef
 Egenskap: Gruppering på utgivelse
   Som bruker av bibliotekets nettsider
   For å kunne finne eksemplar i rett format og språk

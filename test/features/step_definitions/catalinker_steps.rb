@@ -1,5 +1,6 @@
 # encoding: UTF-8
 require 'uri'
+require 'net/http'
 
 Given(/^at det finnes et verk$/) do
   steps %Q{
@@ -27,10 +28,10 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
   }
 
   # Add 3 publications of the work, with 2 exemplars of each
-  1.times do
+  3.times do
     step "at det finnes en utgivelse"
     step "får utgivelsen tildelt en post-ID i Koha" # needed to store :record_id in context
-    1.times do
+    2.times do
       # create new item
       @browser.goto intranet(:biblio_detail)+@context[:record_id]
       @browser.button(:text => "New").click
@@ -43,12 +44,10 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
     @cleanup.push( "delete items of bibilo ##{record_id}" =>
         lambda do
           @browser.goto intranet(:biblio_detail)+record_id
-
           # delete all book items
           @browser.execute_script("window.confirm = function(msg){return true;}")
           @browser.button(:text => "Edit").click
           @browser.a(:id => "deleteallitems").click
-
           # TODO: deletion of biblio will be handled by services?
         end
       )
@@ -286,7 +285,16 @@ Then(/^viser systemet at alternativ tittel på verket har blitt registrert$/) do
 end
 
 When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
-  page = @site.RegPublication.visit
+  page = nil
+  if @browser.driver.browser == :phantomjs
+    # Because phantomjs caches redirects, we need to perform the get request ourself,
+    # store the URI and then open it:
+    res = Net::HTTP.get_response(URI(catalinker("publication")))
+    uri = res['location'][res['location'].index("resource=")+9..-1]
+    page = @site.RegPublication.open(uri)
+  else
+    page = @site.RegPublication.visit
+  end
 
   @context[:publication_format] = ['Bok', 'Lydbok (CD)', 'Lydbok (Kassett)', 'E-bok', 'Bok', 'Bok'].sample
   @context[:publication_language] =  ['Bokmål', 'Baskisk', 'Finsk', 'Engelsk', 'Dansk', 'Svensk'].sample
