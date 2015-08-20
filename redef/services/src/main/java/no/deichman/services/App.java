@@ -2,6 +2,7 @@ package no.deichman.services;
 
 import no.deichman.services.rest.OntologyResource;
 import no.deichman.services.rest.PublicationResource;
+import no.deichman.services.rest.Resource;
 import no.deichman.services.rest.ResourceBase;
 import no.deichman.services.rest.WorkResource;
 import no.deichman.services.rest.utils.CORSResponseFilter;
@@ -69,6 +70,7 @@ public final class App {
                         WorkResource.class.getCanonicalName(),
                         OntologyResource.class.getCanonicalName(),
                         PublicationResource.class.getCanonicalName(),
+                        Resource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName()
                 )));
 

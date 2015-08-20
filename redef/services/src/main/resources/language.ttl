@@ -1,0 +1,14 @@
+@prefix : <http://lexvo.org/id/iso639-3/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+:eng a :Language ;
+   rdfs:label "Engelsk"@no .
+
+:nno a :Language ;
+   rdfs:label "Norsk (Nynorsk)"@no .
+
+:nob a :Language ;
+   rdfs:label "Norsk (Bokmål)"@no .
+
+:fra a :Language ;
+   rdfs:label "Fransk"@no .

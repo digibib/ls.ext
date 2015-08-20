@@ -4,10 +4,13 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -128,6 +131,24 @@ public class AppTest {
         assertThat("model does not three publications",
                 workWith1Plus2ItemsCount.execSelect().next().getLiteral("noOfItems").getInt(),
                 equalTo(2 + 1));
+    }
+
+    @Test
+    public void get_languages() throws Exception {
+        HttpRequest languageRequest = Unirest
+                .get(baseUri + "describe")
+                .queryString("resource", "http://lexvo.org/ontology#Language")
+                .header("Accept", "application/ld+json");
+        HttpResponse<?> languageResponse = languageRequest.asString();
+        assertResponse(Status.OK, languageResponse);
+
+        Model model = RDFModelUtil.modelFrom(languageResponse.getBody().toString(), Lang.JSONLD);
+        boolean hasEnglish = model.contains(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng"),
+                RDFS.label,
+                ResourceFactory.createLangLiteral("Engelsk", "no")
+        ));
+        assertTrue("model doesn't have English", hasEnglish);
     }
 
     private GetRequest buildGetItemsRequest(String workUri) {
