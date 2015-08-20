@@ -15,7 +15,7 @@ class CatalinkerPage < PageRoot
 
     def open(resource, res_type)
       @browser.goto "#{catalinker(:home)}/#{res_type}?resource=#{resource}"
-      Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
+      Watir::Wait.until { @browser.divs(:class => "prop-input").size > 1 }
       self
     end
 
