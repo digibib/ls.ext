@@ -106,7 +106,7 @@ ifdef PLACK_INTRA
 PLACK_ARGS=PLACK_INTRA=true
 endif
 
-test: test_redef cuke_test                            ## Run unit and cucumber tests.
+test: test_patron_client test_catalinker cuke_test     ## Run unit and cucumber tests.
 
 cuke_test:
 	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) $(PLACK_ARGS) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
