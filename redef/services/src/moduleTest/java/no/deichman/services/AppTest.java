@@ -134,10 +134,9 @@ public class AppTest {
     }
 
     @Test
-    public void get_languages() throws Exception {
+    public void get_authorized_values_for_language() throws Exception {
         HttpRequest languageRequest = Unirest
-                .get(baseUri + "describe")
-                .queryString("resource", "http://lexvo.org/ontology#Language")
+                .get(baseUri + "authorized_values/language")
                 .header("Accept", "application/ld+json");
         HttpResponse<?> languageResponse = languageRequest.asString();
         assertResponse(Status.OK, languageResponse);

@@ -16,31 +16,31 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class ResourceTest {
+public class AuthorizedValuesTest {
 
-    private Resource resource;
+    private AuthorizedValues authorizedValues;
 
     @Before
     public void setUp() throws Exception {
-        resource = new Resource();
+        authorizedValues = new AuthorizedValues();
     }
 
     @Test
     public void should_have_default_constructor() {
-        assertNotNull(new Resource());
+        assertNotNull(new AuthorizedValues());
     }
 
     @Test
     public void should_return_ok_when_getting_languages() throws Exception {
 
-        Response response = resource.describe("http://lexvo.org/ontology#Language");
+        Response response = authorizedValues.language();
         assertThat(response.getStatus(), equalTo(Status.OK.getStatusCode()));
     }
 
     @Test
     public void should_actually_return_some_language_data() throws Exception {
 
-        Object body = resource.describe("http://lexvo.org/ontology#Language").getEntity();
+        Object body = authorizedValues.language().getEntity();
         Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
         boolean hasEnglish = model.contains(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng"),
@@ -48,29 +48,5 @@ public class ResourceTest {
                 ResourceFactory.createLangLiteral("Engelsk", "no")
         ));
         assertTrue("model doesn't have English", hasEnglish);
-
     }
-
-    @Test
-    public void should_return_304_for_unknown_resources() throws Exception {
-        Response response = resource.describe("something:else");
-        assertThat(response.getStatus(), equalTo(Status.SEE_OTHER.getStatusCode()));
-        assertThat(response.getHeaderString("Location"), equalTo("something:else"));
-    }
-
-    //    @Test
-//    public void should_get_ontology_as_jsonld() throws IOException {
-//        when(mockOntologyService.getOntologyJsonLD()).thenReturn(THE_JSONLD);
-//        Response result = resource.getOntologyJSON();
-//        assertEquals(OK.getStatusCode(), result.getStatus());
-//        assertEquals(THE_JSONLD, result.getEntity());
-//    }
-//
-//    @Test
-//    public void should_get_ontology_as_turtle() throws IOException {
-//        when(mockOntologyService.getOntologyTurtle()).thenReturn(THE_TURTLE);
-//        Response result = resource.getOntologyTurtle();
-//        assertEquals(OK.getStatusCode(), result.getStatus());
-//        assertEquals(THE_TURTLE, result.getEntity());
-//    }
 }
