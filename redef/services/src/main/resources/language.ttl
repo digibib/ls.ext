@@ -1,14 +1,290 @@
-@prefix : <http://lexvo.org/id/iso639-3/> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix :	<http://lexvo.org/id/iso639-3/> .
+@prefix lvont:	<http://lexvo.org/ontology#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
-:eng a :Language ;
-   rdfs:label "Engelsk"@no .
+:lav	a	lvont:Language ;
+	rdfs:label	"Latvisk"@no .
 
-:nno a :Language ;
-   rdfs:label "Norsk (Nynorsk)"@no .
+:alb	a	lvont:Language ;
+	rdfs:label	"Albansk"@no .
 
-:nob a :Language ;
-   rdfs:label "Norsk (Bokmål)"@no .
+:amh	a	lvont:Language ;
+	rdfs:label	"Amharisk"@no .
 
-:fra a :Language ;
-   rdfs:label "Fransk"@no .
+:ara	a	lvont:Language ;
+	rdfs:label	"Arabisk"@no .
+
+:arm	a	lvont:Language ;
+	rdfs:label	"Armensk"@no .
+
+:baq	a	lvont:Language ;
+	rdfs:label	"Baskisk"@no .
+
+:ben	a	lvont:Language ;
+	rdfs:label	"Bengali"@no .
+
+:bos	a	lvont:Language ;
+	rdfs:label	"Bosnisk"@no .
+
+:bul	a	lvont:Language ;
+	rdfs:label	"Bulgarsk"@no .
+
+:bur	a	lvont:Language ;
+	rdfs:label	"Burmansk"@no .
+
+:cam	a	lvont:Language ;
+	rdfs:label	"Khmer"@no .
+
+:cat	a	lvont:Language ;
+	rdfs:label	"Katalansk"@no .
+
+:che	a	lvont:Language ;
+	rdfs:label	"Tsjetsjensk"@no .
+
+:chi	a	lvont:Language ;
+	rdfs:label	"Kinesisk"@no .
+
+:cze	a	lvont:Language ;
+	rdfs:label	"Tsjekkisk"@no .
+
+:dan	a	lvont:Language ;
+	rdfs:label	"Dansk"@no .
+
+:dut	a	lvont:Language ;
+	rdfs:label	"Nederlandsk"@no .
+
+:egy	a	lvont:Language ;
+	rdfs:label	"Egyptisk"@no .
+
+:eng	a	lvont:Language ;
+	rdfs:label	"Engelsk"@no .
+
+:epo	a	lvont:Language ;
+	rdfs:label	"Esperanto"@no .
+
+:est	a	lvont:Language ;
+	rdfs:label	"Estisk"@no .
+
+:fao	a	lvont:Language ;
+	rdfs:label	"Færøysk"@no .
+
+:fin	a	lvont:Language ;
+	rdfs:label	"Finsk"@no .
+
+:fkv	a	lvont:Language ;
+	rdfs:label	"Kvensk"@no .
+
+:fre	a	lvont:Language ;
+	rdfs:label	"Fransk"@no .
+
+:gae	a	lvont:Language ;
+	rdfs:label	"Skotsk-gælisk"@no .
+
+:geo	a	lvont:Language ;
+	rdfs:label	"Georgisk"@no .
+
+:ger	a	lvont:Language ;
+	rdfs:label	"Tysk"@no .
+
+:gle	a	lvont:Language ;
+	rdfs:label	"Irsk"@no .
+
+:grc	a	lvont:Language ;
+	rdfs:label	"Gammelgresk"@no .
+
+:gre	a	lvont:Language ;
+	rdfs:label	"Gresk"@no .
+
+:hau	a	lvont:Language ;
+	rdfs:label	"Hausa"@no .
+
+:heb	a	lvont:Language ;
+	rdfs:label	"Hebraisk"@no .
+
+:hin	a	lvont:Language ;
+	rdfs:label	"Hindi"@no .
+
+:hrv	a	lvont:Language ;
+	rdfs:label	"Kroatisk"@no .
+
+:hun	a	lvont:Language ;
+	rdfs:label	"Ungarsk"@no .
+
+:ice	a	lvont:Language ;
+	rdfs:label	"Islandsk"@no .
+
+:ind	a	lvont:Language ;
+	rdfs:label	"Indonesisk"@no .
+
+:ita	a	lvont:Language ;
+	rdfs:label	"Italiensk"@no .
+
+:jpn	a	lvont:Language ;
+	rdfs:label	"Japansk"@no .
+
+:kal	a	lvont:Language ;
+	rdfs:label	"Grønlandsk"@no .
+
+:kor	a	lvont:Language ;
+	rdfs:label	"Koreansk"@no .
+
+:kso	a	lvont:Language ;
+	rdfs:label	"Kurdisk (sorani)"@no .
+
+:kur	a	lvont:Language ;
+	rdfs:label	"Kurdisk"@no .
+
+:lat	a	lvont:Language ;
+	rdfs:label	"Latin"@no .
+
+:lin	a	lvont:Language ;
+	rdfs:label	"Lingala"@no .
+
+:lit	a	lvont:Language ;
+	rdfs:label	"Litauisk"@no .
+
+:luo	a	lvont:Language ;
+	rdfs:label	"Luo"@no .
+
+:mac	a	lvont:Language ;
+	rdfs:label	"Makedonsk"@no .
+
+:mar	a	lvont:Language ;
+	rdfs:label	"Marathi"@no .
+
+:may	a	lvont:Language ;
+	rdfs:label	"Malayisk"@no .
+
+:mlg	a	lvont:Language ;
+	rdfs:label	"Gassisk"@no .
+
+:mos	a	lvont:Language ;
+	rdfs:label	"Mossisk"@no .
+
+:nno	a	lvont:Language ;
+	rdfs:label	"Nynorsk"@no .
+
+:nob	a	lvont:Language ;
+	rdfs:label	"Norsk bokmål"@no .
+
+:non	a	lvont:Language ;
+	rdfs:label	"Norrønt"@no .
+
+:nor	a	lvont:Language ;
+	rdfs:label	"Norsk"@no .
+
+:orm	a	lvont:Language ;
+	rdfs:label	"Oromo"@no .
+
+:pan	a	lvont:Language ;
+	rdfs:label	"Panjabi"@no .
+
+:per	a	lvont:Language ;
+	rdfs:label	"Farsi"@no .
+
+:pol	a	lvont:Language ;
+	rdfs:label	"Polsk"@no .
+
+:por	a	lvont:Language ;
+	rdfs:label	"Portugisisk"@no .
+
+:pus	a	lvont:Language ;
+	rdfs:label	"Pashto"@no .
+
+:roh	a	lvont:Language ;
+	rdfs:label	"Retoromansk"@no .
+
+:rom	a	lvont:Language ;
+	rdfs:label	"Romani"@no .
+
+:rum	a	lvont:Language ;
+	rdfs:label	"Rumensk"@no .
+
+:rus	a	lvont:Language ;
+	rdfs:label	"Russisk"@no .
+
+:san	a	lvont:Language ;
+	rdfs:label	"Sanskrit"@no .
+
+:sgn	a	lvont:Language ;
+	rdfs:label	"Tegnspråk"@no .
+
+:sin	a	lvont:Language ;
+	rdfs:label	"Singalesisk"@no .
+
+:slo	a	lvont:Language ;
+	rdfs:label	"Slovakisk"@no .
+
+:slv	a	lvont:Language ;
+	rdfs:label	"Slovensk"@no .
+
+:sma	a	lvont:Language ;
+	rdfs:label	"Sørsamisk"@no .
+
+:sme	a	lvont:Language ;
+	rdfs:label	"Nordsamisk"@no .
+
+:smi	a	lvont:Language ;
+	rdfs:label	"Samisk"@no .
+
+:smj	a	lvont:Language ;
+	rdfs:label	"Lulesamisk"@no .
+
+:smn	a	lvont:Language ;
+	rdfs:label	"Inarisamisk"@no .
+
+:sms	a	lvont:Language ;
+	rdfs:label	"Skoltesamisk"@no .
+
+:som	a	lvont:Language ;
+	rdfs:label	"Somali"@no .
+
+:spa	a	lvont:Language ;
+	rdfs:label	"Spansk"@no .
+
+:srp	a	lvont:Language ;
+	rdfs:label	"Serbisk"@no .
+:swa	a	lvont:Language ;
+	rdfs:label	"Swahili"@no .
+
+:swe	a	lvont:Language ;
+	rdfs:label	"Svensk"@no .
+
+:tag	a	lvont:Language ;
+	rdfs:label	"Tagalog"@no .
+
+:tam	a	lvont:Language ;
+	rdfs:label	"Tamil"@no .
+
+:tgl	a	lvont:Language ;
+	rdfs:label	"Tagalog"@no .
+
+:tha	a	lvont:Language ;
+	rdfs:label	"Thai"@no .
+
+:tir	a	lvont:Language ;
+	rdfs:label	"Tigrinja"@no .
+
+:tso	a	lvont:Language ;
+	rdfs:label	"Tsonga"@no .
+
+:tur	a	lvont:Language ;
+	rdfs:label	"Tyrkisk"@no .
+
+:ukr	a	lvont:Language ;
+	rdfs:label	"Ukrainsk"@no .
+
+:urd	a	lvont:Language ;
+	rdfs:label	"Urdu"@no .
+
+:vie	a	lvont:Language ;
+	rdfs:label	"Vietnamesisk"@no .
+
+:vol	a	lvont:Language ;
+	rdfs:label	"Volapyk"@no .
+
+:wel	a	lvont:Language ;
+	rdfs:label	"Walisisk"@no .
+
+:yid	a	lvont:Language ;
+	rdfs:label	"Jiddisch"@no .
