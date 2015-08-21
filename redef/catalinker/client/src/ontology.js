@@ -106,7 +106,6 @@
 
   // extractValues extracts the values (properties) from the given resource in JSON-LD format,
   // and returns them in the format which the client UI uses.
-  // TODO evaluate JSON-LD messiness and ambiguity VS parsing N-Triples.
   function extractValues(resource) {
     var values = {};
     for (var prop in resource) {
@@ -116,33 +115,24 @@
         case "@context":
           break;
         default:
-          var predicate = resolveURI(resource,  prop);
-          if (typeof resource[prop] === "string") {
-
-            // property has one value, a simple string literal
-            values[predicate] = [{ old: { value: resource[prop], type: "", lang: "" },
-                                  current: { value: resource[prop], type: "", lang: "" } }];
-          } else if (Array.isArray(resource[prop])) {
-
-            // property has several values
-            values[predicate] = [];
-            for (var v in resource[prop]) {
-              var val = resource[prop][v];
-              if (typeof val === "string") {
-                values[predicate].push({ old: { value: val, type: "", lang: "" },
-                                       current: { value: val, type: "", lang: "" } });
-              } else if (typeof val === "object") {
-                values[predicate].push({ old: { value: val["@value"], type: "", lang: val["@language"] },
-                                       current: { value: val["@value"], type: "", lang: val["@language"] } });
-              }
-            }
-          } else if (typeof resource[prop] === "object") {
-
-            // property has one value, with language tag or datatype
-            values[predicate] = [{ old: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] },
-                                  current: { value: resource[prop]["@value"], type: "", lang: resource[prop]["@language"] } }];
+          // unify string/object into an array
+          if (!Array.isArray(resource[prop])) {
+            resource[prop] = [resource[prop]];
           }
-      }
+
+          var predicate = resolveURI(resource,  prop);
+          values[predicate] = [];
+          for (var v in resource[prop]) {
+            var val = resource[prop][v];
+            if (typeof val === "string") {
+              values[predicate].push({ old: { value: val, type: "", lang: "" },
+                                       current: { value: val, type: "", lang: "" } });
+            } else if (typeof val === "object") {
+              values[predicate].push({ old: { value: val["@value"], type: "", lang: val["@language"] },
+                                       current: { value: val["@value"], type: "", lang: val["@language"] } });
+            }
+          }
+        }
     }
 
     return values;
