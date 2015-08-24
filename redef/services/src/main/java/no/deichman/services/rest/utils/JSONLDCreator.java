@@ -39,7 +39,7 @@ public final class JSONLDCreator {
             options.format = "application/ld+json";
 
             final Map<String, Object> ctx = new HashMap<>();
-            DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI);
+            DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI.ontology());
             ctx.put("@context", defaultPrefixes.getAll());
 
             Object compact = JsonLdProcessor.compact(jsonObject, ctx, options);

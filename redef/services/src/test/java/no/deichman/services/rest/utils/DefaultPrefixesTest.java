@@ -4,15 +4,16 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.HashMap;
 import java.util.Map;
 import no.deichman.services.uridefaults.BaseURI;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class DefaultPrefixesTest {
 
     @Test
     public void test_it_can_set_get_default_prefixes(){
         BaseURI baseURI = BaseURI.local();
-        DefaultPrefixes def = new DefaultPrefixes(baseURI);
+        DefaultPrefixes def = new DefaultPrefixes(baseURI.ontology());
         String prefix = "onto";
         String ns = "http://example.com/onto/";
         def.set(prefix,ns);
@@ -23,7 +24,7 @@ public class DefaultPrefixesTest {
     @Test
     public void test_it_returns_system_default_prefixes(){
         BaseURI baseURI = BaseURI.local();
-        DefaultPrefixes def = new DefaultPrefixes(baseURI);
+        DefaultPrefixes def = new DefaultPrefixes(baseURI.ontology());
         String deichman = "deichman";
         String deichmanNs = baseURI.ontology();
         String rdfs = "rdfs";
@@ -35,7 +36,7 @@ public class DefaultPrefixesTest {
     @Test
     public void test_it_returns_prefixes(){
         BaseURI baseURI = BaseURI.local();
-        DefaultPrefixes def = new DefaultPrefixes(baseURI);
+        DefaultPrefixes def = new DefaultPrefixes(baseURI.ontology());
         String deichman = "deichman";
         String deichmanNs = baseURI.ontology();
         String rdfs = "rdfs";
