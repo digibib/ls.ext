@@ -117,7 +117,7 @@ prod_extract_example_data_minimum: prod_clean_data ## After cleaning previous fi
 prod_load_example_data: ## Loads a complete set of example data - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c ' \
 		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.load_example_data pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log && \
-		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.notify_slack'"
+		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.notify_success_to_slack'"
 
 prod_load_issuing_rules: ## Loads example data of type issuing-rules - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.issuing_rules_imported pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
