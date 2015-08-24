@@ -2,6 +2,108 @@
 @prefix lvont:	<http://lexvo.org/ontology#> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 
+:afr	a	lvont:Language ;
+	rdfs:label	"Afrikaans"@no .
+
+:aze	a	lvont:Language ;
+	rdfs:label	"Aserbajdsjansk"@no .
+
+:bam	a	lvont:Language ;
+	rdfs:label	"Bambara"@no .
+
+:bel	a	lvont:Language ;
+	rdfs:label	"Hviterussisk"@no .
+
+:ceb	a	lvont:Language ;
+	rdfs:label	"Cebuano"@no .
+
+:din	a	lvont:Language ;
+	rdfs:label	"Dinka"@no .
+
+:gla	a	lvont:Language ;
+	rdfs:label	"Skotsk-gælisk"@no .
+
+:guj	a	lvont:Language ;
+	rdfs:label	"Gujarati"@no .
+
+:hil	a	lvont:Language ;
+	rdfs:label	"Hiligaynon"@no .
+
+:iku	a	lvont:Language ;
+	rdfs:label	"Inuittisk"@no .
+
+:ilo	a	lvont:Language ;
+	rdfs:label	"Iloko"@no .
+
+:mnk	a	lvont:Language ;
+	rdfs:label	"Mandinka"@no .
+
+:mon	a	lvont:Language ;
+	rdfs:label	"Mongolsk"@no .
+
+:myn	a	lvont:Language ;
+	rdfs:label	"Maya"@no .
+
+:nep	a	lvont:Language ;
+	rdfs:label	"Nepali"@no .
+
+:nic	a	lvont:Language ;
+	rdfs:label	"Niger-Kongospråk"@no .
+
+:nso	a	lvont:Language ;
+	rdfs:label	"Nordsotho"@no .
+
+:nya	a	lvont:Language ;
+	rdfs:label	"Nyanja"@no .
+
+:pam	a	lvont:Language ;
+	rdfs:label	"Pampanga"@no .
+
+:que	a	lvont:Language ;
+	rdfs:label	"Quecha"@no .
+
+:sna	a	lvont:Language ;
+	rdfs:label	"Shona"@no .
+
+:syc	a	lvont:Language ;
+	rdfs:label	"Gammelsyrisk"@no .
+
+:tel	a	lvont:Language ;
+	rdfs:label	"Telugu"@no .
+
+:tet	a	lvont:Language ;
+	rdfs:label	"Tetum"@no .
+
+:tib	a	lvont:Language ;
+	rdfs:label	"Tibetansk"@no .
+
+:tig	a	lvont:Language ;
+	rdfs:label	"Tigré"@no .
+
+:tuk	a	lvont:Language ;
+	rdfs:label	"Turkmensk"@no .
+
+:twi	a	lvont:Language ;
+	rdfs:label	"Twi"@no .
+
+:wol	a	lvont:Language ;
+	rdfs:label	"Wolof"@no .
+
+:xho	a	lvont:Language ;
+	rdfs:label	"Xhosa"@no .
+
+:yor	a	lvont:Language ;
+	rdfs:label	"Joruba"@no .
+
+:zul	a	lvont:Language ;
+	rdfs:label	"Zulu"@no .
+
+:zza	a	lvont:Language ;
+	rdfs:label	"Zazaki"@no .
+
+:sco	a	lvont:Language ;
+	rdfs:label	"Skotsk"@no .
+
 :lav	a	lvont:Language ;
 	rdfs:label	"Latvisk"@no .
 
@@ -44,11 +146,17 @@
 :chi	a	lvont:Language ;
 	rdfs:label	"Kinesisk"@no .
 
+:ckb	a	lvont:Language ;
+	rdfs:label	"Kurdisk (sorani)"@no .
+
 :cze	a	lvont:Language ;
 	rdfs:label	"Tsjekkisk"@no .
 
 :dan	a	lvont:Language ;
 	rdfs:label	"Dansk"@no .
+
+:dar	a	lvont:Language ;
+	rdfs:label	"Dari"@no .
 
 :dut	a	lvont:Language ;
 	rdfs:label	"Nederlandsk"@no .
@@ -76,9 +184,6 @@
 
 :fre	a	lvont:Language ;
 	rdfs:label	"Fransk"@no .
-
-:gae	a	lvont:Language ;
-	rdfs:label	"Skotsk-gælisk"@no .
 
 :geo	a	lvont:Language ;
 	rdfs:label	"Georgisk"@no .
@@ -125,11 +230,11 @@
 :kal	a	lvont:Language ;
 	rdfs:label	"Grønlandsk"@no .
 
+:kmr	a	lvont:Language ;
+	rdfs:label	"Kurdisk (kurmandji)"@no .
+
 :kor	a	lvont:Language ;
 	rdfs:label	"Koreansk"@no .
-
-:kso	a	lvont:Language ;
-	rdfs:label	"Kurdisk (sorani)"@no .
 
 :kur	a	lvont:Language ;
 	rdfs:label	"Kurdisk"@no .
@@ -162,10 +267,10 @@
 	rdfs:label	"Mossisk"@no .
 
 :nno	a	lvont:Language ;
-	rdfs:label	"Nynorsk"@no .
+	rdfs:label	"Norsk (nynorsk)"@no .
 
 :nob	a	lvont:Language ;
-	rdfs:label	"Norsk bokmål"@no .
+	rdfs:label	"Norsk (bokmål)"@no .
 
 :non	a	lvont:Language ;
 	rdfs:label	"Norrønt"@no .
@@ -187,6 +292,9 @@
 
 :por	a	lvont:Language ;
 	rdfs:label	"Portugisisk"@no .
+
+:prs	a	lvont:Language ;
+	rdfs:label	"Dari"@no .
 
 :pus	a	lvont:Language ;
 	rdfs:label	"Pashto"@no .
@@ -244,6 +352,7 @@
 
 :srp	a	lvont:Language ;
 	rdfs:label	"Serbisk"@no .
+
 :swa	a	lvont:Language ;
 	rdfs:label	"Swahili"@no .
 
@@ -288,3 +397,21 @@
 
 :yid	a	lvont:Language ;
 	rdfs:label	"Jiddisch"@no .
+
+:dyu	a	lvont:Language ;
+	rdfs:label	"Dyula"@no .
+
+:lao	a	lvont:Language ;
+	rdfs:label	"Laotisk"@no .
+
+:ibo	a	lvont:Language ;
+	rdfs:label	"Ibo"@no .
+
+:dua	a	lvont:Language ;
+	rdfs:label	"Duala"@no .
+
+:uzb	a	lvont:Language ;
+	rdfs:label	"Usbekisk"@no .
+
+:mri	a	lvont:Language ;
+	rdfs:label	"Maori"@no .
