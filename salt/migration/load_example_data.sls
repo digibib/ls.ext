@@ -13,3 +13,4 @@ include:
   - migration.loans_loaded
   - migration.reservations_loaded
   - koha.reindexed
+  - migration.notify_success_to_slack
