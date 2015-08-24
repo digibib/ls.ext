@@ -5,10 +5,10 @@ package no.deichman.services.uridefaults;
  */
 public final class BaseURI {
 
-    private final String baseURI;
+    private final String baseUriRoot;
 
-    private BaseURI(String baseURI) {
-        this.baseURI = baseURI;
+    private BaseURI(String baseUriRoot) {
+        this.baseUriRoot = baseUriRoot;
     }
 
     public static BaseURI local() {
@@ -20,14 +20,18 @@ public final class BaseURI {
     }
 
     public String work() {
-        return baseURI + "work/";
+        return baseUriRoot + "work/";
     }
 
     public String ontology() {
-        return baseURI + "ontology#";
+        return baseUriRoot + "ontology#";
     }
 
     public String publication() {
-        return baseURI + "publication/";
+        return baseUriRoot + "publication/";
+    }
+
+    public String values() {
+        return baseUriRoot + "authorized_values/";
     }
 }

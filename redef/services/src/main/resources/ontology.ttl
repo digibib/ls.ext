@@ -1,8 +1,10 @@
-@prefix : <http://data.deichman.no/lsext-model#> .
+@prefix : <__BASE_URI_ONTOLOGY__> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+# TODO add: @prefix lvont: <http://lexvo.org/ontology#> .
 @prefix ui: <http://data.deichman.no/ui#> .
+@prefix values: <__BASE_URI_VALUES__> .
 
 :Work a rdfs:Class ;
   rdfs:label "Work"@en ;
@@ -41,7 +43,8 @@
   rdfs:label "Language"@en ;
   rdfs:label "Språk"@no ;
   rdfs:domain :Publication ;
-  rdfs:range xsd:string .
+  rdfs:range xsd:string ;       # TODO replace with rdfs:range lvont:Language ;
+  :valuesFrom values:language .
 
 :format a rdfs:Property ;
   rdfs:label "Format"@en ;

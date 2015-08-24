@@ -3,12 +3,13 @@ package no.deichman.services.rest;
 
 import java.io.IOException;
 import javax.ws.rs.core.Response;
-import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.ontology.OntologyService;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
+
+import static javax.ws.rs.core.Response.Status.OK;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

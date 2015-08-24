@@ -1,26 +1,32 @@
 package no.deichman.services.ontology;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
-import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+
+import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class FileBasedOntologyServiceTest {
 
     @Test
-    public void should_return_ontology_as_string() throws IOException {
-        OntologyService ontology = new FileBasedOntologyService(BaseURI.local());
-        String onto = ontology.getOntologyTurtle();
-        try (FileInputStream fileInputStream = new FileInputStream(new File("src/main/resources/ontology.ttl"))){
-            String fromFile = IOUtils.toString(fileInputStream);
-            assertTrue(onto.equals(fromFile.replace("http://data.deichman.no/lsext-model#", BaseURI.local().ontology())));
-        }
+    public void should_return_ontology_as_turtle() throws IOException {
+        OntologyService service = new FileBasedOntologyService(BaseURI.local());
+        String ontology = service.getOntologyTurtle();
+        assertNotNull(RDFModelUtil.modelFrom(ontology, Lang.TURTLE));
+    }
+
+    @Test
+    public void should_have_replaced_uris() throws Exception {
+        OntologyService service = new FileBasedOntologyService(BaseURI.local());
+        String ontology = service.getOntologyTurtle();
+        assertThat(ontology, not(containsString("_BASE_URI_")));
+        assertThat(ontology, containsString(BaseURI.local().ontology()));
     }
 
     @Test
