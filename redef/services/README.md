@@ -28,4 +28,6 @@ See [Makefile](Makefile).
 
 ## Trobleshooting
 
-Logging: TBW ...
+Logs can be viewed via:
+* [Core ls.ext log viewer](https://github.com/digibib/ls.ext#monitoring-of-logs-with-devops-the-logserver)
+* Running `make log-f` in the Services catalogue
