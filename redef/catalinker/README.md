@@ -39,4 +39,6 @@ See [Makefile](Makefile).
 
 ## Troubleshooting
 
-* TODO: more logging
+Logs can be viewed via:
+* [Core ls.ext log viewer](https://github.com/digibib/ls.ext#monitoring-of-logs-with-devops-the-logserver)
+* Running `make log-f` in the Catalinker catalogue
