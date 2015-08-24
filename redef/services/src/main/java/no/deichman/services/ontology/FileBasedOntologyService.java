@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import no.deichman.services.rest.utils.JSONLDCreator;
+import no.deichman.services.rdf.JSONLDCreator;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;

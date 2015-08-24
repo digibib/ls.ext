@@ -1,4 +1,4 @@
-package no.deichman.services.rest.utils;
+package no.deichman.services.rdf;
 
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;

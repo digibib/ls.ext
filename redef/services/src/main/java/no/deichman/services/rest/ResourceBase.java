@@ -6,7 +6,7 @@ import no.deichman.services.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.repository.InMemoryRepository;
 import no.deichman.services.repository.RDFRepository;
 import no.deichman.services.repository.RemoteRepository;
-import no.deichman.services.rest.utils.JSONLDCreator;
+import no.deichman.services.rdf.JSONLDCreator;
 import no.deichman.services.service.Service;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;

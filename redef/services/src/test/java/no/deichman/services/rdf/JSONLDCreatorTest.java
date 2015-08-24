@@ -1,4 +1,4 @@
-package no.deichman.services.rest.utils;
+package no.deichman.services.rdf;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.vocabulary.RDFS;

@@ -1,4 +1,4 @@
-package no.deichman.services.rest.utils;
+package no.deichman.services.rdf;
 
 
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -16,7 +16,7 @@ final class DefaultPrefixes {
         prefixMapping.put("rdfs", RDFS.getURI());
         prefixMapping.put("deichman", deichmanOntologyBaseUri);
     }
-    
+
     void set(String prefix, String ns){
         prefixMapping.put(prefix, ns);
     }
