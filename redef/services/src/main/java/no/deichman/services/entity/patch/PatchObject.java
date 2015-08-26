@@ -12,7 +12,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 /**
  * Responsibility: TODO.
  */
-public final class PatchObject {
+final class PatchObject {
 
     private String op;
     private String s;

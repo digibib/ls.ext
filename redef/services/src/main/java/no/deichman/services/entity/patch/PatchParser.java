@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,7 +26,19 @@ public final class PatchParser {
     public PatchParser() {
     }
 
-    public List<PatchObject> parsePatch() throws PatchParserException {
+    public static List<Patch> parse(String ldPatchJson) throws PatchParserException {
+        PatchParser patchParser = new PatchParser();
+        patchParser.setPatchData(ldPatchJson);
+        List<PatchObject> patch = patchParser.parsePatch();
+        List<Patch> patches = new ArrayList<>();
+        Iterator<PatchObject> iter = patch.iterator();
+        while (iter.hasNext()) {
+            patches.add(iter.next().toPatch());
+        }
+        return patches;
+    }
+
+    List<PatchObject> parsePatch() throws PatchParserException {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(PATCH_OBJECT_LIST_TYPE, new PatchObjectTypeAdapter())
                 .create();
@@ -39,15 +52,15 @@ public final class PatchParser {
         return rawPatches;
     }
 
-    public void setPatchData(String input){
+    void setPatchData(String input){
         patchInput = input;
     }
 
-    public String getPatchInput() {
+    String getPatchInput() {
         return patchInput;
     }
 
-    public List<PatchObject> getRawPatchObject() {
+    List<PatchObject> getRawPatchObject() {
         return rawParseObject;
     }
 }

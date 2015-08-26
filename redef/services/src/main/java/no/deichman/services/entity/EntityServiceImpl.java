@@ -11,12 +11,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
-import no.deichman.services.entity.patch.Patch;
-import no.deichman.services.entity.patch.PatchObject;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.RDFRepository;
@@ -114,38 +109,14 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model patchWork(String workId, String requestBody) throws PatchParserException {
-        PatchParser patchParser = new PatchParser();
-        try {
-            patchParser.setPatchData(requestBody);
-        } catch (Exception e) {
-            throw new PatchParserException("Bad request");
-        }
-        List<PatchObject> patch = patchParser.parsePatch();
-        List<Patch> patches = new ArrayList<Patch>();
-        Iterator<PatchObject> iter = patch.iterator();
-        while (iter.hasNext()) {
-            patches.add(iter.next().toPatch());
-        }
-        repository.patch(patches);
+    public Model patchWork(String workId, String ldPatchJson) throws PatchParserException {
+        repository.patch(PatchParser.parse(ldPatchJson));
         return retrieveWorkById(workId);
     }
 
     @Override
-    public Model patchPublication(String publicationId, String requestBody) throws PatchParserException {
-        PatchParser patchParser = new PatchParser();
-        try {
-            patchParser.setPatchData(requestBody);
-        } catch (Exception e) {
-            throw new PatchParserException("Bad request");
-        }
-        List<PatchObject> patch = patchParser.parsePatch();
-        List<Patch> patches = new ArrayList<Patch>();
-        Iterator<PatchObject> iter = patch.iterator();
-        while (iter.hasNext()) {
-            patches.add(iter.next().toPatch());
-        }
-        repository.patch(patches);
+    public Model patchPublication(String publicationId, String ldPatchJson) throws PatchParserException {
+        repository.patch(PatchParser.parse(ldPatchJson));
         return retrievePublicationById(publicationId);
 
     }

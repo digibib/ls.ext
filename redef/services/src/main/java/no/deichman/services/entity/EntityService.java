@@ -17,8 +17,8 @@ public interface EntityService {
     String createPublication(String publication) throws XPathExpressionException, Exception;
     void deleteWork(Model work);
     void deletePublication(Model publication);
-    Model patchWork(String work, String requestBody) throws PatchParserException;
+    Model patchWork(String work, String ldPatchJson) throws PatchParserException;
     Model retrievePublicationById(String publicationId);
-    Model patchPublication(String publicationId, String requestBody) throws PatchParserException;
+    Model patchPublication(String publicationId, String ldPatchJson) throws PatchParserException;
     boolean resourceExists(String resourceUri);
 }
