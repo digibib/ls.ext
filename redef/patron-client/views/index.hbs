@@ -104,7 +104,7 @@
                 {{#each work.publications as |pub|}}
                   <tr>
                     <td data-automation-id="publication_name">{{allValuesConcat pub "deichman:name" ../graph}}</td>
-                    <td data-automation-id="publication_language">{{firstValue pub "deichman:language" ../graph}}</td>
+                    <td data-automation-id="publication_language">{{allValuesConcat pub "deichman:language" ../graph}}</td>
                     <td data-automation-id="publication_format">{{firstValue pub "deichman:format" ../graph}}</td>
                     <td>{{pub.items.length}}</td>
                   </tr>
@@ -134,7 +134,7 @@
                 {{#each pub.items as |item|}}
                   <tr>
                     <td data-automation-id="item_title">{{allValuesConcat pub "deichman:name" ../../graph}}</td>
-                    <td data-automation-id="item_language">{{firstValue pub "deichman:language" ../../graph}}</td>
+                    <td data-automation-id="item_language">{{allValuesConcat pub "deichman:language" ../../graph}}</td>
                     <td data-automation-id="item_format">{{firstValue pub "deichman:format" ../../graph}}</td>
                     <td data-automation-id="item_barcode">{{firstValue item "deichman:barcode" ../../graph}}</td>
                     <td data-automation-id="item_location">{{firstValue item "deichman:location" ../../graph}}</td>

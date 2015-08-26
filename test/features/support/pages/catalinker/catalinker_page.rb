@@ -28,6 +28,13 @@ class CatalinkerPage < PageRoot
       self
     end
 
+    def select_prop(predicate, value, nr=0)
+      input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
+      Watir::Wait.until { input.length > 1 }
+      input.select_value(value)
+      self
+    end
+
     def get_prop(predicate, nr=0)
       input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
       Watir::Wait.until { input.value != "" }
