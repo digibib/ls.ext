@@ -25,6 +25,7 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
      lang: "no",
      template: "#template",
      data: {
+       authorized_values: {},
        errors: errors,
        resource_type: "",
        resource_label: "",
@@ -142,6 +143,23 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
     });
   };
 
+  var onAuthorizedValuesLoad = function (predicate) {
+    return function (res) {
+      var values = JSON.parse(res.response);
+
+      // resolve all @id uris
+      values["@graph"].forEach(function (v) {
+        v["@id"] = ontology.resolveURI(values, v["@id"]);
+      });
+
+      ractive.set("authorized_values." + predicate.split(":")[1], values["@graph"]);
+    };
+  };
+
+  var onAuthorizedValuesFailure = function (response)  {
+    console.log("GET authorized values error: " + response);
+  };
+
   var onOntologyLoad = function (response) {
     var ont = JSON.parse(response.responseText),
         props = ontology.propsByClass(ont, ractive.get("resource_type")),
@@ -168,36 +186,39 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
           onAuthorizedValuesFailure
         );
       }
-
       var input = {
         disabled: disabled,
-        predicate: ontology.resolveURI(ont,  props[i]["@id"]),
+        predicate: ontology.resolveURI(ont, props[i]["@id"]),
+        authorized: props[i]["deichman:valuesFrom"] ? true : false,
         range: props[i]["rdfs:range"]["@id"],
         label: props[i]["rdfs:label"][0]["@value"],
         values: [{old: { value: "", type: "", lang: "" },
                   current: { value: "", type: "", lang: "" }}]
       };
 
-      switch (input.range) {
-        case "http://www.w3.org/2001/XMLSchema#string":
-          input.type = "input-string";
-          break;
-        case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
-          input.type = "input-lang-string";
-          break;
-        case "http://www.w3.org/2001/XMLSchema#gYear":
-          input.type = "input-gYear";
-          break;
-        case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
-          input.type = "input-nonNegativeInteger";
-          break;
-        case "deichman:Work":
-          input.type = "input-string"; // temporarily
-          break;
-        default:
-          throw "Doesn't know which input-type to assign to range: " + input.range;
+      if (input.authorized) {
+        input.type = "input-authorized";
+      } else {
+        switch (input.range) {
+          case "http://www.w3.org/2001/XMLSchema#string":
+            input.type = "input-string";
+            break;
+          case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
+            input.type = "input-lang-string";
+            break;
+          case "http://www.w3.org/2001/XMLSchema#gYear":
+            input.type = "input-gYear";
+            break;
+          case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
+            input.type = "input-nonNegativeInteger";
+            break;
+          case "deichman:Work":
+            input.type = "input-string"; // temporarily
+            break;
+          default:
+            throw "Doesn't know which input-type to assign to range: " + input.range;
+        }
       }
-
       inputs.push(input);
     }
 

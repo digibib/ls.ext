@@ -110,6 +110,7 @@ app.get("/ontology", function (req, res) {
           "@language" : "en",
           "@value" : "Language"
         }],
+        "deichman:valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/language"},
         "rdfs:range" : {
           "@id" : "http://www.w3.org/2001/XMLSchema#string"
         }
@@ -143,7 +144,7 @@ app.get("/ontology", function (req, res) {
           "@value" : "Publication of"
         }],
         "rdfs:range" : {
-          "@id" : "deichman:Work"
+          "@id" : "http://www.w3.org/2001/XMLSchema#string"
         }
       }, {
         "@id" : "deichman:recordID",
@@ -182,6 +183,51 @@ app.get("/ontology", function (req, res) {
       }
     }
   );
+});
+
+app.get("/authorized_values/language", function (req, res) {
+  res.send(
+    {
+      "@graph": [
+        {
+          "@id": ":eng",
+          "@type": ":Language",
+          "label": {
+            "@language": "no",
+            "@value": "Engelsk"
+          }
+        },
+        {
+          "@id": ":fra",
+          "@type": ":Language",
+          "label": {
+            "@language": "no",
+            "@value": "Fransk"
+          }
+        },
+        {
+          "@id": ":nno",
+          "@type": ":Language",
+          "label": {
+            "@language": "no",
+            "@value": "Norsk (Nynorsk)"
+          }
+        },
+        {
+          "@id": ":nob",
+          "@type": ":Language",
+          "label": {
+            "@language": "no",
+            "@value": "Norsk (Bokmål)"
+          }
+        }
+      ],
+      "@context": {
+        "label": "http://ww.w3.org/2000/01/rdf-schema#label",
+        "": "http://lexvo.org/id/iso639-3/",
+        "rdfs": "http://ww.w3.org/2000/01/rdf-schema#"
+      }
+    });
 });
 
 app.post("/work", function (req, res) {
