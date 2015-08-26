@@ -3,9 +3,11 @@ package no.deichman.services.patch;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.XSD;
 
 /**
  * Responsibility: TODO.
@@ -16,6 +18,28 @@ public final class PatchObject {
     private String s;
     private String p;
     private Map<String,String> o =  new HashMap<String,String>();
+
+    private RDFNode getDataTypeNode() {
+        RDFNode rdfNode = null;
+        String datatype = getObjectDatatype();
+
+        if (XSD.anyURI.getURI() == datatype) {
+            try {
+                rdfNode = ResourceFactory.createResource(getObjectValue());
+            } catch (PatchParserException e) {
+                e.printStackTrace();
+            }
+        } else {
+            TypeMapper typeMapper = new TypeMapper();
+            try {
+                rdfNode = ResourceFactory.createTypedLiteral(getObjectValue(), typeMapper.getSafeTypeByName(datatype));
+            } catch (PatchParserException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return rdfNode;
+    }
 
     PatchObject(){
     }
@@ -89,7 +113,7 @@ public final class PatchObject {
         if (getObjectLanguage() != null && getObjectValue() != null){
             rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectLanguage());
         } else if (getObjectDatatype() != null && getObjectValue() != null) {
-            rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectDatatype());
+            rdfNode = getDataTypeNode();
         } else if (getObjectValue() != null) {
             rdfNode = ResourceFactory.createPlainLiteral(getObjectValue());
         } else {

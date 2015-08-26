@@ -6,17 +6,20 @@ import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
+import com.hp.hpl.jena.vocabulary.XSD;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PatchObjectTest {
 
-    private static final String ADD = "add";
+    private static final String ADD_OPERATION = "add";
     private static final String SUBJECT = "http://www.example.com/SUBJECT";
     private static final String PREDICATE = "http://www.example.com/PREDICATE";
     private static final String URI_OBJECT = "http://www.example.com/object";
 
     private Map<String, String> object;
+    private Map<String, String> uriObject;
     private Map<String, String> datatypeObject;
     private Map<String, String> languageLiteral;
 
@@ -24,6 +27,10 @@ public class PatchObjectTest {
     public void setUp() {
         object = new HashMap<>();
         object.put("value", URI_OBJECT);
+
+        uriObject = new HashMap<>();
+        uriObject.put("value", URI_OBJECT);
+        uriObject.put("datatype", XSD.anyURI.getURI());
 
         datatypeObject = new HashMap<>();
         datatypeObject.put("value", URI_OBJECT);
@@ -37,8 +44,8 @@ public class PatchObjectTest {
     @Test
     public void test_can_get_set_operation() throws PatchParserException{
         PatchObject patchObject = new PatchObject();
-        patchObject.setOperation(ADD);
-        assertEquals(ADD, patchObject.getOperation());
+        patchObject.setOperation(ADD_OPERATION);
+        assertEquals(ADD_OPERATION, patchObject.getOperation());
     }
 
     @Test(expected = PatchParserException.class)
@@ -81,14 +88,7 @@ public class PatchObjectTest {
     }
 
     @Test
-    public void test_can_get_set_uri_object(){
-        PatchObject patchObject = new PatchObject();
-        patchObject.setObjectValue(URI_OBJECT);
-        assertEquals(object, patchObject.getObject());
-    }
-
-    @Test
-    public void test_can_get_set_datatype_object(){
+    public void test_can_get_set_datatype_object() throws PatchParserException {
         PatchObject patchObject = new PatchObject();
         patchObject.setObject(datatypeObject);
         assertEquals(datatypeObject, patchObject.getObject());
@@ -137,4 +137,38 @@ public class PatchObjectTest {
         patchObject.setObjectValue("Sult");
         assertNotNull(patchObject.toPatch());
     }
+
+    @Test
+    public void test_can_convert_uri_object_to_patch() {
+        PatchObject patchObject = new PatchObject();
+        patchObject.setSubject("http://example.com/test_can_convert_uri_object_to_patch");
+        patchObject.setOperation(ADD_OPERATION);
+        patchObject.setPredicate("http://example.com/predicate");
+        patchObject.setObject(uriObject);
+        try {
+            assertNotNull(patchObject.toPatch());
+            assertEquals(ResourceImpl.class, patchObject.toPatch().getStatement().getObject().getClass());
+            assertEquals(uriObject.get("value"),patchObject.toPatch().getStatement().getObject().toString());
+        } catch (PatchParserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test_can_convert_datatype_object_to_patch() {
+        PatchObject patchObject = new PatchObject();
+        patchObject.setSubject("http://example.com/test_can_convert_datatype_object_to_patch");
+        patchObject.setOperation(ADD_OPERATION);
+        patchObject.setPredicate("http://example.com/predicate");
+        patchObject.setObject(datatypeObject);
+        try {
+            Patch patch = patchObject.toPatch();
+            assertNotNull(patch);
+            assertEquals(datatypeObject.get("datatype"), patch.getStatement().getObject().asLiteral().getDatatype().getURI());
+            assertEquals(datatypeObject.get("value"), patch.getStatement().getObject().asLiteral().getString());
+        } catch (PatchParserException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

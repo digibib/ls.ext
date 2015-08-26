@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.hp.hpl.jena.vocabulary.XSD;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class PatchParserTest {
+
+    public static final String ADD_OPERATION = "add";
 
     @Test
     public void it_exists(){
@@ -34,13 +38,13 @@ public class PatchParserTest {
     public void it_returns_list_of_patch_objects() throws PatchParserException{
         List<PatchObject> lpo = new ArrayList<>();
         PatchObject po = new PatchObject();
-        po.setOperation("add");
+        po.setOperation(ADD_OPERATION);
         po.setSubject("http://example.com/s");
         po.setPredicate("http://example.com/a");
         po.setObjectValue("Housec");
         lpo.add(po);
         String input = "{"
-                     + "  \"op\":\"add\","
+                     + "  \"op\":\"" + ADD_OPERATION + "\","
                      + "  \"s\":\"http://example.com/s\","
                      + "  \"p\":\"http://example.com/a\","
                      + "  \"o\":{\"value\":\"Housec\"}"
@@ -60,13 +64,13 @@ public class PatchParserTest {
     public void test_can_parse_plain_literal_data() throws PatchParserException{
         List<PatchObject> expected = new ArrayList<>();
         PatchObject po = new PatchObject();
-        po.setOperation("add");
+        po.setOperation(ADD_OPERATION);
         po.setSubject("http://example.com/a");
         po.setPredicate("http://example.com/title");
         po.setObjectValue("Housea");
         expected.add(po);
         String data = "{"
-                    + "  \"op\":\"add\","
+                    + "  \"op\":\"" + ADD_OPERATION + "\","
                     + "  \"s\":\"http://example.com/a\","
                     + "  \"p\":\"http://example.com/title\","
                     + "  \"o\":{\"value\":\"Housea\"}"
@@ -82,16 +86,16 @@ public class PatchParserTest {
     public void test_can_parse_lang_literal() throws PatchParserException{
         List<PatchObject> expected = new ArrayList<>();
         PatchObject po = new PatchObject();
-        po.setOperation("add");
+        po.setOperation(ADD_OPERATION);
         po.setSubject("http://example.com/a");
         po.setPredicate("http://example.com/title");
         Map<String,String> object = new HashMap<>();
-        object.put("value","House");
+        object.put("value", "House");
         object.put("lang", "en");
         po.setObject(object);
         expected.add(po);
         String data2 = "{"
-                     + "  \"op\":\"add\","
+                     + "  \"op\":\"" + ADD_OPERATION + "\","
                      + "  \"s\":\"http://example.com/a\","
                      + "  \"p\":\"http://example.com/title\","
                      + "  \"o\": {"
@@ -106,6 +110,43 @@ public class PatchParserTest {
         Type type = new TypeToken<List<PatchObject>>(){}.getType();
         Gson gson = new Gson();
         String source = gson.toJson(l, type);
+        String target = gson.toJson(expected,type);
+        JsonParser parser = new JsonParser();
+        JsonElement l1 = parser.parse(source);
+        JsonElement l2 = parser.parse(target);
+
+        assertEquals(l1,l2);
+    }
+
+    @Test
+    public void test_parse_uri_object() throws PatchParserException {
+        List<PatchObject> expected = new ArrayList<>();
+        PatchObject po = new PatchObject();
+        Map<String,String> object = new HashMap<>();
+        String aXSDanyURI = XSD.anyURI.getURI();
+        object.put("type", aXSDanyURI);
+        object.put("value", "http://example.com/test_parse_uri_object");
+        po.setOperation(ADD_OPERATION);
+        po.setSubject("http://example.com/a");
+        po.setPredicate("http://example.com/predicate");
+        po.setObject(object);
+        expected.add(po);
+
+        String testData = "{"
+                + "  \"op\":\"" + ADD_OPERATION + "\","
+                + "  \"s\":\"http://example.com/a\","
+                + "  \"p\":\"http://example.com/predicate\","
+                + "  \"o\": {"
+                + "           \"value\":\"http://example.com/test_parse_uri_object\","
+                + "           \"type\":\"" + aXSDanyURI + "\""
+                + "         }"
+                + "}";
+
+        PatchParser patchParser = new PatchParser(testData);
+        List<PatchObject> lpo = patchParser.parsePatch();
+        Type type = new TypeToken<List<PatchObject>>(){}.getType();
+        Gson gson = new Gson();
+        String source = gson.toJson(lpo, type);
         String target = gson.toJson(expected,type);
         JsonParser parser = new JsonParser();
         JsonElement l1 = parser.parse(source);
