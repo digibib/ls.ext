@@ -7,8 +7,8 @@ import no.deichman.services.repository.InMemoryRepository;
 import no.deichman.services.repository.RDFRepository;
 import no.deichman.services.repository.RemoteRepository;
 import no.deichman.services.rdf.JSONLDCreator;
-import no.deichman.services.service.Service;
-import no.deichman.services.service.ServiceImpl;
+import no.deichman.services.service.EntityService;
+import no.deichman.services.service.EntityServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 
 /**
@@ -20,14 +20,14 @@ public abstract class ResourceBase {
     public static final String SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY = "inMemoryRDFRepository";
 
     private static InMemoryRepository staticInMemoryRepository;
-    private Service service;
+    private EntityService entityService;
     private BaseURI baseURI;
     private JSONLDCreator jsonldCreator;
 
     abstract ServletConfig getConfig();
 
-    protected final Service getService() {
-        if (service == null) {
+    protected final EntityService getEntityService() {
+        if (entityService == null) {
             KohaAdapter kohaAdapter = new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null);
             RDFRepository repository;
             if (getConfig() != null && "true".equals(getConfig().getInitParameter(SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY))) {
@@ -38,9 +38,9 @@ public abstract class ResourceBase {
             } else {
                 repository = new RemoteRepository();
             }
-            service = new ServiceImpl(getBaseURI(), repository, kohaAdapter);
+            entityService = new EntityServiceImpl(getBaseURI(), repository, kohaAdapter);
         }
-        return service;
+        return entityService;
     }
 
     protected final BaseURI getBaseURI() {
@@ -56,8 +56,8 @@ public abstract class ResourceBase {
         }
         return jsonldCreator;
     }
-    protected final void setService(Service service) {
-        this.service = service;
+    protected final void setEntityService(EntityService entityService) {
+        this.entityService = entityService;
     }
 
     protected final void setBaseURI(BaseURI baseURI) {

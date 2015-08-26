@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 import no.deichman.services.patch.PatchParserException;
 import no.deichman.services.rest.utils.MimeType;
 import no.deichman.services.rest.utils.PATCH;
-import no.deichman.services.service.Service;
+import no.deichman.services.service.EntityService;
 import no.deichman.services.uridefaults.BaseURI;
 
 /**
@@ -35,15 +35,15 @@ public final class PublicationResource extends ResourceBase {
 
     public PublicationResource() { }
 
-    PublicationResource(BaseURI baseURI, Service service) {
-        setService(service);
+    PublicationResource(BaseURI baseURI, EntityService entityService) {
+        setEntityService(entityService);
         setBaseURI(baseURI);
     }
 
     @POST
     @Consumes(MIME_JSONLD)
     public Response createPublication(String publication) throws Exception {
-        String publicationId = getService().createPublication(publication);
+        String publicationId = getEntityService().createPublication(publication);
         URI location = new URI(publicationId);
 
         return Response.created(location).build();
@@ -53,7 +53,7 @@ public final class PublicationResource extends ResourceBase {
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
     @Produces(MIME_JSONLD + ENCODING_UTF8)
     public Response getPublicationJSON(@PathParam("publicationId") String publicationId) {
-        Model model = getService().retrievePublicationById(publicationId);
+        Model model = getEntityService().retrievePublicationById(publicationId);
 
         if (model.isEmpty()) {
             throw new NotFoundException();
@@ -65,13 +65,13 @@ public final class PublicationResource extends ResourceBase {
     @DELETE
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
     public Response deletePublication(@PathParam("publicationId") String publicationId) {
-        Model model = getService().retrievePublicationById(publicationId);
+        Model model = getEntityService().retrievePublicationById(publicationId);
 
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
 
-        getService().deletePublication(model);
+        getEntityService().deletePublication(model);
 
         return Response.noContent().build();
     }
@@ -80,12 +80,12 @@ public final class PublicationResource extends ResourceBase {
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
     @Consumes(MimeType.LDPATCHJSON)
     public Response patchPublication(@PathParam("publicationId") String publicationId, String requestBody) throws Exception {
-        if (!getService().resourceExists(getBaseURI().publication() + publicationId)) {
+        if (!getEntityService().resourceExists(getBaseURI().publication() + publicationId)) {
             throw new NotFoundException();
         }
         Model m;
         try {
-             m = getService().patchPublication(publicationId, requestBody);
+             m = getEntityService().patchPublication(publicationId, requestBody);
         } catch (PatchParserException e) {
             throw new BadRequestException(e);
         }

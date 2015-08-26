@@ -12,7 +12,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.InMemoryRepository;
-import no.deichman.services.service.ServiceImpl;
+import no.deichman.services.service.EntityServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -55,7 +55,7 @@ public class PublicationResourceTest {
     @Before
     public void setUp() throws Exception {
         BaseURI baseURI = BaseURI.local();
-        ServiceImpl service = new ServiceImpl(baseURI, new InMemoryRepository(), mockKohaAdapter);
+        EntityServiceImpl service = new EntityServiceImpl(baseURI, new InMemoryRepository(), mockKohaAdapter);
         resource = new PublicationResource(baseURI, service);
     }
 

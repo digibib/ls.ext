@@ -8,7 +8,7 @@ import no.deichman.services.patch.PatchParserException;
 /**
  * Responsibility: TODO.
  */
-public interface Service {
+public interface EntityService {
     
     void updateWork(String work);
     Model retrieveWorkById(String id);

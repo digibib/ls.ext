@@ -26,14 +26,14 @@ import no.deichman.services.uridefaults.BaseURI;
 /**
  * Responsibility: TODO.
  */
-public final class ServiceImpl implements Service {
+public final class EntityServiceImpl implements EntityService {
 
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
     private final Property recordID;
 
-    public ServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
+    public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
         this.baseURI = baseURI;
         recordID = ResourceFactory.createProperty(this.baseURI.ontology() + "recordID");
         this.repository = repository;

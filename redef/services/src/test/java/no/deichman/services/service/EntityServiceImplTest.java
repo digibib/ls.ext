@@ -35,10 +35,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceImplTest {
+public class EntityServiceImplTest {
 
     private static final String A_BIBLIO_ID = "234567";
-    private ServiceImpl service;
+    private EntityServiceImpl service;
     private InMemoryRepository repository;
     private String ontologyURI;
     private String workURI;
@@ -52,7 +52,7 @@ public class ServiceImplTest {
     public void setup(){
         BaseURI baseURI = BaseURI.local();
         repository = new InMemoryRepository();
-        service = new ServiceImpl(baseURI, repository, mockKohaAdapter);
+        service = new EntityServiceImpl(baseURI, repository, mockKohaAdapter);
         ontologyURI = baseURI.ontology();
         workURI = baseURI.work();
         publicationURI = baseURI.publication();
@@ -115,7 +115,7 @@ public class ServiceImplTest {
     @Test
     public void test_retrieve_work_items_by_id(){
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
-        Service myService = new ServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
+        EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
         Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
         Property p = ResourceFactory.createProperty(ontologyURI + "hasEdition");

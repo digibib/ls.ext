@@ -18,7 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import no.deichman.services.rest.utils.PATCH;
-import no.deichman.services.service.Service;
+import no.deichman.services.service.EntityService;
 import no.deichman.services.uridefaults.BaseURI;
 
 import static no.deichman.services.rest.utils.MimeType.JSONLD;
@@ -39,15 +39,15 @@ public final class WorkResource extends ResourceBase {
     public WorkResource() {
     }
 
-    WorkResource(BaseURI baseURI, Service service) {
+    WorkResource(BaseURI baseURI, EntityService entityService) {
         setBaseURI(baseURI);
-        setService(service);
+        setEntityService(entityService);
     }
 
     @POST
     @Consumes(MIME_JSONLD)
     public Response createWork(String work) throws URISyntaxException {
-        String workId = getService().createWork(work);
+        String workId = getEntityService().createWork(work);
         URI location = new URI(workId);
 
         return Response.created(location).build();
@@ -56,7 +56,7 @@ public final class WorkResource extends ResourceBase {
     @PUT
     @Consumes(MIME_JSONLD)
     public Response updateWork(String work) {
-        getService().updateWork(work);
+        getEntityService().updateWork(work);
         return Response.ok().build();
     }
 
@@ -64,12 +64,12 @@ public final class WorkResource extends ResourceBase {
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Consumes(MIME_LDPATCH_JSON)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) {
-        if (!getService().resourceExists(getBaseURI().work() + workId)) {
+        if (!getEntityService().resourceExists(getBaseURI().work() + workId)) {
             throw new NotFoundException();
         }
         Model m;
         try {
-            m = getService().patchWork(workId, requestBody);
+            m = getEntityService().patchWork(workId, requestBody);
         } catch (Exception e) {
             throw new BadRequestException(e); // FIXME - swallows root cause
         }
@@ -81,7 +81,7 @@ public final class WorkResource extends ResourceBase {
     @Path("/{workId: [a-zA-Z0-9_]+}")
     @Produces(MIME_JSONLD + ENCODING_UTF8)
     public Response getWorkJSON(@PathParam("workId") String workId) {
-        Model model = getService().retrieveWorkById(workId);
+        Model model = getEntityService().retrieveWorkById(workId);
 
         if (model.isEmpty()) {
             throw new NotFoundException();
@@ -93,13 +93,13 @@ public final class WorkResource extends ResourceBase {
     @DELETE
     @Path("/{workId: [a-zA-Z0-9_]+}")
     public Response deleteWork(@PathParam("workId") String workId) {
-        Model model = getService().retrieveWorkById(workId);
+        Model model = getEntityService().retrieveWorkById(workId);
 
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
 
-        getService().deleteWork(model);
+        getEntityService().deleteWork(model);
 
         return Response.noContent().build();
     }
@@ -108,7 +108,7 @@ public final class WorkResource extends ResourceBase {
     @Path("/{workId: [a-zA-Z0-9_]+}/items")
     @Produces(MIME_JSONLD + ENCODING_UTF8)
     public Response getWorkItems(@PathParam("workId") String workId) {
-        Model model = getService().retrieveWorkItemsById(workId);
+        Model model = getEntityService().retrieveWorkItemsById(workId);
         if (model.isEmpty()) {
             throw new NotFoundException();
         }

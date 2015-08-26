@@ -20,7 +20,7 @@ import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.kohaadapter.Marc2Rdf;
 import no.deichman.services.repository.InMemoryRepository;
 import static no.deichman.services.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
-import no.deichman.services.service.ServiceImpl;
+import no.deichman.services.service.EntityServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -49,7 +49,7 @@ public class WorkResourceTest {
     public void setUp() throws Exception {
         baseURI = BaseURI.local();
         repository = new InMemoryRepository();
-        resource = new WorkResource(baseURI, new ServiceImpl(baseURI, repository, null));
+        resource = new WorkResource(baseURI, new EntityServiceImpl(baseURI, repository, null));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class WorkResourceTest {
 
     @Test
     public void should_return_af_valid_json_work() {
-        resource = new WorkResource(baseURI, new ServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null));
+        resource = new WorkResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null));
         String workId = "work_00001";
 
         Response result = resource.getWorkJSON(workId);
@@ -141,7 +141,7 @@ public class WorkResourceTest {
         KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        resource = new WorkResource(baseURI, new ServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
+        resource = new WorkResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 
