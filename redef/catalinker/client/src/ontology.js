@@ -132,7 +132,7 @@
                                        current: { value: val["@value"], type: "", lang: val["@language"] } });
             }
           }
-      }
+        }
     }
 
     return values;

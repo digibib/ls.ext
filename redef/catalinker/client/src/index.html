@@ -53,7 +53,17 @@
             </div>
             <div class="prop-values">
               {{#each values}}
-                {{>type}}
+                {{#range === "http://www.w3.org/2001/XMLSchema#string"}}
+                  {{>input-string}}
+                {{elseif range === "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"}}
+                  {{>input-lang-string}}
+                {{elseif range === "http://www.w3.org/2001/XMLSchema#gYear"}}
+                  {{>input-gYear}}
+                {{elseif range === "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"}}
+                  {{>input-nonNegativeInteger}}
+                {{else}}
+                  {{>input-string}}
+                {{/}}
                 {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
                   <a target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
                 {{/}}

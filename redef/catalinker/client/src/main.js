@@ -157,50 +157,15 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
         disabled = true;
       }
 
-      // Fetch authorized values, if required
-      if (props[i]["deichman:valuesFrom"]) {
-        console.log(props[i]["rdfs:label"][0]["@value"] + " is authorized");
-        var url = props[i]["deichman:valuesFrom"]["@id"];
-        http.get(
-          url,
-          {"Accept": "application/ld+json"},
-          onAuthorizedValuesLoad(props[i]["@id"]),
-          onAuthorizedValuesFailure
-        );
-      }
-
-      var input = {
+      inputs.push({
         disabled: disabled,
         predicate: ontology.resolveURI(ont,  props[i]["@id"]),
         range: props[i]["rdfs:range"]["@id"],
         label: props[i]["rdfs:label"][0]["@value"],
         values: [{old: { value: "", type: "", lang: "" },
                   current: { value: "", type: "", lang: "" }}]
-      };
-
-      switch (input.range) {
-        case "http://www.w3.org/2001/XMLSchema#string":
-          input.type = "input-string";
-          break;
-        case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
-          input.type = "input-lang-string";
-          break;
-        case "http://www.w3.org/2001/XMLSchema#gYear":
-          input.type = "input-gYear";
-          break;
-        case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
-          input.type = "input-nonNegativeInteger";
-          break;
-        case "deichman:Work":
-          input.type = "input-string"; // temporarily
-          break;
-        default:
-          throw "Doesn't know which input-type to assign to range: " + input.range;
-      }
-
-      inputs.push(input);
+      });
     }
-
     ractive.set("inputs", inputs);
 
     // If resource URI is given in query string, it will be loaded for editing, otherwise we will
