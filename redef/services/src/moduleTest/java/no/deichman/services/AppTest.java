@@ -17,7 +17,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
-import no.deichman.services.kohaadapter.KohaSvcMock;
+import no.deichman.services.entity.kohaadapter.KohaSvcMock;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.testutil.PortSelector;
 import org.apache.jena.riot.Lang;

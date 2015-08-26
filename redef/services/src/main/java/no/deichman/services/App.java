@@ -1,11 +1,11 @@
 package no.deichman.services;
 
-import no.deichman.services.rest.AuthorizedValuesResource;
-import no.deichman.services.rest.OntologyResource;
-import no.deichman.services.rest.PublicationResource;
-import no.deichman.services.rest.ResourceBase;
-import no.deichman.services.rest.WorkResource;
-import no.deichman.services.rest.utils.CORSResponseFilter;
+import no.deichman.services.ontology.AuthorizedValuesResource;
+import no.deichman.services.ontology.OntologyResource;
+import no.deichman.services.entity.PublicationResource;
+import no.deichman.services.entity.ResourceBase;
+import no.deichman.services.entity.WorkResource;
+import no.deichman.services.restutils.CORSResponseFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
