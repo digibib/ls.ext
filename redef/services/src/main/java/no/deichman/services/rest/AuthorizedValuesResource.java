@@ -15,7 +15,7 @@ import org.apache.jena.riot.Lang;
  */
 @Singleton
 @Path("authorized_values")
-public final class AuthorizedValues {
+public final class AuthorizedValuesResource {
 
     @GET
     @Path("language")

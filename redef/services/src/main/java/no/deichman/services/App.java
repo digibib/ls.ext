@@ -1,6 +1,6 @@
 package no.deichman.services;
 
-import no.deichman.services.rest.AuthorizedValues;
+import no.deichman.services.rest.AuthorizedValuesResource;
 import no.deichman.services.rest.OntologyResource;
 import no.deichman.services.rest.PublicationResource;
 import no.deichman.services.rest.ResourceBase;
@@ -70,7 +70,7 @@ public final class App {
                         WorkResource.class.getCanonicalName(),
                         OntologyResource.class.getCanonicalName(),
                         PublicationResource.class.getCanonicalName(),
-                        AuthorizedValues.class.getCanonicalName(),
+                        AuthorizedValuesResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName()
                 )));
 

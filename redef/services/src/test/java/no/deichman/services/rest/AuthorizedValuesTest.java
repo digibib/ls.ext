@@ -18,29 +18,29 @@ import static org.junit.Assert.assertTrue;
 
 public class AuthorizedValuesTest {
 
-    private AuthorizedValues authorizedValues;
+    private AuthorizedValuesResource valuesResource;
 
     @Before
     public void setUp() throws Exception {
-        authorizedValues = new AuthorizedValues();
+        valuesResource = new AuthorizedValuesResource();
     }
 
     @Test
     public void should_have_default_constructor() {
-        assertNotNull(new AuthorizedValues());
+        assertNotNull(new AuthorizedValuesResource());
     }
 
     @Test
     public void should_return_ok_when_getting_languages() throws Exception {
 
-        Response response = authorizedValues.language();
+        Response response = valuesResource.language();
         assertThat(response.getStatus(), equalTo(Status.OK.getStatusCode()));
     }
 
     @Test
     public void should_actually_return_some_language_data() throws Exception {
 
-        Object body = authorizedValues.language().getEntity();
+        Object body = valuesResource.language().getEntity();
         Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
         boolean hasEnglish = model.contains(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng"),
