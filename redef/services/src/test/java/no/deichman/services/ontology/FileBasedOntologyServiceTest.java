@@ -1,12 +1,12 @@
 package no.deichman.services.ontology;
 
+import com.hp.hpl.jena.rdf.model.Model;
 import java.io.IOException;
-import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.junit.Test;
 
-import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
+import static no.deichman.services.rdf.RDFModelUtil.stringFrom;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertNotNull;
@@ -14,26 +14,21 @@ import static org.junit.Assert.assertThat;
 
 public class FileBasedOntologyServiceTest {
 
-    @Test
-    public void should_return_ontology_as_turtle() throws IOException {
-        OntologyService service = new FileBasedOntologyService(BaseURI.local());
-        String ontology = service.getOntologyTurtle();
-        assertNotNull(RDFModelUtil.modelFrom(ontology, Lang.TURTLE));
-    }
+    public static final String SOME_BASE_URI = BaseURI.LOCAL_BASE_URI_ROOT;
+
 
     @Test
     public void should_have_replaced_uris() throws Exception {
         OntologyService service = new FileBasedOntologyService(BaseURI.local());
-        String ontology = service.getOntologyTurtle();
-        assertThat(ontology, not(containsString("_BASE_URI_")));
-        assertThat(ontology, containsString(BaseURI.local().ontology()));
+        Model ontology = service.getOntology();
+        String turtle = stringFrom(ontology, Lang.TURTLE);
+        assertThat(turtle, not(containsString("_BASE_URI_")));
+        assertThat(turtle, containsString(SOME_BASE_URI));
     }
 
     @Test
-    public void should_return_as_jsonld() {
-        OntologyService ontology = new FileBasedOntologyService(BaseURI.local());
-        String result = ontology.getOntologyJsonLD();
-        assertNotNull(result);
-        assertNotNull(modelFrom(result, Lang.JSONLD));
+    public void should_return_ontology_as_model() throws IOException {
+        OntologyService service = new FileBasedOntologyService(BaseURI.local());
+        assertNotNull(service.getOntology());
     }
 }

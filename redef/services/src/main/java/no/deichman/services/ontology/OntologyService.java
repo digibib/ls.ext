@@ -1,10 +1,10 @@
 package no.deichman.services.ontology;
 
+import com.hp.hpl.jena.rdf.model.Model;
+
 /**
- * Responsibility: Serve ontology.
+ * Responsibility: Serve ontology model.
  */
 public interface OntologyService {
-    String getOntologyTurtle();
-
-    String getOntologyJsonLD();
+    Model getOntology();
 }

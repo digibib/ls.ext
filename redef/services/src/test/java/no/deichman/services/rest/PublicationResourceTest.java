@@ -5,33 +5,32 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import static javax.ws.rs.core.Response.Status.CREATED;
-import static javax.ws.rs.core.Response.Status.NO_CONTENT;
-import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.kohaadapter.KohaAdapter;
 import no.deichman.services.repository.InMemoryRepository;
 import no.deichman.services.service.ServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.ObjectMapper;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
+import static no.deichman.services.rest.utils.TestJSON.assertValidJSON;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublicationResourceTest {
@@ -86,7 +85,7 @@ public class PublicationResourceTest {
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
         assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(result.getEntity().toString().contains("\"deichman:recordID\""));
-        assertTrue(isValidJSON(result.getEntity().toString()));
+        assertValidJSON(result.getEntity().toString());
     }
 
     @Test
@@ -138,18 +137,4 @@ public class PublicationResourceTest {
         resource.patchPublication("a_missing_publication1234", "{}");
     }
 
-    private boolean isValidJSON(final String json) {
-        boolean valid = false;
-        try {
-            final JsonParser parser = new ObjectMapper().getJsonFactory().createJsonParser(json);
-            while (parser.nextToken() != null) {
-                // NOOP
-            }
-            valid = true;
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-        return valid;
-    }
 }

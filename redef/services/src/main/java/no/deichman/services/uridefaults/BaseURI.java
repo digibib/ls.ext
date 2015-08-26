@@ -5,6 +5,8 @@ package no.deichman.services.uridefaults;
  */
 public final class BaseURI {
 
+    public static final String LOCAL_BASE_URI_ROOT = "http://deichman.no/";
+
     private final String baseUriRoot;
 
     private BaseURI(String baseUriRoot) {
@@ -12,7 +14,7 @@ public final class BaseURI {
     }
 
     public static BaseURI local() {
-        return new BaseURI("http://deichman.no/");
+        return new BaseURI(LOCAL_BASE_URI_ROOT);
     }
 
     public static BaseURI remote() {
