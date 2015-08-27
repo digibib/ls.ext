@@ -294,7 +294,7 @@ Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
 
   table = @browser.table(:id => "default-circulation-rules")
   rules.each do |rule|
-    row = table.tr(:index, -1) # append to last row
+    row = table.tbody.tr(:index, -1) # append to last row
     row.select_list(:name => "categorycode").select_value "#{rule[:categorycode]}"
     row.select_list(:name => "itemtype").select_value "#{rule[:itemtype]}"
     row.text_field(:name => "maxissueqty").set "#{rule[:maxissueqty]}"

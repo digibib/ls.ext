@@ -1,7 +1,7 @@
 koha:
   saltfiles: salt://koha/files
   filerepo: http://datatest.deichman.no/saltfiles/koha/
-  koha-image-tag: 58c7a53bc3eb6bedb09f78d01b150f52846228bb
+  koha-image-tag: 3c6e7703fdde80f55d0514c0e167ffd6e7ba5e37
   opac:
     binding: 0.0.0.0
     port: 8080
