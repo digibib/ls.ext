@@ -8,7 +8,7 @@ fetch_requirejs:
 
 fetch_ractive:
   cmd.run:
-    - name: wget -N http://cdn.ractivejs.org/edge/ractive.min.js -P /vagrant/redef/catalinker/client/lib/
+    - name: wget -N http://cdn.ractivejs.org/0.7.3/ractive.min.js -P /vagrant/redef/catalinker/client/lib/
 
 build_client:
   cmd.run:
