@@ -1,10 +1,11 @@
 package no.deichman.services.entity.repository;
 
 import no.deichman.services.uridefaults.BaseURI;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class UniqueURIGeneratorTest {
 
@@ -17,7 +18,7 @@ public class UniqueURIGeneratorTest {
 
     @Test
     public void should_return_new_work_ID() {
-        String uri = uriGenerator.getNewURI("work", s -> false);
+        String uri = uriGenerator.getNewURI("Work", s -> false);
         assertNotNull(uri);
         assertTrue(uri.contains("/work"));
     }
@@ -27,7 +28,7 @@ public class UniqueURIGeneratorTest {
         boolean[] existsFlag = new boolean[1];
         existsFlag[0] = true;
         String uri = uriGenerator.getNewURI(
-                "publication",
+                "Publication",
                 s -> {
                     boolean result = existsFlag[0];
                     existsFlag[0] = false;

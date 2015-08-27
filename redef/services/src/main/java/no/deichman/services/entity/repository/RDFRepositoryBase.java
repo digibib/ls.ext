@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -79,44 +80,48 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createWork(String work) {
-        InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
-        String uri = uriGenerator.getNewURI("work", this::askIfResourceExists);
-        Model tempModel = ModelFactory.createDefaultModel();
-        Statement workResource = ResourceFactory.createStatement(
-                PLACEHOLDER_RESOURCE,
-                RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + "Work"));
-        tempModel.add(workResource);
-        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
+    public final String createWork(String workJsonLd) {
+        String type = "Work";
 
+        Model tempModel = RDFModelUtil.modelFrom(workJsonLd, Lang.JSONLD);
+        tempModel.add(tempTypeStatement(type));
+
+        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
+
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
         executeUpdate(updateRequest);
         return uri;
     }
 
     @Override
-    public final String createPublication(String publication, String recordID) {
-        InputStream stream = new ByteArrayInputStream(publication.getBytes(StandardCharsets.UTF_8));
-        String uri = uriGenerator.getNewURI("publication", this::askIfResourceExists);
-        Model tempModel = ModelFactory.createDefaultModel();
-        Statement publicationResource = ResourceFactory.createStatement(
-                PLACEHOLDER_RESOURCE,
-                RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + "Publication"));
-        Statement recordLink = ResourceFactory.createStatement(
-                PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(baseURI.ontology() + "recordID"),
-                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
-        tempModel.add(publicationResource);
-        tempModel.add(recordLink);
-        RDFDataMgr.read(tempModel, stream, Lang.JSONLD);
+    public final String createPublication(String publicationJsonLd, String recordID) {
+        String type = "Publication";
 
+        Model tempModel = RDFModelUtil.modelFrom(publicationJsonLd, Lang.JSONLD);
+        tempModel.add(tempTypeStatement(type));
+        tempModel.add(tempRecordIdStatement(recordID));
+
+        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
+
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
         executeUpdate(updateRequest);
         return uri;
+    }
+
+    private Statement tempRecordIdStatement(String recordID) {
+        return ResourceFactory.createStatement(
+                PLACEHOLDER_RESOURCE,
+                ResourceFactory.createProperty(baseURI.ontology() + "recordID"),
+                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
+    }
+
+    private Statement tempTypeStatement(String clazz) {
+        return ResourceFactory.createStatement(
+                PLACEHOLDER_RESOURCE,
+                RDF.type,
+                ResourceFactory.createResource(baseURI.ontology() + clazz));
     }
 
     @Override
