@@ -58,6 +58,20 @@ var example_ontology = {
       "@id": "http://www.w3.org/2001/XMLSchema#string"
     }
   }, {
+    "@id": "lvont:Language",
+    "@type": "rdfs:Class"
+  }, {
+    "@id": "deichman:language",
+    "@type": "rdfs:Property",
+    "rdfs:domain": [{
+      "@id" : "deichman:Publication"
+    }, {
+      "@id" : "deichman:Work"
+    }],
+    "rdfs:range": {
+      "@id": "lvont:Language"
+    }
+  }, {
     "@id": "deichman:year",
     "@type": "rdfs:Property",
     "rdfs:domain": {
@@ -69,7 +83,8 @@ var example_ontology = {
   }],
   "@context": {
     "deichman": "http://192.168.50.12:8005/ontology#",
-    "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "lvont": "http://lexvo.org/ontology#"
   }
 };
 
@@ -78,7 +93,7 @@ define(['ontology'], function (ontology) {
   describe("Parsing an ontology", function () {
     it("can filter properties that are valid for a class", function () {
       workProps = ontology.propsByClass(example_ontology, "Work");
-      assert.equal(workProps.length, 5);
+      assert.equal(workProps.length, 6);
     });
 
     it("can resolve URIs against the supplied prefixes", function () {

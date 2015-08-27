@@ -3,7 +3,9 @@ var work_response_with_publications = JSON.stringify({
     "@id" : "http://192.168.50.12:8005/publication/p976722435911",
     "@type" : "deichman:Publication",
     "deichman:format" : "bok",
-    "deichman:language" : "tysk",
+    "deichman:language" : {
+      "@id": "http://lexvo.org/id/iso639-3/ger"
+    },
     "deichman:publicationOf" : "http://192.168.50.12:8005/work/w733425565188",
     "deichman:name" : [{
       "@language" : "en",
@@ -13,7 +15,9 @@ var work_response_with_publications = JSON.stringify({
     "@id" : "http://192.168.50.12:8005/publication/p417291955314",
     "@type" : "deichman:Publication",
     "deichman:format" : "cd",
-    "deichman:language" : "engelsk",
+    "deichman:language" : {
+      "@id": "http://lexvo.org/id/iso639-3/eng"
+    },
     "deichman:publicationOf" : "http://192.168.50.12:8005/work/w733425565188",
     "deichman:name" : [{
       "@language" : "sv",
