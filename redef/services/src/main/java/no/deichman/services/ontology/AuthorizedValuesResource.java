@@ -10,6 +10,9 @@ import no.deichman.services.rdf.RDFModelUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.riot.Lang;
 
+import static no.deichman.services.restutils.MimeType.UTF_8;
+import static no.deichman.services.restutils.MimeType.LD_JSON;
+
 /**
  * Responsibility: Return authorized values for resources.
  */
@@ -19,7 +22,7 @@ public final class AuthorizedValuesResource {
 
     @GET
     @Path("language")
-    @Produces("application/ld+json" + "; charset=utf-8")
+    @Produces(LD_JSON + UTF_8)
     public Response language() throws IOException {
         return Response.ok().entity(
                 RDFModelUtil.stringFrom(

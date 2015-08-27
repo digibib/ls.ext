@@ -20,15 +20,15 @@ import no.deichman.services.restutils.MimeType;
 import no.deichman.services.restutils.PATCH;
 import no.deichman.services.uridefaults.BaseURI;
 
+import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
+import static no.deichman.services.restutils.MimeType.LD_JSON;
+
 /**
  * Responsibility: Expose publication as a r/w REST resource.
  */
 @Singleton
 @Path("/publication")
 public final class PublicationResource extends ResourceBase {
-
-    private static final String MIME_JSONLD = MimeType.JSONLD;
-    private static final String ENCODING_UTF8 = "; charset=utf-8";
 
     @Context private ServletConfig servletConfig;
 
@@ -40,7 +40,7 @@ public final class PublicationResource extends ResourceBase {
     }
 
     @POST
-    @Consumes(MIME_JSONLD)
+    @Consumes(LD_JSON)
     public Response createPublication(String publication) throws Exception {
         String publicationId = getEntityService().createPublication(publication);
         URI location = new URI(publicationId);
@@ -50,7 +50,7 @@ public final class PublicationResource extends ResourceBase {
 
     @GET
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
-    @Produces(MIME_JSONLD + ENCODING_UTF8)
+    @Produces(LD_JSON + MimeType.UTF_8)
     public Response getPublicationJSON(@PathParam("publicationId") String publicationId) {
         Model model = getEntityService().retrievePublicationById(publicationId);
 
@@ -77,7 +77,7 @@ public final class PublicationResource extends ResourceBase {
 
     @PATCH
     @Path("/{publicationId: [a-zA-Z0-9_]+}")
-    @Consumes(MimeType.LDPATCHJSON)
+    @Consumes(LDPATCH_JSON)
     public Response patchPublication(@PathParam("publicationId") String publicationId, String requestBody) throws Exception {
         if (!getEntityService().resourceExists(getBaseURI().publication() + publicationId)) {
             throw new NotFoundException();

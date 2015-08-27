@@ -6,6 +6,7 @@ import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 
+import no.deichman.services.restutils.MimeType;
 import no.deichman.services.uridefaults.BaseURI;
 
 import org.apache.jena.riot.Lang;
@@ -36,7 +37,7 @@ public final class JSONLDCreator {
         try {
             Object jsonObject = JsonUtils.fromString(sw.toString());
             JsonLdOptions options = new JsonLdOptions();
-            options.format = "application/ld+json";
+            options.format = MimeType.LD_JSON;
 
             final Map<String, Object> ctx = new HashMap<>();
             DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI.ontology());

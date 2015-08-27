@@ -5,6 +5,7 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -19,6 +20,7 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 import no.deichman.services.entity.kohaadapter.KohaSvcMock;
 import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.restutils.MimeType;
 import no.deichman.services.testutil.PortSelector;
 import org.apache.jena.riot.Lang;
 import org.junit.After;
@@ -148,6 +150,23 @@ public class AppTest {
                 ResourceFactory.createLangLiteral("Engelsk", "no")
         ));
         assertTrue("model doesn't have English", hasEnglish);
+    }
+
+    @Test
+    public void get_ontology() throws Exception {
+        HttpRequest request = Unirest
+                .get(baseUri + "ontology")
+                .header("Accept", MimeType.LD_JSON);
+        HttpResponse<?> response = request.asString();
+        assertResponse(Status.OK, response);
+
+        Model ontology = RDFModelUtil.modelFrom(response.getBody().toString(), Lang.JSONLD);
+        Statement workStatement = ResourceFactory.createStatement(
+                ResourceFactory.createResource(baseUri + "ontology#Work"),
+                RDFS.label,
+                ResourceFactory.createLangLiteral("Verk", "no")
+        );
+        assertTrue("ontology doesn't have Work", ontology.contains(workStatement));
     }
 
     private GetRequest buildGetItemsRequest(String workUri) {

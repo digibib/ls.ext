@@ -20,8 +20,9 @@ import javax.ws.rs.core.Response;
 import no.deichman.services.restutils.PATCH;
 import no.deichman.services.uridefaults.BaseURI;
 
-import static no.deichman.services.restutils.MimeType.JSONLD;
-import static no.deichman.services.restutils.MimeType.LDPATCHJSON;
+import static no.deichman.services.restutils.MimeType.UTF_8;
+import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
+import static no.deichman.services.restutils.MimeType.LD_JSON;
 
 /**
  * Responsibility: Expose Work as a r/w REST resource.
@@ -29,9 +30,6 @@ import static no.deichman.services.restutils.MimeType.LDPATCHJSON;
 @Singleton
 @Path("/work")
 public final class WorkResource extends ResourceBase {
-    private static final String MIME_JSONLD = JSONLD;
-    private static final String ENCODING_UTF8 = "; charset=utf-8";
-    private static final String MIME_LDPATCH_JSON = LDPATCHJSON;
 
     @Context private ServletConfig servletConfig;
 
@@ -44,7 +42,7 @@ public final class WorkResource extends ResourceBase {
     }
 
     @POST
-    @Consumes(MIME_JSONLD)
+    @Consumes(LD_JSON)
     public Response createWork(String work) throws URISyntaxException {
         String workId = getEntityService().createWork(work);
         URI location = new URI(workId);
@@ -53,7 +51,7 @@ public final class WorkResource extends ResourceBase {
     }
 
     @PUT
-    @Consumes(MIME_JSONLD)
+    @Consumes(LD_JSON)
     public Response updateWork(String work) {
         getEntityService().updateWork(work);
         return Response.ok().build();
@@ -61,7 +59,8 @@ public final class WorkResource extends ResourceBase {
 
     @PATCH
     @Path("/{workId: [a-zA-Z0-9_]+}")
-    @Consumes(MIME_LDPATCH_JSON)
+    @Consumes(LDPATCH_JSON)
+    @Produces(LD_JSON + UTF_8)
     public Response patchWork(@PathParam("workId") String workId, String requestBody) {
         if (!getEntityService().resourceExists(getBaseURI().work() + workId)) {
             throw new NotFoundException();
@@ -78,7 +77,7 @@ public final class WorkResource extends ResourceBase {
 
     @GET
     @Path("/{workId: [a-zA-Z0-9_]+}")
-    @Produces(MIME_JSONLD + ENCODING_UTF8)
+    @Produces(LD_JSON + UTF_8)
     public Response getWorkJSON(@PathParam("workId") String workId) {
         Model model = getEntityService().retrieveWorkById(workId);
 
@@ -105,7 +104,7 @@ public final class WorkResource extends ResourceBase {
 
     @GET
     @Path("/{workId: [a-zA-Z0-9_]+}/items")
-    @Produces(MIME_JSONLD + ENCODING_UTF8)
+    @Produces(LD_JSON + UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId) {
         Model model = getEntityService().retrieveWorkItemsById(workId);
         if (model.isEmpty()) {
