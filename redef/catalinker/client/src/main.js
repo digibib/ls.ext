@@ -177,7 +177,6 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
 
       // Fetch authorized values, if required
       if (props[i]["deichman:valuesFrom"]) {
-        console.log(props[i]["rdfs:label"][0]["@value"] + " is authorized");
         var url = props[i]["deichman:valuesFrom"]["@id"];
         http.get(
           url,
