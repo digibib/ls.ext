@@ -77,8 +77,17 @@ public class WorkResourceTest {
 
     @Test
     public void should_return_201_when_work_created() throws URISyntaxException {
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
-
+        String work = "{\n" +
+                "    \"@context\": {\n" +
+                "        \"dcterms\": \"http://purl.org/dc/terms/\",\n" +
+                "        \"deichman\": \"http://deichman.no/ontology#\"\n" +
+                "    },\n" +
+                "    \"@graph\": {\n" +
+                "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n" +
+                "        \"@type\": \"deichman:Work\",\n" +
+                "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n" +
+                "    }\n" +
+                "}";
         Response result = resource.createWork(work);
 
         assertNull(result.getEntity());
@@ -87,7 +96,17 @@ public class WorkResourceTest {
 
     @Test
     public void should_return_location_header_when_work_created() throws URISyntaxException {
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
+        String work = "{\n" +
+                "    \"@context\": {\n" +
+                "        \"dcterms\": \"http://purl.org/dc/terms/\",\n" +
+                "        \"deichman\": \"http://deichman.no/ontology#\"\n" +
+                "    },\n" +
+                "    \"@graph\": {\n" +
+                "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n" +
+                "        \"@type\": \"deichman:Work\",\n" +
+                "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n" +
+                "    }\n" +
+                "}";
 
         Response result = resource.createWork(work);
 
@@ -99,7 +118,17 @@ public class WorkResourceTest {
 
     @Test
     public void should_return_200_when_work_updated() {
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
+        String work = "{\n" +
+                "    \"@context\": {\n" +
+                "        \"dcterms\": \"http://purl.org/dc/terms/\",\n" +
+                "        \"deichman\": \"http://deichman.no/ontology#\"\n" +
+                "    },\n" +
+                "    \"@graph\": {\n" +
+                "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n" +
+                "        \"@type\": \"deichman:Work\",\n" +
+                "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n" +
+                "    }\n" +
+                "}";
         Response result = resource.updateWork(work);
 
         assertNull(result.getEntity());
@@ -108,7 +137,17 @@ public class WorkResourceTest {
 
     @Test
     public void should_return_the_new_work() throws URISyntaxException{
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_EXIST\"}}";
+        String work = "{\n" +
+                "    \"@context\": {\n" +
+                "        \"dcterms\": \"http://purl.org/dc/terms/\",\n" +
+                "        \"deichman\": \"http://deichman.no/ontology#\"\n" +
+                "    },\n" +
+                "    \"@graph\": {\n" +
+                "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n" +
+                "        \"@type\": \"deichman:Work\",\n" +
+                "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n" +
+                "    }\n" +
+                "}";
 
         Response createResponse = resource.createWork(work);
 
@@ -161,7 +200,17 @@ public class WorkResourceTest {
 
     @Test
     public void patch_should_return_status_400() throws Exception {
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
+        String work = "{\n" +
+                "    \"@context\": {\n" +
+                "        \"dcterms\": \"http://purl.org/dc/terms/\",\n" +
+                "        \"deichman\": \"http://deichman.no/ontology#\"\n" +
+                "    },\n" +
+                "    \"@graph\": {\n" +
+                "        \"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\n" +
+                "        \"@type\": \"deichman:Work\",\n" +
+                "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n" +
+                "    }\n" +
+                "}";
         Response result = resource.createWork(work);
         String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{}";
@@ -175,7 +224,17 @@ public class WorkResourceTest {
 
     @Test
     public void patched_work_should_persist_changes() throws Exception {
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
+        String work = "{\n" +
+                "    \"@context\": {\n" +
+                "        \"dcterms\": \"http://purl.org/dc/terms/\",\n" +
+                "        \"deichman\": \"http://deichman.no/ontology#\"\n" +
+                "    },\n" +
+                "    \"@graph\": {\n" +
+                "        \"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\n" +
+                "        \"@type\": \"deichman:Work\",\n" +
+                "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n" +
+                "    }\n" +
+                "}";
         Response result = resource.createWork(work);
         String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{"
@@ -214,7 +273,17 @@ public class WorkResourceTest {
 
     @Test
     public void test_delete_work() throws URISyntaxException{
-        String work = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"work_SHOULD_BE_PATCHABLE\"}}";
+        String work = "{\n" +
+                "    \"@context\": {\n" +
+                "        \"dcterms\": \"http://purl.org/dc/terms/\",\n" +
+                "        \"deichman\": \"http://deichman.no/ontology#\"\n" +
+                "    },\n" +
+                "    \"@graph\": {\n" +
+                "        \"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\n" +
+                "        \"@type\": \"deichman:Work\",\n" +
+                "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n" +
+                "    }\n" +
+                "}";
         Response createResponse = resource.createWork(work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response response = resource.deleteWork(workId);
