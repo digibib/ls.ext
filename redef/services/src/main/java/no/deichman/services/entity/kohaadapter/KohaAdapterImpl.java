@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
@@ -122,7 +123,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     @Override
-    public String getNewBiblio() throws Exception {
+    public String getNewBiblio() {
         // TODO Handle login in a filter / using template pattern
         if (sessionCookie == null) {
             login();
@@ -138,13 +139,19 @@ public final class KohaAdapterImpl implements KohaAdapter {
             throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
         }
 
-        InputSource inputSource = new InputSource(new ByteArrayInputStream(response.readEntity(String.class).getBytes()));
+        String body = response.readEntity(String.class);
+        InputSource inputSource = new InputSource(new ByteArrayInputStream(body.getBytes()));
         XPath xpath = XPathFactory.newInstance().newXPath();
-        String biblioId = xpath.evaluate("//response/biblionumber", inputSource);
+        String biblioId;
+        try {
+            biblioId = xpath.evaluate("//response/biblionumber", inputSource);
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException("Could not get biblionumber from Koha response: " + body);
+        }
 
         if (biblioId == "") {
             System.out.println("LOG: Koha failed to create a new bibliographic record");
-            throw new Exception("Koha connection for new biblio failed");
+            throw new RuntimeException("Koha connection for new biblio failed, missing biblioId");
         } else {
             System.out.println("LOG: Koha created a new bibliographic record with ID: " + biblioId);
         }

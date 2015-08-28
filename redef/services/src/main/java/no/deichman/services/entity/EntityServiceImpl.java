@@ -36,20 +36,18 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model retrieveWorkById(String id) {
-
+    public Model retrieveById(EntityType type, String id) {
         Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrieveWorkById(id));
-
-        return m;
-    }
-
-    @Override
-    public Model retrievePublicationById(String id) {
-
-        Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrievePublicationById(id));
-
+        switch (type) {
+            case PUBLICATION:
+                m.add(repository.retrievePublicationById(id));
+                break;
+            case WORK:
+                m.add(repository.retrieveWorkById(id));
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown entity type:" + type);
+        }
         return m;
     }
 
@@ -88,37 +86,31 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public String createWork(String work) {
-        return repository.createWork(work);
+    public String create(EntityType type, String jsonLd) {
+        String uri = null;
+        switch (type) {
+            case PUBLICATION:
+                String recordId = kohaAdapter.getNewBiblio();
+                uri = repository.createPublication(jsonLd, recordId);
+                break;
+            case WORK:
+                uri = repository.createWork(jsonLd);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown entity type:" + type);
+        }
+        return uri;
     }
 
     @Override
-    public String createPublication(String publication) throws Exception {
-        String recordId = kohaAdapter.getNewBiblio();
-        return repository.createPublication(publication, recordId);
+    public void delete(Model model) {
+        repository.delete(model);
     }
 
     @Override
-    public void deleteWork(Model work) {
-        repository.delete(work);
-    }
-
-    @Override
-    public void deletePublication(Model publication) {
-        repository.delete(publication);
-    }
-
-    @Override
-    public Model patchWork(String workId, String ldPatchJson) throws PatchParserException {
+    public Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException {
         repository.patch(PatchParser.parse(ldPatchJson));
-        return retrieveWorkById(workId);
-    }
-
-    @Override
-    public Model patchPublication(String publicationId, String ldPatchJson) throws PatchParserException {
-        repository.patch(PatchParser.parse(ldPatchJson));
-        return retrievePublicationById(publicationId);
-
+        return retrieveById(type, id);
     }
 
     @Override

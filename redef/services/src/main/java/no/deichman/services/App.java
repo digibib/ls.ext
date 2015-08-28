@@ -2,9 +2,8 @@ package no.deichman.services;
 
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
-import no.deichman.services.entity.PublicationResource;
 import no.deichman.services.entity.ResourceBase;
-import no.deichman.services.entity.WorkResource;
+import no.deichman.services.entity.EntityResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -67,9 +66,8 @@ public final class App {
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
                 String.join(",", asList(
-                        WorkResource.class.getCanonicalName(),
+                        EntityResource.class.getCanonicalName(),
                         OntologyResource.class.getCanonicalName(),
-                        PublicationResource.class.getCanonicalName(),
                         AuthorizedValuesResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName()
                 )));

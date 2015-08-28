@@ -62,13 +62,13 @@ public class EntityServiceImplTest {
     public void test_retrieve_work_by_id(){
         String testId = "work_SHOULD_EXIST";
         String workData = getTestJSON(testId,"work");
-        String workId = service.createWork(workData);
+        String workId = service.create(EntityType.WORK, workData);
         Model comparison = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(
                 workData.replace(workURI + testId, workId)
                 .getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(comparison, in, Lang.JSONLD);
-        Model test = service.retrieveWorkById(workId.replace(workURI, ""));
+        Model test = service.retrieveById(EntityType.WORK, workId.replace(workURI, ""));
         assertTrue(test.isIsomorphicWith(comparison));
     }
 
@@ -77,8 +77,8 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_EXIST";
         String publicationData = getTestJSON(testId,"publication");
-        String publicationId = service.createPublication(publicationData);
-        Model test = service.retrievePublicationById(publicationId.replace(publicationURI, ""));
+        String publicationId = service.create(EntityType.PUBLICATION, publicationData);
+        Model test = service.retrieveById(EntityType.PUBLICATION, publicationId.replace(publicationURI, ""));
         Statement testStatement = ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationId),
                 ResourceFactory.createProperty(RDF.type.getURI()),
@@ -90,7 +90,7 @@ public class EntityServiceImplTest {
     public void test_repository_can_be_set_got(){
         String testId = "work_TEST_REPOSITORY";
         String workData = getTestJSON(testId, "work");
-        String workId = service.createWork(workData);
+        String workId = service.create(EntityType.WORK, workData);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(workId),
                 ResourceFactory.createProperty(DCTerms.identifier.getURI()),
@@ -135,7 +135,7 @@ public class EntityServiceImplTest {
         String testId = "SERVICE_WORK_SHOULD_EXIST";
         String work = getTestJSON(testId,"work");
         Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource(service.createWork(work)),
+                ResourceFactory.createResource(service.create(EntityType.WORK, work)),
                 ResourceFactory.createProperty(DCTerms.identifier.getURI()),
                 ResourceFactory.createPlainLiteral(testId));
         assertTrue(repository.askIfStatementExists(s));
@@ -146,7 +146,7 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SERVICE_CREATE_PUBLICATION";
         String publication = getTestJSON(testId, "publication");
-        String publicationId = service.createPublication(publication);
+        String publicationId = service.create(EntityType.PUBLICATION, publication);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationId),
                 ResourceFactory.createProperty(DCTerms.identifier.getURI()),
@@ -158,7 +158,7 @@ public class EntityServiceImplTest {
     public void test_delete_work(){
         String testId = "work_SHOULD_BE_DELETED";
         String work = getTestJSON(testId,"work");
-        String workId = service.createWork(work);
+        String workId = service.create(EntityType.WORK, work);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(workId),
                 ResourceFactory.createProperty(DCTerms.identifier.getURI()),
@@ -169,7 +169,7 @@ public class EntityServiceImplTest {
                 work.replace(workURI + testId, workId)
                 .getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(test,in, Lang.JSONLD);
-        service.deleteWork(test);
+        service.delete(test);
         assertFalse(repository.askIfStatementExists(s));
     }
 
@@ -178,7 +178,7 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
-        String publicationId = service.createPublication(publication);
+        String publicationId = service.create(EntityType.PUBLICATION, publication);
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationId),
                 ResourceFactory.createProperty(DCTerms.identifier.getURI()),
@@ -189,7 +189,7 @@ public class EntityServiceImplTest {
                 publication.replace(publicationURI + testId, publicationId)
                 .getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(test,in, Lang.JSONLD);
-        service.deleteWork(test);
+        service.delete(test);
         assertFalse(repository.askIfStatementExists(s));
     }
 
@@ -197,7 +197,7 @@ public class EntityServiceImplTest {
     public void test_patch_work_add() throws Exception{
         String testId = "work_SHOULD_BE_PATCHABLE";
         String workData = getTestJSON(testId, "work");
-        String workId = service.createWork(workData);
+        String workId = service.create(EntityType.WORK, workData);
 
         Model oldModel = ModelFactory.createDefaultModel();
 
@@ -205,10 +205,10 @@ public class EntityServiceImplTest {
         InputStream oldIn = new ByteArrayInputStream(comparisonRDF.getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(oldModel, oldIn, Lang.JSONLD);
         String nonUriWorkId = workId.replace(workURI, "");
-        Model data = service.retrieveWorkById(nonUriWorkId);
+        Model data = service.retrieveById(EntityType.WORK, nonUriWorkId);
         assertTrue(oldModel.isIsomorphicWith(data));
         String patchData = getTestPatch("add", workId);
-        Model patchedModel = service.patchWork(nonUriWorkId, patchData);
+        Model patchedModel = service.patch(EntityType.WORK, nonUriWorkId, patchData);
         assertTrue(patchedModel.contains(
                 ResourceFactory.createResource(workId),
                 ResourceFactory.createProperty(ontologyURI + "color"),
@@ -224,10 +224,10 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_PATCHABLE";
         String publicationData = getTestJSON(testId,"publication");
-        String publicationId = service.createPublication(publicationData);
+        String publicationId = service.create(EntityType.PUBLICATION, publicationData);
         String nonUriPublicationId = publicationId.replace(publicationURI, "");
         String patchData = getTestPatch("add", publicationId);
-        Model patchedModel = service.patchPublication(nonUriPublicationId, patchData);
+        Model patchedModel = service.patch(EntityType.PUBLICATION, nonUriPublicationId, patchData);
         assertTrue(patchedModel.contains(
                 ResourceFactory.createResource(publicationId),
                 ResourceFactory.createProperty(ontologyURI + "color"),
@@ -237,9 +237,9 @@ public class EntityServiceImplTest {
     @Test(expected=PatchParserException.class)
     public void test_bad_patch_fails() throws Exception{
         String workData = getTestJSON("SHOULD_FAIL","work");
-        String workId = service.createWork(workData);
+        String workId = service.create(EntityType.WORK, workData);
         String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
-        service.patchWork(workId.replace(workURI, ""),badPatchData);
+        service.patch(EntityType.WORK, workId.replace(workURI, ""), badPatchData);
     }
 
     private String getTestJSON(String id, String type) {
@@ -265,7 +265,7 @@ public class EntityServiceImplTest {
 
     private String getTestPatch(String operation, String id) {
         return "{"
-                + "\"op\": \"add\","
+                + "\"op\": \"" + operation + "\","
                 + "\"s\": \"" + id + "\","
                 + "\"p\": \"" + ontologyURI + "color\","
                 + "\"o\": {"

@@ -29,6 +29,10 @@ public final class BaseURI {
         return baseUriRoot + "ontology#";
     }
 
+    public String ontology(String thing) {
+        return baseUriRoot + "ontology#" + thing;
+    }
+
     public String publication() {
         return baseUriRoot + "publication/";
     }

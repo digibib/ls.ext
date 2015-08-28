@@ -3,6 +3,7 @@ package no.deichman.services.entity;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,57 +13,63 @@ import java.util.regex.Pattern;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import static javax.ws.rs.core.Response.Status.CREATED;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-import static javax.ws.rs.core.Response.Status.NO_CONTENT;
-import static javax.ws.rs.core.Response.Status.OK;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
 import no.deichman.services.entity.repository.InMemoryRepository;
-import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
-
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.marc4j.MarcReader;
+import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.Record;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.OK;
+import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
+import static no.deichman.services.testutil.TestJSON.assertValidJSON;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.Test;
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class WorkResourceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class EntityResourceTest {
 
-    private WorkResource resource;
+    private EntityResource entityResource;
     private BaseURI baseURI;
-    private InMemoryRepository repository;
+
+    @Mock
+    private KohaAdapter mockKohaAdapter;
 
     @Before
     public void setUp() throws Exception {
         baseURI = BaseURI.local();
-        repository = new InMemoryRepository();
-        resource = new WorkResource(baseURI, new EntityServiceImpl(baseURI, repository, null));
+        EntityServiceImpl service = new EntityServiceImpl(baseURI, new InMemoryRepository(), mockKohaAdapter);
+        entityResource = new EntityResource(baseURI, service);
     }
 
     @Test
-    public void should_have_default_constructor() {
-        assertNotNull(new WorkResource());
+    public void should_have_default_constructor_2() {
+        assertNotNull(new EntityResource());
     }
 
     @Test
     public void should_return_af_valid_json_work() {
-        resource = new WorkResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null));
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null));
         String workId = "work_00001";
 
-        Response result = resource.getWorkJSON(workId);
+        Response result = entityResource.get("work", workId);
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -72,7 +79,7 @@ public class WorkResourceTest {
     @Test(expected = NotFoundException.class)
     public void should_throw_exception_when_work_is_not_found() {
         String workId = "work_DOES_NOT_EXIST";
-        resource.getWorkJSON(workId);
+        entityResource.get("work", workId);
     }
 
     @Test
@@ -88,7 +95,7 @@ public class WorkResourceTest {
                 + "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n"
                 + "    }\n"
                 + "}";
-        Response result = resource.createWork(work);
+        Response result = entityResource.create("work", work);
 
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
@@ -108,7 +115,7 @@ public class WorkResourceTest {
                 + "    }\n"
                 + "}";
 
-        Response result = resource.createWork(work);
+        Response result = entityResource.create("work", work);
 
         String workURI = baseURI.work();
 
@@ -129,7 +136,7 @@ public class WorkResourceTest {
                 + "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n"
                 + "    }\n"
                 + "}";
-        Response result = resource.updateWork(work);
+        Response result = entityResource.update("work", work);
 
         assertNull(result.getEntity());
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -149,11 +156,11 @@ public class WorkResourceTest {
                 + "    }\n"
                 + "}";
 
-        Response createResponse = resource.createWork(work);
+        Response createResponse = entityResource.create("work", work);
 
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
 
-        Response result = resource.getWorkJSON(workId);
+        Response result = entityResource.get("work", workId);
 
         assertNotNull(result);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
@@ -177,14 +184,13 @@ public class WorkResourceTest {
 
     @Test
     public void should_return_list_of_items(){
-        KohaAdapter mockKohaAdapter = mock(KohaAdapter.class);
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        resource = new WorkResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 
-        Response result = resource.getWorkItems(workId);
+        Response result = entityResource.getWorkItems(workId, "work");
         System.out.println(result.getEntity().toString());
 
         assertNotNull(result);
@@ -194,7 +200,7 @@ public class WorkResourceTest {
 
     @Test(expected=NotFoundException.class)
     public void should_404_on_empty_items_list(){
-        Response result = resource.getWorkItems("DOES_NOT_EXIST");
+        Response result = entityResource.getWorkItems("DOES_NOT_EXIST", "work");
         assertEquals(result.getStatus(), NOT_FOUND.getStatusCode());
     }
 
@@ -211,11 +217,11 @@ public class WorkResourceTest {
                 + "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n"
                 + "    }\n"
                 + "}";
-        Response result = resource.createWork(work);
+        Response result = entityResource.create("work", work);
         String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{}";
         try {
-            resource.patchWork(workId,patchData);
+            entityResource.patch("work", workId,patchData);
             fail("HTTP 400 Bad Request");
         } catch (BadRequestException bre) {
             assertEquals("HTTP 400 Bad Request", bre.getMessage());
@@ -235,7 +241,7 @@ public class WorkResourceTest {
                 + "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n"
                 + "    }\n"
                 + "}";
-        Response result = resource.createWork(work);
+        Response result = entityResource.create("work", work);
         String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{"
                 + "\"op\": \"add\","
@@ -245,7 +251,7 @@ public class WorkResourceTest {
                 + "\"value\": \"red\""
                 + "}"
                 + "}";
-        Response patchResponse = resource.patchWork(workId,patchData);
+        Response patchResponse = entityResource.patch("work", workId,patchData);
         Model testModel = ModelFactory.createDefaultModel();
         Model comparison = ModelFactory.createDefaultModel();
         String response = patchResponse.getEntity().toString();
@@ -263,12 +269,12 @@ public class WorkResourceTest {
 
     @Test(expected = NotFoundException.class)
     public void patching_a_non_existing_resource_should_return_404() throws Exception {
-        resource.patchWork("a_missing_work1234", "{}");
+        entityResource.patch("work", "a_missing_work1234", "{}");
     }
 
     @Test(expected=NotFoundException.class)
     public void test_delete_work_raises_not_found_exception(){
-        resource.deleteWork("work_DOES_NOT_EXIST_AND_FAILS");
+        entityResource.delete("work", "work_DOES_NOT_EXIST_AND_FAILS");
     }
 
     @Test
@@ -284,10 +290,94 @@ public class WorkResourceTest {
                 + "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n"
                 + "    }\n"
                 + "}";
-        Response createResponse = resource.createWork(work);
+        Response createResponse = entityResource.create("work", work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
-        Response response = resource.deleteWork(workId);
+        Response response = entityResource.delete("work", workId);
         assertEquals(response.getStatus(), NO_CONTENT.getStatusCode());
+    }
+
+    private static final String A_BIBLIO_ID = "1234";
+
+    private String createTestPublicationJSON(String id) {
+        return "{\"@context\": "
+                + "{\"dcterms\": \"http://purl.org/dc/terms/\","
+                + "\"deichman\": \"http://deichman.no/ontology#\"},"
+                + "\"@graph\": "
+                + "{\"@id\": \"http://deichman.no/publication/" + id + "\","
+                + "\"@type\": \"deichman:Publication\","
+                + "\"dcterms:identifier\":\"" + id + "\"}}";
+    }
+
+    @Test    public void should_return_201_when_publication_created() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        Response result = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
+        assertNull(result.getEntity());
+        assertEquals(CREATED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void should_return_the_new_publication() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        Response createResponse = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
+
+        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
+
+        Response result = entityResource.get("publication", publicationId);
+
+        assertNotNull(result);
+        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
+        assertEquals(OK.getStatusCode(), result.getStatus());
+        assertTrue(result.getEntity().toString().contains("\"deichman:recordID\""));
+        assertValidJSON(result.getEntity().toString());
+    }
+
+    @Test
+    public void test_delete_publication() throws Exception{
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        Response createResponse = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
+        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
+        Response response = entityResource.delete("publication", publicationId);
+        assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void patch_should_return_status_400_2() throws Exception {
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        Response result = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
+        String publicationId = result.getLocation().getPath().substring("/publication/".length());
+        String patchData = "{}";
+        entityResource.patch("publication", publicationId, patchData);
+    }
+
+    @Test
+    public void patched_publication_should_persist_changes() throws Exception {
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        String publication = createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE");
+        Response result = entityResource.create("publication", publication);
+        String publicationId = result.getLocation().getPath().substring("/publication/".length());
+        String patchData = "{"
+                + "\"op\": \"add\","
+                + "\"s\": \"" + result.getLocation().toString() + "\","
+                + "\"p\": \"http://deichman.no/ontology#color\","
+                + "\"o\": {"
+                + "\"value\": \"red\""
+                + "}"
+                + "}";
+        Response patchResponse = entityResource.patch("publication", publicationId, patchData);
+        Model testModel = ModelFactory.createDefaultModel();
+        String response = patchResponse.getEntity().toString();
+        InputStream in = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(testModel, in, Lang.JSONLD);
+        Statement s = ResourceFactory.createStatement(
+                ResourceFactory.createResource(result.getLocation().toString()),
+                ResourceFactory.createProperty("http://deichman.no/ontology#color"),
+                ResourceFactory.createPlainLiteral("red"));
+        assertTrue(testModel.contains(s));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void patching_a_non_existing_resource_should_return_404_2() throws Exception {
+        entityResource.patch("publication", "a_missing_publication1234", "{}");
     }
 
     private boolean isValidJSON(final String json) {
