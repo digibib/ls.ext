@@ -1,8 +1,5 @@
 package no.deichman.services.entity.patch;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +7,10 @@ import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import com.hp.hpl.jena.vocabulary.XSD;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class PatchObjectTest {
 
@@ -30,11 +31,11 @@ public class PatchObjectTest {
 
         uriObject = new HashMap<>();
         uriObject.put("value", URI_OBJECT);
-        uriObject.put("datatype", XSD.anyURI.getURI());
+        uriObject.put("type", XSD.anyURI.getURI());
 
         datatypeObject = new HashMap<>();
         datatypeObject.put("value", URI_OBJECT);
-        datatypeObject.put("datatype", "http://www.example.com/z");
+        datatypeObject.put("type", "http://www.example.com/z");
 
         languageLiteral = new HashMap<>();
         languageLiteral.put("value", "Hypothesis");
@@ -119,7 +120,7 @@ public class PatchObjectTest {
     public void test_can_get_object_datatype(){
         PatchObject patchObject = new PatchObject();
         patchObject.setObject(datatypeObject);
-        assertEquals(datatypeObject.get("datatype"), patchObject.getObjectDatatype());
+        assertEquals(datatypeObject.get("type"), patchObject.getObjectDatatype());
     }
 
     @Test
@@ -148,7 +149,8 @@ public class PatchObjectTest {
         try {
             assertNotNull(patchObject.toPatch());
             assertEquals(ResourceImpl.class, patchObject.toPatch().getStatement().getObject().getClass());
-            assertEquals(uriObject.get("value"),patchObject.toPatch().getStatement().getObject().toString());
+            assertEquals(uriObject.get("value"), patchObject.toPatch().getStatement().getObject().toString());
+            assertTrue(patchObject.toPatch().getStatement().getObject().isURIResource());
         } catch (PatchParserException e) {
             e.printStackTrace();
         }
@@ -164,7 +166,7 @@ public class PatchObjectTest {
         try {
             Patch patch = patchObject.toPatch();
             assertNotNull(patch);
-            assertEquals(datatypeObject.get("datatype"), patch.getStatement().getObject().asLiteral().getDatatype().getURI());
+            assertEquals(datatypeObject.get("type"), patch.getStatement().getObject().asLiteral().getDatatype().getURI());
             assertEquals(datatypeObject.get("value"), patch.getStatement().getObject().asLiteral().getString());
         } catch (PatchParserException e) {
             e.printStackTrace();

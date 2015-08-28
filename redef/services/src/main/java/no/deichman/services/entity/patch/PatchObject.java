@@ -23,7 +23,7 @@ final class PatchObject {
         RDFNode rdfNode = null;
         String datatype = getObjectDatatype();
 
-        if (XSD.anyURI.getURI() == datatype) {
+        if (datatype.contentEquals(XSD.anyURI.getURI())) {
             try {
                 rdfNode = ResourceFactory.createResource(getObjectValue());
             } catch (PatchParserException e) {
@@ -88,7 +88,7 @@ final class PatchObject {
     }
 
     public String getObjectDatatype() {
-        return o.get("datatype");
+        return o.get("type");
     }
 
     public String getObjectLanguage() {
