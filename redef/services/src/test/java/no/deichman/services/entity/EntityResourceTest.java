@@ -14,7 +14,6 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
-import no.deichman.services.entity.kohaadapter.Marc2Rdf;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
@@ -24,9 +23,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -34,6 +30,7 @@ import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
+import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
 import static org.junit.Assert.assertEquals;
@@ -46,6 +43,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityResourceTest {
 
+    private static final String SOME_WORK_IDENTIFIER = "SOME_WORK_IDENTIFIER";
     private EntityResource entityResource;
     private BaseURI baseURI;
 
@@ -60,12 +58,12 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void should_have_default_constructor_2() {
+    public void should_have_default_constructor() {
         assertNotNull(new EntityResource());
     }
 
     @Test
-    public void should_return_af_valid_json_work() {
+    public void get_should_return_a_valid_json_work() {
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null));
         String workId = "work_00001";
 
@@ -77,24 +75,14 @@ public class EntityResourceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void should_throw_exception_when_work_is_not_found() {
+    public void get_should_throw_exception_when_work_is_not_found() {
         String workId = "work_DOES_NOT_EXIST";
         entityResource.get("work", workId);
     }
 
     @Test
-    public void should_return_201_when_work_created() throws URISyntaxException {
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n"
-                + "        \"@type\": \"deichman:Work\",\n"
-                + "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n"
-                + "    }\n"
-                + "}";
+    public void create_should_return_201_when_work_created() throws URISyntaxException {
+        String work = createTestWork(SOME_WORK_IDENTIFIER);
         Response result = entityResource.create("work", work);
 
         assertNull(result.getEntity());
@@ -102,18 +90,8 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void should_return_location_header_when_work_created() throws URISyntaxException {
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n"
-                + "        \"@type\": \"deichman:Work\",\n"
-                + "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n"
-                + "    }\n"
-                + "}";
+    public void create_should_return_location_header_when_work_created() throws URISyntaxException {
+        String work = createTestWork(SOME_WORK_IDENTIFIER);
 
         Response result = entityResource.create("work", work);
 
@@ -124,18 +102,8 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void should_return_200_when_work_updated() {
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n"
-                + "        \"@type\": \"deichman:Work\",\n"
-                + "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n"
-                + "    }\n"
-                + "}";
+    public void update_should_return_200_when_work_updated() {
+        String work = createTestWork(SOME_WORK_IDENTIFIER);
         Response result = entityResource.update("work", work);
 
         assertNull(result.getEntity());
@@ -143,18 +111,8 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void should_return_the_new_work() throws URISyntaxException{
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/work/work_SHOULD_EXIST\",\n"
-                + "        \"@type\": \"deichman:Work\",\n"
-                + "        \"dcterms:identifier\": \"work_SHOULD_EXIST\"\n"
-                + "    }\n"
-                + "}";
+    public void create_should_return_the_new_work() throws URISyntaxException{
+        String work = createTestWork(SOME_WORK_IDENTIFIER);
 
         Response createResponse = entityResource.create("work", work);
 
@@ -168,22 +126,22 @@ public class EntityResourceTest {
         assertTrue(isValidJSON(result.getEntity().toString()));
     }
 
-    private Model modelForBiblio() { // TODO return much simpler model
-        Model model = ModelFactory.createDefaultModel();
-        Model m = ModelFactory.createDefaultModel();
-        InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
-        MarcReader reader = new MarcXmlReader(in);
-        Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
-        while (reader.hasNext()) {
-            Record record = reader.next();
-            m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
-        }
-        model.add(m);
-        return model;
+    private String createTestWork(String identifier) {
+        return "{\n"
+                    + "    \"@context\": {\n"
+                    + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
+                    + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                    + "    },\n"
+                    + "    \"@graph\": {\n"
+                    + "        \"@id\": \"http://deichman.no/work/" + identifier + "\",\n"
+                    + "        \"@type\": \"deichman:Work\",\n"
+                    + "        \"dcterms:identifier\": \"" + identifier + "\"\n"
+                    + "    }\n"
+                    + "}";
     }
 
     @Test
-    public void should_return_list_of_items(){
+    public void get_work_items_should_return_list_of_items(){
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
@@ -199,24 +157,14 @@ public class EntityResourceTest {
     }
 
     @Test(expected=NotFoundException.class)
-    public void should_404_on_empty_items_list(){
+    public void get_work_items_should_404_on_empty_items_list(){
         Response result = entityResource.getWorkItems("DOES_NOT_EXIST", "work");
         assertEquals(result.getStatus(), NOT_FOUND.getStatusCode());
     }
 
     @Test
-    public void patch_should_return_status_400() throws Exception {
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\n"
-                + "        \"@type\": \"deichman:Work\",\n"
-                + "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n"
-                + "    }\n"
-                + "}";
+    public void patch_with_invalid_data_should_return_status_400() throws Exception {
+        String work = createTestWork(SOME_WORK_IDENTIFIER);
         Response result = entityResource.create("work", work);
         String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{}";
@@ -228,68 +176,19 @@ public class EntityResourceTest {
         }
     }
 
-    @Test
-    public void patched_work_should_persist_changes() throws Exception {
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\n"
-                + "        \"@type\": \"deichman:Work\",\n"
-                + "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n"
-                + "    }\n"
-                + "}";
-        Response result = entityResource.create("work", work);
-        String workId = result.getLocation().getPath().substring("/work/".length());
-        String patchData = "{"
-                + "\"op\": \"add\","
-                + "\"s\": \"" + result.getLocation().toString() + "\","
-                + "\"p\": \"http://deichman.no/ontology#color\","
-                + "\"o\": {"
-                + "\"value\": \"red\""
-                + "}"
-                + "}";
-        Response patchResponse = entityResource.patch("work", workId,patchData);
-        Model testModel = ModelFactory.createDefaultModel();
-        Model comparison = ModelFactory.createDefaultModel();
-        String response = patchResponse.getEntity().toString();
-        InputStream in = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
-        RDFDataMgr.read(testModel, in, Lang.JSONLD);
-        String adaptedWork = work.replace("/work_SHOULD_BE_PATCHABLE", "/" + workId);
-        InputStream in2 = new ByteArrayInputStream(adaptedWork.getBytes(StandardCharsets.UTF_8));
-        RDFDataMgr.read(comparison,in2, Lang.JSONLD);
-        comparison.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(result.getLocation().toString()), 
-                ResourceFactory.createProperty("http://deichman.no/ontology#color"), 
-                ResourceFactory.createPlainLiteral("red")));
-        assertTrue(testModel.isIsomorphicWith(comparison));
-    }
-
     @Test(expected = NotFoundException.class)
-    public void patching_a_non_existing_resource_should_return_404() throws Exception {
+    public void patch_on_a_non_existing_resource_should_return_404() throws Exception {
         entityResource.patch("work", "a_missing_work1234", "{}");
     }
 
     @Test(expected=NotFoundException.class)
-    public void test_delete_work_raises_not_found_exception(){
+    public void delete__non_existing_work_should_raise_not_found_exception(){
         entityResource.delete("work", "work_DOES_NOT_EXIST_AND_FAILS");
     }
 
     @Test
-    public void test_delete_work() throws URISyntaxException{
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/work/work_SHOULD_BE_PATCHABLE\",\n"
-                + "        \"@type\": \"deichman:Work\",\n"
-                + "        \"dcterms:identifier\": \"work_SHOULD_BE_PATCHABLE\"\n"
-                + "    }\n"
-                + "}";
+    public void delete_existing_work_should_return_no_content() throws URISyntaxException{
+        String work = createTestWork(SOME_WORK_IDENTIFIER);
         Response createResponse = entityResource.create("work", work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response response = entityResource.delete("work", workId);
@@ -308,7 +207,8 @@ public class EntityResourceTest {
                 + "\"dcterms:identifier\":\"" + id + "\"}}";
     }
 
-    @Test    public void should_return_201_when_publication_created() throws Exception{
+    @Test
+    public void create_should_return_201_when_publication_created() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         Response result = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
         assertNull(result.getEntity());
@@ -316,7 +216,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void should_return_the_new_publication() throws Exception{
+    public void location_returned_from_create_should_return_the_new_publication() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         Response createResponse = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
 
@@ -332,7 +232,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void test_delete_publication() throws Exception{
+    public void delete_publication_should_return_no_content() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         Response createResponse = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
@@ -340,17 +240,8 @@ public class EntityResourceTest {
         assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
     }
 
-    @Test(expected = BadRequestException.class)
-    public void patch_should_return_status_400_2() throws Exception {
-        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        Response result = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
-        String publicationId = result.getLocation().getPath().substring("/publication/".length());
-        String patchData = "{}";
-        entityResource.patch("publication", publicationId, patchData);
-    }
-
     @Test
-    public void patched_publication_should_persist_changes() throws Exception {
+    public void patch_should_actually_persist_changes() throws Exception {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String publication = createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE");
         Response result = entityResource.create("publication", publication);
@@ -373,11 +264,6 @@ public class EntityResourceTest {
                 ResourceFactory.createProperty("http://deichman.no/ontology#color"),
                 ResourceFactory.createPlainLiteral("red"));
         assertTrue(testModel.contains(s));
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void patching_a_non_existing_resource_should_return_404_2() throws Exception {
-        entityResource.patch("publication", "a_missing_publication1234", "{}");
     }
 
     private boolean isValidJSON(final String json) {

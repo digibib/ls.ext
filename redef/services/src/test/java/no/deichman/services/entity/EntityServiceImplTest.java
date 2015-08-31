@@ -86,22 +86,10 @@ public class EntityServiceImplTest {
         assertTrue(test.contains(testStatement));
     }
 
-    @Test
-    public void test_repository_can_be_set_got(){
-        String testId = "work_TEST_REPOSITORY";
-        String workData = getTestJSON(testId, "work");
-        String workId = service.create(EntityType.WORK, workData);
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource(workId),
-                ResourceFactory.createProperty(DCTerms.identifier.getURI()),
-                ResourceFactory.createPlainLiteral(testId));
-        assertTrue(repository.askIfStatementExists(s));
-    }
-
-    private Model modelForBiblio() { // TODO return much simpler model
+    static Model modelForBiblio() { // TODO return much simpler model
         Model model = ModelFactory.createDefaultModel();
         Model m = ModelFactory.createDefaultModel();
-        InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
+        InputStream in = EntityServiceImplTest.class.getClassLoader().getResourceAsStream("marc.xml");
         MarcReader reader = new MarcXmlReader(in);
         Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
         while (reader.hasNext()) {
@@ -114,7 +102,7 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_retrieve_work_items_by_id(){
-        when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
+        when(mockKohaAdapter.getBiblio("626460")).thenReturn(EntityServiceImplTest.modelForBiblio());
         EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
         Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
@@ -133,7 +121,7 @@ public class EntityServiceImplTest {
     @Test
     public void test_create_work(){
         String testId = "SERVICE_WORK_SHOULD_EXIST";
-        String work = getTestJSON(testId,"work");
+        String work = getTestJSON(testId, "work");
         Statement s = ResourceFactory.createStatement(
                 ResourceFactory.createResource(service.create(EntityType.WORK, work)),
                 ResourceFactory.createProperty(DCTerms.identifier.getURI()),
@@ -142,39 +130,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_publication() throws Exception{
-        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        String testId = "publication_SERVICE_CREATE_PUBLICATION";
-        String publication = getTestJSON(testId, "publication");
-        String publicationId = service.create(EntityType.PUBLICATION, publication);
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource(publicationId),
-                ResourceFactory.createProperty(DCTerms.identifier.getURI()),
-                ResourceFactory.createPlainLiteral(testId));
-        assertTrue(repository.askIfStatementExists(s));
-    }
-
-    @Test
-    public void test_delete_work(){
-        String testId = "work_SHOULD_BE_DELETED";
-        String work = getTestJSON(testId,"work");
-        String workId = service.create(EntityType.WORK, work);
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource(workId),
-                ResourceFactory.createProperty(DCTerms.identifier.getURI()),
-                ResourceFactory.createPlainLiteral(testId));
-        assertTrue(repository.askIfStatementExists(s));
-        Model test = ModelFactory.createDefaultModel();
-        InputStream in = new ByteArrayInputStream(
-                work.replace(workURI + testId, workId)
-                .getBytes(StandardCharsets.UTF_8));
-        RDFDataMgr.read(test,in, Lang.JSONLD);
-        service.delete(test);
-        assertFalse(repository.askIfStatementExists(s));
-    }
-
-    @Test
-    public void test_delete_publication() throws Exception{
+    public void test_create_and_delete_entity() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
@@ -184,6 +140,7 @@ public class EntityServiceImplTest {
                 ResourceFactory.createProperty(DCTerms.identifier.getURI()),
                 ResourceFactory.createPlainLiteral(testId));
         assertTrue(repository.askIfStatementExists(s));
+
         Model test = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(
                 publication.replace(publicationURI + testId, publicationId)
