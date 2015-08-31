@@ -39,6 +39,7 @@ public class AppTest {
     private static final String LOCALHOST = "http://127.0.0.1";
     public static final String FIRST_BIBLIO_ID = "111111";
     public static final String SECOND_BIBLIO_ID = "222222";
+    private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private String baseUri;
     private App app;
 
@@ -80,7 +81,7 @@ public class AppTest {
         assertIsUri(workUri);
         assertThat(workUri, startsWith(baseUri));
 
-        final JsonArray workIntoPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#publicationOf", workUri));
+        final JsonArray workIntoPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
 
         final HttpResponse<String> patchWorkIntoPublicationResponse = buildPatchRequest(publicationUri, workIntoPublicationPatch).asString();
         assertResponse(Status.OK, patchWorkIntoPublicationResponse);
@@ -91,7 +92,7 @@ public class AppTest {
         assertResponse(Status.CREATED, createSecondPublicationResponse);
         final String secondPublicationUri = getLocation(createSecondPublicationResponse);
 
-        final JsonArray workIntoSecondPublicationPatch = buildLDPatch(buildPatchStatement("add", secondPublicationUri, baseUri + "ontology#publicationOf", workUri));
+        final JsonArray workIntoSecondPublicationPatch = buildLDPatch(buildPatchStatement("add", secondPublicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
         final HttpResponse<String> patchWorkIntoSecondPublicationResponse = buildPatchRequest(secondPublicationUri, workIntoSecondPublicationPatch).asString();
         assertResponse(Status.OK, patchWorkIntoSecondPublicationResponse);
 
@@ -109,7 +110,7 @@ public class AppTest {
                                 + "SELECT (COUNT (?publication) AS ?noOfPublications) { "
                                 + "<" + workUri + "> a deichman:Work ."
                                 + "?publication a deichman:Publication ."
-                                + "?publication deichman:publicationOf \"" + workUri + "\" ."
+                                + "?publication deichman:publicationOf <" + workUri + "> ."
                                 + "}"), workWith2PublicationsModel);
         assertThat("model does not have a work with two publications",
                 workWith2PublicationsCount.execSelect().next().getLiteral("noOfPublications").getInt(),
@@ -181,9 +182,9 @@ public class AppTest {
                 .header("Accept", "application/ld+json");
     }
 
-    private static JsonObjectBuilder buildPatchStatement(String op, String s, String p, String o) {
+    private static JsonObjectBuilder buildPatchStatement(String op, String s, String p, String o, String type) {
         return Json.createObjectBuilder()
-                .add("op", op).add("s", s).add("p", p).add("o", Json.createObjectBuilder().add("value", o));
+                .add("op", op).add("s", s).add("p", p).add("o", Json.createObjectBuilder().add("value", o).add("type", type));
     }
 
     private static JsonArray buildLDPatch(JsonObjectBuilder... patchStatements) {

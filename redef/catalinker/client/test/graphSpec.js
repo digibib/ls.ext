@@ -6,7 +6,9 @@ var work_response_with_publications = JSON.stringify({
     "deichman:language" : {
       "@id": "http://lexvo.org/id/iso639-3/ger"
     },
-    "deichman:publicationOf" : "http://192.168.50.12:8005/work/w733425565188",
+    "deichman:publicationOf" : {
+      "@id": "http://192.168.50.12:8005/work/w733425565188"
+    },
     "deichman:name" : [{
       "@language" : "en",
       "@value" : "elevatormusic"
@@ -18,7 +20,9 @@ var work_response_with_publications = JSON.stringify({
     "deichman:language" : {
       "@id": "http://lexvo.org/id/iso639-3/eng"
     },
-    "deichman:publicationOf" : "http://192.168.50.12:8005/work/w733425565188",
+    "deichman:publicationOf" : {
+      "@id": "http://192.168.50.12:8005/work/w733425565188"
+    },
     "deichman:name" : [{
       "@language" : "sv",
       "@value" : "heismusik"

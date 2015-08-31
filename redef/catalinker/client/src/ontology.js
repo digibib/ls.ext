@@ -69,7 +69,7 @@
 
   // createPatch creates a patch request for a given subject, predicate and value (el)
   // as it is represented in the client UI.
-  function createPatch(subject, predicate, el) {
+  function createPatch(subject, predicate, el, datatype) {
     var addPatch,
         delPatch;
 
@@ -78,10 +78,7 @@
       if (el.current.lang !== "") {
         addPatch.o.lang = el.current.lang;
       }
-
-      if (el.current.datatype !== "") {
-        addPatch.o.datatype = el.current.datatype;
-      }
+      addPatch.o.type = datatype;
     }
 
     if (el.old.value !== "") {
@@ -90,9 +87,7 @@
         delPatch.o.lang = el.old.lang;
       }
 
-      if (el.old.datatype !== "") {
-        delPatch.o.datatype = el.old.datatype;
-      }
+      delPatch.o.type = datatype;
     }
 
     if (delPatch && addPatch) {
@@ -125,11 +120,15 @@
           for (var v in resource[prop]) {
             var val = resource[prop][v];
             if (typeof val === "string") {
-              values[predicate].push({ old: { value: val, type: "", lang: "" },
-                                       current: { value: val, type: "", lang: "" } });
+              values[predicate].push({ old: { value: val, lang: "" },
+                                       current: { value: val, lang: "" } });
             } else if (typeof val === "object") {
-              values[predicate].push({ old: { value: val["@value"], type: "", lang: val["@language"] },
-                                       current: { value: val["@value"], type: "", lang: val["@language"] } });
+              var temp = val["@value"];
+              if (val["@id"]) {
+                temp = val["@id"];
+              }
+              values[predicate].push({ old: { value: temp, lang: val["@language"] },
+                                       current: { value: temp, lang: val["@language"] } });
             }
           }
       }

@@ -49,8 +49,8 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
     // addValue adds another input field for the predicate.
     addValue: function (event) {
       ractive.get(event.keypath).values.push({
-        old: { value: "", type: "", lang: "" },
-        current: { value: "", type: "", lang: "" }
+        old: { value: "", lang: "" },
+        current: { value: "", lang: "" }
       });
     },
     // patchResource creates a patch request based on previous and current value of
@@ -59,7 +59,8 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
       if (event.context.error || (event.context.current.value === "" && event.context.old.value === "")) {
         return;
       }
-      var patch = ontology.createPatch(ractive.get("resource_uri"), predicate, event.context);
+      var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
+      var patch = ontology.createPatch(ractive.get("resource_uri"), predicate, event.context, ractive.get(datatype));
       http.patch(ractive.get("resource_uri"),
         {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
         patch,
@@ -70,7 +71,6 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
           var cur = ractive.get(event.keypath + ".current");
           ractive.set(event.keypath + ".old.value", cur.value);
           ractive.set(event.keypath + ".old.lang", cur.lang);
-          ractive.set(event.keypath + ".old.datatype", cur.datatype);
 
           ractive.set("save_status", "alle endringer er lagret");
         },
@@ -185,18 +185,21 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
           onAuthorizedValuesFailure
         );
       }
+      var datatype = props[i]["rdfs:range"]["@id"];
       var input = {
         disabled: disabled,
         predicate: ontology.resolveURI(ont, props[i]["@id"]),
         authorized: props[i]["deichman:valuesFrom"] ? true : false,
-        range: props[i]["rdfs:range"]["@id"],
+        range: datatype,
+        datatype: datatype,
         label: props[i]["rdfs:label"][0]["@value"],
-        values: [{old: { value: "", type: "", lang: "" },
-                  current: { value: "", type: "", lang: "" }}]
+        values: [{old: { value: "", lang: "" },
+                  current: { value: "", lang: "" }}]
       };
 
       if (input.authorized) {
         input.type = "input-authorized";
+        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
       } else {
         switch (input.range) {
           case "http://www.w3.org/2001/XMLSchema#string":
@@ -212,6 +215,9 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
             input.type = "input-nonNegativeInteger";
             break;
           case "deichman:Work":
+            // TODO infer from ontology that this is an URI
+            // (because deichman:Work a rdfs:Class)
+            input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
             input.type = "input-string"; // temporarily
             break;
           default:

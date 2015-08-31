@@ -104,38 +104,39 @@ define(['ontology'], function (ontology) {
   describe("Updating a resource", function () {
     it("can build patch requests adding properties", function () {
       var val = {
-        old: { value: "", datatype: "", lang: "" },
-        current: { value: "a", datatype: "", lang: "no" }
+        old: { value: "", lang: "" },
+        current: { value: "a", lang: "no" }
       };
-      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
-        '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}');
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val, "http://www.w3.org/2000/01/rdf-schema#langString"),
+        '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no","type":"http://www.w3.org/2000/01/rdf-schema#langString"}}');
     });
 
     it("can build patch requests updating removing and adding properties", function () {
       var val = {
-        old: { value: "b", datatype: "", lang: "" },
-        current: { value: "a", datatype: "", lang: "no" }
+        old: { value: "b", lang: "" },
+        current: { value: "a", lang: "no" }
       };
-      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
-        '[{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b"}},{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no"}}]');
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val, "http://www.w3.org/2000/01/rdf-schema#langString"),
+        '[{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","type":"http://www.w3.org/2000/01/rdf-schema#langString"}},' +
+        '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","lang":"no","type":"http://www.w3.org/2000/01/rdf-schema#langString"}}]');
     });
 
     it("ignores empty values", function () {
       var val = {
-        old: { value: "b", datatype: "", lang: "en" },
-        current: { value: "", datatype: "", lang: "" }
+        old: { value: "b", lang: "en" },
+        current: { value: "", lang: "" }
       };
-      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
-        '{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en"}}');
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val, "http://www.w3.org/2000/01/rdf-schema#langString"),
+        '{"op":"del","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"b","lang":"en","type":"http://www.w3.org/2000/01/rdf-schema#langString"}}');
     });
 
     it("builds patch with datatype", function () {
       var val = {
-        old: { value: "", datatype: "", lang: "" },
-        current: { value: "a", datatype: "http://a/mytype", lang: "" }
+        old: { value: "", lang: "" },
+        current: { value: "a", lang: "" }
       };
-      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val),
-        '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","datatype":"http://a/mytype"}}');
+      assert.equal(ontology.createPatch("http://x.org/s/1", "http://x.org/p1", val, "http://a/mytype"),
+        '{"op":"add","s":"http://x.org/s/1","p":"http://x.org/p1","o":{"value":"a","type":"http://a/mytype"}}');
     });
   });
 
@@ -192,7 +193,7 @@ define(['ontology'], function (ontology) {
         JSON.stringify(ontology.extractValues({
           "@id": "http://192.168.50.12:8005/work/w392735109936",
           "@type": "deichman:Work",
-          "deichman:creator": "petter",
+          "deichman:creator": {"@id": "http://example.org/petter"},
           "deichman:name": [{ "@language": "en", "@value": "the title" }, { "@language": "no", "@value": "tittelen" }],
           "deichman:year": "1981",
           "@context": {
@@ -200,16 +201,16 @@ define(['ontology'], function (ontology) {
             "rdfs": "http://www.w3.org/2000/01/rdf-schema#" } })),
         JSON.stringify({
           "http://192.168.50.12:8005/ontology#creator":
-            [{ old: { value: "petter", type: "", lang: "" },
-              current: { value: "petter", type: "", lang: "" } }],
+            [{ old: { value: "http://example.org/petter" },
+              current: { value: "http://example.org/petter" } }],
           "http://192.168.50.12:8005/ontology#name":
-            [{ old: { value: "the title", type: "", lang: "en" },
-              current: { value: "the title", type: "", lang: "en" } },
-             { old: { value: "tittelen", type: "", lang: "no" },
-                     current: { value: "tittelen", type: "", lang: "no" } }],
+            [{ old: { value: "the title", lang: "en" },
+              current: { value: "the title", lang: "en" } },
+             { old: { value: "tittelen", lang: "no" },
+                     current: { value: "tittelen", lang: "no" } }],
           "http://192.168.50.12:8005/ontology#year":
-            [{ old: { value: "1981", type: "", lang: "" },
-              current: { value: "1981", type: "", lang: "" } }]
+            [{ old: { value: "1981", lang: "" },
+              current: { value: "1981", lang: "" } }]
         }));
     });
 

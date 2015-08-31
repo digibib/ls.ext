@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
 
 public class SPARQLQueryBuilderTest {
 
@@ -53,7 +54,7 @@ public class SPARQLQueryBuilderTest {
                 +"DESCRIBE ?publication <http://example.com/a>\n"
                 +"WHERE\n"
                 +"  { <http://example.com/a> ?p ?o .\n"
-                +"    ?publication deichman:publicationOf \"http://example.com/a\" .\n"
+                +"    ?publication deichman:publicationOf <http://example.com/a> .\n"
                 +"    ?publication ?po ?ps\n"
                 +"  }";
         assertEquals(expected,query.toString().trim());

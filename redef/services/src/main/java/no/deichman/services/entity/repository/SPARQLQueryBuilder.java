@@ -39,7 +39,7 @@ public final class SPARQLQueryBuilder {
                             +"DESCRIBE <" + id + "> ?publication\n"
                             +"WHERE {\n"
                             +"<" + id + "> ?p ?o .\n"
-                            +"?publication deichman:publicationOf \"" + id + "\" .\n"
+                            +"?publication deichman:publicationOf <" + id + "> .\n"
                             +"?publication ?po ?ps ."
                             +"}";
         return QueryFactory.create(queryString);

@@ -85,12 +85,18 @@
       props.forEach(function (p) {
         if (typeof p === "string") {
           res.push({val: p, lang: "", dt: ""});
+        } else if (p["@id"]) {
+          res.push({val: p["@id"]});
         } else {
           res.push({val: p["@value"], lang: p["@language"], dt: p["@type"]});
         }
       });
     } else if (typeof props === "object") {
-      res.push({val: props["@value"], lang: props["@language"], dt: props["@type"]});
+      if (props["@id"]) {
+        res.push({val: props["@id"]});
+      } else {
+        res.push({val: props["@value"], lang: props["@language"], dt: props["@type"]});
+      }
     } else {
       res.push({val: props, lang: "", dt: ""});
     }
@@ -118,7 +124,7 @@
 
   function attachPublicationsAndItems(work, workdata, itemsdata) {
     workdata["@graph"].forEach(function (workresource) {
-      if (workresource["deichman:publicationOf"] === work.uri) {
+      if (workresource["deichman:publicationOf"] && workresource["deichman:publicationOf"]["@id"] === work.uri) {
         var p = new Publication(workresource["@id"]);
         p.properties = extractProps(workresource);
         if (itemsdata["@graph"]) {

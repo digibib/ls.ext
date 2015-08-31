@@ -36,7 +36,9 @@ describe('PatronClient', function () {
                   "@type" : "deichman:Publication",
                   "deichman:format" : "bok",
                   "deichman:language" : "engelsk",
-                  "deichman:publicationOf" : "http://deichman.no/work/work_1231",
+                  "deichman:publicationOf" : {
+                    "@id": "http://deichman.no/work/work_1231"
+                  },
                   "deichman:name" : [{
                     "@language" : "sv",
                     "@value" : "Hungrig"

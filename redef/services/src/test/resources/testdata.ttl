@@ -111,4 +111,4 @@
 
 <http://deichman.no/publication/publication_TEST_KOHA_ITEMS_LINK> a deichman:Publication ;
   deichman:recordID "626460" ;
-  deichman:publicationOf "http://deichman.no/work/work_TEST_KOHA_ITEMS_LINK" .
+  deichman:publicationOf <http://deichman.no/work/work_TEST_KOHA_ITEMS_LINK> .

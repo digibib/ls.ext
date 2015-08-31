@@ -39,7 +39,9 @@ class ServicesAPIClient < Service
       patches << {:op => "add",
                   :s => stmt.subject,
                   :p => stmt.predicate,
-                  :o => {:value => stmt.object } }
+                  :o => { :value => stmt.object.uri? ?  stmt.object.value : stmt.object,
+                          :type => stmt.object.uri? ? "http://www.w3.org/2001/XMLSchema#anyURI" : stmt.object.datatype}
+      }
     }
     uri = URI(resource)
     req = Net::HTTP::Patch.new(uri.path)

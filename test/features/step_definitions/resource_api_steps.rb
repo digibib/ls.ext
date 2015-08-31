@@ -64,7 +64,7 @@ When(/^kopler utgivelsen til verket$/) do
   statements[0] = RDF::Statement.new(
             RDF::URI.new(@context[:publication].uri),
             RDF::URI.new(property),
-            RDF::Literal.new(@context[:work].uri)
+            RDF::URI.new(@context[:work].uri)
           )
 
   ServicesAPIClient.new().patch_resource(@context[:publication].uri,statements)
