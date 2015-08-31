@@ -18,7 +18,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import no.deichman.services.entity.patch.PatchParserException;
-import no.deichman.services.restutils.MimeType;
 import no.deichman.services.restutils.PATCH;
 import no.deichman.services.uridefaults.BaseURI;
 
@@ -30,7 +29,7 @@ import static no.deichman.services.restutils.MimeType.UTF_8;
  * Responsibility: Expose Work as a r/w REST resource.
  */
 @Singleton
-@Path("/{type: (work|publication)}")
+@Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
 
     @Context private ServletConfig servletConfig;
@@ -52,7 +51,7 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("/{id: [a-zA-Z0-9_]+}")
-    @Produces(LD_JSON + MimeType.UTF_8)
+    @Produces(LD_JSON + UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
         if (model.isEmpty()) {

@@ -1,7 +1,9 @@
 package no.deichman.services.entity;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,13 +13,22 @@ public enum EntityType {
     WORK("work"),
     PUBLICATION("publication");
 
+    // must be handwritten because of stupid Java
+    public static final String ALL_TYPES_PATTERN = "(work|publication)";
+
     private final String path;
 
     private static final Map<String, EntityType> LOOKUP = new HashMap<>();
+
     static {
+        List<String> allPaths = new ArrayList<>();
         for(EntityType s : EnumSet.allOf(EntityType.class)) {
             LOOKUP.put(s.path, s);
+            allPaths.add(s.path);
+
         }
+        String wantedPattern = "(" + String.join("|", allPaths) + ")";
+        assert wantedPattern.equals(ALL_TYPES_PATTERN) : "Please update ALL_TYPES_PATTERN to '" + wantedPattern + "'";
     }
 
     EntityType(String path) {
