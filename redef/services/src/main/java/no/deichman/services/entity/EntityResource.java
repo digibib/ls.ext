@@ -26,7 +26,7 @@ import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.UTF_8;
 
 /**
- * Responsibility: Expose Work as a r/w REST resource.
+ * Responsibility: Expose entitites as r/w REST resources.
  */
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
@@ -77,7 +77,7 @@ public final class EntityResource extends ResourceBase {
     @Produces(LD_JSON + UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
         EntityType entityType = EntityType.get(type);
-        String resourceUri = null;
+        String resourceUri;
         switch (entityType) {
             case WORK: resourceUri = getBaseURI().work() + id; break;
             case PUBLICATION: resourceUri = getBaseURI().publication() + id; break;
