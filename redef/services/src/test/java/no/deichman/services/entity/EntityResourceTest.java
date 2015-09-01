@@ -34,6 +34,7 @@ import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -290,7 +291,8 @@ public class EntityResourceTest {
         assertNotNull(createResponse);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(result.getEntity().toString().contains("\"http://lexvo.org/ontology#Language\""));
+        assertTrue(result.getEntity().toString().contains("\"no\""));
+        assertFalse(result.getEntity().toString().contains("\"fr\""));
         assertValidJSON(result.getEntity().toString());
 
     }

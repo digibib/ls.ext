@@ -18,15 +18,9 @@ import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
-import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,27 +33,22 @@ public final class EntityServiceImpl implements EntityService {
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
     private final Property recordID;
+    private static final String LANGUAGE_TTL_FILE = "language.ttl";
 
     private Model getLinkedLexvoResource(Model input) {
-
-        HttpClient client = HttpClientBuilder.create()
-                .setRedirectStrategy(new LaxRedirectStrategy()).build();
 
         NodeIterator objects = input.listObjects();
         if (objects.hasNext()) {
             Set<RDFNode> objectResources = objects.toSet();
+            Model tempModel = ModelFactory.createDefaultModel();
             objectResources.stream()
                     .filter(node -> node.toString()
                             .contains("http://lexvo.org/id/iso639-3/")).collect(Collectors.toList())
                     .forEach(lv -> {
-                        HttpGet get = new HttpGet(lv.toString());
-                        get.addHeader("Accept", "application/rdf+xml");
-                        try {
-                            HttpResponse response = client.execute(get);
-                            RDFDataMgr.read(input, response.getEntity().getContent(), Lang.RDFXML);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            RDFDataMgr.read(tempModel, EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE);
+                            Query query = QueryFactory.create("DESCRIBE <" + lv.toString() + ">");
+                            QueryExecution qexec = QueryExecutionFactory.create(query, tempModel);
+                            input.add(qexec.execDescribe());
                     });
         }
 
