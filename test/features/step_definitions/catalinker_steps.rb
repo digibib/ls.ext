@@ -33,21 +33,14 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
     step "får utgivelsen tildelt en post-ID i Koha" # needed to store :record_id in context
     2.times do
       # create new item
-      @browser.goto intranet(:biblio_detail)+@context[:record_id]
-      @browser.button(:text => "New").click
-      @browser.link(:id => "newitem").click
-      @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
-      @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
-      @browser.button(:text => "Add item").click
+      page = @site.BiblioDetail.visit(@context[:record_id])
+      page.add_item_with_random_barcode_and_itemtype(@context[:itemtypes][0].desc)
     end
-    record_id = @context[:record_id]
+    record_id = @context[:record_id] # need to store it in a variable so the cleanup can close over it
     @cleanup.push( "delete items of bibilo ##{record_id}" =>
         lambda do
-          @browser.goto intranet(:biblio_detail)+record_id
-          # delete all book items
-          @browser.execute_script("window.confirm = function(msg){return true;}")
-          @browser.button(:text => "Edit").click
-          @browser.a(:id => "deleteallitems").click
+          page = @site.BiblioDetail.visit(record_id)
+          page.delete_all_items
           # TODO: deletion of biblio will be handled by services?
         end
       )

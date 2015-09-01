@@ -28,4 +28,18 @@ class BiblioDetail < IntraPage
     @browser.td(:text => barcode).parent.cell(:index => 5).text
   end
 
+  def add_item_with_random_barcode_and_itemtype(itemtype)
+    @browser.button(:text => "New").click
+    @browser.link(:id => "newitem").click
+    @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(itemtype)
+    @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
+    @browser.button(:text => "Add item").click
+  end
+
+  def delete_all_items
+    @browser.execute_script("window.confirm = function(msg){return true;}")
+    @browser.button(:text => "Edit").click
+    @browser.a(:id => "deleteallitems").click
+  end
+
 end
