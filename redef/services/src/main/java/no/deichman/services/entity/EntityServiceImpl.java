@@ -21,7 +21,6 @@ import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
-import java.io.InputStream;
 import java.util.Set;
 import java.util.stream.Collectors;
 
