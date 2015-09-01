@@ -34,7 +34,6 @@ public final class EntityServiceImpl implements EntityService {
     private final BaseURI baseURI;
     private final Property recordID;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
-    public static final InputStream LANGUAGE_RESOURCE_AS_STREAM = EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE);
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -54,7 +53,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private Model extractNamedResourceFromModel(String resource) {
         Model tempModel = ModelFactory.createDefaultModel();
-        RDFDataMgr.read(tempModel, LANGUAGE_RESOURCE_AS_STREAM, Lang.TURTLE);
+        RDFDataMgr.read(tempModel, EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE);
         QueryExecution qexec = QueryExecutionFactory.create(
                 QueryFactory.create("DESCRIBE <" + resource + ">"),
                 tempModel);
