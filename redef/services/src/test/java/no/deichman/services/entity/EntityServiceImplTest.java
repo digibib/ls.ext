@@ -12,6 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+
+import com.hp.hpl.jena.vocabulary.RDFS;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
 import no.deichman.services.entity.patch.PatchParserException;
@@ -28,6 +30,7 @@ import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.hp.hpl.jena.rdf.model.ResourceFactory.*;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -61,7 +64,7 @@ public class EntityServiceImplTest {
     @Test
     public void test_retrieve_work_by_id(){
         String testId = "work_SHOULD_EXIST";
-        String workData = getTestJSON(testId,"work");
+        String workData = getTestJSON(testId, "work");
         String workId = service.create(EntityType.WORK, workData);
         Model comparison = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(
@@ -76,16 +79,43 @@ public class EntityServiceImplTest {
     public void test_retrieve_publication_by_id() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_EXIST";
-        String publicationData = getTestJSON(testId,"publication");
+        String publicationData = getTestJSON(testId, "publication");
         String publicationId = service.create(EntityType.PUBLICATION, publicationData);
         Model test = service.retrieveById(EntityType.PUBLICATION, publicationId.replace(publicationURI, ""));
-        Statement testStatement = ResourceFactory.createStatement(
-                ResourceFactory.createResource(publicationId),
-                ResourceFactory.createProperty(RDF.type.getURI()),
-                ResourceFactory.createResource(ontologyURI + "Publication"));
+        Statement testStatement = createStatement(
+                createResource(publicationId),
+                createProperty(RDF.type.getURI()),
+                createResource(ontologyURI + "Publication"));
         assertTrue(test.contains(testStatement));
     }
 
+    @Test
+    public void test_retrieve_work_by_id_with_language() {
+        String testId = "test_retrieve_work_by_id_with_language";
+        String workData = "{\n"
+                + "    \"@context\": {\n"
+                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/publication/" + testId + "\",\n"
+                + "        \"@type\": \"deichman:Work\"\n,"
+                + "        \"deichman:language\": \"http://lexvo.org/id/iso639-3/eng\"\n"
+                + "    }\n"
+                + "}";
+        String workId = service.create(EntityType.WORK, workData);
+        Model test = service.retrieveById(EntityType.WORK, workId.replace(workURI, ""));
+        assertTrue(
+                test.contains(
+                        createStatement(
+                                createResource("http://lexvo.org/id/iso639-3/eng"),
+                                createProperty(RDFS.label.getURI()),
+                                createLangLiteral("Engelsk", "no")
+                        )
+                )
+        );
+    }
+    
     static Model modelForBiblio() { // TODO return much simpler model
         Model model = ModelFactory.createDefaultModel();
         Model m = ModelFactory.createDefaultModel();
@@ -106,7 +136,7 @@ public class EntityServiceImplTest {
         EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
         Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
-        Property p = ResourceFactory.createProperty(ontologyURI + "hasEdition");
+        Property p = createProperty(ontologyURI + "hasEdition");
         NodeIterator ni = m.listObjectsOfProperty(p);
 
         int i = 0;
@@ -122,10 +152,10 @@ public class EntityServiceImplTest {
     public void test_create_work(){
         String testId = "SERVICE_WORK_SHOULD_EXIST";
         String work = getTestJSON(testId, "work");
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource(service.create(EntityType.WORK, work)),
-                ResourceFactory.createProperty(DCTerms.identifier.getURI()),
-                ResourceFactory.createPlainLiteral(testId));
+        Statement s = createStatement(
+                createResource(service.create(EntityType.WORK, work)),
+                createProperty(DCTerms.identifier.getURI()),
+                createPlainLiteral(testId));
         assertTrue(repository.askIfStatementExists(s));
     }
 
@@ -135,10 +165,10 @@ public class EntityServiceImplTest {
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
         String publicationId = service.create(EntityType.PUBLICATION, publication);
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource(publicationId),
-                ResourceFactory.createProperty(DCTerms.identifier.getURI()),
-                ResourceFactory.createPlainLiteral(testId));
+        Statement s = createStatement(
+                createResource(publicationId),
+                createProperty(DCTerms.identifier.getURI()),
+                createPlainLiteral(testId));
         assertTrue(repository.askIfStatementExists(s));
 
         Model test = ModelFactory.createDefaultModel();
@@ -167,8 +197,8 @@ public class EntityServiceImplTest {
         String patchData = getTestPatch("add", workId);
         Model patchedModel = service.patch(EntityType.WORK, nonUriWorkId, patchData);
         assertTrue(patchedModel.contains(
-                ResourceFactory.createResource(workId),
-                ResourceFactory.createProperty(ontologyURI + "color"),
+                createResource(workId),
+                createProperty(ontologyURI + "color"),
                 "red"));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         RDFDataMgr.write(baos,patchedModel.difference(oldModel),Lang.NT);
@@ -186,8 +216,8 @@ public class EntityServiceImplTest {
         String patchData = getTestPatch("add", publicationId);
         Model patchedModel = service.patch(EntityType.PUBLICATION, nonUriPublicationId, patchData);
         assertTrue(patchedModel.contains(
-                ResourceFactory.createResource(publicationId),
-                ResourceFactory.createProperty(ontologyURI + "color"),
+                createResource(publicationId),
+                createProperty(ontologyURI + "color"),
                 "red"));
     }
 
