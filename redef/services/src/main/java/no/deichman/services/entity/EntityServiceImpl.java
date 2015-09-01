@@ -21,6 +21,7 @@ import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
+import java.io.InputStream;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,25 +35,31 @@ public final class EntityServiceImpl implements EntityService {
     private final BaseURI baseURI;
     private final Property recordID;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
+    public static final InputStream LANGUAGE_RESOURCE_AS_STREAM = EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE);
 
     private Model getLinkedLexvoResource(Model input) {
 
         NodeIterator objects = input.listObjects();
         if (objects.hasNext()) {
             Set<RDFNode> objectResources = objects.toSet();
-            Model tempModel = ModelFactory.createDefaultModel();
             objectResources.stream()
                     .filter(node -> node.toString()
                             .contains("http://lexvo.org/id/iso639-3/")).collect(Collectors.toList())
                     .forEach(lv -> {
-                            RDFDataMgr.read(tempModel, EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE);
-                            Query query = QueryFactory.create("DESCRIBE <" + lv.toString() + ">");
-                            QueryExecution qexec = QueryExecutionFactory.create(query, tempModel);
-                            input.add(qexec.execDescribe());
+                        input.add(extractNamedResourceFromModel(lv.toString()));
                     });
         }
 
         return input;
+    }
+
+    private Model extractNamedResourceFromModel(String resource) {
+        Model tempModel = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(tempModel, LANGUAGE_RESOURCE_AS_STREAM, Lang.TURTLE);
+        QueryExecution qexec = QueryExecutionFactory.create(
+                QueryFactory.create("DESCRIBE <" + resource + ">"),
+                tempModel);
+        return qexec.execDescribe();
     }
 
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
