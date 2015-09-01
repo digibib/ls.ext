@@ -266,6 +266,35 @@ public class EntityResourceTest {
         assertTrue(testModel.contains(s));
     }
 
+    @Test
+    public void work_should_have_language_labels() throws URISyntaxException {
+        String work = "{\n"
+                + "    \"@context\": {\n"
+                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/publication/work_should_have_language_labels\",\n"
+                + "        \"@type\": \"deichman:Work\"\n,"
+                + "        \"deichman:language\": \"http://lexvo.org/id/iso639-3/eng\"\n"
+                + "    }\n"
+                + "}";
+        Response createResponse = entityResource.create("work", work);
+        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
+        Response result = entityResource.get("work", workId);
+
+        assertNull(createResponse.getEntity());
+        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
+
+        assertNotNull(workId);
+        assertNotNull(createResponse);
+        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
+        assertEquals(OK.getStatusCode(), result.getStatus());
+        assertTrue(result.getEntity().toString().contains("\"http://lexvo.org/ontology#Language\""));
+        assertValidJSON(result.getEntity().toString());
+
+    }
+
     private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {

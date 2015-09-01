@@ -8,6 +8,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -17,6 +18,17 @@ import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
+import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Responsibility: TODO.
@@ -27,6 +39,32 @@ public final class EntityServiceImpl implements EntityService {
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
     private final Property recordID;
+
+    private Model getLinkedLexvoResource(Model input) {
+
+        HttpClient client = HttpClientBuilder.create()
+                .setRedirectStrategy(new LaxRedirectStrategy()).build();
+
+        NodeIterator objects = input.listObjects();
+        if (objects.hasNext()) {
+            Set<RDFNode> objectResources = objects.toSet();
+            objectResources.stream()
+                    .filter(node -> node.toString()
+                            .contains("http://lexvo.org/id/iso639-3/")).collect(Collectors.toList())
+                    .forEach(lv -> {
+                        HttpGet get = new HttpGet(lv.toString());
+                        get.addHeader("Accept", "application/rdf+xml");
+                        try {
+                            HttpResponse response = client.execute(get);
+                            RDFDataMgr.read(input, response.getEntity().getContent(), Lang.RDFXML);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+        }
+
+        return input;
+    }
 
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
         this.baseURI = baseURI;
@@ -44,6 +82,7 @@ public final class EntityServiceImpl implements EntityService {
                 break;
             case WORK:
                 m.add(repository.retrieveWorkById(id));
+                m = getLinkedLexvoResource(m);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
