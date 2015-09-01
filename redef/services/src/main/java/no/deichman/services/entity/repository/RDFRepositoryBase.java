@@ -12,16 +12,19 @@ import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateRequest;
 import com.hp.hpl.jena.vocabulary.RDF;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * Responsibility: TODO.
@@ -30,6 +33,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final BaseURI baseURI;
     private final SPARQLQueryBuilder sqb;
     private final UniqueURIGenerator uriGenerator;
@@ -47,7 +51,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final Model retrieveWorkById(String id) {
         String uri = baseURI.work() + id;
-        System.out.println("Attempting to retrieve: " + uri);
+        log.debug("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedPublication(uri))) {
             return qexec.execDescribe();
         }
@@ -56,7 +60,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final Model retrievePublicationById(final String id) {
         String uri = baseURI.publication() + id;
-        System.out.println("Attempting to retrieve: " + uri);
+        log.debug("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
             return qexec.execDescribe();
         }

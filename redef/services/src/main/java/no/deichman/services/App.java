@@ -1,14 +1,16 @@
 package no.deichman.services;
 
+import no.deichman.services.entity.EntityResource;
+import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
-import no.deichman.services.entity.ResourceBase;
-import no.deichman.services.entity.EntityResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ServerProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.util.Arrays.asList;
 
@@ -16,7 +18,7 @@ import static java.util.Arrays.asList;
  * Responsibility: Start application (using embedded web server).
  */
 public final class App {
-
+    private static final Logger LOG = LoggerFactory.getLogger(App.class);
     private static final int SERVICES_PORT_NO = 8005;
     private Server jettyServer;
     private final int port;
@@ -73,7 +75,7 @@ public final class App {
                 )));
 
         jettyServer.start();
-        System.out.println("App started on port: " + port);
+        LOG.info("App started on port: " + port);
     }
 
     private void join() throws InterruptedException {
@@ -81,7 +83,7 @@ public final class App {
     }
 
     void stop() throws Exception {
-        System.out.println("Stopping App on port: " + port);
+        LOG.info("Stopping App on port: " + port);
         try {
             jettyServer.stop();
         } finally {
@@ -94,7 +96,7 @@ public final class App {
         try {
             app.startSync();
         } catch (Exception e) {
-            System.err.println("App failed to startSync:");
+            LOG.error("App failed to startSync:");
             e.printStackTrace(System.err);
         }
     }

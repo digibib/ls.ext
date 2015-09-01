@@ -2,9 +2,13 @@ package no.deichman.services.entity.kohaadapter;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import org.marc4j.MarcReader;
+import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.Record;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -17,10 +21,9 @@ import javax.ws.rs.core.Response;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
-import org.xml.sax.InputSource;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -35,13 +38,14 @@ public final class KohaAdapterImpl implements KohaAdapter {
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_PASSWORD", "secret");
     public static final String SESSION_COOKIE_KEY = "CGISESSID";
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final String kohaPort;
 
     private NewCookie sessionCookie;
 
     public KohaAdapterImpl(String kohaPort) {
         this.kohaPort = kohaPort != null ? kohaPort : System.getProperty("KOHA_PORT", DEFAULT_KOHA_PORT);
-        System.out.println("Koha adapter started with kohaPort: " + this.kohaPort);
+        log.info("Koha adapter started with kohaPort: " + this.kohaPort);
     }
 
     public KohaAdapterImpl() {
@@ -63,8 +67,9 @@ public final class KohaAdapterImpl implements KohaAdapter {
         sessionCookie = response.getCookies() == null ? null : response.getCookies().get(SESSION_COOKIE_KEY);
 
         if (response.getStatus() != OK.getStatusCode() || sessionCookie == null) {
-            System.out.println(response);
-            throw new IllegalStateException("Cannot authenticate with Koha: " + response + ", sessionCookie: " + sessionCookie);
+            String message = "Cannot authenticate with Koha: " + response + ", sessionCookie: " + sessionCookie;
+            log.error(message);
+            throw new IllegalStateException(message);
         }
     }
 
@@ -75,7 +80,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
             login();
         }
 
-        System.out.println("LOG: Attempting to retrieve " + id + " from Koha SVC");
+        log.info("Attempting to retrieve " + id + " from Koha SVC");
         Response response = requestItems(id);
         // TODO Hack if we have timed out
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
@@ -100,7 +105,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     private Model mapMarcToModel(String marc21Xml) {
         Model m = ModelFactory.createDefaultModel();
-        System.out.println("DEBUG: Received marc from koha\n" + marc21Xml);
+        log.debug("Received marc from koha\n" + marc21Xml);
         InputStream in = new ByteArrayInputStream(marc21Xml.getBytes(StandardCharsets.UTF_8));
         MarcReader reader = new MarcXmlReader(in);
         Marc2Rdf marcRdf = new Marc2Rdf();
@@ -150,10 +155,10 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
 
         if (biblioId == "") {
-            System.out.println("LOG: Koha failed to create a new bibliographic record");
+            log.error("Koha failed to create a new bibliographic record");
             throw new RuntimeException("Koha connection for new biblio failed, missing biblioId");
         } else {
-            System.out.println("LOG: Koha created a new bibliographic record with ID: " + biblioId);
+            log.info("LOG: Koha created a new bibliographic record with ID: " + biblioId);
         }
 
         return biblioId;

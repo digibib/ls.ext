@@ -9,12 +9,15 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateRequest;
 import no.deichman.services.uridefaults.BaseURI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Responsibility: Implement an in-memory RDF-repository.
  */
 public final class InMemoryRepository extends RDFRepositoryBase {
     private final Dataset model;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public InMemoryRepository() {
         this(BaseURI.local());
@@ -27,7 +30,7 @@ public final class InMemoryRepository extends RDFRepositoryBase {
     private InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         super(baseURI, sqb, uriGenerator);
         model = DatasetFactory.createMem();
-        System.out.println("In-memory repository started.");
+        log.info("In-memory repository started.");
     }
 
     public void addData(Model newData){
