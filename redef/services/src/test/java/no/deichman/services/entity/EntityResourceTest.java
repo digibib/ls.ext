@@ -284,17 +284,17 @@ public class EntityResourceTest {
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response result = entityResource.get("work", workId);
 
-        assertNull(createResponse.getEntity());
-        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
+        String labelsComparison = "{\n"
+                + "    \"@id\" : \"http://lexvo.org/id/iso639-3/eng\",\n"
+                + "    \"@type\" : \"http://lexvo.org/ontology#Language\",\n"
+                + "    \"rdfs:label\" : {\n"
+                + "      \"@language\" : \"no\",\n"
+                + "      \"@value\" : \"Engelsk\"\n"
+                + "    }\n"
+                + "  }";
 
-        assertNotNull(workId);
-        assertNotNull(createResponse);
-        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(result.getEntity().toString().contains("\"no\""));
-        assertFalse(result.getEntity().toString().contains("\"fr\""));
-        assertValidJSON(result.getEntity().toString());
-
+        assertTrue(result.getEntity().toString().contains(labelsComparison));
     }
 
     private boolean isValidJSON(final String json) {
