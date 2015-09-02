@@ -38,25 +38,29 @@ describe('PatronClient', function () {
                   "deichman:publicationOf" : {
                     "@id": "http://deichman.no/work/work_1231"
                   },
-                  "deichman:language" : { "@id": "http://lexvo.org/id/iso639-3/eng" },
+                  "deichman:language" : [{
+                    "@id" : "http://lexvo.org/id/iso639-3/eng"
+                  }, {
+                    "@id" : "http://lexvo.org/id/iso639-3/nob"
+                  }],
                   "deichman:name" : [{
                     "@language" : "sv",
                     "@value" : "Hungrig"
                   }]
-                },
-                {
-                  "@id": "http://lexvo.org/id/iso639-3/eng",
-                  "@type": "http://lexvo.org/ontology#Language",
-                  "rdfs:label": [
-                    {
-                      "@language": "no",
-                      "@value": "Engelsk"
-                    },
-                    {
-                      "@language": "en",
-                      "@value": "English"
-                    }
-                  ]
+                }, {
+                  "@id" : "http://lexvo.org/id/iso639-3/eng",
+                  "@type" : "http://lexvo.org/ontology#Language",
+                  "rdfs:label" : {
+                    "@language" : "no",
+                    "@value" : "Engelsk"
+                  }
+                }, {
+                  "@id" : "http://lexvo.org/id/iso639-3/nob",
+                  "@type" : "http://lexvo.org/ontology#Language",
+                  "rdfs:label" : {
+                    "@language" : "no",
+                    "@value" : "Norsk (bokmål)"
+                  }
                 }
               ]
             }
@@ -129,7 +133,7 @@ describe('PatronClient', function () {
         console.log("Got error: ", e);
       });
     });
-    it('should find language with correct label', function (done) {
+    it('should find languages of publication with correct labels', function (done) {
       http.get(parameters, function (res) {
         var body = '',
             $ = '';
@@ -138,7 +142,7 @@ describe('PatronClient', function () {
         });
         res.on('end', function () {
           $ = cheerio.load(body);
-          expect($('td[data-automation-id=publication_language]').text()).to.equal("Engelsk");
+          expect($('td[data-automation-id=publication_language]').text()).to.equal("Engelsk, Norsk (bokmål)");
           done();
         });
       }).on('error', function (e) {
