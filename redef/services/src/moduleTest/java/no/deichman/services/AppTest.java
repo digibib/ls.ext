@@ -13,11 +13,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.body.RequestBodyEntity;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-import javax.ws.rs.core.Response.Status;
 import no.deichman.services.entity.kohaadapter.KohaSvcMock;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
@@ -26,6 +21,12 @@ import org.apache.jena.riot.Lang;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -37,8 +38,8 @@ public class AppTest {
 
     private static final boolean USE_IN_MEMORY_REPO = true;
     private static final String LOCALHOST = "http://127.0.0.1";
-    public static final String FIRST_BIBLIO_ID = "111111";
-    public static final String SECOND_BIBLIO_ID = "222222";
+    private static final String FIRST_BIBLIO_ID = "111111";
+    private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private String baseUri;
     private App app;
@@ -117,7 +118,6 @@ public class AppTest {
                 equalTo(2));
 
         // Two publications with a total of three items
-        kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 2);
         kohaSvcMock.addGetBiblioExpectation(SECOND_BIBLIO_ID, 1);
 
