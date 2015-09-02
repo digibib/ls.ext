@@ -35,14 +35,28 @@ describe('PatronClient', function () {
                   "@id" : "http://deichman.no/publication/publication_1234",
                   "@type" : "deichman:Publication",
                   "deichman:format" : "bok",
-                  "deichman:language" : "engelsk",
                   "deichman:publicationOf" : {
                     "@id": "http://deichman.no/work/work_1231"
                   },
+                  "deichman:language" : { "@id": "http://lexvo.org/id/iso639-3/eng" },
                   "deichman:name" : [{
                     "@language" : "sv",
                     "@value" : "Hungrig"
                   }]
+                },
+                {
+                  "@id": "http://lexvo.org/id/iso639-3/eng",
+                  "@type": "http://lexvo.org/ontology#Language",
+                  "rdfs:label": [
+                    {
+                      "@language": "no",
+                      "@value": "Engelsk"
+                    },
+                    {
+                      "@language": "en",
+                      "@value": "English"
+                    }
+                  ]
                 }
               ]
             }
@@ -81,7 +95,7 @@ describe('PatronClient', function () {
                 });
     });
 
-    it('should find title, author and date of work"', function (done) {
+    it('should find title, author, original language and date of work"', function (done) {
       http.get(parameters, function (res) {
         var body = '',
             $ = '';
@@ -115,5 +129,22 @@ describe('PatronClient', function () {
         console.log("Got error: ", e);
       });
     });
+    it('should find language with correct label', function (done) {
+      http.get(parameters, function (res) {
+        var body = '',
+            $ = '';
+        res.on('data', function (chunk) {
+          body += chunk;
+        });
+        res.on('end', function () {
+          $ = cheerio.load(body);
+          expect($('td[data-automation-id=publication_language]').text()).to.equal("Engelsk");
+          done();
+        });
+      }).on('error', function (e) {
+        console.log("Got error: ", e);
+      });
+    });
   });
 });
+

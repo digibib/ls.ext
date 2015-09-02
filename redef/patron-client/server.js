@@ -27,6 +27,28 @@ hbs.registerHelper('allValues', function (resource, property, graph) {
   return resource.property(graph.resolve(property));
 });
 
+hbs.registerHelper('firstResourceWithLabel', function (resource, property, graph) {
+  var props = resource.property(graph.resolve(property));
+  if (props.length > 0) {
+    var uri = resource.property(graph.resolve(property))[0].value;
+    var res = graph.works[0].resources.filter(function (g) {
+      return g["@id"] === uri;
+    });
+    var label = res[0]["rdfs:label"];
+
+    // unify string/object into an array
+    if (!Array.isArray(label)) {
+      label = [label];
+    }
+    return label.filter(function (l) {
+      return l["@language"] === "no"; // returns only norwegian label value for now
+    })[0]["@value"];
+
+  } else {
+    return "";
+  }
+});
+
 hbs.registerHelper('allValuesConcat', function (resource, property, graph) {
   var res = [];
   resource.property(graph.resolve(property)).forEach(function (p) {

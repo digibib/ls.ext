@@ -31,7 +31,7 @@ class CatalinkerPage < PageRoot
     def select_prop(predicate, value, nr=0)
       input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
       Watir::Wait.until { input.length > 1 }
-      input.select_value(value)
+      input.select(value)
       self
     end
 

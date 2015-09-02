@@ -290,10 +290,7 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   end
 
   @context[:publication_format] = ['Bok', 'Lydbok (CD)', 'Lydbok (Kassett)', 'E-bok', 'Bok', 'Bok'].sample
-  @context[:publication_language] =  ['http://lexvo.org/id/iso639-3/nob',
-                                      'http://lexvo.org/id/iso639-3/eng',
-                                      'http://lexvo.org/id/iso639-3/fin',
-                                      'http://lexvo.org/id/iso639-3/ben'].sample
+  @context[:publication_language] =  ['Engelsk','Norsk (bokmål)','Finsk','Baskisk', 'Grønlandsk'].sample
   @context[:publication_name] = generateRandomString
 
   page.add_prop('http://192.168.50.12:8005/ontology#format', @context[:publication_format])

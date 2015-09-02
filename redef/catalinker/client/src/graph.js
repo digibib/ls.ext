@@ -41,7 +41,8 @@
 
   function Publication(uri) {
     Resource.call(this, uri);
-    this.items = [];
+    this.resources = [];
+    this.items     = [];
   }
 
   Publication.prototype = Object.create(Resource.prototype);
@@ -122,11 +123,23 @@
     return res;
   }
 
+  function attachResources(work, workdata) {
+    var res = [];
+    workdata["@graph"].forEach(function (workresource) {
+      switch (workresource["@type"]) {
+        case "http://lexvo.org/ontology#Language":
+          res.push(workresource);
+      }
+    });
+    return res;
+  }
+
   function attachPublicationsAndItems(work, workdata, itemsdata) {
     workdata["@graph"].forEach(function (workresource) {
       if (workresource["deichman:publicationOf"] && workresource["deichman:publicationOf"]["@id"] === work.uri) {
         var p = new Publication(workresource["@id"]);
         p.properties = extractProps(workresource);
+        // loop items into work
         if (itemsdata["@graph"]) {
           itemsdata["@graph"].forEach(function (itemresource) {
             if (p.uri === itemresource["@id"] && itemresource["deichman:hasEdition"]) {
@@ -167,6 +180,7 @@
         if (resource["@type"] === "deichman:Work") {
           var w = new Work(resource["@id"]);
           w.properties = extractProps(resource);
+          w.resources = attachResources(w, workdata);
           attachPublicationsAndItems(w, workdata, itemsdata);
           works.push(w);
         }
