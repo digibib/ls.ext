@@ -70,7 +70,7 @@ Vagrant.configure(2) do |config|
       salt.verbose = true
       salt.pillar_data
       salt.pillar({ 'GITREF' => ENV['GITREF']}) if ENV['GITREF']
-      salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
+      salt.bootstrap_options = "-F -c /tmp/ -P -g https://github.com/saltstack/salt.git"
       salt.install_type = "git"
       salt.install_args = SALT_VERSION
       salt.always_install = true
@@ -113,7 +113,7 @@ Vagrant.configure(2) do |config|
       salt.run_highstate = true
       salt.verbose = true
       salt.install_type = "git"
-      salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
+      salt.bootstrap_options = "-F -c /tmp/ -P -g https://github.com/saltstack/salt.git"
       salt.install_args = SALT_VERSION
       salt.always_install = true
     end
@@ -152,7 +152,7 @@ Vagrant.configure(2) do |config|
       salt.run_highstate = true
       salt.verbose = true
       salt.install_type = "git"
-      salt.bootstrap_options = "-g https://github.com/saltstack/salt.git"
+      salt.bootstrap_options = "-F -c /tmp/ -P -g https://github.com/saltstack/salt.git"
       salt.install_args = SALT_VERSION
       salt.always_install = true
     end
