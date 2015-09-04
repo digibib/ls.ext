@@ -50,7 +50,8 @@
   rdfs:label "Format"@en ;
   rdfs:label "Format"@no ;
   rdfs:domain :Publication ;
-  rdfs:range xsd:string .
+  rdfs:range xsd:string ;      # TODO replace with real type
+  :valuesFrom values:format .
 
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;

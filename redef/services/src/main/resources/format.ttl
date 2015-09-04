@@ -1,0 +1,11 @@
+@prefix : <http://schema.org/> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+
+:CDFormat a :MusicReleaseFormatType ;
+  rdfs:label "CD"@no .
+
+:HardCover a :BookFormatType ;
+  rdfs:label "Innbundet bok"@no .
+
+:Paperback a :BookFormatType ;
+  rdfs:label "Pocket"@no .

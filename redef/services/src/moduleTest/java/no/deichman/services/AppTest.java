@@ -154,6 +154,23 @@ public class AppTest {
     }
 
     @Test
+    public void get_authorized_values_for_format() throws Exception {
+        HttpRequest formatRequest = Unirest
+                .get(baseUri + "authorized_values/format")
+                .header("Accept", "application/ld+json");
+        HttpResponse<?> formatResponse = formatRequest.asString();
+        assertResponse(Status.OK, formatResponse);
+
+        Model model = RDFModelUtil.modelFrom(formatResponse.getBody().toString(), Lang.JSONLD);
+        boolean hasBook = model.contains(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://schema.org/HardCover"),
+                RDFS.label,
+                ResourceFactory.createLangLiteral("Innbundet bok", "no")
+        ));
+        assertTrue("model doesn't have Hardback", hasBook);
+    }
+
+    @Test
     public void get_ontology() throws Exception {
         HttpRequest request = Unirest
                 .get(baseUri + "ontology")

@@ -47,4 +47,16 @@ public class AuthorizedValuesResourceTest {
         ));
         assertTrue("model doesn't have English", hasEnglish);
     }
+
+    @Test
+    public void should_actually_return_format_data() throws Exception {
+        Object body = authorizedValuesResource.format().getEntity();
+        Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
+        boolean hasHardback = model.contains(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://schema.org/HardCover"),
+                RDFS.label,
+                ResourceFactory.createLangLiteral("Innbundet bok", "no")
+        ));
+        assertTrue("model doesn't have Hardback", hasHardback);
+    }
 }
