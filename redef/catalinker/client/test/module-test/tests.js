@@ -1,7 +1,15 @@
 casper.on('remote.message', function (message) {
-  // uncommet to print all messages from console.log
+  // uncomment to print all messages from console.log
   //this.echo(message);
 });
+
+casper.test.on("fail", function () {
+  casper.capture("testfail.png");
+});
+
+casper.options.onWaitTimeout = function (timeout) {
+  casper.test.fail('request timed out in '+timeout+' ms');
+}
 
 function addValue(casper, property, value) {
   casper.sendKeys('input[data-automation-id="http://127.0.0.1:7777/ontology#' + property + '_0"]', value);
@@ -9,7 +17,6 @@ function addValue(casper, property, value) {
 
 casper.test.begin("Catalinker grensesnitt (verk)", 4, function (test) {
   casper.start('http://127.0.0.1:7777/work');
-
   casper.waitFor(function check() {
     return this.getCurrentUrl() !== 'http://127.0.0.1:7777/work'; // make sure we have been redirected
   }, function then() {
@@ -87,6 +94,7 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 9, function (test) {
   });
 
   casper.run(function () {
+    this.logLevel = "debug";
     test.done();
   });
 
