@@ -289,7 +289,7 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
     page = @site.RegPublication.visit
   end
 
-  @context[:publication_format] = ['Bok', 'Lydbok (CD)', 'Lydbok (Kassett)', 'E-bok', 'Bok', 'Bok'].sample
+  @context[:publication_format] = ['Innbundet bok', 'Pocket', 'CD', 'CD', 'CD'].sample
   @context[:publication_language] =  ['Engelsk','Norsk (bokmål)','Finsk','Baskisk', 'Grønlandsk'].sample
   @context[:publication_name] = generateRandomString
 
