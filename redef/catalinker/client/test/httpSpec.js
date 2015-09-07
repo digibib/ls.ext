@@ -1,53 +1,59 @@
-var server = sinon.fakeServer.create();
-server.respondWith("GET", "/ok", [200, {}, JSON.stringify({ msg: "ok" })]);
-server.respondWith("GET", "/nok", [500, {}, JSON.stringify({ msg: "not ok" })]);
+var FakePromise = function () {
+  return {
+    get: function (path) {
+      if (path === "/ok") {
+        return {
+          then: function (resolve) {
+            return resolve(JSON.stringify({ msg: "ok" }));
+          }
+        };
+      } else {
+        return {
+          then: function () {
+            return this;
+          },
+          catch: function (reject) {
+            return reject(JSON.stringify({ msg: "not ok" }));
+          }
+        };
+      }
+    }
+  };
+};
 
 define(['http'], function (http) {
 
   describe("Performing HTTP requests", function () {
 
+    sinon.stub(http, "get", FakePromise().get);
+
     describe("when server responds with a successful status code", function () {
-
-      it("then the success callback is called", function () {
-        var cbOK = sinon.spy(),
-            cbNotOK = sinon.spy();
-
-        http.get("/ok", {}, cbOK, cbNotOK);
-        server.respond();
-        sinon.assert.called(cbOK);
-        sinon.assert.notCalled(cbNotOK);
+      it("then it returns a resolved promise", function (done) {
+        http.get("/ok", {}).then(function (response) {
+          expect(response).to.deep.equal(JSON.stringify({ msg: "ok" }));
+          done();
+        });
       });
 
     });
 
     describe("when server responds with a non-successful status code", function () {
-
-      it("then the failure callback is called", function () {
-        var cbOK = sinon.spy(),
-            cbNotOK = sinon.spy();
-
-        http.get("/nok", {}, cbOK, cbNotOK);
-        server.respond();
-        sinon.assert.called(cbNotOK);
-        sinon.assert.notCalled(cbOK);
+      it("then it returns a rejected promise", function (done) {
+        http.get("/nok", {}).then().catch(function (err) {
+          expect(err).to.deep.equal(JSON.stringify({ msg: "not ok" }));
+          done();
+        });
       });
-
     });
 
     describe("when server is never reached", function () {
-
-      it("then the failure callback is called", function () {
-        var cbOK = sinon.spy(),
-            cbNotOK = sinon.spy();
-
-        http.get("http://æøå.xyz/failing/path", {}, cbOK, cbNotOK);
-        server.respond();
-        sinon.assert.called(cbNotOK);
-        sinon.assert.notCalled(cbOK);
+      it("then it returns a rejected promise", function (done) {
+        http.get("http://æøå.xyz/failing/path", {}).then().catch(function (err) {
+          expect(err).to.deep.equal(JSON.stringify({ msg: "not ok" }));
+          done();
+        });
       });
-
     });
-
   });
 
 });

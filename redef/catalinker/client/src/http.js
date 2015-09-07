@@ -1,62 +1,77 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], factory);
+    define(["ractive.min"], factory);
   } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory();
+    module.exports = factory(require("ractive.min"));
   } else {
     // Browser globals (root is window)
-    root.returnExports = factory();
+    root.returnExports = factory(root.Ractive);
   }
-}(this, function () {
+}(this, function (Ractive) {
+  var Promise = Ractive.Promise;
 
   function doReq(method, path, headers, body, onSuccess, onFailure) {
-    var req = new XMLHttpRequest();
-    req.open(method, path, true);
+    return new Promise(function (resolve, reject)  {
 
-    for (var prop in headers) {
-      req.setRequestHeader(prop, headers[prop]);
-    }
+      var req = new XMLHttpRequest();
+      req.open(method, path, true);
 
-    req.onload = function () {
-      if (req.status >= 200 && req.status < 400) {
-        onSuccess(req);
-      } else {
-
-        // request reached server, but we got an error
-        onFailure(req.responseText);
+      for (var prop in headers) {
+        req.setRequestHeader(prop, headers[prop]);
       }
-    };
 
-    // request didn't reach server
-    req.onerror = onFailure;
+      req.onload = function () {
+        if (req.status >= 200 && req.status < 400) {
+          resolve(req);
+        } else {
 
-    if (body !== "") {
-      req.send(body);
-    } else {
-      req.send();
-    }
+          // request reached server, but we got an error
+          reject({
+            status: req.status,
+            statusText: req.statusText
+          });
+        }
+      };
+
+      // request didn't reach server
+      req.onerror = function () {
+        reject({
+          status: req.status,
+          statusText: req.statusText
+        });
+      };
+
+      if (body !== "") {
+        req.send(body);
+      } else {
+        req.send();
+      }
+
+    });
   }
+
+
 
   // return exported functions
   return {
     get: function (path, headers, onSuccess, onFailure) {
-      doReq("GET", path, headers, "", onSuccess, onFailure);
+      return doReq("GET", path, headers, "", onSuccess, onFailure);
     },
-    post: function (path, headers, body, onSuccess, onFailure) {
-      doReq("POST", path, headers, body, onSuccess, onFailure);
+    post: function (path, headers, body) {
+      return doReq("POST", path, headers, body);
     },
-    put: function (path, headers, body, onSuccess, onFailure) {
-      doReq("PUT", path, headers, body, onSuccess, onFailure);
+    put: function (path, headers, body) {
+      return doReq("PUT", path, headers, body);
     },
-    patch: function (path, headers, body, onSuccess, onFailure) {
-      doReq("PATCH", path, headers, body, onSuccess, onFailure);
+    patch: function (path, headers, body) {
+      return doReq("PATCH", path, headers, body);
     },
-    delete: function (path, headers, onSuccess, onFailure) {
-      doReq("DELETE", path, headers, "", onSuccess, onFailure);
+    delete: function (path, headers) {
+      return doReq("DELETE", path, headers, "");
     }
   };
 }));

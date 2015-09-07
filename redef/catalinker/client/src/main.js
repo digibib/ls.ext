@@ -1,4 +1,4 @@
-requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology, string) {
+define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology, string) {
 
   window.onerror = function (message, url, line) {
     // Log any uncaught exceptions to assist debugging tests.
@@ -63,18 +63,18 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
       var patch = ontology.createPatch(ractive.get("resource_uri"), predicate, event.context, ractive.get(datatype));
       http.patch(ractive.get("resource_uri"),
         {"Accept": "application/ld+json", "Content-Type": "application/ldpatch+json"},
-        patch,
-        function (response) {
-          // successfully patched resource
+        patch)
+      .then(function (response) {
+        // successfully patched resource
 
-          // keep the value in current.old - so we can do create delete triple patches later
-          var cur = ractive.get(event.keypath + ".current");
-          ractive.set(event.keypath + ".old.value", cur.value);
-          ractive.set(event.keypath + ".old.lang", cur.lang);
+        // keep the value in current.old - so we can do create delete triple patches later
+        var cur = ractive.get(event.keypath + ".current");
+        ractive.set(event.keypath + ".old.value", cur.value);
+        ractive.set(event.keypath + ".old.lang", cur.lang);
 
-          ractive.set("save_status", "alle endringer er lagret");
-        },
-        function (response) {
+        ractive.set("save_status", "alle endringer er lagret");
+      })
+        .catch(function (response) {
           // failed to patch resource
           console.log("HTTP PATCH failed with: ");
           console.log(response);
@@ -108,8 +108,8 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
 
   var loadExisitingResource = function (uri) {
     http.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
-      {"Accept": "application/ld+json"},
-    function (response) {
+      {"Accept": "application/ld+json"})
+    .then(function (response) {
       ractive.set("resource_uri", uri);
       var values = ontology.extractValues(JSON.parse(response.responseText));
       for (var n in ractive.get("inputs")) {
@@ -120,12 +120,11 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
         }
       }
 
-
       ractive.set("save_status", "åpnet eksisterende ressurs");
-    },
-    function (response) {
+    })
+    .catch(function (err) {
       console.log("HTTP GET existing resource failed with:");
-      console.log(response);
+      console.log(err);
     });
   };
 
@@ -133,35 +132,37 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
     // fetch URI for new resource
     http.post(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase(),
       {"Accept": "application/ld+json", "Content-Type": "application/ld+json"},
-       "{}",
-    function (response) {
+       "{}"
+     ).then(function (response) {
       // now that the resource exists - redirect to load the new resource
       window.location.replace(location.href + "?resource=" + response.getResponseHeader("Location"));
-    },
-    function (response) {
-      console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + response);
+    })
+    .catch(function (err) {
+      console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + err);
     });
   };
 
-  var onAuthorizedValuesLoad = function (predicate) {
-    return function (res) {
-      var values = JSON.parse(res.response);
-
+  var loadAuthorizedValues = function (url, predicate) {
+    //onAuthorizedValuesLoad(props[i]["@id"]),
+    http.get(
+      url,
+      {"Accept": "application/ld+json"})
+    .then(function (res) {
+      var values = JSON.parse(res.responseText);
       // resolve all @id uris
       values["@graph"].forEach(function (v) {
         v["@id"] = ontology.resolveURI(values, v["@id"]);
       });
 
       ractive.set("authorized_values." + predicate.split(":")[1], values["@graph"]);
-    };
-  };
-
-  var onAuthorizedValuesFailure = function (response)  {
-    console.log("GET authorized values error: " + response);
+    })
+    .catch(function (err) {
+      console.log("GET authorized values error: " + err);
+    });
   };
 
   var onOntologyLoad = function (response) {
-    var ont = JSON.parse(response.responseText),
+    var ont = response,
         props = ontology.propsByClass(ont, ractive.get("resource_type")),
         inputs = [];
 
@@ -178,12 +179,7 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
       // Fetch authorized values, if required
       if (props[i]["deichman:valuesFrom"]) {
         var url = props[i]["deichman:valuesFrom"]["@id"];
-        http.get(
-          url,
-          {"Accept": "application/ld+json"},
-          onAuthorizedValuesLoad(props[i]["@id"]),
-          onAuthorizedValuesFailure
-        );
+        loadAuthorizedValues(url, props[i]["@id"]);
       }
       var datatype = props[i]["rdfs:range"]["@id"];
       var input = {
@@ -239,35 +235,22 @@ requirejs(['graph', 'http', 'ontology', 'string'], function (graph, http, ontolo
     }
   };
 
-  var onOntologyFailure = function (response) {
-    console.log("GET ontology error: " + response);
-  };
-
-  var onConfigFailure = function (response) {
-    console.log("GET config error: " + response);
-  };
-
-  var onConfigLoaded = function (response) {
-    ractive.set("config", JSON.parse(response.responseText));
-
-    // fetch ontology
-    http.get(
-      ractive.get("config.ontologyUri"),
-      {"Accept": "application/ld+json"},
-      onOntologyLoad,
-      onOntologyFailure
-    );
-  };
-
   // Find resource type from url path
   ractive.set("resource_type", string.titelize(location.pathname.substr(location.pathname.lastIndexOf("/") + 1)));
 
   // Application entrypoint - start with fetching config
-  http.get(
-    "/config",
-    {"Accept": "application/ld+json"},
-    onConfigLoaded,
-    onConfigFailure
-  );
+  http.get("/config", {"Accept": "application/ld+json"})
+  .then(function (res) {
+    ractive.set("config", JSON.parse(res.responseText));
+  })
+  .then(function () {
+    http.get(ractive.get("config.ontologyUri"), {"Accept": "application/ld+json"})
+    .then(function (res) {
+      onOntologyLoad(JSON.parse(res.responseText));
+    });
+  })
+  .catch(function (err) {
+    console.log("There was an error: " + err);
+  });
 
 });
