@@ -194,7 +194,14 @@ define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology,
       };
 
       if (input.authorized) {
-        input.type = "input-authorized";
+        switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
+          case "language":
+            input.type = "input-authorized-language";
+            break;
+          case "format":
+            input.type = "input-authorized-format";
+            break;
+        }
         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
       } else {
         switch (input.range) {

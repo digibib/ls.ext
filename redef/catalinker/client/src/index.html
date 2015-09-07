@@ -70,7 +70,7 @@
         {{/each}}
       </fieldset>
 
-      {{#partial input-authorized}}
+      {{#partial input-authorized-language}}
         <select
           class="authorized"
           data-automation-id="{{predicate}}_{{@index}}"
@@ -78,7 +78,21 @@
           on-keyup="countdownToSave"
           value="{{current.value}}" >
           <option value="">(ikke valgt)</option>
-          {{#each authorized_values.language}}
+          {{#each authorized_values.language }}
+            <option value='{{.["@id"]}}'>{{label["@value"]}}</option>
+          {{/each}}
+        </select>
+      {{/partial}}
+
+      {{#partial input-authorized-format}}
+        <select
+          class="authorized"
+          data-automation-id="{{predicate}}_{{@index}}"
+          on-change='patchResource:{{predicate}}'
+          on-keyup="countdownToSave"
+          value="{{current.value}}" >
+          <option value="">(ikke valgt)</option>
+          {{#each authorized_values.format }}
             <option value='{{.["@id"]}}'>{{label["@value"]}}</option>
           {{/each}}
         </select>

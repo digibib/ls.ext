@@ -8,7 +8,7 @@ casper.test.on("fail", function () {
 });
 
 casper.options.onWaitTimeout = function (timeout) {
-  casper.test.fail('request timed out in '+timeout+' ms');
+  casper.test.fail('request timed out in ' + timeout + ' ms');
 };
 
 function addValue(casper, property, value) {
@@ -44,7 +44,7 @@ casper.test.begin("Catalinker grensesnitt (verk)", 4, function (test) {
 
 });
 
-casper.test.begin("Catalinker grensesnitt (utgivelse)", 9, function (test) {
+casper.test.begin("Catalinker grensesnitt (utgivelse)", 10, function (test) {
   casper.start('http://127.0.0.1:7777/publication?resource=http://127.0.0.1:7777/publication/1');
 
   casper.then(function () {
@@ -91,6 +91,7 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 9, function (test) {
   casper.then(function () {
     // test our authorized values dropdown has n options
     test.assertElementCount('[class="prop-input http://127.0.0.1:7777/ontology#language"] option', 5);
+    test.assertElementCount('[class="prop-input http://127.0.0.1:7777/ontology#format"] option', 4);
   });
 
   casper.run(function () {
