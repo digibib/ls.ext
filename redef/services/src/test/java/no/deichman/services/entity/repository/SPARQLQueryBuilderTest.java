@@ -7,12 +7,13 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.update.UpdateAction;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
 import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -155,9 +156,7 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_insert_patch() throws Exception{
         List<Patch> patches = new ArrayList<Patch>();
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Statement s = statement("http://example.com/a", "http://example.com/ontology/name", "json");
         Patch patch = new Patch("add", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
@@ -168,9 +167,7 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_delete_patch() throws Exception{
         List<Patch> patches = new ArrayList<Patch>();
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Statement s = statement("http://example.com/a", "http://example.com/ontology/name", "json");
         Patch patch = new Patch("del", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
@@ -181,19 +178,13 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_delete_add_multi_patch() throws Exception{
         List<Patch> patches = new ArrayList<Patch>();
-        Statement s1 = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Statement s1 = statement("http://example.com/a", "http://example.com/ontology/name", "json");
         Patch patch1 = new Patch("del", s1, null);
         patches.add(patch1);
-        Statement s2 = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/test"), ResourceFactory.createPlainLiteral("json"));
+        Statement s2 = statement("http://example.com/a", "http://example.com/ontology/test", "json");
         Patch patch2 = new Patch("del", s2, null);
         patches.add(patch2);
-        Statement s3 = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/cress"), ResourceFactory.createPlainLiteral("false fish"));
+        Statement s3 = statement("http://example.com/a", "http://example.com/ontology/cress", "false fish");
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
@@ -204,12 +195,16 @@ public class SPARQLQueryBuilderTest {
         assertEquals(expected,sqb.patch(patches));
     }
 
+    private static Statement statement(String resource, String property, String literal) {
+        return ResourceFactory.createStatement(
+                ResourceFactory.createResource(resource),
+                ResourceFactory.createProperty(property), ResourceFactory.createPlainLiteral(literal));
+    }
+
     @Test(expected=Exception.class)
     public void test_invalid_patch_fails() throws Exception{
         List<Patch> patches = new ArrayList<Patch>();
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/name"), ResourceFactory.createPlainLiteral("json"));
+        Statement s = statement("http://example.com/a", "http://example.com/ontology/" + "name", "json");
         Patch patch = new Patch("fail", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());

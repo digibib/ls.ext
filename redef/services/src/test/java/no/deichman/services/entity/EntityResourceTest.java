@@ -9,8 +9,6 @@ import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +19,6 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -72,7 +69,7 @@ public class EntityResourceTest {
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(isValidJSON(result.getEntity().toString()));
+        assertValidJSON(result.getEntity().toString());
     }
 
     @Test(expected = NotFoundException.class)
@@ -124,7 +121,7 @@ public class EntityResourceTest {
         assertNotNull(result);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(isValidJSON(result.getEntity().toString()));
+        assertValidJSON(result.getEntity().toString());
     }
 
     private String createTestWork(String identifier) {
@@ -153,7 +150,7 @@ public class EntityResourceTest {
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(isValidJSON(result.getEntity().toString()));
+        assertValidJSON(result.getEntity().toString());
     }
 
     @Test(expected=NotFoundException.class)
@@ -323,19 +320,5 @@ public class EntityResourceTest {
                 + "  }";
         assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(result.getEntity().toString().contains(labelsComparison));
-    }
-    private boolean isValidJSON(final String json) {
-        boolean valid = false;
-        try {
-            final JsonParser parser = new ObjectMapper().getJsonFactory().createJsonParser(json);
-            while (parser.nextToken() != null) {
-                // NOOP
-            }
-            valid = true;
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-        return valid;
     }
 }

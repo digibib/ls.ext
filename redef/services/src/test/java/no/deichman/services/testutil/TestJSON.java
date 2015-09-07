@@ -1,8 +1,9 @@
 package no.deichman.services.testutil;
 
-import java.io.IOException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
