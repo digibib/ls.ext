@@ -7,11 +7,6 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
 import com.hp.hpl.jena.vocabulary.RDFS;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
@@ -29,12 +24,16 @@ import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import static com.hp.hpl.jena.rdf.model.ResourceFactory.createLangLiteral;
+import static com.hp.hpl.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createPlainLiteral;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createLangLiteral;
-
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -233,7 +232,7 @@ public class EntityServiceImplTest {
                 "red"));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         RDFDataMgr.write(baos,patchedModel.difference(oldModel),Lang.NT);
-        assertEquals(baos.toString().trim(),
+        assertEquals(baos.toString("UTF-8").trim(),
                 "<"+ workId + "> <" + ontologyURI + "color> \"red\" .");
     }
 

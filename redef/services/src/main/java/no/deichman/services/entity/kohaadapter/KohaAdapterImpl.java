@@ -145,7 +145,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
 
         String body = response.readEntity(String.class);
-        InputSource inputSource = new InputSource(new ByteArrayInputStream(body.getBytes()));
+        InputSource inputSource = new InputSource(new ByteArrayInputStream(body.getBytes(StandardCharsets.ISO_8859_1)));
         XPath xpath = XPathFactory.newInstance().newXPath();
         String biblioId;
         try {
@@ -154,7 +154,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
             throw new RuntimeException("Could not get biblionumber from Koha response: " + body);
         }
 
-        if (biblioId == "") {
+        if (biblioId == null || "".equals(biblioId)) {
             log.error("Koha failed to create a new bibliographic record");
             throw new RuntimeException("Koha connection for new biblio failed, missing biblioId");
         } else {

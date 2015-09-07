@@ -1,14 +1,15 @@
 package no.deichman.services.entity.kohaadapter;
 
-import java.io.ByteArrayOutputStream;
-
+import info.freelibrary.marc4j.impl.LeaderImpl;
+import info.freelibrary.marc4j.impl.RecordImpl;
 import org.marc4j.MarcWriter;
 import org.marc4j.MarcXmlWriter;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.Record;
 
-import info.freelibrary.marc4j.impl.LeaderImpl;
-import info.freelibrary.marc4j.impl.RecordImpl;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Responsibility: Make a MARCXML record.
@@ -36,7 +37,11 @@ public final class MarcXmlProvider {
         MarcWriter writer = new MarcXmlWriter(baos);
         writer.write(this.getRecord());
         writer.close();
-        return baos.toString();
+        try {
+            return baos.toString(StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Record getRecord() {
