@@ -3,12 +3,11 @@ module.exports = function (config) {
     basePath: '.',
     frameworks: ['mocha', 'requirejs', 'chai', 'sinon'],
     files: [
-        {pattern: 'lib/**/*.js', included: false},
-        {pattern: 'src/**/*.js', included: false},
-        {pattern: 'test/**/*Spec.js', included: false},
-        'test/test-main.js'
+      {pattern: 'lib/**/*.js', included: false},
+      {pattern: 'src/**/*.js', included: false},
+      {pattern: 'test/**/*Spec.js', included: false},
+      'test/test-main.js'
     ],
-    exclude: ['src/app.js'],
     port: 9876,
     runnerPort: 9100,
     colors: true,
