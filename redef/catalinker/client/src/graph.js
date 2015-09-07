@@ -125,10 +125,10 @@
 
   function attachResources(work, workdata) {
     var res = [];
+    // We need to append the externally linked resource types
     workdata["@graph"].forEach(function (workresource) {
-      switch (workresource["@type"]) {
-        case "http://lexvo.org/ontology#Language":
-          res.push(workresource);
+      if (/lexvo.org/.test(workresource["@type"]) || /schema.org/.test(workresource["@type"])) {
+        res.push(workresource);
       }
     });
     return res;
