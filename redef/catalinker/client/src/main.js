@@ -106,7 +106,7 @@ define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology,
   });
 
 
-  var loadExisitingResource = function (uri) {
+  var loadExistingResource = function (uri) {
     http.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
       {"Accept": "application/ld+json"})
     .then(function (response) {
@@ -236,7 +236,7 @@ define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology,
     // request a new URI for working on a new resource.
     var uri = getURLParameter("resource");
     if (uri) {
-      loadExisitingResource(uri);
+      loadExistingResource(uri);
     } else {
       createNewResource();
     }
