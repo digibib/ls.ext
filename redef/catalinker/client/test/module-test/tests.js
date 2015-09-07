@@ -9,7 +9,7 @@ casper.test.on("fail", function () {
 
 casper.options.onWaitTimeout = function (timeout) {
   casper.test.fail('request timed out in '+timeout+' ms');
-}
+};
 
 function addValue(casper, property, value) {
   casper.sendKeys('input[data-automation-id="http://127.0.0.1:7777/ontology#' + property + '_0"]', value);
