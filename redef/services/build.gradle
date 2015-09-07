@@ -2,7 +2,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'gradle-one-jar'
-apply plugin: "checkstyle"
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
 apply plugin: 'com.github.ben-manes.versions'
 
 group = 'no.deichman.services'
@@ -113,6 +114,12 @@ checkstyle {
     // Cannot go higher as 6.8 breaks compatibility with the current Gradle checkstyle plugin
     // See change to CheckStyleTask here: http://checkstyle.sourceforge.net/releasenotes.html#Release_6.8
     toolVersion = 6.7
+}
+
+pmd {
+    consoleOutput = true
+    targetJdk = 1.7 // 1.8 is yet unsupported
+    toolVersion = '5.3.3'
 }
 
 idea {

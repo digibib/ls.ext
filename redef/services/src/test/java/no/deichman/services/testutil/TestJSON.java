@@ -18,12 +18,13 @@ public final class TestJSON {
         assertTrue(isValidJSON(string));
     }
 
+    @SuppressWarnings("PMD.EmptyWhileStmt")
     private static boolean isValidJSON(final String json) {
         boolean valid = false;
         try {
             final JsonParser parser = new ObjectMapper().getJsonFactory().createJsonParser(json);
             while (parser.nextToken() != null) {
-                // NOOP
+                  // NOOP
             }
             valid = true;
         } catch (IOException ioe) {
