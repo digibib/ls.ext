@@ -4,15 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.hp.hpl.jena.vocabulary.XSD;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,13 +35,11 @@ public class PatchParserTest {
 
     @Test
     public void it_returns_list_of_patch_objects() throws PatchParserException{
-        List<PatchObject> lpo = new ArrayList<>();
         PatchObject po = new PatchObject();
         po.setOperation(ADD_OPERATION);
         po.setSubject("http://example.com/s");
         po.setPredicate("http://example.com/a");
         po.setObjectValue("Housec");
-        lpo.add(po);
         String input = "{"
                      + "  \"op\":\"" + ADD_OPERATION + "\","
                      + "  \"s\":\"http://example.com/s\","
