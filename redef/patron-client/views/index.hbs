@@ -105,7 +105,7 @@
                   <tr>
                     <td data-automation-id="publication_name">{{allValuesConcat pub "deichman:name" ../graph}}</td>
                     <td data-automation-id="publication_language">{{allResourcesWithLabelsConcat pub "deichman:language" ../graph }}</td>
-                    <td data-automation-id="publication_format">{{firstValue pub "deichman:format" ../graph}}</td>
+                    <td data-automation-id="publication_format">{{allResourcesWithLabelsConcat pub "deichman:format" ../graph}}</td>
                     <td>{{pub.items.length}}</td>
                   </tr>
                 {{/each}}
