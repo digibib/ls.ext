@@ -94,6 +94,7 @@ app.get("/ontology", function (req, res) {
           "@language" : "en",
           "@value" : "Format"
         }],
+        "deichman:valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/format"},
         "rdfs:range" : {
           "@id" : "http://www.w3.org/2001/XMLSchema#string"
         }
@@ -225,6 +226,42 @@ app.get("/authorized_values/language", function (req, res) {
       "@context": {
         "label": "http://ww.w3.org/2000/01/rdf-schema#label",
         "": "http://lexvo.org/id/iso639-3/",
+        "rdfs": "http://ww.w3.org/2000/01/rdf-schema#"
+      }
+    });
+});
+
+app.get("/authorized_values/format", function (req, res) {
+  res.send(
+    {
+      "@graph": [
+        {
+          "@id": "http://schema.org/CDFormat",
+          "@type": "http://schema.org/MusicReleaseFormatType",
+          "label": {
+            "@language": "no",
+            "@value": "CD"
+          }
+        },
+        {
+          "@id": "http://schema.org/HardCover",
+          "@type": "http://schema.org/BookFormatType",
+          "label": {
+            "@language": "no",
+            "@value": "Innbundet bok"
+          }
+        },
+        {
+          "@id": "http://schema.org/Paperback",
+          "@type": "http://schema.org/BookFormatType",
+          "label": {
+            "@language": "no",
+            "@value": "Pocket"
+          }
+        }
+      ],
+      "@context": {
+        "label": "http://ww.w3.org/2000/01/rdf-schema#label",
         "rdfs": "http://ww.w3.org/2000/01/rdf-schema#"
       }
     });

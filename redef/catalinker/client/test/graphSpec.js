@@ -2,7 +2,9 @@ var work_response_with_publications = JSON.stringify({
   "@graph" : [{
     "@id" : "http://192.168.50.12:8005/publication/p976722435911",
     "@type" : "deichman:Publication",
-    "deichman:format" : "bok",
+    "deichman:format" : {
+      "@id": "http://schema.org/HardCover"
+    },
     "deichman:language" : {
       "@id": "http://lexvo.org/id/iso639-3/ger"
     },
@@ -16,7 +18,9 @@ var work_response_with_publications = JSON.stringify({
   }, {
     "@id" : "http://192.168.50.12:8005/publication/p417291955314",
     "@type" : "deichman:Publication",
-    "deichman:format" : "cd",
+    "deichman:format" : {
+      "@id": "http://schema.org/CDFormat"
+    },
     "deichman:language" : {
       "@id": "http://lexvo.org/id/iso639-3/eng"
     },
