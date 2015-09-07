@@ -296,6 +296,34 @@ public class EntityResourceTest {
         assertTrue(result.getEntity().toString().contains(labelsComparison));
     }
 
+    @Test
+    public void work_should_have_format_labels() throws URISyntaxException {
+        String work = "{\n"
+                + "    \"@context\": {\n"
+                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/publication/work_should_have_language_labels\",\n"
+                + "        \"@type\": \"deichman:Work\"\n,"
+                + "        \"deichman:format\": \"http://schema.org/HardCover\"\n"
+                + "    }\n"
+                + "}";
+        Response createResponse = entityResource.create("work", work);
+        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
+        Response result = entityResource.get("work", workId);
+
+        String labelsComparison = "{\n"
+                + "    \"@id\" : \"http://schema.org/HardCover\",\n"
+                + "    \"@type\" : \"http://schema.org/BookFormatType\",\n"
+                + "    \"rdfs:label\" : {\n"
+                + "      \"@language\" : \"no\",\n"
+                + "      \"@value\" : \"Innbundet bok\"\n"
+                + "    }\n"
+                + "  }";
+        assertEquals(OK.getStatusCode(), result.getStatus());
+        assertTrue(result.getEntity().toString().contains(labelsComparison));
+    }
     private boolean isValidJSON(final String json) {
         boolean valid = false;
         try {

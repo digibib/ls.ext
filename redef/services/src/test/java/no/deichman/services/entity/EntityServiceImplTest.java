@@ -135,6 +135,33 @@ public class EntityServiceImplTest {
     }
 
     @Test
+    public void test_retrieve_work_by_id_with_format() {
+        String testId = "test_retrieve_work_by_id_with_format";
+        String workData = "{\n"
+                + "    \"@context\": {\n"
+                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/publication/" + testId + "\",\n"
+                + "        \"@type\": \"deichman:Work\"\n,"
+                + "        \"deichman:format\": \"http://schema.org/HardCover\"\n"
+                + "    }\n"
+                + "}";
+        String workId = service.create(EntityType.WORK, workData);
+        Model test = service.retrieveById(EntityType.WORK, workId.replace(workURI, ""));
+        assertTrue(
+                test.contains(
+                        createStatement(
+                                createResource("http://schema.org/HardCover"),
+                                createProperty(RDFS.label.getURI()),
+                                createLangLiteral("Innbundet bok", "no")
+                        )
+                )
+        );
+    }
+
+    @Test
     public void test_retrieve_work_items_by_id(){
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(EntityServiceImplTest.modelForBiblio());
         EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);

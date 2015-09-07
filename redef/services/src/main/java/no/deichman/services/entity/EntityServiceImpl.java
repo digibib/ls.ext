@@ -21,6 +21,7 @@ import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
+import java.io.InputStream;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public final class EntityServiceImpl implements EntityService {
     private final BaseURI baseURI;
     private final Property recordID;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
+    private static final String FORMAT_TTL_FILE = "format.ttl";
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -44,16 +46,31 @@ public final class EntityServiceImpl implements EntityService {
                     .filter(node -> node.toString()
                             .contains("http://lexvo.org/id/iso639-3/")).collect(Collectors.toList())
                     .forEach(lv -> {
-                        input.add(extractNamedResourceFromModel(lv.toString()));
+                        input.add(extractNamedResourceFromModel(lv.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE));
                     });
         }
 
         return input;
     }
 
-    private Model extractNamedResourceFromModel(String resource) {
+    private Model getLinkedFormatResource(Model input) {
+
+        NodeIterator objects = input.listObjects();
+        if (objects.hasNext()) {
+            Set<RDFNode> objectResources = objects.toSet();
+            objectResources.stream()
+                    .filter(node -> node.toString()
+                            .contains("http://schema.org/")).collect(Collectors.toList())
+                    .forEach(result -> {
+                        input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(FORMAT_TTL_FILE), Lang.TURTLE));
+                    });
+        }
+
+        return input;
+    }
+    private Model extractNamedResourceFromModel(String resource, InputStream input, Lang lang) {
         Model tempModel = ModelFactory.createDefaultModel();
-        RDFDataMgr.read(tempModel, EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE);
+        RDFDataMgr.read(tempModel, input, lang);
         QueryExecution qexec = QueryExecutionFactory.create(
                 QueryFactory.create("DESCRIBE <" + resource + ">"),
                 tempModel);
@@ -77,6 +94,7 @@ public final class EntityServiceImpl implements EntityService {
             case WORK:
                 m.add(repository.retrieveWorkById(id));
                 m = getLinkedLexvoResource(m);
+                m = getLinkedFormatResource(m);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
