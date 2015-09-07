@@ -34,7 +34,9 @@ describe('PatronClient', function () {
                 {
                   "@id" : "http://deichman.no/publication/publication_1234",
                   "@type" : "deichman:Publication",
-                  "deichman:format" : "bok",
+                  "deichman:format" : {
+                    "@id" : "http://schema.org/HardCover"
+                  },
                   "deichman:publicationOf" : {
                     "@id": "http://deichman.no/work/work_1231"
                   },
@@ -47,6 +49,13 @@ describe('PatronClient', function () {
                     "@language" : "sv",
                     "@value" : "Hungrig"
                   }]
+                }, {
+                  "@id" : "http://schema.org/HardCover",
+                  "@type" : "http://schema.org/BookFormatType",
+                  "rdfs:label" : {
+                    "@language" : "no",
+                    "@value" : "Innbundet bok"
+                  }
                 }, {
                   "@id" : "http://lexvo.org/id/iso639-3/eng",
                   "@type" : "http://lexvo.org/ontology#Language",
@@ -127,6 +136,22 @@ describe('PatronClient', function () {
         res.on('end', function () {
           $ = cheerio.load(body);
           expect($('td[data-automation-id=item_location]').text()).to.equal("hutl");
+          done();
+        });
+      }).on('error', function (e) {
+        console.log("Got error: ", e);
+      });
+    });
+    it('should find formats of publication with correct labels', function (done) {
+      http.get(parameters, function (res) {
+        var body = '',
+            $ = '';
+        res.on('data', function (chunk) {
+          body += chunk;
+        });
+        res.on('end', function () {
+          $ = cheerio.load(body);
+          expect($('td[data-automation-id=publication_format]').text()).to.equal("Innbundet bok");
           done();
         });
       }).on('error', function (e) {
