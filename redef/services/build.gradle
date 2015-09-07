@@ -4,6 +4,7 @@ apply plugin: 'idea'
 apply plugin: 'gradle-one-jar'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'cpd'
 apply plugin: 'com.github.ben-manes.versions'
 
 group = 'no.deichman.services'
@@ -122,6 +123,21 @@ pmd {
     toolVersion = '5.3.3'
 }
 
+cpd {
+    toolVersion = '5.3.3'
+    ignoreIdentifiers = true
+    ignoreLiterals = true
+
+    ignoreFailures = true // not failing the build for now
+}
+
+cpdCheck {
+    reports {
+        text.enabled = true
+        xml.enabled = false
+    }
+}
+
 idea {
     module {
         scopes.TEST.plus += [ configurations.moduleTestCompile ]
@@ -132,6 +148,7 @@ buildscript {
     dependencies {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+        classpath 'de.aaschmid.gradle.plugins:gradle-cpd-plugin:0.5'
     }
     repositories {
         mavenCentral()
