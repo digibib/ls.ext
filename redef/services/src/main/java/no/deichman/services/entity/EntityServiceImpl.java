@@ -60,7 +60,7 @@ public final class EntityServiceImpl implements EntityService {
             Set<RDFNode> objectResources = objects.toSet();
             objectResources.stream()
                     .filter(node -> node.toString()
-                            .contains("http://schema.org/")).collect(Collectors.toList())
+                            .contains("http://data.deichman.no/format#")).collect(Collectors.toList())
                     .forEach(result -> {
                         input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(FORMAT_TTL_FILE), Lang.TURTLE));
                     });

@@ -163,11 +163,11 @@ public class AppTest {
 
         Model model = RDFModelUtil.modelFrom(formatResponse.getBody().toString(), Lang.JSONLD);
         boolean hasBook = model.contains(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://schema.org/HardCover"),
+                ResourceFactory.createResource("http://data.deichman.no/format#Book"),
                 RDFS.label,
-                ResourceFactory.createLangLiteral("Innbundet bok", "no")
+                ResourceFactory.createLangLiteral("Bok", "no")
         ));
-        assertTrue("model doesn't have Hardback", hasBook);
+        assertTrue("model doesn't have Book", hasBook);
     }
 
     @Test

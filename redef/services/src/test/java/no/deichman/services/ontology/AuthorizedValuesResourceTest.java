@@ -52,11 +52,11 @@ public class AuthorizedValuesResourceTest {
     public void should_actually_return_format_data() throws Exception {
         Object body = authorizedValuesResource.format().getEntity();
         Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
-        boolean hasHardback = model.contains(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://schema.org/HardCover"),
+        boolean hasBook = model.contains(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://data.deichman.no/format#Book"),
                 RDFS.label,
-                ResourceFactory.createLangLiteral("Innbundet bok", "no")
+                ResourceFactory.createLangLiteral("Bok", "no")
         ));
-        assertTrue("model doesn't have Hardback", hasHardback);
+        assertTrue("model doesn't have Book", hasBook);
     }
 }

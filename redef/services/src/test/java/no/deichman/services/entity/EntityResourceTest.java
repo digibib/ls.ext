@@ -303,7 +303,7 @@ public class EntityResourceTest {
                 + "    \"@graph\": {\n"
                 + "        \"@id\": \"http://deichman.no/publication/work_should_have_language_labels\",\n"
                 + "        \"@type\": \"deichman:Work\"\n,"
-                + "        \"deichman:format\": \"http://schema.org/HardCover\"\n"
+                + "        \"deichman:format\": \"http://data.deichman.no/format#Book\"\n"
                 + "    }\n"
                 + "}";
         Response createResponse = entityResource.create("work", work);
@@ -311,11 +311,11 @@ public class EntityResourceTest {
         Response result = entityResource.get("work", workId);
 
         String labelsComparison = "{\n"
-                + "    \"@id\" : \"http://schema.org/HardCover\",\n"
-                + "    \"@type\" : \"http://schema.org/BookFormatType\",\n"
+                + "    \"@id\" : \"http://data.deichman.no/format#Book\",\n"
+                + "    \"@type\" : \"http://data.deichman.no/utility#Format\",\n"
                 + "    \"rdfs:label\" : {\n"
                 + "      \"@language\" : \"no\",\n"
-                + "      \"@value\" : \"Innbundet bok\"\n"
+                + "      \"@value\" : \"Bok\"\n"
                 + "    }\n"
                 + "  }";
         assertEquals(OK.getStatusCode(), result.getStatus());

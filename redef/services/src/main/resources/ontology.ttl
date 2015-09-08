@@ -3,6 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix lvont: <http://lexvo.org/ontology#> .
+@prefix format: <data.deichman.no/format#> .
 @prefix ui: <http://data.deichman.no/ui#> .
 @prefix values: <__BASE_URI_VALUES__> .
 
@@ -50,7 +51,7 @@
   rdfs:label "Format"@en ;
   rdfs:label "Format"@no ;
   rdfs:domain :Publication ;
-  rdfs:range xsd:string ;      # TODO replace with real type
+  rdfs:range format:Format ;
   :valuesFrom values:format .
 
 :publicationOf a rdfs:Property ;

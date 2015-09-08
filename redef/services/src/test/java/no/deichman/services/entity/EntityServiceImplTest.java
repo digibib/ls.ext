@@ -144,7 +144,7 @@ public class EntityServiceImplTest {
                 + "    \"@graph\": {\n"
                 + "        \"@id\": \"http://deichman.no/publication/" + testId + "\",\n"
                 + "        \"@type\": \"deichman:Work\"\n,"
-                + "        \"deichman:format\": \"http://schema.org/HardCover\"\n"
+                + "        \"deichman:format\": \"http://data.deichman.no/format#Book\"\n"
                 + "    }\n"
                 + "}";
         String workId = service.create(EntityType.WORK, workData);
@@ -152,9 +152,9 @@ public class EntityServiceImplTest {
         assertTrue(
                 test.contains(
                         createStatement(
-                                createResource("http://schema.org/HardCover"),
+                                createResource("http://data.deichman.no/format#Book"),
                                 createProperty(RDFS.label.getURI()),
-                                createLangLiteral("Innbundet bok", "no")
+                                createLangLiteral("Bok", "no")
                         )
                 )
         );

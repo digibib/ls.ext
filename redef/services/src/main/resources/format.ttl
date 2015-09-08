@@ -1,11 +1,18 @@
-@prefix : <http://schema.org/> .
+@prefix : <http://data.deichman.no/format#> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix duo: <http://data.deichman.no/utility#> .
 
-:CDFormat a :MusicReleaseFormatType ;
+:Book a duo:Format ;
+  rdfs:label "Bok"@no .
+
+:CD a duo:Format ;
   rdfs:label "CD"@no .
 
-:HardCover a :BookFormatType ;
-  rdfs:label "Innbundet bok"@no .
+:CDROM a duo:Format ;
+  rdfs:label "CD-ROM"@no .
 
-:Paperback a :BookFormatType ;
-  rdfs:label "Pocket"@no .
+:DVD a duo:Format ;
+  rdfs:label "DVD"@no .
+
+:DVDROM a duo:Format ;
+  rdfs:label "DVD-ROM"@no .
