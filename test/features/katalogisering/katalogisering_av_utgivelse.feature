@@ -7,7 +7,6 @@ Egenskap: Katalogisering av utgivelse
   For at brukere skal kunne finne rett utgivelse
   Ønsker jeg å registrere utgivelser med format og språk
 
-  @wip
   Scenario: Verk finnes - utgivelse finnes ikke
     Gitt at det finnes et verk
     Når jeg registrerer inn opplysninger om utgivelsen
@@ -20,7 +19,6 @@ Egenskap: Katalogisering av utgivelse
     Så får utgivelsen tildelt en post-ID i Koha
     Og det vises en lenke til posten i Koha i katalogiseringsgrensesnittet
 
-  @wip
   Scenario: Utgivelse med eksemplar
     Gitt at det finnes et verk og en utgivelse
     Når jeg ser på utgivelsen i katalogiseringsgrensesnittet

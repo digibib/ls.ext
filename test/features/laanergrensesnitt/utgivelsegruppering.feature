@@ -7,13 +7,11 @@ Egenskap: Gruppering på utgivelse
   For å kunne finne eksemplar i rett format og språk
   Ønsker jeg å kunne se eksemplarer gruppert etter utgivelse (m/informasjon om format og språk)
 
-  @wip
   Scenario: En utgivelse
     Gitt et verk med en utgivelse
     Når jeg er på sida til verket
     Så ser jeg format og språk for utgivelsen
 
-  @wip
   Scenario: Flere utgivelser og flere eksemplarer
     Gitt et verk med flere utgivelser og eksemplarer
     Når jeg er på sida til verket
