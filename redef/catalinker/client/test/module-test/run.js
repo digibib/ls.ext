@@ -236,27 +236,27 @@ app.get("/authorized_values/format", function (req, res) {
     {
       "@graph": [
         {
-          "@id": "http://schema.org/CDFormat",
-          "@type": "http://schema.org/MusicReleaseFormatType",
+          "@id": "http://data.deichman.no/format#CD",
+          "@type": "http://data.deichman.no/utility#Format",
           "label": {
             "@language": "no",
             "@value": "CD"
           }
         },
         {
-          "@id": "http://schema.org/HardCover",
-          "@type": "http://schema.org/BookFormatType",
+          "@id": "http://data.deichman.no/format#Book",
+          "@type": "http://data.deichman.no/utility#Format",
           "label": {
             "@language": "no",
-            "@value": "Innbundet bok"
+            "@value": "Bok"
           }
         },
         {
-          "@id": "http://schema.org/Paperback",
-          "@type": "http://schema.org/BookFormatType",
+          "@id": "http://data.deichman.no/format#DVD",
+          "@type": "http://data.deichman.no/utility#Format",
           "label": {
             "@language": "no",
-            "@value": "Pocket"
+            "@value": "DVD"
           }
         }
       ],

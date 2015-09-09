@@ -38,7 +38,7 @@ describe('PatronClient', function () {
               "@id" : "http://deichman.no/publication/publication_1234",
               "@type" : "deichman:Publication",
               "deichman:format" : {
-                "@id" : "http://schema.org/HardCover"
+                "@id" : "http://data.deichman.no/format#Book"
               },
               "deichman:publicationOf" : {
                 "@id": "http://deichman.no/work/work_1231"
@@ -53,11 +53,11 @@ describe('PatronClient', function () {
                 "@value" : "Hungrig"
               }]
             }, {
-              "@id" : "http://schema.org/HardCover",
-              "@type" : "http://schema.org/BookFormatType",
+              "@id" : "http://data.deichman.no/format#Book",
+              "@type" : "http://data.deichman.no/utility#Format",
               "rdfs:label" : {
                 "@language" : "no",
-                "@value" : "Innbundet bok"
+                "@value" : "Bok"
               }
             }, {
               "@id" : "http://lexvo.org/id/iso639-3/eng",
@@ -134,7 +134,7 @@ describe('PatronClient', function () {
 
     describe('publication view', function () {
       it('should display formats of publication with correct labels', function () {
-        expect($('td[data-automation-id=publication_format]').text()).to.equal("Innbundet bok");
+        expect($('td[data-automation-id=publication_format]').text()).to.equal("Bok");
       });
 
       it('should display languages of publication with correct labels', function () {
@@ -148,7 +148,7 @@ describe('PatronClient', function () {
       });
 
       it('should display item with label on format', function () {
-        expect($('td[data-automation-id=item_format]').text()).to.equal("Innbundet bok");
+        expect($('td[data-automation-id=item_format]').text()).to.equal("Bok");
       });
 
       it('should display item with label on language', function () {

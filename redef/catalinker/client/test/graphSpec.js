@@ -4,7 +4,7 @@ var work_response_with_publications = JSON.stringify({
           "@id": "http://192.168.50.12:8005/publication/p976722435911",
           "@type": "deichman:Publication",
           "deichman:format": {
-            "@id": "http://schema.org/HardCover"
+            "@id": "http://data.deichman.no/format#Book"
           },
           "deichman:language": {
             "@id": "http://lexvo.org/id/iso639-3/ger"
@@ -24,7 +24,7 @@ var work_response_with_publications = JSON.stringify({
           "@id": "http://192.168.50.12:8005/publication/p417291955314",
           "@type": "deichman:Publication",
           "deichman:format": {
-            "@id": "http://schema.org/CDFormat"
+            "@id": "http://data.deichman.no/format#CD"
           },
           "deichman:language": {
             "@id": "http://lexvo.org/id/iso639-3/eng"
@@ -48,19 +48,19 @@ var work_response_with_publications = JSON.stringify({
           "deichman:year": "1981"
         },
         {
-          "@id": "http://schema.org/CDFormat",
-          "@type": "http://schema.org/MusicReleaseFormatType",
+          "@id": "http://data.deichman.no/format#CD",
+          "@type": "http://data.deichman.no/utility#Format",
           "rdfs:label": {
             "@language": "no",
             "@value": "CD"
           }
         },
         {
-          "@id": "http://schema.org/HardCover",
-          "@type": "http://schema.org/BookFormatType",
+          "@id": "http://data.deichman.no/format#Book",
+          "@type": "http://data.deichman.no/utility#Format",
           "rdfs:label": {
             "@language": "no",
-            "@value": "Innbundet bok"
+            "@value": "Bok"
           }
         },
         {

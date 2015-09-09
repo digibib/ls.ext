@@ -127,7 +127,7 @@
     var res = [];
     // We need to append the externally linked resource types
     workdata["@graph"].forEach(function (workresource) {
-      if (/lexvo.org/.test(workresource["@type"]) || /schema.org/.test(workresource["@type"])) {
+      if (/lexvo.org/.test(workresource["@type"]) || /data.deichman.no\/utility/.test(workresource["@type"])) {
         res.push(workresource);
       }
     });
