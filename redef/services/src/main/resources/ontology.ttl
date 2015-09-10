@@ -6,6 +6,7 @@
 @prefix format: <data.deichman.no/format#> .
 @prefix ui: <http://data.deichman.no/ui#> .
 @prefix values: <__BASE_URI_VALUES__> .
+@prefix duo: <http://data.deichman.no/utility#> .
 
 :Work a rdfs:Class ;
   rdfs:label "Work"@en ;
@@ -51,7 +52,7 @@
   rdfs:label "Format"@en ;
   rdfs:label "Format"@no ;
   rdfs:domain :Publication ;
-  rdfs:range format:Format ;
+  rdfs:range duo:Format ;
   :valuesFrom values:format .
 
 :publicationOf a rdfs:Property ;
