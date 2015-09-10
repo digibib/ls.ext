@@ -154,7 +154,7 @@ define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology,
         v["@id"] = ontology.resolveURI(values, v["@id"]);
       });
 
-      var v = values["@graph"].sort(function (a, b) {
+      var values_sorted = values["@graph"].sort(function (a, b) {
         if (a.label["@value"] < b.label["@value"]) {
           return -1;
         }
@@ -164,7 +164,7 @@ define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology,
         return 0;
       });
 
-      ractive.set("authorized_values." + predicate.split(":")[1], v);
+      ractive.set("authorized_values." + predicate.split(":")[1], values_sorted);
     })
     .catch(function (err) {
       console.log("GET authorized values error: " + err);
