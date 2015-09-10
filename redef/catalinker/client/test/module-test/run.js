@@ -96,7 +96,7 @@ app.get("/ontology", function (req, res) {
         }],
         "deichman:valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/format"},
         "rdfs:range" : {
-          "@id" : "http://www.w3.org/2001/XMLSchema#string"
+          "@id" : "http://data.deichman.no/utility#Format"
         }
       }, {
         "@id" : "deichman:language",
