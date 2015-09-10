@@ -44,7 +44,7 @@ casper.test.begin("Catalinker grensesnitt (verk)", 4, function (test) {
 
 });
 
-casper.test.begin("Catalinker grensesnitt (utgivelse)", 10, function (test) {
+casper.test.begin("Catalinker grensesnitt (utgivelse)", 12, function (test) {
   casper.start('http://127.0.0.1:7777/publication?resource=http://127.0.0.1:7777/publication/1');
 
   casper.then(function () {
@@ -92,6 +92,36 @@ casper.test.begin("Catalinker grensesnitt (utgivelse)", 10, function (test) {
     // test our authorized values dropdown has n options
     test.assertElementCount('[class="prop-input http://127.0.0.1:7777/ontology#language"] option', 5);
     test.assertElementCount('[class="prop-input http://127.0.0.1:7777/ontology#format"] option', 4);
+  });
+
+  casper.waitFor(function check() {
+    return this.evaluate(function () {
+      return document.querySelectorAll('[class="prop-input http://127.0.0.1:7777/ontology#format"] select');
+    });
+  }, function then() {
+    var formats = this.evaluate(function () {
+      return [].map.call(document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#format_0"] option'),
+       function (t) {
+         return t.textContent;
+       });
+    });
+    var f = formats.toString();
+    test.assertEquals(f, formats.sort().toString());
+  });
+
+  casper.waitFor(function check() {
+    return this.evaluate(function () {
+      return document.querySelectorAll('[class="prop-input http://127.0.0.1:7777/ontology#language"] select');
+    });
+  }, function then() {
+    var languages = this.evaluate(function () {
+      return [].map.call(document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#language_0"] option'),
+       function (t) {
+         return t.textContent;
+       });
+    });
+    var f = languages.toString();
+    test.assertEquals(f, languages.sort().toString());
   });
 
   casper.run(function () {
