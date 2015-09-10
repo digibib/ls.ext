@@ -113,7 +113,7 @@ app.get("/ontology", function (req, res) {
         }],
         "deichman:valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/language"},
         "rdfs:range" : {
-          "@id" : "http://www.w3.org/2001/XMLSchema#string"
+          "@id" : "http://lexvo.org/ontology#Language"
         }
       }, {
         "@id" : "deichman:name",
@@ -192,7 +192,7 @@ app.get("/authorized_values/language", function (req, res) {
       "@graph": [
         {
           "@id": ":eng",
-          "@type": ":Language",
+          "@type": "http://lexvo.org/ontology#Language",
           "label": {
             "@language": "no",
             "@value": "Engelsk"
@@ -200,7 +200,7 @@ app.get("/authorized_values/language", function (req, res) {
         },
         {
           "@id": ":fra",
-          "@type": ":Language",
+          "@type": "http://lexvo.org/ontology#Language",
           "label": {
             "@language": "no",
             "@value": "Fransk"
@@ -208,7 +208,7 @@ app.get("/authorized_values/language", function (req, res) {
         },
         {
           "@id": ":nno",
-          "@type": ":Language",
+          "@type": "http://lexvo.org/ontology#Language",
           "label": {
             "@language": "no",
             "@value": "Norsk (Nynorsk)"
@@ -216,7 +216,7 @@ app.get("/authorized_values/language", function (req, res) {
         },
         {
           "@id": ":nob",
-          "@type": ":Language",
+          "@type": "http://lexvo.org/ontology#Language",
           "label": {
             "@language": "no",
             "@value": "Norsk (Bokmål)"
