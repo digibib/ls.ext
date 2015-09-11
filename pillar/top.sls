@@ -10,6 +10,7 @@ base:
 
   '^(wombat|\w+-ship|vm-devops)$':
     - match: pcre
+    - dockerui
     - elk
     - resource_monitoring
 

@@ -3,6 +3,8 @@ overview:
     description: Lokalt utviklingsmiljø
   koha:
     host: 192.168.50.12
+  dockerui:
+    host: 192.168.50.12
   redef:
     catalinker:
       host: 192.168.50.12

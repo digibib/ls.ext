@@ -63,6 +63,9 @@
           ro: {{ binding['ro'] }}
 {% endfor %}
 {% endif %}
+{% if privileged is defined %}
+    - privileged: {{ privileged }}
+{% endif %}
     - volumes_from: {{ volumes_from }}
     - watch:
       - docker: {{ container }}_installed

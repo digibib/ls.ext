@@ -28,7 +28,8 @@
                 },
                 "ops": {
                     "Kibana": "http://" + pillar['overview']['elk']['host'] + ":" + pillar['elk']['kibana']['port']|string + "/index.html#/dashboard/file/logstash.json",
-                    "Graphite": "http://" + pillar['overview']['resource-monitoring']['graphite-web']['host'] + ":" + pillar['resource-monitoring']['graphite-web']['port']|string
+                    "Graphite": "http://" + pillar['overview']['resource-monitoring']['graphite-web']['host'] + ":" + pillar['resource-monitoring']['graphite-web']['port']|string,
+                    "DockerUI": "http://" + pillar['overview']['dockerui']['host'] + ":" + pillar['dockerui']['port']|string,
                 },
                 "tech": {
                     "Services": "http://" + pillar['redef']['services']['host'] + ":" + pillar['redef']['services']['port']|string + "/work",
