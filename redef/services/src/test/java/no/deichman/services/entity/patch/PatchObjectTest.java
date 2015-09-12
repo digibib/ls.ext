@@ -3,8 +3,8 @@ package no.deichman.services.entity.patch;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.impl.ResourceImpl;
+import org.apache.jena.vocabulary.XSD;
 import org.junit.Before;
 import org.junit.Test;
 

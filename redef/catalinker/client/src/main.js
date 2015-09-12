@@ -155,10 +155,10 @@ define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology,
       });
 
       var values_sorted = values["@graph"].sort(function (a, b) {
-        if (a.label["@value"] < b.label["@value"]) {
+        if (a["rdfs:label"]["@value"] < b["rdfs:label"]["@value"]) {
           return -1;
         }
-        if (a.label["@value"] > b.label["@value"]) {
+        if (a["rdfs:label"]["@value"] > b["rdfs:label"]["@value"]) {
           return 1;
         }
         return 0;

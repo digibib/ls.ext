@@ -1,6 +1,6 @@
 package no.deichman.services.entity;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 import no.deichman.services.entity.patch.PatchParserException;
 
 /**

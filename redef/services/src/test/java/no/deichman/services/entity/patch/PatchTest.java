@@ -1,12 +1,12 @@
 package no.deichman.services.entity.patch;
 
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Statement;
 import org.junit.Test;
 
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;

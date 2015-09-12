@@ -1,9 +1,9 @@
 package no.deichman.services.entity.kohaadapter;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Model;
 
 import no.deichman.services.uridefaults.BaseURI;
 
@@ -12,9 +12,9 @@ import org.marc4j.marc.VariableField;
 
 import java.util.List;
 
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 
 /**
  * Responsibility: TODO.

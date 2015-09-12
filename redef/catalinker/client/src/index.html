@@ -79,7 +79,7 @@
           value="{{current.value}}" >
           <option value="">(ikke valgt)</option>
           {{#each authorized_values.language }}
-            <option value='{{.["@id"]}}'>{{label["@value"]}}</option>
+            <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
           {{/each}}
         </select>
       {{/partial}}
@@ -93,7 +93,7 @@
           value="{{current.value}}" >
           <option value="">(ikke valgt)</option>
           {{#each authorized_values.format }}
-            <option value='{{.["@id"]}}'>{{label["@value"]}}</option>
+            <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
           {{/each}}
         </select>
       {{/partial}}

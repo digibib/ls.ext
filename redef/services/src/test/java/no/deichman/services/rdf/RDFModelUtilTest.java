@@ -1,16 +1,16 @@
 package no.deichman.services.rdf;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.hp.hpl.jena.rdf.model.ModelFactory.createDefaultModel;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createPlainLiteral;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ModelFactory.createDefaultModel;
+import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;

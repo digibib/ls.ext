@@ -48,7 +48,7 @@ def version_jetty = '9.2.10.v20150310'
 def version_jersey = '2.21'
 def version_jackson = '1.9.13'
 def version_slf4j = '1.7.12'
-def version_jena = '2.13.0'
+def version_jena = '3.0.0'
 def version_commons_lang = '2.6'
 def version_commons_io = '2.4'
 
@@ -65,6 +65,7 @@ dependencies {
     compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: version_jackson
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
     compile group: 'org.apache.jena', name: 'apache-jena-libs', version: version_jena
+    compile group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.5.1'
     compile group: 'commons-io', name: 'commons-io', version: version_commons_io
     compile group: 'commons-lang', name: 'commons-lang', version: version_commons_lang
     compile ('info.freelibrary:freelib-marc4j:2.6.7') {
@@ -95,7 +96,7 @@ task oneJar(type: OneJar) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
+    gradleVersion = '2.6'
 }
 
 task moduleTest(type: Test) {

@@ -1,7 +1,7 @@
 package no.deichman.services.rdf;
 
 
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.RDFS;
 import java.util.HashMap;
 import java.util.Map;
 

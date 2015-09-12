@@ -1,6 +1,6 @@
 package no.deichman.services.entity;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.inject.Singleton;

@@ -1,7 +1,7 @@
 package no.deichman.services.entity.kohaadapter;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;

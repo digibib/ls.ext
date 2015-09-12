@@ -4,7 +4,7 @@ import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 import no.deichman.services.restutils.MimeType;
 import no.deichman.services.uridefaults.BaseURI;
@@ -38,6 +38,9 @@ public final class JSONLDCreator {
             Object jsonObject = JsonUtils.fromString(sw.toString());
             JsonLdOptions options = new JsonLdOptions();
             options.format = MimeType.LD_JSON;
+            options.useNamespaces = true;
+            options.setUseNativeTypes(true);
+            options.setCompactArrays(true);
 
             final Map<String, Object> ctx = new HashMap<>();
             DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI.ontology());
@@ -49,6 +52,7 @@ public final class JSONLDCreator {
         } catch (IOException | JsonLdError e) {
             e.printStackTrace();
         }
+        System.out.println(s);
         return s;
     }
 

@@ -1,18 +1,18 @@
-@prefix : <http://data.deichman.no/format#> .
+@prefix format: <http://data.deichman.no/format#> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 
-:Book a duo:Format ;
+format:Book a duo:Format ;
   rdfs:label "Bok"@no .
 
-:CD a duo:Format ;
+format:CD a duo:Format ;
   rdfs:label "CD"@no .
 
-:CDROM a duo:Format ;
+format:CDROM a duo:Format ;
   rdfs:label "CD-ROM"@no .
 
-:DVD a duo:Format ;
+format:DVD a duo:Format ;
   rdfs:label "DVD"@no .
 
-:DVDROM a duo:Format ;
+format:DVDROM a duo:Format ;
   rdfs:label "DVD-ROM"@no .

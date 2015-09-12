@@ -14,12 +14,12 @@ import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.VariableField;
 
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 
 import no.deichman.services.uridefaults.BaseURI;
 

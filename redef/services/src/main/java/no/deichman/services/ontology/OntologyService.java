@@ -1,6 +1,6 @@
 package no.deichman.services.ontology;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * Responsibility: Serve ontology model.

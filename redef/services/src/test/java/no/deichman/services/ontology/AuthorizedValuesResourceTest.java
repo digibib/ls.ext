@@ -1,9 +1,9 @@
 package no.deichman.services.ontology;
 
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.RDFS;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import no.deichman.services.rdf.RDFModelUtil;

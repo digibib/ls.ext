@@ -1,12 +1,12 @@
 package no.deichman.services.entity.repository;
 
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.update.UpdateAction;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.update.UpdateAction;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
 import org.junit.Test;
@@ -55,10 +55,10 @@ public class SPARQLQueryBuilderTest {
                 +"DESCRIBE ?publication <http://example.com/a>\n"
                 +"WHERE\n"
                 +"  { <http://example.com/a> ?p ?o .\n"
-                +"    ?publication deichman:publicationOf <http://example.com/a> .\n"
-                +"    ?publication ?po ?ps\n"
+                +"    ?publication deichman:publicationOf <http://example.com/a> ;\n"
+                +"      ?po ?ps\n"
                 +"  }";
-        assertEquals(expected,query.toString().trim());
+        assertEquals(expected.replaceAll("\\s+"," "),query.toString().replaceAll("\\s+"," ").trim());
     }
 
     @Test

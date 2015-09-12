@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.vocabulary.XSD;
 import org.junit.Test;
 
 import java.lang.reflect.Type;

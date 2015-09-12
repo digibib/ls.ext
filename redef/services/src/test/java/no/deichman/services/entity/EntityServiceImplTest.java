@@ -1,13 +1,13 @@
 package no.deichman.services.entity;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.NodeIterator;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
 import no.deichman.services.entity.patch.PatchParserException;
@@ -29,11 +29,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createLangLiteral;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createPlainLiteral;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createResource;
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

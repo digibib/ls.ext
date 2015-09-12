@@ -1,6 +1,6 @@
 package no.deichman.services.entity.patch;
 
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Statement;
 
 /**
  * Responsibility: TODO.

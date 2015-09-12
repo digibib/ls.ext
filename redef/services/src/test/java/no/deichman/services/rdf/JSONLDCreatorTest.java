@@ -1,7 +1,7 @@
 package no.deichman.services.rdf;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.vocabulary.RDFS;
 import java.util.Map;
 import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import no.deichman.services.uridefaults.BaseURI;

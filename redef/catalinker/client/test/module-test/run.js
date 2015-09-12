@@ -191,41 +191,40 @@ app.get("/authorized_values/language", function (req, res) {
     {
       "@graph": [
         {
-          "@id": ":eng",
+          "@id": "language:eng",
           "@type": "http://lexvo.org/ontology#Language",
-          "label": {
+          "rdfs:label": {
             "@language": "no",
             "@value": "Engelsk"
           }
         },
         {
-          "@id": ":fra",
+          "@id": "language:fra",
           "@type": "http://lexvo.org/ontology#Language",
-          "label": {
+          "rdfs:label": {
             "@language": "no",
             "@value": "Fransk"
           }
         },
         {
-          "@id": ":nno",
+          "@id": "language:nno",
           "@type": "http://lexvo.org/ontology#Language",
-          "label": {
+          "rdfs:label": {
             "@language": "no",
             "@value": "Norsk (Nynorsk)"
           }
         },
         {
-          "@id": ":nob",
+          "@id": "language:nob",
           "@type": "http://lexvo.org/ontology#Language",
-          "label": {
+          "rdfs:label": {
             "@language": "no",
             "@value": "Norsk (Bokmål)"
           }
         }
       ],
       "@context": {
-        "label": "http://ww.w3.org/2000/01/rdf-schema#label",
-        "": "http://lexvo.org/id/iso639-3/",
+        "language": "http://lexvo.org/id/iso639-3/",
         "rdfs": "http://ww.w3.org/2000/01/rdf-schema#"
       }
     });
@@ -236,33 +235,34 @@ app.get("/authorized_values/format", function (req, res) {
     {
       "@graph": [
         {
-          "@id": "http://data.deichman.no/format#CD",
+          "@id": "format:CD",
           "@type": "http://data.deichman.no/utility#Format",
-          "label": {
+          "rdfs:label": {
             "@language": "no",
             "@value": "CD"
           }
         },
         {
-          "@id": "http://data.deichman.no/format#Book",
+          "@id": "format:Book",
           "@type": "http://data.deichman.no/utility#Format",
-          "label": {
+          "rdfs:label": {
             "@language": "no",
             "@value": "Bok"
           }
         },
         {
-          "@id": "http://data.deichman.no/format#DVD",
+          "@id": "format:DVD",
           "@type": "http://data.deichman.no/utility#Format",
-          "label": {
+          "rdfs:label": {
             "@language": "no",
             "@value": "DVD"
           }
         }
       ],
       "@context": {
-        "label": "http://ww.w3.org/2000/01/rdf-schema#label",
-        "rdfs": "http://ww.w3.org/2000/01/rdf-schema#"
+        "format": "http://data.deichman.no/",
+        "rdfs": "http://ww.w3.org/2000/01/rdf-schema#",
+        "duo" : "http://data.deichman.no/utility#"
       }
     });
 });

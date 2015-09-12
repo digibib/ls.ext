@@ -1,8 +1,8 @@
 package no.deichman.services.ontology;
 
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import java.io.IOException;
 import javax.ws.rs.core.Response;
 import no.deichman.services.uridefaults.BaseURI;

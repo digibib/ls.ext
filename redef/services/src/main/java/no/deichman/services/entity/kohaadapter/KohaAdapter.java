@@ -1,7 +1,7 @@
 
 package no.deichman.services.entity.kohaadapter;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * Responsibility: TODO.
