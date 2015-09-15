@@ -2,12 +2,14 @@ package no.deichman.services.entity.kohaadapter;
 
 import com.github.restdriver.clientdriver.ClientDriverRequest;
 import com.github.restdriver.clientdriver.ClientDriverRule;
-import java.io.IOException;
-import java.util.regex.Pattern;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import no.deichman.services.testutil.PortSelector;
 import org.junit.Rule;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.POST;
 import static com.github.restdriver.clientdriver.RestClientDriver.giveResponse;
@@ -129,5 +131,56 @@ public final class KohaSvcMock {
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
                         .withStatus(OK.getStatusCode()));
+    }
+
+    public void newBiblioWithPayloadExpectation(String biblioId, String ... barcode) {
+        // TODO most likely this needs to be fixed
+        String responseXml = "<?xml version='1.0' standalone='yes'?>\n"
+                + "<response>\n"
+                + "  <biblionumber>" + biblioId + "</biblionumber>\n"
+                + "  <marcxml>\n"
+                + "<record\n"
+                + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                + "    xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"\n"
+                + "    xmlns=\"http://www.loc.gov/MARC21/slim\">\n"
+                + "\n"
+                + "  <leader>00049    a2200037   4500</leader>\n"
+                + "  <datafield tag=\"999\" ind1=\" \" ind2=\" \">\n"
+                + "    <subfield code=\"c\">26</subfield>\n"
+                + "    <subfield code=\"d\">26</subfield>\n"
+                + "  </datafield>\n"
+                + "</record>\n"
+                + "</marcxml>\n"
+                + "  <status>ok</status>\n"
+                + "</response>\n";
+
+        // TODO most likely this needs to be fixed
+        String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
+                + "<marcxml:record><marcxml:leader>00000     2200000       </marcxml:leader>"
+                + Stream.of(barcode).map(KohaSvcMock::itemMarc).reduce("", String::concat)
+                + "</marcxml:record>"
+                + "</marcxml:collection>\n";
+
+        clientDriver.addExpectation(
+                onRequestTo("/cgi-bin/koha/svc/new_bib")
+                        .withMethod(POST)
+                        .withBody(expectedPayload, MediaType.TEXT_XML)
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
+                        .withStatus(OK.getStatusCode()));
+    }
+
+    public static String itemMarc(final String barcode) {
+        return "  <datafield tag=\"952\" ind1=\" \" ind2=\" \">"
+                + "    <subfield code=\"a\">fnyd</subfield>"
+                + "    <subfield code=\"b\">fnyd</subfield>"
+                + "    <subfield code=\"c\">m</subfield>\n"
+                + "    <subfield code=\"l\">0</subfield>\n"
+                + "    <subfield code=\"o\">Rag</subfield>\n"
+                + "    <subfield code=\"p\">" + barcode + "</subfield>\n"
+                + "    <subfield code=\"t\">95</subfield>\n"
+                + "    <subfield code=\"y\">L</subfield>\n"
+                + "  </datafield>";
     }
 }

@@ -1,12 +1,5 @@
 package no.deichman.services;
 
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.vocabulary.RDFS;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -17,10 +10,20 @@ import no.deichman.services.entity.kohaadapter.KohaSvcMock;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
 import no.deichman.services.testutil.PortSelector;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
+import org.apache.jena.vocabulary.RDFS;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -28,6 +31,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import static no.deichman.services.entity.kohaadapter.KohaSvcMock.itemMarc;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -41,6 +45,7 @@ public class AppTest {
     private static final String FIRST_BIBLIO_ID = "111111";
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
+    private static final String ANOTHER_BIBLIO_ID = "333333";
     private String baseUri;
     private App app;
 
@@ -68,14 +73,14 @@ public class AppTest {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
 
-        final HttpResponse<JsonNode> createPublicationResponse = buildCreateRequest(baseUri + "publication").asJson();
+        final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
 
         assertResponse(Status.CREATED, createPublicationResponse);
         final String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
         assertThat(publicationUri, startsWith(baseUri));
 
-        final HttpResponse<JsonNode> createWorkResponse = buildCreateRequest(baseUri + "work").asJson();
+        final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
 
         assertResponse(Status.CREATED, createWorkResponse);
         final String workUri = getLocation(createWorkResponse);
@@ -89,7 +94,7 @@ public class AppTest {
 
         kohaSvcMock.addPostNewBiblioExpectation(SECOND_BIBLIO_ID);
 
-        final HttpResponse<JsonNode> createSecondPublicationResponse = buildCreateRequest(baseUri + "publication").asJson();
+        final HttpResponse<JsonNode> createSecondPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
         assertResponse(Status.CREATED, createSecondPublicationResponse);
         final String secondPublicationUri = getLocation(createSecondPublicationResponse);
 
@@ -131,10 +136,38 @@ public class AppTest {
                                 + "SELECT (COUNT (?item) AS ?noOfItems) { "
                                 + "?item a deichman:Item ."
                                 + "}"), work1Plus2ItemsModel);
-        assertThat("model does not three publications",
+        assertThat("model does not have 2 + 1 = 3 items",
                 workWith1Plus2ItemsCount.execSelect().next().getLiteral("noOfItems").getInt(),
                 equalTo(2 + 1));
     }
+
+    @Test @Ignore("WIP")
+    public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
+        kohaSvcMock.addLoginExpectation();
+        kohaSvcMock.newBiblioWithPayloadExpectation(ANOTHER_BIBLIO_ID, "03010626460095", "03010626460096");
+
+        Model testModel = ModelFactory.createDefaultModel();
+        Statement item = ResourceFactory.createStatement(
+                ResourceFactory.createResource("anything"),
+                ResourceFactory.createProperty("http://deichman.no/literalmarcitem"),
+                ResourceFactory.createPlainLiteral(itemMarc("03010626460095")));
+        Statement item2 = ResourceFactory.createStatement(
+                ResourceFactory.createResource("something"),
+                ResourceFactory.createProperty("http://deichman.no/literalmarcitem"),
+                ResourceFactory.createPlainLiteral(itemMarc("03010626460096")));
+        testModel.add(item);
+        testModel.add(item2);
+
+        final String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
+
+        final HttpResponse<JsonNode> createPublicationResponse = buildCreateRequest(baseUri + "publication", body).asJson();
+        final String publicationUri = getLocation(createPublicationResponse);
+        assertIsUri(publicationUri);
+        assertThat(publicationUri, startsWith(baseUri));
+
+        Mockito.verifyNoMoreInteractions(kohaSvcMock);
+    }
+
 
     @Test
     public void get_authorized_values_for_language() throws Exception {
@@ -235,12 +268,16 @@ public class AppTest {
         );
     }
 
-    private static RequestBodyEntity buildCreateRequest(String uri) {
+    private static RequestBodyEntity buildEmptyCreateRequest(String uri) {
+        return buildCreateRequest(uri, "{}");
+    }
+
+    private static RequestBodyEntity buildCreateRequest(String uri, String body) {
         return Unirest
                 .post(uri)
                 .header("Accept", "application/ld+json")
                 .header("Content-Type", "application/ld+json")
-                .body("{}");
+                .body(body);
     }
 
 }
