@@ -13,7 +13,6 @@ import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.RDF;
 import no.deichman.services.entity.patch.Patch;
-import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -84,32 +83,29 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createWork(String workJsonLd) {
+    public final String createWork(Model inputModel) {
         String type = "Work";
-
-        Model tempModel = RDFModelUtil.modelFrom(workJsonLd, Lang.JSONLD);
-        tempModel.add(tempTypeStatement(type));
-
+        inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
+
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
         executeUpdate(updateRequest);
         return uri;
     }
 
     @Override
-    public final String createPublication(String publicationJsonLd, String recordID) {
+    public final String createPublication(Model inputModel, String recordID) {
         String type = "Publication";
 
-        Model tempModel = RDFModelUtil.modelFrom(publicationJsonLd, Lang.JSONLD);
-        tempModel.add(tempTypeStatement(type));
-        tempModel.add(tempRecordIdStatement(recordID));
-
+        inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), tempModel);
 
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(tempModel));
+        inputModel.add(tempRecordIdStatement(recordID));
+
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
         executeUpdate(updateRequest);
         return uri;
     }

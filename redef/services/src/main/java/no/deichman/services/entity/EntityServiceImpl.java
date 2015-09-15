@@ -137,15 +137,15 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public String create(EntityType type, String jsonLd) {
+    public String create(EntityType type, Model inputModel) {
         String uri = null;
         switch (type) {
             case PUBLICATION:
                 String recordId = kohaAdapter.getNewBiblio();
-                uri = repository.createPublication(jsonLd, recordId);
+                uri = repository.createPublication(inputModel, recordId);
                 break;
             case WORK:
-                uri = repository.createWork(jsonLd);
+                uri = repository.createWork(inputModel);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);

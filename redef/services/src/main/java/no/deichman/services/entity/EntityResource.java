@@ -49,7 +49,8 @@ public final class EntityResource extends ResourceBase {
     @POST
     @Consumes(LD_JSON)
     public Response create(@PathParam("type") String type, String jsonLd) throws URISyntaxException {
-        String id = getEntityService().create(EntityType.get(type), jsonLd);
+        Model inputModel = RDFModelUtil.modelFrom(jsonLd, Lang.JSONLD);
+        String id = getEntityService().create(EntityType.get(type), inputModel);
         return Response.created(new URI(id)).build();
     }
 
@@ -57,8 +58,8 @@ public final class EntityResource extends ResourceBase {
     @POST
     @Consumes(NTRIPLES)
     public Response createFromNTriples(@PathParam("type") String type, String ntriples) throws URISyntaxException {
-        String jsonLd = RDFModelUtil.stringFrom(RDFModelUtil.modelFrom(ntriples, Lang.NTRIPLES), Lang.JSONLD);
-        String id = getEntityService().create(EntityType.get(type), jsonLd);
+        Model inputModel = RDFModelUtil.modelFrom(ntriples, Lang.NTRIPLES);
+        String id = getEntityService().create(EntityType.get(type), inputModel);
         return Response.created(new URI(id)).build();
     }
 

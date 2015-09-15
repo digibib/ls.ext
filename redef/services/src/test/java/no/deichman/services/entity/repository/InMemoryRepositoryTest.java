@@ -1,5 +1,8 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -8,18 +11,19 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDF;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import no.deichman.services.entity.patch.Patch;
-import no.deichman.services.uridefaults.BaseURI;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class InMemoryRepositoryTest {
     public static final String A_BIBLIO_NO = "34567";
@@ -67,13 +71,15 @@ public class InMemoryRepositoryTest {
     @Test
     public void test_create_publication() throws Exception{
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        assertNotNull(repository.createPublication(publication, A_BIBLIO_NO));
+        final Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
+        assertNotNull(repository.createPublication(inputModel, A_BIBLIO_NO));
     }
 
     @Test
     public void test_publication_has_record_id() throws Exception {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
-        String publicationId = repository.createPublication(publication, A_BIBLIO_NO);
+        final Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
+        String publicationId = repository.createPublication(inputModel, A_BIBLIO_NO);
         Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + baseURI.ontology() + "recordID> ?value .}");
         QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
         assertTrue(qexec.execAsk());

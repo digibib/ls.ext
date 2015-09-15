@@ -10,8 +10,8 @@ import no.deichman.services.entity.patch.Patch;
  */
 public interface RDFRepository {
 
-    String createWork(String work);
-    String createPublication(String publication, String recordID);
+    String createWork(Model model);
+    String createPublication(Model model, String recordID);
 
     void updateWork(String work);
     Model retrieveWorkById(String id);

@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.rdf.RDFModelUtil;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -68,7 +69,8 @@ public class EntityServiceImplTest {
     public void test_retrieve_work_by_id(){
         String testId = "work_SHOULD_EXIST";
         String workData = getTestJSON(testId, "work");
-        String workId = service.create(EntityType.WORK, workData);
+        Model inputModel = RDFModelUtil.modelFrom(workData, Lang.JSONLD);
+        String workId = service.create(EntityType.WORK, inputModel);
         Model comparison = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(
                 workData.replace(workURI + testId, workId)
@@ -83,7 +85,8 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_EXIST";
         String publicationData = getTestJSON(testId, "publication");
-        String publicationId = service.create(EntityType.PUBLICATION, publicationData);
+        Model inputModel = RDFModelUtil.modelFrom(publicationData, Lang.JSONLD);
+        String publicationId = service.create(EntityType.PUBLICATION, inputModel);
         Model test = service.retrieveById(EntityType.PUBLICATION, publicationId.replace(publicationURI, ""));
         Statement testStatement = createStatement(
                 createResource(publicationId),
@@ -106,7 +109,8 @@ public class EntityServiceImplTest {
                 + "        \"deichman:language\": \"http://lexvo.org/id/iso639-3/eng\"\n"
                 + "    }\n"
                 + "}";
-        String workId = service.create(EntityType.WORK, workData);
+        Model inputModel = RDFModelUtil.modelFrom(workData, Lang.JSONLD);
+        String workId = service.create(EntityType.WORK, inputModel);
         Model test = service.retrieveById(EntityType.WORK, workId.replace(workURI, ""));
         assertTrue(
                 test.contains(
@@ -147,7 +151,8 @@ public class EntityServiceImplTest {
                 + "        \"deichman:format\": \"http://data.deichman.no/format#Book\"\n"
                 + "    }\n"
                 + "}";
-        String workId = service.create(EntityType.WORK, workData);
+        Model inputModel = RDFModelUtil.modelFrom(workData, Lang.JSONLD);
+        String workId = service.create(EntityType.WORK, inputModel);
         Model test = service.retrieveById(EntityType.WORK, workId.replace(workURI, ""));
         assertTrue(
                 test.contains(
@@ -182,8 +187,9 @@ public class EntityServiceImplTest {
     public void test_create_work(){
         String testId = "SERVICE_WORK_SHOULD_EXIST";
         String work = getTestJSON(testId, "work");
+        Model inputModel = RDFModelUtil.modelFrom(work, Lang.JSONLD);
         Statement s = createStatement(
-                createResource(service.create(EntityType.WORK, work)),
+                createResource(service.create(EntityType.WORK, inputModel)),
                 createProperty(DCTerms.identifier.getURI()),
                 createPlainLiteral(testId));
         assertTrue(repository.askIfStatementExists(s));
@@ -194,7 +200,8 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
-        String publicationId = service.create(EntityType.PUBLICATION, publication);
+        Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
+        String publicationId = service.create(EntityType.PUBLICATION, inputModel);
         Statement s = createStatement(
                 createResource(publicationId),
                 createProperty(DCTerms.identifier.getURI()),
@@ -214,7 +221,8 @@ public class EntityServiceImplTest {
     public void test_patch_work_add() throws Exception{
         String testId = "work_SHOULD_BE_PATCHABLE";
         String workData = getTestJSON(testId, "work");
-        String workId = service.create(EntityType.WORK, workData);
+        Model inputModel = RDFModelUtil.modelFrom(workData, Lang.JSONLD);
+        String workId = service.create(EntityType.WORK, inputModel);
 
         Model oldModel = ModelFactory.createDefaultModel();
 
@@ -241,7 +249,8 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_PATCHABLE";
         String publicationData = getTestJSON(testId,"publication");
-        String publicationId = service.create(EntityType.PUBLICATION, publicationData);
+        Model inputModel = RDFModelUtil.modelFrom(publicationData, Lang.JSONLD);
+        String publicationId = service.create(EntityType.PUBLICATION, inputModel);
         String nonUriPublicationId = publicationId.replace(publicationURI, "");
         String patchData = getTestPatch("add", publicationId);
         Model patchedModel = service.patch(EntityType.PUBLICATION, nonUriPublicationId, patchData);
@@ -254,7 +263,8 @@ public class EntityServiceImplTest {
     @Test(expected=PatchParserException.class)
     public void test_bad_patch_fails() throws Exception{
         String workData = getTestJSON("SHOULD_FAIL","work");
-        String workId = service.create(EntityType.WORK, workData);
+        Model inputModel = RDFModelUtil.modelFrom(workData, Lang.JSONLD);
+        String workId = service.create(EntityType.WORK, inputModel);
         String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
         service.patch(EntityType.WORK, workId.replace(workURI, ""), badPatchData);
     }
