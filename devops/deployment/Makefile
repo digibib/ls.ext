@@ -69,6 +69,9 @@ dev_extract_example_data_minimum: dev_clean_data ## After cleaning previous file
 dev_load_example_data:
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
+dev_load_example_data_through_services:
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.redef_load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
+
 dev_load_issuing_rules: ## Loads issuing rules
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}"'
 
