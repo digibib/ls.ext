@@ -37,3 +37,10 @@ marc2rdf:
     - require:
       - cmd: merge_catalogue_and_exemp
     - failhard: True
+
+post_records_to_services:
+  cmd.run:
+    - name /vagrant/salt/migration/files/postrecords.sh --dir /var/migration_workdir/converted
+    - require:
+      - cmd: marc2rdf
+    - failhard: True
