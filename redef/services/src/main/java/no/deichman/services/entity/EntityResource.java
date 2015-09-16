@@ -1,8 +1,12 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.entity.patch.PatchParserException;
+import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.restutils.PATCH;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.rdf.model.Model;
-import java.net.URI;
-import java.net.URISyntaxException;
+import org.apache.jena.riot.Lang;
+
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
@@ -17,12 +21,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import no.deichman.services.entity.patch.PatchParserException;
-import no.deichman.services.restutils.PATCH;
-import no.deichman.services.uridefaults.BaseURI;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
+import static no.deichman.services.restutils.MimeType.NTRIPLES;
 import static no.deichman.services.restutils.MimeType.UTF_8;
 
 /**
@@ -45,6 +49,15 @@ public final class EntityResource extends ResourceBase {
     @POST
     @Consumes(LD_JSON)
     public Response create(@PathParam("type") String type, String jsonLd) throws URISyntaxException {
+        String id = getEntityService().create(EntityType.get(type), jsonLd);
+        return Response.created(new URI(id)).build();
+    }
+
+    // TODO fix duplication with method above
+    @POST
+    @Consumes(NTRIPLES)
+    public Response createFromNTriples(@PathParam("type") String type, String ntriples) throws URISyntaxException {
+        String jsonLd = RDFModelUtil.stringFrom(RDFModelUtil.modelFrom(ntriples, Lang.NTRIPLES), Lang.JSONLD);
         String id = getEntityService().create(EntityType.get(type), jsonLd);
         return Response.created(new URI(id)).build();
     }
