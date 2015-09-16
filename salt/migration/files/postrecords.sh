@@ -35,7 +35,7 @@ postRecords() {
   for file in ${FILES}; do
     RES=`curl --silent -H "Content-Type: application/n-triples; charset=UTF-8" -X POST $ENDPOINT -d@${file}`
     RETVAL=$?
-    if [[ $RETVAL -ne 0 ]]; then
+    if [[ $RETVAL -ne true ]]; then      # For some strange reason, RETVAL0|1 is treated as boolean true|false
       SUCCESSCOUNT=$((SUCCESSCOUNT+1))
       MSG+="POST OK    : ${file}"
       MSG+="\n-------\n"
