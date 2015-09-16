@@ -33,8 +33,7 @@ postRecords() {
   local RES
 
   for file in ${FILES}; do
-    CMD="curl --silent -H \"Content-Type: text/ntriples\" -X POST $ENDPOINT -d@${file}"
-    RES=`curl --silent -H "Content-Type: text/ntriples" -X POST $ENDPOINT -d@${file}`
+    RES=`curl --silent -H "Content-Type: application/n-triples; charset=UTF-8" -X POST $ENDPOINT -d@${file}`
     RETVAL=$?
     if [[ $RETVAL -ne 0 ]]; then
       SUCCESSCOUNT=$((SUCCESSCOUNT+1))
