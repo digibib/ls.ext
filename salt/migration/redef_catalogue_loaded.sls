@@ -40,7 +40,7 @@ marc2rdf:
 
 post_records_to_services:
   cmd.run:
-    - name /vagrant/salt/migration/files/postrecords.sh --dir /var/migration_workdir/converted
+    - name: /vagrant/salt/migration/files/postrecords.sh --dir /var/migration_workdir/converted
     - require:
       - cmd: marc2rdf
     - failhard: True
