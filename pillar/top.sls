@@ -1,6 +1,6 @@
 # PILLAR TOP
 base:
-  '^(wombat|\w+-ship)$':
+  '^(wombat|detektor|\w+-ship)$':
     - match: pcre
     - koha
     - koha.admin
@@ -8,7 +8,7 @@ base:
     - migration
     - migration.admin
 
-  '^(wombat|\w+-ship|vm-devops)$':
+  '^(wombat|detektor|\w+-ship|vm-devops)$':
     - match: pcre
     - dockerui
     - elk
@@ -32,6 +32,17 @@ base:
     - koha # overview
     - resource_monitoring # overview
     - redef  # overview
+
+  'detektor':
+    - match: list
+    - docker.prod
+    - registry.prod
+    - elk.prod
+    - sip.kohatest
+    - resource_monitoring.prod
+    - overview # overview
+    - overview.kohatest  # overview
+    - elk.prod  # overview
 
   'wombat':
     - match: list

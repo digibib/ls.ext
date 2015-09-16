@@ -31,23 +31,38 @@ base:
     - mysql.dockerized
     - koha.dockerized
     - sip.dockerized
-    - redef.fuseki
     - migration.dockerized
+
+  'detektor':
+    - match: list
+    - elk
+    - elk.dockerlog-forwarder
+    - mysql.pulled
+    - koha.pulled
+    - sip.pulled
+    - mysql.dockerized
+    - koha.dockerized
+    - sip.dockerized
+    - migration.dockerized
+    - overview
 
   'wombat,vm-ship':
     - match: list
+    - redef.fuseki
     - redef.services.pulledrun
     - redef.catalinker.pulledrun
     - redef.patron-client.pulledrun
 
   'build-ship':
     - match: list
+    - redef.fuseki
     - redef.services.builtrun
     - redef.catalinker.builtrun
     - redef.patron-client.builtrun
 
   'dev-ship':
     - match: list
+    - redef.fuseki
     - redef.services.builtrun
     - redef.catalinker.skeletonrun
     - redef.patron-client.skeletonrun

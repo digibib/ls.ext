@@ -1,4 +1,5 @@
 overview:
+  port: 80
   env:
     description: Lokalt utviklingsmiljø
   koha:
