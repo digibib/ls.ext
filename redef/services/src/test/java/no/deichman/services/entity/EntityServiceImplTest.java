@@ -1,21 +1,21 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.entity.kohaadapter.KohaAdapter;
+import no.deichman.services.entity.kohaadapter.Marc2Rdf;
+import no.deichman.services.entity.patch.PatchParserException;
+import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import no.deichman.services.entity.kohaadapter.KohaAdapter;
-import no.deichman.services.entity.kohaadapter.Marc2Rdf;
-import no.deichman.services.entity.patch.PatchParserException;
-import no.deichman.services.entity.repository.InMemoryRepository;
-import no.deichman.services.uridefaults.BaseURI;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,12 +30,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
-import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -45,6 +45,7 @@ import static org.mockito.Mockito.when;
 public class EntityServiceImplTest {
 
     private static final String A_BIBLIO_ID = "234567";
+    public static final String SOME_BARCODE = "0123456789";
     private EntityServiceImpl service;
     private InMemoryRepository repository;
     private String ontologyURI;
@@ -188,8 +189,11 @@ public class EntityServiceImplTest {
         String testId = "SERVICE_WORK_SHOULD_EXIST";
         String work = getTestJSON(testId, "work");
         Model inputModel = RDFModelUtil.modelFrom(work, Lang.JSONLD);
+
+        final String uri = service.create(EntityType.WORK, inputModel);
+
         Statement s = createStatement(
-                createResource(service.create(EntityType.WORK, inputModel)),
+                createResource(uri),
                 createProperty(DCTerms.identifier.getURI()),
                 createPlainLiteral(testId));
         assertTrue(repository.askIfStatementExists(s));

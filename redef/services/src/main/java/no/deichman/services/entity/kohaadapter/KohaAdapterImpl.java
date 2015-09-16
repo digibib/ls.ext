@@ -24,6 +24,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -124,11 +125,16 @@ public final class KohaAdapterImpl implements KohaAdapter {
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.post(Entity.entity(mxp.getMarcXml(),MediaType.TEXT_XML));
+        return invocationBuilder.post(Entity.entity(mxp.getMarcXml(), MediaType.TEXT_XML));
     }
 
     @Override
     public String getNewBiblio() {
+        return getNewBiblioWithItems(); // empty argument list
+    }
+
+    @Override
+    public String getNewBiblioWithItems(Map<Character, String>... itemSubfieldMap) {
         // TODO Handle login in a filter / using template pattern
         if (sessionCookie == null) {
             login();

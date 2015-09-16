@@ -173,13 +173,14 @@ public final class KohaSvcMock {
 
     public static String itemMarc(final String barcode) {
         return "  <datafield tag=\"952\" ind1=\" \" ind2=\" \">"
-                + "    <subfield code=\"a\">fnyd</subfield>"
-                + "    <subfield code=\"b\">fnyd</subfield>"
+                + "    <subfield code=\"a\">hutl</subfield>"
+                + "    <subfield code=\"b\">hutl</subfield>"
                 + "    <subfield code=\"c\">m</subfield>\n"
-                + "    <subfield code=\"l\">0</subfield>\n"
-                + "    <subfield code=\"o\">Rag</subfield>\n"
+                + "    <subfield code=\"l\">3</subfield>\n"
+                + "    <subfield code=\"m\">1</subfield>\n"
+                + "    <subfield code=\"o\">952 Cri</subfield>\n"
                 + "    <subfield code=\"p\">" + barcode + "</subfield>\n"
-                + "    <subfield code=\"t\">95</subfield>\n"
+                + "    <subfield code=\"t\">1</subfield>\n"
                 + "    <subfield code=\"y\">L</subfield>\n"
                 + "  </datafield>";
     }

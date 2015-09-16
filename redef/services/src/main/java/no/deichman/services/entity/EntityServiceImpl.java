@@ -1,5 +1,11 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.entity.kohaadapter.KohaAdapter;
+import no.deichman.services.entity.patch.PatchParser;
+import no.deichman.services.entity.patch.PatchParserException;
+import no.deichman.services.entity.repository.RDFRepository;
+import no.deichman.services.entity.repository.SPARQLQueryBuilder;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -11,17 +17,17 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import no.deichman.services.entity.kohaadapter.KohaAdapter;
-import no.deichman.services.entity.patch.PatchParser;
-import no.deichman.services.entity.patch.PatchParserException;
-import no.deichman.services.entity.repository.RDFRepository;
-import no.deichman.services.entity.repository.SPARQLQueryBuilder;
-import no.deichman.services.uridefaults.BaseURI;
+import org.apache.jena.rdf.model.SimpleSelector;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,6 +42,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property recordID;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
+    public static final Property HAS_ITEM_PROPERTY = ResourceFactory.createProperty("http://data.deichman.no/hasItem");
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -138,11 +145,49 @@ public final class EntityServiceImpl implements EntityService {
 
     @Override
     public String create(EntityType type, Model inputModel) {
-        String uri = null;
+        String uri;
         switch (type) {
             case PUBLICATION:
-                String recordId = kohaAdapter.getNewBiblio();
-                uri = repository.createPublication(inputModel, recordId);
+                // TODO this needs a bit of love
+                StmtIterator hasItemStatements = inputModel.listStatements(new SimpleSelector() {
+                    public boolean selects(Statement s) {
+                        return s.getPredicate().equals(HAS_ITEM_PROPERTY);
+                    }
+                });
+
+                String recordId;
+                if (hasItemStatements.hasNext()) {
+                    Model withoutItems = ModelFactory.createDefaultModel();
+
+                    Map<Resource, Map<Character, String>> itemSubfieldMaps = new HashMap<>();
+                    hasItemStatements.forEachRemaining(hasItemStatement -> {
+                        Map<Character, String> itemSubFields = new HashMap<>();
+                        itemSubfieldMaps.put(hasItemStatement.getResource(), itemSubFields);
+                    });
+
+                    final StmtIterator stmtIterator = inputModel.listStatements();
+
+                    stmtIterator.forEachRemaining(statement -> {
+                        if (itemSubfieldMaps.containsKey(statement.getSubject())) {
+                            Map<Character, String> itemSubfieldMap = itemSubfieldMaps.get(statement.getSubject());
+
+                            String predicate = statement.getPredicate().getURI();
+                            String fieldCode = predicate.substring(predicate.lastIndexOf("/") + 1);
+
+                            RDFNode object = statement.getObject();
+                            if (object.isLiteral() && !(fieldCode.length() > 1)) {
+                                itemSubfieldMap.put(fieldCode.charAt(0), object.asLiteral().getString());
+                            }
+                        } else if (!statement.getPredicate().equals(HAS_ITEM_PROPERTY)) {
+                            withoutItems.add(statement);
+                        }
+                    });
+                    recordId = kohaAdapter.getNewBiblioWithItems(itemSubfieldMaps.values().toArray(new Map[itemSubfieldMaps.size()]));
+                    uri = repository.createPublication(withoutItems, recordId);
+                } else {
+                    recordId = kohaAdapter.getNewBiblio();
+                    uri = repository.createPublication(inputModel, recordId);
+                }
                 break;
             case WORK:
                 uri = repository.createWork(inputModel);

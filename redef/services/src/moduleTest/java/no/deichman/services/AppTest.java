@@ -14,7 +14,6 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
@@ -31,7 +30,6 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 
-import static no.deichman.services.entity.kohaadapter.KohaSvcMock.itemMarc;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -144,28 +142,36 @@ public class AppTest {
     @Test @Ignore("WIP")
     public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.newBiblioWithPayloadExpectation(ANOTHER_BIBLIO_ID, "03010626460095", "03010626460096");
+        kohaSvcMock.newBiblioWithPayloadExpectation(ANOTHER_BIBLIO_ID, "03011527411001", "03011527411002");
 
-        Model testModel = ModelFactory.createDefaultModel();
-        Statement item = ResourceFactory.createStatement(
-                ResourceFactory.createResource("anything"),
-                ResourceFactory.createProperty("http://deichman.no/literalmarcitem"),
-                ResourceFactory.createPlainLiteral(itemMarc("03010626460095")));
-        Statement item2 = ResourceFactory.createStatement(
-                ResourceFactory.createResource("something"),
-                ResourceFactory.createProperty("http://deichman.no/literalmarcitem"),
-                ResourceFactory.createPlainLiteral(itemMarc("03010626460096")));
-        testModel.add(item);
-        testModel.add(item2);
+        String input = "<http://deichman.no/resource/1527411> <http://data.deichman.no/bibliofilID> \"1527411\" .\n"
+                + "<http://deichman.no/resource/1527411> <http://purl.org/dc/terms/language> <http://lexvo.org/id/iso639-3/eng> .\n"
+                + "<http://deichman.no/resource/1527411> <http://purl.org/dc/terms/format> <http://data.deichman.no/format#Book> .\n"
+                + "<http://deichman.no/resource/1527411> <http://data.deichman.no/name> \"Critical issues in contemporary Japan\" .\n"
+                + itemNTriples("03011527411001")
+                + itemNTriples("03011527411002");
+        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
 
-        final String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
-
-        final HttpResponse<JsonNode> createPublicationResponse = buildCreateRequest(baseUri + "publication", body).asJson();
-        final String publicationUri = getLocation(createPublicationResponse);
+        HttpResponse<JsonNode> createPublicationResponse = buildCreateRequest(baseUri + "publication", body).asJson();
+        String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
         assertThat(publicationUri, startsWith(baseUri));
 
         Mockito.verifyNoMoreInteractions(kohaSvcMock);
+    }
+
+    private String itemNTriples(final String barcode) {
+        return "<http://deichman.no/resource/1527411> <http://data.deichman.no/hasItem> <http://data.deichman.no/item/x" + barcode +  "> .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/a> \"hutl\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/b> \"hutl\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/l> \"3\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/m> \"1\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/o> \"952 Cri\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/p> \"" + barcode + "\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/q> \"2014-11-05\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/t> \"1\" .\n"
+                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/y> \"L\" .";
     }
 
 
