@@ -23,7 +23,7 @@ cleanup() {
 }
 
 usage() { 
-  echo -e "\nUsage:\n$0 records_directory \n"
+  echo -e "\nUsage:\n$0 --dir records_directory \n"
   exit 1
 }
 
@@ -33,9 +33,10 @@ postRecords() {
   local RES
 
   for file in ${FILES}; do
-    RES=`curl --silent -H "Content-Type: application/n-triples; charset=UTF-8" -X POST $ENDPOINT -d@${file}`
+    SED=`sed -e 's|data.deichman.no|192.168.50.12:8005|mg' ${file}`
+    RES=`echo ${SED} | curl --silent -H "Content-Type: application/n-triples; charset=UTF-8" -X POST $ENDPOINT -d @-`
     RETVAL=$?
-    if [[ $RETVAL -ne true ]]; then      # For some strange reason, RETVAL0|1 is treated as boolean true|false
+    if [[ $RETVAL -eq true ]]; then      # For some strange reason, RETVAL0|1 is treated as boolean true|false
       SUCCESSCOUNT=$((SUCCESSCOUNT+1))
       MSG+="POST OK    : ${file}"
       MSG+="\n-------\n"
