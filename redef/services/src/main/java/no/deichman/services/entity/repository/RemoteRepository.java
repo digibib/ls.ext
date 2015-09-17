@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * Responsibility: Remotely calling a sparql endpoint to do queries and updates.
  */
 public final class RemoteRepository extends RDFRepositoryBase {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(RemoteRepository.class);
 
     private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
     private final String fusekiPort;
@@ -21,7 +21,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
     RemoteRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
         super(baseURI, sparqlQueryBuilder, uriGenerator);
         this.fusekiPort = fusekiPort;
-        log.info("Repository started with FUSEKI_PORT: " + this.fusekiPort);
+        LOG.info("Repository started with FUSEKI_PORT: " + this.fusekiPort);
     }
 
     public RemoteRepository() {

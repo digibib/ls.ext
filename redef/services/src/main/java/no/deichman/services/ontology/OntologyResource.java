@@ -1,22 +1,23 @@
 package no.deichman.services.ontology;
 
-import java.io.IOException;
-import javax.inject.Singleton;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 import no.deichman.services.rdf.JSONLDCreator;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 
-import static no.deichman.services.restutils.MimeType.UTF_8;
+import javax.inject.Singleton;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+
 import static no.deichman.services.restutils.MimeType.DEFAULT;
 import static no.deichman.services.restutils.MimeType.JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.PLAIN;
 import static no.deichman.services.restutils.MimeType.TURTLE;
+import static no.deichman.services.restutils.MimeType.UTF_8;
 
 /**
  * Responsibility: Expose ontology as a REST resource.
@@ -53,7 +54,7 @@ public final class OntologyResource {
         return Response.ok().entity(getOntologyJsonLD()).build();
     }
 
-    public String getOntologyJsonLD() {
+    private String getOntologyJsonLD() {
         return new JSONLDCreator(baseUri).asJSONLD(ontologyService.getOntology());
     }
 

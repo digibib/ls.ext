@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class InMemoryRepository extends RDFRepositoryBase {
     private final Dataset model;
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(InMemoryRepository.class);
 
     public InMemoryRepository() {
         this(BaseURI.local());
@@ -30,7 +30,7 @@ public final class InMemoryRepository extends RDFRepositoryBase {
     private InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         super(baseURI, sqb, uriGenerator);
         model = DatasetFactory.createMem();
-        log.info("In-memory repository started.");
+        LOG.info("In-memory repository started.");
     }
 
     public void addData(Model newData){

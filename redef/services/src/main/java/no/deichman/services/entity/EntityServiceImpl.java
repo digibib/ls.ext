@@ -39,7 +39,6 @@ public final class EntityServiceImpl implements EntityService {
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
-    private final Property recordID;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
 
@@ -85,7 +84,6 @@ public final class EntityServiceImpl implements EntityService {
 
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
         this.baseURI = baseURI;
-        recordID = ResourceFactory.createProperty(this.baseURI.ontology() + "recordID");
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
     }

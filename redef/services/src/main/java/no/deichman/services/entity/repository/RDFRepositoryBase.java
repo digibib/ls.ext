@@ -30,7 +30,7 @@ import java.util.List;
  */
 public abstract class RDFRepositoryBase implements RDFRepository {
 
-    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
+    private static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final BaseURI baseURI;

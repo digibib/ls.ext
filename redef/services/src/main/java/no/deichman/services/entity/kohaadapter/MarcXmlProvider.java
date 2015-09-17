@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Responsibility: Make a MARCXML record.
  */
-public final class MarcXmlProvider {
+final class MarcXmlProvider {
 
     private static final String TWENTY_FOUR_SPACES = "                        ";
     private Record record;

@@ -12,9 +12,9 @@ public final class Patch {
     private String graph = null;
 
     public Patch(String operation, Statement statement, String graph){
-        setOperation(operation);
-        setStatement(statement);
-        setGraph(graph);
+        this.operation = operation;
+        this.statement = statement;
+        this.graph = graph;
     }
 
     public String getOperation() {
@@ -27,18 +27,6 @@ public final class Patch {
 
     public String getGraph() {
         return graph;
-    }
-
-    public void setOperation(String op) {
-        operation = op;
-    }
-
-    public void setStatement(Statement st) {
-        statement = st;
-    }
-
-    public void setGraph(String g) {
-        graph = g;
     }
 
 }

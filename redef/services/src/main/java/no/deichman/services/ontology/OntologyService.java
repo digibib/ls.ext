@@ -5,6 +5,6 @@ import org.apache.jena.rdf.model.Model;
 /**
  * Responsibility: Serve ontology model.
  */
-public interface OntologyService {
+interface OntologyService {
     Model getOntology();
 }

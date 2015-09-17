@@ -1,13 +1,13 @@
 package no.deichman.services.entity.patch;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.XSD;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Responsibility: TODO.
@@ -125,7 +125,6 @@ final class PatchObject {
                 ResourceFactory.createProperty(getPredicate()),
                 rdfNode);
 
-        Patch patch = new Patch(op, statement, null);
-        return patch;
+        return new Patch(op, statement, null);
     }
 }

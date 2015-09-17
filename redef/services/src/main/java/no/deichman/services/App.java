@@ -31,7 +31,7 @@ public final class App {
         this.inMemoryRDFRepository = inMemoryRDFRepository;
     }
 
-    void startSync() throws Exception {
+    private void startSync() throws Exception {
         try {
             startAsync();
             join();

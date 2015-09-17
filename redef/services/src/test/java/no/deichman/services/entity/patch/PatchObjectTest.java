@@ -1,16 +1,16 @@
 package no.deichman.services.entity.patch;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.jena.rdf.model.impl.ResourceImpl;
 import org.apache.jena.vocabulary.XSD;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class PatchObjectTest {
 
@@ -19,16 +19,12 @@ public class PatchObjectTest {
     private static final String PREDICATE = "http://www.example.com/PREDICATE";
     private static final String URI_OBJECT = "http://www.example.com/object";
 
-    private Map<String, String> object;
     private Map<String, String> uriObject;
     private Map<String, String> datatypeObject;
     private Map<String, String> languageLiteral;
 
     @Before
     public void setUp() {
-        object = new HashMap<>();
-        object.put("value", URI_OBJECT);
-
         uriObject = new HashMap<>();
         uriObject.put("value", URI_OBJECT);
         uriObject.put("type", XSD.anyURI.getURI());
