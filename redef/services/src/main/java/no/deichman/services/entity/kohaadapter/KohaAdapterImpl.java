@@ -117,11 +117,14 @@ public final class KohaAdapterImpl implements KohaAdapter {
         return m;
     }
 
-    private Response requestNew() {
+    private Response requestNew(Map<Character, String>... itemSubfieldMaps) {
         MarcXmlProvider mxp = new MarcXmlProvider();
         mxp.createRecord();
+        for (Map<Character, String> itemSubfieldMap : itemSubfieldMaps) {
+            mxp.add952(itemSubfieldMap);
+        }
         Client client = ClientBuilder.newClient();
-        String url = kohaPort + "/cgi-bin/koha/svc/new_bib";
+        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (itemSubfieldMaps != null && itemSubfieldMaps.length > 0 ? "?items=1" : "");
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
         invocationBuilder.cookie(sessionCookie.toCookie());
@@ -140,11 +143,11 @@ public final class KohaAdapterImpl implements KohaAdapter {
             login();
         }
 
-        Response response = requestNew();
+        Response response = requestNew(itemSubfieldMap);
         // TODO Hack if we have timed out
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             login();
-            response = requestNew();
+            response = requestNew(itemSubfieldMap);
         }
         if (OK.getStatusCode() != response.getStatus()) {
             throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!

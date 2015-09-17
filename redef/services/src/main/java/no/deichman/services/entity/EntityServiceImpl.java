@@ -42,7 +42,6 @@ public final class EntityServiceImpl implements EntityService {
     private final Property recordID;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
-    public static final Property HAS_ITEM_PROPERTY = ResourceFactory.createProperty("http://data.deichman.no/hasItem");
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -148,10 +147,12 @@ public final class EntityServiceImpl implements EntityService {
         String uri;
         switch (type) {
             case PUBLICATION:
+                Property hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
+
                 // TODO this needs a bit of love
                 StmtIterator hasItemStatements = inputModel.listStatements(new SimpleSelector() {
                     public boolean selects(Statement s) {
-                        return s.getPredicate().equals(HAS_ITEM_PROPERTY);
+                        return s.getPredicate().equals(hasItemProperty);
                     }
                 });
 
@@ -178,7 +179,7 @@ public final class EntityServiceImpl implements EntityService {
                             if (object.isLiteral() && !(fieldCode.length() > 1)) {
                                 itemSubfieldMap.put(fieldCode.charAt(0), object.asLiteral().getString());
                             }
-                        } else if (!statement.getPredicate().equals(HAS_ITEM_PROPERTY)) {
+                        } else if (!statement.getPredicate().equals(hasItemProperty)) {
                             withoutItems.add(statement);
                         }
                     });
