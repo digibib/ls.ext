@@ -58,11 +58,13 @@ dev_reset: dev_reset_db dev_reindex_koha
 dev_clean_data: ## Delete previously extracted files and temporary files from workdir
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.data_cleaned pillar="{migration-data-folder: /var/migration_workdir}"'
 
-dev_extract_example_data_full: dev_clean_data ## After cleaning previous files, downloads complete set of example data from wombat - args: WOMBATUSER
+dev_copy_example_data_full: dev_clean_data ## Clean data, download configuration data and complete set of example data from wombat - args: WOMBATUSER
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.copy_configuration_data pillar="{migration-data-folder: /var/migration_workdir}"'
 	vagrant ssh $(SHIP) -c 'mkdir -p /var/migration_workdir'
-	vagrant ssh $(SHIP) -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/* /var/migration_workdir'
+	vagrant ssh $(SHIP) -c 'sudo scp $(WOMBATUSER)@10.172.2.160:/data/example_data_full/*.txt /var/migration_workdir'
 
-dev_extract_example_data_minimum: dev_clean_data ## After cleaning previous files, downloads complete set of example data from migration image
+dev_copy_example_data_minimum: dev_clean_data	## Clean data, download configuration data and minimal example data from migration image
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.copy_configuration_data pillar="{migration-data-folder: /var/migration_workdir}"'
 	vagrant ssh $(SHIP) -c 'sudo mkdir -p /var/migration_workdir/'
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.copy_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
@@ -119,6 +121,7 @@ prod_extract_example_data_minimum: prod_clean_data ## After cleaning previous fi
 
 prod_load_example_data: ## Loads a complete set of example data - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c ' \
+		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.copy_configuration_data pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log && \
 		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.load_example_data pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log && \
 		salt \"$(MINIONNAME)\" --log-level debug state.sls migration.notify_success_to_slack'"
 
