@@ -23,17 +23,18 @@ cleanup() {
 }
 
 usage() { 
-  echo -e "\nUsage:\n$0 --dir records_directory \n"
+  echo -e "\nUsage:\n$0 -d records_directory -r replace_placeholder_namespace\n"
   exit 1
 }
 
 postRecords() {
-  local ENDPOINT="http://192.168.50.12:8005/publication"
   local FILES="$1/*.nt"
+  local REPLACE="$2"
+  local ENDPOINT="http://$REPLACE/publication"
   local RES
 
   for file in ${FILES}; do
-    SED=`sed -e 's|data.deichman.no|192.168.50.12:8005|mg' ${file}`
+    SED=`sed -e "s|placeholder.com|$REPLACE|mg" ${file}`
     RES=`echo ${SED} | curl --silent -H "Content-Type: application/n-triples; charset=UTF-8" -X POST $ENDPOINT -d @-`
     RETVAL=$?
     if [[ $RETVAL -eq true ]]; then      # For some strange reason, RETVAL0|1 is treated as boolean true|false
@@ -51,12 +52,15 @@ postRecords() {
   done
 }
 
-case "$1" in
-    "")
-    usage
-    ;;
-  --dir|-d)
-    shift
-    postRecords $1
-    ;;
-esac
+while getopts d:n: opts; do
+   case ${opts} in
+      d) DIR=${OPTARG} ;;
+      n) NAMESPACE=${OPTARG} ;;
+   esac
+done
+
+if [ -z "$DIR" ] || [ -z "$NAMESPACE" ] ; then
+  usage
+fi
+
+postRecords $DIR $NAMESPACE
