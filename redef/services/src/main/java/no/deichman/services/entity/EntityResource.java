@@ -48,18 +48,18 @@ public final class EntityResource extends ResourceBase {
 
     @POST
     @Consumes(LD_JSON)
-    public Response create(@PathParam("type") String type, String jsonLd) throws URISyntaxException {
-        Model inputModel = RDFModelUtil.modelFrom(jsonLd, Lang.JSONLD);
-        String id = getEntityService().create(EntityType.get(type), inputModel);
-        return Response.created(new URI(id)).build();
+    public Response createFromLDJSON(@PathParam("type") String type, String body) throws URISyntaxException {
+        return create(type, body, Lang.JSONLD);
     }
 
-    // TODO fix duplication with method above
     @POST
     @Consumes(NTRIPLES)
-    public Response createFromNTriples(@PathParam("type") String type, String ntriples) throws URISyntaxException {
-        Model inputModel = RDFModelUtil.modelFrom(ntriples, Lang.NTRIPLES);
-        String id = getEntityService().create(EntityType.get(type), inputModel);
+    public Response createFromNTriples(@PathParam("type") String type, String body) throws URISyntaxException {
+        return create(type, body, Lang.NTRIPLES);
+    }
+
+    private Response create(@PathParam("type") String type, String body, Lang lang) throws URISyntaxException {
+        String id = getEntityService().create(EntityType.get(type), RDFModelUtil.modelFrom(body, lang));
         return Response.created(new URI(id)).build();
     }
 

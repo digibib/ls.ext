@@ -81,7 +81,7 @@ public class EntityResourceTest {
     @Test
     public void create_should_return_201_when_work_created() throws URISyntaxException {
         String work = createTestWork(SOME_WORK_IDENTIFIER);
-        Response result = entityResource.create("work", work);
+        Response result = entityResource.createFromLDJSON("work", work);
 
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
@@ -91,7 +91,7 @@ public class EntityResourceTest {
     public void create_should_return_location_header_when_work_created() throws URISyntaxException {
         String work = createTestWork(SOME_WORK_IDENTIFIER);
 
-        Response result = entityResource.create("work", work);
+        Response result = entityResource.createFromLDJSON("work", work);
 
         String workURI = baseURI.work();
 
@@ -112,7 +112,7 @@ public class EntityResourceTest {
     public void create_should_return_the_new_work() throws URISyntaxException{
         String work = createTestWork(SOME_WORK_IDENTIFIER);
 
-        Response createResponse = entityResource.create("work", work);
+        Response createResponse = entityResource.createFromLDJSON("work", work);
 
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
 
@@ -162,7 +162,7 @@ public class EntityResourceTest {
     @Test
     public void patch_with_invalid_data_should_return_status_400() throws Exception {
         String work = createTestWork(SOME_WORK_IDENTIFIER);
-        Response result = entityResource.create("work", work);
+        Response result = entityResource.createFromLDJSON("work", work);
         String workId = result.getLocation().getPath().substring("/work/".length());
         String patchData = "{}";
         try {
@@ -186,7 +186,7 @@ public class EntityResourceTest {
     @Test
     public void delete_existing_work_should_return_no_content() throws URISyntaxException{
         String work = createTestWork(SOME_WORK_IDENTIFIER);
-        Response createResponse = entityResource.create("work", work);
+        Response createResponse = entityResource.createFromLDJSON("work", work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response response = entityResource.delete("work", workId);
         assertEquals(response.getStatus(), NO_CONTENT.getStatusCode());
@@ -207,7 +207,7 @@ public class EntityResourceTest {
     @Test
     public void create_should_return_201_when_publication_created() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        Response result = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
+        Response result = entityResource.createFromLDJSON("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
     }
@@ -215,7 +215,7 @@ public class EntityResourceTest {
     @Test
     public void location_returned_from_create_should_return_the_new_publication() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        Response createResponse = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
+        Response createResponse = entityResource.createFromLDJSON("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
 
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
 
@@ -231,7 +231,7 @@ public class EntityResourceTest {
     @Test
     public void delete_publication_should_return_no_content() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        Response createResponse = entityResource.create("publication", createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
+        Response createResponse = entityResource.createFromLDJSON("publication", createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
         String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
         Response response = entityResource.delete("publication", publicationId);
         assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
@@ -241,7 +241,7 @@ public class EntityResourceTest {
     public void patch_should_actually_persist_changes() throws Exception {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String publication = createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE");
-        Response result = entityResource.create("publication", publication);
+        Response result = entityResource.createFromLDJSON("publication", publication);
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{"
                 + "\"op\": \"add\","
@@ -276,7 +276,7 @@ public class EntityResourceTest {
                 + "        \"deichman:language\": \"http://lexvo.org/id/iso639-3/eng\"\n"
                 + "    }\n"
                 + "}";
-        Response createResponse = entityResource.create("work", work);
+        Response createResponse = entityResource.createFromLDJSON("work", work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response result = entityResource.get("work", workId);
 
@@ -306,7 +306,7 @@ public class EntityResourceTest {
                 + "        \"deichman:format\": \"http://data.deichman.no/format#Book\"\n"
                 + "    }\n"
                 + "}";
-        Response createResponse = entityResource.create("work", work);
+        Response createResponse = entityResource.createFromLDJSON("work", work);
         String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
         Response result = entityResource.get("work", workId);
 
