@@ -19,18 +19,23 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Responsibility: TODO.
@@ -42,6 +47,7 @@ public final class EntityServiceImpl implements EntityService {
     private final BaseURI baseURI;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
+    private final Property hasItemProperty;
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -87,6 +93,7 @@ public final class EntityServiceImpl implements EntityService {
         this.baseURI = baseURI;
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
+        hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
     }
 
     @Override
@@ -146,47 +153,11 @@ public final class EntityServiceImpl implements EntityService {
         String uri;
         switch (type) {
             case PUBLICATION:
-                Property hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
-
-                // TODO this needs a bit of love
-                StmtIterator hasItemStatements = inputModel.listStatements(new SimpleSelector() {
-                    public boolean selects(Statement s) {
-                        return s.getPredicate().equals(hasItemProperty);
-                    }
-                });
-
-                String recordId;
-                if (hasItemStatements.hasNext()) {
-                    Model withoutItems = ModelFactory.createDefaultModel();
-
-                    Map<Resource, Map<Character, String>> itemSubfieldMaps = new HashMap<>();
-                    hasItemStatements.forEachRemaining(hasItemStatement -> {
-                        Map<Character, String> itemSubFields = new TreeMap<>();
-                        itemSubfieldMaps.put(hasItemStatement.getResource(), itemSubFields);
-                    });
-
-                    final StmtIterator stmtIterator = inputModel.listStatements();
-
-                    stmtIterator.forEachRemaining(statement -> {
-                        if (itemSubfieldMaps.containsKey(statement.getSubject())) {
-                            Map<Character, String> itemSubfieldMap = itemSubfieldMaps.get(statement.getSubject());
-
-                            String predicate = statement.getPredicate().getURI();
-                            String fieldCode = predicate.substring(predicate.lastIndexOf("/") + 1);
-
-                            RDFNode object = statement.getObject();
-                            if (object.isLiteral() && !(fieldCode.length() > 1)) {
-                                itemSubfieldMap.put(fieldCode.charAt(0), object.asLiteral().getString());
-                            }
-                        } else if (!statement.getPredicate().equals(hasItemProperty)) {
-                            withoutItems.add(statement);
-                        }
-                    });
-                    recordId = kohaAdapter.getNewBiblioWithItems(itemSubfieldMaps.values().toArray(new Map[itemSubfieldMaps.size()]));
-                    uri = repository.createPublication(withoutItems, recordId);
+                Set<Resource> items = objectsOfProperty(hasItemProperty, inputModel);
+                if (items.isEmpty()) {
+                    uri = repository.createPublication(inputModel, kohaAdapter.getNewBiblio());
                 } else {
-                    recordId = kohaAdapter.getNewBiblio();
-                    uri = repository.createPublication(inputModel, recordId);
+                    uri = createPublicationWithItems(inputModel, items);
                 }
                 break;
             case WORK:
@@ -196,6 +167,61 @@ public final class EntityServiceImpl implements EntityService {
                 throw new IllegalArgumentException("Unknown entity type:" + type);
         }
         return uri;
+    }
+
+    private String createPublicationWithItems(Model inputModel, Set<Resource> items) {
+        Model modelWithoutItems = ModelFactory.createDefaultModel();
+        List<Map<Character, String>> itemSubfieldMaps = new ArrayList<>();
+
+        streamFrom(inputModel.listStatements())
+                .collect(groupingBy(Statement::getSubject))
+                .forEach((subject, statements) -> {
+                    if (items.contains(subject)) {
+                        itemSubfieldMaps.add(as952Subfields(statements));
+                    } else {
+                        statements.forEach(s -> {
+                            if (!s.getPredicate().equals(hasItemProperty)) {
+                                modelWithoutItems.add(s);
+                            }
+                        });
+                    }
+                });
+
+        return repository.createPublication(
+                modelWithoutItems,
+                kohaAdapter.getNewBiblioWithItems(asArray(itemSubfieldMaps))
+        );
+    }
+
+    private static <T> Map[] asArray(List<T> list) {
+        return list.toArray(new Map[list.size()]);
+    }
+
+    private Map<Character, String> as952Subfields(List<Statement> statements) {
+        Map<Character, String> itemSubfieldMap = new TreeMap<>();
+        statements.forEach(s -> {
+            String predicate = s.getPredicate().getURI();
+            String fieldCode = predicate.substring(predicate.lastIndexOf("/") + 1);
+
+            RDFNode object = s.getObject();
+            if (object.isLiteral() && !(fieldCode.length() > 1)) {
+                itemSubfieldMap.put(fieldCode.charAt(0), object.asLiteral().getString());
+            }
+        });
+        return itemSubfieldMap;
+    }
+
+    private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
+        Set<Resource> resources = new HashSet<>();
+        inputModel
+                .listObjectsOfProperty(property)
+                .forEachRemaining(r -> resources.add(r.asResource()));
+        return resources;
+    }
+
+    private static <T> Stream<T> streamFrom(Iterator<T> sourceIterator) {
+        Iterable<T> iterable = () -> sourceIterator;
+        return StreamSupport.stream(iterable.spliterator(), false);
     }
 
     @Override
