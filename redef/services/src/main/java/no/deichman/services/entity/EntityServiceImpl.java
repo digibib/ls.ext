@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -160,7 +161,7 @@ public final class EntityServiceImpl implements EntityService {
 
                     Map<Resource, Map<Character, String>> itemSubfieldMaps = new HashMap<>();
                     hasItemStatements.forEachRemaining(hasItemStatement -> {
-                        Map<Character, String> itemSubFields = new HashMap<>();
+                        Map<Character, String> itemSubFields = new TreeMap<>();
                         itemSubfieldMaps.put(hasItemStatement.getResource(), itemSubFields);
                     });
 

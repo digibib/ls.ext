@@ -133,7 +133,7 @@ public final class KohaSvcMock {
                         .withStatus(OK.getStatusCode()));
     }
 
-    public void newBiblioWithPayloadExpectation(String biblioId, String ... barcode) {
+    public void newBiblioWithItemsExpectation(String biblioId, String... barcode) {
         // TODO most likely this needs to be fixed
         String responseXml = "<?xml version='1.0' standalone='yes'?>\n"
                 + "<response>\n"
@@ -164,6 +164,7 @@ public final class KohaSvcMock {
 
         clientDriver.addExpectation(
                 onRequestTo("/cgi-bin/koha/svc/new_bib")
+                        .withParam("items", "1")
                         .withMethod(POST)
                         .withBody(expectedPayload, MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
@@ -172,16 +173,17 @@ public final class KohaSvcMock {
     }
 
     public static String itemMarc(final String barcode) {
-        return "  <datafield tag=\"952\" ind1=\" \" ind2=\" \">"
-                + "    <subfield code=\"a\">hutl</subfield>"
-                + "    <subfield code=\"b\">hutl</subfield>"
-                + "    <subfield code=\"c\">m</subfield>\n"
-                + "    <subfield code=\"l\">3</subfield>\n"
-                + "    <subfield code=\"m\">1</subfield>\n"
-                + "    <subfield code=\"o\">952 Cri</subfield>\n"
-                + "    <subfield code=\"p\">" + barcode + "</subfield>\n"
-                + "    <subfield code=\"t\">1</subfield>\n"
-                + "    <subfield code=\"y\">L</subfield>\n"
-                + "  </datafield>";
+        return "<marcxml:datafield tag=\"952\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">hutl</marcxml:subfield>"
+                + "<marcxml:subfield code=\"b\">hutl</marcxml:subfield>"
+                + "<marcxml:subfield code=\"c\">m</marcxml:subfield>"
+                + "<marcxml:subfield code=\"l\">3</marcxml:subfield>"
+                + "<marcxml:subfield code=\"m\">1</marcxml:subfield>"
+                + "<marcxml:subfield code=\"o\">952 Cri</marcxml:subfield>"
+                + "<marcxml:subfield code=\"p\">" + barcode + "</marcxml:subfield>"
+                + "<marcxml:subfield code=\"q\">2014-11-05</marcxml:subfield>"
+                + "<marcxml:subfield code=\"t\">1</marcxml:subfield>"
+                + "<marcxml:subfield code=\"y\">L</marcxml:subfield>"
+                + "</marcxml:datafield>";
     }
 }

@@ -18,11 +18,9 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -44,24 +42,24 @@ public class AppTest {
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private static final String ANOTHER_BIBLIO_ID = "333333";
-    private String baseUri;
-    private App app;
+    private static String baseUri;
+    private static App app;
 
-    private KohaSvcMock kohaSvcMock;
+    private static KohaSvcMock kohaSvcMock;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
         int appPort = PortSelector.randomFree();
-        baseUri = LOCALHOST + ":" + appPort + "/";
-        System.setProperty("DATA_BASEURI", baseUri);
         kohaSvcMock = new KohaSvcMock();
         String svcEndpoint = LOCALHOST + ":" + kohaSvcMock.getPort();
+        baseUri = LOCALHOST + ":" + appPort + "/";
+        System.setProperty("DATA_BASEURI", baseUri);
         app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO);
         app.startAsync();
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         app.stop();
     }
 
@@ -139,17 +137,17 @@ public class AppTest {
                 equalTo(2 + 1));
     }
 
-    @Test @Ignore("WIP")
+    @Test
     public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.newBiblioWithPayloadExpectation(ANOTHER_BIBLIO_ID, "03011527411001", "03011527411002");
+        kohaSvcMock.newBiblioWithItemsExpectation(ANOTHER_BIBLIO_ID, "03011527411001");
 
-        String input = "<http://deichman.no/resource/1527411> <http://data.deichman.no/bibliofilID> \"1527411\" .\n"
-                + "<http://deichman.no/resource/1527411> <http://purl.org/dc/terms/language> <http://lexvo.org/id/iso639-3/eng> .\n"
-                + "<http://deichman.no/resource/1527411> <http://purl.org/dc/terms/format> <http://data.deichman.no/format#Book> .\n"
-                + "<http://deichman.no/resource/1527411> <http://data.deichman.no/name> \"Critical issues in contemporary Japan\" .\n"
-                + itemNTriples("03011527411001")
-                + itemNTriples("03011527411002");
+        String input = "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#bibliofilID> \"1527411\" .\n"
+                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#language> <http://lexvo.org/id/iso639-3/eng> .\n"
+                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#format> <__BASEURI__format#Book> .\n"
+                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#name> \"Critical issues in contemporary Japan\" ."
+                + itemNTriples("03011527411001");
+        input = input.replace("__BASEURI__", baseUri);
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
 
@@ -157,23 +155,21 @@ public class AppTest {
         String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
         assertThat(publicationUri, startsWith(baseUri));
-
-        Mockito.verifyNoMoreInteractions(kohaSvcMock);
     }
 
     private String itemNTriples(final String barcode) {
-        return "<http://deichman.no/resource/1527411> <http://data.deichman.no/hasItem> <http://data.deichman.no/item/x" + barcode +  "> .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/a> \"hutl\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/b> \"hutl\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/l> \"3\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/m> \"1\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/o> \"952 Cri\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/p> \"" + barcode + "\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/q> \"2014-11-05\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/t> \"1\" .\n"
-                + "<http://data.deichman.no/item/x" + barcode + "> <http://data.deichman.no/itemSubfieldCode/y> \"L\" .";
+        return "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#hasItem> <__BASEURI__bibliofilItem/x" + barcode + "> .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/a> \"hutl\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/b> \"hutl\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/c> \"m\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/l> \"3\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/m> \"1\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/o> \"952 Cri\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/p> \"" + barcode + "\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/q> \"2014-11-05\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/t> \"1\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/y> \"L\" .";
     }
-
 
     @Test
     public void get_authorized_values_for_language() throws Exception {
