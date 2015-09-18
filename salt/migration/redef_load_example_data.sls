@@ -10,6 +10,6 @@ include:
   - migration.patrons_imported
   - migration.material_type_loaded
   - migration.redef_catalogue_loaded
-  # - migration.loans_loaded
-  # - migration.reservations_loaded
+  - migration.loans_loaded
+  - migration.reservations_loaded
   - koha.reindexed
