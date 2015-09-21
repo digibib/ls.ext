@@ -155,9 +155,6 @@ language:cze	a	lvont:Language ;
 language:dan	a	lvont:Language ;
 	rdfs:label	"Dansk"@no .
 
-language:dar	a	lvont:Language ;
-	rdfs:label	"Dari"@no .
-
 language:dut	a	lvont:Language ;
 	rdfs:label	"Nederlandsk"@no .
 
