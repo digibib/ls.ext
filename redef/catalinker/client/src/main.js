@@ -187,15 +187,15 @@ define(['graph', 'http', 'ontology', 'string'], function (graph, http, ontology,
       }
 
       // Fetch authorized values, if required
-      if (props[i]["deichman:valuesFrom"]) {
-        var url = props[i]["deichman:valuesFrom"]["@id"];
+      if (props[i]["http://data.deichman.no/utility#valuesFrom"]) {
+        var url = props[i]["http://data.deichman.no/utility#valuesFrom"]["@id"];
         loadAuthorizedValues(url, props[i]["@id"]);
       }
       var datatype = props[i]["rdfs:range"]["@id"];
       var input = {
         disabled: disabled,
         predicate: ontology.resolveURI(ont, props[i]["@id"]),
-        authorized: props[i]["deichman:valuesFrom"] ? true : false,
+        authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
         range: datatype,
         datatype: datatype,
         label: props[i]["rdfs:label"][0]["@value"],

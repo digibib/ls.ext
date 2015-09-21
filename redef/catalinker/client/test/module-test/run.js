@@ -94,7 +94,7 @@ app.get("/ontology", function (req, res) {
           "@language" : "en",
           "@value" : "Format"
         }],
-        "deichman:valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/format"},
+        "http://data.deichman.no/utility#valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/format"},
         "rdfs:range" : {
           "@id" : "http://data.deichman.no/utility#Format"
         }
@@ -111,7 +111,7 @@ app.get("/ontology", function (req, res) {
           "@language" : "en",
           "@value" : "Language"
         }],
-        "deichman:valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/language"},
+        "http://data.deichman.no/utility#valuesFrom": { "@id": "http://127.0.0.1:7777/authorized_values/language"},
         "rdfs:range" : {
           "@id" : "http://lexvo.org/ontology#Language"
         }
@@ -180,7 +180,8 @@ app.get("/ontology", function (req, res) {
       }],
       "@context" : {
         "deichman" : "http://127.0.0.1:7777/ontology#",
-        "rdfs" : "http://www.w3.org/2000/01/rdf-schema#"
+        "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+        "duo" : "http://data.deichman.no/utility#"
       }
     }
   );

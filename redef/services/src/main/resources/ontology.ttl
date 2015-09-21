@@ -46,14 +46,14 @@
   rdfs:label "Språk"@no ;
   rdfs:domain :Publication ;
   rdfs:range lvont:Language ;
-  :valuesFrom values:language .
+  duo:valuesFrom values:language .
 
 :format a rdfs:Property ;
   rdfs:label "Format"@en ;
   rdfs:label "Format"@no ;
   rdfs:domain :Publication ;
   rdfs:range duo:Format ;
-  :valuesFrom values:format .
+  duo:valuesFrom values:format .
 
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;
