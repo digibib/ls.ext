@@ -127,6 +127,7 @@
                   <th>strekkode</th>
                   <th>plassering</th>
                   <th>status</th>
+                  <th>oppstilling</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,6 +140,7 @@
                     <td data-automation-id="item_barcode">{{firstValue item "deichman:barcode" ../../graph}}</td>
                     <td data-automation-id="item_location">{{firstValue item "deichman:location" ../../graph}}</td>
                     <td data-automation-id="item_status">{{firstValue item "deichman:status" ../../graph}}</td>
+                    <td data-automation-id="item_shelfmark">{{firstValue item "http://data.deichman.no/utility#shelfmark" ../../graph}}</td>
                   </tr>
                 {{/each}}
               {{/each}}

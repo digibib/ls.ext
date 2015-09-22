@@ -96,3 +96,18 @@ end
 When(/^ser jeg eksemplarene gruppert etter utgave m\/informasjon om format og språk$/) do
   pending # Write code here that turns the phrase above into concrete actions
 end
+
+Then(/^ser jeg lokasjon og oppstillinga av eksemplaret$/) do
+  @site.PatronClient.getItemsTableRows().each do |row|
+    row.td(:data_automation_id => "item_location").text.should_not be_empty
+    row.td(:data_automation_id => "item_shelfmark").text.should_not be_empty
+  end
+end
+
+Så(/^ser jeg at boka er ledig$/) do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Så(/^ser jeg at boka ikke er ledig$/) do
+  pending # Write code here that turns the phrase above into concrete actions
+end

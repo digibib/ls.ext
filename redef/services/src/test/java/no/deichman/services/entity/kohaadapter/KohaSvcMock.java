@@ -91,6 +91,7 @@ public final class KohaSvcMock {
                 + "    <subfield code=\"a\">c3928c8f</subfield>\n"
                 + "    <subfield code=\"b\">c3928c8f</subfield>\n"
                 + "    <subfield code=\"d\">2015-08-17</subfield>\n"
+                + "    <subfield code=\"o\">920 Tes</subfield>\n"
                 + "    <subfield code=\"p\">" + barcode + "</subfield>\n"
                 + "    <subfield code=\"r\">2015-08-17</subfield>\n"
                 + "    <subfield code=\"w\">2015-08-17</subfield>\n"

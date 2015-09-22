@@ -86,7 +86,8 @@ describe('PatronClient', function () {
               "@type" : "deichman:Item",
               "deichman:barcode" : "12345",
               "deichman:location": "hutl",
-              "deichman:status" : "AVAIL"
+              "deichman:status" : "AVAIL",
+              "http://data.deichman.no/utility#shelfmark" : "820 Doh"
             }, {
               "@id" : "http://deichman.no/publication/publication_1234",
               "deichman:hasEdition" : {
@@ -153,6 +154,10 @@ describe('PatronClient', function () {
 
       it('should display item with label on language', function () {
         expect($('td[data-automation-id=item_language]').text()).to.equal("Engelsk, Norsk (bokmål)");
+      });
+
+      it('should display item with label for shelfmark', function () {
+        expect($('td[data-automation-id=item_shelfmark]').text()).to.equal("820 Doh");
       });
     });
 

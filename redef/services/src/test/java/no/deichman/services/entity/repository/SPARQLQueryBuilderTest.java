@@ -98,19 +98,22 @@ public class SPARQLQueryBuilderTest {
     public void test_get_items_query(){
         String uri = "http://example.com/a";
         String test = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
+                + "PREFIX duo: <http://data.deichman.no/utility#>\n"
                 + "CONSTRUCT {\n"
                 + "  <" + uri + "> deichman:hasEdition"
                 + " ["
                 + "    a deichman:Item ;"
                 + "    deichman:location ?location ;"
                 + "    deichman:status ?status ;"
-                + "    deichman:barcode ?barcode"
+                + "    deichman:barcode ?barcode ;"
+                + "    duo:shelfmark ?shelfmark"
                 + "  ]"
                 + "} WHERE { \n"
                 + "  ?uri a deichman:Item ;\n"
                 + "    deichman:location ?location;\n"
                 + "    deichman:status ?status ;"
-                + "    deichman:barcode ?barcode .\n"
+                + "    deichman:barcode ?barcode ;\n"
+                + "    duo:shelfmark ?shelfmark\n"
                 + "}";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         Query query = sqb.getItemsFromModelQuery(uri);

@@ -32,6 +32,7 @@ class BiblioDetail < IntraPage
     @browser.button(:text => "New").click
     @browser.link(:id => "newitem").click
     @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(itemtype)
+    @browser.text_field(:id => /^tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' %  [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
     @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
     @browser.button(:text => "Add item").click
   end

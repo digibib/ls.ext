@@ -75,19 +75,22 @@ public final class SPARQLQueryBuilder {
 
     public Query getItemsFromModelQuery(String id) {
         String q = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
+                + "PREFIX duo: <http://data.deichman.no/utility#>\n"
                 + "CONSTRUCT {\n"
                 + "  <" + id + "> deichman:hasEdition"
                 + " ["
                 + "    a deichman:Item ;"
                 + "    deichman:location ?location ;"
                 + "    deichman:status ?status ;"
-                + "    deichman:barcode ?barcode"
+                + "    deichman:barcode ?barcode ;"
+                + "    duo:shelfmark ?shelfmark"
                 + "  ]"
                 + "} WHERE { \n"
                 + "  ?uri a deichman:Item ;\n"
                 + "    deichman:location ?location;\n"
                 + "    deichman:status ?status ;"
-                + "    deichman:barcode ?barcode .\n"
+                + "    deichman:barcode ?barcode ;\n"
+                + "    duo:shelfmark ?shelfmark .\n"
                 + "}";
        return QueryFactory.create(q);
     }

@@ -28,6 +28,8 @@ public final class Marc2Rdf {
     private static final String DEICHMAN_STATUS = "status";
     private static final String DEICHMAN_LOCATION = "location";
     private static final String DEICHMAN_BARCODE = "barcode";
+    private static final String DUO_SHELFMARK = "shelfmark";
+    private static final String DUO_NS = "http://data.deichman.no/utility#";
     private BaseURI baseURI;
 
     public Marc2Rdf(){
@@ -51,6 +53,7 @@ public final class Marc2Rdf {
         Model model = ModelFactory.createDefaultModel();
 
         model.setNsPrefix("", DEICHMAN_NS_EXEMPLAR);
+        model.setNsPrefix("duo", DUO_NS);
         model.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
 
         for (VariableField itemField : itemsFields) {
@@ -61,6 +64,7 @@ public final class Marc2Rdf {
             model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_STATUS, itemData.getSubfield('q') != null ? itemData.getSubfield('q').getData() : "AVAIL"));
             model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_LOCATION, itemData.getSubfield('a').getData()));
             model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_BARCODE, itemData.getSubfield('p').getData()));
+            model.add(stmtLiteral(s, DUO_NS + DUO_SHELFMARK, itemData.getSubfield('o').getData()));
         }
         return model;
     }

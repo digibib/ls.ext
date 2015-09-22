@@ -135,6 +135,9 @@ public class AppTest {
         assertThat("model does not have 2 + 1 = 3 items",
                 workWith1Plus2ItemsCount.execSelect().next().getLiteral("noOfItems").getInt(),
                 equalTo(2 + 1));
+        assertThat("model does not contain shelfmarks",
+                work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#shelfmark")).toList().size(),
+                equalTo(2 +1));
     }
 
     @Test
