@@ -6,3 +6,5 @@ redef:
   services:
     host: 192.168.50.12
     baseuri: http://192.168.50.12:8005/
+  elasticsearch:
+    host: 192.168.50.12

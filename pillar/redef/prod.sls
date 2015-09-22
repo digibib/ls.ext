@@ -6,3 +6,5 @@ redef:
   services:
     host: 10.172.2.160
     baseuri: http://10.172.2.160:8005/
+  elasticsearch:
+    host: 10.172.2.160

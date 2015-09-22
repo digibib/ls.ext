@@ -14,3 +14,10 @@ redef:
   catalinker:
     binding: 0.0.0.0
     port: 8010
+  elasticsearch:
+    http:
+      binding: 0.0.0.0
+      port: 8200
+    native:
+      binding: 0.0.0.0
+      port: 8300

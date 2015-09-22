@@ -48,6 +48,7 @@
             {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
                 <li><a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port']|string }}/work">Services</a></li>
                 <li><a href="http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port']|string }}">Fuseki</a></li>
+                <li><a href="http://{{ pillar['redef']['elasticsearch']['host'] }}:{{ pillar['redef']['elasticsearch']['http']['port']|string }}/?pretty">Elasticsearch</a></li>
             {% endif %}
         </ul>
 
