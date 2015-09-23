@@ -4,7 +4,7 @@ docker_comment_other_params:
     - name: /etc/default/docker
     - regex: ^DOCKER_OPTS=\".+\"
     - require:
-      - pkg: lxc-docker
+      - pkg: docker-engine
 
 docker_params_blockreplace:
   file.blockreplace:

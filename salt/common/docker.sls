@@ -21,22 +21,23 @@ docker-dependencies:
       - iptables
       - ca-certificates
       - lxc
+      - apt-transport-https
 
 docker_repo:
     pkgrepo.managed:
-      - repo: 'deb http://get.docker.com/ubuntu docker main'
+      - repo: 'deb http://apt.dockerproject.org/repo ubuntu-trusty main'
       - file: '/etc/apt/sources.list.d/docker.list'
       - key_url: salt://common/docker.pgp
       - require_in:
-          - pkg: lxc-docker
+          - pkg: docker-engine
 
-lxc-docker:
+docker-engine:
   pkg.installed:
-    - version: "1.7.1"
+    - version: "1.8.2-0~trusty"
     - require:
       - pkg: docker-dependencies
 
 docker:
   service.running:
     - watch:
-      - pkg: lxc-docker
+      - pkg: docker-engine
