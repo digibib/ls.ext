@@ -11,15 +11,15 @@ Egenskap: Finne ledige eksemplar av et bestemt utgivelse
     Gitt et verk med en utgivelse og et eksemplar
     Når jeg er på sida til verket
     Så ser jeg lokasjon og oppstillinga av eksemplaret
-  
-  @wip  
-  Scenario: Se at eksemplaret er ledig
-    Gitt et verk med en utgivelse og et eksemplar
-    Når jeg er på sida til verket
-    Så ser jeg at boka er ledig
 
   @wip
   Scenario: Se at eksemplaret er ledig
     Gitt et verk med en utgivelse og et eksemplar
     Når jeg er på sida til verket
-    Så ser jeg at boka ikke er ledig
+    Så ser jeg at eksemplaret er ledig
+
+  @wip
+  Scenario: Se at eksemplaret er ledig
+    Gitt et verk med en utgivelse og et eksemplar
+    Når jeg er på sida til verket
+    Så ser jeg at eksemplaret ikke er ledig

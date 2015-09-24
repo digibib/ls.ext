@@ -104,10 +104,12 @@ Then(/^ser jeg lokasjon og oppstillinga av eksemplaret$/) do
   end
 end
 
-Så(/^ser jeg at boka er ledig$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+Så(/^ser jeg at eksemplaret er ledig$/) do
+  @site.PatronClient.getItemsTableRows().each do |row|
+    row.td(:data_automation_id => "item_status").text.should eq("ledig")
+  end
 end
 
-Så(/^ser jeg at boka ikke er ledig$/) do
+Så(/^ser jeg at eksemplaret ikke er ledig$/) do
   pending # Write code here that turns the phrase above into concrete actions
 end
