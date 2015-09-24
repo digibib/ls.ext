@@ -12,5 +12,6 @@ include:
   - migration.catalogue_loaded
   - migration.loans_loaded
   - migration.reservations_loaded
+  - migration.cleanup
   - koha.reindexed
   - migration.notify_success_to_slack
