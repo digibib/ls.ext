@@ -138,6 +138,9 @@ public class AppTest {
         assertThat("model does not contain shelfmarks",
                 work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#shelfmark")).toList().size(),
                 equalTo(2 +1));
+        assertThat("model does not contain onloan booleans",
+                work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#onloan")).toList().size(),
+                equalTo(2 + 1));
     }
 
     @Test

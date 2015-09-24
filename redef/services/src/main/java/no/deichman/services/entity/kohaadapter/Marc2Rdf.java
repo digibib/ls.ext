@@ -80,8 +80,6 @@ public final class Marc2Rdf {
                 expectedReturnDate = itemData.getSubfield(KOHA_ON_LOAN).getData();
             }
 
-            boolean onLoan = isLoanable(expectedReturnDate, notForLoan);
-
             Resource subject = createResource(DEICHMAN_NS_EXEMPLAR + barcode);
             String ontologyNS = baseURI.ontology();
 
@@ -98,7 +96,7 @@ public final class Marc2Rdf {
                     createStatement(
                             subject,
                             createProperty(DUO_NS + DUO_ONLOAN),
-                            createTypedLiteral(String.valueOf(onLoan), XSDDatatype.XSDboolean)
+                            createTypedLiteral(String.valueOf(isLoanable(expectedReturnDate, notForLoan)), XSDDatatype.XSDboolean)
                     )
             );
             model.add(
