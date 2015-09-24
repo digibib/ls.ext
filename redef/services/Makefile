@@ -19,6 +19,9 @@ stop:
 build-onejar:
 	./gradlew build oneJar
 
+clean:
+	./gradlew clean
+
 build: build-onejar
 	sudo docker build --tag $(IMAGE) /vagrant/redef/services
 
