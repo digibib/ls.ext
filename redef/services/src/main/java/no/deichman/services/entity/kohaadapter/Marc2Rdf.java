@@ -1,8 +1,8 @@
 package no.deichman.services.entity.kohaadapter;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Model;
 
 import no.deichman.services.uridefaults.BaseURI;
@@ -12,12 +12,14 @@ import org.marc4j.marc.VariableField;
 
 import java.util.List;
 
+import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 
 /**
- * Responsibility: TODO.
+ * Responsibility: Maps KOHA MARC holdings data from field 952 to an RDF model.
  */
 public final class Marc2Rdf {
 
@@ -30,6 +32,15 @@ public final class Marc2Rdf {
     private static final String DEICHMAN_BARCODE = "barcode";
     private static final String DUO_SHELFMARK = "shelfmark";
     private static final String DUO_NS = "http://data.deichman.no/utility#";
+    private static final Character KOHA_NOT_FOR_LOAN = '7';
+    private static final Character KOHA_ITEM_TYPE = 'y';
+    private static final Character KOHA_ON_LOAN = 'q';
+    private static final Character KOHA_HOMEBRANCH = 'a';
+    private static final Character KOHA_BARCODE = 'p';
+    private static final Character KOHA_CALL_NUMBER = 'o';
+    private static final String KOHA_LOANABLE_VALUE = "0";
+    private static final String DUO_ONLOAN = "onloan";
+
     private BaseURI baseURI;
 
     public Marc2Rdf(){
@@ -56,33 +67,83 @@ public final class Marc2Rdf {
         model.setNsPrefix("duo", DUO_NS);
         model.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
 
-        for (VariableField itemField : itemsFields) {
-            DataField itemData = (DataField) itemField;
-            String s = DEICHMAN_NS_EXEMPLAR + itemData.getSubfield('p').getData();
-            model.add(stmt(s, RDF_SYNTAX_NS_TYPE, baseURI.ontology() + DEICHMAN_ITEM));
-            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_FORMAT, itemData.getSubfield('y').getData()));
-            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_STATUS, itemData.getSubfield('q') != null ? itemData.getSubfield('q').getData() : "AVAIL"));
-            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_LOCATION, itemData.getSubfield('a').getData()));
-            model.add(stmtLiteral(s, baseURI.ontology() + DEICHMAN_BARCODE, itemData.getSubfield('p').getData()));
-            model.add(stmtLiteral(s, DUO_NS + DUO_SHELFMARK, itemData.getSubfield('o').getData()));
-        }
+        itemsFields.forEach(item -> {
+
+            DataField itemData = (DataField) item;
+
+            String notForLoan = itemData.getSubfield(KOHA_NOT_FOR_LOAN).getData();
+            String barcode = itemData.getSubfield(KOHA_BARCODE).getData();
+
+            String expectedReturnDate = "AVAIL";
+
+            if (itemData.getSubfield(KOHA_ON_LOAN) != null) {
+                expectedReturnDate = itemData.getSubfield(KOHA_ON_LOAN).getData();
+            }
+
+            boolean onLoan = isLoanable(expectedReturnDate, notForLoan);
+
+            Resource subject = createResource(DEICHMAN_NS_EXEMPLAR + barcode);
+            String ontologyNS = baseURI.ontology();
+
+
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(RDF_SYNTAX_NS_TYPE),
+                            createResource(ontologyNS + DEICHMAN_ITEM)
+                    )
+            );
+
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(DUO_NS + DUO_ONLOAN),
+                            createTypedLiteral(String.valueOf(onLoan), XSDDatatype.XSDboolean)
+                    )
+            );
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(ontologyNS + DEICHMAN_FORMAT),
+                            createPlainLiteral(itemData.getSubfield(KOHA_ITEM_TYPE).getData())
+                    )
+            );
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(ontologyNS + DEICHMAN_STATUS),
+                            createPlainLiteral(expectedReturnDate))
+            );
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(ontologyNS + DEICHMAN_LOCATION),
+                            createPlainLiteral(itemData.getSubfield(KOHA_HOMEBRANCH).getData())
+                    )
+            );
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(ontologyNS + DEICHMAN_BARCODE),
+                            createPlainLiteral(barcode)
+                    )
+            );
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(DUO_NS + DUO_SHELFMARK),
+                            createPlainLiteral(itemData.getSubfield(KOHA_CALL_NUMBER).getData())
+                    )
+            );
+        });
+
         return model;
     }
 
-    private Statement stmt(String subject, String property, String object) {
-
-        return createStatement(
-                createResource(subject),
-                createProperty(property),
-                createResource(object)
-        );
-    }
-    private Statement stmtLiteral(String subject, String property, String object) {
-
-        return createStatement(
-                createResource(subject),
-                createProperty(property),
-                ResourceFactory.createPlainLiteral(object)
-        );
+    private boolean isLoanable(String expectedReturnDate, String loanableCode) {
+        if (loanableCode.equals(KOHA_LOANABLE_VALUE) && expectedReturnDate.contentEquals("AVAIL")) {
+            return false;
+        }
+        return true;
     }
 }

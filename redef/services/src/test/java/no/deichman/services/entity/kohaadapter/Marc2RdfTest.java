@@ -1,6 +1,12 @@
 package no.deichman.services.entity.kohaadapter;
 
+import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -8,22 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.InputStream;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.junit.Test;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.VariableField;
 
-import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 
 import no.deichman.services.uridefaults.BaseURI;
 
 public class Marc2RdfTest {
+
+    private final String itemBase = "http://deichman.no/exemplar/";
+    private final String ontologyNs = "http://deichman.no/ontology#";
+    private final String duoNs = "http://data.deichman.no/utility#";
+
     @Test
     public void test_it_exists(){
         assertNotNull(new Marc2Rdf());
@@ -61,12 +69,60 @@ public class Marc2RdfTest {
 
         Marc2Rdf m2r = new Marc2Rdf(BaseURI.local());
         Model m = m2r.mapItemsToModel(itemsFields);
-        Resource s = ResourceFactory.createResource("http://deichman.no/exemplar/03010626460038");
-        Property p = ResourceFactory.createProperty("http://deichman.no/ontology#format");
-        Literal o = ResourceFactory.createPlainLiteral("L");
-        Statement stmt = ResourceFactory.createStatement(s, p, o);
+
+        String barcode = "03010626460038";
+
+        String s = itemBase + barcode;
+
+        Statement formatStatement = createStatement(
+                createResource(s),
+                createProperty(ontologyNs + "format"),
+                createPlainLiteral("L"));
+        Statement barcodeStatement = createStatement(
+                createResource(s),
+                createProperty(ontologyNs + "barcode"),
+                createPlainLiteral(barcode)
+        );
+        Statement locationStatement = createStatement(
+                createResource(s),
+                createProperty(ontologyNs + "location"),
+                createPlainLiteral("fmaj")
+        );
+        Statement shelfmarkStatement = createStatement(
+                createResource(s),
+                createProperty(duoNs + "shelfmark"),
+                createPlainLiteral("Rag")
+        );
+
+        String loanedBarcode = "03010626460056";
+        String sLoaned = itemBase + loanedBarcode;
+
+        Statement loanedExample = createStatement(
+                createResource(sLoaned),
+                createProperty(ontologyNs + "status"),
+                createPlainLiteral("2014-11-27")
+        );
+
+        Statement onloanAvailableStatement = createStatement(
+                createResource(s),
+                createProperty(duoNs + "onloan"),
+                createTypedLiteral("false", XSDDatatype.XSDboolean)
+        );
+
+        Statement onloanLoanedStatement = createStatement(
+                createResource(sLoaned),
+                createProperty(duoNs + "onloan"),
+                createTypedLiteral("true", XSDDatatype.XSDboolean)
+        );
+
         assertNotNull(m);
-        assertTrue(m.contains(stmt));
-        
+        assertTrue(m.contains(formatStatement));
+        assertTrue(m.contains(barcodeStatement));
+        assertTrue(m.contains(locationStatement));
+        assertFalse(m.listSubjectsWithProperty(createProperty(ontologyNs + "status")).toList().contains(s));
+        assertTrue(m.contains(shelfmarkStatement));
+        assertTrue(m.contains(loanedExample));
+        assertTrue(m.contains(onloanAvailableStatement));
+        assertTrue(m.contains(onloanLoanedStatement));
     }
 }
