@@ -109,7 +109,11 @@ endif
 test: test_patron_client test_catalinker cuke_test     ## Run unit and cucumber tests.
 
 cuke_test:
-	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) $(PLACK_ARGS) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS)'
+	@ vagrant ssh vm-test -c "cd vm-test && \
+	( rm -rf report/rerun.txt && \
+		$(BROWSER_ARG) $(PLACK_ARGS) cucumber $(CUKE_PROFILE_ARG) $(CUKE_ARGS) \
+		--format rerun --out report/rerun.txt || \
+		$(BROWSER_ARG) $(PLACK_ARGS) cucumber @report/rerun.txt $(CUKE_PROFILE_ARG) $(CUKE_ARGS) )"
 
 cuke_test_parallel:
 	vagrant ssh vm-test -c 'cd vm-test && parallel_cucumber -n 2 features/'
@@ -184,7 +188,11 @@ install_firefox_on_devops:
 test_redef: test_patron_client test_services test_catalinker cuke_redef
 
 cuke_redef:
-	vagrant ssh vm-test -c 'cd vm-test && $(BROWSER_ARG) $(PLACK_ARGS) cucumber $(CUKE_PROFILE_ARG) --tags @redef $(CUKE_ARGS)'
+	@ vagrant ssh vm-test -c "cd vm-test && \
+	( rm -rf report/rerun.txt && \
+	$(BROWSER_ARG) $(PLACK_ARGS) cucumber $(CUKE_PROFILE_ARG) --tags @redef $(CUKE_ARGS) \
+	--format rerun --out report/rerun.txt || \
+	$(BROWSER_ARG) $(PLACK_ARGS) cucumber @report/rerun.txt $(CUKE_PROFILE_ARG) --tags @redef $(CUKE_ARGS) )"
 
 test_patron_client:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'
