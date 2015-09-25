@@ -3,7 +3,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix lvont: <http://lexvo.org/ontology#> .
-@prefix format: <data.deichman.no/format#> .
 @prefix ui: <http://data.deichman.no/ui#> .
 @prefix values: <__BASE_URI_VALUES__> .
 @prefix duo: <http://data.deichman.no/utility#> .
