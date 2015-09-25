@@ -33,7 +33,7 @@ marc2rdf:
               -v "{{ pillar['migration-data-folder'] }}:/migration/data"
               -w "/migration/marc2rdf"
               deichman/migration:{{ pillar['migration']['image-tag'] }}
-              "find /migration/data/records -type f -name '*.marcxml' | parallel ruby marc2rdf.rb -m mapping.json -k 1 -o ../data/converted -i"
+              bash -c "find /migration/data/records -type f -name '*.marcxml' | parallel ruby marc2rdf.rb -m mapping.json -o ../data/converted -i"
     - require:
       - cmd: merge_catalogue_and_exemp
     - failhard: True
