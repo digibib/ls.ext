@@ -10,7 +10,7 @@ all: cycle_devops cycle_ship cycle_test test          ## Run tests after (re)loa
 
 cycle_devops: halt_devops up_devops shell_provision_devops provision_devops
 
-cycle_ship: halt_ship up_ship shell_provision_ship clean_services provision_ship
+cycle_ship: halt_ship up_ship shell_provision_ship provision_ship
 
 cycle_test: halt_test up_test shell_provision_test provision_test
 
@@ -202,9 +202,6 @@ run_patron_client:
 
 run_services:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make run-dev'
-
-clean_services:
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make clean'
 
 run_catalinker:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make run-dev'
