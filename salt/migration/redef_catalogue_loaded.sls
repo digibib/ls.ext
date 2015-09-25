@@ -22,7 +22,7 @@ merge_catalogue_and_exemp:
               -v "{{ pillar['migration-data-folder'] }}:/migration/data"
               --link koha_mysql_container:db
               deichman/migration:{{ pillar['migration']['image-tag'] }}
-              make --file /migration/sh/Makefile merge_catalogue_and_exemp
+              make --file /migration/sh/Makefile merge_catalogue_and_exemp_split
     - require:
       - cmd: prepare_catalogue
     - failhard: True
@@ -33,14 +33,17 @@ marc2rdf:
               -v "{{ pillar['migration-data-folder'] }}:/migration/data"
               -w "/migration/marc2rdf"
               deichman/migration:{{ pillar['migration']['image-tag'] }}
-              ruby marc2rdf.rb -i /migration/data/out.marcxml -o ../data/converted
+              find /migration/data/records -type f -name '*.marcxml' | parallel ruby marc2rdf.rb -m mapping.json -k 1 -o ../data/converted -i
     - require:
       - cmd: merge_catalogue_and_exemp
     - failhard: True
 
 post_records_to_services:
   cmd.run:
-    - name: /vagrant/salt/migration/files/postrecords.sh -d /var/migration_workdir/converted -n "{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}"
+    - name: docker run
+            -v "{{ pillar['migration-data-folder'] }}:/migration/data"
+            deichman/migration:{{ pillar['migration']['image-tag'] }}
+            /migration/bin/postrecords -e "http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}/publication" -d /migration/data/converted -r "{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}" -n 4
     - require:
       - cmd: marc2rdf
     - failhard: True
