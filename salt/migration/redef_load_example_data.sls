@@ -1,5 +1,5 @@
 #############
-# STATE TO LOAD FULL EXAMPLE DATA
+# STATE TO LOAD FULL EXAMPLE DATA (THE REDEF WAY)
 #############
 
 # The included states will be run in sequential order
@@ -12,4 +12,6 @@ include:
   - migration.redef_catalogue_loaded
   - migration.loans_loaded
   - migration.reservations_loaded
+  - migration.cleanup
+  - migration.report
   - koha.reindexed
