@@ -103,6 +103,10 @@ module Paths
     "http://#{host}:#{port(:patron_client)}#{paths[path.to_sym]}"
   end
 
+  def patron_client_search_page()
+    "http://#{host}:#{port(:patron_client)}/search"
+  end
+
   def services(path=nil)
     paths = {
       :work => "/work",
