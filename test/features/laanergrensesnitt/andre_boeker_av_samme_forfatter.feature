@@ -12,7 +12,7 @@ Egenskap: Bruker finner andre bøker av samme forfatter
 
   @wip
   Scenario: Finn bok av samme forfatter
-    Når jeg leverer boken 
+    Når jeg leverer boken
     Og gjør et søk på andre bøker av forfatteren på nettsiden
     Så vil jeg finne en annen bok enn "Harry Potter og de vises stein"
 

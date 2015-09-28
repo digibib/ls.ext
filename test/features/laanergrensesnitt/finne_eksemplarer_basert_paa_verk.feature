@@ -21,7 +21,7 @@ Egenskap: Finne eksemplarer basert på opplysninger om verk
     Gitt at jeg befinner meg på "Holmlia" avdeling
     Når jeg søker på verk fra perioden "1918-1939"
     Så vil jeg bare finne verk som har ledige eksemplarer på "Holmlia"
-  
+
   @wip
   Scenario: Finn ledige eksemplarer av verk på annen avdeling 
     Gitt at jeg befinner meg på "Holmlia" avdeling
