@@ -13,5 +13,4 @@ include:
   - migration.loans_loaded
   - migration.reservations_loaded
   - migration.cleanup
-  - migration.report
   - koha.reindexed
