@@ -15,4 +15,3 @@ include:
   - migration.cleanup
   - migration.report
   - koha.reindexed
-  - migration.notify_success_to_slack
