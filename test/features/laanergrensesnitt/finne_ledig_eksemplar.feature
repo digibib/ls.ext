@@ -19,7 +19,8 @@ Egenskap: Finne ledige eksemplar av et bestemt utgivelse
     Så ser jeg at eksemplaret er ledig
 
   @wip
-  Scenario: Se at eksemplaret er ledig
+  Scenario: Se at eksemplaret ikke er ledig
     Gitt et verk med en utgivelse og et eksemplar
+    Og at eksemplaret er utlånt til en låner
     Når jeg er på sida til verket
     Så ser jeg at eksemplaret ikke er ledig

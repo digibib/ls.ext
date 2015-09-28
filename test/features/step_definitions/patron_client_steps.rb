@@ -104,12 +104,31 @@ Then(/^ser jeg lokasjon og oppstillinga av eksemplaret$/) do
   end
 end
 
-Så(/^ser jeg at eksemplaret er ledig$/) do
+Then(/^ser jeg at eksemplaret er ledig$/) do
   @site.PatronClient.getItemsTableRows().each do |row|
-    row.td(:data_automation_id => "item_status").text.should eq("ledig")
+    row.td(:data_automation_id => "item_status").text.should eq("Ledig")
   end
 end
 
-Så(/^ser jeg at eksemplaret ikke er ledig$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^ser jeg at eksemplaret ikke er ledig$/) do
+  @site.PatronClient.getItemsTableRows().each do |row|
+    row.td(:data_automation_id => "item_status").text.should match(/Forventet [0-9]{4}-[0-9]{2}-[0-9]{2}/)
+  end
+end
+
+When(/^jeg låner \"(.*?)\" ut til \"(.*?)$/) do |barcode, patron|
+  step "jeg registrerer \"Knut\" som aktiv låner"
+  @site.Checkout.checkout(barcode)
+
+  @active[:item] = barcode
+  @cleanup.push( "utlån #{barcode}" =>
+    lambda do
+      @site.Home.visit.select_branch().checkin(barcode)
+    end
+  )
+end
+
+Given(/^at eksemplaret er utlånt til en låner$/) do
+  step "at det finnes en låner"
+  step "jeg låner \"#{@context[:item_barcode]}\" ut til \"#{@active[:patron]}\""
 end

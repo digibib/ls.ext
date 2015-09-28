@@ -209,13 +209,15 @@ When(/^jeg vil katalogisere en utgivelse$/) do
 end
 
 When(/^jeg oppretter et eksemplar av utgivelsen$/) do
+  @context[:item_barcode] = '0301%010d' % rand(10 ** 10)
   @browser.button(:text => "New").click
   @browser.link(:id => "newitem").click
   @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
-  @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set('0301%010d' % rand(10 ** 10))
+  @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set(@context[:item_barcode])
   @browser.text_field(:id => /^tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' %  [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
   @browser.button(:text => "Add item").click
   record_id = @context[:record_id]
+
   @cleanup.push( "delete items of bibilo ##{record_id}" =>
     lambda do
       @browser.goto intranet(:biblio_detail)+record_id
