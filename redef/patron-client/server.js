@@ -10,7 +10,7 @@ var express = require('express'),
     Server;
 
 app.set('view engine', 'hbs');
-app.use(express.static('public'));
+app.use(express.static('public', { extensions: ['html'] }));
 
 hbs.registerHelper('firstValue', function (resource, property, graph) {
   var props = resource.property(graph.resolve(property));
