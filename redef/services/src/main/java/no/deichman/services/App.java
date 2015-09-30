@@ -1,18 +1,20 @@
 package no.deichman.services;
 
+import static java.util.Arrays.asList;
+
 import no.deichman.services.entity.EntityResource;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.restutils.CORSResponseFilter;
+import no.deichman.services.search.WorkSearchResource;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static java.util.Arrays.asList;
 
 /**
  * Responsibility: Start application (using embedded web server).
@@ -70,6 +72,7 @@ public final class App {
                 String.join(",", asList(
                         EntityResource.class.getCanonicalName(),
                         OntologyResource.class.getCanonicalName(),
+                        WorkSearchResource.class.getCanonicalName(),
                         AuthorizedValuesResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName()
                 )));
