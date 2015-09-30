@@ -11,6 +11,6 @@
                         '9300/tcp': { 'HostIp': pillar['redef']['elasticsearch']['native']['binding'], 'HostPort': pillar['redef']['elasticsearch']['native']['port'] } } %}
 {% set data_volume = { 'container': 'elasticsearch_data', 'image': 'busybox', 'tag': 'latest', 'volumes': ['/usr/share/elasticsearch/data'] } %}
 {% set command = 'elasticsearch --network.host _non_loopback_' %} # https://github.com/docker-library/elasticsearch/issues/52
-{% set host_volume_bindings = [ { 'host': '/vagrant/salt/redef/elasticsearch/files/elasticsearch.yml', 'container': '/usr/share/elasticsearch/config/elasticsearch.yml', 'ro': false } ] %}
+{% set host_volume_bindings = [ { 'host': '/vagrant/salt/redef/elasticsearch/elasticsearch.yml', 'container': '/usr/share/elasticsearch/config/elasticsearch.yml', 'ro': false } ] %}
 
 {% include 'docker-run.sls-fragment' %}
