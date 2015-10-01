@@ -7,3 +7,4 @@ ssh/id_rsa.pub
 .idea/
 .DS_Store
 npm-debug.log
+*.lock
