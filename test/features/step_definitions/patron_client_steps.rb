@@ -117,6 +117,7 @@ Then(/^ser jeg at eksemplaret ikke er ledig$/) do
 end
 
 When(/^jeg låner \"(.*?)\" ut til \"(.*?)$/) do |barcode, patron|
+  @site.SelectBranch.visit.select_branch()
   step "jeg registrerer \"Knut\" som aktiv låner"
   @site.Checkout.checkout(barcode)
 
