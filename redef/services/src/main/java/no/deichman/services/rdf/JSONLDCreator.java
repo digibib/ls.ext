@@ -32,7 +32,24 @@ public final class JSONLDCreator {
 
     public String asJSONLD(Model model) {
         StringWriter sw = new StringWriter();
+
         RDFDataMgr.write(sw, model, Lang.JSONLD);
+
+        final Map<String, Object> ctx = new HashMap<>();
+        DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI.ontology());
+        ctx.put("@context", defaultPrefixes.getAll());
+
+        return asJSONLD(model, ctx);
+    }
+
+    public void setBaseURI(BaseURI base) {
+        baseURI = base;
+    }
+
+    public String asJSONLD(Model model, Map<String, Object> context) {
+        StringWriter sw = new StringWriter();
+        RDFDataMgr.write(sw, model, Lang.JSONLD);
+
         String s = "";
         try {
             Object jsonObject = JsonUtils.fromString(sw.toString());
@@ -41,23 +58,15 @@ public final class JSONLDCreator {
             options.useNamespaces = true;
             options.setUseNativeTypes(true);
             options.setCompactArrays(true);
+            options.setEmbed(true);
 
-            final Map<String, Object> ctx = new HashMap<>();
-            DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI.ontology());
-            ctx.put("@context", defaultPrefixes.getAll());
-
-            Object compact = JsonLdProcessor.compact(jsonObject, ctx, options);
+            Object compact = JsonLdProcessor.compact(jsonObject, context, options);
 
             s = JsonUtils.toPrettyString(compact);
         } catch (IOException | JsonLdError e) {
             e.printStackTrace();
         }
-        System.out.println(s);
+
         return s;
     }
-
-    public void setBaseURI(BaseURI base) {
-        baseURI = base;
-    }
-
 }
