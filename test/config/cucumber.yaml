@@ -25,3 +25,5 @@ migration_wip: <%= omit_ignore %> --tags @wip --tags @migration
 html_report_migration_wip: <%= omit_ignore %> --tags @wip --tags @migration --format pretty --format html --out report/index_migration_wip.html
 
 rerun: <%= rerun %> features
+
+omit_wip: <%= omit_wip %>
