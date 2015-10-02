@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      /* normalize.css */
+      *, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+      html { font-size: 100%; font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+      body { margin: 0; color: #222; }
+
+      /* responsive grid setup */
+      .column { margin-bottom: 1.5rem; }
+      @media (min-width: 40rem) {
+        html { font-size: 112%; }
+        .column { float: left; padding-left: 1rem; padding-right: 1rem; }
+        .column.full { width: 100%; }
+        .column.two-thirds { width: 66.7%; }
+        .column.half { width: 50%; }
+        .column.third { width: 33.3%; }
+        .column.fourth { width: 25%; }
+        .column.three-fourths { width: 75%; }
+        .column.flow-opposite { float: right; }
+      }
+      @media (min-width: 64rem) {
+        html { font-size: 120%; }
+      }
+      .container { margin: 0 auto; max-width: 64rem; width: 90%; } 
+      .row:after { content: ""; display: table; clear: both; }
+
+      /* deichman ui styles */
+      a, a:visited { color: navy; }
+      button,input[type="search"] { margin-right: 1em; height: 2em; min-width: 6em; font-size: 1em;}
+      input[type="search"] { width: 300px; }
+      .logo { margin-right: 3em; }
+      .green { color: green; }
+      .small-text { font-size: 0.8em; }
+      .big-text { font-size: 1.4em; }
+      .header { background: #eee; width: 100%; padding: 1em; }
+      .results { border: 1px solid #aaa; margin-top: 2em;}
+      .result { border-bottom: 1px solid #aaa; }
+      .result-header { background: #eee; }
+      .result-image { padding: 1em; text-align: center;}
+      .cover-inner { padding: 1em; background: #eee; max-height: 200px; max-width: 150px; overflow: hidden;}
+      .cover-image { max-width: 100%; opacity: 0.9; display: block; margin-left: auto; margin-right: auto;}
+      a.more { display: block; float:right; background:#444; color: #fff; border-radius: 3em; padding: 1em; text-decoration: none}
+      a.more:visited { color: #fff;}
+    </style>
+    <title>Søk</title>
+    <script src="/ractive.min.js"></script>
+    <script src="/ractive-events-keys.js"></script>
+    <script src="/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="#app"></div>
+    <script id="template" type="text/ractive">
+      <div class="header">
+        <div class="container">
+          <img class="logo" width="164" height="24px" src="/logo.png"/>
+          <input placeholder="søk etter noe da..." on-enter="search" value="{{search_term}}" type="search"/><button id="submit" on-click="search">søk</button>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row results small-text">
+            <div class="row">
+              <div class="column full result-header"><h3>Verk ({{hits.total}})</h3></div>
+            </div>
+            {{#hits.hits}}
+              <div class="result row">
+              <div class="column fourth result-image">
+                <div class="cover-inner">
+                  {{#image}}
+                    <img class="cover-image" src="{{.image}}">
+                  {{else}}
+                    <i>et bilde hadde passet fint her</i>
+                  {{/}}
+                </div>
+              </div>
+             
+              <div class="column fourth result-info">
+                <p><strong>{{name}}</strong></p>
+                <p>Forfatter: <strong><a href="">{{creator}}</a></strong></p>
+                <p>Utgitt første gang: <strong>{{year}}</strong></p>
+                <p class="green">Ledig (? eks.)</p>
+              </div>
+              <div class="column half">
+                <p><b>Kort beskrivelse av verket:</b></p>
+                <p>Hadde vært fint å ha her.</p>
+                <a href="{{.['@id']}}" class="more">les mer ►</a>
+              </div>
+            </div>
+            {{/hits}}
+        </div>
+      </div>
+    </script>
+  <script type="text/javascript">
+    Ractive.DEBUG = false;
+
+    var ractive = new Ractive({
+       el: "#app",
+       template: "#template",
+       data: {
+        hits: {
+          total: 0,
+          hits: []
+        }
+       }
+     });
+
+    ractive.on({
+      search: function(event) {
+        var q = '"' + ractive.get("search_term") + '"';
+
+        axios.get('http://192.168.50.12:8200/_search?q='+q)
+          .then(function (response) {
+            ractive.set("hits", response.data.hits);
+          })
+          .catch(function (response) {
+            console.log(response);
+          });
+      }
+    });
+
+  </script>
+  </body>
+</html>

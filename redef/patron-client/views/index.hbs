@@ -139,10 +139,10 @@
                     <td data-automation-id="item_format">{{allResourcesWithLabelsConcat pub "deichman:format" ../../graph}}</td>
                     <td data-automation-id="item_barcode">{{firstValue item "deichman:barcode" ../../graph}}</td>
                     <td data-automation-id="item_location">{{firstValue item "deichman:location" ../../graph}}</td>
-                    {{#if onloan}}
-                    <td data-automation-id="item_status">Forventet {{firstValue item "deichman:status" ../../graph}}</td>
+                    {{#if (firstValue item "http://data.deichman.no/utility#onloan" ../../graph)}}
+                      <td data-automation-id="item_status">Forventet {{firstValue item "deichman:status" ../../../graph}}</td>
                     {{else}}
-                    <td data-automation-id="item_status">Ledig</td>
+                      <td data-automation-id="item_status">Ledig</td>
                     {{/if}}
                     <td data-automation-id="item_shelfmark">{{firstValue item "http://data.deichman.no/utility#shelfmark" ../../graph}}</td>
                   </tr>

@@ -6,6 +6,8 @@
 
 <% omit_migration = "--tags ~@migration" %>
 
+<% rerun = "--format pretty --format rerun --out report/rerun.txt" %>
+
 default: <%= omit_ignore %> <%= omit_migration %> <%= omit_wip %> features
 
 html_report: <%= omit_ignore %> <%= omit_migration %> <%= omit_wip %> --format pretty --format html --out report/index.html
@@ -21,3 +23,7 @@ html_report_migration: <%= omit_ignore %> <%= omit_wip %> --tags @migration --fo
 migration_wip: <%= omit_ignore %> --tags @wip --tags @migration
 
 html_report_migration_wip: <%= omit_ignore %> --tags @wip --tags @migration --format pretty --format html --out report/index_migration_wip.html
+
+rerun: <%= rerun %> features
+
+omit_wip: <%= omit_wip %>
