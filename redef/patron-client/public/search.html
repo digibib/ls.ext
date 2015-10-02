@@ -49,78 +49,11 @@
     <title>Søk</title>
     <script src="/ractive.min.js"></script>
     <script src="/ractive-events-keys.js"></script>
+    <script src="/ractive-load.min.js"></script>
     <script src="/axios.min.js"></script>
   </head>
   <body>
     <div id="#app"></div>
-    <script id="template" type="text/ractive">
-      <div class="header">
-        <div class="container">
-          <img class="logo" width="164" height="24px" src="/logo.png"/>
-          <input placeholder="søk etter noe da..." on-enter="search" value="{{search_term}}" type="search"/><button id="submit" on-click="search">søk</button>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row results small-text">
-            <div class="row">
-              <div class="column full result-header"><h3>Verk ({{hits.total}})</h3></div>
-            </div>
-            {{#hits.hits}}
-              <div class="result row">
-              <div class="column fourth result-image">
-                <div class="cover-inner">
-                  {{#image}}
-                    <img class="cover-image" src="{{.image}}">
-                  {{else}}
-                    <i>et bilde hadde passet fint her</i>
-                  {{/}}
-                </div>
-              </div>
-             
-              <div class="column fourth result-info">
-                <p><strong>{{name}}</strong></p>
-                <p>Forfatter: <strong><a href="">{{creator}}</a></strong></p>
-                <p>Utgitt første gang: <strong>{{year}}</strong></p>
-                <p class="green">Ledig (? eks.)</p>
-              </div>
-              <div class="column half">
-                <p><b>Kort beskrivelse av verket:</b></p>
-                <p>Hadde vært fint å ha her.</p>
-                <a href="{{.['@id']}}" class="more">les mer ►</a>
-              </div>
-            </div>
-            {{/hits}}
-        </div>
-      </div>
-    </script>
-  <script type="text/javascript">
-    Ractive.DEBUG = false;
-
-    var ractive = new Ractive({
-       el: "#app",
-       template: "#template",
-       data: {
-        hits: {
-          total: 0,
-          hits: []
-        }
-       }
-     });
-
-    ractive.on({
-      search: function(event) {
-        var q = '"' + ractive.get("search_term") + '"';
-
-        axios.get('http://192.168.50.12:8200/_search?q='+q)
-          .then(function (response) {
-            ractive.set("hits", response.data.hits);
-          })
-          .catch(function (response) {
-            console.log(response);
-          });
-      }
-    });
-
-  </script>
+    <script src="/search.js"></script>
   </body>
 </html>
