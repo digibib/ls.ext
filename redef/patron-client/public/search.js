@@ -14,7 +14,6 @@
     return axios.get( "http://192.168.50.12:8000/search_template.html" ).then( function ( response ) {
         return response.data;
     }).then(function(data){
-        console.log(data);
         var searchRactive = new Ractive({
             el: "#app",
             template: data,

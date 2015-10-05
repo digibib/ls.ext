@@ -2,6 +2,7 @@ FROM node:4.1.1
 
 ENV REFRESHED_AT 2015-10-05
 
+RUN npm config set loglevel warn
 RUN npm install -g nodemon
 RUN npm install -g mocha
 RUN npm install -g jshint
