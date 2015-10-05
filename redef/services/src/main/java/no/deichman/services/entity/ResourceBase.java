@@ -1,6 +1,5 @@
 package no.deichman.services.entity;
 
-import javax.servlet.ServletConfig;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.entity.repository.InMemoryRepository;
@@ -9,6 +8,10 @@ import no.deichman.services.entity.repository.RemoteRepository;
 import no.deichman.services.rdf.JSONLDCreator;
 import no.deichman.services.uridefaults.BaseURI;
 
+import javax.servlet.ServletConfig;
+import javax.ws.rs.core.Context;
+import java.util.Optional;
+
 /**
  * Responsibility: Common logic for handling dependencies.
  */
@@ -16,13 +19,20 @@ public abstract class ResourceBase {
 
     public static final String SERVLET_INIT_PARAM_KOHA_PORT = "kohaPort";
     public static final String SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY = "inMemoryRDFRepository";
+    public static final String ELASTIC_SEARCH_URL = "elasticsearch.url";
 
     private static InMemoryRepository staticInMemoryRepository;
+    @Context
+    private ServletConfig servletConfig;
     private EntityService entityService;
     private BaseURI baseURI;
     private JSONLDCreator jsonldCreator;
 
-    abstract ServletConfig getConfig();
+    protected final String elasticSearchBaseUrl() {
+        return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://localhost:9200");
+    }
+
+    protected abstract ServletConfig getConfig();
 
     protected final EntityService getEntityService() {
         if (entityService == null) {

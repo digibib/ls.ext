@@ -1,12 +1,22 @@
 package no.deichman.services.entity;
 
-import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
-import static no.deichman.services.restutils.MimeType.LD_JSON;
-import static no.deichman.services.restutils.MimeType.NTRIPLES;
-import static no.deichman.services.restutils.MimeType.UTF_8;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.google.gson.Gson;
+import no.deichman.services.entity.patch.PatchParserException;
+import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.restutils.PATCH;
+import no.deichman.services.uridefaults.BaseURI;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
@@ -22,14 +32,18 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
-import no.deichman.services.entity.patch.PatchParserException;
-import no.deichman.services.rdf.RDFModelUtil;
-import no.deichman.services.restutils.PATCH;
-import no.deichman.services.uridefaults.BaseURI;
-
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.Lang;
+import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
+import static no.deichman.services.restutils.MimeType.LD_JSON;
+import static no.deichman.services.restutils.MimeType.NTRIPLES;
+import static no.deichman.services.restutils.MimeType.UTF_8;
 
 /**
  * Responsibility: Expose entitites as r/w REST resources.
@@ -37,8 +51,10 @@ import org.apache.jena.riot.Lang;
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
+    private static final Logger LOG = LoggerFactory.getLogger(EntityResource.class);
 
-    @Context private ServletConfig servletConfig;
+    @Context
+    private ServletConfig servletConfig;
 
     public EntityResource() {
     }
@@ -110,7 +126,33 @@ public final class EntityResource extends ResourceBase {
             throw new BadRequestException(e);
         }
 
+        indexModel(m);
         return Response.ok().entity(getJsonldCreator().asJSONLD(m)).build();
+    }
+
+    private void indexModel(Model m) {
+        StringWriter jsonContent = new StringWriter();
+        RDFDataMgr.write(jsonContent, m, RDFFormat.JSONLD);
+        Map jsonMap = new Gson().fromJson(jsonContent.toString(), HashMap.class);
+        jsonMap.remove("@context");
+        String encodedWorkId;
+        try {
+            encodedWorkId = URLEncoder.encode(jsonMap.get("@id").toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOG.error(e.getMessage(), e);
+            return;
+        }
+        jsonMap.remove("@id");
+        String newJsonContent = new Gson().toJson(jsonMap);
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            HttpPut httpPut = new HttpPut(new URIBuilder(elasticSearchBaseUrl()).setPath("/search/work/" + encodedWorkId).build());
+            httpPut.setEntity(new StringEntity(newJsonContent));
+            try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
+                LOG.info(putResponse.getStatusLine().toString());
+            }
+        }  catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
 
     @PUT
@@ -137,7 +179,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @Override
-    ServletConfig getConfig() {
+    protected ServletConfig getConfig() {
         return servletConfig;
     }
 }

@@ -1,5 +1,6 @@
 package no.deichman.services.search;
 
+import no.deichman.services.entity.ResourceBase;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
@@ -24,25 +25,23 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 /**
  * Responsibility: Expose a subset of Elasticsearch REST API limited to searching for works.
  */
 @Singleton
 @Path("search/work")
-public class WorkSearchResource {
+public class WorkSearchResource extends ResourceBase {
     private static final Logger LOG = LoggerFactory.getLogger(WorkSearchResource.class);
-    public static final String ELASTIC_SEARCH_URL = "elasticsearch.url";
+    private URIBuilder workSearchUriBuilder;
+
     @Context
     private ServletConfig servletConfig;
-    private URIBuilder workSearchUriBuilder;
 
     @PostConstruct
     public final void init() {
-        String elasticSearchPort = Optional.ofNullable(servletConfig.getInitParameter(ELASTIC_SEARCH_URL)).orElse("http://localhost:9200");
         try {
-            workSearchUriBuilder = new URIBuilder(elasticSearchPort).setPath("/search/work/_search");
+            workSearchUriBuilder = new URIBuilder(elasticSearchBaseUrl()).setPath("/search/work/_search");
         } catch (URISyntaxException e) {
             LOG.error(e.getMessage(), e);
         }
@@ -74,5 +73,10 @@ public class WorkSearchResource {
             LOG.error(usx.getMessage(), usx);
             return Response.serverError().build();
         }
+    }
+
+    @Override
+    protected final ServletConfig getConfig() {
+        return servletConfig;
     }
 }

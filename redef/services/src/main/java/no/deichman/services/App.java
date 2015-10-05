@@ -68,7 +68,7 @@ public final class App {
         }
 
         if (elasticSearchUrl != null) {
-            jerseyServlet.setInitParameter(WorkSearchResource.ELASTIC_SEARCH_URL, elasticSearchUrl);
+            jerseyServlet.setInitParameter(ResourceBase.ELASTIC_SEARCH_URL, elasticSearchUrl);
         }
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
