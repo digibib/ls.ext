@@ -1,20 +1,19 @@
 package no.deichman.services;
 
-import static java.util.Arrays.asList;
-
 import no.deichman.services.entity.EntityResource;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.WorkSearchResource;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.util.Arrays.asList;
 
 /**
  * Responsibility: Start application (using embedded web server).
@@ -26,6 +25,7 @@ public final class App {
     private final int port;
     private String kohaPort;
     private boolean inMemoryRDFRepository;
+    private String elasticSearchUrl = System.getProperty("ELASTCSEARCH_URL", "http://localhost:9200");
 
     App(int port, String kohaPort, boolean inMemoryRDFRepository) {
         this.port = port;
@@ -67,6 +67,9 @@ public final class App {
             );
         }
 
+        if (elasticSearchUrl != null) {
+            jerseyServlet.setInitParameter(WorkSearchResource.ELASTIC_SEARCH_URL, elasticSearchUrl);
+        }
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
                 String.join(",", asList(

@@ -8,6 +8,7 @@ CMD /services/javarunner.sh \
     -DKOHA_PASSWORD="$KOHA_PASSWORD" \
     -DFUSEKI_PORT="$FUSEKI_PORT" \
     -DDATA_BASEURI="$DATA_BASEURI" \
+    -DELASTCSEARCH_URL="$ELASTICSEARCH_URL" \
     -Done-jar.silent=true \
     -jar \
     /services/services-1.0-SNAPSHOT-standalone.jar
