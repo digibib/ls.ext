@@ -1,11 +1,12 @@
-FROM node:0.12
+FROM node:4.1.1
 
-ENV REFRESHED_AT 2015-07-28
+ENV REFRESHED_AT 2015-10-05
 
 RUN npm install -g nodemon
 RUN npm install -g mocha
 RUN npm install -g jshint
 RUN npm install -g jscs
+RUN npm install -g jest-cli
 
 RUN mkdir -p /usr/src/app
 COPY package.json /usr/src/
