@@ -1,29 +1,45 @@
-Ractive.load( 'search_template.html' ).then( function ( SearchResults ) {
+(function (root, factory) {
+    if (typeof module === 'object' && module.exports) {
+        var Ractive = require("../public/ractive.min.js");
+        Ractive.events = require("../public/ractive-events-keys.js");
 
-  var ractive = new SearchResults({
-     el: "#app",
-     data: {
-      hits: {
-        total: 0,
-        hits: []
-      }
-     }
-   });
-
-  ractive.on({
-    search: function(event) {
-      var q = '"' + ractive.get("search_term") + '"';
-
-      axios.get('http://192.168.50.12:8200/_search?q='+q)
-        .then(function (response) {
-          ractive.set("hits", response.data.hits);
-        })
-        .catch(function (response) {
-          console.log(response);
-        });
+        var axios = require("../public/axios.min.js");
+        module.exports = factory(Ractive, axios);
+    } else {
+        root.Search = factory(root.Ractive, root.axios);
     }
-  });
-}).catch(function(err) {
-  console.log(err);
-});
+}(this, function (Ractive, axios) {
+    "use strict";
+    var template = '';
+    return axios.get( "http://192.168.50.12:8000/search_template.html" ).then( function ( response ) {
+        return response.data;
+    }).then(function(data){
+        console.log(data);
+        var searchRactive = new Ractive({
+            el: "#app",
+            template: data,
+            data: {
+                hits: {
+                    total: 0,
+                    hits: []
+                }
+            }
+        });
 
+        searchRactive.on({
+            search: function (event) {
+                var q = '"' + searchRactive.get("search_term") + '"';
+
+                axios.get('http://192.168.50.12:8200/_search?q=' + q)
+                    .then(function (response) {
+                        searchRactive.set("hits", response.data.hits);
+                    })
+                    .catch(function (response) {
+                        console.log(response);
+                    });
+            }
+        });
+        return searchRactive;
+    });
+
+}));

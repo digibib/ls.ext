@@ -6,33 +6,33 @@
 </div>
 <div class="container">
   <div class="row results small-text">
-      <div class="row">
-        <div class="column full result-header"><h3>Verk ({{hits.total}})</h3></div>
-      </div>
-      {{#hits.hits}}
-        <div class="result row">
-        <div class="column fourth result-image">
-          <div class="cover-inner">
-            {{#image}}
-              <img class="cover-image" src="{{.image}}">
-            {{else}}
-              <i>et bilde hadde passet fint her</i>
-            {{/}}
-          </div>
+    <div class="row">
+      <div class="column full result-header"><h3>Verk (<span data-automation-id="hits-total">{{hits.total}}</span>)</h3></div>
+    </div>
+    {{#hits.hits}}
+    <div class="result row">
+      <div class="column fourth result-image">
+        <div class="cover-inner">
+          {{#image}}
+          <img class="cover-image" src="{{.image}}">
+          {{else}}
+          <i>et bilde hadde passet fint her</i>
+          {{/}}
         </div>
+      </div>
 
-        <div class="column fourth result-info">
-          <p><strong>{{name}}</strong></p>
-          <p>Forfatter: <strong><a href="">{{creator}}</a></strong></p>
-          <p>Utgitt første gang: <strong>{{year}}</strong></p>
-          <p class="green">Ledig (? eks.)</p>
-        </div>
-        <div class="column half">
-          <p><b>Kort beskrivelse av verket:</b></p>
-          <p>Hadde vært fint å ha her.</p>
-          <a href="{{.['@id']}}" class="more">les mer ►</a>
-        </div>
+      <div class="column fourth result-info">
+        <p><strong>{{name}}</strong></p>
+        <p>Forfatter: <strong><a href="">{{creator}}</a></strong></p>
+        <p>Utgitt første gang: <strong>{{year}}</strong></p>
+        <p class="green">Ledig (? eks.)</p>
       </div>
-      {{/hits}}
+      <div class="column half">
+        <p><b>Kort beskrivelse av verket:</b></p>
+        <p>Hadde vært fint å ha her.</p>
+        <a href="{{.['@id']}}" class="more">les mer ►</a>
+      </div>
+    </div>
+    {{/hits}}
   </div>
-</div>q
+</div>
