@@ -10,5 +10,6 @@ CMD /services/javarunner.sh \
     -DDATA_BASEURI="$DATA_BASEURI" \
     -DELASTCSEARCH_URL="$ELASTICSEARCH_URL" \
     -Done-jar.silent=true \
+    -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070 \
     -jar \
     /services/services-1.0-SNAPSHOT-standalone.jar
