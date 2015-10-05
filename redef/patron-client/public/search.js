@@ -1,5 +1,6 @@
 (function (root, factory) {
-    if (typeof module === 'object' && module.exports) {
+    "use strict";
+    if (typeof module === "object" && module.exports) {
         var Ractive = require("../public/ractive.min.js");
         Ractive.events = require("../public/ractive-events-keys.js");
 
@@ -10,7 +11,6 @@
     }
 }(this, function (Ractive, axios) {
     "use strict";
-    var template = '';
     return axios.get( "http://192.168.50.12:8000/search_template.html" ).then( function ( response ) {
         return response.data;
     }).then(function(data){
@@ -26,10 +26,10 @@
         });
 
         searchRactive.on({
-            search: function (event) {
-                var q = '"' + searchRactive.get("search_term") + '"';
+            search: function () {
+                var q = "\"" + searchRactive.get("search_term") + "\"";
 
-                axios.get('http://192.168.50.12:8200/_search?q=' + q)
+                axios.get("http://192.168.50.12:8200/_search?q=" + q)
                     .then(function (response) {
                         searchRactive.set("hits", response.data.hits);
                     })
