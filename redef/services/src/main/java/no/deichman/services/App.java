@@ -5,6 +5,7 @@ import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.restutils.CORSResponseFilter;
+import no.deichman.services.search.WorkSearchResource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -24,6 +25,7 @@ public final class App {
     private final int port;
     private String kohaPort;
     private boolean inMemoryRDFRepository;
+    private String elasticSearchUrl = System.getProperty("ELASTCSEARCH_URL", "http://localhost:9200");
 
     App(int port, String kohaPort, boolean inMemoryRDFRepository) {
         this.port = port;
@@ -65,11 +67,15 @@ public final class App {
             );
         }
 
+        if (elasticSearchUrl != null) {
+            jerseyServlet.setInitParameter(WorkSearchResource.ELASTIC_SEARCH_URL, elasticSearchUrl);
+        }
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
                 String.join(",", asList(
                         EntityResource.class.getCanonicalName(),
                         OntologyResource.class.getCanonicalName(),
+                        WorkSearchResource.class.getCanonicalName(),
                         AuthorizedValuesResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName()
                 )));

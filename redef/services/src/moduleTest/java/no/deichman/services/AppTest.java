@@ -9,6 +9,7 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import no.deichman.services.entity.kohaadapter.KohaSvcMock;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
+import no.deichman.services.search.EmbeddedElasticsearchServer;
 import no.deichman.services.testutil.PortSelector;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -18,9 +19,12 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDFS;
+import org.elasticsearch.client.Client;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -35,6 +39,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class AppTest {
+    private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
 
     private static final boolean USE_IN_MEMORY_REPO = true;
     private static final String LOCALHOST = "http://127.0.0.1";
@@ -42,10 +47,14 @@ public class AppTest {
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private static final String ANOTHER_BIBLIO_ID = "333333";
+    public static final int ONE_SECOND = 1000;
+    public static final int TEN_TIMES = 10;
     private static String baseUri;
     private static App app;
 
     private static KohaSvcMock kohaSvcMock;
+    private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
+
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -56,11 +65,19 @@ public class AppTest {
         System.setProperty("DATA_BASEURI", baseUri);
         app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO);
         app.startAsync();
+
+        setupElasticSearch();
+
+    }
+
+    private static void setupElasticSearch() {
+        embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         app.stop();
+        embeddedElasticsearchServer.shutdown();
     }
 
     @Test
@@ -137,7 +154,7 @@ public class AppTest {
                 equalTo(2 + 1));
         assertThat("model does not contain shelfmarks",
                 work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#shelfmark")).toList().size(),
-                equalTo(2 +1));
+                equalTo(2 + 1));
         assertThat("model does not contain onloan booleans",
                 work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#onloan")).toList().size(),
                 equalTo(2 + 1));
@@ -228,6 +245,38 @@ public class AppTest {
         assertTrue("ontology doesn't have Work", ontology.contains(workStatement));
     }
 
+    @Test
+    public void when_get_elasticsearch_work_should_return_something() throws Exception {
+        getClient().prepareIndex("search", "work", "1")
+                .setSource("{"
+                        + "\"name\": \"Name\""
+                        + "}")
+                .execute()
+                .actionGet();
+        boolean foundWorkInIndex;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest
+                    .get(baseUri + "search/work/_search").queryString("q", "name:Name");
+            HttpResponse<?> response = request.asJson();
+            assertResponse(Status.OK, response);
+            foundWorkInIndex = response.getBody().toString().contains("name");
+            if (!foundWorkInIndex) {
+                LOG.info("Work not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundWorkInIndex && attempts-->0);
+        assertTrue("Should have found work again in index by now", foundWorkInIndex);
+    }
+
+    @Test
+    public void when_get_elasticsearch_work_without_query_parameter_should_get_bad_request_response() throws Exception {
+        HttpRequest request = Unirest
+                .get(baseUri + "search/work/_search");
+        HttpResponse<?> response = request.asString();
+        assertResponse(Status.BAD_REQUEST, response);
+    }
+
     private GetRequest buildGetItemsRequest(String workUri) {
         return Unirest
                 .get(workUri + "/items")
@@ -259,10 +308,10 @@ public class AppTest {
 
     private static RequestBodyEntity buildPatchRequest(String uri, JsonArray patch) {
         return Unirest
-                    .patch(uri)
-                    .header("Accept", "application/ld+json")
-                    .header("Content-Type", "application/ldpatch+json")
-                    .body(new JsonNode(patch.toString()));
+                .patch(uri)
+                .header("Accept", "application/ld+json")
+                .header("Content-Type", "application/ldpatch+json")
+                .body(new JsonNode(patch.toString()));
     }
 
     private static void assertIsUri(String uri) {
@@ -286,6 +335,10 @@ public class AppTest {
                 .header("Accept", "application/ld+json")
                 .header("Content-Type", "application/ld+json")
                 .body(body);
+    }
+
+    protected Client getClient() {
+        return embeddedElasticsearchServer.getClient();
     }
 
 }

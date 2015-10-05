@@ -1,11 +1,12 @@
 package no.deichman.services.entity;
 
-import no.deichman.services.entity.patch.PatchParserException;
-import no.deichman.services.rdf.RDFModelUtil;
-import no.deichman.services.restutils.PATCH;
-import no.deichman.services.uridefaults.BaseURI;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.Lang;
+import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
+import static no.deichman.services.restutils.MimeType.LD_JSON;
+import static no.deichman.services.restutils.MimeType.NTRIPLES;
+import static no.deichman.services.restutils.MimeType.UTF_8;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
@@ -21,13 +22,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.net.URISyntaxException;
 
-import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
-import static no.deichman.services.restutils.MimeType.LD_JSON;
-import static no.deichman.services.restutils.MimeType.NTRIPLES;
-import static no.deichman.services.restutils.MimeType.UTF_8;
+import no.deichman.services.entity.patch.PatchParserException;
+import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.restutils.PATCH;
+import no.deichman.services.uridefaults.BaseURI;
+
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
 
 /**
  * Responsibility: Expose entitites as r/w REST resources.
@@ -64,7 +66,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: [a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w)[0-9_]+}")
     @Produces(LD_JSON + UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
@@ -75,7 +77,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @DELETE
-    @Path("/{id: [a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w)[0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
         if (model.isEmpty()) {
@@ -86,7 +88,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PATCH
-    @Path("/{id: [a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w)[0-9_]+}")
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
@@ -123,7 +125,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{workId: [a-zA-Z0-9_]+}/items")
+    @Path("/{workId: (p|w)[a-zA-Z0-9_]+}/items")
     @Produces(LD_JSON + UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) {
         Model model = getEntityService().retrieveWorkItemsById(workId);
