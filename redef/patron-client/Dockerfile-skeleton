@@ -6,7 +6,7 @@ RUN npm install -g nodemon
 RUN npm install -g mocha
 RUN npm install -g jshint
 RUN npm install -g jscs
-RUN npm install -g jest-cli
+RUN npm install -g mocha-jsdom
 
 RUN mkdir -p /usr/src/app
 COPY package.json /usr/src/

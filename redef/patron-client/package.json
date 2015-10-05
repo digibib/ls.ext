@@ -41,6 +41,7 @@
     "chai-http" : "*",
     "http": "*",
     "router": "*",
+    "mocha-jsdom": "*",
     "finalhandler": "*",
     "cheerio": "*"
   },
