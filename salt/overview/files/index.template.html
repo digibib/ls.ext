@@ -20,7 +20,7 @@
         <ul>
             <li><a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['opac']['port']|string }}">Kohas OPAC</a></li>
             {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
-                <li><a href="http://{{ pillar['overview']['redef']['patron-client']['host']}}:{{ pillar['redef']['patron-client']['port']|string}}">PatronClient</a></li>
+                <li><a href="http://{{ pillar['overview']['redef']['patron-client']['host']}}:{{ pillar['redef']['patron-client']['port']|string}}/search">PatronClient</a></li>
             {% endif %}
         </ul>
 
@@ -46,7 +46,7 @@
 
         <ul>
             {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
-                <li><a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port']|string }}/work">Services</a></li>
+                <li><a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port']|string }}/application.wadl?detail=true">Services</a></li>
                 <li><a href="http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port']|string }}">Fuseki</a></li>
                 <li><a href="http://{{ pillar['redef']['elasticsearch']['host'] }}:{{ pillar['redef']['elasticsearch']['http']['port']|string }}/?pretty">Elasticsearch</a></li>
             {% endif %}
