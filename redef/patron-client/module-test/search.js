@@ -1,8 +1,11 @@
-/*global require, it, describe, before, document*/
+/*global require, it, describe, before, document, Promise*/
 "use strict";
 
 var chai = require("chai"),
     expect = chai.expect,
+    sinon = require("sinon"),
+    axios = require("axios"),
+    fs = require("fs"),
     jsdom = require("mocha-jsdom");
 
 describe("PatronClient", function () {
@@ -11,12 +14,24 @@ describe("PatronClient", function () {
     var ractive;
 
     before(function (done) {
+
+      // stub http requests from axios used in module, faking returned promises
+      sinon.stub(axios, "get", function (path) {
+        switch (path) {
+        case "/config":
+          return Promise.resolve({data: { host: "192.168.50.12", port: 7000 }});
+        case "/search_template.html":
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/search_template.html", "UTF-8") });
+        }
+      });
+
+      // create fixtures for testing Ractive events
       var fixture = document.createElement("div");
       fixture.setAttribute("id", "app");
       document.body.appendChild(fixture);
 
-      var Search = require("../public/search.js");
-      Search.then(function (r) {
+      // load module
+      require("../public/search.js").then(function (r) {
         ractive = r;
         done();
       }).catch(done);

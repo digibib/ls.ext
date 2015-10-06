@@ -52,6 +52,7 @@
     "cheerio": "*",
     "nodemon": "*",
     "mocha": "*",
+    "sinon": "*",
     "browserify": "*",
     "jscs": "*",
     "jshint": "*"
