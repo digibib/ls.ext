@@ -3,7 +3,6 @@
     if (typeof module === "object" && module.exports) {
         var Ractive = require("../public/ractive.min.js");
         Ractive.events = require("../public/ractive-events-keys.js");
-
         var axios = require("../public/axios.min.js");
         module.exports = factory(Ractive, axios);
     } else {
@@ -11,7 +10,13 @@
     }
 }(this, function (Ractive, axios) {
     "use strict";
+
     Ractive.DEBUG = false;
+
+    if (window && !window.Promise) {
+        // axios needs a Promise polyfill, so we use the one provided by ractive.
+        window.Promise = Ractive.Promise;
+    }
 
     return axios.get( "http://192.168.50.12:8000/search_template.html" ).then( function ( response ) {
         return response.data;
