@@ -11,6 +11,8 @@
     }
 }(this, function (Ractive, axios) {
     "use strict";
+    Ractive.DEBUG = false;
+
     return axios.get( "http://192.168.50.12:8000/search_template.html" ).then( function ( response ) {
         return response.data;
     }).then(function(data){
