@@ -25,8 +25,3 @@ copy_graph_module:
   file.managed:
     - source: https://raw.githubusercontent.com/ractivejs/ractive-events-keys/master/dist/ractive-events-keys.js
     - source_hash: md5=a47424451e9692a58083fcca93e2d930
-
-/vagrant/redef/patron-client/public/ractive-load.min.js:
-  file.managed:
-    - source: https://raw.githubusercontent.com/ractivejs/ractive-load/master/dist/ractive-load.min.js
-    - source_hash: md5=fccfb2dc3b591f0f980ea4d07e71e9e5

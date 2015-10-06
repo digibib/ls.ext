@@ -3,6 +3,7 @@ package no.deichman.services.entity;
 import com.google.gson.Gson;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.restutils.MimeType;
 import no.deichman.services.restutils.PATCH;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -37,13 +38,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
-import static no.deichman.services.restutils.MimeType.UTF_8;
 
 /**
  * Responsibility: Expose entitites as r/w REST resources.
@@ -52,6 +53,7 @@ import static no.deichman.services.restutils.MimeType.UTF_8;
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
     private static final Logger LOG = LoggerFactory.getLogger(EntityResource.class);
+    public static final String UTF_8 = "UTF-8";
 
     @Context
     private ServletConfig servletConfig;
@@ -83,7 +85,7 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("/{id: (p|w)[0-9_]+}")
-    @Produces(LD_JSON + UTF_8)
+    @Produces(LD_JSON + MimeType.UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
         if (model.isEmpty()) {
@@ -106,7 +108,7 @@ public final class EntityResource extends ResourceBase {
     @PATCH
     @Path("/{id: (p|w)[0-9_]+}")
     @Consumes(LDPATCH_JSON)
-    @Produces(LD_JSON + UTF_8)
+    @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
         EntityType entityType = EntityType.get(type);
         String resourceUri;
@@ -137,21 +139,20 @@ public final class EntityResource extends ResourceBase {
         jsonMap.remove("@context");
         String encodedWorkId;
         try {
-            encodedWorkId = URLEncoder.encode(jsonMap.get("@id").toString(), "UTF-8");
+            encodedWorkId = URLEncoder.encode(jsonMap.get("@id").toString(), UTF_8);
         } catch (UnsupportedEncodingException e) {
             LOG.error(e.getMessage(), e);
             return;
         }
-        jsonMap.remove("@id");
         String newJsonContent = new Gson().toJson(jsonMap);
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpPut httpPut = new HttpPut(new URIBuilder(elasticSearchBaseUrl()).setPath("/search/work/" + encodedWorkId).build());
-            httpPut.setEntity(new StringEntity(newJsonContent));
+            httpPut.setEntity(new StringEntity(newJsonContent, Charset.forName(UTF_8)));
             try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
-                LOG.info(putResponse.getStatusLine().toString());
+                LOG.debug(putResponse.getStatusLine().toString());
             }
         }  catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error(String.format("Failed to index %s in elasticsearch", encodedWorkId), e);
         }
     }
 
@@ -168,7 +169,7 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("/{workId: (p|w)[a-zA-Z0-9_]+}/items")
-    @Produces(LD_JSON + UTF_8)
+    @Produces(LD_JSON + MimeType.UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) {
         Model model = getEntityService().retrieveWorkItemsById(workId);
         if (model.isEmpty()) {

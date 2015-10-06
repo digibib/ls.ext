@@ -10,7 +10,13 @@
     }
 }(this, function (Ractive, axios) {
     "use strict";
+
     Ractive.DEBUG = false;
+
+    if (window && !window.Promise) {
+        // axios needs a Promise polyfill, so we use the one provided by ractive.
+        window.Promise = Ractive.Promise;
+    }
 
     return axios.get( "http://192.168.50.12:8000/search_template.html" ).then( function ( response ) {
         return response.data;
@@ -30,7 +36,7 @@
             search: function () {
                 var q = "\"" + searchRactive.get("search_term") + "\"";
 
-                axios.get("http://192.168.50.12:8200/_search?q=" + q)
+                axios.get("http://192.168.50.12:8005/search/work/_search?q=" + q)
                     .then(function (response) {
                         searchRactive.set("hits", response.data.hits);
                     })

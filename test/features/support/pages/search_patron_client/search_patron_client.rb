@@ -14,6 +14,6 @@ class SearchPatronClient < PageRoot
   end
 
   def get_search_result_list
-    return @browser.ul(:id=> 'results')
+    return @browser.div(:class=> 'result')
   end
 end
