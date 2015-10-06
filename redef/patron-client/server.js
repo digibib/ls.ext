@@ -100,6 +100,10 @@ function getData(body) {
   return data;
 }
 
+app.get('/config', function (request, response) {
+  response.json(config.get(process.env));
+});
+
 app.get('/work/:id', function (request, response) {
   var parameters = config.get(process.env);
   parameters.path = "/work/" + request.params.id;
