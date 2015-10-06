@@ -32,28 +32,28 @@ rm-test-instance: stop-test-instance
 	sudo docker rm $(MODULE_TEST_CONTAINER) || true
 
 run-test-instance: build_skeleton rm-test-instance
-	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE)
+	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" -v /vagrant/redef/patron-client:/usr/src/app-test $(SKELETON_IMAGE)
 
 lint: build_skeleton
-	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run jscs -- server.js lib module-test test --fix
-	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run jshint -- server.js lib module-test test
+	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app-test $(SKELETON_IMAGE) npm run jscs -- server.js lib module-test test --fix
+	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app-test $(SKELETON_IMAGE) npm run jshint -- server.js lib module-test test
 
 unit_test: build_skeleton
-	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm test
+	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app-test $(SKELETON_IMAGE) npm test
 
 module-test: run-test-instance
-	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app -p 7080:8080 -p 6666:6666 $(SKELETON_IMAGE) npm run-script module-test
+	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app-test -p 7080:8080 -p 6666:6666 $(SKELETON_IMAGE) npm run-script module-test
 	@echo "*** Log from module test container"
 	sudo docker logs $(MODULE_TEST_CONTAINER)
 
 run-dev-debug: build_skeleton rm
-	sudo docker run -it -v /vagrant/redef/patron-client:/usr/src/app -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
+	sudo docker run -it -v /vagrant/redef/patron-client:/usr/src/app-test -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
 
 test-debug: build_skeleton
-	sudo docker run -it --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run-script test-debug
+	sudo docker run -it --rm -v /vagrant/redef/patron-client:/usr/src/app-test $(SKELETON_IMAGE) npm run-script test-debug
 
 module-test-debug: build_skeleton run-test-instance
-	sudo docker run -it --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run-script module-test-debug
+	sudo docker run -it --rm -v /vagrant/redef/patron-client:/usr/src/app-test $(SKELETON_IMAGE) npm run-script module-test-debug
 
 log-f:
 	sudo docker logs -f $(CONTAINER)
