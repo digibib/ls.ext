@@ -7,5 +7,6 @@
   },
   "requireVarDeclFirst": null,
   "validateIndentation": 2,
-  "requireMultipleVarDecl": null
+  "requireMultipleVarDecl": null,
+  "disallowDanglingUnderscores": false
 }
