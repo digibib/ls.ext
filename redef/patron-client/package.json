@@ -14,7 +14,10 @@
     "start-dev" : "nodemon",
     "start-dev-debug" : "nodemon debug",
     "test-debug" : "mocha debug",
-    "module-test-debug" : "mocha debug module-test"
+    "module-test-debug" : "mocha debug module-test",
+    "browserify": "browserify",
+    "jscs": "jscs",
+    "jslint": "jslint"
   },
   "main": "server.js",
   "repository": {
@@ -34,7 +37,10 @@
   "dependencies": {
     "express": "*",
     "hbs": "*",
-    "http": "*"
+    "http": "*",
+    "axios": "0.7.0",
+    "ractive": "0.7.3",
+    "ractive-events-keys": "0.2.1"
   },
   "devDependencies": {
     "chai" : "*",
@@ -43,7 +49,12 @@
     "router": "*",
     "mocha-jsdom": "*",
     "finalhandler": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "nodemon": "*",
+    "mocha": "*",
+    "browserify": "*",
+    "jscs": "*",
+    "jshint": "*"
   },
   "private": true,
   "analyze": true,

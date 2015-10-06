@@ -1,18 +1,13 @@
 FROM node:4.1.1
 
-ENV REFRESHED_AT 2015-10-05
+ENV REFRESHED_AT 2015-10-06
 
-RUN npm config set loglevel warn
-RUN npm install -g nodemon
-RUN npm install -g mocha
-RUN npm install -g jshint
-RUN npm install -g jscs
-RUN npm install -g mocha-jsdom
-
-RUN mkdir -p /usr/src/app
-COPY package.json /usr/src/
+RUN mkdir -p /usr/src/app/public
+ADD package.json /usr/src/
+ADD public/search.js /usr/src/app/public/
 WORKDIR /usr/src/
-RUN npm install
+RUN npm install >npm.log 2>&1
+RUN npm run browserify -- app/public/search.js -o app/public/bundle.js
 
 WORKDIR /usr/src/app/
 

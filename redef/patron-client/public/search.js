@@ -1,10 +1,9 @@
 (function (root, factory) {
-    "use strict";
-    if (typeof module === "object" && module.exports) {
-        var Ractive = require("../public/ractive.min.js");
-        Ractive.events = require("../public/ractive-events-keys.js");
+    if (typeof module === 'object' && module.exports) {
+        var Ractive = require("ractive");
+        Ractive.events = require("ractive-events-keys");
 
-        var axios = require("../public/axios.min.js");
+        var axios = require("axios");
         module.exports = factory(Ractive, axios);
     } else {
         root.Search = factory(root.Ractive, root.axios);

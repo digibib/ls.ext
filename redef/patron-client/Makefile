@@ -35,8 +35,8 @@ run-test-instance: build_skeleton rm-test-instance
 	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE)
 
 lint: build_skeleton
-	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) jscs server.js lib module-test test --fix
-	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) jshint server.js lib module-test test
+	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run jscs -- server.js lib module-test test --fix
+	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm run jshint -- server.js lib module-test test
 
 unit_test: build_skeleton
 	sudo docker run --rm -v /vagrant/redef/patron-client:/usr/src/app $(SKELETON_IMAGE) npm test
