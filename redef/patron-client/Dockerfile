@@ -1,6 +1,5 @@
 FROM digibib/redef-patron-client-skeleton
 
-COPY . /usr/src/app
-WORKDIR /usr/src/app/
+RUN npm run browserify -- public/search.js -o public/bundle.js
 
 CMD [ "npm", "start" ]
