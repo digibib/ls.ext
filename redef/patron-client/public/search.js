@@ -31,7 +31,7 @@
             search: function () {
                 var q = "\"" + searchRactive.get("search_term") + "\"";
 
-                axios.get("http://192.168.50.12:8200/_search?q=" + q)
+                axios.get("http://192.168.50.12:8005/search/work/_search?q=" + q)
                     .then(function (response) {
                         searchRactive.set("hits", response.data.hits);
                     })
