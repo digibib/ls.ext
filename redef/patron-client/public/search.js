@@ -5,11 +5,12 @@
     Ractive.events = require("ractive-events-keys");
 
     var axios = require("axios");
-    module.exports = factory(Ractive, axios);
+    var url = require("url");
+    module.exports = factory(Ractive, axios, url);
   } else {
-    root.Search = factory(root.Ractive, root.axios);
+    root.Search = factory(root.Ractive, root.axios, root.url);
   }
-}(this, function (Ractive, axios) {
+}(this, function (Ractive, axios, url) {
   "use strict";
   Ractive.DEBUG = false;
 
@@ -32,6 +33,9 @@
         hits: {
           total: 0,
           hits: []
+        },
+        workUrl: function (work) {
+            return '/work/' + url.parse(work['@id']).path.split('/').pop();
         }
       }
     });
