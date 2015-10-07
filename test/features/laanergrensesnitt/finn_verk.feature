@@ -10,3 +10,5 @@ Egenskap: Finn verk
     Gitt at det finnes et verk
     Når jeg søker på verket i lånergrensesnittet
     Så vil jeg finne verket i trefflista
+    Og kan klikke på det første verket
+    Så ser jeg informasjon om verkets tittel og utgivelsesår

@@ -133,3 +133,8 @@ Given(/^at eksemplaret er utlånt til en låner$/) do
   step "at det finnes en låner"
   step "jeg låner \"#{@context[:item_barcode]}\" ut til \"#{@active[:patron]}\""
 end
+
+
+When(/^kan klikke på det første verket$/) do
+  @site.SearchPatronClient.follow_first_item_in_search_result
+end
