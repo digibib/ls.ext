@@ -7,8 +7,9 @@ MODULE_TEST_CONTAINER=redef-patron-client-test-instance
 
 test: lint unit_test module-test
 
-run-dev:
-	sudo salt-call --local state.sls redef.patron-client.skeletonrun
+# 2015-10-09 : Patron client skeletonrun state disabled
+#run-dev:
+#	sudo salt-call --local state.sls redef.patron-client.skeletonrun
 
 run:
 	sudo salt-call --local state.sls redef.patron-client.builtrun

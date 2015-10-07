@@ -68,4 +68,4 @@ base:
     - redef.elasticsearch
     - redef.services.builtrun
     - redef.catalinker.skeletonrun
-    - redef.patron-client.skeletonrun
+    - redef.patron-client.builtrun
