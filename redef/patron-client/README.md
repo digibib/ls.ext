@@ -8,12 +8,16 @@ Patron client is a browser-based viewer (for now) for data from [Services](../se
 * Server
   * [http](https://nodejs.org/api/http.html)
   * [Express](http://expressjs.com/)
-* Templating
-  * [Handlebars](http://handlebarsjs.com/)
+* Templating/Browser rendering
+  * [Handlebars](http://handlebarsjs.com/) Deprecated: will use ractivejs + Mustache in future
+  * [Ractive.js](http://www.ractivejs.org/)
+  * [UMD](https://github.com/umdjs/umd)
 * Testing
+  * [Cheerio](https://github.com/cheeriojs/cheerio) Deprecated: will use mocha + jsdom in future
+  * [Router](https://github.com/tildeio/router.js/) Deprecated: will use mocha + jsdom in future
   * [Chai](http://chaijs.com/)
-  * [Cheerio](https://github.com/cheeriojs/cheerio)
-  * [Router](https://github.com/tildeio/router.js/)
+  * [Mocha](https://mochajs.org/)
+  * [Jsdom](https://github.com/tmpvar/jsdom)
 
 ## Build
 
