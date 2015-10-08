@@ -1,5 +1,4 @@
 npm-debug.log
 node_modules
-lib/graph.js
-public/*.js
-!public/search.js
+public/
+!.placeholder
