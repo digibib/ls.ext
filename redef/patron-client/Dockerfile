@@ -1,5 +1,5 @@
-FROM digibib/redef-patron-client-skeleton
+FROM node:4.1.2-onbuild
 
-RUN npm run browserify -- public/search.js -o public/bundle.js
+ENV REFRESHED_AT 2015-10-07
 
-CMD [ "npm", "start" ]
+EXPOSE 8000

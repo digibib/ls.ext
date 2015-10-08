@@ -1,6 +1,0 @@
-FROM node:4.1.2-onbuild
-
-ENV REFRESHED_AT 2015-10-06
-
-CMD [ "npm", "start" ]
-EXPOSE 8000
