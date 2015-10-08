@@ -31,7 +31,7 @@ describe("PatronClient", function () {
       document.body.appendChild(fixture);
 
       // load module
-      require("../public/search.js").then(function (r) {
+      require("../src/search.js").then(function (r) {
         ractive = r;
         done();
       }).catch(done);
