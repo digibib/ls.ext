@@ -216,7 +216,8 @@ run_catalinker:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make run-dev'
 
 login: # needs EMAIL, PASSWORD, USER
-	@ vagrant ssh $(SHIP) -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'
+	# TODO: remove registry url when docker push (https://github.com/docker/docker/issues/16746) is fixed
+	@ vagrant ssh $(SHIP) -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD) https://registry.hub.docker.com/v1/'
 
 TAG = "$(shell git rev-parse HEAD)"
 push:
