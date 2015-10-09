@@ -15,7 +15,7 @@ Egenskap: Selvbetjent innlevering
     Gitt at det finnes en utlånsautomat
     Og at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | password |
-      | Knut      | 01/08/2015   | 10/08/2015 | 1234     |
+      | Knut      | 01/08/2015   | 01/01/2020 | 1234     |
     Og at låneren ikke har aktiv innkrevingssak
     Og at det finnes materiale som er utlånt til låneren
     Og at materialet har en eieravdeling

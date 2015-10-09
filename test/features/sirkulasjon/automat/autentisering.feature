@@ -17,7 +17,7 @@ Egenskap: Autentisering på automat
   Scenario: Autentisering av eksisterende låner for utlån på automat
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     | false    | 1234     | 0     |
+      | Knut      | 01/08/2015   | 01/01/2020 | 0             | 0     | false    | 1234     | 0     |
     Og at låneren ikke har utestående purregebyr
     Og at låneren ikke har aktiv innkrevingssak
     Og at låneren ikke er fratatt lånerretten
@@ -28,7 +28,7 @@ Egenskap: Autentisering på automat
   Scenario: Låner prøver å låne på automat med feil PIN
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     | false    | 1234     | 0     |
+      | Knut      | 01/08/2015   | 01/01/2020 | 0             | 0     | false    | 1234     | 0     |
     Når låneren velger "låne" på automaten
     Og låneren identifiserer seg på automat med feil PIN
     Så får låneren beskjed om at PIN ikke er riktig
@@ -36,7 +36,7 @@ Egenskap: Autentisering på automat
   Scenario: Låner med lånekort rapportert mistet prøver å låne på automat
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 1     | false    | 1234     | 0     |
+      | Knut      | 01/08/2015   | 01/01/2020 | 0             | 1     | false    | 1234     | 0     |
     Når låneren velger "låne" på automaten
     Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
@@ -44,7 +44,7 @@ Egenskap: Autentisering på automat
   Scenario: Låner registrert med feil adresse prøver å låne på automat
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 1             | 0     | false    | 1234     | 0     |
+      | Knut      | 01/08/2015   | 01/01/2020 | 1             | 0     | false    | 1234     | 0     |
     Når låneren velger "låne" på automaten
     Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
@@ -52,7 +52,7 @@ Egenskap: Autentisering på automat
   Scenario: Låner registrert med sperret kort prøver å låne på automat
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred   | password | flags |
-      | Knut      | 01/08/2015   | 10/08/2015 | 0             | 0     | 9999-12-31 | 1234     | 0     |
+      | Knut      | 01/08/2015   | 01/01/2020 | 0             | 0     | 9999-12-31 | 1234     | 0     |
     Når låneren velger "låne" på automaten
     Og låneren identifiserer seg på automat med riktig PIN
     Så får låneren beskjed om at lånekort er sperret
