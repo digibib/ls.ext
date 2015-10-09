@@ -74,6 +74,12 @@ dev_load_example_data:
 dev_load_example_data_through_services:
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.redef_load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
+dev_create_works:	## Aggregates works from publications
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.redef_sparql_aggregation pillar="{migration-data-folder: /var/migration_workdir}"'
+
+dev_index_all_works:	## indexes all works in Elasticsearch
+	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.redef_index_all_works pillar="{migration-data-folder: /var/migration_workdir}"'
+
 dev_load_issuing_rules: ## Loads issuing rules
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.issuing_rules_imported pillar="{migration-data-folder: /var/migration_workdir}"'
 
@@ -148,6 +154,12 @@ prod_load_reservations: ## Loads example data of type reservations - args: SUDOU
 
 prod_reindex_koha: ## Reindexes koha by building zebra
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls koha.reindexed | tee -a deploy.log'"
+
+prod_create_works:	## Aggregates works from publications - args: SUDOUSER, MASTER, MINIONNAME
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.redef_sparql_aggregation | tee -a deploy.log'"
+
+prod_index_all_works:	## indexes all works in Elasticsearch - args: SUDOUSER, MASTER, MINIONNAME
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.redef_index_all_works | tee -a deploy.log'"
 
 ## 
 ## 
