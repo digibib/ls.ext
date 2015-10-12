@@ -4,6 +4,8 @@ Patron client is a browser-based viewer (for now) for data from [Services](../se
 
 ## Technologies used
 
+All modules are specified in package.json.
+
 * [Node.JS](https://nodejs.org/)
 * Server
   * [http](https://nodejs.org/api/http.html)
@@ -18,6 +20,8 @@ Patron client is a browser-based viewer (for now) for data from [Services](../se
   * [Chai](http://chaijs.com/)
   * [Mocha](https://mochajs.org/)
   * [Jsdom](https://github.com/tmpvar/jsdom)
+* Build
+  * Gulp (watch, uglify, generate sourcemaps, browserify)
 
 ## Build
 
