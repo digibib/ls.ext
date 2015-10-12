@@ -102,12 +102,17 @@ public class AppTest {
         assertIsUri(workUri);
         assertThat(workUri, startsWith(baseUri));
 
-        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, "deichman:name", "Name", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#name", "Name", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
-//        assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
+        assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
-        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, "deichman:year", "2015", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#year", "2015", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
         final HttpResponse<String> patchAddYearToWorkPatchResponse = buildPatchRequest(workUri, addYearToWorkPatch).asString();
+        assertResponse(Status.OK, patchAddYearToWorkPatchResponse);
+
+        final JsonArray addCreatorToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#creator", "Knut Hamsun", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchAddCreatorToWorkPatchResponse = buildPatchRequest(workUri, addCreatorToWorkPatch).asString();
+        assertResponse(Status.OK, patchAddCreatorToWorkPatchResponse);
 
         HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get(workUri).asJson();
 
@@ -173,7 +178,6 @@ public class AppTest {
         HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
         assertNotNull(stringHttpResponse);
         doSearchForWorks("Name");
-
     }
 
     @Test

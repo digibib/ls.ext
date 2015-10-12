@@ -53,18 +53,25 @@ public class SearchServiceImpl implements SearchService {
     public final void indexWorkModel(Model workModel) {
         QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
                 "PREFIX  deichman: <" + BaseURI.remote().ontology() + "> "
-                        + "SELECT  ?workUri ?name ?year "
-                        + "WHERE { ?workUri <deichman:name> ?name ; \n <deichman:year> ?year . }"), workModel);
-        ResultSet workSet = queryExecution.execSelect();
+                        + "SELECT  ?workUri ?name ?creator ?year "
+                        + "WHERE { "
+                        + "   ?workUri deichman:name ?name ; "
+                        + "            deichman:year ?year ;"
+                        + "            deichman:creator ?creator . "
+                        + "}"),
+                workModel);
+        ResultSet publicationSet = queryExecution.execSelect();
 
-        if (workSet.hasNext()) {
-            QuerySolution solution = workSet.next();
+        if (publicationSet.hasNext()) {
+            QuerySolution solution = publicationSet.next();
             RDFNode nameNode = solution.get("name");
+            RDFNode  creatorNode = solution.get("creator");
             RDFNode uriNode = solution.get("workUri");
             RDFNode yearNode = solution.get("year");
             String workUri = uriNode.toString();
             Map<String, String> jsonMap = ImmutableMap.of(
                     "@id", workUri,
+                    "creator", creatorNode.asLiteral().getString(),
                     "name", nameNode.asLiteral().getString(),
                     "year", yearNode.asLiteral().getString());
             String newJsonContent = new Gson().toJson(jsonMap);
