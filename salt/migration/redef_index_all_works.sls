@@ -11,7 +11,7 @@ send_work_uris_to_index:
             docker run
             -v "{{ pillar['migration-data-folder'] }}:/migration/data"
             deichman/migration:{{ pillar['migration']['image-tag'] }}
-            bash -c "while read uri; do curl -X PUT $uri/index ; done < <(tr -d '\r' < /migration/data/work_uris.txt)"
+            bash -c "cat /migration/data/work_uris.txt | tr -d '\r' | xargs -i curl -sS -X PUT {}/index"
     - require:
       - cmd: get_all_works
     - failhard: True
