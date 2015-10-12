@@ -3,6 +3,7 @@ package no.deichman.services;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.body.RequestBodyEntity;
@@ -35,6 +36,7 @@ import javax.ws.rs.core.Response.Status;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -100,6 +102,15 @@ public class AppTest {
         assertIsUri(workUri);
         assertThat(workUri, startsWith(baseUri));
 
+        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, "deichman:name", "Name", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
+//        assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
+
+        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, "deichman:year", "2015", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchAddYearToWorkPatchResponse = buildPatchRequest(workUri, addYearToWorkPatch).asString();
+
+        HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get(workUri).asJson();
+
         final JsonArray workIntoPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
 
         final HttpResponse<String> patchWorkIntoPublicationResponse = buildPatchRequest(publicationUri, workIntoPublicationPatch).asString();
@@ -158,6 +169,11 @@ public class AppTest {
         assertThat("model does not contain onloan booleans",
                 work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#onloan")).toList().size(),
                 equalTo(2 + 1));
+        jsonNodeHttpResponse = Unirest.get(workUri).asJson();
+        HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
+        assertNotNull(stringHttpResponse);
+        doSearchForWorks("Name");
+
     }
 
     @Test
@@ -247,17 +263,17 @@ public class AppTest {
 
     @Test
     public void when_get_elasticsearch_work_should_return_something() throws Exception {
-        getClient().prepareIndex("search", "work", "1")
-                .setSource("{"
-                        + "\"name\": \"Name\""
-                        + "}")
-                .execute()
-                .actionGet();
+        indexWork("1", "Name");
+
+        doSearchForWorks("Name");
+    }
+
+    private void doSearchForWorks(String name) throws UnirestException, InterruptedException {
         boolean foundWorkInIndex;
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "name:Name");
+                    .get(baseUri + "search/work/_search").queryString("q", "name:" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             foundWorkInIndex = response.getBody().toString().contains("name");
@@ -267,6 +283,15 @@ public class AppTest {
             }
         } while (!foundWorkInIndex && attempts-->0);
         assertTrue("Should have found work again in index by now", foundWorkInIndex);
+    }
+
+    private void indexWork(String workId, String name) {
+        getClient().prepareIndex("search", "work", workId)
+                .setSource("{"
+                        + "\"name\": \""+name+"\""
+                        + "}")
+                .execute()
+                .actionGet();
     }
 
     @Test

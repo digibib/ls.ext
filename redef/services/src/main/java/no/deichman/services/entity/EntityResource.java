@@ -1,23 +1,13 @@
 package no.deichman.services.entity;
 
-import com.google.gson.Gson;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
 import no.deichman.services.restutils.PATCH;
+import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
@@ -33,15 +23,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
 
+import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
@@ -52,7 +37,6 @@ import static no.deichman.services.restutils.MimeType.NTRIPLES;
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
-    private static final Logger LOG = LoggerFactory.getLogger(EntityResource.class);
     public static final String UTF_8 = "UTF-8";
 
     @Context
@@ -61,9 +45,10 @@ public final class EntityResource extends ResourceBase {
     public EntityResource() {
     }
 
-    EntityResource(BaseURI baseURI, EntityService entityService) {
+    EntityResource(BaseURI baseURI, EntityService entityService, SearchService searchService) {
         setBaseURI(baseURI);
         setEntityService(entityService);
+        setSearchService(searchService);
     }
 
     @POST
@@ -113,9 +98,14 @@ public final class EntityResource extends ResourceBase {
         EntityType entityType = EntityType.get(type);
         String resourceUri;
         switch (entityType) {
-            case WORK: resourceUri = getBaseURI().work() + id; break;
-            case PUBLICATION: resourceUri = getBaseURI().publication() + id; break;
-            default: throw new NotFoundException("Unknown entity type.");
+            case WORK:
+                resourceUri = getBaseURI().work() + id;
+                break;
+            case PUBLICATION:
+                resourceUri = getBaseURI().publication() + id;
+                break;
+            default:
+                throw new NotFoundException("Unknown entity type.");
         }
 
         if (!getEntityService().resourceExists(resourceUri)) {
@@ -128,39 +118,17 @@ public final class EntityResource extends ResourceBase {
             throw new BadRequestException(e);
         }
 
-        indexModel(m);
+        if (entityType == WORK) {
+            getSearchService().indexWorkModel(m);
+        }
         return Response.ok().entity(getJsonldCreator().asJSONLD(m)).build();
-    }
-
-    private void indexModel(Model m) {
-        StringWriter jsonContent = new StringWriter();
-        RDFDataMgr.write(jsonContent, m, RDFFormat.JSONLD);
-        Map jsonMap = new Gson().fromJson(jsonContent.toString(), HashMap.class);
-        jsonMap.remove("@context");
-        String encodedWorkId;
-        try {
-            encodedWorkId = URLEncoder.encode(jsonMap.get("@id").toString(), UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            LOG.error(e.getMessage(), e);
-            return;
-        }
-        String newJsonContent = new Gson().toJson(jsonMap);
-        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-            HttpPut httpPut = new HttpPut(new URIBuilder(elasticSearchBaseUrl()).setPath("/search/work/" + encodedWorkId).build());
-            httpPut.setEntity(new StringEntity(newJsonContent, Charset.forName(UTF_8)));
-            try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
-                LOG.debug(putResponse.getStatusLine().toString());
-            }
-        }  catch (Exception e) {
-            LOG.error(String.format("Failed to index %s in elasticsearch", encodedWorkId), e);
-        }
     }
 
     @PUT
     @Consumes(LD_JSON)
     public Response update(@PathParam("type") String type, String work) {
         EntityType entityType = EntityType.get(type);
-        if (entityType != EntityType.WORK) {
+        if (entityType != WORK) {
             throw new NotFoundException("PUT unsupported on this resource");
         }
         getEntityService().updateWork(work);
@@ -183,4 +151,13 @@ public final class EntityResource extends ResourceBase {
     protected ServletConfig getConfig() {
         return servletConfig;
     }
+
+    @PUT
+    @Path("{id: (p|w)[a-zA-Z0-9_]+}/index")
+    public Response index(@PathParam("type") String type, @PathParam("id") String id) {
+        Model m = getEntityService().retrieveById(EntityType.get(type), id);
+        getSearchService().indexWorkModel(m);
+        return Response.accepted().build();
+    }
+
 }

@@ -1,12 +1,14 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.entity.kohaadapter.KohaAdapter;
+import no.deichman.services.entity.repository.InMemoryRepository;
+import no.deichman.services.ontology.OntologyService;
+import no.deichman.services.search.SearchService;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
-import no.deichman.services.entity.kohaadapter.KohaAdapter;
-import no.deichman.services.entity.repository.InMemoryRepository;
-import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Before;
@@ -24,6 +26,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
+import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
@@ -42,17 +45,24 @@ import static org.mockito.Mockito.when;
 public class EntityResourceTest {
 
     private static final String SOME_WORK_IDENTIFIER = "SOME_WORK_IDENTIFIER";
+    private static final String SOME_OTHER_WORK_IDENTIFIER = "SOME_OTHER_WORK_IDENTIFIER";
     private EntityResource entityResource;
     private BaseURI baseURI;
 
     @Mock
     private KohaAdapter mockKohaAdapter;
 
+    @Mock
+    private SearchService mockSearchService;
+
+    @Mock
+    private OntologyService mockOntologyService;
+
     @Before
     public void setUp() throws Exception {
         baseURI = BaseURI.local();
         EntityServiceImpl service = new EntityServiceImpl(baseURI, new InMemoryRepository(), mockKohaAdapter);
-        entityResource = new EntityResource(baseURI, service);
+        entityResource = new EntityResource(baseURI, service, mockSearchService);
     }
 
     @Test
@@ -62,7 +72,7 @@ public class EntityResourceTest {
 
     @Test
     public void get_should_return_a_valid_json_work() {
-        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null));
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null), mockSearchService);
         String workId = "work_00001";
 
         Response result = entityResource.get("work", workId);
@@ -124,6 +134,21 @@ public class EntityResourceTest {
         assertValidJSON(result.getEntity().toString());
     }
 
+    @Test
+    public void create_should_index_the_new_work() throws URISyntaxException{
+        String work = createTestWork(SOME_WORK_IDENTIFIER);
+
+        Response createResponse = entityResource.createFromLDJSON("work", work);
+
+        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
+
+
+        Response result = entityResource.index("work", workId);
+
+        assertNotNull(result);
+        assertEquals(ACCEPTED.getStatusCode(), result.getStatus());
+    }
+
     private String createTestWork(String identifier) {
         return "{\n"
                     + "    \"@context\": {\n"
@@ -142,7 +167,7 @@ public class EntityResourceTest {
     public void get_work_items_should_return_list_of_items(){
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter));
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService);
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 

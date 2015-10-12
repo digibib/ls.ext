@@ -6,6 +6,8 @@ import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.RemoteRepository;
 import no.deichman.services.rdf.JSONLDCreator;
+import no.deichman.services.search.SearchService;
+import no.deichman.services.search.SearchServiceImpl;
 import no.deichman.services.uridefaults.BaseURI;
 
 import javax.servlet.ServletConfig;
@@ -21,16 +23,17 @@ public abstract class ResourceBase {
     public static final String SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY = "inMemoryRDFRepository";
     public static final String ELASTIC_SEARCH_URL = "elasticsearch.url";
 
+    protected final String elasticSearchBaseUrl() {
+        return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://localhost:9200");
+    }
+
     private static InMemoryRepository staticInMemoryRepository;
     @Context
     private ServletConfig servletConfig;
     private EntityService entityService;
     private BaseURI baseURI;
     private JSONLDCreator jsonldCreator;
-
-    protected final String elasticSearchBaseUrl() {
-        return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://localhost:9200");
-    }
+    private SearchService searchService;
 
     protected abstract ServletConfig getConfig();
 
@@ -68,8 +71,18 @@ public abstract class ResourceBase {
         this.entityService = entityService;
     }
 
+    protected final void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
+
     protected final void setBaseURI(BaseURI baseURI) {
         this.baseURI = baseURI;
     }
 
+    public final SearchService getSearchService() {
+        if (searchService == null) {
+            searchService = new SearchServiceImpl(elasticSearchBaseUrl());
+        }
+        return searchService;
+    }
 }
