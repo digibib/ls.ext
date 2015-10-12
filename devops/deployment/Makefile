@@ -4,7 +4,7 @@ SSH_OPTS=-o PreferredAuthentications="password" -t
 ##****************        LS.ext DEVOPS Makefile      ************************
 ## 
 
-SALT_VERSION=v2014.7.6
+SALT_VERSION=2015.5.3+ds-1trusty1
 
 help:                  ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -227,8 +227,12 @@ prod_deploy_log:       ## - args:  SUDOUSER, MASTER
 ##------- DEV - tasks:                                           -------------
 
 dev_upgrade_salt: ## Upgrade salt-master+minion on vm-devops and minion on $(SHIP)
-	vagrant ssh vm-devops -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git -M git $(SALT_VERSION)'
-	vagrant ssh $(SHIP) -c 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
+	vagrant ssh vm-devops -c 'bash -c "sudo add-apt-repository -y ppa:saltstack/salt && \
+		sudo apt-get update && \
+		sudo apt-get install -y python-software-properties software-properties-common salt-master=$(SALT_VERSION) salt-minion=$(SALT_VERSION)"'
+	vagrant ssh $(SHIP) -c 'bash -c "sudo add-apt-repository -y ppa:saltstack/salt && \
+		sudo apt-get update && \
+		sudo apt-get install -y python-software-properties software-properties-common salt-minion=$(SALT_VERSION)"'
 
 dev_connect_minions: ## Adds and connect minion
 	vagrant ssh $(SHIP) -c 'sudo service salt-minion stop || true'
@@ -244,12 +248,16 @@ dev_bootstrap: dev_upgrade_salt dev_connect_minions ## Install salt-master+minio
 ##------- PROD - tasks:                                          -------------
 
 prod_upgrade_salt_master: ## Upgrade salt on master - args: SUDOUSER, MASTER
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) 'bash -c "sudo add-apt-repository -y ppa:saltstack/salt && \
+		sudo apt-get update && \
+		sudo apt-get install -y python-software-properties software-properties-common salt-master=$(SALT_VERSION)"'
 
 prod_upgrade_salt_minion: ## Upgrade salt on minion - args: SUDOUSER, MINION
-	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'wget -O- --quiet https://bootstrap.saltstack.com | sudo sh -s -- -g https://github.com/saltstack/salt.git git $(SALT_VERSION)'
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'bash -c "sudo add-apt-repository -y ppa:saltstack/salt && \
+		sudo apt-get update && \
+		sudo apt-get install -y python-software-properties software-properties-common salt-master=$(SALT_VERSION)"'
 
-prod_bootstrap_master : prod_upgrade_salt_master ## Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
+prod_bootstrap_master: prod_upgrade_salt_master ## Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /var/lib/salt-master ] || sudo git clone https://github.com/digibib/ls.ext.git /var/lib/salt-master'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /srv/salt ] || sudo ln -s /var/lib/salt-master/salt /srv'
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /srv/pillar ] || sudo ln -s /var/lib/salt-master/pillar /srv'
