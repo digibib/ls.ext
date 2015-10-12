@@ -8,6 +8,7 @@ Given(/^at det finnes et verk$/) do
    Så leverer systemet en ny ID for det nye verket
    Og jeg kan legge til tittel for det nye verket
    Når jeg legger til et årstall for førsteutgave av nye verket
+   Og jeg legger til navn på forfatter av det nye verket
    Så grensesnittet viser at tittelen er lagret
   }
 end
@@ -193,6 +194,11 @@ end
 When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @context[:year] = rand(2015).to_s
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+end
+
+When(/^jeg legger til navn på forfatter av det nye verket$/) do
+  @context[:creator] = generateRandomString
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#creator", @context[:creator])
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
