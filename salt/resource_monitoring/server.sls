@@ -32,6 +32,7 @@ graphite_container_installed:
 graphite_container_running:
   docker.running:
     - container: graphite_container
+    - image: nickstenning/graphite
     - port_bindings:
         "80/tcp":
             HostIp: "{{ pillar['resource-monitoring']['graphite-web']['binding'] }}"

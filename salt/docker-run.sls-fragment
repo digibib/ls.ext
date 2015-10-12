@@ -14,6 +14,7 @@
 {{ data_volume['container'] }}_volume_run_once:
   docker.running:
   - container: {{ data_volume['container'] }}
+  - image: {{ data_volume['image'] }}:{{ data_volume['tag'] }}
   - volumes: {{ data_volume['volumes'] }}
   - check_is_running: False
   - require:
@@ -54,6 +55,7 @@
 {{ container }}_running:
   docker.running:
     - container: {{ container }}
+    - image: {{ repo ~ '/' if repo is defined else '' }}{{ image }}:{{ tag }}
     - port_bindings: {{ port_bindings }}
 {% if host_volume_bindings is defined and host_volume_bindings %}
     - binds:

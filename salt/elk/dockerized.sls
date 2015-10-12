@@ -12,6 +12,7 @@ elk_data_volume_installed:
 elk_data_volume_run_once:
   docker.running:
   - container: elk_data
+  - image: busybox
   - volumes:
     - /data/elasticsearch
   - check_is_running: False
@@ -57,6 +58,7 @@ elk_container_installed:
 elk_container_running:
   docker.running:
     - container: elk_container
+    - image: pblittle/docker-logstash:{{ pillar['elk']['logstash']['image-tag'] }}
     - port_bindings:
         "5000/tcp":
             HostIp: "{{ pillar['elk']['lumberjack']['binding'] }}"

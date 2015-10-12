@@ -18,12 +18,13 @@ mysql_data_volume_installed:
 
 mysql_data_volume_run_once:
   docker.running:   
-  - container: koha_mysql_data   
-  - volumes:  
-    - /var/lib/mysql
-  - check_is_running: False
-  - require:
-    - docker: mysql_data_volume_installed
+    - container: koha_mysql_data
+    - image: busybox:latest
+    - volumes:
+      - /var/lib/mysql
+    - check_is_running: False
+    - require:
+      - docker: mysql_data_volume_installed
 
 ##########
 # MYSQL DOCKER CONTAINER
@@ -62,6 +63,7 @@ koha_mysql_container_installed:
 koha_mysql_container_running:
   docker.running:
     - container: koha_mysql_container
+    - image: mysql:5.6.21 # Version MUST be in line with the one used in koha_mysql_container_stop_if_old
     - port_bindings:
         "3306/tcp":
             HostIp: "0.0.0.0"

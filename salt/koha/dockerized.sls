@@ -52,6 +52,7 @@ koha_container_installed:
 koha_container_running:
   docker.running:
     - container: koha_container
+    - image: digibib/koha:{{ pillar['koha']['koha-image-tag'] }}
     - hostname: koha
     - port_bindings:
         "6001/tcp":

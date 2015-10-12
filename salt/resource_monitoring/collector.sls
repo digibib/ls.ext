@@ -31,6 +31,7 @@ collectd_container_installed:
 collectd_container_running:
   docker.running:
     - container: collectd_container
+    - image: andreasjansson/collectd-write-graphite
     - check_is_running:
       - "collectd_container"
     - watch:
