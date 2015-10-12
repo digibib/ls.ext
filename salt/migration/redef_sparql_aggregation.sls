@@ -12,7 +12,7 @@ load_aggregated_works:
             docker run
             -v "{{ pillar['migration-data-folder'] }}:/migration/data" 
             deichman/migration:{{ pillar['migration']['image-tag'] }}
-            bash -c "curl -X POST -H 'Content-Type: text/turtle' -d @/migration/data/works_aggregated.ttl http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port'] }}/ds/data?graph=default
+            bash -c "curl -X POST -H 'Content-Type: text/turtle' -d @/migration/data/works_aggregated.ttl http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port'] }}/ds/data?graph=default"
     - require:
       - cmd: generate_works_from_publications
     - failhard: True
