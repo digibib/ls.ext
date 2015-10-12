@@ -1,6 +1,7 @@
 package no.deichman.services.search;
 
 import com.google.gson.Gson;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -11,21 +12,19 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.impl.PropertyImpl;
-import org.apache.jena.rdf.model.impl.ResourceImpl;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,20 +49,24 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void indexWorkModel(Model m) {
-        String year = m.listStatements(new ResourceImpl("http://127.0.0.1:55051/work/w278995271697"),
-                new PropertyImpl("deichman:year"), ((RDFNode) null)).nextStatement().getString();
-        StringWriter jsonContent = new StringWriter();
-        RDFDataMgr.write(jsonContent, m, RDFFormat.JSONLD);
-        Map jsonMap = new Gson().fromJson(jsonContent.toString(), HashMap.class);
-        jsonMap.remove("@context");
-        String encodedWorkId;
-        try {
-            encodedWorkId = URLEncoder.encode(jsonMap.get("@id").toString(), UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            LOG.error(e.getMessage(), e);
-            return;
+    public final void indexWorkModel(Model workModel) {
+
+        QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
+                "PREFIX  deichman: <" + BaseURI.remote().ontology() + "> "
+                        + "SELECT  * "
+                        + "WHERE { ?workUri deichman:name ?name }"), workModel);
+        ResultSet publicationSet = queryExecution.execSelect();
+        String encodedWorkId="";
+
+        while (publicationSet.hasNext()) {
+            QuerySolution solution =  publicationSet.next();
+            RDFNode nameNode = solution.get("name");
+            RDFNode uriNode = solution.get("workUri");
+            encodedWorkId = uriNode.toString();
         }
+
+
+        Map<String, String> jsonMap = new HashMap<>();
         String newJsonContent = new Gson().toJson(jsonMap);
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpPut httpPut = new HttpPut(workSearchUriBuilder.setPath("/search/work/" + encodedWorkId).build());
