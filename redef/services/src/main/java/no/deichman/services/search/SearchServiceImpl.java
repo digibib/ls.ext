@@ -70,7 +70,7 @@ public class SearchServiceImpl implements SearchService {
             RDFNode yearNode = solution.get("year");
             String workUri = uriNode.toString();
             Map<String, String> jsonMap = ImmutableMap.of(
-                    "@id", workUri,
+                    "uri", workUri,
                     "creator", creatorNode.asLiteral().getString(),
                     "name", nameNode.asLiteral().getString(),
                     "year", yearNode.asLiteral().getString());

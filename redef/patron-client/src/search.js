@@ -35,7 +35,7 @@
           hits: []
         },
         workUrl: function (work) {
-            return '/work/' + url.parse(work['@id']).path.split('/').pop();
+            return '/work/' + url.parse(work.uri).path.split('/').pop();
         }
       }
     });
