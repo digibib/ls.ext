@@ -59,7 +59,7 @@ elk_container_running:
   docker.running:
     - container: elk_container
     - image: pblittle/docker-logstash:{{ pillar['elk']['logstash']['image-tag'] }}
-    - port_bindings:
+    - ports:
         "5000/tcp":
             HostIp: "{{ pillar['elk']['lumberjack']['binding'] }}"
             HostPort: "{{ pillar['elk']['lumberjack']['port'] }}"

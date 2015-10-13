@@ -54,7 +54,7 @@ koha_container_running:
     - container: koha_container
     - image: digibib/koha:{{ pillar['koha']['koha-image-tag'] }}
     - hostname: koha
-    - port_bindings:
+    - ports:
         "6001/tcp":
             HostIp: "{{ pillar['sip']['server']['binding'] }}"
             HostPort: "{{ pillar['sip']['server']['port'] }}"

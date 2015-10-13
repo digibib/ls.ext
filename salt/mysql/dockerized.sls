@@ -64,7 +64,7 @@ koha_mysql_container_running:
   docker.running:
     - container: koha_mysql_container
     - image: mysql:5.6.21 # Version MUST be in line with the one used in koha_mysql_container_stop_if_old
-    - port_bindings:
+    - ports:
         "3306/tcp":
             HostIp: "0.0.0.0"
             HostPort: "3306"

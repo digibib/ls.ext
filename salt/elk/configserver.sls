@@ -76,7 +76,7 @@ config_container_running:
   docker.running:
     - container: config_container
     - image: nginx:{{ pillar['elk']['configserver']['image-tag'] }}
-    - port_bindings:
+    - ports:
         "80/tcp":
             HostIp: "{{ pillar['elk']['configserver']['binding'] }}"
             HostPort: "{{ pillar['elk']['configserver']['port'] }}"

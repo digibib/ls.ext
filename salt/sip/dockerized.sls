@@ -29,7 +29,7 @@ sip_proxy_container_running:
   docker.running:
     - container: sip_proxy_container
     - image: digibib/biblio-sip2:{{ pillar['sip']['image-tag'] }} # Version MUST be in line with the one used in sip_proxy_container_stop_if_old
-    - port_bindings:
+    - ports:
         "{{ pillar['sip']['proxy']['port'] }}/tcp":
             HostIp: "{{ pillar['sip']['proxy']['binding'] }}"
             HostPort: "{{ pillar['sip']['proxy']['port'] }}"

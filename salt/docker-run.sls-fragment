@@ -56,7 +56,7 @@
   docker.running:
     - container: {{ container }}
     - image: {{ repo ~ '/' if repo is defined else '' }}{{ image }}:{{ tag }}
-    - port_bindings: {{ port_bindings }}
+    - ports: {{ port_bindings }}
 {% if host_volume_bindings is defined and host_volume_bindings %}
     - binds:
 {% for binding in host_volume_bindings %}
