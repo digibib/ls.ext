@@ -50,7 +50,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
       sudo apt-get update && \
-      sudo apt-get install -y salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
+      sudo apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
 
     config.vm.provision "shell", path: "pip_install.sh"
 
@@ -107,7 +107,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
       sudo apt-get update && \
-      sudo apt-get install -y salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
+      sudo apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
 
     config.vm.provision "shell", path: "ssh/generate_keys.sh"
     config.vm.provision "shell", path: "ssh/add_keys.sh"
@@ -147,7 +147,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
       sudo apt-get update && \
-      sudo apt-get install -y salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
+      sudo apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
 
     config.vm.provision "shell", path: "pip_install.sh"
 
