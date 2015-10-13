@@ -2,6 +2,8 @@
 # vi: set ft=ruby :
 require 'fileutils'
 
+SALT_VERSION="2015.5.3+ds-1trusty1"
+
 vagrant_root = File.dirname(__FILE__)
 
 koha_pillar_example = "#{vagrant_root}/pillar/koha/admin.sls.example"
@@ -46,6 +48,10 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "salt", "/srv/salt"
     config.vm.synced_folder "pillar", "/srv/pillar"
 
+    config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
+      sudo apt-get update && \
+      sudo apt-get install -y salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
+
     config.vm.provision "shell", path: "pip_install.sh"
 
     config.vm.provision "shell", path: "ssh/generate_keys.sh"
@@ -68,8 +74,6 @@ Vagrant.configure(2) do |config|
       salt.verbose = true
       salt.pillar_data
       salt.pillar({ 'GITREF' => ENV['GITREF']}) if ENV['GITREF']
-      salt.install_type = "daily"
-      salt.always_install = true
     end
   end
 
@@ -101,6 +105,10 @@ Vagrant.configure(2) do |config|
 
     config.vm.network "private_network", ip: "192.168.50.11"
 
+    config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
+      sudo apt-get update && \
+      sudo apt-get install -y salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
+
     config.vm.provision "shell", path: "ssh/generate_keys.sh"
     config.vm.provision "shell", path: "ssh/add_keys.sh"
 
@@ -108,8 +116,6 @@ Vagrant.configure(2) do |config|
       salt.minion_config = "test/salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-      salt.install_type = "daily"
-      salt.always_install = true
     end
   end # vm-test
 
@@ -139,14 +145,16 @@ Vagrant.configure(2) do |config|
 
     config.vm.network "private_network", ip: "192.168.50.21"
 
+    config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
+      sudo apt-get update && \
+      sudo apt-get install -y salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
+
     config.vm.provision "shell", path: "pip_install.sh"
 
     config.vm.provision :salt do |salt|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-      salt.install_type = "daily"
-      salt.always_install = true
     end
   end # vm-devops
 
