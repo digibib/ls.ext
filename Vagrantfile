@@ -2,8 +2,6 @@
 # vi: set ft=ruby :
 require 'fileutils'
 
-SALT_VERSION = "v2014.7.6"
-
 vagrant_root = File.dirname(__FILE__)
 
 koha_pillar_example = "#{vagrant_root}/pillar/koha/admin.sls.example"
@@ -70,9 +68,7 @@ Vagrant.configure(2) do |config|
       salt.verbose = true
       salt.pillar_data
       salt.pillar({ 'GITREF' => ENV['GITREF']}) if ENV['GITREF']
-      salt.bootstrap_options = "-F -c /tmp/ -P -g https://github.com/saltstack/salt.git"
-      salt.install_type = "git"
-      salt.install_args = SALT_VERSION
+      salt.install_type = "daily"
       salt.always_install = true
     end
   end
@@ -112,9 +108,7 @@ Vagrant.configure(2) do |config|
       salt.minion_config = "test/salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-      salt.install_type = "git"
-      salt.bootstrap_options = "-F -c /tmp/ -P -g https://github.com/saltstack/salt.git"
-      salt.install_args = SALT_VERSION
+      salt.install_type = "daily"
       salt.always_install = true
     end
   end # vm-test
@@ -151,9 +145,7 @@ Vagrant.configure(2) do |config|
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
-      salt.install_type = "git"
-      salt.bootstrap_options = "-F -c /tmp/ -P -g https://github.com/saltstack/salt.git"
-      salt.install_args = SALT_VERSION
+      salt.install_type = "daily"
       salt.always_install = true
     end
   end # vm-devops
