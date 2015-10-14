@@ -69,6 +69,7 @@ Vagrant.configure(2) do |config|
     end
 
     config.vm.provision :salt do |salt|
+      salt.bootstrap_options = "-F -c /tmp -P"  # Vagrant Issues #6011, #6029
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
@@ -113,6 +114,7 @@ Vagrant.configure(2) do |config|
     config.vm.provision "shell", path: "ssh/add_keys.sh"
 
     config.vm.provision :salt do |salt|
+      salt.bootstrap_options = "-F -c /tmp -P"  # Vagrant Issues #6011, #6029
       salt.minion_config = "test/salt/minion"
       salt.run_highstate = true
       salt.verbose = true
@@ -152,6 +154,7 @@ Vagrant.configure(2) do |config|
     config.vm.provision "shell", path: "pip_install.sh"
 
     config.vm.provision :salt do |salt|
+      salt.bootstrap_options = "-F -c /tmp -P"  # Vagrant Issues #6011, #6029
       salt.minion_config = "salt/minion"
       salt.run_highstate = true
       salt.verbose = true
