@@ -14,3 +14,4 @@ include:
   - migration.reservations_loaded
   - migration.cleanup
   - koha.reindexed
+  - migration.report
