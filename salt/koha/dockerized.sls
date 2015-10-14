@@ -69,7 +69,7 @@ koha_container_running:
             HostPort: "{{ pillar['koha']['intra']['plack_port'] }}"
     - check_is_running:
       - "koha_mysql_container"
-    - binds:
+    - volumes:
         /var/migration_workdir: 
           bind: /var/migration_workdir
           ro: false

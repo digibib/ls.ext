@@ -58,7 +58,7 @@
     - image: {{ repo ~ '/' if repo is defined else '' }}{{ image }}:{{ tag }}
     - ports: {{ port_bindings }}
 {% if host_volume_bindings is defined and host_volume_bindings %}
-    - binds:
+    - volumes:
 {% for binding in host_volume_bindings %}
         {{ binding['host'] }}:
           bind: {{ binding['container'] }}

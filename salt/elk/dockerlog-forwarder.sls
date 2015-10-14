@@ -76,7 +76,7 @@ dockerlogs_forwarder_container_running:
     - image: digitalwonderland/logstash-forwarder:{{ pillar['elk']['logforwarder']['image-tag'] }}
     - check_is_running:
       - "dockerlogs_forwarder_container"
-    - binds:
+    - volumes:
         /etc/logstash/:
           bind: /etc/logstash
           ro: True

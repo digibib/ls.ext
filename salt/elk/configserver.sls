@@ -80,7 +80,7 @@ config_container_running:
         "80/tcp":
             HostIp: "{{ pillar['elk']['configserver']['binding'] }}"
             HostPort: "{{ pillar['elk']['configserver']['port'] }}"
-    - binds:
+    - volumes:
         /etc/logstash/:
           bind: /usr/share/nginx/html
           ro: True
