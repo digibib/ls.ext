@@ -40,7 +40,6 @@ install_chromedriver:
   'parallel_tests',
   'pry',
   'pry-nav',
-  'watir-webdriver',
   'rdf',
   'json-ld' %}
 {{ gem }}:
@@ -56,3 +55,7 @@ cucumber:
 selenium-webdriver:
   gem.installed:
     - version: 2.46.2
+
+watir-webdriver:
+  gem.installed:
+    - version: 0.8.0
