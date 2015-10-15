@@ -77,7 +77,7 @@ dev_load_example_data_through_services:
 dev_create_works:	## Aggregates works from publications
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.redef_sparql_aggregation pillar="{migration-data-folder: /var/migration_workdir}"'
 
-dev_index_all_works:	## indexes all works in Elasticsearch
+dev_index_all_works: dev_recreate_elasticsearch_indices	## indexes all works in Elasticsearch
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.redef_index_all_works pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_load_issuing_rules: ## Loads issuing rules
@@ -106,6 +106,10 @@ dev_load_reservations: ## Loads example data of type reservations
 
 dev_reindex_koha: ## Reindexes koha by building zebra
 	vagrant ssh vm-devops -c 'sudo salt -t 30 "$(SHIP)" --log-level info state.sls koha.reindexed'
+
+dev_recreate_elasticsearch_indices: ## Recreate Elasticsearch indices and mappings
+	vagrant ssh vm-devops -c 'sudo salt -t 30 "$(SHIP)" --log-level info state.sls redef.elasticsearch.mappings'
+
 ##
 ##------- PROD - tasks:                                          -------------
 
@@ -158,8 +162,11 @@ prod_reindex_koha: ## Reindexes koha by building zebra
 prod_create_works:	## Aggregates works from publications - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.redef_sparql_aggregation | tee -a deploy.log'"
 
-prod_index_all_works:	## indexes all works in Elasticsearch - args: SUDOUSER, MASTER, MINIONNAME
+prod_index_all_works: prod_recreate_elasticsearch_indices	## indexes all works in Elasticsearch - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.redef_index_all_works | tee -a deploy.log'"
+
+prod_recreate_elasticsearch_indices: ## Recreate Elasticsearch indices and mappings
+	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls redef.elasticsearch.mappings | tee -a deploy.log'"
 
 ## 
 ## 
