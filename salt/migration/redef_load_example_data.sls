@@ -13,4 +13,6 @@ include:
   - migration.loans_loaded
   - migration.reservations_loaded
   - koha.reindexed
+  - migration.redef_sparql_aggregation
+  - migration.redef_index_all_works
   - migration.report
