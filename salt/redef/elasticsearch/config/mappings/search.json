@@ -1,0 +1,22 @@
+{
+  "mappings" : {
+    "work" : {
+      "properties" : {
+        "creator" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "uri" : {
+          "type" : "string",
+          "index" : "no"
+        },
+        "year" : {
+          "type" : "string",
+          "index" : "no"
+        }
+      }
+    }
+  }
+}
