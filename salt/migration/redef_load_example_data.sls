@@ -14,5 +14,6 @@ include:
   - migration.reservations_loaded
   - koha.reindexed
   - migration.redef_sparql_aggregation
+  - redef.elasticsearch.mappings
   - migration.redef_index_all_works
   - migration.report
