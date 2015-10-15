@@ -77,10 +77,4 @@ selenium-webdriver:
 
 watir-webdriver:
   gem.installed:
-    - version: 0.9.0
-
-# Temporarily fix file permission on watir until bug is fixed
-# https://github.com/watir/watir-webdriver/issues/381
-/var/lib/gems/2.2.0/gems/watir-webdriver-0.9.0/lib/watir-webdriver/locators/element_locator.rb:
-  file.managed:
-    - mode: 644
+    - version: 0.9.1
