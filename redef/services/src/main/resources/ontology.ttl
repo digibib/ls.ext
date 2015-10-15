@@ -19,7 +19,7 @@
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
   rdfs:domain rdfs:Class ;
-  rdfs:range rdf:langString .
+  rdfs:range xsd:string .
 
 :creator a rdfs:Property ;
   rdfs:label "Creator"@en ;

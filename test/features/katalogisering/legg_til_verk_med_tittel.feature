@@ -29,13 +29,6 @@ Egenskap: Legg til verk med tittel
     Så viser systemet at alternativ tittel på verket har blitt registrert
     Og verkets alternative tittel vises på verks-siden
 
-  Scenario: Katalogisator legger språkinformasjon på tittel
-    Gitt at det finnes et verk
-    Og at verket har en tittel
-    Når jeg velger språk for tittelen
-    Så viser systemet at språket til tittelen blitt registrert
-    Og språket til verkets tittel vises på verks-siden
-
   Scenario: Katalogisator møter et system som feiler
     Gitt at det er en feil i systemet for katalogisering
     Når jeg forsøker å registrere ett nytt verk
