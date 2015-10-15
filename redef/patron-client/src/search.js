@@ -42,9 +42,11 @@
 
     searchRactive.on({
       search: function () {
-        var q = "\"" + searchRactive.get("search_term") + "\"";
+        var term = searchRactive.get("search_term"),
+            q = "\"" + term + "\"";
         axios.get("http://" + config.host + ":" + config.port + "/search/work/_search?q=" + q)
           .then(function (response) {
+            searchRactive.set("currentSearchTerm", term);
             searchRactive.set("hits", response.data.hits);
           });
       }

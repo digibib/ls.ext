@@ -7,7 +7,11 @@
 <div class="container">
   <div class="row results small-text">
     <div class="row">
-      <div class="column full result-header"><h3>Verk (<span data-automation-id="hits-total">{{hits.total}}</span>)</h3></div>
+      {{#if currentSearchTerm}}
+      <div class="column full result-header"><h3>Ditt søk &quot;<span data-automation-id="current-search-term">{{currentSearchTerm}}</span>&quot; ga <span data-automation-id="hits-total">{{hits.total}}</span> treff</h3></div>
+      {{else}}
+      <div class="column full result-header"><h3 data-automation-id="no-search">Søk etter verk</h3></div>
+      {{/if}}
     </div>
     {{#hits.hits}}
       {{#with _source}}

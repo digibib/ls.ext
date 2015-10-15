@@ -37,7 +37,24 @@ describe("PatronClient", function () {
       }).catch(done);
     });
 
+    it("should display opening message", function (done) {
+      ractive.set("hits", null).then(function () {
+        expect(document.querySelector("[data-automation-id='no-search']").innerHTML).to.eq("Søk etter verk");
+        done();
+      }).catch(done);
+    });
+
+    it("should report lack of hits following search", function (done) {
+      ractive.set("currentSearchTerm", "nohits");
+      ractive.set("hits.total", 0).then(function () {
+        expect(document.querySelector("[data-automation-id='current-search-term']").innerHTML).to.eq("nohits");
+        expect(document.querySelector("[data-automation-id='hits-total']").innerHTML).to.eq("0");
+        done();
+      }).catch(done);
+    });
+
     it("should display total number of search hits", function (done) {
+      ractive.set("currentSearchTerm", "should display total number of search hits");
       ractive.set("hits.total", 1).then(function () {
         expect(document.querySelector("[data-automation-id='hits-total']").innerHTML).to.eq("1");
         done();
@@ -45,6 +62,7 @@ describe("PatronClient", function () {
     });
 
     it("should display name of all hits", function (done) {
+      ractive.set("currentSearchTerm", "should display name of all hits");
       var hits = {
         "hits": [
             {
