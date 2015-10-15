@@ -13,6 +13,17 @@ Given(/^at det finnes et verk$/) do
   }
 end
 
+Given(/^at det finnes et verk med tre ledd i tittelen$/) do
+  steps %Q{
+   Gitt at jeg er i katalogiseringsgrensesnittet
+   Så leverer systemet en ny ID for det nye verket
+   Og jeg kan legge til tittel med tre ledd for det nye verket
+   Når jeg legger til et årstall for førsteutgave av nye verket
+   Og jeg legger til navn på forfatter av det nye verket
+   Så grensesnittet viser at tittelen er lagret
+  }
+end
+
 Given(/^et verk med en utgivelse$/) do
   step "at det finnes et verk"
   step "at det finnes en utgivelse"
@@ -267,6 +278,11 @@ end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
   @context[:title] = generateRandomString
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#name", @context[:title])
+end
+
+Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
+  @context[:title] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#name", @context[:title])
 end
 

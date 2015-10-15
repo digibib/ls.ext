@@ -26,3 +26,10 @@ Then(/^skal ikke verket finnes i trefflisten$/) do
   result_list = @site.SearchPatronClient.get_search_result_list
   result_list.exists?.should == false
 end
+
+When(/^jeg søker på verket i lånergrensesnittet basert på det første og siste leddet i tittelen$/) do
+  page = @site.SearchPatronClient
+  page.visit
+  search_query = [@context[:title].first, @context[:title].last].join(' ')
+  page.search_with_text(search_query)
+end
