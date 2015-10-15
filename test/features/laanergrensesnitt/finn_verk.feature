@@ -13,6 +13,9 @@ Egenskap: Finn verk
     Og kan klikke på det første verket
     Så ser jeg informasjon om verkets tittel og utgivelsesår
 
-  Scenario: Ikke finn verk
-    Når jeg søker på noe som ikke finnes
-    Så får jeg beskjed om at det ikke var noen treff
+  Scenario: Ikke finn treff fra irrelevante felter
+    Gitt at det finnes et verk
+    Når jeg søker på verket i lånergrensesnittet
+    Så vil jeg finne verket i trefflista
+    Når jeg søker på verkets ID i lånergrensesnittet
+    Så skal ikke verket finnes i trefflisten

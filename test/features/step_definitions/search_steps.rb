@@ -16,14 +16,13 @@ Then(/^vil jeg finne verket i trefflista$/) do
   resultList.text.include?(@context[:title]).should == true
 end
 
-When(/^jeg søker på noe som ikke finnes$/) do
-  @context[:search_term] = generateRandomString
+When(/^jeg søker på verkets ID i lånergrensesnittet$/) do
   page = @site.SearchPatronClient
   page.visit
-  page.search_with_text(@context[:search_term])
+  page.search_with_text(@context[:identifier])
 end
 
-Then(/^får jeg beskjed om at det ikke var noen treff$/) do
-  @browser.span(:data_automation_id => "current-search-term").text.include?(@context[:search_term]).should == true
-  @browser.span(:data_automation_id => "hits-total").text.should == "0"
+Then(/^skal ikke verket finnes i trefflisten$/) do
+  results = @site.SearchPatronClient.get_search_result_list
+  results.exists?.should == false
 end
