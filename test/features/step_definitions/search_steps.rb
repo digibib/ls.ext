@@ -7,13 +7,13 @@ When(/^jeg søker på verket i lånergrensesnittet$/) do
 end
 
 Then(/^vil jeg finne verket i trefflista$/) do
-  resultList = @site.SearchPatronClient.get_search_result_list
-  if !resultList.present?
+  result_list = @site.SearchPatronClient.get_search_result_list
+  if !result_list.present?
     sleep 2 # to give elasticsearch more time to index
     step "jeg søker på verket i lånergrensesnittet"
-    resultList = @site.SearchPatronClient.get_search_result_list
+    result_list = @site.SearchPatronClient.get_search_result_list
   end
-  resultList.text.include?(@context[:title]).should == true
+  result_list.text.include?(@context[:title]).should == true
 end
 
 When(/^jeg søker på verkets ID i lånergrensesnittet$/) do
@@ -23,6 +23,6 @@ When(/^jeg søker på verkets ID i lånergrensesnittet$/) do
 end
 
 Then(/^skal ikke verket finnes i trefflisten$/) do
-  results = @site.SearchPatronClient.get_search_result_list
-  results.exists?.should == false
+  result_list = @site.SearchPatronClient.get_search_result_list
+  result_list.exists?.should == false
 end
