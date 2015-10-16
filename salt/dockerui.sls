@@ -1,6 +1,6 @@
 {% set repo = 'dockerui' %}
 {% set image = 'dockerui' %}
-{% set tag = '0.7.0' %}
+{% set tag = 'latest' %}
 
 {% include 'docker-pull.sls-fragment' %}
 
