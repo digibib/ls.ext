@@ -69,7 +69,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: (p|w)[0-9_]+}")
+    @Path("/{id: (p|w|h)[a-zA-Z0-9_]+}")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
@@ -80,7 +80,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @DELETE
-    @Path("/{id: (p|w)[0-9_]+}")
+    @Path("/{id: (p|w|h)[a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
         if (model.isEmpty()) {
@@ -91,7 +91,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PATCH
-    @Path("/{id: (p|w)[0-9_]+}")
+    @Path("/{id: (p|w|h)[a-zA-Z0-9_]+}")
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
@@ -103,6 +103,9 @@ public final class EntityResource extends ResourceBase {
                 break;
             case PUBLICATION:
                 resourceUri = getBaseURI().publication() + id;
+                break;
+            case PERSON:
+                resourceUri = getBaseURI().person() + id;
                 break;
             default:
                 throw new NotFoundException("Unknown entity type.");
@@ -136,7 +139,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{workId: (p|w)[a-zA-Z0-9_]+}/items")
+    @Path("/{workId: (p|w|h)[a-zA-Z0-9_]+}/items")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) {
         Model model = getEntityService().retrieveWorkItemsById(workId);
@@ -153,7 +156,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PUT
-    @Path("{id: (p|w)[a-zA-Z0-9_]+}/index")
+    @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/index")
     public Response index(@PathParam("type") String type, @PathParam("id") String id) {
         Model m = getEntityService().retrieveById(EntityType.get(type), id);
         getSearchService().indexWorkModel(m);

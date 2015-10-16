@@ -1,8 +1,9 @@
 package no.deichman.services.entity.repository;
 
-import java.util.function.Predicate;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.RandomStringUtils;
+
+import java.util.function.Predicate;
 
 /**
  * Responsibility: TODO.
@@ -26,6 +27,8 @@ class UniqueURIGenerator {
             case "Work":        result = baseURI.work() + "w" + uniquePart;
                 break;
             case "Publication": result = baseURI.publication() + "p" + uniquePart;
+                break;
+            case "Person": result = baseURI.person() + "h" + uniquePart;
                 break;
             default:            throw new IllegalArgumentException("Unknown URI-type");
         }

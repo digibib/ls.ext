@@ -103,6 +103,9 @@ public final class EntityServiceImpl implements EntityService {
             case PUBLICATION:
                 m.add(repository.retrievePublicationById(id));
                 break;
+            case PERSON:
+                m.add(repository.retrievePersonById(id));
+                break;
             case WORK:
                 m.add(repository.retrieveWorkById(id));
                 m = getLinkedLexvoResource(m);
@@ -162,6 +165,9 @@ public final class EntityServiceImpl implements EntityService {
                 break;
             case WORK:
                 uri = repository.createWork(inputModel);
+                break;
+            case PERSON:
+                uri = repository.createPerson(inputModel);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);

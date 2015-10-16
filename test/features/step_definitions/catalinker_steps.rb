@@ -337,3 +337,41 @@ Given(/^et verk med en utgivelse og et eksemplar$/) do
     Og jeg oppretter et eksemplar av utgivelsen
   }
 end
+
+Given(/^at jeg er i personregistergrensesnittet$/) do
+  @site.RegPerson.visit
+end
+
+When(/^jeg vil legge til en person$/) do
+  true
+end
+
+When(/^leverer systemet en ny ID for den nye personen$/) do
+  @context[:identifier] = @site.RegPerson.get_id()
+  @context[:identifier].should_not be_empty
+end
+
+When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
+  @context[:personName] = generateRandomString
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#name", @context[:personName])
+
+  @context[:birthYear] = rand(2015).to_s
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:birthYear])
+
+  @context[:deathYear] = rand(2015).to_s
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#death", @context[:deathYear])
+end
+
+When(/^grensesnittet viser at personen er lagret$/) do
+  Watir::Wait.until { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
+end
+
+When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
+  @browser.goto(@site.RegPerson.get_link)
+end
+
+When(/^kommer jeg til personsiden$/) do
+  Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
+  @browser.body.text.should include("Cannot")
+  # @site.PatronClientPersonPage.getTitle.should include(@context[:personName])
+end

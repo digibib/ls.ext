@@ -2,7 +2,7 @@
 
 require_relative '../page_root.rb'
 
-class PatronClient < PageRoot
+class PatronClientWorkPage < PageRoot
     def visit(workId)
       @browser.goto patron_client(:work) + "/" + workId
       self

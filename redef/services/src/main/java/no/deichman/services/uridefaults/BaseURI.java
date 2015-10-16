@@ -37,7 +37,15 @@ public final class BaseURI {
         return baseUriRoot + "publication/";
     }
 
+    public String person() {
+        return baseUriRoot + "person/";
+    }
+
     public String values() {
         return baseUriRoot + "authorized_values/";
+    }
+
+    public String ui() {
+        return baseUriRoot + "ui#";
     }
 }

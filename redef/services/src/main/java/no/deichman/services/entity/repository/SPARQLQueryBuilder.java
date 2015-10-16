@@ -1,19 +1,20 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.uridefaults.BaseURI;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
-import no.deichman.services.entity.patch.Patch;
-import no.deichman.services.uridefaults.BaseURI;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 
 /**
  * Responsibility: TODO.
@@ -21,11 +22,11 @@ import org.apache.jena.riot.RDFDataMgr;
 public final class SPARQLQueryBuilder {
     private final BaseURI baseURI;
 
-    SPARQLQueryBuilder(){
+    SPARQLQueryBuilder() {
         baseURI = BaseURI.remote();
     }
 
-    public SPARQLQueryBuilder(BaseURI base){
+    public SPARQLQueryBuilder(BaseURI base) {
         baseURI = base;
     }
 
@@ -34,14 +35,28 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-    public Query describeWorkAndLinkedPublication(String id){
-        String queryString = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
-                            +"DESCRIBE <" + id + "> ?publication\n"
-                            +"WHERE {\n"
-                            +"<" + id + "> ?p ?o .\n"
-                            +"?publication deichman:publicationOf <" + id + "> .\n"
-                            +"?publication ?po ?ps ."
-                            +"}";
+    public Query describeWorkAndLinkedPublication(String workId) {
+        String queryString = "#\n"
+                + "PREFIX deichman: <" + baseURI.ontology() + ">\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "DESCRIBE ?workUri ?publication ?creator ?format ?formatLabel\n"
+                + "WHERE {\n"
+                + "    ?workUri a deichman:Work .\n"
+                + "    optional {"
+                + "            ?workUri deichman:name ?name"
+                + "    }"
+                + "    optional { \n"
+                + "           ?workUri deichman:creator ?creator .\n"
+                + "           ?creator ?a ?b \n"
+                + "    }\n"
+                + "    optional { \n"
+                + "           ?workUri deichman:format ?format .\n"
+                + "           ?format rdfs:label ?label \n"
+                + "    }\n"
+                + "    optional {\n"
+                + "            ?publication deichman:publicationOf ?workUri .\n"
+                + "    }\n"
+                + "}";
         return QueryFactory.create(queryString);
     }
 
@@ -94,7 +109,7 @@ public final class SPARQLQueryBuilder {
                 + "    duo:shelfmark ?shelfmark ;\n"
                 + "    duo:onloan ?onloan ."
                 + "}";
-       return QueryFactory.create(q);
+        return QueryFactory.create(q);
     }
 
     public Query checkIfResourceExists(String uri) {
@@ -141,10 +156,12 @@ public final class SPARQLQueryBuilder {
                 sep = "";
             }
             switch (currentPatch.getOperation().toUpperCase()) {
-                case "ADD": operation = "INSERT";
-                            break;
-                case "DEL": operation = "DELETE";
-                            break;
+                case "ADD":
+                    operation = "INSERT";
+                    break;
+                case "DEL":
+                    operation = "DELETE";
+                    break;
                 default:
                     throw new RuntimeException("Invalid patch operation");
             }

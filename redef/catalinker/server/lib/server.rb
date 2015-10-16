@@ -49,6 +49,10 @@ get '/publication' do
   redirect '/cataloguing/publication?resource='+new_resource("publication")
 end
 
+get '/person' do
+  redirect '/cataloguing/person?resource='+new_resource("person")
+end
+
 __END__
 
 @@ layout
@@ -59,6 +63,8 @@ __END__
 .title Catalinker - metadataregistrering med lenkede data
 .links
   %ul
+    %li
+      %a{:href => 'person'} Registrere person
     %li
       %a{:href => 'work'} Registrere verk
     %li

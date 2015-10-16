@@ -9,7 +9,6 @@ docker_comment_other_params:
 docker_params_blockreplace:
   file.blockreplace:
     - name: /etc/default/docker
-    - template: jinja
     - marker_start: "### DOCKER PARAMS START --DO NOT EDIT-- ###"
     - marker_end: "### DOCKER PARAMS END --DO NOT EDIT-- ###"
     - content: |

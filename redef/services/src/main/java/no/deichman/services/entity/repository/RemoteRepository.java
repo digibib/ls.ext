@@ -1,11 +1,11 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateRequest;
-import no.deichman.services.uridefaults.BaseURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

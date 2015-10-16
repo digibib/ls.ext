@@ -11,7 +11,7 @@
   dcterms:identifier "work_00001" ;
   rdfs:label "Sult" ;
   dcterms:title "Sult"@no ;
-  dcterms:creator <http://deichman.no/person/person_00001> ;
+  deichman:creator <http://deichman.no/person/person_00001> ;
   dcterms:date "1890"^^xsd:gYear ;
   deichman:hasEdition <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
  
@@ -45,7 +45,7 @@
   dcterms:identifier "work_00002" ;
   rdfs:label "Trist som faen" ;
   dcterms:title "Trist som faen"@no ;
-  dcterms:creator <http://deichman.no/person/person_00002> ;
+  deichman:creator <http://deichman.no/person/person_00002> ;
   dcterms:date "1999"^^xsd:gYear ;
   deichman:hasEdition <http://deichman.no/edition/edition_00003> .
  
@@ -73,7 +73,7 @@
   dcterms:identifier "work_00003" ;
   rdfs:label "A minimalist analysis trousers" ;
   dcterms:title "A minimalist analysis of trousers"@en ;
-  dcterms:creator <http://deichman.no/person/person_00003> ;
+  deichman:creator <http://deichman.no/person/person_00003> ;
   dcterms:date "2004"^^xsd:gYear .
 
 <http://deichman.no/person/person_00003> a foaf:Person ;
@@ -87,7 +87,7 @@
   dcterms:identifier "work_00004" ;
   rdfs:label "Berlinerpoplene" ;
   dcterms:title "Berlinerpoplene"@no ;
-  dcterms:creator <http://deichman.no/person/person_00004> ;
+  deichman:creator <http://deichman.no/person/person_00004> ;
   dcterms:date "2004"^^xsd:gYear ;
   deichman:hasEdition <http://deichman.no/edition/edition_00004> .
 
@@ -105,7 +105,7 @@
 <http://deichman.no/work/work_TEST_KOHA_ITEMS_LINK> a deichman:Work ;
   rdfs:label "Berlinerpoplene" ;
   dcterms:title "Berlinerpoplene"@no ;
-  dcterms:creator <http://deichman.no/person/person_00004> ;
+  deichman:creator <http://deichman.no/person/person_00004> ;
   dcterms:date "2004"^^xsd:gYear ;
   dcterms:identifier "work_TEST_KOHA_ITEMS_LINK" .
 

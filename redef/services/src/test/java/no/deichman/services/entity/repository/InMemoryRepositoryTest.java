@@ -9,58 +9,62 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
-import org.apache.jena.vocabulary.RDF;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.vocabulary.RDF.type;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class InMemoryRepositoryTest {
     public static final String A_BIBLIO_NO = "34567";
+    public static final String WORK_ID = "test_id_1234";
+    public static final String PUBLICATION_ID = "test_id_12345";
+    private static final BaseURI BASE_URI = BaseURI.local();
+    private static final Property NAME = createProperty(BASE_URI.ontology("name"));
     private InMemoryRepository repository;
-    private Statement testWorkStmt;
-    private Statement testPublicationStmt;
-    private List<Statement> stmts;
-    private BaseURI baseURI;
+    private Statement workHasNameStmt;
+    private Statement publHasANameStmt;
+    private List<Statement> workWithPublicationStatements;
+    private Statement workIsAWorkStmt;
+    private Statement publIsAPublicationStmt;
+    private Statement publIsAPublicationOfWorkStmt;
+    private String publicationUri = BASE_URI.publication() + PUBLICATION_ID;
+    private String workUri = BASE_URI.work() + WORK_ID;
+    private String work = BASE_URI.ontology() + "Work";
+    private String publicationTypeUri = BASE_URI.ontology() + "Publication";
+    private String publicationOf = BASE_URI.ontology() + "publicationOf";
 
     @Before
     public void setup(){
-        repository = new InMemoryRepository();
-        baseURI = BaseURI.local();
-        testWorkStmt = ResourceFactory.createStatement(
-                        ResourceFactory.createResource(baseURI.work() + "test_id_123"),
-                        ResourceFactory.createProperty("http://example.com/ontology/name"),
-                        ResourceFactory.createPlainLiteral("Test"));
-        testPublicationStmt = ResourceFactory.createStatement(
-                ResourceFactory.createResource(baseURI.publication() + "test_id_Publication"),
-                ResourceFactory.createProperty("http://example.com/ontology/name"),
-                ResourceFactory.createPlainLiteral("Test"));
-        Statement testWork0 = ResourceFactory.createStatement(
-                ResourceFactory.createResource(baseURI.work() + "test_id_1234"),
-                RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + "Work"));
-        Statement testWork1 = ResourceFactory.createStatement(
-                ResourceFactory.createResource(baseURI.publication() + "test_id_12345"),
-                RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + "Publication"));
-        Statement testWork2 = ResourceFactory.createStatement(
-                ResourceFactory.createResource(baseURI.publication() + "test_id_12345"),
-                ResourceFactory.createProperty(baseURI.ontology() + "publicationOf"),
-                ResourceFactory.createResource(baseURI.work() + "test_id_1234"));
-        stmts  = new ArrayList<Statement>();
-        stmts.add(testWork0);
-        stmts.add(testWork1);
-        stmts.add(testWork2);
+        repository = new InMemoryRepository(BASE_URI);
+        workIsAWorkStmt = createStatement(createResource(workUri), type, createResource(work));
+        workHasNameStmt = createStatement(createResource(workUri), NAME, createPlainLiteral("Test"));
+        publIsAPublicationStmt = createStatement(createResource(publicationUri), type, createResource(publicationTypeUri));
+        publHasANameStmt = createStatement(createResource(publicationUri), NAME, createPlainLiteral("Test"));
+        publIsAPublicationOfWorkStmt = createStatement(createResource(publicationUri), createProperty(publicationOf),
+                createResource(workUri));
+
+        workWithPublicationStatements = newArrayList(
+                workIsAWorkStmt,
+                workHasNameStmt,
+                publHasANameStmt,
+                publIsAPublicationStmt,
+                publIsAPublicationOfWorkStmt
+        );
     }
 
     @Test
@@ -70,7 +74,7 @@ public class InMemoryRepositoryTest {
 
     @Test
     public void test_create_publication() throws Exception{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/ublication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         final Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
         assertNotNull(repository.createPublication(inputModel, A_BIBLIO_NO));
     }
@@ -80,17 +84,17 @@ public class InMemoryRepositoryTest {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         final Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
         String publicationId = repository.createPublication(inputModel, A_BIBLIO_NO);
-        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + baseURI.ontology() + "recordID> ?value .}");
+        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + BASE_URI.ontology() + "recordID> ?value .}");
         QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
         assertTrue(qexec.execAsk());
     }
     @Test
     public void test_add_data(){
         Model testModel = ModelFactory.createDefaultModel();
-        Statement s = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/name"),
-                ResourceFactory.createPlainLiteral("Test"));
+        Statement s = createStatement(
+                createResource("http://example.com/a"),
+                NAME,
+                createPlainLiteral("Test"));
         repository.addData(testModel);
         assertFalse(repository.askIfStatementExists(s));
         testModel.add(s);
@@ -100,22 +104,20 @@ public class InMemoryRepositoryTest {
 
     @Test
     public void test_retrieve_work_by_id(){
-        String id = "test_id_123";
-        Model temp = ModelFactory.createDefaultModel();
-        temp.add(testWorkStmt);
-        repository.addData(temp);
-        Model testModel = repository.retrieveWorkById(id);
-        assertTrue(testModel.contains(testWorkStmt));
+        repository.addData(ModelFactory.createDefaultModel().add(workWithPublicationStatements));
+        Model testModel = repository.retrieveWorkById(WORK_ID);
+        assertTrue("Work " + WORK_ID + " should be a Work", testModel.contains(workIsAWorkStmt));
+        assertTrue("Work " + WORK_ID + " should should have name", testModel.contains(workHasNameStmt));
     }
 
-    @Test @Ignore("Fails ... must be addressed by RDF hero")
+    @Test
     public void test_retrieve_work_by_id2(){
-        String id = "test_id_1234";
+        String id = WORK_ID;
         Model temp = ModelFactory.createDefaultModel();
-        temp.add(stmts);
+        temp.add(workWithPublicationStatements);
         repository.addData(temp);
         Model testModel = repository.retrieveWorkById(id);
-        List<Statement> missing = stmts.stream()
+        List<Statement> missing = workWithPublicationStatements.stream()
                 .filter(stmt -> !testModel.contains(stmt))
                 .collect(Collectors.<Statement>toList());
         assertTrue("oups, some statements are missing: " + missing, missing.isEmpty());
@@ -123,21 +125,20 @@ public class InMemoryRepositoryTest {
 
     @Test
     public void test_retrieve_publication_by_id(){
-        String id = "test_id_Publication";
         Model temp = ModelFactory.createDefaultModel();
-        temp.add(testPublicationStmt);
+        temp.add(publHasANameStmt);
         repository.addData(temp);
-        Model testModel = repository.retrievePublicationById(id);
-        assertTrue(testModel.contains(testPublicationStmt));
+        Model testModel = repository.retrievePublicationById(PUBLICATION_ID);
+        assertTrue(testModel.contains(publHasANameStmt));
     }
 
     @Test
     public void test_patch() throws Exception{
         List<Patch> list = new ArrayList<Patch>();
-        Statement s1 = ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://example.com/a"),
-                ResourceFactory.createProperty("http://example.com/ontology/name"),
-                ResourceFactory.createPlainLiteral("Test"));
+        Statement s1 = createStatement(
+                createResource("http://example.com/a"),
+                NAME,
+                createPlainLiteral("Test"));
         Patch patch1 = new Patch("add",s1,null);
         list.add(patch1);
         repository.patch(list);

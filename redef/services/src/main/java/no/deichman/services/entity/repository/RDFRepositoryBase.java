@@ -1,5 +1,7 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -8,14 +10,12 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.RDF;
-import no.deichman.services.entity.patch.Patch;
-import no.deichman.services.uridefaults.BaseURI;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +66,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final Model retrievePersonById(String id) {
+        String uri = baseURI.person() + id;
+        log.debug("Attempting to retrieve: " + uri);
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
     public final void updateWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         Model model = ModelFactory.createDefaultModel();
@@ -85,6 +94,19 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final String createWork(Model inputModel) {
         String type = "Work";
+        inputModel.add(tempTypeStatement(type));
+        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
+
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
+
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
+        executeUpdate(updateRequest);
+        return uri;
+    }
+
+    @Override
+    public final String createPerson(Model inputModel) {
+        String type = "Person";
         inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
 

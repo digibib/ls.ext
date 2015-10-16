@@ -15,6 +15,10 @@
   rdfs:label "Publication"@en ;
   rdfs:label "Utgivelse"@no .
 
+:Person a rdfs:Class ;
+  rdfs:label "Person"@en ;
+  rdfs:label "Person"@no .
+
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
@@ -25,7 +29,7 @@
   rdfs:label "Creator"@en ;
   rdfs:label "Skaper"@no ;
   rdfs:domain :Work ;
-  rdfs:range xsd:string .
+  rdfs:range :Person .
 
 :year a rdfs:Property ;
   rdfs:label "Year"@en ;
@@ -59,3 +63,16 @@
   rdfs:label "Utgivelse av"@no ;
   rdfs:domain :Publication ;
   rdfs:range :Work .
+
+:birth a rdfs:Property ;
+  rdfs:label "Birth year"@en ;
+  rdfs:label "Fødselsår"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:gYear.
+
+:death a rdfs:Property ;
+  rdfs:label "Death year"@en ;
+  rdfs:label "Dødsår"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:gYear.
+

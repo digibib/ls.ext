@@ -106,13 +106,32 @@ public class AppTest {
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
-        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#year", "2015", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#year", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
         final HttpResponse<String> patchAddYearToWorkPatchResponse = buildPatchRequest(workUri, addYearToWorkPatch).asString();
         assertResponse(Status.OK, patchAddYearToWorkPatchResponse);
 
-        final JsonArray addCreatorToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#creator", "Knut Hamsun", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<JsonNode> createPersonResponse = buildEmptyCreateRequest(baseUri + "person").asJson();
+        assertResponse(Status.CREATED, createPersonResponse);
+        final String personUri = getLocation(createPersonResponse);
+        assertIsUri(personUri);
+        assertThat(personUri, startsWith(baseUri));
+
+        final JsonArray addCreatornameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#name", "Knut Hamsun", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchAddCreatornameToPersonPatchResponse = buildPatchRequest(personUri, addCreatornameToPersonPatch).asString();
+        assertResponse(Status.OK, patchAddCreatornameToPersonPatchResponse);
+
+        final JsonArray addBirthToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#birth", "1923", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final HttpResponse<String> patchAddBirthToPersonPatchResponse = buildPatchRequest(personUri, addBirthToPersonPatch).asString();
+        assertResponse(Status.OK, patchAddBirthToPersonPatchResponse);
+        
+        final JsonArray addDeathToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#death", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final HttpResponse<String> patchAddDeathToPersonPatchResponse = buildPatchRequest(personUri, addDeathToPersonPatch).asString();
+        assertResponse(Status.OK, patchAddDeathToPersonPatchResponse);
+
+        final JsonArray addCreatorToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#creator", personUri, ANY_URI));
         final HttpResponse<String> patchAddCreatorToWorkPatchResponse = buildPatchRequest(workUri, addCreatorToWorkPatch).asString();
         assertResponse(Status.OK, patchAddCreatorToWorkPatchResponse);
+
 
         HttpResponse<JsonNode> jsonNodeHttpResponse = Unirest.get(workUri).asJson();
 
@@ -174,7 +193,7 @@ public class AppTest {
         assertThat("model does not contain onloan booleans",
                 work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#onloan")).toList().size(),
                 equalTo(2 + 1));
-        jsonNodeHttpResponse = Unirest.get(workUri).asJson();
+        Unirest.get(workUri).asJson();
         HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
         assertNotNull(stringHttpResponse);
         doSearchForWorks("Name");

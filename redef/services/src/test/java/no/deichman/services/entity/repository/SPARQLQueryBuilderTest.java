@@ -1,5 +1,7 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
@@ -7,8 +9,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.update.UpdateAction;
-import no.deichman.services.entity.patch.Patch;
-import no.deichman.services.uridefaults.BaseURI;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -45,20 +45,6 @@ public class SPARQLQueryBuilderTest {
         Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
         String expected = "DESCRIBE <http://example.com/a>";
         assertEquals(expected,query.toString().trim());
-    }
-
-    @Test
-    public void test_it_describes_work_and_publication(){
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
-        Query query = sqb.describeWorkAndLinkedPublication("http://example.com/a");
-        String expected = "PREFIX  deichman: <" + baseURI.ontology() + ">\n\n"
-                +"DESCRIBE ?publication <http://example.com/a>\n"
-                +"WHERE\n"
-                +"  { <http://example.com/a> ?p ?o .\n"
-                +"    ?publication deichman:publicationOf <http://example.com/a> ;\n"
-                +"      ?po ?ps\n"
-                +"  }";
-        assertEquals(expected.replaceAll("\\s+"," "),query.toString().replaceAll("\\s+"," ").trim());
     }
 
     @Test
