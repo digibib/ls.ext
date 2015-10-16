@@ -4,6 +4,7 @@
 
 # The included states will be run in sequential order
 include:
+  - redef.elasticsearch
   - migration.reset
   - migration.issuing_rules_imported
   - migration.authorised_values_imported
