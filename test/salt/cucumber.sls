@@ -43,7 +43,7 @@ install_chromedriver:
     - name: /usr/local/bin/
     - source: http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip
     - archive_format: zip
-    - source_hash: md5=058cd8b7b4b9688507701b5e648fd821
+    - source_hash: md5=245858cc984bd946df6a1e6719c8e6f5
     - if_missing: /usr/local/bin/chromedriver
     - requires:
       - pkg: unzip
