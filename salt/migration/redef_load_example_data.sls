@@ -12,6 +12,7 @@ include:
   - migration.redef_catalogue_loaded
   - migration.loans_loaded
   - migration.reservations_loaded
+  - migration.cleanup
   - koha.reindexed
   - migration.redef_sparql_aggregation
   - redef.elasticsearch.mappings
