@@ -1,7 +1,6 @@
 package no.deichman.services.search;
 
 import com.google.gson.Gson;
-import no.deichman.services.rdf.JSONLDCreator;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -16,6 +15,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Responsibility: perform indexing and searching.
@@ -50,65 +52,40 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public final void indexWorkModel(Model workModel) {
         QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
-                        "PREFIX  deichman: <"+ BaseURI.remote().ontology() + "> \n"
-                                + "PREFIX  ui: <"+BaseURI.remote().ui() + ">\n"
-                                + "\n"
-                                + "construct { \n"
-                                + "     ?workUri a ?class ;\n"
-                                + "              ui:creatorString ?name ;\n"
-                                + "              deichman:name ?title;\n"
-                                + "              deichman:year ?year.\n"
-                                + "      } \n"
-                                + "WHERE {    \n"
-                                + "   ?workUri a ?class ;\n"
-                                + "            deichman:name ?title ;\n"
-                                + "            deichman:creator ?c .\n"
-                                + "   optional { ?workUri deichman:year ?year }\n"
-                                + "   ?c a deichman:Person ;           \n"
-                                + "        deichman:name ?name    \n"
-                                + "}\n"),
+                        String.format("PREFIX  deichman: <%1$s> \n"
+                                + "select distinct ?workUri ?workName ?workYear ?creatorName\n"
+                                + "where {\n"
+                                + "    ?workUri a deichman:Work ;\n"
+                                + "             deichman:name ?workName ;\n"
+                                + "             deichman:year ?workYear.\n"
+                                + "    optional { \n"
+                                + "             ?workUri deichman:creator ?creator .\n"
+                                + "             ?creator a deichman:Person ;\n"
+                                + "                      deichman:name ?creatorName.\n"
+                                + "    }                       \n"
+                                + "}\n", BaseURI.remote().ontology())),
                 workModel);
-        Model newWorkModel = queryExecution.execConstruct();
+        ResultSet resultSet = queryExecution.execSelect();
+        if (resultSet.hasNext()) {
+            Map<String, String> result = new HashMap<>();
+            QuerySolution querySolution = resultSet.nextSolution();
+            String workUri = querySolution.get("workUri").asNode().getURI();
+            result.put("uri", workUri);
 
-        if (!newWorkModel.isEmpty()) {
-            Map<String, String> name = new HashMap<>();
-            name.put("@type", "langString");
-            name.put("@id", "deichman:name");
+            Optional.ofNullable(querySolution.getLiteral("workName")).ifPresent(literal -> {
+                result.put("name", literal.getString());
+            });
 
-            Map<String, String> creatorString = new HashMap<>();
-            creatorString.put("@type", "langString");
-            creatorString.put("@id", "ui:creatorString");
+            Optional.ofNullable(querySolution.getLiteral("workYear")).ifPresent(literal -> {
+                result.put("year", literal.getString());
+            });
 
-            Map<String, String> year = new HashMap<>();
-            year.put("@type", "gYear");
-            year.put("@id", "deichman:year");
-
-
-            Map<String, Object> context = new HashMap<>();
-
-            context.put("deichman", BaseURI.remote().ontology());
-            context.put("ui", BaseURI.remote().ui());
-            context.put("gYear", "http://www.w3.org/2001/XMLSchema#gYear");
-            context.put("langString", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString");
-            context.put("Work", "deichman:Work");
-            context.put("creator", creatorString);
-            context.put("year", year);
-            context.put("uri", "ui:workUri");
-            context.put("name", name);
-            JSONLDCreator jsonldCreator = new JSONLDCreator();
-
-            String result = jsonldCreator.asJSONLD(newWorkModel, context);
-            HashMap fromJson = new Gson().fromJson(result, HashMap.class);
-            fromJson.remove("@context");
-            String workUri = (String) fromJson.get("@id");
-            fromJson.put("uri", workUri);
-            fromJson.remove("@id");
-            fromJson.put("type", fromJson.get("@type"));
-            fromJson.remove("@type");
-
+            Optional.ofNullable(querySolution.getLiteral("creatorName")).ifPresent(literal -> {
+                result.put("creator", literal.getString());
+            });
             try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
                 HttpPut httpPut = new HttpPut(workSearchUriBuilder.setPath("/search/work/" + URLEncoder.encode(workUri, UTF_8)).build());
-                httpPut.setEntity(new StringEntity(new Gson().toJson(fromJson), Charset.forName(UTF_8)));
+                httpPut.setEntity(new StringEntity(new Gson().toJson(result), Charset.forName(UTF_8)));
                 try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
                     LOG.debug(putResponse.getStatusLine().toString());
                 }

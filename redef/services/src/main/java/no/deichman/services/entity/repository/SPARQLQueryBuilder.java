@@ -36,27 +36,26 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query describeWorkAndLinkedPublication(String workId) {
-        String queryString = "#\n"
-                + "PREFIX deichman: <" + baseURI.ontology() + ">\n"
+        String queryString = String.format("#\n"
+                + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                + "DESCRIBE ?workUri ?publication ?creator ?format ?formatLabel\n"
+                + "DESCRIBE <%2$s> ?publication ?creator ?format ?label\n"
                 + "WHERE {\n"
-                + "    ?workUri a deichman:Work .\n"
-                + "    optional {"
-                + "            ?workUri deichman:name ?name"
-                + "    }"
-                + "    optional { \n"
-                + "           ?workUri deichman:creator ?creator .\n"
-                + "           ?creator ?a ?b \n"
-                + "    }\n"
-                + "    optional { \n"
-                + "           ?workUri deichman:format ?format .\n"
-                + "           ?format rdfs:label ?label \n"
-                + "    }\n"
+                + "    <%2$s> a deichman:Work .\n"
                 + "    optional {\n"
-                + "            ?publication deichman:publicationOf ?workUri .\n"
+                + "            <%2$s> deichman:name ?name \n"
+                + "    } \n"
+                + "    optional { \n"
+                + "           <%2$s> deichman:creator ?creator .\n"
                 + "    }\n"
-                + "}";
+                + "    optional { \n"
+                + "           ?publication deichman:publicationOf <%2$s> . \n"
+                + "            optional { \n"
+                + "                        ?publication deichman:format ?format .\n"
+                + "                        ?format rdfs:label ?label .\n"
+                + "            }\n"
+                + "    }\n"
+                + "}", baseURI.ontology(), workId);
         return QueryFactory.create(queryString);
     }
 
