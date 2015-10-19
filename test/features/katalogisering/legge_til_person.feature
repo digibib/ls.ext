@@ -10,7 +10,6 @@ Egenskap: Redigere autoritative persondata
   Bakgrunn:
     Gitt at jeg er i personregistergrensesnittet
 
-  @wip
   Scenario: Katalogisator legger til en ny person
     Når jeg vil legge til en person
     Så leverer systemet en ny ID for den nye personen

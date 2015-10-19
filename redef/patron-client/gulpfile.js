@@ -14,7 +14,7 @@ var fs = require('fs');
 
 gulp.task('javascript', function () {
     var b = browserify({
-        entries: ['src/search.js'],
+        entries: ['src/search.js', 'src/person.js'],
         debug: true
     });
 

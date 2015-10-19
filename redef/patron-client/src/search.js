@@ -27,7 +27,7 @@
     });
   }).then(function (data) {
     var searchRactive = new Ractive({
-      el: "#app",
+      el: "#search-app",
       template: data,
       data: {
         hits: {

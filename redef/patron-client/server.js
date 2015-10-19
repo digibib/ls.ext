@@ -104,6 +104,12 @@ app.get('/config', function (request, response) {
   response.json(config.get(process.env));
 });
 
+app.get('/person/:id', function (request, response) {
+  response.type(".html");
+  response.status(200);
+  response.sendFile(__dirname +'/public/person.html');
+});
+
 app.get('/work/:id', function (request, response) {
   var parameters = config.get(process.env);
   parameters.path = "/work/" + request.params.id;

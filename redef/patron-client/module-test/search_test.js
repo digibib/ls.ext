@@ -1,4 +1,4 @@
-/*global require, it, describe, before, document, Promise*/
+/*global require, it, describe, before, after, document, Promise*/
 "use strict";
 
 var chai = require("chai"),
@@ -27,7 +27,7 @@ describe("PatronClient", function () {
 
       // create fixtures for testing Ractive events
       var fixture = document.createElement("div");
-      fixture.setAttribute("id", "app");
+      fixture.setAttribute("id", "search-app");
       document.body.appendChild(fixture);
 
       // load module
@@ -35,6 +35,10 @@ describe("PatronClient", function () {
         ractive = r;
         done();
       }).catch(done);
+    });
+
+    after(function () {
+      axios.get.restore();
     });
 
     it("should display opening message", function (done) {
