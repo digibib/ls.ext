@@ -42,18 +42,16 @@
 
     searchRactive.on({
       search: function () {
-        var term = searchRactive.get("search_term"),
-            q = "\"" + term + "\"";
-        axios.get("http://" + config.host + ":" + config.port + "/search/work/_search?q=" + q)
-          .then(function (response) {
-            searchRactive.set("currentSearchTerm", term);
-            searchRactive.set("hits", response.data.hits);
-          });
+        var term = searchRactive.get("search_term");
+        axios.get("http://" + config.host + ":" + config.port + "/search/work/_search?q=" + term)
+            .then(function (response) {
+              searchRactive.set("currentSearchTerm", term);
+              searchRactive.set("hits", response.data.hits);
+            });
       }
     });
     return searchRactive;
   }).catch(function (error) {
     console.log(error);
   });
-
 }));

@@ -30,6 +30,7 @@ end
 When(/^jeg søker på verket i lånergrensesnittet basert på det første og siste leddet i tittelen$/) do
   page = @site.SearchPatronClient
   page.visit
-  search_query = [@context[:title].first, @context[:title].last].join(' ')
+  split_title = @context[:title].split(' ')
+  search_query = [split_title.first, split_title.last].join(' ')
   page.search_with_text(search_query)
 end
