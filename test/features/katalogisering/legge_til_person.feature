@@ -10,10 +10,11 @@ Egenskap: Redigere autoritative persondata
   Bakgrunn:
     Gitt at jeg er i personregistergrensesnittet
 
+  @wip
   Scenario: Katalogisator legger til en ny person
     Når jeg vil legge til en person
     Så leverer systemet en ny ID for den nye personen
     Og jeg kan legge inn navn fødselsår og dødsår for personen
     Og grensesnittet viser at personen er lagret
     Når jeg klikker på linken ved urien kommer jeg til personsiden
-    Så kommer jeg til personsiden
+    Og personens navn vises på siden

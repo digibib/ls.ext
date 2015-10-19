@@ -370,8 +370,7 @@ When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
   @browser.goto(@site.RegPerson.get_link)
 end
 
-When(/^kommer jeg til personsiden$/) do
+When(/^personens navn vises på siden$/) do
   Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
-  @browser.body.text.should include("Cannot")
-  # @site.PatronClientPersonPage.getTitle.should include(@context[:personName])
+  @site.PatronClientPersonPage.getTitle.should include(@context[:personName])
 end
