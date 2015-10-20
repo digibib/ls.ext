@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
-  Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.execute_script("return document.readyState") == "complete" }
   @site.PatronClientWorkPage.getTitle.should include(@context[:title])
 end
 

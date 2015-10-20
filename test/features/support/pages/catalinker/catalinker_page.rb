@@ -6,7 +6,7 @@ class CatalinkerPage < PageRoot
 
     def visit_sub_page(page)
       @browser.goto catalinker(page)
-      Watir::Wait.until {
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
         @browser.url != catalinker(page) &&            # wait until we have been redirected
         @browser.divs(:class => "prop-input").size > 1 # wait until dom-tree has been populated
       }
@@ -15,14 +15,14 @@ class CatalinkerPage < PageRoot
 
     def open(resource, res_type)
       @browser.goto "#{catalinker(:home)}/#{res_type}?resource=#{resource}"
-      Watir::Wait.until { @browser.divs(:class => "prop-input").size > 1 }
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.divs(:class => "prop-input").size > 1 }
       self
     end
 
     def add_prop(predicate, value, nr=0)
       input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
       input.set("")
-      Watir::Wait.until { input.value == "" }
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value == "" }
       input.set(value)
       input.fire_event :blur
       self
@@ -30,19 +30,19 @@ class CatalinkerPage < PageRoot
 
     def select_prop(predicate, value, nr=0)
       input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
-      Watir::Wait.until { input.length > 1 }
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }
       input.select(value)
       self
     end
 
     def get_prop(predicate, nr=0)
       input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
-      Watir::Wait.until { input.value != "" }
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value != "" }
       input.value
     end
 
     def get_id()
-      Watir::Wait.until { @browser.input(:data_automation_id => /resource_uri/).value != "" }
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.input(:data_automation_id => /resource_uri/).value != "" }
       @browser.input(:data_automation_id => /resource_uri/).value
     end
 

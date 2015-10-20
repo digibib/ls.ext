@@ -287,7 +287,7 @@ Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
 end
 
 Then(/^grensesnittet viser at tittelen er lagret$/) do
-  Watir::Wait.until { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
 end
 
 Then(/^får jeg beskjed om at noe er feil$/) do
@@ -363,7 +363,7 @@ When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
 end
 
 When(/^grensesnittet viser at personen er lagret$/) do
-  Watir::Wait.until { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
 end
 
 When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
