@@ -371,6 +371,5 @@ When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
 end
 
 When(/^personens navn vises på siden$/) do
-  Watir::Wait.until { @browser.execute_script("return document.readyState") == "complete" }
-  @site.PatronClientPersonPage.getTitle.should include(@context[:personName])
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getTitle.include? @context[:personName] }
 end

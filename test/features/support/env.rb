@@ -7,6 +7,7 @@ require 'rspec'
 require 'yaml'
 require 'securerandom'
 
+BROWSER_WAIT_TIMEOUT = 5 # timeout for waiting for elements to appear using Watir::Wait.until {}
 PILLAR = YAML.load_file('/srv/pillar/koha/init.sls')
 
 # Merge in Koha credentials
