@@ -2,6 +2,7 @@
 
 var browserify = require('browserify');
 var gulp = require('gulp');
+var factor = require('factor-bundle');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
@@ -12,20 +13,21 @@ var child = require('child_process');
 var fs = require('fs');
 
 
-gulp.task('javascript', function () {
+
+gulp.task('browserify', ['clean', 'placeholders', 'images', 'html'], function () {
     var b = browserify({
         entries: ['src/search.js', 'src/person.js'],
         debug: true
     });
-
+    b.plugin(factor, {outputs: ['public/js/search.js', 'public/js/person.js']})
     return b.bundle()
-        .pipe(source('bundle.js'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
-        .on('error', gutil.log)
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('public/js'))
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(uglify())
+    .on('error', gutil.log)
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('public/js/'))
 });
 
 gulp.task('serve', function() {
@@ -36,25 +38,30 @@ gulp.task('serve', function() {
 });
 
 gulp.task('html', function () {
-    gulp.src('src/*.html')
+    return gulp.src('src/*.html')
         .pipe(gulp.dest('public'))
 });
 
 gulp.task('images', function () {
-    gulp.src('src/*.png')
+    return gulp.src('src/*.png')
         .pipe(gulp.dest('public'))
 });
 
 gulp.task('clean', function () {
     return del([
-        'public/*'
+        'public/js/*.js', 'public/*.html'
     ]);
 });
 
-gulp.task('watch', function () {
-    gulp.watch(['src/*.html'], ['html']);
-    gulp.watch(['src/*.js'], ['javascript']);
+gulp.task('placeholders', function () {
+    gulp.src(['src/search.js', 'src/person.js'])
+    .pipe(gulp.dest('public/js'))
 });
 
-gulp.task('default', ['clean', 'serve', 'images', 'javascript', 'html', 'watch']);
-gulp.task('build', ['clean', 'images', 'javascript', 'html']);
+gulp.task('watch', ['clean','browserify'], function () {
+    gulp.watch(['src/*.html'], ['html'])
+    gulp.watch(['src/*.js'], ['browserify']);
+});
+
+gulp.task('default', ['build', 'serve', 'watch']);
+gulp.task('build', ['clean', 'images', 'html', 'browserify']);

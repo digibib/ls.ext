@@ -3,23 +3,25 @@
   "version": "0.0.1",
   "description": "Patron client for the redef part of ls.ext.",
   "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
-  "contributors": [{
-  "name": "akafred",
-  "email": "github@akafred.com"
-  }],
+  "contributors": [
+    {
+      "name": "akafred",
+      "email": "github@akafred.com"
+    }
+  ],
   "scripts": {
-    "start" : "node server.js",
+    "start": "node server.js",
     "prestart": "npm run build",
     "pretest": "npm run build",
-    "test" : "mocha test module-test",
+    "test": "mocha test module-test",
     "prestart-dev": "npm run build",
-    "start-dev" : "nodemon",
-    "prestart-dev-debug" : "npm run build",
-    "start-dev-debug" : "nodemon debug",
+    "start-dev": "nodemon",
+    "prestart-dev-debug": "npm run build",
+    "start-dev-debug": "nodemon debug",
     "pretest-debug": "npm run build",
-    "test-debug" : "mocha debug",
-    "premodule-test-debug" : "npm run build",
-    "module-test-debug" : "mocha debug module-test",
+    "test-debug": "mocha debug",
+    "premodule-test-debug": "npm run build",
+    "module-test-debug": "mocha debug module-test",
     "browserify": "browserify",
     "jscs": "jscs",
     "jshint": "jshint",
@@ -28,13 +30,13 @@
   },
   "main": "server.js",
   "repository": {
-  "type": "git",
-  "url": "https://github.com/digibib/ls.ext"
+    "type": "git",
+    "url": "https://github.com/digibib/ls.ext"
   },
   "bugs": {
     "url": "https://github.com/digibib/ls.ext/issues"
   },
-    "keywords": [
+  "keywords": [
     "library",
     "patron"
   ],
@@ -50,25 +52,27 @@
     "ractive-events-keys": "0.2.1"
   },
   "devDependencies": {
-    "chai" : "*",
-    "chai-http" : "*",
-    "http": "*",
-    "router": "*",
-    "mocha-jsdom": "*",
-    "finalhandler": "*",
-    "cheerio": "*",
-    "nodemon": "*",
-    "mocha": "*",
-    "sinon": "*",
-    "jscs": "*",
-    "jshint": "*",
     "browser-sync": "^2.9.10",
     "browserify": "^11.2.0",
+    "chai": "*",
+    "chai-http": "*",
+    "cheerio": "*",
     "del": "^2.0.2",
+    "factor-bundle": "^2.5.0",
+    "finalhandler": "*",
     "gulp": "^3.9.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.6",
+    "http": "*",
+    "jscs": "*",
+    "jshint": "*",
+    "literalify": "^0.4.0",
+    "mocha": "*",
+    "mocha-jsdom": "*",
+    "nodemon": "*",
+    "router": "*",
+    "sinon": "*",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
