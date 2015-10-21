@@ -46,6 +46,7 @@ public class EntityResourceTest {
 
     private static final String SOME_WORK_IDENTIFIER = "SOME_WORK_IDENTIFIER";
     private static final String SOME_OTHER_WORK_IDENTIFIER = "SOME_OTHER_WORK_IDENTIFIER";
+    private static final String SOME_PERSON_IDENTIFIER = "SOME_PERSON_IDENTIFIER";
     private EntityResource entityResource;
     private BaseURI baseURI;
 
@@ -98,6 +99,15 @@ public class EntityResourceTest {
     }
 
     @Test
+    public void create_should_return_201_when_person_created() throws URISyntaxException {
+        String work = createTestWork(SOME_PERSON_IDENTIFIER);
+        Response result = entityResource.createFromLDJSON("person", work);
+
+        assertNull(result.getEntity());
+        assertEquals(CREATED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
     public void create_should_return_location_header_when_work_created() throws URISyntaxException {
         String work = createTestWork(SOME_WORK_IDENTIFIER);
 
@@ -107,6 +117,19 @@ public class EntityResourceTest {
 
         assertNull(result.getEntity());
         assertTrue(Pattern.matches(workURI + "w\\d{12}", result.getHeaderString("Location")));
+    }
+
+
+    @Test
+    public void create_should_return_location_header_when_person_created() throws URISyntaxException {
+        String person = createTestWork(SOME_PERSON_IDENTIFIER);
+
+        Response result = entityResource.createFromLDJSON("person", person);
+
+        String personURI = baseURI.person();
+
+        assertNull(result.getEntity());
+        assertTrue(Pattern.matches(personURI + "h\\d{12}", result.getHeaderString("Location")));
     }
 
     @Test
