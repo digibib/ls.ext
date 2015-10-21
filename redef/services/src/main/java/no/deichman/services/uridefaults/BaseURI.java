@@ -48,4 +48,8 @@ public final class BaseURI {
     public String ui() {
         return baseUriRoot + "ui#";
     }
+
+    public String exemplar() {
+        return baseUriRoot + "exemplar/";
+    }
 }

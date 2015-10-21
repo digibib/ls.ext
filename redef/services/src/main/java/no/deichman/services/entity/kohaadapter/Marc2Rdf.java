@@ -1,22 +1,20 @@
 package no.deichman.services.entity.kohaadapter;
 
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Model;
-
-import no.deichman.services.uridefaults.BaseURI;
-
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.VariableField;
 
 import java.util.List;
 
 import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
-import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
 
 /**
  * Responsibility: Maps KOHA MARC holdings data from field 952 to an RDF model.
@@ -80,7 +78,7 @@ public final class Marc2Rdf {
                 expectedReturnDate = itemData.getSubfield(KOHA_ON_LOAN).getData();
             }
 
-            Resource subject = createResource(DEICHMAN_NS_EXEMPLAR + barcode);
+            Resource subject = createResource(baseURI.exemplar() + "e" + barcode);
             String ontologyNS = baseURI.ontology();
 
 

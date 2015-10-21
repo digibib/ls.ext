@@ -208,8 +208,7 @@ When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
 end
 
 When(/^jeg legger til navn på forfatter av det nye verket$/) do
-  @context[:creator] = generateRandomString
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#creator", @context[:creator])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#creator", @context[:person_identifier])
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
@@ -347,19 +346,19 @@ When(/^jeg vil legge til en person$/) do
 end
 
 When(/^leverer systemet en ny ID for den nye personen$/) do
-  @context[:identifier] = @site.RegPerson.get_id()
-  @context[:identifier].should_not be_empty
+  @context[:person_identifier] = @site.RegPerson.get_id()
+  @context[:person_identifier].should_not be_empty
 end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
   @context[:personName] = generateRandomString
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#name", @context[:personName])
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:personName])
 
   @context[:birthYear] = rand(2015).to_s
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:birthYear])
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:birthYear])
 
   @context[:deathYear] = rand(2015).to_s
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#death", @context[:deathYear])
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#death", @context[:deathYear])
 end
 
 When(/^grensesnittet viser at personen er lagret$/) do
@@ -372,4 +371,13 @@ end
 
 When(/^personens navn vises på siden$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getTitle.include? @context[:personName] }
+end
+
+
+When(/^at jeg har lagt til en person$/) do
+  steps %Q{
+    Gitt at jeg er i personregistergrensesnittet
+    Så leverer systemet en ny ID for den nye personen
+    Og jeg kan legge inn navn fødselsår og dødsår for personen
+  }
 end

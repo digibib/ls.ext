@@ -7,7 +7,11 @@ var chai = require("chai"),
     http = require('http'),
     cheerio = require('cheerio'),
     servicesStub = require("./services-stub"),
-    parameters = {hostname: '192.168.50.12', port: '7000', path: '/work/work_00001'},
+    parameters = {
+      hostname: process.env.PATRON_CLIENT_SERVER_HOST || '192.168.50.12',
+      port: process.env.PATRON_CLIENT_SERVER_PORT || '7000',
+      path: '/work/work_00001'
+    },
     $ = '';
 
 chai.use(chaiHttp);
@@ -22,6 +26,11 @@ describe('PatronClient', function () {
       servicesStub.getJson('/', {});
       servicesStub.getJson('/work/work_00001',
         {
+          "@context" : {
+            "deichman" : "http://deichman.no/ontology#",
+            "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+            "xsd" : "http://www.w3.org/2001/XMLSchema#"
+          },
           "@graph": [
             {
               "@id" : "http://deichman.no/work/work_1231",
@@ -29,10 +38,22 @@ describe('PatronClient', function () {
               "deichman:biblio" : "2",
               "deichman:year" : "1890",
               "deichman:name" : "Sult",
-              "deichman:creator" : "Knut Hamsun",
-              "@context" : {
-                "deichman" : "http://deichman.no/ontology#"
+              "deichman:creator" : {
+                "@id": "http://deichman.no/person/h998496193265"
               }
+            },
+            {
+              "@id" : "http://deichman.no/person/h998496193265",
+              "@type" : "deichman:Person",
+              "deichman:birth" : {
+                "@type" : "xsd:gYear",
+                "@value" : "1859"
+              },
+              "deichman:death" : {
+                "@type" : "xsd:gYear",
+                "@value" : "1952"
+              },
+              "deichman:name" : "Knut Hamsun"
             },
             {
               "@id" : "http://deichman.no/publication/publication_1234",
@@ -80,23 +101,18 @@ describe('PatronClient', function () {
 
       servicesStub.getJson('/work/work_00001/items',
         {
-          "@graph": [
-            {
-              "@id" : "_:b1",
-              "@type" : "deichman:Item",
-              "deichman:barcode" : "12345",
-              "deichman:location": "hutl",
-              "deichman:status" : "AVAIL",
-              "http://data.deichman.no/utility#shelfmark" : "820 Doh"
-            }, {
-              "@id" : "http://deichman.no/publication/publication_1234",
-              "deichman:hasEdition" : {
-                "@id" : "_:b1"
-              }
-            }
-          ],
           "@context": {
             "deichman": "http://deichman.no/ontology#"
+          },
+          "@id" : "http://deichman.no/exemplar/e_1234",
+          "@type" : "deichman:Item",
+          "deichman:barcode" : "12345",
+          "deichman:location": "hutl",
+          "deichman:status" : "AVAIL",
+          "deichman:onloan" : false,
+          "http://data.deichman.no/utility#shelfmark" : "820 Doh",
+          "deichman:editionOf": {
+            "@id": "http://deichman.no/publication/publication_1234"
           }
         }
       );

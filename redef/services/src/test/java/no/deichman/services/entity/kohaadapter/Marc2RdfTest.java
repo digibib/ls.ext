@@ -1,5 +1,19 @@
 package no.deichman.services.entity.kohaadapter;
 
+import no.deichman.services.uridefaults.BaseURI;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Statement;
+import org.junit.Test;
+import org.marc4j.MarcReader;
+import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.Record;
+import org.marc4j.marc.VariableField;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -9,22 +23,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.io.InputStream;
-
-import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.junit.Test;
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
-import org.marc4j.marc.VariableField;
-
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Statement;
-
-import no.deichman.services.uridefaults.BaseURI;
 
 public class Marc2RdfTest {
 
@@ -72,7 +70,7 @@ public class Marc2RdfTest {
 
         String barcode = "03010626460038";
 
-        String s = itemBase + barcode;
+        String s = itemBase + "e" + barcode;
 
         Statement formatStatement = createStatement(
                 createResource(s),
@@ -95,7 +93,7 @@ public class Marc2RdfTest {
         );
 
         String loanedBarcode = "03010626460056";
-        String sLoaned = itemBase + loanedBarcode;
+        String sLoaned = itemBase + "e" + loanedBarcode;
 
         Statement loanedExample = createStatement(
                 createResource(sLoaned),

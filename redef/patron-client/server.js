@@ -5,90 +5,12 @@ var express = require('express'),
     hbs = require('hbs'),
     http = require('http'),
     config = require('./lib/config'),
-    graph = require('./lib/graph'),
+    graph = require('ld-graph'),
     app = express(),
     Server;
 
 app.set('view engine', 'hbs');
 app.use(express.static('public', { extensions: ['html'] }));
-
-hbs.registerHelper('firstValue', function (resource, property, graph) {
-  var props = resource.property(graph.resolve(property));
-  if (props.length > 0) {
-    if (props[0].language !== "") {
-      return '"' + props[0].value + '"@' + props[0].language;
-    }
-    return props[0].value;
-  }
-  return "";
-});
-
-hbs.registerHelper('allValues', function (resource, property, graph) {
-  return resource.property(graph.resolve(property));
-});
-
-hbs.registerHelper('firstResourceWithLabel', function (resource, property, graph) {
-  var props = resource.property(graph.resolve(property));
-  if (props.length > 0) {
-    var uri = resource.property(graph.resolve(property))[0].value;
-    var res = graph.works[0].resources.filter(function (g) {
-      return g["@id"] === uri;
-    });
-    var label = res[0]["rdfs:label"];
-
-    // unify string/object into an array
-    if (!Array.isArray(label)) {
-      label = [label];
-    }
-    return label.filter(function (l) {
-      return l["@language"] === "no"; // returns only norwegian label value for now
-    })[0]["@value"];
-
-  } else {
-    return "";
-  }
-});
-
-hbs.registerHelper('allResourcesWithLabelsConcat', function (resource, property, graph) {
-  var res = [];
-  resource.property(graph.resolve(property)).forEach(function (p) {
-    var uri = p.value;
-    var label = graph.works[0].resources.filter(function (g) {
-      return g["@id"] === uri;
-    })[0]["rdfs:label"];
-
-    // unify string/object into an array
-    if (!Array.isArray(label)) {
-      label = [label];
-    }
-
-    var norwegianLabel = label.filter(function (l) {
-      return l["@language"] === "no"; // returns only norwegian label value for now
-    })[0]["@value"];
-
-    res.push(norwegianLabel);
-  });
-  return res.join(", ");
-});
-
-hbs.registerHelper('allValuesConcat', function (resource, property, graph) {
-  var res = [];
-  resource.property(graph.resolve(property)).forEach(function (p) {
-    if (p.language !== "") {
-      res.push('"' + p.value + '"@' + p.language);
-    } else {
-      res.push(p.value);
-    }
-  });
-  return res.join(", ");
-});
-
-hbs.registerHelper('availableItems', function (items, graph) {
-  return items.filter(function (item) {
-    return item.property(graph.resolve("deichman:status"))[0].value === "AVAIL";
-  }).length;
-
-});
 
 function getData(body) {
   var data = {};
@@ -121,10 +43,38 @@ app.get('/work/:id', function (request, response) {
       workjson += chunk;
     })
     .on('end', function () {
-      var data = getData(workjson);
       console.log("Received reply from services for '" + parameters.path + "' with status code: " + res.statusCode);
-      if (data.ok) {
-        // fetch items
+      var workData = getData(workjson);
+      var parsedWorkData = graph.parse(workData.data);
+      if (workData.ok) {
+        var publications = [];
+        parsedWorkData.byType("deichman:Publication").forEach(function (publication){
+            publications.push({
+              id: publication.id,
+              name: publication.getAll("name")[0].value,
+              language: publication.outAll("language").map(function(lang){return lang.get("label").value;}).join(", "),
+              format: publication.out("format").get("label").value,
+              items: []
+            });
+        });
+        var responseData = {
+          work: {
+            name: parsedWorkData.byType("deichman:Work")[0].getAll("name").map(function(name){return name.value;}).join(", "),
+            year: parsedWorkData.byType("deichman:Work")[0].getAll("year").map(function(year){return year.value;}).join(", "),
+            creator: parsedWorkData.byType("deichman:Work")[0].outAll("creator").map(function(creator){return creator.get("name").value;}).join(", "),
+            publications: publications,
+            hasItems: function() {
+              var retVal = false;
+              publications.find(function (publication) {
+                if(publication.items.length > 0) {
+                  retVal = true;
+                }
+              });
+              return retVal;
+            }
+          }
+        };
+
         parameters.path += '/items';
         http.get(parameters, function (res) {
           var itemsjson = '';
@@ -132,17 +82,27 @@ app.get('/work/:id', function (request, response) {
             itemsjson += chunk;
           })
           .on('end', function () {
-            var data = getData(itemsjson);
+            var itemData = getData(itemsjson);
             console.log("Received reply from services for '" + parameters.path + "' with status code: " + res.statusCode);
-            if (data.ok) {
-              data.data.graph = graph.parse(workjson, itemsjson);
-              data.data.work = data.data.graph.works[0];
-              response.render('index', data.data);
-            } else {  // no items response 404
-              data.data.graph = graph.parse(workjson);
-              data.data.work = data.data.graph.works[0];
-              response.render('index', data.data);
+            if (itemData.ok) {
+              responseData.items = [];
+              var parsedItemData = graph.parse(itemData.data);
+              parsedItemData.byType("deichman:Item").forEach(function(item){
+                responseData.work.publications.forEach(function(pub){
+                  var item = parsedItemData.byType("deichman:Item")[0];
+                  if (pub.id === item.out("editionOf").id) {
+                    pub.items.push({
+                      barcode: item.get("barcode").value,
+                      status: item.get("status").value,
+                      location: item.get("location").value,
+                      onloan: item.get("onloan").value,
+                      shelfmark: item.get("shelfmark").value
+                    });
+                  }
+                });
+              });
             }
+            response.render('index', responseData);
           })
           .on('error', function (e) {
             console.log("Got error: ", e);

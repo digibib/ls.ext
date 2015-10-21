@@ -101,7 +101,7 @@ module Paths
       :work => "/work"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://#{host}:#{port(:patron_client)}#{paths[path.to_sym]}"
+    "http://#{host(:patron_client)}:#{port(:patron_client)}#{paths[path.to_sym]}"
   end
 
   def patron_client_search_page()

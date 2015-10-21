@@ -8,8 +8,8 @@ import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -172,8 +172,8 @@ public class EntityServiceImplTest {
         EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
         Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
-        Property p = createProperty(ontologyURI + "hasEdition");
-        NodeIterator ni = m.listObjectsOfProperty(p);
+        Property p = createProperty("http://deichman.no/ontology#editionOf");
+        ResIterator ni = m.listSubjectsWithProperty(p);
 
         int i = 0;
         while (ni.hasNext()) {
