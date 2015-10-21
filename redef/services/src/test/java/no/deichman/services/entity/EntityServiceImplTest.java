@@ -51,6 +51,7 @@ public class EntityServiceImplTest {
     private String ontologyURI;
     private String workURI;
     private String publicationURI;
+    private String personURI;
 
 
     @Mock
@@ -64,6 +65,7 @@ public class EntityServiceImplTest {
         ontologyURI = baseURI.ontology();
         workURI = baseURI.work();
         publicationURI = baseURI.publication();
+        personURI = baseURI.person();
     }
 
     @Test
@@ -200,6 +202,37 @@ public class EntityServiceImplTest {
     }
 
     @Test
+    public void test_create_publication(){
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        String testId = "SERVICE_PUBLICATION_SHOULD_EXIST";
+        String publication = getTestJSON(testId, "publication");
+        Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
+
+        String publicationId = service.create(EntityType.PUBLICATION, inputModel);
+
+        Statement s = createStatement(
+                createResource(publicationId),
+                createProperty(DCTerms.identifier.getURI()),
+                createPlainLiteral(testId));
+        assertTrue(repository.askIfStatementExists(s));
+    }
+
+    @Test
+    public void test_create_person(){
+        String testId = "SERVICE_PERSON_SHOULD_EXIST";
+        String person = getTestJSON(testId, "person");
+        Model inputModel = RDFModelUtil.modelFrom(person, Lang.JSONLD);
+
+        final String uri = service.create(EntityType.PERSON, inputModel);
+
+        Statement s = createStatement(
+                createResource(uri),
+                createProperty(DCTerms.identifier.getURI()),
+                createPlainLiteral(testId));
+        assertTrue(repository.askIfStatementExists(s));
+    }
+
+    @Test
     public void test_create_and_delete_entity() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
@@ -277,12 +310,17 @@ public class EntityServiceImplTest {
         String resourceClass = null;
         String resourceURI = null;
 
-        if (type.toLowerCase().equals("work")) {
-            resourceClass = "Work";
-            resourceURI = workURI;
-        } else if (type.toLowerCase().equals("publication")) {
-            resourceClass = "Publication";
-            resourceURI = publicationURI;
+        switch (type.toLowerCase()) {
+            case "work" : resourceClass = "Work";
+                resourceURI = workURI;
+                break;
+            case "publication" : resourceClass = "Publication";
+                resourceURI = publicationURI;
+                break;
+            case "person" : resourceClass = "Person";
+                resourceURI = personURI;
+                break;
+            default: break;
         }
 
         return "{\"@context\": "
