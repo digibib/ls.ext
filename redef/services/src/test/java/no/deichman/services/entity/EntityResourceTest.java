@@ -5,6 +5,7 @@ import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.ontology.OntologyService;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
+import org.apache.commons.lang.WordUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -47,6 +48,11 @@ public class EntityResourceTest {
     private static final String SOME_WORK_IDENTIFIER = "SOME_WORK_IDENTIFIER";
     private static final String SOME_OTHER_WORK_IDENTIFIER = "SOME_OTHER_WORK_IDENTIFIER";
     private static final String SOME_PERSON_IDENTIFIER = "SOME_PERSON_IDENTIFIER";
+    private static final String WORK = "work";
+    private static final String PERSON = "person";
+    private static final String PUBLICATION = "publication";
+    private static final String A_BIBLIO_ID = "1234";
+    private static final String LOCATION = "Location";
     private EntityResource entityResource;
     private BaseURI baseURI;
 
@@ -76,7 +82,7 @@ public class EntityResourceTest {
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null), mockSearchService);
         String workId = "work_00001";
 
-        Response result = entityResource.get("work", workId);
+        Response result = entityResource.get(WORK, workId);
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -86,13 +92,13 @@ public class EntityResourceTest {
     @Test(expected = NotFoundException.class)
     public void get_should_throw_exception_when_work_is_not_found() {
         String workId = "work_DOES_NOT_EXIST";
-        entityResource.get("work", workId);
+        entityResource.get(WORK, workId);
     }
 
     @Test
     public void create_should_return_201_when_work_created() throws URISyntaxException {
-        String work = createTestWork(SOME_WORK_IDENTIFIER);
-        Response result = entityResource.createFromLDJSON("work", work);
+        String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
+        Response result = entityResource.createFromLDJSON(WORK, work);
 
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
@@ -100,8 +106,19 @@ public class EntityResourceTest {
 
     @Test
     public void create_should_return_201_when_person_created() throws URISyntaxException {
-        String work = createTestWork(SOME_PERSON_IDENTIFIER);
-        Response result = entityResource.createFromLDJSON("person", work);
+        String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
+        Response result = entityResource.createFromLDJSON(PERSON, person);
+
+        assertNull(result.getEntity());
+        assertEquals(CREATED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void create_duplicate_person_returns_409() throws URISyntaxException {
+        String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
+        Response result = entityResource.createFromLDJSON(PERSON, person);
+
+
 
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
@@ -109,33 +126,33 @@ public class EntityResourceTest {
 
     @Test
     public void create_should_return_location_header_when_work_created() throws URISyntaxException {
-        String work = createTestWork(SOME_WORK_IDENTIFIER);
+        String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
 
-        Response result = entityResource.createFromLDJSON("work", work);
+        Response result = entityResource.createFromLDJSON(WORK, work);
 
         String workURI = baseURI.work();
 
         assertNull(result.getEntity());
-        assertTrue(Pattern.matches(workURI + "w\\d{12}", result.getHeaderString("Location")));
+        assertTrue(Pattern.matches(workURI + "w\\d{12}", result.getHeaderString(LOCATION)));
     }
 
 
     @Test
     public void create_should_return_location_header_when_person_created() throws URISyntaxException {
-        String person = createTestWork(SOME_PERSON_IDENTIFIER);
+        String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
 
-        Response result = entityResource.createFromLDJSON("person", person);
+        Response result = entityResource.createFromLDJSON(PERSON, person);
 
         String personURI = baseURI.person();
 
         assertNull(result.getEntity());
-        assertTrue(Pattern.matches(personURI + "h\\d{12}", result.getHeaderString("Location")));
+        assertTrue(Pattern.matches(personURI + "h\\d{12}", result.getHeaderString(LOCATION)));
     }
 
     @Test
     public void update_should_return_200_when_work_updated() {
-        String work = createTestWork(SOME_WORK_IDENTIFIER);
-        Response result = entityResource.update("work", work);
+        String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
+        Response result = entityResource.update(WORK, work);
 
         assertNull(result.getEntity());
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -143,13 +160,13 @@ public class EntityResourceTest {
 
     @Test
     public void create_should_return_the_new_work() throws URISyntaxException{
-        String work = createTestWork(SOME_WORK_IDENTIFIER);
+        String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
 
-        Response createResponse = entityResource.createFromLDJSON("work", work);
+        Response createResponse = entityResource.createFromLDJSON(WORK, work);
 
-        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
+        String workId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/work/", "");
 
-        Response result = entityResource.get("work", workId);
+        Response result = entityResource.get(WORK, workId);
 
         assertNotNull(result);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
@@ -159,31 +176,17 @@ public class EntityResourceTest {
 
     @Test
     public void create_should_index_the_new_work() throws URISyntaxException{
-        String work = createTestWork(SOME_WORK_IDENTIFIER);
+        String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
 
-        Response createResponse = entityResource.createFromLDJSON("work", work);
+        Response createResponse = entityResource.createFromLDJSON(WORK, work);
 
-        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
+        String workId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/work/", "");
 
 
-        Response result = entityResource.index("work", workId);
+        Response result = entityResource.index(WORK, workId);
 
         assertNotNull(result);
         assertEquals(ACCEPTED.getStatusCode(), result.getStatus());
-    }
-
-    private String createTestWork(String identifier) {
-        return "{\n"
-                    + "    \"@context\": {\n"
-                    + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                    + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                    + "    },\n"
-                    + "    \"@graph\": {\n"
-                    + "        \"@id\": \"http://deichman.no/work/" + identifier + "\",\n"
-                    + "        \"@type\": \"deichman:Work\",\n"
-                    + "        \"dcterms:identifier\": \"" + identifier + "\"\n"
-                    + "    }\n"
-                    + "}";
     }
 
     @Test
@@ -194,7 +197,7 @@ public class EntityResourceTest {
 
         String workId = "work_TEST_KOHA_ITEMS_LINK";
 
-        Response result = entityResource.getWorkItems(workId, "work");
+        Response result = entityResource.getWorkItems(workId, WORK);
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -203,18 +206,18 @@ public class EntityResourceTest {
 
     @Test(expected=NotFoundException.class)
     public void get_work_items_should_404_on_empty_items_list(){
-        Response result = entityResource.getWorkItems("DOES_NOT_EXIST", "work");
+        Response result = entityResource.getWorkItems("DOES_NOT_EXIST", WORK);
         assertEquals(result.getStatus(), NOT_FOUND.getStatusCode());
     }
 
     @Test
     public void patch_with_invalid_data_should_return_status_400() throws Exception {
-        String work = createTestWork(SOME_WORK_IDENTIFIER);
-        Response result = entityResource.createFromLDJSON("work", work);
-        String workId = result.getLocation().getPath().substring("/work/".length());
+        String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
+        Response result = entityResource.createFromLDJSON(WORK, work);
+        String workId = result.getLocation().getPath().substring(("/" + WORK + "/").length());
         String patchData = "{}";
         try {
-            entityResource.patch("work", workId,patchData);
+            entityResource.patch(WORK, workId,patchData);
             fail("HTTP 400 Bad Request");
         } catch (BadRequestException bre) {
             assertEquals("HTTP 400 Bad Request", bre.getMessage());
@@ -223,39 +226,27 @@ public class EntityResourceTest {
 
     @Test(expected = NotFoundException.class)
     public void patch_on_a_non_existing_resource_should_return_404() throws Exception {
-        entityResource.patch("work", "a_missing_work1234", "{}");
+        entityResource.patch(WORK, "a_missing_work1234", "{}");
     }
 
     @Test(expected=NotFoundException.class)
     public void delete__non_existing_work_should_raise_not_found_exception(){
-        entityResource.delete("work", "work_DOES_NOT_EXIST_AND_FAILS");
+        entityResource.delete(WORK, "work_DOES_NOT_EXIST_AND_FAILS");
     }
 
     @Test
     public void delete_existing_work_should_return_no_content() throws URISyntaxException{
-        String work = createTestWork(SOME_WORK_IDENTIFIER);
-        Response createResponse = entityResource.createFromLDJSON("work", work);
-        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
-        Response response = entityResource.delete("work", workId);
+        String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
+        Response createResponse = entityResource.createFromLDJSON(WORK, work);
+        String workId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/" + WORK + "/", "");
+        Response response = entityResource.delete(WORK, workId);
         assertEquals(response.getStatus(), NO_CONTENT.getStatusCode());
-    }
-
-    private static final String A_BIBLIO_ID = "1234";
-
-    private String createTestPublicationJSON(String id) {
-        return "{\"@context\": "
-                + "{\"dcterms\": \"http://purl.org/dc/terms/\","
-                + "\"deichman\": \"http://deichman.no/ontology#\"},"
-                + "\"@graph\": "
-                + "{\"@id\": \"http://deichman.no/publication/" + id + "\","
-                + "\"@type\": \"deichman:Publication\","
-                + "\"dcterms:identifier\":\"" + id + "\"}}";
     }
 
     @Test
     public void create_should_return_201_when_publication_created() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        Response result = entityResource.createFromLDJSON("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
+        Response result = entityResource.createFromLDJSON(PUBLICATION, createTestRDF("publication_SHOULD_EXIST", PUBLICATION));
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
     }
@@ -263,11 +254,11 @@ public class EntityResourceTest {
     @Test
     public void location_returned_from_create_should_return_the_new_publication() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        Response createResponse = entityResource.createFromLDJSON("publication", createTestPublicationJSON("publication_SHOULD_EXIST"));
+        Response createResponse = entityResource.createFromLDJSON(PUBLICATION, createTestRDF("publication_SHOULD_EXIST", PUBLICATION));
 
-        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
+        String publicationId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/publication/", "");
 
-        Response result = entityResource.get("publication", publicationId);
+        Response result = entityResource.get(PUBLICATION, publicationId);
 
         assertNotNull(result);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
@@ -279,17 +270,17 @@ public class EntityResourceTest {
     @Test
     public void delete_publication_should_return_no_content() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        Response createResponse = entityResource.createFromLDJSON("publication", createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE"));
-        String publicationId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/publication/", "");
-        Response response = entityResource.delete("publication", publicationId);
+        Response createResponse = entityResource.createFromLDJSON(PUBLICATION, createTestRDF("publication_SHOULD_BE_PATCHABLE", PUBLICATION));
+        String publicationId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/publication/", "");
+        Response response = entityResource.delete(PUBLICATION, publicationId);
         assertEquals(NO_CONTENT.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void patch_should_actually_persist_changes() throws Exception {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
-        String publication = createTestPublicationJSON("publication_SHOULD_BE_PATCHABLE");
-        Response result = entityResource.createFromLDJSON("publication", publication);
+        String publication = createTestRDF("publication_SHOULD_BE_PATCHABLE", PUBLICATION);
+        Response result = entityResource.createFromLDJSON(PUBLICATION, publication);
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{"
                 + "\"op\": \"add\","
@@ -299,7 +290,7 @@ public class EntityResourceTest {
                 + "\"value\": \"red\""
                 + "}"
                 + "}";
-        Response patchResponse = entityResource.patch("publication", publicationId, patchData);
+        Response patchResponse = entityResource.patch(PUBLICATION, publicationId, patchData);
         Model testModel = ModelFactory.createDefaultModel();
         String response = patchResponse.getEntity().toString();
         InputStream in = new ByteArrayInputStream(response.getBytes(StandardCharsets.UTF_8));
@@ -324,9 +315,9 @@ public class EntityResourceTest {
                 + "        \"deichman:language\": \"http://lexvo.org/id/iso639-3/eng\"\n"
                 + "    }\n"
                 + "}";
-        Response createResponse = entityResource.createFromLDJSON("work", work);
-        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
-        Response result = entityResource.get("work", workId);
+        Response createResponse = entityResource.createFromLDJSON(WORK, work);
+        String workId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/work/", "");
+        Response result = entityResource.get(WORK, workId);
 
         String labelsComparison = "{\n"
                 + "    \"@id\" : \"http://lexvo.org/id/iso639-3/eng\",\n"
@@ -354,9 +345,9 @@ public class EntityResourceTest {
                 + "        \"deichman:format\": \"http://data.deichman.no/format#Book\"\n"
                 + "    }\n"
                 + "}";
-        Response createResponse = entityResource.createFromLDJSON("work", work);
-        String workId = createResponse.getHeaderString("Location").replaceAll("http://deichman.no/work/", "");
-        Response result = entityResource.get("work", workId);
+        Response createResponse = entityResource.createFromLDJSON(WORK, work);
+        String workId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/work/", "");
+        Response result = entityResource.get(WORK, workId);
 
         String labelsComparison = "{\n"
                 + "    \"@id\" : \"http://data.deichman.no/format#Book\",\n"
@@ -368,5 +359,20 @@ public class EntityResourceTest {
                 + "  }";
         assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(result.getEntity().toString().contains(labelsComparison));
+    }
+
+    private String createTestRDF(String identifier, String type) {
+        String ontologyClass = WordUtils.capitalize(type);
+        return "{\n"
+                + "    \"@context\": {\n"
+                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/" + type + "/" + identifier + "\",\n"
+                + "        \"@type\": \"deichman:" + ontologyClass + "\",\n"
+                + "        \"dcterms:identifier\": \"" + identifier + "\"\n"
+                + "    }\n"
+                + "}";
     }
 }
