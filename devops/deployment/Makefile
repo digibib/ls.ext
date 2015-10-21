@@ -68,10 +68,10 @@ dev_copy_example_data_minimum: dev_clean_data	## Clean data, download configurat
 	vagrant ssh $(SHIP) -c 'sudo mkdir -p /var/migration_workdir/'
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.copy_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
-dev_load_example_data:
+dev_load_example_data: ## Kohatest - Migrate and load data through Koha bulkimport
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
-dev_load_example_data_through_services:
+dev_load_example_data_through_services: ## Redef - Loads migration data through Services endpoint
 	vagrant ssh vm-devops -c 'sudo salt "$(SHIP)" --log-level info state.sls migration.redef_load_example_data pillar="{migration-data-folder: /var/migration_workdir}"'
 
 dev_create_works:	## Aggregates works from publications
