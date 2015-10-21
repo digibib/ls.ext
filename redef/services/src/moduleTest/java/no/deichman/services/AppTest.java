@@ -16,13 +16,13 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDFS;
 import org.elasticsearch.client.Client;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,14 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -188,15 +193,35 @@ public class AppTest {
                 workWith1Plus2ItemsCount.execSelect().next().getLiteral("noOfItems").getInt(),
                 equalTo(2 + 1));
         assertThat("model does not contain shelfmarks",
-                work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#shelfmark")).toList().size(),
+                work1Plus2ItemsModel.listSubjectsWithProperty(createProperty("http://data.deichman.no/utility#shelfmark")).toList().size(),
                 equalTo(2 + 1));
         assertThat("model does not contain onloan booleans",
-                work1Plus2ItemsModel.listSubjectsWithProperty(ResourceFactory.createProperty("http://data.deichman.no/utility#onloan")).toList().size(),
+                work1Plus2ItemsModel.listSubjectsWithProperty(createProperty("http://data.deichman.no/utility#onloan")).toList().size(),
                 equalTo(2 + 1));
         Unirest.get(workUri).asJson();
         HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
         assertNotNull(stringHttpResponse);
         doSearchForWorks("Name");
+    }
+
+    @Ignore
+    @Test
+    public void person_resource_can_be_created_if_not_a_duplicate() throws UnirestException {
+        String input = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI_ontology#Person> .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#bibliofilPersonId> \"1234\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^http://www.w3.org/2001/XMLSchema#gYear .\n";
+
+        String duplicateInput = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI_ontology#Person> .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#bibliofilPersonId> \"1234\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^http://www.w3.org/2001/XMLSchema#gYear .\n";
+
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "person", input).asString();
+        HttpResponse<String> result2 = buildCreateRequest(baseUri + "person", duplicateInput).asString();
+
+        assertResponse(Status.CONFLICT, result2);
+        assertEquals("Did not have location of existing resource", getLocation(result1), getLocation(result2));
     }
 
     @Test
@@ -242,10 +267,10 @@ public class AppTest {
         assertResponse(Status.OK, languageResponse);
 
         Model model = RDFModelUtil.modelFrom(languageResponse.getBody().toString(), Lang.JSONLD);
-        boolean hasEnglish = model.contains(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng"),
+        boolean hasEnglish = model.contains(createStatement(
+                createResource("http://lexvo.org/id/iso639-3/eng"),
                 RDFS.label,
-                ResourceFactory.createLangLiteral("Engelsk", "no")
+                createLangLiteral("Engelsk", "no")
         ));
         assertTrue("model doesn't have English", hasEnglish);
     }
@@ -259,10 +284,10 @@ public class AppTest {
         assertResponse(Status.OK, formatResponse);
 
         Model model = RDFModelUtil.modelFrom(formatResponse.getBody().toString(), Lang.JSONLD);
-        boolean hasBook = model.contains(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://data.deichman.no/format#Book"),
+        boolean hasBook = model.contains(createStatement(
+                createResource("http://data.deichman.no/format#Book"),
                 RDFS.label,
-                ResourceFactory.createLangLiteral("Bok", "no")
+                createLangLiteral("Bok", "no")
         ));
         assertTrue("model doesn't have Book", hasBook);
     }
@@ -276,10 +301,10 @@ public class AppTest {
         assertResponse(Status.OK, response);
 
         Model ontology = RDFModelUtil.modelFrom(response.getBody().toString(), Lang.JSONLD);
-        Statement workStatement = ResourceFactory.createStatement(
-                ResourceFactory.createResource(baseUri + "ontology#Work"),
+        Statement workStatement = createStatement(
+                createResource(baseUri + "ontology#Work"),
                 RDFS.label,
-                ResourceFactory.createLangLiteral("Verk", "no")
+                createLangLiteral("Verk", "no")
         );
         assertTrue("ontology doesn't have Work", ontology.contains(workStatement));
     }
