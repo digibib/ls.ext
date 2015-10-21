@@ -61,6 +61,7 @@ base:
     - redef.services.builtrun
     - redef.catalinker.builtrun
     - redef.patron-client.builtrun
+    - redef.elasticsearch.mappings
 
   'dev-ship':
     - match: list
