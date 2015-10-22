@@ -5,6 +5,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Responsibility: TODO.
@@ -28,4 +29,6 @@ public interface RDFRepository {
 
     void patch(List<Patch> patches);
 
+
+    Optional<String> getResourceURIByBibliofilId(String personId);
 }

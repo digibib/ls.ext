@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -25,6 +26,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.vocabulary.RDF.type;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -161,6 +163,15 @@ public class InMemoryRepositoryTest {
         repository = repositoryWithDataFrom("testdata.ttl");
         String test = "http://deichman.no/work/work_00001";
         assertTrue(repository.askIfResourceExists(test));
+    }
+
+    @Test
+    public void test_get_resource_URI_by_Bibliofil_id() {
+        String personId = "n12345";
+        String importedPerson = "<#> <http://data.deichman.no/duo#bibliofilPersonId> \"" + personId + "\" .";
+        String person = repository.createPerson(RDFModelUtil.modelFrom(importedPerson, Lang.NTRIPLES));
+        Optional existingPerson = repository.getResourceURIByBibliofilId(personId);
+        assertEquals("Expected person ID to result in URI match", person, existingPerson.get());
     }
 
     public static InMemoryRepository repositoryWithDataFrom(String fileName) {

@@ -174,4 +174,10 @@ public final class SPARQLQueryBuilder {
         return q.toString();
     }
 
+    public Query getBibliofilPersonResource(String personId) {
+        String q = "SELECT ?uri "
+                + "WHERE "
+                + "  { ?uri <http://data.deichman.no/duo#bibliofilPersonId> \"" + personId + "\" }";
+        return QueryFactory.create(q);
+    }
 }

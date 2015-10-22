@@ -7,6 +7,9 @@ import no.deichman.services.restutils.PATCH;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 
 import javax.inject.Singleton;
@@ -25,6 +28,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
@@ -64,8 +69,57 @@ public final class EntityResource extends ResourceBase {
     }
 
     private Response create(@PathParam("type") String type, String body, Lang lang) throws URISyntaxException {
-        String id = getEntityService().create(EntityType.get(type), RDFModelUtil.modelFrom(body, lang));
-        return Response.created(new URI(id)).build();
+        Response.Status status;
+        String bibliofilId = null;
+        Optional<String> message = Optional.ofNullable(null);
+        Optional<String> uri = Optional.ofNullable(null);
+
+        switch (type) {
+            case "person" :
+                Model model = RDFModelUtil.modelFrom(body, lang);
+                NodeIterator nodes = model.listObjectsOfProperty(ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofilPersonId"));
+                List<RDFNode> nodeList = nodes.toList();
+                if (nodeList.size() > 1) {
+                    message = Optional.of("Request with greater than one bibliofil personal authority ID per resource");
+                    status = Response.Status.BAD_REQUEST;
+                    break;
+                }
+                if (nodeList.size() > 0) {
+                    bibliofilId = nodeList.get(0).asLiteral().toString();
+                    if (checkBibliofilPersonResourceExistence(bibliofilId).isPresent()) {
+                        uri = checkBibliofilPersonResourceExistence(bibliofilId);
+                    }
+                }
+
+                if (uri.isPresent()) {
+                    status = Response.Status.CONFLICT;
+                    message = Optional.of("Resource with ID <" + uri.get() + "> was found to have Bibliofil ID " + bibliofilId);
+                } else {
+                    uri = Optional.of(getEntityService().create(EntityType.get(type), model));
+                    status = Response.Status.CREATED;
+                }
+                break;
+            default:
+                uri = Optional.of(getEntityService().create(EntityType.get(type), RDFModelUtil.modelFrom(body, lang)));
+                status = Response.Status.CREATED;
+                break;
+        }
+
+        Response.ResponseBuilder rb = Response.status(status);
+        rb.location(new URI(uri.get()));
+        if (message.isPresent()) {
+            rb.entity(message.get());
+        }
+
+        return rb.build();
+    }
+
+    private void setResponse(Response.Status conflict, String s) {
+
+    }
+
+    private Optional<String> checkBibliofilPersonResourceExistence(String personId) {
+        return getEntityService().retrieveBibliofilPerson(personId);
     }
 
     @GET

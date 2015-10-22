@@ -22,7 +22,6 @@ import org.apache.jena.vocabulary.RDFS;
 import org.elasticsearch.client.Client;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,6 @@ import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -204,24 +202,34 @@ public class AppTest {
         doSearchForWorks("Name");
     }
 
-    @Ignore
     @Test
     public void person_resource_can_be_created_if_not_a_duplicate() throws UnirestException {
-        String input = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI_ontology#Person> .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#bibliofilPersonId> \"1234\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^http://www.w3.org/2001/XMLSchema#gYear .\n";
+        String input = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Person> .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPerson/p1234> <http://data.deichman.no/duo#bibliofilPersonId> \"1234\" .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
 
-        String duplicateInput = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI_ontology#Person> .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#bibliofilPersonId> \"1234\"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^http://www.w3.org/2001/XMLSchema#gYear .\n";
+                input = input.replace("__BASEURI__", baseUri);
 
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "person", input).asString();
-        HttpResponse<String> result2 = buildCreateRequest(baseUri + "person", duplicateInput).asString();
+        String duplicateInput = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Person> .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPerson/p1234> <http://data.deichman.no/duo#bibliofilPersonId> \"1234\" .\n"
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
+        duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
+
+        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
+
+        Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
+        String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
+
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "person", body).asString();
+        HttpResponse<String> result2 = buildCreateRequest(baseUri + "person", body2).asString();
 
         assertResponse(Status.CONFLICT, result2);
-        assertEquals("Did not have location of existing resource", getLocation(result1), getLocation(result2));
+        String location1 = getLocation(result1);
+        String location2 = getLocation(result2);
+        assertTrue(location1.equals(location2));
     }
 
     @Test
@@ -376,7 +384,8 @@ public class AppTest {
     }
 
     private static String getLocation(HttpResponse<?> response) {
-        return response.getHeaders().getFirst("Location");
+        String str = response.getHeaders().getFirst("Location");
+        return str;
     }
 
     private static RequestBodyEntity buildPatchRequest(String uri, JsonArray patch) {

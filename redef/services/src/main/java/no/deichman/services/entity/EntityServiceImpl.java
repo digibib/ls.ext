@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -244,5 +245,11 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public boolean resourceExists(String resourceUri) {
         return repository.askIfResourceExists(resourceUri);
+    }
+
+    @Override
+    public Optional<String> retrieveBibliofilPerson(String personId) {
+        return repository.getResourceURIByBibliofilId(personId);
+
     }
 }

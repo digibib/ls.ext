@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 import static javax.ws.rs.core.Response.Status.ACCEPTED;
+import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
@@ -115,13 +116,14 @@ public class EntityResourceTest {
 
     @Test
     public void create_duplicate_person_returns_409() throws URISyntaxException {
-        String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
+        String personId = "n019283";
+        String person = createPersonImportRDF(SOME_PERSON_IDENTIFIER, PERSON, personId);
         Response result = entityResource.createFromLDJSON(PERSON, person);
-
-
-
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
+        Response duplicate = entityResource.createFromLDJSON(PERSON, person);
+        assertNotNull(duplicate.getEntity());
+        assertEquals(CONFLICT.getStatusCode(), duplicate.getStatus());
     }
 
     @Test
@@ -375,4 +377,20 @@ public class EntityResourceTest {
                 + "    }\n"
                 + "}";
     }
+
+    private String createPersonImportRDF(String identifier, String type, String personId) {
+        String ontologyClass = WordUtils.capitalize(type);
+        return "{\n"
+                + "    \"@context\": {\n"
+                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/" + type + "/" + identifier + "\",\n"
+                + "        \"@type\": \"deichman:" + ontologyClass + "\",\n"
+                + "        \"http://data.deichman.no/duo#bibliofilPersonId\": \"" + personId + "\"\n"
+                + "    }\n"
+                + "}";
+    }
+
 }

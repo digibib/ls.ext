@@ -5,6 +5,7 @@ import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Responsibility: TODO.
@@ -166,5 +168,17 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final void patch(List<Patch> patches) {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
         executeUpdate(updateRequest);
+    }
+
+    @Override
+    public final Optional<String> getResourceURIByBibliofilId(String personId) {
+        try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPersonResource(personId))) {
+            ResultSet resultSet = qexec.execSelect();
+            boolean uri = resultSet.hasNext();
+            if (uri) {
+                return Optional.of(resultSet.next().getResource("uri").toString());
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -201,4 +201,15 @@ public class SPARQLQueryBuilderTest {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         sqb.patch(patches);
     }
+
+    @Test
+    public void test_get_Bibliofil_person_resource() {
+        String personId = "n12345";
+        String expected = "SELECT  ?uri\n"
+                + "WHERE\n"
+                + "  { ?uri  <http://data.deichman.no/duo#bibliofilPersonId>  \"" + personId + "\" }\n";
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+
+        assertEquals("Bibliofil person resource query did not match", expected, sqb.getBibliofilPersonResource(personId).toString());
+    }
 }
