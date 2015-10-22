@@ -44,7 +44,7 @@
       th { padding: 0.5em;}
       td { padding: 0.5em; }
     </style>
-    <title>{{work.name}} av {{work.creator}} ({{work.year}})</title>
+    <title>{{work.name}} av {{work.creators.0.name}} ({{work.year}})</title>
   </head>
   <body>
     <div class="header">
@@ -67,7 +67,7 @@
         </div>
         <div id="work" class="column half relative">
           <h2 data-automation-id="work_title">{{work.name}}</h2>
-          <p data-automation-id="work_author">{{work.creator}}</p>
+          <p data-automation-id="work_author">{{work.creators.0.name}}</p>
           <div class="small-text">
             <p><b>Utgitt første gang: </b><span data-automation-id="work_date">{{work.year}}</span></p>
             <p>Beskrivelse av verket kommer her ...</p>
@@ -81,7 +81,7 @@
         <div class="column fourth">
           <dl class="item-details small-text">
             <dt>Originaltittel</dt><dd>{{work.name}}</dd>
-            <dt>Forfatter</dt><dd><u>{{work.creator}}</u></dd>
+            <dt>Forfatter</dt><dd>{{#each work.creators as |creator|}}<a href="{{creator.url}}">{{creator.name}}</a>{{/each}}</dd>
             <dt>Originalspråk</dt><dd>ukjent</dd>
             <dt>Emner</dt><dd></dd>
           </dl>
@@ -139,7 +139,7 @@
                     <td data-automation-id="item_format">{{pub.format}}</td>
                     <td data-automation-id="item_barcode">{{barcode}}</td>
                     <td data-automation-id="item_location">{{location}}</td>
-                    {{#if onloan }}
+                    {{#if onloan}}
                       <td data-automation-id="item_status">Forventet {{status}}</td>
                     {{else}}
                       <td data-automation-id="item_status">Ledig</td>

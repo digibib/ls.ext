@@ -138,3 +138,10 @@ end
 When(/^kan klikke på det første verket$/) do
   @site.SearchPatronClient.follow_first_item_in_search_result
 end
+
+
+When(/^vises forfatterens navn på verkssiden$/) do
+  step "jeg er på sida til verket"
+  @browser.refresh
+  @site.PatronClientWorkPage.getAuthor.should include(@context[:personName])
+end

@@ -16,4 +16,4 @@ Egenskap: Redigere autoritative persondata
     Og jeg kan legge inn navn fødselsår og dødsår for personen
     Og grensesnittet viser at personen er lagret
     Når jeg klikker på linken ved urien kommer jeg til personsiden
-    Og personens navn vises på siden
+    Og personens navn vises på personsiden

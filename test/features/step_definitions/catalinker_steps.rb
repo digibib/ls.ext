@@ -369,7 +369,7 @@ When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
   @browser.goto(@site.RegPerson.get_link)
 end
 
-When(/^personens navn vises på siden$/) do
+When(/^personens navn vises på personsiden$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getTitle.include? @context[:personName] }
 end
 
@@ -380,4 +380,8 @@ When(/^at jeg har lagt til en person$/) do
     Så leverer systemet en ny ID for den nye personen
     Og jeg kan legge inn navn fødselsår og dødsår for personen
   }
+end
+
+When(/^viser systemet at opphavsperson til verket har blitt registrert$/) do
+  step "grensesnittet viser at tittelen er lagret"
 end

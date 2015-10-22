@@ -6,6 +6,7 @@ var express = require('express'),
     http = require('http'),
     config = require('./lib/config'),
     graph = require('ld-graph'),
+    url = require('url'),
     app = express(),
     Server;
 
@@ -20,6 +21,18 @@ function getData(body) {
     data = {ok: false, data: error};
   }
   return data;
+}
+
+function getLabels(labelledNode) {
+  return labelledNode.get("label").value;
+}
+
+function valuesSepByCommas(node, field) {
+  return node.getAll(field).map(
+      function(value){
+        return value.value;
+      }
+  ).join(", ");
 }
 
 app.get('/config', function (request, response) {
@@ -52,16 +65,22 @@ app.get('/work/:id', function (request, response) {
             publications.push({
               id: publication.id,
               name: publication.getAll("name")[0].value,
-              language: publication.outAll("language").map(function(lang){return lang.get("label").value;}).join(", "),
-              format: publication.out("format").get("label").value,
-              items: []
+              language: publication.outAll("language").map(getLabels).join(", "),
+              format: publication.outAll("format").map(getLabels).join(", "),
+              items: [] // items added later
             });
         });
+        var workNode = parsedWorkData.byType("deichman:Work")[0];
         var responseData = {
           work: {
-            name: parsedWorkData.byType("deichman:Work")[0].getAll("name").map(function(name){return name.value;}).join(", "),
-            year: parsedWorkData.byType("deichman:Work")[0].getAll("year").map(function(year){return year.value;}).join(", "),
-            creator: parsedWorkData.byType("deichman:Work")[0].outAll("creator").map(function(creator){return creator.get("name").value;}).join(", "),
+            name: valuesSepByCommas(workNode, "name"),
+            year: valuesSepByCommas(workNode, "year"),
+            creators: workNode.outAll("creator").map(function(creator){
+                  return {
+                    name: creator.get("name").value,
+                    url: '/person/' + url.parse(creator.id).path.split('/').pop()
+                  };
+                }),
             publications: publications,
             hasItems: function() {
               var retVal = false;
@@ -92,11 +111,11 @@ app.get('/work/:id', function (request, response) {
                   var item = parsedItemData.byType("deichman:Item")[0];
                   if (pub.id === item.out("editionOf").id) {
                     pub.items.push({
-                      barcode: item.get("barcode").value,
-                      status: item.get("status").value,
-                      location: item.get("location").value,
+                      barcode: valuesSepByCommas(item, "barcode"),
+                      status: valuesSepByCommas(item, "status"),
+                      location: valuesSepByCommas(item, "location"),
                       onloan: item.get("onloan").value,
-                      shelfmark: item.get("shelfmark").value
+                      shelfmark: valuesSepByCommas(item, "shelfmark")
                     });
                   }
                 });

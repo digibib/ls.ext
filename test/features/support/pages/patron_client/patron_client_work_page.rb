@@ -13,7 +13,7 @@ class PatronClientWorkPage < PageRoot
     end
 
     def getAuthor
-      return @browser.span(:data_automation_id => /work_author/).text
+      return @browser.p(:data_automation_id => /work_author/).text
     end
 
     def getDate
