@@ -54,6 +54,10 @@ base:
     - redef.catalinker.pulledrun
     - redef.patron-client.pulledrun
 
+  'vm-ship':
+    - match: list
+    - redef.elasticsearch.mappings
+
   'build-ship':
     - match: list
     - redef.fuseki
