@@ -61,7 +61,7 @@ app.get('/work/:id', function (request, response) {
       var parsedWorkData = graph.parse(workData.data);
       if (workData.ok) {
         var publications = [];
-        parsedWorkData.byType("deichman:Publication").forEach(function (publication){
+        parsedWorkData.byType("Publication").forEach(function (publication){
             publications.push({
               id: publication.id,
               name: publication.getAll("name")[0].value,
@@ -70,7 +70,7 @@ app.get('/work/:id', function (request, response) {
               items: [] // items added later
             });
         });
-        var workNode = parsedWorkData.byType("deichman:Work")[0];
+        var workNode = parsedWorkData.byType("Work")[0];
         var responseData = {
           work: {
             name: valuesSepByCommas(workNode, "name"),
@@ -106,9 +106,9 @@ app.get('/work/:id', function (request, response) {
             if (itemData.ok) {
               responseData.items = [];
               var parsedItemData = graph.parse(itemData.data);
-              parsedItemData.byType("deichman:Item").forEach(function(item){
+              parsedItemData.byType("Item").forEach(function(item){
                 responseData.work.publications.forEach(function(pub){
-                  var item = parsedItemData.byType("deichman:Item")[0];
+                  var item = parsedItemData.byType("Item")[0];
                   if (pub.id === item.out("editionOf").id) {
                     pub.items.push({
                       barcode: valuesSepByCommas(item, "barcode"),
