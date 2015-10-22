@@ -16,10 +16,10 @@ var fs = require('fs');
 
 gulp.task('browserify', ['clean', 'placeholders', 'images', 'html'], function () {
     var b = browserify({
-        entries: ['src/search.js', 'src/person.js'],
+        entries: ['src/search.js', 'src/person.js', 'src/work.js'],
         debug: true
     });
-    b.plugin(factor, {outputs: ['public/js/search.js', 'public/js/person.js']})
+    b.plugin(factor, {outputs: ['public/js/search.js', 'public/js/person.js', 'public/js/work.js']})
     return b.bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
@@ -54,7 +54,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('placeholders', function () {
-    gulp.src(['src/search.js', 'src/person.js'])
+    gulp.src(['src/search.js', 'src/person.js', 'src/work.js'])
     .pipe(gulp.dest('public/js'))
 });
 

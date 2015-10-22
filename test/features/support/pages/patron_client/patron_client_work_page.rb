@@ -5,6 +5,7 @@ require_relative '../page_root.rb'
 class PatronClientWorkPage < PageRoot
     def visit(workId)
       @browser.goto patron_client(:work) + "/" + workId
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.h2(:data_automation_id => /work_title/).present? }
       self
     end
 

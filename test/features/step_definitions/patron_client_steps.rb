@@ -52,7 +52,6 @@ Then(/^vises eksemplaret på verkssiden$/) do
 end
 
 When(/^vises opplysningene om utgivelsen på verkssiden$/) do
-  sleep 4 # TODO why does it take so long for previous step (knytte utgivelse til verket) to be persisted in DB?
   step "jeg er på sida til verket"
   @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
     row.td(:data_automation_id => "publication_name").text.should eq(@context[:publication_name])

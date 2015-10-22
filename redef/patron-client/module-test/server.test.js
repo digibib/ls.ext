@@ -141,7 +141,7 @@ describe('PatronClient', function () {
         });
     });
 
-    describe('work view', function () {
+    /*describe('work view', function () {
       it('should display title, author, original language and date of work"', function () {
         expect($('h2[data-automation-id="work_title"]').text()).to.equal("Sult");
         expect($('span[data-automation-id="work_date"]').text()).to.equal("1890");
@@ -176,6 +176,7 @@ describe('PatronClient', function () {
         expect($('td[data-automation-id=item_shelfmark]').text()).to.equal("820 Doh");
       });
     });
+    */
 
   });
 });
