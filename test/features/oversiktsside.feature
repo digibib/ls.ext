@@ -9,12 +9,14 @@ Egenskap: Oversiktsside
   Scenario: Oversiktsside med en lenke
     Gitt at jeg er på oversiktssiden
     Så skal jeg finne lenker til:
-      | text         |
-      | OPAC         |
-      | Intra        |
-      | Catalinker   |
-      | PatronClient |
-      | Services     |
-      | Fuseki       |
-      | Kibana       |
-      | Graphite     |
+      | text          |
+      | OPAC          |
+      | Intra         |
+      | Catalinker    |
+      | PatronClient  |
+      | Services      |
+      | Fuseki        |
+      | Kibana        |
+      | Graphite      |
+      | DockerUI      |
+      | Elasticsearch |

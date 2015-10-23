@@ -1,58 +1,242 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Oversikt LS.ext</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  /* normalize.css */
+  *, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+  html { font-size: 100%; font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; color: #222; }
+
+  /* responsive grid setup */
+  /*
+  .col { margin-bottom: 1.5rem; }
+  .container { margin: 0 auto; max-width: 80rem; width: 90%; } 
+  */
+  /*  SECTIONS  */
+  .section { clear: both; padding: 0px; margin: 0px; margin: 0 auto; max-width: 80rem; width: 90%; }
+
+  /*  COLUMN SETUP  */
+  .col { display: block; float:left; margin-bottom: 0.3px; width: 90%; }
+  .col:first-child { margin-left: 0; }
+
+  /*  GROUPING  */
+  .row:before,
+  .row:after { content:""; display:table; }
+  .row:after { clear:both;}
+
+  @media (min-width: 40rem) {
+    html { font-size: 112%; }
+    /*  GRID OF FIVE  */
+    .span_5_of_5 { width: 100%; }
+    .span_4_of_5 { width: 79.68%; }
+    .span_3_of_5 { width: 59.36%; }
+    .span_2_of_5 { width: 39.04%; }
+    .span_1_of_5 { width: 18.72%; }
+    .col.flow-opposite { float: right; }
+  }
+
+  @media only screen and (max-width: 480px) {
+    /*  SMALL SCREEN - USE FULL WIDTH  */
+    .col {  margin: 1% 0 1% 0%; }
+    .span_1_of_5, .span_2_of_5, .span_3_of_5, .span_4_of_5, .span_5_of_5 { width: 100%; }
+  }
+
+  /* deichman ui styles */
+  a, a:visited { color: navy; }
+  .logo { margin-right: 3em; }
+  .small-text { font-size: 0.8em; }
+  .big-text { font-size: 1.4em; }
+  .header { background: #eee; width: 100%; padding: 1em; }
+  a.more { display: block; float:right; background:#444; color: #fff; border-radius: 3em; padding: 1em; text-decoration: none}
+  a.more:visited { color: #fff;}
+
+  </style>
+  <title>Oversikt LS.ext</title>
 </head>
 
 <body>
-
-<div class="container">
-    <div class="overview">
-        <h1>Oversikt Library System – Extended LS.ext</h1>
-
-        <h2>{{ pillar['overview']['env']['description'] }}</h2>
-
-        <h3>Brukertjenester</h3>
-
-        <ul>
-            <li><a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['opac']['port']|string }}">Kohas OPAC</a></li>
-            {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
-                <li><a href="http://{{ pillar['overview']['redef']['patron-client']['host']}}:{{ pillar['redef']['patron-client']['port']|string}}/search">PatronClient</a></li>
-            {% endif %}
-        </ul>
-
-        <h3>Interne tjenester</h3>
-
-        <ul>
-            <li><a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['intra']['port']|string }}">Kohas Intra</a></li>
-            <li><a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['intra']['plack_port']|string }}">Kohas Intra (Plack)</a></li>
-            {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
-                <li><a href="http://{{ pillar['overview']['redef']['catalinker']['host'] }}:{{ pillar['redef']['catalinker']['port']|string }}">Catalinker</a></li>
-            {% endif %}
-        </ul>
-
-        <h3>Driftsverktøy</h3>
-
-        <ul>
-            <li><a href="http://{{ pillar['overview']['elk']['host'] }}:{{ pillar['elk']['kibana']['port']|string }}/index.html#/dashboard/file/logstash.json">Kibana</a></li>
-            <li><a href="http://{{ pillar['overview']['resource-monitoring']['graphite-web']['host'] }}:{{ pillar['resource-monitoring']['graphite-web']['port']|string }}">Graphite</a></li>
-            <li><a href="http://{{ pillar['overview']['dockerui']['host'] }}:{{ pillar['dockerui']['port']|string }}">DockerUI</a></li>
-        </ul>
-
-        <h3>Tekniske grensesnitt</h3>
-
-        <ul>
-            {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
-                <li><a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port']|string }}/application.wadl?detail=true">Services</a></li>
-                <li><a href="http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port']|string }}">Fuseki</a></li>
-                <li><a href="http://{{ pillar['redef']['elasticsearch']['host'] }}:{{ pillar['redef']['elasticsearch']['http']['port']|string }}/?pretty">Elasticsearch</a></li>
-            {% endif %}
-        </ul>
-
+  <div class="header">
+    <div class="section">
+      <div class="row">
+        <div class="col span_1_of_5">
+          <img class="logo" width="164" height="24px" src="/logo.png"/>
+        </div>
+        <div class="col span_2_of_5">
+          <div class="big-text">ls.ext</div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="section">
+    <div class="row">
+      <div class="col full">
+        <h2>{{ pillar['overview']['env']['description'] }}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col span_1_of_5">&nbsp;</div>
+      <div class="col span_2_of_5">
+        <strong>beskrivelse</strong>
+      </div>
+      <div class="col span_2_of_5">
+        <strong>eksempler</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Brukertjenester</h3>
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['opac']['port']|string }}">Kohas OPAC</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:opac:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:opac:examples', '') }}
+      </div>
+    </div>
+
+    {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['redef']['patron-client']['host']}}:{{ pillar['redef']['patron-client']['port']|string}}/search">PatronClient</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:patron-client:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:patron-client:examples', '') }}
+      </div>
+    </div>
+    {% endif %}
+
+    <h3>Interne tjenester</h3>
+
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['intra']['port']|string }}">Kohas Intra</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:intra:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:intra:examples', '') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['intra']['plack_port']|string }}">Kohas Intra (Plack)</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:plack:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:plack:examples', '') }}
+      </div>
+    </div>
+
+    {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['redef']['catalinker']['host'] }}:{{ pillar['redef']['catalinker']['port']|string }}">Catalinker</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:catalinker:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {% for ex in salt['pillar.get']('overview:catalinker:examples', {}.iteritems()) %}
+          <a href="http://{{ pillar['redef']['catalinker']['host'] }}:{{ pillar['redef']['catalinker']['port']|string }}{{ex}}">{{ex}}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <h3>Driftsverktøy</h3>
+
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['elk']['host'] }}:{{ pillar['elk']['kibana']['port']|string }}/index.html#/dashboard/file/logstash.json">Kibana</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:kibana:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:kibana:examples', '') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['resource-monitoring']['graphite-web']['host'] }}:{{ pillar['resource-monitoring']['graphite-web']['port']|string }}">Graphite</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:graphite:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:graphite:examples', '') }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['dockerui']['host'] }}:{{ pillar['dockerui']['port']|string }}">DockerUI</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:dockerui:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:dockerui:examples', '') }}
+      </div>
+    </div>
+
+    <h3>Tekniske grensesnitt</h3>
+
+    {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port']|string }}/application.wadl?detail=true">Services</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:services:description','') }}
+      </div>
+      <div class="col span_2_of_5">
+        {% for ex in salt['pillar.get']('overview:services:examples', {}.iteritems()) %}
+          <a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port']|string }}{{ex}}">{{ex}}</a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port']|string }}">Fuseki</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:fuseki:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {% for ex in salt['pillar.get']('overview:fuseki:examples', {}.iteritems()) %}
+          <a href="http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port']|string }}{{ex}}">{{ex}}</a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['redef']['elasticsearch']['host'] }}:{{ pillar['redef']['elasticsearch']['http']['port']|string }}/?pretty">Elasticsearch</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:elasticsearch:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:elasticsearch:examples', '') }}
+      </div>
+    </div>
+    {% endif %}
+  </div>
 </div><!-- /container -->
 
 </body>

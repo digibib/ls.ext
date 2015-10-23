@@ -3,6 +3,8 @@ redef:
     host: 10.172.2.160
   fuseki:
     host: 10.172.2.160
+  catalinker:
+    host: 10.172.2.160
   services:
     host: 10.172.2.160
     baseuri: http://10.172.2.160:8005/
