@@ -34,7 +34,10 @@ describe("PatronClient", function () {
       require("../src/search.js").then(function (r) {
         ractive = r;
         done();
-      }).catch(done);
+      }).catch(function (err) {
+        console.log(err);
+        done();
+      });
     });
 
     after(function () {
@@ -45,7 +48,10 @@ describe("PatronClient", function () {
       ractive.set("hits", null).then(function () {
         expect(document.querySelector("[data-automation-id='no-search']").innerHTML).to.eq("Søk etter verk");
         done();
-      }).catch(done);
+      }).catch(function (err) {
+        console.log(err);
+        done();
+      });
     });
 
     it("should report lack of hits following search", function (done) {
@@ -54,7 +60,10 @@ describe("PatronClient", function () {
         expect(document.querySelector("[data-automation-id='current-search-term']").innerHTML).to.eq("nohits");
         expect(document.querySelector("[data-automation-id='hits-total']").innerHTML).to.eq("0");
         done();
-      }).catch(done);
+      }).catch(function (err) {
+        console.log(err);
+        done();
+      });
     });
 
     it("should display total number of search hits", function (done) {
@@ -62,7 +71,10 @@ describe("PatronClient", function () {
       ractive.set("hits.total", 1).then(function () {
         expect(document.querySelector("[data-automation-id='hits-total']").innerHTML).to.eq("1");
         done();
-      }).catch(done);
+      }).catch(function (err) {
+        console.log(err);
+        done();
+      });
     });
 
     it("should display name of all hits", function (done) {
@@ -105,7 +117,10 @@ describe("PatronClient", function () {
         expect(titles).to.eql(want);
 
         done();
-      }).catch(done);
+      }).catch(function (err) {
+        console.log(err);
+        done();
+      });
     });
 
   });

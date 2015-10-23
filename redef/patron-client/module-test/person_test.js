@@ -36,7 +36,10 @@ describe("PatronClient", function () {
       require("../src/person.js").then(function (r) {
         ractive = r;
         done();
-      }).catch(done);
+      }).catch(function (err) {
+        console.log(err);
+        done();
+      });
     });
 
     after(function () {
