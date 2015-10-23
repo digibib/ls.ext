@@ -76,3 +76,55 @@
   rdfs:domain :Person ;
   rdfs:range xsd:gYear.
 
+:cataloguing_name a rdfs Property ;
+  rdfs:label "Cataloguing name"@en ;
+  rdfs:label "Katalogiseringsnavn"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:alternative_name a rdfs Property ;
+  rdfs:label "Alternative name"@en ;
+  rdfs:label "Alternativt navn"@no ;
+  rdfs:domain :Class ;
+  rdfs:range xsd:string .
+
+:sorting_name a rdfs Property ;
+  rdfs:label "Sorting name"@en ;
+  rdfs:label "Sorteringsnavn"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+  
+:numeration a rdfs Property ;
+  rdfs:label "Numeration"@en ;
+  rdfs:label "Nummerering"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:description a rdfs Property ;
+  rdfs:label "Description"@en ;
+  rdfs:label "Beskrivelse"@no ;
+  rdfs:domain :Class ;
+  rdfs:range xsd:string .
+
+:nationality a rdfs Property ;
+  rdfs:label "Nationality"@en ;
+  rdfs:label "Nasjonalitet"@no ;
+  rdfs:domain :Person ;
+  rdfs:range :Nationality .
+
+:gender a rdfs Property ;
+  rdfs:label "Gender"@en ;
+  rdfs:label "Kjønn"@no ;
+  rdfs:domain :Person ;
+  rdfs:range :Gender .
+
+:biography a rdfs Property ;
+  rdfs:label "Biography"@en ;
+  rdfs:label "Biografi"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:depiction a rdfs Property ;
+  rdfs:label "Depiction"@en ;
+  rdfs:label "Bilde"@no ;
+  rdfs:domain :Class .
