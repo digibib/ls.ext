@@ -35,7 +35,6 @@
         return axios.get("http://" + config.host + ":" + config.port + "/person/"+id);
       })
       .then(function(response) {
-        console.log(response);
         person.name = response.data["deichman:name"];
         document.title = person.name;
         if (response.data["deichman:birth"]) {
