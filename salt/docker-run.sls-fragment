@@ -75,3 +75,8 @@
       - docker: {{ data_volume['container'] }}_volume_installed
       - docker: {{ data_volume['container'] }}_volume_run_once
 {% endif %}
+{% if watchers is defined and watchers %}
+  {% for watcher in watchers %}
+      - {{ watcher['type'] }}: {{ watcher['state'] }}
+  {% endfor %}
+{% endif %}
