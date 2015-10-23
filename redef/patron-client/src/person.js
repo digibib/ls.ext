@@ -14,46 +14,56 @@
   "use strict";
   Ractive.DEBUG = false;
 
-  if (window && !window.Promise) {
-    window.Promise = Ractive.Promise; // axios needs a Promise polyfill, so we use the one provided by ractive.
+  var Person = {
+
+    getResourceID: function() {
+      return window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
+    },
+    init: function() {
+      if (window && !window.Promise) {
+        window.Promise = Ractive.Promise; // axios needs a Promise polyfill, so we use the one provided by ractive.
+      }
+
+      var config,
+          person = {};
+      var id = this.getResourceID();
+
+      return axios.get("/config").then(function (response) {
+        config = response.data;
+      })
+      .then(function() {
+        return axios.get("http://" + config.host + ":" + config.port + "/person/"+id);
+      })
+      .then(function(response) {
+        console.log(response);
+        person.name = response.data["deichman:name"];
+        document.title = person.name;
+        if (response.data["deichman:birth"]) {
+          person.birthYear = response.data["deichman:birth"]["@value"];
+        }
+        if (response.data["deichman:death"]) {
+          person.deathYear = response.data["deichman:death"]["@value"];
+        }
+      })
+      .then(function() {
+        return axios.get("/person_template.html");
+      })
+      .then(function (response) {
+        return response.data;
+       })
+      .then(function (data) {
+        var personRactive = new Ractive({
+          el: "#person-app",
+          template: data,
+          data: person
+        });
+        return personRactive;
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
   }
-
-  var id = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1),
-      config,
-      person = {};
-
-  return axios.get("/config").then(function (response) {
-    config = response.data;
-  })
-  .then(function() {
-    return axios.get("http://" + config.host + ":" + config.port + "/person/"+id);
-  })
-  .then(function(response) {
-    person.name = response.data["deichman:name"];
-    document.title = person.name;
-    if (response.data["deichman:birth"]) {
-      person.birthYear = response.data["deichman:birth"]["@value"];
-    }
-    if (response.data["deichman:death"]) {
-      person.deathYear = response.data["deichman:death"]["@value"];
-    }
-  })
-  .then(function() {
-    return axios.get("/person_template.html");
-  })
-  .then(function (response) {
-    return response.data;
-   })
-  .then(function (data) {
-    var personRactive = new Ractive({
-      el: "#person-app",
-      template: data,
-      data: person
-    });
-    return personRactive;
-  })
-  .catch(function (error) {
-      console.log(error);
-  });
+  return Person;
 
 }));
