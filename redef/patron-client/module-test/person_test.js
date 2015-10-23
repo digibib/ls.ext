@@ -51,10 +51,12 @@ describe("PatronClient", function () {
 
     after(function () {
       axios.get.restore();
+      Person.getResourceID.restore();
     });
 
-    it("should get person ID from window.location", function () {
+    it("should get person ID from window.location", function (done) {
       expect(Person.getResourceID()).to.eq("p123456");
+      done();
     });
 
     it("should display name, birth- and deathyear of person", function (done) {
