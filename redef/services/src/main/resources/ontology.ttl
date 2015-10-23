@@ -110,13 +110,13 @@
   rdfs:label "Nationality"@en ;
   rdfs:label "Nasjonalitet"@no ;
   rdfs:domain :Person ;
-  rdfs:range :Nationality .
+  rdfs:range xsd:string .
 
 :gender a rdfs:Property ;
   rdfs:label "Gender"@en ;
   rdfs:label "Kjønn"@no ;
   rdfs:domain :Person ;
-  rdfs:range :Gender .
+  rdfs:range xsd:string .
 
 :biography a rdfs:Property ;
   rdfs:label "Biography"@en ;
@@ -127,4 +127,5 @@
 :depiction a rdfs:Property ;
   rdfs:label "Depiction"@en ;
   rdfs:label "Bilde"@no ;
-  rdfs:domain rdfs:Class .
+  rdfs:domain rdfs:Class ;
+  rdfs:range xsd:string .
