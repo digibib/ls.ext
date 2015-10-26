@@ -33,8 +33,8 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
-import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -105,7 +105,7 @@ public class AppTest {
         assertIsUri(workUri);
         assertThat(workUri, startsWith(baseUri));
 
-        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#name", "Name", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#name", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
@@ -126,7 +126,7 @@ public class AppTest {
         final JsonArray addBirthToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#birth", "1923", "http://www.w3.org/2001/XMLSchema#gYear"));
         final HttpResponse<String> patchAddBirthToPersonPatchResponse = buildPatchRequest(personUri, addBirthToPersonPatch).asString();
         assertResponse(Status.OK, patchAddBirthToPersonPatchResponse);
-        
+
         final JsonArray addDeathToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#death", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
         final HttpResponse<String> patchAddDeathToPersonPatchResponse = buildPatchRequest(personUri, addDeathToPersonPatch).asString();
         assertResponse(Status.OK, patchAddDeathToPersonPatchResponse);
@@ -199,7 +199,7 @@ public class AppTest {
         Unirest.get(workUri).asJson();
         HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
         assertNotNull(stringHttpResponse);
-        doSearchForWorks("Name");
+        doSearchForWorks("Sult");
     }
 
     @Test
@@ -319,9 +319,8 @@ public class AppTest {
 
     @Test
     public void when_get_elasticsearch_work_should_return_something() throws Exception {
-        indexWork("1", "Name");
-
-        doSearchForWorks("Name");
+        indexWork("1", "Sult");
+        doSearchForWorks("Sult");
     }
 
     private void doSearchForWorks(String name) throws UnirestException, InterruptedException {
@@ -329,22 +328,35 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "name:" + name);
+                    .get(baseUri + "search/work/_search").queryString("q", "work.name:" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
-            foundWorkInIndex = response.getBody().toString().contains("name");
+            String responseBody = response.getBody().toString();
+            foundWorkInIndex = responseBody.contains("Sult")
+                    && responseBody.contains("Hamsun")
+                    && responseBody.contains("person/h");
             if (!foundWorkInIndex) {
                 LOG.info("Work not found in index yet, waiting one second");
                 Thread.sleep(ONE_SECOND);
             }
-        } while (!foundWorkInIndex && attempts-->0);
+        } while (!foundWorkInIndex && attempts-- > 0);
         assertTrue("Should have found work again in index by now", foundWorkInIndex);
     }
 
     private void indexWork(String workId, String name) {
         getClient().prepareIndex("search", "work", workId)
-                .setSource("{"
-                        + "\"name\": \""+name+"\""
+                .setSource(""
+                        + "{ \"work\": {"
+                        + "    \"name\": \"" + name + "\","
+                        + "    \"year\": \"1890\","
+                        + "    \"uri\": \"http://deichman.no/work/w12344553\","
+                        + "    \"creator\": {"
+                        + "       \"name\": \"Knut Hamsun\","
+                        + "       \"birth\": \"1859\","
+                        + "       \"death\": \"1952\","
+                        + "       \"uri\": \"http://deichman.no/person/h12345\""
+                        + "    }"
+                        + "}"
                         + "}")
                 .execute()
                 .actionGet();
