@@ -88,10 +88,10 @@
   rdfs:domain rdfs:Class ;
   rdfs:range xsd:string .
 
-:sorting_name a rdfs:Property ;
-  rdfs:label "Sorting name"@en ;
-  rdfs:label "Sorteringsnavn"@no ;
-  rdfs:domain :Person ;
+:sorting_label a rdfs:Property ;
+  rdfs:label "Sorting label"@en ;
+  rdfs:label "Sorteringsform"@no ;
+  rdfs:domain :Class ;
   rdfs:range xsd:string .
   
 :numeration a rdfs:Property ;
