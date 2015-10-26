@@ -1,0 +1,30 @@
+events.js:141
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::8000
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at Server._listen2 (net.js:1231:14)
+    at listen (net.js:1267:10)
+    at Server.listen (net.js:1363:5)
+    at EventEmitter.listen (/Users/kristoffer/prosjekter/ls.ext/redef/patron-client/node_modules/express/lib/application.js:617:24)
+    at Object.<anonymous> (/Users/kristoffer/prosjekter/ls.ext/redef/patron-client/server.js:137:14)
+    at Module._compile (module.js:434:26)
+    at Object.Module._extensions..js (module.js:452:10)
+    at Module.load (module.js:355:32)
+events.js:141
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::8000
+    at Object.exports._errnoException (util.js:837:11)
+    at exports._exceptionWithHostPort (util.js:860:20)
+    at Server._listen2 (net.js:1231:14)
+    at listen (net.js:1267:10)
+    at Server.listen (net.js:1363:5)
+    at EventEmitter.listen (/Users/kristoffer/prosjekter/ls.ext/redef/patron-client/node_modules/express/lib/application.js:617:24)
+    at Object.<anonymous> (/Users/kristoffer/prosjekter/ls.ext/redef/patron-client/server.js:141:14)
+    at Module._compile (module.js:434:26)
+    at Object.Module._extensions..js (module.js:452:10)
+    at Module.load (module.js:355:32)
