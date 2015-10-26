@@ -47,7 +47,9 @@ describe("PatronClient", function () {
       Work.init().then(function (w) {
         ractive = w;
         done();
-      }).catch(done);
+      }).catch(function (err) {
+        done(err);
+      });
 
     });
 

@@ -44,8 +44,7 @@ describe("PatronClient", function () {
         ractive = r;
         done();
       }).catch(function (err) {
-        console.log(err);
-        done();
+        done(err);
       });
     });
 

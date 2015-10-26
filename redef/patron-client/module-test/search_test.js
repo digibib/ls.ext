@@ -35,8 +35,7 @@ describe("PatronClient", function () {
         ractive = r;
         done();
       }).catch(function (err) {
-        console.log(err);
-        done();
+        done(err);
       });
     });
 
@@ -49,8 +48,7 @@ describe("PatronClient", function () {
         expect(document.querySelector("[data-automation-id='no-search']").innerHTML).to.eq("Søk etter verk");
         done();
       }).catch(function (err) {
-        console.log(err);
-        done();
+        done(err);
       });
     });
 
@@ -61,8 +59,7 @@ describe("PatronClient", function () {
         expect(document.querySelector("[data-automation-id='hits-total']").innerHTML).to.eq("0");
         done();
       }).catch(function (err) {
-        console.log(err);
-        done();
+        done(err);
       });
     });
 
@@ -72,8 +69,7 @@ describe("PatronClient", function () {
         expect(document.querySelector("[data-automation-id='hits-total']").innerHTML).to.eq("1");
         done();
       }).catch(function (err) {
-        console.log(err);
-        done();
+        done(err);
       });
     });
 
@@ -124,8 +120,7 @@ describe("PatronClient", function () {
 
         done();
       }).catch(function (err) {
-        console.log(err);
-        done();
+        done(err);
       });
     });
 
