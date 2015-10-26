@@ -26,8 +26,9 @@ public class EmbeddedElasticsearchServer {
     public EmbeddedElasticsearchServer(String dataDirectory) {
             this.dataDirectory = dataDirectory;
         new File(dataDirectory).mkdirs();
-
-        Settings.Builder elasticsearchSettings = Settings.settingsBuilder()
+        Settings.Builder elasticsearchSettings;
+        elasticsearchSettings = Settings.settingsBuilder()
+                .loadFromStream("/elasticsearch.json", getClass().getResourceAsStream("/elasticsearch.json"))
                 .put("http.enabled", "true")
                 .put("path.home", ".")
                 .put("path.data", dataDirectory);
@@ -36,6 +37,7 @@ public class EmbeddedElasticsearchServer {
                 .local(true)
                 .settings(elasticsearchSettings.build())
                 .node();
+
     }
 
     public final Client getClient() {

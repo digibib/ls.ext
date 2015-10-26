@@ -84,19 +84,25 @@ describe("PatronClient", function () {
             {
               "_id": "http//example.org/work/1",
               "_source": {
-                "name": "Tittel 1"
+                "work": {
+                  "name": "Tittel 1"
+                }
               }
             },
             {
               "_id": "http//example.org/work/2",
               "_source": {
-                "name": "Tittel 2"
+                "work": {
+                  "name": "Tittel 2"
+                }
               }
             },
             {
               "_id": "http//example.org/work/3",
               "_source": {
-                "name": "æøå"
+                "work": {
+                  "name": "æøå"
+                }
               }
             }
         ],
