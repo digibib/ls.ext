@@ -55,6 +55,9 @@
   <body>
     <div id="person-app"></div>
     <script src="/js/bundle.js"></script>
-    <script src="/js/person.js"></script>
+    <script>
+      var person = require('person');
+      person.init();
+    </script>
   </body>
 </html>

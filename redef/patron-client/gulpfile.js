@@ -14,13 +14,16 @@ var fs = require('fs');
 
 
 
-gulp.task('browserify', ['clean', 'placeholders', 'images', 'html'], function () {
+gulp.task('browserify', ['clean', 'images', 'html'], function () {
     var b = browserify({
         entries: ['src/search.js', 'src/person.js', 'src/work.js'],
         debug: true
     });
-    b.plugin(factor, {outputs: ['public/js/search.js', 'public/js/person.js', 'public/js/work.js']})
-    return b.bundle()
+    return b
+    .require('./src/work.js', {expose: "work"})
+    .require('./src/person.js', {expose: "person"})
+    .require('./src/search.js', {expose: "search"})
+    .bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
@@ -51,11 +54,6 @@ gulp.task('clean', function () {
     return del([
         'public/js/*.js', 'public/*.html'
     ]);
-});
-
-gulp.task('placeholders', function () {
-    gulp.src(['src/search.js', 'src/person.js', 'src/work.js'])
-    .pipe(gulp.dest('public/js'))
 });
 
 gulp.task('watch', ['clean','browserify'], function () {

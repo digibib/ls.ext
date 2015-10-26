@@ -40,11 +40,13 @@
         return axios.get("http://" + config.host + ":" + config.port + "/work/"+id);
       })
       .then(function (response) {
-        work_response = JSON.parse(response.data);
+        // axios behaves differently; in browser it parses json automatically, and on node(test) not
+        work_response = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
         return axios.get("http://" + config.host + ":" + config.port + "/work/"+id+"/items");
       })
       .then(function (response) {
-        items_response = JSON.parse(response.data);
+        // axios behaves differently; in browser it parses json automatically, and on node(test) not
+        items_response = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
       })
       .catch(function (error) {
         console.log("work items: " + error.statusText);
