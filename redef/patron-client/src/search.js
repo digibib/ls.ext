@@ -36,6 +36,9 @@
         },
         workUrl: function (work) {
             return '/work/' + url.parse(work.uri).path.split('/').pop();
+        },
+        personUrl: function (person) {
+            return '/person/' + url.parse(person.uri).path.split('/').pop();
         }
       }
     });
