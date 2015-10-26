@@ -30,7 +30,7 @@ Then(/^språket til verkets tittel vises på verks\-siden$/) do
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
-  @browser.refresh
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {@browser.title != "verksside"}
   @site.PatronClientWorkPage.getTitle.should include(@context[:title])
   @site.PatronClientWorkPage.getDate.should include(@context[:year])
 end
