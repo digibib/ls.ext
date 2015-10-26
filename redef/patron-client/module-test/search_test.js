@@ -108,7 +108,7 @@ describe("PatronClient", function () {
         var results = document.getElementsByClassName("result"),
             titles = [],
             want = hits.hits.map(function (h) {
-              return h._source.name;
+              return h._source.work.name;
             });
 
         [].forEach.call(results, function (el) {
