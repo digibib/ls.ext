@@ -11,9 +11,12 @@ var chai = require("chai"),
 describe("PatronClient", function () {
   describe("/search", function () {
     jsdom();
-    var ractive;
+    var ractive, Search;
 
     before(function (done) {
+
+      // load module
+      Search = require("../src/search.js");
 
       // stub http requests from axios used in module, faking returned promises
       sinon.stub(axios, "get", function (path) {
@@ -31,7 +34,7 @@ describe("PatronClient", function () {
       document.body.appendChild(fixture);
 
       // load module
-      require("../src/search.js").then(function (r) {
+      Search.init().then(function (r) {
         ractive = r;
         done();
       }).catch(function (err) {
