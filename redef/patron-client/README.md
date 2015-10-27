@@ -8,10 +8,8 @@ All modules are specified in package.json.
 
 * [Node.JS](https://nodejs.org/)
 * Server
-  * [http](https://nodejs.org/api/http.html)
   * [Express](http://expressjs.com/)
 * Templating/Browser rendering
-  * [Handlebars](http://handlebarsjs.com/) Deprecated: will use ractivejs + Mustache in future
   * [Ractive.js](http://www.ractivejs.org/)
   * [UMD](https://github.com/umdjs/umd)
 * Testing

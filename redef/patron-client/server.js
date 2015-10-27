@@ -2,15 +2,12 @@
 "use strict";
 
 var express = require('express'),
-    hbs = require('hbs'),
-    http = require('http'),
     config = require('./lib/config'),
     graph = require('ld-graph'),
     url = require('url'),
     app = express(),
     Server;
 
-app.set('view engine', 'hbs');
 app.use(express.static('public'));
 
 app.get('/config', function (request, response) {
