@@ -13,7 +13,7 @@
     "start": "node server.js",
     "prestart": "npm run build",
     "pretest": "npm run build",
-    "test": "mocha test module-test",
+    "test": "mocha test module-test --timeout 5000",
     "prestart-dev": "npm run build",
     "start-dev": "nodemon",
     "prestart-dev-debug": "npm run build",
