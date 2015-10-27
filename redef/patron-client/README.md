@@ -13,8 +13,6 @@ All modules are specified in package.json.
   * [Ractive.js](http://www.ractivejs.org/)
   * [UMD](https://github.com/umdjs/umd)
 * Testing
-  * [Cheerio](https://github.com/cheeriojs/cheerio) Deprecated: will use mocha + jsdom in future
-  * [Router](https://github.com/tildeio/router.js/) Deprecated: will use mocha + jsdom in future
   * [Chai](http://chaijs.com/)
   * [Mocha](https://mochajs.org/)
   * [Jsdom](https://github.com/tmpvar/jsdom)
