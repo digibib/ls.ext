@@ -10,7 +10,7 @@ overview:
       description: Kohas intranett. Katalogisering, brukerh&aring;ndtering, utl&aring;n/innlevering, osv.
       examples: ''
     plack:
-      description: Kohas intranett p&aring; steroider. Kan være ustabilt.
+      description: Kohas intranett p&aring; steroider. Kan v&aelig;re ustabilt.
       examples: ''
   patron-client:
     description: LS.ext l&aring;nergrensesnitt
