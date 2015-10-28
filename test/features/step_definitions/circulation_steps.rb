@@ -358,7 +358,7 @@ Given(/^at status (.*?) er innstilt med data$/) do |status,table|
   d = @browser.table :id => 'table_authorized_values'
   p = d.hashes
   #Need to remove &nbsp; from captured data values
-  p.each { |x| 
+  p.each { |x|
     x.each {|k,v|
       if /^\s$/.match(v)
         x.update({ k => ""})
@@ -383,7 +383,7 @@ end
 When(/^jeg endrer status til "(.*?)"$/) do |status|
   def selector (subfield,status)
     s = @browser.select_list(:id => /^tag_952_subfield_#{subfield}_[0-9]+$/)
-    s.select "#{status}" 
+    s.select "#{status}"
     @browser.button(:value => "Save changes").click
   end
   case status
@@ -394,7 +394,7 @@ When(/^jeg endrer status til "(.*?)"$/) do |status|
   when "skadet"
     selector(4,status)
   when "begrenset tilgang","referanseverk"
-    selector(5,status)    
+    selector(5,status)
   when "i bestilling","ny","til innbinding","til internt bruk","til katalogisering","til retting","vurderes kassert"
     selector(7,status)
   end
@@ -412,7 +412,7 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
   table = table.raw()
   rows = @browser.table(:id => "default-circulation-rules").tbody.rows
   orig = []
-  rows.each do |row| 
+  rows.each do |row|
     orig << [row[0].text, row[1].text, row[2].text, row[3].text, row[4].text, row[5].text, row[6].text, row[7].text, row[8].text, row[9].text, row[10].text, row[11].text, row[12].text, row[13].text, row[14].text, row[15].text, row[16].text, row[17].text, row[18].text, row[19].text, row[20].text ]
   end
   orig.pop
@@ -421,4 +421,16 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
 
   a.should == true
   b.should == true
+end
+
+When(/^ser jeg tittelen i plukklisten$/) do
+  pending
+end
+
+When(/^jeg besøker bokposten$/) do
+  @site.BiblioDetail.visit(@context[:biblionumber])
+end
+
+When(/^ser jeg tittelen i bokposten$/) do
+  @browser.h1[:title] == @context[:publication_name]
 end
