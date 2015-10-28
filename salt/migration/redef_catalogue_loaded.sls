@@ -43,7 +43,7 @@ post_records_to_services:
     - name: docker run
             -v "{{ pillar['migration-data-folder'] }}:/migration/data"
             deichman/migration:{{ pillar['migration']['image-tag'] }}
-            /migration/bin/postrecords -e "http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}/publication" -d /migration/data/converted -r "{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}" -n 4
+            /migration/bin/postpublications -b "http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}" -d /migration/data/converted -r "{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}" -n 4
     - require:
       - cmd: marc2rdf
     - failhard: True
