@@ -112,7 +112,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
         Marc2Rdf marcRdf = new Marc2Rdf();
         while (reader.hasNext()) {
             Record record = reader.next();
-            m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
+            m.add(marcRdf.mapItemsToModel(record.getVariableFields(MarcConstants.FIELD_952)));
         }
         return m;
     }

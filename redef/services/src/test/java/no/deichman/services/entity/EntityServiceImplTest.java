@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
 import no.deichman.services.entity.patch.PatchParserException;
@@ -134,7 +135,7 @@ public class EntityServiceImplTest {
         Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
         while (reader.hasNext()) {
             Record record = reader.next();
-            m.add(marcRdf.mapItemsToModel(record.getVariableFields("952")));
+            m.add(marcRdf.mapItemsToModel(record.getVariableFields(MarcConstants.FIELD_952)));
         }
         model.add(m);
         return model;

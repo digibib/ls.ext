@@ -16,7 +16,6 @@ import java.util.Map;
  */
 final class MarcXmlProvider {
 
-    private static final String TWENTY_FOUR_SPACES = "                        ";
     private Record record;
     private final MarcFactory marcFactory = MarcFactory.newInstance();
 
@@ -24,11 +23,11 @@ final class MarcXmlProvider {
     }
 
     public void createRecord() {
-        this.record = marcFactory.newRecord(marcFactory.newLeader(TWENTY_FOUR_SPACES));
+        this.record = marcFactory.newRecord(marcFactory.newLeader(MarcConstants.TWENTY_FOUR_SPACES));
     }
 
     public void add952(Map<Character, String> subfields) {
-        final DataField field952 = marcFactory.newDataField("952", ' ', ' ');
+        final DataField field952 = marcFactory.newDataField(MarcConstants.FIELD_952, ' ', ' ');
         for (Map.Entry<Character,String> entry : subfields.entrySet()) {
             field952.addSubfield(marcFactory.newSubfield(entry.getKey(), entry.getValue()));
         }

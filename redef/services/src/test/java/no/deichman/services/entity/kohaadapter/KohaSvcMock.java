@@ -81,7 +81,7 @@ public final class KohaSvcMock {
     }
 
     private String itemXml(final String barcode) {
-        return "  <datafield tag=\"952\" ind1=\" \" ind2=\" \">\n"
+        return "  <datafield tag=\""+ MarcConstants.FIELD_952+"\" ind1=\" \" ind2=\" \">\n"
                 + "    <subfield code=\"0\">0</subfield>\n"
                 + "    <subfield code=\"1\">0</subfield>\n"
                 + "    <subfield code=\"2\">ddc</subfield>\n"
@@ -174,7 +174,7 @@ public final class KohaSvcMock {
     }
 
     public static String itemMarc(final String barcode) {
-        return "<marcxml:datafield tag=\"952\" ind1=\" \" ind2=\" \">"
+        return "<marcxml:datafield tag=\""+ MarcConstants.FIELD_952+"\" ind1=\" \" ind2=\" \">"
                 + "<marcxml:subfield code=\"a\">hutl</marcxml:subfield>"
                 + "<marcxml:subfield code=\"b\">hutl</marcxml:subfield>"
                 + "<marcxml:subfield code=\"c\">m</marcxml:subfield>"

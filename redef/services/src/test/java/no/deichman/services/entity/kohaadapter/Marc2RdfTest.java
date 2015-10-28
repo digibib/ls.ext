@@ -62,7 +62,7 @@ public class Marc2RdfTest {
         MarcReader reader = new MarcXmlReader(in);
         while (reader.hasNext()) {
             Record record = reader.next();
-            itemsFields.addAll(record.getVariableFields("952"));
+            itemsFields.addAll(record.getVariableFields(MarcConstants.FIELD_952));
         }
 
         Marc2Rdf m2r = new Marc2Rdf(BaseURI.local());
