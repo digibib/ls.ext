@@ -34,6 +34,16 @@ final class MarcXmlProvider {
         this.record.addVariableField(field952);
     }
 
+    public void add245(Map<Character, String> subfields) {
+        final DataField field245 = marcFactory.newDataField(MarcConstants.FIELD_245, ' ', ' ');
+        for (Map.Entry<Character,String> entry : subfields.entrySet()) {
+            field245.addSubfield(marcFactory.newSubfield(entry.getKey(), entry.getValue()));
+        }
+        this.record.addVariableField(field245);
+    }
+
+    //public void addSubfield(String field, )
+
     public String getMarcXml() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         MarcWriter writer = new MarcXmlWriter(baos);
@@ -49,4 +59,6 @@ final class MarcXmlProvider {
     Record getRecord() {
         return this.record;
     }
+
+
 }

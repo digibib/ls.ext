@@ -45,4 +45,12 @@ public class MarcXmlProviderTest {
         assertThat(mxp.getMarcXml(), containsString("<marcxml:subfield code=\"a\">bugga</marcxml:subfield>"));
     }
 
+    @Test
+    public void should_include_title() {
+        mxp.createRecord();
+        Map<Character, String> subfields = new HashMap<>();
+        subfields.put('a', "bugga");
+        mxp.add245(subfields);
+        assertThat(mxp.getMarcXml(), containsString("<marcxml:subfield code=\""+ MarcConstants.SUBFIELD_A +"\">bugga</marcxml:subfield>"));
+    }
 }
