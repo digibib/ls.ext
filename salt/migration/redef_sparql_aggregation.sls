@@ -1,3 +1,11 @@
+remove_works:
+  cmd.run:
+    - name: docker run
+            -v "{{ pillar['migration-data-folder'] }}:/migration/data"
+            deichman/migration:{{ pillar['migration']['image-tag'] }}
+            bash -c "sed -e 's/__HOST__/{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port'] }}/g' /sparql/000_delete_works_and_links_to_works.sparql | curl http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port'] }}/ds/query --data-urlencode query@-"
+    - failhard: True
+
 generate_works_from_publications:
   cmd.run:
     - name: docker run
