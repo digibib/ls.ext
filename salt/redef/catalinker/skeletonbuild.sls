@@ -1,6 +1,3 @@
-include:
-  - .clientbuild
-
 {% set repo = 'digibib' %}
 {% set image = 'redef-catalinker-skeleton' %}
 {% set tag = 'latest' %}
