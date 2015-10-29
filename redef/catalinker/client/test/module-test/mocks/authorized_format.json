@@ -1,0 +1,33 @@
+{
+  "@graph": [
+    {
+      "@id": "format:CD",
+      "@type": "http://data.deichman.no/utility#Format",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "CD"
+      }
+    },
+    {
+      "@id": "format:Book",
+      "@type": "http://data.deichman.no/utility#Format",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Bok"
+      }
+    },
+    {
+      "@id": "format:DVD",
+      "@type": "http://data.deichman.no/utility#Format",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "DVD"
+      }
+    }
+  ],
+  "@context": {
+    "format": "http://data.deichman.no/",
+    "rdfs": "http://ww.w3.org/2000/01/rdf-schema#",
+    "duo": "http://data.deichman.no/utility#"
+  }
+}

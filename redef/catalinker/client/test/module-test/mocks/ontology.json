@@ -1,0 +1,200 @@
+{
+  "@graph": [
+    {
+      "@id": "deichman:Publication",
+      "@type": "rdfs:Class",
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Utgivelse"
+        },
+        {
+          "@language": "en",
+          "@value": "Publication"
+        }
+      ]
+    },
+    {
+      "@id": "deichman:Work",
+      "@type": "rdfs:Class",
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Verk"
+        },
+        {
+          "@language": "en",
+          "@value": "Work"
+        }
+      ]
+    },
+    {
+      "@id": "deichman:biblio",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Work"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Biblio"
+        },
+        {
+          "@language": "en",
+          "@value": "Biblio"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+      }
+    },
+    {
+      "@id": "deichman:creator",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Work"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Skaper"
+        },
+        {
+          "@language": "en",
+          "@value": "Creator"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    {
+      "@id": "deichman:format",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Publication"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Format"
+        },
+        {
+          "@language": "en",
+          "@value": "Format"
+        }
+      ],
+      "http://data.deichman.no/utility#valuesFrom": {
+        "@id": "http://127.0.0.1:7777/authorized_values/format"
+      },
+      "rdfs:range": {
+        "@id": "http://data.deichman.no/utility#Format"
+      }
+    },
+    {
+      "@id": "deichman:language",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Publication"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Språk"
+        },
+        {
+          "@language": "en",
+          "@value": "Language"
+        }
+      ],
+      "http://data.deichman.no/utility#valuesFrom": {
+        "@id": "http://127.0.0.1:7777/authorized_values/language"
+      },
+      "rdfs:range": {
+        "@id": "http://lexvo.org/ontology#Language"
+      }
+    },
+    {
+      "@id": "deichman:name",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "rdfs:Class"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Navn"
+        },
+        {
+          "@language": "en",
+          "@value": "Name"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+      }
+    },
+    {
+      "@id": "deichman:publicationOf",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Publication"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Utgivelse av"
+        },
+        {
+          "@language": "en",
+          "@value": "Publication of"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    {
+      "@id": "deichman:recordID",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Publication"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Koha post ID"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+      },
+      "http://data.deichman.no/ui#editable": false
+    },
+    {
+      "@id": "deichman:year",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Work"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Årstall"
+        },
+        {
+          "@language": "en",
+          "@value": "Year"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#gYear"
+      }
+    }
+  ],
+  "@context": {
+    "deichman": "http://127.0.0.1:7777/ontology#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "duo": "http://data.deichman.no/utility#"
+  }
+}

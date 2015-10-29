@@ -1,0 +1,40 @@
+{
+  "@graph": [
+    {
+      "@id": "language:eng",
+      "@type": "http://lexvo.org/ontology#Language",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Engelsk"
+      }
+    },
+    {
+      "@id": "language:fra",
+      "@type": "http://lexvo.org/ontology#Language",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Fransk"
+      }
+    },
+    {
+      "@id": "language:nno",
+      "@type": "http://lexvo.org/ontology#Language",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Norsk (Nynorsk)"
+      }
+    },
+    {
+      "@id": "language:nob",
+      "@type": "http://lexvo.org/ontology#Language",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Norsk (Bokmål)"
+      }
+    }
+  ],
+  "@context": {
+    "language": "http://lexvo.org/id/iso639-3/",
+    "rdfs": "http://ww.w3.org/2000/01/rdf-schema#"
+  }
+}

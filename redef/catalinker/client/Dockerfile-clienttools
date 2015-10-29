@@ -1,27 +1,20 @@
-FROM node:0.10.38
+FROM node:4.2.1
 
-MAINTAINER Oslo Public Library "digitalutvikling@gmail.com"
-ENV REFRESHED_AT 2015-07-28
-
-RUN npm install -g mocha
-RUN npm install -g karma
-RUN npm install -g karma-phantomjs-launcher
-RUN npm install -g karma-mocha
-RUN npm install -g karma-chai
-RUN npm install -g chai
-RUN npm install -g sinon
-RUN npm install -g karma-sinon
-RUN npm install -g karma-sinon
-RUN npm install -g karma-sinon-chai
-RUN npm install -g karma-requirejs
-RUN npm install -g jscs
-RUN npm install -g jshint
-RUN npm install -g casperjs
+ENV REFRESHED_AT 2015-10-27
 
 RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/
+WORKDIR /usr/src/app
 
-RUN npm install express
+COPY package.json /usr/src/app/
+
+RUN npm config set loglevel warn
+RUN npm install -g mocha
+RUN npm install -g mocha-jsdom
+RUN npm install -g chai
+RUN npm install -g sinon
+RUN npm install -g jscs
+RUN npm install -g jshint
+
+COPY . /usr/src/app
 
 VOLUME /usr/src/app/
-WORKDIR /usr/src/app/
