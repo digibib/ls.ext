@@ -1,4 +1,4 @@
-/*global require, it, describe, before, after, document, Promise, Person*/
+/*global require, it, describe, before, after, document, Promise*/
 "use strict";
 
 var chai = require("chai"),

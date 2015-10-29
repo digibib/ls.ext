@@ -5,15 +5,31 @@ ENV REFRESHED_AT 2015-10-27
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package.json /usr/src/app/
+# Global packages
+RUN npm install --silent -g mocha
+RUN npm install --silent -g gulp
+RUN npm install --silent -g jscs
+RUN npm install --silent -g jshint
 
-RUN npm config set loglevel warn
-RUN npm install -g mocha
-RUN npm install -g mocha-jsdom
-RUN npm install -g chai
-RUN npm install -g sinon
-RUN npm install -g jscs
-RUN npm install -g jshint
+# Local packages
+RUN npm install --silent mocha-jsdom
+RUN npm install --silent axios@0.7.0
+RUN npm install --silent ractive@0.7.3
+RUN npm install --silent browserify@11.2.0
+RUN npm install --silent ractive-events-keys@0.2.1
+RUN npm install --silent chai
+RUN npm install --silent del@2.0.2
+RUN npm install --silent gulp@3.9.0
+RUN npm install --silent gulp-concat@2.6.0
+RUN npm install --silent gulp-jshint@1.11.2
+RUN npm install --silent gulp-sourcemaps@1.6.0
+RUN npm install --silent gulp-uglify@1.4.2
+RUN npm install --silent gulp-util@3.0.6
+RUN npm install --silent nodemon
+RUN npm install --silent sinon
+RUN npm install --silent vinyl-buffer@1.0.0
+RUN npm install --silent vinyl-source-stream@1.1.0
+RUN npm install --silent ld-graph@git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61
 
 COPY . /usr/src/app
 

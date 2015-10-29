@@ -1,3 +1,4 @@
+/*global assert*/
 var work_response_with_publications = JSON.stringify({
   "@graph": [
         {

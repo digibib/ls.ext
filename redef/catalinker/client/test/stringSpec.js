@@ -1,3 +1,4 @@
+/*global assert*/
 define(['string'], function (string) {
 
   describe("Working with strings", function () {

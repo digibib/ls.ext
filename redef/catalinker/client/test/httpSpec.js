@@ -1,3 +1,4 @@
+/*global sinon, expect*/
 var FakePromise = function () {
   return {
     get: function (path) {
