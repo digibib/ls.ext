@@ -11,12 +11,12 @@ var chai = require("chai"),
 describe("Catalinker", function () {
   describe("/work", function () {
     jsdom();
-    var ractive, Work;
+    var ractive, Main;
 
     before(function (done) {
 
       // load module
-      //Work = require("../src/work.js");
+      Main = require("../src/main.js");
 
       // stub ID returned from window.location
       //sinon.stub(Work, "getResourceID", function () {
@@ -51,12 +51,15 @@ describe("Catalinker", function () {
 
       // create fixtures for testing Ractive events
       var fixture = document.createElement("div");
-      fixture.setAttribute("id", "catalinker-work");
+      var template = document.createElement("script");
+      fixture.setAttribute("id", "container");
+      template.setAttribute("id", "template");
       document.body.appendChild(fixture);
+      document.body.appendChild(template);
 
       // load module
-      Work.init().then(function (w) {
-        ractive = w;
+      Main.init().then(function (m) {
+        ractive = m;
         done();
       }).catch(function (err) {
         done(err);
@@ -65,7 +68,6 @@ describe("Catalinker", function () {
 
     after(function () {
       axios.get.restore();
-      Work.getResourceID.restore();
     });
 
     it("Katalogisering av verk - har riktig tittel", function () {
