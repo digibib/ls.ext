@@ -8,5 +8,6 @@
   "requireVarDeclFirst": null,
   "validateIndentation": 2,
   "requireMultipleVarDecl": null,
-  "excludeFiles": ["lib/*.js", "test/test-main.js"]
+  "disallowDanglingUnderscores": false,
+  "excludeFiles": ["node_modules", "lib/*.js"]
 }
