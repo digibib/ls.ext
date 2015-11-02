@@ -175,8 +175,10 @@ public final class EntityResource extends ResourceBase {
             throw new BadRequestException(e);
         }
 
-        if (entityType == WORK) {
-            getSearchService().indexWorkModel(m);
+        switch (entityType) {
+            case WORK: getSearchService().indexWorkModel(m); break;
+            case PERSON: getSearchService().indexPersonModel(m); break;
+            default:break;
         }
         return Response.ok().entity(getJsonldCreator().asJSONLD(m)).build();
     }

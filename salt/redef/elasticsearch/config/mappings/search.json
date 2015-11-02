@@ -39,5 +39,20 @@
         }
       }
     }
+  },
+  "person": {
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "birth": {
+        "type": "string",
+        "index": "no"
+      },
+      "death": {
+        "type": "string",
+        "index": "no"
+      }
+    }
   }
 }

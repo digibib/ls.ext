@@ -63,12 +63,50 @@ public class SearchServiceImpl implements SearchService {
         }
     };
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final String WORK_MODEL_TO_INDEX_DOCUMENT_QUERY = String.format("PREFIX  : <%1$s> \n"
+            + "select distinct ?work ?workName ?workYear ?creatorName ?creator ?birth ?death\n"
+            + "where {\n"
+            + "    ?work a :Work ;\n"
+            + "             :name ?workName ;\n"
+            + "             :year ?workYear.\n"
+            + "    optional { \n"
+            + "             ?work :creator ?creator .\n"
+            + "             ?creator a :Person ;\n"
+            + "                      :name ?creatorName.\n"
+            + "             optional {?creator :birth ?birth.}\n"
+            + "             optional {?creator :death ?death.}\n"
+            + "    }\n"
+            + "}\n", BaseURI.remote().ontology());
+
+    private static final String PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY = String.format("PREFIX  : <%1$s> \n"
+            + "select distinct ?person ?personName ?birth ?death\n"
+            + "where {\n"
+            + "    ?person a :Person ;\n"
+            + "             :name ?personName .\n"
+            + "    optional {?person :birth ?birth.}\n"
+            + "    optional {?person :death ?death.}\n"
+            + "}\n", BaseURI.remote().ontology());
+
+    private static final ImmutableMap<String, String> WORK_MODEL_TO_INDEX_DOCUMENT_MAPPING = new ImmutableMap.Builder<String, String>()
+            .putAll(of("work", "work.uri", "workName", "work.name", "workYear", "work.year"))
+            .putAll(of("creatorName", "work.creator.name", "creator", "work.creator.uri"))
+            .putAll(of("birth", "work.creator.birth", "death", "work.creator.death"))
+            .build();
+
+    private static final ImmutableMap<String, String> PERSON_MODEL_TO_INDEX_DOCUMENT_MAPPING = of(
+            "person", "person.uri", "personName", "person.name", "birth", "person.birth", "death", "person.death"
+    );
+
+    public static final String WORK_INDEX_TYPE = "work";
+    public static final String PERSON_INDEX_TYPE = "person";
     private URIBuilder workSearchUriBuilder;
+    private URIBuilder personSearchUriBuilder;
 
 
     public SearchServiceImpl(String elasticSearchBaseUrl) {
         try {
             workSearchUriBuilder = new URIBuilder(elasticSearchBaseUrl).setPath("/search/work/_search");
+            personSearchUriBuilder = new URIBuilder(elasticSearchBaseUrl).setPath("/search/person/_search");
         } catch (URISyntaxException e) {
             LOG.error("Failed to create uri builder for elasticsearch");
             throw new RuntimeException(e);
@@ -78,39 +116,29 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final void indexWorkModel(Model workModel) {
-        QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
-                        String.format("PREFIX  : <%1$s> \n"
-                                + "select distinct ?work ?workName ?workYear ?creatorName ?creator ?birth ?death\n"
-                                + "where {\n"
-                                + "    ?work a :Work ;\n"
-                                + "             :name ?workName ;\n"
-                                + "             :year ?workYear.\n"
-                                + "    optional { \n"
-                                + "             ?work :creator ?creator .\n"
-                                + "             ?creator a :Person ;\n"
-                                + "                      :name ?creatorName.\n"
-                                + "             optional {?creator :birth ?birth.}\n"
-                                + "             optional {?creator :death ?death.}\n"
-                                + "    }\n"
-                                + "}\n", BaseURI.remote().ontology())),
-                workModel);
+        indexModel(workModel, WORK_MODEL_TO_INDEX_DOCUMENT_QUERY, WORK_INDEX_TYPE, WORK_MODEL_TO_INDEX_DOCUMENT_MAPPING);
+    }
+
+    @Override
+    public final void indexPersonModel(Model m) {
+        indexModel(m, PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY, PERSON_INDEX_TYPE, PERSON_MODEL_TO_INDEX_DOCUMENT_MAPPING);
+    }
+
+    private void indexModel(Model model, String selectQuery, final String type, ImmutableMap<String, String> queryResultToJsonMapping) {
+        QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(selectQuery), model);
         ResultSet resultSet = queryExecution.execSelect();
         if (resultSet.hasNext()) {
             Map<String, Object> result = new HashMap<>();
             QuerySolution querySolution = resultSet.nextSolution();
-            String workUri = querySolution.get("work").asNode().getURI();
-            new ImmutableMap.Builder<String, String>()
-                    .putAll(of("work", "work.uri", "workName", "work.name", "workYear", "work.year"))
-                    .putAll(of("creatorName", "work.creator.name", "creator", "work.creator.uri"))
-                    .putAll(of("birth", "work.creator.birth", "death", "work.creator.death"))
-                    .build()
+            String workUri = querySolution.get(type).asNode().getURI();
+            queryResultToJsonMapping
                     .forEach((resultVar, nestedElementName) -> {
                         ofNullable(querySolution.get(resultVar)).ifPresent(node -> {
                             putValue(result, nestedElementName, valueOf(node));
                         });
                     });
             try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-                HttpPut httpPut = new HttpPut(workSearchUriBuilder.setPath("/search/work/" + URLEncoder.encode(workUri, UTF_8)).build());
+                HttpPut httpPut = new HttpPut(workSearchUriBuilder.setPath("/search/" + type + "/" + URLEncoder.encode(workUri, UTF_8)).build());
                 httpPut.setEntity(new StringEntity(GSON.toJson(result), Charset.forName(UTF_8)));
                 try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
                     LOG.debug(putResponse.getStatusLine().toString());
@@ -124,8 +152,18 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response searchWork(String query) {
+        return doSearch(query, workSearchUriBuilder);
+    }
+
+    @Override
+    public final Response searchPerson(String query) {
+        return doSearch(query, personSearchUriBuilder);
+    }
+
+
+    private Response doSearch(String query, URIBuilder searchUriBuilder) {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-            HttpGet httpget = new HttpGet(workSearchUriBuilder.setParameter("q", query).build());
+            HttpGet httpget = new HttpGet(searchUriBuilder.setParameter("q", query).build());
             try (CloseableHttpResponse response = httpclient.execute(httpget)) {
                 HttpEntity responseEntity = response.getEntity();
                 String jsonContent = IOUtils.toString(responseEntity.getContent());
@@ -141,6 +179,7 @@ public class SearchServiceImpl implements SearchService {
             throw new ServerErrorException(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     private void putValue(Map<String, Object> result, String path, String value) {
         int dotPosition = path.indexOf('.');

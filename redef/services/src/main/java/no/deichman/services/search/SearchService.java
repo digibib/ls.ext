@@ -11,4 +11,8 @@ public interface SearchService {
     void indexWorkModel(Model m);
 
     Response searchWork(String query);
+
+    Response searchPerson(String query);
+
+    void indexPersonModel(Model m);
 }

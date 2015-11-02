@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -28,13 +29,17 @@ public class SearchResource extends ResourceBase {
     private ServletConfig servletConfig;
 
     @GET
-    @Path("work/_search")
+    @Path("{type: work|person}/_search")
     @Produces(MediaType.APPLICATION_JSON)
-    public final Response searchWork(@QueryParam("q") String query) {
+    public final Response searchWork(@PathParam("type") String type, @QueryParam("q") String query) {
         if (StringUtils.isBlank(query)) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return getSearchService().searchWork(query);
+        switch (type) {
+            case "work": return getSearchService().searchWork(query);
+            case "person": return getSearchService().searchPerson(query);
+            default:throw new RuntimeException("Unknown type: " + type);
+        }
     }
 
 

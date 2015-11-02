@@ -119,8 +119,8 @@ public class AppTest {
         assertIsUri(personUri);
         assertThat(personUri, startsWith(baseUri));
 
-        final JsonArray addCreatornameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#name", "Knut Hamsun", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
-        final HttpResponse<String> patchAddCreatornameToPersonPatchResponse = buildPatchRequest(personUri, addCreatornameToPersonPatch).asString();
+        final JsonArray addCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#name", "Knut Hamsun", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchAddCreatornameToPersonPatchResponse = buildPatchRequest(personUri, addCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchAddCreatornameToPersonPatchResponse);
 
         final JsonArray addBirthToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#birth", "1923", "http://www.w3.org/2001/XMLSchema#gYear"));
@@ -200,6 +200,7 @@ public class AppTest {
         HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
         assertNotNull(stringHttpResponse);
         doSearchForWorks("Sult");
+        doSearchForPersons("Hamsun");
     }
 
     @Test
@@ -340,7 +341,25 @@ public class AppTest {
                 Thread.sleep(ONE_SECOND);
             }
         } while (!foundWorkInIndex && attempts-- > 0);
-        assertTrue("Should have found work again in index by now", foundWorkInIndex);
+        assertTrue("Should have found work in index by now", foundWorkInIndex);
+    }
+
+    private void doSearchForPersons(String name) throws UnirestException, InterruptedException {
+        boolean foundPersonInIndex;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest
+                    .get(baseUri + "search/person/_search").queryString("q", "person.name:" + name);
+            HttpResponse<?> response = request.asJson();
+            assertResponse(Status.OK, response);
+            String responseBody = response.getBody().toString();
+            foundPersonInIndex = responseBody.contains("Hamsun");
+            if (!foundPersonInIndex) {
+                LOG.info("Peson not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundPersonInIndex && attempts-- > 0);
+        assertTrue("Should have found person in index by now", foundPersonInIndex);
     }
 
     private void indexWork(String workId, String name) {
