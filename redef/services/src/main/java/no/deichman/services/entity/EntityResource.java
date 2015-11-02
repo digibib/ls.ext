@@ -213,7 +213,7 @@ public final class EntityResource extends ResourceBase {
 
     @PUT
     @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
-    public Response index(final @PathParam("type") String type, @PathParam("id") String id) {
+    public Response index(@PathParam("type") final String type, @PathParam("id") String id) {
         EntityType entityType = EntityType.get(type);
         Model m = getEntityService().retrieveById(entityType, id);
         switch (entityType) {

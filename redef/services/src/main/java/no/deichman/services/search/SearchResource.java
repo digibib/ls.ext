@@ -1,9 +1,6 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.ResourceBase;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
@@ -16,23 +13,29 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * Responsibility: Expose a subset of Elasticsearch REST API limited to searching for works.
  */
 @Singleton
 @Path("search")
 public class SearchResource extends ResourceBase {
-    private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
-
-
     @Context
     private ServletConfig servletConfig;
+
+    public SearchResource() {
+    }
+
+    public SearchResource(SearchService searchService) {
+        setSearchService(searchService);
+    }
 
     @GET
     @Path("{type: work|person}/_search")
     @Produces(MediaType.APPLICATION_JSON)
-    public final Response searchWork(@PathParam("type") String type, @QueryParam("q") String query) {
-        if (StringUtils.isBlank(query)) {
+    public final Response search(@PathParam("type") String type, @QueryParam("q") String query) {
+        if (isBlank(query)) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         switch (type) {
@@ -41,7 +44,6 @@ public class SearchResource extends ResourceBase {
             default:throw new RuntimeException("Unknown type: " + type);
         }
     }
-
 
     @Override
     protected final ServletConfig getConfig() {
