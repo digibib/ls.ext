@@ -188,6 +188,11 @@
         console.log('ERROR: "' + message + '" in file: ' + url + ', line: ' + line);
       };
 
+      // axios and phantomjs needs a Promise polyfill, so we use the one provided by ractive.
+      if (window && !window.Promise) {
+        window.Promise = Ractive.Promise;
+      }
+
       var errors = [];
 
       // Start initializing - return a Promise
