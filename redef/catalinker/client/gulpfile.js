@@ -11,13 +11,14 @@ var del = require('del');
 gulp.task('browserify', ['clean', 'images', 'html'], function () {
   "use strict";
   var b = browserify({
-    entries: ['src/ontology.js', 'src/graph.js', 'src/stringutil.js'],
+    entries: ['src/main.js', 'src/ontology.js', 'src/graph.js', 'src/stringutil.js'],
     debug: true
   });
   return b
-  .require('./src/ontology.js', {expose: "Ontology"})
-  .require('./src/graph.js', {expose: "Graph"})
-  .require('./src/stringutil.js', {expose: "StringUtil"})
+  .require('./src/main.js', {expose: "main"})
+  .require('./src/ontology.js', {expose: "ontology"})
+  .require('./src/graph.js', {expose: "graph"})
+  .require('./src/stringutil.js', {expose: "stringutil"})
   .bundle()
   .pipe(source('bundle.js'))
   .pipe(buffer())
