@@ -4,23 +4,23 @@ CLIENTTOOL_IMAGE=digibib/redef-catalinker-client-tools
 SKELETON_IMAGE=digibib/redef-catalinker-skeleton
 CONTAINER=redef_catalinker_skeleton_container
 IMAGE=digibib/redef-catalinker
+HOST_VOLUME_BINDINGS_CLIENT=-v /vagrant/redef/catalinker/client/src:/usr/src/app/src \
+       -v /vagrant/redef/catalinker/client/test:/usr/src/app/test \
+       -v /vagrant/redef/catalinker/client/module-test:/usr/src/app/module-test \
+       -v /vagrant/redef/catalinker/client/public:/usr/src/app/public
 
 build-clienttools:
 	sudo docker build --tag $(CLIENTTOOL_IMAGE) --file="/vagrant/redef/catalinker/client/Dockerfile-clienttools" /vagrant/redef/catalinker/client
 
 test-client-dev: build-clienttools
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) karma start karma.config.js
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS_CLIENT) $(CLIENTTOOL_IMAGE) karma start karma.config.js
 
 lint-client: build-clienttools
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) jscs . --fix
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) jshint --exclude lib/*.js .
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS_CLIENT) $(CLIENTTOOL_IMAGE) npm run jscs src test module-test --fix
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS_CLIENT) $(CLIENTTOOL_IMAGE) npm run jshint src test module-test
 
 test-client: lint-client
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) karma start karma.config.js --single-run
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app $(CLIENTTOOL_IMAGE) node test/module-test/run.js
-
-test-client-module-dev:
-	sudo docker run --rm -v /vagrant/redef/catalinker/client:/usr/src/app digibib/redef-catalinker-client-tools node test/module-test/run.js
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS_CLIENT) $(CLIENTTOOL_IMAGE) npm run test
 
 build-client: test-client
 	sudo salt-call --local state.sls redef.catalinker.clientbuild
