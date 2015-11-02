@@ -192,6 +192,21 @@ public class EntityResourceTest {
     }
 
     @Test
+    public void create_should_index_the_new_person() throws URISyntaxException{
+        String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
+
+        Response createResponse = entityResource.createFromLDJSON(PERSON, person);
+
+        String personId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/person/", "");
+
+
+        Response result = entityResource.index(PERSON, personId);
+
+        assertNotNull(result);
+        assertEquals(ACCEPTED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
     public void get_work_items_should_return_list_of_items(){
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 

@@ -212,10 +212,15 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PUT
-    @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/index")
-    public Response index(@PathParam("type") String type, @PathParam("id") String id) {
-        Model m = getEntityService().retrieveById(EntityType.get(type), id);
-        getSearchService().indexWorkModel(m);
+    @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
+    public Response index(final @PathParam("type") String type, @PathParam("id") String id) {
+        EntityType entityType = EntityType.get(type);
+        Model m = getEntityService().retrieveById(entityType, id);
+        switch (entityType) {
+            case WORK: getSearchService().indexWorkModel(m); break;
+            case PERSON: getSearchService().indexPersonModel(m); break;
+            default: /* will never get to here */ break;
+        }
         return Response.accepted().build();
     }
 
