@@ -197,7 +197,7 @@
         return config;
       })
       .then(function () {
-        return axios.get("/index_template.html");
+        return axios.get("/main_template.html");
       })
       .then(function (response) {
         // Initialize ractive component from template

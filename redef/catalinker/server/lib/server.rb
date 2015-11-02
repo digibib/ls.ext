@@ -33,7 +33,7 @@ get '/' do
 end
 
 get '/cataloguing*' do
-  send_file File.join(settings.public_folder, 'index.html')
+  send_file File.join(settings.public_folder, 'main.html')
 end
 
 # Used by catalinker client

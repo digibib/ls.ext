@@ -41,8 +41,8 @@ describe("Catalinker", function () {
             ontologyUri: "http://192.168.50.12:7000/ontology",
             resourceApiUri: "http://192.168.50.12:7000/"
           }});
-        case "/index_template.html":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/../src/index_template.html", "UTF-8") });
+        case "/main_template.html":
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/../src/main_template.html", "UTF-8") });
         case "http://192.168.50.12:7000/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
         case "http://192.168.50.12:7000/authorized_values/language":
