@@ -195,7 +195,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{workId: (p|w|h)[a-zA-Z0-9_]+}/items")
+    @Path("/{workId: w[a-zA-Z0-9_]+}/items")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) {
         Model model = getEntityService().retrieveWorkItemsById(workId);
