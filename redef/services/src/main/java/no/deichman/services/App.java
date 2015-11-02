@@ -5,7 +5,7 @@ import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.restutils.CORSResponseFilter;
-import no.deichman.services.search.WorkSearchResource;
+import no.deichman.services.search.SearchResource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -75,7 +75,7 @@ public final class App {
                 String.join(",", asList(
                         EntityResource.class.getCanonicalName(),
                         OntologyResource.class.getCanonicalName(),
-                        WorkSearchResource.class.getCanonicalName(),
+                        SearchResource.class.getCanonicalName(),
                         AuthorizedValuesResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName()
                 )));

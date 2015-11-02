@@ -123,7 +123,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final Response search(String query) {
+    public final Response searchWork(String query) {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
             HttpGet httpget = new HttpGet(workSearchUriBuilder.setParameter("q", query).build());
             try (CloseableHttpResponse response = httpclient.execute(httpget)) {

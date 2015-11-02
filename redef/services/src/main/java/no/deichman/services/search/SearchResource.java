@@ -19,22 +19,22 @@ import javax.ws.rs.core.Response;
  * Responsibility: Expose a subset of Elasticsearch REST API limited to searching for works.
  */
 @Singleton
-@Path("search/work")
-public class WorkSearchResource extends ResourceBase {
-    private static final Logger LOG = LoggerFactory.getLogger(WorkSearchResource.class);
+@Path("search")
+public class SearchResource extends ResourceBase {
+    private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
 
 
     @Context
     private ServletConfig servletConfig;
 
     @GET
-    @Path("_search")
+    @Path("work/_search")
     @Produces(MediaType.APPLICATION_JSON)
-    public final Response search(@QueryParam("q") String query) {
+    public final Response searchWork(@QueryParam("q") String query) {
         if (StringUtils.isBlank(query)) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return getSearchService().search(query);
+        return getSearchService().searchWork(query);
     }
 
 

@@ -10,5 +10,5 @@ import javax.ws.rs.core.Response;
 public interface SearchService {
     void indexWorkModel(Model m);
 
-    Response search(String query);
+    Response searchWork(String query);
 }
