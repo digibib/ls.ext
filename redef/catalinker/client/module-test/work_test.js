@@ -18,7 +18,7 @@ describe("Catalinker", function () {
       // load module
       Main = require("../src/main.js");
 
-      /* STUBS */
+      // STUBS
 
       sinon.stub(Main, "getResourceType", function () {
         return "Work"; // ID returned from window.location
