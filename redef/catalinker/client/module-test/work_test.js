@@ -9,9 +9,9 @@ var chai = require("chai"),
   jsdom = require("mocha-jsdom");
 
 describe("Catalinker", function () {
-  describe("/work", function () {
+  describe("/Work", function () {
     jsdom();
-    var ractive, Main;
+    var testRactive, Main;
 
     before(function (done) {
 
@@ -20,12 +20,11 @@ describe("Catalinker", function () {
 
       /* STUBS */
 
-      // ID returned from window.location
       sinon.stub(Main, "getResourceType", function () {
-        return "Work";
+        return "Work"; // ID returned from window.location
       });
 
-      // URI parameter
+      // URL parameter
       sinon.stub(Main, "getURLParameter", function () {
         return "http://192.168.50.12:7000/work/w123456";
       });
@@ -45,10 +44,6 @@ describe("Catalinker", function () {
           return Promise.resolve({data: fs.readFileSync(__dirname + "/../src/main_template.html", "UTF-8") });
         case "http://192.168.50.12:7000/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/language":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_language.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/format":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_format.json", "UTF-8") });
         case "http://192.168.50.12:7000/work/w123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/w123456.json", "UTF-8") });
         }
@@ -70,7 +65,7 @@ describe("Catalinker", function () {
 
       // load module
       Main.init().then(function (m) {
-        ractive = m;
+        testRactive = m;
         return Main.loadOntology();
       }).then(function () {
         done();
@@ -102,31 +97,5 @@ describe("Catalinker", function () {
       expect(document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value).to.equal("http://192.168.50.12:7000/work/w123456");
       done();
     });
-
-    /*
-    it("gir riktig ressurs-ID, og er ikke redigerbar", function (done) {
-      expect(document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#recordID_0"]')[0].value).to.equal("123456");
-      expect(document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#recordID_0"]')[0].disabled).to.equal(true);
-      done();
-    });
-
-    it("gir riktig antall options i authorized values dropdown", function (done) {
-      expect(document.querySelectorAll('[class="prop-input http://127.0.0.1:7777/ontology#format"] option').length).to.equal(5);
-      expect(document.querySelectorAll('[class="prop-input http://127.0.0.1:7777/ontology#language"] option').length).to.equal(4);
-      done();
-    });
-
-    it("gir riktig options i format select list", function (done) {
-      var opts = document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#format_0"] select';
-      expect(opts).to.equal("something");
-      done();
-    });
-
-    it("gir riktig options i language select list", function (done) {
-      var opts = document.querySelectorAll('[data-automation-id="http://127.0.0.1:7777/ontology#language_0"] select';
-      expect(opts).to.equal("something");
-      done();
-    });
-    */
   });
 });
