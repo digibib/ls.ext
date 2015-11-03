@@ -378,6 +378,20 @@ public class EntityResourceTest {
         assertTrue(result.getEntity().toString().contains(labelsComparison));
     }
 
+    @Test
+    public void should_return_created_response_from_ntriples_input() throws URISyntaxException {
+        String ntriples = "<#> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://deichman.no/ontology#Work> .";
+        Response createResponse = entityResource.createFromNTriples("work", ntriples);
+        assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
+    }
+
+    @Test
+    public void should_return_location_from_ntriples_input() throws URISyntaxException {
+        String ntriples = "<#> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://deichman.no/ontology#Work> .";
+        Response createResponse = entityResource.createFromNTriples("work", ntriples);
+        assertTrue(createResponse.getLocation().toString().contains("http://"));
+    }
+
     private String createTestRDF(String identifier, String type) {
         String ontologyClass = WordUtils.capitalize(type);
         return "{\n"

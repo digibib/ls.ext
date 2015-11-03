@@ -30,6 +30,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
@@ -234,6 +238,28 @@ public class EntityServiceImplTest {
     }
 
     @Test
+    public void test_create_publication_with_items() {
+        List<Map<Character, String>> list = new ArrayList<Map<Character, String>>();
+        Map<Character, String> arr = new HashMap<Character, String>(){{
+            put('a', "hutl");
+            put('b', "hutl");
+            put('c', "m");
+            put('l', "3");
+            put('m', "1");
+            put('o', "952 Cri");
+            put('p', "213123123");
+            put('q', "2014-11-05");
+            put('t', "1");
+            put('y', "L");
+        }};
+
+        when(mockKohaAdapter.getNewBiblioWithItems(arr)).thenReturn("123");
+        Model test = RDFModelUtil.modelFrom(itemNTriples("213123123").replaceAll("__BASEURI__", "http://deichman.no/"), Lang.NTRIPLES);
+        String response = service.create(EntityType.PUBLICATION, test);
+        assertTrue(response.substring(response.lastIndexOf("/") + 1, response.length()).matches("p[0-9]+"));
+    }
+
+    @Test
     public void test_create_and_delete_entity() throws Exception{
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
@@ -344,4 +370,18 @@ public class EntityServiceImplTest {
                 + "}";
     }
 
+    private String itemNTriples(final String barcode) {
+        return "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "hasItem> <__BASEURI__bibliofilItem/x" + barcode + "> .\n"
+                + "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "name> \"Titlely title\".\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/a> \"hutl\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/b> \"hutl\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/c> \"m\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/l> \"3\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/m> \"1\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/o> \"952 Cri\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/p> \"" + barcode + "\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/q> \"2014-11-05\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/t> \"1\" .\n"
+                + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/y> \"L\" .";
+    }
 }
