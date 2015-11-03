@@ -252,4 +252,9 @@ public final class EntityServiceImpl implements EntityService {
         return repository.getResourceURIByBibliofilId(personId);
 
     }
+
+    @Override
+    public Model retrieveWorksByCreator(String creatorUri) {
+        return repository.retrieveWorksByCreator(creatorUri);
+    }
 }

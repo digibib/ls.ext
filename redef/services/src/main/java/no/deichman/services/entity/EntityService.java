@@ -1,7 +1,7 @@
 package no.deichman.services.entity;
 
-import org.apache.jena.rdf.model.Model;
 import no.deichman.services.entity.patch.PatchParserException;
+import org.apache.jena.rdf.model.Model;
 
 import java.util.Optional;
 
@@ -19,4 +19,6 @@ public interface EntityService {
     boolean resourceExists(String resourceUri);
 
     Optional<String> retrieveBibliofilPerson(String personId);
+
+    Model retrieveWorksByCreator(String creatorUri);
 }

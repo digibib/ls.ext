@@ -1,8 +1,8 @@
 package no.deichman.services.entity;
 
-import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
+import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.rdf.RDFModelUtil;
@@ -14,9 +14,11 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +27,7 @@ import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.co.datumedge.hamcrest.json.SameJSONAs;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
@@ -43,6 +47,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -331,6 +336,51 @@ public class EntityServiceImplTest {
         String workId = service.create(EntityType.WORK, inputModel);
         String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
         service.patch(EntityType.WORK, workId.replace(workURI, ""), badPatchData);
+    }
+
+    @Test
+    public void test_retrieve_work_by_creator() throws Exception {
+        String testId = "PERSON_THAT_SHOULD_HAVE_CREATED_WORK";
+        String person = getTestJSON(testId, "person");
+        Model personModel = RDFModelUtil.modelFrom(person, Lang.JSONLD);
+
+        final String personUri = service.create(EntityType.PERSON, personModel);
+
+        String work = getTestJSON("workId", "work");
+        Model workModel = RDFModelUtil.modelFrom(work, Lang.JSONLD);
+        final String workUri = service.create(EntityType.WORK, workModel);
+
+        String work2 = getTestJSON("workId2", "work");
+        Model workModel2 = RDFModelUtil.modelFrom(work2, Lang.JSONLD);
+        String workUri2 = service.create(EntityType.WORK, workModel2);
+
+        addCreatorToWorkPatch(personUri, workUri);
+        addCreatorToWorkPatch(personUri, workUri2);
+        Model worksByCreator = service.retrieveWorksByCreator(personUri.substring(personUri.lastIndexOf("/h")+1));
+        assertFalse(worksByCreator.isEmpty());
+        assertThat(RDFModelUtil.stringFrom(worksByCreator, RDFFormat.JSONLD),
+                SameJSONAs.sameJSONAs(format(""
+                        + "{"
+                        + "  \"@graph\":["
+                        + "      {\"@id\":\"%s\"},"
+                        + "      {\"@id\":\"%s\"}"
+                        + "    ]"
+                        + "}", workUri, workUri2))
+                        .allowingExtraUnexpectedFields()
+                        .allowingAnyArrayOrdering());
+    }
+
+    private void addCreatorToWorkPatch(String personUri, String workUri) throws PatchParserException {
+        service.patch(EntityType.WORK, workUri, format(""
+                + "{"
+                + "  \"op\":\"add\",\n"
+                + "  \"s\": \"%s\",\n"
+                + "  \"p\":\"%screator\",\n"
+                + "  \"o\":{\n"
+                + "    \"value\":\"%s\",\n"
+                + "    \"type\": \"%s\"\n"
+                + "   }\n"
+                + "}\n", workUri, ontologyURI, personUri, XSD.anyURI.getURI()));
     }
 
     private String getTestJSON(String id, String type) {

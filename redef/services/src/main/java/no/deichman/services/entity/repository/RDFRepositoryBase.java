@@ -181,4 +181,13 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+    public final Model retrieveWorksByCreator(String creatorId) {
+        String uri = baseURI.person() + creatorId;
+        log.debug("Attempting to retrieve: works created by " + uri);
+        try (QueryExecution qexec = getQueryExecution(sqb.describeWorksByCreator(uri))) {
+            return qexec.execDescribe();
+        }
+    }
 }

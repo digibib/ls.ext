@@ -180,4 +180,15 @@ public final class SPARQLQueryBuilder {
                 + "  { ?uri <http://data.deichman.no/duo#bibliofilPersonId> \"" + personId + "\" }";
         return QueryFactory.create(q);
     }
+
+    public Query describeWorksByCreator(String uri) {
+        String q = String.format(""
+                + "PREFIX deichman: <%s>\n"
+                + "DESCRIBE ?work \n"
+                + "WHERE {\n"
+                + "      ?work a deichman:Work ;\n"
+                + "            deichman:creator <%s> .\n"
+                + "}", baseURI.ontology(), uri);
+        return QueryFactory.create(q);
+    }
 }

@@ -31,4 +31,6 @@ public interface RDFRepository {
 
 
     Optional<String> getResourceURIByBibliofilId(String personId);
+
+    Model retrieveWorksByCreator(String creatorUri);
 }
