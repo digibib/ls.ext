@@ -21,15 +21,19 @@
 
   Ractive.DEBUG = false;
   var ractive;
+
+  // need to leave already parsed JSON from axios
+  var ensureJSON = function (res) {
+    return (typeof res === "string") ? JSON.parse(res) : res;
+  };
+
   /* Private functions */
   var loadExistingResource = function (uri) {
-    axios.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1),
-      {"Accept": "application/ld+json"})
+    axios.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1))
     .then(function (response) {
-      var r = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
+      //var r = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
       ractive.set("resource_uri", uri);
-
-      var values = Ontology.extractValues(r);
+      var values = Ontology.extractValues(ensureJSON(response.data));
       for (var n in ractive.get("inputs")) {
         var kp = "inputs." + n;
         var input = ractive.get(kp);
@@ -61,10 +65,10 @@
 
   var loadAuthorizedValues = function (url, predicate) {
 
-    axios.get(url, {headers: {Accept: "application/ld+json"}})
+    axios.get(url)
     .then(function (response) {
-      var values = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
-
+      //var values = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
+      var values = ensureJSON(response.data);
       // resolve all @id uris
       values["@graph"].forEach(function (v) {
         v["@id"] = Ontology.resolveURI(values, v["@id"]);
@@ -196,10 +200,11 @@
       var errors = [];
 
       // Start initializing - return a Promise
-      return axios.get("/config", {headers: {Accept: "application/ld+json" } })
+      return axios.get("/config")
       .then(function (response) {
-        config = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
-        return config;
+        //config = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
+        config = ensureJSON(response.data);
+        return;
       })
       .then(function () {
         return axios.get("/main_template.html");
@@ -222,7 +227,6 @@
             save_status: "ny ressurs"
           }
         });
-
         // Find resource type from url path
         ractive.set("resource_type", Main.getResourceType());
 
@@ -298,10 +302,10 @@
       });
     },
     loadOntology: function () {
-      return axios.get(ractive.get("config.ontologyUri"), { headers: {Accept: "application/ld+json" } })
+      return axios.get(ractive.get("config.ontologyUri"))
       .then(function (response) {
-        var r = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
-        return onOntologyLoad(r);
+        //var r = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
+        return onOntologyLoad(ensureJSON(response.data));
       }).catch(function (err) {
         console.log("Error loading ontology: " + err);
       });
