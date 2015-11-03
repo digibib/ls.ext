@@ -1,8 +1,8 @@
 {
   "@graph": [
     {
-      "@id": "format:CD",
-      "@type": "http://data.deichman.no/utility#Format",
+      "@id": "format:Compact_Disc",
+      "@type": "duo:Format",
       "rdfs:label": {
         "@language": "no",
         "@value": "CD"
@@ -10,7 +10,7 @@
     },
     {
       "@id": "format:Book",
-      "@type": "http://data.deichman.no/utility#Format",
+      "@type": "duo:Format",
       "rdfs:label": {
         "@language": "no",
         "@value": "Bok"
@@ -18,16 +18,21 @@
     },
     {
       "@id": "format:DVD",
-      "@type": "http://data.deichman.no/utility#Format",
+      "@type": "duo:Format",
       "rdfs:label": {
         "@language": "no",
         "@value": "DVD"
       }
     }
   ],
-  "@context": {
-    "format": "http://data.deichman.no/",
-    "rdfs": "http://ww.w3.org/2000/01/rdf-schema#",
-    "duo": "http://data.deichman.no/utility#"
+  "@context" : {
+    "label" : {
+      "@id" : "http://www.w3.org/2000/01/rdf-schema#label",
+      "@type" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+    },
+    "format" : "http://data.deichman.no/format#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+    "duo" : "http://data.deichman.no/utility#"
   }
 }
+

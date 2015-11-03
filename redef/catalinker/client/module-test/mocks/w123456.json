@@ -33,6 +33,7 @@
       "deichman:format": {
         "@id": "http://data.deichman.no/format#Book"
       },
+      "deichman:recordID" : "123456",
       "deichman:name": [
         {
           "@value": "Hungrig",

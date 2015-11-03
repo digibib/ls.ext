@@ -1,40 +1,40 @@
 {
-  "@graph": [
-    {
-      "@id": "language:eng",
-      "@type": "http://lexvo.org/ontology#Language",
-      "rdfs:label": {
-        "@language": "no",
-        "@value": "Engelsk"
-      }
-    },
-    {
-      "@id": "language:fra",
-      "@type": "http://lexvo.org/ontology#Language",
-      "rdfs:label": {
-        "@language": "no",
-        "@value": "Fransk"
-      }
-    },
-    {
-      "@id": "language:nno",
-      "@type": "http://lexvo.org/ontology#Language",
-      "rdfs:label": {
-        "@language": "no",
-        "@value": "Norsk (Nynorsk)"
-      }
-    },
-    {
-      "@id": "language:nob",
-      "@type": "http://lexvo.org/ontology#Language",
-      "rdfs:label": {
-        "@language": "no",
-        "@value": "Norsk (Bokmål)"
-      }
+  "@graph" : [ {
+    "@id" : "language:ara",
+    "@type" : "lvont:Language",
+    "rdfs:label" : {
+      "@language" : "no",
+      "@value" : "Arabisk"
     }
-  ],
-  "@context": {
-    "language": "http://lexvo.org/id/iso639-3/",
-    "rdfs": "http://ww.w3.org/2000/01/rdf-schema#"
+  }, {
+    "@id" : "language:chi",
+    "@type" : "lvont:Language",
+    "rdfs:label" : {
+      "@language" : "no",
+      "@value" : "Kinesisk"
+    }
+  }, {
+    "@id" : "language:eng",
+    "@type" : "lvont:Language",
+    "rdfs:label" : {
+      "@language" : "no",
+      "@value" : "Engelsk"
+    }
+  }, {
+    "@id" : "language:nob",
+    "@type" : "lvont:Language",
+    "rdfs:label" : {
+      "@language" : "no",
+      "@value" : "Norsk (bokmål)"
+    }
+  } ],
+  "@context" : {
+    "label" : {
+      "@id" : "http://www.w3.org/2000/01/rdf-schema#label",
+      "@type" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+    },
+    "lvont" : "http://lexvo.org/ontology#",
+    "language" : "http://lexvo.org/id/iso639-3/",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#"
   }
 }

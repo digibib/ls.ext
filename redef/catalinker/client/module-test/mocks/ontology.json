@@ -85,7 +85,7 @@
         }
       ],
       "http://data.deichman.no/utility#valuesFrom": {
-        "@id": "http://127.0.0.1:7777/authorized_values/format"
+        "@id": "http://192.168.50.12:7000/authorized_values/format"
       },
       "rdfs:range": {
         "@id": "http://data.deichman.no/utility#Format"
@@ -108,7 +108,7 @@
         }
       ],
       "http://data.deichman.no/utility#valuesFrom": {
-        "@id": "http://127.0.0.1:7777/authorized_values/language"
+        "@id": "http://192.168.50.12:7000/authorized_values/language"
       },
       "rdfs:range": {
         "@id": "http://lexvo.org/ontology#Language"
@@ -193,7 +193,7 @@
     }
   ],
   "@context": {
-    "deichman": "http://127.0.0.1:7777/ontology#",
+    "deichman": "http://192.168.50.12:7000/ontology#",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "duo": "http://data.deichman.no/utility#"
   }
