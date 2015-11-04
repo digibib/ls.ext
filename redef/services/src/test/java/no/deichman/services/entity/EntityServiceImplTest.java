@@ -3,6 +3,7 @@ package no.deichman.services.entity;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
+import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.uridefaults.BaseURI;
@@ -30,10 +31,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.PERSON;
@@ -73,7 +70,7 @@ public class EntityServiceImplTest {
     private KohaAdapter mockKohaAdapter;
 
     @Before
-    public void setup(){
+    public void setup() {
         BaseURI baseURI = BaseURI.local();
         repository = new InMemoryRepository();
         service = new EntityServiceImpl(baseURI, repository, mockKohaAdapter);
@@ -84,7 +81,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_work_by_id(){
+    public void test_retrieve_work_by_id() {
         String testId = "work_SHOULD_EXIST";
         String workData = getTestJSON(testId, "work");
         Model inputModel = modelFrom(workData, JSONLD);
@@ -92,14 +89,14 @@ public class EntityServiceImplTest {
         Model comparison = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(
                 workData.replace(workURI + testId, workId)
-                .getBytes(StandardCharsets.UTF_8));
+                        .getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(comparison, in, JSONLD);
         Model test = service.retrieveById(WORK, workId.replace(workURI, ""));
         assertTrue(test.isIsomorphicWith(comparison));
     }
 
     @Test
-    public void test_retrieve_publication_by_id() throws Exception{
+    public void test_retrieve_publication_by_id() throws Exception {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_EXIST";
         String publicationData = getTestJSON(testId, "publication");
@@ -184,7 +181,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_work_items_by_id(){
+    public void test_retrieve_work_items_by_id() {
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(EntityServiceImplTest.modelForBiblio());
         EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
@@ -202,7 +199,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_work(){
+    public void test_create_work() {
         String testId = "SERVICE_WORK_SHOULD_EXIST";
         String work = getTestJSON(testId, "work");
         Model inputModel = modelFrom(work, JSONLD);
@@ -217,7 +214,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_publication(){
+    public void test_create_publication() {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "SERVICE_PUBLICATION_SHOULD_EXIST";
         String publication = getTestJSON(testId, "publication");
@@ -233,7 +230,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_person(){
+    public void test_create_person() {
         String testId = "SERVICE_PERSON_SHOULD_EXIST";
         String person = getTestJSON(testId, "person");
         Model inputModel = modelFrom(person, JSONLD);
@@ -249,28 +246,28 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_create_publication_with_items() {
-        List<Map<Character, String>> list = new ArrayList<Map<Character, String>>();
-        Map<Character, String> arr = new HashMap<Character, String>(){{
-            put('a', "hutl");
-            put('b', "hutl");
-            put('c', "m");
-            put('l', "3");
-            put('m', "1");
-            put('o', "952 Cri");
-            put('p', "213123123");
-            put('q', "2014-11-05");
-            put('t', "1");
-            put('y', "L");
-        }};
+        MarcRecord marcRecord = new MarcRecord();
+        String title = "Titely title";
+        marcRecord.addTitle(title);
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'a', "hutl");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'b', "hutl");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'c', "m");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'l', "3");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'm', "1");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'o', "952 Cri");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'p', "213123123");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'q', "2014-11-05");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 't', "1");
+        marcRecord.addGroup(MarcConstants.FIELD_952, 'y', "L");
 
-        when(mockKohaAdapter.getNewBiblioWithItems(arr)).thenReturn("123");
-        Model test = modelFrom(itemNTriples("213123123").replaceAll("__BASEURI__", "http://deichman.no/"), Lang.NTRIPLES);
+        when(mockKohaAdapter.getNewBiblioWithItems(marcRecord)).thenReturn("123");
+        Model test = modelFrom(itemNTriples(title, "213123123").replaceAll("__BASEURI__", "http://deichman.no/"), Lang.NTRIPLES);
         String response = service.create(PUBLICATION, test);
         assertTrue(response.substring(response.lastIndexOf("/") + 1, response.length()).matches("p[0-9]+"));
     }
 
     @Test
-    public void test_create_and_delete_entity() throws Exception{
+    public void test_create_and_delete_entity() throws Exception {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
@@ -285,14 +282,14 @@ public class EntityServiceImplTest {
         Model test = ModelFactory.createDefaultModel();
         InputStream in = new ByteArrayInputStream(
                 publication.replace(publicationURI + testId, publicationId)
-                .getBytes(StandardCharsets.UTF_8));
-        RDFDataMgr.read(test,in, JSONLD);
+                        .getBytes(StandardCharsets.UTF_8));
+        RDFDataMgr.read(test, in, JSONLD);
         service.delete(test);
         assertFalse(repository.askIfStatementExists(s));
     }
 
     @Test
-    public void test_patch_work_add() throws Exception{
+    public void test_patch_work_add() throws Exception {
         String testId = "work_SHOULD_BE_PATCHABLE";
         String workData = getTestJSON(testId, "work");
         Model inputModel = modelFrom(workData, JSONLD);
@@ -313,16 +310,16 @@ public class EntityServiceImplTest {
                 createProperty(ontologyURI + "color"),
                 "red"));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        RDFDataMgr.write(baos,patchedModel.difference(oldModel),Lang.NT);
+        RDFDataMgr.write(baos, patchedModel.difference(oldModel), Lang.NT);
         assertEquals(baos.toString("UTF-8").trim(),
-                "<"+ workId + "> <" + ontologyURI + "color> \"red\" .");
+                "<" + workId + "> <" + ontologyURI + "color> \"red\" .");
     }
 
     @Test
-    public void test_patch_publication_add() throws Exception{
+    public void test_patch_publication_add() throws Exception {
         when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_PATCHABLE";
-        String publicationData = getTestJSON(testId,"publication");
+        String publicationData = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publicationData, JSONLD);
         String publicationId = service.create(PUBLICATION, inputModel);
         String nonUriPublicationId = publicationId.replace(publicationURI, "");
@@ -334,9 +331,9 @@ public class EntityServiceImplTest {
                 "red"));
     }
 
-    @Test(expected=PatchParserException.class)
-    public void test_bad_patch_fails() throws Exception{
-        String workData = getTestJSON("SHOULD_FAIL","work");
+    @Test(expected = PatchParserException.class)
+    public void test_bad_patch_fails() throws Exception {
+        String workData = getTestJSON("SHOULD_FAIL", "work");
         Model inputModel = modelFrom(workData, JSONLD);
         String workId = service.create(WORK, inputModel);
         String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
@@ -361,7 +358,7 @@ public class EntityServiceImplTest {
 
         addCreatorToWorkPatch(personUri, workUri);
         addCreatorToWorkPatch(personUri, workUri2);
-        Model worksByCreator = service.retrieveWorksByCreator(personUri.substring(personUri.lastIndexOf("/h")+1));
+        Model worksByCreator = service.retrieveWorksByCreator(personUri.substring(personUri.lastIndexOf("/h") + 1));
         assertFalse(worksByCreator.isEmpty());
         assertThat(stringFrom(worksByCreator, JSONLD),
                 sameJSONAs(format(""
@@ -399,16 +396,20 @@ public class EntityServiceImplTest {
         String resourceURI = null;
 
         switch (type.toLowerCase()) {
-            case "work" : resourceClass = "Work";
+            case "work":
+                resourceClass = "Work";
                 resourceURI = workURI;
                 break;
-            case "publication" : resourceClass = "Publication";
+            case "publication":
+                resourceClass = "Publication";
                 resourceURI = publicationURI;
                 break;
-            case "person" : resourceClass = "Person";
+            case "person":
+                resourceClass = "Person";
                 resourceURI = personURI;
                 break;
-            default: break;
+            default:
+                break;
         }
 
         return format("{\"@context\": "
@@ -433,9 +434,9 @@ public class EntityServiceImplTest {
                 + "}";
     }
 
-    private String itemNTriples(final String barcode) {
+    private String itemNTriples(final String title, final String barcode) {
         return "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "hasItem> <__BASEURI__bibliofilItem/x" + barcode + "> .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "name> \"Titlely title\".\n"
+                + "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "name> \"" + title + "\".\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/a> \"hutl\" .\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/b> \"hutl\" .\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/c> \"m\" .\n"

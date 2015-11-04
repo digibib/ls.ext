@@ -38,5 +38,24 @@ public class MarcRecord {
                 .collect(Collectors.toList());
     }
 
+    public final List<Group> getFields() {
+        return fields;
+    }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (o instanceof MarcRecord) {
+            fields.removeAll(((MarcRecord) o).getFields());
+            return fields.isEmpty();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public final int hashCode() {
+        return fields.hashCode();
+    }
 }
