@@ -6,13 +6,19 @@
 
     var axios = require("axios");
     var url = require("url");
-    module.exports = factory(Ractive, axios, url);
+    var graph = require("ld-graph");
+
+    module.exports = factory(Ractive, axios, url, graph);
   } else {
-    root.Person = factory(root.Ractive, root.axios, root.url);
+    root.Person = factory(root.Ractive, root.axios, root.url, root.graph);
   }
-}(this, function (Ractive, axios, url) {
+}(this, function (Ractive, axios, url, graph) {
   "use strict";
   Ractive.DEBUG = false;
+
+  var ensureJSON = function (res) {
+    return (typeof res === "string") ? JSON.parse(res) : res;
+  };
 
   var Person = {
 
@@ -25,23 +31,36 @@
       }
 
       var config,
-          person = {};
-      var id = this.getResourceID();
+          person,
+          works,
+          id = this.getResourceID();
 
-      return axios.get("/config").then(function (response) {
-        config = response.data;
+      return axios.get("/config")
+      .then(function (response) {
+        config = ensureJSON(response.data);
+      })
+      .then(function() {
+        return axios.get("http://" + config.host + ":" + config.port + "/person/"+id+"/works");
+      })
+      .then(function(response) {
+        works = ensureJSON(response.data);
+      })
+      .catch(function(error) {
+        if (error.status == 404) {
+          console.log("person has no connected works");
+        } else {
+          throw new Error(error);
+        }
       })
       .then(function() {
         return axios.get("http://" + config.host + ":" + config.port + "/person/"+id);
       })
       .then(function(response) {
-        person.name = response.data["deichman:name"];
-        document.title = person.name;
-        if (response.data["deichman:birth"]) {
-          person.birthYear = response.data["deichman:birth"]["@value"];
-        }
-        if (response.data["deichman:death"]) {
-          person.deathYear = response.data["deichman:death"]["@value"];
+        var h = ensureJSON(response.data);
+        if (works) {
+          person = graph.parse(works, h);
+        } else {
+          person = graph.parse(h);
         }
       })
       .then(function() {
@@ -54,7 +73,23 @@
         var personRactive = new Ractive({
           el: "#person-app",
           template: data,
-          data: person
+          data: {
+            person: person.byId("http://" + config.host + ":" + config.port + "/person/"+id),
+            works: person.byType("Work"),
+            linkify: function(uri) {
+              var found = false;
+              var i;
+              for (i = uri.length; i>0; i--) {
+                if (uri[i] == '/') {
+                  if (found) {
+                    return uri.substring(i);
+                  }
+                  found = true;
+                }
+              }
+              throw new Error("cannot linkify: " + uri);
+            }
+          }
         });
         return personRactive;
       })

@@ -65,7 +65,7 @@ describe("PatronClient", function () {
     it("should display title, author, original language and date of work", function (done) {
       expect(document.querySelector("[data-automation-id='work_title']").innerHTML).to.equal("Sult");
       expect(document.querySelector("[data-automation-id='work_date']").innerHTML).to.equal("1890");
-      expect(document.querySelector("[data-automation-id='work_author']").innerHTML).to.equal('<a href="/person/h998496193265">Knut Hamsun</a>');
+      expect(document.querySelector("[data-automation-id='work_author']").innerHTML).to.equal('<a href="/person/h123456">Knut Hamsun</a>');
       done();
     });
 

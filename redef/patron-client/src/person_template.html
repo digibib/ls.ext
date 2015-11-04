@@ -7,8 +7,8 @@
   <div class="row person-info">
     <div class="column fourth"><p>bilde kommer her</p></div>
     <div class="column three-fourths">
-      <h2><span data-automation-id="person-name">{{name}}</span></h2>
-      <h3>(<span data-automation-id="person-birth">{{birthYear}}</span>-<span data-automation-id="person-death">{{deathYear}}</span>)</h3>
+      <h2><span data-automation-id="person-name">{{person.get("name").value}}</span></h2>
+      <h3>(<span data-automation-id="person-birth">{{person.get("birth").value}}</span>-<span data-automation-id="person-death">{{person.get("death").value}}</span>)</h3>
       <div class="small-text">
         <p><strong>Kort biografi</strong></p>
         <p>bla bla</p>
@@ -26,6 +26,11 @@
   </div>
   <div class="panel column full">
     <h3>Verk</h3>
+    {{#each works}}
+      <div class="work">
+        <p><a href="{{linkify(id)}}"><strong>{{.get("name").value}}</strong> ({{.get("year").value}})</a></p>
+      </div>
+    {{/each}}
   </div>
 
 </div>

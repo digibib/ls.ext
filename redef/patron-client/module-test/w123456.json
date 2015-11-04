@@ -9,7 +9,7 @@
       "deichman:biblio": "2",
       "deichman:year": "1890",
       "deichman:creator": {
-        "@id": "http://192.168.50.12:7000/person/h998496193265"
+        "@id": "http://192.168.50.12:7000/person/h123456"
       },
       "deichman:name": "Sult",
       "@id": "http://192.168.50.12:7000/work/w123456",
@@ -21,7 +21,7 @@
         "@type": "xsd:gYear",
         "@value": "1859"
       },
-      "@id": "http://192.168.50.12:7000/person/h998496193265",
+      "@id": "http://192.168.50.12:7000/person/h123456",
       "@type": "deichman:Person",
       "deichman:death": {
         "@type": "xsd:gYear",

@@ -20,7 +20,7 @@ describe("PatronClient", function () {
 
       // stub ID returned from window.location
       sinon.stub(Person, "getResourceID", function () {
-        return "p123456";
+        return "h123456";
       });
 
       // stub http requests from axios used in module, faking returned promises
@@ -29,9 +29,11 @@ describe("PatronClient", function () {
           case "/config":
             return Promise.resolve({data: { host: "192.168.50.12", port: 7000 }});
           case "/person_template.html":
-            return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/person_template.html", "UTF-8") });
-          case "http://192.168.50.12:7000/person/p123456":
-            return Promise.resolve({data: {"deichman:name": "R. Rolfsen", "deichman:birth": {"@value": "1977"}, "deichman:death": {"@value": "1981"}}});
+            return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/person_template.html", "UTF-8")});
+          case "http://192.168.50.12:7000/person/h123456":
+            return Promise.resolve({data: fs.readFileSync(__dirname + "/../module-test/h123456.json", "UTF-8") });
+          case "http://192.168.50.12:7000/person/h123456/works":
+            return Promise.resolve({data: fs.readFileSync(__dirname + "/../module-test/w123456.json", "UTF-8") });
         }
       });
 
@@ -54,7 +56,7 @@ describe("PatronClient", function () {
     });
 
     it("should get person ID from window.location", function (done) {
-      expect(Person.getResourceID()).to.eq("p123456");
+      expect(Person.getResourceID()).to.eq("h123456");
       done();
     });
 
@@ -62,6 +64,11 @@ describe("PatronClient", function () {
       expect(document.querySelector("[data-automation-id='person-name']").innerHTML).to.eq("R. Rolfsen");
       expect(document.querySelector("[data-automation-id='person-birth']").innerHTML).to.eq("1977");
       expect(document.querySelector("[data-automation-id='person-death']").innerHTML).to.eq("1981");
+      done();
+    });
+
+    it("should list the works of a person", function (done) {
+      expect(document.querySelectorAll(".work").length).to.eq(ractive.get("works").length);
       done();
     });
 
