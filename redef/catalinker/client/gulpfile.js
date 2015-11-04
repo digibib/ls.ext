@@ -29,12 +29,12 @@ gulp.task('browserify', ['clean', 'images', 'html'], function () {
   .pipe(gulp.dest('public/js/'));
 });
 
-gulp.task('html', function () {
+gulp.task('html', ['clean'], function () {
   return gulp.src('src/*.html')
       .pipe(gulp.dest('public'));
 });
 
-gulp.task('images', function () {
+gulp.task('images', ['clean'], function () {
   return gulp.src('src/*.png')
       .pipe(gulp.dest('public'));
 });
