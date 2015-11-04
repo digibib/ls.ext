@@ -36,8 +36,16 @@ public class KohaAdapterImplTest {
         assertEquals("26", biblioId);
     }
 
+    @Test
+    public void should_return_raw_marc_xml() throws IOException {
+        kohaSvcMock.addLoginExpectation();
+        String expected = stringFromClassPathResource("ragde.marcxml");
+        kohaSvcMock.addGetBiblioExpectation("626460", expected);
+
+        assertEquals(expected, kohaAdapter.getMarcXml("626460"));
+    }
+
     private String stringFromClassPathResource(String classPathResource) throws IOException {
         return IOUtils.toString(getClass().getClassLoader().getResourceAsStream(classPathResource), StandardCharsets.UTF_8);
     }
-
 }

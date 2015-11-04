@@ -159,7 +159,7 @@ end
 
 When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   book = @active[:book]
-  @browser.goto intranet(:reserve)+book.biblionumber
+  @browser.goto intranet(:reserve)+@context[:record_id]
 
   user = SVC::User.new(@browser).get(name).first
 
@@ -200,7 +200,7 @@ Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
       @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
     end
   else
-   @browser.table(:id => "holdst").text.should include(@active[:book].title)
+   @browser.table(:id => "holdst").text.should include(@context[:publication_name])
   end
 end
 
@@ -229,7 +229,7 @@ end
 
 Then(/^vises boka i listen over bøker som skal plukkes$/) do
   holds = @site.HoldsQueue.visit.get_holds
-  holds.text.should include(@active[:book].title)
+  holds.text.should include(@context[:publication_name])
   holds.text.should include(@active[:patron].cardnumber)
 end
 
@@ -370,7 +370,7 @@ end
 
 When(/^jeg leter opp boka i katalogiseringssøk$/) do
   @browser.goto intranet(:cataloguing)
-  @browser.text_field(:name => 'q').set @active[:book].title
+  @browser.text_field(:name => 'q').set @context[:record_id]#@active[:book].title
   @browser.form(:name => 'search').submit
   @browser.text.include?("Add/Edit items") == true
 end
@@ -424,13 +424,13 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
 end
 
 When(/^ser jeg tittelen i plukklisten$/) do
-  pending
+  @browser.strongs.any? {|element| element.text.include? @context[:publication_name]}
 end
 
 When(/^jeg besøker bokposten$/) do
-  @site.BiblioDetail.visit(@context[:biblionumber])
+  @site.BiblioDetail.visit(@context[:record_id])
 end
 
 When(/^ser jeg tittelen i bokposten$/) do
-  @browser.h1[:title] == @context[:publication_name]
+  @browser.h1s(:class => "title").first.text == @context[:publication_name]
 end

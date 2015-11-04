@@ -31,6 +31,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
 
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -39,6 +40,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -210,7 +212,7 @@ public class AppTest {
                 + "<__BASEURI__externalPerson/p1234> <http://data.deichman.no/duo#bibliofilPersonId> \"1234\" .\n"
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
 
-                input = input.replace("__BASEURI__", baseUri);
+        input = input.replace("__BASEURI__", baseUri);
 
         String duplicateInput = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Person> .\n"
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
@@ -454,4 +456,39 @@ public class AppTest {
         return embeddedElasticsearchServer.getClient();
     }
 
+
+    @Test
+    public void should_return_marc_xml_for_existing_biblio_id() throws UnirestException, IOException {
+        kohaSvcMock.addLoginExpectation();
+        kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
+
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<record\n"
+                + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                + "    xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"\n"
+                + "    xmlns=\"http://www.loc.gov/MARC21/slim\">\n"
+                + "\n"
+                + "  <leader>00080    a2200049   4500</leader>\n"
+                + "  <datafield tag=\"245\" ind1=\" \" ind2=\" \">\n"
+                + "    <subfield code=\"a\">Test test test</subfield>\n"
+                + "  </datafield>\n"
+                + "  <datafield tag=\"999\" ind1=\" \" ind2=\" \">\n"
+                + "    <subfield code=\"c\">27</subfield>\n"
+                + "    <subfield code=\"d\">27</subfield>\n"
+                + "  </datafield>\n"
+                + "</record>\n";
+
+        HttpResponse<String> response = buildEmptyCreateRequest(baseUri + "publication").asString();
+        String location = getLocation(response);
+
+        final HttpResponse<JsonNode> getItem = buildGetRequest(location).asJson();
+
+        Model model = RDFModelUtil.modelFrom(getItem.getBody().toString(), Lang.JSONLD);
+        final String[] recordId = new String[1];
+        model.listObjectsOfProperty(createProperty(baseUri + "ontology#recordID")).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
+
+        kohaSvcMock.addGetBiblioExpectation(recordId[0], expected);
+        HttpResponse<String> result = Unirest.get(baseUri + "marc/" + recordId[0]).asString();
+        assertEquals(expected, result.getBody());
+    }
 }

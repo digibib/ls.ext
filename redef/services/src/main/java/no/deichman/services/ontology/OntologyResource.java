@@ -54,6 +54,7 @@ public final class OntologyResource {
         return Response.ok().entity(getOntologyJsonLD()).build();
     }
 
+
     private String getOntologyJsonLD() {
         return new JSONLDCreator(baseUri).asJSONLD(ontologyService.getOntology());
     }

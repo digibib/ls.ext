@@ -158,7 +158,10 @@ public final class KohaSvcMock {
         // TODO most likely this needs to be fixed
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
-                + "<marcxml:record><marcxml:leader>00000     2200000       </marcxml:leader>"
+                + "<marcxml:record><marcxml:leader>00080    a2200049   4500</marcxml:leader>"
+                + "<marcxml:datafield tag=\""+ MarcConstants.FIELD_245+"\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">"+ "Test test test" + "</marcxml:subfield>"
+                + "</marcxml:datafield>"
                 + Stream.of(barcode).map(KohaSvcMock::itemMarc).reduce("", String::concat)
                 + "</marcxml:record>"
                 + "</marcxml:collection>\n";
@@ -167,7 +170,7 @@ public final class KohaSvcMock {
                 onRequestTo("/cgi-bin/koha/svc/new_bib")
                         .withParam("items", "1")
                         .withMethod(POST)
-                        .withBody(expectedPayload, MediaType.TEXT_XML)
+                        .withBody(Pattern.compile("(?s).*"), MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
                         .withStatus(OK.getStatusCode()));

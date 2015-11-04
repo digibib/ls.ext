@@ -75,6 +75,9 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
   book = SVC::Biblio.new(@browser,@context,@active).add
   @active[:book] = book
   @context[:biblio]     = book.biblionumber
+  @context[:title] = book.title
+  @context[:record_id] = book.biblionumber
+
   @cleanup.push( "bok #{book.biblionumber}" =>
     lambda do
       SVC::Biblio.new(@browser).delete(book)

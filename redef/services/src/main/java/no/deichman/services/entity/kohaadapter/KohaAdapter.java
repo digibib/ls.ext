@@ -3,7 +3,7 @@ package no.deichman.services.entity.kohaadapter;
 
 import org.apache.jena.rdf.model.Model;
 
-import java.util.Map;
+import javax.ws.rs.core.Response;
 
 /**
  * Responsibility: TODO.
@@ -12,5 +12,10 @@ public interface KohaAdapter {
     Model getBiblio(String biblioNo);
     String getNewBiblio();
 
-    String getNewBiblioWithItems(Map<Character, String>... itemSubfieldMap);
-}
+    String getNewBiblioWithItems(MarcRecord marcRecord);
+
+    String getMarcXml(String recordId);
+
+    Response updateRecord(String id, MarcRecord marcRecord);
+
+    }

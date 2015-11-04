@@ -24,7 +24,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -75,24 +74,8 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     @Override
-    public Model getBiblio(String id) {
-        // TODO Handle login in a filter / using template pattern
-        if (sessionCookie == null) {
-            login();
-        }
-
-        log.info("Attempting to retrieve " + id + " from Koha SVC");
-        Response response = requestItems(id);
-        // TODO Hack if we have timed out
-        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
-            login();
-            response = requestItems(id);
-        }
-        if (OK.getStatusCode() != response.getStatus()) {
-            throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
-        }
-
-        return mapMarcToModel(response.readEntity(String.class));
+    public Model getBiblio(String recordId) {
+        return mapMarcToModel(getMarcXml(recordId));
     }
 
     private Response requestItems(String id) {
@@ -117,14 +100,35 @@ public final class KohaAdapterImpl implements KohaAdapter {
         return m;
     }
 
-    private Response requestNew(Map<Character, String>... itemSubfieldMaps) {
+    private Response requestNewRecord(MarcRecord marcRecord) {
         MarcXmlProvider mxp = new MarcXmlProvider();
         mxp.createRecord();
-        for (Map<Character, String> itemSubfieldMap : itemSubfieldMaps) {
-            mxp.add952(itemSubfieldMap);
+
+        if (marcRecord != null){
+            mxp.addSubfield(MarcConstants.FIELD_245, marcRecord.getField(MarcConstants.FIELD_245));
+            mxp.addSubfield(MarcConstants.FIELD_952, marcRecord.getField(MarcConstants.FIELD_952));
         }
+
         Client client = ClientBuilder.newClient();
-        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (itemSubfieldMaps != null && itemSubfieldMaps.length > 0 ? "?items=1" : "");
+        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (marcRecord != null && !marcRecord.isEmpty() ? "?items=1" : "");
+        WebTarget webTarget = client.target(url);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.post(Entity.entity(mxp.getMarcXml(), MediaType.TEXT_XML));
+    }
+
+    @Override
+    public Response updateRecord(String recordId, MarcRecord marcRecord) {
+        MarcXmlProvider mxp = new MarcXmlProvider();
+        mxp.createRecord();
+
+        if (marcRecord != null){
+            mxp.addSubfield(MarcConstants.FIELD_245, marcRecord.getField(MarcConstants.FIELD_245));
+            mxp.addSubfield(MarcConstants.FIELD_952, marcRecord.getField(MarcConstants.FIELD_952));
+        }
+
+        Client client = ClientBuilder.newClient();
+        String url = kohaPort + "/cgi-bin/koha/svc/bib/" + recordId + "?items=0";
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
         invocationBuilder.cookie(sessionCookie.toCookie());
@@ -133,21 +137,21 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     @Override
     public String getNewBiblio() {
-        return getNewBiblioWithItems(); // empty argument list
+        return getNewBiblioWithItems(null); // empty argument list
     }
 
     @Override
-    public String getNewBiblioWithItems(Map<Character, String>... itemSubfieldMap) {
+    public String getNewBiblioWithItems(MarcRecord marcRecord) {
         // TODO Handle login in a filter / using template pattern
         if (sessionCookie == null) {
             login();
         }
 
-        Response response = requestNew(itemSubfieldMap);
+        Response response = requestNewRecord(marcRecord);
         // TODO Hack if we have timed out
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             login();
-            response = requestNew(itemSubfieldMap);
+            response = requestNewRecord(marcRecord);
         }
         if (OK.getStatusCode() != response.getStatus()) {
             throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
@@ -171,6 +175,26 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
 
         return biblioId;
+    }
+
+    @Override
+    public String getMarcXml(String recordId) {
+        // TODO Handle login in a filter / using template pattern
+        if (sessionCookie == null) {
+            login();
+        }
+
+        log.info("Attempting to retrieve " + recordId + " from Koha SVC");
+        Response response = requestItems(recordId);
+        // TODO Hack if we have timed out
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            login();
+            response = requestItems(recordId);
+        }
+        if (OK.getStatusCode() != response.getStatus()) {
+            throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
+        }
+        return response.readEntity(String.class);
     }
 
 }

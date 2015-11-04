@@ -1,6 +1,8 @@
 package no.deichman.services.entity;
 
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
+import no.deichman.services.entity.kohaadapter.MarcConstants;
+import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.RDFRepository;
@@ -24,7 +26,6 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +50,7 @@ public final class EntityServiceImpl implements EntityService {
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
     private final Property hasItemProperty;
+    private final Property nameProperty;
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -81,6 +83,7 @@ public final class EntityServiceImpl implements EntityService {
 
         return input;
     }
+
     private Model extractNamedResourceFromModel(String resource, InputStream input, Lang lang) {
         Model tempModel = ModelFactory.createDefaultModel();
         RDFDataMgr.read(tempModel, input, lang);
@@ -90,11 +93,12 @@ public final class EntityServiceImpl implements EntityService {
         return qexec.execDescribe();
     }
 
-    public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter){
+    public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
         this.baseURI = baseURI;
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
+        nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
     }
 
     @Override
@@ -136,7 +140,7 @@ public final class EntityServiceImpl implements EntityService {
         ResultSet publicationSet = queryExecution.execSelect();
 
         while (publicationSet.hasNext()) {
-            QuerySolution solution =  publicationSet.next();
+            QuerySolution solution = publicationSet.next();
             RDFNode publicationUri = solution.get("publicationUri");
             String biblioId = solution.get("biblioId").asLiteral().getString();
 
@@ -178,17 +182,20 @@ public final class EntityServiceImpl implements EntityService {
 
     private String createPublicationWithItems(Model inputModel, Set<Resource> items) {
         Model modelWithoutItems = ModelFactory.createDefaultModel();
-        List<Map<Character, String>> itemSubfieldMaps = new ArrayList<>();
-
+        MarcRecord marcRecord = new MarcRecord();
         streamFrom(inputModel.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
                     if (items.contains(subject)) {
-                        itemSubfieldMaps.add(as952Subfields(statements));
+                        as952Subfields(statements).forEach((x, y) -> marcRecord.addGroup(MarcConstants.FIELD_952, x, y));
                     } else {
                         statements.forEach(s -> {
                             if (!s.getPredicate().equals(hasItemProperty)) {
+                                if (s.getPredicate().equals(nameProperty)) {
+                                    marcRecord.addTitle(s.getObject().asLiteral().toString());
+                                }
                                 modelWithoutItems.add(s);
+
                             }
                         });
                     }
@@ -196,7 +203,7 @@ public final class EntityServiceImpl implements EntityService {
 
         return repository.createPublication(
                 modelWithoutItems,
-                kohaAdapter.getNewBiblioWithItems(asArray(itemSubfieldMaps))
+                kohaAdapter.getNewBiblioWithItems(marcRecord)
         );
     }
 
@@ -239,7 +246,23 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException {
         repository.patch(PatchParser.parse(ldPatchJson));
-        return retrieveById(type, id);
+        Model model = retrieveById(type, id);
+
+        if(type.equals(EntityType.PUBLICATION)) {
+            MarcRecord marcRecord = new MarcRecord();
+            streamFrom(model.listStatements())
+                    .collect(groupingBy(Statement::getSubject))
+                    .forEach((subject, statements) -> {
+                        statements.forEach(s -> {
+                            if (!s.getPredicate().equals(hasItemProperty) && s.getPredicate().equals(nameProperty)) {
+                                marcRecord.addTitle(s.getObject().asLiteral().toString());
+                            }
+                        });
+                    });
+            kohaAdapter.updateRecord(model.getProperty(null, ResourceFactory.createProperty(baseURI.ontology("recordID"))).getString(), marcRecord);
+        }
+
+        return model;
     }
 
     @Override

@@ -3,8 +3,8 @@ package no.deichman.services.entity.kohaadapter;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertNotNull;
@@ -39,18 +39,20 @@ public class MarcXmlProviderTest {
     @Test
     public void should_include_added_item() {
         mxp.createRecord();
-        Map<Character, String> subfields = new HashMap<>();
-        subfields.put('a', "bugga");
-        mxp.add952(subfields);
-        assertThat(mxp.getMarcXml(), containsString("<marcxml:subfield code=\"a\">bugga</marcxml:subfield>"));
+        List<Group> groups = new ArrayList<>();
+        Group group = new Group(MarcConstants.FIELD_952, 'a', "bugga");
+        groups.add(group);
+        mxp.addSubfield(MarcConstants.FIELD_952, groups);
+        assertThat(mxp.getMarcXml(), containsString("<marcxml:subfield code=\""+ MarcConstants.SUBFIELD_A +"\">bugga</marcxml:subfield>"));
     }
 
     @Test
     public void should_include_title() {
         mxp.createRecord();
-        Map<Character, String> subfields = new HashMap<>();
-        subfields.put('a', "bugga");
-        mxp.add245(subfields);
+        List<Group> groups = new ArrayList<>();
+        Group group = new Group(MarcConstants.FIELD_952, 'a', "bugga");
+        groups.add(group);
+        mxp.addSubfield(MarcConstants.FIELD_952, groups);
         assertThat(mxp.getMarcXml(), containsString("<marcxml:subfield code=\""+ MarcConstants.SUBFIELD_A +"\">bugga</marcxml:subfield>"));
     }
 }

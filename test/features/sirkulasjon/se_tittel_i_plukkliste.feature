@@ -6,7 +6,6 @@ Egenskap: Se tittel i plukkliste
   For at jeg skal kunne vite hvilke bøker jeg skal hente
   Må plukklisten inneholde tittel
 
-  @wip
   Scenario: Finn utgivelsestittel i Koha
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes et verk og en utgivelse
@@ -15,6 +14,10 @@ Egenskap: Se tittel i plukkliste
 
   @wip
   Scenario: Sjekker plukkliste
-    Gitt at det finnes et verk og en utgivelse
-    Og jeg leter opp boka i katalogiseringssøk
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes et verk og en utgivelse
+    Og jeg ser på utgivelsen i katalogiseringsgrensesnittet
+    Og jeg følger lenken til posten i Koha
+    Og jeg oppretter et eksemplar av utgivelsen
+    Og at det finnes en reservasjon på materialet
     Så ser jeg tittelen i plukklisten

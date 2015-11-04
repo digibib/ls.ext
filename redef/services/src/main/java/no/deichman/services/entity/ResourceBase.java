@@ -39,7 +39,7 @@ public abstract class ResourceBase {
 
     protected final EntityService getEntityService() {
         if (entityService == null) {
-            KohaAdapter kohaAdapter = new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null);
+            KohaAdapter kohaAdapter = getKohaAdapter();
             RDFRepository repository;
             if (getConfig() != null && "true".equals(getConfig().getInitParameter(SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY))) {
                 if (staticInMemoryRepository == null) {
@@ -52,6 +52,10 @@ public abstract class ResourceBase {
             entityService = new EntityServiceImpl(getBaseURI(), repository, kohaAdapter);
         }
         return entityService;
+    }
+
+    protected final KohaAdapter getKohaAdapter() {
+        return new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null);
     }
 
     protected final BaseURI getBaseURI() {
