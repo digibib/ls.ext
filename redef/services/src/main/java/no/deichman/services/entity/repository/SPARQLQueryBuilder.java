@@ -184,6 +184,9 @@ public final class SPARQLQueryBuilder {
     public Query describeWorksByCreator(String uri) {
         String q = String.format(""
                 + "PREFIX deichman: <%s>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
+                + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "DESCRIBE ?work \n"
                 + "WHERE {\n"
                 + "      ?work a deichman:Work ;\n"
