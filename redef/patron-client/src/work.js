@@ -16,6 +16,10 @@
   "use strict";
   Ractive.DEBUG = false;
 
+  var ensureJSON = function (res) {
+    return (typeof res === "string") ? JSON.parse(res) : res;
+  };
+
   var Work = {
 
     getResourceID: function() {
@@ -41,12 +45,12 @@
       })
       .then(function (response) {
         // axios behaves differently; in browser it parses json automatically, and on node(test) not
-        work_response = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
+        work_response = ensureJSON(response.data);
         return axios.get("http://" + config.host + ":" + config.port + "/work/"+id+"/items");
       })
       .then(function (response) {
         // axios behaves differently; in browser it parses json automatically, and on node(test) not
-        items_response = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
+        items_response = ensureJSON(response.data);
       })
       .catch(function (error) {
         console.log("work items: " + error.statusText);
