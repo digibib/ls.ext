@@ -9,5 +9,5 @@ mappings:
             wget --method=POST --retry-connrefused --timeout=10 --tries=5
             "http://{{ pillar['redef']['elasticsearch']['host']}}:{{ pillar['redef']['elasticsearch']['http']['port']}}/${mapping%.*}"
             --body-file $mapping; done
-   - require:
-     - docker: elasticsearch_container_running
+    - require:
+      - docker: elasticsearch_container_running
