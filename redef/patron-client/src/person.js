@@ -40,7 +40,8 @@
         config = ensureJSON(response.data);
       })
       .then(function() {
-        return axios.get("http://" + config.host + ":" + config.port + "/person/"+id+"/works");
+        id = "http://" + config.host + ":" + config.port + "/person/"+id;
+        return axios.get(id+"/works");
       })
       .then(function(response) {
         works = ensureJSON(response.data);
@@ -53,7 +54,7 @@
         }
       })
       .then(function() {
-        return axios.get("http://" + config.host + ":" + config.port + "/person/"+id);
+        return axios.get(id);
       })
       .then(function(response) {
         var h = ensureJSON(response.data);
@@ -61,6 +62,9 @@
           person = graph.parse(works, h);
         } else {
           person = graph.parse(h);
+        }
+        if (person.byId(id).getAll("name")) {
+          document.title = person.byId(id).get("name").value;
         }
       })
       .then(function() {
@@ -74,7 +78,7 @@
           el: "#person-app",
           template: data,
           data: {
-            person: person.byId("http://" + config.host + ":" + config.port + "/person/"+id),
+            person: person.byId(id),
             works: person.byType("Work"),
             linkify: function(uri) {
               var found = false;
