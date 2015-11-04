@@ -4,10 +4,10 @@ mappings:
     - cwd: {{ mapping_path }}
     - name: >
             for mapping in *; do
-            curl --connect-timeout 10 --max-time 20 --retry 5 --retry-delay 10 --retry-max-time 120
-            -XDELETE "http://{{ pillar['redef']['elasticsearch']['host']}}:{{ pillar['redef']['elasticsearch']['http']['port']}}/${mapping%.*}";
-            curl -XPOST
+            wget --method=DELETE --retry-connrefused --timeout=10 --tries=5
+            "http://{{ pillar['redef']['elasticsearch']['host']}}:{{ pillar['redef']['elasticsearch']['http']['port']}}/${mapping%.*}";
+            wget --method=POST --retry-connrefused --timeout=10 --tries=5
             "http://{{ pillar['redef']['elasticsearch']['host']}}:{{ pillar['redef']['elasticsearch']['http']['port']}}/${mapping%.*}"
-            -d @$mapping; done
-    - require:
-      - docker: elasticsearch_container_running
+            --body-file $mapping; done
+   - require:
+     - docker: elasticsearch_container_running
