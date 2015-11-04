@@ -26,9 +26,9 @@
   </div>
   <div class="panel column full">
     <h3>Verk</h3>
-    {{#each works}}
+    {{#works}}
       <div class="work">
-        <p><a href="{{linkify(id)}}"><strong>{{.get("name").value}}</strong> ({{.get("year").value}})</a></p>
+        <p><a href="{{linkify(id)}}"><strong>{{this.get("name").value}}</strong> ({{this.get("year").value}})</a></p>
       </div>
     {{/each}}
   </div>

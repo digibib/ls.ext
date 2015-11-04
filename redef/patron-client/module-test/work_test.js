@@ -30,11 +30,11 @@ describe("PatronClient", function () {
         case "/config":
           return Promise.resolve({data: { host: "192.168.50.12", port: 7000 }});
         case "/work_template.html":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/../src/work_template.html", "UTF-8") });
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/../src/work_template.html", "UTF-8"), status: 200 });
         case "http://192.168.50.12:7000/work/w123456":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/../module-test/w123456.json", "UTF-8") });
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/../module-test/w123456.json", "UTF-8"), status: 200});
         case "http://192.168.50.12:7000/work/w123456/items":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/../module-test/w123456items.json", "UTF-8") });
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/../module-test/w123456items.json", "UTF-8"), status: 200 });
         }
       });
 

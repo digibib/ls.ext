@@ -20,5 +20,5 @@ public interface EntityService {
 
     Optional<String> retrieveBibliofilPerson(String personId);
 
-    Model retrieveWorksByCreator(String creatorUri);
+    Model retrieveWorksByCreator(String creatorId);
 }

@@ -50,7 +50,9 @@
       })
       .then(function (response) {
         // axios behaves differently; in browser it parses json automatically, and on node(test) not
-        items_response = ensureJSON(response.data);
+        if (response.status === 200) {
+          items_response = ensureJSON(response.data);
+        }
       })
       .catch(function (error) {
         console.log("work items: " + error.statusText);

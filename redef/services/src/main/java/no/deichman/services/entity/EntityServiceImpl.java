@@ -254,7 +254,7 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model retrieveWorksByCreator(String creatorUri) {
-        return repository.retrieveWorksByCreator(creatorUri);
+    public Model retrieveWorksByCreator(String creatorId) {
+        return repository.retrieveWorksByCreator(creatorId);
     }
 }

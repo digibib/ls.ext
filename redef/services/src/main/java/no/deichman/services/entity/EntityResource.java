@@ -31,6 +31,9 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import static javax.ws.rs.core.Response.accepted;
+import static javax.ws.rs.core.Response.noContent;
+import static javax.ws.rs.core.Response.ok;
 import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
@@ -114,10 +117,6 @@ public final class EntityResource extends ResourceBase {
         return rb.build();
     }
 
-    private void setResponse(Response.Status conflict, String s) {
-
-    }
-
     private Optional<String> checkBibliofilPersonResourceExistence(String personId) {
         return getEntityService().retrieveBibliofilPerson(personId);
     }
@@ -130,7 +129,7 @@ public final class EntityResource extends ResourceBase {
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
-        return Response.ok().entity(getJsonldCreator().asJSONLD(model)).build();
+        return ok().entity(getJsonldCreator().asJSONLD(model)).build();
     }
 
     @DELETE
@@ -141,7 +140,7 @@ public final class EntityResource extends ResourceBase {
             throw new NotFoundException();
         }
         getEntityService().delete(model);
-        return Response.noContent().build();
+        return noContent().build();
     }
 
     @PATCH
@@ -180,7 +179,7 @@ public final class EntityResource extends ResourceBase {
             case PERSON: getSearchService().indexPersonModel(m); break;
             default:break;
         }
-        return Response.ok().entity(getJsonldCreator().asJSONLD(m)).build();
+        return ok().entity(getJsonldCreator().asJSONLD(m)).build();
     }
 
     @PUT
@@ -191,24 +190,14 @@ public final class EntityResource extends ResourceBase {
             throw new NotFoundException("PUT unsupported on this resource");
         }
         getEntityService().updateWork(work);
-        return Response.ok().build();
+        return ok().build();
     }
 
     @GET
     @Path("/{workId: w[a-zA-Z0-9_]+}/items")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) {
-        Model model = getEntityService().retrieveWorkItemsById(workId);
-        if (model.isEmpty()) {
-            throw new NotFoundException();
-        }
-
-        return Response.ok().entity(getJsonldCreator().asJSONLD(model)).build();
-    }
-
-    @Override
-    protected ServletConfig getConfig() {
-        return servletConfig;
+        return zeroOrMoreResponseFromModel(getEntityService().retrieveWorkItemsById(workId));
     }
 
     @PUT
@@ -221,7 +210,24 @@ public final class EntityResource extends ResourceBase {
             case PERSON: getSearchService().indexPersonModel(m); break;
             default: /* will never get to here */ break;
         }
-        return Response.accepted().build();
+        return accepted().build();
     }
 
+    @GET
+    @Path("{creatorId: h[a-zA-Z0-9_]+}/works")
+    public Response getWorksByCreator(@PathParam("creatorId") String creatorId) {
+        return zeroOrMoreResponseFromModel(getEntityService().retrieveWorksByCreator(creatorId));
+    }
+
+    @Override
+    protected ServletConfig getConfig() {
+        return servletConfig;
+    }
+
+    private Response zeroOrMoreResponseFromModel(Model model) {
+        return (model.isEmpty()
+                ? noContent()
+                : ok().entity(getJsonldCreator().asJSONLD(model)))
+                .build();
+    }
 }

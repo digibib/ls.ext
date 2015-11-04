@@ -44,13 +44,8 @@
         return axios.get(id+"/works");
       })
       .then(function(response) {
-        works = ensureJSON(response.data);
-      })
-      .catch(function(error) {
-        if (error.status == 404) {
-          console.log("person has no connected works");
-        } else {
-          throw new Error(error);
+        if (response.status === 200) {
+          works = ensureJSON(response.data);
         }
       })
       .then(function() {
@@ -101,7 +96,7 @@
           console.log(error);
       });
     }
-  }
+  };
   return Person;
 
 }));

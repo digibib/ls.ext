@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.CREATED;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
@@ -221,10 +220,21 @@ public class EntityResourceTest {
         assertValidJSON(result.getEntity().toString());
     }
 
-    @Test(expected=NotFoundException.class)
-    public void get_work_items_should_404_on_empty_items_list(){
+    @Test
+    public void get_creator_works_should_return_list_of_works(){
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService);
+
+        Response result = entityResource.getWorksByCreator("person_00001");
+
+        assertNotNull(result);
+        assertEquals(OK.getStatusCode(), result.getStatus());
+        assertValidJSON(result.getEntity().toString());
+    }
+
+    @Test
+    public void get_work_items_should_204_on_empty_items_list(){
         Response result = entityResource.getWorkItems("DOES_NOT_EXIST", WORK);
-        assertEquals(result.getStatus(), NOT_FOUND.getStatusCode());
+        assertEquals(result.getStatus(), NO_CONTENT.getStatusCode());
     }
 
     @Test
