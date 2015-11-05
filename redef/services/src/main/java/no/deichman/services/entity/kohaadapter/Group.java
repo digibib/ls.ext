@@ -53,10 +53,10 @@ public class Group {
         if (subfield != group.subfield) {
             return false;
         }
-        if (!field.equals(group.field)) {
+        if (field != null ? !field.equals(group.field) : group.field != null) {
             return false;
         }
-        return value.equals(group.value);
+        return !(value != null ? !value.equals(group.value) : group.value != null);
     }
 
     @Override

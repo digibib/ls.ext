@@ -3,8 +3,8 @@ package no.deichman.services.entity.kohaadapter;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertNotNull;
@@ -39,20 +39,18 @@ public class MarcXmlProviderTest {
     @Test
     public void should_include_added_item() {
         mxp.createRecord();
-        List<Group> groups = new ArrayList<>();
-        Group group = new Group(MarcConstants.FIELD_952, 'a', "bugga");
-        groups.add(group);
-        mxp.addSubfield(MarcConstants.FIELD_952, groups);
+        MultivaluedMap<Character, String> subfields = new MultivaluedHashMap<>();
+        subfields.add('a', "bugga");
+        mxp.addSubfield(MarcConstants.FIELD_952, subfields);
         assertThat(mxp.getMarcXml(), containsString("<marcxml:subfield code=\""+ MarcConstants.SUBFIELD_A +"\">bugga</marcxml:subfield>"));
     }
 
     @Test
     public void should_include_title() {
         mxp.createRecord();
-        List<Group> groups = new ArrayList<>();
-        Group group = new Group(MarcConstants.FIELD_952, 'a', "bugga");
-        groups.add(group);
-        mxp.addSubfield(MarcConstants.FIELD_952, groups);
+        MultivaluedMap<Character, String> subfields = new MultivaluedHashMap<>();
+        subfields.add('a', "bugga");
+        mxp.addSubfield(MarcConstants.FIELD_245, subfields);
         assertThat(mxp.getMarcXml(), containsString("<marcxml:subfield code=\""+ MarcConstants.SUBFIELD_A +"\">bugga</marcxml:subfield>"));
     }
 }

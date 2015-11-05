@@ -46,7 +46,7 @@ public class MarcRecord {
     public final boolean equals(Object o) {
         if (this == o) {
             return true;
-        } else if (o instanceof MarcRecord) {
+        } else if (o instanceof MarcRecord && ((MarcRecord) o).getFields().size() == fields.size()) {
             fields.removeAll(((MarcRecord) o).getFields());
             return fields.isEmpty();
         } else {

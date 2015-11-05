@@ -481,9 +481,9 @@ public class AppTest {
         HttpResponse<String> response = buildEmptyCreateRequest(baseUri + "publication").asString();
         String location = getLocation(response);
 
-        final HttpResponse<JsonNode> getItem = buildGetRequest(location).asJson();
+        final HttpResponse<JsonNode> getPublication = buildGetRequest(location).asJson();
 
-        Model model = RDFModelUtil.modelFrom(getItem.getBody().toString(), Lang.JSONLD);
+        Model model = RDFModelUtil.modelFrom(getPublication.getBody().toString(), Lang.JSONLD);
         final String[] recordId = new String[1];
         model.listObjectsOfProperty(createProperty(baseUri + "ontology#recordID")).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
 

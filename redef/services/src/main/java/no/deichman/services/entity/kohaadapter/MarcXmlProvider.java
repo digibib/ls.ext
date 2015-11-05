@@ -6,10 +6,10 @@ import org.marc4j.marc.DataField;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * Responsibility: Make a MARCXML record.
@@ -26,12 +26,10 @@ final class MarcXmlProvider {
         this.record = marcFactory.newRecord(marcFactory.newLeader(MarcConstants.TWENTY_FOUR_SPACES));
     }
 
-    public void addSubfield(String field, List<Group> groups) {
-        if(!groups.isEmpty()) {
-            final DataField dataField = marcFactory.newDataField(field, ' ', ' ');
-            groups.forEach(group -> dataField.addSubfield(marcFactory.newSubfield(group.getSubfield(), group.getValue())));
-            this.record.addVariableField(dataField);
-        }
+    public void addSubfield(String field, MultivaluedMap<Character, String> subfields) {
+        final DataField dataField = marcFactory.newDataField(field, ' ', ' ');
+        subfields.forEach((subfield, values) -> values.forEach(value -> dataField.addSubfield(marcFactory.newSubfield(subfield, value))));
+        this.record.addVariableField(dataField);
     }
 
     public String getMarcXml() {

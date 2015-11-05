@@ -100,39 +100,31 @@ public final class KohaAdapterImpl implements KohaAdapter {
         return m;
     }
 
-    private Response requestNewRecord(MarcRecord marcRecord) {
+    private Response postMarcRecord(String url, MarcRecord marcRecord) {
         MarcXmlProvider mxp = new MarcXmlProvider();
         mxp.createRecord();
 
-        if (marcRecord != null){
-            mxp.addSubfield(MarcConstants.FIELD_245, marcRecord.getField(MarcConstants.FIELD_245));
-            mxp.addSubfield(MarcConstants.FIELD_952, marcRecord.getField(MarcConstants.FIELD_952));
+        if (marcRecord != null) {
+            mxp.addSubfield(MarcConstants.FIELD_245, marcRecord.fieldAsMap(MarcConstants.FIELD_245));
+            mxp.addSubfield(MarcConstants.FIELD_952, marcRecord.fieldAsMap(MarcConstants.FIELD_952));
         }
 
         Client client = ClientBuilder.newClient();
-        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (marcRecord != null && !marcRecord.isEmpty() ? "?items=1" : "");
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
         invocationBuilder.cookie(sessionCookie.toCookie());
         return invocationBuilder.post(Entity.entity(mxp.getMarcXml(), MediaType.TEXT_XML));
     }
 
+    private Response requestNewRecord(MarcRecord marcRecord) {
+        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (marcRecord != null && !marcRecord.isEmpty() ? "?items=1" : "");
+        return postMarcRecord(url, marcRecord);
+    }
+
     @Override
     public Response updateRecord(String recordId, MarcRecord marcRecord) {
-        MarcXmlProvider mxp = new MarcXmlProvider();
-        mxp.createRecord();
-
-        if (marcRecord != null){
-            mxp.addSubfield(MarcConstants.FIELD_245, marcRecord.getField(MarcConstants.FIELD_245));
-            mxp.addSubfield(MarcConstants.FIELD_952, marcRecord.getField(MarcConstants.FIELD_952));
-        }
-
-        Client client = ClientBuilder.newClient();
         String url = kohaPort + "/cgi-bin/koha/svc/bib/" + recordId + "?items=0";
-        WebTarget webTarget = client.target(url);
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
-        invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.post(Entity.entity(mxp.getMarcXml(), MediaType.TEXT_XML));
+        return postMarcRecord(url, marcRecord);
     }
 
     @Override
