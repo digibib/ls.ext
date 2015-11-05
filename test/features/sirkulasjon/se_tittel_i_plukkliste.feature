@@ -12,7 +12,6 @@ Egenskap: Se tittel i plukkliste
     Når jeg besøker bokposten
     Så ser jeg tittelen i bokposten
 
-  @wip
   Scenario: Sjekker plukkliste
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes et verk og en utgivelse
