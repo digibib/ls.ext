@@ -29,7 +29,7 @@ public class MarcResource extends ResourceBase {
     @Path("/{recordId: [0-9]+}")
     @Produces("application/xml")
     public final Response getMarcRecord(@PathParam("recordId") String recordId){
-        return Response.ok().entity(getKohaAdapter().getMarcXml(recordId)).build();
+        return Response.ok().entity(getKohaAdapter().retrieveMarcXml(recordId)).build();
     }
 
 

@@ -187,7 +187,7 @@ public final class EntityServiceImpl implements EntityService {
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
                     if (items.contains(subject)) {
-                        as952Subfields(statements).forEach((x, y) -> marcRecord.addGroup(MarcConstants.FIELD_952, x, y));
+                        as952Subfields(statements).forEach((subfield, value) -> marcRecord.addGroup(MarcConstants.FIELD_952, subfield, value));
                     } else {
                         statements.forEach(s -> {
                             if (!s.getPredicate().equals(hasItemProperty)) {
@@ -254,7 +254,7 @@ public final class EntityServiceImpl implements EntityService {
                     .collect(groupingBy(Statement::getSubject))
                     .forEach((subject, statements) -> {
                         statements.forEach(s -> {
-                            if (!s.getPredicate().equals(hasItemProperty) && s.getPredicate().equals(nameProperty)) {
+                            if (s.getPredicate().equals(nameProperty)) {
                                 marcRecord.addTitle(s.getObject().asLiteral().toString());
                             }
                         });

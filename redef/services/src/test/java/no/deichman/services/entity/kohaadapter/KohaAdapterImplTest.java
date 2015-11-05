@@ -42,7 +42,7 @@ public class KohaAdapterImplTest {
         String expected = stringFromClassPathResource("ragde.marcxml");
         kohaSvcMock.addGetBiblioExpectation("626460", expected);
 
-        assertEquals(expected, kohaAdapter.getMarcXml("626460"));
+        assertEquals(expected, kohaAdapter.retrieveMarcXml("626460"));
     }
 
     private String stringFromClassPathResource(String classPathResource) throws IOException {

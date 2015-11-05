@@ -10,12 +10,12 @@ import javax.ws.rs.core.Response;
  */
 public interface KohaAdapter {
     Model getBiblio(String biblioNo);
+
     String getNewBiblio();
 
     String getNewBiblioWithItems(MarcRecord marcRecord);
 
-    String getMarcXml(String recordId);
+    String retrieveMarcXml(String recordId);
 
     Response updateRecord(String id, MarcRecord marcRecord);
-
-    }
+}

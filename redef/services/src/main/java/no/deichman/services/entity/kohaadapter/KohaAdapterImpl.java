@@ -75,7 +75,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     @Override
     public Model getBiblio(String recordId) {
-        return mapMarcToModel(getMarcXml(recordId));
+        return mapMarcToModel(retrieveMarcXml(recordId));
     }
 
     private Response requestItems(String id) {
@@ -170,7 +170,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     @Override
-    public String getMarcXml(String recordId) {
+    public String retrieveMarcXml(String recordId) {
         // TODO Handle login in a filter / using template pattern
         if (sessionCookie == null) {
             login();
