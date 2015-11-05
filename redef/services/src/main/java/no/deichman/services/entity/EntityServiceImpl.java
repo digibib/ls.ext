@@ -2,6 +2,7 @@ package no.deichman.services.entity;
 
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
+import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.patch.PatchParserException;
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -187,15 +187,16 @@ public final class EntityServiceImpl implements EntityService {
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
                     if (items.contains(subject)) {
-                        as952Subfields(statements).forEach((subfield, value) -> marcRecord.addGroup(MarcConstants.FIELD_952, subfield, value));
+                        marcRecord.addMarcField(as952Subfields(statements));
                     } else {
                         statements.forEach(s -> {
                             if (!s.getPredicate().equals(hasItemProperty)) {
                                 if (s.getPredicate().equals(nameProperty)) {
-                                    marcRecord.addTitle(s.getObject().asLiteral().toString());
+                                    MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
+                                    marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
+                                    marcRecord.addMarcField(marcField);
                                 }
                                 modelWithoutItems.add(s);
-
                             }
                         });
                     }
@@ -211,18 +212,19 @@ public final class EntityServiceImpl implements EntityService {
         return list.toArray(new Map[list.size()]);
     }
 
-    private Map<Character, String> as952Subfields(List<Statement> statements) {
-        Map<Character, String> itemSubfieldMap = new TreeMap<>();
+    private MarcField as952Subfields(List<Statement> statements) {
+        MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_952);
+
         statements.forEach(s -> {
             String predicate = s.getPredicate().getURI();
             String fieldCode = predicate.substring(predicate.lastIndexOf("/") + 1);
 
             RDFNode object = s.getObject();
             if (object.isLiteral() && !(fieldCode.length() > 1)) {
-                itemSubfieldMap.put(fieldCode.charAt(0), object.asLiteral().getString());
+                marcField.addSubfield(fieldCode.charAt(0), object.asLiteral().getString());
             }
         });
-        return itemSubfieldMap;
+        return marcField;
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -255,7 +257,9 @@ public final class EntityServiceImpl implements EntityService {
                     .forEach((subject, statements) -> {
                         statements.forEach(s -> {
                             if (s.getPredicate().equals(nameProperty)) {
-                                marcRecord.addTitle(s.getObject().asLiteral().toString());
+                                MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
+                                marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
+                                marcRecord.addMarcField(marcField);
                             }
                         });
                     });

@@ -101,23 +101,15 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     private Response postMarcRecord(String url, MarcRecord marcRecord) {
-        MarcXmlProvider mxp = new MarcXmlProvider();
-        mxp.createRecord();
-
-        if (marcRecord != null) {
-            mxp.addSubfield(MarcConstants.FIELD_245, marcRecord.fieldAsMap(MarcConstants.FIELD_245));
-            mxp.addSubfield(MarcConstants.FIELD_952, marcRecord.fieldAsMap(MarcConstants.FIELD_952));
-        }
-
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.post(Entity.entity(mxp.getMarcXml(), MediaType.TEXT_XML));
+        return invocationBuilder.post(Entity.entity(marcRecord.getMarcXml(), MediaType.TEXT_XML));
     }
 
     private Response requestNewRecord(MarcRecord marcRecord) {
-        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (marcRecord != null && !marcRecord.isEmpty() ? "?items=1" : "");
+        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (marcRecord != null && marcRecord.hasItems() ? "?items=1" : "");
         return postMarcRecord(url, marcRecord);
     }
 
@@ -129,7 +121,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     @Override
     public String getNewBiblio() {
-        return getNewBiblioWithItems(null); // empty argument list
+        return getNewBiblioWithItems(new MarcRecord()); // empty argument list
     }
 
     @Override

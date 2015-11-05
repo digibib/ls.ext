@@ -1,61 +1,50 @@
 package no.deichman.services.entity.kohaadapter;
 
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.marc4j.MarcWriter;
+import org.marc4j.MarcXmlWriter;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Record;
+
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Responsibility: In-memory MARC record.
  */
 public class MarcRecord {
-    private List<Group> fields = new ArrayList<>();
+    private Record record;
+    private final MarcFactory marcFactory = MarcFactory.newInstance();
 
-    public final void addTitle(String title) {
-        addGroup(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A, title);
+    public MarcRecord() {
+        record = marcFactory.newRecord(marcFactory.newLeader(MarcConstants.TWENTY_FOUR_SPACES));
     }
 
-    public final void addGroup(String field, char subfield, String value) {
-        fields.add(new Group(field, subfield, value));
+    public final void addMarcField(MarcField marcField) {
+        this.record.addVariableField(marcField.getDataField());
     }
 
-    public final MultivaluedMap<Character, String> fieldAsMap(String field) {
-        MultivaluedMap<Character, String> subfields = new MultivaluedHashMap<>();
-        fields.stream()
-                .filter(s -> s.getField().equals(field))
-                .forEach(s -> subfields.add(s.getSubfield(), s.getValue()));
-        return subfields;
+    public static MarcField newDataField(String field) {
+        return new MarcField(field);
     }
 
-    public final boolean isEmpty() {
-        return fields.isEmpty();
+    public final boolean hasItems() {
+        return !record.find(MarcConstants.FIELD_952, "").isEmpty();
     }
 
-    public final List<Group> getField(String field) {
-        return fields.stream()
-                .filter(s -> s.getField().equals(field))
-                .collect(Collectors.toList());
-    }
-
-    public final List<Group> getFields() {
-        return fields;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o instanceof MarcRecord && ((MarcRecord) o).getFields().size() == fields.size()) {
-            fields.removeAll(((MarcRecord) o).getFields());
-            return fields.isEmpty();
-        } else {
-            return false;
+    public final String getMarcXml() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        MarcWriter writer = new MarcXmlWriter(baos);
+        writer.write(getRecord());
+        writer.close();
+        try {
+            return baos.toString(StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public final int hashCode() {
-        return fields.hashCode();
+    final Record getRecord() {
+        return this.record;
     }
 }

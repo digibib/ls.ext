@@ -3,7 +3,6 @@ package no.deichman.services.entity;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.Marc2Rdf;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
-import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.uridefaults.BaseURI;
@@ -50,6 +49,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 
@@ -246,22 +246,8 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_create_publication_with_items() {
-        MarcRecord marcRecord = new MarcRecord();
-        String title = "Titely title";
-        marcRecord.addTitle(title);
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'a', "hutl");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'b', "hutl");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'c', "m");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'l', "3");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'm', "1");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'o', "952 Cri");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'p', "213123123");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'q', "2014-11-05");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 't', "1");
-        marcRecord.addGroup(MarcConstants.FIELD_952, 'y', "L");
-
-        when(mockKohaAdapter.getNewBiblioWithItems(marcRecord)).thenReturn("123");
-        Model test = modelFrom(itemNTriples(title, "213123123").replaceAll("__BASEURI__", "http://deichman.no/"), Lang.NTRIPLES);
+        when(mockKohaAdapter.getNewBiblioWithItems(any())).thenReturn("123");
+        Model test = modelFrom(itemNTriples("Titley title", "213123123").replaceAll("__BASEURI__", "http://deichman.no/"), Lang.NTRIPLES);
         String response = service.create(PUBLICATION, test);
         assertTrue(response.substring(response.lastIndexOf("/") + 1, response.length()).matches("p[0-9]+"));
     }
