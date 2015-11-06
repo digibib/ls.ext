@@ -5,15 +5,20 @@ SKELETON_IMAGE=digibib/redef-catalinker-skeleton
 CONTAINER=redef_catalinker_skeleton_container
 IMAGE=digibib/redef-catalinker
 HOST_VOLUME_BINDINGS_CLIENT=-v /vagrant/redef/catalinker/client/src:/usr/src/app/src \
-       -v /vagrant/redef/catalinker/client/test:/usr/src/app/test \
-       -v /vagrant/redef/catalinker/client/module-test:/usr/src/app/module-test \
-       -v /vagrant/redef/catalinker/client/public:/usr/src/app/public
+	-v /vagrant/redef/catalinker/client/test:/usr/src/app/test \
+	-v /vagrant/redef/catalinker/client/module-test:/usr/src/app/module-test \
+	-v /vagrant/redef/catalinker/client/public:/usr/src/app/public
+
+HOST_VOLUME_BINDINGS_DEV=-v /vagrant/redef/catalinker/server:/usr/src/app \
+	-v /vagrant/redef/catalinker/client/test:/usr/src/app/test \
+	-v /vagrant/redef/catalinker/client/module-test:/usr/src/app/module-test \
+	-v /vagrant/redef/catalinker/client/public:/usr/src/app/public
 
 build-clienttools:
 	sudo docker build --tag $(CLIENTTOOL_IMAGE) --file="/vagrant/redef/catalinker/client/Dockerfile-clienttools" /vagrant/redef/catalinker/client
 
 test-client-dev: build-clienttools
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS_CLIENT) $(CLIENTTOOL_IMAGE) karma start karma.config.js
+	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS_DEV) $(SKELETON_IMAGE) rake test
 
 lint-client: build-clienttools
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS_CLIENT) $(CLIENTTOOL_IMAGE) npm run jscs src test module-test --fix
@@ -21,6 +26,7 @@ lint-client: build-clienttools
 
 test-client: lint-client
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS_CLIENT) $(CLIENTTOOL_IMAGE) npm run test
+
 
 build-client: test-client
 	sudo salt-call --local state.sls redef.catalinker.clientbuild
@@ -33,7 +39,7 @@ test: build test-server
 test-server:
 	sudo docker run --rm -v /vagrant/redef/catalinker/server:/usr/src/app $(SKELETON_IMAGE) rake test
 
-run-dev: build-client stop
+run-dev:
 	sudo salt-call --local state.sls redef.catalinker.skeletonrun
 
 test-server-dev:
