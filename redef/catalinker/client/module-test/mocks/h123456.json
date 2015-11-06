@@ -1,0 +1,18 @@
+{
+  "@id" : "http://192.168.50.12:7000/person/h123456",
+  "@type" : "deichman:Person",
+  "deichman:birth" : {
+    "@type" : "http://www.w3.org/2001/XMLSchema#gYear",
+    "@value" : "1944"
+  },
+  "deichman:cataloguing_name" : "Monkey, Test",
+  "deichman:death" : {
+    "@type" : "http://www.w3.org/2001/XMLSchema#gYear",
+    "@value" : "1988"
+  },
+  "deichman:name" : "Test Monkey",
+  "@context" : {
+    "deichman" : "http://192.168.50.12:7000/ontology#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#"
+  }
+}

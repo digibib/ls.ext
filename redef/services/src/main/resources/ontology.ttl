@@ -26,6 +26,7 @@
   rdfs:range xsd:string .
 
 :creator a rdfs:Property ;
+  ui:searchable true ;
   rdfs:label "Creator"@en ;
   rdfs:label "Skaper"@no ;
   rdfs:domain :Work ;

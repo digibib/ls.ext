@@ -1,0 +1,33 @@
+{
+  "hits": {
+    "total": 2,
+    "hits": [
+      {
+        "_index": "search",
+        "_type": "person",
+        "_id": "http%3A%2F%2F192.168.50.12%3A7000%2Fperson%2Fh123456",
+        "_source": {
+          "person": {
+            "name": "Test Monkey",
+            "birth": "1944",
+            "death": "1988",
+            "uri": "http://192.168.50.12:7000/person/h123456"
+          }
+        }
+      },
+      {
+        "_index": "search",
+        "_type": "person",
+        "_id": "http%3A%2F%2F192.168.50.12%3A7000%2Fperson%2Fh234567",
+        "_source": {
+          "person": {
+            "name": "Another Test Monkey",
+            "birth": "1955",
+            "death": "1999",
+            "uri": "http://192.168.50.12:7000/person/h234567"
+          }
+        }
+      }
+    ]
+  }
+}
