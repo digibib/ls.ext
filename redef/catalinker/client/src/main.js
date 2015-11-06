@@ -31,7 +31,6 @@
   var loadExistingResource = function (uri) {
     axios.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1))
     .then(function (response) {
-      //var r = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
       ractive.set("resource_uri", uri);
       var values = Ontology.extractValues(ensureJSON(response.data));
       for (var n in ractive.get("inputs")) {
@@ -67,7 +66,6 @@
 
     axios.get(url)
     .then(function (response) {
-      //var values = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
       var values = ensureJSON(response.data);
       // resolve all @id uris
       values["@graph"].forEach(function (v) {
@@ -304,7 +302,6 @@
     loadOntology: function () {
       return axios.get(ractive.get("config.ontologyUri"))
       .then(function (response) {
-        //var r = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
         return onOntologyLoad(ensureJSON(response.data));
       }).catch(function (err) {
         console.log("Error loading ontology: " + err);
