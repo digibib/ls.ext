@@ -51,6 +51,7 @@
     {
       "@id": "deichman:creator",
       "@type": "rdfs:Property",
+      "http://data.deichman.no/ui#searchable": true,
       "rdfs:domain": {
         "@id": "deichman:Work"
       },
