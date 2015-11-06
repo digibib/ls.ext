@@ -14,6 +14,6 @@ Egenskap: Legg til verk med opphavsperson
   Scenario: Katalogisator legger inn opphavsperson for et verk
     Og at systemet har returnert en ny ID for det nye verket
     Og at verket har en tittel
-    Når jeg legger til navn på forfatter av det nye verket
+    Når jeg legger til forfatter av det nye verket
     Så viser systemet at opphavsperson til verket har blitt registrert
     Så vises forfatterens navn på verkssiden
