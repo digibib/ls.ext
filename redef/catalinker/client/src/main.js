@@ -110,6 +110,7 @@
       var datatype = props[i]["rdfs:range"]["@id"];
       var input = {
         disabled: disabled,
+        searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
         predicate: Ontology.resolveURI(ont, props[i]["@id"]),
         authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
         range: datatype,
@@ -119,13 +120,16 @@
                   current: { value: "", lang: "" }}]
       };
 
-      if (input.authorized) {
+      if (input.searchable) {
+        input.type = "input-string-searchable";
+        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+      } else if (input.authorized) {
         switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
           case "language":
-            input.type = "input-authorized-language";
+            input.type = "select-authorized-language";
             break;
           case "format":
-            input.type = "input-authorized-format";
+            input.type = "select-authorized-format";
             break;
         }
         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
@@ -221,6 +225,7 @@
             resource_uri: "",
             inputs: {},
             ontology: null,
+            search_result: null,
             config: config,
             save_status: "ny ressurs"
           }
@@ -269,6 +274,25 @@
 
               errors.push("Noe gikk galt! Fikk ikke lagret endringene");
             });
+          },
+          searchResource: function (event, predicate, searchString) {
+            // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
+            var searchType = "person";
+            var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search/?q=" + searchString;
+            axios.get(searchURI)
+            .then(function (response) {
+              var results = ensureJSON(response.data);
+              ractive.set("search_result", {origin: event.keypath, predicate: predicate, results: results});
+            }).catch(function (err) {
+              console.log(err);
+            });
+          },
+          selectResource: function (event, predicate, origin) {
+            var uri = event.context.uri;
+            ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
+            ractive.set(origin + ".current.value", uri);
+            ///patchResource takes event.keypath and event.context, and predicate as param
+            ractive.fire("patchResource", { keypath: origin, context: ractive.get(origin) }, predicate);
           }
         });
 

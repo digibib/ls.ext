@@ -1,115 +1,149 @@
 <h2 data-automation-id="page-heading">Katalogisering av {{resource_label}}</h2>
 <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
 <div id="save-stat">{{save_status}}</div>
-<fieldset>
-  <div class="prop-input">
-    <div class="prop-details">
-      <label>URI</label>
-    </div>
-    <div class="prop-values">
-      <input disabled="disabled" data-automation-id="resource_uri" value="{{resource_uri}}"/>
-      {{#resource_type === "Work"}}<a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>{{/}}
-      {{#resource_type === "Person"}}<a data-automation-id="person_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>{{/}}
-    </div>
-  </div>
-  {{#each inputs}}
-    <div class="prop-input {{predicate}}">
-      <div class="prop-details">
-        {{^disabled}}<button on-click="addValue">+</button>{{/}}
-        <label>{{label}}</label>
-      </div>
-      <div class="prop-values">
-        {{#each values}}
-          {{>type}}
-          {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
-            <a target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
-          {{/}}
-          {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
-            <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}" class="link"></a>
-          {{/}}
-          <br/>
-          <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+<div class="row column full">
+  <fieldset>
+    <div class="row">
+      <div class="column three-fifths">
+        <div class="row">
+          <div class="column two-fifths prop-input">
+            <div class="prop-details">
+              <label>URI</label>
+            </div>
+          </div>
+          <div class="column three-fifths prop-values">
+            <input disabled="disabled" data-automation-id="resource_uri" value="{{resource_uri}}" />
+            {{#resource_type === "Work"}}
+            <a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>
+            {{/}}
+            {{#resource_type === "Person"}}
+            <a data-automation-id="person_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>
+            {{/}}
+          </div>
+        </div>
+        {{#each inputs}}
+          <div class="row">
+            <div class="column two-fifths prop-input {{predicate}}">
+              <div class="prop-details">
+                {{^disabled}}
+                <button class="prop-add" on-click="addValue">+</button>
+                {{/}}
+                <label>{{label}}</label>
+              </div>
+            </div>
+            <div class="column three-fifths prop-values">
+              {{#each values}}
+                {{>type}}
+                {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
+                <a data-automation-id="biblio_record_link" target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
+                {{/}}
+                {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
+                <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}" class="link"></a>
+                {{/}}
+                <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+              {{/each}}
+            </div>
+          </div>
         {{/each}}
       </div>
-    </div>
-  {{/each}}
-</fieldset>
-
-{{#partial input-authorized-language}}
+      <div class="column two-fifths">
+        {{#search_result}}
+          <div class="prop-search-results">
+            {{#results.hits.hits}}
+              {{#with _source.person}}
+                <div class="search-result" data-automation-id="{{uri}}" on-click="selectResource:{{predicate}},{{origin}}">
+                  <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span><br/>
+                  <span class="search-result-info">{{#birth}}({{birth}}-{{death}}){{/birth}}</span><br/>
+                </div>
+              {{/with}}
+            {{/results}}
+          </div>
+        {{/search_result}}
+      </div>
+    </div> <!-- end main row -->
+  </fieldset>
+</div>
+{{#partial select-authorized-language}}
   <select
     class="authorized"
     data-automation-id="{{predicate}}_{{@index}}"
     on-change='patchResource:{{predicate}}'
     on-keyup="countdownToSave"
-    value="{{current.value}}" >
+    value="{{current.value}}">
     <option value="">(ikke valgt)</option>
-    {{#each authorized_values.language }}
-      <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
-    {{/each}}
+      {{#each authorized_values.language }}
+        <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
+      {{/each}}
   </select>
 {{/partial}}
 
-{{#partial input-authorized-format}}
+{{#partial select-authorized-format}}
   <select
     class="authorized"
     data-automation-id="{{predicate}}_{{@index}}"
     on-change='patchResource:{{predicate}}'
     on-keyup="countdownToSave"
-    value="{{current.value}}" >
+    value="{{current.value}}">
     <option value="">(ikke valgt)</option>
     {{#each authorized_values.format }}
-      <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
-    {{/each}}
+    <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
+      {{/each}}
   </select>
 {{/partial}}
 
 {{#partial input-string}}
-    <input
-      {{#disabled}} disabled="true" {{/}}
-      class="{{#error}}invalid-input{{else}}valid{{/error}}"
-      on-blur='patchResource:{{predicate}}'
-      on-keyup="countdownToSave"
-      on-change="countdownToSave"
-      data-automation-id="{{predicate}}_{{@index}}"
-      value="{{current.value}}" />
+  <input
+    {{#disabled}} disabled="true" {{/}}
+    class="{{#error}}invalid-input{{else}}valid{{/error}}"
+    on-blur='patchResource:{{predicate}}'
+    on-keyup="countdownToSave"
+    on-change="countdownToSave"
+    data-automation-id="{{predicate}}_{{@index}}"
+    value="{{current.value}}" />
+{{/partial}}
+
+{{#partial input-string-searchable}}
+  <input
+    class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}"
+    data-automation-id="{{predicate}}_{{@index}}"
+    on-enter='searchResource:{{predicate}}, {{current.value}}'
+    value="{{current.value}}" />
 {{/partial}}
 
 {{#partial input-lang-string}}
-    <input
-      {{#disabled}} disabled="true" {{/}}
-      class="{{#error}}invalid-input{{else}}valid{{/error}}"
-      on-blur='patchResource:{{predicate}}'
-      on-keyup="countdownToSave"
-      on-change="countdownToSave"
-      data-automation-id="{{predicate}}_{{@index}}"
-      value="{{current.value}}" />
-      <select value="{{current.lang}}"
-              on-change='patchResource:{{predicate}}'
-              class="select_lang">
-        <option value="">velg språk</option>
-        <option value="no">norsk</option>
-        <option value="en">engelsk</option>
-        <option value="fr">fransk</option>
-      </select>
+  <input
+    {{#disabled}} disabled="true" {{/}}
+    class="{{#error}}invalid-input{{else}}valid{{/error}}"
+    on-blur='patchResource:{{predicate}}'
+    on-keyup="countdownToSave"
+    on-change="countdownToSave"
+    data-automation-id="{{predicate}}_{{@index}}"
+    value="{{current.value}}" />
+  <select value="{{current.lang}}" on-change='patchResource:{{predicate}}' class="select_lang">
+    <option value="">velg språk</option>
+    <option value="no">norsk</option>
+    <option value="en">engelsk</option>
+    <option value="fr">fransk</option>
+  </select>
 {{/partial}}
 
 {{#partial input-gYear}}
-    <input
-      {{#disabled}} disabled="true" {{/}}
-      class="{{#error}}invalid-input{{else}}valid{{/error}}"
-      on-blur='patchResource:{{predicate}}'
-      on-keyup="countdownToSave"
-      data-automation-id="{{predicate}}_{{@index}}"
-      value="{{current.value}}" />
+  <input
+    {{#disabled}} disabled="true" {{/}}
+    class="{{#error}}invalid-input{{else}}valid{{/error}}"
+    on-blur='patchResource:{{predicate}}'
+    on-keyup="countdownToSave"
+    data-automation-id="{{predicate}}_{{@index}}"
+    value="{{current.value}}" />
 {{/partial}}
 
 {{#partial input-nonNegativeInteger}}
-    <input
-      {{#disabled}} disabled="true" {{/}}
-      class="{{#error}}invalid-input{{else}}valid{{/error}}"
-      on-blur='patchResource:{{predicate}}'
-      on-keyup="countdownToSave"
-      on-change="countdownToSave"
-      data-automation-id="{{predicate}}_{{@index}}"
-      value="{{current.value}}" />
+  <input
+    {{#disabled}} disabled="true" {{/}}
+    class="{{#error}}invalid-input{{else}}valid{{/error}}"
+    on-blur='patchResource:{{predicate}}'
+    on-keyup="countdownToSave"
+    on-change="countdownToSave"
+    data-automation-id="{{predicate}}_{{@index}}"
+    value="{{current.value}}" />
 {{/partial}}
