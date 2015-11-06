@@ -28,6 +28,20 @@ class CatalinkerPage < PageRoot
       self
     end
 
+    def search_resource(predicate, value, nr=0)
+      input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
+      input.set("")
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value == "" }
+      input.set(value)
+      @browser.send_keys :enter
+      self
+    end
+
+    def select_resource(uri)
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => uri).text != "" }
+      @browser.div(:data_automation_id => uri).click
+    end
+
     def select_prop(predicate, value, nr=0)
       input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
       Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }

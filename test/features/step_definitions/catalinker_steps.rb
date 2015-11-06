@@ -4,22 +4,24 @@ require 'net/http'
 
 Given(/^at det finnes et verk$/) do
   steps %Q{
+   Gitt at det finnes en personressurs
    Gitt at jeg er i katalogiseringsgrensesnittet
    Så leverer systemet en ny ID for det nye verket
    Og jeg kan legge til tittel for det nye verket
    Når jeg legger til et årstall for førsteutgave av nye verket
-   Og jeg legger til navn på forfatter av det nye verket
+   Og jeg legger til forfatter av det nye verket
    Så grensesnittet viser at tittelen er lagret
   }
 end
 
 Given(/^at det finnes et verk med tre ledd i tittelen$/) do
   steps %Q{
+   Gitt at det finnes en personressurs
    Gitt at jeg er i katalogiseringsgrensesnittet
    Så leverer systemet en ny ID for det nye verket
    Og jeg kan legge til tittel med tre ledd for det nye verket
    Når jeg legger til et årstall for førsteutgave av nye verket
-   Og jeg legger til navn på forfatter av det nye verket
+   Og jeg legger til forfatter av det nye verket
    Så grensesnittet viser at tittelen er lagret
   }
 end
@@ -150,7 +152,7 @@ When(/^jeg ser på utgivelsen i katalogiseringsgrensesnittet$/) do
 end
 
 When(/^jeg klikker på lenken til en biblio\-kobling$/) do
-  @browser.goto(@browser.div(:class => "http://192.168.50.12:8005/ontology#biblio").a(:class => "link").href)
+  @browser.goto(@browser.a(:class => "biblio_record_link").href)
 end
 
 When(/^jeg klikker på lenken til verks\-siden$/) do
@@ -158,7 +160,7 @@ When(/^jeg klikker på lenken til verks\-siden$/) do
 end
 
 When(/^jeg følger lenken til posten i Koha$/) do
-  link = @browser.div(:class => "http://192.168.50.12:8005/ontology#recordID").a(:class => "link").href
+  link = @browser.a(:data_automation_id => "biblio_record_link").href
   steps %Q{
     Gitt at jeg er logget inn som adminbruker
     Gitt at det finnes en avdeling
@@ -210,8 +212,17 @@ When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
 end
 
-When(/^jeg legger til navn på forfatter av det nye verket$/) do
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#creator", @context[:person_identifier])
+When(/^jeg legger til forfatter av det nye verket$/) do
+  step "jeg søker på navn til opphavsperson for det nye verket"
+  step "velger person fra en treffliste"
+end
+
+When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
+  @site.RegWork.search_resource("http://192.168.50.12:8005/ontology#creator", @context[:personName])
+end
+
+When(/^velger person fra en treffliste$/) do
+  @site.RegWork.select_resource(@context[:person_identifier])
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
@@ -257,7 +268,7 @@ Then(/^får utgivelsen tildelt en post\-ID i Koha$/) do
 end
 
 Then(/^det vises en lenke til posten i Koha i katalogiseringsgrensesnittet$/) do
-  link = @browser.div(:class => "http://192.168.50.12:8005/ontology#recordID").a(:class => "link")
+  link = @browser.a(:data_automation_id => "biblio_record_link")
   link.href.end_with?("biblionumber=#{@context[:record_id]}").should be true
 end
 
@@ -338,6 +349,11 @@ Given(/^et verk med en utgivelse og et eksemplar$/) do
     Og jeg følger lenken til posten i Koha
     Og jeg oppretter et eksemplar av utgivelsen
   }
+end
+
+Given(/^at det finnes en personressurs$/) do
+  step "at jeg har lagt til en person"
+  step "grensesnittet viser at personen er lagret"
 end
 
 Given(/^at jeg er i personregistergrensesnittet$/) do
