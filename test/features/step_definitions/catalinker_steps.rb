@@ -147,6 +147,17 @@ Given(/^at det finnes et verk og en utgivelse$/) do
   }
 end
 
+Given(/^at det finnes et verk med person og en utgivelse$/) do
+  steps %Q{
+    Gitt at jeg har lagt til en person
+    Og at jeg er i katalogiseringsgrensesnittet
+    Og at systemet har returnert en ny ID for det nye verket
+    Og jeg legger til forfatter av det nye verket
+    Og jeg registrerer inn opplysninger om utgivelsen
+    Og jeg knytter utgivelsen til verket
+  }
+end
+
 When(/^jeg ser på utgivelsen i katalogiseringsgrensesnittet$/) do
   true
 end
@@ -223,6 +234,7 @@ end
 
 When(/^velger person fra en treffliste$/) do
   @site.RegWork.select_resource(@context[:person_identifier])
+  @context[:creator] = @context[:personName]
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
@@ -330,6 +342,7 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   @context[:publication_format] = ['Bok', 'CD', 'DVD', 'CD-ROM', 'DVD-ROM'].sample
   @context[:publication_language] =  ['Engelsk','Norsk (bokmål)','Finsk','Baskisk', 'Grønlandsk'].sample
   @context[:publication_name] = generateRandomString
+  step "får utgivelsen tildelt en post-ID i Koha"
 
   page.select_prop('http://192.168.50.12:8005/ontology#format', @context[:publication_format])
   page.select_prop('http://192.168.50.12:8005/ontology#language', @context[:publication_language])

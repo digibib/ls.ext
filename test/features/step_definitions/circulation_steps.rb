@@ -370,7 +370,7 @@ end
 
 When(/^jeg leter opp boka i katalogiseringssøk$/) do
   @browser.goto intranet(:cataloguing)
-  @browser.text_field(:name => 'q').set @context[:record_id]#@active[:book].title
+  @browser.text_field(:name => 'q').set @context[:record_id]
   @browser.form(:name => 'search').submit
   @browser.text.include?("Add/Edit items") == true
 end
@@ -423,14 +423,22 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
   b.should == true
 end
 
-When(/^ser jeg tittelen i plukklisten$/) do
-  @browser.strongs.any? {|element| element.text.include? @context[:publication_name]}
-end
-
 When(/^jeg besøker bokposten$/) do
   @site.BiblioDetail.visit(@context[:record_id])
 end
 
 When(/^ser jeg tittelen i bokposten$/) do
-  @browser.h1s(:class => "title").first.text == @context[:publication_name]
+  @browser.h1(:class => 'title').text == @context[:publication_name]
+end
+
+When(/^ser jeg forfatteren i bokposten$/) do
+  @browser.h5(:class => 'author').a.text == @context[:creator]
+end
+
+When(/^ser jeg tittelen i plukklisten$/) do
+  @browser.strongs.any? { |element| element.text.include? @context[:publication_name] }
+end
+
+When(/^ser jeg forfatteren i plukklisten$/) do
+  @browser.divs(:class => 'hq-author').any? { |element| element.text.include? @context[:creator] }
 end

@@ -10,14 +10,12 @@ Egenskap: Se tittel i plukkliste
     Gitt at jeg er logget inn som adminbruker
     Og at jeg er i katalogiseringsgrensesnittet
 
-  @wip
   Scenario: Finn utgivelsestittel i Koha
     Og at det finnes et verk med person og en utgivelse
     Når jeg besøker bokposten
     Så ser jeg tittelen i bokposten
     Og ser jeg forfatteren i bokposten
 
-  @wip
   Scenario: Sjekker plukkliste
     Og at det finnes et verk med person og en utgivelse
     Og jeg ser på utgivelsen i katalogiseringsgrensesnittet
