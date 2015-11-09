@@ -22,25 +22,13 @@
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person ;
-  rdfs:range xsd:string .
-
-:title a rdfs:Property ;
-  rdfs:label "Title"@en ;
-  rdfs:label "Tittel"@no ;
-  rdfs:domain :Work, :Publication ;
-  rdfs:range xsd:string .
-
-:original_title a rdfs:Property ;
-  rdfs:label "Original title"@en ;
-  rdfs:label "Originaltittel"@no ;
-  rdfs:domain :Publication, :Work ;
+  rdfs:domain rdfs:Class ;
   rdfs:range xsd:string .
 
 :creator a rdfs:Property ;
   ui:searchable true ;
   rdfs:label "Creator"@en ;
-  rdfs:label "Opphavsperson"@no ;
+  rdfs:label "Skaper"@no ;
   rdfs:domain :Work ;
   rdfs:range :Person .
 
@@ -89,6 +77,36 @@
   rdfs:domain :Person ;
   rdfs:range xsd:gYear.
 
+:cataloguing_name a rdfs:Property ;
+  rdfs:label "Cataloguing name"@en ;
+  rdfs:label "Katalogiseringsnavn"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:alternative_name a rdfs:Property ;
+  rdfs:label "Alternative name"@en ;
+  rdfs:label "Alternativt navn"@no ;
+  rdfs:domain rdfs:Class ;
+  rdfs:range xsd:string .
+
+:sorting_label a rdfs:Property ;
+  rdfs:label "Sorting label"@en ;
+  rdfs:label "Sorteringsform"@no ;
+  rdfs:domain :Class ;
+  rdfs:range xsd:string .
+  
+:numeration a rdfs:Property ;
+  rdfs:label "Numeration"@en ;
+  rdfs:label "Nummerering"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:description a rdfs:Property ;
+  rdfs:label "Description"@en ;
+  rdfs:label "Beskrivelse"@no ;
+  rdfs:domain rdfs:Class ;
+  rdfs:range xsd:string .
+
 :nationality a rdfs:Property ;
   rdfs:label "Nationality"@en ;
   rdfs:label "Nasjonalitet"@no ;
@@ -99,4 +117,16 @@
   rdfs:label "Gender"@en ;
   rdfs:label "Kjønn"@no ;
   rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:biography a rdfs:Property ;
+  rdfs:label "Biography"@en ;
+  rdfs:label "Biografi"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:depiction a rdfs:Property ;
+  rdfs:label "Depiction"@en ;
+  rdfs:label "Bilde"@no ;
+  rdfs:domain rdfs:Class ;
   rdfs:range xsd:string .
