@@ -50,17 +50,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     protected abstract void executeUpdate(UpdateRequest updateRequest);
 
     @Override
-    public final Model retrieveWorkById(String id) {
-        String uri = baseURI.work() + id;
-        log.debug("Attempting to retrieve: " + uri);
+    public final Model retrieveWorkByURI(String uri) {
+        log.debug("Attempting to retrieve: <" + uri + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedPublication(uri))) {
             return qexec.execDescribe();
         }
     }
 
     @Override
-    public final Model retrievePublicationById(final String id) {
-        String uri = baseURI.publication() + id;
+    public final Model retrievePublicationByURI(final String uri) {
         log.debug("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
             return qexec.execDescribe();
@@ -68,8 +66,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final Model retrievePersonById(String id) {
-        String uri = baseURI.person() + id;
+    public final Model retrievePersonByURI(String uri) {
         log.debug("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
             return qexec.execDescribe();

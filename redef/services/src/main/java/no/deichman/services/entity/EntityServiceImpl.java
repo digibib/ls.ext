@@ -113,13 +113,13 @@ public final class EntityServiceImpl implements EntityService {
         Model m = ModelFactory.createDefaultModel();
         switch (type) {
             case PUBLICATION:
-                m.add(repository.retrievePublicationById(id));
+                m.add(repository.retrievePublicationByURI(baseURI.publication() + id));
                 break;
             case PERSON:
-                m.add(repository.retrievePersonById(id));
+                m.add(repository.retrievePersonByURI(baseURI.person() + id));
                 break;
             case WORK:
-                m.add(repository.retrieveWorkById(id));
+                m.add(repository.retrieveWorkByURI(baseURI.work() + id));
                 m = getLinkedLexvoResource(m);
                 m = getLinkedFormatResource(m);
                 break;
@@ -128,7 +128,6 @@ public final class EntityServiceImpl implements EntityService {
         }
         return m;
     }
-
 
     @Override
     public void updateWork(String work) {
@@ -139,7 +138,7 @@ public final class EntityServiceImpl implements EntityService {
     public Model retrieveWorkItemsById(String id) {
         Model allItemsModel = ModelFactory.createDefaultModel();
 
-        Model workModel = repository.retrieveWorkById(id);
+        Model workModel = repository.retrieveWorkByURI(baseURI.work() + id);
         QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
                 "PREFIX  deichman: <" + baseURI.ontology() + "> "
                         + "SELECT  * "
@@ -270,7 +269,7 @@ public final class EntityServiceImpl implements EntityService {
                             }
                             if (s.getPredicate().equals(publicationOfProperty)) {
                                 String uri = s.getObject().toString();
-                                Model work = repository.retrieveWorkById(uri.substring(uri.lastIndexOf("/") + 1));
+                                Model work = repository.retrieveWorkByURI(uri);
 
                                 final String[] name = new String[1];
 
@@ -278,7 +277,9 @@ public final class EntityServiceImpl implements EntityService {
                                     workStatements.forEach(r -> {
                                         if (r.getPredicate().equals(creatorProperty)) {
                                             String personUri = r.getObject().toString();
-                                            Model person = repository.retrievePersonById(personUri.substring(personUri.lastIndexOf("/") + 1));
+
+                                            Model person = repository.retrievePersonByURI(personUri);
+
                                             if (person.listObjectsOfProperty(nameProperty).hasNext()) {
                                                 name[0] = person.listObjectsOfProperty(nameProperty).next().asLiteral().toString();
                                             }

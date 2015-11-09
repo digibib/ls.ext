@@ -17,9 +17,9 @@ public interface RDFRepository {
     String createPerson(Model inputModel);
 
     void updateWork(String work);
-    Model retrieveWorkById(String id);
-    Model retrievePublicationById(String id);
-    Model retrievePersonById(String id);
+    Model retrieveWorkByURI(String uri);
+    Model retrievePublicationByURI(String uri);
+    Model retrievePersonByURI(String uri);
 
     boolean askIfResourceExists(String uri);
 

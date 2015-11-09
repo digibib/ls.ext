@@ -107,18 +107,17 @@ public class InMemoryRepositoryTest {
     @Test
     public void test_retrieve_work_by_id(){
         repository.addData(ModelFactory.createDefaultModel().add(workWithPublicationStatements));
-        Model testModel = repository.retrieveWorkById(WORK_ID);
-        assertTrue("Work " + WORK_ID + " should be a Work", testModel.contains(workIsAWorkStmt));
-        assertTrue("Work " + WORK_ID + " should should have name", testModel.contains(workHasNameStmt));
+        Model testModel = repository.retrieveWorkByURI(workUri);
+        assertTrue("Work <" + workUri + "> should be a Work", testModel.contains(workIsAWorkStmt));
+        assertTrue("Work <" + workUri + "> should should have name", testModel.contains(workHasNameStmt));
     }
 
     @Test
     public void test_retrieve_work_by_id2(){
-        String id = WORK_ID;
         Model temp = ModelFactory.createDefaultModel();
         temp.add(workWithPublicationStatements);
         repository.addData(temp);
-        Model testModel = repository.retrieveWorkById(id);
+        Model testModel = repository.retrieveWorkByURI(workUri);
         List<Statement> missing = workWithPublicationStatements.stream()
                 .filter(stmt -> !testModel.contains(stmt))
                 .collect(Collectors.<Statement>toList());
@@ -130,7 +129,7 @@ public class InMemoryRepositoryTest {
         Model temp = ModelFactory.createDefaultModel();
         temp.add(publHasANameStmt);
         repository.addData(temp);
-        Model testModel = repository.retrievePublicationById(PUBLICATION_ID);
+        Model testModel = repository.retrievePublicationByURI(publicationUri);
         assertTrue(testModel.contains(publHasANameStmt));
     }
 
