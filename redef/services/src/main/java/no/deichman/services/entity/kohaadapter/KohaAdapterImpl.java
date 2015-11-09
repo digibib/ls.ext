@@ -104,6 +104,9 @@ public final class KohaAdapterImpl implements KohaAdapter {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
+        if (sessionCookie == null) {
+            login();
+        }
         invocationBuilder.cookie(sessionCookie.toCookie());
         return invocationBuilder.post(Entity.entity(marcRecord.getMarcXml(), MediaType.TEXT_XML));
     }

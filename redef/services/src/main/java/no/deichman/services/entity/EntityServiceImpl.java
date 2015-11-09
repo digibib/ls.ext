@@ -51,6 +51,8 @@ public final class EntityServiceImpl implements EntityService {
     private static final String FORMAT_TTL_FILE = "format.ttl";
     private final Property hasItemProperty;
     private final Property nameProperty;
+    private final Property creatorProperty;
+    private final Property publicationOfProperty;
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -99,6 +101,9 @@ public final class EntityServiceImpl implements EntityService {
         this.kohaAdapter = kohaAdapter;
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
         nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
+        creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
+        publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
+
     }
 
     @Override
@@ -195,6 +200,10 @@ public final class EntityServiceImpl implements EntityService {
                                     MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
                                     marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
                                     marcRecord.addMarcField(marcField);
+                                } else if (s.getPredicate().equals(creatorProperty)) {
+                                    MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_100);
+                                    marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
+                                    marcRecord.addMarcField(marcField);
                                 }
                                 modelWithoutItems.add(s);
                             }
@@ -250,7 +259,7 @@ public final class EntityServiceImpl implements EntityService {
         repository.patch(PatchParser.parse(ldPatchJson));
         Model model = retrieveById(type, id);
 
-        if(type.equals(EntityType.PUBLICATION)) {
+        if (type.equals(EntityType.PUBLICATION)) {
             MarcRecord marcRecord = new MarcRecord();
             streamFrom(model.listStatements())
                     .collect(groupingBy(Statement::getSubject))
@@ -260,6 +269,40 @@ public final class EntityServiceImpl implements EntityService {
                                 MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
                                 marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
                                 marcRecord.addMarcField(marcField);
+                            }
+                            if (s.getPredicate().equals(publicationOfProperty)) {
+                                String query = "select ?name where {\n"
+                                        + "<" + s.getSubject().toString() + "> a deichman:Publication; \n"
+                                        + "  deichman:publicationOf ?work .\n"
+                                        + "?work a deichman:Work ;\n"
+                                        + "  deichman:creator ?person .\n"
+                                        + "?person a deichman:Person ;\n"
+                                        + "  deichman:name ?name . \n"
+                                        + "}";
+                                //QueryExecution queryExecution = QueryExecutionFactory.create(query);
+
+                                String uri = s.getObject().toString();
+                                Model work = repository.retrieveWorkById(uri.substring(uri.lastIndexOf("/") + 1));
+
+                                final String[] name = new String[1];
+
+                                streamFrom(work.listStatements()).collect(groupingBy(Statement::getSubject)).forEach((workSubject, workStatements) -> {
+                                    workStatements.forEach(r -> {
+                                        if (r.getPredicate().equals(creatorProperty)) {
+                                            String personUri = r.getObject().toString();
+                                            Model person = repository.retrievePersonById(personUri.substring(personUri.lastIndexOf("/") + 1));
+                                            //person.listObjectsOfProperty(nameProperty).forEachRemaining(t -> names.add(t.asLiteral().toString()));
+                                            if (person.listObjectsOfProperty(nameProperty).hasNext()) {
+                                                name[0] = person.listObjectsOfProperty(nameProperty).next().asLiteral().toString();
+                                            }
+                                        }
+                                    });
+                                });
+                                if (name[0] != null) {
+                                    MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_100);
+                                    marcField.addSubfield(MarcConstants.SUBFIELD_A, name[0]);
+                                    marcRecord.addMarcField(marcField);
+                                }
                             }
                         });
                     });
