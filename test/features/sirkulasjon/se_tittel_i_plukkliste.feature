@@ -6,17 +6,23 @@ Egenskap: Se tittel i plukkliste
   For at jeg skal kunne vite hvilke bøker jeg skal hente
   Må plukklisten inneholde tittel
 
-  Scenario: Finn utgivelsestittel i Koha
+  Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
-    Og at det finnes et verk og en utgivelse
+    Og at jeg er i katalogiseringsgrensesnittet
+
+  @wip
+  Scenario: Finn utgivelsestittel i Koha
+    Og at det finnes et verk med person og en utgivelse
     Når jeg besøker bokposten
     Så ser jeg tittelen i bokposten
+    Og ser jeg forfatteren i bokposten
 
+  @wip
   Scenario: Sjekker plukkliste
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes et verk og en utgivelse
+    Og at det finnes et verk med person og en utgivelse
     Og jeg ser på utgivelsen i katalogiseringsgrensesnittet
     Og jeg følger lenken til posten i Koha
     Og jeg oppretter et eksemplar av utgivelsen
     Og at det finnes en reservasjon på materialet
     Så ser jeg tittelen i plukklisten
+    Og ser jeg forfatteren i plukklisten
