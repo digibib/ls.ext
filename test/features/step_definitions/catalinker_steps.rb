@@ -245,7 +245,7 @@ end
 
 When(/^velger person fra en treffliste$/) do
   @site.RegWork.select_resource(@context[:person_identifier])
-  @context[:creator] = @context[:personName]
+  @context[:creator] = @context[:person_name]
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
@@ -400,14 +400,14 @@ When(/^leverer systemet en ny ID for den nye personen$/) do
 end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
-  @context[:personName] = generateRandomString
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:personName])
+  @context[:person_name] = generateRandomString
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:person_name])
 
-  @context[:birthYear] = rand(2015).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:birthYear])
+  @context[:birth_year] = rand(2015).to_s
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:birth_year])
 
-  @context[:deathYear] = rand(2015).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#death", @context[:deathYear])
+  @context[:death_year] = rand(2015).to_s
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#death", @context[:death_year])
 end
 
 When(/^grensesnittet viser at personen er lagret$/) do
@@ -419,9 +419,8 @@ When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
 end
 
 When(/^personens navn vises på personsiden$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getTitle.include? @context[:personName] }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getTitle.include? @context[:person_name] }
 end
-
 
 When(/^at jeg har lagt til en person$/) do
   steps %Q{
