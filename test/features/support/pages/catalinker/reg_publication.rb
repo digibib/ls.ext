@@ -11,6 +11,10 @@ class RegPublication < CatalinkerPage
     self.get_prop("http://192.168.50.12:8005/ontology#recordID")
   end
 
+  def get_link
+    @browser.inputs(:data_automation_id => 'resource_uri').first.value
+  end
+
   def open(resource)
     super(resource, "publication")
   end

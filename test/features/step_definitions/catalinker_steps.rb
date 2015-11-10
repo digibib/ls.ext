@@ -188,6 +188,10 @@ When(/^jeg åpner verket for redigering$/) do
   @site.RegWork.open(@context[:identifier], "work")
 end
 
+When(/^jeg åpner utgivelsen for redigering$/) do
+  @site.RegPublication.open(@context[:publication_identifier])
+end
+
 When(/^når jeg endrer årstall for førsteutgave til verket$/) do
   step "jeg legger til et årstall for førsteutgave av nye verket"
   step "grensesnittet viser at tittelen er lagret"
@@ -306,6 +310,11 @@ Then(/^jeg kan legge til tittel for det nye verket$/) do
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#title", @context[:work_title])
 end
 
+Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
+  @context[:publication_name] = generateRandomString
+  @site.RegPublication.add_prop("http://192.168.50.12:8005/ontology#name", @context[:publication_name])
+end
+
 Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
   @context[:work_title] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#title", @context[:work_title])
@@ -339,6 +348,7 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
     page = @site.RegPublication.visit
   end
 
+  @context[:publication_identifier] = @site.RegPublication.get_link
   @context[:publication_format] = ['Bok', 'CD', 'DVD', 'CD-ROM', 'DVD-ROM'].sample
   @context[:publication_language] =  ['Engelsk','Norsk (bokmål)','Finsk','Baskisk', 'Grønlandsk'].sample
   @context[:publication_title] = generateRandomString
@@ -415,5 +425,11 @@ When(/^at jeg har lagt til en person$/) do
 end
 
 When(/^viser systemet at opphavsperson til verket har blitt registrert$/) do
+  step "grensesnittet viser at tittelen er lagret"
+end
+
+
+When(/^når jeg endrer tittelen på utgivelsen$/) do
+  step "jeg kan legge til tittel for den nye utgivelsen"
   step "grensesnittet viser at tittelen er lagret"
 end
