@@ -440,7 +440,7 @@ public class EntityServiceImplTest {
 
     private String itemNTriples(final String title, final String barcode) {
         return "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "hasItem> <__BASEURI__bibliofilItem/x" + barcode + "> .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "name> \"" + title + "\".\n"
+                + "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "title> \"" + title + "\".\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/a> \"hutl\" .\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/b> \"hutl\" .\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/c> \"m\" .\n"

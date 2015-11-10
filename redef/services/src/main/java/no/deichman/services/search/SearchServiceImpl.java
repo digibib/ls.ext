@@ -34,10 +34,10 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     private static final String WORK_MODEL_TO_INDEX_DOCUMENT_QUERY = format("PREFIX  : <%1$s> \n"
-            + "select distinct ?work ?workName ?workYear ?creatorName ?creator ?birth ?death\n"
+            + "select distinct ?work ?workTitle ?workYear ?creatorName ?creator ?birth ?death\n"
             + "where {\n"
             + "    ?work a :Work ;\n"
-            + "             :name ?workName ;\n"
+            + "             :title ?workTitle ;\n"
             + "             :year ?workYear.\n"
             + "    optional { \n"
             + "             ?work :creator ?creator .\n"
@@ -58,7 +58,7 @@ public class SearchServiceImpl implements SearchService {
             + "}\n", BaseURI.remote().ontology());
 
     private static final ImmutableMap<String, String> WORK_MODEL_TO_INDEX_DOCUMENT_MAPPING = new ImmutableMap.Builder<String, String>()
-            .putAll(of("work", "work.uri", "workName", "work.name", "workYear", "work.year"))
+            .putAll(of("work", "work.uri", "workTitle", "work.title", "workYear", "work.year"))
             .putAll(of("creatorName", "work.creator.name", "creator", "work.creator.uri"))
             .putAll(of("birth", "work.creator.birth", "death", "work.creator.death"))
             .build();

@@ -43,7 +43,7 @@ public final class SPARQLQueryBuilder {
                 + "WHERE {\n"
                 + "    <%2$s> a deichman:Work .\n"
                 + "    optional {\n"
-                + "            <%2$s> deichman:name ?name \n"
+                + "            <%2$s> deichman:title ?title \n"
                 + "    } \n"
                 + "    optional { \n"
                 + "           <%2$s> deichman:creator ?creator .\n"

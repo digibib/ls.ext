@@ -50,7 +50,7 @@ public final class EntityServiceImpl implements EntityService {
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
     private final Property hasItemProperty;
-    private final Property nameProperty;
+    private final Property titleProperty;
     private final Property creatorProperty;
     private final Property publicationOfProperty;
 
@@ -100,7 +100,7 @@ public final class EntityServiceImpl implements EntityService {
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
-        nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
+        titleProperty = ResourceFactory.createProperty(baseURI.ontology("title"));
         creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
 
@@ -196,7 +196,7 @@ public final class EntityServiceImpl implements EntityService {
                     } else {
                         statements.forEach(s -> {
                             if (!s.getPredicate().equals(hasItemProperty)) {
-                                if (s.getPredicate().equals(nameProperty)) {
+                                if (s.getPredicate().equals(titleProperty)) {
                                     MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
                                     marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
                                     marcRecord.addMarcField(marcField);
@@ -265,7 +265,7 @@ public final class EntityServiceImpl implements EntityService {
                     .collect(groupingBy(Statement::getSubject))
                     .forEach((subject, statements) -> {
                         statements.forEach(s -> {
-                            if (s.getPredicate().equals(nameProperty)) {
+                            if (s.getPredicate().equals(titleProperty)) {
                                 MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
                                 marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
                                 marcRecord.addMarcField(marcField);
@@ -291,9 +291,9 @@ public final class EntityServiceImpl implements EntityService {
                                         if (r.getPredicate().equals(creatorProperty)) {
                                             String personUri = r.getObject().toString();
                                             Model person = repository.retrievePersonById(personUri.substring(personUri.lastIndexOf("/") + 1));
-                                            //person.listObjectsOfProperty(nameProperty).forEachRemaining(t -> names.add(t.asLiteral().toString()));
-                                            if (person.listObjectsOfProperty(nameProperty).hasNext()) {
-                                                name[0] = person.listObjectsOfProperty(nameProperty).next().asLiteral().toString();
+                                            //person.listObjectsOfProperty(titleProperty).forEachRemaining(t -> names.add(t.asLiteral().toString()));
+                                            if (person.listObjectsOfProperty(titleProperty).hasNext()) {
+                                                name[0] = person.listObjectsOfProperty(titleProperty).next().asLiteral().toString();
                                             }
                                         }
                                     });
