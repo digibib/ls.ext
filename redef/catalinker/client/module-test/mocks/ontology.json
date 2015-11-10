@@ -58,7 +58,7 @@
       "rdfs:label": [
         {
           "@language": "no",
-          "@value": "Skaper"
+          "@value": "Opphavsperson"
         },
         {
           "@language": "en",
@@ -119,7 +119,7 @@
       "@id": "deichman:name",
       "@type": "rdfs:Property",
       "rdfs:domain": {
-        "@id": "rdfs:Class"
+        "@id": "deichman:Person"
       },
       "rdfs:label": [
         {
@@ -132,7 +132,57 @@
         }
       ],
       "rdfs:range": {
-        "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    {
+      "@id": "deichman:title",
+      "@type": "rdfs:Property",
+      "rdfs:domain": [
+        {
+          "@id": "deichman:Work"
+        },
+        {
+          "@id": "deichman:Publication"
+        }
+      ],
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Tittel"
+        },
+        {
+          "@language": "en",
+          "@value": "Title"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    {
+      "@id": "deichman:original_title",
+      "@type": "rdfs:Property",
+      "rdfs:domain": [
+        {
+          "@id": "deichman:Work"
+        },
+        {
+          "@id": "deichman:Publication"
+        }
+      ],
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Originaltittel"
+        },
+        {
+          "@language": "en",
+          "@value": "Original Title"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
       }
     },
     {

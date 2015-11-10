@@ -1,104 +1,15 @@
 var assert = require('chai').assert;
 var Ontology = require('../src/ontology');
-
-var example_ontology = {
-  "@graph": [{
-    "@id": "deichman:Person",
-    "@type": "rdfs:Class"
-  }, {
-    "@id": "deichman:Work",
-    "@type": "rdfs:Class",
-    "rdfs:label": [{
-      "@language": "no",
-      "@value": "Verk"
-    }, {
-      "@language": "en",
-      "@value": "Work"
-    }]
-  }, {
-    "@id": "deichman:Book",
-    "@type": "rdfs:Class",
-    "rdfs:label": [{
-      "@language": "no",
-      "@value": "Bok"
-    }, {
-      "@language": "en",
-      "@value": "Book"
-    }]
-  }, {
-    "@id": "deichman:biblio",
-    "@type": "rdfs:Property",
-    "rdfs:domain": {
-      "@id": "deichman:Work"
-    },
-    "rdfs:range": {
-      "@id": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-    }
-  }, {
-    "@id": "deichman:creator",
-    "@type": "rdfs:Property",
-    "rdfs:domain": {
-      "@id": "rdfs:Class"
-    },
-    "rdfs:range": {
-      "@id": "deichman:Person"
-    }
-  }, {
-    "@id": "deichman:identifier",
-    "@type": "rdfs:Property",
-    "rdfs:range": {
-      "@id": "http://www.w3.org/2001/XMLSchema#string"
-    }
-  }, {
-    "@id": "deichman:name",
-    "@type": "rdfs:Property",
-    "rdfs:domain": [{
-      "@id" : "deichman:Publication"
-    }, {
-      "@id" : "deichman:Work"
-    }],
-    "rdfs:range": {
-      "@id": "http://www.w3.org/2001/XMLSchema#string"
-    }
-  }, {
-    "@id": "lvont:Language",
-    "@type": "rdfs:Class"
-  }, {
-    "@id": "deichman:language",
-    "@type": "rdfs:Property",
-    "rdfs:domain": [{
-      "@id" : "deichman:Publication"
-    }, {
-      "@id" : "deichman:Work"
-    }],
-    "rdfs:range": {
-      "@id": "lvont:Language"
-    }
-  }, {
-    "@id": "deichman:year",
-    "@type": "rdfs:Property",
-    "rdfs:domain": {
-      "@id": "deichman:Work"
-    },
-    "rdfs:range": {
-      "@id": "http://www.w3.org/2001/XMLSchema#gYear"
-    }
-  }],
-  "@context": {
-    "deichman": "http://192.168.50.12:8005/ontology#",
-    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    "lvont": "http://lexvo.org/ontology#"
-  }
-};
+var example_ontology = require('../module-test/mocks/ontology.json');
 
 describe("Parsing an ontology", function () {
   it("can filter properties that are valid for a class", function () {
     var workProps = Ontology.propsByClass(example_ontology, "Work");
-    assert.equal(workProps.length, 6);
+    assert.equal(workProps.length, 5);
   });
 
   it("can resolve URIs against the supplied prefixes", function () {
-    assert.equal(Ontology.resolveURI(example_ontology, "deichman:Work"), "http://192.168.50.12:8005/ontology#Work");
+    assert.equal(Ontology.resolveURI(example_ontology, "deichman:Work"), "http://192.168.50.12:7000/ontology#Work");
   });
 });
 
