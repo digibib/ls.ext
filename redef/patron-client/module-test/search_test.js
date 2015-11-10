@@ -76,15 +76,15 @@ describe("PatronClient", function () {
       });
     });
 
-    it("should display name of all hits", function (done) {
-      ractive.set("currentSearchTerm", "should display name of all hits");
+    it("should display title of all hits", function (done) {
+      ractive.set("currentSearchTerm", "should display title of all hits");
       var hits = {
         "hits": [
             {
               "_id": "http//example.org/work/1",
               "_source": {
                 "work": {
-                  "name": "Tittel 1"
+                  "title": "Tittel 1"
                 }
               }
             },
@@ -92,7 +92,7 @@ describe("PatronClient", function () {
               "_id": "http//example.org/work/2",
               "_source": {
                 "work": {
-                  "name": "Tittel 2"
+                  "title": "Tittel 2"
                 }
               }
             },
@@ -100,7 +100,7 @@ describe("PatronClient", function () {
               "_id": "http//example.org/work/3",
               "_source": {
                 "work": {
-                  "name": "æøå"
+                  "title": "æøå"
                 }
               }
             }
@@ -111,11 +111,11 @@ describe("PatronClient", function () {
         var results = document.getElementsByClassName("result"),
             titles = [],
             want = hits.hits.map(function (h) {
-              return h._source.work.name;
+              return h._source.work.title;
             });
 
         [].forEach.call(results, function (el) {
-          titles.push(el.querySelector("[data-automation-id='work-name']").innerHTML);
+          titles.push(el.querySelector("[data-automation-id='work-title']").innerHTML);
         });
 
         expect(document.querySelector("[data-automation-id='hits-total']").innerHTML).to.eq(hits.total.toString());

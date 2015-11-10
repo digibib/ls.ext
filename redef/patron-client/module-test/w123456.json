@@ -6,12 +6,13 @@
   },
   "@graph": [
     {
-      "deichman:biblio": "2",
+      "deichman:recordID": "2",
       "deichman:year": "1890",
       "deichman:creator": {
         "@id": "http://192.168.50.12:7000/person/h123456"
       },
-      "deichman:name": "Sult",
+      "deichman:original_title": "Sult",
+      "deichman:title": "Sult",
       "@id": "http://192.168.50.12:7000/work/w123456",
       "@type": "deichman:Work"
     },
@@ -33,7 +34,7 @@
       "deichman:format": {
         "@id": "http://data.deichman.no/format#Book"
       },
-      "deichman:name": [
+      "deichman:title": [
         {
           "@value": "Hungrig",
           "@language": "sv"

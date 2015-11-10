@@ -9,7 +9,7 @@
       </div>
     </div>
     <div id="work" class="column half relative">
-      <h2 data-automation-id="work_title">{{work.get("name").value}}</h2>
+      <h2 data-automation-id="work_title">{{work.get("title").value}}</h2>
       {{#each work.outAll("creator")}}
         <p data-automation-id="work_author"><a href="{{linkify(this.id)}}">{{this.get("name").value}}</a></p>
       {{/each}}
@@ -25,7 +25,7 @@
     </div>
     <div class="column fourth">
       <dl class="item-details small-text">
-        <dt>Originaltittel</dt><dd>{{work.get("name").value}}</dd>
+        <dt>Originaltittel</dt><dd>{{work.get("original_title").value}}</dd>
         <dt>Forfatter(e)</dt><dd>{{#each work.outAll("creator")}}<u>{{this.get("name").value}}</u> {{/each}}</dd>
         <dt>Originalspråk</dt><dd>ukjent</dd>
         <dt>Emner</dt><dd></dd>
@@ -47,7 +47,7 @@
             <tbody>
               {{#each graph.byType("Publication")}}
                 <tr about="{{this.id}}">
-                  <td data-automation-id="publication_name">{{this.get("name").value}}</td>
+                  <td data-automation-id="publication_title">{{this.get("title").value}}</td>
                   <td data-automation-id="publication_language">{{this.out("language").get("label").value}}</td>
                   <td data-automation-id="publication_format">{{this.out("format").get("label").value}}</td>
                   <td>{{this.inAll("editionOf").length}}</td>
@@ -79,7 +79,7 @@
         {{#each graph.byType("Publication")}}
           {{#each this.inAll("editionOf")}}
             <tr>
-              <td data-automation-id="item_title">{{this.out("editionOf").get("name").value}}</td>
+              <td data-automation-id="item_title">{{this.out("editionOf").get("title").value}}</td>
               <td data-automation-id="item_language">{{this.out("editionOf").out("language").get("label").value}}</td>
               <td data-automation-id="item_format">{{this.out("editionOf").out("format").get("label").value}}</td>
               <td data-automation-id="item_barcode">{{this.get("barcode").value}}</td>
