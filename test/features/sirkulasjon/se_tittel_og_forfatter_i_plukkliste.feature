@@ -1,17 +1,16 @@
 # encoding: UTF-8
 # language: no
 
-Egenskap: Se tittel i plukkliste
+Egenskap: Se tittel og forfatter i plukkliste
   Som bibliotekar
   For at jeg skal kunne vite hvilke bøker jeg skal hente
-  Må plukklisten inneholde tittel
+  Må plukklisten inneholde tittel og forfatter
 
   Bakgrunn:
     Gitt at jeg er logget inn som adminbruker
     Og at jeg er i katalogiseringsgrensesnittet
 
-  @wip
-  Scenario: Finn utgivelsestittel i Koha
+  Scenario: Finn utgivelsestittel og forfatter i Koha
     Gitt at det finnes et verk med person og en utgivelse
     Når jeg besøker bokposten
     Så ser jeg tittelen i bokposten
@@ -29,7 +28,19 @@ Egenskap: Se tittel i plukkliste
   Scenario: Finn endret utgivelsestittel i Koha
     Gitt at det finnes et verk med person og en utgivelse
     Og jeg besøker bokposten
+    Så ser jeg tittelen i bokposten
     Når jeg åpner utgivelsen for redigering
     Og når jeg endrer tittelen på utgivelsen
     Og jeg besøker bokposten
     Så ser jeg tittelen i bokposten
+
+  @wip
+  Scenario: Finn endret forfatter i Koha
+    Gitt at det finnes et verk med person og en utgivelse
+    Og jeg besøker bokposten
+    Så ser jeg forfatteren i bokposten
+    Gitt at det finnes en personressurs
+    Når jeg åpner verket for redigering
+    Og når jeg endrer forfatteren på verket
+    Og jeg besøker bokposten
+    Så ser jeg forfatteren i bokposten
