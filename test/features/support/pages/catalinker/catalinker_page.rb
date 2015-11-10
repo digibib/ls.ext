@@ -38,7 +38,7 @@ class CatalinkerPage < PageRoot
     end
 
     def select_resource(uri)
-      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => uri).text != "" }
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.divs(:data_automation_id => uri).length == 1 } # select on uri should always be one
       @browser.div(:data_automation_id => uri).click
     end
 

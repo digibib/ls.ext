@@ -2,7 +2,7 @@
 
 Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.h2(:data_automation_id => /work_title/).present? }
-  @site.PatronClientWorkPage.getTitle.should include(@context[:title])
+  @site.PatronClientWorkPage.getTitle.should include(@context[:work_title])
 end
 
 
@@ -26,18 +26,18 @@ end
 Then(/^språket til verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
   @browser.refresh
-  @site.PatronClientWorkPage.getTitle.should include("@" + @context[:title_lang])
+  @site.PatronClientWorkPage.getTitle.should include("@" + @context[:work_title_lang])
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {@browser.title != "verksside"}
-  @site.PatronClientWorkPage.getTitle.should include(@context[:title])
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {@site.PatronClientWorkPage.getTitle != ""}
+  @site.PatronClientWorkPage.getTitle.should include(@context[:work_title])
   @site.PatronClientWorkPage.getDate.should include(@context[:year])
 end
 
 Then(/^verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
-  @site.PatronClientWorkPage.getTitle.should include(@context[:title])
+  @site.PatronClientWorkPage.getTitle.should include(@context[:work_title])
 end
 
 Then(/^verkets alternative tittel vises på verks\-siden$/) do
@@ -54,7 +54,7 @@ end
 When(/^vises opplysningene om utgivelsen på verkssiden$/) do
   step "jeg er på sida til verket"
   @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
-    row.td(:data_automation_id => "publication_name").text.should eq(@context[:publication_name])
+    row.td(:data_automation_id => "publication_title").text.should eq(@context[:publication_title])
     row.td(:data_automation_id => "publication_format").text.should eq(@context[:publication_format])
     row.td(:data_automation_id => "publication_language").text.should eq(@context[:publication_language])
   end
@@ -73,7 +73,7 @@ end
 
 Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$/) do
   @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
-    row.td(:data_automation_id => "publication_name").text.should_not be_empty
+    row.td(:data_automation_id => "publication_title").text.should_not be_empty
     row.td(:data_automation_id => "publication_language").text.should_not be_empty
     row.td(:data_automation_id => "publication_format").text.should_not be_empty
   end

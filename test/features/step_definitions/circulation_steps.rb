@@ -200,7 +200,7 @@ Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
       @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
     end
   else
-   @browser.table(:id => "holdst").text.should include(@context[:publication_name])
+   @browser.table(:id => "holdst").text.should include(@context[:publication_title])
   end
 end
 
@@ -229,7 +229,7 @@ end
 
 Then(/^vises boka i listen over bøker som skal plukkes$/) do
   holds = @site.HoldsQueue.visit.get_holds
-  holds.text.should include(@context[:publication_name])
+  holds.text.should include(@context[:publication_title])
   holds.text.should include(@active[:patron].cardnumber)
 end
 
@@ -428,7 +428,7 @@ When(/^jeg besøker bokposten$/) do
 end
 
 When(/^ser jeg tittelen i bokposten$/) do
-  @browser.h1(:class => 'title').text == @context[:publication_name]
+  @browser.h1(:class => 'title').text == @context[:publication_title]
 end
 
 When(/^ser jeg forfatteren i bokposten$/) do
@@ -436,7 +436,7 @@ When(/^ser jeg forfatteren i bokposten$/) do
 end
 
 When(/^ser jeg tittelen i plukklisten$/) do
-  @browser.strongs.any? { |element| element.text.include? @context[:publication_name] }
+  @browser.strongs.any? { |element| element.text.include? @context[:publication_title] }
 end
 
 When(/^ser jeg forfatteren i plukklisten$/) do

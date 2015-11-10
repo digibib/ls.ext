@@ -3,7 +3,7 @@
 When(/^jeg søker på verket i lånergrensesnittet$/) do
   page = @site.SearchPatronClient
   page.visit
-  page.search_with_text(@context[:title])
+  page.search_with_text(@context[:work_title])
 end
 
 Then(/^vil jeg finne verket i trefflista$/) do
@@ -13,7 +13,7 @@ Then(/^vil jeg finne verket i trefflista$/) do
     step "jeg søker på verket i lånergrensesnittet"
     result_list = @site.SearchPatronClient.get_search_result_list
   end
-  result_list.text.include?(@context[:title]).should == true
+  result_list.text.include?(@context[:work_title]).should == true
 end
 
 When(/^jeg søker på verkets ID i lånergrensesnittet$/) do
@@ -30,7 +30,7 @@ end
 When(/^jeg søker på verket i lånergrensesnittet basert på det første og siste leddet i tittelen$/) do
   page = @site.SearchPatronClient
   page.visit
-  split_title = @context[:title].split(' ')
+  split_title = @context[:work_title].split(' ')
   search_query = [split_title.first, split_title.last].join(' ')
   page.search_with_text(search_query)
 end

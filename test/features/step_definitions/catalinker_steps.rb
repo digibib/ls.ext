@@ -77,7 +77,7 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
   book = SVC::Biblio.new(@browser,@context,@active).add
   @active[:book] = book
   @context[:biblio]     = book.biblionumber
-  @context[:title] = book.title
+  @context[:publication_title] = book.title
   @context[:record_id] = book.biblionumber
 
   @cleanup.push( "bok #{book.biblionumber}" =>
@@ -194,7 +194,7 @@ When(/^når jeg endrer årstall for førsteutgave til verket$/) do
 end
 
 When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
-  predicate = "http://192.168.50.12:8005/ontology#name"
+  predicate = "http://192.168.50.12:8005/ontology#title"
   @context[:alt_title] = generateRandomString
   @browser.div(:class => predicate).button.click
   @site.RegWork.add_prop(predicate, @context[:alt_title], 1)
@@ -213,7 +213,7 @@ When(/^jeg forsøker å registrere ett nytt verk$/) do
 end
 
 When(/^jeg velger språk for tittelen$/) do
-  predicate = "http://192.168.50.12:8005/ontology#name"
+  predicate = "http://192.168.50.12:8005/ontology#title"
   @context[:title_lang] = "no"
   @browser.div(:class => predicate).select.select_value(@context[:title_lang])
 end
@@ -302,13 +302,13 @@ Then(/^leverer systemet en ny ID for det nye verket$/) do
 end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
-  @context[:title] = generateRandomString
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#name", @context[:title])
+  @context[:work_title] = generateRandomString
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#title", @context[:work_title])
 end
 
 Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
-  @context[:title] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#name", @context[:title])
+  @context[:work_title] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#title", @context[:work_title])
 end
 
 Then(/^grensesnittet viser at tittelen er lagret$/) do
@@ -341,12 +341,12 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
 
   @context[:publication_format] = ['Bok', 'CD', 'DVD', 'CD-ROM', 'DVD-ROM'].sample
   @context[:publication_language] =  ['Engelsk','Norsk (bokmål)','Finsk','Baskisk', 'Grønlandsk'].sample
-  @context[:publication_name] = generateRandomString
+  @context[:publication_title] = generateRandomString
   step "får utgivelsen tildelt en post-ID i Koha"
 
   page.select_prop('http://192.168.50.12:8005/ontology#format', @context[:publication_format])
   page.select_prop('http://192.168.50.12:8005/ontology#language', @context[:publication_language])
-  page.add_prop('http://192.168.50.12:8005/ontology#name', @context[:publication_name])
+  page.add_prop('http://192.168.50.12:8005/ontology#title', @context[:publication_title])
 end
 
 
