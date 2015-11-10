@@ -434,8 +434,12 @@ When(/^viser systemet at opphavsperson til verket har blitt registrert$/) do
   step "grensesnittet viser at tittelen er lagret"
 end
 
-
 When(/^når jeg endrer tittelen på utgivelsen$/) do
   step "jeg kan legge til tittel for den nye utgivelsen"
+  step "grensesnittet viser at tittelen er lagret"
+end
+
+When(/^når jeg endrer forfatteren på verket$/) do
+  step "jeg legger til forfatter av det nye verket"
   step "grensesnittet viser at tittelen er lagret"
 end

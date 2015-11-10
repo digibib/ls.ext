@@ -89,17 +89,17 @@ When(/^jeg registrerer utlån av boka$/) do
 end
 
 When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
-  book = @context[:books].find {|b| b.items.find {|i| i.barcode == "#{barcode}" } }
-  item = book[:items].find {|i| i.barcode == "#{barcode}" }
+  book = @context[:books].find { |b| b.items.find { |i| i.barcode == "#{barcode}" } }
+  item = book[:items].find { |i| i.barcode == "#{barcode}" }
 
   @site.Checkout.checkout(barcode)
 
   @active[:book] = book
   @active[:item] = item
-  @cleanup.push( "utlån #{barcode}" =>
-    lambda do
-      @site.Home.visit.select_branch().checkin(book.items.first.barcode)
-    end
+  @cleanup.push("utlån #{barcode}" =>
+                    lambda do
+                      @site.Home.visit.select_branch().checkin(book.items.first.barcode)
+                    end
   )
 end
 
@@ -200,7 +200,7 @@ Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
       @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
     end
   else
-   @browser.table(:id => "holdst").text.should include(@context[:publication_title])
+    @browser.table(:id => "holdst").text.should include(@context[:publication_title])
   end
 end
 
@@ -220,7 +220,7 @@ end
 Then(/^viser systemet at boka ligger til avhenting$/) do
   book = @active[:book]
   @site.WaitingReserves.visit.
-    get_waiting_reserves.text.should include(@active[:book].title)
+      get_waiting_reserves.text.should include(@active[:book].title)
 end
 
 Then(/^systemet viser at materialet fortsatt er holdt av til den andre låneren$/) do
@@ -243,7 +243,7 @@ end
 
 
 Given(/^at låneren har et antall lån som( ikke)? er under maksgrense for antall lån$/) do |maxloans|
-  item   = @active[:item] ||= @active[:book].items.first
+  item = @active[:item] ||= @active[:book].items.first
   patron = @active[:patron]
   if maxloans
     step "at det finnes følgende sirkulasjonsregler", table(%{
@@ -351,7 +351,7 @@ Then(/^viser systemet at låneren ikke låner boka$/) do
   step "systemet viser at låneren ikke låner materialet"
 end
 
-Given(/^at status (.*?) er innstilt med data$/) do |status,table|
+Given(/^at status (.*?) er innstilt med data$/) do |status, table|
   @browser.goto intranet(:authorised_values)
   s = @browser.select_list :id => 'searchfield'
   s.select "#{status}"
@@ -359,9 +359,9 @@ Given(/^at status (.*?) er innstilt med data$/) do |status,table|
   p = d.hashes
   #Need to remove &nbsp; from captured data values
   p.each { |x|
-    x.each {|k,v|
+    x.each { |k, v|
       if /^\s$/.match(v)
-        x.update({ k => ""})
+        x.update({k => ""})
       end
     }
   }
@@ -381,22 +381,23 @@ When(/^velger å redigere eksemplaret$/) do
 end
 
 When(/^jeg endrer status til "(.*?)"$/) do |status|
-  def selector (subfield,status)
+  def selector (subfield, status)
     s = @browser.select_list(:id => /^tag_952_subfield_#{subfield}_[0-9]+$/)
     s.select "#{status}"
     @browser.button(:value => "Save changes").click
   end
+
   case status
-  when "trukket tilbake"
-    selector(0,status)
-  when "borte i transport", "ikke på plass", "påstått ikke lånt", "påstått levert", "regnes som tapt", "retur eieravdeling (ved import)", "tapt", "tapt og erstattet", "tapt, regning betalt", "til henteavdeling (ved import)", "vidvanke, registrert forsvunnet"
-    selector(1,status)
-  when "skadet"
-    selector(4,status)
-  when "begrenset tilgang","referanseverk"
-    selector(5,status)
-  when "i bestilling","ny","til innbinding","til internt bruk","til katalogisering","til retting","vurderes kassert"
-    selector(7,status)
+    when "trukket tilbake"
+      selector(0, status)
+    when "borte i transport", "ikke på plass", "påstått ikke lånt", "påstått levert", "regnes som tapt", "retur eieravdeling (ved import)", "tapt", "tapt og erstattet", "tapt, regning betalt", "til henteavdeling (ved import)", "vidvanke, registrert forsvunnet"
+      selector(1, status)
+    when "skadet"
+      selector(4, status)
+    when "begrenset tilgang", "referanseverk"
+      selector(5, status)
+    when "i bestilling", "ny", "til innbinding", "til internt bruk", "til katalogisering", "til retting", "vurderes kassert"
+      selector(7, status)
   end
 end
 
@@ -413,7 +414,7 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
   rows = @browser.table(:id => "default-circulation-rules").tbody.rows
   orig = []
   rows.each do |row|
-    orig << [row[0].text, row[1].text, row[2].text, row[3].text, row[4].text, row[5].text, row[6].text, row[7].text, row[8].text, row[9].text, row[10].text, row[11].text, row[12].text, row[13].text, row[14].text, row[15].text, row[16].text, row[17].text, row[18].text, row[19].text, row[20].text ]
+    orig << [row[0].text, row[1].text, row[2].text, row[3].text, row[4].text, row[5].text, row[6].text, row[7].text, row[8].text, row[9].text, row[10].text, row[11].text, row[12].text, row[13].text, row[14].text, row[15].text, row[16].text, row[17].text, row[18].text, row[19].text, row[20].text]
   end
   orig.pop
   a = (table & orig == table)
@@ -428,17 +429,17 @@ When(/^jeg besøker bokposten$/) do
 end
 
 When(/^ser jeg tittelen i bokposten$/) do
-  @browser.h1(:class => 'title').text == @context[:publication_title]
+  @browser.h1(:class => 'title').text.should be == @context[:publication_title]
 end
 
 When(/^ser jeg forfatteren i bokposten$/) do
-  @browser.h5(:class => 'author').a.text == @context[:creator]
+  @browser.h5(:class => 'author').a.text.should be == @context[:creator]
 end
 
 When(/^ser jeg tittelen i plukklisten$/) do
-  @browser.strongs.any? { |element| element.text.include? @context[:publication_title] }
+  @browser.strongs.any? { |element| element.text.include? @context[:publication_title] }.should be true
 end
 
 When(/^ser jeg forfatteren i plukklisten$/) do
-  @browser.divs(:class => 'hq-author').any? { |element| element.text.include? @context[:creator] }
+  @browser.divs(:class => 'hq-author').any? { |element| element.text.include? @context[:creator] }.should be true
 end
