@@ -233,7 +233,14 @@ When(/^jeg legger til forfatter av det nye verket$/) do
 end
 
 When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
-  @site.RegWork.search_resource("http://192.168.50.12:8005/ontology#creator", @context[:personName])
+  5.times do
+    @site.RegWork.search_resource("http://192.168.50.12:8005/ontology#creator", @context[:person_name])
+    if @browser.div(:data_automation_id => @context[:person_identifier]).present?
+      break
+    else
+      sleep 2 #Give more time for indexing
+    end
+  end
 end
 
 When(/^velger person fra en treffliste$/) do
