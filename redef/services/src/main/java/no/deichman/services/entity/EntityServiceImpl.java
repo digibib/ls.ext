@@ -200,10 +200,6 @@ public final class EntityServiceImpl implements EntityService {
                                     MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
                                     marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
                                     marcRecord.addMarcField(marcField);
-                                } else if (s.getPredicate().equals(creatorProperty)) {
-                                    MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_100);
-                                    marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
-                                    marcRecord.addMarcField(marcField);
                                 }
                                 modelWithoutItems.add(s);
                             }
@@ -271,16 +267,6 @@ public final class EntityServiceImpl implements EntityService {
                                 marcRecord.addMarcField(marcField);
                             }
                             if (s.getPredicate().equals(publicationOfProperty)) {
-                                String query = "select ?name where {\n"
-                                        + "<" + s.getSubject().toString() + "> a deichman:Publication; \n"
-                                        + "  deichman:publicationOf ?work .\n"
-                                        + "?work a deichman:Work ;\n"
-                                        + "  deichman:creator ?person .\n"
-                                        + "?person a deichman:Person ;\n"
-                                        + "  deichman:name ?name . \n"
-                                        + "}";
-                                //QueryExecution queryExecution = QueryExecutionFactory.create(query);
-
                                 String uri = s.getObject().toString();
                                 Model work = repository.retrieveWorkById(uri.substring(uri.lastIndexOf("/") + 1));
 
