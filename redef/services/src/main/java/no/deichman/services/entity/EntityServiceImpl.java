@@ -51,6 +51,7 @@ public final class EntityServiceImpl implements EntityService {
     private static final String FORMAT_TTL_FILE = "format.ttl";
     private final Property hasItemProperty;
     private final Property titleProperty;
+    private final Property nameProperty;
     private final Property creatorProperty;
     private final Property publicationOfProperty;
 
@@ -101,6 +102,7 @@ public final class EntityServiceImpl implements EntityService {
         this.kohaAdapter = kohaAdapter;
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
         titleProperty = ResourceFactory.createProperty(baseURI.ontology("title"));
+        nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
         creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
 
@@ -277,9 +279,8 @@ public final class EntityServiceImpl implements EntityService {
                                         if (r.getPredicate().equals(creatorProperty)) {
                                             String personUri = r.getObject().toString();
                                             Model person = repository.retrievePersonById(personUri.substring(personUri.lastIndexOf("/") + 1));
-                                            //person.listObjectsOfProperty(titleProperty).forEachRemaining(t -> names.add(t.asLiteral().toString()));
-                                            if (person.listObjectsOfProperty(titleProperty).hasNext()) {
-                                                name[0] = person.listObjectsOfProperty(titleProperty).next().asLiteral().toString();
+                                            if (person.listObjectsOfProperty(nameProperty).hasNext()) {
+                                                name[0] = person.listObjectsOfProperty(nameProperty).next().asLiteral().toString();
                                             }
                                         }
                                     });

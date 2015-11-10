@@ -311,8 +311,8 @@ Then(/^jeg kan legge til tittel for det nye verket$/) do
 end
 
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
-  @context[:publication_name] = generateRandomString
-  @site.RegPublication.add_prop("http://192.168.50.12:8005/ontology#name", @context[:publication_name])
+  @context[:publication_title] = generateRandomString
+  @site.RegPublication.add_prop("http://192.168.50.12:8005/ontology#title", @context[:publication_title])
 end
 
 Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
