@@ -87,19 +87,30 @@ describe("Catalinker", function () {
       done();
     });
 
-    it('henter ressurstype fra siste ledd i pathname i url', function (done) {
-      expect(Main.getResourceType()).to.equal("Work");
-      done();
+    describe("Registrere verk", function () {
+      it('henter ressurstype fra siste ledd i pathname i url', function (done) {
+        expect(Main.getResourceType()).to.equal("Work");
+        done();
+      });
+
+      it("har riktig side-tittel", function (done) {
+        expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av verk");
+        done();
+      });
+
+      it("gir riktig ressurs-URI", function (done) {
+        expect(document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value).to.equal("http://192.168.50.12:7000/work/w123456");
+        done();
+      });
     });
 
-    it("har riktig side-tittel", function (done) {
-      expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av verk");
-      done();
-    });
-
-    it("gir riktig ressurs-URI", function (done) {
-      expect(document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value).to.equal("http://192.168.50.12:7000/work/w123456");
-      done();
+    describe("Eksisterende verk", function () {
+      it("populerer felt riktig", function (done) {
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#title_0"]')[0].value).to.equal("Sult");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#original_title_0"]')[0].value).to.equal("Sult");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#year_0"]')[0].value).to.equal("1890");
+        done();
+      });
     });
 
     describe("Søk på ressurser", function () {

@@ -89,42 +89,52 @@ describe("Catalinker", function () {
       done();
     });
 
-
-    it("har riktig side-tittel", function (done) {
-      expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av utgivelse");
-      done();
-    });
-
-    it("gir riktig ressurs-ID, og er ikke redigerbar", function (done) {
-      expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#recordID_0"]')[0].value).to.equal("123");
-      expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#recordID_0"]')[0].disabled).to.equal(true);
-      done();
-    });
-
-    it("gir riktig antall options i authorized values dropdown", function (done) {
-      expect(document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#format_0"] option').length).to.equal(4);
-      expect(document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#language_0"] option').length).to.equal(5);
-      done();
-    });
-
-    it("gir sorterte options i format select list", function (done) {
-      var opts = document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#format_0"] option');
-      var formats = [].map.call(opts, function (o) {
-        return o.textContent;
+    describe("Registrere utgivelse", function () {
+      it("har riktig side-tittel", function (done) {
+        expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av utgivelse");
+        done();
       });
-      var f = formats.toString();
-      expect(f).to.equal(formats.sort().toString());
-      done();
+
+      it("gir riktig ressurs-ID, og er ikke redigerbar", function (done) {
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#recordID_0"]')[0].value).to.equal("123");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#recordID_0"]')[0].disabled).to.equal(true);
+        done();
+      });
     });
 
-    it("gir sorterte options i language select list", function (done) {
-      var opts = document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#language_0"] option');
-      var languages = [].map.call(opts, function (o) {
-        return o.textContent;
+    describe("Endre eksisterende utgivelse", function () {
+      it("populerer felt riktig", function (done) {
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#title_0"]')[0].value).to.equal("Test Publication");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#original_title_0"]')[0].value).to.equal("Zombie Publication");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#recordID_0"]')[0].value).to.equal("123");
+        done();
       });
-      var l = languages.toString();
-      expect(l).to.equal(languages.sort().toString());
-      done();
+
+      it("gir riktig antall options i authorized values dropdown", function (done) {
+        expect(document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#format_0"] option').length).to.equal(4);
+        expect(document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#language_0"] option').length).to.equal(5);
+        done();
+      });
+
+      it("gir sorterte options i format select list", function (done) {
+        var opts = document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#format_0"] option');
+        var formats = [].map.call(opts, function (o) {
+          return o.textContent;
+        });
+        var f = formats.toString();
+        expect(f).to.equal(formats.sort().toString());
+        done();
+      });
+
+      it("gir sorterte options i language select list", function (done) {
+        var opts = document.querySelectorAll('select[data-automation-id="http://192.168.50.12:7000/ontology#language_0"] option');
+        var languages = [].map.call(opts, function (o) {
+          return o.textContent;
+        });
+        var l = languages.toString();
+        expect(l).to.equal(languages.sort().toString());
+        done();
+      });
     });
   });
 });

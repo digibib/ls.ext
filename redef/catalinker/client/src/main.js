@@ -32,7 +32,27 @@
     axios.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1))
     .then(function (response) {
       ractive.set("resource_uri", uri);
-      var values = Ontology.extractValues(ensureJSON(response.data));
+      var resource;
+      var graph = ensureJSON(response.data);
+      // Work resource gives a @graph object if attached resources, need to extract work to extract properties
+      switch (ractive.get("resource_type")) {
+        case "Work":
+          if (graph["@graph"]) {
+            graph["@graph"].forEach(function (g) {
+              if (g["@type"] === "deichman:Work") {
+                resource = g;
+                resource["@context"] = graph["@context"];
+              }
+            });
+          } else {
+            resource = graph;
+          }
+          break;
+        default:
+          resource = graph;
+      }
+      var values = Ontology.extractValues(resource);
+
       for (var n in ractive.get("inputs")) {
         var kp = "inputs." + n;
         var input = ractive.get(kp);
