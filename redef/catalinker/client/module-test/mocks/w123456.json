@@ -11,7 +11,8 @@
       "deichman:creator": {
         "@id": "http://192.168.50.12:7000/person/h998496193265"
       },
-      "deichman:name": "Sult",
+      "deichman:original_title": "Sult",
+      "deichman:title": "Sult",
       "@id": "http://192.168.50.12:7000/work/w123456",
       "@type": "deichman:Work"
     },
@@ -34,7 +35,7 @@
         "@id": "http://data.deichman.no/format#Book"
       },
       "deichman:recordID" : "123456",
-      "deichman:name": [
+      "deichman:title": [
         {
           "@value": "Hungrig",
           "@language": "sv"
