@@ -9,5 +9,5 @@
   "validateIndentation": 2,
   "requireMultipleVarDecl": null,
   "disallowDanglingUnderscores": false,
-  "excludeFiles": ["node_modules", "lib/*.js"]
+  "excludeFiles": ["node_modules"]
 }

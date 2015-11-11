@@ -72,6 +72,6 @@ base:
     - redef.fuseki
     - redef.elasticsearch
     - redef.services.builtrun
-    - redef.catalinker.skeletonrun
+    - redef.catalinker.builtrun
     - redef.patron-client.builtrun
     - redef.elasticsearch.mappings    # Put last because Elasticsearch needs some time to spin up before accepting connects

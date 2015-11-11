@@ -5,8 +5,6 @@
   "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
   "scripts": {
     "start": "node server.js",
-    "prestart": "npm run build",
-    "pretest": "npm run build",
     "test": "mocha test module-test --timeout 5000",
     "prestart-dev": "npm run build",
     "start-dev": "nodemon",
@@ -14,11 +12,9 @@
     "start-dev-debug": "nodemon debug",
     "premodule-test-debug": "npm run build",
     "module-test-debug": "mocha debug module-test",
-    "browserify": "browserify",
+    "build": "",
     "jscs": "jscs",
-    "jshint": "jshint",
-    "gulp": "gulp",
-    "build": "gulp build"
+    "jshint": "jshint"
   },
   "repository": {
     "type": "git",
@@ -38,18 +34,23 @@
     "axios": "0.7.0",
     "ractive": "0.7.3",
     "ractive-events-keys": "0.2.1",
-    "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61"
+    "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61",
+    "path": "*",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.6.1",
+    "browserify-middleware": "^3.0.0",
+    "ractive-express": "^0.1.5",
+    "node-sass": "*",
+    "node-sass-evergreen": "*",
+    "express-compile-sass": "*"
   },
   "devDependencies": {
     "browserify": "^11.2.0",
     "chai": "*",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-jshint": "^1.11.2",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.4.2",
-    "gulp-util": "^3.0.6",
     "jscs": "*",
     "jshint": "*",
     "mocha": "*",

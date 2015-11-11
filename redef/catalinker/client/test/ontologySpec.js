@@ -1,6 +1,6 @@
 var assert = require('chai').assert;
 var Ontology = require('../src/ontology');
-var example_ontology = require('../module-test/mocks/ontology.json');
+var example_ontology = require('.././mocks/ontology.json');
 
 describe("Parsing an ontology", function () {
   it("can filter properties that are valid for a class", function () {
