@@ -27,8 +27,8 @@
   <div class="panel column full">
     <h3>Verk</h3>
     {{#works}}
-      <div class="work">
-        <p><a href="{{linkify(id)}}"><strong>{{this.get("name").value}}</strong> ({{this.get("year").value}})</a></p>
+      <div class="work" data-automation-id="{{this.uri}}">
+        <p><a href="{{linkify(id)}}"><strong>{{this.get("title").value}}</strong> ({{this.get("year").value}})</a></p>
       </div>
     {{/each}}
   </div>
