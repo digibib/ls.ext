@@ -9,6 +9,7 @@ import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -26,6 +27,7 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
+import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -253,6 +255,9 @@ public final class EntityServiceImpl implements EntityService {
 
     @Override
     public Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException {
+        if (StringUtils.isBlank(ldPatchJson)) {
+            throw new BadRequestException("Empty JSON-LD patch");
+        }
         repository.patch(PatchParser.parse(ldPatchJson));
         Model model = retrieveById(type, id);
 
