@@ -13,8 +13,8 @@ The server is a very basic HTTP server which servers the static resources (html,
 
 ### Technologies used
 
- * Ruby
- * Sinatra
+ * Node.js
+ * Express
  * webmock (test)
 
 ## Client details
