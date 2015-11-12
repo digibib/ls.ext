@@ -187,4 +187,14 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             return qexec.execDescribe();
         }
     }
+
+    @Override
+    public final Model retrievePublicationsByWork(String id) {
+        String uri = baseURI.work() + id;
+        log.debug("Attempting to retrieve: " + uri);
+        ResultSet resultSet;
+        try (QueryExecution qexec = getQueryExecution(sqb.describeLinkedPublications(uri))) {
+            return qexec.execDescribe();
+        }
+    }
 }

@@ -29,6 +29,7 @@ import org.apache.jena.riot.RDFDataMgr;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -122,14 +123,22 @@ public final class EntityServiceImpl implements EntityService {
                 break;
             case WORK:
                 m.add(repository.retrieveWorkByURI(baseURI.work() + id));
-                m = getLinkedLexvoResource(m);
-                m = getLinkedFormatResource(m);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
         }
         return m;
     }
+
+    @Override
+    public Model retrieveWorkWithLinkedResources(String id) {
+        Model m = ModelFactory.createDefaultModel();
+        m.add(repository.retrieveWorkByURI(baseURI.work() + id));
+        m = getLinkedLexvoResource(m);
+        m = getLinkedFormatResource(m);
+        return m;
+    }
+
 
     @Override
     public void updateWork(String work) {
@@ -253,6 +262,7 @@ public final class EntityServiceImpl implements EntityService {
         repository.delete(model);
     }
 
+
     @Override
     public Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException {
         if (StringUtils.isBlank(ldPatchJson)) {
@@ -261,7 +271,40 @@ public final class EntityServiceImpl implements EntityService {
         repository.patch(PatchParser.parse(ldPatchJson));
         Model model = retrieveById(type, id);
 
-        if (type.equals(EntityType.PUBLICATION)) {
+        if (type.equals(EntityType.WORK)) {
+            List<String> personNames = new ArrayList<>();
+            streamFrom(model.listStatements())
+                    .collect(groupingBy(Statement::getSubject))
+                    .forEach((subject, statements) -> {
+                        statements.forEach(s -> {
+                            if (s.getPredicate().equals(creatorProperty)) {
+                                String personUri = s.getObject().toString();
+                                Model person = repository.retrievePersonByURI(personUri);
+                                NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
+                                while (nameIterator.hasNext()) {
+                                    personNames.add(nameIterator.next().asLiteral().toString());
+                                }
+                            }
+                        });
+                    });
+
+            Model publications = repository.retrievePublicationsByWork(id);
+            publications.listSubjects().forEachRemaining(publication -> {
+                MarcRecord marcRecord = new MarcRecord();
+                for (String personName : personNames) {
+                    MarcField creatorField = MarcRecord.newDataField(MarcConstants.FIELD_100);
+                    creatorField.addSubfield(MarcConstants.SUBFIELD_A, personName);
+                    marcRecord.addMarcField(creatorField);
+                }
+
+                MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
+                titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(titleProperty).getObject().asLiteral().toString());
+                marcRecord.addMarcField(titleField);
+
+                Property recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
+                kohaAdapter.updateRecord(publication.getProperty(recordIdProperty).getString(), marcRecord);
+            });
+        } else if (type.equals(EntityType.PUBLICATION)) {
             MarcRecord marcRecord = new MarcRecord();
             streamFrom(model.listStatements())
                     .collect(groupingBy(Statement::getSubject))

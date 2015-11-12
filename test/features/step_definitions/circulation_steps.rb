@@ -433,6 +433,7 @@ When(/^ser jeg tittelen i bokposten$/) do
 end
 
 When(/^ser jeg forfatteren i bokposten$/) do
+  @browser.h5(:class => 'author').as.size.should be == 1
   @browser.h5(:class => 'author').a.text.should be == @context[:creator]
 end
 

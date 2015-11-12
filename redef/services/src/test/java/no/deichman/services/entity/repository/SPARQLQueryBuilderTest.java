@@ -212,4 +212,19 @@ public class SPARQLQueryBuilderTest {
 
         assertEquals("Bibliofil person resource query did not match", expected, sqb.getBibliofilPersonResource(personId).toString());
     }
+
+
+    @Test
+    public void test_describe_publications_query(){
+        String uri = "http://example.com/a";
+        String test = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
+                + "DESCRIBE ?publication WHERE \n"
+                + "    {\n"
+                + "        ?publication deichman:publicationOf <"+uri+">\n"
+                + "    }";
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        Query query = sqb.describeLinkedPublications(uri);
+        Query expected = QueryFactory.create(test);
+        assertEquals(expected,query);
+    }
 }

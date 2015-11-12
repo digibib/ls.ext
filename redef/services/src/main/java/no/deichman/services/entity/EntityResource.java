@@ -78,7 +78,7 @@ public final class EntityResource extends ResourceBase {
         Optional<String> uri = Optional.ofNullable(null);
 
         switch (type) {
-            case "person" :
+            case "person":
                 Model model = RDFModelUtil.modelFrom(body, lang);
                 NodeIterator nodes = model.listObjectsOfProperty(ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofilPersonId"));
                 List<RDFNode> nodeList = nodes.toList();
@@ -125,7 +125,12 @@ public final class EntityResource extends ResourceBase {
     @Path("/{id: (p|w|h)[a-zA-Z0-9_]+}")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) {
-        Model model = getEntityService().retrieveById(EntityType.get(type), id);
+        Model model;
+        if ("work".equals(type)) {
+            model = getEntityService().retrieveWorkWithLinkedResources(id);
+        } else {
+            model = getEntityService().retrieveById(EntityType.get(type), id);
+        }
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
@@ -175,9 +180,14 @@ public final class EntityResource extends ResourceBase {
         }
 
         switch (entityType) {
-            case WORK: getSearchService().indexWorkModel(m); break;
-            case PERSON: getSearchService().indexPersonModel(m); break;
-            default:break;
+            case WORK:
+                getSearchService().indexWorkModel(m);
+                break;
+            case PERSON:
+                getSearchService().indexPersonModel(m);
+                break;
+            default:
+                break;
         }
         return ok().entity(getJsonldCreator().asJSONLD(m)).build();
     }
@@ -206,9 +216,14 @@ public final class EntityResource extends ResourceBase {
         EntityType entityType = EntityType.get(type);
         Model m = getEntityService().retrieveById(entityType, id);
         switch (entityType) {
-            case WORK: getSearchService().indexWorkModel(m); break;
-            case PERSON: getSearchService().indexPersonModel(m); break;
-            default: /* will never get to here */ break;
+            case WORK:
+                getSearchService().indexWorkModel(m);
+                break;
+            case PERSON:
+                getSearchService().indexPersonModel(m);
+                break;
+            default: /* will never get to here */
+                break;
         }
         return accepted().build();
     }

@@ -29,8 +29,9 @@ public interface RDFRepository {
 
     void patch(List<Patch> patches);
 
-
     Optional<String> getResourceURIByBibliofilId(String personId);
 
     Model retrieveWorksByCreator(String creatorUri);
+
+    Model retrievePublicationsByWork(String work);
 }

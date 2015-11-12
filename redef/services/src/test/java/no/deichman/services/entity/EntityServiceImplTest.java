@@ -127,7 +127,7 @@ public class EntityServiceImplTest {
                 + "}";
         Model inputModel = modelFrom(workData, JSONLD);
         String workId = service.create(WORK, inputModel);
-        Model test = service.retrieveById(WORK, workId.replace(workURI, ""));
+        Model test = service.retrieveWorkWithLinkedResources(workId.replace(workURI, ""));
         assertTrue(
                 test.contains(
                         createStatement(
@@ -169,7 +169,7 @@ public class EntityServiceImplTest {
                 + "}";
         Model inputModel = modelFrom(workData, JSONLD);
         String workId = service.create(WORK, inputModel);
-        Model test = service.retrieveById(WORK, workId.replace(workURI, ""));
+        Model test = service.retrieveWorkWithLinkedResources(workId.replace(workURI, ""));
         assertTrue(
                 test.contains(
                         createStatement(

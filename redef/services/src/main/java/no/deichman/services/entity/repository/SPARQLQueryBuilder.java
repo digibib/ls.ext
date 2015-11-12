@@ -194,4 +194,14 @@ public final class SPARQLQueryBuilder {
                 + "}", baseURI.ontology(), uri);
         return QueryFactory.create(q);
     }
+
+    public Query describeLinkedPublications(String uri) {
+        String q = String.format(""
+                + "PREFIX deichman: <%s>\n"
+                + "DESCRIBE ?publication WHERE \n"
+                + "    {\n"
+                + "        ?publication deichman:publicationOf <%s>\n"
+                + "    }", baseURI.ontology(), uri);
+        return QueryFactory.create(q);
+    }
 }
