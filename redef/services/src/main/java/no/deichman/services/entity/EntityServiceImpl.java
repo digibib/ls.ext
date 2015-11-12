@@ -271,39 +271,19 @@ public final class EntityServiceImpl implements EntityService {
         repository.patch(PatchParser.parse(ldPatchJson));
         Model model = retrieveById(type, id);
 
-        if (type.equals(EntityType.WORK)) {
-            List<String> personNames = new ArrayList<>();
-            streamFrom(model.listStatements())
+        if (type.equals(EntityType.PERSON)) {
+            Model works = repository.retrieveWorksByCreator(id);
+            streamFrom(works.listStatements())
                     .collect(groupingBy(Statement::getSubject))
                     .forEach((subject, statements) -> {
-                        statements.forEach(s -> {
-                            if (s.getPredicate().equals(creatorProperty)) {
-                                String personUri = s.getObject().toString();
-                                Model person = repository.retrievePersonByURI(personUri);
-                                NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
-                                while (nameIterator.hasNext()) {
-                                    personNames.add(nameIterator.next().asLiteral().toString());
-                                }
-                            }
-                        });
+                        Model m = ModelFactory.createDefaultModel();
+                        m.add(statements);
+                        String workUri = subject.toString();
+                        String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
+                        updatePublicationByWork(workId, m);
                     });
-
-            Model publications = repository.retrievePublicationsByWork(id);
-            publications.listSubjects().forEachRemaining(publication -> {
-                MarcRecord marcRecord = new MarcRecord();
-                for (String personName : personNames) {
-                    MarcField creatorField = MarcRecord.newDataField(MarcConstants.FIELD_100);
-                    creatorField.addSubfield(MarcConstants.SUBFIELD_A, personName);
-                    marcRecord.addMarcField(creatorField);
-                }
-
-                MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-                titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(titleProperty).getObject().asLiteral().toString());
-                marcRecord.addMarcField(titleField);
-
-                Property recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
-                kohaAdapter.updateRecord(publication.getProperty(recordIdProperty).getString(), marcRecord);
-            });
+        } else if (type.equals(EntityType.WORK)) {
+            updatePublicationByWork(id, model);
         } else if (type.equals(EntityType.PUBLICATION)) {
             MarcRecord marcRecord = new MarcRecord();
             streamFrom(model.listStatements())
@@ -346,6 +326,41 @@ public final class EntityServiceImpl implements EntityService {
         }
 
         return model;
+    }
+
+    private void updatePublicationByWork(String id, Model model) {
+        List<String> personNames = new ArrayList<>();
+        streamFrom(model.listStatements())
+                .collect(groupingBy(Statement::getSubject))
+                .forEach((subject, statements) -> {
+                    statements.forEach(s -> {
+                        if (s.getPredicate().equals(creatorProperty)) {
+                            String personUri = s.getObject().toString();
+                            Model person = repository.retrievePersonByURI(personUri);
+                            NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
+                            while (nameIterator.hasNext()) {
+                                personNames.add(nameIterator.next().asLiteral().toString());
+                            }
+                        }
+                    });
+                });
+
+        Model publications = repository.retrievePublicationsByWork(id);
+        publications.listSubjects().forEachRemaining(publication -> {
+            MarcRecord marcRecord = new MarcRecord();
+            for (String personName : personNames) {
+                MarcField creatorField = MarcRecord.newDataField(MarcConstants.FIELD_100);
+                creatorField.addSubfield(MarcConstants.SUBFIELD_A, personName);
+                marcRecord.addMarcField(creatorField);
+            }
+
+            MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
+            titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(titleProperty).getObject().asLiteral().toString());
+            marcRecord.addMarcField(titleField);
+
+            Property recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
+            kohaAdapter.updateRecord(publication.getProperty(recordIdProperty).getString(), marcRecord);
+        });
     }
 
     @Override
