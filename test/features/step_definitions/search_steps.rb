@@ -7,6 +7,10 @@ When(/^jeg søker på verket i lånergrensesnittet$/) do
 end
 
 Then(/^vil jeg finne verket i trefflista$/) do
+  step "jeg vil finne verket i trefflista"
+end
+
+Then(/^jeg vil finne verket i trefflista$/) do
   result_list = @site.SearchPatronClient.get_search_result_list
   if !result_list.present?
     sleep 2 # to give elasticsearch more time to index
@@ -14,6 +18,10 @@ Then(/^vil jeg finne verket i trefflista$/) do
     result_list = @site.SearchPatronClient.get_search_result_list
   end
   result_list.text.include?(@context[:work_title]).should == true
+end
+
+When(/^søker jeg på verkets ID i lånergrensesnittet$/) do
+  step "jeg søker på verkets ID i lånergrensesnittet"
 end
 
 When(/^jeg søker på verkets ID i lånergrensesnittet$/) do

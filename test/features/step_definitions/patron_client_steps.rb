@@ -134,7 +134,7 @@ Given(/^at eksemplaret er utlånt til en låner$/) do
 end
 
 
-When(/^kan klikke på det første verket$/) do
+When(/^jeg klikker på det første verket$/) do
   @site.SearchPatronClient.follow_first_item_in_search_result
 end
 
@@ -143,4 +143,13 @@ When(/^vises forfatterens navn på verkssiden$/) do
   step "jeg er på sida til verket"
   @browser.refresh
   @site.PatronClientWorkPage.getAuthor.should include(@context[:person_name])
+end
+
+When(/^jeg klikker på forfatter\-linken$/) do
+  @site.PatronClientWorkPage.getAuthorLink.click
+end
+
+When(/^vises verket i forfatterens verkliste$/) do
+  wl = @site.PatronClientPersonPage.getWorkslist
+  wl[0].to_s.should be == @context[:work_title]
 end

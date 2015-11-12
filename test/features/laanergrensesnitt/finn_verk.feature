@@ -6,21 +6,32 @@ Egenskap: Finn verk
   Som bruker av biblioteket
   For å finne et verk, ønsker jeg å kunne søke på verk
 
+  Bakgrunn:
+    Gitt at jeg har lagt til en person
+    Og at det finnes et verk
+    Og jeg legger til forfatter av det nye verket
+    Og jeg søker på verket i lånergrensesnittet
+
   Scenario: Finn verk
-    Gitt at det finnes et verk
-    Når jeg søker på verket i lånergrensesnittet
-    Så vil jeg finne verket i trefflista
-    Og kan klikke på det første verket
+    Når jeg vil finne verket i trefflista
+    Og jeg klikker på det første verket
     Så ser jeg informasjon om verkets tittel og utgivelsesår
 
   Scenario: Ikke finn treff fra irrelevante felter
-    Gitt at det finnes et verk
-    Når jeg søker på verket i lånergrensesnittet
-    Så vil jeg finne verket i trefflista
-    Når jeg søker på verkets ID i lånergrensesnittet
+    Når jeg vil finne verket i trefflista
+    Så søker jeg på verkets ID i lånergrensesnittet
     Så skal ikke verket finnes i trefflisten
 
   Scenario: Søk etter ord i tittel for å finne verk
     Gitt at det finnes et verk med tre ledd i tittelen
     Når jeg søker på verket i lånergrensesnittet basert på det første og siste leddet i tittelen
     Så vil jeg finne verket i trefflista
+
+  Scenario: Finn andre verk av samme forfatter
+    Når jeg vil finne verket i trefflista
+    Og jeg klikker på det første verket
+    Så kommer jeg til verks-siden for det aktuelle verket
+    Og jeg klikker på forfatter-linken
+    Og personens navn vises på personsiden
+    Så vises verket i forfatterens verkliste
+

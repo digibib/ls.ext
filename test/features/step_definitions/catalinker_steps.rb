@@ -244,7 +244,7 @@ When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
 end
 
 When(/^velger person fra en treffliste$/) do
-  @site.RegWork.select_resource(@context[:person_identifier])
+  @site.RegWork.select_resource(@context[:person_identifier].to_s)
   @context[:creator] = @context[:person_name]
 end
 

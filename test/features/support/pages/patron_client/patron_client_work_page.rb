@@ -10,11 +10,15 @@ class PatronClientWorkPage < PageRoot
     end
 
     def getTitle
-      return @browser.h2(:data_automation_id => /work_title/).text
+      return @browser.h2(:data_automation_id => /work_title/).when_present(BROWSER_WAIT_TIMEOUT).text
     end
 
     def getAuthor
       return @browser.p(:data_automation_id => /work_author/).text
+    end
+
+    def getAuthorLink
+      return @browser.p(:'data_automation_id' => /work_author/).when_present(BROWSER_WAIT_TIMEOUT).a
     end
 
     def getDate

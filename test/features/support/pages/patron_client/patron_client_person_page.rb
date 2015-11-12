@@ -9,14 +9,22 @@ class PatronClientPersonPage < PageRoot
     end
 
     def getTitle
-      return @browser.title
+      @browser.title
     end
 
     def getAuthor
-      return @browser.span(:data_automation_id => /person_birth/).text
+      @browser.span(:data_automation_id => /person_birth/).text
     end
 
     def getDate
-      return @browser.span(:data_automation_id => /person_death/).text
+      @browser.span(:data_automation_id => /person_death/).text
+    end
+
+    def getWorkslist
+      works = Array.new
+      @browser.divs(:class => "work").each do |work|
+        works.push(work.p.a.strong.text)
+      end
+      works
     end
 end
