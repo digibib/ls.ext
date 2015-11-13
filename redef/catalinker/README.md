@@ -25,13 +25,20 @@ Catalinker communicates with Services using HTTP POST and PATCH requests.
 
 ### Technologies used
 
- * JavaScript
- * [Ractive](http://www.ractivejs.org/)
- * [Require.js](http://requirejs.org/)
- * [UMD](https://github.com/umdjs/umd)
- * [Karma](http://karma-runner.github.io/) (test runner)
- * [Casper](http://casperjs.org/) (test - browser automation)
- * [Sinon](http://sinonjs.org/) (test - http mocking)
+All modules are specified in package.json.
+
+* [Node.JS](https://nodejs.org/)
+* Server
+  * [Express](http://expressjs.com/)
+* Templating/Browser rendering
+  * [Ractive.js](http://www.ractivejs.org/)
+  * [UMD](https://github.com/umdjs/umd)
+* Testing
+  * [Chai](http://chaijs.com/)
+  * [Mocha](https://mochajs.org/)
+  * [Jsdom](https://github.com/tmpvar/jsdom)
+* Build
+  * browserify
 
 ## Operations
 

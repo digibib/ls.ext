@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "mocha test module-test --timeout 5000",
-    "prestart-dev": "npm run build",
-    "start-dev": "nodemon",
+    "start-dev": "NODE_ENV=development nodemon -L",
     "prestart-dev-debug": "npm run build",
     "start-dev-debug": "nodemon debug",
     "premodule-test-debug": "npm run build",
@@ -50,15 +49,12 @@
     "browserify": "^11.2.0",
     "chai": "*",
     "del": "^2.0.2",
-    "gulp": "^3.9.0",
     "jscs": "*",
     "jshint": "*",
     "mocha": "*",
     "mocha-jsdom": "*",
     "nodemon": "*",
-    "sinon": "*",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "sinon": "*"
   },
   "private": true,
   "analyze": true,
