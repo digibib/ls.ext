@@ -10,4 +10,8 @@ class RegPerson < CatalinkerPage
   def get_link
     @browser.a(:data_automation_id => "person_page_link").href
   end
+
+  def open(resource)
+    super(resource, "person")
+  end
 end

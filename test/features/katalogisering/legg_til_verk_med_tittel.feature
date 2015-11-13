@@ -14,7 +14,7 @@ Egenskap: Legg til verk med tittel
     Når jeg vil legge til et nytt verk
     Så leverer systemet en ny ID for det nye verket
     Og jeg kan legge til tittel for det nye verket
-    Og grensesnittet viser at tittelen er lagret
+    Og grensesnittet viser at endringene er lagret
 
   Scenario: Katalogisator legger inn tittel for et verk
     Gitt at systemet har returnert en ny ID for det nye verket

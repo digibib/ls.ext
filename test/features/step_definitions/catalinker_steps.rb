@@ -10,7 +10,7 @@ Given(/^at det finnes et verk$/) do
    Og jeg kan legge til tittel for det nye verket
    Når jeg legger til et årstall for førsteutgave av nye verket
    Og jeg legger til forfatter av det nye verket
-   Så grensesnittet viser at tittelen er lagret
+   Så grensesnittet viser at endringene er lagret
   }
 end
 
@@ -22,7 +22,7 @@ Given(/^at det finnes et verk med tre ledd i tittelen$/) do
    Og jeg kan legge til tittel med tre ledd for det nye verket
    Når jeg legger til et årstall for førsteutgave av nye verket
    Og jeg legger til forfatter av det nye verket
-   Så grensesnittet viser at tittelen er lagret
+   Så grensesnittet viser at endringene er lagret
   }
 end
 
@@ -65,7 +65,7 @@ end
 Given(/^at det finnes et verk med biblio-kobling$/) do
   step "at det finnes et verk"
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
@@ -111,7 +111,7 @@ end
 
 Given(/^at verket har en tittel$/) do
   step "jeg kan legge til tittel for det nye verket"
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 Given(/^at det finnes et verk med feil årstall$/) do
@@ -124,7 +124,7 @@ Given(/^at jeg ser på et lagret verk$/) do
   step "at jeg er i katalogiseringsgrensesnittet"
   step "at systemet har returnert en ny ID for det nye verket"
   step "jeg kan legge til tittel for det nye verket"
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 Given(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
@@ -192,9 +192,14 @@ When(/^jeg åpner utgivelsen for redigering$/) do
   @site.RegPublication.open(@context[:publication_identifier])
 end
 
+When(/^jeg åpner personen for redigering$/) do
+  @site.RegPerson.open(@context[:person_identifier])
+end
+
+
 When(/^når jeg endrer årstall for førsteutgave til verket$/) do
   step "jeg legger til et årstall for førsteutgave av nye verket"
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
@@ -300,11 +305,11 @@ Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|
 end
 
 Then(/^viser systemet at årstall for førsteutgave av verket har blitt registrert$/) do
-   step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 Then(/^viser systemet at språket til tittelen blitt registrert$/) do
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 Then(/^leverer systemet en ny ID for det nye verket$/) do
@@ -327,7 +332,7 @@ Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#title", @context[:work_title])
 end
 
-Then(/^grensesnittet viser at tittelen er lagret$/) do
+Then(/^grensesnittet viser at endringene er lagret$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
 end
 
@@ -336,11 +341,11 @@ Then(/^får jeg beskjed om at noe er feil$/) do
 end
 
 Then(/^viser systemet at tittel på verket har blitt registrert$/) do
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 Then(/^viser systemet at alternativ tittel på verket har blitt registrert$/) do
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
@@ -431,15 +436,22 @@ When(/^at jeg har lagt til en person$/) do
 end
 
 When(/^viser systemet at opphavsperson til verket har blitt registrert$/) do
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end
 
 When(/^når jeg endrer tittelen på utgivelsen$/) do
   step "jeg kan legge til tittel for den nye utgivelsen"
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
+end
+
+When(/^når jeg endrer navnet på personen$/) do
+  @context[:person_name] = generateRandomString
+  @context[:creator] = @context[:person_name]
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:person_name])
+  step "grensesnittet viser at endringene er lagret"
 end
 
 When(/^når jeg endrer forfatteren på verket$/) do
   step "jeg legger til forfatter av det nye verket"
-  step "grensesnittet viser at tittelen er lagret"
+  step "grensesnittet viser at endringene er lagret"
 end

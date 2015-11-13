@@ -35,12 +35,22 @@ Egenskap: Se tittel og forfatter i plukkliste
     Så ser jeg tittelen i bokposten
 
   @wip
-  Scenario: Finn endret forfatter i Koha
+  Scenario: Finn byttet forfatter i Koha
     Gitt at det finnes et verk med person og en utgivelse
     Og jeg besøker bokposten
     Så ser jeg forfatteren i bokposten
     Gitt at det finnes en personressurs
     Når jeg åpner verket for redigering
     Og når jeg endrer forfatteren på verket
+    Og jeg besøker bokposten
+    Så ser jeg forfatteren i bokposten
+
+  @wip
+  Scenario: Finn forfatter med endret navn i Koha
+    Gitt at det finnes et verk med person og en utgivelse
+    Og jeg besøker bokposten
+    Så ser jeg forfatteren i bokposten
+    Når jeg åpner personen for redigering
+    Og når jeg endrer navnet på personen
     Og jeg besøker bokposten
     Så ser jeg forfatteren i bokposten
