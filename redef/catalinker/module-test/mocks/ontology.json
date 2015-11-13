@@ -161,7 +161,7 @@
       }
     },
     {
-      "@id": "deichman:original_title",
+      "@id": "deichman:originalTitle",
       "@type": "rdfs:Property",
       "rdfs:domain": [
         {

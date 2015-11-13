@@ -31,7 +31,7 @@
   rdfs:domain :Work, :Publication ;
   rdfs:range xsd:string .
 
-:original_title a rdfs:Property ;
+:originalTitle a rdfs:Property ;
   rdfs:label "Original title"@en ;
   rdfs:label "Originaltittel"@no ;
   rdfs:domain :Publication, :Work ;

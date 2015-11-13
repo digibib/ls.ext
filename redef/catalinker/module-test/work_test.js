@@ -107,7 +107,7 @@ describe("Catalinker", function () {
     describe("Eksisterende verk", function () {
       it("populerer felt riktig", function (done) {
         expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#title_0"]')[0].value).to.equal("Sult");
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#original_title_0"]')[0].value).to.equal("Sult");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#originalTitle_0"]')[0].value).to.equal("Sult");
         expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#year_0"]')[0].value).to.equal("1890");
         done();
       });

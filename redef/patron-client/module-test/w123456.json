@@ -11,7 +11,7 @@
       "deichman:creator": {
         "@id": "http://192.168.50.12:7000/person/h123456"
       },
-      "deichman:original_title": "Sult",
+      "deichman:originalTitle": "Sult",
       "deichman:title": "Sult",
       "@id": "http://192.168.50.12:7000/work/w123456",
       "@type": "deichman:Work"
