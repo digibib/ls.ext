@@ -30,11 +30,8 @@ class CatalinkerPage < PageRoot
 
     def search_resource(predicate, value, nr=0)
       input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
-      input.set("")
-      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value == "" }
       input.set(value)
       @browser.send_keys :enter
-      self
     end
 
     def select_resource(uri)

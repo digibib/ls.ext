@@ -234,13 +234,12 @@ When(/^jeg legger til forfatter av det nye verket$/) do
 end
 
 When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
-  5.times do
+  retries = 0
+  begin
     @site.RegWork.search_resource("http://192.168.50.12:8005/ontology#creator", @context[:person_name])
-    if @browser.div(:data_automation_id => @context[:person_identifier]).present?
-      break
-    else
-      sleep 2 #Give more time for indexing
-    end
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => @context[:person_identifier]) }
+  rescue Timeout::Error
+    retry unless (retries += 1) == 3
   end
 end
 
