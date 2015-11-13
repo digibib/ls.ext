@@ -41,7 +41,9 @@ label       { font-family: monospace; text-align: right; display: inline-block; 
 /* search result box */
 .prop-search-results { position: relative; background: #c0d2d5; border: 2px solid #c2e1f5; padding-left: 1em;}
 /* search looking glass */
-.searchable { outline: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; background: white url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAIVBMVEW/v7+/v78AAAC/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v79QUkolAAAAC3RSTlOLYAAJeoMjRhpOcbsbtd4AAABJSURBVHjaVc1JDsAgDATB9uAF8v8Hx0QcSN9KssZI5eClDj18PRsFlmlQDcfUGd6A3EgYP1xncQ+sa5qYOk9jRQt1Y0izhU5bL2o2AW3ZQKeJAAAAAElFTkSuQmCC) 10px 6px no-repeat; }
+.searchable { background: white url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAIVBMVEW/v7+/v78AAAC/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v79QUkolAAAAC3RSTlOLYAAJeoMjRhpOcbsbtd4AAABJSURBVHjaVc1JDsAgDATB9uAF8v8Hx0QcSN9KssZI5eClDj18PRsFlmlQDcfUGd6A3EgYP1xncQ+sa5qYOk9jRQt1Y0izhU5bL2o2AW3ZQKeJAAAAAElFTkSuQmCC) 10px 6px no-repeat; }
+.deletable { background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><circle fill="darkred" stroke="red" cx="50" cy="50" r="40" stroke-width="4" /><g stroke="white" fill="none"><line x1="30" y1="30" x2="70" y2="70" stroke-width="6" stroke-linecap="round" /><line x1="30" y1="70" x2="70" y2="30" stroke-width="6" stroke-linecap="round" /></g></svg>');
+    background-repeat: no-repeat; background-color: #c0d2d5; background-position:right top; cursor: pointer; }
 
 /* inputs */
 .prop-input   { clear:both; width: 10em;}

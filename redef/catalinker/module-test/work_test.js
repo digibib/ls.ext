@@ -141,11 +141,35 @@ describe("Catalinker", function () {
       it("oppdaterer riktig inputfelt med URI fra valgt søketreff", function (done) {
         var origin = "inputs.1.values.0"; // keypath for originating search field
         // selectResource event takes uri from context, and predicate and origin as parameters
-        testRactive.fire("selectResource", {context: {uri: "http://192.168.50.12:7000/work/h123456" }},
-          "http://192.168.50.12:7000/ontology#creator", origin);
+        testRactive.fire("selectResource", {
+          context: { uri: "http://192.168.50.12:7000/work/h123456" }
+        }, "http://192.168.50.12:7000/ontology#creator", origin);
         testRactive.update().then(function () {
           var creator = document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#creator_0"]')[0].value;
           expect(creator).to.equal("http://192.168.50.12:7000/work/h123456");
+          done();
+        }).catch(done);
+      });
+
+      it("endrer inputfelt til slettbart felt som er read only", function (done) {
+        var creator = document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#creator_0"]')[0];
+        expect(creator.className).to.contain("deletable");
+        expect(creator.readOnly).to.equal(true);
+        done();
+      });
+
+      it("når slettbart felt klikkes, slettes ressursen og feltet blir søkbart igjen", function (done) {
+        testRactive.fire("delResource", {
+          keypath: "inputs.1.values.0",
+          context: {
+            current: { value: "http://192.168.50.12:7000/work/h123456" },
+            old: { value: "http://192.168.50.12:7000/work/h123456" }
+          }}, "http://192.168.50.12:7000/ontology#creator");
+        testRactive.update().then(function () {
+          var creator = document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#creator_0"]')[0];
+          expect(creator.value).to.equal("");
+          expect(creator.className).to.not.contain("deletable");
+          expect(creator.readOnly).to.equal(false);
           done();
         }).catch(done);
       });

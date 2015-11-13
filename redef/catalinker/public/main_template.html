@@ -26,7 +26,7 @@
             <div class="column two-fifths prop-input {{predicate}}">
               <div class="prop-details">
                 {{^disabled}}
-                <button class="prop-add" on-click="addValue">+</button>
+                  <button class="prop-add" on-click="addValue">+</button>
                 {{/}}
                 <label>{{label}}</label>
               </div>
@@ -104,7 +104,9 @@
 
 {{#partial input-string-searchable}}
   <input
-    class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}"
+    {{#deletable}}readonly="readonly"{{/deletable}}
+    on-click="{{#deletable}}delResource{{/deletable}}:{{predicate}}"
+    class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
     data-automation-id="{{predicate}}_{{@index}}"
     on-enter='searchResource:{{predicate}}, {{current.value}}'
     value="{{current.value}}" />

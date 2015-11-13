@@ -56,8 +56,17 @@
       for (var n in ractive.get("inputs")) {
         var kp = "inputs." + n;
         var input = ractive.get(kp);
+        // Populate with existing values
         if (values[input.predicate]) {
-          ractive.set(kp + ".values", values[input.predicate]);
+          var idx;
+          for (idx=0;idx < values[input.predicate].length; idx++) {
+            // If populated is searchable, it should also be deletable
+            if (input.searchable) {
+              values[input.predicate][idx].deletable = true;
+              values[input.predicate][idx].searchable = false;
+            }
+            ractive.set(kp + ".values." + idx, values[input.predicate][idx]);
+          }
         }
       }
 
@@ -168,7 +177,6 @@
             input.type = "input-nonNegativeInteger";
             break;
           case "deichman:Work":
-          case "deichman:Person":
             // TODO infer from ontology that this is an URI
             // (because deichman:Work a rdfs:Class)
             input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
@@ -224,7 +232,6 @@
       // Start initializing - return a Promise
       return axios.get("/config")
       .then(function (response) {
-        //config = (typeof response.data === "string") ? JSON.parse(response.data) : response.data;
         config = ensureJSON(response.data);
         return;
       })
@@ -308,11 +315,22 @@
             });
           },
           selectResource: function (event, predicate, origin) {
+            // selectResource takes origin as param, as we don't know where clicked search hits comes from
             var uri = event.context.uri;
             ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
             ractive.set(origin + ".current.value", uri);
+            ractive.set(origin + ".deletable", true);
+            ractive.set(origin + ".searchable", false);
+            ractive.update();
             ///patchResource takes event.keypath and event.context, and predicate as param
             ractive.fire("patchResource", { keypath: origin, context: ractive.get(origin) }, predicate);
+          },
+          delResource: function (event, predicate) {
+            ractive.set(event.keypath + ".current.value", "");
+            ractive.set(event.keypath + ".deletable", false);
+            ractive.set(event.keypath + ".searchable", true);
+            ractive.update();
+            ractive.fire("patchResource", { keypath: event.keypath, context: event.context }, predicate);
           }
         });
 
