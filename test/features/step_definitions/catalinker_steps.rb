@@ -51,7 +51,7 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
       page.add_item_with_random_barcode_and_itemtype(@context[:itemtypes][0].desc)
     end
     record_id = @context[:record_id] # need to store it in a variable so the cleanup can close over it
-    @cleanup.push( "delete items of bibilo ##{record_id}" =>
+    @cleanup.push("delete items of biblio ##{record_id}" =>
         lambda do
           page = @site.BiblioDetail.visit(record_id)
           page.delete_all_items
@@ -276,7 +276,7 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
   @browser.button(:text => "Add item").click
   record_id = @context[:record_id]
 
-  @cleanup.push( "delete items of bibilo ##{record_id}" =>
+  @cleanup.push("delete items of biblio ##{record_id}" =>
     lambda do
       @browser.goto intranet(:biblio_detail)+record_id
 
