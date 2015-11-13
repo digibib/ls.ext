@@ -4,24 +4,20 @@ require 'net/http'
 
 Given(/^at det finnes et verk$/) do
   steps %Q{
-   Gitt at det finnes en personressurs
    Gitt at jeg er i katalogiseringsgrensesnittet
    Så leverer systemet en ny ID for det nye verket
    Og jeg kan legge til tittel for det nye verket
    Når jeg legger til et årstall for førsteutgave av nye verket
-   Og jeg legger til forfatter av det nye verket
    Så grensesnittet viser at endringene er lagret
   }
 end
 
 Given(/^at det finnes et verk med tre ledd i tittelen$/) do
   steps %Q{
-   Gitt at det finnes en personressurs
    Gitt at jeg er i katalogiseringsgrensesnittet
    Så leverer systemet en ny ID for det nye verket
    Og jeg kan legge til tittel med tre ledd for det nye verket
    Når jeg legger til et årstall for førsteutgave av nye verket
-   Og jeg legger til forfatter av det nye verket
    Så grensesnittet viser at endringene er lagret
   }
 end
