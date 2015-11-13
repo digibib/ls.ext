@@ -18,6 +18,9 @@ public interface RDFRepository {
 
     void updateWork(String work);
     Model retrieveWorkByURI(String uri);
+
+    Model retrieveWorkAndLinkedResourcesByURI(String uri);
+
     Model retrievePublicationByURI(String uri);
     Model retrievePersonByURI(String uri);
 

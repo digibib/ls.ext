@@ -52,6 +52,14 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final Model retrieveWorkByURI(String uri) {
         log.debug("Attempting to retrieve: <" + uri + ">");
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
+    public final Model retrieveWorkAndLinkedResourcesByURI(String uri) {
+        log.debug("Attempting to retrieve: <" + uri + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedPublication(uri))) {
             return qexec.execDescribe();
         }

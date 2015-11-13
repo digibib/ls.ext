@@ -117,7 +117,7 @@ public class InMemoryRepositoryTest {
         Model temp = ModelFactory.createDefaultModel();
         temp.add(workWithPublicationStatements);
         repository.addData(temp);
-        Model testModel = repository.retrieveWorkByURI(workUri);
+        Model testModel = repository.retrieveWorkAndLinkedResourcesByURI(workUri);
         List<Statement> missing = workWithPublicationStatements.stream()
                 .filter(stmt -> !testModel.contains(stmt))
                 .collect(Collectors.<Statement>toList());
