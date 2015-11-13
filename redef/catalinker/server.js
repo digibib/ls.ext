@@ -53,8 +53,8 @@ app.get('/config', function (request, response) {
     {
         kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
         kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8082').replace(/^tcp:\//, 'http:/'),
-        ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8010').replace(/^tcp:\//, 'http:/') + '/ontology',
-        resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8010').replace(/^tcp:\//, 'http:/') + '/'
+        ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/ontology',
+        resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/'
     };
 
     response.json(config);
