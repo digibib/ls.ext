@@ -14,7 +14,7 @@ class PatronClientWorkPage < PageRoot
     end
 
     def getAuthor
-      return @browser.p(:data_automation_id => /work_author/).text
+      return @browser.p(:data_automation_id => /work_author/).when_present(BROWSER_WAIT_TIMEOUT).text
     end
 
     def getAuthorLink
@@ -22,11 +22,11 @@ class PatronClientWorkPage < PageRoot
     end
 
     def getDate
-      return @browser.span(:data_automation_id => /work_date/).text
+      return @browser.span(:data_automation_id => /work_date/).when_present(BROWSER_WAIT_TIMEOUT).text
     end
 
     def existsExemplar
-      if @browser.td(:data_automation_id => /item_location/).text
+      if @browser.td(:data_automation_id => /item_location/).when_present(BROWSER_WAIT_TIMEOUT).text
         location = true
       else
         location = false
@@ -35,10 +35,10 @@ class PatronClientWorkPage < PageRoot
     end
 
     def getPublicationsTableRows
-      return @browser.div(:id=> "publications").table.tbody.rows
+      return @browser.div(:id=> "publications").when_present(BROWSER_WAIT_TIMEOUT).table.tbody.rows
     end
 
     def getItemsTableRows
-      return @browser.div(:id=> "items").table.tbody.rows
+      return @browser.div(:id=> "items").when_present(BROWSER_WAIT_TIMEOUT).table.tbody.rows
     end
 end
