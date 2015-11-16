@@ -442,8 +442,7 @@ end
 When(/^ser jeg forfatteren i bokposten$/) do
   tries = 3
   begin
-    @browser.h5(:class => 'author').as.size.should be == 1
-    @browser.h5(:class => 'author').a.text.should be == @context[:creator]
+    @browser.h5(:class => 'author').when_present(BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:creator]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     step "jeg besøker bokposten"
