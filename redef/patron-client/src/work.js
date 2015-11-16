@@ -63,9 +63,9 @@
         } else {
           work_graph = graph.parse(work_response);
         }
-        if (work_graph.byType("Work")[0].getAll("name").length > 0 ) {
-          // TODO add to ld-graph API: resource.has("name") => true/false
-          document.title = work_graph.byType("Work")[0].get("name").value;
+        if (work_graph.byType("Work")[0].getAll("title").length > 0 ) {
+          // TODO add to ld-graph API: resource.has("title") => true/false
+          document.title = work_graph.byType("Work")[0].get("title").value;
         }
       })
       .then(function () {
