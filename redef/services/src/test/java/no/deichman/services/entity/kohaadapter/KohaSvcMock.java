@@ -121,7 +121,7 @@ public final class KohaSvcMock {
 
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
-                + "<marcxml:record><marcxml:leader>00000     2200000       </marcxml:leader>"
+                + "<marcxml:record><marcxml:leader>00000    a2200000       </marcxml:leader>"
                 + "</marcxml:record>"
                 + "</marcxml:collection>\n";
 

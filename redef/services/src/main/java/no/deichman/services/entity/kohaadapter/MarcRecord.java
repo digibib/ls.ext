@@ -23,7 +23,7 @@ public class MarcRecord {
     private final MarcFactory marcFactory = MarcFactory.newInstance();
 
     public MarcRecord() {
-        record = marcFactory.newRecord(marcFactory.newLeader(MarcConstants.TWENTY_FOUR_SPACES));
+        record = marcFactory.newRecord(marcFactory.newLeader(MarcConstants.LEADER_TEMPLATE));
     }
 
     public final void addMarcField(MarcField marcField) {
