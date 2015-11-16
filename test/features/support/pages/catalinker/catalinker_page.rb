@@ -35,7 +35,13 @@ class CatalinkerPage < PageRoot
     end
 
     def select_resource(uri)
-      @browser.div(:data_automation_id => uri).when_present(BROWSER_WAIT_TIMEOUT).click
+      tries = 3
+      begin
+        @browser.div(:data_automation_id => uri).when_present(BROWSER_WAIT_TIMEOUT).click
+      rescue Watir::Wait::TimeoutError
+        STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
+        retry unless tries == 0
+      end
     end
 
     def select_prop(predicate, value, nr=0)

@@ -429,12 +429,26 @@ When(/^jeg besøker bokposten$/) do
 end
 
 When(/^ser jeg tittelen i bokposten$/) do
-  @browser.h1(:class => 'title').text.should be == @context[:publication_title]
+  tries = 3
+  begin
+    @browser.h1(:class => 'title').when_present(BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_title]
+  rescue Watir::Wait::TimeoutError
+    STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
+    step "jeg besøker bokposten"
+    retry unless tries == 0
+  end
 end
 
 When(/^ser jeg forfatteren i bokposten$/) do
-  @browser.h5(:class => 'author').as.size.should be == 1
-  @browser.h5(:class => 'author').a.text.should be == @context[:creator]
+  tries = 3
+  begin
+    @browser.h5(:class => 'author').as.size.should be == 1
+    @browser.h5(:class => 'author').a.text.should be == @context[:creator]
+  rescue Watir::Wait::TimeoutError
+    STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
+    step "jeg besøker bokposten"
+    retry unless tries == 0
+  end
 end
 
 When(/^ser jeg tittelen i plukklisten$/) do

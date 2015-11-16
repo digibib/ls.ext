@@ -238,7 +238,7 @@ When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
   begin
     @site.RegWork.search_resource("http://192.168.50.12:8005/ontology#creator", @context[:person_name])
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => @context[:person_identifier]) }
-  rescue Timeout::Error
+  rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
     retry unless tries == 0
   end
