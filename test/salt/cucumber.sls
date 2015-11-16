@@ -2,13 +2,6 @@ Europe/Oslo:
   timezone.system:
     - utc: True
 
-phantomjsppa:
-  pkgrepo.managed:
-    - ppa: tanguy-patte/phantomjs
-  pkg.latest:
-    - name: phantomjs
-    - refresh: True
-
 installpkgs:
   pkg.installed:
     - pkgs:
