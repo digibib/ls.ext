@@ -6,9 +6,22 @@ var express = require('express'),
     graph = require('ld-graph'),
     url = require('url'),
     app = express(),
+    browserify = require('browserify-middleware'),
     Server;
 
+browserify.settings.development("basedir",  "./");
+
+
+
 app.use(express.static('public'));
+//app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/js/bundle.js', browserify([
+  {'./client/src/search': {"expose":"search"}},
+  {'./client/src/work': {"expose":"work"}},
+  {'./client/src/person': {"expose":"person"}}
+]));
+//app.get('/js/bundle.js', browserify([require.resolve('./client/src/search')]));
 
 app.get('/config', function (request, response) {
   response.json(config.get(process.env));

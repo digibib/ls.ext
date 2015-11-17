@@ -11,22 +11,15 @@
   ],
   "scripts": {
     "start": "node server.js",
-    "prestart": "npm run build",
-    "pretest": "npm run build",
     "test": "mocha test module-test --timeout 5000",
     "prestart-dev": "npm run build",
     "start-dev": "nodemon",
-    "prestart-dev-debug": "npm run build",
     "start-dev-debug": "nodemon debug",
-    "pretest-debug": "npm run build",
     "test-debug": "mocha debug",
-    "premodule-test-debug": "npm run build",
     "module-test-debug": "mocha debug module-test",
-    "browserify": "browserify",
     "jscs": "jscs",
     "jshint": "jshint",
-    "gulp": "gulp",
-    "build": "gulp build"
+    "build": ""
   },
   "main": "server.js",
   "repository": {
@@ -44,22 +37,17 @@
     "node": ">=4.1"
   },
   "dependencies": {
-    "express": "*",
     "axios": "0.7.0",
+    "browserify-middleware": "^7.0.0",
+    "express": "*",
+    "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61",
     "ractive": "0.7.3",
-    "ractive-events-keys": "0.2.1",
-    "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61"
+    "ractive-events-keys": "0.2.1"
   },
   "devDependencies": {
     "browserify": "^11.2.0",
     "chai": "*",
     "del": "^2.0.2",
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-jshint": "^1.11.2",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.4.2",
-    "gulp-util": "^3.0.6",
     "jscs": "*",
     "jshint": "*",
     "mocha": "*",

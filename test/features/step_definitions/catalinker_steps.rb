@@ -451,3 +451,7 @@ When(/^når jeg endrer forfatteren på verket$/) do
   step "jeg legger til forfatter av det nye verket"
   step "grensesnittet viser at endringene er lagret"
 end
+
+When(/^jeg venter litt.*$/) do
+  sleep 5
+end

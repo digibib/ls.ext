@@ -16,7 +16,7 @@ describe("PatronClient", function () {
     before(function (done) {
 
       // load module
-      Person = require("../src/person.js");
+      Person = require("../client/src/person.js");
 
       // stub ID returned from window.location
       sinon.stub(Person, "getResourceID", function () {

@@ -5,8 +5,9 @@ IMAGE=digibib/redef-patron-client
 CONTAINER=redef_patron_client_container
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
 DEV_CONTAINER=redef_patron_client_skeleton_container
-HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/src:/usr/src/app/src \
+HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/client/src:/usr/src/app/client/src \
 	-v /vagrant/redef/patron-client/module-test:/usr/src/app/module-test \
+	-v /vagrant/redef/patron-client/public:/usr/src/app/public \
 	-v /vagrant/redef/patron-client/test:/usr/src/app/test
 
 run-dev:
@@ -38,8 +39,8 @@ run-test-instance: build_skeleton rm-test-instance
 	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE)
 
 lint: build_skeleton
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jscs -- server.js lib module-test test --fix
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jshint -- server.js lib module-test test
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jscs -- server.js module-test test --fix
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jshint -- server.js module-test test
 
 
 test: lint run-test-instance

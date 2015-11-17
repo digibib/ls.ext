@@ -16,7 +16,7 @@ describe("PatronClient", function () {
     before(function (done) {
 
       // load module
-      Search = require("../src/search.js");
+      Search = require("../client/src/search.js");
 
       // stub http requests from axios used in module, faking returned promises
       sinon.stub(axios, "get", function (path) {
