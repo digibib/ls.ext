@@ -107,7 +107,7 @@ public class AppTest {
         assertIsUri(workUri);
         assertThat(workUri, startsWith(baseUri));
 
-        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#name", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#title", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
@@ -243,7 +243,7 @@ public class AppTest {
         String input = "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#bibliofilID> \"1527411\" .\n"
                 + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#language> <http://lexvo.org/id/iso639-3/eng> .\n"
                 + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#format> <__BASEURI__format#Book> .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#name> \"Critical issues in contemporary Japan\" ."
+                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#title> \"Critical issues in contemporary Japan\" ."
                 + itemNTriples("03011527411001");
         input = input.replace("__BASEURI__", baseUri);
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
@@ -331,11 +331,11 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "work.name:" + name);
+                    .get(baseUri + "search/work/_search").queryString("q", "work.title:" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
-            foundWorkInIndex = responseBody.contains("Sult")
+            foundWorkInIndex = responseBody.contains(name)
                     && responseBody.contains("Hamsun")
                     && responseBody.contains("person/h");
             if (!foundWorkInIndex) {
@@ -355,7 +355,7 @@ public class AppTest {
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
-            foundPersonInIndex = responseBody.contains("Hamsun");
+            foundPersonInIndex = responseBody.contains(name);
             if (!foundPersonInIndex) {
                 LOG.info("Peson not found in index yet, waiting one second");
                 Thread.sleep(ONE_SECOND);
@@ -364,11 +364,11 @@ public class AppTest {
         assertTrue("Should have found person in index by now", foundPersonInIndex);
     }
 
-    private void indexWork(String workId, String name) {
+    private void indexWork(String workId, String title) {
         getClient().prepareIndex("search", "work", workId)
                 .setSource(""
                         + "{ \"work\": {"
-                        + "    \"name\": \"" + name + "\","
+                        + "    \"title\": \"" + title + "\","
                         + "    \"year\": \"1890\","
                         + "    \"uri\": \"http://deichman.no/work/w12344553\","
                         + "    \"creator\": {"
