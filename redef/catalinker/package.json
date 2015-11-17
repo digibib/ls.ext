@@ -7,11 +7,8 @@
     "start": "node server.js",
     "test": "mocha test module-test --timeout 5000",
     "start-dev": "NODE_ENV=development nodemon -L",
-    "prestart-dev-debug": "npm run build",
     "start-dev-debug": "nodemon debug",
-    "premodule-test-debug": "npm run build",
     "module-test-debug": "mocha debug module-test",
-    "build": "",
     "jscs": "jscs",
     "jshint": "jshint"
   },
