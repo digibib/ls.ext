@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      /* normalize.css */
+      *, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+      html { font-size: 100%; font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+      body { margin: 0; color: #222; }
+
+      /* responsive grid setup */
+      .column { margin-bottom: 1.5rem; }
+      @media (min-width: 40rem) {
+        html { font-size: 112%; }
+        .column { float: left; padding-left: 1rem; padding-right: 1rem; }
+        .column.full { width: 100%; }
+        .column.two-thirds { width: 66.7%; }
+        .column.half { width: 50%; }
+        .column.third { width: 33.3%; }
+        .column.fourth { width: 25%; }
+        .column.three-fourths { width: 75%; }
+        .column.flow-opposite { float: right; }
+      }
+      @media (min-width: 64rem) {
+        html { font-size: 120%; }
+      }
+      .container { margin: 0 auto; max-width: 64rem; width: 90%; } 
+      .row:after { content: ""; display: table; clear: both; }
+
+      /* deichman ui styles */
+      a, a:visited { color: navy; }
+      button,input[type="search"] { margin-right: 1em; height: 2em; min-width: 6em; font-size: 1em;}
+      input[type="search"] { width: 300px; }
+      .logo { margin-right: 3em; }
+      .green { color: green; }
+      .small-text { font-size: 0.8em; }
+      .big-text { font-size: 1.4em; }
+      .header { background: #eee; width: 100%; padding: 1em; }
+      .results { border: 1px solid #aaa; margin-top: 2em;}
+      .result { border-bottom: 1px solid #aaa; }
+      .result-header { background: #eee; }
+      .result-image { padding: 1em; text-align: center;}
+      .cover-inner { padding: 1em; background: #eee; max-height: 200px; max-width: 150px; overflow: hidden;}
+      .cover-image { max-width: 100%; opacity: 0.9; display: block; margin-left: auto; margin-right: auto;}
+      a.more { display: block; float:right; background:#444; color: #fff; border-radius: 3em; padding: 1em; text-decoration: none}
+      a.more:visited { color: #fff;}
+    </style>
+    <title>Søk</title>
+  </head>
+  <body>
+    <div id="search-app"></div>
+    <script src="/js/bundle.js"></script>
+    <script>
+      var search = require('search');
+      search.init();
+    </script>
+  </body>
+</html>

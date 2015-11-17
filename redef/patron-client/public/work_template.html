@@ -1,0 +1,104 @@
+<div class="container">
+  <div class="row">
+    <div class="column fourth">
+      <div class="cover-outer">
+        <div class="cover-label">VERK</div>
+        <div class="cover-inner">
+          <img class="cover-image" src="/icon_bok.png"/>
+        </div>
+      </div>
+    </div>
+    <div id="work" class="column half relative">
+      <h2 data-automation-id="work_title">{{work.get("title").value}}</h2>
+      {{#each work.outAll("creator")}}
+        <p data-automation-id="work_author"><a href="{{linkify(this.id)}}">{{this.get("name").value}}</a></p>
+      {{/each}}
+      <div class="small-text">
+        <p><b>Utgitt første gang:</b> <span data-automation-id="work_date">{{work.get("year").value}}</span></p>
+        <p>Beskrivelse av verket kommer her ...</p>
+      </div>
+      <p>{{work.inAll("publicationOf").length}} ulike utgaver</p>
+      <p>Antall eksemplarer: <span class="green big-text">{{availCount(graph.byType("Item"))}} ledige</span></p>
+      <div class="item-actions">
+        <button disabled='disabled'>Lån</button> <button disabled='disabled'>Legg i huskeliste</button>
+      </div>
+    </div>
+    <div class="column fourth">
+      <dl class="item-details small-text">
+        <dt>Originaltittel</dt><dd>{{work.get("originalTitle").value}}</dd>
+        <dt>Forfatter(e)</dt><dd>{{#each work.outAll("creator")}}<u>{{this.get("name").value}}</u> {{/each}}</dd>
+        <dt>Originalspråk</dt><dd>ukjent</dd>
+        <dt>Emner</dt><dd></dd>
+      </dl>
+    </div>
+    <div class="row">
+      <div id="publications" class="panel column full">
+        {{#if graph.byType("Publication")}}
+          <h2>Finnes i disse utgavene</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>tittel</th>
+                <th>språk</th>
+                <th>format</th>
+                <th>eksemplarer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each graph.byType("Publication")}}
+                <tr about="{{this.id}}">
+                  <td data-automation-id="publication_title">{{this.get("title").value}}</td>
+                  <td data-automation-id="publication_language">{{this.out("language").get("label").value}}</td>
+                  <td data-automation-id="publication_format">{{this.out("format").get("label").value}}</td>
+                  <td>{{this.inAll("editionOf").length}}</td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{else}}
+          <h2>Vi har ingen utgaver</h2>
+        {{/if}}
+      </div>
+  </div>
+  <div id="items" class="panel column full">
+    {{#if graph.byType("Item")}}
+      <h2>Eksemplarer</h2>
+      <table>
+        <thead>
+         <tr>
+            <th>tittel</th>
+            <th>språk</th>
+            <th>format</th>
+            <th>strekkode</th>
+            <th>plassering</th>
+            <th>status</th>
+            <th>oppstilling</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each graph.byType("Publication")}}
+          {{#each this.inAll("editionOf")}}
+            <tr>
+              <td data-automation-id="item_title">{{this.out("editionOf").get("title").value}}</td>
+              <td data-automation-id="item_language">{{this.out("editionOf").out("language").get("label").value}}</td>
+              <td data-automation-id="item_format">{{this.out("editionOf").out("format").get("label").value}}</td>
+              <td data-automation-id="item_barcode">{{this.get("barcode").value}}</td>
+              <td data-automation-id="item_location">{{this.get("location").value}}</td>
+              <td data-automation-id="item_status">
+                {{#if this.get("status").value === "AVAIL"}}
+                  Ledig
+                {{else}}
+                  Forventet {{this.get("status").value}}
+                {{/if}}
+              </td>
+              <td data-automation-id="item_shelfmark">{{this.get("shelfmark").value}}</td>
+            </tr>
+          {{/each}}
+        {{/each}}
+        </tbody>
+     </table>
+    {{else}}
+      <h2>Vi har ingen eksemplarer</h2>
+    {{/if}}
+  </div>
+</div>
