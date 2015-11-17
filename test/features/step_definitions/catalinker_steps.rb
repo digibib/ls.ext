@@ -228,6 +228,10 @@ When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
 end
 
+When(/^jeg sletter eksisterende forfatter på verket$/) do
+  @browser.inputs(:data_automation_id => "http://192.168.50.12:8005/ontology#creator"+"_0").first.click
+end
+
 When(/^jeg legger til forfatter av det nye verket$/) do
   step "jeg søker på navn til opphavsperson for det nye verket"
   step "velger person fra en treffliste"
@@ -448,6 +452,7 @@ When(/^når jeg endrer navnet på personen$/) do
 end
 
 When(/^når jeg endrer forfatteren på verket$/) do
+  step "jeg sletter eksisterende forfatter på verket"
   step "jeg legger til forfatter av det nye verket"
   step "grensesnittet viser at endringene er lagret"
 end

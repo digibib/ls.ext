@@ -34,7 +34,6 @@ Egenskap: Se tittel og forfatter i plukkliste
     Og jeg besøker bokposten
     Så ser jeg tittelen i bokposten
 
-  @wip
   Scenario: Finn byttet forfatter i Koha
     Gitt at det finnes et verk med person og en utgivelse
     Og jeg besøker bokposten
