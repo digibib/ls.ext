@@ -99,7 +99,7 @@ app.use(function (err, req, res, next) {
     });
 });
 
-Server = app.listen(process.env.SERVER_PORT || 8010, function () {
+Server = app.listen(process.env.BIND_PORT || 8010, process.env.BIND_IP, function () {
     var host = Server.address().address,
         port = Server.address().port;
     console.log('Catalinker server listening at http://%s:%s', host, port);
