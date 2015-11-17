@@ -10,9 +10,7 @@
     }
   ],
   "scripts": {
-    "start": "node server.js",
     "test": "mocha test module-test --timeout 5000",
-    "prestart-dev": "npm run build",
     "start-dev": "nodemon",
     "start-dev-debug": "nodemon debug",
     "test-debug": "mocha debug",
