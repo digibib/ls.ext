@@ -7,10 +7,10 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
 
-RUN npm config set loglevel warn
-RUN npm install
+RUN npm install > install.log 2>&1
 COPY . /usr/src/app
-
-CMD [ "npm", "start" ]
+VOLUME /usr/src/app/
 
 EXPOSE 8000
+
+CMD [ "npm", "start" ]

@@ -5,7 +5,7 @@ IMAGE=digibib/redef-patron-client
 CONTAINER=redef_patron_client_container
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
 DEV_CONTAINER=redef_patron_client_skeleton_container
-HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/client/src:/usr/src/app/client/src \
+HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/client:/usr/src/app/client \
 	-v /vagrant/redef/patron-client/module-test:/usr/src/app/module-test \
 	-v /vagrant/redef/patron-client/public:/usr/src/app/public \
 	-v /vagrant/redef/patron-client/test:/usr/src/app/test

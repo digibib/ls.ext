@@ -11,7 +11,8 @@ include:
 {% set environment = { 'SERVICES_PORT': "tcp://{0}:{1}".format(pillar['redef']['services']['host'], pillar['redef']['services']['port']) } %}
 {% set port_bindings = {'8000/tcp': { 'HostIp': pillar['redef']['patron-client']['binding'], 'HostPort': pillar['redef']['patron-client']['port'] } } %}
 {% set host_volume_bindings = [
- { 'host': '/vagrant/redef/patron-client/src', 'container': '/usr/src/app/src', 'ro': false },
+ { 'host': '/vagrant/redef/patron-client/client', 'container': '/usr/src/app/client', 'ro': false },
+ { 'host': '/vagrant/redef/patron-client/public', 'container': '/usr/src/app/public', 'ro': false },
  { 'host': '/vagrant/redef/patron-client/module-test', 'container': '/usr/src/app/module-test', 'ro': false },
  { 'host': '/vagrant/redef/patron-client/test', 'container': '/usr/src/app/test', 'ro': false }]
 %}
