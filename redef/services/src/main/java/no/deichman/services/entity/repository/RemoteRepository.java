@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public final class RemoteRepository extends RDFRepositoryBase {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteRepository.class);
 
-    private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.50:3030");
+    private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.12:3030");
     private final String fusekiPort;
 
     RemoteRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
