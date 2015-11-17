@@ -229,7 +229,9 @@ When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
 end
 
 When(/^jeg sletter eksisterende forfatter på verket$/) do
+  deletables = @browser.inputs(:class => 'deletable').size
   @browser.inputs(:data_automation_id => "http://192.168.50.12:8005/ontology#creator"+"_0").first.click
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.inputs(:class => 'deletable').size == deletables - 1 } #Allow some time for the UI to update after clicking the red X
 end
 
 When(/^jeg legger til forfatter av det nye verket$/) do
