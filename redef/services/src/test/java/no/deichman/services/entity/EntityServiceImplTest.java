@@ -459,10 +459,11 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_generate_marc_record_in_publication_without_work_patch() throws PatchParserException {
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+
         String originalPublicationTitle = "Sult";
         String newPublicationTitle = "Tørst";
 
-        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
                 + "<publication> <" + ontologyURI + "title> \"" + originalPublicationTitle + "\" .\n";
@@ -470,8 +471,6 @@ public class EntityServiceImplTest {
         Model inputPublication = modelFrom(publicationTriples, Lang.NTRIPLES);
         String publicationUri = service.create(PUBLICATION, inputPublication);
 
-        String patch = "[{\"op\":\"del\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + originalPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
-                + "{\"op\":\"add\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + newPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
         service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "title", originalPublicationTitle, newPublicationTitle));
         Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationUri.substring(publicationUri.lastIndexOf("/") + 1));
@@ -482,6 +481,8 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_generate_marc_record_in_publication_patch() throws PatchParserException {
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+
         String originalCreator = "Knut Hamsun";
         String newCreator = "Ellisiv Lindkvist";
         String originalWorkTitle = "Hunger";
@@ -489,7 +490,6 @@ public class EntityServiceImplTest {
         String originalPublicationTitle = "Sult";
         String newPublicationTitle = "Tørst";
 
-        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
         String workTriples = ""
                 + "<work> <" + ontologyURI + "title> \"" + originalWorkTitle + "\" .\n"
                 + "<work> <" + ontologyURI + "year> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
