@@ -181,10 +181,10 @@ public final class EntityResource extends ResourceBase {
 
         switch (entityType) {
             case WORK:
-                getSearchService().indexWorkModel(m);
+                getSearchService().indexWork(id);
                 break;
             case PERSON:
-                getSearchService().indexPersonModel(m);
+                getSearchService().indexPerson(id);
                 break;
             default:
                 break;
@@ -214,13 +214,12 @@ public final class EntityResource extends ResourceBase {
     @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
     public Response index(@PathParam("type") final String type, @PathParam("id") String id) {
         EntityType entityType = EntityType.get(type);
-        Model m = getEntityService().retrieveById(entityType, id);
         switch (entityType) {
             case WORK:
-                getSearchService().indexWorkModel(m);
+                getSearchService().indexWork(id);
                 break;
             case PERSON:
-                getSearchService().indexPersonModel(m);
+                getSearchService().indexPerson(id);
                 break;
             default: /* will never get to here */
                 break;

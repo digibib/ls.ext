@@ -85,7 +85,7 @@ public abstract class ResourceBase {
 
     public final SearchService getSearchService() {
         if (searchService == null) {
-            searchService = new SearchServiceImpl(elasticSearchBaseUrl());
+            searchService = new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService());
         }
         return searchService;
     }

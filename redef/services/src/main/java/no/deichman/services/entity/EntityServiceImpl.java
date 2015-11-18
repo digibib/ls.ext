@@ -108,7 +108,6 @@ public final class EntityServiceImpl implements EntityService {
         nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
         creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
-
     }
 
     @Override

@@ -1,6 +1,8 @@
 package no.deichman.services.search;
 
 import com.google.common.collect.ImmutableMap;
+import no.deichman.services.entity.EntityService;
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -12,6 +14,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ResIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,13 +75,15 @@ public class SearchServiceImpl implements SearchService {
     private final URIBuilder indexUriBuilder;
     private final URIBuilder workSearchUriBuilder;
     private final URIBuilder personSearchUriBuilder;
+    private final EntityService entityService;
 
 
-    public SearchServiceImpl(String elasticSearchBaseUrl) {
+    public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         try {
             indexUriBuilder = new URIBuilder(elasticSearchBaseUrl);
             workSearchUriBuilder = new URIBuilder(elasticSearchBaseUrl).setPath("/search/work/_search");
             personSearchUriBuilder = new URIBuilder(elasticSearchBaseUrl).setPath("/search/person/_search");
+            this.entityService = entityService;
         } catch (URISyntaxException e) {
             LOG.error("Failed to create uri builder for elasticsearch");
             throw new RuntimeException(e);
@@ -86,13 +91,22 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void indexWorkModel(Model m) {
-        indexModel(m, WORK_MODEL_TO_INDEX_DOCUMENT_QUERY, WORK_INDEX_TYPE, WORK_MODEL_TO_INDEX_DOCUMENT_MAPPING);
+    public final void indexWork(String workId) {
+        Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(workId);
+        indexModel(workModelWithLinkedResources, WORK_MODEL_TO_INDEX_DOCUMENT_QUERY, WORK_INDEX_TYPE, WORK_MODEL_TO_INDEX_DOCUMENT_MAPPING);
     }
 
     @Override
-    public final void indexPersonModel(Model m) {
-        indexModel(m, PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY, PERSON_INDEX_TYPE, PERSON_MODEL_TO_INDEX_DOCUMENT_MAPPING);
+    public final void indexPerson(String personId) {
+        Model works = entityService.retrieveWorksByCreator(personId);
+        ResIterator subjectIterator = works.listSubjects();
+        while (subjectIterator.hasNext()) {
+            String workUri = subjectIterator.next().toString();
+            String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
+            indexWork(workId);
+        }
+        Model personModel = entityService.retrieveById(EntityType.PERSON, personId);
+        indexModel(personModel, PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY, PERSON_INDEX_TYPE, PERSON_MODEL_TO_INDEX_DOCUMENT_MAPPING);
     }
 
     private void indexModel(Model m, String query, String type, Map<String, String> modelToIndexDocumentMapping) {

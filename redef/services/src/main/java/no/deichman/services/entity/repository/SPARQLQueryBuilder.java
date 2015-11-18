@@ -35,7 +35,7 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-    public Query describeWorkAndLinkedPublication(String workId) {
+    public Query describeWorkAndLinkedResources(String workId) {
         String queryString = String.format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
