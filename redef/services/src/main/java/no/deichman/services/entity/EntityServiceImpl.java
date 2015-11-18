@@ -286,14 +286,41 @@ public final class EntityServiceImpl implements EntityService {
             String workUri = model.getProperty(null, publicationOfProperty).getObject().toString();
             Model work = repository.retrieveWorkByURI(workUri);
             updatePublicationsByWork(workUri, work);
+        } else if (type.equals(EntityType.PUBLICATION)) {
+            model.listSubjects().forEachRemaining(publication -> updatePublicationInKoha(publication, new ArrayList()));
         }
-
         return model;
     }
 
     private void updatePublicationsByWork(String workUri, Model work) {
         String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
 
+        List<String> personNames = getPersonNames(work);
+        Model publications = repository.retrievePublicationsByWork(workId);
+        publications.listSubjects().forEachRemaining(publication -> {
+            updatePublicationInKoha(publication, personNames);
+        });
+    }
+
+    private void updatePublicationInKoha(Resource publication, List<String> personNames) {
+        MarcRecord marcRecord = new MarcRecord();
+        for (String personName : personNames) {
+            MarcField creatorField = MarcRecord.newDataField(MarcConstants.FIELD_100);
+            creatorField.addSubfield(MarcConstants.SUBFIELD_A, personName);
+            marcRecord.addMarcField(creatorField);
+        }
+
+        if (publication.getProperty(titleProperty) != null) {
+            MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
+            titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(titleProperty).getObject().asLiteral().toString());
+            marcRecord.addMarcField(titleField);
+        }
+
+        Property recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
+        kohaAdapter.updateRecord(publication.getProperty(recordIdProperty).getString(), marcRecord);
+    }
+
+    private List<String> getPersonNames(Model work) {
         List<String> personNames = new ArrayList<>();
         streamFrom(work.listStatements())
                 .collect(groupingBy(Statement::getSubject))
@@ -309,25 +336,7 @@ public final class EntityServiceImpl implements EntityService {
                         }
                     });
                 });
-
-        Model publications = repository.retrievePublicationsByWork(workId);
-        publications.listSubjects().forEachRemaining(publication -> {
-            MarcRecord marcRecord = new MarcRecord();
-            for (String personName : personNames) {
-                MarcField creatorField = MarcRecord.newDataField(MarcConstants.FIELD_100);
-                creatorField.addSubfield(MarcConstants.SUBFIELD_A, personName);
-                marcRecord.addMarcField(creatorField);
-            }
-
-            if (publication.getProperty(titleProperty) != null) {
-                MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-                titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(titleProperty).getObject().asLiteral().toString());
-                marcRecord.addMarcField(titleField);
-            }
-
-            Property recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
-            kohaAdapter.updateRecord(publication.getProperty(recordIdProperty).getString(), marcRecord);
-        });
+        return personNames;
     }
 
     @Override

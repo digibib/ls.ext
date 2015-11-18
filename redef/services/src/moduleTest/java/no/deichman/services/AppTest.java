@@ -87,6 +87,7 @@ public class AppTest {
         embeddedElasticsearchServer.shutdown();
     }
 
+
     @Test
     public void happy_day_scenario() throws Exception {
 

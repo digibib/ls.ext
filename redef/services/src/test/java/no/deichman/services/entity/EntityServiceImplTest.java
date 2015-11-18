@@ -12,6 +12,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -51,6 +52,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 
@@ -452,4 +455,97 @@ public class EntityServiceImplTest {
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/t> \"1\" .\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/y> \"L\" .";
     }
+
+
+    @Test
+    public void test_generate_marc_record_in_publication_without_work_patch() throws PatchParserException {
+        String originalPublicationTitle = "Sult";
+        String newPublicationTitle = "Tørst";
+
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        String publicationTriples = ""
+                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<publication> <" + ontologyURI + "title> \"" + originalPublicationTitle + "\" .\n";
+
+        Model inputPublication = modelFrom(publicationTriples, Lang.NTRIPLES);
+        String publicationUri = service.create(PUBLICATION, inputPublication);
+
+        String patch = "[{\"op\":\"del\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + originalPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
+                + "{\"op\":\"add\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + newPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
+        String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
+        service.patch(EntityType.PUBLICATION, publicationId, patch.replace("__PUBLICATIONURI__", publicationUri));
+        Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationUri.substring(publicationUri.lastIndexOf("/") + 1));
+
+        String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
+        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, null));
+    }
+
+    @Test
+    public void test_generate_marc_record_in_publication_patch() throws PatchParserException {
+        String originalCreator = "Knut Hamsun";
+        String newCreator = "Ellisiv Lindkvist";
+        String originalWorkTitle = "Hunger";
+        String newWorkTitle = "Thirst";
+        String originalPublicationTitle = "Sult";
+        String newPublicationTitle = "Tørst";
+
+        when(mockKohaAdapter.getNewBiblio()).thenReturn(A_BIBLIO_ID);
+        String workTriples = ""
+                + "<work> <" + ontologyURI + "title> \"" + originalWorkTitle + "\" .\n"
+                + "<work> <" + ontologyURI + "year> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<work> <" + ontologyURI + "creator> <__CREATORURI__> .\n";
+        String publicationTriples = ""
+                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<publication> <" + ontologyURI + "title> \"" + originalPublicationTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
+        String personTriples = ""
+                + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
+                + "<person> <" + ontologyURI + "name> \"" + originalCreator + "\" .";
+
+        Model inputPerson = modelFrom(personTriples, Lang.NTRIPLES);
+        String personUri = service.create(PERSON, inputPerson);
+
+        Model inputWork = modelFrom(workTriples.replace("__CREATORURI__", personUri), Lang.NTRIPLES);
+        String workUri = service.create(WORK, inputWork);
+
+        Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workUri), Lang.NTRIPLES);
+        String publicationUri = service.create(PUBLICATION, inputPublication);
+
+        String publicationPatch = "[{\"op\":\"del\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + originalPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
+                + "{\"op\":\"add\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + newPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
+        String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
+        service.patch(EntityType.PUBLICATION, publicationId, publicationPatch.replace("__PUBLICATIONURI__", publicationUri));
+        Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationId);
+
+        String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
+        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator));
+
+        String workPatch = "[{\"op\":\"del\",\"s\":\"__WORKURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + originalWorkTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
+                + "{\"op\":\"add\",\"s\":\"__WORKURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + newWorkTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
+        String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
+        service.patch(EntityType.WORK, workId, workPatch.replace("__WORKURI__", workUri));
+        verify(mockKohaAdapter, times(2)).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator)); // Need times(2) because publication has not changed.
+
+        String personPatch = "[{\"op\":\"del\",\"s\":\"__PERSONURI__\",\"p\":\"" + ontologyURI + "name\",\"o\":{\"value\":\"" + originalCreator + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
+                + "{\"op\":\"add\",\"s\":\"__PERSONURI__\",\"p\":\"" + ontologyURI + "name\",\"o\":{\"value\":\"" + newCreator + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
+        String personId = personUri.substring(personUri.lastIndexOf("/") + 1);
+        service.patch(EntityType.PERSON, personId, personPatch.replace("__PERSONURI__", personUri));
+        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator));
+    }
+
+    private MarcRecord getMarcRecord(String title, String name) {
+        MarcRecord marcRecord = new MarcRecord();
+        if (title != null) {
+            MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
+            titleField.addSubfield(MarcConstants.SUBFIELD_A, title);
+            marcRecord.addMarcField(titleField);
+        }
+        if (name != null) {
+            MarcField nameField = MarcRecord.newDataField(MarcConstants.FIELD_100);
+            nameField.addSubfield(MarcConstants.SUBFIELD_A, name);
+            marcRecord.addMarcField(nameField);
+        }
+        return marcRecord;
+    }
+
 }
