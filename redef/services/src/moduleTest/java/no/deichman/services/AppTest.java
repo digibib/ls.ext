@@ -87,7 +87,6 @@ public class AppTest {
         embeddedElasticsearchServer.shutdown();
     }
 
-
     @Test
     public void happy_day_scenario() throws Exception {
 
@@ -204,6 +203,24 @@ public class AppTest {
         assertNotNull(stringHttpResponse);
         doSearchForWorks("Sult");
         doSearchForPersons("Hamsun");
+
+        //Change the work title and search for it again.
+        final JsonArray delTitleToWorkPatch = buildLDPatch(buildPatchStatement("del", workUri, baseUri + "ontology#title", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchDelTitleToWorkPatchResponse = buildPatchRequest(workUri, delTitleToWorkPatch).asString();
+        assertResponse(Status.OK, patchDelTitleToWorkPatchResponse);
+        final JsonArray addNewTitleToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#title", "Metthet", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchAddNewTitleToWorkPatchResponse = buildPatchRequest(workUri, addNewTitleToWorkPatch).asString();
+        assertResponse(Status.OK, patchAddNewTitleToWorkPatchResponse);
+        doSearchForWorks("Metthet");
+
+        //Change the person name and search for it again.
+        final JsonArray delCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("del", personUri, baseUri + "ontology#name", "Knut Hamsun", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchDelCreatorNameToPersonPatchResponse = buildPatchRequest(personUri, delCreatorNameToPersonPatch).asString();
+        assertResponse(Status.OK, patchDelCreatorNameToPersonPatchResponse);
+        final JsonArray addNewCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#name", "George Orwell", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final HttpResponse<String> patchAddNewCreatorNameToPersonPatchResponse = buildPatchRequest(personUri, addNewCreatorNameToPersonPatch).asString();
+        assertResponse(Status.OK, patchAddNewCreatorNameToPersonPatchResponse);
+        doSearchForPersons("Orwell");
     }
 
     @Test
@@ -358,7 +375,7 @@ public class AppTest {
             String responseBody = response.getBody().toString();
             foundPersonInIndex = responseBody.contains(name);
             if (!foundPersonInIndex) {
-                LOG.info("Peson not found in index yet, waiting one second");
+                LOG.info("Person not found in index yet, waiting one second");
                 Thread.sleep(ONE_SECOND);
             }
         } while (!foundPersonInIndex && attempts-- > 0);
