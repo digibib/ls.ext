@@ -30,6 +30,12 @@ When(/^jeg søker på verkets ID i lånergrensesnittet$/) do
   page.search_with_text(@context[:identifier])
 end
 
+When(/^jeg søker på verkets forfatter i lånergrensesnittet$/) do
+  page = @site.SearchPatronClient
+  page.visit
+  page.search_with_text(@context[:person_name])
+end
+
 Then(/^skal ikke verket finnes i trefflisten$/) do
   result_list = @site.SearchPatronClient.get_search_result_list
   result_list.exists?.should == false

@@ -34,4 +34,3 @@ Egenskap: Finn verk
     Og jeg klikker på forfatter-linken
     Og personens navn vises på personsiden
     Så vises verket i forfatterens verkliste
-

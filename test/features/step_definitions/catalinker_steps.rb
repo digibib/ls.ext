@@ -446,6 +446,11 @@ When(/^når jeg endrer tittelen på utgivelsen$/) do
   step "grensesnittet viser at endringene er lagret"
 end
 
+When(/^når jeg endrer tittelen på verket$/) do
+  step "jeg kan legge til tittel for det nye verket"
+  step "grensesnittet viser at endringene er lagret"
+end
+
 When(/^når jeg endrer navnet på personen$/) do
   @context[:person_name] = generateRandomString
   @context[:creator] = @context[:person_name]
