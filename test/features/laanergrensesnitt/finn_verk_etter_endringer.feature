@@ -18,7 +18,7 @@ Egenskap: Finn verk etter endringer
     Så jeg vil finne verket i trefflista
 
   Scenario: Verk har endret person
-    Når når jeg endrer forfatteren på verket
+    Når jeg endrer forfatteren på verket
     Og jeg søker på verkets forfatter i lånergrensesnittet
     Så jeg vil finne verket i trefflista
 

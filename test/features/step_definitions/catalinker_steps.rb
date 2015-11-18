@@ -458,7 +458,7 @@ When(/^når jeg endrer navnet på personen$/) do
   step "grensesnittet viser at endringene er lagret"
 end
 
-When(/^når jeg endrer forfatteren på verket$/) do
+When(/^jeg endrer forfatteren på verket$/) do
   step "jeg sletter eksisterende forfatter på verket"
   step "jeg legger til forfatter av det nye verket"
   step "grensesnittet viser at endringene er lagret"
