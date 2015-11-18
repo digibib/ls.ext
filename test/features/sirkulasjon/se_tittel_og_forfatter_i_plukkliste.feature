@@ -34,13 +34,22 @@ Egenskap: Se tittel og forfatter i plukkliste
     Og jeg besøker bokposten
     Så ser jeg tittelen i bokposten
 
+  Scenario: Finn endret utgivelsestittel i Koha (utgivelse uten verk)
+    Gitt at det finnes en utgivelse uten verk
+    Og jeg besøker bokposten
+    Så ser jeg tittelen i bokposten
+    Når jeg åpner utgivelsen for redigering
+    Og når jeg endrer tittelen på utgivelsen
+    Og jeg besøker bokposten
+    Så ser jeg tittelen i bokposten
+
   Scenario: Finn byttet forfatter i Koha
     Gitt at det finnes et verk med person og en utgivelse
     Og jeg besøker bokposten
     Så ser jeg forfatteren i bokposten
     Gitt at det finnes en personressurs
     Når jeg åpner verket for redigering
-    Og når jeg endrer forfatteren på verket
+    Og jeg endrer forfatteren på verket
     Og jeg besøker bokposten
     Så ser jeg forfatteren i bokposten
 

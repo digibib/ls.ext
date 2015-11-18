@@ -135,6 +135,10 @@ Given(/^at det finnes en utgivelse$/) do
   step "jeg knytter utgivelsen til verket"
 end
 
+Given(/^at det finnes en utgivelse uten verk$/) do
+  step "jeg registrerer inn opplysninger om utgivelsen"
+end
+
 Given(/^at det finnes et verk og en utgivelse$/) do
   steps %Q{
     Gitt at det finnes et verk
