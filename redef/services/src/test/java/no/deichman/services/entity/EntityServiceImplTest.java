@@ -473,7 +473,7 @@ public class EntityServiceImplTest {
         String patch = "[{\"op\":\"del\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + originalPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
                 + "{\"op\":\"add\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + newPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PUBLICATION, publicationId, patch.replace("__PUBLICATIONURI__", publicationUri));
+        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "title", originalPublicationTitle, newPublicationTitle));
         Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationUri.substring(publicationUri.lastIndexOf("/") + 1));
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
@@ -511,25 +511,21 @@ public class EntityServiceImplTest {
         Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workUri), Lang.NTRIPLES);
         String publicationUri = service.create(PUBLICATION, inputPublication);
 
-        String publicationPatch = "[{\"op\":\"del\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + originalPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
-                + "{\"op\":\"add\",\"s\":\"__PUBLICATIONURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + newPublicationTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PUBLICATION, publicationId, publicationPatch.replace("__PUBLICATIONURI__", publicationUri));
+        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "title", originalPublicationTitle, newPublicationTitle));
         Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationId);
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator));
 
-        String workPatch = "[{\"op\":\"del\",\"s\":\"__WORKURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + originalWorkTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
-                + "{\"op\":\"add\",\"s\":\"__WORKURI__\",\"p\":\"" + ontologyURI + "title\",\"o\":{\"value\":\"" + newWorkTitle + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
         String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.WORK, workId, workPatch.replace("__WORKURI__", workUri));
+        service.patch(EntityType.WORK, workId, getPatch(workUri, "title", originalWorkTitle, newWorkTitle));
         verify(mockKohaAdapter, times(2)).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator)); // Need times(2) because publication has not changed.
 
         String personPatch = "[{\"op\":\"del\",\"s\":\"__PERSONURI__\",\"p\":\"" + ontologyURI + "name\",\"o\":{\"value\":\"" + originalCreator + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
                 + "{\"op\":\"add\",\"s\":\"__PERSONURI__\",\"p\":\"" + ontologyURI + "name\",\"o\":{\"value\":\"" + newCreator + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
         String personId = personUri.substring(personUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PERSON, personId, personPatch.replace("__PERSONURI__", personUri));
+        service.patch(EntityType.PERSON, personId, getPatch(personUri, "name", originalCreator, newCreator));
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator));
     }
 
@@ -546,6 +542,11 @@ public class EntityServiceImplTest {
             marcRecord.addMarcField(nameField);
         }
         return marcRecord;
+    }
+
+    private String getPatch(String uri, String field, String from, String to) {
+        return "[{\"op\":\"del\",\"s\":\"" + uri + "\",\"p\":\"" + ontologyURI + "" + field + "\",\"o\":{\"value\":\"" + from + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
+                + "{\"op\":\"add\",\"s\":\"" + uri + "\",\"p\":\"" + ontologyURI + "" + field + "\",\"o\":{\"value\":\"" + to + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
     }
 
 }
