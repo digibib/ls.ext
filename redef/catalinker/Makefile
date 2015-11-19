@@ -39,8 +39,8 @@ run-test-instance: build_skeleton rm-test-instance
 	sudo docker run -d -p 7010:8000 --name $(MODULE_TEST_CONTAINER) $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE)
 
 lint: build_skeleton
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jscs -- server.js module-test test --fix
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jshint -- server.js module-test test
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jscs -- server.js module-test client/test --fix
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jshint -- server.js module-test client/test
 
 
 test: lint run-test-instance

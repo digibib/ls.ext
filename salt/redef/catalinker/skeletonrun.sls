@@ -13,7 +13,6 @@ include:
 {% set host_volume_bindings = [
  { 'host': '/vagrant/redef/catalinker/client', 'container': '/usr/src/app/client', 'ro': false },
  { 'host': '/vagrant/redef/catalinker/module-test', 'container': '/usr/src/app/module-test', 'ro': false },
- { 'host': '/vagrant/redef/catalinker/test', 'container': '/usr/src/app/test', 'ro': false },
  { 'host': '/vagrant/redef/catalinker/public', 'container': '/usr/src/app/public', 'ro': false }]
 %}
 

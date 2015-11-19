@@ -5,7 +5,7 @@
   "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha test module-test --timeout 5000",
+    "test": "mocha module-test --timeout 5000",
     "start-dev": "NODE_ENV=development nodemon -L",
     "start-dev-debug": "nodemon debug",
     "module-test-debug": "mocha debug module-test",
