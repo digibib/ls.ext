@@ -67,6 +67,16 @@ describe("PatronClient", function () {
       done();
     });
 
+    it("should display the title of a person", function (done) {
+      expect(document.querySelector("[data-automation-id='person-title']").innerHTML).to.eq("Dr. Macabre");
+      done();
+    });
+
+    it("should display the nationality of a person", function (done) {
+      expect(document.querySelector("[data-automation-id='person-nationality']").innerHTML).to.eq("Norsk");
+      done();
+    });
+
     it("should list the works of a person", function (done) {
       expect(document.querySelectorAll(".work").length).to.eq(ractive.get("works").length);
       done();

@@ -7,11 +7,11 @@
   <div class="row person-info">
     <div class="column fourth"><p>bilde kommer her</p></div>
     <div class="column three-fourths">
-      <h2><span data-automation-id="person-name">{{person.get("name").value}}</span></h2>
+      <h2><span data-automation-id="person-title">{{person.get("personTitle").value}}</span><span data-automation-id="person-name">{{person.get("name").value}}</span></h2>
       <h3>(<span data-automation-id="person-birth">{{person.get("birth").value}}</span>-<span data-automation-id="person-death">{{person.get("death").value}}</span>)</h3>
       <div class="small-text">
+        <p><strong>nasjonalitet: </strong><span data-automation-id="person-nationality">{{person.out("nationality").get("label").value}}</span></p>
         <p><strong>Kort biografi</strong></p>
-        <p>bla bla</p>
       </div>
     </div>
     <div class="row">

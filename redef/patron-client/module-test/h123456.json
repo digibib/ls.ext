@@ -1,6 +1,31 @@
 {
- "@id": "http://192.168.50.12:7000/person/h123456",
- "deichman:name": "R. Rolfsen", 
- "deichman:birth": {"@value": "1977", "@type": "xsd:gYear"}, 
- "deichman:death": {"@value": "1981", "@type": "xsd:gYear"}
+  "@graph": [
+    {
+      "@id": "http://192.168.50.12:7000/person/h123456",
+      "deichman:name": "R. Rolfsen",
+      "deichman:birth": {
+        "@value": "1977",
+        "@type": "xsd:gYear"
+      },
+      "deichman:death": {
+        "@value": "1981",
+        "@type": "xsd:gYear"
+      },
+      "deichman:personTitle": {
+        "@value": "Dr. Macabre",
+        "@type": "xsd:string"
+      },
+      "deichman:nationality": {
+        "@id": "http://data.deichman.no/nationality#n"
+      }
+    },
+    {
+      "rdfs:label": {
+        "@value": "Norsk",
+        "@language": "no"
+      },
+      "@id": "http://data.deichman.no/nationality#n",
+      "@type": "http://data.deichman.no/utility#Nationality"
+    }
+  ]
 }
