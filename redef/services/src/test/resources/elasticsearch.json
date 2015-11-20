@@ -24,7 +24,7 @@
                 }
               }
             },
-            "name": {
+            "title": {
               "type": "string"
             },
             "uri": {
@@ -52,6 +52,23 @@
       "death": {
         "type": "string",
         "index": "no"
+      },
+      "work": {
+        "type": "nested",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "index": "no"
+          },
+          "title": {
+            "type": "string",
+            "index": "no"
+          },
+          "year": {
+            "type": "string",
+            "index": "no"
+          }
+        }
       }
     }
   }

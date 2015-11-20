@@ -31,13 +31,17 @@ label       { font-family: monospace; text-align: right; display: inline-block; 
 #errors     { background: #F77F00; color: #fff; font-weight: bold; }
 #errors p   { padding: 4px; }
 
-#save-stat  { text-align: right; color: #888; margin: 0 4px; display: block; }
+#save-stat  { text-align: right; color: #888; margin: 0 4px; display: block; max-width: 600px;}
 #save-stat:before  { content: "status: ";}
 
 /* search results */
 .search-result:hover { background-color: #aaa;}
 .search-result-name { font-size: 100%;}
+.search-result { margin-bottom: 10px; z-index: 1000;}
 .search-result-info { font-size: 90%; padding-left: 2em;}
+.search-result-work { font-size: 90%; padding-left: 2em;}
+.search-result-work-list { padding-left: 2em;}
+.search-result-more-info { font-size: 90%;}
 /* search result box */
 .prop-search-results { position: relative; background: #c0d2d5; border: 2px solid #c2e1f5; padding-left: 1em;}
 /* search looking glass */

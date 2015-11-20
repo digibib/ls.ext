@@ -40,18 +40,23 @@ public abstract class ResourceBase {
     protected final EntityService getEntityService() {
         if (entityService == null) {
             KohaAdapter kohaAdapter = getKohaAdapter();
-            RDFRepository repository;
-            if (getConfig() != null && "true".equals(getConfig().getInitParameter(SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY))) {
-                if (staticInMemoryRepository == null) {
-                    staticInMemoryRepository = new InMemoryRepository(getBaseURI());
-                }
-                repository = staticInMemoryRepository;
-            } else {
-                repository = new RemoteRepository();
-            }
+            RDFRepository repository = getRdfRepository();
             entityService = new EntityServiceImpl(getBaseURI(), repository, kohaAdapter);
         }
         return entityService;
+    }
+
+    private RDFRepository getRdfRepository() {
+        RDFRepository repository;
+        if (getConfig() != null && "true".equals(getConfig().getInitParameter(SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY))) {
+            if (staticInMemoryRepository == null) {
+                staticInMemoryRepository = new InMemoryRepository(getBaseURI());
+            }
+            repository = staticInMemoryRepository;
+        } else {
+            repository = new RemoteRepository();
+        }
+        return repository;
     }
 
     protected final KohaAdapter getKohaAdapter() {
@@ -85,7 +90,7 @@ public abstract class ResourceBase {
 
     public final SearchService getSearchService() {
         if (searchService == null) {
-            searchService = new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService());
+            searchService = new SearchServiceImpl(elasticSearchBaseUrl(), getRdfRepository(), getEntityService());
         }
         return searchService;
     }

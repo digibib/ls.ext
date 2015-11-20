@@ -34,7 +34,7 @@ end
 Before do |scenario|
   if !scenario.source_tag_names.include?("@no-browser")
     @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-    @browser.window.resize_to(800, 600) unless ENV['BROWSER']
+    @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
     @site = @site || Site.new(@browser)
   end
 end
