@@ -39,6 +39,7 @@
             <thead>
               <tr>
                 <th>tittel</th>
+                <th>utgivelsesår</th>
                 <th>språk</th>
                 <th>format</th>
                 <th>eksemplarer</th>
@@ -48,6 +49,7 @@
               {{#each graph.byType("Publication")}}
                 <tr about="{{this.id}}">
                   <td data-automation-id="publication_title">{{this.get("title").value}}</td>
+                  <td data-automation-id="publication_year">{{this.get("year").value}}</td>
                   <td data-automation-id="publication_language">{{this.out("language").get("label").value}}</td>
                   <td data-automation-id="publication_format">{{this.out("format").get("label").value}}</td>
                   <td>{{this.inAll("editionOf").length}}</td>
