@@ -29,6 +29,20 @@
       ]
     },
     {
+      "@id": "deichman:Person",
+      "@type": "rdfs:Class",
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Person"
+        },
+        {
+          "@language": "en",
+          "@value": "Person"
+        }
+      ]
+    },
+    {
       "@id": "deichman:biblio",
       "@type": "rdfs:Property",
       "rdfs:domain": {
@@ -113,6 +127,29 @@
       },
       "rdfs:range": {
         "@id": "http://lexvo.org/ontology#Language"
+      }
+    },
+    {
+      "@id": "deichman:nationality",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Person"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Nasjonalitet"
+        },
+        {
+          "@language": "en",
+          "@value": "Nationality"
+        }
+      ],
+      "http://data.deichman.no/utility#valuesFrom": {
+        "@id": "http://192.168.50.12:7000/authorized_values/nationality"
+      },
+      "rdfs:range": {
+        "@id": "http://data.deichman.no/utility#Nationality"
       }
     },
     {
@@ -240,6 +277,66 @@
       ],
       "rdfs:range": {
         "@id": "http://www.w3.org/2001/XMLSchema#gYear"
+      }
+    },
+    {
+      "@id": "deichman:birth",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Person"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Fødselsår"
+        },
+        {
+          "@language": "en",
+          "@value": "Birth year"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#gYear"
+      }
+    },
+    {
+      "@id": "deichman:death",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Person"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Dødsår"
+        },
+        {
+          "@language": "en",
+          "@value": "Death year"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#gYear"
+      }
+    },
+    {
+      "@id": "deichman:personTitle",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:Person"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Tittel"
+        },
+        {
+          "@language": "en",
+          "@value": "Title"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
       }
     }
   ],

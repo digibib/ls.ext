@@ -1,18 +1,34 @@
 {
-  "@id" : "http://192.168.50.12:7000/person/h123456",
-  "@type" : "deichman:Person",
-  "deichman:birth" : {
-    "@type" : "http://www.w3.org/2001/XMLSchema#gYear",
-    "@value" : "1944"
+  "@context": {
+    "deichman": "http://192.168.50.12:7000/ontology#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
   },
-  "deichman:cataloguing_name" : "Monkey, Test",
-  "deichman:death" : {
-    "@type" : "http://www.w3.org/2001/XMLSchema#gYear",
-    "@value" : "1988"
-  },
-  "deichman:name" : "Test Monkey",
-  "@context" : {
-    "deichman" : "http://192.168.50.12:7000/ontology#",
-    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#"
-  }
+  "@graph": [
+    {
+      "@id": "http://192.168.50.12:7000/person/h123456",
+      "@type": "deichman:Person",
+      "deichman:name": "R. Rolfsen",
+      "deichman:personTitle": "Dr. Macabre",
+      "deichman:birth": {
+        "@value": "1977",
+        "@type": "xsd:gYear"
+      },
+      "deichman:death": {
+        "@value": "1981",
+        "@type": "xsd:gYear"
+      },
+      "deichman:nationality": {
+        "@id": "http://data.deichman.no/nationality#n"
+      }
+    },
+    {
+      "rdfs:label": {
+        "@value": "Norsk",
+        "@language": "no"
+      },
+      "@id": "http://data.deichman.no/nationality#n",
+      "@type": "http://data.deichman.no/utility#Nationality"
+    }
+  ]
 }
