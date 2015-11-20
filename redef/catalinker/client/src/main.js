@@ -34,12 +34,25 @@
       ractive.set("resource_uri", uri);
       var resource;
       var graph = ensureJSON(response.data);
-      // Work resource gives a @graph object if attached resources, need to extract work to extract properties
+      // Work and Person resource gives a @graph object if attached resources, need to extract work to extract properties
+      // TODO: should be rewritten to use ld-graph
       switch (ractive.get("resource_type")) {
         case "Work":
           if (graph["@graph"]) {
             graph["@graph"].forEach(function (g) {
               if (g["@type"] === "deichman:Work") {
+                resource = g;
+                resource["@context"] = graph["@context"];
+              }
+            });
+          } else {
+            resource = graph;
+          }
+          break;
+        case "Person":
+          if (graph["@graph"]) {
+            graph["@graph"].forEach(function (g) {
+              if (g["@type"] === "deichman:Person") {
                 resource = g;
                 resource["@context"] = graph["@context"];
               }
@@ -160,6 +173,9 @@
           case "format":
             input.type = "select-authorized-format";
             break;
+          case "nationality":
+            input.type = "select-authorized-nationality";
+            break;
         }
         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
       } else {
@@ -177,6 +193,7 @@
             input.type = "input-nonNegativeInteger";
             break;
           case "deichman:Work":
+          case "deichman:Person":
             // TODO infer from ontology that this is an URI
             // (because deichman:Work a rdfs:Class)
             input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
