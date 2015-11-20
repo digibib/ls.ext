@@ -1,0 +1,37 @@
+{
+  "@graph": [
+    {
+      "@id": "nationality:n",
+      "@type": "duo:Nationality",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Norsk"
+      }
+    },
+    {
+      "@id": "nationality:eng",
+      "@type": "duo:Nationality",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Engelsk"
+      }
+    },
+    {
+      "@id": "nationality:fær",
+      "@type": "duo:Nationality",
+      "rdfs:label": {
+        "@language": "no",
+        "@value": "Færøyisk"
+      }
+    }
+  ],
+  "@context": {
+    "label": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+    },
+    "nationality": "http://data.deichman.no/nationality#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "duo": "http://data.deichman.no/utility#"
+  }
+}
