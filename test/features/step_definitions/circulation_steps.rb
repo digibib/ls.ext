@@ -435,7 +435,11 @@ When(/^ser jeg tittelen i bokposten$/) do
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     step "jeg besøker bokposten"
-    retry unless tries == 0
+    if (tries == 0)
+      fail
+    else
+      retry
+    end
   end
 end
 
@@ -446,7 +450,11 @@ When(/^ser jeg forfatteren i bokposten$/) do
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     step "jeg besøker bokposten"
-    retry unless tries == 0
+    if (tries == 0)
+      fail
+    else
+      retry
+    end
   end
 end
 
