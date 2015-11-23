@@ -6,6 +6,7 @@ import no.deichman.services.restutils.MimeType;
 import no.deichman.services.restutils.PATCH;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.RDFNode;
@@ -153,6 +154,9 @@ public final class EntityResource extends ResourceBase {
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
+        if (StringUtils.isBlank(jsonLd)){
+            throw new BadRequestException("Empty json body");
+        }
         EntityType entityType = EntityType.get(type);
         String resourceUri;
         switch (entityType) {
