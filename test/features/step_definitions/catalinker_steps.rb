@@ -471,3 +471,7 @@ end
 When(/^jeg venter litt.*$/) do
   sleep 5
 end
+
+When(/^viser trefflisten at personen har et verk fra før$/) do
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.spans(:text => @context[:person_name]).length > 0 }
+end
