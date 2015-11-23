@@ -25,6 +25,12 @@
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
+:personTitle a rdfs:Property ;
+  rdfs:label "Person title"@en ;
+  rdfs:label "Personens tittel"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
 :title a rdfs:Property ;
   rdfs:label "Title"@en ;
   rdfs:label "Tittel"@no ;
