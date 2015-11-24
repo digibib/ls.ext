@@ -19,6 +19,14 @@ compileJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
+    maven {
+        url "http://xss-html-filter.sf.net/releases/"
+        name "xss-html-filter.sf.net releases"
+    }
+    maven {
+        url "https://maven.nuxeo.org/nexus/content/groups/public/"
+        name "nexeo"
+    }
 }
 
 sourceSets {
@@ -85,10 +93,14 @@ dependencies {
     compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: version_slf4j
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.3'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.3'
-    compile 'com.jamonapi:jamon:2.81'
+    compile group: 'com.jamonapi', name: 'jamon', version: '2.81'
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: version_jetty
     compile group: 'org.eclipse.jetty', name: 'jetty-annotations', version: version_jetty
     compile group: 'org.eclipse.jetty', name: 'apache-jsp', version: version_jetty
+    compile group: 'net.sf.xss-html-filter', name: 'xss-html-filter', version: '1.5'
+    compile group: 'com.jamonapi', name: 'fdsapi', version: '1.2'
+    compile group: 'oro', name: 'oro', version: '2.0.8'
+
 
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.0.31-beta'
