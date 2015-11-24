@@ -7,6 +7,7 @@ import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -15,6 +16,8 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.glassfish.jersey.server.ServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 import static java.util.Arrays.asList;
 
@@ -100,8 +103,9 @@ public final class App {
         jamonJettyServer = new Server(jamonAppPort);
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/");
-
-        webapp.setWar(getClass().getResource("/jamon.war").getFile());
+        File tempFile = new File(System.getProperty("java.io.tmpdir"), "jamon.war");
+        FileUtils.copyInputStreamToFile(getClass().getResourceAsStream("/jamon.war"), tempFile);
+        webapp.setWar(tempFile.getAbsolutePath());
 
         Configuration.ClassList classlist = Configuration.ClassList
                 .setServerDefault(jamonJettyServer);
