@@ -23,6 +23,7 @@ public interface RDFRepository {
 
     Model retrievePublicationByURI(String uri);
     Model retrievePersonByURI(String uri);
+    Model retrievePersonAndLinkedResourcesByURI(String uri);
 
     boolean askIfResourceExists(String uri);
 

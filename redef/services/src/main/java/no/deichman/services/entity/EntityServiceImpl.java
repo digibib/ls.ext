@@ -91,6 +91,24 @@ public final class EntityServiceImpl implements EntityService {
         return input;
     }
 
+    private Model getLinkedNationalityResource(Model input) {
+
+        NodeIterator objects = input.listObjects();
+        if (objects.hasNext()) {
+            Set<RDFNode> objectResources = objects.toSet();
+            objectResources.stream()
+                    .filter(node -> node.toString()
+                            .contains("http://data.deichman.no/nationality#")).collect(Collectors.toList())
+                    .forEach(result -> {
+                        input.add(
+                            extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(NATIONALITY_TTL_FILE), Lang.TURTLE)
+                        );
+                    });
+        }
+
+        return input;
+    }
+
     private Model extractNamedResourceFromModel(String resource, InputStream input, Lang lang) {
         Model tempModel = ModelFactory.createDefaultModel();
         RDFDataMgr.read(tempModel, input, lang);
@@ -139,6 +157,13 @@ public final class EntityServiceImpl implements EntityService {
         return m;
     }
 
+    @Override
+    public Model retrievePersonWithLinkedResources(String id) {
+        Model m = ModelFactory.createDefaultModel();
+        m.add(repository.retrievePersonAndLinkedResourcesByURI(baseURI.person() + id));
+        m = getLinkedNationalityResource(m);
+        return m;
+    }
 
     @Override
     public void updateWork(String work) {

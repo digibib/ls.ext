@@ -13,6 +13,7 @@ public interface EntityService {
     void updateWork(String work);
     Model retrieveById(EntityType type, String id);
     Model retrieveWorkWithLinkedResources(String id);
+    Model retrievePersonWithLinkedResources(String id);
 
     Model retrieveWorkItemsById(String id);
     String create(EntityType type, Model inputModel);

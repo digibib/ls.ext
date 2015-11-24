@@ -185,6 +185,34 @@ public class EntityServiceImplTest {
     }
 
     @Test
+    public void test_retrieve_person_by_id_with_nationality() {
+        String testId = "test_retrieve_person_by_id_with_nationality";
+        String personData = "{\n"
+                + "    \"@context\": {\n"
+                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/person/" + testId + "\",\n"
+                + "        \"@type\": \"deichman:Person\"\n,"
+                + "        \"deichman:nationality\":  { \"@id\": \"http://data.deichman.no/nationality#eng\" } \n"
+                + "    }\n"
+                + "}";
+        Model inputModel = modelFrom(personData, JSONLD);
+        String personId = service.create(PERSON, inputModel);
+        Model test = service.retrievePersonWithLinkedResources(personId.replace(personURI, ""));
+        assertTrue(
+                test.contains(
+                        createStatement(
+                                createResource("http://data.deichman.no/nationality#eng"),
+                                createProperty(RDFS.label.getURI()),
+                                createLangLiteral("Engelsk", "no")
+                        )
+                )
+        );
+    }
+
+    @Test
     public void test_retrieve_work_items_by_id() {
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(EntityServiceImplTest.modelForBiblio());
         EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);

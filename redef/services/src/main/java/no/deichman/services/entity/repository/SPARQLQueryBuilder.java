@@ -59,6 +59,25 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
+
+    public Query describePersonAndLinkedResources(String personId) {
+        String queryString = String.format("#\n"
+                + "PREFIX deichman: <%1$s>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "DESCRIBE <%2$s> ?name ?birth ?death ?personTitle ?nationality ?nationalityLabel \n"
+                + "WHERE {\n"
+                + "    <%2$s> a deichman:Person .\n"
+                + "    optional { <%2$s> deichman:name ?name . }\n"
+                + "    optional { <%2$s> deichman:birth ?birth . }\n"
+                + "    optional { <%2$s> deichman:death ?death . }\n"
+                + "    optional { <%2$s> deichman:personTitle ?personTitle . }\n"
+                + "    optional { <%2$s> deichman:nationality ?nationality . \n"
+                + "                 ?nationality rdfs:label ?nationalityLabel .\n"
+                + "             }\n"
+                + "}", baseURI.ontology(), personId);
+        return QueryFactory.create(queryString);
+    }
+
     public String getUpdateWorkQueryString(Model work) {
         return getCreateQueryString(work);
     }
