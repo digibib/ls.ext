@@ -12,12 +12,24 @@ class PatronClientPersonPage < PageRoot
       @browser.title
     end
 
-    def getAuthor
-      @browser.span(:data_automation_id => /person_birth/).text
+    def getPersonName
+      return @browser.span(:data_automation_id => "person-name").when_present(BROWSER_WAIT_TIMEOUT).text
     end
 
-    def getDate
-      @browser.span(:data_automation_id => /person_death/).text
+    def getPersonTitle
+      return @browser.span(:data_automation_id => "person-title").when_present(BROWSER_WAIT_TIMEOUT).text
+    end
+
+    def getBirth
+      return @browser.span(:data_automation_id => "person-birth").when_present(BROWSER_WAIT_TIMEOUT).text
+    end
+
+    def getDeath
+      return @browser.span(:data_automation_id => "person-death").when_present(BROWSER_WAIT_TIMEOUT).text
+    end
+
+    def getNationality
+      return @browser.span(:data_automation_id => "person-nationality").when_present(BROWSER_WAIT_TIMEOUT).text
     end
 
     def getWorkslist

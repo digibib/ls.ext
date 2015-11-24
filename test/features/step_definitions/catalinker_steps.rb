@@ -414,12 +414,21 @@ When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
   @context[:person_name] = generateRandomString
   @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:person_name])
 
-  @context[:birth_year] = rand(2015).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:birth_year])
+  @context[:person_birth_year] = rand(2015).to_s
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:person_birth_year])
 
-  @context[:death_year] = rand(2015).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#death", @context[:death_year])
+  @context[:person_death_year] = rand(2015).to_s
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#death", @context[:person_death_year])
 end
+
+When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do
+  @context[:person_title] = generateRandomString
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#personTitle", @context[:person_title])
+
+  @context[:person_nationality] = ['Norsk', 'Engelsk', 'Færøyisk'].sample
+  @site.RegPerson.select_prop('http://192.168.50.12:8005/ontology#nationality', @context[:person_nationality])
+end
+
 
 When(/^grensesnittet viser at personen er lagret$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
@@ -430,7 +439,7 @@ When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
 end
 
 When(/^personens navn vises på personsiden$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getTitle.include? @context[:person_name] }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getPersonName.include? @context[:person_name] }
 end
 
 When(/^at jeg har lagt til en person$/) do
@@ -438,6 +447,7 @@ When(/^at jeg har lagt til en person$/) do
     Gitt at jeg er i personregistergrensesnittet
     Så leverer systemet en ny ID for den nye personen
     Og jeg kan legge inn navn fødselsår og dødsår for personen
+    Og jeg kan legge inn tittel og nasjonalitet for personen
   }
 end
 

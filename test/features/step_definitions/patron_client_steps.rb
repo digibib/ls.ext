@@ -7,8 +7,7 @@ end
 
 
 When(/^jeg er på sida til verket$/) do
-  identifier = @context[:identifier].sub(services(:work).to_s + "/","")
-  @site.PatronClientWorkPage.visit(identifier)
+  @site.PatronClientWorkPage.visit(@context[:identifier].split("/").last)
 end
 
 Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
@@ -152,4 +151,19 @@ end
 When(/^vises verket i forfatterens verkliste$/) do
   wl = @site.PatronClientPersonPage.getWorkslist
   wl[0].to_s.should be == @context[:work_title]
+end
+
+When(/^jeg er på informasjonssiden til personen$/) do
+  @site.PatronClientPersonPage.visit(@context[:person_identifier].split("/").last)
+end
+
+Then(/^ser jeg personens navn$/) do
+  @site.PatronClientPersonPage.getPersonName.should eq(@context[:person_name])
+end
+
+Then(/^så ser jeg utfyllende informasjon om personen$/) do
+  @site.PatronClientPersonPage.getPersonTitle.should eq(@context[:person_title])
+  @site.PatronClientPersonPage.getBirth.should eq(@context[:person_birth_year])
+  @site.PatronClientPersonPage.getDeath.should eq(@context[:person_death_year])
+  @site.PatronClientPersonPage.getNationality.should eq(@context[:person_nationality])
 end
