@@ -52,6 +52,7 @@ public final class EntityServiceImpl implements EntityService {
     private final BaseURI baseURI;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
+    private static final String NATIONALITY_TTL_FILE = "nationality.ttl";
     private final Property hasItemProperty;
     private final Property titleProperty;
     private final Property nameProperty;

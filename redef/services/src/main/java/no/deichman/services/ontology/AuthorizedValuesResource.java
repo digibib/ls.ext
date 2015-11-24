@@ -47,4 +47,19 @@ public final class AuthorizedValuesResource {
                         Lang.JSONLD))
                 .build();
     }
+
+    @GET
+    @Path("nationality")
+    @Produces(LD_JSON + UTF_8)
+    public Response nationality() throws IOException {
+        return Response.ok().entity(
+                RDFModelUtil.stringFrom(
+                        RDFModelUtil.modelFrom(
+                                IOUtils.toString(
+                                        this.getClass().getClassLoader().getResourceAsStream("nationality.ttl")),
+                                Lang.TURTLE),
+                        Lang.JSONLD))
+                .build();
+    }
+
 }

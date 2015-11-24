@@ -99,7 +99,8 @@
   rdfs:label "Nationality"@en ;
   rdfs:label "Nasjonalitet"@no ;
   rdfs:domain :Person ;
-  rdfs:range xsd:string .
+  rdfs:range duo:Nationality ;
+  duo:valuesFrom values:nationality .
 
 :gender a rdfs:Property ;
   rdfs:label "Gender"@en ;

@@ -59,4 +59,16 @@ public class AuthorizedValuesResourceTest {
         ));
         assertTrue("model doesn't have Book", hasBook);
     }
+
+    @Test
+    public void should_actually_return_some_nationality_data() throws Exception {
+        Object body = authorizedValuesResource.nationality().getEntity();
+        Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
+        boolean hasEnglish = model.contains(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://data.deichman.no/nationality#eng"),
+                RDFS.label,
+                ResourceFactory.createLangLiteral("Engelsk", "no")
+        ));
+        assertTrue("model doesn't have English nationality", hasEnglish);
+    }
 }

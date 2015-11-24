@@ -322,6 +322,23 @@ public class AppTest {
     }
 
     @Test
+    public void get_authorized_values_for_nationality() throws Exception {
+        HttpRequest nationalityRequest = Unirest
+                .get(baseUri + "authorized_values/nationality")
+                .header("Accept", "application/ld+json");
+        HttpResponse<?> nationalityResponse = nationalityRequest.asString();
+        assertResponse(Status.OK, nationalityResponse);
+
+        Model model = RDFModelUtil.modelFrom(nationalityResponse.getBody().toString(), Lang.JSONLD);
+        boolean hasNationality = model.contains(createStatement(
+                createResource("http://data.deichman.no/nationality#eng"),
+                RDFS.label,
+                createLangLiteral("Engelsk", "no")
+        ));
+        assertTrue("model doesn't have English nationality", hasNationality);
+    }
+
+    @Test
     public void get_ontology() throws Exception {
         HttpRequest request = Unirest
                 .get(baseUri + "ontology")
