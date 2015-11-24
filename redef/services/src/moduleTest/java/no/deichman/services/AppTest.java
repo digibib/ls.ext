@@ -66,11 +66,12 @@ public class AppTest {
     @BeforeClass
     public static void setUp() throws Exception {
         int appPort = PortSelector.randomFree();
+        int jamonAppPort = PortSelector.randomFree();
         kohaSvcMock = new KohaSvcMock();
         String svcEndpoint = LOCALHOST + ":" + kohaSvcMock.getPort();
         baseUri = LOCALHOST + ":" + appPort + "/";
         System.setProperty("DATA_BASEURI", baseUri);
-        app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO);
+        app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO, jamonAppPort);
         app.startAsync();
 
         setupElasticSearch();

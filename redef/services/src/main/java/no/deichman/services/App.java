@@ -24,18 +24,20 @@ import static java.util.Arrays.asList;
 public final class App {
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
     private static final int SERVICES_PORT_NO = 8005;
-    public static final int JAMON_WEBAPP_PORRT = 8006;
+    public static final int JAMON_WEBAPP_PORT = 8006;
     private Server jettyServer;
     private Server jamonJettyServer;
     private final int port;
     private String kohaPort;
     private boolean inMemoryRDFRepository;
+    private int jamonAppPort;
     private String elasticSearchUrl = System.getProperty("ELASTCSEARCH_URL", "http://localhost:9200");
 
-    App(int port, String kohaPort, boolean inMemoryRDFRepository) {
+    App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort) {
         this.port = port;
         this.kohaPort = kohaPort;
         this.inMemoryRDFRepository = inMemoryRDFRepository;
+        this.jamonAppPort = jamonAppPort;
     }
 
     private void startSync() throws Exception {
@@ -95,11 +97,11 @@ public final class App {
     }
 
     private void setUpJamonWebApp() throws Exception {
-        jamonJettyServer = new Server(JAMON_WEBAPP_PORRT);
+        jamonJettyServer = new Server(jamonAppPort);
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/");
 
-        webapp.setWar(getClass().getResource("/jamon.war").toExternalForm());
+        webapp.setWar(getClass().getResource("/jamon.war").getFile());
 
         Configuration.ClassList classlist = Configuration.ClassList
                 .setServerDefault(jamonJettyServer);
@@ -130,7 +132,7 @@ public final class App {
     }
 
     public static void main(String[] args) {
-        App app = new App(SERVICES_PORT_NO, null, false);
+        App app = new App(SERVICES_PORT_NO, null, false, JAMON_WEBAPP_PORT);
         try {
             app.startSync();
         } catch (Exception e) {
