@@ -429,7 +429,7 @@ When(/^jeg besøker bokposten$/) do
 end
 
 When(/^ser jeg tittelen i bokposten$/) do
-  tries = 3
+  tries = 5
   begin
     @browser.h1(:class => 'title').when_present(BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_title]
   rescue Watir::Wait::TimeoutError
@@ -444,7 +444,7 @@ When(/^ser jeg tittelen i bokposten$/) do
 end
 
 When(/^ser jeg forfatteren i bokposten$/) do
-  tries = 3
+  tries = 5
   begin
     @browser.h5(:class => 'author').when_present(BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:creator]
   rescue Watir::Wait::TimeoutError
