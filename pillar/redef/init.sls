@@ -8,6 +8,8 @@ redef:
   services:
     binding: 0.0.0.0
     port: 8005
+    jamonport: 8006
+    debugport: 5070
   patron-client:
     binding: 0.0.0.0
     port: 8000

@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.entity.repository.InMemoryRepository;
@@ -60,7 +61,7 @@ public abstract class ResourceBase {
     }
 
     protected final KohaAdapter getKohaAdapter() {
-        return new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null);
+        return (KohaAdapter) MonProxyFactory.monitor(new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null));
     }
 
     protected final BaseURI getBaseURI() {

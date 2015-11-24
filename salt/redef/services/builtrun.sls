@@ -17,7 +17,7 @@
 
 {% include 'docker-build.sls-fragment' %}
 
-{% set ports = ['8005/tcp', '5070/tcp'] %}
+{% set ports = ['8005/tcp', '8006/tcp', '5070/tcp'] %}
 {% set environment = { 'KOHA_PORT': "http://{0}:{1}".format(pillar['redef']['koha']['host'], pillar['redef']['koha']['port_intra']),
                        'KOHA_USER': pillar['koha']['adminuser'],
                        'KOHA_PASSWORD': pillar['koha']['adminpass'],
@@ -25,7 +25,8 @@
                        'DATA_BASEURI': pillar['redef']['services']['baseuri'],
                        'ELASTICSEARCH_URL' : "http://{0}:{1}".format(pillar['redef']['elasticsearch']['host'], pillar['redef']['elasticsearch']['http']['port'])} %}
 {% set port_bindings = {'8005/tcp': { 'HostIp': pillar['redef']['services']['binding'], 'HostPort': pillar['redef']['services']['port'] },
-                        '5070/tcp': { 'HostIp': pillar['redef']['services']['binding'], 'HostPort': '5070' } } %}
+                        '8006/tcp': { 'HostIp': pillar['redef']['services']['binding'], 'HostPort': pillar['redef']['services']['jamonport'] },
+                        '5070/tcp': { 'HostIp': pillar['redef']['services']['binding'], 'HostPort': pillar['redef']['services']['debugport'] } } %}
 
 
 {% include 'docker-run.sls-fragment' %}

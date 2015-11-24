@@ -1,5 +1,7 @@
 package no.deichman.services.ontology;
 
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
 import no.deichman.services.rdf.JSONLDCreator;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
@@ -51,7 +53,10 @@ public final class OntologyResource {
     @GET
     @Produces({LD_JSON + UTF_8, JSON + UTF_8})
     public Response getOntologyJSON() throws IOException {
-        return Response.ok().entity(getOntologyJsonLD()).build();
+        Monitor monitor = MonitorFactory.start("ontology");
+        Response build = Response.ok().entity(getOntologyJsonLD()).build();
+        monitor.stop();
+        return build;
     }
 
 
