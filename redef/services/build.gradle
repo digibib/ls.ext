@@ -86,12 +86,8 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.3'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.3'
     compile 'com.jamonapi:jamon:2.81'
-    compile 'org.eclipse.jetty:jetty-webapp:9.3.6.v20151106'
-    compile 'org.eclipse.jetty:jetty-annotations:9.3.6.v20151106'
-    compile 'org.eclipse.jetty:apache-jsp:9.3.2.v20150730'
-
-
-
+    compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: version_jetty
+    compile group: 'org.eclipse.jetty', name: 'jetty-annotations', version: version_jetty
 
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.0.31-beta'
