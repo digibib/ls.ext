@@ -1,5 +1,7 @@
 package no.deichman.services;
 
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
 import no.deichman.services.entity.EntityResource;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.marc.MarcResource;
@@ -8,7 +10,10 @@ import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.HandlerWrapper;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.Configuration;
@@ -17,7 +22,11 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
@@ -53,11 +62,30 @@ public final class App {
     }
 
     void startAsync() throws Exception {
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
+        setUpMainWebApp();
+        setUpJamonWebApp();
+    }
+
+    private void setUpMainWebApp() throws Exception {
 
         jettyServer = new Server(port);
-        jettyServer.setHandler(context);
+        HandlerCollection handlers = new HandlerCollection();
+
+
+        handlers.addHandler(new HandlerWrapper(){
+            @Override
+            public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+                Monitor monitor = MonitorFactory.start("no.deichman.services  " + request.getMethod() + "   " + request.getRequestURI().replaceAll("(w|p|h)[0-9]+$", "$1*******"));
+                super.handle(target, baseRequest, request, response);
+                monitor.stop();
+            }
+        });
+
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        handlers.addHandler(context);
+
+        jettyServer.setHandler(handlers);
 
         ServletHolder jerseyServlet = context.addServlet(
                 org.glassfish.jersey.servlet.ServletContainer.class, "/*");
@@ -93,10 +121,6 @@ public final class App {
 
         jettyServer.start();
         LOG.info("App started on port: " + port);
-
-
-        setUpJamonWebApp();
-
     }
 
     private void setUpJamonWebApp() throws Exception {
@@ -144,4 +168,5 @@ public final class App {
             e.printStackTrace(System.err);
         }
     }
+
 }
