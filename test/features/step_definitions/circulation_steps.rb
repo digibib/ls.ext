@@ -434,6 +434,7 @@ When(/^ser jeg tittelen i bokposten$/) do
     @browser.h1(:class => 'title').when_present(BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_title]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
+    step "katalogen reindekseres"
     step "jeg besøker bokposten"
     if (tries == 0)
       fail
@@ -449,6 +450,7 @@ When(/^ser jeg forfatteren i bokposten$/) do
     @browser.h5(:class => 'author').when_present(BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:creator]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
+    step "katalogen reindekseres"
     step "jeg besøker bokposten"
     if (tries == 0)
       fail
