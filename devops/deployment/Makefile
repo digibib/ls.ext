@@ -156,7 +156,7 @@ prod_load_loans: ## Loads example data of type loans - args: SUDOUSER, MASTER, M
 prod_load_reservations: ## Loads example data of type reservations - args: SUDOUSER, MASTER, MINIONNAME
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls migration.reservations_loaded pillar=\"{migration-data-folder: /var/migration_workdir}\" | tee -a deploy.log'"
 
-prod_reindex_koha: ## Reindexes koha by building zebra
+prod_reindex_koha: ## Reindexes koha by building zebra - args: SUDOUSER, MASTER, MINIONNAE
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) "sudo sh -c 'salt \"$(MINIONNAME)\" --log-level debug state.sls koha.reindexed | tee -a deploy.log'"
 
 prod_create_works:	## Aggregates works from publications - args: SUDOUSER, MASTER, MINIONNAME
