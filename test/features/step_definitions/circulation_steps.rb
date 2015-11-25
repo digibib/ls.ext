@@ -434,11 +434,11 @@ When(/^ser jeg tittelen i bokposten$/) do
     @browser.h1(:class => 'title').when_present(BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_title]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
-    step "katalogen reindekseres"
-    step "jeg besøker bokposten"
     if (tries == 0)
       fail
     else
+      step "katalogen reindekseres"
+      step "jeg besøker bokposten"
       retry
     end
   end
@@ -450,20 +450,45 @@ When(/^ser jeg forfatteren i bokposten$/) do
     @browser.h5(:class => 'author').when_present(BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:creator]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
-    step "katalogen reindekseres"
-    step "jeg besøker bokposten"
     if (tries == 0)
       fail
     else
+      step "katalogen reindekseres"
+      step "jeg besøker bokposten"
       retry
     end
   end
 end
 
 When(/^ser jeg tittelen i plukklisten$/) do
-  @browser.strongs.any? { |element| element.text.include? @context[:publication_title] }.should be true
+  tries = 3
+  begin
+    @browser.table(:id => "holdst").when_present(BROWSER_WAIT_TIMEOUT).trs.take_while { |row|
+      row.td(:class => "hq-title") }.any? { |element| element.text.include? @context[:publication_title] }.should be true
+  rescue Watir::Wait::TimeoutError
+    STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
+    if (tries == 0)
+      fail
+    else
+      step "katalogen reindekseres"
+      @site.HoldsQueue.visit.get_holds
+      retry
+    end
+  end
 end
 
 When(/^ser jeg forfatteren i plukklisten$/) do
-  @browser.divs(:class => 'hq-author').any? { |element| element.text.include? @context[:creator] }.should be true
+  tries = 3
+  begin
+    @browser.table(:id => "holdst").when_present(BROWSER_WAIT_TIMEOUT).divs(:class => 'hq-author').any? { |element| element.text.include? @context[:creator] }.should be true
+  rescue Watir::Wait::TimeoutError
+    STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
+    if (tries == 0)
+      fail
+    else
+      step "katalogen reindekseres"
+      @site.HoldsQueue.visit.get_holds
+      retry
+    end
+  end
 end
