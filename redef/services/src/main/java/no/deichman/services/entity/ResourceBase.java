@@ -55,7 +55,7 @@ public abstract class ResourceBase {
             }
             repository = staticInMemoryRepository;
         } else {
-            repository = new RemoteRepository();
+            repository = (RDFRepository) MonProxyFactory.monitor(new RemoteRepository());
         }
         return repository;
     }
