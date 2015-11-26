@@ -101,7 +101,7 @@ public final class EntityServiceImpl implements EntityService {
                             .contains("http://data.deichman.no/nationality#")).collect(Collectors.toList())
                     .forEach(result -> {
                         input.add(
-                            extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(NATIONALITY_TTL_FILE), Lang.TURTLE)
+                                extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(NATIONALITY_TTL_FILE), Lang.TURTLE)
                         );
                     });
         }
@@ -205,7 +205,7 @@ public final class EntityServiceImpl implements EntityService {
             case PUBLICATION:
                 Set<Resource> items = objectsOfProperty(hasItemProperty, inputModel);
                 if (items.isEmpty()) {
-                    uri = repository.createPublication(inputModel, kohaAdapter.getNewBiblio());
+                    uri = createPublication(inputModel);
                 } else {
                     uri = createPublicationWithItems(inputModel, items);
                 }
@@ -222,9 +222,41 @@ public final class EntityServiceImpl implements EntityService {
         return uri;
     }
 
+    private String createPublication(Model inputModel) {
+        MarcRecord marcRecord = new MarcRecord();
+        final String[] workUri = {null};
+        streamFrom(inputModel.listStatements())
+                .collect(groupingBy(Statement::getSubject))
+                .forEach((subject, statements) -> {
+                    statements.forEach(s -> {
+                        if (s.getPredicate().equals(titleProperty)) {
+                            MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
+                            marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
+                            marcRecord.addMarcField(marcField);
+                        } else if (s.getPredicate().equals(publicationOfProperty)) {
+                            workUri[0] = s.getObject().toString();
+                        }
+                    });
+                });
+
+        String s = repository.createPublication(
+                inputModel,
+                kohaAdapter.getNewBiblioWithItems(marcRecord)
+        );
+
+        if (workUri[0] != null) {
+            Model work = repository.retrieveWorkByURI(workUri[0]);
+            updatePublicationsByWork(workUri[0], work);
+        }
+
+        return s;
+    }
+
     private String createPublicationWithItems(Model inputModel, Set<Resource> items) {
         Model modelWithoutItems = ModelFactory.createDefaultModel();
         MarcRecord marcRecord = new MarcRecord();
+        final String[] workUri = {null};
+
         streamFrom(inputModel.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
@@ -237,6 +269,8 @@ public final class EntityServiceImpl implements EntityService {
                                     MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
                                     marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
                                     marcRecord.addMarcField(marcField);
+                                } else if (s.getPredicate().equals(publicationOfProperty)) {
+                                    workUri[0] = s.getObject().toString();
                                 }
                                 modelWithoutItems.add(s);
                             }
@@ -244,10 +278,17 @@ public final class EntityServiceImpl implements EntityService {
                     }
                 });
 
-        return repository.createPublication(
+        String s = repository.createPublication(
                 modelWithoutItems,
                 kohaAdapter.getNewBiblioWithItems(marcRecord)
         );
+
+        if (workUri[0] != null) {
+            Model work = repository.retrieveWorkByURI(workUri[0]);
+            updatePublicationsByWork(workUri[0], work);
+        }
+
+        return s;
     }
 
     private static <T> Map[] asArray(List<T> list) {
