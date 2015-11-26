@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@check-for-errors
 Egenskap: Søk opp person og se at denne har andre verk fra før
   Som katalogisator
   Ønsker jeg å kunne se andre verk en person har skrevet for å kunne velge riktig person

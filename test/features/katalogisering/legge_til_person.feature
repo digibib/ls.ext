@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@check-for-errors
 @redef
 Egenskap: Redigere autoritative persondata
   Som Katalogisator

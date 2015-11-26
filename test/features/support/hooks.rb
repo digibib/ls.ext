@@ -27,7 +27,7 @@ end
 
 Before do
   @context = {}
-  @active  = {} # Hash of active context objects (Book, Patron, Branch, etc.)
+  @active = {} # Hash of active context objects (Book, Patron, Branch, etc.)
   @cleanup = [] # A stack of operations to be undone in reversed order after feature
 end
 
@@ -44,6 +44,14 @@ end
 After do |scenario| # The final hook
   @site = nil
   @browser.close if @browser
+end
+
+AfterStep('@check-for-errors') do |scenario|
+  if @browser.div(:id => "errors").exist?
+    unless @browser.div(:id => "errors").ps.length == 0
+      fail("The errors <div> contained one or more error <p>'s'")
+    end
+  end
 end
 
 def title_of(scenario)

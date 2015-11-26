@@ -2,6 +2,7 @@
 # language: no
 
 @wip
+@check-for-errors
 Egenskap: Legg til eksemplar under verk
   Som katalogisator
   For å kunne registrere et nytt eksemplar

@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@check-for-errors
 Egenskap: Legg til verk med dato
   Som katalogisator
   For at en låner skal kunne finne et verk med kjent årstall for førsteutgave

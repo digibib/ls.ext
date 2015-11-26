@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@check-for-errors
 Egenskap: Katalogisering av utgivelse
   Som katalogisator
   For at brukere skal kunne finne rett utgivelse

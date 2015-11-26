@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@check-for-errors
 Egenskap: Vise koblinger fra verk til andre ressurser i systemet
   Som katalogisator
   For se hvordan et verk er knyttet til andre ressurser i systemet

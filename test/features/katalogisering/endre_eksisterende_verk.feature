@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@check-for-errors
 Egenskap: Endre eksisterende verk
   Som katalogisator
   For å kunne rette en feil verksopplysning
