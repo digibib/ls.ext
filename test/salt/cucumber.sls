@@ -35,6 +35,16 @@ rubies:
     - require:
       - pkgrepo: rubyrepo
 
+install_build_essential:
+  pkg.installed:
+    - pkgs:
+      - build-essential
+
+install_zlib1g-dev:
+  pkg.installed:
+    - pkgs:
+      - zlib1g-dev
+
 install_chromedriver:
   pkg.installed:
     - pkgs:
@@ -60,7 +70,10 @@ install_chromedriver:
   'pry',
   'pry-nav',
   'rdf',
-  'json-ld' %}
+  'json-ld',
+  'rest-client',
+  'nokogiri'
+   %}
 {{ gem }}:
   gem.installed:
     - require:

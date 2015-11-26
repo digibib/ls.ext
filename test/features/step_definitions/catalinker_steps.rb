@@ -158,6 +158,15 @@ Given(/^at det finnes et verk med person og en utgivelse$/) do
   }
 end
 
+Given(/^at det finnes et verk med person$/) do
+  steps %Q{
+    Gitt at jeg har lagt til en person
+    Og at jeg er i katalogiseringsgrensesnittet
+    Og at systemet har returnert en ny ID for det nye verket
+    Og jeg legger til forfatter av det nye verket
+  }
+end
+
 When(/^jeg ser på utgivelsen i katalogiseringsgrensesnittet$/) do
   true
 end
