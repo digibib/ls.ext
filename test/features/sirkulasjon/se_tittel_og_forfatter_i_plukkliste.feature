@@ -13,6 +13,7 @@ Egenskap: Se tittel og forfatter i plukkliste
 
   Scenario: Finn utgivelsestittel og forfatter i Koha
     Gitt at det finnes et verk med person og en utgivelse
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Når jeg besøker bokposten
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Så ser jeg tittelen i bokposten
@@ -21,6 +22,7 @@ Egenskap: Se tittel og forfatter i plukkliste
 
   Scenario: Sjekker plukkliste
     Gitt at det finnes et verk med person og en utgivelse
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg ser på utgivelsen i katalogiseringsgrensesnittet
     Og jeg følger lenken til posten i Koha
     Og jeg oppretter et eksemplar av utgivelsen
@@ -32,45 +34,53 @@ Egenskap: Se tittel og forfatter i plukkliste
 
   Scenario: Finn endret utgivelsestittel i Koha
     Gitt at det finnes et verk med person og en utgivelse
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Så ser jeg tittelen i bokposten
     Når jeg åpner utgivelsen for redigering
     Og når jeg endrer tittelen på utgivelsen
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Så ser jeg tittelen i bokposten
 
   Scenario: Finn endret utgivelsestittel i Koha (utgivelse uten verk)
     Gitt at det finnes en utgivelse uten verk
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Så ser jeg tittelen i bokposten
     Når jeg åpner utgivelsen for redigering
     Og når jeg endrer tittelen på utgivelsen
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Så ser jeg tittelen i bokposten
 
   Scenario: Finn byttet forfatter i Koha
     Gitt at det finnes et verk med person og en utgivelse
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Så ser jeg forfatteren i bokposten
     Gitt at det finnes en personressurs
     Når jeg åpner verket for redigering
     Og jeg endrer forfatteren på verket
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Så ser jeg forfatteren i bokposten
 
   Scenario: Finn forfatter med endret navn i Koha
     Gitt at det finnes et verk med person og en utgivelse
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Så ser jeg forfatteren i bokposten
     Når jeg åpner personen for redigering
     Og når jeg endrer navnet på personen
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg besøker bokposten
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Så ser jeg forfatteren i bokposten
@@ -78,6 +88,7 @@ Egenskap: Se tittel og forfatter i plukkliste
   Scenario: Finn utgivelsestittel og forfatter i Koha på migrert utgivelse
     Gitt at det finnes et verk med person
     Og jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Og jeg besøker bokposten
@@ -87,6 +98,7 @@ Egenskap: Se tittel og forfatter i plukkliste
   Scenario: Finn utgivelsestittel og forfatter i Koha på migrert utgivelse med items
     Gitt at det finnes et verk med person
     Og jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter og items
+    Og jeg sørger for at publikasjonen er synkronisert i Koha
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Og jeg besøker bokposten

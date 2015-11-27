@@ -233,6 +233,14 @@ public final class EntityResource extends ResourceBase {
         return accepted().build();
     }
 
+    @PUT
+    @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/sync")
+    public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws PatchParserException {
+        EntityType entityType = EntityType.get(type);
+        getEntityService().synchronizeKohaAndIndex(entityType, id);
+        return accepted().build();
+    }
+
     @GET
     @Path("{creatorId: h[a-zA-Z0-9_]+}/works")
     public Response getWorksByCreator(@PathParam("creatorId") String creatorId) {

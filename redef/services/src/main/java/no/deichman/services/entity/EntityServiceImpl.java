@@ -248,6 +248,9 @@ public final class EntityServiceImpl implements EntityService {
         List<String> personNames;
         if (inputModel.contains(null, publicationOfProperty)) {
             Model work = repository.retrieveWorkByURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString());
+            if (work.isEmpty()) {
+                throw new BadRequestException("Associated work does not exist.");
+            }
             personNames = getPersonNames(work);
         } else {
             personNames = new ArrayList<>();
@@ -300,6 +303,12 @@ public final class EntityServiceImpl implements EntityService {
             throw new BadRequestException("Empty JSON-LD patch");
         }
         repository.patch(PatchParser.parse(ldPatchJson));
+
+        return synchronizeKohaAndIndex(type, id);
+    }
+
+    @Override
+    public Model synchronizeKohaAndIndex(EntityType type, String id) {
         Model model = retrieveById(type, id);
 
         if (type.equals(EntityType.PERSON)) {

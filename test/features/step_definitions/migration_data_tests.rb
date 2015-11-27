@@ -35,7 +35,6 @@ Then(/^kan jeg velge å endre materialtypen til "(.*?)"$/) do |type|
   s.select "#{type}"
 end
 
-
 When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter$/) do
   publication_name = generateRandomString
   ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://192.168.50.12:8005/ontology#Publication> .
@@ -57,7 +56,8 @@ end
 def post_publication_ntriples(publication_title, ntriples)
   response = RestClient.post "http://192.168.50.12:8005/publication", ntriples, :content_type => 'application/n-triples'
   response.code.should == 201
-  @context[:record_id] = JSON.parse(RestClient.get(response.headers[:location]))["deichman:recordID"]
+  @context[:publication_identifier] = response.headers[:location]
+  @context[:record_id] = JSON.parse(RestClient.get(@context[:publication_identifier]))["deichman:recordID"]
   @context[:publication_title] = publication_title
 end
 
@@ -73,4 +73,9 @@ When(/^jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen$/) do
   xml_doc = Nokogiri::XML response
   creator = xml_doc.xpath("//xmlns:datafield[@tag=100]/xmlns:subfield[@code='a']").text
   creator.should == @context[:person_name]
+end
+
+When(/^jeg sørger for at publikasjonen er synkronisert i Koha$/) do
+  response = RestClient.put "#{@context[:publication_identifier]}/sync", {}
+  response.code.should == 202
 end
