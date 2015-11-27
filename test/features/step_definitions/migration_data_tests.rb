@@ -75,7 +75,7 @@ When(/^jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen$/) do
   creator.should == @context[:person_name]
 end
 
-When(/^jeg sørger for at publikasjonen er synkronisert i Koha$/) do
+When(/^jeg sørger for at utgivelsen er synkronisert i Koha$/) do
   response = RestClient.put "#{@context[:publication_identifier]}/sync", {}
   response.code.should == 202
 end
