@@ -155,6 +155,7 @@ Given(/^at det finnes et verk med person og en utgivelse$/) do
     Og jeg legger til forfatter av det nye verket
     Og jeg registrerer inn opplysninger om utgivelsen
     Og jeg knytter utgivelsen til verket
+    Og grensesnittet viser at endringene er lagret
   }
 end
 
@@ -164,6 +165,7 @@ Given(/^at det finnes et verk med person$/) do
     Og at jeg er i katalogiseringsgrensesnittet
     Og at systemet har returnert en ny ID for det nye verket
     Og jeg legger til forfatter av det nye verket
+    Og grensesnittet viser at endringene er lagret
   }
 end
 
