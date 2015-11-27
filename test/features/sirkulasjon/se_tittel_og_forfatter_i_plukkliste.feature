@@ -63,20 +63,18 @@ Egenskap: Se tittel og forfatter i plukkliste
     Og jeg besøker bokposten
     Så ser jeg forfatteren i bokposten
 
-  @wip
   Scenario: Finn utgivelsestittel og forfatter i Koha på migrert utgivelse
     Gitt at det finnes et verk med person
-    Og jeg migrerer en utgivelse med tilknyttet verk som har forfatter
+    Og jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Og jeg besøker bokposten
     Så ser jeg tittelen i bokposten
     Og ser jeg forfatteren i bokposten
 
-  @wip
   Scenario: Finn utgivelsestittel og forfatter i Koha på migrert utgivelse med items
     Gitt at det finnes et verk med person
-    Og jeg migrerer en utgivelse med tilknyttet verk som har forfatter og items
+    Og jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter og items
     Og jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Og jeg besøker bokposten

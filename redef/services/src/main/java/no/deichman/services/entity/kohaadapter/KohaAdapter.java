@@ -13,7 +13,7 @@ public interface KohaAdapter {
 
     String getNewBiblio();
 
-    String getNewBiblioWithItems(MarcRecord marcRecord);
+    String getNewBiblioWithMarcRecord(MarcRecord marcRecord);
 
     String retrieveMarcXml(String recordId);
 

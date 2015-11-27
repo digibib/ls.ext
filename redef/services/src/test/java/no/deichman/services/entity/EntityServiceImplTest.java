@@ -101,7 +101,7 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_retrieve_publication_by_id() throws Exception {
-        when(mockKohaAdapter.getNewBiblioWithItems(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_EXIST";
         String publicationData = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publicationData, JSONLD);
@@ -247,7 +247,7 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_create_publication() {
-        when(mockKohaAdapter.getNewBiblioWithItems(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         String testId = "SERVICE_PUBLICATION_SHOULD_EXIST";
         String publication = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publication, JSONLD);
@@ -295,7 +295,7 @@ public class EntityServiceImplTest {
         itemsField.addSubfield('t', "1");
         itemsField.addSubfield('y', "L");
         marcRecord.addMarcField(itemsField);
-        when(mockKohaAdapter.getNewBiblioWithItems(marcRecord)).thenReturn("123");
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(marcRecord)).thenReturn("123");
         Model test = modelFrom(itemNTriples(title, "213123123").replaceAll("__BASEURI__", "http://deichman.no/"), Lang.NTRIPLES);
         String response = service.create(PUBLICATION, test);
         assertTrue(response.substring(response.lastIndexOf("/") + 1, response.length()).matches("p[0-9]+"));
@@ -303,7 +303,7 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_create_and_delete_entity() throws Exception {
-        when(mockKohaAdapter.getNewBiblioWithItems(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_DELETED";
         String publication = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publication, JSONLD);
@@ -352,7 +352,7 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_patch_publication_add() throws Exception {
-        when(mockKohaAdapter.getNewBiblioWithItems(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         String testId = "publication_SHOULD_BE_PATCHABLE";
         String publicationData = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publicationData, JSONLD);
@@ -489,7 +489,7 @@ public class EntityServiceImplTest {
         String originalPublicationTitle = "Sult";
         String newPublicationTitle = "Torst";
 
-        when(mockKohaAdapter.getNewBiblioWithItems(getMarcRecord(originalPublicationTitle, null))).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(getMarcRecord(originalPublicationTitle, null))).thenReturn(A_BIBLIO_ID);
 
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
@@ -515,7 +515,7 @@ public class EntityServiceImplTest {
         String originalPublicationTitle = "Sult";
         String newPublicationTitle = "Torst";
 
-        when(mockKohaAdapter.getNewBiblioWithItems(getMarcRecord(originalPublicationTitle, null))).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(getMarcRecord(originalPublicationTitle, originalCreator))).thenReturn(A_BIBLIO_ID);
 
         String workTriples = ""
                 + "<work> <" + ontologyURI + "title> \"" + originalWorkTitle + "\" .\n"

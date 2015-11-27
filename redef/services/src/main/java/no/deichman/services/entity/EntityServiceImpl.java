@@ -47,17 +47,47 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public final class EntityServiceImpl implements EntityService {
 
-    private final RDFRepository repository;
-    private final KohaAdapter kohaAdapter;
-    private final BaseURI baseURI;
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
     private static final String NATIONALITY_TTL_FILE = "nationality.ttl";
+    private final RDFRepository repository;
+    private final KohaAdapter kohaAdapter;
+    private final BaseURI baseURI;
     private final Property hasItemProperty;
     private final Property titleProperty;
     private final Property nameProperty;
     private final Property creatorProperty;
     private final Property publicationOfProperty;
+    private final Property recordIdProperty;
+
+    public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
+        this.baseURI = baseURI;
+        this.repository = repository;
+        this.kohaAdapter = kohaAdapter;
+        hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
+        titleProperty = ResourceFactory.createProperty(baseURI.ontology("title"));
+        nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
+        creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
+        publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
+        recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
+    }
+
+    private static <T> Map[] asArray(List<T> list) {
+        return list.toArray(new Map[list.size()]);
+    }
+
+    private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
+        Set<Resource> resources = new HashSet<>();
+        inputModel
+                .listObjectsOfProperty(property)
+                .forEachRemaining(r -> resources.add(r.asResource()));
+        return resources;
+    }
+
+    private static <T> Stream<T> streamFrom(Iterator<T> sourceIterator) {
+        Iterable<T> iterable = () -> sourceIterator;
+        return StreamSupport.stream(iterable.spliterator(), false);
+    }
 
     private Model getLinkedLexvoResource(Model input) {
 
@@ -116,17 +146,6 @@ public final class EntityServiceImpl implements EntityService {
                 QueryFactory.create("DESCRIBE <" + resource + ">"),
                 tempModel);
         return qexec.execDescribe();
-    }
-
-    public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
-        this.baseURI = baseURI;
-        this.repository = repository;
-        this.kohaAdapter = kohaAdapter;
-        hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
-        titleProperty = ResourceFactory.createProperty(baseURI.ontology("title"));
-        nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
-        creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
-        publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
     }
 
     @Override
@@ -203,12 +222,7 @@ public final class EntityServiceImpl implements EntityService {
         String uri;
         switch (type) {
             case PUBLICATION:
-                Set<Resource> items = objectsOfProperty(hasItemProperty, inputModel);
-                if (items.isEmpty()) {
-                    uri = createPublication(inputModel);
-                } else {
-                    uri = createPublicationWithItems(inputModel, items);
-                }
+                uri = createPublication(inputModel);
                 break;
             case WORK:
                 uri = repository.createWork(inputModel);
@@ -223,40 +237,23 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     private String createPublication(Model inputModel) {
-        MarcRecord marcRecord = new MarcRecord();
-        final String[] workUri = {null};
-        streamFrom(inputModel.listStatements())
-                .collect(groupingBy(Statement::getSubject))
-                .forEach((subject, statements) -> {
-                    statements.forEach(s -> {
-                        if (s.getPredicate().equals(titleProperty)) {
-                            MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-                            marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
-                            marcRecord.addMarcField(marcField);
-                        } else if (s.getPredicate().equals(publicationOfProperty)) {
-                            workUri[0] = s.getObject().toString();
-                        }
-                    });
-                });
-
-        String s = repository.createPublication(
-                inputModel,
-                kohaAdapter.getNewBiblioWithItems(marcRecord)
-        );
-
-        if (workUri[0] != null) {
-            Model work = repository.retrieveWorkByURI(workUri[0]);
-            updatePublicationsByWork(workUri[0], work);
+        Set<Resource> items = objectsOfProperty(hasItemProperty, inputModel);
+        Model modelWithoutItems;
+        if (items.isEmpty()) {
+            modelWithoutItems = inputModel;
+        } else {
+            modelWithoutItems = ModelFactory.createDefaultModel();
         }
 
-        return s;
-    }
+        List<String> personNames;
+        if (inputModel.contains(null, publicationOfProperty)) {
+            Model work = repository.retrieveWorkByURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString());
+            personNames = getPersonNames(work);
+        } else {
+            personNames = new ArrayList<>();
+        }
 
-    private String createPublicationWithItems(Model inputModel, Set<Resource> items) {
-        Model modelWithoutItems = ModelFactory.createDefaultModel();
-        MarcRecord marcRecord = new MarcRecord();
-        final String[] workUri = {null};
-
+        MarcRecord marcRecord = generateMarcRecordForPublication(inputModel, personNames);
         streamFrom(inputModel.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
@@ -265,34 +262,16 @@ public final class EntityServiceImpl implements EntityService {
                     } else {
                         statements.forEach(s -> {
                             if (!s.getPredicate().equals(hasItemProperty)) {
-                                if (s.getPredicate().equals(titleProperty)) {
-                                    MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-                                    marcField.addSubfield(MarcConstants.SUBFIELD_A, s.getObject().asLiteral().toString());
-                                    marcRecord.addMarcField(marcField);
-                                } else if (s.getPredicate().equals(publicationOfProperty)) {
-                                    workUri[0] = s.getObject().toString();
-                                }
                                 modelWithoutItems.add(s);
                             }
                         });
                     }
                 });
 
-        String s = repository.createPublication(
+        return repository.createPublication(
                 modelWithoutItems,
-                kohaAdapter.getNewBiblioWithItems(marcRecord)
+                kohaAdapter.getNewBiblioWithMarcRecord(marcRecord)
         );
-
-        if (workUri[0] != null) {
-            Model work = repository.retrieveWorkByURI(workUri[0]);
-            updatePublicationsByWork(workUri[0], work);
-        }
-
-        return s;
-    }
-
-    private static <T> Map[] asArray(List<T> list) {
-        return list.toArray(new Map[list.size()]);
     }
 
     private MarcField as952Subfields(List<Statement> statements) {
@@ -310,24 +289,10 @@ public final class EntityServiceImpl implements EntityService {
         return marcField;
     }
 
-    private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
-        Set<Resource> resources = new HashSet<>();
-        inputModel
-                .listObjectsOfProperty(property)
-                .forEachRemaining(r -> resources.add(r.asResource()));
-        return resources;
-    }
-
-    private static <T> Stream<T> streamFrom(Iterator<T> sourceIterator) {
-        Iterable<T> iterable = () -> sourceIterator;
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
     @Override
     public void delete(Model model) {
         repository.delete(model);
     }
-
 
     @Override
     public Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException {
@@ -351,12 +316,17 @@ public final class EntityServiceImpl implements EntityService {
             updatePublicationsByWork(id, model);
         } else if (type.equals(EntityType.PUBLICATION) && model.getProperty(null, publicationOfProperty) != null) {
             String workUri = model.getProperty(null, publicationOfProperty).getObject().toString();
-            Model work = repository.retrieveWorkByURI(workUri);
-            updatePublicationsByWork(workUri, work);
+            updatePublicationWithWork(workUri, model);
         } else if (type.equals(EntityType.PUBLICATION)) {
-            model.listSubjects().forEachRemaining(publication -> updatePublicationInKoha(publication, new ArrayList()));
+            updatePublicationInKoha(model, new ArrayList<>());
         }
         return model;
+    }
+
+    private void updatePublicationWithWork(String workUri, Model publication) {
+        Model work = repository.retrieveWorkByURI(workUri);
+        List<String> personNames = getPersonNames(work);
+        updatePublicationInKoha(publication, personNames);
     }
 
     private void updatePublicationsByWork(String workUri, Model work) {
@@ -364,27 +334,36 @@ public final class EntityServiceImpl implements EntityService {
 
         List<String> personNames = getPersonNames(work);
         Model publications = repository.retrievePublicationsByWork(workId);
-        publications.listSubjects().forEachRemaining(publication -> {
-            updatePublicationInKoha(publication, personNames);
-        });
+
+        streamFrom(publications.listStatements())
+                .collect(groupingBy(Statement::getSubject))
+                .forEach((subject, statements) -> {
+                    Model publication = ModelFactory.createDefaultModel();
+                    publication.add(statements);
+                    updatePublicationInKoha(publication, personNames);
+                });
     }
 
-    private void updatePublicationInKoha(Resource publication, List<String> personNames) {
+    private void updatePublicationInKoha(Model publication, List<String> personNames) {
+        MarcRecord marcRecord = generateMarcRecordForPublication(publication, personNames);
+        kohaAdapter.updateRecord(publication.getProperty(null, recordIdProperty).getString(), marcRecord);
+    }
+
+    private MarcRecord generateMarcRecordForPublication(Model publication, List<String> personNames) {
         MarcRecord marcRecord = new MarcRecord();
+
         for (String personName : personNames) {
             MarcField creatorField = MarcRecord.newDataField(MarcConstants.FIELD_100);
             creatorField.addSubfield(MarcConstants.SUBFIELD_A, personName);
             marcRecord.addMarcField(creatorField);
         }
 
-        if (publication.getProperty(titleProperty) != null) {
+        if (publication.getProperty(null, titleProperty) != null) {
             MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-            titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(titleProperty).getObject().asLiteral().toString());
+            titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(null, titleProperty).getObject().asLiteral().toString());
             marcRecord.addMarcField(titleField);
         }
-
-        Property recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
-        kohaAdapter.updateRecord(publication.getProperty(recordIdProperty).getString(), marcRecord);
+        return marcRecord;
     }
 
     private List<String> getPersonNames(Model work) {
@@ -414,7 +393,6 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public Optional<String> retrieveBibliofilPerson(String personId) {
         return repository.getResourceURIByBibliofilId(personId);
-
     }
 
     @Override

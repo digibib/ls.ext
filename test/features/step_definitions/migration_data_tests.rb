@@ -36,28 +36,27 @@ Then(/^kan jeg velge å endre materialtypen til "(.*?)"$/) do |type|
 end
 
 
-When(/^jeg migrerer en utgivelse med tilknyttet verk som har forfatter$/) do
+When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter$/) do
   publication_name = generateRandomString
   ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://192.168.50.12:8005/ontology#Publication> .
               <publication> <http://192.168.50.12:8005/ontology#publicationOf> <#{@context[:identifier]}> .
               <publication> <http://192.168.50.12:8005/ontology#title> \"#{publication_name}\" ."
-  post_publication_ntriples ntriples
+  post_publication_ntriples publication_name, ntriples
 end
 
-When(/^jeg migrerer en utgivelse med tilknyttet verk som har forfatter og items$/) do
+When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter og items$/) do
   publication_name = generateRandomString
   ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://192.168.50.12:8005/ontology#Publication> .
               <publication> <http://192.168.50.12:8005/ontology#publicationOf> <#{@context[:identifier]}> .
               <publication> <http://192.168.50.12:8005/ontology#hasItem> <http://item> .
               <http://item> <http://192.168.50.12:8005/itemSubfieldCode/a> \"test\" .
               <publication> <http://192.168.50.12:8005/ontology#title> \"#{publication_name}\" ."
-  post_publication_ntriples ntriples
+  post_publication_ntriples publication_name, ntriples
 end
 
-def post_publication_ntriples(ntriples)
+def post_publication_ntriples(publication_name, ntriples)
   response = RestClient.post "http://192.168.50.12:8005/publication", ntriples, :content_type => 'application/n-triples'
-  record_id = JSON.parse(RestClient.get(response.headers[:location]))["deichman:recordID"]
-  @context[:record_id] = record_id
+  @context[:record_id] = JSON.parse(RestClient.get(response.headers[:location]))["deichman:recordID"]
   @context[:publication_title] = publication_name
 end
 
