@@ -56,6 +56,7 @@ end
 
 def post_publication_ntriples(publication_title, ntriples)
   response = RestClient.post "http://192.168.50.12:8005/publication", ntriples, :content_type => 'application/n-triples'
+  response.code.should == 201
   @context[:record_id] = JSON.parse(RestClient.get(response.headers[:location]))["deichman:recordID"]
   @context[:publication_title] = publication_title
 end
