@@ -1,7 +1,6 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.EntityService;
-import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.repository.RDFRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -78,13 +77,20 @@ public class SearchServiceImpl implements SearchService {
             .build();
 
 
-    private static final String PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY = format("PREFIX  : <%1$s> \n"
-            + "select distinct ?person ?personName ?birth ?death ?work ?workTitle ?workYear\n"
+    private static final String PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY = format(""
+            + "PREFIX  : <%1$s> \n"
+            + "PREFIX  rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n"
+            + "PREFIX  duo:<http://data.deichman.no/utility#>\n"
+            + "select distinct ?person ?personName ?birth ?death ?nationalityLabel ?work ?workTitle ?workYear\n"
             + "where {\n"
             + "    ?person a :Person ;\n"
             + "             :name ?personName .\n"
             + "    optional {?person :birth ?birth.}\n"
             + "    optional {?person :death ?death.}\n"
+            + "    optional {?person :nationality ?nationality. \n"
+            + "              ?nationality a duo:Nationality; \n"
+            + "                           rdfs:label ?nationalityLabel. "
+            + "    } \n"
             + "    optional {?work :creator ?person ;\n"
             + "                    :title ?workTitle .\n"
             + "              optional {?work :year ?workYear .}"
@@ -98,6 +104,7 @@ public class SearchServiceImpl implements SearchService {
             .mapFromResultVar("personName").toJsonPath("person.name")
             .mapFromResultVar("birth").toJsonPath("person.birth")
             .mapFromResultVar("death").toJsonPath("person.death")
+            .mapFromResultVar("nationalityLabel").toJsonPath("person.nationality")
             .mapFromResultVar("work").toJsonObjectArray("person.work").withObjectMember("uri")
             .mapFromResultVar("workTitle").toJsonObjectArray("person.work").withObjectMember("title")
             .mapFromResultVar("workYear").toJsonObjectArray("person.work").withObjectMember("year")
@@ -166,7 +173,7 @@ public class SearchServiceImpl implements SearchService {
                 doIndexWorkOnly(workId);
             }
         }
-        Model personWithWorksModel = entityService.retrieveById(EntityType.PERSON, personId).add(works);
+        Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(personId).add(works);
         indexModel(personModelToIndexMapper.modelToIndexDocument(personWithWorksModel), PERSON_INDEX_TYPE);
     }
 

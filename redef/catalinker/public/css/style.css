@@ -38,7 +38,8 @@ label       { font-family: monospace; text-align: right; display: inline-block; 
 .search-result:hover { background-color: #aaa;}
 .search-result-name { font-size: 100%;}
 .search-result { margin-bottom: 10px; z-index: 1000;}
-.search-result-info { font-size: 90%; padding-left: 2em;}
+.birth-and-death { font-size: 90%; padding-left: 2em;}
+.nationality { font-size: 90%; padding-left: 2em;}
 .search-result-work { font-size: 90%; padding-left: 2em;}
 .search-result-work-list { padding-left: 2em;}
 .search-result-more-info { font-size: 90%;}

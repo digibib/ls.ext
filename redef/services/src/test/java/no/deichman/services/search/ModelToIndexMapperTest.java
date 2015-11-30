@@ -16,10 +16,13 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
  */
 public class ModelToIndexMapperTest {
     public static final String QUERY = ""
-            + "select ?person ?name ?work ?workTitle ?workYear\n"
+            + "select ?person ?name ?nationalityLabel ?work ?workTitle ?workYear\n"
             + "where { \n"
             + "    ?person a <http://deichman.no/ontology#person> ; \n"
-            + "                 <http://deichman.no/name> ?name ; \n"
+            + "              <http://deichman.no/name> ?name ; \n"
+            + "              <http://deichman.no/nationality> ?nationality . \n"
+            + "     ?nationality a <http://data.deichman.no/utility#Nationality> ;\n"
+            + "                  <http://www.w3.org/2000/01/rdf-schema#label> ?nationalityLabel .\n"
             + "     optional {?work a <http://deichman.no/ontology#work> ;"
             + "                       <http://deichman.no/ontology#creator> ?person ;\n"
             + "                       <http://deichman.no/ontology#title> ?workTitle ; \n"
@@ -46,6 +49,26 @@ public class ModelToIndexMapperTest {
                 ResourceFactory.createPlainLiteral("personName_value")));
 
         model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createProperty("http://deichman.no/nationality"),
+                ResourceFactory.createResource("http://deichman.no/nationality#n")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman.no/nationality#n"),
+                ResourceFactory.createProperty("http://deichman.no/nationality"),
+                ResourceFactory.createResource("http://deichman.no/nationality#n")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman.no/nationality#n"),
+                RDF.type,
+                ResourceFactory.createResource("http://data.deichman.no/utility#Nationality")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman.no/nationality#n"),
+                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
+                ResourceFactory.createLangLiteral("Norsk", "no")));
+
+                model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman.no/person_2"),
                 ResourceFactory.createProperty("http://deichman.no/a_prop"),
                 ResourceFactory.createPlainLiteral("a_prop_value_2")));
@@ -94,6 +117,7 @@ public class ModelToIndexMapperTest {
                 .selectQuery(QUERY)
                 .mapFromResultVar("person").toJsonPath("person.uri")
                 .mapFromResultVar("name").toJsonPath("person.name")
+                .mapFromResultVar("nationalityLabel").toJsonPath("person.nationality")
                 .mapFromResultVar("work").toJsonObjectArray("person.work").withObjectMember("uri")
                 .mapFromResultVar("workTitle").toJsonObjectArray("person.work").withObjectMember("title")
                 .mapFromResultVar("workYear").toJsonObjectArray("person.work").withObjectMember("year")
@@ -110,6 +134,7 @@ public class ModelToIndexMapperTest {
                 + "  \"person\": {"
                 + "      \"uri\": \"http://deichman.no/person_1\","
                 + "      \"name\": \"personName_value\","
+                + "      \"nationality\": \"Norsk\","
                 + "      \"work\": ["
                 + "           {"
                 + "               \"uri\": \"http://deichman.no/work_1\","

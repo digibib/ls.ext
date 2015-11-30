@@ -53,6 +53,10 @@
         "type": "string",
         "index": "no"
       },
+      "nationality": {
+        "type": "string",
+        "index": "no"
+      },
       "work": {
         "type": "nested",
         "properties": {

@@ -507,5 +507,9 @@ When(/^jeg venter litt.*$/) do
 end
 
 When(/^viser trefflisten at personen har et verk fra før$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.spans(:text => @context[:person_name]).length > 0 }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class=> "search-result-name", :text => @context[:person_name]).should exist}
+end
+
+When(/^trefflisten viser at personen har riktig nasjonalitet$/) do
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text =>@context[:person_nationality]).should exist}
 end
