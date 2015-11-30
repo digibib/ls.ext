@@ -21,7 +21,9 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
@@ -29,6 +31,7 @@ import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.ws.rs.BadRequestException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -60,18 +63,32 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityServiceImplTest {
 
-    private static final String A_BIBLIO_ID = "234567";
     public static final String SOME_BARCODE = "0123456789";
+    private static final String A_BIBLIO_ID = "234567";
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     private EntityServiceImpl service;
     private InMemoryRepository repository;
     private String ontologyURI;
     private String workURI;
     private String publicationURI;
     private String personURI;
-
-
     @Mock
     private KohaAdapter mockKohaAdapter;
+
+    static Model modelForBiblio() { // TODO return much simpler model
+        Model model = ModelFactory.createDefaultModel();
+        Model m = ModelFactory.createDefaultModel();
+        InputStream in = EntityServiceImplTest.class.getClassLoader().getResourceAsStream("marc.xml");
+        MarcReader reader = new MarcXmlReader(in);
+        Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
+        while (reader.hasNext()) {
+            Record record = reader.next();
+            m.add(marcRdf.mapItemsToModel(record.getVariableFields(MarcConstants.FIELD_952)));
+        }
+        model.add(m);
+        return model;
+    }
 
     @Before
     public void setup() {
@@ -140,20 +157,6 @@ public class EntityServiceImplTest {
                         )
                 )
         );
-    }
-
-    static Model modelForBiblio() { // TODO return much simpler model
-        Model model = ModelFactory.createDefaultModel();
-        Model m = ModelFactory.createDefaultModel();
-        InputStream in = EntityServiceImplTest.class.getClassLoader().getResourceAsStream("marc.xml");
-        MarcReader reader = new MarcXmlReader(in);
-        Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
-        while (reader.hasNext()) {
-            Record record = reader.next();
-            m.add(marcRdf.mapItemsToModel(record.getVariableFields(MarcConstants.FIELD_952)));
-        }
-        model.add(m);
-        return model;
     }
 
     @Test
@@ -484,6 +487,7 @@ public class EntityServiceImplTest {
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/y> \"L\" .";
     }
 
+
     @Test
     public void test_generate_marc_record_in_publication_without_work_patch() throws PatchParserException {
         String originalPublicationTitle = "Sult";
@@ -507,6 +511,20 @@ public class EntityServiceImplTest {
     }
 
     @Test
+    public void should_throw_exception_if_posting_publication_with_nonexistant_work() {
+        thrown.expect(BadRequestException.class);
+        thrown.expectMessage("Associated work does not exist.");
+        String publicationTitle = "Sult";
+        String publicationTriples = ""
+                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<publication> <" + ontologyURI + "title> \"" + publicationTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
+
+        Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", "invalid"), Lang.NTRIPLES);
+        service.create(PUBLICATION, inputPublication);
+    }
+
+    @Test
     public void test_generate_marc_record_in_publication_patch() throws PatchParserException {
         String originalCreator = "Knut Hamsun";
         String newCreator = "Ellisiv Lindkvist";
@@ -515,7 +533,8 @@ public class EntityServiceImplTest {
         String originalPublicationTitle = "Sult";
         String newPublicationTitle = "Torst";
 
-        when(mockKohaAdapter.getNewBiblioWithMarcRecord(getMarcRecord(originalPublicationTitle, originalCreator))).thenReturn(A_BIBLIO_ID);
+        MarcRecord marcRecord = getMarcRecord(originalPublicationTitle, originalCreator);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(marcRecord)).thenReturn(A_BIBLIO_ID);
 
         String workTriples = ""
                 + "<work> <" + ontologyURI + "title> \"" + originalWorkTitle + "\" .\n"
@@ -537,6 +556,7 @@ public class EntityServiceImplTest {
 
         Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workUri), Lang.NTRIPLES);
         String publicationUri = service.create(PUBLICATION, inputPublication);
+        verify(mockKohaAdapter).getNewBiblioWithMarcRecord(marcRecord);
 
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
         service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "title", originalPublicationTitle, newPublicationTitle));
@@ -549,8 +569,6 @@ public class EntityServiceImplTest {
         service.patch(EntityType.WORK, workId, getPatch(workUri, "title", originalWorkTitle, newWorkTitle));
         verify(mockKohaAdapter, times(2)).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator)); // Need times(2) because publication has not changed.
 
-        String personPatch = "[{\"op\":\"del\",\"s\":\"__PERSONURI__\",\"p\":\"" + ontologyURI + "name\",\"o\":{\"value\":\"" + originalCreator + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
-                + "{\"op\":\"add\",\"s\":\"__PERSONURI__\",\"p\":\"" + ontologyURI + "name\",\"o\":{\"value\":\"" + newCreator + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}}]";
         String personId = personUri.substring(personUri.lastIndexOf("/") + 1);
         service.patch(EntityType.PERSON, personId, getPatch(personUri, "name", originalCreator, newCreator));
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator));

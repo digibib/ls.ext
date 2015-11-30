@@ -26,6 +26,21 @@ public final class KohaSvcMock {
     @Rule
     private final ClientDriverRule clientDriver = new ClientDriverRule(clientdriverPort);
 
+    public static String itemMarc(final String barcode) {
+        return "<marcxml:datafield tag=\"" + MarcConstants.FIELD_952 + "\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">hutl</marcxml:subfield>"
+                + "<marcxml:subfield code=\"b\">hutl</marcxml:subfield>"
+                + "<marcxml:subfield code=\"c\">m</marcxml:subfield>"
+                + "<marcxml:subfield code=\"l\">3</marcxml:subfield>"
+                + "<marcxml:subfield code=\"m\">1</marcxml:subfield>"
+                + "<marcxml:subfield code=\"o\">952 Cri</marcxml:subfield>"
+                + "<marcxml:subfield code=\"p\">" + barcode + "</marcxml:subfield>"
+                + "<marcxml:subfield code=\"q\">2014-11-05</marcxml:subfield>"
+                + "<marcxml:subfield code=\"t\">1</marcxml:subfield>"
+                + "<marcxml:subfield code=\"y\">L</marcxml:subfield>"
+                + "</marcxml:datafield>";
+    }
+
     public int getPort() {
         return clientdriverPort;
     }
@@ -176,18 +191,14 @@ public final class KohaSvcMock {
                         .withStatus(OK.getStatusCode()));
     }
 
-    public static String itemMarc(final String barcode) {
-        return "<marcxml:datafield tag=\""+ MarcConstants.FIELD_952+"\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">hutl</marcxml:subfield>"
-                + "<marcxml:subfield code=\"b\">hutl</marcxml:subfield>"
-                + "<marcxml:subfield code=\"c\">m</marcxml:subfield>"
-                + "<marcxml:subfield code=\"l\">3</marcxml:subfield>"
-                + "<marcxml:subfield code=\"m\">1</marcxml:subfield>"
-                + "<marcxml:subfield code=\"o\">952 Cri</marcxml:subfield>"
-                + "<marcxml:subfield code=\"p\">" + barcode + "</marcxml:subfield>"
-                + "<marcxml:subfield code=\"q\">2014-11-05</marcxml:subfield>"
-                + "<marcxml:subfield code=\"t\">1</marcxml:subfield>"
-                + "<marcxml:subfield code=\"y\">L</marcxml:subfield>"
-                + "</marcxml:datafield>";
+    public void newBiblioFromMarcXmlExpectation(String biblioId, String expectedPayload) {
+        String responseXml = "<response><biblionumber>" + biblioId + "</biblionumber></response>"; //Bare minimum response
+        clientDriver.addExpectation(
+                onRequestTo("/cgi-bin/koha/svc/new_bib")
+                        .withMethod(POST)
+                        .withBody(expectedPayload, MediaType.TEXT_XML)
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
+                        .withStatus(OK.getStatusCode()));
     }
 }

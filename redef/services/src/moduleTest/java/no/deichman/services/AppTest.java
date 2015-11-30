@@ -46,16 +46,15 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class AppTest {
+    public static final int ONE_SECOND = 1000;
+    public static final int TEN_TIMES = 10;
     private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
-
     private static final boolean USE_IN_MEMORY_REPO = true;
     private static final String LOCALHOST = "http://127.0.0.1";
     private static final String FIRST_BIBLIO_ID = "111111";
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private static final String ANOTHER_BIBLIO_ID = "333333";
-    public static final int ONE_SECOND = 1000;
-    public static final int TEN_TIMES = 10;
     private static String baseUri;
     private static App app;
 
@@ -86,6 +85,63 @@ public class AppTest {
     public static void tearDown() throws Exception {
         app.stop();
         embeddedElasticsearchServer.shutdown();
+    }
+
+    private static JsonObjectBuilder buildPatchStatement(String op, String s, String p, String o, String type) {
+        return Json.createObjectBuilder()
+                .add("op", op).add("s", s).add("p", p).add("o", Json.createObjectBuilder().add("value", o).add("type", type));
+    }
+
+    private static JsonArray buildLDPatch(JsonObjectBuilder... patchStatements) {
+        JsonArrayBuilder patchBuilder = Json.createArrayBuilder();
+        for (JsonObjectBuilder patchStatement : patchStatements) {
+            patchBuilder.add(patchStatement);
+        }
+        return patchBuilder.build();
+    }
+
+    private static String getLocation(HttpResponse<?> response) {
+        String str = response.getHeaders().getFirst("Location");
+        return str;
+    }
+
+    private static RequestBodyEntity buildPatchRequest(String uri, JsonArray patch) {
+        return Unirest
+                .patch(uri)
+                .header("Accept", "application/ld+json")
+                .header("Content-Type", "application/ldpatch+json")
+                .body(new JsonNode(patch.toString()));
+    }
+
+    private static void assertIsUri(String uri) {
+        assertTrue("Not a URI: " + uri, uri.matches("(?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s]*)"));
+    }
+
+    private static void assertResponse(Status status, HttpResponse<?> response) {
+        assertThat("Unexpected response: " + response.getBody(),
+                Status.fromStatusCode(response.getStatus()),
+                equalTo(status)
+        );
+    }
+
+    private static RequestBodyEntity buildEmptyCreateRequest(String uri) {
+        return buildCreateRequest(uri, "{}");
+    }
+
+    private static RequestBodyEntity buildCreateRequestNtriples(String uri, String body) {
+        return Unirest
+                .post(uri)
+                .header("Accept", "application/n-triples")
+                .header("Content-Type", "application/n-triples")
+                .body(body);
+    }
+
+    private static RequestBodyEntity buildCreateRequest(String uri, String body) {
+        return Unirest
+                .post(uri)
+                .header("Accept", "application/ld+json")
+                .header("Content-Type", "application/ld+json")
+                .body(body);
     }
 
     @Test
@@ -439,59 +495,49 @@ public class AppTest {
                 .header("Accept", "application/ld+json");
     }
 
-    private static JsonObjectBuilder buildPatchStatement(String op, String s, String p, String o, String type) {
-        return Json.createObjectBuilder()
-                .add("op", op).add("s", s).add("p", p).add("o", Json.createObjectBuilder().add("value", o).add("type", type));
-    }
-
-    private static JsonArray buildLDPatch(JsonObjectBuilder... patchStatements) {
-        JsonArrayBuilder patchBuilder = Json.createArrayBuilder();
-        for (JsonObjectBuilder patchStatement : patchStatements) {
-            patchBuilder.add(patchStatement);
-        }
-        return patchBuilder.build();
-    }
-
-    private static String getLocation(HttpResponse<?> response) {
-        String str = response.getHeaders().getFirst("Location");
-        return str;
-    }
-
-    private static RequestBodyEntity buildPatchRequest(String uri, JsonArray patch) {
-        return Unirest
-                .patch(uri)
-                .header("Accept", "application/ld+json")
-                .header("Content-Type", "application/ldpatch+json")
-                .body(new JsonNode(patch.toString()));
-    }
-
-    private static void assertIsUri(String uri) {
-        assertTrue("Not a URI: " + uri, uri.matches("(?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s]*)"));
-    }
-
-    private static void assertResponse(Status status, HttpResponse<?> response) {
-        assertThat("Unexpected response: " + response.getBody(),
-                Status.fromStatusCode(response.getStatus()),
-                equalTo(status)
-        );
-    }
-
-    private static RequestBodyEntity buildEmptyCreateRequest(String uri) {
-        return buildCreateRequest(uri, "{}");
-    }
-
-    private static RequestBodyEntity buildCreateRequest(String uri, String body) {
-        return Unirest
-                .post(uri)
-                .header("Accept", "application/ld+json")
-                .header("Content-Type", "application/ld+json")
-                .body(body);
-    }
-
     protected Client getClient() {
         return embeddedElasticsearchServer.getClient();
     }
 
+    @Test
+    public void correct_marc_xml_gets_sent_to_koha_on_post_publication() throws UnirestException {
+        String creator = "Knut Hamsun";
+        String workTitle = "Hunger";
+        String publicationTitle = "Sult";
+        String ontologyURI = baseUri + "ontology#";
+
+        kohaSvcMock.addLoginExpectation();
+        // TODO MARC XML can end up in any order, need a better comparison method for expected MARC XML
+        String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
+                + "<marcxml:record><marcxml:leader>00000    a2200000       </marcxml:leader>"
+                + "<marcxml:datafield tag=\"100\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">" + creator + "</marcxml:subfield></marcxml:datafield>"
+                + "<marcxml:datafield tag=\"245\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">" + publicationTitle + "</marcxml:subfield></marcxml:datafield>"
+                + "</marcxml:record></marcxml:collection>\n";
+        kohaSvcMock.newBiblioFromMarcXmlExpectation(FIRST_BIBLIO_ID, expectedPayload);
+
+        String personTriples = ""
+                + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
+                + "<person> <" + ontologyURI + "name> \"" + creator + "\" .";
+        HttpResponse<JsonNode> createPersonResponse = buildCreateRequestNtriples(baseUri + "person", personTriples).asJson();
+        String personUri = getLocation(createPersonResponse);
+
+        String workTriples = ""
+                + "<work> <" + ontologyURI + "title> \"" + workTitle + "\" .\n"
+                + "<work> <" + ontologyURI + "year> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<work> <" + ontologyURI + "creator> <__CREATORURI__> .\n";
+        HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(baseUri + "work", workTriples.replace("__CREATORURI__", personUri)).asJson();
+        String workUri = getLocation(createworkResponse);
+
+        String publicationTriples = ""
+                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<publication> <" + ontologyURI + "title> \"" + publicationTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
+        HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
+        String publicationUri = getLocation(createpublicationResponse);
+    }
 
     @Test
     public void should_return_marc_xml_for_existing_biblio_id() throws UnirestException, IOException {
