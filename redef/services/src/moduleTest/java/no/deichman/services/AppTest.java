@@ -506,17 +506,8 @@ public class AppTest {
         String publicationTitle = "Sult";
         String ontologyURI = baseUri + "ontology#";
 
+        setupExpectationForMarcXmlSentToKoha(creator, publicationTitle);
         kohaSvcMock.addLoginExpectation();
-        // TODO MARC XML can end up in any order, need a better comparison method for expected MARC XML
-        String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
-                + "<marcxml:record><marcxml:leader>00000    a2200000       </marcxml:leader>"
-                + "<marcxml:datafield tag=\"100\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">" + creator + "</marcxml:subfield></marcxml:datafield>"
-                + "<marcxml:datafield tag=\"245\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">" + publicationTitle + "</marcxml:subfield></marcxml:datafield>"
-                + "</marcxml:record></marcxml:collection>\n";
-        kohaSvcMock.newBiblioFromMarcXmlExpectation(FIRST_BIBLIO_ID, expectedPayload);
 
         String personTriples = ""
                 + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
@@ -535,8 +526,22 @@ public class AppTest {
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
                 + "<publication> <" + ontologyURI + "title> \"" + publicationTitle + "\" .\n"
                 + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
+
         HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
-        String publicationUri = getLocation(createpublicationResponse);
+        assertNotNull(getLocation(createpublicationResponse));
+    }
+
+    private void setupExpectationForMarcXmlSentToKoha(String creator, String publicationTitle) {
+        // TODO MARC XML can end up in any order, need a better comparison method for expected MARC XML
+        String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
+                + "<marcxml:record><marcxml:leader>00000    a2200000       </marcxml:leader>"
+                + "<marcxml:datafield tag=\"100\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">" + creator + "</marcxml:subfield></marcxml:datafield>"
+                + "<marcxml:datafield tag=\"245\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">" + publicationTitle + "</marcxml:subfield></marcxml:datafield>"
+                + "</marcxml:record></marcxml:collection>\n";
+        kohaSvcMock.newBiblioFromMarcXmlExpectation(FIRST_BIBLIO_ID, expectedPayload);
     }
 
     @Test
