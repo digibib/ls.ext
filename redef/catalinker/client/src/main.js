@@ -300,24 +300,29 @@
             }
             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
             var patch = Ontology.createPatch(ractive.get("resource_uri"), predicate, event.context, ractive.get(datatype));
-            axios.patch(ractive.get("resource_uri"), patch, { headers: { Accept: "application/ld+json", "Content-Type": "application/ldpatch+json"} })
-            .then(function (response) {
-              // successfully patched resource
+            if (patch.trim() != "") {
+              axios.patch(ractive.get("resource_uri"), patch, {
+                    headers: {
+                      Accept: "application/ld+json",
+                      "Content-Type": "application/ldpatch+json"
+                    }
+                  })
+                  .then(function (response) {
+                    // successfully patched resource
 
-              // keep the value in current.old - so we can do create delete triple patches later
-              var cur = ractive.get(event.keypath + ".current");
-              ractive.set(event.keypath + ".old.value", cur.value);
-              ractive.set(event.keypath + ".old.lang", cur.lang);
+                    // keep the value in current.old - so we can do create delete triple patches later
+                    var cur = ractive.get(event.keypath + ".current");
+                    ractive.set(event.keypath + ".old.value", cur.value);
+                    ractive.set(event.keypath + ".old.lang", cur.lang);
 
-              ractive.set("save_status", "alle endringer er lagret");
-            })
-            .catch(function (response) {
-              // failed to patch resource
-              console.log("HTTP PATCH failed with: ");
-              console.log(response);
-
-              errors.push("Noe gikk galt! Fikk ikke lagret endringene");
-            });
+                    ractive.set("save_status", "alle endringer er lagret");
+                  })
+                  .catch(function (response) {
+                    // failed to patch resource
+                    console.log("HTTP PATCH failed with: ");
+                    errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+                  });
+            }
           },
           searchResource: function (event, predicate, searchString) {
             // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
