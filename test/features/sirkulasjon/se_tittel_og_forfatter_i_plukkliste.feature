@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@check-for-errors
 Egenskap: Se tittel og forfatter i plukkliste
   Som bibliotekar
   For at jeg skal kunne vite hvilke bøker jeg skal hente
