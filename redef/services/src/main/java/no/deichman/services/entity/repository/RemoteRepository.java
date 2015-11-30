@@ -15,17 +15,17 @@ import org.slf4j.LoggerFactory;
 public final class RemoteRepository extends RDFRepositoryBase {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteRepository.class);
 
-    private static final String FUSEKI_PORT = System.getProperty("FUSEKI_PORT", "http://192.168.50.12:3030");
-    private final String fusekiPort;
+    private static final String TRIPLESTORE_PORT = System.getProperty("TRIPLESTORE_PORT", "http://192.168.50.12:3030");
+    private final String triplestorePort;
 
-    RemoteRepository(String fusekiPort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
+    RemoteRepository(String triplestorePort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
         super(baseURI, sparqlQueryBuilder, uriGenerator);
-        this.fusekiPort = fusekiPort;
-        LOG.info("Repository started with FUSEKI_PORT: " + this.fusekiPort);
+        this.triplestorePort = triplestorePort;
+        LOG.info("Repository started with TRIPLESTORE_PORT: " + this.triplestorePort);
     }
 
     public RemoteRepository() {
-        this(FUSEKI_PORT,
+        this(TRIPLESTORE_PORT,
                 new UniqueURIGenerator(BaseURI.remote()),
                 new SPARQLQueryBuilder(BaseURI.remote()),
                 BaseURI.remote());
@@ -33,11 +33,11 @@ public final class RemoteRepository extends RDFRepositoryBase {
 
     @Override
     protected QueryExecution getQueryExecution(Query query) {
-        return QueryExecutionFactory.sparqlService(fusekiPort + "/ds/sparql", query);
+        return QueryExecutionFactory.sparqlService(triplestorePort + "/ds/sparql", query);
     }
 
     @Override
     protected void executeUpdate(UpdateRequest updateRequest) {
-        UpdateExecutionFactory.createRemote(updateRequest, fusekiPort + "/ds/update").execute();
+        UpdateExecutionFactory.createRemote(updateRequest, triplestorePort + "/ds/update").execute();
     }
 }

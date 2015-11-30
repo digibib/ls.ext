@@ -26,11 +26,11 @@ build: build-onejar
 	sudo docker build --tag $(IMAGE) /vagrant/redef/services
 
 
-KOHA_URL      ?= http://192.168.50.12:8081
-KOHA_USER     ?= admin
-KOHA_PASSWORD ?= secret
-FUSEKI_URL    ?= http://192.168.50.12:3030
-DATA_BASEURI  ?= http://192.168.50.12:8005
+KOHA_URL          ?= http://192.168.50.12:8081
+KOHA_USER         ?= admin
+KOHA_PASSWORD     ?= secret
+TRIPLESTORE_PORT  ?= http://192.168.50.12:3030
+DATA_BASEURI      ?= http://192.168.50.12:8005
 ELASTICSEARCH_URL ?= http://192.168.50.12:9200
 
 run-alternative: build rm
@@ -38,7 +38,7 @@ run-alternative: build rm
 		-e KOHA_URL=$(KOHA_URL) \
 		-e KOHA_USER=$(KOHA_USER) \
 		-e KOHA_PASSWORD=$(KOHA_PASSWORD) \
-		-e FUSEKI_URL=$(FUSEKI_URL) \
+		-e TRIPLESTORE_PORT=$(TRIPLESTORE_PORT) \
 		-e DATA_BASEURI=$(DATA_BASEURI) \
 		-e ELASTICSEARCH_URL=$(ELASTICSEARCH_URL) \
 		--name $(CONTAINER) $(IMAGE)
