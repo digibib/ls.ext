@@ -155,7 +155,6 @@ Given(/^at det finnes et verk med person og en utgivelse$/) do
     Og jeg legger til forfatter av det nye verket
     Og jeg registrerer inn opplysninger om utgivelsen
     Og jeg knytter utgivelsen til verket
-    Og grensesnittet viser at endringene er lagret
   }
 end
 
@@ -165,7 +164,6 @@ Given(/^at det finnes et verk med person$/) do
     Og at jeg er i katalogiseringsgrensesnittet
     Og at systemet har returnert en ny ID for det nye verket
     Og jeg legger til forfatter av det nye verket
-    Og grensesnittet viser at endringene er lagret
   }
 end
 
@@ -229,7 +227,8 @@ When(/^jeg vil legge til et nytt verk$/) do
 end
 
 When(/^jeg forsøker å registrere ett nytt verk$/) do
-  step "jeg kan legge til tittel for det nye verket"
+  @context[:work_title] = generateRandomString
+  @site.RegWork.add_prop_expect_error("http://192.168.50.12:8005/ontology#title", @context[:work_title])
 end
 
 When(/^jeg velger språk for tittelen$/) do
@@ -286,7 +285,7 @@ end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
   @context[:year] = arg1
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+  @site.RegWork.add_prop_expect_error("http://192.168.50.12:8005/ontology#year", @context[:year])
 end
 
 When(/^jeg legger til et eksemplar av utgivelsen$/) do

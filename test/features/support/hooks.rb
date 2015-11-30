@@ -47,6 +47,7 @@ After do |scenario| # The final hook
 end
 
 AfterStep('@check-for-errors') do |scenario|
+  sleep 0.1
   if @browser.div(:id => "errors").exist?
     unless @browser.div(:id => "errors").ps.length == 0
       fail("The errors <div> contained one or more error <p>'s'")
