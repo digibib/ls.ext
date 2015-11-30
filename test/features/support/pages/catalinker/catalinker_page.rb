@@ -19,17 +19,17 @@ class CatalinkerPage < PageRoot
     self
   end
 
-  def add_prop_expect_error(predicate, value, nr=0)
+  def add_prop_skip_wait(predicate, value, nr=0)
     return add_prop predicate, value, nr, true
   end
 
-  def add_prop(predicate, value, nr=0, expect_error=false)
+  def add_prop(predicate, value, nr=0, skip_wait=false)
     input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
     input.set('')
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value == '' }
     input.set(value)
     input.fire_event :blur
-    unless expect_error
+    unless skip_wait
       retry_wait do
         Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === 'alle endringer er lagret' }
       end
