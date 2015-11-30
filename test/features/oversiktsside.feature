@@ -15,7 +15,7 @@ Egenskap: Oversiktsside
       | Catalinker    |
       | PatronClient  |
       | Services      |
-      | Fuseki        |
+      | Triplestore   |
       | Kibana        |
       | Graphite      |
       | DockerUI      |
