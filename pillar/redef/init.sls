@@ -2,7 +2,7 @@ redef:
   koha:
     port_intra: 8082
     port_opac: 8080
-  fuseki:
+  triplestore:
     binding: 0.0.0.0
     port: 3030
   services:

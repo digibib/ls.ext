@@ -1,7 +1,7 @@
 redef:
   koha:
     host: 192.168.50.12
-  fuseki:
+  triplestore:
     host: 192.168.50.12
   catalinker:
     host: 192.168.50.12

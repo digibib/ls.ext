@@ -35,7 +35,7 @@ overview:
     examples:
       - /work/w1029812245
       - /publication/p2135235089
-  fuseki:
+  triplestore:
     description: RDF-endpoint
     examples: ''
   elasticsearch:

@@ -213,14 +213,14 @@
     </div>
     <div class="row">
       <div class="col span_1_of_5">
-        <a href="http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port']|string }}">Fuseki</a>
+        <a href="http://{{ pillar['redef']['triplestore']['host'] }}:{{ pillar['redef']['triplestore']['port']|string }}">Triplestore</a>
       </div>
       <div class="col span_2_of_5">
-        {{ salt['pillar.get']('overview:fuseki:description', '') }}
+        {{ salt['pillar.get']('overview:triplestore:description', '') }}
       </div>
       <div class="col span_2_of_5">
-        {% for ex in salt['pillar.get']('overview:fuseki:examples', {}.iteritems()) %}
-          <a href="http://{{ pillar['redef']['fuseki']['host'] }}:{{ pillar['redef']['fuseki']['port']|string }}{{ex}}">{{ex}}</a>
+        {% for ex in salt['pillar.get']('overview:triplestore:examples', {}.iteritems()) %}
+          <a href="http://{{ pillar['redef']['triplestore']['host'] }}:{{ pillar['redef']['triplestore']['port']|string }}{{ex}}">{{ex}}</a>
         {% endfor %}
       </div>
     </div>

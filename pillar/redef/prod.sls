@@ -1,7 +1,7 @@
 redef:
   koha:
     host: 10.172.2.160
-  fuseki:
+  triplestore:
     host: 10.172.2.160
   catalinker:
     host: 10.172.2.160

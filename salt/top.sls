@@ -48,7 +48,7 @@ base:
 
   'wombat,vm-ship':
     - match: list
-    - redef.fuseki
+    - redef.triplestore
     - redef.elasticsearch
     - redef.services.pulledrun
     - redef.catalinker.pulledrun
@@ -60,7 +60,7 @@ base:
 
   'build-ship':
     - match: list
-    - redef.fuseki
+    - redef.triplestore
     - redef.elasticsearch
     - redef.services.builtrun
     - redef.catalinker.builtrun
@@ -69,7 +69,7 @@ base:
 
   'dev-ship':
     - match: list
-    - redef.fuseki
+    - redef.triplestore
     - redef.elasticsearch
     - redef.services.builtrun
     - redef.catalinker.builtrun

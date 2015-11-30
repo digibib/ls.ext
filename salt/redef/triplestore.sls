@@ -8,7 +8,7 @@
 {% set container = 'fuseki_container' %}
 {% set ports = ["3030/tcp"] %}
 {% set environment = {} %}
-{% set port_bindings = {'3030/tcp': { 'HostIp': pillar['redef']['fuseki']['binding'], 'HostPort': pillar['redef']['fuseki']['port'] } } %}
+{% set port_bindings = {'3030/tcp': { 'HostIp': pillar['redef']['triplestore']['binding'], 'HostPort': pillar['redef']['triplestore']['port'] } } %}
 {% set data_volume = { 'container': 'fuseki_data', 'image': 'busybox', 'tag': 'latest', 'volumes': ['/data'] } %}
 
 {% include 'docker-run.sls-fragment' %}

@@ -10,7 +10,7 @@
 {% set environment = { 'KOHA_PORT': "http://{0}:{1}".format(pillar['redef']['koha']['host'], pillar['redef']['koha']['port_intra']),
                        'KOHA_USER': pillar['koha']['adminuser'],
                        'KOHA_PASSWORD': pillar['koha']['adminpass'],
-                       'FUSEKI_PORT': "http://{0}:{1}".format(pillar['redef']['fuseki']['host'], pillar['redef']['fuseki']['port']),
+                       'FUSEKI_PORT': "http://{0}:{1}".format(pillar['redef']['triplestore']['host'], pillar['redef']['triplestore']['port']),
                        'DATA_BASEURI': pillar['redef']['services']['baseuri'],
                        'ELASTICSEARCH_URL' : "http://{0}:{1}".format(pillar['redef']['elasticsearch']['host'], pillar['redef']['elasticsearch']['http']['port']) } %}
 {% set port_bindings = {'8005/tcp': { 'HostIp': pillar['redef']['services']['binding'], 'HostPort': pillar['redef']['services']['port'] },
