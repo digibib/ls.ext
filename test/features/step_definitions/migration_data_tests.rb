@@ -76,7 +76,7 @@ When(/^jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen$/) do
 end
 
 When(/^jeg sørger for at utgivelsen er synkronisert i Koha$/) do
-  unless @context[:publication_identifier]
+  if @context[:publication_identifier].to_s.empty?
     fail
   end
   response = RestClient.put "#{@context[:publication_identifier]}/sync", {}
