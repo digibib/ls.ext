@@ -31,3 +31,17 @@ World(Paths)
 def generateRandomString ()
   return SecureRandom.hex(4)
 end
+
+def retry_wait
+	tries = 3
+	begin
+	  yield
+	rescue Watir::Wait::TimeoutError
+	  STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
+	  if (tries == 0)
+	    fail
+	  else
+	    retry
+	  end
+	end
+end

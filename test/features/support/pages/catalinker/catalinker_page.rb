@@ -37,20 +37,6 @@ class CatalinkerPage < PageRoot
     self
   end
 
-  def retry_wait
-    tries = 3
-    begin
-      yield
-    rescue Watir::Wait::TimeoutError
-      STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
-      if (tries == 0)
-        fail
-      else
-        retry
-      end
-    end
-  end
-
   def search_resource(predicate, value, nr=0)
     input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
     input.set(value)
