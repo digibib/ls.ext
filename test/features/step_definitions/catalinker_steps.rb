@@ -513,3 +513,8 @@ end
 When(/^trefflisten viser at personen har riktig nasjonalitet$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text =>@context[:person_nationality]).should exist}
 end
+
+When(/^trefflisten viser at personen har riktig levetid$/) do
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "birthYear", :text =>@context[:person_birth_year]).should exist}
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text =>@context[:person_death_year]).should exist}
+end

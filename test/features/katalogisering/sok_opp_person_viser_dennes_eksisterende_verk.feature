@@ -23,3 +23,4 @@ Egenskap: Søk opp person og se at denne har andre verk fra før
     Og jeg søker på navn til opphavsperson for det nye verket
     Så viser trefflisten at personen har et verk fra før
     Og trefflisten viser at personen har riktig nasjonalitet
+    Og trefflisten viser at personen har riktig levetid

@@ -133,7 +133,8 @@ describe("Catalinker", function () {
         testRactive.set("search_result", {results: JSON.parse(res)}).then(function () {
           expect(document.querySelectorAll(".search-result").length).to.equal(2);
           expect(document.querySelectorAll(".search-result-name")[0].innerHTML).to.equal("Test Monkey");
-          expect(document.querySelectorAll(".birth-and-death")[0].innerHTML).to.equal("(1944-1988)");
+          expect(document.querySelectorAll(".birthYear")[0].innerHTML).to.equal("1944");
+          expect(document.querySelectorAll(".deathYear")[0].innerHTML).to.equal("1988");
           expect(document.querySelectorAll(".nationality")[0].innerHTML).to.equal("Norsk");
           done();
         }).catch(done);
