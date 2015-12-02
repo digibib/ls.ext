@@ -3,7 +3,7 @@ base:
     - common
     - common.docker
     - common.docker-params
-    - dockerui
+    #- dockerui
     - resource_monitoring.collector
 
   '^(\w+-ship|vm-devops)$':
