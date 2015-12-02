@@ -75,7 +75,8 @@ public final class App {
         handlers.addHandler(new HandlerWrapper(){
             @Override
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-                Monitor monitor = MonitorFactory.start("no.deichman.services  " + request.getMethod() + "   " + request.getRequestURI().replaceAll("(w|p|h)[0-9]+$", "$1*******"));
+                Monitor monitor = MonitorFactory.start(
+                        "no.deichman.services  " + request.getMethod() + "   " + request.getRequestURI().replaceAll("(w|p|h)[0-9]+(/[a-zA-Z])*$", "$1*******"));
                 super.handle(target, baseRequest, request, response);
                 monitor.stop();
             }
