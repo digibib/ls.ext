@@ -108,8 +108,8 @@ dependencies {
     testCompile group: 'uk.co.datumedge', name: 'hamcrest-json', version: '0.2'
 
     moduleTestCompile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.7'
-    moduleTestCompile group: 'org.elasticsearch', name: 'elasticsearch', version: '2.0.0-beta2', classifier: 'tests'
-    moduleTestCompile group: 'org.elasticsearch', name: 'elasticsearch', version: '2.0.0-beta2'
+    moduleTestCompile group: 'org.elasticsearch', name: 'elasticsearch', version: '2.1.0', classifier: 'tests'
+    moduleTestCompile group: 'org.elasticsearch', name: 'elasticsearch', version: '2.1.0'
 }
 
 task oneJar(type: OneJar) {

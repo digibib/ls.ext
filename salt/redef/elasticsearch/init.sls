@@ -1,5 +1,5 @@
 {% set image = 'elasticsearch' %}
-{% set tag = '2.0.0-beta2' %}
+{% set tag = '2.1.0' %}
 {% set force_pull = false %}
 
 {% include 'docker-pull.sls-fragment' %}
