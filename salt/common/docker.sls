@@ -33,7 +33,7 @@ docker_repo:
 
 docker-engine:
   pkg.installed:
-    - version: "1.8.2-0~trusty"
+    - version: "1.9.1-0~trusty"
     - require:
       - pkg: docker-dependencies
 
