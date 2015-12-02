@@ -1,10 +1,14 @@
 package no.deichman.services.entity.repository;
 
 import no.deichman.services.uridefaults.BaseURI;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.SystemDefaultHttpClient;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.riot.WebContent;
+import org.apache.jena.riot.web.HttpOp;
+import org.apache.jena.sparql.modify.UpdateProcessRemote;
 import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class RemoteRepository extends RDFRepositoryBase {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteRepository.class);
-
+    private static HttpClient httpClient = new SystemDefaultHttpClient();
     private static final String TRIPLESTORE_PORT = System.getProperty("TRIPLESTORE_PORT", "http://192.168.50.12:3030");
     private final String triplestorePort;
 
@@ -22,6 +26,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
         super(baseURI, sparqlQueryBuilder, uriGenerator);
         this.triplestorePort = triplestorePort;
         LOG.info("Repository started with TRIPLESTORE_PORT: " + this.triplestorePort);
+        HttpOp.setDefaultHttpClient(httpClient);
     }
 
     public RemoteRepository() {
@@ -38,6 +43,21 @@ public final class RemoteRepository extends RDFRepositoryBase {
 
     @Override
     protected void executeUpdate(UpdateRequest updateRequest) {
-        UpdateExecutionFactory.createRemote(updateRequest, triplestorePort + "/ds/update").execute();
+        UpdateProcessRemote updateProcessRemote = new UpdateProcessRemote(updateRequest, triplestorePort + "/ds/update", null){
+            @Override
+            public void execute() {
+                // Build endpoint URL
+                String endpoint = this.getEndpoint();
+                String querystring = this.getQueryString();
+                if (querystring != null && !querystring.equals("")) {
+                    endpoint = endpoint.contains("?") ? endpoint + "&" + querystring : endpoint + "?" + querystring;
+                }
+
+                // Execution
+                String reqStr = this.getUpdateRequest().toString();
+                HttpOp.execHttpPost(endpoint, WebContent.contentTypeSPARQLUpdate, reqStr, httpClient, getHttpContext(), getAuthenticator());
+            }
+        };
+        updateProcessRemote.execute();
     }
 }

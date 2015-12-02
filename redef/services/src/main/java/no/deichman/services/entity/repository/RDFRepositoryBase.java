@@ -13,6 +13,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -53,6 +54,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final Model retrieveWorkByURI(String uri) {
         log.debug("Attempting to retrieve: <" + uri + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+            disableCompression(qexec);
             return qexec.execDescribe();
         }
     }
@@ -61,6 +63,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final Model retrieveWorkAndLinkedResourcesByURI(String uri) {
         log.debug("Attempting to retrieve: <" + uri + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedResources(uri))) {
+            disableCompression(qexec);
             return qexec.execDescribe();
         }
     }
@@ -69,6 +72,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final Model retrievePublicationByURI(final String uri) {
         log.debug("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+            disableCompression(qexec);
             return qexec.execDescribe();
         }
     }
@@ -77,6 +81,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final Model retrievePersonByURI(String uri) {
         log.debug("Attempting to retrieve: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+            disableCompression(qexec);
             return qexec.execDescribe();
         }
     }
@@ -85,6 +90,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final Model retrievePersonAndLinkedResourcesByURI(String uri) {
         log.debug("Attempting to retrieve person: " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.describePersonAndLinkedResources(uri))) {
+            disableCompression(qexec);
             return qexec.execDescribe();
         }
     }
@@ -102,6 +108,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final boolean askIfResourceExists(String uri) {
         try (QueryExecution qexec = getQueryExecution(sqb.checkIfResourceExists(uri))){
+            disableCompression(qexec);
             return qexec.execAsk();
         }
     }
@@ -164,6 +171,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final boolean askIfStatementExists(Statement statement) {
         try (QueryExecution qexec = getQueryExecution(sqb.checkIfStatementExists(statement))) {
+            disableCompression(qexec);
             return qexec.execAsk();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -186,6 +194,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final Optional<String> getResourceURIByBibliofilId(String personId) {
         try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPersonResource(personId))) {
+            disableCompression(qexec);
             ResultSet resultSet = qexec.execSelect();
             boolean uri = resultSet.hasNext();
             if (uri) {
@@ -200,6 +209,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         String uri = baseURI.person() + creatorId;
         log.debug("Attempting to retrieve: works created by " + uri);
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorksByCreator(uri))) {
+            disableCompression(qexec);
             return qexec.execDescribe();
         }
     }
@@ -210,7 +220,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         log.debug("Attempting to retrieve: " + uri);
         ResultSet resultSet;
         try (QueryExecution qexec = getQueryExecution(sqb.describeLinkedPublications(uri))) {
+            disableCompression(qexec);
             return qexec.execDescribe();
+        }
+    }
+
+    private void disableCompression(QueryExecution qexec) {
+        if (qexec instanceof QueryEngineHTTP) {
+            ((QueryEngineHTTP) qexec).setAllowGZip(false);
+            ((QueryEngineHTTP) qexec).setAllowDeflate(false);
         }
     }
 }
