@@ -10,8 +10,8 @@ dockerpy-prereqs:
 
 dockerpy:
   pip.installed:
-    - name: git+https://github.com/docker/docker-py.git@1.6.0
-    - unless: pip freeze | grep 'docker-py==1.6.0'
+    - name: git+https://github.com/docker/docker-py.git@1.2.3
+    - unless: pip freeze | grep 'docker-py==1.2.3'
     - require:
       - pkg: dockerpy-prereqs
 
