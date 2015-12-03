@@ -10,7 +10,7 @@ base:
     - match: pcre
     - common.docker-aufs
 
-  'wombat,vm-devops':
+  'wombat,ubuntu,vm-devops':
     - match: list
 #    - registry # not really used in vm-devops, just installed to make sure installation works
     - overview
@@ -21,7 +21,7 @@ base:
 #    - elk.dockerlog-forwarder
     - resource_monitoring.server
 
-  '^(wombat|\w+-ship)$':
+  '^(wombat|ubuntu|\w+-ship)$':
     - match: pcre
     - elk
     - elk.dockerlog-forwarder
@@ -46,7 +46,7 @@ base:
     - migration.dockerized
     - overview
 
-  'wombat,vm-ship':
+  'wombat,vm-ship,ubuntu':
     - match: list
     - redef.triplestore
     - redef.elasticsearch
