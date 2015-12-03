@@ -262,7 +262,7 @@ prod_upgrade_salt_master: ## Upgrade salt on master - args: SUDOUSER, MASTER
 prod_upgrade_salt_minion: ## Upgrade salt on minion - args: SUDOUSER, MINION
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MINION) 'bash -c "sudo add-apt-repository -y ppa:saltstack/salt && \
 		sudo apt-get update && \
-		sudo apt-get install -y python-software-properties software-properties-common salt-master=$(SALT_VERSION)"'
+		sudo apt-get install -y python-software-properties software-properties-common salt-minion=$(SALT_VERSION)"'
 
 prod_bootstrap_master: prod_upgrade_salt_master ## Install salt-master with ls.ext salt states and pillar data  - args: SUDOUSER, MASTER
 	ssh $(SSH_OPTS) $(SUDOUSER)@$(MASTER) '[ -d /var/lib/salt-master ] || sudo git clone https://github.com/digibib/ls.ext.git /var/lib/salt-master'
