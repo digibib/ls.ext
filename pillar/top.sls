@@ -35,8 +35,8 @@ base:
 
   'detektor':
     - match: list
-    - docker.prod1
-    - registry.prod1
+    - docker.prod
+    - registry.prod
     - elk.prod1
     - sip.kohatest
     - resource_monitoring.prod1
