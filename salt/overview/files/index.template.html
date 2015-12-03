@@ -23,6 +23,9 @@
   .col:first-child { margin-left: 0; }
 
   /*  GROUPING  */
+  .row {
+    padding-bottom: 8px;
+  }
   .row:before,
   .row:after { content:""; display:table; }
   .row:after { clear:both;}
@@ -208,6 +211,19 @@
       <div class="col span_2_of_5">
         {% for ex in salt['pillar.get']('overview:services:examples', {}.iteritems()) %}
           <a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['port']|string }}{{ex}}">{{ex}}</a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['jamonport']|string }}/jamonadmin.jsp">JAMon</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:jamon:description','') }}
+      </div>
+      <div class="col span_2_of_5">
+        {% for ex in salt['pillar.get']('overview:jamon:examples', {}.iteritems()) %}
+          <a href="http://{{ pillar['redef']['services']['host'] }}:{{ pillar['redef']['services']['jamonport']|string }}{{ex}}">{{ex}}</a>
         {% endfor %}
       </div>
     </div>
