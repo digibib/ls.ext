@@ -1,7 +1,7 @@
 overview:
   port: 80
   env:
-    description: Hj&oslash;rnebiblioteket
+    description: Hj&oslash;rnebiblioteket 1 (wombat)
   koha:
     host: 10.172.2.160
   redef:

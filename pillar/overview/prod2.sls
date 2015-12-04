@@ -1,7 +1,7 @@
 overview:
   port: 80
   env:
-    description: Hj&oslash;rnebiblioteket
+    description: Hj&oslash;rnebiblioteket 2 (ubuntu)
   koha:
     host: 10.172.3.196
   redef:
