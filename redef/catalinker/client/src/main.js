@@ -17,7 +17,7 @@
         // Browser globals (root is window)
         root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._);
     }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, jquery) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _) {
     "use strict";
 
     Ractive.DEBUG = false;
@@ -396,11 +396,11 @@
                             ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
                         },
                         activateTab : function(event) {
-                            //debugger;
-                            //$(event.node).tab("show");
-                            console.log("Velger tab " + event.keypath);
-                            ractive.set(event.keypath + ".tabSelected", true);
-                            ractive.set()
+                            _.each(ractive.get("inputGroups"), function(group, groupIndex) {
+                                var keyPath = "inputGroups." + groupIndex;
+                                ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
+                            });
+                            console.log("active tab");
                         }
                     });
 

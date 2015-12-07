@@ -1,70 +1,65 @@
-<h2 data-automation-id="page-heading">Katalogisering av {{resource_label}}</h2>
+
 <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
 <div id="save-stat">{{save_status}}</div>
-<div class="row column full pure-g">
-    <fieldset>
-        <ul class="nav nav-tabs" id="workflow-tabs" role="tablist">
+<div class="container content">
+    <h2 data-automation-id="page-heading">Katalogisering av {{resource_label}}</h2>
+    <div class="grid-input">
+        <ul class="grid-tabs pure-g" id="workflow-tabs">
             {{#each inputGroups}}
-            <li role="presentation" class="">
-                <a id="{{tabId}}-tab" data-toggle="tab" role="tab" href="#{{tabId}}"
-                   on-click="activateTab">{{tabLabel}}</a>
+            <li class="grid-tab pure-u">
+                <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link" id="{{tabId}}-tab"
+                   data-toggle="tab" role="tab" href="#{{tabId}}" on-click="activateTab">{{tabLabel}}</a>
             </li>
             {{/each}}
         </ul>
-        <div class="tab-content">
+        <div class="grid-content">
             {{#each inputGroups}}
-            <div id="{{tabId}}" class="tab-pane {{tabSelected ? 'active' : ''}}" role="tabpanel">
+            <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected -selected' : ''}} pure-g">
                 {{#each inputs}}
-                {{>input}}
+                    {{>input}}
                 {{/each}}
             </div>
             {{/each}}
         </div>
+    </div>
 
-        <div class="column two-fifths">
-            {{#search_result}}
-            <div class="prop-search-results">
-                {{#results.hits.hits}}
-                {{#with _source.person}}
-                <div class="search-result" data-automation-id="{{uri}}"
-                     on-click="selectResource:{{predicate}},{{origin}}">
-                    <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
+    <!--div class="column two-fifths">
+        {{#search_result}}
+        <div class="prop-search-results">
+            {{#results.hits.hits}}
+            {{#with _source.person}}
+            <div class="search-result" data-automation-id="{{uri}}"
+                 on-click="selectResource:{{predicate}},{{origin}}">
+                <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
                     <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
                             class="deathYear">{{death}}</span>){{/birth}}</span>
-                    <span class="nationality">{{nationality}}</span>
+                <span class="nationality">{{nationality}}</span>
 
-                    <div class="search-result-more-info">
-                        {{#work.length}}
-                        <div class="search-result-work-list">
-                            Verk:
-                            {{#work}}
-                            <div class="search-result-work">
-                                <span class="search-result-work-name">{{title}}</span>
-                                <span class="search-result-work-year">({{year}})</span>
-                            </div>
-                            {{/work}}
+                <div class="search-result-more-info">
+                    {{#work.length}}
+                    <div class="search-result-work-list">
+                        Verk:
+                        {{#work}}
+                        <div class="search-result-work">
+                            <span class="search-result-work-name">{{title}}</span>
+                            <span class="search-result-work-year">({{year}})</span>
                         </div>
                         {{/work}}
                     </div>
+                    {{/work}}
                 </div>
-                {{/with}}
-                {{/results}}
             </div>
-            {{/search_result}}
+            {{/with}}
+            {{/results}}
         </div>
-    </fieldset>
+        {{/search_result}}
+    </div-->
 </div>
+
 {{#partial input}}
-<div class="row">
-    <div class="column two-fifths prop-input {{predicate}}">
-        <div class="prop-details">
-            {{^disabled}}
-            <button class="prop-add" on-click="addValue">+</button>
-            {{/}}
-            <label>{{label}}</label>
-        </div>
-    </div>
-    <div class="column three-fifths prop-values">
+<fieldset class="pure-u-1-2">
+    <label>{{label}}</label>
+    <div>
         {{#each values}}
         {{>type}}
         {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
@@ -79,7 +74,14 @@
         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
         {{/each}}
     </div>
-</div>
+    <div class="column two-fifths prop-input {{predicate}}">
+        <div class="prop-details">
+            {{^disabled}}
+            <button class="prop-add" on-click="addValue">+</button>
+            {{/}}
+        </div>
+    </div>
+</fieldset>
 {{/partial}}
 
 {{#partial select-authorized-language}}

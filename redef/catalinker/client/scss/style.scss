@@ -1,4 +1,5 @@
 body {
+  background: no-repeat url('/images/logo.png') 15px 20px / 170px;
   margin: 40px auto;
   max-width: 1050px;
   line-height: 1.6;
@@ -24,58 +25,6 @@ body {
     display: block;
     &:before {
       content: "status: "
-    }
-  }
-  fieldset {
-    border: 0;
-    background: #eee;
-    .row {
-      clear: both;
-      .prop-details {
-        width: 25%;
-        float: left;
-        text-align: right;
-        button {
-          float: left
-        }
-        label {
-          font-family: monospace;
-          text-align: right;
-          width: 160px;
-        }
-      }
-      .prop-values {
-        padding-left: 1em;
-        width: 40%;
-        float: left;
-        input {
-          width: 300px;
-          padding: 3px;
-          margin: 2px 0px;
-          &.invalid-input {
-            border: 1px solid #F77F00;
-            padding: 5px;
-          }
-        }
-        select.authorized {
-          width: 310px;
-          padding: 3px 0px;
-          margin: 3px 0px;
-        }
-        .link {
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          background-image: linear-gradient(transparent, transparent), url('/images/link.svg');
-        }
-        .invalid-msg {
-          color: #F77F00;
-          font-size: 14px;
-          float: right;
-          margin-left: 10px;
-          padding: 4px;
-        }
-      }
     }
   }
 }
