@@ -20,7 +20,7 @@
       var res = [];
       ontology["@graph"].forEach(function (p) {
         if (p["@type"] === "rdfs:Property") {
-          if (p["rdfs:domain"] === undefined || p["rdfs:domain"]["@id"] === "rdfs:Class") {
+          if (p["rdfs:domain"] === undefined || cls === undefined || p["rdfs:domain"]["@id"] === "rdfs:Class") {
             res.push(p);
           } else if (Array.isArray(p["rdfs:domain"])) {
             p["rdfs:domain"].forEach(function (q) {
@@ -34,6 +34,10 @@
         }
       });
       return res;
+    },
+
+    allProps: function (ontology) {
+       return this.propsByClass(ontology);
     },
 
     // resolveURI resolves a URI in prefixed form to its full form, according to prefixes specified

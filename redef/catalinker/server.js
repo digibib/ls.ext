@@ -10,7 +10,7 @@ var Server;
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/js/bundle.js', browserify(['./client/src/main']));
+app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery']));
 
 function newResource(type) {
     return axios.post(process.env.SERVICES_PORT + "/" + type, {}, {
@@ -54,11 +54,37 @@ app.get('/config', function (request, response) {
         kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
         kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8082').replace(/^tcp:\//, 'http:/'),
         ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/ontology',
-        resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/'
+        resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
+        tabs: [
+            {
+                id: "confirm-person",
+                label: "Bekreft person",
+                rdfProperties: [/* isbn later*/],
+            },
+            {
+                id: "confirm-work",
+                rdfType: "Work",
+                label: "Bekreft verk",
+                rdfProperties: ["title", "originalTitle"]
+            },
+            {
+                id: "describe-work",
+                rdfType: "Work",
+                label: "Beskriv verket",
+                rdfProperties: ["year"]
+            },
+            {
+                id: "describe-publication",
+                rdfType: "Publication",
+                label: "Beskriv utgivelsen",
+                rdfProperties: ["title", "year", "language", "format"]
+            }
+        ]
     };
 
     response.json(config);
-});
+})
+;
 
 app.use("/style", compileSass({
     root: path.join(__dirname, 'client/scss'),

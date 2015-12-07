@@ -1,52 +1,34 @@
 <h2 data-automation-id="page-heading">Katalogisering av {{resource_label}}</h2>
 <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
 <div id="save-stat">{{save_status}}</div>
-<div class="row column full">
+<div class="row column full pure-g">
   <fieldset>
-    <div class="row">
-      <div class="column three-fifths">
-        <div class="row">
-          <div class="column two-fifths prop-input">
-            <div class="prop-details">
-              <label>URI</label>
-            </div>
-          </div>
-          <div class="column three-fifths prop-values">
-            <input disabled="disabled" data-automation-id="resource_uri" value="{{resource_uri}}" />
-            {{#resource_type === "Work"}}
-            <a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>
-            {{/}}
-            {{#resource_type === "Person"}}
-            <a data-automation-id="person_page_link" target="_blank" href="{{resource_uri.replace(':8005',':8000')}}" class="link"></a>
-            {{/}}
-          </div>
-        </div>
-        {{#each inputs}}
-          <div class="row">
-            <div class="column two-fifths prop-input {{predicate}}">
-              <div class="prop-details">
-                {{^disabled}}
-                  <button class="prop-add" on-click="addValue">+</button>
-                {{/}}
-                <label>{{label}}</label>
-              </div>
-            </div>
-            <div class="column three-fifths prop-values">
-              {{#each values}}
-                {{>type}}
-                {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
-                <a data-automation-id="biblio_record_link" target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
-                {{/}}
-                {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
-                <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}" class="link"></a>
-                {{/}}
-                <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-              {{/each}}
-            </div>
-          </div>
+
+        <ul class="nav nav-tabs" id="workflow-tabs" role="tablist">
+        {{#each inputGroups}}
+          <li role="presentation" class="">
+            <a id="{{tabId}}-tab" data-toggle="tab" role="tab" href="{{tabId}}">{{tabLabel}}</a>
+          </li>
         {{/each}}
-      </div>
-      <div class="column two-fifths">
+        </ul>
+    <div class="tab-content">
+    {{#each inputGroups}}
+      <div id="{{tabId}}" class="tab-pane" role="tabpanel">
+    {{#each inputs}}
+    {{>input}}
+    {{/each}}
+        </div>
+    {{/each}}
+    </div>
+
+    <script>
+      jQuery('#workflow-tabs a').click(function (e) {
+        e.preventDefault();
+        debugger;
+        jQuery(this).tab('show')
+      })
+    </script>
+    <div class="column two-fifths">
         {{#search_result}}
           <div class="prop-search-results">
             {{#results.hits.hits}}
@@ -74,9 +56,33 @@
           </div>
         {{/search_result}}
       </div>
-    </div> <!-- end main row -->
   </fieldset>
 </div>
+{{#partial input}}
+  <div class="row">
+    <div class="column two-fifths prop-input {{predicate}}">
+      <div class="prop-details">
+        {{^disabled}}
+        <button class="prop-add" on-click="addValue">+</button>
+        {{/}}
+        <label>{{label}}</label>
+      </div>
+    </div>
+    <div class="column three-fifths prop-values">
+      {{#each values}}
+      {{>type}}
+      {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
+      <a data-automation-id="biblio_record_link" target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
+      {{/}}
+      {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
+      <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}" class="link"></a>
+      {{/}}
+      <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+      {{/each}}
+    </div>
+  </div>
+{{/partial}}
+
 {{#partial select-authorized-language}}
   <select
     class="authorized"
