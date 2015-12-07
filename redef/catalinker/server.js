@@ -57,9 +57,10 @@ app.get('/config', function (request, response) {
         resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
         tabs: [
             {
+                rdfType: "Work",
                 id: "confirm-person",
                 label: "Bekreft person",
-                rdfProperties: [/* isbn later*/],
+                rdfProperties: [/* isbn later*/"creator"],
             },
             {
                 id: "confirm-work",

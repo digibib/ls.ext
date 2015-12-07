@@ -233,8 +233,10 @@
             group.inputs = groupInputs;
             group.tabLabel = tab.label;
             group.tabId = tab.id;
+            group.tabSelected = false;
             inputGroups.push(group);
         });
+        inputGroups[0].tabSelected = true;
         ractive.set("inputs", inputs);
         ractive.set("inputGroups", inputGroups);
 
@@ -392,6 +394,13 @@
                             ractive.set(event.keypath + ".searchable", true);
                             ractive.update();
                             ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
+                        },
+                        activateTab : function(event) {
+                            //debugger;
+                            //$(event.node).tab("show");
+                            console.log("Velger tab " + event.keypath);
+                            ractive.set(event.keypath + ".tabSelected", true);
+                            ractive.set()
                         }
                     });
 
