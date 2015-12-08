@@ -314,6 +314,10 @@
                         decorators:{
                             repositionSupportPanel: function(node){
                                 $(node).find(".support-panel").css({top: $(node).position().top})
+                                Main.repositionSupportPanelsHorizontally();
+//                                return {
+//                                    teardown: function() {}
+//                                }
                             }
                         }
                     });
@@ -444,6 +448,16 @@
                 }).catch(function (err) {
                     console.log("Error loading ontology: " + err);
                 });
+        },
+        repositionSupportPanelsHorizontally: function () {
+            var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
+            var supportPanelWidth = $("#right-dummy-panel").width();
+
+            //var existingTop = $(".support-panel").position().top;
+            $(".support-panel").each(function(index, panel) {
+                var existingTop = $(panel).position().top;
+                $(panel).css({left: supportPanelLeftEdge, width: supportPanelWidth});
+            });
         }
     };
 
