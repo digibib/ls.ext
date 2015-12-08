@@ -39,6 +39,10 @@ app.get('/', function (res) {
 });
 
 app.get('/cataloguing/*', function (req, res, next) {
+    res.sendFile('main_old.html', {title: 'Katalogisering', root: __dirname + '/public/'});
+});
+
+app.get('/workflow', function (req, res, next) {
     res.sendFile('main.html', {title: 'Katalogisering', root: __dirname + '/public/'});
 });
 

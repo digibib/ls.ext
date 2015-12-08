@@ -1,19 +1,20 @@
-<div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
-<div id="save-stat">{{save_status}}</div>
-<div class="container content">
-    <div class="pure-u-1-2" id="left-dummy-panel"/><div class="pure-u-1-2" id="right-dummy-panel"/>
+<div class="content">
     <h2 data-automation-id="page-heading">Katalogisering av utgivelse</h2>
 
-    <div class="grid-input">
+    <div class="grid-input" >
+        <div class="pure-g">
+            <div class="pure-u-1-2" id="left-dummy-panel"/>
+            <div class="pure-u-1-2" id="right-dummy-panel"/>
+        </div>
         <ul class="grid-tabs pure-g" id="workflow-tabs">
             {{#each inputGroups}}
             <li class="grid-tab pure-u">
                 <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link" id="{{tabId}}-tab"
-                   data-toggle="tab" role="tab" href="#{{tabId}}" on-click="activateTab">{{tabLabel}}</a>
+                   data-toggle="tab" role="tab" on-click="activateTab">{{tabLabel}}</a>
             </li>
             {{/each}}
         </ul>
-        <div class="grid-content">
+        <div class="grid-content tab-content">
             {{#each inputGroups}}
             <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected -selected' : ''}} pure-g">
                 {{#each inputs}}
@@ -27,6 +28,11 @@
     <div class="column two-fifths">
 
     </div>
+
+</div>
+<div class="footer">
+    <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
+    <div id="save-stat">{{save_status}}</div>
 </div>
 
 {{#partial input}}
@@ -62,35 +68,36 @@
 {{/partial}}
 
 {{#partial support-for-input-string-searchable}}
-    {{#search_result}}
-        <div class="prop-search-results">
-            {{#results.hits.hits}}
-            {{#with _source.person}}
-            <div class="search-result" data-automation-id="{{uri}}">
+{{#search_result}}
+<div class="prop-search-results">
+    {{#results.hits.hits}}
+    {{#with _source.person}}
+    <div class="search-result" data-automation-id="{{uri}}">
                 <span on-click="selectResource:{{predicate}},{{origin}}">
                     <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
                                 <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
                                         class="deathYear">{{death}}</span>){{/birth}}</span>
                     <span class="nationality">{{nationality}}</span>
                 </span>
-                <div class="search-result-more-info">
-                    {{#work.length}}
-                    <div class="search-result-work-list">
-                        Verk:
-                        {{#work}}
-                        <div class="search-result-work" on-click="selectWorkResource">
-                            <span class="search-result-work-name">{{title}}</span>
-                            <span class="search-result-work-year">({{year}})</span>
-                        </div>
-                        {{/work}}
-                    </div>
-                    {{/work}}
+
+        <div class="search-result-more-info">
+            {{#work.length}}
+            <div class="search-result-work-list">
+                Verk:
+                {{#work}}
+                <div class="search-result-work" on-click="selectWorkResource">
+                    <span class="search-result-work-name">{{title}}</span>
+                    <span class="search-result-work-year">({{year}})</span>
                 </div>
+                {{/work}}
             </div>
-            {{/with}}
-            {{/results}}
+            {{/work}}
         </div>
-    {{/search_result}}
+    </div>
+    {{/with}}
+    {{/results}}
+</div>
+{{/search_result}}
 {{/partial}}
 
 {{#partial select-authorized-language}}

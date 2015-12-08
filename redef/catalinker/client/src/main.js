@@ -135,13 +135,14 @@
 
     var onOntologyLoad = function (ont) {
 
-        var props = Ontology.allProps(ont),
+        var resourceType = ractive.get("resource_type");
+        var props = resourceType !=  "Workflow" ? Ontology.propsByClass(ont, resourceType) : Ontology.allProps(ont),
             inputs = [],
             inputMap = {},
             selectedResources = {};
 
         ractive.set("ontology", ont);
-        ractive.set("resource_label", Ontology.resourceLabel(ont, ractive.get("resource_type"), "no").toLowerCase());
+        ractive.set("resource_label", Ontology.resourceLabel(ont, resourceType, "no").toLowerCase());
         ractive.set("selectedResources", selectedResources);
 
         for (var i = 0; i < props.length; i++) {
@@ -216,7 +217,7 @@
             inputMap[input.predicate] = input;
         }
         var inputGroups = [];
-        var tabs = ractive.get("config.tabs");
+        var tabs = (resourceType === "Workflow") ? ractive.get("config.tabs") : [];
         _.each(tabs, function(tab){
             var group = {};
             var groupInputs = [];
@@ -241,17 +242,21 @@
             group.tabSelected = false;
             inputGroups.push(group);
         });
-        inputGroups[0].tabSelected = true;
+        if (inputGroups.length > 0) {
+            inputGroups[0].tabSelected = true;
+        }
         ractive.set("inputs", inputs);
         ractive.set("inputGroups", inputGroups);
 
-        // If resource URI is given in query string, it will be loaded for editing, otherwise we will
-        // request a new URI for working on a new resource.
-        var uri = Main.getURLParameter("resource");
-        if (uri) {
-            loadExistingResource(uri);
-        } else {
-            createNewResource();
+        if (resourceType != "Workflow") {
+            // If resource URI is given in query string, it will be loaded for editing, otherwise we will
+            // request a new URI for working on a new resource.
+            var uri = Main.getURLParameter("resource");
+            if (uri) {
+                loadExistingResource(uri);
+            } else {
+                createNewResource();
+            }
         }
     };
 
@@ -268,7 +273,8 @@
             var results = regex.exec(location.search);
             return results === null ? null : results[1];
         },
-        init: function () {
+        init: function (template) {
+            template = template || "/main_template.html";
             var config;
             window.onerror = function (message, url, line) {
                 // Log any uncaught exceptions to assist debugging tests.
@@ -290,7 +296,7 @@
                     return;
                 })
                 .then(function () {
-                    return axios.get("/main_template.html");
+                    return axios.get(template);
                 })
                 .then(function (response) {
                     // Initialize ractive component from template

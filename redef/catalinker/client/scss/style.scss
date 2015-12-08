@@ -10,9 +10,13 @@ body {
   h1, h2, h3 {
     line-height: 1.2
   }
+  .tab-content {
+    min-height: 600px;
+  }
   .support-panel {
-    border: 1px solid;
-    width: 316px;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding: 6px 11px 13px;
     position: absolute;
     overflow: visible;
     left: 620px;
@@ -20,24 +24,32 @@ body {
       height: 300px;
     }
   }
-  #errors {
-    position: absolute;
-    left: 245px;
-    top: 4px;
-    background: #F77F00;
-    color: #fff;
-    font-weight: bold;
-    p {
-      padding: 4px;
+  .footer {
+    position: fixed;
+    bottom: 0;
+    float: right;
+    #errors {
+      float: right;
+      position: relative;
+      width: 100%;
+      background: #F77F00;
+      color: #fff;
+      font-weight: bold;
+      p {
+        padding: 4px;
+      }
     }
-  }
-  #save-stat {
-    text-align: right;
-    color: #888;
-    margin: 0 4px;
-    display: block;
-    &:before {
-      content: "status: "
+    #save-stat {
+      float: right;
+      text-align: center;
+      color: #888;
+      margin: 0 4px;
+      display: block;
+      width: 200px;
+      &:before {
+        content: "status: "
+      }
     }
   }
 }
+

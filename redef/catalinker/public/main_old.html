@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Katalogisering</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+
+<div id="container"></div>
+
+<script src="/js/bundle.js"></script>
+<script>
+    var Main = require('./client/src/main');
+    Main.init("/main_template_old.html").then(function () { Main.loadOntology() });
+</script>
+</body>
+</html>
