@@ -10,14 +10,15 @@
         var Ontology = require("./ontology");
         var StringUtil = require("./stringutil");
         var _ = require("underscore");
+        var $ = require("jquery")
 
-        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _);
+        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $);
 
     } else {
         // Browser globals (root is window)
-        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._);
+        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$);
     }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $) {
     "use strict";
 
     Ractive.DEBUG = false;
@@ -309,6 +310,11 @@
                                 debugger;
                                 return map[id];
                             }
+                        },
+                        decorators:{
+                            repositionSupportPanel: function(node){
+                                $(node).find(".support-panel").css({top: $(node).position().top})
+                            }
                         }
                     });
                     // Find resource type from url path
@@ -395,7 +401,7 @@
                             ractive.update();
                             ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
                         },
-                        activateTab : function(event) {
+                        activateTab: function(event) {
                             _.each(ractive.get("inputGroups"), function(group, groupIndex) {
                                 var keyPath = "inputGroups." + groupIndex;
                                 ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);

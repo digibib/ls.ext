@@ -1,8 +1,8 @@
-
 <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
 <div id="save-stat">{{save_status}}</div>
 <div class="container content">
     <h2 data-automation-id="page-heading">Katalogisering av {{resource_label}}</h2>
+
     <div class="grid-input">
         <ul class="grid-tabs pure-g" id="workflow-tabs">
             {{#each inputGroups}}
@@ -16,23 +16,60 @@
             {{#each inputGroups}}
             <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected -selected' : ''}} pure-g">
                 {{#each inputs}}
-                    {{>input}}
+                {{>input}}
                 {{/each}}
             </div>
             {{/each}}
         </div>
     </div>
 
-    <!--div class="column two-fifths">
-        {{#search_result}}
+    <div class="column two-fifths">
+
+    </div>
+</div>
+
+{{#partial input}}
+<div class="input-panel pure-u-1-1" decorator="repositionSupportPanel">
+    <fieldset class="pure-u-1-2">
+        <label>{{label}}</label>
+        {{#each values}}
+        {{>type}}
+        {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
+        <a data-automation-id="biblio_record_link" target="_blank"
+           href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}"
+           class="link"></a>
+        {{/}}
+        {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
+        <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}"
+           class="link"></a>
+        {{/}}
+        <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+        {{/each}}
+        <div class="column two-fifths prop-input {{predicate}}">
+            <div class="prop-details">
+                {{^disabled}}
+                <button class="prop-add" on-click="addValue">+</button>
+                {{/}}
+            </div>
+        </div>
+    </fieldset>
+    <span class="support-panel">
+        {{>"support-for-"+type}}
+    </span>
+</div>
+<div class="pure-1-2"/>
+{{/partial}}
+
+{{#partial support-for-input-string-searchable}}
+    {{#search_result}}
         <div class="prop-search-results">
             {{#results.hits.hits}}
             {{#with _source.person}}
             <div class="search-result" data-automation-id="{{uri}}"
                  on-click="selectResource:{{predicate}},{{origin}}">
                 <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
-                    <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
-                            class="deathYear">{{death}}</span>){{/birth}}</span>
+                            <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
+                                    class="deathYear">{{death}}</span>){{/birth}}</span>
                 <span class="nationality">{{nationality}}</span>
 
                 <div class="search-result-more-info">
@@ -52,36 +89,7 @@
             {{/with}}
             {{/results}}
         </div>
-        {{/search_result}}
-    </div-->
-</div>
-
-{{#partial input}}
-<fieldset class="pure-u-1-2">
-    <label>{{label}}</label>
-    <div>
-        {{#each values}}
-        {{>type}}
-        {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
-        <a data-automation-id="biblio_record_link" target="_blank"
-           href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}"
-           class="link"></a>
-        {{/}}
-        {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
-        <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}"
-           class="link"></a>
-        {{/}}
-        <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-        {{/each}}
-    </div>
-    <div class="column two-fifths prop-input {{predicate}}">
-        <div class="prop-details">
-            {{^disabled}}
-            <button class="prop-add" on-click="addValue">+</button>
-            {{/}}
-        </div>
-    </div>
-</fieldset>
+    {{/search_result}}
 {{/partial}}
 
 {{#partial select-authorized-language}}

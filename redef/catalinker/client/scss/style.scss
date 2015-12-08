@@ -10,7 +10,21 @@ body {
   h1, h2, h3 {
     line-height: 1.2
   }
+  .support-panel {
+    border: 1px solid;
+    height: 50px;
+    width: 316px;
+    position: absolute;
+    overflow: visible;
+    left: 620px;
+    .prop-search-result {
+      height: 300px;
+    }
+  }
   #errors {
+    position: absolute;
+    left: 245px;
+    top: 4px;
     background: #F77F00;
     color: #fff;
     font-weight: bold;
