@@ -2,7 +2,7 @@
 <div id="save-stat">{{save_status}}</div>
 <div class="container content">
     <div class="pure-u-1-2" id="left-dummy-panel"/><div class="pure-u-1-2" id="right-dummy-panel"/>
-    <h2 data-automation-id="page-heading">Katalogisering av {{resource_label}}</h2>
+    <h2 data-automation-id="page-heading">Katalogisering av utgivelse</h2>
 
     <div class="grid-input">
         <ul class="grid-tabs pure-g" id="workflow-tabs">
@@ -66,19 +66,19 @@
         <div class="prop-search-results">
             {{#results.hits.hits}}
             {{#with _source.person}}
-            <div class="search-result" data-automation-id="{{uri}}"
-                 on-click="selectResource:{{predicate}},{{origin}}">
-                <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
-                            <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
-                                    class="deathYear">{{death}}</span>){{/birth}}</span>
-                <span class="nationality">{{nationality}}</span>
-
+            <div class="search-result" data-automation-id="{{uri}}">
+                <span on-click="selectResource:{{predicate}},{{origin}}">
+                    <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
+                                <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
+                                        class="deathYear">{{death}}</span>){{/birth}}</span>
+                    <span class="nationality">{{nationality}}</span>
+                </span>
                 <div class="search-result-more-info">
                     {{#work.length}}
                     <div class="search-result-work-list">
                         Verk:
                         {{#work}}
-                        <div class="search-result-work">
+                        <div class="search-result-work" on-click="selectWorkResource">
                             <span class="search-result-work-name">{{title}}</span>
                             <span class="search-result-work-year">({{year}})</span>
                         </div>

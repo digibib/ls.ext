@@ -31,15 +31,15 @@
 
     /* Private functions */
     var loadExistingResource = function (uri) {
-        axios.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1))
+        axios.get(uri)
             .then(function (response) {
                 ractive.set("resource_uri", uri);
                 var resource;
                 var graph = ensureJSON(response.data);
                 // Work and Person resource gives a @graph object if attached resources, need to extract work to extract properties
                 // TODO: should be rewritten to use ld-graph
-                switch (ractive.get("resource_type")) {
-                    case "Work":
+                switch (/^.*(work|person|publication).*$/g.exec(uri)[1]) {
+                    case "work":
                         if (graph["@graph"]) {
                             graph["@graph"].forEach(function (g) {
                                 if (g["@type"] === "deichman:Work") {
@@ -51,7 +51,7 @@
                             resource = graph;
                         }
                         break;
-                    case "Person":
+                    case "person":
                         if (graph["@graph"]) {
                             graph["@graph"].forEach(function (g) {
                                 if (g["@type"] === "deichman:Person") {
@@ -81,10 +81,11 @@
                                 values[input.predicate][idx].searchable = false;
                             }
                             ractive.set(kp + ".values." + idx, values[input.predicate][idx]);
+                            console.log("Setting " + kp + ".values." + idx + " -> " + values[input.predicate][idx].current.value);
                         }
                     }
                 }
-
+                ractive.update();
                 ractive.set("save_status", "åpnet eksisterende ressurs");
             })
             .catch(function (err) {
@@ -136,9 +137,12 @@
 
         var props = Ontology.allProps(ont),
             inputs = [],
-            inputMap = {};
+            inputMap = {},
+            selectedResources = {};
+
         ractive.set("ontology", ont);
         ractive.set("resource_label", Ontology.resourceLabel(ont, ractive.get("resource_type"), "no").toLowerCase());
+        ractive.set("selectedResources", selectedResources);
 
         for (var i = 0; i < props.length; i++) {
             var disabled = false;
@@ -315,9 +319,9 @@
                             repositionSupportPanel: function(node){
                                 $(node).find(".support-panel").css({top: $(node).position().top})
                                 Main.repositionSupportPanelsHorizontally();
-//                                return {
-//                                    teardown: function() {}
-//                                }
+                                //return {
+                                //    teardown: function() {}
+                                //}
                             }
                         }
                     });
@@ -388,15 +392,25 @@
                             });
                         },
                         selectResource: function (event, predicate, origin) {
+                            console.log("select resource");
                             // selectResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
-                            ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
+                            var currentValue = ractive.get(origin + ".current.value");
+                            ractive.set(origin + ".old.value", currentValue);
                             ractive.set(origin + ".current.value", uri);
                             ractive.set(origin + ".deletable", true);
                             ractive.set(origin + ".searchable", false);
+                            ractive.set("selectedResources[" + predicate.split("#")[1] + "]", uri);
                             ractive.update();
                             ///patchResource takes event.keypath and event.context, and predicate as param
                             ractive.fire("patchResource", {keypath: origin, context: ractive.get(origin)}, predicate);
+                        },
+                        selectWorkResource: function (event) {
+                            console.log("select work resource");
+                            // selectResource takes origin as param, as we don't know where clicked search hits comes from
+                            var uri = event.context.uri;
+                            ractive.set("selectedResources[work]", uri);
+                            ractive.update();
                         },
                         delResource: function (event, predicate) {
                             ractive.set(event.keypath + ".current.value", "");
@@ -414,8 +428,15 @@
                         }
                     });
 
+                    ractive.observe("selectedResources[work]", function(newValue, oldValue, keypath){
+                        if (newValue && newValue != oldValue) {
+                            loadExistingResource(newValue);
+                        }
+                    });
+
                     // Observing input for instant validation:
                     ractive.observe("inputs.*.values.*", function (newValue, oldValue, keypath) {
+                        console.log("Validation " + keypath + " -> " + newValue.current.value);
                         if (newValue.current.value === "") {
                             ractive.set(keypath + ".error", false);
                             return;
@@ -438,6 +459,7 @@
                     return ractive;
                 })
                 .catch(function (err) {
+                    debugger;
                     console.log("Error initiating ractive template: " + err);
                 });
         },
