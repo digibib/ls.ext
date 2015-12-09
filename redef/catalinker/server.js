@@ -4,7 +4,16 @@ var logger = require('morgan');
 var browserify = require('browserify-middleware');
 var axios = require('axios');
 var compileSass = require('express-compile-sass');
+var livereload = require('express-livereload')
 var app = express();
+if (app.get('env') === 'development') {
+    var livereload = require('express-livereload')
+    livereload(app, config = {});
+
+    app.use(require('connect-livereload')({
+        port: 35729
+    }));
+}
 var Server;
 
 app.use(logger('dev'));

@@ -48,7 +48,9 @@
   "devDependencies": {
     "browserify": "^11.2.0",
     "chai": "*",
+    "connect-livereload": "^0.5.4",
     "del": "^2.0.2",
+    "express-livereload": "0.0.24",
     "jscs": "*",
     "jshint": "*",
     "mocha": "*",
