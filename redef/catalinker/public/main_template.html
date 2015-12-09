@@ -154,14 +154,15 @@ value="{{current.value}}" />
 {{/partial}}
 
 {{#partial input-string-searchable}}
-<input
-        {{#deletable}}readonly="readonly" {{/deletable}}
+<input data-value="{{current.value}}"
+       {{#deletable}}readonly {{/deletable}}
 on-click="{{#deletable}}delResource{{/deletable}}:{{predicate}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
 data-automation-id="{{predicate}}_{{@index}}"
-on-enter='searchResource:{{predicate}}, {{current.value}}'
-value="{{current.value}}" />
+on-enter='searchResource:{{predicate}}, {{current.displayValue}}'
+value="{{current.displayValue}}" />
 {{/partial}}
+
 
 {{#partial input-lang-string}}
 <input

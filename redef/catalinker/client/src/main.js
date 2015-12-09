@@ -325,9 +325,10 @@
                             repositionSupportPanel: function(node){
                                 $(node).find(".support-panel").css({top: $(node).position().top})
                                 Main.repositionSupportPanelsHorizontally();
-                                //return {
-                                //    teardown: function() {}
-                                //}
+                                return {
+                                    teardown: function () {
+                                    }
+                                }
                             }
                         }
                     });
@@ -401,9 +402,10 @@
                             console.log("select resource");
                             // selectResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
-                            var currentValue = ractive.get(origin + ".current.value");
-                            ractive.set(origin + ".old.value", currentValue);
+                            var name = event.context.name;
+                            ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
                             ractive.set(origin + ".current.value", uri);
+                            ractive.set(origin + ".current.displayValue", name);
                             ractive.set(origin + ".deletable", true);
                             ractive.set(origin + ".searchable", false);
                             ractive.set("selectedResources[" + predicate.split("#")[1] + "]", uri);
@@ -420,6 +422,7 @@
                         },
                         delResource: function (event, predicate) {
                             ractive.set(event.keypath + ".current.value", "");
+                            ractive.set(event.keypath + ".current.displayValue", "");
                             ractive.set(event.keypath + ".deletable", false);
                             ractive.set(event.keypath + ".searchable", true);
                             ractive.update();
