@@ -70,28 +70,42 @@ app.get('/config', function (request, response) {
         resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
         tabs: [
             {
-                rdfType: "Work",
                 id: "confirm-person",
+                rdfType: "Work",
                 label: "Bekreft person",
                 rdfProperties: [/* isbn later*/"creator"],
+                nextStep: {
+                    buttonLabel: "Verifisér verk",
+                    createNewResource: "Work"
+                }
             },
             {
                 id: "confirm-work",
                 rdfType: "Work",
                 label: "Bekreft verk",
-                rdfProperties: ["title", "originalTitle"]
+                rdfProperties: ["title", "originalTitle"],
+                nextStep: {
+                    buttonLabel: "Mer om verket"
+                }
             },
             {
                 id: "describe-work",
                 rdfType: "Work",
                 label: "Beskriv verket",
-                rdfProperties: ["year"]
+                rdfProperties: ["year"],
+                nextStep: {
+                    buttonLabel: "Mer om utgivelsen",
+                    createNewResource: "Publication"
+                }
             },
             {
                 id: "describe-publication",
                 rdfType: "Publication",
                 label: "Beskriv utgivelsen",
-                rdfProperties: ["title", "year", "language", "format"]
+                rdfProperties: ["title", /*"year",*/ "language", "format"],
+                nextStep: {
+                    buttonLabel: "Avslutt registrering av utgivelsen"
+                }
             }
         ]
     };

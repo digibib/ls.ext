@@ -12,6 +12,12 @@ body {
   }
   .tab-content {
     min-height: 600px;
+    .next-step-button {
+      horiz-align: center;
+      margin-left: auto;
+      display: block;
+      margin-top: 20px;
+    }
   }
   .grid-tabs {
     padding: 1em 0 0;

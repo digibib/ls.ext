@@ -107,6 +107,39 @@
             });
     };
 
+    var saveNewResourceFromInputs = function (resourceType) {
+        // collect inputs related to resource type
+        var inputsToSave = _.filter(ractive.get("inputs"), function (input) {
+            return _.last(input.domain.split(":")) === resourceType;
+        });
+        // force all inputs to appear as changed
+        _.each(inputsToSave, function (input) {
+            _.each(input.values, function (value) {
+                value.old = {
+                    value: "",
+                    lang: ""
+                };
+            });
+        });
+        var errors = [];
+        axios.post(ractive.get("config.resourceApiUri") + resourceType.toLowerCase(),
+            {}, {headers: {Accept: "application/ld+json", "Content-Type": "application/ld+json"}})
+            .then(function (response) {
+                var resourceUri = response.headers.location;
+                ractive.set("selectedResources[" + resourceType + "]", resourceUri);
+                _.each(inputsToSave, function (input) {
+                    _.each(input.values, function (value) {
+                        Main.patchResourceFromValue(resourceUri, input.predicate, value, input.datatype, errors); // skip keypath for now
+                    })
+                });
+            })
+            .catch(function (err) {
+                console.log("POST to " + resourceType.toLowerCase() + " fails: " + err);
+            });
+        ractive.set("errors", errors);
+
+    };
+
     var loadAuthorizedValues = function (url, predicate) {
 
         axios.get(url)
@@ -136,7 +169,7 @@
     var onOntologyLoad = function (ont) {
 
         var resourceType = ractive.get("resource_type");
-        var props = resourceType !=  "Workflow" ? Ontology.propsByClass(ont, resourceType) : Ontology.allProps(ont),
+        var props = resourceType != "Workflow" ? Ontology.propsByClass(ont, resourceType) : Ontology.allProps(ont),
             inputs = [],
             inputMap = {},
             selectedResources = {};
@@ -157,89 +190,98 @@
                 loadAuthorizedValues(url, props[i]["@id"]);
             }
             var datatype = props[i]["rdfs:range"]["@id"];
-            var input = {
-                disabled: disabled,
-                searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
-                predicate: Ontology.resolveURI(ont, props[i]["@id"]),
-                authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
-                range: datatype,
-                datatype: datatype,
-                label: props[i]["rdfs:label"][0]["@value"],
-                domains: props[i]["rdfs:domain"],
-                values: [{
-                    old: {value: "", lang: ""},
-                    current: {value: "", lang: ""}
-                }]
-            };
+            var domains = props[i]["rdfs:domain"]
+            _.each(domains, function (domain) {
+                if (_.isObject(domain)) {
+                    domain = domain['@id'];
+                }
+                var input = {
+                    disabled: disabled,
+                    searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
+                    predicate: Ontology.resolveURI(ont, props[i]["@id"]),
+                    authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
+                    range: datatype,
+                    datatype: datatype,
+                    label: props[i]["rdfs:label"][0]["@value"],
+                    domain: domain,
+                    values: [{
+                        old: {value: "", lang: ""},
+                        current: {value: "", lang: ""}
+                    }]
+                };
 
-            if (input.searchable) {
-                input.type = "input-string-searchable";
-                input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-            } else if (input.authorized) {
-                switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
-                    case "language":
-                        input.type = "select-authorized-language";
-                        break;
-                    case "format":
-                        input.type = "select-authorized-format";
-                        break;
-                    case "nationality":
-                        input.type = "select-authorized-nationality";
-                        break;
+                if (input.searchable) {
+                    input.type = "input-string-searchable";
+                    input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                } else if (input.authorized) {
+                    switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
+                        case "language":
+                            input.type = "select-authorized-language";
+                            break;
+                        case "format":
+                            input.type = "select-authorized-format";
+                            break;
+                        case "nationality":
+                            input.type = "select-authorized-nationality";
+                            break;
+                    }
+                    input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                } else {
+                    switch (input.range) {
+                        case "http://www.w3.org/2001/XMLSchema#string":
+                            input.type = "input-string";
+                            break;
+                        case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
+                            input.type = "input-lang-string";
+                            break;
+                        case "http://www.w3.org/2001/XMLSchema#gYear":
+                            input.type = "input-gYear";
+                            break;
+                        case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
+                            input.type = "input-nonNegativeInteger";
+                            break;
+                        case "deichman:Work":
+                        case "deichman:Person":
+                            // TODO infer from ontology that this is an URI
+                            // (because deichman:Work a rdfs:Class)
+                            input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                            input.type = "input-string"; // temporarily
+                            break;
+                        default:
+                            throw "Doesn't know which input-type to assign to range: " + input.range;
+                    }
                 }
-                input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-            } else {
-                switch (input.range) {
-                    case "http://www.w3.org/2001/XMLSchema#string":
-                        input.type = "input-string";
-                        break;
-                    case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
-                        input.type = "input-lang-string";
-                        break;
-                    case "http://www.w3.org/2001/XMLSchema#gYear":
-                        input.type = "input-gYear";
-                        break;
-                    case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
-                        input.type = "input-nonNegativeInteger";
-                        break;
-                    case "deichman:Work":
-                    case "deichman:Person":
-                        // TODO infer from ontology that this is an URI
-                        // (because deichman:Work a rdfs:Class)
-                        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                        input.type = "input-string"; // temporarily
-                        break;
-                    default:
-                        throw "Doesn't know which input-type to assign to range: " + input.range;
-                }
-            }
-            inputs.push(input);
-            inputMap[input.predicate] = input;
+                inputs.push(input);
+                inputMap[_.last(domain.split(":")) + "." + input.predicate] = input;
+            });
+
+
         }
         var inputGroups = [];
+        var ontologyUri = ractive.get("config.ontologyUri");
         var tabs = (resourceType === "Workflow") ? ractive.get("config.tabs") : [];
-        _.each(tabs, function(tab){
+        _.each(tabs, function (tab) {
             var group = {};
             var groupInputs = [];
-            _.each(tab.rdfProperties, function(prop){
-                var currentInput = inputMap[ractive.get("config.ontologyUri") + "#" + prop];
+            _.each(tab.rdfProperties, function (prop) {
+                var currentInput = inputMap[tab.rdfType + "." + ontologyUri + "#" + prop];
                 if (typeof currentInput === 'undefined') {
                     throw "Tab '" + tab.label + "' specified unknown property '" + prop + "'";
                 }
-                if (typeof tab.rdfType === 'undefined' || _.contains(
-                        _.map(
-                            _.isArray(currentInput.domains) ? currentInput.domains : [currentInput.domains],
-                            function(domain) {
-                                return _.last(domain['@id'].split(':'));
-                            })),
-                        tab.rdfType) {
+                if (tab.rdfType === _.last(currentInput.domain.split(":"))) {
                     groupInputs.push(currentInput);
+                    currentInput.rdfType = tab.rdfType;
                 }
             });
             group.inputs = groupInputs;
             group.tabLabel = tab.label;
             group.tabId = tab.id;
             group.tabSelected = false;
+            if (tab.nextStep) {
+                group.nextStep = tab.nextStep;
+            }
+
+            group.domain = tab.rdfType;
             inputGroups.push(group);
         });
         if (inputGroups.length > 0) {
@@ -272,6 +314,34 @@
             var regex = new RegExp(regexS);
             var results = regex.exec(location.search);
             return results === null ? null : results[1];
+        },
+        patchResourceFromValue: function (subject, predicate, inputValue, datatype, errors, keypath) {
+            var patch = Ontology.createPatch(subject, predicate, inputValue, datatype);
+            if (patch && patch.trim() != "") {
+                axios.patch(subject, patch, {
+                        headers: {
+                            Accept: "application/ld+json",
+                            "Content-Type": "application/ldpatch+json"
+                        }
+                    })
+                    .then(function (response) {
+                        // successfully patched resource
+
+                        // keep the value in current.old - so we can do create delete triple patches later
+                        if (keypath) {
+                            var cur = ractive.get(keypath + ".current");
+                            ractive.set(keypath + ".old.value", cur.value);
+                            ractive.set(keypath + ".old.lang", cur.lang);
+
+                            ractive.set("save_status", "alle endringer er lagret");
+                        }
+                    })
+                    .catch(function (response) {
+                        // failed to patch resource
+                        console.log("HTTP PATCH failed with: ");
+                        errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+                    });
+            }
         },
         init: function (template) {
             template = template || "/main_template.html";
@@ -316,13 +386,23 @@
                             search_result: null,
                             config: config,
                             save_status: "ny ressurs",
-                            inputForId: function (id, map) {
-                                debugger;
-                                return map[id];
+                            targetResources: {
+                                Work: {
+                                    uri: "",
+                                    pendingProperties: []
+                                },
+                                Person: {
+                                    uri: "",
+                                    pendingProperties: []
+                                },
+                                Publication: {
+                                    uri: "",
+                                    pendingProperties: []
+                                }
                             }
                         },
-                        decorators:{
-                            repositionSupportPanel: function(node){
+                        decorators: {
+                            repositionSupportPanel: function (node) {
                                 $(node).find(".support-panel").css({top: $(node).position().top})
                                 Main.repositionSupportPanelsHorizontally();
                                 return {
@@ -352,34 +432,15 @@
                         },
                         // patchResource creates a patch request based on previous and current value of
                         // input field, and sends this to the backend.
-                        patchResource: function (event, predicate) {
-                            if (event.context.error || (event.context.current.value === "" && event.context.old.value === "")) {
+                        patchResource: function (event, predicate, origin, rdfType) {
+                            var inputValue = event.context;
+                            if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
                                 return;
                             }
                             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                            var patch = Ontology.createPatch(ractive.get("resource_uri"), predicate, event.context, ractive.get(datatype));
-                            if (patch.trim() != "") {
-                                axios.patch(ractive.get("resource_uri"), patch, {
-                                        headers: {
-                                            Accept: "application/ld+json",
-                                            "Content-Type": "application/ldpatch+json"
-                                        }
-                                    })
-                                    .then(function (response) {
-                                        // successfully patched resource
-
-                                        // keep the value in current.old - so we can do create delete triple patches later
-                                        var cur = ractive.get(event.keypath + ".current");
-                                        ractive.set(event.keypath + ".old.value", cur.value);
-                                        ractive.set(event.keypath + ".old.lang", cur.lang);
-
-                                        ractive.set("save_status", "alle endringer er lagret");
-                                    })
-                                    .catch(function (response) {
-                                        // failed to patch resource
-                                        console.log("HTTP PATCH failed with: ");
-                                        errors.push("Noe gikk galt! Fikk ikke lagret endringene");
-                                    });
+                            var subject = ractive.get("selectedResources[" + rdfType + "]");
+                            if (subject) {
+                                Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
                             }
                         },
                         searchResource: function (event, predicate, searchString) {
@@ -398,7 +459,7 @@
                                 console.log(err);
                             });
                         },
-                        selectResource: function (event, predicate, origin) {
+                        selectResource: function (event, predicate, origin, domainType) {
                             console.log("select resource");
                             // selectResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
@@ -408,16 +469,15 @@
                             ractive.set(origin + ".current.displayValue", name);
                             ractive.set(origin + ".deletable", true);
                             ractive.set(origin + ".searchable", false);
-                            ractive.set("selectedResources[" + predicate.split("#")[1] + "]", uri);
+                            loadExistingResource(uri);
+                            ractive.set("selectedResources[" + domainType + "]", uri);
                             ractive.update();
-                            ///patchResource takes event.keypath and event.context, and predicate as param
-                            ractive.fire("patchResource", {keypath: origin, context: ractive.get(origin)}, predicate);
                         },
                         selectWorkResource: function (event) {
                             console.log("select work resource");
-                            // selectResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
-                            ractive.set("selectedResources[work]", uri);
+                            loadExistingResource(uri);
+                            ractive.set("selectedResources[Work]", uri);
                             ractive.update();
                         },
                         delResource: function (event, predicate) {
@@ -428,24 +488,35 @@
                             ractive.update();
                             ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
                         },
-                        activateTab: function(event) {
-                            _.each(ractive.get("inputGroups"), function(group, groupIndex) {
+                        activateTab: function (event) {
+                            _.each(ractive.get("inputGroups"), function (group, groupIndex) {
                                 var keyPath = "inputGroups." + groupIndex;
                                 ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
                             });
-                            console.log("active tab");
-                        }
-                    });
-
-                    ractive.observe("selectedResources[work]", function(newValue, oldValue, keypath){
-                        if (newValue && newValue != oldValue) {
-                            loadExistingResource(newValue);
+                        },
+                        nextStep: function (event) {
+                            var newResourceType = event.context.createNewResource;
+                            if (newResourceType && (typeof ractive.get("selectedResources[" + newResourceType + "]") === 'undefined')) {
+                                saveNewResourceFromInputs(newResourceType);
+                            }
+                            var foundSelectedTab = false;
+                            _.each(ractive.get("inputGroups"), function (group, groupIndex) {
+                                var keyPath = "inputGroups." + groupIndex;
+                                if (foundSelectedTab) {
+                                    ractive.set(keyPath + ".tabSelected", true);
+                                    foundSelectedTab = false;
+                                } else {
+                                    if (ractive.get(keyPath + ".tabSelected")) {
+                                        foundSelectedTab = true;
+                                    }
+                                    ractive.set(keyPath + ".tabSelected", false);
+                                }
+                            });
                         }
                     });
 
                     // Observing input for instant validation:
                     ractive.observe("inputs.*.values.*", function (newValue, oldValue, keypath) {
-                        console.log("Validation " + keypath + " -> " + newValue.current.value);
                         if (newValue.current.value === "") {
                             ractive.set(keypath + ".error", false);
                             return;
@@ -485,7 +556,7 @@
             var supportPanelWidth = $("#right-dummy-panel").width();
 
             //var existingTop = $(".support-panel").position().top;
-            $(".support-panel").each(function(index, panel) {
+            $(".support-panel").each(function (index, panel) {
                 var existingTop = $(panel).position().top;
                 $(panel).css({left: supportPanelLeftEdge, width: supportPanelWidth});
             });

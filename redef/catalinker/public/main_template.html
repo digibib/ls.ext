@@ -20,6 +20,11 @@
                 {{#each inputs}}
                 {{>input}}
                 {{/each}}
+                <div class="pure-u-1-2">
+                    {{#nextStep}}
+                        <button class="next-step-button" on-click="nextStep:{{.}}">{{buttonLabel}}</button>
+                    {{/nextStep}}
+                </div>
             </div>
             {{/each}}
         </div>
@@ -40,7 +45,7 @@
     <fieldset class="pure-u-1-2">
         <label>{{label}}</label>
         {{#each values}}
-        {{>type}}
+        {{>type }}
         {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
         <a data-automation-id="biblio_record_link" target="_blank"
            href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}"
@@ -64,16 +69,14 @@
         {{>"support-for-"+type}}
     </span>
 </div>
-<div class="pure-1-2"/>
 {{/partial}}
-
 {{#partial support-for-input-string-searchable}}
 {{#search_result}}
 <div class="prop-search-results">
     {{#results.hits.hits}}
     {{#with _source.person}}
     <div class="search-result" data-automation-id="{{uri}}">
-                <span on-click="selectResource:{{predicate}},{{origin}}">
+                <span on-click="selectResource:{{predicate}},{{origin}},{{rdfType}}" class="search-result-creator">
                     <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
                                 <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
                                         class="deathYear">{{death}}</span>){{/birth}}</span>
@@ -85,7 +88,9 @@
             <div class="search-result-work-list">
                 Verk:
                 {{#work}}
-                <div class="search-result-work" on-click="selectWorkResource">
+                <div class="search-result-work" on-click="selectWorkResource:{{predicate}},{{origin}},{{rdfType}}"
+                     onclick="(function(e){
+                     $(e.target).parents('.search-result').children('.search-result-creator').click(); })(event)">
                     <span class="search-result-work-name">{{title}}</span>
                     <span class="search-result-work-year">({{year}})</span>
                 </div>
@@ -99,12 +104,11 @@
 </div>
 {{/search_result}}
 {{/partial}}
-
 {{#partial select-authorized-language}}
 <select
         class="authorized"
         data-automation-id="{{predicate}}_{{@index}}"
-        on-change='patchResource:{{predicate}}'
+        on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
         on-keyup="countdownToSave"
         value="{{current.value}}">
     <option value="">(ikke valgt)</option>
@@ -118,7 +122,7 @@
 <select
         class="authorized"
         data-automation-id="{{predicate}}_{{@index}}"
-        on-change='patchResource:{{predicate}}'
+        on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
         on-keyup="countdownToSave"
         value="{{current.value}}">
     <option value="">(ikke valgt)</option>
@@ -132,7 +136,7 @@
 <select
         class="authorized"
         data-automation-id="{{predicate}}_{{@index}}"
-        on-change='patchResource:{{predicate}}'
+        on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
         on-keyup="countdownToSave"
         value="{{current.value}}">
     <option value="">(ikke valgt)</option>
@@ -146,7 +150,7 @@
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}}'
+on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
 on-change="countdownToSave"
 data-automation-id="{{predicate}}_{{@index}}"
@@ -168,12 +172,12 @@ value="{{current.displayValue}}" />
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}}'
+on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
 on-change="countdownToSave"
 data-automation-id="{{predicate}}_{{@index}}"
 value="{{current.value}}" />
-<select value="{{current.lang}}" on-change='patchResource:{{predicate}}' class="select_lang">
+<select value="{{current.lang}}" on-change='patchResource:{{predicate}},' class="select_lang">
     <option value="">velg språk</option>
     <option value="no">norsk</option>
     <option value="en">engelsk</option>
@@ -185,7 +189,7 @@ value="{{current.value}}" />
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}}'
+on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
 data-automation-id="{{predicate}}_{{@index}}"
 value="{{current.value}}" />
@@ -195,9 +199,9 @@ value="{{current.value}}" />
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}}'
+on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
 on-change="countdownToSave"
-data-automation-id="{{predicate}}_{{@index}}"
+data-automation-id="{{predicate}}_{{@index}},rdfType"
 value="{{current.value}}" />
 {{/partial}}

@@ -67,7 +67,7 @@
                     return /^\+?(\d)+$/.test(value);
                 default:
                     var err = "don't know how to validate literal of range: <" + range + ">";
-//          throw err;
+                    return true;
             }
         },
 
