@@ -427,6 +427,8 @@
                             axios.get(searchURI)
                                 .then(function (response) {
                                     var results = ensureJSON(response.data);
+                                    setUncheckedOnSearchResults(results);
+
                                     ractive.set("search_result", {
                                         origin: event.keypath,
                                         predicate: predicate,
@@ -446,11 +448,6 @@
                             ractive.update();
                         },
                         selectResource: function (event, predicate, origin, domainType) {
-                            console.log(event);
-                            console.log(predicate);
-                            console.log(origin)
-                            console.log("domainType: " + domainType);
-
                             console.log("select resource");
                             // selectResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
@@ -531,6 +528,46 @@
                             ractive.set(keypath + ".error", "ugyldig input");
                         }
                     });
+
+                    ractive.observe("search_result.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
+                        if (newValue === true) {
+                            var workPath = getParentFromKeypath(keypath);
+                            checkSelectedSearchResults([workPath]);
+                        }
+                    });
+
+                    ractive.observe("search_result.results.hits.hits.*._source.person.work.*.isChecked", function (newValue, oldValue, keypath) {
+                        if (newValue === true) {
+                            var workPath = getParentFromKeypath(keypath);
+                            var personPath = getParentFromKeypath(keypath, 3);
+                            checkSelectedSearchResults([workPath, personPath]);
+                        }
+                    });
+
+                    function getParentFromKeypath(keypath, parentLevels) {
+                        parentLevels = parentLevels || 1;
+                        var split = keypath.split('.');
+                        return split.splice(0, split.length - parentLevels).join('.');
+                    }
+
+                    function checkSelectedSearchResults(pathsToCheck) {
+                        setUncheckedOnSearchResults(ractive.get('search_result').results);
+                        pathsToCheck.forEach(function (path) {
+                            ractive.get(path).isChecked = true;
+                        });
+                        ractive.update();
+                    }
+
+                    function setUncheckedOnSearchResults(results) {
+                        results.hits.hits.forEach(function (hit) {
+                            var person = hit._source.person;
+                            person.isChecked = false;
+                            var works = person.work;
+                            works.forEach(function (work) {
+                                work.isChecked = false;
+                            });
+                        })
+                    }
 
                     return ractive;
                 })
