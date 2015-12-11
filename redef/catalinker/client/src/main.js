@@ -459,7 +459,21 @@
                                 console.log(err);
                             });
                         },
+                        toggleWork: function (event, person) {
+                            if (person.toggleWork) {
+                                person.toggleWork = false;
+                            }
+                            else {
+                                person.toggleWork = true;
+                            }
+                            ractive.update();
+                        },
                         selectResource: function (event, predicate, origin, domainType) {
+                            console.log(event);
+                            console.log(predicate);
+                            console.log(origin)
+                            console.log("domainType: " + domainType);
+
                             console.log("select resource");
                             // selectResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
@@ -480,7 +494,12 @@
                             ractive.set("selectedResources[Work]", uri);
                             ractive.update();
                         },
+                        setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
+                            ractive.fire("selectWorkResource", {context: event.context});
+                            ractive.fire("selectResource", {context: person}, predicate, origin, domainType);
+                        },
                         delResource: function (event, predicate) {
+                            ractive.set("search_result", null);
                             ractive.set(event.keypath + ".current.value", "");
                             ractive.set(event.keypath + ".current.displayValue", "");
                             ractive.set(event.keypath + ".deletable", false);
@@ -560,6 +579,9 @@
                 var existingTop = $(panel).position().top;
                 $(panel).css({left: supportPanelLeftEdge, width: supportPanelWidth});
             });
+        },
+        getRactive: function () {
+            return ractive;
         }
     };
 

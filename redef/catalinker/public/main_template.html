@@ -1,7 +1,7 @@
 <div class="content">
     <h2 data-automation-id="page-heading">Katalogisering av utgivelse</h2>
 
-    <div class="grid-input" >
+    <div class="grid-input">
         <div class="pure-g" style="height: 0px;">
             <div class="pure-u-1-2" id="left-dummy-panel"/>
             <div class="pure-u-1-2" id="right-dummy-panel"/>
@@ -22,7 +22,7 @@
                 {{/each}}
                 <div class="pure-u-1-2">
                     {{#nextStep}}
-                        <button class="next-step-button" on-click="nextStep:{{.}}">{{buttonLabel}}</button>
+                    <button class="next-step-button" on-click="nextStep:{{.}}">{{buttonLabel}}</button>
                     {{/nextStep}}
                 </div>
             </div>
@@ -73,36 +73,61 @@
 {{#partial support-for-input-string-searchable}}
 {{#search_result}}
 <div class="prop-search-results">
-    {{#results.hits.hits}}
-    {{#with _source.person}}
-    <div class="search-result" data-automation-id="{{uri}}">
-                <span on-click="selectResource:{{predicate}},{{origin}},{{rdfType}}" class="search-result-creator">
-                    <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
-                                <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span
-                                        class="deathYear">{{death}}</span>){{/birth}}</span>
-                    <span class="nationality">{{nationality}}</span>
-                </span>
+    <form action="">
+        {{#results.hits.hits}}
+        {{#with _source.person}}
+        <div class="search-result pure-g" data-automation-id="{{uri}}">
+            <div class="pure-u-1">
+                <div class="pure-g">
+                    <div class="pure-u-1-12">
+                        <input on-click="selectResource:{{predicate}},{{origin}}" class="creator-radio" type="radio"
+                               name="creator"/>
+                    </div>
 
-        <div class="search-result-more-info">
-            {{#work.length}}
-            <div class="search-result-work-list">
-                Verk:
-                {{#work}}
-                <div class="search-result-work" on-click="selectWorkResource:{{predicate}},{{origin}},{{rdfType}}"
-                     onclick="(function(e){
-                     $(e.target).parents('.search-result').children('.search-result-creator').click(); })(event)">
-                    <span class="search-result-work-name">{{title}}</span>
-                    <span class="search-result-work-year">({{year}})</span>
+                    <div class="pure-u-5-6">
+                        <p class="creator-name">{{name}}</p>
+                    </div>
+
+                    <div class="pure-u-1-12">
+                        <span on-click="toggleWork:{{_source.person}}">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>
+                    </div>
                 </div>
-                {{/work}}
+
+                <div class="pure-g">
+                    <div class="pure-u-1-8"></div>
+                    <div class="pure-u-7-8">
+                        <small><span class="birth-and-death">{{#birth}}f. <span
+                                class="birthYear">{{birth}}</span> - {{#death}}d. <span
+                                class="deathYear">{{death}}</span>{{/death}}{{/birth}}</span></small>
+                    </div>
+                </div>
+
+                {{#toggleWork}}
+                <div class="work-items pure-u-1">
+                    {{#work.length}}
+                    {{#work}}
+                    <div class="work-item pure-g">
+                        <span class="search-result-work-name pure-u-17-24">{{title}}</span>
+                        <span class="search-result-work-year pure-u-5-24">{{#year}}{{year}}{{/year}}</span>
+                    <span class="search-result-work-selector pure-u-1-12">
+                        <input type="radio" name="work"
+                               value="{{workvalue}}"
+                               on-click="setResourceAndWorkResource:{{_source.person}},{{predicate}},{{origin}},{{rdfType}}"/>
+                    </span>
+                    </div>
+                    {{/work}}
+                    {{/work}}
+                </div>
+                {{/toggleWork}}
             </div>
-            {{/work}}
         </div>
-    </div>
-    {{/with}}
-    {{/results}}
+        {{/with}}
+        {{/results}}
+    </form>
 </div>
 {{/search_result}}
+
+
 {{/partial}}
 {{#partial select-authorized-language}}
 <select

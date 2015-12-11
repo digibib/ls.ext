@@ -69,3 +69,25 @@ body {
   background-position: right top;
   cursor: pointer;
 }
+
+.work-item {
+  background: #dddddd;
+}
+
+.search-result {
+  background: white;
+  padding: 0.5em;
+  margin-bottom: 0.1em;
+}
+
+.creator-name, .creator-years {
+  margin: 0;
+}
+
+.tab-content {
+  background: #f5f6f6;
+}
+
+.creator-radio {
+  vertical-align: middle;
+}
