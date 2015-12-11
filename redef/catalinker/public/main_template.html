@@ -80,7 +80,7 @@
             <div class="pure-u-1">
                 <div class="pure-g">
                     <div class="pure-u-1-12">
-                        <input on-click="selectResource:{{predicate}},{{origin}}" class="creator-radio" type="radio"
+                        <input on-click="selectResource:{{predicate}},{{origin}},Person" class="creator-radio" type="radio"
                                name="creator"/>
                     </div>
 
@@ -112,7 +112,7 @@
                     <span class="search-result-work-selector pure-u-1-12">
                         <input type="radio" name="work"
                                value="{{workvalue}}"
-                               on-click="setResourceAndWorkResource:{{_source.person}},{{predicate}},{{origin}},{{rdfType}}"/>
+                               on-click="setResourceAndWorkResource:{{_source.person}},{{predicate}},{{origin}},Person"/>
                     </span>
                     </div>
                     {{/work}}

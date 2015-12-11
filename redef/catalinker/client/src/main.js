@@ -45,11 +45,8 @@
                 var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(uri)[1]);
                 var root = ldGraph.parse(graphData).byType(type)[0];
 
-                _.each(_.filter(ractive.get("inputs"),
-                    function (input) {
-                        return type == unPrefix(input.domain);
-                    }),
-                    function (input, inputIndex) {
+                _.each(ractive.get("inputs"), function (input, inputIndex) {
+                    if (type == unPrefix(input.domain)) {
                         var kp = "inputs." + inputIndex;
                         var values = root.getAll(_.last(input.predicate.split("#")));
                         if (values.length > 0) {
@@ -63,7 +60,8 @@
                                 console.log("Setting " + kp + ".values." + idx + ".current.value -> " + ractive.get(kp + ".values." + idx + ".current.value"));
                             }
                         }
-                    });
+                    }
+                });
                 ractive.update();
                 ractive.set("save_status", "åpnet eksisterende ressurs");
             })
