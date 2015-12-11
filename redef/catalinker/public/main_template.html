@@ -81,7 +81,7 @@
                 <div class="pure-g">
                     <div class="pure-u-1-12">
                         <input class="creator-radio" type="radio"
-                               on-click="selectResource:{{predicate}},{{origin}},Person"
+                               on-click="selectResource:{{predicate}},{{origin}},'Person'"
                                checked="{{isChecked}}"/>
                     </div>
 
@@ -112,7 +112,7 @@
                         <span class="search-result-work-year pure-u-5-24">{{#year}}{{year}}{{/year}}</span>
                     <span class="search-result-work-selector pure-u-1-12">
                         <input type="radio" checked="{{isChecked}}"
-                               on-click="setResourceAndWorkResource:{{.}},{{predicate}},{{origin}},Person"/>
+                               on-click="setResourceAndWorkResource:{{../../../person}},{{predicate}},{{origin}},'Person'"/>
                     </span>
                     </div>
                     {{/work}}
