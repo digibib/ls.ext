@@ -562,8 +562,7 @@
                         results.hits.hits.forEach(function (hit) {
                             var person = hit._source.person;
                             person.isChecked = false;
-                            var works = person.work;
-                            works.forEach(function (work) {
+                            _.each(person.work, function (work) {
                                 work.isChecked = false;
                             });
                         })
