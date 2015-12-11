@@ -11,14 +11,15 @@
         var StringUtil = require("./stringutil");
         var _ = require("underscore");
         var $ = require("jquery")
+        var ldGraph = require("ld-graph");
 
-        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $);
+        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph);
 
     } else {
         // Browser globals (root is window)
-        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$);
+        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph);
     }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph) {
     "use strict";
 
     Ractive.DEBUG = false;
@@ -30,61 +31,39 @@
     };
 
     /* Private functions */
+    function unPrefix(prefixed) {
+        return _.last(prefixed.split(":"));
+    }
+
     var loadExistingResource = function (uri) {
         axios.get(uri)
             .then(function (response) {
                 ractive.set("resource_uri", uri);
                 var resource;
-                var graph = ensureJSON(response.data);
-                // Work and Person resource gives a @graph object if attached resources, need to extract work to extract properties
-                // TODO: should be rewritten to use ld-graph
-                switch (/^.*(work|person|publication).*$/g.exec(uri)[1]) {
-                    case "work":
-                        if (graph["@graph"]) {
-                            graph["@graph"].forEach(function (g) {
-                                if (g["@type"] === "deichman:Work") {
-                                    resource = g;
-                                    resource["@context"] = graph["@context"];
-                                }
-                            });
-                        } else {
-                            resource = graph;
-                        }
-                        break;
-                    case "person":
-                        if (graph["@graph"]) {
-                            graph["@graph"].forEach(function (g) {
-                                if (g["@type"] === "deichman:Person") {
-                                    resource = g;
-                                    resource["@context"] = graph["@context"];
-                                }
-                            });
-                        } else {
-                            resource = graph;
-                        }
-                        break;
-                    default:
-                        resource = graph;
-                }
-                var values = Ontology.extractValues(resource);
+                var graphData = ensureJSON(response.data);
 
-                for (var n in ractive.get("inputs")) {
-                    var kp = "inputs." + n;
-                    var input = ractive.get(kp);
-                    // Populate with existing values
-                    if (values[input.predicate]) {
-                        var idx;
-                        for (idx = 0; idx < values[input.predicate].length; idx++) {
-                            // If populated is searchable, it should also be deletable
-                            if (input.searchable) {
-                                values[input.predicate][idx].deletable = true;
-                                values[input.predicate][idx].searchable = false;
+                var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(uri)[1]);
+                var root = ldGraph.parse(graphData).byType(type)[0];
+
+                _.each(_.filter(ractive.get("inputs"),
+                    function (input) {
+                        return type == unPrefix(input.domain);
+                    }),
+                    function (input, inputIndex) {
+                        var kp = "inputs." + inputIndex;
+                        var values = root.getAll(_.last(input.predicate.split("#")));
+                        if (values.length > 0) {
+                            var idx;
+                            for (idx = 0; idx < values.length; idx++) {
+                                ractive.set(kp + ".values." + idx + ".old", {value: "", lang: ""});
+                                ractive.set(kp + ".values." + idx + ".current", {
+                                    value: values[idx].value,
+                                    lang: values[idx].value
+                                });
+                                console.log("Setting " + kp + ".values." + idx + ".current.value -> " + ractive.get(kp + ".values." + idx + ".current.value"));
                             }
-                            ractive.set(kp + ".values." + idx, values[input.predicate][idx]);
-                            console.log("Setting " + kp + ".values." + idx + " -> " + values[input.predicate][idx].current.value);
                         }
-                    }
-                }
+                    });
                 ractive.update();
                 ractive.set("save_status", "åpnet eksisterende ressurs");
             })
@@ -110,7 +89,7 @@
     var saveNewResourceFromInputs = function (resourceType) {
         // collect inputs related to resource type
         var inputsToSave = _.filter(ractive.get("inputs"), function (input) {
-            return _.last(input.domain.split(":")) === resourceType;
+            return unPrefix(input.domain) === resourceType;
         });
         // force all inputs to appear as changed
         _.each(inputsToSave, function (input) {
@@ -159,7 +138,7 @@
                     }
                     return 0;
                 });
-                ractive.set("authorized_values." + predicate.split(":")[1], values_sorted);
+                ractive.set("authorized_values." + unPrefix(predicate), values_sorted);
             })
             .catch(function (err) {
                 console.log("GET authorized values error: " + err);
@@ -252,7 +231,7 @@
                     }
                 }
                 inputs.push(input);
-                inputMap[_.last(domain.split(":")) + "." + input.predicate] = input;
+                inputMap[unPrefix(domain) + "." + input.predicate] = input;
             });
 
 
@@ -268,7 +247,7 @@
                 if (typeof currentInput === 'undefined') {
                     throw "Tab '" + tab.label + "' specified unknown property '" + prop + "'";
                 }
-                if (tab.rdfType === _.last(currentInput.domain.split(":"))) {
+                if (tab.rdfType === unPrefix(currentInput.domain)) {
                     groupInputs.push(currentInput);
                     currentInput.rdfType = tab.rdfType;
                 }
