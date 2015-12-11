@@ -438,7 +438,7 @@
                                 return;
                             }
                             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                            var subject = ractive.get("selectedResources[" + rdfType + "]");
+                            var subject = ractive.get("selectedResources[" + rdfType + "]") || ractive.get("resource_uri");
                             if (subject) {
                                 Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
                             }
