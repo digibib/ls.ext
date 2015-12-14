@@ -74,7 +74,7 @@ app.get('/config', function (request, response) {
                 label: "Bekreft person",
                 rdfProperties: [/* isbn later*/"creator"],
                 nextStep: {
-                    buttonLabel: "Verifisér verk",
+                    buttonLabel: "Bekreft verk",
                     createNewResource: "Work"
                 }
             },
@@ -84,7 +84,7 @@ app.get('/config', function (request, response) {
                 label: "Bekreft verk",
                 rdfProperties: ["title", "originalTitle"],
                 nextStep: {
-                    buttonLabel: "Mer om verket"
+                    buttonLabel: "Beskriv verket"
                 }
             },
             {
@@ -93,7 +93,7 @@ app.get('/config', function (request, response) {
                 label: "Beskriv verket",
                 rdfProperties: ["year"],
                 nextStep: {
-                    buttonLabel: "Mer om utgivelsen",
+                    buttonLabel: "Beskriv utgivelsen",
                     createNewResource: "Publication"
                 }
             },

@@ -35,6 +35,16 @@
         return _.last(prefixed.split(":"));
     }
 
+    var unsetInputsForDomain = function (domainType) {
+        _.each(ractive.get("inputs"), function (input, inputIndex) {
+            if (domainType === unPrefix(input.domain)) {
+                var kp = "inputs." + inputIndex;
+                ractive.set(kp + '.values.*.current.value', '');
+                ractive.set(kp + '.values.*.old.value', '');
+            }
+        });
+    };
+
     var loadExistingResource = function (uri) {
         axios.get(uri)
             .then(function (response) {
@@ -466,6 +476,10 @@
                             ractive.set(origin + ".searchable", false);
                             loadExistingResource(uri);
                             ractive.set("selectedResources[" + domainType + "]", uri);
+                            if (ractive.get("selectedResources[Person]")) {
+                                ractive.set("selectedResources[Work]", null);
+                                unsetInputsForDomain("Work");
+                            }
                             ractive.update();
                         },
                         selectWorkResource: function (event) {
@@ -487,6 +501,18 @@
                             ractive.set(event.keypath + ".searchable", true);
                             ractive.update();
                             ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
+                        },
+                        unselectWorkAndPerson: function (event) {
+                            ractive.set("search_result", null);
+                            ractive.set(event.keypath + ".current.value", "");
+                            ractive.set(event.keypath + ".current.displayValue", "");
+                            ractive.set(event.keypath + ".deletable", false);
+                            ractive.set(event.keypath + ".searchable", true);
+                            ractive.set("selectedResources[Work]", null);
+                            unsetInputsForDomain('Work');
+                            ractive.set("selectedResources[Person]", null);
+                            unsetInputsForDomain('Person');
+                            ractive.update();
                         },
                         activateTab: function (event) {
                             _.each(ractive.get("inputGroups"), function (group, groupIndex) {
@@ -572,7 +598,8 @@
                             _.each(person.work, function (work) {
                                 work.isChecked = false;
                             });
-                        })
+                        });
+                        ractive.updateModel();
                     }
 
                     return ractive;
