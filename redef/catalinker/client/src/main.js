@@ -177,7 +177,7 @@
                 if (_.isObject(domain)) {
                     domain = domain['@id'];
                 }
-                if (resourceType === undefined || resourceType === unPrefix(domain)) {
+                if (resourceType === undefined || resourceType === "Workflow" || resourceType === unPrefix(domain)) {
                     var input = {
                         disabled: disabled,
                         searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
