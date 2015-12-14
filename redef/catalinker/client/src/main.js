@@ -52,10 +52,15 @@
                         if (values.length > 0) {
                             var idx;
                             for (idx = 0; idx < values.length; idx++) {
-                                ractive.set(kp + ".values." + idx + ".old", {value: "", lang: ""});
-                                ractive.set(kp + ".values." + idx + ".current", {
-                                    value: values[idx].value,
-                                    lang: values[idx].value
+                                ractive.set(kp + ".values." + idx, {
+                                    old: {
+                                        value: "",
+                                        lang: ""
+                                    },
+                                    current: {
+                                        value: values[idx].value,
+                                        lang: values[idx].lang
+                                    }
                                 });
                                 console.log("Setting " + kp + ".values." + idx + ".current.value -> " + ractive.get(kp + ".values." + idx + ".current.value"));
                             }
@@ -167,69 +172,71 @@
                 loadAuthorizedValues(url, props[i]["@id"]);
             }
             var datatype = props[i]["rdfs:range"]["@id"];
-            var domains = props[i]["rdfs:domain"]
+            var domains = props[i]["rdfs:domain"];
             _.each(domains, function (domain) {
                 if (_.isObject(domain)) {
                     domain = domain['@id'];
                 }
-                var input = {
-                    disabled: disabled,
-                    searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
-                    predicate: Ontology.resolveURI(ont, props[i]["@id"]),
-                    authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
-                    range: datatype,
-                    datatype: datatype,
-                    label: props[i]["rdfs:label"][0]["@value"],
-                    domain: domain,
-                    values: [{
-                        old: {value: "", lang: ""},
-                        current: {value: "", lang: ""}
-                    }]
-                };
+                if (resourceType === undefined || resourceType === unPrefix(domain)) {
+                    var input = {
+                        disabled: disabled,
+                        searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
+                        predicate: Ontology.resolveURI(ont, props[i]["@id"]),
+                        authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
+                        range: datatype,
+                        datatype: datatype,
+                        label: props[i]["rdfs:label"][0]["@value"],
+                        domain: domain,
+                        values: [{
+                            old: {value: "", lang: ""},
+                            current: {value: "", lang: ""}
+                        }]
+                    };
 
-                if (input.searchable) {
-                    input.type = "input-string-searchable";
-                    input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                } else if (input.authorized) {
-                    switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
-                        case "language":
-                            input.type = "select-authorized-language";
-                            break;
-                        case "format":
-                            input.type = "select-authorized-format";
-                            break;
-                        case "nationality":
-                            input.type = "select-authorized-nationality";
-                            break;
+                    if (input.searchable) {
+                        input.type = "input-string-searchable";
+                        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                    } else if (input.authorized) {
+                        switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
+                            case "language":
+                                input.type = "select-authorized-language";
+                                break;
+                            case "format":
+                                input.type = "select-authorized-format";
+                                break;
+                            case "nationality":
+                                input.type = "select-authorized-nationality";
+                                break;
+                        }
+                        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                    } else {
+                        switch (input.range) {
+                            case "http://www.w3.org/2001/XMLSchema#string":
+                                input.type = "input-string";
+                                break;
+                            case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
+                                input.type = "input-lang-string";
+                                break;
+                            case "http://www.w3.org/2001/XMLSchema#gYear":
+                                input.type = "input-gYear";
+                                break;
+                            case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
+                                input.type = "input-nonNegativeInteger";
+                                break;
+                            case "deichman:Work":
+                            case "deichman:Person":
+                                // TODO infer from ontology that this is an URI
+                                // (because deichman:Work a rdfs:Class)
+                                input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                                input.type = "input-string"; // temporarily
+                                break;
+                            default:
+                                throw "Doesn't know which input-type to assign to range: " + input.range;
+                        }
                     }
-                    input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                } else {
-                    switch (input.range) {
-                        case "http://www.w3.org/2001/XMLSchema#string":
-                            input.type = "input-string";
-                            break;
-                        case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
-                            input.type = "input-lang-string";
-                            break;
-                        case "http://www.w3.org/2001/XMLSchema#gYear":
-                            input.type = "input-gYear";
-                            break;
-                        case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
-                            input.type = "input-nonNegativeInteger";
-                            break;
-                        case "deichman:Work":
-                        case "deichman:Person":
-                            // TODO infer from ontology that this is an URI
-                            // (because deichman:Work a rdfs:Class)
-                            input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                            input.type = "input-string"; // temporarily
-                            break;
-                        default:
-                            throw "Doesn't know which input-type to assign to range: " + input.range;
-                    }
+                    inputs.push(input);
+                    inputMap[unPrefix(domain) + "." + input.predicate] = input;
                 }
-                inputs.push(input);
-                inputMap[unPrefix(domain) + "." + input.predicate] = input;
             });
 
 
@@ -571,7 +578,6 @@
                     return ractive;
                 })
                 .catch(function (err) {
-                    debugger;
                     console.log("Error initiating ractive template: " + err);
                 });
         },

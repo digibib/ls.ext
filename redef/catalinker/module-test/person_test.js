@@ -40,8 +40,8 @@ describe("Catalinker", function () {
             ontologyUri: "http://192.168.50.12:7000/ontology",
             resourceApiUri: "http://192.168.50.12:7000/"
           }});
-        case "/main_template.html":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template.html", "UTF-8") });
+        case "/main_template_old.html":
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template_old.html", "UTF-8") });
         case "http://192.168.50.12:7000/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
         case "http://192.168.50.12:7000/authorized_values/nationality":
@@ -66,7 +66,7 @@ describe("Catalinker", function () {
       document.body.appendChild(fixture);
 
       // load module
-      Main.init().then(function (m) {
+      Main.init("/main_template_old.html").then(function (m) {
         testRactive = m;
         return Main.loadOntology();
       }).then(function () {

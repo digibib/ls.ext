@@ -40,8 +40,8 @@ describe("Catalinker", function () {
             ontologyUri: "http://192.168.50.12:7000/ontology",
             resourceApiUri: "http://192.168.50.12:7000/"
           }});
-        case "/main_template.html":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template.html", "UTF-8") });
+        case "/main_template_old.html":
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template_old.html", "UTF-8") });
         case "http://192.168.50.12:7000/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
         case "http://192.168.50.12:7000/work/w123456":
@@ -68,7 +68,7 @@ describe("Catalinker", function () {
       document.body.appendChild(fixture);
 
       // load module
-      Main.init().then(function (m) {
+      Main.init("/main_template_old.html").then(function (m) {
         testRactive = m;
         return Main.loadOntology();
       }).then(function () {
@@ -144,11 +144,11 @@ describe("Catalinker", function () {
         var origin = "inputs.1.values.0"; // keypath for originating search field
         // selectResource event takes uri from context, and predicate and origin as parameters
         testRactive.fire("selectResource", {
-          context: { uri: "http://192.168.50.12:7000/work/h123456" }
+          context: { uri: "http://192.168.50.12:7000/person/h123456" }
         }, "http://192.168.50.12:7000/ontology#creator", origin);
         testRactive.update().then(function () {
           var creator = document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#creator_0"]')[0].value;
-          expect(creator).to.equal("http://192.168.50.12:7000/work/h123456");
+          expect(creator).to.equal("http://192.168.50.12:7000/person/h123456");
           done();
         }).catch(done);
       });
