@@ -31,15 +31,15 @@
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
-:title a rdfs:Property ;
-  rdfs:label "Title"@en ;
-  rdfs:label "Tittel"@no ;
+:mainTitle a rdfs:Property ;
+  rdfs:label "Main title"@en ;
+  rdfs:label "Hovedtittel"@no ;
   rdfs:domain :Work, :Publication ;
   rdfs:range xsd:string .
 
-:originalTitle a rdfs:Property ;
-  rdfs:label "Original title"@en ;
-  rdfs:label "Originaltittel"@no ;
+:subtitle a rdfs:Property ;
+  rdfs:label "Subtitle"@en ;
+  rdfs:label "Undertittel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
@@ -50,10 +50,10 @@
   rdfs:domain :Work ;
   rdfs:range :Person .
 
-:year a rdfs:Property ;
-  rdfs:label "Year"@en ;
-  rdfs:label "Årstall"@no ;
-  rdfs:domain :Work ;
+:publicationYear a rdfs:Property ;
+  rdfs:label "Publication year"@en ;
+  rdfs:label "Utgivelsesår"@no ;
+  rdfs:domain :Publication, :Work ;
   rdfs:range xsd:gYear .
 
 :recordID a rdfs:Property ;
@@ -66,7 +66,7 @@
 :language a rdfs:Property ;
   rdfs:label "Language"@en ;
   rdfs:label "Språk"@no ;
-  rdfs:domain :Publication ;
+  rdfs:domain :Publication, :Work ;
   rdfs:range lvont:Language ;
   duo:valuesFrom values:language .
 
@@ -83,13 +83,13 @@
   rdfs:domain :Publication ;
   rdfs:range :Work .
 
-:birth a rdfs:Property ;
+:birthYear a rdfs:Property ;
   rdfs:label "Birth year"@en ;
   rdfs:label "Fødselsår"@no ;
   rdfs:domain :Person ;
   rdfs:range xsd:gYear.
 
-:death a rdfs:Property ;
+:deathYear a rdfs:Property ;
   rdfs:label "Death year"@en ;
   rdfs:label "Dødsår"@no ;
   rdfs:domain :Person ;
