@@ -37,6 +37,10 @@ body {
       margin-bottom: 0.1em;
       .search-result-subitem {
         background: #dddddd;
+        margin-bottom: 2px;
+      }
+      .search-result-subitem:last-child {
+        margin-bottom: 0px;
       }
       .creator-name, .creator-years {
         margin: 0;
