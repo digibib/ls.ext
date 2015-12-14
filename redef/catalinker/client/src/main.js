@@ -444,7 +444,13 @@
                             axios.get(searchURI)
                                 .then(function (response) {
                                     var results = ensureJSON(response.data);
-                                    setUncheckedOnSearchResults(results);
+                                    results.hits.hits.forEach(function (hit) {
+                                        var person = hit._source.person;
+                                        person.isChecked = false;
+                                        _.each(person.work, function (work) {
+                                            work.isChecked = false;
+                                        });
+                                    });
 
                                     ractive.set("search_result", {
                                         origin: event.keypath,
@@ -573,7 +579,7 @@
                         if (newValue === true) {
                             var workPath = getParentFromKeypath(keypath);
                             var personPath = getParentFromKeypath(keypath, 3);
-                            checkSelectedSearchResults([workPath, personPath]);
+                            checkSelectedSearchResults([personPath, workPath]);
                         }
                     });
 
@@ -584,22 +590,11 @@
                     }
 
                     function checkSelectedSearchResults(pathsToCheck) {
-                        setUncheckedOnSearchResults(ractive.get('search_result').results);
+                        ractive.set("search_result.results.hits.hits.*._source.person.isChecked", false);
+                        ractive.set("search_result.results.hits.hits.*._source.person.work.*.isChecked", false);
                         pathsToCheck.forEach(function (path) {
-                            ractive.get(path).isChecked = true;
+                            ractive.set(path + '.isChecked', true);
                         });
-                        ractive.update();
-                    }
-
-                    function setUncheckedOnSearchResults(results) {
-                        results.hits.hits.forEach(function (hit) {
-                            var person = hit._source.person;
-                            person.isChecked = false;
-                            _.each(person.work, function (work) {
-                                work.isChecked = false;
-                            });
-                        });
-                        ractive.updateModel();
                     }
 
                     return ractive;
