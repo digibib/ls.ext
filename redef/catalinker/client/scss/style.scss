@@ -1,4 +1,5 @@
-$lightergray: #f6f6f6;
+$lightestgray: #f6f6f6;
+$lightergray: #e8e8e8;
 
 body {
   background: no-repeat url('/images/logo.png') 15px 20px / 170px;
@@ -20,7 +21,7 @@ body {
       display: block;
       margin-top: 20px;
     }
-    background: $lightergray;
+    background: $lightestgray;
     label {
       display: block;
     }
@@ -38,20 +39,22 @@ body {
       padding: 0.5em;
       margin-bottom: 0.1em;
       .search-result-subitem {
-        background: lightgrey;
+        background: $lightergray;
         margin-bottom: 2px;
+        padding-left: 0.4em;
+        padding-right: 0.4em;
+        .search-result-work-selector {
+          text-align: right;
+        }
       }
       .search-result-subitem:last-child {
-        margin-bottom: 0px;
+        margin-bottom: 0;
       }
       .creator-name, .creator-years {
         margin: 0;
       }
-      .creator-radio {
+      .select-creator-radio {
         vertical-align: middle;
-      }
-      .search-result-work-selector {
-        horizontal-align: right;
       }
     }
   }
