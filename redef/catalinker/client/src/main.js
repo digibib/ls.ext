@@ -462,13 +462,10 @@
                             });
                         },
                         toggleWork: function (event, person) {
-                            if (person.toggleWork) {
-                                person.toggleWork = false;
-                            }
-                            else {
-                                person.toggleWork = true;
-                            }
-                            ractive.update();
+                            var keypath = event.keypath + '.toggleWork';
+                            ractive.get(keypath) !== true ?
+                                ractive.set(keypath, true) :
+                                ractive.set(keypath, false);
                         },
                         selectResource: function (event, predicate, origin, domainType) {
                             console.log("select resource");
