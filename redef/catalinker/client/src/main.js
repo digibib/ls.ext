@@ -348,6 +348,12 @@
                             search_result: null,
                             config: config,
                             save_status: "ny ressurs",
+                            tabEnabled: function (tabSelected, domainType) {
+                                if (tabSelected === true || ractive.get("selectedResources." + domainType)) {
+                                    return true;
+                                }
+                                return false;
+                            },
                             targetResources: {
                                 Work: {
                                     uri: "",
@@ -483,10 +489,6 @@
                             ractive.update();
                         },
                         activateTab: function (event) {
-                            if (event.node.classList.contains("disabled")) {
-                                console.log("Disabled tab, aborting.");
-                                return;
-                            }
                             _.each(ractive.get("inputGroups"), function (group, groupIndex) {
                                 var keyPath = "inputGroups." + groupIndex;
                                 ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
