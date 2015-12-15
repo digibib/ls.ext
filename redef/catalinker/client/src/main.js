@@ -349,10 +349,7 @@
                             config: config,
                             save_status: "ny ressurs",
                             tabEnabled: function (tabSelected, domainType) {
-                                if (tabSelected === true || ractive.get("selectedResources." + domainType)) {
-                                    return true;
-                                }
-                                return false;
+                                return !!(tabSelected === true || ractive.get("selectedResources." + domainType));
                             },
                             targetResources: {
                                 Work: {
