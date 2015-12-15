@@ -16,7 +16,7 @@ describe("Catalinker", function () {
     before(function (done) {
 
       // load module
-      Main = require("../client/src/main.js");
+      Main = require("../client/src/main_old.js");
 
       // STUBS
 
