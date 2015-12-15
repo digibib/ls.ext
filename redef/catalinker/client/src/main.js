@@ -469,6 +469,10 @@
                         },
                         selectResource: function (event, predicate, origin, domainType) {
                             console.log("select resource");
+                            if (ractive.get("selectedResources.Person")) {
+                                ractive.set("selectedResources.Work", null);
+                                unsetInputsForDomain("Work");
+                            }
                             // selectResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
                             var name = event.context.name;
@@ -479,10 +483,6 @@
                             ractive.set(origin + ".searchable", false);
                             loadExistingResource(uri);
                             ractive.set("selectedResources." + domainType, uri);
-                            if (ractive.get("selectedResources.Person")) {
-                                ractive.set("selectedResources.Work", null);
-                                unsetInputsForDomain("Work");
-                            }
                             ractive.update();
                         },
                         selectWorkResource: function (event) {
