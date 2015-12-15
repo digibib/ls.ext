@@ -10,7 +10,7 @@
         var Ontology = require("./ontology");
         var StringUtil = require("./stringutil");
         var _ = require("underscore");
-        var $ = require("jquery")
+        var $ = require("jquery");
         var ldGraph = require("ld-graph");
 
         module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph);
@@ -105,12 +105,10 @@
             {}, {headers: {Accept: "application/ld+json", "Content-Type": "application/ld+json"}})
             .then(function (response) {
                 var resourceUri = response.headers.location;
-                if (resourceType !== undefined) {
-                    ractive.set("selectedResources[" + resourceType + "]", resourceUri);
-                }
+                ractive.set("selectedResources." + resourceType, resourceUri);
                 _.each(inputsToSave, function (input) {
                     _.each(input.values, function (value) {
-                        Main.patchResourceFromValue(resourceUri, input.predicate, value, input.datatype, errors); // skip keypath for now
+                        Main.patchResourceFromValue(resourceUri, input.predicate, value, input.datatype, errors);
                     })
                 });
             })
@@ -148,15 +146,12 @@
     };
 
     var onOntologyLoad = function (ont) {
-
-        var resourceType = ractive.get("resource_type");
-        var props = resourceType != "Workflow" ? Ontology.propsByClass(ont, resourceType) : Ontology.allProps(ont),
+        var props = Ontology.allProps(ont),
             inputs = [],
             inputMap = {},
             selectedResources = {};
 
         ractive.set("ontology", ont);
-        ractive.set("resource_label", Ontology.resourceLabel(ont, resourceType, "no").toLowerCase());
         ractive.set("selectedResources", selectedResources);
 
         for (var i = 0; i < props.length; i++) {
@@ -310,8 +305,8 @@
                     });
             }
         },
-        init: function (template) {
-            template = template || "/main_template.html";
+        init: function () {
+            var template = "/main_template.html";
             var config;
             window.onerror = function (message, url, line) {
                 // Log any uncaught exceptions to assist debugging tests.
