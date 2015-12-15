@@ -86,19 +86,6 @@
             });
     };
 
-    var createNewResource = function () {
-        // fetch URI for new resource
-        axios.post(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase(),
-            {}, {headers: {Accept: "application/ld+json", "Content-Type": "application/ld+json"}})
-            .then(function (response) {
-                // now that the resource exists - redirect to load the new resource
-                window.location.replace(location.href + "?resource=" + response.headers.location);
-            })
-            .catch(function (err) {
-                console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + err);
-            });
-    };
-
     var saveNewResourceFromInputs = function (resourceType) {
         // collect inputs related to resource type
         var inputsToSave = _.filter(ractive.get("inputs"), function (input) {
@@ -189,73 +176,71 @@
                 if (_.isObject(domain)) {
                     domain = domain['@id'];
                 }
-                if (resourceType === undefined || resourceType === "Workflow" || resourceType === unPrefix(domain)) {
-                    var input = {
-                        disabled: disabled,
-                        searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
-                        predicate: Ontology.resolveURI(ont, props[i]["@id"]),
-                        authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
-                        range: datatype,
-                        datatype: datatype,
-                        label: props[i]["rdfs:label"][0]["@value"],
-                        domain: domain,
-                        values: [{
-                            old: {value: "", lang: ""},
-                            current: {value: "", lang: ""}
-                        }]
-                    };
+                var input = {
+                    disabled: disabled,
+                    searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
+                    predicate: Ontology.resolveURI(ont, props[i]["@id"]),
+                    authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
+                    range: datatype,
+                    datatype: datatype,
+                    label: props[i]["rdfs:label"][0]["@value"],
+                    domain: domain,
+                    values: [{
+                        old: {value: "", lang: ""},
+                        current: {value: "", lang: ""}
+                    }]
+                };
 
-                    if (input.searchable) {
-                        input.type = "input-string-searchable";
-                        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                    } else if (input.authorized) {
-                        switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
-                            case "language":
-                                input.type = "select-authorized-language";
-                                break;
-                            case "format":
-                                input.type = "select-authorized-format";
-                                break;
-                            case "nationality":
-                                input.type = "select-authorized-nationality";
-                                break;
-                        }
-                        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                    } else {
-                        switch (input.range) {
-                            case "http://www.w3.org/2001/XMLSchema#string":
-                                input.type = "input-string";
-                                break;
-                            case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
-                                input.type = "input-lang-string";
-                                break;
-                            case "http://www.w3.org/2001/XMLSchema#gYear":
-                                input.type = "input-gYear";
-                                break;
-                            case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
-                                input.type = "input-nonNegativeInteger";
-                                break;
-                            case "deichman:Work":
-                            case "deichman:Person":
-                                // TODO infer from ontology that this is an URI
-                                // (because deichman:Work a rdfs:Class)
-                                input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                                input.type = "input-string"; // temporarily
-                                break;
-                            default:
-                                throw "Doesn't know which input-type to assign to range: " + input.range;
-                        }
+                if (input.searchable) {
+                    input.type = "input-string-searchable";
+                    input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                } else if (input.authorized) {
+                    switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
+                        case "language":
+                            input.type = "select-authorized-language";
+                            break;
+                        case "format":
+                            input.type = "select-authorized-format";
+                            break;
+                        case "nationality":
+                            input.type = "select-authorized-nationality";
+                            break;
                     }
-                    inputs.push(input);
-                    inputMap[unPrefix(domain) + "." + input.predicate] = input;
+                    input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                } else {
+                    switch (input.range) {
+                        case "http://www.w3.org/2001/XMLSchema#string":
+                            input.type = "input-string";
+                            break;
+                        case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
+                            input.type = "input-lang-string";
+                            break;
+                        case "http://www.w3.org/2001/XMLSchema#gYear":
+                            input.type = "input-gYear";
+                            break;
+                        case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
+                            input.type = "input-nonNegativeInteger";
+                            break;
+                        case "deichman:Work":
+                        case "deichman:Person":
+                            // TODO infer from ontology that this is an URI
+                            // (because deichman:Work a rdfs:Class)
+                            input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                            input.type = "input-string"; // temporarily
+                            break;
+                        default:
+                            throw "Doesn't know which input-type to assign to range: " + input.range;
+                    }
                 }
+                inputs.push(input);
+                inputMap[unPrefix(domain) + "." + input.predicate] = input;
             });
 
 
         }
         var inputGroups = [];
         var ontologyUri = ractive.get("config.ontologyUri");
-        var tabs = (resourceType === "Workflow") ? ractive.get("config.tabs") : [];
+        var tabs = ractive.get("config.tabs");
         _.each(tabs, function (tab) {
             var group = {};
             var groupInputs = [];
@@ -285,24 +270,10 @@
         }
         ractive.set("inputs", inputs);
         ractive.set("inputGroups", inputGroups);
-
-        if (resourceType != "Workflow") {
-            // If resource URI is given in query string, it will be loaded for editing, otherwise we will
-            // request a new URI for working on a new resource.
-            var uri = Main.getURLParameter("resource");
-            if (uri) {
-                loadExistingResource(uri);
-            } else {
-                createNewResource();
-            }
-        }
     };
 
     /* public API */
     var Main = {
-        getResourceType: function () {
-            return StringUtil.titelize(location.pathname.substr(location.pathname.lastIndexOf("/") + 1));
-        },
         getURLParameter: function (name) {
             // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
             name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -408,9 +379,6 @@
                             }
                         }
                     });
-                    // Find resource type from url path
-                    ractive.set("resource_type", Main.getResourceType());
-
                     ractive.on({
                         countdownToSave: function (event) {
                             // TODO find better name to this function
@@ -434,7 +402,7 @@
                                 return;
                             }
                             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                            var subject = ractive.get("selectedResources." + rdfType) || ractive.get("resource_uri");
+                            var subject = ractive.get("selectedResources." + rdfType);
                             if (subject) {
                                 Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
                             }
