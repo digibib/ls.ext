@@ -10,7 +10,7 @@
         var Ontology = require("./ontology");
         var StringUtil = require("./stringutil");
         var _ = require("underscore");
-        var $ = require("jquery");
+        var $ = require("jquery")
         var ldGraph = require("ld-graph");
 
         module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph);
@@ -118,7 +118,9 @@
             {}, {headers: {Accept: "application/ld+json", "Content-Type": "application/ld+json"}})
             .then(function (response) {
                 var resourceUri = response.headers.location;
-                ractive.set("selectedResources[" + resourceType + "]", resourceUri);
+                if (resourceType !== undefined) {
+                    ractive.set("selectedResources[" + resourceType + "]", resourceUri);
+                }
                 _.each(inputsToSave, function (input) {
                     _.each(input.values, function (value) {
                         Main.patchResourceFromValue(resourceUri, input.predicate, value, input.datatype, errors); // skip keypath for now
@@ -525,7 +527,7 @@
                         },
                         nextStep: function (event) {
                             var newResourceType = event.context.createNewResource;
-                            if (newResourceType && (typeof ractive.get("selectedResources." + newResourceType) === 'undefined')) {
+                            if (newResourceType && (!ractive.get("selectedResources." + newResourceType))) {
                                 saveNewResourceFromInputs(newResourceType);
                             }
                             var foundSelectedTab = false;

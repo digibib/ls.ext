@@ -19,6 +19,7 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery']));
+app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']));
 
 function newResource(type) {
     return axios.post(process.env.SERVICES_PORT + "/" + type, {}, {

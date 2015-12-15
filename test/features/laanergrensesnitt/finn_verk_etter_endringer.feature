@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@check-for-errors
 Egenskap: Finn verk etter endringer
   Som katalogisator
   Så ønsker jeg å kunne finne et verk etter å ha endret tittelen
