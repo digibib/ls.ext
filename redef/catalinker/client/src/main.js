@@ -10,7 +10,7 @@
         var Ontology = require("./ontology");
         var StringUtil = require("./stringutil");
         var _ = require("underscore");
-        var $ = require("jquery")
+        var $ = require("jquery");
         var ldGraph = require("ld-graph");
 
         module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph);
@@ -432,7 +432,7 @@
                                 return;
                             }
                             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                            var subject = ractive.get("selectedResources[" + rdfType + "]") || ractive.get("resource_uri");
+                            var subject = ractive.get("selectedResources." + rdfType) || ractive.get("resource_uri");
                             if (subject) {
                                 Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
                             }
@@ -478,9 +478,9 @@
                             ractive.set(origin + ".deletable", true);
                             ractive.set(origin + ".searchable", false);
                             loadExistingResource(uri);
-                            ractive.set("selectedResources[" + domainType + "]", uri);
-                            if (ractive.get("selectedResources[Person]")) {
-                                ractive.set("selectedResources[Work]", null);
+                            ractive.set("selectedResources." + domainType, uri);
+                            if (ractive.get("selectedResources.Person")) {
+                                ractive.set("selectedResources.Work", null);
                                 unsetInputsForDomain("Work");
                             }
                             ractive.update();
@@ -489,12 +489,12 @@
                             console.log("select work resource");
                             var uri = event.context.uri;
                             loadExistingResource(uri);
-                            ractive.set("selectedResources[Work]", uri);
+                            ractive.set("selectedResources.Work", uri);
                             ractive.update();
                         },
                         setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
-                            ractive.fire("selectWorkResource", {context: event.context});
                             ractive.fire("selectResource", {context: person}, predicate, origin, domainType);
+                            ractive.fire("selectWorkResource", {context: event.context});
                         },
                         delResource: function (event, predicate) {
                             ractive.set("search_result", null);
@@ -511,9 +511,9 @@
                             ractive.set(event.keypath + ".current.displayValue", "");
                             ractive.set(event.keypath + ".deletable", false);
                             ractive.set(event.keypath + ".searchable", true);
-                            ractive.set("selectedResources[Work]", null);
+                            ractive.set("selectedResources.Work", null);
                             unsetInputsForDomain('Work');
-                            ractive.set("selectedResources[Person]", null);
+                            ractive.set("selectedResources.Person", null);
                             unsetInputsForDomain('Person');
                             ractive.update();
                         },
@@ -525,7 +525,7 @@
                         },
                         nextStep: function (event) {
                             var newResourceType = event.context.createNewResource;
-                            if (newResourceType && (typeof ractive.get("selectedResources[" + newResourceType + "]") === 'undefined')) {
+                            if (newResourceType && (typeof ractive.get("selectedResources." + newResourceType) === 'undefined')) {
                                 saveNewResourceFromInputs(newResourceType);
                             }
                             var foundSelectedTab = false;
