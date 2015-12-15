@@ -31,15 +31,15 @@
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
-:title a rdfs:Property ;
-  rdfs:label "Title"@en ;
-  rdfs:label "Tittel"@no ;
+:mainTitle a rdfs:Property ;
+  rdfs:label "Main title"@en ;
+  rdfs:label "Hovedtittel"@no ;
   rdfs:domain :Work, :Publication ;
   rdfs:range xsd:string .
 
-:originalTitle a rdfs:Property ;
-  rdfs:label "Original title"@en ;
-  rdfs:label "Originaltittel"@no ;
+:subtitle a rdfs:Property ;
+  rdfs:label "Subtitle"@en ;
+  rdfs:label "Undertittel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 

@@ -83,7 +83,7 @@ app.get('/config', function (request, response) {
                 id: "confirm-work",
                 rdfType: "Work",
                 label: "Bekreft verk",
-                rdfProperties: ["mainTitle", "subtitle"],
+                rdfProperties: ["title", "originalTitle"],
                 nextStep: {
                     buttonLabel: "Beskriv verket"
                 }
@@ -92,7 +92,7 @@ app.get('/config', function (request, response) {
                 id: "describe-work",
                 rdfType: "Work",
                 label: "Beskriv verket",
-                rdfProperties: ["publicationYear"],
+                rdfProperties: ["year"],
                 nextStep: {
                     buttonLabel: "Beskriv utgivelsen",
                     createNewResource: "Publication"
@@ -102,7 +102,7 @@ app.get('/config', function (request, response) {
                 id: "describe-publication",
                 rdfType: "Publication",
                 label: "Beskriv utgivelsen",
-                rdfProperties: ["mainTitle", "publicationYear", "language", "format"],
+                rdfProperties: ["title", /*"year",*/ "language", "format"],
                 nextStep: {
                     buttonLabel: "Avslutt registrering av utgivelsen"
                 }
