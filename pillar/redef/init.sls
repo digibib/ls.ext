@@ -1,6 +1,6 @@
 redef:
   koha:
-    port_intra: 8082
+    port_intra: 8081
     port_opac: 8080
   triplestore:
     binding: 0.0.0.0
