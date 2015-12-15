@@ -145,7 +145,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
 
         String body = response.readEntity(String.class);
-        InputSource inputSource = new InputSource(new ByteArrayInputStream(body.getBytes(StandardCharsets.ISO_8859_1)));
+        InputSource inputSource = new InputSource(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
         XPath xpath = XPathFactory.newInstance().newXPath();
         String biblioId;
         try {

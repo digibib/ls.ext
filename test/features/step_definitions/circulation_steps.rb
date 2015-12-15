@@ -113,7 +113,7 @@ When(/^låneren reserverer boka$/) do
 end
 
 Then(/^viser systemet at boka er reservert av låneren$/) do
-  @browser.url.should eq("#{opac}/cgi-bin/koha/opac-user.pl#opac-user-holds")
+  @browser.url.should eq("#{opac}/cgi-bin/koha/opac-user.pl?#opac-user-holds")
   @browser.link(:href => "/cgi-bin/koha/opac-detail.pl?biblionumber=#{@context[:books][0].biblionumber}").present?.should be true
 end
 
