@@ -483,6 +483,10 @@
                             ractive.update();
                         },
                         activateTab: function (event) {
+                            if (event.node.classList.contains("disabled")) {
+                                console.log("Disabled tab, aborting.");
+                                return;
+                            }
                             _.each(ractive.get("inputGroups"), function (group, groupIndex) {
                                 var keyPath = "inputGroups." + groupIndex;
                                 ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);

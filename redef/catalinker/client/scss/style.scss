@@ -13,6 +13,15 @@ body {
   h1, h2, h3 {
     line-height: 1.2
   }
+  .grid-tab {
+    .grid-tab-link-selected {
+      background: $lightestgray;
+    }
+    .disabled {
+      color: lightgray;
+    }
+  }
+
   .tab-content {
     min-height: 600px;
     .next-step-button {

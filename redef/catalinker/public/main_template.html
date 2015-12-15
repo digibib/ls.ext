@@ -9,7 +9,8 @@
         <ul class="grid-tabs pure-g" id="workflow-tabs">
             {{#each inputGroups}}
             <li class="grid-tab pure-u">
-                <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link" id="{{tabId}}-tab"
+                <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link  {{#if tabSelected}}{{elseif (domain == 'Work' && !selectedResources.Work) || (domain == 'Publication' && !selectedResources.Publication)}}disabled{{/if}}"
+                   id="{{tabId}}-tab"
                    data-toggle="tab" role="tab" on-click="activateTab">{{tabLabel}}</a>
             </li>
             {{/each}}
