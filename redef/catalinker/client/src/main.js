@@ -441,7 +441,7 @@
                                 ractive.set("targetUri.Work", null);
                                 unsetInputsForDomain("Work");
                             }
-                            // selectResource takes origin as param, as we don't know where clicked search hits comes from
+                            // selectPersonResource takes origin as param, as we don't know where clicked search hits comes from
                             var uri = event.context.uri;
                             var name = event.context.name;
                             ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
@@ -461,7 +461,7 @@
                             ractive.update();
                         },
                         setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
-                            ractive.fire("selectResource", {context: person}, predicate, origin, domainType);
+                            ractive.fire("selectPersonResource", {context: person}, predicate, origin, domainType);
                             ractive.fire("selectWorkResource", {context: event.context});
                         },
                         delResource: function (event, predicate) {
