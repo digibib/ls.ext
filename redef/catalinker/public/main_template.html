@@ -70,13 +70,6 @@
         {{/}}
         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
         {{/each}}
-        <div class="column two-fifths prop-input {{predicate}}">
-            <div class="prop-details">
-                {{^disabled}}
-                <button class="prop-add" on-click="addValue">+</button>
-                {{/}}
-            </div>
-        </div>
     </fieldset>
     <span class="support-panel">
         {{>"support-for-"+type}}
