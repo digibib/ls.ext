@@ -105,7 +105,7 @@
             {}, {headers: {Accept: "application/ld+json", "Content-Type": "application/ld+json"}})
             .then(function (response) {
                 var resourceUri = response.headers.location;
-                ractive.set("selectedResources." + resourceType, resourceUri);
+                ractive.set("targetUri." + resourceType, resourceUri);
                 _.each(inputsToSave, function (input) {
                     _.each(input.values, function (value) {
                         Main.patchResourceFromValue(resourceUri, input.predicate, value, input.datatype, errors);
@@ -149,10 +149,10 @@
         var props = Ontology.allProps(ont),
             inputs = [],
             inputMap = {},
-            selectedResources = {};
+            targetUri = {};
 
         ractive.set("ontology", ont);
-        ractive.set("selectedResources", selectedResources);
+        ractive.set("targetUri", targetUri);
 
         for (var i = 0; i < props.length; i++) {
             var disabled = false;
@@ -349,7 +349,7 @@
                             config: config,
                             save_status: "ny ressurs",
                             tabEnabled: function (tabSelected, domainType) {
-                                return !!(tabSelected === true || ractive.get("selectedResources." + domainType));
+                                return tabSelected === true || ractive.get("targetUri." + domainType);
                             },
                             targetResources: {
                                 Work: {
@@ -400,7 +400,7 @@
                                 return;
                             }
                             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                            var subject = ractive.get("selectedResources." + rdfType);
+                            var subject = ractive.get("targetUri." + rdfType);
                             if (subject) {
                                 Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
                             }
@@ -435,10 +435,10 @@
                                 ractive.set(keypath, true) :
                                 ractive.set(keypath, false);
                         },
-                        selectResource: function (event, predicate, origin, domainType) {
+                        selectPersonResource: function (event, predicate, origin) {
                             console.log("select resource");
-                            if (ractive.get("selectedResources.Person")) {
-                                ractive.set("selectedResources.Work", null);
+                            if (ractive.get("targetUri.Person")) {
+                                ractive.set("targetUri.Work", null);
                                 unsetInputsForDomain("Work");
                             }
                             // selectResource takes origin as param, as we don't know where clicked search hits comes from
@@ -450,14 +450,14 @@
                             ractive.set(origin + ".deletable", true);
                             ractive.set(origin + ".searchable", false);
                             loadExistingResource(uri);
-                            ractive.set("selectedResources." + domainType, uri);
+                            ractive.set("targetUri.Person", uri);
                             ractive.update();
                         },
                         selectWorkResource: function (event) {
                             console.log("select work resource");
                             var uri = event.context.uri;
                             loadExistingResource(uri);
-                            ractive.set("selectedResources.Work", uri);
+                            ractive.set("targetUri.Work", uri);
                             ractive.update();
                         },
                         setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
@@ -479,9 +479,9 @@
                             ractive.set(event.keypath + ".current.displayValue", "");
                             ractive.set(event.keypath + ".deletable", false);
                             ractive.set(event.keypath + ".searchable", true);
-                            ractive.set("selectedResources.Work", null);
+                            ractive.set("targetUri.Work", null);
                             unsetInputsForDomain('Work');
-                            ractive.set("selectedResources.Person", null);
+                            ractive.set("targetUri.Person", null);
                             unsetInputsForDomain('Person');
                             ractive.update();
                         },
@@ -493,7 +493,7 @@
                         },
                         nextStep: function (event) {
                             var newResourceType = event.context.createNewResource;
-                            if (newResourceType && (!ractive.get("selectedResources." + newResourceType))) {
+                            if (newResourceType && (!ractive.get("targetUri." + newResourceType))) {
                                 saveNewResourceFromInputs(newResourceType);
                             }
                             var foundSelectedTab = false;
