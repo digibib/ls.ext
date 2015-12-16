@@ -16,25 +16,37 @@
             {{/each}}
         </ul>
         <div class="grid-content tab-content">
-            {{#each inputGroups}}
-            <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected -selected' : ''}} pure-g">
-                {{#each inputs}}
-                {{>input}}
-                {{/each}}
-                <div class="pure-u-1-2">
-                    {{#nextStep}}
-                    <button class="next-step-button" on-click="nextStep:{{.}}">{{buttonLabel}}</button>
-                    {{/nextStep}}
+            <div class="inner-content">
+                {{#each inputGroups}}
+                <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected -selected' : ''}} pure-g">
+                    {{#each inputs}}
+                    {{>input}}
+                    {{/each}}
+                    <div class="pure-u-1-2">
+                        {{#nextStep}}
+                        <button class="next-step-button" on-click="nextStep:{{.}}">{{buttonLabel}}</button>
+                        {{/nextStep}}
+                    </div>
                 </div>
+                {{/each}}
             </div>
-            {{/each}}
+            <div class="pure-g links">
+                {{#targetUri.Work}}
+                <div class="pure-u-1">
+                    <a data-automation-id="work_page_link" target="_blank"
+                       href="{{targetUri.Work.replace(':8005', ':8000')}}">Vis siden for verket</a>
+                </div>
+                {{/}}
+                {{#targetUri.Publication}}
+                <div class="pure-u-1">
+                    <a data-automation-id="biblio_record_link" target="_blank"
+                       href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
+                       class="link">Vis <utgivelsen></utgivelsen> i Koha</a>
+                </div>
+                {{/}}
+            </div>
         </div>
     </div>
-
-    <div class="column two-fifths">
-
-    </div>
-
 </div>
 <div class="footer">
     <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>

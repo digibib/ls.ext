@@ -112,11 +112,14 @@
                     })
                 });
             })
+            .then(function () {
+                loadExistingResource(ractive.get("targetUri." + resourceType));
+            })
             .catch(function (err) {
                 console.log("POST to " + resourceType.toLowerCase() + " fails: " + err);
+                errors.push(err);
+                ractive.set("errors", errors);
             });
-        ractive.set("errors", errors);
-
     };
 
     var loadAuthorizedValues = function (url, predicate) {
@@ -351,6 +354,14 @@
                             tabEnabled: function (tabSelected, domainType) {
                                 return tabSelected === true || ractive.get("targetUri." + domainType);
                             },
+                            publicationId: function () {
+                                var publicationIdInput = _.find(ractive.get("inputs"), function (input) {
+                                    return input.predicate.indexOf("#recordID") != -1;
+                                });
+                                if (publicationIdInput) {
+                                    return _.first(publicationIdInput.values).current.value;
+                                }
+                            },
                             targetResources: {
                                 Work: {
                                     uri: "",
@@ -546,6 +557,15 @@
                             var personPath = getParentFromKeypath(keypath, 3);
                             checkSelectedSearchResults([personPath, workPath]);
                         }
+                    });
+
+                    ractive.observe("targetUri.Work", function (newValue, oldValue, keypath) {
+                        _.each(ractive.get("inputs"), function (input, inputIndex) {
+                            if (input.predicate.indexOf("#publicationOf") != -1) {
+                                ractive.set("inputs." + inputIndex + ".values.0.current.value", newValue);
+                                ractive.set("inputs." + inputIndex + ".values.0.old.value", "");
+                            }
+                        });
                     });
 
                     function getParentFromKeypath(keypath, parentLevels) {
