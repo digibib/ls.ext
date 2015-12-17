@@ -422,8 +422,9 @@
                         searchResource: function (event, predicate, searchString) {
                             // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
                             var searchType = "person";
-                            var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search/?q=" + searchString;
-                            axios.get(searchURI)
+                            var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search";
+                            var searchData = {query: {match: {'person.name': searchString}}};
+                            axios.post(searchURI, searchData)
                                 .then(function (response) {
                                     var results = ensureJSON(response.data);
                                     results.hits.hits.forEach(function (hit) {

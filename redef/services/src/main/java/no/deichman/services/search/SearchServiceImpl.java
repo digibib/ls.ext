@@ -8,7 +8,9 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Optional;
@@ -40,13 +43,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 public class SearchServiceImpl implements SearchService {
     public static final String WORK_INDEX_TYPE = "work";
     public static final String PERSON_INDEX_TYPE = "person";
-    private final URIBuilder indexUriBuilder;
-    private final URIBuilder workSearchUriBuilder;
-    private final URIBuilder personSearchUriBuilder;
-    private final EntityService entityService;
-
     public static final Property CREATOR = createProperty(remote().ontology("creator"));
-    private final RDFRepository rdfRepository;
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     private static final String WORK_MODEL_TO_INDEX_DOCUMENT_QUERY = format("PREFIX  : <%1$s> \n"
@@ -63,20 +60,6 @@ public class SearchServiceImpl implements SearchService {
             + "             optional {?creator :death ?death.}\n"
             + "    }\n"
             + "}\n", remote().ontology());
-
-    private ModelToIndexMapper worksModelToIndexMapper = modelToIndexMapperBuilder()
-            .targetIndexType(WORK_INDEX_TYPE)
-            .selectQuery(WORK_MODEL_TO_INDEX_DOCUMENT_QUERY)
-            .mapFromResultVar("work").toJsonPath("work.uri")
-            .mapFromResultVar("workTitle").toJsonPath("work.title")
-            .mapFromResultVar("workYear").toJsonPath("work.year")
-            .mapFromResultVar("creatorName").toJsonPath("work.creator.name")
-            .mapFromResultVar("creator").toJsonPath("work.creator.uri")
-            .mapFromResultVar("birth").toJsonPath("work.creator.birth")
-            .mapFromResultVar("death").toJsonPath("work.creator.death")
-            .build();
-
-
     private static final String PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY = format(""
             + "PREFIX  : <%1$s> \n"
             + "PREFIX  rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -96,7 +79,22 @@ public class SearchServiceImpl implements SearchService {
             + "              optional {?work :year ?workYear .}"
             + "              }\n"
             + "}\n", remote().ontology());
-
+    private final URIBuilder indexUriBuilder;
+    private final URIBuilder workSearchUriBuilder;
+    private final URIBuilder personSearchUriBuilder;
+    private final EntityService entityService;
+    private final RDFRepository rdfRepository;
+    private ModelToIndexMapper worksModelToIndexMapper = modelToIndexMapperBuilder()
+            .targetIndexType(WORK_INDEX_TYPE)
+            .selectQuery(WORK_MODEL_TO_INDEX_DOCUMENT_QUERY)
+            .mapFromResultVar("work").toJsonPath("work.uri")
+            .mapFromResultVar("workTitle").toJsonPath("work.title")
+            .mapFromResultVar("workYear").toJsonPath("work.year")
+            .mapFromResultVar("creatorName").toJsonPath("work.creator.name")
+            .mapFromResultVar("creator").toJsonPath("work.creator.uri")
+            .mapFromResultVar("birth").toJsonPath("work.creator.birth")
+            .mapFromResultVar("death").toJsonPath("work.creator.death")
+            .build();
     private ModelToIndexMapper personModelToIndexMapper = modelToIndexMapperBuilder()
             .targetIndexType(PERSON_INDEX_TYPE)
             .selectQuery(PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY)
@@ -110,8 +108,6 @@ public class SearchServiceImpl implements SearchService {
             .mapFromResultVar("workYear").toJsonObjectArray("person.work").withObjectMember("year")
             .arrayGroupBy("work")
             .build();
-
-
 
 
     public SearchServiceImpl(String elasticSearchBaseUrl, RDFRepository rdfRepository, EntityService entityService) {
@@ -135,6 +131,44 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public final void indexPerson(String personId) {
         doIndexPerson(personId, false);
+    }
+
+    @Override
+    public final Response searchPersonWithJson(String json) {
+        return searchWithJson(json, personSearchUriBuilder);
+    }
+
+    @Override
+    public final Response searchWorkWithJson(String json) {
+        return searchWithJson(json, workSearchUriBuilder);
+    }
+
+    private Response searchWithJson(String body, URIBuilder searchUriBuilder) {
+        try {
+            HttpPost httpPost = new HttpPost(searchUriBuilder.build());
+            httpPost.setEntity(new StringEntity(body));
+            httpPost.setHeader("Content-type", "application/json");
+            return executeHttpRequest(httpPost);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private Response executeHttpRequest(HttpRequestBase httpRequestBase) throws IOException {
+        try (CloseableHttpClient httpclient = createDefault();
+             CloseableHttpResponse response = httpclient.execute(httpRequestBase)) {
+            HttpEntity responseEntity = response.getEntity();
+            String jsonContent = IOUtils.toString(responseEntity.getContent());
+            Response.ResponseBuilder responseBuilder = Response.ok(jsonContent);
+            Header[] headers = response.getAllHeaders();
+            for (Header header : headers) {
+                responseBuilder = responseBuilder.header(header.getName(), header.getValue());
+            }
+            return responseBuilder.build();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
@@ -205,23 +239,15 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private Response doSearch(String query, URIBuilder searchUriBuilder) {
-        try (CloseableHttpClient httpclient = createDefault()) {
-            HttpGet httpget = new HttpGet(searchUriBuilder.setParameter("q", query).build());
-            try (CloseableHttpResponse response = httpclient.execute(httpget)) {
-                HttpEntity responseEntity = response.getEntity();
-                String jsonContent = IOUtils.toString(responseEntity.getContent());
-                Response.ResponseBuilder responseBuilder = Response.ok(jsonContent);
-                Header[] headers = response.getAllHeaders();
-                for (Header header : headers) {
-                    responseBuilder = responseBuilder.header(header.getName(), header.getValue());
-                }
-                return responseBuilder.build();
-            }
+        try {
+            HttpGet httpGet = new HttpGet(searchUriBuilder.setParameter("q", query).build());
+            return executeHttpRequest(httpGet);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
     }
+
     private void doIndexPersonOnly(String personId) {
         doIndexPerson(personId, true);
     }

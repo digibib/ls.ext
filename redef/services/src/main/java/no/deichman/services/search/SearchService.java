@@ -13,4 +13,8 @@ public interface SearchService {
     Response searchPerson(String query);
 
     void indexPerson(String personUri);
+
+    Response searchPersonWithJson(String json);
+
+    Response searchWorkWithJson(String json);
 }

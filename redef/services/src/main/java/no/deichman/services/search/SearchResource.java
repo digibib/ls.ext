@@ -4,7 +4,9 @@ import no.deichman.services.entity.ResourceBase;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -39,11 +41,33 @@ public class SearchResource extends ResourceBase {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         switch (type) {
-            case "work": return getSearchService().searchWork(query);
-            case "person": return getSearchService().searchPerson(query);
-            default:throw new RuntimeException("Unknown type: " + type);
+            case "work":
+                return getSearchService().searchWork(query);
+            case "person":
+                return getSearchService().searchPerson(query);
+            default:
+                throw new RuntimeException("Unknown type: " + type);
         }
     }
+
+    @POST
+    @Path("{type: work|person}/_search")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public final Response searchJson(String body, @PathParam("type") String type) {
+        if (isBlank(body)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        switch (type) {
+            case "work":
+                return getSearchService().searchWorkWithJson(body);
+            case "person":
+                return getSearchService().searchPersonWithJson(body);
+            default:
+                throw new RuntimeException("Unknown type: " + type);
+        }
+    }
+
 
     @Override
     protected final ServletConfig getConfig() {
