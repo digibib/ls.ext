@@ -48,8 +48,8 @@ class AuthorizedValues < AdminPage
   def delete_value(value)
     values_table.rows.each do |row|
       if row.text.include?(value)
-        @browser.execute_script("window.confirm = function(msg){return true;}")
-        row.link(:href => /op=delete/).click
+        row.link(:href => /op=delete_confirm/).click
+        @browser.input(:class => "approve").click
         break
       end
     end

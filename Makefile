@@ -102,13 +102,17 @@ ifdef FEATURE
 CUKE_ARGS=-n \"$(FEATURE)\"
 endif
 
+ifdef PLACK_INTRA
+PLACK_ARGS=PLACK_INTRA=true
+endif
+
 test: test_patron_client test_catalinker cuke_test     ## Run unit and cucumber tests.
 
 cuke_test:
 	@vagrant ssh vm-test -c "cd vm-test && \
 	  rm -rf report/rerun.txt && \
-		$(BROWSER_ARG) cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS) || \
-		$(BROWSER_ARG) cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS)"
+		$(BROWSER_ARG) $(PLACK_ARGS) cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS) || \
+		$(BROWSER_ARG) $(PLACK_ARGS) cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS)"
 
 cuke_test_parallel:
 	vagrant ssh vm-test -c 'cd vm-test && parallel_cucumber -n 2 features/'
@@ -185,8 +189,8 @@ test_redef: test_patron_client test_services test_catalinker cuke_redef
 cuke_redef:
 	@ vagrant ssh vm-test -c "cd vm-test && \
 	  rm -rf report/rerun.txt && \
-		$(BROWSER_ARG) cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || \
-		$(BROWSER_ARG) cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)"
+		$(BROWSER_ARG) $(PLACK_ARGS) cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || \
+		$(BROWSER_ARG) $(PLACK_ARGS) cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)"
 
 test_patron_client:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'

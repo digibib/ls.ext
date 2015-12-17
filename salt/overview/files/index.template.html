@@ -132,6 +132,18 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col span_1_of_5">
+        <a href="http://{{ pillar['overview']['koha']['host'] }}:{{ pillar['koha']['intra']['plack_port']|string }}">Kohas Intra (Plack)</a>
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:plack:description', '') }}
+      </div>
+      <div class="col span_2_of_5">
+        {{ salt['pillar.get']('overview:koha:plack:examples', '') }}
+      </div>
+    </div>
+
     {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
     <div class="row">
       <div class="col span_1_of_5">

@@ -70,8 +70,6 @@ koha_mysql_container_running:
             HostPort: "3306"
     - volumes_from:
       - "koha_mysql_data"
-    - cap_add:
-      - MKNOD
     - watch:
       - docker: mysql_data_volume_installed
       - docker: mysql_data_volume_run_once
