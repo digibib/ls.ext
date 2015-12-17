@@ -354,6 +354,9 @@
                             tabEnabled: function (tabSelected, domainType) {
                                 return tabSelected === true || ractive.get("targetUri." + domainType);
                             },
+                            nextStepEnabled: function (domainType) {
+                                return !(domainType === 'Work' && !ractive.get('targetUri.Person'));
+                            },
                             publicationId: function () {
                                 var publicationIdInput = _.find(ractive.get("inputs"), function (input) {
                                     return input.predicate.indexOf("#recordID") != -1;
@@ -440,7 +443,7 @@
                                 console.log(err);
                             });
                         },
-                        toggleWork: function (event, person) {
+                        toggleWork: function (event) {
                             var keypath = event.keypath + '.toggleWork';
                             ractive.get(keypath) !== true ?
                                 ractive.set(keypath, true) :

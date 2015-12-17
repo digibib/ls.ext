@@ -24,7 +24,9 @@
                     {{/each}}
                     <div class="pure-u-1-2">
                         {{#nextStep}}
-                        <button class="next-step-button" on-click="nextStep:{{.}}">{{buttonLabel}}</button>
+                        <button class="pure-button pure-button-primary next-step-button"
+                                disabled="{{!nextStepEnabled(domain)}}" on-click="nextStep:{{.}}">{{buttonLabel}}
+                        </button>
                         {{/nextStep}}
                     </div>
                 </div>
@@ -41,7 +43,9 @@
                 <div class="pure-u-1">
                     <a data-automation-id="biblio_record_link" target="_blank"
                        href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
-                       class="link">Vis <utgivelsen></utgivelsen> i Koha</a>
+                       class="link">Vis
+                        <utgivelsen></utgivelsen>
+                        i Koha</a>
                 </div>
                 {{/}}
             </div>
@@ -96,7 +100,7 @@
                     </div>
 
                     <div class="pure-u-1-12">
-                        <span on-click="toggleWork:{{.}}">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>
+                        {{#work.length}}<span on-click="toggleWork">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>{{/}}
                     </div>
                 </div>
 
@@ -111,7 +115,6 @@
 
                 {{#toggleWork}}
                 <div class="work-items pure-u-1">
-                    {{#work.length}}
                     {{#work}}
                     <div class="search-result-subitem pure-g">
                         <span class="search-result-work-name pure-u-18-24">{{title}}</span>
@@ -121,7 +124,6 @@
                                on-click="setResourceAndWorkResource:{{../../../person}},{{predicate}},{{origin}},'Person'"/>
                     </span>
                     </div>
-                    {{/work}}
                     {{/work}}
                 </div>
                 {{/toggleWork}}
