@@ -53,7 +53,7 @@
                     {{#with _source.person}}
                     <div class="search-result" data-automation-id="{{uri}}" on-click="selectResource:{{predicate}},{{origin}}">
                         <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
-                        <span class="birth-and-death">{{#birth}}(<span class="birthYear">{{birth}}</span>-<span class="deathYear">{{death}}</span>){{/birth}}</span>
+                        <span class="birth-and-death">{{#birthYear}}(<span class="birthYear">{{birthYear}}</span>-<span class="deathYear">{{deathYear}}</span>){{/birthYear}}</span>
                         <span class="nationality">{{nationality}}</span>
                         <div class="search-result-more-info">
                             {{#work.length}}
@@ -61,8 +61,8 @@
                                 Verk:
                                 {{#work}}
                                 <div class="search-result-work">
-                                    <span class="search-result-work-name">{{title}}</span>
-                                    <span class="search-result-work-year">({{year}})</span>
+                                    <span class="search-result-work-name">{{mainTitle}}</span>
+                                    <span class="search-result-work-year">({{publicationYear}})</span>
                                 </div>
                                 {{/work}}
                             </div>

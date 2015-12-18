@@ -7,24 +7,24 @@
   "@graph": [
     {
       "deichman:recordID": "2",
-      "deichman:year": "1890",
+      "deichman:publicationYear": "1890",
       "deichman:creator": {
         "@id": "http://192.168.50.12:7000/person/h123456"
       },
       "deichman:originalTitle": "Sult",
-      "deichman:title": "Sult",
+      "deichman:mainTitle": "Sult",
       "@id": "http://192.168.50.12:7000/work/w123456",
       "@type": "deichman:Work"
     },
     {
       "deichman:name": "Knut Hamsun",
-      "deichman:birth": {
+      "deichman:birthYear": {
         "@type": "xsd:gYear",
         "@value": "1859"
       },
       "@id": "http://192.168.50.12:7000/person/h123456",
       "@type": "deichman:Person",
-      "deichman:death": {
+      "deichman:deathYear": {
         "@type": "xsd:gYear",
         "@value": "1952"
       }
@@ -34,7 +34,7 @@
       "deichman:format": {
         "@id": "http://data.deichman.no/format#Book"
       },
-      "deichman:title": [
+      "deichman:mainTitle": [
         {
           "@value": "Hungrig",
           "@language": "sv"

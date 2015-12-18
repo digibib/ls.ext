@@ -15,7 +15,7 @@ var work_response_with_publications = JSON.stringify({
           "deichman:publicationOf": {
             "@id": "http://192.168.50.12:8005/work/w733425565188"
           },
-          "deichman:name": [
+          "deichman:mainTitle": [
                 {
                   "@language": "en",
                   "@value": "elevatormusic"
@@ -35,7 +35,7 @@ var work_response_with_publications = JSON.stringify({
           "deichman:publicationOf": {
             "@id": "http://192.168.50.12:8005/work/w733425565188"
           },
-          "deichman:name": [
+          "deichman:mainTitle": [
                 {
                   "@language": "sv",
                   "@value": "heismusik"
@@ -47,8 +47,8 @@ var work_response_with_publications = JSON.stringify({
           "@id": "http://192.168.50.12:8005/work/w733425565188",
           "@type": "deichman:Work",
           "deichman:creator": "petter",
-          "deichman:name": "heismusikk",
-          "deichman:year": "1981"
+          "deichman:mainTitle": "heismusikk",
+          "deichman:publicationYear": "1981"
         },
         {
           "@id": "http://data.deichman.no/format#CD",
@@ -171,9 +171,9 @@ describe("Parsing JSON-LD as a graph", function () {
       assert.equal(work.properties.length, 3);
       assert.equal(work.properties[0].predicate, "http://192.168.50.12:8005/ontology#creator");
       assert.equal(work.properties[0].value, "petter");
-      assert.equal(work.properties[1].predicate, "http://192.168.50.12:8005/ontology#name");
+      assert.equal(work.properties[1].predicate, "http://192.168.50.12:8005/ontology#mainTitle");
       assert.equal(work.properties[1].value, "heismusikk");
-      assert.equal(work.properties[2].predicate, "http://192.168.50.12:8005/ontology#year");
+      assert.equal(work.properties[2].predicate, "http://192.168.50.12:8005/ontology#publicationYear");
       assert.equal(work.properties[2].value, "1981");
     });
 
@@ -189,7 +189,7 @@ describe("Parsing JSON-LD as a graph", function () {
     it("can filter property of a publication", function () {
       var pub = graph.works[0].publications[0];
 
-      var name_props = pub.property("http://192.168.50.12:8005/ontology#name");
+      var name_props = pub.property("http://192.168.50.12:8005/ontology#mainTitle");
       assert.equal(name_props.length, 2);
       assert.equal(name_props[0].value, "elevatormusic");
       assert.equal(name_props[0].language, "en");
@@ -200,7 +200,7 @@ describe("Parsing JSON-LD as a graph", function () {
 
     it("can filter property of a work", function () {
       var work = graph.works[0];
-      var name_props = work.property(graph.resolve("deichman:name"));
+      var name_props = work.property(graph.resolve("deichman:mainTitle"));
       assert.equal(name_props.length, 1);
       assert.equal(name_props[0].value, "heismusikk");
     });

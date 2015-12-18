@@ -212,7 +212,7 @@ When(/^når jeg endrer årstall for førsteutgave til verket$/) do
 end
 
 When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
-  predicate = "http://192.168.50.12:8005/ontology#title"
+  predicate = "http://192.168.50.12:8005/ontology#mainTitle"
   @context[:alt_title] = generateRandomString
   @browser.div(:class => predicate).button.click
   @site.RegWork.add_prop(predicate, @context[:alt_title], 1)
@@ -228,18 +228,18 @@ end
 
 When(/^jeg forsøker å registrere ett nytt verk$/) do
   @context[:work_title] = generateRandomString
-  @site.RegWork.add_prop_skip_wait("http://192.168.50.12:8005/ontology#title", @context[:work_title])
+  @site.RegWork.add_prop_skip_wait("http://192.168.50.12:8005/ontology#mainTitle", @context[:work_title])
 end
 
 When(/^jeg velger språk for tittelen$/) do
-  predicate = "http://192.168.50.12:8005/ontology#title"
+  predicate = "http://192.168.50.12:8005/ontology#mainTitle"
   @context[:title_lang] = "no"
   @browser.div(:class => predicate).select.select_value(@context[:title_lang])
 end
 
 When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @context[:year] = rand(2015).to_s
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#year", @context[:year])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#publicationYear", @context[:year])
 end
 
 When(/^jeg sletter eksisterende forfatter på verket$/) do
@@ -285,7 +285,7 @@ end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
   @context[:year] = arg1
-  @site.RegWork.add_prop_skip_wait("http://192.168.50.12:8005/ontology#year", @context[:year])
+  @site.RegWork.add_prop_skip_wait("http://192.168.50.12:8005/ontology#publicationYear", @context[:year])
 end
 
 When(/^jeg legger til et eksemplar av utgivelsen$/) do
@@ -349,17 +349,17 @@ end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
   @context[:work_title] = generateRandomString
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#title", @context[:work_title])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:work_title])
 end
 
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
   @context[:publication_title] = generateRandomString
-  @site.RegPublication.add_prop("http://192.168.50.12:8005/ontology#title", @context[:publication_title])
+  @site.RegPublication.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:publication_title])
 end
 
 Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
   @context[:work_title] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#title", @context[:work_title])
+  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:work_title])
 end
 
 Then(/^grensesnittet viser at endringene er lagret$/) do
@@ -398,7 +398,7 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
 
   page.select_prop('http://192.168.50.12:8005/ontology#format', @context[:publication_format])
   page.select_prop('http://192.168.50.12:8005/ontology#language', @context[:publication_language])
-  page.add_prop('http://192.168.50.12:8005/ontology#title', @context[:publication_title])
+  page.add_prop('http://192.168.50.12:8005/ontology#mainTitle', @context[:publication_title])
 end
 
 
@@ -439,10 +439,10 @@ When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
   @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:person_name])
 
   @context[:person_birth_year] = rand(2015).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birth", @context[:person_birth_year])
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birthYear", @context[:person_birth_year])
 
   @context[:person_death_year] = rand(2015).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#death", @context[:person_death_year])
+  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#deathYear", @context[:person_death_year])
 end
 
 When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do

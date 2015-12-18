@@ -108,8 +108,8 @@ describe("Catalinker", function () {
       it("populerer felt riktig", function (done) {
         expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#personTitle_0"]')[0].value).to.equal("Dr. Macabre");
         expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#name_0"]')[0].value).to.equal("R. Rolfsen");
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#birth_0"]')[0].value).to.equal("1977");
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#death_0"]')[0].value).to.equal("1981");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#birthYear_0"]')[0].value).to.equal("1977");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#deathYear_0"]')[0].value).to.equal("1981");
         done();
       });
 

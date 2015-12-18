@@ -104,8 +104,8 @@ describe("Catalinker", function () {
 
     describe("Endre eksisterende utgivelse", function () {
       it("populerer felt riktig", function (done) {
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#title_0"]')[0].value).to.equal("Test Publication");
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#originalTitle_0"]')[0].value).to.equal("Zombie Publication");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#subtitle_0"]')[0].value).to.equal("Test Publication");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#mainTitle_0"]')[0].value).to.equal("Zombie Publication");
         expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#recordID_0"]')[0].value).to.equal("123");
         done();
       });

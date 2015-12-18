@@ -107,7 +107,7 @@ describe("Parsing JSON-LD", function () {
         "@type": "deichman:Work",
         "deichman:creator": {"@id": "http://example.org/petter"},
         "deichman:name": [{ "@language": "en", "@value": "the title" }, { "@language": "no", "@value": "tittelen" }],
-        "deichman:year": "1981",
+        "deichman:publicationYear": "1981",
         "@context": {
           "deichman": "http://192.168.50.12:8005/ontology#",
           "rdfs": "http://www.w3.org/2000/01/rdf-schema#" } })),
@@ -115,7 +115,7 @@ describe("Parsing JSON-LD", function () {
         "http://192.168.50.12:8005/ontology#creator":
           [{ old: { value: "http://example.org/petter" },
             current: { value: "http://example.org/petter" } }],
-        "http://192.168.50.12:8005/ontology#name":
+        "http://192.168.50.12:8005/ontology#mainTitle":
           [{ old: { value: "the title", lang: "en" },
             current: { value: "the title", lang: "en" } },
            { old: { value: "tittelen", lang: "no" },

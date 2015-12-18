@@ -8,7 +8,7 @@
     <div class="column fourth"><p>bilde kommer her</p></div>
     <div class="column three-fourths">
       <h2><span data-automation-id="person-title">{{person.get("personTitle").value}}</span>&nbsp;<span data-automation-id="person-name">{{person.get("name").value}}</span></h2>
-      <h3>(<span data-automation-id="person-birth">{{person.get("birth").value}}</span>-<span data-automation-id="person-death">{{person.get("death").value}}</span>)</h3>
+      <h3>(<span data-automation-id="person-birth">{{person.get("birthYear").value}}</span>-<span data-automation-id="person-death">{{person.get("deathYear").value}}</span>)</h3>
       <div class="small-text">
         <p><strong>nasjonalitet:</strong>&nbsp;<span data-automation-id="person-nationality">{{person.out("nationality").get("label").value}}</span></p>
         <p><strong>Kort biografi</strong></p>
@@ -28,7 +28,7 @@
     <h3>Verk</h3>
     {{#works}}
       <div class="work" data-automation-id="{{this.uri}}">
-        <p><a href="{{linkify(id)}}"><strong>{{this.get("title").value}}</strong> ({{this.get("year").value}})</a></p>
+        <p><a href="{{linkify(id)}}"><strong>{{this.get("mainTitle").value}}</strong> ({{this.get("publicationYear").value}})</a></p>
       </div>
     {{/each}}
   </div>

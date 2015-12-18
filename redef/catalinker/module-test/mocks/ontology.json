@@ -110,8 +110,9 @@
       "@id": "deichman:language",
       "@type": "rdfs:Property",
       "rdfs:domain": {
-        "@id": "deichman:Publication"
-      },
+          "@id": "deichman:Publication"
+        }
+      ,
       "rdfs:label": [
         {
           "@language": "no",
@@ -173,7 +174,7 @@
       }
     },
     {
-      "@id": "deichman:title",
+      "@id": "deichman:mainTitle",
       "@type": "rdfs:Property",
       "rdfs:domain": [
         {
@@ -186,11 +187,11 @@
       "rdfs:label": [
         {
           "@language": "no",
-          "@value": "Tittel"
+          "@value": "Hovedtittel"
         },
         {
           "@language": "en",
-          "@value": "Title"
+          "@value": "Main title"
         }
       ],
       "rdfs:range": {
@@ -198,7 +199,7 @@
       }
     },
     {
-      "@id": "deichman:originalTitle",
+      "@id": "deichman:subtitle",
       "@type": "rdfs:Property",
       "rdfs:domain": [
         {
@@ -211,11 +212,11 @@
       "rdfs:label": [
         {
           "@language": "no",
-          "@value": "Originaltittel"
+          "@value": "Undertittel"
         },
         {
           "@language": "en",
-          "@value": "Original Title"
+          "@value": "Subtitle"
         }
       ],
       "rdfs:range": {
@@ -260,19 +261,24 @@
       "http://data.deichman.no/ui#editable": false
     },
     {
-      "@id": "deichman:year",
+      "@id": "deichman:publicationYear",
       "@type": "rdfs:Property",
-      "rdfs:domain": {
-        "@id": "deichman:Work"
-      },
+      "rdfs:domain": [
+        {
+          "@id": "deichman:Work"
+        },
+        {
+          "@id": "deichman:Publication"
+        }
+      ],
       "rdfs:label": [
         {
           "@language": "no",
-          "@value": "Årstall"
+          "@value": "Årstall for utgivelse"
         },
         {
           "@language": "en",
-          "@value": "Year"
+          "@value": "Year of publication"
         }
       ],
       "rdfs:range": {
@@ -280,7 +286,7 @@
       }
     },
     {
-      "@id": "deichman:birth",
+      "@id": "deichman:birthYear",
       "@type": "rdfs:Property",
       "rdfs:domain": {
         "@id": "deichman:Person"
@@ -300,7 +306,7 @@
       }
     },
     {
-      "@id": "deichman:death",
+      "@id": "deichman:deathYear",
       "@type": "rdfs:Property",
       "rdfs:domain": {
         "@id": "deichman:Person"

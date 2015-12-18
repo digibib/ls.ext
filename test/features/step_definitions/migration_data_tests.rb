@@ -39,7 +39,7 @@ When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter
   publication_name = generateRandomString
   ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://192.168.50.12:8005/ontology#Publication> .
               <publication> <http://192.168.50.12:8005/ontology#publicationOf> <#{@context[:identifier]}> .
-              <publication> <http://192.168.50.12:8005/ontology#title> \"#{publication_name}\" ."
+              <publication> <http://192.168.50.12:8005/ontology#mainTitle> \"#{publication_name}\" ."
   post_publication_ntriples publication_name, ntriples
 end
 
@@ -49,7 +49,7 @@ When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter o
               <publication> <http://192.168.50.12:8005/ontology#publicationOf> <#{@context[:identifier]}> .
               <publication> <http://192.168.50.12:8005/ontology#hasItem> <http://item> .
               <http://item> <http://192.168.50.12:8005/itemSubfieldCode/a> \"test\" .
-              <publication> <http://192.168.50.12:8005/ontology#title> \"#{publication_title}\" ."
+              <publication> <http://192.168.50.12:8005/ontology#mainTitle> \"#{publication_title}\" ."
   post_publication_ntriples publication_title, ntriples
 end
 
