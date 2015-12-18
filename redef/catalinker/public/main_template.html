@@ -131,6 +131,13 @@
         </div>
         {{/with}}
         {{/results}}
+        {{#results.hits.hits.length}}
+        <div class="search-result pure-g">
+            <div class="pure-u-1">
+                <button class="pure-button">Last fler</button>
+            </div>
+        </div>
+        {{/}}
     </form>
 </div>
 {{/search_result}}
