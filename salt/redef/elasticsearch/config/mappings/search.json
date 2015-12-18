@@ -14,24 +14,24 @@
                 "name": {
                   "type": "string"
                 },
-                "birth": {
+                "birthYear": {
                   "type": "string",
                   "index": "no"
                 },
-                "death": {
+                "deathYear": {
                   "type": "string",
                   "index": "no"
                 }
               }
             },
-            "title": {
+            "mainTitle": {
               "type": "string"
             },
             "uri": {
               "type": "string",
               "index": "no"
             },
-            "year": {
+            "publicationYear": {
               "type": "string",
               "index": "no"
             }
@@ -45,15 +45,19 @@
       "name": {
         "type": "string"
       },
-      "birth": {
+      "birthYear": {
         "type": "string",
         "index": "no"
       },
-      "death": {
+      "deathYear": {
         "type": "string",
         "index": "no"
       },
       "nationality": {
+        "type": "string",
+        "index": "no"
+      },
+      "uri": {
         "type": "string",
         "index": "no"
       },
@@ -64,11 +68,11 @@
             "type": "string",
             "index": "no"
           },
-          "title": {
+          "mainTitle": {
             "type": "string",
             "index": "no"
           },
-          "year": {
+          "publicationYear": {
             "type": "string",
             "index": "no"
           }

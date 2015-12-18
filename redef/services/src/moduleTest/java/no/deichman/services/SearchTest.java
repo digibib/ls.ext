@@ -58,7 +58,7 @@ public class SearchTest {
     private static String generateWorkJson(String title, String creator) {
         JsonObject json = new JsonObject();
         if (title != null) {
-            json.addProperty("title", title);
+            json.addProperty("mainTitle", title);
         }
         if (creator != null) {
             JsonObject name = new JsonObject();

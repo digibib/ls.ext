@@ -25,8 +25,8 @@ public class ModelToIndexMapperTest {
             + "                  <http://www.w3.org/2000/01/rdf-schema#label> ?nationalityLabel .\n"
             + "     optional {?work a <http://deichman.no/ontology#work> ;"
             + "                       <http://deichman.no/ontology#creator> ?person ;\n"
-            + "                       <http://deichman.no/ontology#title> ?workTitle ; \n"
-            + "                       <http://deichman.no/ontology#year> ?workYear . "
+            + "                       <http://deichman.no/ontology#mainTitle> ?workTitle ; \n"
+            + "                       <http://deichman.no/ontology#publicationYear> ?workYear . "
             + "      }\n"
             + "}\n";
 
@@ -85,12 +85,12 @@ public class ModelToIndexMapperTest {
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman.no/work_1"),
-                ResourceFactory.createProperty("http://deichman.no/ontology#title"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createResource("work_1_title")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman.no/work_1"),
-                ResourceFactory.createProperty("http://deichman.no/ontology#year"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#publicationYear"),
                 ResourceFactory.createResource("work_1_year")));
 
         model.add(ResourceFactory.createStatement(
@@ -105,12 +105,12 @@ public class ModelToIndexMapperTest {
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman.no/work_2"),
-                ResourceFactory.createProperty("http://deichman.no/ontology#title"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createResource("work_2_title")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman.no/work_2"),
-                ResourceFactory.createProperty("http://deichman.no/ontology#year"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#publicationYear"),
                 ResourceFactory.createResource("work_2_year")));
 
         Pair<String, String> uriAndDocument = modelToIndexMapperBuilder().targetIndexType("person")
@@ -119,8 +119,8 @@ public class ModelToIndexMapperTest {
                 .mapFromResultVar("name").toJsonPath("person.name")
                 .mapFromResultVar("nationalityLabel").toJsonPath("person.nationality")
                 .mapFromResultVar("work").toJsonObjectArray("person.work").withObjectMember("uri")
-                .mapFromResultVar("workTitle").toJsonObjectArray("person.work").withObjectMember("title")
-                .mapFromResultVar("workYear").toJsonObjectArray("person.work").withObjectMember("year")
+                .mapFromResultVar("workTitle").toJsonObjectArray("person.work").withObjectMember("mainTitle")
+                .mapFromResultVar("workYear").toJsonObjectArray("person.work").withObjectMember("publicationYear")
                 .arrayGroupBy("work")
                 .build()
                 .modelToIndexDocument(model)
@@ -138,13 +138,13 @@ public class ModelToIndexMapperTest {
                 + "      \"work\": ["
                 + "           {"
                 + "               \"uri\": \"http://deichman.no/work_1\","
-                + "               \"title\": \"work_1_title\","
-                + "               \"year\": \"work_1_year\""
+                + "               \"mainTitle\": \"work_1_title\","
+                + "               \"publicationYear\": \"work_1_year\""
                 + "           },"
                 + "           {"
                 + "               \"uri\": \"http://deichman.no/work_2\","
-                + "               \"title\": \"work_2_title\","
-                + "               \"year\": \"work_2_year\""
+                + "               \"mainTitle\": \"work_2_title\","
+                + "               \"publicationYear\": \"work_2_year\""
                 + "           }"
                 + "       ]"
                 + "  }"

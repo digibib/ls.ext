@@ -50,14 +50,14 @@ public class SearchServiceImpl implements SearchService {
             + "select distinct ?work ?workTitle ?workYear ?creatorName ?creator ?birth ?death\n"
             + "where {\n"
             + "    ?work a :Work ;\n"
-            + "             :title ?workTitle ;\n"
-            + "             :year ?workYear.\n"
+            + "             :mainTitle ?workTitle .\n"
+            + "    optional { ?work :publicationYear ?workYear. }\n"
             + "    optional { \n"
             + "             ?work :creator ?creator .\n"
             + "             ?creator a :Person ;\n"
             + "                      :name ?creatorName.\n"
-            + "             optional {?creator :birth ?birth.}\n"
-            + "             optional {?creator :death ?death.}\n"
+            + "             optional {?creator :birthYear ?birth.}\n"
+            + "             optional {?creator :deathYear ?death.}\n"
             + "    }\n"
             + "}\n", remote().ontology());
     private static final String PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY = format(""
@@ -68,15 +68,15 @@ public class SearchServiceImpl implements SearchService {
             + "where {\n"
             + "    ?person a :Person ;\n"
             + "             :name ?personName .\n"
-            + "    optional {?person :birth ?birth.}\n"
-            + "    optional {?person :death ?death.}\n"
+            + "    optional {?person :birthYear ?birth.}\n"
+            + "    optional {?person :deathYear ?death.}\n"
             + "    optional {?person :nationality ?nationality. \n"
             + "              ?nationality a duo:Nationality; \n"
             + "                           rdfs:label ?nationalityLabel. "
             + "    } \n"
             + "    optional {?work :creator ?person ;\n"
-            + "                    :title ?workTitle .\n"
-            + "              optional {?work :year ?workYear .}"
+            + "                    :mainTitle ?workTitle .\n"
+            + "              optional {?work :publicationYear ?workYear .}"
             + "              }\n"
             + "}\n", remote().ontology());
     private final URIBuilder indexUriBuilder;
@@ -88,24 +88,24 @@ public class SearchServiceImpl implements SearchService {
             .targetIndexType(WORK_INDEX_TYPE)
             .selectQuery(WORK_MODEL_TO_INDEX_DOCUMENT_QUERY)
             .mapFromResultVar("work").toJsonPath("work.uri")
-            .mapFromResultVar("workTitle").toJsonPath("work.title")
-            .mapFromResultVar("workYear").toJsonPath("work.year")
+            .mapFromResultVar("workTitle").toJsonPath("work.mainTitle")
+            .mapFromResultVar("workYear").toJsonPath("work.publicationYear")
             .mapFromResultVar("creatorName").toJsonPath("work.creator.name")
             .mapFromResultVar("creator").toJsonPath("work.creator.uri")
-            .mapFromResultVar("birth").toJsonPath("work.creator.birth")
-            .mapFromResultVar("death").toJsonPath("work.creator.death")
+            .mapFromResultVar("birth").toJsonPath("work.creator.birthYear")
+            .mapFromResultVar("death").toJsonPath("work.creator.deathYear")
             .build();
     private ModelToIndexMapper personModelToIndexMapper = modelToIndexMapperBuilder()
             .targetIndexType(PERSON_INDEX_TYPE)
             .selectQuery(PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY)
             .mapFromResultVar("person").toJsonPath("person.uri")
             .mapFromResultVar("personName").toJsonPath("person.name")
-            .mapFromResultVar("birth").toJsonPath("person.birth")
-            .mapFromResultVar("death").toJsonPath("person.death")
+            .mapFromResultVar("birth").toJsonPath("person.birthYear")
+            .mapFromResultVar("death").toJsonPath("person.deathYear")
             .mapFromResultVar("nationalityLabel").toJsonPath("person.nationality")
             .mapFromResultVar("work").toJsonObjectArray("person.work").withObjectMember("uri")
-            .mapFromResultVar("workTitle").toJsonObjectArray("person.work").withObjectMember("title")
-            .mapFromResultVar("workYear").toJsonObjectArray("person.work").withObjectMember("year")
+            .mapFromResultVar("workTitle").toJsonObjectArray("person.work").withObjectMember("mainTitle")
+            .mapFromResultVar("workYear").toJsonObjectArray("person.work").withObjectMember("publicationYear")
             .arrayGroupBy("work")
             .build();
 

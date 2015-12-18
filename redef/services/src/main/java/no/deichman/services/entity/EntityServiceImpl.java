@@ -65,7 +65,7 @@ public final class EntityServiceImpl implements EntityService {
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
-        titleProperty = ResourceFactory.createProperty(baseURI.ontology("title"));
+        titleProperty = ResourceFactory.createProperty(baseURI.ontology("mainTitle"));
         nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
         creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));

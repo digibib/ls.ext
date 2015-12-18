@@ -474,7 +474,7 @@ public class EntityServiceImplTest {
 
     private String itemNTriples(final String title, final String barcode) {
         return "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "hasItem> <__BASEURI__bibliofilItem/x" + barcode + "> .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "title> \"" + title + "\".\n"
+                + "<__BASEURI__bibliofilResource/1527411> <" + ontologyURI + "mainTitle> \"" + title + "\".\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/a> \"hutl\" .\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/b> \"hutl\" .\n"
                 + "<__BASEURI__bibliofilItem/x" + barcode + "> <" + ontologyURI + "itemSubfieldCode/c> \"m\" .\n"
@@ -497,13 +497,13 @@ public class EntityServiceImplTest {
 
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "title> \"" + originalPublicationTitle + "\" .\n";
+                + "<publication> <" + ontologyURI + "mainTitle> \"" + originalPublicationTitle + "\" .\n";
 
         Model inputPublication = modelFrom(publicationTriples, Lang.NTRIPLES);
         String publicationUri = service.create(PUBLICATION, inputPublication);
 
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "title", originalPublicationTitle, newPublicationTitle));
+        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalPublicationTitle, newPublicationTitle));
         Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationUri.substring(publicationUri.lastIndexOf("/") + 1));
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
@@ -517,7 +517,7 @@ public class EntityServiceImplTest {
         String publicationTitle = "Sult";
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "title> \"" + publicationTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
                 + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
 
         Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", "invalid"), Lang.NTRIPLES);
@@ -537,12 +537,12 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.getNewBiblioWithMarcRecord(marcRecord)).thenReturn(A_BIBLIO_ID);
 
         String workTriples = ""
-                + "<work> <" + ontologyURI + "title> \"" + originalWorkTitle + "\" .\n"
-                + "<work> <" + ontologyURI + "year> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<work> <" + ontologyURI + "mainTitle> \"" + originalWorkTitle + "\" .\n"
+                + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
                 + "<work> <" + ontologyURI + "creator> <__CREATORURI__> .\n";
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "title> \"" + originalPublicationTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "mainTitle> \"" + originalPublicationTitle + "\" .\n"
                 + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
         String personTriples = ""
                 + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
@@ -559,14 +559,14 @@ public class EntityServiceImplTest {
         verify(mockKohaAdapter).getNewBiblioWithMarcRecord(marcRecord);
 
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "title", originalPublicationTitle, newPublicationTitle));
+        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalPublicationTitle, newPublicationTitle));
         Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationId);
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator));
 
         String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.WORK, workId, getPatch(workUri, "title", originalWorkTitle, newWorkTitle));
+        service.patch(EntityType.WORK, workId, getPatch(workUri, "mainTitle", originalWorkTitle, newWorkTitle));
         verify(mockKohaAdapter, times(2)).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator)); // Need times(2) because publication has not changed.
 
         String personId = personUri.substring(personUri.lastIndexOf("/") + 1);

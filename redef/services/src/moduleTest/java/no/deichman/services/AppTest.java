@@ -177,11 +177,11 @@ public class AppTest {
         assertIsUri(workUri);
         assertThat(workUri, startsWith(baseUri));
 
-        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#title", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
-        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#year", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#publicationYear", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
         final HttpResponse<String> patchAddYearToWorkPatchResponse = buildPatchRequest(workUri, addYearToWorkPatch).asString();
         assertResponse(Status.OK, patchAddYearToWorkPatchResponse);
 
@@ -195,11 +195,11 @@ public class AppTest {
         final HttpResponse<String> patchAddCreatornameToPersonPatchResponse = buildPatchRequest(personUri, addCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchAddCreatornameToPersonPatchResponse);
 
-        final JsonArray addBirthToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#birth", "1923", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final JsonArray addBirthToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#birthYear", "1923", "http://www.w3.org/2001/XMLSchema#gYear"));
         final HttpResponse<String> patchAddBirthToPersonPatchResponse = buildPatchRequest(personUri, addBirthToPersonPatch).asString();
         assertResponse(Status.OK, patchAddBirthToPersonPatchResponse);
 
-        final JsonArray addDeathToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#death", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final JsonArray addDeathToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#deathYear", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
         final HttpResponse<String> patchAddDeathToPersonPatchResponse = buildPatchRequest(personUri, addDeathToPersonPatch).asString();
         assertResponse(Status.OK, patchAddDeathToPersonPatchResponse);
 
@@ -275,10 +275,10 @@ public class AppTest {
         doSearchForPersons("Hamsun");
 
         //Change the work title and search for it again.
-        final JsonArray delTitleToWorkPatch = buildLDPatch(buildPatchStatement("del", workUri, baseUri + "ontology#title", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray delTitleToWorkPatch = buildLDPatch(buildPatchStatement("del", workUri, baseUri + "ontology#mainTitle", "Sult", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
         final HttpResponse<String> patchDelTitleToWorkPatchResponse = buildPatchRequest(workUri, delTitleToWorkPatch).asString();
         assertResponse(Status.OK, patchDelTitleToWorkPatchResponse);
-        final JsonArray addNewTitleToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#title", "Metthet", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
+        final JsonArray addNewTitleToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Metthet", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"));
         final HttpResponse<String> patchAddNewTitleToWorkPatchResponse = buildPatchRequest(workUri, addNewTitleToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNewTitleToWorkPatchResponse);
         doSearchForWorks("Metthet");
@@ -298,14 +298,14 @@ public class AppTest {
         String input = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Person> .\n"
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
                 + "<__BASEURI__externalPerson/p1234> <http://data.deichman.no/duo#bibliofilPersonId> \"1234\" .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birthYear> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
 
         input = input.replace("__BASEURI__", baseUri);
 
         String duplicateInput = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Person> .\n"
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
                 + "<__BASEURI__externalPerson/p1234> <http://data.deichman.no/duo#bibliofilPersonId> \"1234\" .\n"
-                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birth> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
+                + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birthYear> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
         duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
 
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
@@ -331,7 +331,7 @@ public class AppTest {
         String input = "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#bibliofilID> \"1527411\" .\n"
                 + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#language> <http://lexvo.org/id/iso639-3/eng> .\n"
                 + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#format> <__BASEURI__format#Book> .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#title> \"Critical issues in contemporary Japan\" ."
+                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#mainTitle> \"Critical issues in contemporary Japan\" ."
                 + itemNTriples("03011527411001");
         input = input.replace("__BASEURI__", baseUri);
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
@@ -436,7 +436,7 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "work.title:" + name);
+                    .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle:" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
@@ -473,13 +473,13 @@ public class AppTest {
         getClient().prepareIndex("search", "work", workId)
                 .setSource(""
                         + "{ \"work\": {"
-                        + "    \"title\": \"" + title + "\","
-                        + "    \"year\": \"1890\","
+                        + "    \"mainTitle\": \"" + title + "\","
+                        + "    \"publicationYear\": \"1890\","
                         + "    \"uri\": \"http://deichman.no/work/w12344553\","
                         + "    \"creator\": {"
                         + "       \"name\": \"Knut Hamsun\","
-                        + "       \"birth\": \"1859\","
-                        + "       \"death\": \"1952\","
+                        + "       \"birthYear\": \"1859\","
+                        + "       \"deathYear\": \"1952\","
                         + "       \"uri\": \"http://deichman.no/person/h12345\""
                         + "    }"
                         + "}"
@@ -529,15 +529,15 @@ public class AppTest {
         String personUri = getLocation(createPersonResponse);
 
         String workTriples = ""
-                + "<work> <" + ontologyURI + "title> \"" + workTitle + "\" .\n"
-                + "<work> <" + ontologyURI + "year> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<work> <" + ontologyURI + "mainTitle> \"" + workTitle + "\" .\n"
+                + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
                 + "<work> <" + ontologyURI + "creator> <__CREATORURI__> .\n";
         HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(baseUri + "work", workTriples.replace("__CREATORURI__", personUri)).asJson();
         String workUri = getLocation(createworkResponse);
 
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "title> \"" + publicationTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
                 + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
 
         HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
