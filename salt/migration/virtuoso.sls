@@ -8,7 +8,7 @@
 
 /etc/virtuoso.ini:
   file.managed:
-    - source: salt://migration-new/files/virtuoso.ini
+    - source: salt://migration/files/virtuoso.ini
     - user: root
     - group: root
     - file_mode: 644

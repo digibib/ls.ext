@@ -1,6 +1,6 @@
 # MIGRATE AND IMPORT PARTONS
 
-{% from "migration-new/migration-docker-run-command.sls-fragment" import migration with context %}
+{% from "migration/migration-docker-run-command.sls-fragment" import migration with context %}
 
 {{ migration("convert_patrons", { "docker_cmd": "convert_data.sh" }) }}
 {{ migration("prepare_patrons_csv", { "docker_cmd": "prepare_csv.sh" }) }}

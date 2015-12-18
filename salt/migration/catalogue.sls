@@ -1,6 +1,6 @@
 # MIGRATE AND IMPORT CATALOGUE
 
-{% from "migration-new/migration-docker-run-command.sls-fragment" import migration with context %}
+{% from "migration/migration-docker-run-command.sls-fragment" import migration with context %}
 
 # PREPARE CATALOGUE
 {{ migration("merge_catalogue_and_items", {

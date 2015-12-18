@@ -1,5 +1,5 @@
 # CLEANUP KOHA AND RESET CHANGES IN DB
-{% from "migration-new/migration-docker-run-command.sls-fragment" import migration with context %}
+{% from "migration/migration-docker-run-command.sls-fragment" import migration with context %}
 
 {{ migration("koha_reset", {"mysql_import": {"file":"/migration/sql/reset.sql"} }) }}
 {{ migration("koha_cleanup", {"mysql_import": {"file":"/migration/sql/cleanup.sql"} }) }}

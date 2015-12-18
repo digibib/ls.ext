@@ -1,5 +1,5 @@
 # KOHA IMPORT OF CONFIGURATION DATA
-{% from "migration-new/migration-docker-run-command.sls-fragment" import migration with context %}
+{% from "migration/migration-docker-run-command.sls-fragment" import migration with context %}
 
 {{ migration("branches", {"mysql_import": {"file":"/migration/sql/branches.sql"} }) }}
 {{ migration("patron_categories", {"mysql_import": {"file":"/migration/sql/patron_categories.sql"} }) }}
