@@ -352,6 +352,11 @@ Then(/^jeg kan legge til tittel for det nye verket$/) do
   @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:work_title])
 end
 
+Then(/^jeg kan legge til språk for det nye verket$/) do
+  @context[:work_lang] = "http://lexvo.org/id/iso639-3/nob"
+  @site.RegWork.select_prop('http://192.168.50.12:8005/ontology#language', "Norsk")
+end
+
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
   @context[:publication_title] = generateRandomString
   @site.RegPublication.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:publication_title])
@@ -438,10 +443,10 @@ When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
   @context[:person_name] = generateRandomString
   @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:person_name])
 
-  @context[:person_birth_year] = rand(2015).to_s
+  @context[:person_birth_year] = (1000 + rand(1015)).to_s
   @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birthYear", @context[:person_birth_year])
 
-  @context[:person_death_year] = rand(2015).to_s
+  @context[:person_death_year] = (1000 + rand(1015)).to_s
   @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#deathYear", @context[:person_death_year])
 end
 

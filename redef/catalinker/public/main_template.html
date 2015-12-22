@@ -18,7 +18,7 @@
         <div class="grid-content tab-content">
             <div class="inner-content">
                 {{#each inputGroups}}
-                <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected -selected' : ''}} pure-g">
+                <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected' : ''}} pure-g">
                     {{#each inputs}}
                     {{>input}}
                     {{/each}}
@@ -58,7 +58,7 @@
 </div>
 
 {{#partial input}}
-<div class="input-panel pure-u-1-1" decorator="repositionSupportPanel">
+<div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
     <fieldset class="pure-u-1-2">
         <label>{{label}}</label>
         {{#each values}}
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="pure-u-1-12">
-                        {{#work.length}}<span on-click="toggleWork">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>{{/}}
+                        {{#work.length}}<span class="toggle-show-works" on-click="toggleWork">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>{{/}}
                     </div>
                 </div>
 
@@ -140,7 +140,7 @@
 {{#partial select-authorized-language}}
 <select
         class="authorized"
-        data-automation-id="{{predicate}}_{{@index}}"
+        data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
         on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
         on-keyup="countdownToSave"
         value="{{current.value}}">
@@ -154,7 +154,7 @@
 {{#partial select-authorized-format}}
 <select
         class="authorized"
-        data-automation-id="{{predicate}}_{{@index}}"
+        data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
         on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
         on-keyup="countdownToSave"
         value="{{current.value}}">
@@ -168,7 +168,7 @@
 {{#partial select-authorized-nationality}}
 <select
         class="authorized"
-        data-automation-id="{{predicate}}_{{@index}}"
+        data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
         on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
         on-keyup="countdownToSave"
         value="{{current.value}}">
@@ -186,7 +186,7 @@ class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
 on-change="countdownToSave"
-data-automation-id="{{predicate}}_{{@index}}"
+data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
 value="{{current.value}}" />
 {{/partial}}
 
@@ -195,7 +195,7 @@ value="{{current.value}}" />
        {{#deletable}}readonly {{/deletable}}
 on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}:{{predicate}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
-data-automation-id="{{predicate}}_{{@index}}"
+data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
 on-enter='searchResource:{{predicate}}, {{current.displayValue}}'
 value="{{current.displayValue}}" />
 {{/partial}}
@@ -208,7 +208,7 @@ class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
 on-change="countdownToSave"
-data-automation-id="{{predicate}}_{{@index}}"
+data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
 value="{{current.value}}" />
 <select value="{{current.lang}}" on-change='patchResource:{{predicate}},' class="select_lang">
     <option value="">velg språk</option>
@@ -224,7 +224,7 @@ value="{{current.value}}" />
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
-data-automation-id="{{predicate}}_{{@index}}"
+data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
 value="{{current.value}}" />
 {{/partial}}
 
@@ -235,6 +235,6 @@ class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
 on-keyup="countdownToSave"
 on-change="countdownToSave"
-data-automation-id="{{predicate}}_{{@index}},rdfType"
+data-automation-id="{{rdfType}}_{{predicate}}_{{@index}},rdfType"
 value="{{current.value}}" />
 {{/partial}}
