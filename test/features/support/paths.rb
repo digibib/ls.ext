@@ -94,7 +94,7 @@ module Paths
       :workflow => "/workflow"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://localhost:#{port(:catalinker)}#{paths[path.to_sym]}"
+    "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
   end
 
   def patron_client(path=nil)
