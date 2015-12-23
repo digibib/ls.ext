@@ -19,5 +19,5 @@
 {% set port_bindings = {'8890/tcp': { 'HostIp': pillar['redef']['triplestore']['binding'], 'HostPort': "8890" },
 						'1111/tcp': { 'HostIp': pillar['redef']['triplestore']['binding'], 'HostPort': "1111" } } %}
 
-{% set host_volume_bindings = [ { 'host': '/etc/virtuoso.ini', 'container': '/var/lib/virtuoso/db/virtuoso.ini', 'ro': false } ] %}
+{% set host_volume_bindings = [ { 'host': '/etc', 'container': '/var/lib/virtuoso/db', 'ro': false } ] %}
 {% include 'docker-run.sls-fragment' %}
