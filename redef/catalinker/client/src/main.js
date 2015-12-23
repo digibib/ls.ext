@@ -111,6 +111,7 @@
                         Main.patchResourceFromValue(resourceUri, input.predicate, value, input.datatype, errors);
                     })
                 });
+                ractive.update();
             })
             .then(function () {
                 loadExistingResource(ractive.get("targetUri." + resourceType));
@@ -417,6 +418,7 @@
                             var subject = ractive.get("targetUri." + rdfType);
                             if (subject) {
                                 Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
+                                ractive.update();
                             }
                         },
                         searchResource: function (event, predicate, searchString) {

@@ -52,7 +52,7 @@ When(/^legger inn opplysningene om utgivelsen for hovedtittel, undertittel, år,
   @site.WorkFlow.nextStep
   @site.WorkFlow.assertSelectedTab("Beskriv utgivelsen")
   @context[:publication_title] = generateRandomString
-  @site.WorkFlow.add_prop("Publication", "http://192.168.50.12:8005/ontology#mainTitle", @context[:publication_title])
+  @site.WorkFlow.add_prop("Publication", "http://192.168.50.12:8005/ontology#mainTitle", @context[:publication_title], 0, true)
   @context[:publication_language] = "Norsk"
   @site.WorkFlow.select_prop("Publication", "http://192.168.50.12:8005/ontology#language", @context[:publication_language])
   @context[:publication_format] = "Bok"
