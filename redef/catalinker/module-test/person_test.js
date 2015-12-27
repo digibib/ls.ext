@@ -5,12 +5,12 @@ var chai = require("chai"),
   expect = chai.expect,
   sinon = require("sinon"),
   axios = require("axios"),
-  fs = require("fs"),
-  jsdom = require("mocha-jsdom");
+  fs = require("fs");
 
 describe("Catalinker", function () {
   describe("/Person", function () {
-    jsdom();
+
+    require('./testdom')('<html><body><div id="container"/></body></html>');
     var testRactive, Main;
 
     before(function (done) {
@@ -59,11 +59,6 @@ describe("Catalinker", function () {
       sinon.stub(axios, "patch", function (path, data, headers) {
         return Promise.resolve({data: {}, headers: { location: ""} });
       });
-
-      // create fixtures for testing Ractive events
-      var fixture = document.createElement("div");
-      fixture.setAttribute("id", "container");
-      document.body.appendChild(fixture);
 
       // load module
       Main.init("/main_template_old.html").then(function (m) {
