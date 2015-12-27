@@ -92,10 +92,38 @@ describe("Catalinker", function () {
     describe("Verksside", function () {
 
       it("har riktig side-tittel", function (done) {
+      	//console.log(document.body.innerHTML);
         expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av utgivelse");
         done();
       });
-
+      it("populerer med utvalgte faner fra /config", function (done) {
+      	var tabs = document.querySelectorAll(".grid-tabs li");
+        expect(tabs.length).to.equal(1);
+        expect(tabs[0].children[0].id).to.equal("confirm-person-tab");
+        expect(tabs[0].children[0].innerHTML).to.equal("Bekreft person");
+        done();
+      });
+      it("populerer faner med gruppert innhold fra ontologi", function (done) {
+      	var tabContent = document.querySelectorAll(".inner-content div.grid-panel");
+      	expect(tabContent.length).to.equal(1);
+      	expect(tabContent[0].querySelector("label").innerHTML).to.equal("Opphavsperson");
+      	expect(tabContent[0].querySelector("input").getAttribute("data-automation-id")).to.equal("Work_http://192.168.50.12:7000/ontology#creator_0");
+      	expect(tabContent[0].querySelector("button.next-step-button").innerHTML).to.equal("Bekreft verk");
+      	done();
+      });
+      it("bruker Ractive til å legge til faner", function (done) {
+      	var testPane = {
+      		tabLabel: "Test Tab",
+      		tabId: "testid"
+      	};
+      	testRactive.set("inputGroups", [testPane]).then(function() {
+      		var tabs = document.querySelectorAll(".grid-tabs li");
+	        expect(tabs.length).to.equal(1);
+	        expect(tabs[0].children[0].id).to.equal("testid-tab");
+	        expect(tabs[0].children[0].innerHTML).to.equal("Test Tab");
+	        done();
+        }).catch(done);
+      });
     });
   });
 });
