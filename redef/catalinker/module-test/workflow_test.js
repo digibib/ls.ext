@@ -31,16 +31,16 @@ describe("Catalinker", function () {
             ontologyUri: "http://192.168.50.12:7000/ontology",
             resourceApiUri: "http://192.168.50.12:7000/",
             tabs: [
-	            {
-	                id: "confirm-person",
-	                rdfType: "Work",
-	                label: "Bekreft person",
-	                rdfProperties: ["creator"],
-	                nextStep: {
-	                    buttonLabel: "Bekreft verk",
-	                    createNewResource: "Work"
-	                }
-	            }
+              {
+                id: "confirm-person",
+                rdfType: "Work",
+                label: "Bekreft person",
+                rdfProperties: ["creator"],
+                nextStep: {
+                  buttonLabel: "Bekreft verk",
+                  createNewResource: "Work"
+                }
+              }
             ]
           }});
         case "/main_template.html":
@@ -51,8 +51,8 @@ describe("Catalinker", function () {
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/w123456.json", "UTF-8") });
         case "http://192.168.50.12:7000/person/h123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/h123456.json", "UTF-8") });
-		case "http://192.168.50.12:7000/publication/p123456":
-		  return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/p123456.json", "UTF-8") });
+        case "http://192.168.50.12:7000/publication/p123456":
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/p123456.json", "UTF-8") });
         case "http://192.168.50.12:7000/authorized_values/language":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_language.json", "UTF-8") });
         case "http://192.168.50.12:7000/authorized_values/format":
