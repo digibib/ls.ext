@@ -1,4 +1,4 @@
-// test/testdom.js
+/*global document*/
 module.exports = function(markup) {  
   if (typeof document !== 'undefined') {
     return;
