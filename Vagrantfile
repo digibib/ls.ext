@@ -40,7 +40,7 @@ Vagrant.configure(2) do |config|
     end
 
     config.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "3072"]
+      vb.customize ["modifyvm", :id, "--memory", "4096"]
     end
 
     config.vm.network "private_network", ip: "192.168.50.12"
