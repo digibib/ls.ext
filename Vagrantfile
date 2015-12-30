@@ -53,6 +53,7 @@ Vagrant.configure(2) do |config|
       sudo apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
 
     config.vm.provision "shell", path: "pip_install.sh"
+    config.vm.provision "shell", inline: "sudo pip install docker-compose==1.5.2"
 
     config.vm.provision "shell", path: "ssh/generate_keys.sh"
     config.vm.provision "shell", path: "ssh/accept_keys.sh"
@@ -67,6 +68,8 @@ Vagrant.configure(2) do |config|
     if ENV['LSDEVMODE'] && ENV['LSDEVMODE'] == 'dev'
       config.vm.provision "shell", path: "redef/set_gradle_daemon.sh"
     end
+
+    config.vm.provision "shell", inline: "sudo /vagrant/docker-compose/docker-compose.sh"
 
     config.vm.provision :salt do |salt|
       salt.bootstrap_options = "-F -c /tmp -P"  # Vagrant Issues #6011, #6029
