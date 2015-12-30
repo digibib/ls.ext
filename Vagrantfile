@@ -98,44 +98,4 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # **** vm-devops - Monitors the system logs ****
-
-  config.vm.define "vm-devops" do |config|
-    config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "vm-devops"
-
-    # X forwarding for Firefox Browser
-    unless ENV['NO_PUBLIC_PORTS']
-      config.ssh.forward_x11 = true
-      config.ssh.forward_agent = true
-    end
-
-    config.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2048"]
-    end
-
-    # http://fgrehm.viewdocs.io/vagrant-cachier
-    if Vagrant.has_plugin?("vagrant-cachier")
-      config.cache.scope = :box
-    end
-
-    config.vm.synced_folder "salt", "/srv/salt"
-    config.vm.synced_folder "pillar", "/srv/pillar"
-
-    config.vm.network "private_network", ip: "192.168.50.21"
-
-    config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
-      sudo apt-get update && \
-      sudo apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
-
-    config.vm.provision "shell", path: "pip_install.sh"
-
-    config.vm.provision :salt do |salt|
-      salt.bootstrap_options = "-F -c /tmp -P"  # Vagrant Issues #6011, #6029
-      salt.minion_config = "salt/minion"
-      salt.run_highstate = true
-      salt.verbose = true
-    end
-  end # vm-devops
-
 end
