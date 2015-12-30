@@ -9,3 +9,6 @@ install_common_pkgs:
       - openssh-server
       - git
     - skip_verify: True
+
+include:
+  - .config
