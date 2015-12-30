@@ -6,9 +6,7 @@ else
 SHIP=vm-ship
 endif
 
-all: cycle_devops cycle_ship test          ## Run tests after (re)loading and (re)provisioning vagrant boxes.
-
-cycle_devops: halt_devops up_devops shell_provision_devops provision_devops
+all: cycle_ship test                       ## Run tests after (re)loading and (re)provisioning vagrant boxes.
 
 cycle_ship: halt_ship up_ship shell_provision_ship clean_services provision_ship
 
@@ -19,43 +17,29 @@ reload: halt up                                       ## Reload vagrant boxes.
 
 # halt + up is like a reload - except it should also work if there is no machine yet
 
-halt: halt_ship halt_devops                 ## Halt boxes.
-
-reload_devops: halt_devops up_devops                  ##
+halt: halt_ship                 ## Halt boxes.
 
 reload_ship: halt_ship up_ship                        ##
 
 halt_ship:                                            ##
 	vagrant halt $(SHIP)
 
-up: up_devops up_ship                                 ## Start boxes.
-
-halt_devops:                                          ##
-	vagrant halt vm-devops
+up: up_ship 			                      ## Start boxes.
 
 up_ship:                                              ##
 	vagrant up $(SHIP)
 
-up_devops:                                            ##
-	vagrant up vm-devops
-
-full_provision: full_provision_devops full_provision_ship  ## Full reprovision of boxes
+full_provision: full_provision_ship                    ## Full reprovision of boxes
 
 shell_provision_ship:                                 ## Run only shell provisioners
 	vagrant provision $(SHIP) --provision-with shell
 
-shell_provision_devops:                               ## Run only shell provisioners
-	vagrant provision vm-devops --provision-with shell
-
-shell_provision: shell_provision_devops shell_provision_ship  ## Run only shell provisioners
+shell_provision: shell_provision_ship                 ## Run only shell provisioners
 
 full_provision_ship:                                  ## Run full provisioning, including salt-install
 	vagrant provision $(SHIP)
 
-full_provision_devops:                                ## Run full provisioning, including salt-install
-	vagrant provision vm-devops
-
-provision: provision_devops provision_ship                ## Quick re-provision of boxes (only salt states)
+provision:  provision_ship                            ## Quick re-provision of boxes (only salt states)
 
 provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
 
@@ -67,9 +51,6 @@ provision_ship_highstate:                             ## Run state.highstate on 
 
 wait_until_ready:                                     ## Checks if koha is up and running
 	vagrant ssh $(SHIP) -c 'sudo docker exec -t koha_container ./wait_until_ready.py'
-
-provision_devops:                                     ## Run state.highstate
-	vagrant ssh vm-devops -c 'sudo salt-call --retcode-passthrough --local state.highstate'
 
 ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
@@ -125,9 +106,6 @@ clean: clean_report                                    ## Destroy boxes (except 
 clean_report:                                          ## Clean cucumber reports.
 	rm -rf test/report || true
 
-clean_devops:                                          ## Destroy vm-devops box.
-	vagrant destroy vm-devops --force
-
 clean_ship:                                            ## Destroy $(SHIP) box. Prompts for ok.
 	vagrant destroy $(SHIP)
 
@@ -142,13 +120,6 @@ nsenter_koha:
 
 mysql_client:
 	vagrant ssh $(SHIP) -c 'sudo apt-get install mysql-client && sudo mysql --user MYadmin --password=MYsecret --host 192.168.50.12 --port 3306'
-
-kibana: install_firefox_on_devops                      ## Run kibanas web ui from inside devops.
-	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" -no-remote > firefox.log 2> firefox.err < /dev/null' &
-
-install_firefox_on_devops:
-	vagrant ssh vm-devops -c 'sudo salt-call --retcode-passthrough --local state.sls firefox'
-
 
 # Commands for redef build & dev
 
