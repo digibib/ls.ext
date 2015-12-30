@@ -19,7 +19,7 @@ and [SaltStack](http://docs.saltstack.com/) for automated provisioning.
 
 For local setup and to run tests, we use a multi-machine vagrant setup (see [Illustration](#illustration)).
 
-1. Install virtualbox and vagrant (and X11-server on OSX/Windows - for development):
+1. Install virtualbox and vagrant (and X11-server on OSX - for development):
     - Ubuntu:
         * `sudo apt-get install virtualbox`
         * vagrant > 1.5 - install deb manually: https://www.vagrantup.com/downloads.html
@@ -27,22 +27,6 @@ For local setup and to run tests, we use a multi-machine vagrant setup (see [Ill
         * `brew cask install virtualbox` -- or [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
         * `brew cask install vagrant` -- or [Vagrant Downloads](https://www.vagrantup.com/downloads)
         * `brew cask install xquartz` -- or [XQuartz Download](http://xquartz.macosforge.org/landing/)
-    - Windows:
-        * Download and install "VirtualBox platform package" for Window hosts: [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
-        * Download and install Vagrant for Windows: [Vagrant Downloads](https://www.vagrantup.com/downloads)
-        * Reboot your machine.
-        * Install Cygwin/X by following this procedure: [Setting Up Cygwin/X](http://x.cygwin.com/docs/ug/setup.html)
-          - Important! In step 15 you must also choose the following packages:
-            * git
-            * make
-            * openssh
-          - We also recommend these:
-            * curl
-            * git-completion
-            * tig
-            * vim
-            * wget
-        * After installing Cygwin/X Windows users should use the program "XWin Server" for commands like git, make etc.
 2. Clone this repo from the command line (in a directory of your choice):
    ```git clone https://github.com/digibib/ls.ext.git```
 3. `cd ls.ext` into your cloned repo.
