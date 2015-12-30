@@ -148,44 +148,6 @@
     </div>
     {% endif %}
 
-    <h3>Driftsverktøy</h3>
-
-    <div class="row">
-      <div class="col span_1_of_5">
-        <a href="http://{{ pillar['overview']['elk']['host'] }}:{{ pillar['elk']['kibana']['port']|string }}/index.html#/dashboard/file/logstash.json">Kibana</a>
-      </div>
-      <div class="col span_2_of_5">
-        {{ salt['pillar.get']('overview:kibana:description', '') }}
-      </div>
-      <div class="col span_2_of_5">
-        {{ salt['pillar.get']('overview:kibana:examples', '') }}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col span_1_of_5">
-        <a href="http://{{ pillar['overview']['resource-monitoring']['graphite-web']['host'] }}:{{ pillar['resource-monitoring']['graphite-web']['port']|string }}">Graphite</a>
-      </div>
-      <div class="col span_2_of_5">
-        {{ salt['pillar.get']('overview:graphite:description', '') }}
-      </div>
-      <div class="col span_2_of_5">
-        {{ salt['pillar.get']('overview:graphite:examples', '') }}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col span_1_of_5">
-        <a href="http://{{ pillar['overview']['dockerui']['host'] }}:{{ pillar['dockerui']['port']|string }}">DockerUI</a>
-      </div>
-      <div class="col span_2_of_5">
-        {{ salt['pillar.get']('overview:dockerui:description', '') }}
-      </div>
-      <div class="col span_2_of_5">
-        {{ salt['pillar.get']('overview:dockerui:examples', '') }}
-      </div>
-    </div>
-
     <h3>Tekniske grensesnitt</h3>
 
     {% if salt['pillar.get']('overview:redef', 'missing') != 'missing' %}
@@ -246,3 +208,4 @@
 </body>
 
 </html>
+
