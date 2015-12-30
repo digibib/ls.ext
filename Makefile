@@ -6,9 +6,7 @@ else
 SHIP=vm-ship
 endif
 
-all: cycle_devops cycle_ship cycle_test test          ## Run tests after (re)loading and (re)provisioning vagrant boxes.
-
-cycle_devops: halt_devops up_devops shell_provision_devops provision_devops
+all: cycle_ship cycle_test test                       ## Run tests after (re)loading and (re)provisioning vagrant boxes.
 
 cycle_ship: halt_ship up_ship shell_provision_ship clean_services provision_ship
 
@@ -23,9 +21,7 @@ reload: halt up                                       ## Reload vagrant boxes.
 
 reload_test: halt_test up_test                        ## Reload vm-test box.
 
-halt: halt_test halt_ship halt_devops                 ## Halt boxes.
-
-reload_devops: halt_devops up_devops                  ##
+halt: halt_test halt_ship                             ## Halt boxes.
 
 reload_ship: halt_ship up_ship                        ##
 
@@ -35,10 +31,7 @@ halt_test:                                            ##
 halt_ship:                                            ##
 	vagrant halt $(SHIP)
 
-up: up_devops up_ship up_test                         ## Start boxes.
-
-halt_devops:                                          ##
-	vagrant halt vm-devops
+up: up_ship up_test				                      ## Start boxes.
 
 up_ship:                                              ##
 	vagrant up $(SHIP)
@@ -46,10 +39,7 @@ up_ship:                                              ##
 up_test:                                              ##
 	vagrant up vm-test
 
-up_devops:                                            ##
-	vagrant up vm-devops
-
-full_provision: full_provision_devops full_provision_ship full_provision_test  ## Full reprovision of boxes
+full_provision: full_provision_ship full_provision_test  ## Full reprovision of boxes
 
 shell_provision_ship:                                 ## Run only shell provisioners
 	vagrant provision $(SHIP) --provision-with shell
@@ -57,10 +47,7 @@ shell_provision_ship:                                 ## Run only shell provisio
 shell_provision_test:                                 ## Run only shell provisioners
 	vagrant provision vm-test --provision-with shell
 
-shell_provision_devops:                               ## Run only shell provisioners
-	vagrant provision vm-devops --provision-with shell
-
-shell_provision: shell_provision_devops shell_provision_ship shell_provision_test  ## Run only shell provisioners
+shell_provision: shell_provision_ship shell_provision_test  ## Run only shell provisioners
 
 full_provision_ship:                                  ## Run full provisioning, including salt-install
 	vagrant provision $(SHIP)
@@ -68,10 +55,7 @@ full_provision_ship:                                  ## Run full provisioning, 
 full_provision_test:                                  ## Run full provisioning, including salt-install
 	vagrant provision vm-test
 
-full_provision_devops:                                ## Run full provisioning, including salt-install
-	vagrant provision vm-devops
-
-provision: provision_devops provision_ship provision_test  ## Quick re-provision of boxes (only salt states)
+provision: provision_ship provision_test  ## Quick re-provision of boxes (only salt states)
 
 provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
 
@@ -86,9 +70,6 @@ wait_until_ready:                                     ## Checks if koha is up an
 
 provision_test:                                       ## Run state.highstate
 	vagrant ssh vm-test -c 'sudo salt-call --retcode-passthrough --local state.highstate'
-
-provision_devops:                                     ## Run state.highstate
-	vagrant ssh vm-devops -c 'sudo salt-call --retcode-passthrough --local state.highstate'
 
 ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
@@ -136,16 +117,13 @@ delete_db: stop_ship
 wipe_db: delete_ship
 	vagrant ssh $(SHIP) -c 'sudo docker rm -v koha_mysql_data'
 
-clean: clean_report clean_test                         ## Destroy boxes (except $(SHIP) and vm-devops).
+clean: clean_report clean_test                         ## Destroy boxes (except $(SHIP)).
 
 clean_report:                                          ## Clean cucumber reports.
 	rm -rf test/report || true
 
 clean_test: clean_report                               ## Destroy vm-test box.
 	vagrant destroy vm-test --force
-
-clean_devops:                                          ## Destroy vm-devops box.
-	vagrant destroy vm-devops --force
 
 clean_ship:                                            ## Destroy $(SHIP) box. Prompts for ok.
 	vagrant destroy $(SHIP)
@@ -170,13 +148,6 @@ install_sublime:
 
 open_intra:                                            ## Open Kohas intra-interface in firefox from vm-test.
 	vagrant ssh vm-test -c 'firefox "http://192.168.50.12:8081/" -no-remote > firefox.log 2> firefox.err < /dev/null' &
-
-kibana: install_firefox_on_devops                      ## Run kibanas web ui from inside devops.
-	vagrant ssh vm-devops -c 'firefox "http://localhost:9292/index.html#/dashboard/file/logstash.json" -no-remote > firefox.log 2> firefox.err < /dev/null' &
-
-install_firefox_on_devops:
-	vagrant ssh vm-devops -c 'sudo salt-call --retcode-passthrough --local state.sls firefox'
-
 
 # Commands for redef build & dev
 
