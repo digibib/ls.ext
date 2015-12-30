@@ -30,7 +30,6 @@ if !File.file?(env_file) || FileUtils.compare_file(env_file, koha_pillar_example
 else
   puts "Note! #{env_file} is in sync with original."
 end
-end
 if !FileUtils.compare_file(env_file, docker_compose_env_example)
   puts "Note: You are running a customized #{env_file}."
 end
