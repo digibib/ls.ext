@@ -1,4 +1,4 @@
-all: build run
+all: build
 
 SKELETON_IMAGE=digibib/redef-catalinker-skeleton
 IMAGE=digibib/redef-catalinker
@@ -12,14 +12,8 @@ HOST_VOLUME_BINDINGS=-v /vagrant/redef/catalinker/client:/usr/src/app/client \
 run-dev:
 	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name $(DEV_CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
 
-run:
-	sudo salt-call --local state.sls redef.catalinker.builtrun
-
 build:
-	sudo salt-call --local state.sls redef.catalinker.builtrun
-
-build_skeleton:
-	sudo salt-call --local state.sls redef.catalinker.skeletonbuild
+	sudo docker build --tag $(IMAGE) /vagrant/redef/catalinker
 
 stop:
 	sudo docker stop $(CONTAINER) || true
@@ -35,10 +29,10 @@ rm: stop
 rm-test-instance: stop-test-instance 
 	sudo docker rm $(MODULE_TEST_CONTAINER) || true
 
-run-test-instance: build_skeleton rm-test-instance
+run-test-instance: rm-test-instance
 	sudo docker run -d -p 7010:8000 --name $(MODULE_TEST_CONTAINER) $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE)
 
-lint: build_skeleton
+lint:
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jscs -- server.js module-test client/test --fix
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jshint -- server.js module-test client/test
 
@@ -48,13 +42,13 @@ test: lint run-test-instance
 	@echo "*** Log from module test container"
 	sudo docker logs $(MODULE_TEST_CONTAINER)
 
-run-dev-debug: build_skeleton rm
+run-dev-debug: rm
 	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
 
-test-debug: build_skeleton
+test-debug:
 	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run-script test-debug
 
-module-test-debug: build_skeleton run-test-instance
+module-test-debug: run-test-instance
 	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run-script module-test-debug
 
 log-f:

@@ -1,17 +1,12 @@
 .PHONY: build
 
-all: test build run
+all: test build
 
 IMAGE=digibib/redef-services
 CONTAINER=redef_services_container
 
 test:
 	./gradlew check test
-
-run-dev: run
-
-run:
-	sudo salt-call --retcode-passthrough --local state.sls redef.services.builtrun
 
 stop:
 	sudo docker stop $(CONTAINER) || true
@@ -24,7 +19,6 @@ clean:
 
 build: build-onejar
 	sudo docker build --tag $(IMAGE) /vagrant/redef/services
-
 
 KOHA_URL          ?= http://192.168.50.12:8081
 KOHA_USER         ?= admin
