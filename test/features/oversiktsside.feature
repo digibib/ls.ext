@@ -16,7 +16,4 @@ Egenskap: Oversiktsside
       | PatronClient  |
       | Services      |
       | Triplestore   |
-      | Kibana        |
-      | Graphite      |
-      | DockerUI      |
       | Elasticsearch |

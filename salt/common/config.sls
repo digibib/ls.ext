@@ -1,4 +1,3 @@
----
 ###########
 # KOHA SPECIFIC CONFIG
 ###########
@@ -58,16 +57,17 @@ services_gradle_oneJar:
     - require:
       - file: /var/www
 
-# /var/www/overview/index.html:
-#   file.managed:
-#     - source: salt://overview/files/index.template.html
-#     - template: jinja
-#     - require:
-#       - file: /var/www/overview
+/var/www/overview/index.html:
+  file.managed:
+    - source: salt://overview/files/index.template.html
+    - template: jinja
+    - require:
+      - file: /var/www/overview
 
-# /var/www/overview/logo.png:
-#   file.managed:
-#     - source: salt://overview/files/logo.png
-#     - template: jinja
-#     - require:
-#       - file: /var/www/overview
+/var/www/overview/logo.png:
+  file.managed:
+    - source: salt://overview/files/logo.png
+    - template: jinja
+    - require:
+      - file: /var/www/overview
+

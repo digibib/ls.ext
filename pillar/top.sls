@@ -7,31 +7,16 @@ base:
     - sip
     - migration
     - migration.admin
-
-  '^(wombat|ubuntu|detektor|\w+-ship|vm-devops)$':
-    - match: pcre
-    - dockerui
-    - elk
-    - resource_monitoring
-
-  '^(\w+-ship|vm-devops)$':
-    - match: pcre
-    - docker.dev
-    - elk.dev
-    - resource_monitoring.dev
+    - overview # overview
+    - redef  # overview
 
   '^(\w+-ship)$':
     - match: pcre
+    - docker.dev
     - sip.dev
     - redef
     - redef.dev
-
-  'wombat,ubuntu,vm-devops':
-    - match: list
-    - overview # overview
-    - koha # overview
-    - resource_monitoring # overview
-    - redef  # overview
+    - overview.dev
 
   'detektor':
     - match: list
@@ -68,9 +53,3 @@ base:
     - redef.prod2  # overview
     - elk.prod2  # overview
 
-  'vm-devops':
-    - match: list
-    - registry.dev
-    - overview.dev  # overview
-    - redef.dev  # overview
-    - elk.dev  # overview

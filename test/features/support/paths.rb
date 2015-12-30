@@ -1,9 +1,7 @@
 module Paths
 
   def host(host=nil)
-    hosts = {
-        :overview => "192.168.50.21"
-    }
+    hosts = {} # Can be used to test services on different hosts
     if host && hosts[host]
       hosts[host]
     else
