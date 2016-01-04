@@ -6,7 +6,7 @@ else
 SHIP=vm-ship
 endif
 
-all: cycle_ship test                       ## Run tests after (re)loading and (re)provisioning vagrant boxes.
+all: cycle_ship test                       ## Run tests after (re)loading and (re)provisioning vagrant box.
 
 cycle_ship: halt_ship up_ship shell_provision_ship clean_services provision_ship
 
@@ -17,14 +17,14 @@ reload: halt up                                       ## Reload vagrant boxes.
 
 # halt + up is like a reload - except it should also work if there is no machine yet
 
-halt: halt_ship                 ## Halt boxes.
+halt: halt_ship                             ## Halt boxes.
 
 reload_ship: halt_ship up_ship                        ##
 
 halt_ship:                                            ##
 	vagrant halt $(SHIP)
 
-up: up_ship 			                      ## Start boxes.
+up: up_ship  				                          ## Start box.
 
 up_ship:                                              ##
 	vagrant up $(SHIP)
@@ -33,8 +33,6 @@ full_provision: full_provision_ship                    ## Full reprovision of bo
 
 shell_provision_ship:                                 ## Run only shell provisioners
 	vagrant provision $(SHIP) --provision-with shell
-
-shell_provision: shell_provision_ship                 ## Run only shell provisioners
 
 full_provision_ship:                                  ## Run full provisioning, including salt-install
 	vagrant provision $(SHIP)
@@ -101,7 +99,7 @@ delete_db: stop_ship
 wipe_db: delete_ship
 	vagrant ssh $(SHIP) -c 'sudo docker rm -v koha_mysql_data'
 
-clean: clean_report                                    ## Destroy boxes (except $(SHIP) and vm-devops).
+clean: clean_report                          ## Destroy boxes (except $(SHIP)).
 
 clean_report:                                          ## Clean cucumber reports.
 	rm -rf test/report || true
