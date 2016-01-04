@@ -78,49 +78,6 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # **** vm-test - Feature test runner ****
-
-  config.vm.define "vm-test", primary: true do |config|
-    config.vm.box = "ubuntu/trusty64"
-    config.vm.hostname = "vm-test"
-
-    # X forwarding for Firefox Browser
-    unless ENV['NO_PUBLIC_PORTS']
-      config.ssh.forward_x11 = true
-      config.ssh.forward_agent = true
-    end
-
-    config.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "768"]
-      vb.cpus = 2
-    end
-
-    # http://fgrehm.viewdocs.io/vagrant-cachier
-    if Vagrant.has_plugin?("vagrant-cachier")
-      config.cache.scope = :box
-    end
-
-    config.vm.synced_folder "test/salt", "/srv/salt"
-    config.vm.synced_folder "pillar", "/srv/pillar"           # share pillar with vm-ext
-    config.vm.synced_folder "test", "/home/vagrant/vm-test"
-
-    config.vm.network "private_network", ip: "192.168.50.11"
-
-    config.vm.provision "shell", inline: "sudo add-apt-repository -y ppa:saltstack/salt && \
-      sudo apt-get update && \
-      sudo apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
-
-    config.vm.provision "shell", path: "ssh/generate_keys.sh"
-    config.vm.provision "shell", path: "ssh/add_keys.sh"
-
-    config.vm.provision :salt do |salt|
-      salt.bootstrap_options = "-F -c /tmp -P"  # Vagrant Issues #6011, #6029
-      salt.minion_config = "test/salt/minion"
-      salt.run_highstate = true
-      salt.verbose = true
-    end
-  end # vm-test
-
   # **** vm-devops - Monitors the system logs ****
 
   config.vm.define "vm-devops" do |config|

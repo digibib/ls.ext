@@ -88,10 +88,10 @@ Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
 end
 
 Given(/^at det er en feil i systemet for katalogisering$/) do
-  `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker stop redef_services_container' >&2`
+  `docker stop redef_services_container`
   @cleanup.push("restarting redef_services_container" =>
     lambda do
-      `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker start redef_services_container' >&2`
+      `sudo docker start redef_services_container`
       sleep 15 # give container time to get up running properly for next tests
     end
     )

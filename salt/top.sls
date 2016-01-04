@@ -69,6 +69,7 @@ base:
 
   'dev-ship':
     - match: list
+    - test
     - redef.triplestore
     - redef.elasticsearch
     - redef.services.builtrun
