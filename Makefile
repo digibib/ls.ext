@@ -54,8 +54,17 @@ ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
 endif
 
+ifeq ($(shell uname), Linux)
+	DEVELOPER_IP?=$(shell ifconfig eth0 | awk '/inet / { print $$2 }' | sed 's/addr://')
+else
+	DEVELOPER_IP?=$(shell netstat -nr | grep default | awk '{print $$2}')
+endif
+
 ifdef TESTBROWSER
-BROWSER_ARG=BROWSER=$(TESTBROWSER)
+	BROWSER_ARG=-e BROWSER=$(TESTBROWSER)
+	XHOST_ADD=xhost + $(DEVELOPER_IP)
+	XHOST_REMOVE=xhost - $(DEVELOPER_IP)
+	DISPLAY_ARG=-e DISPLAY=$(DEVELOPER_IP):0
 endif
 
 ifdef FEATURE
@@ -65,19 +74,23 @@ endif
 test: test_patron_client test_catalinker cuke_test     ## Run unit and cucumber tests.
 
 ifdef CUKE_PROFILE_ARG
-CUKE_PROFILE=$(CUKE_PROFILE_ARG)
+	CUKE_PROFILE=$(CUKE_PROFILE_ARG)
 else
-CUKE_PROFILE=--profile default
+	CUKE_PROFILE=--profile default
 endif
 
 cuke_test:
+	@$(XHOST_ADD)
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
-	  sudo docker run --rm -it -e DISPLAY=172.17.0.1:0 --net=host\
+	  sudo docker run --rm -it $(DISPLAY_ARG) $(BROWSER_ARG) \
        -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
-		bash -c '$(BROWSER_ARG) cucumber --profile rerun $(CUKE_PROFILE) $(CUKE_ARGS) || $(BROWSER_ARG) cucumber @report/rerun.txt $(CUKE_PROFILE) $(CUKE_ARGS)'"
+		bash -c 'cucumber --profile rerun $(CUKE_PROFILE) $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) $(CUKE_ARGS)'"
+	 @$(XHOST_ADD)
 
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
-	vagrant ssh dev-ship -c 'sudo docker run --rm -t -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests $(BROWSER_ARG) cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
+	@$(XHOST_ADD)
+	@vagrant ssh dev-ship -c 'sudo docker run --rm -t $(BROWSER_ARG) $(DISPLAY_ARG) -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
+	@$(XHOST_ADD)
 
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
@@ -124,9 +137,11 @@ mysql_client:
 test_redef: test_patron_client test_services test_catalinker cuke_redef
 
 cuke_redef:
+	@$(XHOST_ADD)
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
-	  sudo docker run --rm -t -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
-		bash -c '$(BROWSER_ARG) cucumber --profile rerun $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS) || $(BROWSER_ARG) cucumber @report/rerun.txt $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS)'"
+	  sudo docker run --rm -t $(BROWSER_ARG) $(DISPLAY_ARG) -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
+		bash -c 'cucumber --profile rerun $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS)'"
+	@$(XHOST_REMOVE)
 
 test_patron_client:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'
