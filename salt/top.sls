@@ -8,3 +8,4 @@ base:
     - match: pcre
     - common.docker-aufs
     - elasticsearch.mappings
+    - test

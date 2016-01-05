@@ -46,8 +46,8 @@ On an CI server you would not want to open uneccesary ports. This can be avoided
 
 ### Adding graphical browser support
 
-If you want a different browser than headless phantomjs in testing, we have installed firefox in vm-test and use X11
-forwarding over ssh to show you the browser window as you run the test from inside vm-test.
+If you want a different browser than headless phantomjs in testing, ~~we have installed firefox in vm-test and use X11
+forwarding over ssh to show you the browser window as you run the test from inside vm-test~~.
 
 To use you can either set `TESTBROWSER=<your favorite browser>` as an environment variable on your system or pass it to `make`. We currently support the following browsers:
 - firefox
@@ -55,12 +55,6 @@ To use you can either set `TESTBROWSER=<your favorite browser>` as an environmen
 
 Example:
 `make test TESTBROWSER=firefox`  (  -- or  `TESTBROWSER=firefox make test` )
-
-### Running development tools from inside the vm-test virtual machine
-
-These tools also need support for X11 forwarding on the host.
-
-* Sublime: `make sublime`
 
 ### Running a single test
 

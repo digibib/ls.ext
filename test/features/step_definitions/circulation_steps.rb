@@ -177,12 +177,12 @@ When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
 end
 
 When(/^reserveringskøen kjøres$/) do
-  `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-foreach --enabled /usr/share/koha/bin/cronjobs/holds/build_holds_queue.pl' >&2`
+  `docker exec koha_container koha-foreach --enabled /usr/share/koha/bin/cronjobs/holds/build_holds_queue.pl`
   STDERR.puts "build_holds_queue.pl has returned"
 end
 
 When(/^katalogen reindekseres$/) do
-  `ssh 192.168.50.12 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 'sudo docker exec koha_container sudo koha-rebuild-zebra -v -b --wait-for-lock #{PILLAR['koha']['instance']}' >&2`
+  `docker exec koha_container koha-rebuild-zebra -v -b --wait-for-lock #{PILLAR['koha']['instance']}`
   STDERR.puts "koha-rebuild-zebra has returned"
 end
 

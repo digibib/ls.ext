@@ -1,4 +1,0 @@
-base:
-  '*':
-    - cucumber
-    - sanity-check
