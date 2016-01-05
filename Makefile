@@ -84,7 +84,7 @@ cuke_test:
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
 	  sudo docker run --rm -it $(DISPLAY_ARG) $(BROWSER_ARG) \
        -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
-		bash -c 'cucumber --profile rerun $(CUKE_PROFILE) $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) $(CUKE_ARGS)'"
+		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun $(CUKE_PROFILE) $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) $(CUKE_ARGS)'"
 	 @$(XHOST_ADD)
 
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
@@ -140,7 +140,7 @@ cuke_redef:
 	@$(XHOST_ADD)
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
 	  sudo docker run --rm -t $(BROWSER_ARG) $(DISPLAY_ARG) -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
-		bash -c 'cucumber --profile rerun $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS)'"
+		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS)'"
 	@$(XHOST_REMOVE)
 
 test_patron_client:
