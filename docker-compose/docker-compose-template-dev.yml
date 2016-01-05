@@ -103,7 +103,7 @@ services:
   ports:
     - "8005:8005"
     - "8006:8006"
-    - "5700:5700"
+    - "5070:5070"
   environment:
     KOHA_USER: "${KOHA_ADMINUSER}"
     KOHA_PASSWORD: "${KOHA_ADMINPASS}"
