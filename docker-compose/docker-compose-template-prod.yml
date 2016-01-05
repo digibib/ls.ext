@@ -89,7 +89,7 @@ sip:
 
 catalinker:
   container_name: redef_catalinker_container
-  image: "digibib/redef-catalinker:${KOHA_IMAGE_TAG}"
+  image: "digibib/redef-catalinker:${GITREF}"
   ports:
     - "8010:8010"
   environment:
@@ -99,7 +99,7 @@ catalinker:
 
 services:
   container_name: redef_services_container
-  image: "digibib/redef-services:${KOHA_IMAGE_TAG}"
+  image: "digibib/redef-services:${GITREF}"
   ports:
     - "8005:8005"
     - "8006:8006"
@@ -114,7 +114,7 @@ services:
 
 patron-client:
   container_name: redef_patron_client_container
-  image: "digibib/redef-patron-client:${KOHA_IMAGE_TAG}"
+  image: "digibib/redef-patron-client:${GITREF}"
   ports:
     - "8000:8000"
   environment:
