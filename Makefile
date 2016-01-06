@@ -8,7 +8,7 @@ endif
 
 all: cycle_ship test                       ## Run tests after (re)loading and (re)provisioning vagrant box.
 
-cycle_ship: halt_ship up_ship shell_provision_ship clean_services provision_ship
+cycle_ship: halt_ship up_ship provision
 
 help:                                                 ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -29,15 +29,10 @@ up: up_ship  				                          ## Start box.
 up_ship:                                              ##
 	vagrant up $(SHIP)
 
-full_provision: full_provision_ship                    ## Full reprovision of boxes
-
 shell_provision_ship:                                 ## Run only shell provisioners
 	vagrant provision $(SHIP) --provision-with shell
 
-full_provision_ship:                                  ## Run full provisioning, including salt-install
-	vagrant provision $(SHIP)
-
-provision:  provision_ship                            ## Quick re-provision of boxes (only salt states)
+provision:  shell_provision_ship clean_services provision_ship   ## Full provision
 
 provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
 
