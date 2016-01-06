@@ -54,10 +54,10 @@ ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
 endif
 
-ifeq ($(shell uname), Linux)
-	DEVELOPER_IP?=$(shell ifconfig eth0 | awk '/inet / { print $$2 }' | sed 's/addr://')
+ifeq ($(shell uname -s), Linux)
+	DEVELOPER_IP=$(shell ifconfig eth0 | awk '/inet / { print $$2 }' | sed 's/addr://')
 else
-	DEVELOPER_IP?=$(shell netstat -nr | grep default | awk '{print $$2}')
+	DEVELOPER_IP=$(shell netstat -nr | grep default | awk '{print $$2}')
 endif
 
 ifdef TESTBROWSER
