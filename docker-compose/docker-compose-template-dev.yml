@@ -1,6 +1,7 @@
 ---
 koha:
   container_name: koha_container
+  image: "digibib/koha:${KOHA_IMAGE_TAG}"
   cap_add:
     - SYS_NICE
     - DAC_READ_SEARCH
@@ -9,7 +10,6 @@ koha:
     KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
     KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
     KOHA_INSTANCE: "$KOHA_INSTANCE"
-  image: "digibib/koha:${KOHA_IMAGE_TAG}"
   links:
     - koha_mysql:db
   ports:
