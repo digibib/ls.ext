@@ -83,7 +83,7 @@ cuke_test:
 	@$(XHOST_ADD)
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
 	  sudo docker run --rm -it $(DISPLAY_ARG) $(BROWSER_ARG) \
-       -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
+       -v /usr/bin/docker:/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun $(CUKE_PROFILE) $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) $(CUKE_ARGS)'"
 	 @$(XHOST_ADD)
 
