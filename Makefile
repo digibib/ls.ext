@@ -74,6 +74,16 @@ else
 	CUKE_PROFILE=--profile default
 endif
 
+rebuild_services:
+	@vagrant ssh dev-ship -c "cd /vagrant/redef/services && ./gradlew --no-daemon build oneJar && \
+	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d"
+
+rebuild_catalinker:
+	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up -d"
+
+rebuild_patron_client:
+	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up -d"
+
 cuke_test:
 	@$(XHOST_ADD)
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
