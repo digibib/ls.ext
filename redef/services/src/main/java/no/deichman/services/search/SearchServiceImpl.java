@@ -1,7 +1,6 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.EntityService;
-import no.deichman.services.entity.repository.RDFRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.Header;
@@ -79,11 +78,8 @@ public class SearchServiceImpl implements SearchService {
             + "              optional {?work :publicationYear ?workYear .}"
             + "              }\n"
             + "}\n", remote().ontology());
-    private final URIBuilder indexUriBuilder;
-    private final URIBuilder workSearchUriBuilder;
-    private final URIBuilder personSearchUriBuilder;
     private final EntityService entityService;
-    private final RDFRepository rdfRepository;
+    private final String elasticSearchBaseUrl;
     private ModelToIndexMapper worksModelToIndexMapper = modelToIndexMapperBuilder()
             .targetIndexType(WORK_INDEX_TYPE)
             .selectQuery(WORK_MODEL_TO_INDEX_DOCUMENT_QUERY)
@@ -110,17 +106,10 @@ public class SearchServiceImpl implements SearchService {
             .build();
 
 
-    public SearchServiceImpl(String elasticSearchBaseUrl, RDFRepository rdfRepository, EntityService entityService) {
-        this.rdfRepository = rdfRepository;
-        try {
-            indexUriBuilder = new URIBuilder(elasticSearchBaseUrl);
-            workSearchUriBuilder = new URIBuilder(elasticSearchBaseUrl).setPath("/search/work/_search");
-            personSearchUriBuilder = new URIBuilder(elasticSearchBaseUrl).setPath("/search/person/_search");
-            this.entityService = entityService;
-        } catch (URISyntaxException e) {
-            LOG.error("Failed to create uri builder for elasticsearch");
-            throw new RuntimeException(e);
-        }
+    public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
+        this.elasticSearchBaseUrl = elasticSearchBaseUrl;
+        this.entityService = entityService;
+        getIndexUriBuilder();
     }
 
     @Override
@@ -135,12 +124,12 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response searchPersonWithJson(String json) {
-        return searchWithJson(json, personSearchUriBuilder);
+        return searchWithJson(json, getPersonSearchUriBuilder());
     }
 
     @Override
     public final Response searchWorkWithJson(String json) {
-        return searchWithJson(json, workSearchUriBuilder);
+        return searchWithJson(json, getWorkSearchUriBuilder());
     }
 
     private Response searchWithJson(String body, URIBuilder searchUriBuilder) {
@@ -173,12 +162,12 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response searchWork(String query) {
-        return doSearch(query, workSearchUriBuilder);
+        return doSearch(query, getWorkSearchUriBuilder());
     }
 
     @Override
     public final Response searchPerson(String query) {
-        return doSearch(query, personSearchUriBuilder);
+        return doSearch(query, getPersonSearchUriBuilder());
     }
 
 
@@ -225,7 +214,7 @@ public class SearchServiceImpl implements SearchService {
 
     private void indexDocument(String type, String uri, String document) {
         try (CloseableHttpClient httpclient = createDefault()) {
-            HttpPut httpPut = new HttpPut(indexUriBuilder
+            HttpPut httpPut = new HttpPut(getIndexUriBuilder()
                     .setPath(format("/search/%s/%s", type, encode(uri, UTF_8)))
                     .build());
             httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
@@ -250,5 +239,22 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexPersonOnly(String personId) {
         doIndexPerson(personId, true);
+    }
+
+    private URIBuilder getIndexUriBuilder() {
+        try {
+            return new URIBuilder(this.elasticSearchBaseUrl);
+        } catch (URISyntaxException e) {
+            LOG.error("Failed to create uri builder for elasticsearch");
+            throw new RuntimeException(e);
+        }
+    }
+
+    private URIBuilder getWorkSearchUriBuilder() {
+            return getIndexUriBuilder().setPath("/search/work/_search");
+    }
+
+    private URIBuilder getPersonSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/person/_search");
     }
 }
