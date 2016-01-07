@@ -60,7 +60,7 @@ end
 
 Given(/^at det finnes et verk med biblio-kobling$/) do
   step "at det finnes et verk"
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#biblio", @context[:biblio])
   step "grensesnittet viser at endringene er lagret"
 end
 
@@ -127,7 +127,7 @@ Given(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
   step "at det finnes et eksemplar av en bok registrert i Koha"
   step "at jeg er i katalogiseringsgrensesnittet"
   step "at jeg ser på et lagret verk"
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#biblio", @context[:biblio])
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#biblio", @context[:biblio])
 end
 
 Given(/^at det finnes en utgivelse$/) do
@@ -212,7 +212,7 @@ When(/^når jeg endrer årstall for førsteutgave til verket$/) do
 end
 
 When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
-  predicate = "http://192.168.50.12:8005/ontology#mainTitle"
+  predicate = "http://#{ENV['HOST']}:8005/ontology#mainTitle"
   @context[:alt_title] = generateRandomString
   @browser.div(:class => predicate).button.click
   @site.RegWork.add_prop(predicate, @context[:alt_title], 1)
@@ -228,25 +228,25 @@ end
 
 When(/^jeg forsøker å registrere ett nytt verk$/) do
   @context[:work_title] = generateRandomString
-  @site.RegWork.add_prop_skip_wait("http://192.168.50.12:8005/ontology#mainTitle", @context[:work_title])
+  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_title])
 end
 
 When(/^jeg velger språk for tittelen$/) do
-  predicate = "http://192.168.50.12:8005/ontology#mainTitle"
+  predicate = "http://#{ENV['HOST']}:8005/ontology#mainTitle"
   @context[:title_lang] = "no"
   @browser.div(:class => predicate).select.select_value(@context[:title_lang])
 end
 
 When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @context[:year] = rand(2015).to_s
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#publicationYear", @context[:year])
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:year])
 end
 
 When(/^jeg sletter eksisterende forfatter på verket$/) do
 tries = 3
   begin
     deletables = @browser.inputs(:class => 'deletable').size
-    @browser.inputs(:data_automation_id => "http://192.168.50.12:8005/ontology#creator"+"_0").first.click
+    @browser.inputs(:data_automation_id => "http://#{ENV['HOST']}:8005/ontology#creator"+"_0").first.click
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.inputs(:class => 'deletable').size == deletables - 1 } #Allow some time for the UI to update after clicking the red X
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
@@ -266,7 +266,7 @@ end
 When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
   tries = 3
   begin
-    @site.RegWork.search_resource("http://192.168.50.12:8005/ontology#creator", @context[:person_name])
+    @site.RegWork.search_resource("http://#{ENV['HOST']}:8005/ontology#creator", @context[:person_name])
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => @context[:person_identifier]) }
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
@@ -285,7 +285,7 @@ end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
   @context[:year] = arg1
-  @site.RegWork.add_prop_skip_wait("http://192.168.50.12:8005/ontology#publicationYear", @context[:year])
+  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:year])
 end
 
 When(/^jeg legger til et eksemplar av utgivelsen$/) do
@@ -349,22 +349,22 @@ end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
   @context[:work_title] = generateRandomString
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:work_title])
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_title])
 end
 
 Then(/^jeg kan legge til språk for det nye verket$/) do
   @context[:work_lang] = "http://lexvo.org/id/iso639-3/nob"
-  @site.RegWork.select_prop('http://192.168.50.12:8005/ontology#language', "Norsk")
+  @site.RegWork.select_prop("http://#{ENV['HOST']}:8005/ontology#language", "Norsk")
 end
 
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
   @context[:publication_title] = generateRandomString
-  @site.RegPublication.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:publication_title])
+  @site.RegPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_title])
 end
 
 Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
   @context[:work_title] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
-  @site.RegWork.add_prop("http://192.168.50.12:8005/ontology#mainTitle", @context[:work_title])
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_title])
 end
 
 Then(/^grensesnittet viser at endringene er lagret$/) do
@@ -401,15 +401,15 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   @context[:publication_title] = generateRandomString
   step "får utgivelsen tildelt en post-ID i Koha"
 
-  page.select_prop('http://192.168.50.12:8005/ontology#format', @context[:publication_format])
-  page.select_prop('http://192.168.50.12:8005/ontology#language', @context[:publication_language])
-  page.add_prop('http://192.168.50.12:8005/ontology#mainTitle', @context[:publication_title])
+  page.select_prop("http://#{ENV['HOST']}:8005/ontology#format", @context[:publication_format])
+  page.select_prop("http://#{ENV['HOST']}:8005/ontology#language", @context[:publication_language])
+  page.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_title])
 end
 
 
 When(/^jeg knytter utgivelsen til verket$/) do
   page = @site.RegPublication
-  page.add_prop('http://192.168.50.12:8005/ontology#publicationOf', @context[:identifier])
+  page.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationOf", @context[:identifier])
 end
 
 Given(/^et verk med en utgivelse og et eksemplar$/) do
@@ -441,21 +441,21 @@ end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
   @context[:person_name] = generateRandomString
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:person_name])
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:person_name])
 
   @context[:person_birth_year] = (1000 + rand(1015)).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#birthYear", @context[:person_birth_year])
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#birthYear", @context[:person_birth_year])
 
   @context[:person_death_year] = (1000 + rand(1015)).to_s
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#deathYear", @context[:person_death_year])
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#deathYear", @context[:person_death_year])
 end
 
 When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do
   @context[:person_title] = generateRandomString
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#personTitle", @context[:person_title])
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#personTitle", @context[:person_title])
 
   @context[:person_nationality] = ['Norsk', 'Engelsk', 'Færøyisk'].sample
-  @site.RegPerson.select_prop('http://192.168.50.12:8005/ontology#nationality', @context[:person_nationality])
+  @site.RegPerson.select_prop("http://#{ENV['HOST']}:8005/ontology#nationality", @context[:person_nationality])
 end
 
 
@@ -497,7 +497,7 @@ end
 When(/^når jeg endrer navnet på personen$/) do
   @context[:person_name] = generateRandomString
   @context[:creator] = @context[:person_name]
-  @site.RegPerson.add_prop("http://192.168.50.12:8005/ontology#name", @context[:person_name])
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:person_name])
   step "grensesnittet viser at endringene er lagret"
 end
 
