@@ -17,8 +17,8 @@ build-onejar:
 clean:
 	./gradlew clean
 
-build: build-onejar
-	sudo docker build --tag $(IMAGE) /vagrant/redef/services
+build:
+	./gradlew -Dtag=$(IMAGE) dockerBuildImage
 
 KOHA_URL          ?= http://192.168.50.12:8081
 KOHA_USER         ?= admin

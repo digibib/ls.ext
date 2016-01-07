@@ -99,7 +99,7 @@ catalinker:
 
 services:
   container_name: redef_services_container
-  build: /vagrant/redef/services
+  image: "digibib/redef-services"
   ports:
     - "8005:8005"
     - "8006:8006"
@@ -109,8 +109,8 @@ services:
     KOHA_PASSWORD: "${KOHA_ADMINPASS}"
     KOHA_PORT: "http://${HOST}:8081"
     TRIPLESTORE_PORT: "http://${HOST}:${TRIPLESTORE_PORT}"
-    DATA_BASEURI: "${DATA_BASEURI}"
     ELASTICSEARCH_URL: "http://${HOST}:${ELASTICSEARCH_PORT}"
+    JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070 -DDATA_BASEURI=${DATA_BASEURI}"
 
 patron-client:
   container_name: redef_patron_client_container

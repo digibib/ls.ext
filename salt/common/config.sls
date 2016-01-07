@@ -20,9 +20,9 @@ apache2:
 # Services specific config
 ###########
 
-services_gradle_oneJar:
+services_gradle_build_docker_image:
   cmd.run:
-  - name: ./gradlew --no-daemon build oneJar
+  - name: ./gradlew dockerBuildImage
   - cwd: /vagrant/redef/services
   - user: vagrant
 
@@ -70,4 +70,11 @@ services_gradle_oneJar:
     - template: jinja
     - require:
       - file: /var/www/overview
+
+docker_compose_up:
+  cmd.run:
+    - name: docker-compose up -d
+    - cwd: /vagrant/docker-compose
+    - require:
+      - cmd: services_gradle_build_docker_image
 

@@ -1,11 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'gradle-one-jar'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'cpd'
 apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'application'
+apply plugin: 'com.bmuschko.docker-java-application'
 
 group = 'no.deichman.services'
 version = '1.0-SNAPSHOT'
@@ -112,10 +113,6 @@ dependencies {
     moduleTestCompile group: 'org.elasticsearch', name: 'elasticsearch', version: '2.1.0'
 }
 
-task oneJar(type: OneJar) {
-    mainClass = 'no.deichman.services.App'
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '2.6'
 }
@@ -171,6 +168,7 @@ buildscript {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
         classpath 'de.aaschmid.gradle.plugins:gradle-cpd-plugin:0.5'
+        classpath 'com.bmuschko:gradle-docker-plugin:2.6.4'
     }
     repositories {
         mavenCentral()
@@ -180,3 +178,20 @@ buildscript {
         jcenter()
     }
 }
+
+mainClassName = 'no.deichman.services.App'
+
+docker {
+    url = "http://192.168.50.12:2375"
+
+    registryCredentials {
+        url = 'https://index.docker.io/v1'
+        username = 'deichman'
+        password = 'paaTryggGrunnForFremtiden'
+    }
+    javaApplication {
+        maintainer = 'digitalutvikling@gmail.com'
+        port = 8005
+    }
+}
+

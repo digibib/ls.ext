@@ -32,7 +32,7 @@ up_ship:                                              ##
 shell_provision_ship:                                 ## Run only shell provisioners
 	vagrant provision $(SHIP) --provision-with shell
 
-provision:  shell_provision_ship clean_services provision_ship   ## Full provision
+provision:  shell_provision_ship provision_ship   ## Full provision
 
 provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
 
@@ -50,16 +50,17 @@ CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
 endif
 
 ifeq ($(shell uname -s), Linux)
-	DEVELOPER_IP=$(shell ifconfig eth0 | awk '/inet / { print $$2 }' | sed 's/addr://')
+DEVELOPER_IP=$(shell ifconfig en5 | awk '/inet / { print $$2 }')
 else
-	DEVELOPER_IP=$(shell netstat -nr | grep default | awk '{print $$2}')
+DEVELOPER_IP=$(shell netstat -nr | grep default | awk '{print $$2}')
+XHOST_PATH=/opt/X11/bin/
 endif
 
 ifdef TESTBROWSER
-	BROWSER_ARG=-e BROWSER=$(TESTBROWSER)
-	XHOST_ADD=xhost + $(DEVELOPER_IP)
-	XHOST_REMOVE=xhost - $(DEVELOPER_IP)
-	DISPLAY_ARG=-e DISPLAY=$(DEVELOPER_IP):0
+BROWSER_ARG=-e BROWSER=$(TESTBROWSER)
+XHOST_ADD=$(XHOST_PATH)xhost +
+XHOST_REMOVE=$(XHOST_PATH)xhost - $(DEVELOPER_IP)
+DISPLAY_ARG=-e DISPLAY=$(DEVELOPER_IP):0
 endif
 
 ifdef FEATURE
@@ -86,7 +87,7 @@ rebuild_patron_client:
 
 cuke_test:
 	@$(XHOST_ADD)
-	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
+	vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS) || cucumber @report/rerun.txt \
