@@ -1,24 +1,22 @@
 all: build
 
-SKELETON_IMAGE=digibib/redef-patron-client-skeleton
 IMAGE=digibib/redef-patron-client
 CONTAINER=redef_patron_client_container
 MODULE_TEST_CONTAINER=redef-patron-client-test-instance
-DEV_CONTAINER=redef_patron_client_skeleton_container
 HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/client:/usr/src/app/client \
 	-v /vagrant/redef/patron-client/module-test:/usr/src/app/module-test \
 	-v /vagrant/redef/patron-client/public:/usr/src/app/public \
 	-v /vagrant/redef/patron-client/test:/usr/src/app/test
 
 run-dev:
-	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8000:8000 --name $(DEV_CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev
+	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8000:8000 --name dockercompose_patron-client dockercompose_patron-client npm run-script start-dev
 
 build:
 	sudo docker build --tag $(IMAGE) /vagrant/redef/patron-client
 
 stop:
 	sudo docker stop $(CONTAINER) || true
-	sudo docker stop $(DEV_CONTAINER) || true
+	sudo docker stop dockercompose_patron-client || true
 
 stop-test-instance:
 	sudo docker stop $(MODULE_TEST_CONTAINER) || true
@@ -30,26 +28,26 @@ rm-test-instance: stop-test-instance
 	sudo docker rm $(MODULE_TEST_CONTAINER) || true
 
 run-test-instance: rm-test-instance
-	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE)
+	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" $(HOST_VOLUME_BINDINGS) dockercompose_patron-client
 
 lint:
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jscs -- server.js module-test test --fix
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run jshint -- server.js module-test test
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run jscs -- server.js module-test test --fix
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run jshint -- server.js module-test test
 
 
 test: lint run-test-instance
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) -p 7080:8080 -p 6666:6666 $(SKELETON_IMAGE) npm test
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) -p 7080:8080 -p 6666:6666 dockercompose_patron-client npm test
 	@echo "*** Log from module test container"
 	sudo docker logs $(MODULE_TEST_CONTAINER)
 
 run-dev-debug: rm
-	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) $(SKELETON_IMAGE) npm run-script start-dev-debug
+	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8000:8000 -e "SERVICES_PORT=$(SERVICES_PORT)" --name $(CONTAINER) dockercompose_patron-client npm run-script start-dev-debug
 
 test-debug:
-	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run-script test-debug
+	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run-script test-debug
 
 module-test-debug: run-test-instance
-	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) $(SKELETON_IMAGE) npm run-script module-test-debug
+	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run-script module-test-debug
 
 log-f:
 	sudo docker logs -f $(CONTAINER)
