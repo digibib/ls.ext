@@ -5,7 +5,7 @@ module Paths
     if host && hosts[host]
       hosts[host]
     else
-      "192.168.50.12"
+      ENV["HOST"] || "192.168.50.12"
     end
   end
 
