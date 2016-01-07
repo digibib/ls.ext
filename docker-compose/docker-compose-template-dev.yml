@@ -127,3 +127,13 @@ overview:
     - "${OVERVIEW_PORT}:${OVERVIEW_PORT}"
   volumes:
     - /var/www/overview:/etc/nginx/html
+
+cuke_tests:
+  container_name: cuke_tests
+  build: /vagrant/test
+  volumes:
+    - /usr/bin/docker:/usr/bin/docker
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /vagrant/pillar:/srv/pillar
+    - /vagrant/test:/tests
+  command: bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun ${CUKE_PROFILE} ${CUKE_ARGS} || cucumber @report/rerun.txt ${CUKE_PROFILE} ${CUKE_ARGS}'

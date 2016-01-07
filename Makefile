@@ -87,15 +87,16 @@ rebuild_patron_client:
 cuke_test:
 	@$(XHOST_ADD)
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
-	  sudo docker run --rm -it $(DISPLAY_ARG) $(BROWSER_ARG) \
-       -v /usr/bin/docker:/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
-		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun $(CUKE_PROFILE) $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) $(CUKE_ARGS)'"
-	 @$(XHOST_ADD)
+	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
+		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
+		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS) || cucumber @report/rerun.txt \
+		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS)'"
+	@$(XHOST_REMOVE)
 
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
 	@$(XHOST_ADD)
-	@vagrant ssh dev-ship -c 'sudo docker run --rm -t $(BROWSER_ARG) $(DISPLAY_ARG) -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
-	@$(XHOST_ADD)
+	@vagrant ssh dev-ship -c 'cd /vagrant/docker-compose && sudo docker-compose run $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
+	@$(XHOST_REMOVE)
 
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
@@ -144,8 +145,10 @@ test_redef: test_patron_client test_services test_catalinker cuke_redef
 cuke_redef:
 	@$(XHOST_ADD)
 	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
-	  sudo docker run --rm -t $(BROWSER_ARG) $(DISPLAY_ARG) -v $$(which docker):/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -v /vagrant/pillar:/srv/pillar -v /vagrant/test:/tests cuke_tests \
-		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt $(CUKE_PROFILE) --tags @redef $(CUKE_ARGS)'"
+	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
+		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
+		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt \
+		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)'"
 	@$(XHOST_REMOVE)
 
 test_patron_client:
