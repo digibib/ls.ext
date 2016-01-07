@@ -182,7 +182,7 @@ When(/^reserveringskøen kjøres$/) do
 end
 
 When(/^katalogen reindekseres$/) do
-  `docker exec koha_container koha-rebuild-zebra -v -b --wait-for-lock #{PILLAR['koha']['instance']}`
+  `docker exec koha_container koha-rebuild-zebra -v -b --wait-for-lock #{ENV['KOHA_INSTANCE']}`
   STDERR.puts "koha-rebuild-zebra has returned"
 end
 

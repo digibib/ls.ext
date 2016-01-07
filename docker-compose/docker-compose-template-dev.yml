@@ -138,4 +138,7 @@ cuke_tests:
     - /vagrant/test:/tests
   environment:
     HOST: "${HOST}"
+    KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
+    KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
+    KOHA_INSTANCE: "${KOHA_INSTANCE}"
   command: bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun ${CUKE_PROFILE} ${CUKE_ARGS} || cucumber @report/rerun.txt ${CUKE_PROFILE} ${CUKE_ARGS}'

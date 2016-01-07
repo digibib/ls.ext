@@ -11,7 +11,7 @@ module SVC
 
     def add
       http = Net::HTTP.new(host, 8081)
-      res = http.get("/cgi-bin/koha/svc/authentication?userid=#{PILLAR['koha']['adminuser']}&password=#{PILLAR['koha']['adminpass']}")
+      res = http.get("/cgi-bin/koha/svc/authentication?userid=#{ENV['KOHA_ADMINUSER']}&password=#{ENV['KOHA_ADMINPASS']}")
       res.body.should_not include("failed")
       @context[:svc_cookie] = res.response['set-cookie']
 
@@ -38,7 +38,7 @@ module SVC
       book.biblionumber = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
 
       # force rebuild and restart zebra bibliographic index
-      `docker exec koha_container koha-rebuild-zebra -v -b #{PILLAR['koha']['instance']}`
+      `docker exec koha_container koha-rebuild-zebra -v -b #{ENV['KOHA_INSTANCE']}`
       STDERR.puts "koha-rebuild-zebra has returned"
 
       return book
