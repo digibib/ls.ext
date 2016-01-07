@@ -7,7 +7,7 @@ require 'yaml'
 
 REDEF = YAML.load_file('/srv/pillar/redef/init.sls')["redef"]
 
-HOST = "192.168.50.12"
+HOST = ENV["HOST"] || "192.168.50.12"
 Ports = {
   :koha_opac =>  { :port => REDEF["koha"]["port_opac"], :path =>'/' },
   :koha_intra => { :port => REDEF["koha"]["port_intra"], :path =>'/' },

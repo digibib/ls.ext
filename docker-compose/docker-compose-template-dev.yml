@@ -136,4 +136,6 @@ cuke_tests:
     - /var/run/docker.sock:/var/run/docker.sock
     - /vagrant/pillar:/srv/pillar
     - /vagrant/test:/tests
+  environment:
+    HOST: "${HOST}"
   command: bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun ${CUKE_PROFILE} ${CUKE_ARGS} || cucumber @report/rerun.txt ${CUKE_PROFILE} ${CUKE_ARGS}'
