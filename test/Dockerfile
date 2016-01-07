@@ -8,11 +8,12 @@ RUN apt-get update && apt-get install -y \
    	software-properties-common \
    	lxc \
    	firefox \
-    chromium-browser
+    chromium-browser && \
+    apt-get clean
 
 RUN add-apt-repository ppa:tanguy-patte/phantomjs
 RUN add-apt-repository ppa:brightbox/ruby-ng
-RUN apt-get update && apt-get install -y phantomjs ruby2.2 ruby2.2-dev
+RUN apt-get update && apt-get install -y --force-yes phantomjs ruby2.2 ruby2.2-dev && apt-get clean
 
 RUN wget http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && rm chromedriver_linux64.zip
