@@ -74,6 +74,7 @@ Vagrant.configure(2) do |config|
       sudo apt-get update && \
       sudo apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold salt-minion=\"#{SALT_VERSION}\" salt-master=\"#{SALT_VERSION}\""
 
+    config.vm.provision "shell", path: "docker_install.sh"
     config.vm.provision "shell", path: "pip_install.sh"
     config.vm.provision "shell", inline: "sudo pip install docker-compose==1.5.2"
 
