@@ -110,7 +110,8 @@ services:
     KOHA_PORT: "http://${HOST}:8081"
     TRIPLESTORE_PORT: "http://${HOST}:${TRIPLESTORE_PORT}"
     ELASTICSEARCH_URL: "http://${HOST}:${ELASTICSEARCH_PORT}"
-    JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070 -DDATA_BASEURI=${DATA_BASEURI}"
+    DATA_BASEURI: "${DATA_BASEURI}"
+    JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070"
 
 patron-client:
   container_name: redef_patron_client_container
