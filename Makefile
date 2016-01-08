@@ -87,7 +87,7 @@ rebuild_patron_client:
 
 cuke_test:
 	@$(XHOST_ADD)
-	vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
+	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS) || cucumber @report/rerun.txt \
