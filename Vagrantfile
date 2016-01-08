@@ -60,6 +60,11 @@ Vagrant.configure(2) do |config|
       vb.customize ["modifyvm", :id, "--memory", "4096"]
     end
 
+    config.vm.provision "shell" do |s|
+      s.privileged = false
+      s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+    end
+
     config.vm.network "private_network", ip: "192.168.50.12"
     # Sync folders salt and pillar in virtualboxes
     config.vm.synced_folder "salt", "/srv/salt"
