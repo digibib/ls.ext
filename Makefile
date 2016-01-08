@@ -70,9 +70,9 @@ endif
 test: test_patron_client test_catalinker cuke_test     ## Run unit and cucumber tests.
 
 ifdef CUKE_PROFILE_ARG
-	CUKE_PROFILE=$(CUKE_PROFILE_ARG)
+CUKE_PROFILE=$(CUKE_PROFILE_ARG)
 else
-	CUKE_PROFILE=--profile default
+CUKE_PROFILE=--profile default
 endif
 
 rebuild_services:
@@ -87,11 +87,11 @@ rebuild_patron_client:
 
 cuke_test:
 	@$(XHOST_ADD)
-	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
+	vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
-		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
-		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS) || cucumber @report/rerun.txt \
-		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` $(CUKE_ARGS)'"
+		bash -c 'ruby /tests/sanity-check.rb && \
+		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
+		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)'"
 	@$(XHOST_REMOVE)
 
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
