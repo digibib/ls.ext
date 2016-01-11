@@ -33,7 +33,7 @@ public class SearchTest {
     public static final int TEN_TIMES = 10;
     private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
-    private static String elasticSearchUrl = System.getProperty("ELASTCSEARCH_URL", "http://localhost:9200");
+    private static String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://localhost:9200");
 
     @BeforeClass
     public static void setup() throws Exception {
