@@ -22,9 +22,9 @@ apache2:
 
 services_gradle_build_docker_image:
   cmd.run:
-  - name: ./gradlew dockerBuildImage
-  - cwd: /vagrant/redef/services
-  - user: vagrant
+    - name: ./gradlew dockerBuildImage
+    - cwd: /vagrant/redef/services
+    - user: vagrant
 
 ##########
 # Elasticsearch specifig config
