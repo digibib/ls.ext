@@ -25,7 +25,7 @@ public abstract class ResourceBase {
     public static final String ELASTIC_SEARCH_URL = "elasticsearch.url";
 
     protected final String elasticSearchBaseUrl() {
-        return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://localhost:9200");
+        return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://192.168.50.12:8200");
     }
 
     private static InMemoryRepository staticInMemoryRepository;
