@@ -24,4 +24,4 @@ docker_reload_with_params:
     - watch:
       - file: docker_params_blockreplace
     - require_in:
-      - service: docker
+      - cmd: services_gradle_build_docker_image
