@@ -192,6 +192,7 @@ docker {
     javaApplication {
         maintainer = 'digitalutvikling@gmail.com'
         port = 8005
+        tag = "digibib/redef-services"
     }
 }
 
