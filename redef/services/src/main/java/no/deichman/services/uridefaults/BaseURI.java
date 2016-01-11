@@ -18,7 +18,7 @@ public final class BaseURI {
     }
 
     public static BaseURI remote() {
-        return new BaseURI(System.getProperty("DATA_BASEURI"));
+        return new BaseURI(System.getProperty("DATA_BASEURI", "http://192.168.50.12:8005/"));
     }
 
     public String work() {
