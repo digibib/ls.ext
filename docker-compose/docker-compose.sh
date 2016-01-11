@@ -9,4 +9,4 @@ if [ ! -f docker-compose.env ]; then
 fi
 source docker-compose.env
 envsubst < "docker-compose-template-dev.yml" > "docker-compose.yml"
-docker-compose up -d
+#docker-compose up -d
