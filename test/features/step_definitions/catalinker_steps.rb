@@ -183,8 +183,6 @@ When(/^jeg følger lenken til posten i Koha$/) do
   link = @browser.a(:data_automation_id => "biblio_record_link").href
   steps %Q{
     Gitt at jeg er logget inn som adminbruker
-    Gitt at det finnes en avdeling
-    Når jeg legger til en materialtype
   }
   @browser.goto(@browser.url[0..@browser.url.index("/cgi-bin")] + link[link.index("/cgi-bin")+1..-1])
 end
