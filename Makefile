@@ -50,16 +50,16 @@ CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
 endif
 
 ifeq ($(shell uname -s), Linux)
-DEVELOPER_IP=$(shell ifconfig en5 | awk '/inet / { print $$2 }')
+DEVELOPER_IP=$(shell ifconfig eth0 | awk '/inet / { print $$2 }' | sed 's/addr://')
 else
-DEVELOPER_IP=$(shell netstat -nr | grep default | awk '{print $$2}')
+DEVELOPER_IP=$(shell for i in 0 1 2 3 4 5  ; do ifconfig en$$i 2>/dev/null | awk '/inet / { print $$2 }' | sed 's/addr://'; done)
 XHOST_PATH=/opt/X11/bin/
 endif
 
 ifdef TESTBROWSER
 BROWSER_ARG=-e BROWSER=$(TESTBROWSER)
 XHOST_ADD=$(XHOST_PATH)xhost +
-XHOST_REMOVE=$(XHOST_PATH)xhost - $(DEVELOPER_IP)
+XHOST_REMOVE=$(XHOST_PATH)xhost -
 DISPLAY_ARG=-e DISPLAY=$(DEVELOPER_IP):0
 endif
 
