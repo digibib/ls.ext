@@ -101,13 +101,13 @@ services:
     - "8006:8006"
     - "5070:5070"
   environment:
-    KOHA_USER: "${KOHA_ADMINUSER}"
-    KOHA_PASSWORD: "${KOHA_ADMINPASS}"
-    KOHA_PORT: "http://${HOST}:8081"
-    TRIPLESTORE_PORT: "http://${HOST}:${TRIPLESTORE_PORT}"
-    ELASTICSEARCH_URL: "http://${HOST}:${ELASTICSEARCH_PORT}"
-    DATA_BASEURI: "${DATA_BASEURI}"
-    JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070"
+    JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070 \
+    -DKOHA_USER=${KOHA_ADMINUSER} \
+    -DKOHA_PASSWORD=${KOHA_ADMINPASS} \
+    -DKOHA_PORT=http://${HOST}:8081 \
+    -DTRIPLESTORE_PORT=http://${HOST}:${TRIPLESTORE_PORT} \
+    -DELASTICSEARCH_URL=http://${HOST}:${ELASTICSEARCH_PORT} \
+    -DDATA_BASEURI=${DATA_BASEURI}"
 
 patron-client:
   container_name: redef_patron_client_container

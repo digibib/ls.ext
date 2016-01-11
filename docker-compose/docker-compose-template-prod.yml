@@ -104,12 +104,13 @@ services:
     - "8005:8005"
     - "8006:8006"
   environment:
-    KOHA_USER: "${KOHA_ADMINUSER}"
-    KOHA_PASSWORD: "${KOHA_ADMINPASS}"
-    KOHA_PORT: "http://${HOST}:8081"
-    TRIPLESTORE_PORT: "http://${HOST}:${TRIPLESTORE_PORT}"
-    DATA_BASEURI: "${DATA_BASEURI}"
-    ELASTICSEARCH_URL: "http://${HOST}:${ELASTICSEARCH_PORT}"
+    JAVA_OPTS: " \
+    -DKOHA_USER=${KOHA_ADMINUSER} \
+    -DKOHA_PASSWORD=${KOHA_ADMINPASS} \
+    -DKOHA_PORT=http://${HOST}:8081 \
+    -DTRIPLESTORE_PORT=http://${HOST}:${TRIPLESTORE_PORT} \
+    -DELASTICSEARCH_URL=http://${HOST}:${ELASTICSEARCH_PORT} \
+    -DDATA_BASEURI=${DATA_BASEURI}"
 
 patron-client:
   container_name: redef_patron_client_container
