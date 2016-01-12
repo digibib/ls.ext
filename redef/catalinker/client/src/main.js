@@ -53,6 +53,7 @@
                 var graphData = ensureJSON(response.data);
 
                 var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(uri)[1]);
+                ractive.set("targetResources." + type + ".uri", uri);
                 var root = ldGraph.parse(graphData).byType(type)[0];
 
                 _.each(ractive.get("inputs"), function (input, inputIndex) {
