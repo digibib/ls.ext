@@ -30,6 +30,10 @@ class ItemTypes < AdminPage
     if (@browser.a(:id => "newitemtype").present?)
       @browser.a(:id => "newitemtype").click
     end
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+      @browser.h3(:text => "Add item type").present?
+    }
+
     form = @browser.form(:id => "itemtypeentry")
     form.text_field(:id => "itemtype").set code
     form.text_field(:id => "description").set desc
