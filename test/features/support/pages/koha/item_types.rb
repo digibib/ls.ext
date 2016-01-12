@@ -14,7 +14,7 @@ class ItemTypes < AdminPage
   end
 
   def create(code, desc)
-    tries = 5
+    tries = 10
     begin
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
       @browser.a(:id => "newitemtype").present?
