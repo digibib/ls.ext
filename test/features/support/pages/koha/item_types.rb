@@ -27,7 +27,9 @@ class ItemTypes < AdminPage
         retry
       end
     end
-    @browser.a(:id => "newitemtype").click
+    if (@browser.a(:id => "newitemtype").present?)
+      @browser.a(:id => "newitemtype").click
+    end
     form = @browser.form(:id => "itemtypeentry")
     form.text_field(:id => "itemtype").set code
     form.text_field(:id => "description").set desc
