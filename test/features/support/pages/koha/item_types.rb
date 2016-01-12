@@ -14,6 +14,19 @@ class ItemTypes < AdminPage
   end
 
   def create(code, desc)
+    tries = 3
+    begin
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+      @browser.a(:id => "newitemtype").present?
+    }
+    rescue Watir::Wait::TimeoutError
+      STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
+      if (tries == 0)
+        fail
+      else
+        retry
+      end
+    end
     @browser.a(:id => "newitemtype").click
     form = @browser.form(:id => "itemtypeentry")
     form.text_field(:id => "itemtype").set code
