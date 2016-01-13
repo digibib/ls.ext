@@ -161,7 +161,7 @@ Then(/^får låneren beskjed om at materialet (.*?)$/) do |check|
     when "ikke kan lånes"
       @context[:sip_checkout_response]["AF"].should include("Item is on hold shelf for another patron")
     when "overskrider maksgrensen for lån"
-      @context[:sip_checkout_response]["AF"].should eq("1") # TODO! This should be a more meaningful response ?!?!
+      @context[:sip_checkout_response]["AF"].should eq("TOO_MANY_CHECKOUTS") # TODO! This should be a more meaningful response ?!?!
     when "ikke kan lånes pga aldersbegrensning"
       @context[:sip_checkout_response]["AF"].should eq("AGE_RESTRICTION: Aldersgrense: 15")
     else
