@@ -90,6 +90,7 @@ sip:
 catalinker:
   container_name: redef_catalinker_container
   image: "digibib/redef-catalinker:${GITREF}"
+  dockerfile: Dockerfile
   ports:
     - "8010:8010"
   environment:

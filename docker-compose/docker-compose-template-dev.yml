@@ -88,9 +88,9 @@ catalinker:
   build: /vagrant/redef/catalinker
   dockerfile: Dockerfile-dev
   volumes:
-    - /vagrant/redef/catalinker/client:/usr/src/app/client
-    - /vagrant/redef/catalinker/public:/usr/src/app/public
-    - /vagrant/redef/catalinker/server:/usr/src/app/server
+    - /mnt/catalinker_client:/usr/src/app/client
+    - /mnt/catalinker_public:/usr/src/app/public
+    - /mnt/catalinker_server:/usr/src/app/server
   ports:
     - "8010:8010"
   environment:
