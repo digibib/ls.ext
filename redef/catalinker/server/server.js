@@ -16,7 +16,7 @@ if (app.get('env') === 'development') {
 var Server;
 
 app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/../public')));
 
 app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery']));
 app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']));
@@ -48,11 +48,11 @@ app.get('/', function (res) {
 });
 
 app.get('/cataloguing/*', function (req, res, next) {
-    res.sendFile('main_old.html', {title: 'Katalogisering', root: __dirname + '/public/'});
+    res.sendFile('main_old.html', {title: 'Katalogisering', root: __dirname + '/../public/'});
 });
 
 app.get('/workflow', function (req, res, next) {
-    res.sendFile('main.html', {title: 'Katalogisering', root: __dirname + '/public/'});
+    res.sendFile('main.html', {title: 'Katalogisering', root: __dirname + '/../public/'});
 });
 
 app.get('/:type(person|work|publication)', function (req, res, next) {
@@ -115,7 +115,7 @@ app.get('/config', function (request, response) {
 ;
 
 app.use("/style", compileSass({
-    root: path.join(__dirname, 'client/scss'),
+    root: path.join(__dirname, '/../client/scss'),
     sourceMap: true, // Includes Base64 encoded source maps in output css
     sourceComments: false, // Includes source comments in output css
     watchFiles: true, // Watches sass files and updates mtime on main files for each change

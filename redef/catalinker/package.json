@@ -4,7 +4,7 @@
   "description": "Client for the cataloguing part of ls.ext.",
   "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server/server.js",
     "test": "mocha module-test --timeout 5000",
     "start-dev": "NODE_ENV=development nodemon -L",
     "start-dev-debug": "nodemon debug",
@@ -36,7 +36,7 @@
     "jquery": "^2.1.4",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61",
     "morgan": "~1.6.1",
-    "node-sass": "*",
+    "node-sass": "^3.4.2",
     "node-sass-evergreen": "*",
     "path": "*",
     "purecss-sass": "^0.6.0",
