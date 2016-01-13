@@ -14,14 +14,27 @@ class ItemTypes < AdminPage
   end
 
   def create(code, desc)
+    # the usual watir ui element manipulations seem to fail with timeout when adding new item types,
+    # so default to using old school javascript
     @browser.execute_script("document.getElementById('newitemtype').click()")
-    Watir::Wait.until {
-      @browser.text_field(:id => "itemtype").present?
+
+    # wait for page to be partially re-render by ajax
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+      @browser.h3(:text => "Add item type").present?
     }
 
     form = @browser.form(:id => "itemtypeentry")
-    form.text_field(:id => "itemtype").set code
-    form.text_field(:id => "description").set desc
+
+    # instead of:
+    # form.text_field(:id => "itemtype").set code
+    # use:
+    @browser.execute_script("document.getElementById('itemtype').value = '" + code + "'")
+
+    # instead of:
+    # form.text_field(:id => "description").set desc
+    # use:
+    @browser.execute_script("document.getElementById('description').value = '" + description + "'")
+
     form.submit
     self
   end
