@@ -5,6 +5,7 @@ CONTAINER=redef_catalinker_container
 MODULE_TEST_CONTAINER=redef_catalinker_test_container
 HOST_VOLUME_BINDINGS=-v /vagrant/redef/catalinker/client:/usr/src/app/client \
 	-v /vagrant/redef/catalinker/public:/usr/src/app/public \
+	-v /vagrant/redef/catalinker/server:/usr/src/app/server \
 	-v /vagrant/redef/catalinker/module-test:/usr/src/app/module-test
 
 run-dev:
