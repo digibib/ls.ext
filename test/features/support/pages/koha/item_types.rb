@@ -14,22 +14,7 @@ class ItemTypes < AdminPage
   end
 
   def create(code, desc)
-    tries = 10
-    begin
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-      @browser.a(:id => "newitemtype").visible?
-    }
-    rescue Watir::Wait::TimeoutError
-      STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
-      if (tries == 0)
-        fail
-      else
-        retry
-      end
-    end
-    if @browser.a(:id => "newitemtype").visible?
-      @browser.a(:id => 'newitemtype').click
-    end
+    @browser.execute_script("document.getElementById('newitemtype').click()")
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
       @browser.h3(:text => "Add item type").present?
     }
