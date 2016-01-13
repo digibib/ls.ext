@@ -125,7 +125,7 @@ clean_report:                                          ## Clean cucumber reports
 	rm -rf test/report || true
 
 clean_ship:                                            ## Destroy $(SHIP) box. Prompts for ok.
-	vagrant destroy $(SHIP)
+	vagrant destroy -f $(SHIP)
 
 dump_ship:                                             ## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
 	vagrant ssh $(SHIP) -c 'sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host 192.168.50.12 --port 3306 --databases koha_name > /vagrant/koha_name_dump.sql'
