@@ -16,7 +16,7 @@ class ItemTypes < AdminPage
   def create(code, desc)
     @browser.execute_script("document.getElementById('newitemtype').click()")
     Watir::Wait.until {
-      @browser.form(:id => "itemtypeentry").text_field(:id => "itemtype").present?
+      @browser.text_field(:id => "itemtype").present?
     }
 
     form = @browser.form(:id => "itemtypeentry")
