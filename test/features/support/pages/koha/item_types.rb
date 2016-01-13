@@ -33,7 +33,7 @@ class ItemTypes < AdminPage
     # instead of:
     # form.text_field(:id => "description").set desc
     # use:
-    @browser.execute_script("document.getElementById('description').value = '" + description + "'")
+    @browser.execute_script("document.getElementById('description').value = '" + desc + "'")
 
     form.submit
     self
