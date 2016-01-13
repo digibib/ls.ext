@@ -81,13 +81,13 @@ endif
 
 rebuild_services:
 	@vagrant ssh dev-ship -c "cd /vagrant/redef/services && ./gradlew --no-daemon build oneJar && \
-	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d"
+	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d --force-recreate services"
 
 rebuild_catalinker:
-	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up -d"
+	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up -d --force-recreate catalinker"
 
 rebuild_patron_client:
-	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up -d"
+	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up -d --force-recreate patron-client"
 
 cuke_test:
 	@$(XHOST_ADD)
