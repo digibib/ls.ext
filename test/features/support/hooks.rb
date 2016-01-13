@@ -104,3 +104,8 @@ After do |scenario|
     STDOUT.puts "#{@active.pretty_inspect}"
   end
 end
+
+# `FAIL_FAST=1 cucumber` to stop on first failure
+After do |scenario|
+  Cucumber.wants_to_quit = ENV['FAIL_FAST'] && scenario.failed?
+end

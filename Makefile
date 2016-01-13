@@ -75,6 +75,10 @@ else
 CUKE_PROFILE=--profile default
 endif
 
+ifdef FAIL_FAST
+FAIL_FAST_ARG=-e FAIL_FAST=1
+endif
+
 rebuild_services:
 	@vagrant ssh dev-ship -c "cd /vagrant/redef/services && ./gradlew --no-daemon build oneJar && \
 	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d"
@@ -88,7 +92,7 @@ rebuild_patron_client:
 cuke_test:
 	@$(XHOST_ADD)
 	vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
-	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
+	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && \
 		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
 		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)'"
