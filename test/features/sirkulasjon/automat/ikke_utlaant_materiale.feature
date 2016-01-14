@@ -2,6 +2,7 @@
 # language: no
 
 @issue-8 @bug-13411
+@wip
 Egenskap: Innlevering av ikke-utlånt materiale
 
   Notat: Disse scenariene tester ikke egentlig automaten, men at dersom vi oppfører oss

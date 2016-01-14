@@ -2,6 +2,7 @@
 # language: no
 
 @issue-2
+@wip
 Egenskap: Autentisering på automat
   Som en låner Knut
   Fordi jeg liker å gjøre ting selv

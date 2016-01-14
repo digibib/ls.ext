@@ -2,6 +2,7 @@
 # language: no
 
 @issue-3
+@wip
 Egenskap: Selvbetjent utlån via utlånsautomat
   Som en låner Knut
   For å bli underholdt

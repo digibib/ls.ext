@@ -2,6 +2,7 @@
 # language: no
 
 @issue-3
+@wip
 Egenskap: Selvbetjent innlevering
   Som en låner Knut
   Fordi jeg har sett filmen jeg lånte
