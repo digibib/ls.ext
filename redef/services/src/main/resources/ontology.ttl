@@ -107,3 +107,33 @@
   rdfs:label "Kjønn"@no ;
   rdfs:domain :Person ;
   rdfs:range xsd:string .
+
+:partTitle a rdfs:Property ;
+  rdfs:label "Part title"@no ;
+  rdfs:label "Deltittel"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
+:partNumber a rdfs:Property ;
+  rdfs:label "Part number"@en ;
+  rdfs:label "Delnummer"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
+:edition a rdfs:Property ;
+  rdfs:label "Edition"@en ;
+  rdfs:label "Utgave"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
+:numberOfPages a rdfs:Property ;
+  rdfs:label "Number of pages"@en ;
+  rdfs:label "Sidetall"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
+:isbn a rdfs:Property ;
+  rdfs:label "ISBN"@en ;
+  rdfs:label "ISBN"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
