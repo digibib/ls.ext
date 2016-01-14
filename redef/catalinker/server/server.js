@@ -102,7 +102,7 @@ app.get('/config', function (request, response) {
               id: "describe-publication",
               rdfType: "Publication",
               label: "Beskriv utgivelsen",
-              rdfProperties: ["mainTitle", "subtitle", "publicationYear", "language", "format"],
+              rdfProperties: ["mainTitle", "subtitle", "publicationYear", "language", "format", "partTitle", "partNumber", "edition", "numberOfPages", "isbn"],
               nextStep: {
                 buttonLabel: "Avslutt registrering av utgivelsen"
               }
