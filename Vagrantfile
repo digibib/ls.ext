@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
         config.vm.synced_folder "redef/catalinker/client", "/mnt/catalinker_client", type: "nfs"
         config.vm.synced_folder "redef/catalinker/public", "/mnt/catalinker_public", type: "nfs"
       else
-        config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server_mnt"
+        config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server"
         config.vm.synced_folder "redef/catalinker/client", "/mnt/catalinker_client"
         config.vm.synced_folder "redef/catalinker/public", "/mnt/catalinker_public"
       end
