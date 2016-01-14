@@ -27,7 +27,7 @@ end
 When(/^jeg søker på verkets ID i lånergrensesnittet$/) do
   page = @site.SearchPatronClient
   page.visit
-  page.search_with_text(@context[:identifier])
+  page.search_with_text(@context[:work_identifier])
 end
 
 When(/^jeg søker på verkets forfatter i lånergrensesnittet$/) do

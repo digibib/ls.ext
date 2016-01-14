@@ -7,18 +7,18 @@ end
 
 
 When(/^jeg er på sida til verket$/) do
-  @site.PatronClientWorkPage.visit(@context[:identifier].split("/").last)
+  @site.PatronClientWorkPage.visit(@context[:work_identifier].split("/").last)
 end
 
 Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
   step "jeg er på sida til verket"
-  @site.PatronClientWorkPage.getDate().should_not include(@context[:year])
+  @site.PatronClientWorkPage.getDate().should_not include(@context[:work_publicationyear])
 end
 
 Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do
   step "jeg er på sida til verket"
   @browser.refresh
-  @site.PatronClientWorkPage.getDate().should eq(@context[:year])
+  @site.PatronClientWorkPage.getDate().should eq(@context[:work_publicationyear])
 end
 
 
@@ -31,7 +31,7 @@ end
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {@site.PatronClientWorkPage.getTitle != ""}
   @site.PatronClientWorkPage.getTitle.should include(@context[:work_title])
-  @site.PatronClientWorkPage.getDate.should include(@context[:year])
+  @site.PatronClientWorkPage.getDate.should include(@context[:work_publicationyear])
 end
 
 Then(/^verkets tittel vises på verks\-siden$/) do
@@ -46,14 +46,14 @@ Then(/^verkets alternative tittel vises på verks\-siden$/) do
 end
 
 Then(/^vises eksemplaret på verkssiden$/) do
-  page = @site.PatronClientWorkPage.visit(@context[:identifier].split("/").last)
+  page = @site.PatronClientWorkPage.visit(@context[:work_identifier].split("/").last)
   page.existsExemplar.should be(true)
 end
 
 When(/^vises opplysningene om utgivelsen på verkssiden$/) do
   step "jeg er på sida til verket"
   @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
-    row.td(:data_automation_id => "publication_title").text.should eq(@context[:publication_title])
+    row.td(:data_automation_id => "publication_title").text.should eq(@context[:publication_maintitle])
     row.td(:data_automation_id => "publication_format").text.should eq(@context[:publication_format])
     row.td(:data_automation_id => "publication_language").text.should eq(@context[:publication_language])
   end
@@ -163,7 +163,7 @@ end
 
 Then(/^så ser jeg utfyllende informasjon om personen$/) do
   @site.PatronClientPersonPage.getPersonTitle.should eq(@context[:person_title])
-  @site.PatronClientPersonPage.getBirth.should eq(@context[:person_birth_year])
-  @site.PatronClientPersonPage.getDeath.should eq(@context[:person_death_year])
+  @site.PatronClientPersonPage.getBirth.should eq(@context[:person_birthyear])
+  @site.PatronClientPersonPage.getDeath.should eq(@context[:person_deathyear])
   @site.PatronClientPersonPage.getNationality.should eq(@context[:person_nationality])
 end

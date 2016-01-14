@@ -200,7 +200,7 @@ Then(/^viser systemet at boka( ikke)? er reservert$/) do |notreserved|
       @browser.table(:id => "holdst").text.should_not include(@active[:book].title)
     end
   else
-    @browser.table(:id => "holdst").text.should include(@context[:publication_title])
+    @browser.table(:id => "holdst").text.should include(@context[:publication_maintitle])
   end
 end
 
@@ -229,7 +229,7 @@ end
 
 Then(/^vises boka i listen over bøker som skal plukkes$/) do
   holds = @site.HoldsQueue.visit.get_holds
-  holds.text.should include(@context[:publication_title])
+  holds.text.should include(@context[:publication_maintitle])
   holds.text.should include(@active[:patron].cardnumber)
 end
 
@@ -431,7 +431,7 @@ end
 When(/^ser jeg tittelen i bokposten$/) do
   tries = 5
   begin
-    @browser.h1(:class => 'title').when_present(BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_title]
+    @browser.h1(:class => 'title').when_present(BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_maintitle]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -447,7 +447,7 @@ end
 When(/^ser jeg forfatteren i bokposten$/) do
   tries = 5
   begin
-    @browser.h5(:class => 'author').when_present(BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:creator]
+    @browser.h5(:class => 'author').when_present(BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -464,7 +464,7 @@ When(/^ser jeg tittelen i plukklisten$/) do
   tries = 3
   begin
     @browser.table(:id => "holdst").when_present(BROWSER_WAIT_TIMEOUT).trs.take_while { |row|
-      row.td(:class => "hq-title") }.any? { |element| element.text.include? @context[:publication_title] }.should be true
+      row.td(:class => "hq-title") }.any? { |element| element.text.include? @context[:publication_maintitle] }.should be true
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -480,7 +480,7 @@ end
 When(/^ser jeg forfatteren i plukklisten$/) do
   tries = 3
   begin
-    @browser.table(:id => "holdst").when_present(BROWSER_WAIT_TIMEOUT).divs(:class => 'hq-author').any? { |element| element.text.include? @context[:creator] }.should be true
+    @browser.table(:id => "holdst").when_present(BROWSER_WAIT_TIMEOUT).divs(:class => 'hq-author').any? { |element| element.text.include? @context[:work_creator] }.should be true
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)

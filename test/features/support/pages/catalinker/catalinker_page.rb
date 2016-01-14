@@ -53,10 +53,15 @@ class CatalinkerPage < PageRoot
     end
   end
 
-  def select_prop(predicate, value, nr=0)
+  def select_prop(predicate, value, nr=0, skip_wait=false)
     input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }
     input.select(value)
+    unless skip_wait
+      retry_wait do
+        Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === 'alle endringer er lagret' }
+      end
+    end
     self
   end
 
@@ -64,6 +69,17 @@ class CatalinkerPage < PageRoot
     input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value != "" }
     input.value
+  end
+
+  def get_select_prop(predicate, nr=0)
+    input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }
+    selected_options = input.selected_options
+    if (selected_options.size.eql? 1)
+      selected_options.first.text
+    else
+      false
+    end
   end
 
   def get_id()

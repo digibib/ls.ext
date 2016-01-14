@@ -6,28 +6,49 @@ class WorkFlow < CatalinkerPage
   def visit
     @browser.goto catalinker(:workflow)
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-        @browser.divs(:class => "prop-input").size > 1 # wait until dom-tree has been populated
+      @browser.divs(:class => 'prop-input').size > 1 # wait until dom-tree has been populated
     }
     self
   end
 
   def nextStep
-    @browser.div(:class => "grid-panel-selected").button(:class =>  "next-step-button").click
+    @browser.div(:class => 'grid-panel-selected').button(:class => 'next-step-button').click
   end
 
   def assertSelectedTab(nameOfVisibleTag)
-    @browser.ul(:id => "workflow-tabs").a(:class => "grid-tab-link-selected").text.should eq nameOfVisibleTag
+    @browser.ul(:id => 'workflow-tabs').a(:class => 'grid-tab-link-selected').text.should eq nameOfVisibleTag
   end
 
   def add_prop(domain, predicate, value, nr=0, skip_wait=false)
-    super domain + "_" + predicate, value, nr, skip_wait
+    super "#{domain}_#{predicate}", value, nr, skip_wait
   end
 
-  def select_prop(domain, predicate, value, nr=0)
-    super domain + "_" + predicate, value, nr
+  def select_prop(domain, predicate, value, nr=0, skip_wait=false)
+    super "#{domain}_#{predicate}", value, nr, skip_wait
   end
 
   def get_link_to_work
-    @browser.a(:data_automation_id => "work_page_link")
+    @browser.a(:data_automation_id => 'work_page_link')
+  end
+
+  def get_work_uri
+    get_resource_uri 'work'
+  end
+
+  def get_publication_uri
+    get_resource_uri 'publication'
+  end
+
+  def get_person_uri
+    get_resource_uri 'person'
+  end
+
+  def get_resource_uri(type)
+    attribute_name = "data-#{type.downcase}-uri"
+    element = @browser.div(:data_automation_id => 'targetresources-uris')
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+      not element.attribute_value(attribute_name).empty?
+    end
+    element.attribute_value(attribute_name)
   end
 end

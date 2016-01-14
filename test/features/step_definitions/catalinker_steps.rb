@@ -48,12 +48,12 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
     end
     record_id = @context[:record_id] # need to store it in a variable so the cleanup can close over it
     @cleanup.push("delete items of biblio ##{record_id}" =>
-        lambda do
-          page = @site.BiblioDetail.visit(record_id)
-          page.delete_all_items
-          # TODO: deletion of biblio will be handled by services?
-        end
-      )
+                      lambda do
+                        page = @site.BiblioDetail.visit(record_id)
+                        page.delete_all_items
+                        # TODO: deletion of biblio will be handled by services?
+                      end
+    )
   end
 end
 
@@ -70,16 +70,16 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
     Gitt at det finnes en avdeling
     Når jeg legger til en materialtype
   }
-  book = SVC::Biblio.new(@browser,@context,@active).add
+  book = SVC::Biblio.new(@browser, @context, @active).add
   @active[:book] = book
-  @context[:biblio]     = book.biblionumber
-  @context[:publication_title] = book.title
+  @context[:biblio] = book.biblionumber
+  @context[:publication_maintitle] = book.title
   @context[:record_id] = book.biblionumber
 
-  @cleanup.push( "bok #{book.biblionumber}" =>
-    lambda do
-      SVC::Biblio.new(@browser).delete(book)
-    end
+  @cleanup.push("bok #{book.biblionumber}" =>
+                    lambda do
+                      SVC::Biblio.new(@browser).delete(book)
+                    end
   )
 end
 
@@ -90,11 +90,11 @@ end
 Given(/^at det er en feil i systemet for katalogisering$/) do
   `docker stop redef_services_container`
   @cleanup.push("restarting redef_services_container" =>
-    lambda do
-      `sudo docker start redef_services_container`
-      sleep 15 # give container time to get up running properly for next tests
-    end
-    )
+                    lambda do
+                      `sudo docker start redef_services_container`
+                      sleep 15 # give container time to get up running properly for next tests
+                    end
+  )
 end
 
 Given(/^at systemet har returnert en ny ID for det nye verket$/) do
@@ -193,8 +193,22 @@ Then(/^kommer jeg til Koha's presentasjon av biblio$/) do
   step "verkets tittel vises på verks-siden"
 end
 
+When(/^jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt$/) do
+  unless (@context[:publication_identifier])
+    fail 'No publication identifier added to context'
+  end
+  step 'jeg åpner utgivelsen for redigering'
+end
+
+When(/^jeg åpner verket i gammelt katalogiseringsgrensesnitt$/) do
+  unless (@context[:work_identifier])
+    fail 'No work identifier added to context'
+  end
+  step 'jeg åpner verket for redigering'
+end
+
 When(/^jeg åpner verket for redigering$/) do
-  @site.RegWork.open(@context[:identifier], "work")
+  @site.RegWork.open(@context[:work_identifier], "work")
 end
 
 When(/^jeg åpner utgivelsen for redigering$/) do
@@ -238,12 +252,12 @@ When(/^jeg velger språk for tittelen$/) do
 end
 
 When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
-  @context[:year] = rand(2015).to_s
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:year])
+  @context[:work_publicationyear] = rand(2015).to_s
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:work_publicationyear])
 end
 
 When(/^jeg sletter eksisterende forfatter på verket$/) do
-tries = 3
+  tries = 3
   begin
     deletables = @browser.inputs(:class => 'deletable').size
     @browser.inputs(:data_automation_id => "http://#{ENV['HOST']}:8005/ontology#creator"+"_0").first.click
@@ -280,12 +294,12 @@ end
 
 When(/^velger person fra en treffliste$/) do
   @site.RegWork.select_resource(@context[:person_identifier].to_s)
-  @context[:creator] = @context[:person_name]
+  @context[:work_creator] = @context[:person_name]
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
-  @context[:year] = arg1
-  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:year])
+  @context[:work_publicationyear] = arg1
+  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:work_publicationyear])
 end
 
 When(/^jeg legger til et eksemplar av utgivelsen$/) do
@@ -302,21 +316,21 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
   @browser.link(:id => "newitem").click
   @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
   @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set(@context[:item_barcode])
-  @browser.text_field(:id => /^tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' %  [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
+  @browser.text_field(:id => /^tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' % [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
   @browser.button(:text => "Add item").click
   record_id = @context[:record_id]
 
   @cleanup.push("delete items of biblio ##{record_id}" =>
-    lambda do
-      @browser.goto intranet(:biblio_detail)+record_id
+                    lambda do
+                      @browser.goto intranet(:biblio_detail)+record_id
 
-      # delete all book items
-      @browser.execute_script("window.confirm = function(msg){return true;}")
-      @browser.button(:text => "Edit").click
-      @browser.a(:id => "deleteallitems").click
+                      # delete all book items
+                      @browser.execute_script("window.confirm = function(msg){return true;}")
+                      @browser.button(:text => "Edit").click
+                      @browser.a(:id => "deleteallitems").click
 
-      # TODO: deletion of biblio will be handled by services?
-    end
+                      # TODO: deletion of biblio will be handled by services?
+                    end
   )
 end
 
@@ -343,8 +357,8 @@ Then(/^viser systemet at språket til tittelen blitt registrert$/) do
 end
 
 Then(/^leverer systemet en ny ID for det nye verket$/) do
-  @context[:identifier] = @site.RegWork.get_id()
-  @context[:identifier].should_not be_empty
+  @context[:work_identifier] = @site.RegWork.get_id()
+  @context[:work_identifier].should_not be_empty
 end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
@@ -358,8 +372,8 @@ Then(/^jeg kan legge til språk for det nye verket$/) do
 end
 
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
-  @context[:publication_title] = generateRandomString
-  @site.RegPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_title])
+  @context[:publication_maintitle] = generateRandomString
+  @site.RegPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
 end
 
 Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
@@ -397,19 +411,19 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
 
   @context[:publication_identifier] = @site.RegPublication.get_link
   @context[:publication_format] = ['Bok', 'CD', 'DVD', 'CD-ROM', 'DVD-ROM'].sample
-  @context[:publication_language] =  ['Engelsk','Norsk (bokmål)','Finsk','Baskisk', 'Grønlandsk'].sample
-  @context[:publication_title] = generateRandomString
+  @context[:publication_language] = ['Engelsk', 'Norsk (bokmål)', 'Finsk', 'Baskisk', 'Grønlandsk'].sample
+  @context[:publication_maintitle] = generateRandomString
   step "får utgivelsen tildelt en post-ID i Koha"
 
   page.select_prop("http://#{ENV['HOST']}:8005/ontology#format", @context[:publication_format])
   page.select_prop("http://#{ENV['HOST']}:8005/ontology#language", @context[:publication_language])
-  page.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_title])
+  page.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
 end
 
 
 When(/^jeg knytter utgivelsen til verket$/) do
   page = @site.RegPublication
-  page.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationOf", @context[:identifier])
+  page.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationOf", @context[:work_identifier])
 end
 
 Given(/^et verk med en utgivelse og et eksemplar$/) do
@@ -443,11 +457,11 @@ When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
   @context[:person_name] = generateRandomString
   @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:person_name])
 
-  @context[:person_birth_year] = (1000 + rand(1015)).to_s
-  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#birthYear", @context[:person_birth_year])
+  @context[:person_birthyear] = (1000 + rand(1015)).to_s
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#birthYear", @context[:person_birthyear])
 
-  @context[:person_death_year] = (1000 + rand(1015)).to_s
-  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#deathYear", @context[:person_death_year])
+  @context[:person_deathyear] = (1000 + rand(1015)).to_s
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#deathYear", @context[:person_deathyear])
 end
 
 When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do
@@ -496,7 +510,7 @@ end
 
 When(/^når jeg endrer navnet på personen$/) do
   @context[:person_name] = generateRandomString
-  @context[:creator] = @context[:person_name]
+  @context[:work_creator] = @context[:person_name]
   @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:person_name])
   step "grensesnittet viser at endringene er lagret"
 end
@@ -512,14 +526,48 @@ When(/^jeg venter litt.*$/) do
 end
 
 When(/^viser trefflisten at personen har et verk fra før$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class=> "search-result-name", :text => @context[:person_name]).should exist}
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "search-result-name", :text => @context[:person_name]).should exist }
 end
 
 When(/^trefflisten viser at personen har riktig nasjonalitet$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text =>@context[:person_nationality]).should exist}
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text => @context[:person_nationality]).should exist }
 end
 
 When(/^trefflisten viser at personen har riktig levetid$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "birthYear", :text =>@context[:person_birth_year]).should exist}
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text =>@context[:person_death_year]).should exist}
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "birthYear", :text => @context[:person_birthyear]).should exist }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text => @context[:person_deathyear]).should exist }
+end
+
+When(/^jeg verifiserer opplysningene om utgivelsen for hovedtittel, undertittel, år, format og språk$/) do
+  # TODO: Unify get_prop and get_select_prop in the page objects to avoid having to specify it.
+  data = Hash.new
+  data['mainTitle'] = :get_prop
+  data['subtitle'] = :get_prop
+  data['publicationYear'] = :get_prop
+  data['format'] = :get_select_prop
+  data['language'] = :get_select_prop
+  data['partTitle'] = :get_prop
+  data['partNumber'] = :get_prop
+  data['edition'] = :get_prop
+  data['numberOfPages'] = :get_prop
+  data['isbn'] = :get_prop
+
+  batch_verify_props @site.RegPublication, 'Publication', data
+end
+
+def batch_verify_props(page_object, domain, data)
+  data.each do |fragment, method|
+    symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
+    page_object.method(method).call("http://#{ENV['HOST']}:8005/ontology##{fragment}").should eq @context[symbol]
+  end
+end
+
+When(/^jeg verifiserer opplysningene om verket for hovedtittel, undertittel, utgivelsesår og språk$/) do
+  data = Hash.new
+  data['mainTitle'] = :get_prop
+  data['subtitle'] = :get_prop
+  data['publicationYear'] = :get_prop
+  data['språk'] = :get_select_prop
+
+  batch_verify_props @site.RegWork, 'Work', data
 end

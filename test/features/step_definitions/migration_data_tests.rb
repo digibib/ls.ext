@@ -38,7 +38,7 @@ end
 When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter$/) do
   publication_name = generateRandomString
   ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
-              <publication> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:identifier]}> .
+              <publication> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
               <publication> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_name}\" ."
   post_publication_ntriples publication_name, ntriples
 end
@@ -46,7 +46,7 @@ end
 When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter og items$/) do
   publication_title = generateRandomString
   ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
-              <publication> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:identifier]}> .
+              <publication> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
               <publication> <http://#{ENV['HOST']}:8005/ontology#hasItem> <http://item> .
               <http://item> <http://#{ENV['HOST']}:8005/itemSubfieldCode/a> \"test\" .
               <publication> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_title}\" ."
@@ -58,14 +58,14 @@ def post_publication_ntriples(publication_title, ntriples)
   response.code.should == 201
   @context[:publication_identifier] = response.headers[:location]
   @context[:record_id] = JSON.parse(RestClient.get(@context[:publication_identifier]))["deichman:recordID"]
-  @context[:publication_title] = publication_title
+  @context[:publication_maintitle] = publication_title
 end
 
 When(/^jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen$/) do
   response = RestClient.get "http://#{ENV['HOST']}:8005/marc/#{@context[:record_id]}"
   xml_doc = Nokogiri::XML response
   title = xml_doc.xpath("//xmlns:datafield[@tag=245]/xmlns:subfield[@code='a']").text
-  title.should == @context[:publication_title]
+  title.should == @context[:publication_maintitle]
 end
 
 When(/^jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen$/) do

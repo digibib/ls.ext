@@ -48,18 +48,63 @@ When(/^bekrefter verkets tilleggsopplysninger uten endringer er korrekte$/) do
   @browser.select(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#language_0").selected_options.include? @context[:work_language]
 end
 
-When(/^legger inn opplysningene om utgivelsen for hovedtittel, undertittel, år, format og språk$/) do
+When(/^legger inn opplysningene om utgivelsen for hovedtittel, undertittel, utgivelsesår, format, språk, deltittel, delnummer, utgave, sidetall og ISBN$/) do
   @site.WorkFlow.nextStep
-  @site.WorkFlow.assertSelectedTab("Beskriv utgivelsen")
-  @context[:publication_title] = generateRandomString
-  @site.WorkFlow.add_prop("Publication", "http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_title], 0, true)
-  @context[:publication_language] = "Norsk"
-  @site.WorkFlow.select_prop("Publication", "http://#{ENV['HOST']}:8005/ontology#language", @context[:publication_language])
-  @context[:publication_format] = "Bok"
-  @site.WorkFlow.select_prop("Publication", "http://#{ENV['HOST']}:8005/ontology#format", @context[:publication_format])
+  @context[:publication_identifier] = @site.WorkFlow.get_publication_uri
+  @site.WorkFlow.assertSelectedTab('Beskriv utgivelsen')
+
+  # TODO: Unify add_prop and select_prop in the page objects to avoid having to specify it.
+  data = Hash.new
+  data['mainTitle'] = [generateRandomString, :add_prop]
+  data['subtitle'] = [generateRandomString, :add_prop]
+  data['publicationYear'] = [rand(2015).to_s, :add_prop]
+  data['format'] = [%w(Bok Lydbok Mikrofilm).sample, :select_prop]
+  data['language'] = [%w(Norsk Svensk Dansk).sample, :select_prop]
+  data['partTitle'] = [generateRandomString, :add_prop]
+  data['partNumber'] = [generateRandomString, :add_prop]
+  data['edition'] = [generateRandomString, :add_prop]
+  data['numberOfPages'] = [rand(999).to_s, :add_prop]
+  data['isbn'] = [generateRandomString, :add_prop]
+
+  workflow_batch_add_props 'Publication', data
+end
+
+def workflow_batch_add_props(domain, data)
+  data.each do |fragment, (value, method)|
+    symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
+    @context[symbol] = value
+    begin
+      @site.WorkFlow.method(method).call(domain, "http://#{ENV['HOST']}:8005/ontology##{fragment}", @context[symbol], 0, true)
+    rescue
+      fail "Error adding #{fragment} for #{domain}"
+    end
+  end
 end
 
 When(/^bekrefter at utgivelsesinformasjonen er korrekt$/) do
-  @site.PatronClientWorkPage.visit(@context[:identifier].split("/").last)
+  @site.PatronClientWorkPage.visit(@context[:work_identifier].split("/").last)
   step "ser jeg informasjon om verkets tittel og utgivelsesår"
+end
+
+When(/^legger inn basisopplysningene om verket for hovedtittel og undertittel$/) do
+  @site.WorkFlow.nextStep
+  @context[:work_identifier] = @site.WorkFlow.get_work_uri
+  @site.WorkFlow.assertSelectedTab('Bekreft verk')
+
+  data = Hash.new
+  data['mainTitle'] = [generateRandomString, :add_prop]
+  data['subtitle'] = [generateRandomString, :add_prop]
+
+  workflow_batch_add_props 'Work', data
+end
+
+When(/^legger inn tilleggsopplyningene om verket for utgivelsesår og språk$/) do
+  @site.WorkFlow.nextStep
+  @site.WorkFlow.assertSelectedTab('Beskriv verket')
+
+  data = Hash.new
+  data['publicationYear'] = [rand(2015).to_s, :add_prop]
+  data['språk'] = [['Norsk', 'Svensk', 'Dansk'].sample, :select_prop]
+
+  workflow_batch_add_props 'Work', data
 end
