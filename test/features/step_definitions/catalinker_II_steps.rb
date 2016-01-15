@@ -89,6 +89,7 @@ def workflow_batch_add_props(domain, data)
       fail "Error adding #{fragment} for #{domain}"
     end
   end
+  sleep 2
 end
 
 When(/^bekrefter at utgivelsesinformasjonen er korrekt$/) do
