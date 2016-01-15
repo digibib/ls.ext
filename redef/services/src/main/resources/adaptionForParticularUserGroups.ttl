@@ -1,0 +1,19 @@
+@prefix : <http://data.deichman.no/adaptionForParticularUserGroups#> .
+@prefix deichman: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+:storskrift_forlagsdefinert a deichman:AdaptionForParticularUserGroups ;
+  deichman:code "tc, td" ;
+  rdfs:label "Storskrift, forlagsdefinert"@no ;
+  rdfs:label "Large type, publisher defined"@en .
+:storskrift_selvmålt a deichman:AdaptionForParticularUserGroups ;
+  deichman:code "td" ;
+  rdfs:label "Storskrift, selvmålt"@no ;
+  rdfs:label "Large type, measured"@en .
+:blindeskrift a deichman:AdaptionForParticularUserGroups ;
+  deichman:code "te" ;
+  rdfs:label "Blindeskrift"@no ;
+  rdfs:label "Braille"@en .
+:tegnspråk a deichman:AdaptionForParticularUserGroups ;
+  deichman:code "tr" ;
+  rdfs:label "Tegnspråk"@no ;
+  rdfs:label "Sign language"@en .

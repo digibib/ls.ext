@@ -1,0 +1,31 @@
+@prefix : <http://data.deichman.no/illustrationMatter#> .
+@prefix deichman: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+:illustrert a deichman:IllustrationMatter ;
+  deichman:code "ill" ;
+  rdfs:label "Illustrert"@no ;
+  rdfs:label "Illustration"@en .
+:kolorerte_illustrasjoner a deichman:IllustrationMatter ;
+  deichman:code "kol. ill." ;
+  rdfs:label "Kolorerte illustrasjoner"@no ;
+  rdfs:label "Coloured illustrations"@en .
+:kart a deichman:IllustrationMatter ;
+  deichman:code "kart" ;
+  rdfs:label "Kart"@no ;
+  rdfs:label "Map"@en .
+:portrett a deichman:IllustrationMatter ;
+  deichman:code "port." ;
+  rdfs:label "Portrett"@no ;
+  rdfs:label "Portrait"@en .
+:figur a deichman:IllustrationMatter ;
+  deichman:code "fig." ;
+  rdfs:label "Figur"@no ;
+  rdfs:label "Figure"@en .
+:tabell a deichman:IllustrationMatter ;
+  deichman:code "tab." ;
+  rdfs:label "Tabell"@no ;
+  rdfs:label "Table"@en .
+:plansje a deichman:IllustrationMatter ;
+  deichman:code "pl." ;
+  rdfs:label "Plansje"@no ;
+  rdfs:label "Plate"@en .

@@ -102,6 +102,34 @@
   rdfs:range duo:Nationality ;
   duo:valuesFrom values:nationality .
 
+:writingSystem a rdfs:Property ;
+  rdfs:label "Writing system"@en ;
+  rdfs:label "Skriftsystem"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range duo:WritingSystem ;
+  duo:valuesFrom values:writingSystem .
+
+:binding a rdfs:Property ;
+  rdfs:label "Binding"@en ;
+  rdfs:label "Innbinding"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range duo:Binding ;
+  duo:valuesFrom values:binding .
+
+:illustrativeMatter a rdfs:Property ;
+  rdfs:label "Illustrative matter"@en ;
+  rdfs:label "Illustrasjonsmateriale"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range duo:IllustrativeMatter ;
+  duo:valuesFrom values:illustrativeMatter .
+
+:adaptionForParticularUserGroups a rdfs:Property ;
+  rdfs:label "Adaption for particular user groups"@en ;
+  rdfs:label "Tilrettelegging"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range duo:AdaptionForParticularUserGroups ;
+  duo:valuesFrom values:adaptionForParticularUserGroups .
+
 :gender a rdfs:Property ;
   rdfs:label "Gender"@en ;
   rdfs:label "Kjønn"@no ;
