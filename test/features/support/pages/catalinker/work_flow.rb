@@ -29,6 +29,10 @@ class WorkFlow < CatalinkerPage
     super "#{domain}_#{predicate}", value, nr, skip_wait
   end
 
+  def get_available_select_choices(domain, predicate, nr=0)
+    super "#{domain}_#{predicate}", nr
+  end
+
   def get_link_to_work
     @browser.a(:data_automation_id => 'work_page_link')
   end

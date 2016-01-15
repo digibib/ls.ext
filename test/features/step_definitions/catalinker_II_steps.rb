@@ -64,27 +64,31 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['mainTitle'] = [generateRandomString, :add_prop]
   data['subtitle'] = [generateRandomString, :add_prop]
   data['publicationYear'] = [rand(2015).to_s, :add_prop]
-  data['format'] = [%w(Bok Lydbok Mikrofilm).sample, :select_prop]
-  data['language'] = [%w(Norsk Svensk Dansk).sample, :select_prop]
+  data['format'] = [:random, :select_prop]
+  data['language'] = [:random, :select_prop]
   data['partTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
   data['edition'] = [generateRandomString, :add_prop]
   data['numberOfPages'] = [rand(999).to_s, :add_prop]
   data['isbn'] = [generateRandomString, :add_prop]
-  data['illustrativeMatter'] = [%w(Illustrert Kart Figur).sample, :select_prop]
-  data['adaptionForParticularUserGroups'] = [%w(Blindeskrift Tegnspråk).sample, :select_prop]
-  data['binding'] = [%w(Innbundet Heftet).sample, :select_prop]
-  data['writingSystem'] = [%w(Kyrillisk Kinesisk Arabisk).sample, :select_prop]
+  data['illustrativeMatter'] = [:random, :select_prop]
+  data['adaptionForParticularUserGroups'] = [:random, :select_prop]
+  data['binding'] = [:random, :select_prop]
+  data['writingSystem'] = [:random, :select_prop]
 
   workflow_batch_add_props 'Publication', data
 end
 
 def workflow_batch_add_props(domain, data)
   data.each do |fragment, (value, method)|
+    predicate = "http://#{ENV['HOST']}:8005/ontology##{fragment}"
+    if value.eql?(:random) && method.eql?(:select_prop)
+      value = @site.WorkFlow.get_available_select_choices(domain, predicate).sample
+    end
     symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
     @context[symbol] = value
     begin
-      @site.WorkFlow.method(method).call(domain, "http://#{ENV['HOST']}:8005/ontology##{fragment}", @context[symbol], 0, true)
+      @site.WorkFlow.method(method).call(domain, predicate, @context[symbol], 0, true)
     rescue
       fail "Error adding #{fragment} for #{domain}"
     end

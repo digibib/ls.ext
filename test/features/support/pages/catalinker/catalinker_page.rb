@@ -65,6 +65,10 @@ class CatalinkerPage < PageRoot
     self
   end
 
+  def get_available_select_choices(predicate, nr=0)
+    @browser.select_list(:data_automation_id => "#{predicate}_#{nr}").options.map(&:text)
+  end
+
   def get_prop_count(predicate)
     @browser.elements(:data_automation_id => /#{predicate}_\d+/).size
   end
