@@ -14,12 +14,14 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg forfatter fra treffliste fra personregisteret
     Og velger verket fra lista tilkoplet forfatteren
     Og bekrefter for å gå videre til bekreft verk
-    Og bekrefter at verkets basisopplysninger uten endringer er korrekte
-    Og bekrefter verkets tilleggsopplysninger uten endringer er korrekte
-    Og legger inn opplysningene om utgivelsen for hovedtittel, undertittel, utgivelsesår, format, språk, deltittel, delnummer, utgave, sidetall og ISBN
+    Og verifiserer at verkets basisopplysninger uten endringer er korrekte
+    Og bekrefter for å gå videre til beskriv verket
+    Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
+    Og bekrefter for å gå videre til beskriv utgivelsen
+    Og legger inn opplysningene om utgivelsen
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
-    Så jeg verifiserer opplysningene om utgivelsen for hovedtittel, undertittel, år, format og språk
-    Så vises opplysningene om utgivelsen på verkssiden
+    Så jeg verifiserer opplysningene om utgivelsen
+    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
   @wip
   Scenario: Verifisere resulterende utgivelse fra arbeidsflyt med eksisterende person
@@ -29,10 +31,12 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg forfatter fra treffliste fra personregisteret
     Og bekrefter for å gå videre til bekreft verk
     Og legger inn basisopplysningene om verket for hovedtittel og undertittel
+    Og bekrefter for å gå videre til beskriv verket
     Og legger inn tilleggsopplyningene om verket for utgivelsesår og språk
-    Og legger inn opplysningene om utgivelsen for hovedtittel, undertittel, utgivelsesår, format, språk, deltittel, delnummer, utgave, sidetall og ISBN
+    Og bekrefter for å gå videre til beskriv utgivelsen
+    Og legger inn opplysningene om utgivelsen
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
-    Så jeg verifiserer opplysningene om utgivelsen for hovedtittel, undertittel, år, format og språk
+    Så jeg verifiserer opplysningene om utgivelsen
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
-    Så jeg verifiserer opplysningene om verket for hovedtittel, undertittel, utgivelsesår og språk
-    Så vises opplysningene om utgivelsen på verkssiden
+    Så jeg verifiserer opplysningene om verket
+    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden

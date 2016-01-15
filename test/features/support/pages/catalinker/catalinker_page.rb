@@ -65,15 +65,18 @@ class CatalinkerPage < PageRoot
     self
   end
 
+  def get_prop_count(predicate)
+    @browser.elements(:data_automation_id => /#{predicate}_\d+/).size
+  end
+
   def get_prop(predicate, nr=0)
-    input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
+    input = @browser.text_field(:data_automation_id => "#{predicate}_#{nr}")
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value != "" }
     input.value
   end
 
   def get_select_prop(predicate, nr=0)
-    input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }
+    input = @browser.select_list(:data_automation_id => "#{predicate}_#{nr}")
     selected_options = input.selected_options
     if (selected_options.size.eql? 1)
       selected_options.first.text
@@ -82,7 +85,7 @@ class CatalinkerPage < PageRoot
     end
   end
 
-  def get_id()
+  def get_id
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.input(:data_automation_id => /resource_uri/).value != "" }
     @browser.input(:data_automation_id => /resource_uri/).value
   end

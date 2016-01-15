@@ -538,7 +538,7 @@ When(/^trefflisten viser at personen har riktig levetid$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text => @context[:person_deathyear]).should exist }
 end
 
-When(/^jeg verifiserer opplysningene om utgivelsen for hovedtittel, undertittel, år, format og språk$/) do
+When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   # TODO: Unify get_prop and get_select_prop in the page objects to avoid having to specify it.
   data = Hash.new
   data['mainTitle'] = :get_prop
@@ -551,6 +551,10 @@ When(/^jeg verifiserer opplysningene om utgivelsen for hovedtittel, undertittel,
   data['edition'] = :get_prop
   data['numberOfPages'] = :get_prop
   data['isbn'] = :get_prop
+  data['illustrativeMatter'] = :get_select_prop
+  data['adaptionForParticularUserGroups'] = :get_select_prop
+  data['binding'] = :get_select_prop
+  data['writingSystem'] = :get_select_prop
 
   batch_verify_props @site.RegPublication, 'Publication', data
 end
@@ -558,16 +562,22 @@ end
 def batch_verify_props(page_object, domain, data)
   data.each do |fragment, method|
     symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
-    page_object.method(method).call("http://#{ENV['HOST']}:8005/ontology##{fragment}").should eq @context[symbol]
+    predicate = "http://#{ENV['HOST']}:8005/ontology##{fragment}"
+    begin
+      page_object.method(method).call(predicate).should eq @context[symbol]
+    rescue
+      fail "Failed getting field for #{fragment}"
+    end
+    fail "More than one field for #{fragment}" if page_object.get_prop_count(predicate) > 1
   end
 end
 
-When(/^jeg verifiserer opplysningene om verket for hovedtittel, undertittel, utgivelsesår og språk$/) do
+When(/^jeg verifiserer opplysningene om verket$/) do
   data = Hash.new
   data['mainTitle'] = :get_prop
   data['subtitle'] = :get_prop
   data['publicationYear'] = :get_prop
-  data['språk'] = :get_select_prop
+  data['language'] = :get_select_prop
 
   batch_verify_props @site.RegWork, 'Work', data
 end

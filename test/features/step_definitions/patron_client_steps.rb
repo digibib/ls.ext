@@ -50,7 +50,7 @@ Then(/^vises eksemplaret på verkssiden$/) do
   page.existsExemplar.should be(true)
 end
 
-When(/^vises opplysningene om utgivelsen på verkssiden$/) do
+When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
   step "jeg er på sida til verket"
   @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
     row.td(:data_automation_id => "publication_title").text.should eq(@context[:publication_maintitle])

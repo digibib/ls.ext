@@ -34,25 +34,31 @@ When(/^velger verket fra lista tilkoplet forfatteren$/) do
 end
 
 When(/^bekrefter for å gå videre til bekreft verk$/) do
-  @site.WorkFlow.nextStep
-  @site.WorkFlow.assertSelectedTab("Bekreft verk")
+  @site.WorkFlow.next_step
+  @context[:work_identifier] = @site.WorkFlow.get_work_uri
+  @site.WorkFlow.assert_selected_tab("Bekreft verk")
 end
 
-When(/^bekrefter at verkets basisopplysninger uten endringer er korrekte$/) do
+When(/^bekrefter for å gå videre til beskriv verket$/) do
+  @site.WorkFlow.next_step
+  @site.WorkFlow.assert_selected_tab("Beskriv verket")
+end
+
+When(/^bekrefter for å gå videre til beskriv utgivelsen$/) do
+  @site.WorkFlow.next_step
+  @context[:publication_identifier] = @site.WorkFlow.get_publication_uri
+  @site.WorkFlow.assert_selected_tab("Beskriv utgivelsen")
+end
+
+When(/^verifiserer at verkets basisopplysninger uten endringer er korrekte$/) do
   @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#mainTitle_0").value.should eq @context[:work_title]
 end
 
-When(/^bekrefter verkets tilleggsopplysninger uten endringer er korrekte$/) do
-  @site.WorkFlow.nextStep
-  @site.WorkFlow.assertSelectedTab("Beskriv verket")
+When(/^verifiserer verkets tilleggsopplysninger uten endringer er korrekte$/) do
   @browser.select(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#language_0").selected_options.include? @context[:work_language]
 end
 
-When(/^legger inn opplysningene om utgivelsen for hovedtittel, undertittel, utgivelsesår, format, språk, deltittel, delnummer, utgave, sidetall og ISBN$/) do
-  @site.WorkFlow.nextStep
-  @context[:publication_identifier] = @site.WorkFlow.get_publication_uri
-  @site.WorkFlow.assertSelectedTab('Beskriv utgivelsen')
-
+When(/^legger inn opplysningene om utgivelsen$/) do
   # TODO: Unify add_prop and select_prop in the page objects to avoid having to specify it.
   data = Hash.new
   data['mainTitle'] = [generateRandomString, :add_prop]
@@ -65,6 +71,10 @@ When(/^legger inn opplysningene om utgivelsen for hovedtittel, undertittel, utgi
   data['edition'] = [generateRandomString, :add_prop]
   data['numberOfPages'] = [rand(999).to_s, :add_prop]
   data['isbn'] = [generateRandomString, :add_prop]
+  data['illustrativeMatter'] = [generateRandomString, :add_prop]
+  data['adaptionForParticularUserGroups'] = [%w(Blindeskrift Tegnspråk).sample, :select_prop]
+  data['binding'] = [%w(Innbundet Heftet).sample, :select_prop]
+  data['writingSystem'] = [%w(Kyrillisk, Kinesisk, Arabisk).sample, :select_prop]
 
   workflow_batch_add_props 'Publication', data
 end
@@ -87,10 +97,6 @@ When(/^bekrefter at utgivelsesinformasjonen er korrekt$/) do
 end
 
 When(/^legger inn basisopplysningene om verket for hovedtittel og undertittel$/) do
-  @site.WorkFlow.nextStep
-  @context[:work_identifier] = @site.WorkFlow.get_work_uri
-  @site.WorkFlow.assertSelectedTab('Bekreft verk')
-
   data = Hash.new
   data['mainTitle'] = [generateRandomString, :add_prop]
   data['subtitle'] = [generateRandomString, :add_prop]
@@ -99,12 +105,9 @@ When(/^legger inn basisopplysningene om verket for hovedtittel og undertittel$/)
 end
 
 When(/^legger inn tilleggsopplyningene om verket for utgivelsesår og språk$/) do
-  @site.WorkFlow.nextStep
-  @site.WorkFlow.assertSelectedTab('Beskriv verket')
-
   data = Hash.new
   data['publicationYear'] = [rand(2015).to_s, :add_prop]
-  data['språk'] = [['Norsk', 'Svensk', 'Dansk'].sample, :select_prop]
+  data['language'] = [['Norsk', 'Svensk', 'Dansk'].sample, :select_prop]
 
   workflow_batch_add_props 'Work', data
 end

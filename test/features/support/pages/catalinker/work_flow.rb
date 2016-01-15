@@ -11,12 +11,14 @@ class WorkFlow < CatalinkerPage
     self
   end
 
-  def nextStep
+  def next_step
     @browser.div(:class => 'grid-panel-selected').button(:class => 'next-step-button').click
   end
 
-  def assertSelectedTab(nameOfVisibleTag)
-    @browser.ul(:id => 'workflow-tabs').a(:class => 'grid-tab-link-selected').text.should eq nameOfVisibleTag
+  def assert_selected_tab(name_of_visible_tag)
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+      @browser.ul(:id => 'workflow-tabs').a(:class => 'grid-tab-link-selected').text.should eq name_of_visible_tag
+    end
   end
 
   def add_prop(domain, predicate, value, nr=0, skip_wait=false)

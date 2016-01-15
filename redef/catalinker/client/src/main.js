@@ -205,6 +205,19 @@
                         case "nationality":
                             input.type = "select-authorized-nationality";
                             break;
+                        case "binding":
+                            input.type = "select-authorized-binding";
+                            break;
+                        case "illustrativeMatter":
+                            input.type = "select-authorized-illustrativematter";
+                            break;
+                        case "writingSystem":
+                            input.type = "select-authorized-writingsystem";
+                            break;
+                        case "adaptionForParticularUserGroups":
+                            input.type = "select-authorized-adaptionforparticularusergroups";
+                            break;
+
                     }
                     input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                 } else {
