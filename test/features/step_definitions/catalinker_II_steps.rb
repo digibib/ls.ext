@@ -71,10 +71,10 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['edition'] = [generateRandomString, :add_prop]
   data['numberOfPages'] = [rand(999).to_s, :add_prop]
   data['isbn'] = [generateRandomString, :add_prop]
-  data['illustrativeMatter'] = [generateRandomString, :add_prop]
+  data['illustrativeMatter'] = [%w(Illustrert Kart Figur).sample, :select_prop]
   data['adaptionForParticularUserGroups'] = [%w(Blindeskrift Tegnspråk).sample, :select_prop]
   data['binding'] = [%w(Innbundet Heftet).sample, :select_prop]
-  data['writingSystem'] = [%w(Kyrillisk, Kinesisk, Arabisk).sample, :select_prop]
+  data['writingSystem'] = [%w(Kyrillisk Kinesisk Arabisk).sample, :select_prop]
 
   workflow_batch_add_props 'Publication', data
 end

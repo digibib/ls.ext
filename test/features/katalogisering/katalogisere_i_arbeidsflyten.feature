@@ -6,7 +6,6 @@ Egenskap: Katalogisere i arbeidsflyt
   Som katalogisator
   Ønsker jeg å kunne katalogisere en bok
 
-  @wip
   Scenario: Verifisere resulterende utgivelse fra arbeidsflyt med eksisterende person og verk
     Gitt at jeg har en bok
     Og at det finnes et verk med forfatter
@@ -23,7 +22,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg verifiserer opplysningene om utgivelsen
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
-  @wip
   Scenario: Verifisere resulterende utgivelse fra arbeidsflyt med eksisterende person
     Gitt at jeg har en bok
     Og at jeg har lagt til en person

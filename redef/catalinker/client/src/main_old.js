@@ -150,10 +150,12 @@
                 loadAuthorizedValues(url, props[i]["@id"]);
             }
             var datatype = props[i]["rdfs:range"]["@id"];
+            var predicate = Ontology.resolveURI(ont, props[i]["@id"]);
             var input = {
                 disabled: disabled,
                 searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
-                predicate: Ontology.resolveURI(ont, props[i]["@id"]),
+                predicate: predicate,
+                fragment: predicate.substring(predicate.lastIndexOf("#") + 1),
                 authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
                 range: datatype,
                 datatype: datatype,
@@ -166,17 +168,7 @@
                 input.type = "input-string-searchable";
                 input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
             } else if (input.authorized) {
-                switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
-                    case "language":
-                        input.type = "select-authorized-language";
-                        break;
-                    case "format":
-                        input.type = "select-authorized-format";
-                        break;
-                    case "nationality":
-                        input.type = "select-authorized-nationality";
-                        break;
-                }
+                input.type = "select-authorized-value";
                 input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
             } else {
                 switch (input.range) {
@@ -263,6 +255,24 @@
                         template: response.data,
                         data: {
                             authorized_values: {},
+                            getAuthorizedValues: function (fragment) {
+                                return ractive.get("authorized_values." + fragment);
+                            },
+                            getRdfsLabelValue: function (rdfsLabel) {
+                                if (Array.isArray(rdfsLabel)) {
+                                    var value;
+                                    rdfsLabel.forEach(function (label) {
+                                        if (label['@language']) {
+                                            value = label['@value'];
+                                        }
+                                    });
+                                    return value;
+                                }
+                                else {
+                                    return rdfsLabel['@value'];
+                                }
+                                return false;
+                            },
                             errors: errors,
                             resource_type: "",
                             resource_label: "",

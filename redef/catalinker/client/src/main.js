@@ -49,7 +49,6 @@
         axios.get(uri)
             .then(function (response) {
                 ractive.set("resource_uri", uri);
-                var resource;
                 var graphData = ensureJSON(response.data);
 
                 var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(uri)[1]);
@@ -176,10 +175,12 @@
                 if (_.isObject(domain)) {
                     domain = domain['@id'];
                 }
+                var predicate = Ontology.resolveURI(ont, props[i]["@id"]);
                 var input = {
                     disabled: disabled,
                     searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
-                    predicate: Ontology.resolveURI(ont, props[i]["@id"]),
+                    predicate: predicate,
+                    fragment: predicate.substring(predicate.lastIndexOf("#") + 1),
                     authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
                     range: datatype,
                     datatype: datatype,
@@ -195,30 +196,7 @@
                     input.type = "input-string-searchable";
                     input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                 } else if (input.authorized) {
-                    switch (input.predicate.substring(input.predicate.lastIndexOf("#") + 1)) {
-                        case "language":
-                            input.type = "select-authorized-language";
-                            break;
-                        case "format":
-                            input.type = "select-authorized-format";
-                            break;
-                        case "nationality":
-                            input.type = "select-authorized-nationality";
-                            break;
-                        case "binding":
-                            input.type = "select-authorized-binding";
-                            break;
-                        case "illustrativeMatter":
-                            input.type = "select-authorized-illustrativematter";
-                            break;
-                        case "writingSystem":
-                            input.type = "select-authorized-writingsystem";
-                            break;
-                        case "adaptionForParticularUserGroups":
-                            input.type = "select-authorized-adaptionforparticularusergroups";
-                            break;
-
-                    }
+                    input.type = "select-authorized-value";
                     input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                 } else {
                     switch (input.range) {
@@ -366,6 +344,24 @@
                             search_result: null,
                             config: config,
                             save_status: "ny ressurs",
+                            getAuthorizedValues: function (fragment) {
+                                return ractive.get("authorized_values." + fragment);
+                            },
+                            getRdfsLabelValue: function (rdfsLabel) {
+                                if (Array.isArray(rdfsLabel)) {
+                                    var value;
+                                    rdfsLabel.forEach(function (label) {
+                                        if (label['@language']) {
+                                            value = label['@value'];
+                                        }
+                                    });
+                                    return value;
+                                }
+                                else {
+                                    return rdfsLabel['@value'];
+                                }
+                                return false;
+                            },
                             tabEnabled: function (tabSelected, domainType) {
                                 return tabSelected === true || ractive.get("targetUri." + domainType);
                             },

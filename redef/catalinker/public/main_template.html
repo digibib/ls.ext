@@ -138,10 +138,9 @@
     </form>
 </div>
 {{/search_result}}
-
-
 {{/partial}}
-{{#partial select-authorized-language}}
+
+{{#partial select-authorized-value}}
 <select
         class="authorized"
         data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
@@ -149,36 +148,8 @@
         on-keyup="countdownToSave"
         value="{{current.value}}">
     <option value="">(ikke valgt)</option>
-    {{#each authorized_values.language }}
-    <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
-    {{/each}}
-</select>
-{{/partial}}
-
-{{#partial select-authorized-format}}
-<select
-        class="authorized"
-        data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
-        on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
-        on-keyup="countdownToSave"
-        value="{{current.value}}">
-    <option value="">(ikke valgt)</option>
-    {{#each authorized_values.format }}
-    <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
-    {{/each}}
-</select>
-{{/partial}}
-
-{{#partial select-authorized-nationality}}
-<select
-        class="authorized"
-        data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
-        on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
-        on-keyup="countdownToSave"
-        value="{{current.value}}">
-    <option value="">(ikke valgt)</option>
-    {{#each authorized_values.nationality }}
-    <option value='{{.["@id"]}}'>{{.["rdfs:label"]["@value"]}}</option>
+    {{#getAuthorizedValues(fragment)}}
+    <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
     {{/each}}
 </select>
 {{/partial}}
