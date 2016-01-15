@@ -1,64 +1,64 @@
-@prefix : <http://data.deichman.no/writingSystem#> .
-@prefix deichman: <http://data.deichman.no/utility#> .
+@prefix writingSystem: <http://data.deichman.no/writingSystem#> .
+@prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-:grunnleggende_latinsk a deichman:WritingSystem ;
-  deichman:code "a" ;
+writingSystem:grunnleggende_latinsk a duo:WritingSystem ;
+  duo:code "a" ;
   rdfs:label "Grunnleggende latinsk"@no ;
   rdfs:label "Latin basic"@en .
-:utvidet_latinsk a deichman:WritingSystem ;
-  deichman:code "b" ;
+writingSystem:utvidet_latinsk a duo:WritingSystem ;
+  duo:code "b" ;
   rdfs:label "Utvidet latinsk"@no ;
   rdfs:label "Latin extended"@en .
-:kyrillisk a deichman:WritingSystem ;
-  deichman:code "c" ;
+writingSystem:kyrillisk a duo:WritingSystem ;
+  duo:code "c" ;
   rdfs:label "Kyrillisk"@no ;
   rdfs:label "Cyrillic"@en .
-:japansk a deichman:WritingSystem ;
-  deichman:code "d" ;
+writingSystem:japansk a duo:WritingSystem ;
+  duo:code "d" ;
   rdfs:label "Japansk"@no ;
   rdfs:label "Japanese"@en .
-:kinesisk a deichman:WritingSystem ;
-  deichman:code "e" ;
+writingSystem:kinesisk a duo:WritingSystem ;
+  duo:code "e" ;
   rdfs:label "Kinesisk"@no ;
   rdfs:label "Chinese"@en .
-:arabisk a deichman:WritingSystem ;
-  deichman:code "f" ;
+writingSystem:arabisk a duo:WritingSystem ;
+  duo:code "f" ;
   rdfs:label "Arabisk"@no ;
   rdfs:label "Arabic"@en .
-:gresk a deichman:WritingSystem ;
-  deichman:code "g" ;
+writingSystem:gresk a duo:WritingSystem ;
+  duo:code "g" ;
   rdfs:label "Gresk"@no ;
   rdfs:label "Greek"@en .
-:hebraisk a deichman:WritingSystem ;
-  deichman:code "h" ;
+writingSystem:hebraisk a duo:WritingSystem ;
+  duo:code "h" ;
   rdfs:label "Hebraisk"@no ;
   rdfs:label "Hebrew"@en .
-:thai a deichman:WritingSystem ;
-  deichman:code "i" ;
+writingSystem:thai a duo:WritingSystem ;
+  duo:code "i" ;
   rdfs:label "Thai"@no ;
   rdfs:label "Thai"@en .
-:devanagari a deichman:WritingSystem ;
-  deichman:code "j" ;
+writingSystem:devanagari a duo:WritingSystem ;
+  duo:code "j" ;
   rdfs:label "Devanagari"@no ;
   rdfs:label "Devanagari"@en .
-:koreansk a deichman:WritingSystem ;
-  deichman:code "k" ;
+writingSystem:koreansk a duo:WritingSystem ;
+  duo:code "k" ;
   rdfs:label "Koreansk"@no ;
   rdfs:label "Korean"@en .
-:tamil a deichman:WritingSystem ;
-  deichman:code "l" ;
+writingSystem:tamil a duo:WritingSystem ;
+  duo:code "l" ;
   rdfs:label "Tamil"@no ;
   rdfs:label "Tamil"@en .
-:gotisk_skrift a deichman:WritingSystem ;
-  deichman:code "m" ;
+writingSystem:gotisk_skrift a duo:WritingSystem ;
+  duo:code "m" ;
   rdfs:label "Gotisk skrift"@no ;
   rdfs:label ""@en .
-:ukjent a deichman:WritingSystem ;
-  deichman:code "u" ;
+writingSystem:ukjent a duo:WritingSystem ;
+  duo:code "u" ;
   rdfs:label "Ukjent"@no ;
   rdfs:label "Unknown"@en .
-:andre a deichman:WritingSystem ;
-  deichman:code "z" ;
+writingSystem:andre a duo:WritingSystem ;
+  duo:code "z" ;
   rdfs:label "Andre"@no ;
   rdfs:label "Other"@en .

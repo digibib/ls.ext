@@ -1,11 +1,11 @@
-@prefix : <http://data.deichman.no/binding#> .
-@prefix deichman: <http://data.deichman.no/utility#> .
+@prefix binding: <http://data.duo.no/binding#> .
+@prefix duo: <http://data.duo.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-:innbundet a deichman:Binding ;
-  deichman:code "ib." ;
+binding:innbundet a duo:Binding ;
+  duo:code "ib." ;
   rdfs:label "Innbundet"@no ;
   rdfs:label "Hardback"@en .
-:heftet a deichman:Binding ;
-  deichman:code "h." ;
+binding:heftet a duo:Binding ;
+  duo:code "h." ;
   rdfs:label "Heftet"@no ;
   rdfs:label "Paperback"@en .
