@@ -117,6 +117,10 @@ services:
 patron-client:
   container_name: redef_patron_client_container
   build: /vagrant/redef/patron-client
+  dockerfile: Dockerfile-dev
+  volumes:
+    - /mnt/patron-client_client:/usr/src/app/client
+    - /mnt/patron-client_public:/usr/src/app/public
   ports:
     - "8000:8000"
   environment:

@@ -1,0 +1,18 @@
+FROM node:4.2.1
+
+ENV REFRESHED_AT 2016-13T21:50
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+COPY .jscsrc /usr/src/app/
+COPY .jshintrc /usr/src/app/
+
+RUN npm install > install.log 2>&1
+VOLUME /usr/src/app/client
+VOLUME /usr/src/app/public
+
+EXPOSE 8000
+
+CMD [ "npm", "start" ]
