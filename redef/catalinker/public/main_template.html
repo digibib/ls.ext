@@ -64,7 +64,7 @@
 {{#partial input}}
 <div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
     <fieldset class="pure-u-1-2">
-        <label>{{label}}</label>
+        <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
         {{#each values}}
         {{>type }}
         {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}

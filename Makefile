@@ -78,11 +78,14 @@ FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
 rebuild_services:
-	@vagrant ssh dev-ship -c "cd /vagrant/redef/services && ./gradlew --no-daemon build oneJar && \
+	@vagrant ssh dev-ship -c "cd /vagrant/redef/services && ./gradlew --no-daemon dockerBuildImage  && \
 	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d --force-recreate services"
 
 rebuild_catalinker:
 	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up -d --force-recreate catalinker"
+
+restart_catalinker:
+	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose restart catalinker"
 
 rebuild_patron_client:
 	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up -d --force-recreate patron-client"

@@ -7,6 +7,7 @@ import org.apache.jena.riot.Lang;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -21,52 +22,21 @@ import static no.deichman.services.restutils.MimeType.UTF_8;
 @Path("authorized_values")
 public final class AuthorizedValuesResource {
     @GET
-    @Path("language")
+    @Path("{valueRangeName:"
+            + "language|"
+            + "format|"
+            + "nationality|"
+            + "literaryForm|"
+            + "audience|"
+            + "biography|"
+            + "adaptationOfPublicationForParticularUserGroups|"
+            + "adaptationOfWorkForParticularUserGroups|"
+            + "binding|"
+            + "writingSystem|"
+            + "illustrativeMatter}")
     @Produces(LD_JSON + UTF_8)
-    public Response language() throws IOException {
-        return getJsonLdResponse("language.ttl");
-    }
-
-    @GET
-    @Path("format")
-    @Produces(LD_JSON + UTF_8)
-    public Response format() throws IOException {
-        return getJsonLdResponse("format.ttl");
-    }
-
-    @GET
-    @Path("nationality")
-    @Produces(LD_JSON + UTF_8)
-    public Response nationality() throws IOException {
-        return getJsonLdResponse("nationality.ttl");
-    }
-
-    @GET
-    @Path("adaptionForParticularUserGroups")
-    @Produces(LD_JSON + UTF_8)
-    public Response adaptionForParticularUserGroups() throws IOException {
-        return getJsonLdResponse("adaptionForParticularUserGroups.ttl");
-    }
-
-    @GET
-    @Path("binding")
-    @Produces(LD_JSON + UTF_8)
-    public Response binding() throws IOException {
-        return getJsonLdResponse("binding.ttl");
-    }
-
-    @GET
-    @Path("writingSystem")
-    @Produces(LD_JSON + UTF_8)
-    public Response writingSystem() throws IOException {
-        return getJsonLdResponse("writingSystem.ttl");
-    }
-
-    @GET
-    @Path("illustrativeMatter")
-    @Produces(LD_JSON + UTF_8)
-    public Response illustrativeMatter() throws IOException {
-        return getJsonLdResponse("illustrativeMatter.ttl");
+    public Response getValueRange(@PathParam("valueRangeName") String valueRangeName) throws IOException {
+        return getJsonLdResponse(valueRangeName + ".ttl");
     }
 
     private Response getJsonLdResponse(String filename) throws IOException {

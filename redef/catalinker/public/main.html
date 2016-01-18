@@ -16,12 +16,21 @@
 
 <script src="/js/bundle.js"></script>
 <script>
-    var Main = require('./client/src/main');
-    Main.init().then(function () {
-        Main.loadOntology()
-    });
-    var $ = require("jquery");
+    try {
+        var Main = require('./client/src/main');
+        Main.init().then(function () {
+            Main.loadOntology()
+        });
+        var $ = require("jquery");
 
-    $(window).resize(Main.repositionSupportPanelsHorizontally);
+        $(window).resize(Main.repositionSupportPanelsHorizontally);
+    } catch (error) {
+        console.log(error)
+        console.log("Failed to initialise, reloading page")
+        setTimeout(function () {
+            location.reload();
+        }, 1000);
+    }
 </script>
-</body></html>
+</body>
+</html>

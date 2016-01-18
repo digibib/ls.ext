@@ -123,13 +123,6 @@
   rdfs:range duo:IllustrativeMatter ;
   duo:valuesFrom values:illustrativeMatter .
 
-:adaptionForParticularUserGroups a rdfs:Property ;
-  rdfs:label "Adaption for particular user groups"@en ;
-  rdfs:label "Tilrettelegging"@no ;
-  rdfs:domain :Publication ;
-  rdfs:range duo:AdaptionForParticularUserGroups ;
-  duo:valuesFrom values:adaptionForParticularUserGroups .
-
 :gender a rdfs:Property ;
   rdfs:label "Gender"@en ;
   rdfs:label "Kjønn"@no ;
@@ -139,13 +132,13 @@
 :partTitle a rdfs:Property ;
   rdfs:label "Part title"@no ;
   rdfs:label "Deltittel"@no ;
-  rdfs:domain :Publication ;
+  rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
 :partNumber a rdfs:Property ;
   rdfs:label "Part number"@en ;
   rdfs:label "Delnummer"@no ;
-  rdfs:domain :Publication ;
+  rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
 :edition a rdfs:Property ;
@@ -165,3 +158,38 @@
   rdfs:label "ISBN"@no ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
+
+:literaryForm a rdfs:Property;
+  rdfs:label "Litterær form"@no ;
+  rdfs:label "Literary form"@en ;
+  rdfs:domain :Work ;
+  rdfs:range duo:LiteraryForm ;
+  duo:valuesFrom values:literaryForm .
+
+:audience a rdfs:Property;
+  rdfs:label "Målgruppe"@no ;
+  rdfs:label "Audience"@en ;
+  rdfs:domain :Work ;
+  rdfs:range duo:Audience ;
+  duo:valuesFrom values:audience .
+
+:biography a rdfs:Property;
+  rdfs:label "Biografisk innhold"@no ;
+  rdfs:label "Biography"@en ;
+  rdfs:domain :Work ;
+  rdfs:range duo:Biography ;
+  duo:valuesFrom values:biography .
+
+:adaptationOfPublicationForParticularUserGroups a rdfs:Property ;
+  rdfs:label "Adaptation for particular user groups"@en ;
+  rdfs:label "Tilrettelegging"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range duo:AdaptationOfPublicationForParticularUserGroups ;
+  duo:valuesFrom values:adaptationOfPublicationForParticularUserGroups .
+
+:adaptationOfWorkForParticularUserGroups a rdfs:Property ;
+  rdfs:label "Adaptation for particular user groups"@en ;
+  rdfs:label "Tilrettelegging"@no ;
+  rdfs:domain :Work ;
+  rdfs:range duo:AdaptationOfWorkForParticularUserGroups ;
+  duo:valuesFrom values:adaptationOfWorkForParticularUserGroups .

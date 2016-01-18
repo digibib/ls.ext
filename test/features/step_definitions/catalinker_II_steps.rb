@@ -72,7 +72,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['numberOfPages'] = [rand(999).to_s, :add_prop]
   data['isbn'] = [generateRandomString, :add_prop]
   data['illustrativeMatter'] = [:random, :select_prop]
-  data['adaptionForParticularUserGroups'] = [:random, :select_prop]
+  data['adaptionOfPublicationForParticularUserGroups'] = [:random, :select_prop]
   data['binding'] = [:random, :select_prop]
   data['writingSystem'] = [:random, :select_prop]
 
@@ -115,4 +115,26 @@ When(/^legger inn tilleggsopplyningene om verket for utgivelsesår og språk$/) 
   data['language'] = [['Norsk', 'Svensk', 'Dansk'].sample, :select_prop]
 
   workflow_batch_add_props 'Work', data
+end
+
+When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label|
+  input = @browser.inputs(:xpath => '//input[preceding-sibling::label/@data-uri-escaped-label = "' + URI::escape(parameter_label) + '"]')[0]
+  input_id = input.attribute_value('data-automation-id')
+  predicate = input_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
+  domain = input_id.match(/^(Work|Publication|Person)_.*/).captures[0]
+  @site.WorkFlow.add_prop(domain, predicate, value)
+  fragment = predicate.partition('#').last()
+  symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym
+  @context[symbol] = value
+end
+
+When(/^jeg velger verdien "([^"]*)" for "([^"]*)"$/) do |value, selectable_parameter_label|
+  select = @browser.selects(:xpath => '//select[preceding-sibling::label/@data-uri-escaped-label = "' + URI::escape(selectable_parameter_label) + '"]')[0]
+  select_id = select.attribute_value('data-automation-id')
+  predicate = select_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
+  domain = select_id.match(/^(Work|Publication|Person)_.*/).captures[0]
+  @site.WorkFlow.select_prop(domain, predicate, value)
+  fragment = predicate.partition('#').last()
+  symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym
+  @context[symbol] = value
 end

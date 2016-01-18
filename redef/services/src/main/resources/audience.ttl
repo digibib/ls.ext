@@ -1,0 +1,35 @@
+@prefix audience: <http://data.deichman.no/audience#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+audience:adults a duo:Audience ;
+  duo:code "a" ;
+  rdfs:label "Voksne"@no ;
+  rdfs:label "Adults"@en .
+audience:childrenAndYouths a duo:Audience ;
+  duo:code "j" ;
+  rdfs:label "Barn of unge"@no ;
+  rdfs:label "Children and youths"@en .
+audience:childrenAge1To2 a duo:Audience ;
+  duo:code "aa" ;
+  rdfs:label "Barn i alderen 0–2 år"@no ;
+  rdfs:label "Children age 0–2"@en .
+audience:childrenAge3To5 a duo:Audience ;
+  duo:code "a" ;
+  rdfs:label "Barn i alderen 3–5 år"@no ;
+  rdfs:label "Children age 3–5"@en .
+audience:pupils1To3Grade a duo:Audience ;
+  duo:code "b" ;
+  rdfs:label "Elever på 1. til 3. klassetrinn"@no ;
+  rdfs:label "Pupils in 1. to 3. grade"@en .
+audience:pupils4To5Grade a duo:Audience ;
+  duo:code "bu" ;
+  rdfs:label "Elever på 4. og 5. klassetrinn"@no ;
+  rdfs:label "Pupils in 4. and 5. grade"@en .
+audience:pupils6To7Grade a duo:Audience ;
+  duo:code "u" ;
+  rdfs:label "Elever på 6. og 7. klassetrinn"@no ;
+  rdfs:label "Pupils in 6. and 7. grade"@en .
+audience:pupils8to10Grade a duo:Audience ;
+  duo:code "mu" ;
+  rdfs:label "Elever på ungdomsskoletrinnet"@no ;
+  rdfs:label "Pupils in 8. 10. grade"@en .

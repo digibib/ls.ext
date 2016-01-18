@@ -45,6 +45,21 @@
         });
     };
 
+    function i18nLabelValue(label) {
+        if (Array.isArray(label)) {
+            var value = _.find(label, function (labelValue) {
+                return ("no" === labelValue['@language']);
+            })['@value'];
+            if (value === undefined) {
+                value = labelValue[0]['@value'];
+            }
+            return value;
+        }
+        else {
+            return label['@value'];
+        }
+    }
+
     var loadExistingResource = function (uri) {
         axios.get(uri)
             .then(function (response) {
@@ -184,7 +199,7 @@
                     authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
                     range: datatype,
                     datatype: datatype,
-                    label: props[i]["rdfs:label"][0]["@value"],
+                    label: i18nLabelValue(props[i]["rdfs:label"]),
                     domain: domain,
                     values: [{
                         old: {value: "", lang: ""},
@@ -347,20 +362,8 @@
                             getAuthorizedValues: function (fragment) {
                                 return ractive.get("authorized_values." + fragment);
                             },
-                            getRdfsLabelValue: function (rdfsLabel) {
-                                if (Array.isArray(rdfsLabel)) {
-                                    var value;
-                                    rdfsLabel.forEach(function (label) {
-                                        if (label['@language']) {
-                                            value = label['@value'];
-                                        }
-                                    });
-                                    return value;
-                                }
-                                else {
-                                    return rdfsLabel['@value'];
-                                }
-                                return false;
+                            getRdfsLabelValue: function (label) {
+                                return i18nLabelValue(label)
                             },
                             tabEnabled: function (tabSelected, domainType) {
                                 return tabSelected === true || ractive.get("targetUri." + domainType);

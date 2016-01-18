@@ -83,7 +83,12 @@ app.get('/config', function (request, response) {
               id: "confirm-work",
               rdfType: "Work",
               label: "Bekreft verk",
-              rdfProperties: ["mainTitle", "subtitle"],
+              rdfProperties: [
+                "mainTitle",
+                "subtitle",
+                "partTitle",
+                "partNumber"
+              ],
               nextStep: {
                 buttonLabel: "Beskriv verket"
               }
@@ -92,7 +97,14 @@ app.get('/config', function (request, response) {
               id: "describe-work",
               rdfType: "Work",
               label: "Beskriv verket",
-              rdfProperties: ["publicationYear", "language"],
+              rdfProperties: [
+                "publicationYear",
+                "language",
+                "literaryForm",
+                "audience",
+                "biography",
+                "adaptationOfWorkForParticularUserGroups"
+              ],
               nextStep: {
                 buttonLabel: "Beskriv utgivelsen",
                 createNewResource: "Publication"
@@ -102,10 +114,22 @@ app.get('/config', function (request, response) {
               id: "describe-publication",
               rdfType: "Publication",
               label: "Beskriv utgivelsen",
-              rdfProperties: ["mainTitle", "subtitle", "publicationYear",
-                "language", "format", "partTitle", "partNumber", "edition",
-                "numberOfPages", "isbn", "writingSystem", "binding",
-                "illustrativeMatter", "adaptionForParticularUserGroups"],
+              rdfProperties: [
+                "mainTitle",
+                "subtitle",
+                "publicationYear",
+                "language",
+                "format",
+                "partTitle",
+                "partNumber",
+                "edition",
+                "numberOfPages",
+                "isbn",
+                "writingSystem",
+                "binding",
+                "illustrativeMatter",
+                "adaptationOfPublicationForParticularUserGroups"
+              ],
               nextStep: {
                 buttonLabel: "Avslutt registrering av utgivelsen"
               }

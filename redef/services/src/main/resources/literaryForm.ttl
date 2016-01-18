@@ -1,0 +1,47 @@
+@prefix literaryForm: <http://data.deichman.no/literaryForm#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+literaryForm:nonfiction a duo:LiteraryForm ;
+  duo:code "0" ;
+  rdfs:label "Fag"@no ;
+  rdfs:label "Nonfiction"@en .
+literaryForm:fiction a duo:LiteraryForm ;
+  duo:code "1" ;
+  rdfs:label "Fiksjon"@no ;
+  rdfs:label "Fiction"@en .
+literaryForm:novel a duo:LiteraryForm ;
+  duo:code "r" ;
+  rdfs:label "Roman"@no ;
+  rdfs:label "Novel"@en .
+literaryForm:shortStory a duo:LiteraryForm ;
+  duo:code "n" ;
+  rdfs:label "Novelle"@no ;
+  rdfs:label "Short story"@en .
+literaryForm:poem a duo:LiteraryForm ;
+  duo:code "d" ;
+  rdfs:label "Dikt"@no ;
+  rdfs:label "Poem"@en .
+literaryForm:drama a duo:LiteraryForm ;
+  duo:code "s" ;
+  rdfs:label "Skuespill"@no ;
+  rdfs:label "Drama"@en .
+literaryForm:cartoon a duo:LiteraryForm ;
+  duo:code "t" ;
+  rdfs:label "Tegneserie"@no ;
+  rdfs:label "Cartoon"@en .
+literaryForm:anthology a duo:LiteraryForm ;
+  duo:code "a" ;
+  rdfs:label "Antologi"@no ;
+  rdfs:label "Anthology"@en .
+literaryForm:textBook a duo:LiteraryForm ;
+  duo:code "l" ;
+  rdfs:label "Lærenok, brevkurs"@no ;
+  rdfs:label "Text book"@en .
+literaryForm:pointingBook a duo:LiteraryForm ;
+  duo:code "p" ;
+  rdfs:label "Pekebok"@no ;
+  rdfs:label "Pointing book"@en .
+literaryForm:pictureBook a duo:LiteraryForm ;
+  duo:code "b" ;
+  rdfs:label "Bildebok"@no ;
+  rdfs:label "Picture book"@en .

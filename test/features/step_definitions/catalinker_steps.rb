@@ -552,7 +552,7 @@ When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   data['numberOfPages'] = :get_prop
   data['isbn'] = :get_prop
   data['illustrativeMatter'] = :get_select_prop
-  data['adaptionForParticularUserGroups'] = :get_select_prop
+  data['adaptationOfPublicationForParticularUserGroups'] = :get_select_prop
   data['binding'] = :get_select_prop
   data['writingSystem'] = :get_select_prop
 
@@ -580,4 +580,19 @@ When(/^jeg verifiserer opplysningene om verket$/) do
   data['language'] = :get_select_prop
 
   batch_verify_props @site.RegWork, 'Work', data
+end
+
+def verify_fragment(fragment, prop_get_method)
+  resource_type = @browser.span(:id, "resource-type").attribute_value("data-resource-type")
+  data = Hash.new
+  data[fragment] = prop_get_method
+  batch_verify_props @site.RegWork, resource_type, data
+end
+
+When(/^verifiserer jeg innskrevet verdi for "([^"]*)"$/) do |fragment|
+  verify_fragment(fragment, :get_prop)
+end
+
+When(/^verifiserer jeg valgt verdi for "([^"]*)"$/) do |fragment|
+  verify_fragment(fragment, :get_select_prop)
 end
