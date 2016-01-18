@@ -51,7 +51,7 @@ When(/^bekrefter for å gå videre til beskriv utgivelsen$/) do
 end
 
 When(/^verifiserer at verkets basisopplysninger uten endringer er korrekte$/) do
-  @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#mainTitle_0").value.should eq @context[:work_title]
+  @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#mainTitle_0").value.should eq @context[:work_maintitle]
 end
 
 When(/^verifiserer verkets tilleggsopplysninger uten endringer er korrekte$/) do

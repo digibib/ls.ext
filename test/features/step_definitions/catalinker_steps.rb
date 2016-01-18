@@ -241,8 +241,8 @@ When(/^jeg vil legge til et nytt verk$/) do
 end
 
 When(/^jeg forsøker å registrere ett nytt verk$/) do
-  @context[:work_title] = generateRandomString
-  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_title])
+  @context[:work_maintitle] = generateRandomString
+  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
 end
 
 When(/^jeg velger språk for tittelen$/) do
@@ -362,8 +362,8 @@ Then(/^leverer systemet en ny ID for det nye verket$/) do
 end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
-  @context[:work_title] = generateRandomString
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_title])
+  @context[:work_maintitle] = generateRandomString
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
 end
 
 Then(/^jeg kan legge til språk for det nye verket$/) do
@@ -377,8 +377,8 @@ Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
 end
 
 Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
-  @context[:work_title] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_title])
+  @context[:work_maintitle] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
 end
 
 Then(/^grensesnittet viser at endringene er lagret$/) do

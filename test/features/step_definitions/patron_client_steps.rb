@@ -2,7 +2,7 @@
 
 Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.h2(:data_automation_id => /work_title/).present? }
-  @site.PatronClientWorkPage.getTitle.should include(@context[:work_title])
+  @site.PatronClientWorkPage.getTitle.should include(@context[:work_maintitle])
 end
 
 
@@ -25,18 +25,18 @@ end
 Then(/^språket til verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
   @browser.refresh
-  @site.PatronClientWorkPage.getTitle.should include("@" + @context[:work_title_lang])
+  @site.PatronClientWorkPage.getTitle.should include("@" + @context[:work_maintitle_lang])
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {@site.PatronClientWorkPage.getTitle != ""}
-  @site.PatronClientWorkPage.getTitle.should include(@context[:work_title])
+  @site.PatronClientWorkPage.getTitle.should include(@context[:work_maintitle])
   @site.PatronClientWorkPage.getDate.should include(@context[:work_publicationyear])
 end
 
 Then(/^verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
-  @site.PatronClientWorkPage.getTitle.should include(@context[:work_title])
+  @site.PatronClientWorkPage.getTitle.should include(@context[:work_maintitle])
 end
 
 Then(/^verkets alternative tittel vises på verks\-siden$/) do
@@ -150,7 +150,7 @@ end
 
 When(/^vises verket i forfatterens verkliste$/) do
   wl = @site.PatronClientPersonPage.getWorkslist
-  wl[0].to_s.should be == @context[:work_title]
+  wl[0].to_s.should be == @context[:work_maintitle]
 end
 
 When(/^jeg er på informasjonssiden til personen$/) do
