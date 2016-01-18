@@ -38,3 +38,19 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om verket
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
+
+  @wip
+  Scenario: Verifisere endring av verksopplysninger
+    Gitt at jeg har en bok
+    Og at det finnes et verk med forfatter
+    Når jeg legger inn forfatternavnet på startsida
+    Så velger jeg forfatter fra treffliste fra personregisteret
+    Og velger verket fra lista tilkoplet forfatteren
+    Og bekrefter for å gå videre til bekreft verk
+    Og legger inn basisopplysningene om verket for hovedtittel og undertittel
+    Og bekrefter for å gå videre til beskriv verket
+    Og legger inn tilleggsopplyningene om verket for utgivelsesår og språk
+    Og bekrefter for å gå videre til beskriv utgivelsen
+    Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
+    Så jeg verifiserer opplysningene om verket
+

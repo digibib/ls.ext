@@ -40,13 +40,13 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
   # Add 3 publications of the work, with 2 exemplars of each
   3.times do
     step "at det finnes en utgivelse"
-    step "får utgivelsen tildelt en post-ID i Koha" # needed to store :record_id in context
+    step "får utgivelsen tildelt en post-ID i Koha" # needed to store :publication_recordid in context
     2.times do
       # create new item
-      page = @site.BiblioDetail.visit(@context[:record_id])
+      page = @site.BiblioDetail.visit(@context[:publication_recordid])
       page.add_item_with_random_barcode_and_itemtype(@context[:itemtypes][0].desc)
     end
-    record_id = @context[:record_id] # need to store it in a variable so the cleanup can close over it
+    record_id = @context[:publication_recordid] # need to store it in a variable so the cleanup can close over it
     @cleanup.push("delete items of biblio ##{record_id}" =>
                       lambda do
                         page = @site.BiblioDetail.visit(record_id)
@@ -74,7 +74,7 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
   @active[:book] = book
   @context[:biblio] = book.biblionumber
   @context[:publication_maintitle] = book.title
-  @context[:record_id] = book.biblionumber
+  @context[:publication_recordid] = book.biblionumber
 
   @cleanup.push("bok #{book.biblionumber}" =>
                     lambda do
@@ -318,7 +318,7 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
   @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set(@context[:item_barcode])
   @browser.text_field(:id => /^tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' % [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
   @browser.button(:text => "Add item").click
-  record_id = @context[:record_id]
+  record_id = @context[:publication_recordid]
 
   @cleanup.push("delete items of biblio ##{record_id}" =>
                     lambda do
@@ -335,13 +335,13 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
 end
 
 Then(/^får utgivelsen tildelt en post\-ID i Koha$/) do
-  @context[:record_id] = @site.RegPublication.get_record_id
-  @context[:record_id].should_not be_empty
+  @context[:publication_recordid] = @site.RegPublication.get_record_id
+  @context[:publication_recordid].should_not be_empty
 end
 
 Then(/^det vises en lenke til posten i Koha i katalogiseringsgrensesnittet$/) do
   link = @browser.a(:data_automation_id => "biblio_record_link")
-  link.href.end_with?("biblionumber=#{@context[:record_id]}").should be true
+  link.href.end_with?("biblionumber=#{@context[:publication_recordid]}").should be true
 end
 
 Then(/^viser systemet at "(.*?)" ikke er ett gyldig årstall$/) do |arg1|

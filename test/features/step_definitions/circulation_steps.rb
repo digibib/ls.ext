@@ -159,7 +159,7 @@ end
 
 When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   book = @active[:book]
-  @browser.goto intranet(:reserve)+@context[:record_id]
+  @browser.goto intranet(:reserve)+@context[:publication_recordid]
 
   user = SVC::User.new(@browser).get(name).first
 
@@ -370,7 +370,7 @@ end
 
 When(/^jeg leter opp boka i katalogiseringssøk$/) do
   @browser.goto intranet(:cataloguing)
-  @browser.text_field(:name => 'q').set @context[:record_id]
+  @browser.text_field(:name => 'q').set @context[:publication_recordid]
   @browser.form(:name => 'search').submit
   @browser.text.include?("Add/Edit items") == true
 end
@@ -425,7 +425,7 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
 end
 
 When(/^jeg besøker bokposten$/) do
-  @site.BiblioDetail.visit(@context[:record_id])
+  @site.BiblioDetail.visit(@context[:publication_recordid])
 end
 
 When(/^ser jeg tittelen i bokposten$/) do

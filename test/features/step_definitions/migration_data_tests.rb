@@ -57,19 +57,19 @@ def post_publication_ntriples(publication_title, ntriples)
   response = RestClient.post "http://#{ENV['HOST']}:8005/publication", ntriples, :content_type => 'application/n-triples'
   response.code.should == 201
   @context[:publication_identifier] = response.headers[:location]
-  @context[:record_id] = JSON.parse(RestClient.get(@context[:publication_identifier]))["deichman:recordID"]
+  @context[:publication_recordid] = JSON.parse(RestClient.get(@context[:publication_identifier]))["deichman:recordID"]
   @context[:publication_maintitle] = publication_title
 end
 
 When(/^jeg sjekker om tittelen finnes i MARC-dataene til utgivelsen$/) do
-  response = RestClient.get "http://#{ENV['HOST']}:8005/marc/#{@context[:record_id]}"
+  response = RestClient.get "http://#{ENV['HOST']}:8005/marc/#{@context[:publication_recordid]}"
   xml_doc = Nokogiri::XML response
   title = xml_doc.xpath("//xmlns:datafield[@tag=245]/xmlns:subfield[@code='a']").text
   title.should == @context[:publication_maintitle]
 end
 
 When(/^jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen$/) do
-  response = RestClient.get "http://#{ENV['HOST']}:8005/marc/#{@context[:record_id]}"
+  response = RestClient.get "http://#{ENV['HOST']}:8005/marc/#{@context[:publication_recordid]}"
   xml_doc = Nokogiri::XML response
   creator = xml_doc.xpath("//xmlns:datafield[@tag=100]/xmlns:subfield[@code='a']").text
   creator.should == @context[:person_name]
