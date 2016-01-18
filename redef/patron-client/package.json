@@ -10,6 +10,7 @@
     }
   ],
   "scripts": {
+    "start": "node server/server.js",
     "test": "mocha test module-test --timeout 5000",
     "start-dev": "nodemon",
     "start-dev-debug": "nodemon debug",
@@ -19,7 +20,7 @@
     "jshint": "jshint",
     "build": ""
   },
-  "main": "server.js",
+  "main": "server/server.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/digibib/ls.ext"

@@ -79,6 +79,7 @@ Vagrant.configure(2) do |config|
 
         config.vm.synced_folder "redef/patron-client/client", "/mnt/patron-client_client", type: "nfs"
         config.vm.synced_folder "redef/patron-client/public", "/mnt/patron-client_public", type: "nfs"
+        config.vm.synced_folder "redef/patron-client/server", "/mnt/patron-client_server", type: "nfs"
       else
         config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server"
         config.vm.synced_folder "redef/catalinker/client", "/mnt/catalinker_client"
@@ -86,6 +87,7 @@ Vagrant.configure(2) do |config|
 
         config.vm.synced_folder "redef/patron-client/client", "/mnt/patron-client_client"
         config.vm.synced_folder "redef/patron-client/public", "/mnt/patron-client_public"
+        config.vm.synced_folder "redef/patron-client/server", "/mnt/patron-client_server"
       end
     end
 

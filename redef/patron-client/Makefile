@@ -6,6 +6,7 @@ MODULE_TEST_CONTAINER=redef-patron-client-test-instance
 HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/client:/usr/src/app/client \
 	-v /vagrant/redef/patron-client/module-test:/usr/src/app/module-test \
 	-v /vagrant/redef/patron-client/public:/usr/src/app/public \
+	-v /vagrant/redef/patron-client/server:/usr/src/app/server \
 	-v /vagrant/redef/patron-client/test:/usr/src/app/test
 
 run-dev:
@@ -31,8 +32,8 @@ run-test-instance: rm-test-instance
 	sudo docker run -d -p 7000:8000 --name $(MODULE_TEST_CONTAINER) -e "SERVICES_PORT=tcp://192.168.50.12:6666" $(HOST_VOLUME_BINDINGS) dockercompose_patron-client
 
 lint:
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run jscs -- server.js module-test test --fix
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run jshint -- server.js module-test test
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run jscs -- server/server.js module-test test --fix
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_patron-client npm run jshint -- server/server.js module-test test
 
 
 test: lint run-test-instance

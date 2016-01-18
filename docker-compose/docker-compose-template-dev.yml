@@ -121,6 +121,7 @@ patron-client:
   volumes:
     - /mnt/patron-client_client:/usr/src/app/client
     - /mnt/patron-client_public:/usr/src/app/public
+    - /mnt/patron-client_server:/usr/src/app/server
   ports:
     - "8000:8000"
   environment:

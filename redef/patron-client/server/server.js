@@ -2,6 +2,7 @@
 "use strict";
 
 var express = require('express'),
+    path = require('path'),
     config = require('./lib/config'),
     graph = require('ld-graph'),
     url = require('url'),
@@ -10,15 +11,12 @@ var express = require('express'),
     Server;
 
 browserify.settings.development("basedir",  "./");
-
-
-
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, '/../public')));
 
 app.get('/js/bundle.js', browserify([
-  {'./client/src/search': {"expose":"search"}},
-  {'./client/src/work': {"expose":"work"}},
-  {'./client/src/person': {"expose":"person"}}
+  {'./client/src/search': {"expose": "search"}},
+  {'./client/src/work': {"expose": "work"}},
+  {'./client/src/person': {"expose": "person"}}
 ]));
 
 app.get('/config', function (request, response) {
@@ -28,19 +26,19 @@ app.get('/config', function (request, response) {
 app.get('/search', function (request, response) {
   response.type(".html");
   response.status(200);
-  response.sendFile(__dirname +'/public/search.html');
+  response.sendFile('search.html', {title: 'Søk', root: __dirname + '/../public/'});
 });
 
 app.get('/person/:id', function (request, response) {
   response.type(".html");
   response.status(200);
-  response.sendFile(__dirname +'/public/person.html');
+  response.sendFile('person.html', {title: 'Person', root: __dirname + '/../public/'});
 });
 
 app.get('/work/:id', function (request, response) {
   response.type(".html");
   response.status(200);
-  response.sendFile(__dirname +'/public/work.html');
+  response.sendFile('work.html', {title: 'Verk', root: __dirname + '/../public/'});
 });
 
 Server = app.listen(process.env.BIND_PORT || 8000, process.env.BIND_IP, function () {

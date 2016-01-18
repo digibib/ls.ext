@@ -2,7 +2,7 @@
 "use strict";
 
 var expect = require('chai').expect,
-    config = require('../lib/config');
+    config = require('../server/lib/config');
 
 describe('config', function () {
   describe('#get(env)', function () {
