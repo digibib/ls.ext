@@ -5,9 +5,13 @@ require_relative 'catalinker_page.rb'
 class WorkFlow < CatalinkerPage
   def visit
     @browser.goto catalinker(:workflow)
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-      @browser.divs(:class => 'prop-input').size > 1 # wait until dom-tree has been populated
-    }
+    @browser.execute_script('console.log("test")')
+    retry_wait do
+      @browser.goto catalinker(:workflow)
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+        @browser.divs(:class => 'prop-input').size > 1
+      end # wait until dom-tree has been populated
+    end
     self
   end
 
