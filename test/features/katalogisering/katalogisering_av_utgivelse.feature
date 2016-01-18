@@ -12,7 +12,7 @@ Egenskap: Katalogisering av utgivelse
     Gitt at det finnes et verk
     Når jeg registrerer inn opplysninger om utgivelsen
     Og jeg knytter utgivelsen til verket
-    Så vises opplysningene om utgivelsen på verkssiden
+    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
   Scenario: Verk finnes - utgivelse finnes ikke (2)
     Gitt at det finnes et verk
