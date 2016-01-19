@@ -72,7 +72,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['numberOfPages'] = [rand(999).to_s, :add_prop]
   data['isbn'] = [generateRandomString, :add_prop]
   data['illustrativeMatter'] = [:random, :select_prop]
-  data['adaptionOfPublicationForParticularUserGroups'] = [:random, :select_prop]
+  data['adaptationOfPublicationForParticularUserGroups'] = [:random, :select_prop]
   data['binding'] = [:random, :select_prop]
   data['writingSystem'] = [:random, :select_prop]
 
@@ -81,13 +81,13 @@ end
 
 def workflow_batch_add_props(domain, data)
   data.each do |fragment, (value, method)|
-    predicate = "http://#{ENV['HOST']}:8005/ontology##{fragment}"
-    if value.eql?(:random) && method.eql?(:select_prop)
-      value = @site.WorkFlow.get_available_select_choices(domain, predicate).sample
-    end
-    symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
-    @context[symbol] = value
     begin
+      predicate = "http://#{ENV['HOST']}:8005/ontology##{fragment}"
+      if value.eql?(:random) && method.eql?(:select_prop)
+        value = @site.WorkFlow.get_available_select_choices(domain, predicate).sample
+      end
+      symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
+      @context[symbol] = value
       @site.WorkFlow.method(method).call(domain, predicate, @context[symbol], 0, true)
     rescue
       fail "Error adding #{fragment} for #{domain}"
@@ -137,4 +137,10 @@ When(/^jeg velger verdien "([^"]*)" for "([^"]*)"$/) do |value, selectable_param
   fragment = predicate.partition('#').last()
   symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym
   @context[symbol] = value
+end
+
+When(/^jeg følger lenken til posten i Koha i arbeidsflyten$/) do
+  link = @browser.a(:data_automation_id => 'biblio_record_link').href
+  steps 'at jeg er logget inn som adminbruker'
+  @browser.goto(link)
 end

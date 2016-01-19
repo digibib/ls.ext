@@ -494,11 +494,12 @@ When(/^ser jeg forfatteren i plukklisten$/) do
 end
 
 
-When(/^skal jeg se tittel, deltittel, delnummer, forfatter og ISBN$/) do
+When(/^skal jeg se tittel, deltittel, delnummer, forfatter, utgivelsesår og ISBN$/) do
   mainTitle, partTitle, partNumber = @browser.h1(class: 'title').text.split(' ')
   mainTitle.should eq @context[:publication_maintitle]
   partTitle.should eq @context[:publication_parttitle]
   partNumber.should eq @context[:publication_partnumber]
   @browser.h5(class: 'author').text.should eq "By: #{@context[:work_creator]}."
+  @browser.span(class: 'publisher').text.should eq "Publisher: #{@context[:publication_publicationyear]}"
   @browser.span(class: 'isbn').text.should eq "ISBN: #{@context[:publication_isbn]}."
 end

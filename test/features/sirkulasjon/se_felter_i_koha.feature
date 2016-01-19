@@ -21,5 +21,5 @@ Egenskap: Se felter i Koha
     Og bekrefter for å gå videre til beskriv verket
     Og bekrefter for å gå videre til beskriv utgivelsen
     Og legger inn opplysningene om utgivelsen
-    Og jeg følger lenken til posten i Koha
-    Så skal jeg se tittel, deltittel, delnummer, forfatter og ISBN
+    Og jeg følger lenken til posten i Koha i arbeidsflyten
+    Så skal jeg se tittel, deltittel, delnummer, forfatter, utgivelsesår og ISBN
