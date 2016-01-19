@@ -88,7 +88,7 @@ Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$
 end
 
 Then(/^ser jeg format og språk for utgivelsen$/) do
-  step "vises opplysningene om utgivelsen på verkssiden"
+  step "vises opplysningene brukerne skal se om utgivelsen på verkssiden"
 end
 
 When(/^ser jeg eksemplarene gruppert etter utgave m\/informasjon om format og språk$/) do
