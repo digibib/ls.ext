@@ -39,6 +39,5 @@ Ports.each do | name, service |
     failed << name
   end
 end
-exit 0
 
-#exit 1 unless failed.empty?
+exit 1 unless failed.empty?
