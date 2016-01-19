@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@wip #step is missing
 Egenskap: Gruppering på utgivelse
   Som bruker av bibliotekets nettsider
   For å kunne finne eksemplar i rett format og språk
