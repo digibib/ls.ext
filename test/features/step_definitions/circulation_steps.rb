@@ -326,6 +326,9 @@ end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
   @site.Home.visit.search_catalog @active[:book].title
+  while @browser.text == "Internal Server Error" do
+      @site.Home.visit.search_catalog @active[:book].title
+  end
   @browser.text.should include(@active[:book].title)
 end
 
