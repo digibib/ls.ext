@@ -19,19 +19,25 @@ import java.util.stream.Collectors;
  */
 public class MarcRecord {
     public static final int THIRTY_ONE = 31;
-    private Record record;
     private final MarcFactory marcFactory = MarcFactory.newInstance();
+    private Record record;
 
     public MarcRecord() {
         record = marcFactory.newRecord(marcFactory.newLeader(MarcConstants.LEADER_TEMPLATE));
     }
 
-    public final void addMarcField(MarcField marcField) {
-        this.record.addVariableField(marcField.getDataField());
-    }
-
     public static MarcField newDataField(String field) {
         return new MarcField(field);
+    }
+
+    public final void addMarcField(MarcField marcField) {
+        record.addVariableField(marcField.getDataField());
+    }
+
+    public final void addMarcField(String field, char subfield, String value) {
+        MarcField marcField = newDataField(field);
+        marcField.addSubfield(subfield, value);
+        addMarcField(marcField);
     }
 
     public final boolean hasItems() {

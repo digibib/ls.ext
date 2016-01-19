@@ -59,6 +59,10 @@ public final class EntityServiceImpl implements EntityService {
     private final Property creatorProperty;
     private final Property publicationOfProperty;
     private final Property recordIdProperty;
+    private final Property partTitleProperty;
+    private final Property partNumberProperty;
+    private final Property isbnProperty;
+
 
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
         this.baseURI = baseURI;
@@ -70,6 +74,9 @@ public final class EntityServiceImpl implements EntityService {
         creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
         recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
+        partTitleProperty = ResourceFactory.createProperty(baseURI.ontology("partTitle"));
+        partNumberProperty = ResourceFactory.createProperty(baseURI.ontology("partNumber"));
+        isbnProperty = ResourceFactory.createProperty(baseURI.ontology("isbn"));
     }
 
     private static <T> Map[] asArray(List<T> list) {
@@ -362,16 +369,25 @@ public final class EntityServiceImpl implements EntityService {
         MarcRecord marcRecord = new MarcRecord();
 
         for (String personName : personNames) {
-            MarcField creatorField = MarcRecord.newDataField(MarcConstants.FIELD_100);
-            creatorField.addSubfield(MarcConstants.SUBFIELD_A, personName);
-            marcRecord.addMarcField(creatorField);
+            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, personName);
+        }
+        if (publication.getProperty(null, titleProperty) != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A,
+                    publication.getProperty(null, titleProperty).getObject().asLiteral().toString());
+        }
+        if (publication.getProperty(null, partTitleProperty) != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_P,
+                    publication.getProperty(null, partTitleProperty).getObject().asLiteral().toString());
+        }
+        if (publication.getProperty(null, partNumberProperty) != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_N,
+                    publication.getProperty(null, partNumberProperty).getObject().asLiteral().toString());
+        }
+        if (publication.getProperty(null, isbnProperty) != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A,
+                    publication.getProperty(null, isbnProperty).getObject().asLiteral().toString());
         }
 
-        if (publication.getProperty(null, titleProperty) != null) {
-            MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-            titleField.addSubfield(MarcConstants.SUBFIELD_A, publication.getProperty(null, titleProperty).getObject().asLiteral().toString());
-            marcRecord.addMarcField(titleField);
-        }
         return marcRecord;
     }
 

@@ -83,4 +83,46 @@ public class MarcRecordTest {
         assertNotEquals(record1, record2);
     }
 
+    @Test
+    public void marc_records_should_be_equal2() {
+        MarcRecord record1 = new MarcRecord();
+        MarcField field1 = MarcRecord.newDataField("111");
+        field1.addSubfield('a', "b");
+        record1.addMarcField(field1);
+        MarcField field2 = MarcRecord.newDataField("111");
+        field2.addSubfield('c', "d");
+        record1.addMarcField(field2);
+        MarcField field3 = MarcRecord.newDataField("222");
+        field3.addSubfield('e', "f");
+        record1.addMarcField(field3);
+
+        MarcRecord record2 = new MarcRecord();
+        record2.addMarcField("222", 'e', "f");
+        record2.addMarcField("111", 'c', "d");
+        record2.addMarcField("111", 'a', "b");
+
+        assertEquals(record1, record2);
+    }
+
+    @Test
+    public void marc_records_should_not_be_equal2() {
+        MarcRecord record1 = new MarcRecord();
+        MarcField field1 = MarcRecord.newDataField("111");
+        field1.addSubfield('a', "b");
+        field1.addSubfield('x', "NOT_EQUAL");
+        record1.addMarcField(field1);
+        MarcField field2 = MarcRecord.newDataField("111");
+        field2.addSubfield('c', "d");
+        record1.addMarcField(field2);
+        MarcField field3 = MarcRecord.newDataField("222");
+        field3.addSubfield('e', "f");
+        record1.addMarcField(field3);
+
+        MarcRecord record2 = new MarcRecord();
+        record2.addMarcField("222", 'e', "f");
+        record2.addMarcField("111", 'c', "d");
+        record2.addMarcField("111", 'a', "b");
+
+        assertNotEquals(record1, record2);
+    }
 }
