@@ -54,7 +54,7 @@ public final class EntityServiceImpl implements EntityService {
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
     private final Property hasItemProperty;
-    private final Property titleProperty;
+    private final Property mainTitleProperty;
     private final Property nameProperty;
     private final Property creatorProperty;
     private final Property publicationOfProperty;
@@ -62,6 +62,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property partTitleProperty;
     private final Property partNumberProperty;
     private final Property isbnProperty;
+    private final Property publicationYearProperty;
 
 
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
@@ -69,7 +70,7 @@ public final class EntityServiceImpl implements EntityService {
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
-        titleProperty = ResourceFactory.createProperty(baseURI.ontology("mainTitle"));
+        mainTitleProperty = ResourceFactory.createProperty(baseURI.ontology("mainTitle"));
         nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
         creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
@@ -77,6 +78,7 @@ public final class EntityServiceImpl implements EntityService {
         partTitleProperty = ResourceFactory.createProperty(baseURI.ontology("partTitle"));
         partNumberProperty = ResourceFactory.createProperty(baseURI.ontology("partNumber"));
         isbnProperty = ResourceFactory.createProperty(baseURI.ontology("isbn"));
+        publicationYearProperty = ResourceFactory.createProperty(baseURI.ontology("publicationYear"));
     }
 
     private static <T> Map[] asArray(List<T> list) {
@@ -371,21 +373,25 @@ public final class EntityServiceImpl implements EntityService {
         for (String personName : personNames) {
             marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, personName);
         }
-        if (publication.getProperty(null, titleProperty) != null) {
+        if (publication.getProperty(null, mainTitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A,
-                    publication.getProperty(null, titleProperty).getObject().asLiteral().toString());
+                    publication.getProperty(null, mainTitleProperty).getLiteral().getString());
         }
         if (publication.getProperty(null, partTitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_P,
-                    publication.getProperty(null, partTitleProperty).getObject().asLiteral().toString());
+                    publication.getProperty(null, partTitleProperty).getLiteral().getString());
         }
         if (publication.getProperty(null, partNumberProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_N,
-                    publication.getProperty(null, partNumberProperty).getObject().asLiteral().toString());
+                    publication.getProperty(null, partNumberProperty).getLiteral().getString());
         }
         if (publication.getProperty(null, isbnProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A,
-                    publication.getProperty(null, isbnProperty).getObject().asLiteral().toString());
+                    publication.getProperty(null, isbnProperty).getLiteral().getString());
+        }
+        if (publication.getProperty(null, publicationYearProperty) != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_260, MarcConstants.SUBFIELD_C,
+                    publication.getProperty(null, publicationYearProperty).getLiteral().getString());
         }
 
         return marcRecord;

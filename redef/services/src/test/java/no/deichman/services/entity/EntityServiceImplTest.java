@@ -490,24 +490,32 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_generate_marc_record_in_publication_without_work_patch() throws PatchParserException {
-        String originalPublicationTitle = "Sult";
-        String newPublicationTitle = "Torst";
+        String originalMainTitle = "Sult";
+        String newMainTitle = "Torst";
+        String partTitle = "Svolten";
+        String partNumber = "Part 1";
+        String isbn = "978-3-16-148410-0";
+        String publicationYear = "2016";
 
-        when(mockKohaAdapter.getNewBiblioWithMarcRecord(getMarcRecord(originalPublicationTitle, null))).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.getNewBiblioWithMarcRecord(getMarcRecord(originalMainTitle, null, partTitle, partNumber, isbn, publicationYear))).thenReturn(A_BIBLIO_ID);
 
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "mainTitle> \"" + originalPublicationTitle + "\" .\n";
+                + "<publication> <" + ontologyURI + "mainTitle> \"" + originalMainTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
+                + "<publication> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
+                + "<publication> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
 
         Model inputPublication = modelFrom(publicationTriples, Lang.NTRIPLES);
         String publicationUri = service.create(PUBLICATION, inputPublication);
 
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalPublicationTitle, newPublicationTitle));
+        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalMainTitle, newMainTitle));
         Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationUri.substring(publicationUri.lastIndexOf("/") + 1));
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
-        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, null));
+        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newMainTitle, null, partTitle, partNumber, isbn, publicationYear));
     }
 
     @Test
@@ -574,20 +582,35 @@ public class EntityServiceImplTest {
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator));
     }
 
-    private MarcRecord getMarcRecord(String title, String name) {
+    private MarcRecord getMarcRecord(String mainTitle, String name) {
         MarcRecord marcRecord = new MarcRecord();
-        if (title != null) {
-            MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-            titleField.addSubfield(MarcConstants.SUBFIELD_A, title);
-            marcRecord.addMarcField(titleField);
+        if (mainTitle != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A, mainTitle);
         }
         if (name != null) {
-            MarcField nameField = MarcRecord.newDataField(MarcConstants.FIELD_100);
-            nameField.addSubfield(MarcConstants.SUBFIELD_A, name);
-            marcRecord.addMarcField(nameField);
+            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, name);
         }
         return marcRecord;
     }
+
+
+    private MarcRecord getMarcRecord(String mainTitle, String name, String partTitle, String partNumber, String isbn, String publicationYear) {
+        MarcRecord marcRecord = getMarcRecord(mainTitle, name);
+        if (partTitle != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_P, partTitle);
+        }
+        if (partNumber != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_N, partNumber);
+        }
+        if (isbn != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A, isbn);
+        }
+        if (publicationYear != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_260, MarcConstants.SUBFIELD_C, publicationYear);
+        }
+        return marcRecord;
+    }
+
 
     private String getPatch(String uri, String field, String from, String to) {
         return "[{\"op\":\"del\",\"s\":\"" + uri + "\",\"p\":\"" + ontologyURI + "" + field + "\",\"o\":{\"value\":\"" + from + "\",\"type\":\"http://www.w3.org/2001/XMLSchema#string\"}},"
