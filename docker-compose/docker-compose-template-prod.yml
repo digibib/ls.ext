@@ -123,8 +123,17 @@ patron-client:
 
 overview:
   container_name: overview_container
-  image: connexiolabs/alpine-nginx:1.7.11
+  build: "${OVERVIEW_BUILD_DIR}"
   ports:
     - "${OVERVIEW_PORT}:${OVERVIEW_PORT}"
-  volumes:
-    - /var/www/overview:/etc/nginx/html
+  environment:
+    HOST: "${HOST}"
+    PATRON_CLIENT_PORT: "8000"
+    SERVICES_PORT: "8005"
+    CATALINKER_PORT: "8010"
+    KOHA_OPAC_PORT: "8080"
+    KOHA_INTRA_PORT: "8081"
+    JAMON_PORT: "5070"
+    TRIPLESTORE_PORT: "${TRIPLESTORE_PORT}"
+    ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT}"
+    KOHA_VERSION: "${KOHA_IMAGE_TAG}"
