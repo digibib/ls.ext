@@ -97,7 +97,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell", path: "docker_install.sh"
     config.vm.provision "shell", path: "pip_install.sh"
-    config.vm.provision "shell", inline: "sudo pip install docker-compose==1.5.2"
+    config.vm.provision "shell", inline: "sudo pip install pyopenssl ndg-httpsclient pyasn1 docker-compose==1.5.2"
 
     config.vm.provision "shell", path: "ssh/generate_keys.sh"
     config.vm.provision "shell", path: "ssh/accept_keys.sh"
