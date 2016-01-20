@@ -27,6 +27,8 @@ public interface RDFRepository {
     Model retrievePersonByURI(String uri);
     Model retrievePersonAndLinkedResourcesByURI(String uri);
 
+    Model retrievePlaceOfPublicationByURI(String uri);
+
     boolean askIfResourceExists(String uri);
 
     boolean askIfStatementExists(Statement statement);

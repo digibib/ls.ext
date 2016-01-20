@@ -171,6 +171,9 @@ public final class EntityServiceImpl implements EntityService {
             case WORK:
                 m.add(repository.retrieveWorkByURI(baseURI.work() + id));
                 break;
+            case PLACE_OF_PUBLICATION:
+                m.add(repository.retrievePlaceOfPublicationByURI(baseURI.placeOfPublication() + id));
+                break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
         }

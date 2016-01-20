@@ -61,6 +61,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public Model retrievePlaceOfPublicationByURI(String uri) {
+        log.debug("Attempting to retrieve: <" + uri + ">");
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
     public final Model retrieveWorkAndLinkedResourcesByURI(String uri) {
         log.debug("Attempting to retrieve: <" + uri + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedResources(uri))) {
@@ -261,6 +270,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             });
         }
     }
+
 
     private void disableCompression(QueryExecution qexec) {
         if (qexec instanceof QueryEngineHTTP) {
