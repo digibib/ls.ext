@@ -17,6 +17,7 @@ base:
     - redef
     - redef.dev
     - overview.dev
+    - common.dev
 
   'detektor':
     - match: list
@@ -28,6 +29,7 @@ base:
     - overview # overview
     - overview.kohatest  # overview
     - elk.prod1  # overview
+    - common.prod
 
   'wombat':
     - match: list
@@ -40,6 +42,7 @@ base:
     - overview.prod1  # overview
     - redef.prod1  # overview
     - elk.prod1  # overview
+    - common.prod
 
   'ubuntu':
     - match: list
@@ -52,4 +55,5 @@ base:
     - overview.prod2  # overview
     - redef.prod2  # overview
     - elk.prod2  # overview
+    - common.prod
 

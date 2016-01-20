@@ -22,7 +22,7 @@ apache2:
 
 services_gradle_build_docker_image:
   cmd.run:
-    - name: ./gradlew dockerBuildImage
+    - name: ./gradlew -PdockerUrl={{pillar['dockerUrl']}} dockerBuildImage
     - cwd: /vagrant/redef/services
     - user: vagrant
 

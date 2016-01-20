@@ -182,7 +182,7 @@ buildscript {
 mainClassName = 'no.deichman.services.App'
 
 docker {
-    url = "http://172.17.0.1:2375"
+    url = dockerUrl
 
     registryCredentials {
         url = 'https://index.docker.io/v1'
