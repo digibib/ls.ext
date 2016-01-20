@@ -86,7 +86,7 @@ sip:
 catalinker:
   container_name: redef_catalinker_container
   build: /vagrant/redef/catalinker
-  dockerfile: Dockerfile-dev
+  dockerfile: Dockerfile
   ports:
     - "8010:8010"
   environment:
@@ -113,7 +113,7 @@ services:
 patron-client:
   container_name: redef_patron_client_container
   build: /vagrant/redef/patron-client
-  dockerfile: Dockerfile-dev
+  dockerfile: Dockerfile
   ports:
     - "8000:8000"
   environment:
