@@ -98,7 +98,7 @@ public class SearchServiceImpl implements SearchService {
             + "select distinct ?placeuri ?place ?country\n"
             + "where {\n"
             + "    ?placeuri a :PlaceOfPublication ;\n"
-            + "             :placename ?placename .\n"
+            + "             :placename ?placename ;\n"
             + "             :country ?country .\n"
             + "}\n", remote().ontology());
 

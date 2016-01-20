@@ -27,9 +27,13 @@
         return (typeof res === "string") ? JSON.parse(res) : res;
     };
 
+    String.prototype.lowerCaseFirstLetter = function () {
+        return this.charAt(0).toLowerCase() + this.slice(1);
+    };
+
     /* Private functions */
     var loadExistingResource = function (uri) {
-        axios.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase() + "/" + uri.substr(uri.lastIndexOf("/") + 1))
+        axios.get(ractive.get("config.resourceApiUri") + ractive.get("resource_type").lowerCaseFirstLetter() + "/" + uri.substr(uri.lastIndexOf("/") + 1))
             .then(function (response) {
                 ractive.set("resource_uri", uri);
                 var resource;
@@ -93,14 +97,14 @@
 
     var createNewResource = function () {
         // fetch URI for new resource
-        axios.post(ractive.get("config.resourceApiUri") + ractive.get("resource_type").toLowerCase(),
+        axios.post(ractive.get("config.resourceApiUri") + ractive.get("resource_type").lowerCaseFirstLetter(),
             {}, {headers: {Accept: "application/ld+json", "Content-Type": "application/ld+json"}})
             .then(function (response) {
                 // now that the resource exists - redirect to load the new resource
                 window.location.replace(location.href + "?resource=" + response.headers.location);
             })
             .catch(function (err) {
-                console.log("POST to " + ractive.get("resource_type").toLowerCase() + " fails: " + err);
+                console.log("POST to " + ractive.get("resource_type").lowerCaseFirstLetter() + " fails: " + err);
             });
     };
 

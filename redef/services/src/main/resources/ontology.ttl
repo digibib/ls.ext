@@ -19,6 +19,10 @@
   rdfs:label "Person"@en ;
   rdfs:label "Person"@no .
 
+:PlaceOfPublication a rdfs:Class ;
+  rdfs:label "Place of publication"@en ;
+  rdfs:label "Utgivelsessted"@no .
+
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
@@ -205,4 +209,15 @@
   rdfs:domain :Work ;
   rdfs:range duo:AdaptationOfWorkForParticularUserGroups ;
   duo:valuesFrom values:adaptationOfWorkForParticularUserGroups .
-e
+
+:place a rdfs:Property ;
+  rdfs:label "Place"@en ;
+  rdfs:label "Sted"@no ;
+  rdfs:domain :PlaceOfPublication ;
+  rdfs:range xsd:string .
+
+:country a rdfs:Property ;
+  rdfs:label "Country"@en ;
+  rdfs:label "Land"@no ;
+  rdfs:domain :PlaceOfPublication ;
+  rdfs:range xsd:string .
