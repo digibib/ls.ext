@@ -1,11 +1,11 @@
 @prefix audience: <http://data.deichman.no/audience#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-audience:adults a duo:Audience ;
+audience:adult a duo:Audience ;
   duo:code "a" ;
   rdfs:label "Voksne"@no ;
   rdfs:label "Adults"@en .
-audience:childrenAndYouths a duo:Audience ;
+audience:juvenile a duo:Audience ;
   duo:code "j" ;
   rdfs:label "Barn of unge"@no ;
   rdfs:label "Children and youths"@en .
