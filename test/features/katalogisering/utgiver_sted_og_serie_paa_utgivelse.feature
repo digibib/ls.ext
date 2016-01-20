@@ -9,9 +9,10 @@ Egenskap: Legge til utgivelsesautoriteter på utgivelse
   
   @wip
   Scenario: Opprettelse av et utgivelsessted
-    Gitt at jeg er på utgivelsesstedsregistreringssida
-    Når jeg fyller ut feltene for stedsnavn og land
-    Så har jeg laget et nytt utgivelsessted
+    Når jeg vil lage et nytt utgivelsessted
+    Så leverer systemet en ny ID for det nye utgivelsesstedet
+    Og jeg kan legge inn stedsnavn og land
+    Og grensesnittet viser at utgivelsesstedet er lagret
 
   @wip
   Scenario: Legge til utgivelsessted i arbeidsflyt

@@ -30,6 +30,8 @@ class UniqueURIGenerator {
                 break;
             case "Person": result = baseURI.person() + "h" + uniquePart;
                 break;
+            case "PlaceOfPublication": result = baseURI.placeOfPublication() + "g" + uniquePart;
+                break;
             default:            throw new IllegalArgumentException("Unknown URI-type");
         }
         return result;

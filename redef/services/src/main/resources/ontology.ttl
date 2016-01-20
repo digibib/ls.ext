@@ -205,3 +205,4 @@
   rdfs:domain :Work ;
   rdfs:range duo:AdaptationOfWorkForParticularUserGroups ;
   duo:valuesFrom values:adaptationOfWorkForParticularUserGroups .
+e

@@ -103,6 +103,30 @@ public final class EntityResource extends ResourceBase {
                     status = Response.Status.CREATED;
                 }
                 break;
+            case "placeOfPublication":
+                Model placeOfPublicationModel = RDFModelUtil.modelFrom(body, lang);
+                NodeIterator placeOfPublicationNodes = placeOfPublicationModel.listObjectsOfProperty(ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofilPlaceOfPublicationId"));
+                List<RDFNode> placeOfPublicationNodeList = placeOfPublicationNodes.toList();
+                if (placeOfPublicationNodeList.size() > 1) {
+                    message = Optional.of("Request with greater than one bibliofil place of publication authority ID per resource");
+                    status = Response.Status.BAD_REQUEST;
+                    break;
+                }
+                if (placeOfPublicationNodeList.size() > 0) {
+                    bibliofilId = placeOfPublicationNodeList.get(0).asLiteral().toString();
+                    if (checkBibliofilPlaceOfPublicationResourceExistence(bibliofilId).isPresent()) {
+                        uri = checkBibliofilPlaceOfPublicationResourceExistence(bibliofilId);
+                    }
+                }
+
+                if (uri.isPresent()) {
+                    status = Response.Status.CONFLICT;
+                    message = Optional.of("Resource with ID <" + uri.get() + "> was found to have Bibliofil ID " + bibliofilId);
+                } else {
+                    uri = Optional.of(getEntityService().create(EntityType.get(type), placeOfPublicationModel));
+                    status = Response.Status.CREATED;
+                }
+                break;
             default:
                 uri = Optional.of(getEntityService().create(EntityType.get(type), RDFModelUtil.modelFrom(body, lang)));
                 status = Response.Status.CREATED;
@@ -118,12 +142,16 @@ public final class EntityResource extends ResourceBase {
         return rb.build();
     }
 
+    private Optional<String> checkBibliofilPlaceOfPublicationResourceExistence(String bibliofilId) {
+        return getEntityService().retrieveBibliofilPlaceOfPublication(bibliofilId);
+    }
+
     private Optional<String> checkBibliofilPersonResourceExistence(String personId) {
         return getEntityService().retrieveBibliofilPerson(personId);
     }
 
     @GET
-    @Path("/{id: (p|w|h)[a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w|h|g)[a-zA-Z0-9_]+}")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) {
         Model model;
@@ -152,7 +180,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PATCH
-    @Path("/{id: (p|w|h)[a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w|h|g)[a-zA-Z0-9_]+}")
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
@@ -170,6 +198,9 @@ public final class EntityResource extends ResourceBase {
                 break;
             case PERSON:
                 resourceUri = getBaseURI().person() + id;
+                break;
+            case PLACE_OF_PUBLICATION:
+                resourceUri = getBaseURI().placeOfPublication() + id;
                 break;
             default:
                 throw new NotFoundException("Unknown entity type.");
@@ -191,6 +222,9 @@ public final class EntityResource extends ResourceBase {
                 break;
             case PERSON:
                 getSearchService().indexPerson(id);
+                break;
+            case PLACE_OF_PUBLICATION:
+                getSearchService().indexPlaceOfPublication(id);
                 break;
             default:
                 break;

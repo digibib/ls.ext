@@ -50,8 +50,10 @@ public class EntityResourceTest {
     private static final String SOME_WORK_IDENTIFIER = "SOME_WORK_IDENTIFIER";
     private static final String SOME_OTHER_WORK_IDENTIFIER = "SOME_OTHER_WORK_IDENTIFIER";
     private static final String SOME_PERSON_IDENTIFIER = "SOME_PERSON_IDENTIFIER";
+    private static final String SOME_PLACE_OF_PUBLICATION_IDENTIFIER = "SOME_PLACE_OF_PUBLICATION";
     private static final String WORK = "work";
     private static final String PERSON = "person";
+    private static final String PLACE_OF_PUBLICATION = "placeOfPublication";
     private static final String PUBLICATION = "publication";
     private static final String A_BIBLIO_ID = "1234";
     private static final String LOCATION = "Location";
@@ -116,6 +118,15 @@ public class EntityResourceTest {
     }
 
     @Test
+    public void create_should_return_201_when_place_of_publication_created() throws URISyntaxException {
+        String placeOfPublication = createTestRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION);
+        Response result = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+
+        assertNull(result.getEntity());
+        assertEquals(CREATED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
     public void create_duplicate_person_returns_409() throws URISyntaxException {
         String personId = "n019283";
         String person = createPersonImportRDF(SOME_PERSON_IDENTIFIER, PERSON, personId);
@@ -126,6 +137,19 @@ public class EntityResourceTest {
         assertNotNull(duplicate.getEntity());
         assertEquals(CONFLICT.getStatusCode(), duplicate.getStatus());
     }
+
+    @Test
+    public void create_duplicate_place_of_publication_returns_409() throws URISyntaxException {
+        String id = "g019283";
+        String placeOfPublication = createPlaceOfPublicationImportRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION, id);
+        Response result = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+        assertNull(result.getEntity());
+        assertEquals(CREATED.getStatusCode(), result.getStatus());
+        Response duplicate = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+        assertNotNull(duplicate.getEntity());
+        assertEquals(CONFLICT.getStatusCode(), duplicate.getStatus());
+    }
+
 
     @Test
     public void create_should_return_location_header_when_work_created() throws URISyntaxException {
@@ -150,6 +174,18 @@ public class EntityResourceTest {
 
         assertNull(result.getEntity());
         assertTrue(Pattern.matches(personURI + "h\\d{12}", result.getHeaderString(LOCATION)));
+    }
+
+    @Test
+    public void create_should_return_location_header_when_place_of_publication_created() throws URISyntaxException {
+        String placeOfPublication = createTestRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION);
+
+        Response result = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+
+        String placeOfPublicationURI = baseURI.placeOfPublication();
+
+        assertNull(result.getEntity());
+        assertTrue(Pattern.matches(placeOfPublicationURI + "g\\d{12}", result.getHeaderString(LOCATION)));
     }
 
     @Test
@@ -202,6 +238,21 @@ public class EntityResourceTest {
 
 
         Response result = entityResource.index(PERSON, personId);
+
+        assertNotNull(result);
+        assertEquals(ACCEPTED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void create_should_index_the_new_place_of_publication() throws URISyntaxException{
+        String placeOfPublication = createTestRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION);
+
+        Response createResponse = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+
+        String placeOfPublicationId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/placeOfPublication/", "");
+
+
+        Response result = entityResource.index(PLACE_OF_PUBLICATION, placeOfPublicationId);
 
         assertNotNull(result);
         assertEquals(ACCEPTED.getStatusCode(), result.getStatus());
@@ -433,5 +484,21 @@ public class EntityResourceTest {
                 + "    }\n"
                 + "}";
     }
+
+    private String createPlaceOfPublicationImportRDF(String identifier, String type, String placeId) {
+        String ontologyClass = WordUtils.capitalize(type);
+        return "{\n"
+                + "    \"@context\": {\n"
+                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/" + type + "/" + identifier + "\",\n"
+                + "        \"@type\": \"deichman:" + ontologyClass + "\",\n"
+                + "        \"http://data.deichman.no/duo#bibliofilPlaceOfPublicationId\": \"" + placeId + "\"\n"
+                + "    }\n"
+                + "}";
+    }
+
 
 }

@@ -328,6 +328,37 @@ public class AppTest {
     }
 
     @Test
+    public void place_of_publication_resource_can_be_created_if_not_a_duplicate() throws UnirestException {
+        String input = "<__BASEURI__externalPlaceOfPublication/g1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#PlaceOfPublication> .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#placename> \"Oslo\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <http://data.deichman.no/duo#bibliofilPlaceOfPublicationId> \"1234\" .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#country> \"Norge\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
+
+        input = input.replace("__BASEURI__", baseUri);
+
+        String duplicateInput = "<__BASEURI__externalPlaceOfPublication/g1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#PlaceOfPublication> .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#placename> \"Oslo\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <http://data.deichman.no/duo#bibliofilPlaceOfPublicationId> \"1234\" .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#country> \"Norge\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
+        duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
+
+        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
+
+        Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
+        String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
+
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", body).asString();
+        HttpResponse<String> result2 = buildCreateRequest(baseUri + "placeOfPublication", body2).asString();
+
+        assertResponse(Status.CONFLICT, result2);
+        String location1 = getLocation(result1);
+        String location2 = getLocation(result2);
+        assertTrue(location1.equals(location2));
+    }
+
+
+    @Test
     public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.newBiblioWithItemsExpectation(ANOTHER_BIBLIO_ID, "03011527411001");

@@ -31,12 +31,16 @@ public class SearchResourceTest {
     @Mock
     private Response mockPersonSearchResponse;
 
+    @Mock
+    private Response mockPlaceOfPublicationSearchResponse;
+
     @Before
     public void setUp() throws Exception {
         searchResource = new SearchResource(mockSearchService);
         searchResource.getConfig();
         when(mockSearchService.searchWork(anyString())).thenReturn(mockWorkSearchResponse);
         when(mockSearchService.searchPerson(anyString())).thenReturn(mockPersonSearchResponse);
+        when(mockSearchService.searchPlaceOfPublication(anyString())).thenReturn(mockPlaceOfPublicationSearchResponse);
     }
 
     @Test
@@ -47,6 +51,11 @@ public class SearchResourceTest {
     @Test
     public void when_search_for_person_returns_person_search_response() throws Exception {
         Assert.assertSame(mockPersonSearchResponse, searchResource.search("person", "query"));
+    }
+
+    @Test
+    public void when_search_for_place_of_publication_returns_person_place_of_publication_response() throws Exception {
+        Assert.assertSame(mockPlaceOfPublicationSearchResponse, searchResource.search("placeOfPublication", "query"));
     }
 
     @Test

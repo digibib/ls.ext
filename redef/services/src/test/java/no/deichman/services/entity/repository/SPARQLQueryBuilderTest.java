@@ -213,6 +213,15 @@ public class SPARQLQueryBuilderTest {
         assertEquals("Bibliofil person resource query did not match", expected, sqb.getBibliofilPersonResource(personId).toString());
     }
 
+    @Test
+    public void test_get_bibliofil_place_of_publication_resource() {
+        String placeOfPublicationId = "n12345";
+        String expected = "SELECT  ?uri\n"
+                + "WHERE\n"
+                + "  { ?uri  <http://data.deichman.no/duo#bibliofilPlaceOfPublicationId>  \"" + placeOfPublicationId + "\" }\n";
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        assertEquals("Bibliofil place of publication resource query did not match", expected, sqb.getBibliofilPlaceOfPublicationResource(placeOfPublicationId).toString());
+    }
 
     @Test
     public void test_describe_publications_query(){

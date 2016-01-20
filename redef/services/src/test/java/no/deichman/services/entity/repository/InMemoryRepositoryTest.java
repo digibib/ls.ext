@@ -37,6 +37,9 @@ public class InMemoryRepositoryTest {
     public static final String PUBLICATION_ID = "test_id_12345";
     private static final BaseURI BASE_URI = BaseURI.local();
     private static final Property NAME = createProperty(BASE_URI.ontology("name"));
+    private static final String UNRECOGNISED_TYPE_ERROR = "The type wasn't recognised";
+    private static final String PERSON = "Person";
+    private static final String PLACE_OF_PUBLICATION = "PlaceOfPublication";
     private InMemoryRepository repository;
     private Statement workHasNameStmt;
     private Statement publHasANameStmt;
@@ -165,12 +168,59 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void test_get_resource_URI_by_Bibliofil_id() {
+    public void test_get_person_resource_URI_by_Bibliofil_id() {
         String personId = "n12345";
-        String importedPerson = "<#> <http://data.deichman.no/duo#bibliofilPersonId> \"" + personId + "\" .";
-        String person = repository.createPerson(RDFModelUtil.modelFrom(importedPerson, Lang.NTRIPLES));
-        Optional existingPerson = repository.getResourceURIByBibliofilId(personId);
-        assertEquals("Expected person ID to result in URI match", person, existingPerson.get());
+        String person = setUpBibliofilImportedTestNTriples(PERSON, personId);
+        Optional personExists = queryBibliofilResource(PERSON, personId);
+        assertEquals("Expected person ID to result in URI match", person, personExists.get());
+    }
+
+    @Test
+    public void test_get_place_of_publication_resource_URI_by_bibliofil_id() {
+        String placeOfPublicationId = "n12345";
+        String placeOfPublication = setUpBibliofilImportedTestNTriples(PERSON, placeOfPublicationId);
+        Optional personExists = queryBibliofilResource(PERSON, placeOfPublicationId);
+        assertEquals("Expected person ID to result in URI match", placeOfPublication, personExists.get());
+    }
+
+    private Optional queryBibliofilResource(String type, String identifier) {
+        Optional exists;
+        switch (type) {
+            case "Person": exists = repository.getResourceURIByBibliofilId(identifier);
+                break;
+            case "PlaceOfPublication": exists = repository.getPlaceOfPublicationResourceURIByBibliofilId(identifier);
+                break;
+            default: exists = Optional.of(UNRECOGNISED_TYPE_ERROR);
+                break;
+        }
+
+        if (exists.isPresent() && exists.get() == UNRECOGNISED_TYPE_ERROR) {
+            throw new Error(UNRECOGNISED_TYPE_ERROR);
+        }
+
+        return exists;
+    }
+
+    private String setUpBibliofilImportedTestNTriples(String type, String identifier) {
+        String testData = "<#> <http://data.deichman.no/duo#bibliofil" + type + "Id> \"" + identifier + "\" .";
+        Model model = RDFModelUtil.modelFrom(testData, Lang.NTRIPLES);
+
+        String retVal = null;
+
+        switch (type) {
+            case PERSON: retVal = repository.createPerson(model);
+                break;
+            case PLACE_OF_PUBLICATION: retVal = repository.createPlaceOfPublication(model);
+                break;
+            default: retVal = UNRECOGNISED_TYPE_ERROR;
+                break;
+        }
+
+        if (retVal == UNRECOGNISED_TYPE_ERROR) {
+            throw new Error(UNRECOGNISED_TYPE_ERROR);
+        }
+
+        return retVal;
     }
 
     public static InMemoryRepository repositoryWithDataFrom(String fileName) {

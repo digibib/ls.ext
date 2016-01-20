@@ -448,9 +448,18 @@ When(/^jeg vil legge til en person$/) do
   true
 end
 
+When(/^jeg vil lage et nytt utgivelsessted$/) do
+  true
+end
+
 When(/^leverer systemet en ny ID for den nye personen$/) do
   @context[:person_identifier] = @site.RegPerson.get_id()
   @context[:person_identifier].should_not be_empty
+end
+
+When(/^leverer systemet en ny ID for det nye utgivelsesstedet$/) do
+  @context[:ploce_of_publication_identifier] = @site.RegPlaceOfPublication.get_id()
+  @context[:ploce_of_publication_identifier].should_not be_empty
 end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
@@ -462,6 +471,13 @@ When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
 
   @context[:person_deathyear] = (1000 + rand(1015)).to_s
   @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#deathYear", @context[:person_deathyear])
+end
+
+When(/^jeg kan legge inn stedsnavn og land$/) do
+  @context[:place_of_publication] = generateRandomString
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#placeOfPublication", @context[:place_of_publication])
+  @context[:country_of_publication] = generateRandomString
+  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#countryOfPublication", @context[:country_of_publication])  
 end
 
 When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do

@@ -240,6 +240,9 @@ public final class EntityServiceImpl implements EntityService {
             case PERSON:
                 uri = repository.createPerson(inputModel);
                 break;
+            case PLACE_OF_PUBLICATION:
+                uri = repository.createPlaceOfPublication(inputModel);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
         }
@@ -433,7 +436,12 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
+
     public void retrieveAllWorkUris(String type, Consumer<String> uriConsumer) {
         repository.findAllUrisOfType(type, uriConsumer);
+    }
+    public Optional<String> retrieveBibliofilPlaceOfPublication(String bibliofilId) {
+        return repository.getPlaceOfPublicationResourceURIByBibliofilId(bibliofilId);
+
     }
 }

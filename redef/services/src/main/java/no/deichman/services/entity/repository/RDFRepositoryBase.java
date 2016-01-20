@@ -141,6 +141,19 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final String createPlaceOfPublication(Model inputModel) {
+        String type = "PlaceOfPublication";
+        inputModel.add(tempTypeStatement(type));
+        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
+
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
+
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
+        executeUpdate(updateRequest);
+        return uri;
+    }
+
+    @Override
     public final String createPublication(Model inputModel, String recordID) {
         String type = "Publication";
 
@@ -195,6 +208,19 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final Optional<String> getResourceURIByBibliofilId(String personId) {
         try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPersonResource(personId))) {
+            disableCompression(qexec);
+            ResultSet resultSet = qexec.execSelect();
+            boolean uri = resultSet.hasNext();
+            if (uri) {
+                return Optional.of(resultSet.next().getResource("uri").toString());
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public final Optional<String> getPlaceOfPublicationResourceURIByBibliofilId(String id) {
+        try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPlaceOfPublicationResource(id))) {
             disableCompression(qexec);
             ResultSet resultSet = qexec.execSelect();
             boolean uri = resultSet.hasNext();

@@ -12,10 +12,11 @@ import java.util.Map;
 public enum EntityType {
     WORK("work"),
     PUBLICATION("publication"),
-    PERSON("person");
+    PERSON("person"),
+    PLACE_OF_PUBLICATION("placeOfPublication");
 
     // must be handwritten because of stupid Java
-    public static final String ALL_TYPES_PATTERN = "(work|publication|person)";
+    public static final String ALL_TYPES_PATTERN = "(work|publication|person|placeOfPublication)";
 
     private final String path;
 

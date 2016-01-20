@@ -19,4 +19,10 @@ public interface SearchService {
     Response searchWorkWithJson(String json);
 
     Response clearIndex();
+
+    void indexPlaceOfPublication(String id);
+
+    Response searchPlaceOfPublicationWithJson(String json);
+
+    Response searchPlaceOfPublication(String query);
 }

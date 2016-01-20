@@ -9,6 +9,10 @@ import static org.junit.Assert.assertTrue;
 
 public class UniqueURIGeneratorTest {
 
+    public static final String PERSON_IDENTIFIER_REGEX = "h[0-9]+";
+    public static final String PUBLICATION_IDENTIFIER_REGEX = "p[0-9]+";
+    public static final String WORK_IDENTIFIER_REGEX = "w[0-9]+";
+    public static final String PLACE_OF_PUBLICATION_IDENTIFIER_REGEX = "g[0-9]+";
     private UniqueURIGenerator uriGenerator;
 
     @Before
@@ -21,6 +25,7 @@ public class UniqueURIGeneratorTest {
         String uri = uriGenerator.getNewURI("Work", s -> false);
         assertNotNull(uri);
         assertTrue(uri.contains("/work"));
+        assertTrue(getLastElementOfURI(uri).matches(WORK_IDENTIFIER_REGEX));
     }
 
     @Test
@@ -37,5 +42,26 @@ public class UniqueURIGeneratorTest {
         );
         assertNotNull(uri);
         assertTrue(uri.contains("/publication"));
+        assertTrue(getLastElementOfURI(uri).matches(PUBLICATION_IDENTIFIER_REGEX));
+    }
+
+    @Test
+    public void should_get_new_person_id() {
+        String uri = uriGenerator.getNewURI("Person", s -> false);
+        assertNotNull(uri);
+        assertTrue(uri.contains("/person"));
+        assertTrue(getLastElementOfURI(uri).matches(PERSON_IDENTIFIER_REGEX));
+    }
+
+    @Test
+    public void should_get_new_place_of_publication_id() {
+        String uri = uriGenerator.getNewURI("PlaceOfPublication", s -> false);
+        assertNotNull(uri);
+        assertTrue(uri.contains("/placeOfPublication"));
+        assertTrue(getLastElementOfURI(uri).matches(PLACE_OF_PUBLICATION_IDENTIFIER_REGEX));
+    }
+
+    private String getLastElementOfURI(String uri) {
+        return uri.substring(uri.lastIndexOf("/") + 1);
     }
 }

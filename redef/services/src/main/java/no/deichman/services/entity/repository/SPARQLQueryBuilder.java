@@ -202,6 +202,13 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
+    public Query getBibliofilPlaceOfPublicationResource(String id) {
+        String q = "SELECT ?uri "
+                + "WHERE "
+                + "  { ?uri <http://data.deichman.no/duo#bibliofilPlaceOfPublicationId> \"" + id + "\" }";
+        return QueryFactory.create(q);
+    }
+
     public Query describeWorksByCreator(String uri) {
         String q = String.format(""
                 + "PREFIX deichman: <%s>\n"

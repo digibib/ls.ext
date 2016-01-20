@@ -40,7 +40,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @GET
-    @Path("{type: work|person}/_search")
+    @Path("{type: work|person|placeOfPublication}/_search")
     @Produces(MediaType.APPLICATION_JSON)
     public final Response search(@PathParam("type") String type, @QueryParam("q") String query) {
         if (isBlank(query)) {
@@ -51,6 +51,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchWork(query);
             case "person":
                 return getSearchService().searchPerson(query);
+            case "placeOfPublication":
+                return getSearchService().searchPlaceOfPublication(query);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }

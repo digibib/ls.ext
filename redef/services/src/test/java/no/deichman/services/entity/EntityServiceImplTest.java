@@ -41,6 +41,7 @@ import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.PERSON;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
+import static no.deichman.services.entity.EntityType.PLACE_OF_PUBLICATION;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static no.deichman.services.rdf.RDFModelUtil.stringFrom;
@@ -73,6 +74,8 @@ public class EntityServiceImplTest {
     private String workURI;
     private String publicationURI;
     private String personURI;
+    private String placeOfPublicationURI;
+
     @Mock
     private KohaAdapter mockKohaAdapter;
 
@@ -99,6 +102,7 @@ public class EntityServiceImplTest {
         workURI = baseURI.work();
         publicationURI = baseURI.publication();
         personURI = baseURI.person();
+        placeOfPublicationURI = baseURI.placeOfPublication();
     }
 
     @Test
@@ -280,6 +284,21 @@ public class EntityServiceImplTest {
     }
 
     @Test
+    public void test_create_place_of_publication() {
+        String testId = "SERVICE_PLACE_OF_PUBLICATION_SHOULD_EXIST";
+        String placeOfPublication = getTestJSON(testId, "placeOfPublication");
+        Model inputModel = modelFrom(placeOfPublication, JSONLD);
+
+        final String uri = service.create(PLACE_OF_PUBLICATION, inputModel);
+
+        Statement s = createStatement(
+                createResource(uri),
+                createProperty(DCTerms.identifier.getURI()),
+                createPlainLiteral(testId));
+        assertTrue(repository.askIfStatementExists(s));
+    }
+
+    @Test
     public void test_create_publication_with_items() {
         MarcRecord marcRecord = new MarcRecord();
         String title = "Titely title";
@@ -445,6 +464,10 @@ public class EntityServiceImplTest {
             case "person":
                 resourceClass = "Person";
                 resourceURI = personURI;
+                break;
+            case "placeofpublication":
+                resourceClass = "PlaceOfPublication";
+                resourceURI = placeOfPublicationURI;
                 break;
             default:
                 break;

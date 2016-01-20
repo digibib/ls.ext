@@ -30,4 +30,6 @@ public interface EntityService {
     Model retrieveWorksByCreator(String creatorId);
 
     void retrieveAllWorkUris(String type, Consumer<String> uriConsumer);
+
+    Optional<String> retrieveBibliofilPlaceOfPublication(String bibliofilId);
 }
