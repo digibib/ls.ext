@@ -23,24 +23,24 @@ app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']));
 
 function newResource(type) {
   return axios.post(process.env.SERVICES_PORT + "/" + type, {}, {
-    headers: {
-      Accept: "application/ld+json",
-      "Content-Type": "application/ld+json"
-    }
-  })
-        .catch(function (response) {
-          if (response instanceof Error) {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', response.message);
-          } else {
-            // The request was made, but the server responded with a status code
-            // that falls out of the range of 2xx
-            console.log(response.data);
-            console.log(response.status);
-            console.log(response.headers);
-            console.log(response.config);
-          }
-        });
+      headers: {
+        Accept: "application/ld+json",
+        "Content-Type": "application/ld+json"
+      }
+    })
+    .catch(function (response) {
+      if (response instanceof Error) {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', response.message);
+      } else {
+        // The request was made, but the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(response.data);
+        console.log(response.status);
+        console.log(response.headers);
+        console.log(response.config);
+      }
+    });
 }
 
 app.get('/', function (res) {
@@ -63,83 +63,86 @@ app.get('/:type(person|work|publication)', function (req, res, next) {
 
 app.get('/config', function (request, response) {
   var config =
-    {
-      kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
-      kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
-      ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/ontology',
-      resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
-      tabs: [
-            {
-              id: "confirm-person",
-              rdfType: "Work",
-              label: "Bekreft person",
-              rdfProperties: [/* isbn later*/"creator"],
-              nextStep: {
-                buttonLabel: "Bekreft verk",
-                createNewResource: "Work"
-              }
-            },
-            {
-              id: "confirm-work",
-              rdfType: "Work",
-              label: "Bekreft verk",
-              rdfProperties: [
-                "mainTitle",
-                "subtitle",
-                "partTitle",
-                "partNumber"
-              ],
-              nextStep: {
-                buttonLabel: "Beskriv verket"
-              }
-            },
-            {
-              id: "describe-work",
-              rdfType: "Work",
-              label: "Beskriv verket",
-              rdfProperties: [
-                "publicationYear",
-                "language",
-                "literaryForm",
-                "audience",
-                "biography",
-                "adaptationOfWorkForParticularUserGroups"
-              ],
-              nextStep: {
-                buttonLabel: "Beskriv utgivelsen",
-                createNewResource: "Publication"
-              }
-            },
-            {
-              id: "describe-publication",
-              rdfType: "Publication",
-              label: "Beskriv utgivelsen",
-              rdfProperties: [
-                "mainTitle",
-                "subtitle",
-                "publicationYear",
-                "language",
-                "format",
-                "partTitle",
-                "partNumber",
-                "edition",
-                "numberOfPages",
-                "isbn",
-                "writingSystem",
-                "binding",
-                "illustrativeMatter",
-                "adaptationOfPublicationForParticularUserGroups"
-              ],
-              nextStep: {
-                buttonLabel: "Avslutt registrering av utgivelsen"
-              }
-            }
-        ]
-    };
+  {
+    kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
+    kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
+    ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/ontology',
+    resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
+    tabs: [
+      {
+        id: "confirm-person",
+        rdfType: "Work",
+        label: "Bekreft person",
+        rdfProperties: [/* isbn later*/"creator"],
+        nextStep: {
+          buttonLabel: "Bekreft verk",
+          createNewResource: "Work"
+        }
+      },
+      {
+        id: "confirm-work",
+        rdfType: "Work",
+        label: "Bekreft verk",
+        rdfProperties: [
+          "mainTitle",
+          "subtitle",
+          "partTitle",
+          "partNumber"
+        ],
+        nextStep: {
+          buttonLabel: "Beskriv verket"
+        }
+      },
+      {
+        id: "describe-work",
+        rdfType: "Work",
+        label: "Beskriv verket",
+        rdfProperties: [
+          "publicationYear",
+          "language",
+          "literaryForm",
+          "audience",
+          "biography",
+          "adaptationOfWorkForParticularUserGroups"
+        ],
+        nextStep: {
+          buttonLabel: "Beskriv utgivelsen",
+          createNewResource: "Publication"
+        }
+      },
+      {
+        id: "describe-publication",
+        rdfType: "Publication",
+        label: "Beskriv utgivelsen",
+        rdfProperties: [
+          "mainTitle",
+          "subtitle",
+          "publicationYear",
+          "language",
+          "format",
+          "partTitle",
+          "partNumber",
+          "edition",
+          "numberOfPages",
+          "isbn",
+          "writingSystem",
+          "binding",
+          "illustrativeMatter",
+          "adaptationOfPublicationForParticularUserGroups"
+        ],
+        nextStep: {
+          buttonLabel: "Avslutt registrering av utgivelsen"
+        }
+      }
+    ]
+  };
 
   response.json(config);
-})
-;
+});
+
+app.get('/version', function (request, response) {
+  response.json({'jenkinsId': process.env.JENKINSID, 'gitref': process.env.GITREF})
+});
 
 app.use("/style", compileSass({
   root: path.join(__dirname, '/../client/scss'),
@@ -182,7 +185,7 @@ app.use(function (err, req, res, next) {
 
 Server = app.listen(process.env.BIND_PORT || 8010, process.env.BIND_IP, function () {
   var host = Server.address().address,
-      port = Server.address().port;
+    port = Server.address().port;
   console.log('Catalinker server listening at http://%s:%s', host, port);
 });
 

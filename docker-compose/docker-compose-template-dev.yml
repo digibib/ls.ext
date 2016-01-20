@@ -97,6 +97,8 @@ catalinker:
     KOHA_OPAC_PORT: "http://${HOST}:8080"
     KOHA_INTRA_PORT: "http://${HOST}:8081"
     SERVICES_PORT: "http://${HOST}:8005"
+    GITREF: "${GITREF}"
+    JENKINSID: "${JENKINSID}"
 
 services:
   container_name: redef_services_container
@@ -113,6 +115,8 @@ services:
     -DTRIPLESTORE_PORT=http://${HOST}:${TRIPLESTORE_PORT} \
     -DELASTICSEARCH_URL=http://${HOST}:${ELASTICSEARCH_PORT} \
     -DDATA_BASEURI=${DATA_BASEURI}"
+    GITREF: "${GITREF}"
+    JENKINSID: "${JENKINSID}"
 
 patron-client:
   container_name: redef_patron_client_container
@@ -126,6 +130,8 @@ patron-client:
     - "8000:8000"
   environment:
     SERVICES_PORT: "http://${HOST}:${SERVICES_PORT}"
+    GITREF: "${GITREF}"
+    JENKINSID: "${JENKINSID}"
 
 overview:
   container_name: overview_container
@@ -143,6 +149,8 @@ overview:
     TRIPLESTORE_PORT: "${TRIPLESTORE_PORT}"
     ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT}"
     KOHA_VERSION: "${KOHA_IMAGE_TAG}"
+    GITREF: "${GITREF}"
+    JENKINSID: "${JENKINSID}"
 
 cuke_tests:
   container_name: cuke_tests

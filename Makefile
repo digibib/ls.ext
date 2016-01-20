@@ -38,7 +38,10 @@ provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and 
 
 ifdef GITREF
 PILLAR = "pillar={\"GITREF\": \"$(GITREF)\"}"
+else
+export GITREF=$(shell git rev-parse HEAD)
 endif
+
 provision_ship_highstate:                             ## Run state.highstate on $(SHIP)
 	vagrant ssh $(SHIP) -c 'sudo salt-call --retcode-passthrough --local state.highstate $(PILLAR)'
 
