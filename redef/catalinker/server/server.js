@@ -141,7 +141,7 @@ app.get('/config', function (request, response) {
 });
 
 app.get('/version', function (request, response) {
-  response.json({'jenkinsId': process.env.JENKINSID, 'gitref': process.env.GITREF})
+  response.json({'jenkinsId': process.env.JENKINSID, 'gitref': process.env.GITREF});
 });
 
 app.use("/style", compileSass({
