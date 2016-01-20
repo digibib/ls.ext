@@ -42,7 +42,7 @@ app.get('/work/:id', function (request, response) {
 });
 
 app.get('/version', function (request, response) {
-  response.json({'jenkinsId': process.env.JENKINSID, 'gitref': process.env.GITREF})
+  response.json({'jenkinsId': process.env.JENKINSID, 'gitref': process.env.GITREF});
 });
 
 Server = app.listen(process.env.BIND_PORT || 8000, process.env.BIND_IP, function () {
