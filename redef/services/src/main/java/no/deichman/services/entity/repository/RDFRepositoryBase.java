@@ -61,7 +61,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public Model retrievePlaceOfPublicationByURI(String uri) {
+    public final Model retrievePlaceOfPublicationByURI(String uri) {
         log.debug("Attempting to retrieve: <" + uri + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
             disableCompression(qexec);

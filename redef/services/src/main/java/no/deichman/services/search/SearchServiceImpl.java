@@ -184,7 +184,7 @@ public class SearchServiceImpl implements SearchService {
     public void indexPlaceOfPublication(String id) { doIndexPlaceOfPublication(id); }
 
     @Override
-    public Response searchPlaceOfPublicationWithJson(String json) {
+    public final Response searchPlaceOfPublicationWithJson(String json) {
         return searchWithJson(json, getPlaceOfPublicationUriBuilder());
     }
 
@@ -325,5 +325,7 @@ public class SearchServiceImpl implements SearchService {
         return getIndexUriBuilder().setPath("/search/person/_search");
     }
 
-    public URIBuilder getPlaceOfPublicationUriBuilder() { return getIndexUriBuilder().setPath("/search/placeOfPublication/_search"); }
+    public final URIBuilder getPlaceOfPublicationUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/placeOfPublication/_search");
+    }
 }

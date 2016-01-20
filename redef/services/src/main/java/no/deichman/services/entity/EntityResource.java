@@ -105,7 +105,9 @@ public final class EntityResource extends ResourceBase {
                 break;
             case "placeOfPublication":
                 Model placeOfPublicationModel = RDFModelUtil.modelFrom(body, lang);
-                NodeIterator placeOfPublicationNodes = placeOfPublicationModel.listObjectsOfProperty(ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofilPlaceOfPublicationId"));
+                NodeIterator placeOfPublicationNodes =
+                        placeOfPublicationModel.listObjectsOfProperty(
+                                ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofilPlaceOfPublicationId"));
                 List<RDFNode> placeOfPublicationNodeList = placeOfPublicationNodes.toList();
                 if (placeOfPublicationNodeList.size() > 1) {
                     message = Optional.of("Request with greater than one bibliofil place of publication authority ID per resource");
@@ -184,7 +186,7 @@ public final class EntityResource extends ResourceBase {
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
-        if (StringUtils.isBlank(jsonLd)){
+        if (StringUtils.isBlank(jsonLd)) {
             throw new BadRequestException("Empty json body");
         }
         EntityType entityType = EntityType.get(type);
