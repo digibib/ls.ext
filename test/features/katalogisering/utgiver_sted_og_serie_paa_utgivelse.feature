@@ -1,18 +1,16 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Legge til utgivelsesautoriteter på utgivelse
   Som katalogisator
   For å gjøre det mulig for brukere å se utgivelsesinformasjon
   Ønsker jeg å legge til utgiver, utgivelsessted og serie med nummerering på utgivelser
   
-  @wip
   Scenario: Opprettelse av et utgivelsessted
     Når jeg vil lage et nytt utgivelsessted
     Så leverer systemet en ny ID for det nye utgivelsesstedet
     Og jeg kan legge inn stedsnavn og land
-    Og grensesnittet viser at utgivelsesstedet er lagret
+    Og grensesnittet viser at endringene er lagret
 
   @wip
   Scenario: Legge til utgivelsessted i arbeidsflyt

@@ -82,11 +82,12 @@ module Paths
 
   def catalinker(path=nil)
     paths = {
-      :home => "/cataloguing",
-      :work => "/work",
-      :publication => "/publication",
-      :person => "/person",
-      :workflow => "/workflow"
+        :home => "/cataloguing",
+        :work => "/work",
+        :publication => "/publication",
+        :person => "/person",
+        :workflow => "/workflow",
+        :placeofpublication => "/placeOfPublication"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
