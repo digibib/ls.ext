@@ -81,21 +81,21 @@ FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
 rebuild_services:
-	@vagrant ssh dev-ship -c "cd /vagrant/redef/services && ./gradlew --no-daemon dockerBuildImage  && \
+	@vagrant ssh $(SHIP) -c "cd /vagrant/redef/services && ./gradlew --no-daemon dockerBuildImage  && \
 	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d --force-recreate services"
 
 rebuild_catalinker:
-	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up -d --force-recreate catalinker"
+	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up -d --force-recreate catalinker"
 
 restart_catalinker:
-	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose restart catalinker"
+	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose restart catalinker"
 
 rebuild_patron_client:
-	@vagrant ssh dev-ship -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up -d --force-recreate patron-client"
+	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up -d --force-recreate patron-client"
 
 cuke_test:
 	@$(XHOST_ADD)
-	vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
+	vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && \
 		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
@@ -104,7 +104,7 @@ cuke_test:
 
 test_one:                                              ## Run 'utlaan_via_adminbruker'.
 	@$(XHOST_ADD)
-	@vagrant ssh dev-ship -c 'cd /vagrant/docker-compose && sudo docker-compose run $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
+	@vagrant ssh $(SHIP) -c 'cd /vagrant/docker-compose && sudo docker-compose run $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
 	@$(XHOST_REMOVE)
 
 stop_koha:
@@ -153,7 +153,7 @@ test_redef: test_patron_client test_services test_catalinker cuke_redef
 
 cuke_redef:
 	@$(XHOST_ADD)
-	@vagrant ssh dev-ship -c "rm -rf /vagrant/test/report/*.* && \
+	@vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt \
