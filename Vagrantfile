@@ -70,7 +70,7 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder "salt", "/srv/salt"
     config.vm.synced_folder "pillar", "/srv/pillar"
 
-    if ENV['LSDEVMODE']
+    if ENV['LSDEVMODE'] == 'vm' || ENV['LSDEVMODE'] == 'dev'
       # sync node app source trees. Use NFS to enable instant reload
       if ENV['MOUNT_WITH_NFS']
         config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server", type: "nfs"
