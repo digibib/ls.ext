@@ -73,7 +73,13 @@
                 _.each(ractive.get("inputs"), function (input, inputIndex) {
                     if (type == unPrefix(input.domain)) {
                         var kp = "inputs." + inputIndex;
-                        var values = root.getAll(_.last(input.predicate.split("#")));
+                        var values = [];
+                        var authorizedValue = input.type === "select-authorized-value";
+                        if (authorizedValue) {
+                            values = root.outAll(_.last(input.predicate.split("#")));
+                        } else {
+                            values = root.getAll(_.last(input.predicate.split("#")));
+                        }
                         if (values.length > 0) {
                             var idx;
                             for (idx = 0; idx < values.length; idx++) {
@@ -83,7 +89,7 @@
                                         lang: ""
                                     },
                                     current: {
-                                        value: values[idx].value,
+                                        value: authorizedValue ? values[idx].id : values[idx].value,
                                         lang: values[idx].lang
                                     }
                                 });
