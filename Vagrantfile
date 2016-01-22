@@ -113,7 +113,9 @@ Vagrant.configure(2) do |config|
       config.vm.provision "shell", path: "redef/set_gradle_daemon.sh"
     end
 
-    config.vm.provision "shell", inline: "sudo JENKINSID=\"#{ENV['JENKINSID']}\" GITREF=\"#{ENV['GITREF']}\" /vagrant/docker-compose/docker-compose.sh"
+    config.vm.provision "shell", inline: "sudo JENKINSID=\"#{ENV['JENKINSID']}\" \
+      GITREF=\"#{ENV['GITREF']}\" LSDEVMODE=\"#{ENV['LSDEVMODE']}\" \
+      /vagrant/docker-compose/docker-compose.sh"
 
     config.vm.provision :salt do |salt|
       salt.bootstrap_options = "-F -c /tmp -P" # Vagrant Issues #6011, #6029

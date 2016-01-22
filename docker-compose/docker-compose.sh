@@ -9,5 +9,16 @@ if [ ! -f docker-compose.env ]; then
 fi
 
 source docker-compose.env
-envsubst < "docker-compose-template-dev.yml" > "docker-compose.yml"
-#docker-compose up -d
+
+echo "Provisioning docker-compose.yml template for ${LSDEVMODE} environment..."
+case "$LSDEVMODE" in
+	'build')
+	envsubst < "docker-compose-template-dev-CI.yml" > "docker-compose.yml"
+	;;
+	'prod')
+	envsubst < "docker-compose-template-prod.yml" > "docker-compose.yml"
+	;;
+	*)
+	envsubst < "docker-compose-template-dev.yml" > "docker-compose.yml"
+	;;
+esac
