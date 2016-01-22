@@ -95,6 +95,10 @@ rebuild_patron_client:
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
 	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up --force-recreate -d patron-client"
 
+rebuild_overview:
+	@echo "======= FORCE RECREATING OVERVIEW ======\n"
+	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build overview && sudo docker-compose up --force-recreate -d overview"
+
 cuke_test:
 	@$(XHOST_ADD)
 	vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
