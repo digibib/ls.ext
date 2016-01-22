@@ -85,13 +85,15 @@ rebuild_services:
 	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d --force-recreate services"
 
 rebuild_catalinker:
-	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up -d --force-recreate catalinker"
+	@echo "======= FORCE RECREATING CATALINKER ======\n"
+	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up --force-recreate -d catalinker"
 
 restart_catalinker:
 	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose restart catalinker"
 
 rebuild_patron_client:
-	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up -d --force-recreate patron-client"
+	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
+	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up --force-recreate -d patron-client"
 
 cuke_test:
 	@$(XHOST_ADD)
