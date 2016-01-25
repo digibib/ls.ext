@@ -13,11 +13,74 @@ driven by acceptance tests - using [Cucumber](http://cukes.info/). For
 browser automation we use [Watir WebDriver](http://watirwebdriver.com).
 
 This setup uses [Vagrant](http://www.vagrantup.com/) for local virtualisation
-and [SaltStack](http://docs.saltstack.com/) for automated provisioning.
+and [Docker Engine](https://www.docker.com/docker-engine) for Docker container orchestration.
+A minimal [SaltStack](http://docs.saltstack.com/) is used for provisioning, but is planned removed in the future.
 
 ## Usage
 
-For local setup and to run tests, we use a multi-machine vagrant setup (see [Illustration](#illustration)).
+For local setup and to run tests, we use a vagrant setup (see [Illustration](#illustration)).
+
+Docker containers are used both in development and in production.
+
+## Installation and Quickstart
+
+(for detailed installation, read [Installation](#Installation))
+
+Having installed all prerequisites, system cat be set up my:
+
+`make`:     Installs all, sets up and runs all tests (take a lunch break)
+
+Step-wise:
+
+```
+make up:        Starts Vagrant box
+make provision: Provisions box, downloads all code and dependencies, creates and starts containers
+make test:      Runs all tests
+make cuke_test  Run only feature tests
+```
+
+## Docker Compose
+
+Three environment setups:
+```
+dev:    template: docker-compose-template-dev.yml
+build:  template: docker-compose-template-dev-CI.yml
+prod:   template: docker-compose-template-prod-yml
+```
+
+Environment variables are used to provision templates according to base environment
+
+## Environments
+
+Develop:
+```
+export LSDEVMODE=dev
+
+* docker containers are built and run on demand:
+  - catalinker    (handled by docker-compose)
+  - patron-client (handled by docker-compose)
+  - overview      (handled by docker-compose)
+  - services      (handled by gradle)
+```
+
+Build:
+
+`export LSDEVMODE=build`
+
+Build process is handled by Jenkins CI.
+Docker containers are built, Unit Tests, Module Tests and Feature Tests are run.
+
+If success, docker images are pushed to Docker Registry using GITREF as tag
+
+Production:
+
+Deployment is setup in docker-compose-template-prod-yml, and the specified instance is deployed by Jenkins.
+
+GITREF is used to pull correct docker images of (services, catalinker and patron-client).
+
+KOHA_IMAGE_TAG is used to pull specified Koha build
+
+## Installation
 
 1. Install virtualbox and vagrant (and X11-server on OSX - for development):
     - Ubuntu:
@@ -79,12 +142,12 @@ The first step for creating a new feature is authoring a test, in this case a ve
 1. Open terminal
 2. Change directory to LS.ext by typing
 
-   ```
+```
 cd (foldername where you keep your projects)/LS.ext/test/features
 ```
 Then type
 
-    ```
+```
 git up
 ```
 
@@ -94,20 +157,20 @@ git up
    - start by adding a "Egenskap" that explains the feature in the simplest way
    - Then follows the typical "User story" format (with one change).
 
-      ```
+```
 Feature: Title of the feature
   As a (role)
   I want to (what you want to accomplish)
   So therefore I need (what you want to do)
 ```
 
-      It often makes for bad grammar, but helps us focus on what we want to achieve, rather than how we achieve it.
+It often makes for bad grammar, but helps us focus on what we want to achieve, rather than how we achieve it.
 
   - Then you add the Scenario description. Add @wip before the scenario to make sure the test is not run until the feature is done.
 
     Format:
 
-    ```
+```
   Scenario: Title of the scenario
     Gitt (condition og precondition)
     Og (another condition or precondition)
@@ -122,54 +185,35 @@ Feature: Title of the feature
 
 4. Return to the terminal to ensure the test is in proper format
 
-    ```
+```
 make test TESTPROFILE=wip
 ```
 
 5. Stay in the terminal to commit the changes to github
 
-    ```
+```
 git up
 ```
 
-    to check you have all the latest changes from github
+to check you have all the latest changes from github
 
-    ```
+```
 git status
 ```
 
-    to check the difference between your version and the master
+to check the difference between your version and the master
 
-    ```
+```
 git add (the filename(s) you want to push to github)
 ```
 
-    ```
+```
 git commit -m "free text description of the change (less than 50 characters)"
 ```
-    and finally
+and finally
 
-    ```
+```
 git push
-```
-
-### Monitoring of logs with devops, the logserver
-
-You can start the virtual machine devops (aka logserver) to monitor your logs. Devops has the following stack running:
-- logstash: to collect and process log events from logstash-forwarder installed on the servers, in our case vm-ext
-- elasticsearch: to store and index the log events
-- kibana: to present a web interface for searching and visualizing the logs
-
-
-To fire up the logserver, simply do
-```
-make up_devops
-```
-and point your favorite browser to [http://192.168.50.21](http://192.168.50.21)
-
-If you're _really_ lazy you can fire up firefox to see the logstash dashboard by doing:
-```
-make kibana
 ```
 
 ## Illustration

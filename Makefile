@@ -6,7 +6,7 @@ else
 SHIP=vm-ship
 endif
 
-all: cycle_ship test                       ## Run tests after (re)loading and (re)provisioning vagrant box.
+all: cycle_ship test                       		## Run tests after (re)loading and (re)provisioning vagrant box.
 
 cycle_ship: halt_ship up_ship provision
 
@@ -17,22 +17,22 @@ reload: halt up                                       ## Reload vagrant boxes.
 
 # halt + up is like a reload - except it should also work if there is no machine yet
 
-halt: halt_ship                             ## Halt boxes.
+halt: halt_ship						## Halt boxes.
 
 reload_ship: halt_ship up_ship                        ##
 
 halt_ship:                                            ##
 	vagrant halt $(SHIP)
 
-up: up_ship  				                          ## Start box.
+up: up_ship 						## Start box.
 
 up_ship:                                              ##
 	vagrant up $(SHIP)
 
-shell_provision_ship:                                 ## Run only shell provisioners
+shell_provision_ship:					## Run ONLY shell provisioners
 	vagrant provision $(SHIP) --provision-with shell
 
-provision:  shell_provision_ship provision_ship   ## Full provision
+provision:  shell_provision_ship provision_ship   	## Full provision
 
 provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
 
@@ -42,10 +42,10 @@ else
 export GITREF=$(shell git rev-parse HEAD)
 endif
 
-provision_ship_highstate:                             ## Run state.highstate on $(SHIP)
+provision_ship_highstate:				## Run state.highstate on $(SHIP)
 	vagrant ssh $(SHIP) -c 'sudo salt-call --retcode-passthrough --local state.highstate $(PILLAR)'
 
-wait_until_ready:                                     ## Checks if koha is up and running
+wait_until_ready:					## Checks if koha is up and running
 	vagrant ssh $(SHIP) -c 'sudo docker exec -t koha_container ./wait_until_ready.py'
 
 ifdef TESTPROFILE
@@ -68,7 +68,7 @@ ifdef FEATURE
 CUKE_ARGS=-n \"$(FEATURE)\"
 endif
 
-test: test_patron_client test_catalinker cuke_test     ## Run unit and cucumber tests.
+test: test_patron_client test_catalinker cuke_test	## Run unit and cucumber tests.
 
 ifdef CUKE_PROFILE_ARG
 CUKE_PROFILE=$(CUKE_PROFILE_ARG)
@@ -80,26 +80,26 @@ ifdef FAIL_FAST
 FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
-rebuild_services:
+rebuild_services:					## Force rebuilds services
 	@vagrant ssh $(SHIP) -c "cd /vagrant/redef/services && ./gradlew --no-daemon dockerBuildImage  && \
 	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d --force-recreate services"
 
-rebuild_catalinker:
+rebuild_catalinker:					## Force rebuilds catalinker
 	@echo "======= FORCE RECREATING CATALINKER ======\n"
 	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up --force-recreate -d catalinker"
 
-restart_catalinker:
+restart_catalinker:					## Restarts catalinker
 	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose restart catalinker"
 
-rebuild_patron_client:
+rebuild_patron_client:					## Force rebuilds patron-client
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
 	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up --force-recreate -d patron-client"
 
-rebuild_overview:
+rebuild_overview:					## Force rebuilds overview
 	@echo "======= FORCE RECREATING OVERVIEW ======\n"
 	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build overview && sudo docker-compose up --force-recreate -d overview"
 
-cuke_test:
+cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
 	vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
@@ -108,7 +108,7 @@ cuke_test:
 		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)'"
 	@$(XHOST_REMOVE)
 
-test_one:                                              ## Run 'utlaan_via_adminbruker'.
+test_one:						## Run 'utlaan_via_adminbruker'.
 	@$(XHOST_ADD)
 	@vagrant ssh $(SHIP) -c 'cd /vagrant/docker-compose && sudo docker-compose run $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
 	@$(XHOST_REMOVE)
@@ -133,18 +133,18 @@ delete_db: stop_ship
 wipe_db: delete_ship
 	vagrant ssh $(SHIP) -c 'sudo docker rm -v koha_mysql_data'
 
-clean: clean_report                          ## Destroy boxes (except $(SHIP)).
+clean: clean_report					## Destroy boxes (except $(SHIP)).
 
-clean_report:                                          ## Clean cucumber reports.
+clean_report:						## Clean cucumber reports.
 	rm -rf test/report || true
 
-clean_ship:                                            ## Destroy $(SHIP) box. Prompts for ok.
+clean_ship:						## Destroy $(SHIP) box. Prompts for ok.
 	vagrant destroy -f $(SHIP)
 
-dump_ship:                                             ## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
+dump_ship:						## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
 	vagrant ssh $(SHIP) -c 'sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host 192.168.50.12 --port 3306 --databases koha_name > /vagrant/koha_name_dump.sql'
 
-login_ship:                                            ## DEV: Login to database from vm-ext (standard admin.sls only)
+login_ship:						## DEV: Login to database from vm-ext (standard admin.sls only)
 	vagrant ssh $(SHIP) -c 'sudo mysql --user admin --password=secret --host 192.168.50.12 --port 3306'
 
 nsenter_koha:
@@ -155,9 +155,9 @@ mysql_client:
 
 # Commands for redef build & dev
 
-test_redef: test_patron_client test_services test_catalinker cuke_redef
+test_redef: test_patron_client test_services test_catalinker cuke_redef  ## Test only Redef
 
-cuke_redef:
+cuke_redef:						## Run only redef cucumber tests
 	@$(XHOST_ADD)
 	@vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
@@ -166,10 +166,10 @@ cuke_redef:
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)'"
 	@$(XHOST_REMOVE)
 
-test_patron_client:
+test_patron_client:					## Run unit and module tests of patron-client
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'
 
-test_services:
+test_services:						## Run unit and module tests of services
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make test'
 
 test_catalinker:
@@ -198,7 +198,6 @@ push:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make push TAG=$(TAG)'
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make push TAG=$(TAG)'
 
-
-docker_cleanup:
+docker_cleanup:						## Clean up unused docker containers and images
 	@echo "cleaning up unused containers and images"
 	@vagrant ssh $(SHIP) -c 'sudo /vagrant/redef/docker_cleanup.sh'
