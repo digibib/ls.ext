@@ -71,6 +71,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchWorkWithJson(body);
             case "person":
                 return getSearchService().searchPersonWithJson(body);
+            case "placeOfPublication":
+                return getSearchService().searchPlaceOfPublication(body);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
