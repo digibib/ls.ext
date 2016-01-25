@@ -65,6 +65,19 @@
                             resource = graph;
                         }
                         break;
+                    case "PlaceOfPublication":
+                        if (graph["@graph"]) {
+                            graph["@graph"].forEach(function (g) {
+                                if (g["@type"] === "deichman:PlaceOfPublication") {
+                                    resource = g;
+                                    resource["@context"] = graph["@context"];
+                                }
+                            });
+                        } else {
+                            resource = graph;
+                        }
+                        break;
+
                     default:
                         resource = graph;
                 }

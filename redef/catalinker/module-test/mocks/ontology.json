@@ -43,6 +43,20 @@
       ]
     },
     {
+      "@id": "deichman:PlaceOfPublication",
+      "@type": "rdfs:Class",
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Utgivelsessted"
+        },
+        {
+          "@language": "en",
+          "@value": "Place of publication"
+        }
+      ]
+    },
+    {
       "@id": "deichman:biblio",
       "@type": "rdfs:Property",
       "rdfs:domain": {
@@ -339,6 +353,46 @@
         {
           "@language": "en",
           "@value": "Title"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    {
+      "@id": "deichman:place",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:PlaceOfPublication"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Sted"
+        },
+        {
+          "@language": "en",
+          "@value": "Place"
+        }
+      ],
+      "rdfs:range": {
+        "@id": "http://www.w3.org/2001/XMLSchema#string"
+      }
+    },
+    {
+      "@id": "deichman:country",
+      "@type": "rdfs:Property",
+      "rdfs:domain": {
+        "@id": "deichman:PlaceOfPublication"
+      },
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Land"
+        },
+        {
+          "@language": "en",
+          "@value": "Country"
         }
       ],
       "rdfs:range": {

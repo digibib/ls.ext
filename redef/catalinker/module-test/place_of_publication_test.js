@@ -46,8 +46,8 @@ describe("Catalinker", function () {
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
         case "http://192.168.50.12:7000/authorized_values/nationality":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_nationality.json", "UTF-8") });
-        case "http://192.168.50.12:7000/person/h123456":
-          return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/h123456.json", "UTF-8") });
+        case "http://192.168.50.12:7000/placeOfPublication/g123456":
+          return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/g123456.json", "UTF-8") });
         }
       });
       // Stub creating new resource
@@ -101,8 +101,8 @@ describe("Catalinker", function () {
 
     describe("Eksisterende utgivelsessted", function () {
       it("populerer felt riktig", function (done) {
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#placename_0"]')[0].value).to.equal("Oslo");
         expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#country_0"]')[0].value).to.equal("Norge");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#place_0"]')[0].value).to.equal("Oslo");
         done();
       });
     });
