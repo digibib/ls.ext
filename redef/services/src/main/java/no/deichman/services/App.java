@@ -9,6 +9,7 @@ import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
+import no.deichman.services.version.VersionResource;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -34,12 +35,12 @@ import static java.util.Arrays.asList;
  * Responsibility: Start application (using embedded web server).
  */
 public final class App {
+    public static final int JAMON_WEBAPP_PORT = 8006;
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
     private static final int SERVICES_PORT_NO = 8005;
-    public static final int JAMON_WEBAPP_PORT = 8006;
+    private final int port;
     private Server jettyServer;
     private Server jamonJettyServer;
-    private final int port;
     private String kohaPort;
     private boolean inMemoryRDFRepository;
     private int jamonAppPort;
@@ -50,6 +51,16 @@ public final class App {
         this.kohaPort = kohaPort;
         this.inMemoryRDFRepository = inMemoryRDFRepository;
         this.jamonAppPort = jamonAppPort;
+    }
+
+    public static void main(String[] args) {
+        App app = new App(SERVICES_PORT_NO, null, false, JAMON_WEBAPP_PORT);
+        try {
+            app.startSync();
+        } catch (Exception e) {
+            LOG.error("App failed to startSync:");
+            e.printStackTrace(System.err);
+        }
     }
 
     private void startSync() throws Exception {
@@ -117,7 +128,8 @@ public final class App {
                         SearchResource.class.getCanonicalName(),
                         AuthorizedValuesResource.class.getCanonicalName(),
                         MarcResource.class.getCanonicalName(),
-                        CORSResponseFilter.class.getCanonicalName()
+                        CORSResponseFilter.class.getCanonicalName(),
+                        VersionResource.class.getCanonicalName()
                 )));
 
         jettyServer.start();
@@ -157,16 +169,6 @@ public final class App {
             jettyServer.stop();
         } finally {
             jettyServer.destroy();
-        }
-    }
-
-    public static void main(String[] args) {
-        App app = new App(SERVICES_PORT_NO, null, false, JAMON_WEBAPP_PORT);
-        try {
-            app.startSync();
-        } catch (Exception e) {
-            LOG.error("App failed to startSync:");
-            e.printStackTrace(System.err);
         }
     }
 

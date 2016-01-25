@@ -1,17 +1,56 @@
 <html>
-<div>Catalinker - metadataregistrering med lenkede data</div>
+<script src="/js/bundle.js"></script>
+<script>
+    $ = require('jquery');
+    $(document).ready(function () {
+        $.ajax({
+            dataType: 'json',
+            url: '/version',
+            success: function (data) {
+                $('#catalinker-gitref').text(data.gitref);
+                $('#catalinker-jenkinsid').text(data.jenkinsId);
+            },
+            error: function () {
+                $('#catalinker-gitref').text('Error retrieving GITREF');
+                $('#catalinker-jenkinsid').text('Error retrieving Jenkins ID');
+            }
+        });
+
+        $.ajax({
+            dataType: 'json',
+            url: 'http://192.168.50.12:8005/version',
+            success: function (data) {
+                $('#services-gitref').text(data.gitref);
+                $('#services-jenkinsid').text(data.jenkinsId);
+            },
+            error: function () {
+                $('#services-gitref').text('Error retrieving GITREF');
+                $('#services-jenkinsid').text('Error retrieving Jenkins ID');
+            }
+        });
+    });
+
+</script>
+<h2>Catalinker - metadataregistrering med lenkede data</h2>
 <ul>
-	<li>
-      <a href='person'>Registrere person</a>
-  </li>
-  <li>
-  	<a href='work'>Registrere verk</a>
-   </li>
-   <li>
-   	<a href='publication'>Registrere utgivelse</a>
-   </li>
-   <li>
-   	<a href='workflow'>Arbeidsflyt</a>
-   </li>
+    <li>
+        <a href='person'>Registrere person</a>
+    </li>
+    <li>
+        <a href='work'>Registrere verk</a>
+    </li>
+    <li>
+        <a href='publication'>Registrere utgivelse</a>
+    </li>
+    <li>
+        <a href='workflow'>Arbeidsflyt</a>
+    </li>
 </ul>
+<h3>Catalinker versjonsinfo:</h3>
+<p>GITREF: <span id="catalinker-gitref"></span></p>
+<p>Jenkins ID: <span id="catalinker-jenkinsid"></span></p>
+<h3>Services versjonsinfo:</h3>
+<p>GITREF: <span id="services-gitref"></span></p>
+<p>Jenkins ID: <span id="services-jenkinsid"></span></p>
+</div>
 </html>
