@@ -39,11 +39,28 @@ Before do |scenario|
   end
 end
 
+# Set language to English during testing, use global var to avvoid running before each scenario
+Before do
+  $testingLanguageSwitch ||= false
+  unless $testingLanguageSwitch
+    step "at jeg er logget inn som adminbruker"
+    SVC::Preference.new(@browser).set("pref_language", "en")
+    SVC::Preference.new(@browser).set("pref_opaclanguages", "en")
+    $testingLanguageSwitch = true
+  end
+end
+
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
 After do |scenario| # The final hook
   @site = nil
   @browser.close if @browser
+end
+
+# Reset to Norwegian after all tests are run
+at_exit do
+  SVC::Preference.new(@browser).set("pref_language", "nb-NO")
+  SVC::Preference.new(@browser).set("pref_opaclanguages", "nb-NO")
 end
 
 AfterStep('@check-for-errors') do |scenario|

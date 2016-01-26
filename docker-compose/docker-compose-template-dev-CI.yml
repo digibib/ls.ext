@@ -10,6 +10,7 @@ koha:
     KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
     KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
     KOHA_INSTANCE: "$KOHA_INSTANCE"
+    DEFAULT_LANGUAGE: nb-NO
   links:
     - koha_mysql:db
   ports:
