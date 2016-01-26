@@ -50,18 +50,18 @@ Before do
   end
 end
 
-#  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
-
-After do |scenario| # The final hook
-  @site = nil
+# After all test are run
+at_exit do
+  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+  Site.new(@browser).Login.visit.login(ENV['KOHA_ADMINUSER'], ENV['KOHA_ADMINPASS'])
+  # Reset to Norwegian after all tests are run
+  SVC::Preference.new(@browser).set("pref_language", "nb-NO")
+  SVC::Preference.new(@browser).set("pref_opaclanguages", "nb-NO")
+  $testingLanguageSwitch = false
   @browser.close if @browser
 end
 
-# Reset to Norwegian after all tests are run
-at_exit do
-  SVC::Preference.new(@browser).set("pref_language", "nb-NO")
-  SVC::Preference.new(@browser).set("pref_opaclanguages", "nb-NO")
-end
+#  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
 
 AfterStep('@check-for-errors') do |scenario|
   sleep 0.1
