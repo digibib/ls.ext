@@ -171,7 +171,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @DELETE
-    @Path("/{id: (p|w|h)[a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w|h|g)[a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
         if (model.isEmpty()) {
