@@ -117,17 +117,17 @@ app.get('/config', function (request, response) {
         rdfProperties: [
           "mainTitle",
           "subtitle",
-          "publicationYear",
-          "language",
-          "format",
           "partTitle",
           "partNumber",
           "edition",
+          "publicationYear",
           "numberOfPages",
-          "isbn",
-          "writingSystem",
-          "binding",
           "illustrativeMatter",
+          "isbn",
+          "binding",
+          "language",
+          "format",
+          "writingSystem",
           "adaptationOfPublicationForParticularUserGroups"
         ],
         nextStep: {
