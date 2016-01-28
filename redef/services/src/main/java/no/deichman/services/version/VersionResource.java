@@ -13,7 +13,7 @@ import java.util.Optional;
 import static no.deichman.services.restutils.MimeType.JSON;
 
 /**
- * Responsibility: Return GITREF and Jenkins ID (if available)
+ * Responsibility: Return GITREF and Jenkins ID (if available).
  */
 @Singleton
 @Path("version")
