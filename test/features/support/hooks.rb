@@ -32,11 +32,9 @@ Before do
 end
 
 Before do |scenario|
-  if !scenario.source_tag_names.include?("@no-browser")
-    @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-    @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
-    @site = @site || Site.new(@browser)
-  end
+  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+  @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
+  @site = @site || Site.new(@browser)
 end
 
 # Set language to English during testing, use global var to avvoid running before each scenario
@@ -74,6 +72,10 @@ end
 
 def title_of(scenario)
   (defined? scenario.name) ? scenario.name : scenario.scenario_outline.name
+end
+
+After do |scenario|
+  @browser.close if @browser
 end
 
 After do |scenario| # cleanup based on @cleanup - in reverse order

@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@redef @no-browser
+@redef
 Egenskap: Legge til og endre utgivelse via API
   Som katalogiseringsgrensesnitt
   For å kunne hjelpe katalogisator med å katalogisere
