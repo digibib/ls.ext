@@ -385,6 +385,23 @@
                                     return _.first(publicationIdInput.values).current.value;
                                 }
                             },
+                            inPreferredLanguage: function(text) {
+                                if (typeof text === 'string') {
+                                    return text;
+                                } else {
+                                    var preferredTexts = _.compact([
+                                        _.find(text, function (lang) {
+                                            return lang === "nb";
+                                        }), _.find(text, function (lang) {
+                                            return lang === "nn";
+                                        }), _.find(text, function (lang) {
+                                            return lang === "default";
+                                        }), _.find(text, function (lang) {
+                                            return true;
+                                        })]);
+                                    return _.first(preferredTexts);
+                                }
+                            },
                             targetResources: {
                                 Work: {
                                     uri: "",

@@ -27,7 +27,7 @@
           </div>
 
           <div class="column fourth result-info">
-            <p><strong><span data-automation-id="work-title">{{mainTitle}}</span></strong></p>
+            <p><strong><span data-automation-id="work-title">{{inPreferredLanguage(mainTitle)}}{{#partTitle}} — {{inPreferredLanguage(partTitle)}}{{/}}</span></strong></p>
             <p>Forfatter: <strong>{{#creator}}<a href="{{personUrl(.)}}">{{name}}</a>{{/creator}}</strong></p>
             <p>Utgitt første gang: <strong>{{publicationYear}}</strong></p>
             <p class="green">Ledig (? eks.)</p>

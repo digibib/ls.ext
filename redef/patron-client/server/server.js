@@ -8,6 +8,7 @@ var express = require('express'),
     url = require('url'),
     app = express(),
     browserify = require('browserify-middleware'),
+    _ = require('underscore'),
     Server;
 
 browserify.settings.development("basedir",  "./");

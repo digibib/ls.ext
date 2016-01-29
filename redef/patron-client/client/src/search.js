@@ -6,11 +6,12 @@
 
     var axios = require("axios");
     var url = require("url");
-    module.exports = factory(Ractive, axios, url);
+    var _ = require("underscore");
+    module.exports = factory(Ractive, axios, url, _);
   } else {
-    root.Search = factory(root.Ractive, root.axios, root.url);
+    root.Search = factory(root.Ractive, root.axios, root.url, root._);
   }
-}(this, function (Ractive, axios, url) {
+}(this, function (Ractive, axios, url, _) {
   "use strict";
   Ractive.DEBUG = false;
 
@@ -42,6 +43,23 @@
             },
             personUrl: function (person) {
                 return '/person/' + url.parse(person.uri).path.split('/').pop();
+            },
+            inPreferredLanguage: function(text) {
+              if (typeof text === 'string') {
+                return text;
+              } else {
+                var preferredTexts = _.compact([
+                  _.find(text, function (lang) {
+                    return lang === "nb";
+                  }), _.find(text, function (lang) {
+                    return lang === "nn";
+                  }), _.find(text, function (lang) {
+                    return lang === "default";
+                  }), _.find(text, function (lang) {
+                    return true;
+                  })]);
+                return _.first(preferredTexts);
+              }
             }
           }
         });

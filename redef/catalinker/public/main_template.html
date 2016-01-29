@@ -121,12 +121,17 @@
                 <div class="work-items pure-u-1">
                     {{#work}}
                     <div class="search-result-subitem pure-g">
-                        <span class="search-result-work-name pure-u-18-24">{{mainTitle}}</span>
-                        <span class="search-result-work-year pure-u-4-24">{{#publicationYear}}{{publicationYear}}{{/publicationYear}}</span>
-                    <span class="search-result-work-selector pure-u-2-24">
-                        <input class="select-work-radio" type="radio" checked="{{isChecked}}"
-                               on-click="setResourceAndWorkResource:{{../../../person}},{{predicate}},{{origin}},'Person'"/>
-                    </span>
+                        <div class="work-name pure-u-22-24">
+                            <span class="pure-u-23-24">{{inPreferredLanguage(mainTitle)}}</span>
+                            {{#partTitle}}
+                            <span class="pure-u-1-24"/>
+                            <span class="part-name pure-u-21-22">{{inPreferredLanguage(partTitle)}}</span>
+                            {{/}}
+                        </div>
+                            <span class="search-result-work-selector pure-u-2-24">
+                            <input class="select-work-radio" type="radio" checked="{{isChecked}}"
+                                   on-click="setResourceAndWorkResource:{{../../../person}},{{predicate}},{{origin}},'Person'"/>
+                        </span>
                     </div>
                     {{/work}}
                 </div>

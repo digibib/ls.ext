@@ -31,18 +31,6 @@
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
-:mainTitle a rdfs:Property ;
-  rdfs:label "Main title"@en ;
-  rdfs:label "Hovedtittel"@no ;
-  rdfs:domain :Work, :Publication ;
-  rdfs:range xsd:string .
-
-:subtitle a rdfs:Property ;
-  rdfs:label "Subtitle"@en ;
-  rdfs:label "Undertittel"@no ;
-  rdfs:domain :Publication, :Work ;
-  rdfs:range xsd:string .
-
 :creator a rdfs:Property ;
   ui:searchable true ;
   rdfs:label "Creator"@en ;
@@ -129,9 +117,33 @@
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
+:mainTitle a rdfs:Property ;
+  rdfs:label "Main title"@en ;
+  rdfs:label "Hovedtittel"@no ;
+  rdfs:domain :Work, :Publication ;
+  rdfs:range xsd:string .
+
+:originalTitle a rdfs:Property ;
+  rdfs:label "Original title"@en ;
+  rdfs:label "Originaltittel"@no ;
+  rdfs:domain :Work, :Publication ;
+  rdfs:range xsd:string .
+
 :partTitle a rdfs:Property ;
   rdfs:label "Part title"@no ;
   rdfs:label "Deltittel"@no ;
+  rdfs:domain :Publication, :Work ;
+  rdfs:range xsd:string .
+
+:originalPartTitle a rdfs:Property ;
+  rdfs:label "Original part title"@no ;
+  rdfs:label "Original deltittel"@no ;
+  rdfs:domain :Publication, :Work ;
+  rdfs:range xsd:string .
+
+:subtitle a rdfs:Property ;
+  rdfs:label "Subtitle"@en ;
+  rdfs:label "Undertittel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
