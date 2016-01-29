@@ -75,7 +75,7 @@ public class AuthorizedValuesResourceTest {
 
     @Test
     public void should_actually_return_some_literaryForm_data() throws Exception {
-        Object body = authorizedValuesResource.getValueRange("literaryFormXXX").getEntity();
+        Object body = authorizedValuesResource.getValueRange("literaryForm").getEntity();
         Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
         boolean hasNovel = model.contains(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://data.deichman.no/literaryForm#novel"),
@@ -90,7 +90,7 @@ public class AuthorizedValuesResourceTest {
         Object body = authorizedValuesResource.getValueRange("audience").getEntity();
         Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
         boolean hasAdults = model.contains(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://data.deichman.no/audience#adults"),
+                ResourceFactory.createResource("http://data.deichman.no/audience#adult"),
                 RDFS.label,
                 ResourceFactory.createLangLiteral("Voksne", "no")
         ));
@@ -126,9 +126,9 @@ public class AuthorizedValuesResourceTest {
         Object body = authorizedValuesResource.getValueRange("adaptationOfWorkForParticularUserGroups").getEntity();
         Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
         boolean hasEasyLanguage = model.contains(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://data.deichman.no/adaptationOfWorkForParticularUserGroups#easyLanguage"),
+                ResourceFactory.createResource("http://data.deichman.no/adaptationOfWorkForParticularUserGroups#easyContent"),
                 RDFS.label,
-                ResourceFactory.createLangLiteral("Lettlest, enkelt språk", "no")
+                ResourceFactory.createLangLiteral("Lettlest, enkelt innhold", "no")
         ));
         assertTrue("model doesn't have Easy language", hasEasyLanguage);
     }
