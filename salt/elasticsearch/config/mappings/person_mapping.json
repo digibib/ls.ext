@@ -1,0 +1,68 @@
+{
+  "dynamic_templates": [
+    {
+      "workTitle_template": {
+        "path_match": "person.work.mainTitle.*",
+        "mapping": {
+          "type": "string",
+          "index": "no"
+        }
+      }
+    },
+    {
+      "partTitle_template": {
+        "path_match": "person.work.partTitle.*",
+        "mapping": {
+          "type": "string",
+          "index": "no"
+        }
+      }
+    }
+  ],
+  "properties": {
+    "person": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "birthYear": {
+          "type": "string",
+          "index": "no"
+        },
+        "deathYear": {
+          "type": "string",
+          "index": "no"
+        },
+        "nationality": {
+          "type": "string",
+          "index": "no"
+        },
+        "uri": {
+          "type": "string",
+          "index": "no"
+        },
+        "work": {
+          "type": "nested",
+          "properties": {
+            "uri": {
+              "type": "string",
+              "index": "no"
+            },
+            "originalTitle": {
+              "type": "string",
+              "index": "no"
+            },
+            "originalPartTitle": {
+              "type": "string",
+              "index": "no"
+            },
+            "publicationYear": {
+              "type": "string",
+              "index": "no"
+            }
+          }
+        }
+      }
+    }
+  }
+}

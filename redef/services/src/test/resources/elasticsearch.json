@@ -27,6 +27,15 @@
             "mainTitle": {
               "type": "string"
             },
+            "partTitle": {
+              "type": "string"
+            },
+            "originalTitle": {
+              "type": "string"
+            },
+            "originalPartTitle": {
+              "type": "string"
+            },
             "uri": {
               "type": "string",
               "index": "no"
@@ -69,6 +78,18 @@
             "index": "no"
           },
           "mainTitle": {
+            "type": "string",
+            "index": "no"
+          },
+          "partTitle": {
+            "type": "string",
+            "index": "no"
+          },
+          "originalTitle": {
+            "type": "string",
+            "index": "no"
+          },
+          "originalPartTitle": {
             "type": "string",
             "index": "no"
           },

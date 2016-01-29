@@ -46,7 +46,7 @@ public final class App {
     private int jamonAppPort;
     private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://localhost:9200");
 
-    App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort) {
+    public App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort) {
         this.port = port;
         this.kohaPort = kohaPort;
         this.inMemoryRDFRepository = inMemoryRDFRepository;
@@ -72,7 +72,7 @@ public final class App {
         }
     }
 
-    void startAsync() throws Exception {
+    public void startAsync() throws Exception {
         setUpMainWebApp();
         setUpJamonWebApp();
     }
@@ -163,7 +163,7 @@ public final class App {
         jettyServer.join();
     }
 
-    void stop() throws Exception {
+    public void stop() throws Exception {
         LOG.info("Stopping App on port: " + port);
         try {
             jettyServer.stop();

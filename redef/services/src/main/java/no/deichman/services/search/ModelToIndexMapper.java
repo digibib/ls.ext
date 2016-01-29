@@ -2,7 +2,10 @@ package no.deichman.services.search;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.collections4.map.ListOrderedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.jena.ext.com.google.common.collect.ImmutableMap;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -12,7 +15,6 @@ import org.apache.jena.rdf.model.AnonId;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.RDFVisitor;
 import org.apache.jena.rdf.model.Resource;
 
 import java.util.ArrayList;
@@ -20,22 +22,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
+import static no.deichman.services.uridefaults.BaseURI.remote;
 
 /**
  * Responsibility: Map between RDF models and index documents.
  */
 public final class ModelToIndexMapper {
+    public static final String LANGUAGE_AWARE_POSTFIX = "#__lang__";
+    private final String groupConcatConcatenator;
     private String type;
     private final String query;
     private final Map<String, String> resultVarToJsonPaths;
     private String groupingResultVariable;
+    public static final Pattern VALUE_WITH_LANGUAGE_TAG_PATTERN = Pattern.compile("^(.+)@(.+)$");
 
-    private static final RDFVisitor RDF_VISITOR = new RDFVisitor() {
+    /**
+     * Responsibility: provide an impelemntation of RDFVisitor to extract data from RDF nodes.
+     */
+    private abstract static class RDFVisitor implements org.apache.jena.rdf.model.RDFVisitor {
         @Override
         public Object visitBlank(Resource r, AnonId id) {
             return null;
@@ -45,20 +56,30 @@ public final class ModelToIndexMapper {
         public Object visitURI(Resource r, String uri) {
             return uri;
         }
+    }
 
+    private static final RDFVisitor RDF_VALUE_VISITOR = new RDFVisitor() {
         @Override
         public Object visitLiteral(Literal l) {
             return l.getString();
         }
     };
 
+    private static final RDFVisitor RDF_LANGUAGE_VISITOR = new RDFVisitor() {
+        @Override
+        public Object visitLiteral(Literal l) {
+            return l.getLanguage();
+        }
+    };
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private ModelToIndexMapper(String type, String query, Map<String, String> resultVarToJsonPaths, String groupingResultVariable) {
+    private ModelToIndexMapper(String type, String query, Map<String, String> resultVarToJsonPaths, String groupingResultVariable, String groupConcatConcatenator) {
         this.type = type;
         this.query = query;
         this.resultVarToJsonPaths = resultVarToJsonPaths;
         this.groupingResultVariable = groupingResultVariable;
+        this.groupConcatConcatenator = groupConcatConcatenator;
     }
 
     public Optional<Pair<String, String>> modelToIndexDocument(Model model) {
@@ -71,14 +92,51 @@ public final class ModelToIndexMapper {
                 QuerySolution querySolution = resultSet.nextSolution();
                 id = querySolution.get(type).asNode().getURI();
                 resultVarToJsonPaths
-                        .forEach((resultVar, nestedElementName) ->
-                                ofNullable(querySolution.get(resultVar))
-                                        .ifPresent(node ->
-                                                putValue(result, nestedElementName, valueOf(node), resultVar.equals(groupingResultVariable))));
+                        .forEach((resultVar, nestedElementName) -> {
+                            ofNullable(querySolution.get(resultVar))
+                                    .ifPresent(node -> {
+                                        String nodeValue = valueOf(node);
+                                        if (nestedElementName.endsWith(LANGUAGE_AWARE_POSTFIX)) {
+                                            nodeValue = nodeValue.replaceAll("@$", "@default");
+                                        }
+                                        if (!nodeValue.isEmpty()) {
+                                            putValue(result, nestedElementName, nodeValue, resultVar.equals(groupingResultVariable));
+                                        }
+                                    });
+                        });
             }
+            expandLanguageLeafs(result);
             return of(Pair.of(id, GSON.toJson(result)));
         } else {
             return empty();
+        }
+    }
+
+    private void expandLanguageLeafs(Map<Object, Object> result) {
+        for (Map.Entry<Object, Object> entry : result.entrySet()) {
+            Object entryValue = entry.getValue();
+            if (entryValue instanceof Map) {
+                ModelToIndexMapper.this.expandLanguageLeafs((Map<Object, Object>) entryValue);
+            } else if (entryValue instanceof List) {
+                for (Object next : ((List) entryValue)) {
+                    if (next instanceof Map) {
+                        expandLanguageLeafs((Map<Object, Object>) next);
+                    }
+                }
+            } else {
+                for (String leafValue : StringUtils.split(entryValue.toString(), groupConcatConcatenator)) {
+                    Matcher matcher = VALUE_WITH_LANGUAGE_TAG_PATTERN.matcher(leafValue);
+                    if (matcher.matches()) {
+                        String text = matcher.group(1);
+                        String language = matcher.group(2);
+                        if (entry.getValue() instanceof Map) {
+                            ((Map) entry.getValue()).put(language, text);
+                        } else {
+                            entry.setValue(newHashMap(ImmutableMap.of(language, text)));
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -89,19 +147,19 @@ public final class ModelToIndexMapper {
             if (!result.containsKey(normalised(thisPathElement))) {
                 result.put(normalised(thisPathElement), isArrayElement(thisPathElement) ? new ArrayList() : newHashMap());
             }
-            if (isLeafGroupMember(thisPathElement)){
+            if (isLeafGroupMember(thisPathElement)) {
                 List list = (List) result.get(normalised(thisPathElement));
                 if (resetGroup) {
                     list.add(newHashMap());
                 }
-                putValue((Map<Object, Object>) list.get(list.size()-1), path.substring(dotPosition + 2), value, resetGroup);
+                putValue((Map<Object, Object>) list.get(list.size() - 1), path.substring(dotPosition + 2), value, resetGroup);
             } else {
                 if (isArrayElement(thisPathElement)) {
                     List list = (List) result.get(normalised(thisPathElement));
-                    if (resetGroup) {
+                    if (resetGroup || list.isEmpty()) {
                         list.add(newHashMap());
                     }
-                    putValue((Map<Object, Object>) ((List) result.get(normalised(thisPathElement))).get(list.size()-1), path.substring(dotPosition + 1), value, resetGroup);
+                    putValue((Map<Object, Object>) ((List) result.get(normalised(thisPathElement))).get(list.size() - 1), path.substring(dotPosition + 1), value, resetGroup);
                 } else {
                     putValue((Map<Object, Object>) result.get(normalised(thisPathElement)), path.substring(dotPosition + 1), value, resetGroup);
                 }
@@ -120,7 +178,7 @@ public final class ModelToIndexMapper {
     }
 
     private static String normalised(String thisPathElement) {
-        return thisPathElement.replace("#", "");
+        return thisPathElement.replace("#__lang__", "").replace("#", "");
     }
 
     private static boolean lastElementOfPath(int dotPosition) {
@@ -128,19 +186,25 @@ public final class ModelToIndexMapper {
     }
 
     private static String valueOf(RDFNode node) {
-        return node.visitWith(RDF_VISITOR).toString();
+        return node.visitWith(RDF_VALUE_VISITOR).toString();
+    }
+
+    private static String languageOf(RDFNode node) {
+        return node.visitWith(RDF_LANGUAGE_VISITOR).toString();
     }
 
     /**
      * Responsibility: Provide an easy to use builder that makes client code more easy to read.
      */
     public static final class ModelToIndexMapperBuilder {
+        private String ontologyPrefix = remote().ontology();
         private String type;
         private String query;
         private String resultVar;
-        private Map<String, String> resultVarToJsonPaths = new HashMap<>();
+        private Map<String, String> resultVarToJsonPaths = new ListOrderedMap<>();
         private String groupingResultVariable;
         private String arrayPath;
+        private String groupConcatConcatenator = "|";
 
         private ModelToIndexMapperBuilder() {
         }
@@ -197,7 +261,7 @@ public final class ModelToIndexMapper {
             if (query == null) {
                 throw new IllegalArgumentException("Missing select query");
             }
-            return new ModelToIndexMapper(type, query, resultVarToJsonPaths, groupingResultVariable);
+            return new ModelToIndexMapper(type, String.format(query, ontologyPrefix), resultVarToJsonPaths, groupingResultVariable, groupConcatConcatenator);
         }
 
         public ModelToIndexMapperBuilder withObjectMember(String arrayMemberField) {
@@ -206,6 +270,25 @@ public final class ModelToIndexMapper {
             }
             addJsonPath(arrayPath + "#.#" + arrayMemberField);
             arrayPath = null;
+            return this;
+        }
+
+        public ModelToIndexMapperBuilder withLanguageSpecifiedObjectMember(String arrayMemberField) {
+            return withObjectMember(arrayMemberField + LANGUAGE_AWARE_POSTFIX);
+        }
+
+        public ModelToIndexMapperBuilder withGroupConcatenator(String groupConcatConcatenator) {
+            this.groupConcatConcatenator = groupConcatConcatenator;
+            return this;
+        }
+
+        public ModelToIndexMapperBuilder toLanguageSpecifiedJsonPath(String jsonPath) {
+            addJsonPath(jsonPath + LANGUAGE_AWARE_POSTFIX);
+            return this;
+        }
+
+        public ModelToIndexMapperBuilder withOntologyPrefix(String prefix) {
+            this.ontologyPrefix = prefix;
             return this;
         }
     }

@@ -1,4 +1,4 @@
-package no.deichman.services;
+package no.deichman.services.services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -6,11 +6,10 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
-import no.deichman.services.search.EmbeddedElasticsearchServer;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.common.settings.Settings;
+import no.deichman.services.services.search.EmbeddedElasticsearchServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +19,9 @@ import static org.junit.Assert.fail;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 
 /**
- * Created by nicho on 03/12/15.
+ * Responsibility: Test search result order.
  */
+@Ignore
 public class SearchTest {
     public static final int ONE_SECOND = 1000;
     public static final int ZERO = 0;
@@ -47,18 +47,15 @@ public class SearchTest {
     }
 
     private static void setupElasticSearch() throws Exception {
-        embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
-        Settings indexSettings = Settings.settingsBuilder()
-                .put("number_of_shards", 1)
-                .build();
-        CreateIndexRequest indexRequest = new CreateIndexRequest("search", indexSettings);
-        embeddedElasticsearchServer.getClient().admin().indices().create(indexRequest).actionGet();
+        embeddedElasticsearchServer = EmbeddedElasticsearchServer.getInstance();
     }
 
     private static String generateWorkJson(String title, String creator) {
         JsonObject json = new JsonObject();
         if (title != null) {
-            json.addProperty("mainTitle", title);
+            JsonObject jsonObject = new JsonObject();
+            json.add("mainTitle", jsonObject);
+            jsonObject.addProperty("default", title);
         }
         if (creator != null) {
             JsonObject name = new JsonObject();
@@ -76,7 +73,7 @@ public class SearchTest {
                 .actionGet();
     }
 
-    private static void populateSearchIndex() {
+    private static void populateSearchIndex() throws InterruptedException {
         indexDocument("work", generateWorkJson("When the Last Acorn is Found", "Deborah Latzke"));
         indexDocument("work", generateWorkJson("Lost. Found.", "Marsha Diane Arnold"));
         indexDocument("work", generateWorkJson("When I Found You", "Catherine Ryan Hyde"));
@@ -91,7 +88,7 @@ public class SearchTest {
     public com.google.gson.JsonArray searchDocument(String type, String query, int numberOfExpectedResults) throws UnirestException, InterruptedException {
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(elasticSearchUrl + "/search/" + type + "/_search").queryString("q", query);
+            HttpRequest request = Unirest.get(elasticSearchUrl + "/search/" + type + "/_search").queryString("q", "work.mainTitle=" + query);
             HttpResponse<?> response = request.asJson();
             JsonObject json = new Gson().fromJson(response.getBody().toString(), JsonObject.class);
             com.google.gson.JsonArray results = new com.google.gson.JsonArray();
