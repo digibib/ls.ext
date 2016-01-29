@@ -6,7 +6,7 @@ IMAGE=digibib/redef-services
 CONTAINER=redef_services_container
 
 test:
-	./gradlew check test
+	./gradlew -PdockerUrl=http://localhost:2375 check test
 
 stop:
 	sudo docker stop $(CONTAINER) || true
