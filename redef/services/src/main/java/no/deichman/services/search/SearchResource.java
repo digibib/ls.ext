@@ -59,7 +59,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @POST
-    @Path("{type: work|person}/_search")
+    @Path("{type: work|person|placeOfPublication}/_search")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public final Response searchJson(String body, @PathParam("type") String type) {
