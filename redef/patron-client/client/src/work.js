@@ -97,7 +97,7 @@
               }
               throw new Error("cannot linkify: " + uri);
             }
-          },
+          }
         });
 
         return workRactive;
