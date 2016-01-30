@@ -48,7 +48,7 @@
             <tbody>
               {{#each graph.byType("Publication")}}
                 <tr about="{{this.id}}">
-                  <td data-automation-id="publication_title">{{this.get("mainTitle").value}} {{#this.get("partTitle").value}} — {{this.get("partTitle").value}}{{/}}</td>
+                  <td data-automation-id="publication_title">{{this.get("mainTitle").value}}{{#this.get("partTitle").value}} — {{this.get("partTitle").value}}{{/}}</td>
                   <td data-automation-id="publication_year">{{this.get("publicationYear").value}}</td>
                   <td data-automation-id="publication_language">{{this.out("language").get("label").value}}</td>
                   <td data-automation-id="publication_format">{{this.out("format").get("label").value}}</td>
