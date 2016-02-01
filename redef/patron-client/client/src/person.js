@@ -7,12 +7,12 @@
     var axios = require("axios");
     var url = require("url");
     var graph = require("ld-graph");
-
-    module.exports = factory(Ractive, axios, url, graph);
+    var _ = require("underscore");
+    module.exports = factory(Ractive, axios, url, graph, _);
   } else {
-    root.Person = factory(root.Ractive, root.axios, root.url, root.graph);
+    root.Person = factory(root.Ractive, root.axios, root.url, root.graph, root._);
   }
-}(this, function (Ractive, axios, url, graph) {
+}(this, function (Ractive, axios, url, graph, _) {
   "use strict";
   Ractive.DEBUG = false;
 
@@ -88,22 +88,18 @@
               }
               throw new Error("cannot linkify: " + uri);
             },
-            inPreferredLanguage: function(text) {
-              if (typeof text === 'string') {
-                return text;
-              } else {
-                var preferredTexts = _.compact([
-                  _.find(text, function (value, lang) {
-                    return lang === "nb";
-                  }), _.find(text, function (value, lang) {
-                    return lang === "nn";
-                  }), _.find(text, function (value, lang) {
-                    return lang === "default";
-                  }), _.find(text, function () {
-                    return true;
-                  })]);
-                return _.first(preferredTexts);
-              }
+            inPreferredLanguage: function(texts) {
+              var preferredTexts = _.compact([
+                _.find(texts, function (text) {
+                  return text.lang === "nb";
+                }), _.find(texts, function (text) {
+                  return text.lang === "nn";
+                }), _.find(texts, function (text) {
+                  return text.lang === "default";
+                }), _.find(texts, function () {
+                  return true;
+                })]);
+              return _.first(preferredTexts).value;
             }
           }
         });
