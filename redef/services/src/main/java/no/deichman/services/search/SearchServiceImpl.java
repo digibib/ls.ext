@@ -108,7 +108,7 @@ public class SearchServiceImpl implements SearchService {
     private ModelToIndexMapper placeOfPublicationModelToIndexMapper = modelToIndexMapperBuilder()
             .targetIndexType(PLACE_OF_PUBLICATION_TYPE)
             .selectQuery(PLACE_OF_PUBLICATION_TO_INDEX_DOCUMENT_QUERY)
-            .mapFromResultVar("placename").toJsonPath("placename")
+            .mapFromResultVar("place").toJsonPath("place")
             .mapFromResultVar("country").toJsonPath("country")
             .build();
 
