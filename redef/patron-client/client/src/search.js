@@ -44,21 +44,19 @@
             personUrl: function (person) {
                 return '/person/' + url.parse(person.uri).path.split('/').pop();
             },
-            inPreferredLanguage: function(literals) {
-              var noMatch = "";
-              for (var lang in literals) {
-                switch (lang) {
-                  case "nb":
-                    // fallthrough to "nn"
-                  case "nn":
-                    return literals[lang];
-                  default:
-                    noMatch = literals[lang];
-                }
-              }
-              // no preferred language match, return arbritary (last in iteration)
-              return noMatch;
-            },
+            inPreferredLanguage: function(text) {
+              var preferredTexts = _.compact([
+                _.find(text, function (value, lang) {
+                  return lang === "nb";
+                }), _.find(text, function (value, lang) {
+                  return lang === "nn";
+                }), _.find(text, function (value, lang) {
+                  return lang === "default";
+                }), _.find(text, function (value) {
+                  return true;
+                })]);
+              return _.first(preferredTexts);
+            }
           }
         });
 
