@@ -81,7 +81,7 @@ FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
 rebuild_services:					## Force rebuilds services
-	@vagrant ssh $(SHIP) -c "cd /vagrant/redef/services && ./gradlew --no-daemon dockerBuildImage  && \
+	@vagrant ssh $(SHIP) -c "cd /vagrant/redef/services && ./gradlew --no-daemon -PdockerUrl=http://localhost:2375 dockerBuildImage && \
 	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d --force-recreate services"
 
 rebuild_catalinker:					## Force rebuilds catalinker
