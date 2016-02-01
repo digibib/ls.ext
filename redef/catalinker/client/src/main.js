@@ -390,13 +390,13 @@
                                     return text;
                                 } else {
                                     var preferredTexts = _.compact([
-                                        _.find(text, function (lang) {
+                                        _.find(text, function (value, lang) {
                                             return lang === "nb";
-                                        }), _.find(text, function (lang) {
+                                        }), _.find(text, function (value, lang) {
                                             return lang === "nn";
-                                        }), _.find(text, function (lang) {
+                                        }), _.find(text, function (value, lang) {
                                             return lang === "default";
-                                        }), _.find(text, function (lang) {
+                                        }), _.find(text, function () {
                                             return true;
                                         })]);
                                     return _.first(preferredTexts);
