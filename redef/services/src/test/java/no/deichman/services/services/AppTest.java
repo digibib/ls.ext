@@ -357,6 +357,31 @@ public class AppTest {
         assertTrue(location1.equals(location2));
     }
 
+    @Test
+    public void place_of_publication_is_patched() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p = "http://deichman.no/ontology#place";
+        String o = "Oslo";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+        JsonArray body = buildLDPatch(buildPatchStatement(op, s, p, o, type));
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+    }
+
+
+    @Test
+    public void place_of_publication_is_deleted() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
+        HttpResponse<String> result2 = buildDeleteRequest(getLocation(result1));
+        assertEquals(Status.NO_CONTENT.getStatusCode(), result2.getStatus());
+    }
+
+    private HttpResponse<String> buildDeleteRequest(String location) throws UnirestException {
+        return Unirest
+                .delete(location).asString();
+    }
 
     @Test
     public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
@@ -507,6 +532,23 @@ public class AppTest {
             }
         } while (!foundPersonInIndex && attempts-- > 0);
         assertTrue("Should have found person in index by now", foundPersonInIndex);
+    }
+
+    private void doSearchForPlaceOfPublication(String place) throws UnirestException, InterruptedException {
+        boolean foundPlaceOfPublicationInIndex;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(baseUri + "search/placeOfPublication/_search").queryString("q","placeOfPublication.place:" + place);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundPlaceOfPublicationInIndex = responseBody.contains(place);
+            if (!foundPlaceOfPublicationInIndex) {
+                LOG.info("Place of publication not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundPlaceOfPublicationInIndex && attempts-- > 0);
+
+        assertTrue("Should have found place of publication in index by now", foundPlaceOfPublicationInIndex);
     }
 
     private void indexWork(String workId, String title) {
