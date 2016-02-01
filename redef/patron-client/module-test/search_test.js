@@ -84,7 +84,9 @@ describe("PatronClient", function () {
               "_id": "http//example.org/work/1",
               "_source": {
                 "work": {
-                  "mainTitle": "Tittel 1"
+                  "mainTitle": {
+                    "nb": "Tittel 1"
+                  }
                 }
               }
             },
@@ -92,7 +94,9 @@ describe("PatronClient", function () {
               "_id": "http//example.org/work/2",
               "_source": {
                 "work": {
-                  "mainTitle": "Tittel 2"
+                  "mainTitle": {
+                    "nb": "Tittel 2"
+                  }
                 }
               }
             },
@@ -100,7 +104,9 @@ describe("PatronClient", function () {
               "_id": "http//example.org/work/3",
               "_source": {
                 "work": {
-                  "mainTitle": "æøå"
+                  "mainTitle": {
+                    "nn": "æøå"
+                  }
                 }
               }
             }
@@ -111,7 +117,8 @@ describe("PatronClient", function () {
         var results = document.getElementsByClassName("result"),
             titles = [],
             want = hits.hits.map(function (h) {
-              return h._source.work.mainTitle;
+              console.log(ractive);
+              return ractive.get("inPreferredLanguage")(h._source.work.mainTitle);
             });
 
         [].forEach.call(results, function (el) {
