@@ -117,7 +117,6 @@ describe("PatronClient", function () {
         var results = document.getElementsByClassName("result"),
             titles = [],
             want = hits.hits.map(function (h) {
-              console.log(ractive);
               return ractive.get("inPreferredLanguage")(h._source.work.mainTitle);
             });
 
