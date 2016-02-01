@@ -9,7 +9,7 @@
       </div>
     </div>
     <div id="work" class="column half relative">
-      <h2 data-automation-id="work_title">{{work.get("mainTitle").value}}{{#work.get("partTitle").value}} — {{work.get("partTitle").value}}{{/}}</h2>
+      <h2 data-automation-id="work_title">{{inPreferredLanguage(work.getAll("mainTitle")).value}}{{#work.get("partTitle").value}} — {{inPreferredLanguage(work.getAll("partTitle")).value}}{{/}}</h2>
       {{#each work.outAll("creator")}}
         <p data-automation-id="work_author"><a href="{{linkify(this.id)}}">{{this.get("name").value}}</a></p>
       {{/each}}

@@ -88,23 +88,19 @@
               }
               throw new Error("cannot linkify: " + uri);
             },
-            inPreferredLanguage: function(text) {
-              if (typeof text === 'string') {
-                return text;
-              } else {
-                var preferredTexts = _.compact([
-                  _.find(text, function (lang) {
-                    return lang === "nb";
-                  }), _.find(text, function (lang) {
-                    return lang === "nn";
-                  }), _.find(text, function (lang) {
-                    return lang === "default";
-                  }), _.find(text, function (lang) {
-                    return true;
-                  })]);
-                return _.first(preferredTexts);
+            inPreferredLanguage: function(literals) {
+              for (var i=0; i<literals.length; i++) {
+                switch (literals[i].lang) {
+                  case "nb":
+                    // fallthrough to "nn"
+                  case "nn":
+                    return literals[i];
+                  default:
+                }
               }
-            }
+              // no preferred language match; return first
+              return literals[0];
+            },
           }
         });
         return personRactive;

@@ -84,6 +84,19 @@
                 return item.get("status").value === "AVAIL";
               }).length;
             },
+            inPreferredLanguage: function(literals) {
+              for (var i=0; i<literals.length; i++) {
+                switch (literals[i].lang) {
+                  case "nb":
+                    // fallthrough to "nn"
+                  case "nn":
+                    return literals[i];
+                  default:
+                }
+              }
+              // no preferred language match; return first
+              return literals[0];
+            },
             linkify: function(uri) {
               var found = false;
               var i;

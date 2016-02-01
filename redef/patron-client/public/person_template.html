@@ -28,7 +28,7 @@
     <h3>Verk</h3>
     {{#works}}
       <div class="work" data-automation-id="{{this.uri}}">
-        <p><a href="{{linkify(id)}}"><strong>{{inPreferredLanguage(this.get("mainTitle").value)}}{{#this.get("partTitle").value}} — {{this.get("partTitle").value}}{{/}}</strong></a></p>
+        <p><a href="{{linkify(id)}}"><strong>{{inPreferredLanguage(this.getAll("mainTitle")).value}}{{#this.get("partTitle").value}} — {{inPreferredLanguage(this.getAll("partTitle")).value}}{{/}}</strong></a></p>
       </div>
     {{/each}}
   </div>
