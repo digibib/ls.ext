@@ -8,7 +8,7 @@ audience:adult a duo:Audience ;
 audience:juvenile a duo:Audience ;
   duo:code "j" ;
   rdfs:label "Barn og unge"@no ;
-  rdfs:label "Children and youths"@en .
+  rdfs:label "Juvenile"@en .
 audience:childrenAge1To2 a duo:Audience ;
   duo:code "aa" ;
   rdfs:label "Barn i alderen 0–2 år"@no ;
