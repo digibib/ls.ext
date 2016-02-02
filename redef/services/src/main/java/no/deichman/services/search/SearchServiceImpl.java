@@ -182,6 +182,7 @@ public class SearchServiceImpl implements SearchService {
                 throw new ServerErrorException("Failed to create elasticsearch mapping for " + type, HTTP_INTERNAL_ERROR);
             }
         }
+    }
     public void indexPlaceOfPublication(String id) { doIndexPlaceOfPublication(id); }
 
     @Override
