@@ -43,6 +43,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -433,8 +434,9 @@ public class AppTest {
         doSearchForWorks("Sult");
     }
 
-    private void doSearchForWorks(String name) throws UnirestException, InterruptedException {
+    private void doSearchForWorks(String name, boolean...invert) throws UnirestException, InterruptedException {
         boolean foundWorkInIndex;
+        boolean doInvert = invert != null && invert.length > 0 && invert[0];
         int attempts = FIFTY_TIMES;
         do {
             HttpRequest request = Unirest
@@ -443,14 +445,17 @@ public class AppTest {
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
             foundWorkInIndex = responseBody.contains(name)
-                    && responseBody.contains("Hamsun")
                     && responseBody.contains("person/h");
-            if (!foundWorkInIndex) {
+            if (foundWorkInIndex == doInvert) {
                 LOG.info("Work not found in index yet, waiting one second");
                 Thread.sleep(ONE_SECOND);
             }
-        } while (!foundWorkInIndex && attempts-- > 0);
-        assertTrue("Should have found work in index by now", foundWorkInIndex);
+        } while (foundWorkInIndex == doInvert && attempts-- > 0);
+        if (!doInvert) {
+            assertTrue("Should have found work in index by now", foundWorkInIndex);
+        } else {
+            assertFalse("Should not have found work in index", foundWorkInIndex);
+        }
     }
 
     private void doSearchForPersons(String name) throws UnirestException, InterruptedException {
@@ -608,5 +613,16 @@ public class AppTest {
         kohaSvcMock.addGetBiblioExpectation(recordId[0], expected);
         HttpResponse<String> result = Unirest.get(baseUri + "marc/" + recordId[0]).asString();
         assertEquals(expected, result.getBody());
+    }
+
+    @Test
+    public void when_index_is_cleared_search_returns_nothing () throws Exception {
+        indexWork("101", "Lord of the rings");
+        doSearchForWorks("Lord");
+        HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
+        assertEquals(200, response.getStatus());
+        doSearchForWorks("Lord", true);
+        indexWork("102", "Lucky Luke");
+        doSearchForWorks("Lucky");
     }
 }

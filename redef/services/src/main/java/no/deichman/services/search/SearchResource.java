@@ -68,6 +68,11 @@ public class SearchResource extends ResourceBase {
         }
     }
 
+    @POST
+    @Path("clear_index")
+    public final Response clearIndex() {
+        return getSearchService().clearIndex();
+    }
 
     @Override
     protected final ServletConfig getConfig() {

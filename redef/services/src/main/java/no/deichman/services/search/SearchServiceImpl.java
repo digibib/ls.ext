@@ -6,12 +6,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.jena.rdf.model.Model;
@@ -25,11 +27,13 @@ import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static no.deichman.services.search.PersonModelToIndexMapper.getPersonModelToIndexMapper;
@@ -75,6 +79,51 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public final Response searchWorkWithJson(String json) {
         return searchWithJson(json, getWorkSearchUriBuilder());
+    }
+
+    @Override
+    public Response clearIndex() {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = getIndexUriBuilder().setPath("/search").build();
+
+            try (CloseableHttpResponse getExistingIndex = httpclient.execute(new HttpGet(uri))) {
+                if (getExistingIndex.getStatusLine().getStatusCode() == HTTP_OK) {
+                    try (CloseableHttpResponse delete = httpclient.execute(new HttpDelete(uri))) {
+                        int statusCode = delete.getStatusLine().getStatusCode();
+                        LOG.info("Delete index request returned status " + statusCode);
+                        if (statusCode != 200) {
+                            throw new ServerErrorException("Failed to delete elasticsearch index", 500);
+                        }
+                    }
+                }
+            }
+            try (CloseableHttpResponse create = httpclient.execute(new HttpPut(uri))) {
+                int statusCode = create.getStatusLine().getStatusCode();
+                LOG.info("Create index request returned status " + statusCode);
+                if (statusCode != 200) {
+                    throw new ServerErrorException("Failed to create elasticsearch index", 500);
+                }
+            }
+            putIndexMapping(httpclient, "work");
+            putIndexMapping(httpclient, "person");
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void putIndexMapping(CloseableHttpClient httpclient, String type) throws URISyntaxException, IOException {
+        URI workIndexUri = getIndexUriBuilder().setPath("search/_mapping/" + type).build();
+        HttpPut putWorkMappingRequest = new HttpPut(workIndexUri);
+        putWorkMappingRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/" + type + "_mapping.json"), ContentType.APPLICATION_JSON));
+        try (CloseableHttpResponse create = httpclient.execute(putWorkMappingRequest)) {
+            int statusCode = create.getStatusLine().getStatusCode();
+            LOG.info("Create mapping request for " + type + " returned status " + statusCode);
+            if (statusCode != 200) {
+                throw new ServerErrorException("Failed to create elasticsearch mapping for " + type, 500);
+            }
+        }
     }
 
     private Response searchWithJson(String body, URIBuilder searchUriBuilder) {
@@ -197,7 +246,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private URIBuilder getWorkSearchUriBuilder() {
-            return getIndexUriBuilder().setPath("/search/work/_search");
+        return getIndexUriBuilder().setPath("/search/work/_search");
     }
 
     private URIBuilder getPersonSearchUriBuilder() {

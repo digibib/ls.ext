@@ -17,4 +17,6 @@ public interface SearchService {
     Response searchPersonWithJson(String json);
 
     Response searchWorkWithJson(String json);
+
+    Response clearIndex();
 }
