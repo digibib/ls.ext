@@ -95,10 +95,10 @@ public class SearchServiceImpl implements SearchService {
     private static final String PLACE_OF_PUBLICATION_TO_INDEX_DOCUMENT_QUERY = format(""
             + "PREFIX  : <%1$s> \n"
             + "PREFIX  rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n"
-            + "select distinct ?placeuri ?place ?country\n"
+            + "select distinct ?placeOfPublication ?place ?country\n"
             + "where {\n"
-            + "    ?placeuri a :PlaceOfPublication ;\n"
-            + "             :placename ?placename ;\n"
+            + "    ?placeOfPublication a :PlaceOfPublication ;\n"
+            + "             :place ?place ;\n"
             + "             :country ?country .\n"
             + "}\n", remote().ontology());
 
@@ -108,8 +108,9 @@ public class SearchServiceImpl implements SearchService {
     private ModelToIndexMapper placeOfPublicationModelToIndexMapper = modelToIndexMapperBuilder()
             .targetIndexType(PLACE_OF_PUBLICATION_TYPE)
             .selectQuery(PLACE_OF_PUBLICATION_TO_INDEX_DOCUMENT_QUERY)
-            .mapFromResultVar("place").toJsonPath("place")
-            .mapFromResultVar("country").toJsonPath("country")
+            .mapFromResultVar("placeOfPublication").toJsonPath("placeOfPublication.uri")
+            .mapFromResultVar("place").toJsonPath("placeOfPublication.place")
+            .mapFromResultVar("country").toJsonPath("placeOfPublication.country")
             .build();
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {

@@ -330,14 +330,14 @@ public class AppTest {
     @Test
     public void place_of_publication_resource_can_be_created_if_not_a_duplicate() throws UnirestException {
         String input = "<__BASEURI__externalPlaceOfPublication/g1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#PlaceOfPublication> .\n"
-                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#placename> \"Oslo\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#place> \"Oslo\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
                 + "<__BASEURI__externalPlaceOfPublication/g1234> <http://data.deichman.no/duo#bibliofilPlaceOfPublicationId> \"1234\" .\n"
                 + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#country> \"Norge\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
 
         input = input.replace("__BASEURI__", baseUri);
 
         String duplicateInput = "<__BASEURI__externalPlaceOfPublication/g1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#PlaceOfPublication> .\n"
-                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#placename> \"Oslo\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#place> \"Oslo\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
                 + "<__BASEURI__externalPlaceOfPublication/g1234> <http://data.deichman.no/duo#bibliofilPlaceOfPublicationId> \"1234\" .\n"
                 + "<__BASEURI__externalPlaceOfPublication/g1234> <__BASEURI__ontology#country> \"Norge\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
         duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
@@ -362,7 +362,7 @@ public class AppTest {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
         String op = "ADD";
         String s = getLocation(result1);
-        String p = "http://deichman.no/ontology#place";
+        String p = baseUri + "ontology#place";
         String o = "Oslo";
         String type = "http://www.w3.org/2001/XMLSchema#string";
         JsonArray body = buildLDPatch(buildPatchStatement(op, s, p, o, type));
@@ -376,6 +376,28 @@ public class AppTest {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
         HttpResponse<String> result2 = buildDeleteRequest(getLocation(result1));
         assertEquals(Status.NO_CONTENT.getStatusCode(), result2.getStatus());
+    }
+
+    @Test
+    public void place_of_publication_is_searchable() throws UnirestException, InterruptedException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
+
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#place";
+        String o1 = "Oslo";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+        String p2 = baseUri + "ontology#country";
+        String o2 = "Norway";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .add(buildLDPatch(buildPatchStatement(op, s, p2, o2, type)).get(0))
+                .build();
+
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+        doSearchForPlaceOfPublication("Oslo");
     }
 
     private HttpResponse<String> buildDeleteRequest(String location) throws UnirestException {
