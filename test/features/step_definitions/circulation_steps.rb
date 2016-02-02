@@ -506,3 +506,16 @@ When(/^skal jeg se tittel, deltittel, delnummer, forfatter, utgivelsesår og ISB
   @browser.span(class: 'publisher').text.should eq "Publisher: #{@context[:publication_publicationyear]}"
   @browser.span(class: 'isbn').text.should eq "ISBN: #{@context[:publication_isbn]}."
 end
+
+# FEATURES: email_messaging.feature
+Given(/^at bok er reservert av låner$/) do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then(/^vil låneren få epost om at boka skulle vært levert på forfallsdato$/) do
+  pending # Write code here that turns the phrase above into concrete actions
+end
