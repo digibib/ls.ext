@@ -65,6 +65,7 @@ public class AppTest {
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private static final String ANOTHER_BIBLIO_ID = "333333";
+    public static final boolean SHOULD_NOT_FIND = true;
     private static String baseUri;
     private static App app;
 
@@ -533,18 +534,8 @@ public class AppTest {
         setupExpectationForMarcXmlSentToKoha(creator, publicationTitle, partTitle, partNumber, isbn, publicationYear);
         kohaSvcMock.addLoginExpectation();
 
-        String personTriples = ""
-                + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
-                + "<person> <" + ontologyURI + "name> \"" + creator + "\" .";
-        HttpResponse<JsonNode> createPersonResponse = buildCreateRequestNtriples(baseUri + "person", personTriples).asJson();
-        String personUri = getLocation(createPersonResponse);
-
-        String workTriples = ""
-                + "<work> <" + ontologyURI + "mainTitle> \"" + workTitle + "\" .\n"
-                + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
-                + "<work> <" + ontologyURI + "creator> <__CREATORURI__> .\n";
-        HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(baseUri + "work", workTriples.replace("__CREATORURI__", personUri)).asJson();
-        String workUri = getLocation(createworkResponse);
+        String personUri = createPersonInRdfStore(creator, ontologyURI);
+        String workUri = createWorkInRdfStore(workTitle, ontologyURI, personUri);
 
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
@@ -557,6 +548,23 @@ public class AppTest {
 
         HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
         assertNotNull(getLocation(createpublicationResponse));
+    }
+
+    private String createWorkInRdfStore(String workTitle, String ontologyURI, String personUri) throws UnirestException {
+        String workTriples = ""
+                + "<work> <" + ontologyURI + "mainTitle> \"" + workTitle + "\" .\n"
+                + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<work> <" + ontologyURI + "creator> <__CREATORURI__> .\n";
+        HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(baseUri + "work", workTriples.replace("__CREATORURI__", personUri)).asJson();
+        return getLocation(createworkResponse);
+    }
+
+    private String createPersonInRdfStore(String creator, String ontologyURI) throws UnirestException {
+        String personTriples = ""
+                + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
+                + "<person> <" + ontologyURI + "name> \"" + creator + "\" .";
+        HttpResponse<JsonNode> createPersonResponse = buildCreateRequestNtriples(baseUri + "person", personTriples).asJson();
+        return getLocation(createPersonResponse);
     }
 
     private void setupExpectationForMarcXmlSentToKoha(String creator, String publicationTitle, String partTitle, String partNumber, String isbn, String publicationYear) {
@@ -621,8 +629,23 @@ public class AppTest {
         doSearchForWorks("Lord");
         HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
         assertEquals(200, response.getStatus());
-        doSearchForWorks("Lord", true);
+        doSearchForWorks("Lord", SHOULD_NOT_FIND);
         indexWork("102", "Lucky Luke");
+        doSearchForWorks("Lucky");
+    }
+
+    @Test
+    public void when_index_is_cleared_and_reindexed_works_are_found() throws Exception {
+        indexWork("101", "Lord of the rings");
+        doSearchForWorks("Lord");
+        HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
+        assertEquals(200, response.getStatus());
+        doSearchForWorks("Lord", SHOULD_NOT_FIND);
+        String ontologyURI = baseUri + "ontology#";
+
+        String personUri = createPersonInRdfStore("Morris", ontologyURI);
+        createWorkInRdfStore("Lucky Luke", ontologyURI, personUri);
+        Unirest.post(baseUri + "search/work/reindex_all").asString();
         doSearchForWorks("Lucky");
     }
 }

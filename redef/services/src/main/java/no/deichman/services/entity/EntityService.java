@@ -4,6 +4,7 @@ import no.deichman.services.entity.patch.PatchParserException;
 import org.apache.jena.rdf.model.Model;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Responsibility: TODO.
@@ -27,4 +28,6 @@ public interface EntityService {
     Optional<String> retrieveBibliofilPerson(String personId);
 
     Model retrieveWorksByCreator(String creatorId);
+
+    void retrieveAllWorkUris(String type, Consumer<String> uriConsumer);
 }

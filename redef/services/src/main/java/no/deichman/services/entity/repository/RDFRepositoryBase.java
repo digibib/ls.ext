@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Responsibility: TODO.
@@ -107,7 +108,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final boolean askIfResourceExists(String uri) {
-        try (QueryExecution qexec = getQueryExecution(sqb.checkIfResourceExists(uri))){
+        try (QueryExecution qexec = getQueryExecution(sqb.checkIfResourceExists(uri))) {
             disableCompression(qexec);
             return qexec.execAsk();
         }
@@ -218,10 +219,20 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final Model retrievePublicationsByWork(String id) {
         String uri = baseURI.work() + id;
         log.debug("Attempting to retrieve: " + uri);
-        ResultSet resultSet;
         try (QueryExecution qexec = getQueryExecution(sqb.describeLinkedPublications(uri))) {
             disableCompression(qexec);
             return qexec.execDescribe();
+        }
+    }
+
+    @Override
+    public void findAllUrisOfType(String type, Consumer<String> consumer) {
+        log.debug("Attempting to retrieve all " + type + " uris: ");
+        try (QueryExecution qexec = getQueryExecution(sqb.selectAllUrisOfType(type))) {
+            disableCompression(qexec);
+            qexec.execSelect().forEachRemaining(querySolution -> {
+                consumer.accept(querySolution.get("uri").asResource().getURI());
+            });
         }
     }
 

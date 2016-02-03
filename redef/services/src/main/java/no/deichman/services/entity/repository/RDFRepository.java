@@ -6,6 +6,7 @@ import org.apache.jena.rdf.model.Statement;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Responsibility: TODO.
@@ -38,4 +39,6 @@ public interface RDFRepository {
     Model retrieveWorksByCreator(String creatorUri);
 
     Model retrievePublicationsByWork(String work);
+
+    void findAllUrisOfType(String type, Consumer<String> uriConsumer);
 }

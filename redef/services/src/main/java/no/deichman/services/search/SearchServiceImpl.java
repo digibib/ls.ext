@@ -54,7 +54,6 @@ public class SearchServiceImpl implements SearchService {
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
 
-
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
         this.entityService = entityService;

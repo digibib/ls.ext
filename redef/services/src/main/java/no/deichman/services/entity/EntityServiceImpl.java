@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -429,5 +430,10 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public Model retrieveWorksByCreator(String creatorId) {
         return repository.retrieveWorksByCreator(creatorId);
+    }
+
+    @Override
+    public void retrieveAllWorkUris(String type, Consumer<String> uriConsumer) {
+        repository.findAllUrisOfType(type, uriConsumer);
     }
 }

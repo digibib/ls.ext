@@ -16,6 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.capitalize;
+
 /**
  * Responsibility: TODO.
  */
@@ -221,6 +223,16 @@ public final class SPARQLQueryBuilder {
                 + "    {\n"
                 + "        ?publication deichman:publicationOf <%s>\n"
                 + "    }", baseURI.ontology(), uri);
+        return QueryFactory.create(q);
+    }
+
+    public Query selectAllUrisOfType(String type) {
+        String q = String.format(""
+                + "PREFIX deichman: <%s>\n"
+                + "SELECT ?uri WHERE \n"
+                + "    {\n"
+                + "        ?uri a deichman:%s .\n"
+                + "    }", baseURI.ontology(), capitalize(type));
         return QueryFactory.create(q);
     }
 }

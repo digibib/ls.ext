@@ -1,6 +1,8 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.ResourceBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
@@ -14,6 +16,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -23,6 +27,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Singleton
 @Path("search")
 public class SearchResource extends ResourceBase {
+    private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
+    public static final String ALL_EXCEPT_LAST_PATH_ELEMENT = "^.+/";
     @Context
     private ServletConfig servletConfig;
 
@@ -72,6 +78,31 @@ public class SearchResource extends ResourceBase {
     @Path("clear_index")
     public final Response clearIndex() {
         return getSearchService().clearIndex();
+    }
+
+    @POST
+    @Path("{type: work|person}/reindex_all")
+    public final Response reIndex(final @PathParam("type") String type) {
+        ForkJoinPool.commonPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                LOG.info("Starting to reindex " + type);
+                long start = System.currentTimeMillis();
+                getEntityService().retrieveAllWorkUris(type, uri -> CompletableFuture.runAsync(() -> {
+                    if (type.equals("person")) {
+                        getSearchService().indexPerson(idFromUri(uri));
+                    } else {
+                        getSearchService().indexWork(idFromUri(uri));
+                    }
+                }));
+                LOG.info("Done reindexing " + type + " in " + (System.currentTimeMillis() - start) + " seconds");
+            }
+        });
+        return Response.accepted().build();
+    }
+
+    private String idFromUri(String uri) {
+        return uri.replaceAll(ALL_EXCEPT_LAST_PATH_ELEMENT, "");
     }
 
     @Override
