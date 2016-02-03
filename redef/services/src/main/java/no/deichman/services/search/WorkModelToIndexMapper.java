@@ -51,7 +51,6 @@ public final class WorkModelToIndexMapper {
                 .selectQuery(WORK_MODEL_TO_INDEX_DOCUMENT_QUERY)
                 .mapFromResultVar("mainTitles").toLanguageSpecifiedJsonPath("work.mainTitle")
                 .mapFromResultVar("partTitles").toLanguageSpecifiedJsonPath("work.partTitle")
-                .mapFromResultVar("workYear").toJsonPath("work.publicationYear")
                 .mapFromResultVar("creatorName").toJsonPath("work.creator.name")
                 .mapFromResultVar("work").toJsonPath("work.uri")
                 .mapFromResultVar("creator").toJsonPath("work.creator.uri")
