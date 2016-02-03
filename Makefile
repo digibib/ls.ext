@@ -86,14 +86,22 @@ rebuild_services:					## Force rebuilds services
 
 rebuild_catalinker:					## Force rebuilds catalinker
 	@echo "======= FORCE RECREATING CATALINKER ======\n"
-	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build catalinker && sudo docker-compose up --force-recreate -d catalinker"
+	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
+	  sudo docker-compose stop catalinker || true &&\
+	  sudo docker-compose rm -f catalinker || true &&\
+	  sudo docker-compose build catalinker &&\
+	  sudo docker-compose up --force-recreate -d catalinker"
 
 restart_catalinker:					## Restarts catalinker
 	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose restart catalinker"
 
 rebuild_patron_client:					## Force rebuilds patron-client
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
-	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build patron-client && sudo docker-compose up --force-recreate -d patron-client"
+	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
+	  sudo docker-compose stop patron-client || true && \
+	  sudo docker-compose rm -f patron-client || true && \
+	  sudo docker-compose build patron-client && \
+	  sudo docker-compose up --force-recreate -d patron-client"
 
 rebuild_overview:					## Force rebuilds overview
 	@echo "======= FORCE RECREATING OVERVIEW ======\n"
