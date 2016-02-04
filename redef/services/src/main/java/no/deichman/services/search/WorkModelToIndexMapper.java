@@ -39,7 +39,7 @@ public final class WorkModelToIndexMapper {
             + "      where {\n"
             + "         ?pub :publicationOf ?work ;\n"
             + "              :format ?format .\n"
-            + "         ?format :label ?formatLabel .\n"
+            + "         ?format rdfs:label ?formatLabel .\n"
             + "      }\n"
             + "      group by ?work \n"
             + "   }\n"
