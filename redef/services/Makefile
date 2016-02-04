@@ -15,7 +15,7 @@ build-onejar:
 	./gradlew build oneJar
 
 clean:
-	./gradlew clean
+	./gradlew clean -PdockerUrl=doesntmatter
 
 build:
 	./gradlew -Dtag=$(IMAGE) dockerBuildImage
