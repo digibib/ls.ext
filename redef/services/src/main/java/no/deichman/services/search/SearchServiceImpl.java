@@ -23,7 +23,6 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import riotcmd.json;
 
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.HttpHeaders;
@@ -39,9 +38,9 @@ import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
-import static no.deichman.services.search.ModelToIndexMapper.ModelToIndexMapperBuilder.modelToIndexMapperBuilder;
 import static no.deichman.services.search.PersonModelToIndexMapper.getPersonModelToIndexMapper;
 import static no.deichman.services.search.WorkModelToIndexMapper.getworksModelToIndexMapper;
+import static no.deichman.services.search.PlaceOfPublicationModelToIndexMapper.getPlaceOfPublicationModelToIndexMapper;
 import static no.deichman.services.uridefaults.BaseURI.remote;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -54,64 +53,14 @@ public class SearchServiceImpl implements SearchService {
 
     public static final String WORK_INDEX_TYPE = "work";
     public static final String PERSON_INDEX_TYPE = "person";
-    public static final String PLACE_OF_PUBLICATION_TYPE = "placeOfPublication";
+    public static final String PLACE_OF_PUBLICATION_INDEX_TYPE = "placeOfPublication";
     public static final Property CREATOR = createProperty(remote().ontology("creator"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
-    private static final String WORK_MODEL_TO_INDEX_DOCUMENT_QUERY = format("PREFIX  : <%1$s> \n"
-            + "select distinct ?work ?workTitle ?workYear ?creatorName ?creator ?birth ?death\n"
-            + "where {\n"
-            + "    ?work a :Work ;\n"
-            + "             :mainTitle ?workTitle .\n"
-            + "    optional { ?work :publicationYear ?workYear. }\n"
-            + "    optional { \n"
-            + "             ?work :creator ?creator .\n"
-            + "             ?creator a :Person ;\n"
-            + "                      :name ?creatorName.\n"
-            + "             optional {?creator :birthYear ?birth.}\n"
-            + "             optional {?creator :deathYear ?death.}\n"
-            + "    }\n"
-            + "}\n", remote().ontology());
-    private static final String PERSON_MODEL_TO_INDEX_DOCUMENT_QUERY = format(""
-            + "PREFIX  : <%1$s> \n"
-            + "PREFIX  rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n"
-            + "PREFIX  duo:<http://data.deichman.no/utility#>\n"
-            + "select distinct ?person ?personName ?birth ?death ?nationalityLabel ?work ?workTitle ?workYear\n"
-            + "where {\n"
-            + "    ?person a :Person ;\n"
-            + "             :name ?personName .\n"
-            + "    optional {?person :birthYear ?birth.}\n"
-            + "    optional {?person :deathYear ?death.}\n"
-            + "    optional {?person :nationality ?nationality. \n"
-            + "              ?nationality a duo:Nationality; \n"
-            + "                           rdfs:label ?nationalityLabel. "
-            + "    } \n"
-            + "    optional {?work :creator ?person ;\n"
-            + "                    :mainTitle ?workTitle .\n"
-            + "              optional {?work :publicationYear ?workYear .}"
-            + "              }\n"
-            + "}\n", remote().ontology());
 
-    private static final String PLACE_OF_PUBLICATION_TO_INDEX_DOCUMENT_QUERY = format(""
-            + "PREFIX  : <%1$s> \n"
-            + "PREFIX  rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n"
-            + "select distinct ?placeOfPublication ?place ?country\n"
-            + "where {\n"
-            + "    ?placeOfPublication a :PlaceOfPublication ;\n"
-            + "             :place ?place ;\n"
-            + "             :country ?country .\n"
-            + "}\n", remote().ontology());
 
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
-
-    private ModelToIndexMapper placeOfPublicationModelToIndexMapper = modelToIndexMapperBuilder()
-            .targetIndexType(PLACE_OF_PUBLICATION_TYPE)
-            .selectQuery(PLACE_OF_PUBLICATION_TO_INDEX_DOCUMENT_QUERY)
-            .mapFromResultVar("placeOfPublication").toJsonPath("placeOfPublication.uri")
-            .mapFromResultVar("place").toJsonPath("placeOfPublication.place")
-            .mapFromResultVar("country").toJsonPath("placeOfPublication.country")
-            .build();
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -183,7 +132,9 @@ public class SearchServiceImpl implements SearchService {
             }
         }
     }
-    public void indexPlaceOfPublication(String id) { doIndexPlaceOfPublication(id); }
+    public final void indexPlaceOfPublication(String id) {
+        doIndexPlaceOfPublication(id);
+    }
 
     @Override
     public final Response searchPlaceOfPublicationWithJson(String json) {
@@ -265,7 +216,7 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexPlaceOfPublication(String id) {
         Model placeOfPublicationModel = entityService.retrieveById(EntityType.PLACE_OF_PUBLICATION, id);
-        indexModel(placeOfPublicationModelToIndexMapper.modelToIndexDocument(placeOfPublicationModel), PLACE_OF_PUBLICATION_TYPE);
+        indexModel(getPlaceOfPublicationModelToIndexMapper().modelToIndexDocument(placeOfPublicationModel), PLACE_OF_PUBLICATION_INDEX_TYPE);
     }
 
     private void doIndexWorkOnly(String workId) {
