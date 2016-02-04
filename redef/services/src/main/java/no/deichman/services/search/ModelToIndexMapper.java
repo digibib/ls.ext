@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -35,7 +36,8 @@ import static no.deichman.services.uridefaults.BaseURI.remote;
  * Responsibility: Map between RDF models and index documents.
  */
 public final class ModelToIndexMapper {
-    public static final String LANGUAGE_AWARE_POSTFIX = "#__lang__";
+    private static final String LANGUAGE_AWARE_POSTFIX = "#__lang__";
+    private static final String SUFFIX_STRING_ARRAY = "__toStringArray";
     private final String groupConcatConcatenator;
     private String type;
     private final String query;
@@ -106,9 +108,36 @@ public final class ModelToIndexMapper {
                         });
             }
             expandLanguageLeafs(result);
-            return of(Pair.of(id, GSON.toJson(result)));
+            expandArrayLeafs(result);
+            return of(Pair.of(id, GSON.toJson(result).replace(SUFFIX_STRING_ARRAY, "")));
         } else {
             return empty();
+        }
+    }
+
+    private void expandArrayLeafs(Map<Object, Object> result) {
+        for (Map.Entry<Object, Object> entry : result.entrySet()) {
+            Object entryValue = entry.getValue();
+            if (entryValue instanceof Map) {
+                ModelToIndexMapper.this.expandArrayLeafs((Map<Object, Object>) entryValue);
+            } else if (entryValue instanceof List) {
+                for (Object next : ((List) entryValue)) {
+                    if (next instanceof Map) {
+                        expandArrayLeafs((Map<Object, Object>) next);
+                    }
+                }
+            } else {
+                if (entry.getKey().toString().endsWith(SUFFIX_STRING_ARRAY)) {
+                    for (String arrayMemberValue : StringUtils.split(entryValue.toString(), groupConcatConcatenator)) {
+                        if (entry.getValue() instanceof List) {
+                            ((List) entry.getValue()).add(arrayMemberValue);
+                        } else {
+                            entry.setValue(newArrayList(arrayMemberValue));
+                        }
+                    }
+
+                }
+            }
         }
     }
 
@@ -233,6 +262,14 @@ public final class ModelToIndexMapper {
                 throw new IllegalArgumentException("Illegal characters in jsonPath");
             }
             addJsonPath(jsonPath);
+            return this;
+        }
+
+        public ModelToIndexMapperBuilder toJsonStringArray(String jsonPath) {
+            if (!jsonPath.matches("[$_A-Za-z][$_A-Za-z0-9\\.]*")) {
+                throw new IllegalArgumentException("Illegal characters in jsonPath");
+            }
+            addJsonPath(jsonPath + "#" + SUFFIX_STRING_ARRAY);
             return this;
         }
 

@@ -53,6 +53,10 @@
         "publicationYear": {
           "type": "string",
           "index": "no"
+        },
+        "formats": {
+          "type": "string",
+          "index": "not_analyzed"
         }
       }
     }

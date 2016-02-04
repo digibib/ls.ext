@@ -13,7 +13,7 @@ public final class WorkModelToIndexMapper {
     private static final String WORK_MODEL_TO_INDEX_DOCUMENT_QUERY = "PREFIX  : <%1$s> \n"
             + "PREFIX  rdfs:<http://www.w3.org/2000/01/rdf-schema#>\n"
             + "PREFIX  duo:<http://data.deichman.no/utility#>\n"
-            + "select distinct ?work ?mainTitles ?partTitles ?creator ?creatorName ?birth ?death\n"
+            + "select distinct ?work ?mainTitles ?partTitles ?creator ?creatorName ?birth ?death ?formats\n"
             + "where {\n"
             + "   ?work a :Work .\n"
             + "   optional {\n"
@@ -30,6 +30,16 @@ public final class WorkModelToIndexMapper {
             + "      where {\n"
             + "         ?work a :Work ;\n"
             + "               :partTitle ?partTitle .\n"
+            + "      }\n"
+            + "      group by ?work \n"
+            + "   }\n"
+            + "   optional {\n"
+            + "      select ?work \n"
+            + "      (GROUP_CONCAT (?formatLabel; separator='|') AS ?formats)\n"
+            + "      where {\n"
+            + "         ?pub :publicationOf ?work ;\n"
+            + "              :format ?format .\n"
+            + "         ?format :label ?formatLabel .\n"
             + "      }\n"
             + "      group by ?work \n"
             + "   }\n"
@@ -52,6 +62,7 @@ public final class WorkModelToIndexMapper {
                 .mapFromResultVar("mainTitles").toLanguageSpecifiedJsonPath("work.mainTitle")
                 .mapFromResultVar("partTitles").toLanguageSpecifiedJsonPath("work.partTitle")
                 .mapFromResultVar("creatorName").toJsonPath("work.creator.name")
+                .mapFromResultVar("formats").toJsonStringArray("work.formats")
                 .mapFromResultVar("work").toJsonPath("work.uri")
                 .mapFromResultVar("creator").toJsonPath("work.creator.uri")
                 .mapFromResultVar("birth").toJsonPath("work.creator.birthYear")

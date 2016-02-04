@@ -57,6 +57,37 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createProperty("http://deichman2.no/ontology#partTitle"),
                 ResourceFactory.createLangLiteral("work_1_english_part_title", "en")));
 
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_1"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#publicationOf"),
+                ResourceFactory.createResource("http://deichman2.no/work_1")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_1"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#format"),
+                ResourceFactory.createResource("http://data.deichman.no/format#Book")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_2"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#publicationOf"),
+                ResourceFactory.createResource("http://deichman2.no/work_1")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_2"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#format"),
+                ResourceFactory.createResource("http://data.deichman.no/format#DVD")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://data.deichman.no/format#DVD"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#label"),
+                ResourceFactory.createPlainLiteral("DVD")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://data.deichman.no/format#Book"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#label"),
+                ResourceFactory.createPlainLiteral("Bok")));
+
+
         Pair<String, String> uriAndDocument = WorkModelToIndexMapper.getModelToIndexMapperBuilder()
                 .withOntologyPrefix("http://deichman2.no/ontology#")
                 .build()
@@ -81,7 +112,10 @@ public class WorkModelToIndexMapperTest {
                 + "       \"creator\": {\n"
                 + "            \"name\": \"personName_value\",\n"
                 + "            \"uri\": \"http://deichman2.no/person_1\"\n"
-                + "       }\n"
+                + "       },\n"
+                + "       \"formats\": [\n"
+                + "            \"Bok\", \"DVD\""
+                + "      ]\n"
                 + "  }\n"
                 + "}").allowingAnyArrayOrdering());
     }
