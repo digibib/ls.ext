@@ -35,6 +35,7 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -624,11 +625,11 @@ public class AppTest {
     }
 
     @Test
-    public void when_index_is_cleared_search_returns_nothing () throws Exception {
+    public void when_index_is_cleared_search_returns_nothing() throws Exception {
         indexWork("101", "Lord of the rings");
         doSearchForWorks("Lord");
         HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
-        assertEquals(200, response.getStatus());
+        assertEquals(HTTP_OK, response.getStatus());
         doSearchForWorks("Lord", SHOULD_NOT_FIND);
         indexWork("102", "Lucky Luke");
         doSearchForWorks("Lucky");
@@ -639,7 +640,7 @@ public class AppTest {
         indexWork("101", "Lord of the rings");
         doSearchForWorks("Lord");
         HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
-        assertEquals(200, response.getStatus());
+        assertEquals(HTTP_OK, response.getStatus());
         doSearchForWorks("Lord", SHOULD_NOT_FIND);
         String ontologyURI = baseUri + "ontology#";
 

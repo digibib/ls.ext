@@ -82,7 +82,7 @@ public class SearchResource extends ResourceBase {
 
     @POST
     @Path("{type: work|person}/reindex_all")
-    public final Response reIndex(final @PathParam("type") String type) {
+    public final Response reIndex(@PathParam("type") final String type) {
         ForkJoinPool.commonPool().execute(new Runnable() {
             @Override
             public void run() {

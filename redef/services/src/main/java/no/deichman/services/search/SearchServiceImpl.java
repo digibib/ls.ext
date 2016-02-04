@@ -33,6 +33,7 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
@@ -81,7 +82,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Response clearIndex() {
+    public final Response clearIndex() {
         try (CloseableHttpClient httpclient = createDefault()) {
             URI uri = getIndexUriBuilder().setPath("/search").build();
 
@@ -90,8 +91,8 @@ public class SearchServiceImpl implements SearchService {
                     try (CloseableHttpResponse delete = httpclient.execute(new HttpDelete(uri))) {
                         int statusCode = delete.getStatusLine().getStatusCode();
                         LOG.info("Delete index request returned status " + statusCode);
-                        if (statusCode != 200) {
-                            throw new ServerErrorException("Failed to delete elasticsearch index", 500);
+                        if (statusCode != HTTP_OK) {
+                            throw new ServerErrorException("Failed to delete elasticsearch index", HTTP_INTERNAL_ERROR);
                         }
                     }
                 }
@@ -99,8 +100,8 @@ public class SearchServiceImpl implements SearchService {
             try (CloseableHttpResponse create = httpclient.execute(new HttpPut(uri))) {
                 int statusCode = create.getStatusLine().getStatusCode();
                 LOG.info("Create index request returned status " + statusCode);
-                if (statusCode != 200) {
-                    throw new ServerErrorException("Failed to create elasticsearch index", 500);
+                if (statusCode != HTTP_OK) {
+                    throw new ServerErrorException("Failed to create elasticsearch index", HTTP_INTERNAL_ERROR);
                 }
             }
             putIndexMapping(httpclient, "work");
@@ -119,8 +120,8 @@ public class SearchServiceImpl implements SearchService {
         try (CloseableHttpResponse create = httpclient.execute(putWorkMappingRequest)) {
             int statusCode = create.getStatusLine().getStatusCode();
             LOG.info("Create mapping request for " + type + " returned status " + statusCode);
-            if (statusCode != 200) {
-                throw new ServerErrorException("Failed to create elasticsearch mapping for " + type, 500);
+            if (statusCode != HTTP_OK) {
+                throw new ServerErrorException("Failed to create elasticsearch mapping for " + type, HTTP_INTERNAL_ERROR);
             }
         }
     }

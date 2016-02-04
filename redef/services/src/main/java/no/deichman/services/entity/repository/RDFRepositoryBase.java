@@ -226,7 +226,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public void findAllUrisOfType(String type, Consumer<String> consumer) {
+    public final void findAllUrisOfType(String type, Consumer<String> consumer) {
         log.debug("Attempting to retrieve all " + type + " uris: ");
         try (QueryExecution qexec = getQueryExecution(sqb.selectAllUrisOfType(type))) {
             disableCompression(qexec);
