@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@ignore
 Egenskap: Import av låner
   Som adminbruker
   For å slippe å registrere eksisterende lånere på nytt
