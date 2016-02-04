@@ -78,6 +78,16 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createResource("http://data.deichman.no/format#DVD")));
 
         model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_3"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#publicationOf"),
+                ResourceFactory.createResource("http://deichman2.no/work_1")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_3"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#format"),
+                ResourceFactory.createResource("http://data.deichman.no/format#Bok")));
+
+        model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://data.deichman.no/format#DVD"),
                 ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                 ResourceFactory.createPlainLiteral("DVD")));

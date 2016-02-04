@@ -18,7 +18,9 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -128,7 +130,7 @@ public final class ModelToIndexMapper {
                 }
             } else {
                 if (entry.getKey().toString().endsWith(SUFFIX_STRING_ARRAY)) {
-                    for (String arrayMemberValue : StringUtils.split(entryValue.toString(), groupConcatConcatenator)) {
+                    for (String arrayMemberValue : new HashSet<String>(Arrays.asList(StringUtils.split(entryValue.toString(), groupConcatConcatenator)))) {
                         if (entry.getValue() instanceof List) {
                             ((List) entry.getValue()).add(arrayMemberValue);
                         } else {
