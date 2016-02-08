@@ -158,9 +158,8 @@ Given(/^at materialet er holdt av til en annen låner$/) do
 end
 
 When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
-  book = @active[:book]
   @browser.goto intranet(:reserve)+@context[:publication_recordid]
-
+  barcode = @context[:item_barcode]
   user = SVC::User.new(@browser).get(name).first
 
   # lookup patron via holds
@@ -168,12 +167,22 @@ When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   form.text_field(:id => "patron").set user["dt_cardnumber"]
   form.submit
 
-  # place reservation on branch
+  # place reservation on user's own branch
   form = @browser.form(:id => "hold-request-form")
-  form.select_list(:name => "pickup").select_value @active[:branch].code
+  if @active[:patron]
+    form.select_list(:name => "pickup").select_value @active[:patron].branch.code
+  else
+    form.select_list(:name => "pickup").select_value user["dt_branch"]
+  end
   # TODO: place hold on specific item?
   # form.radio(:value => book.items.first.itemnumber).set
   form.submit
+  @cleanup.push("reservasjon på #{barcode}" =>
+                lambda do
+                  @browser.goto intranet(:reserve)+@context[:publication_recordid]
+                  @browser.link(:href => /action=cancel/).click
+                end
+  )
 end
 
 When(/^reserveringskøen kjøres$/) do
@@ -184,6 +193,11 @@ end
 When(/^katalogen reindekseres$/) do
   `docker exec koha_container koha-rebuild-zebra -v -b --wait-for-lock #{ENV['KOHA_INSTANCE']}`
   STDERR.puts "koha-rebuild-zebra has returned"
+end
+
+When(/^meldingskøen kjøres$/) do
+  `docker exec koha_container koha-foreach --enabled /usr/share/koha/bin/cronjobs/process_message_queue.pl`
+  STDERR.puts "process_message_queue.pl has returned"
 end
 
 When(/^boka plukkes og skannes inn$/) do
@@ -209,12 +223,15 @@ Then(/^viser systemet at boka er reservert og skal holdes av$/) do
 end
 
 When(/^boka sjekkes inn på låners henteavdeling$/) do
+  barcode = @active[:book] ?
+    @active[:book].items.first.barcode :
+    @context[:item_barcode]
   @site.SelectBranch.visit.select_branch(@active[:patron].branch.code)
-  @site.IntraPage.checkin(@active[:book].items.first.barcode)
+  @site.IntraPage.checkin(barcode)
 end
 
 When(/^det bekreftes at boka skal holdes av$/) do
-  @browser.form(:class => "confirm").input(:class => "approve").click
+  @browser.div(:id => "hold-found2").form(:class => "confirm").input(:class => "approve").click
 end
 
 Then(/^viser systemet at boka ligger til avhenting$/) do
@@ -509,11 +526,42 @@ end
 
 # FEATURES: email_messaging.feature
 Given(/^at bok er reservert av låner$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  step "boka er reservert av \"#{@active[:patron].surname}\""
+end
+
+
+Given(/^at meldingstyper er aktivert for låneren$/) do
+  SVC::Preference.new(@browser).set("pref_EnhancedMessagingPreferences", "1")
+  # TODO: actually parse table. For now only activates email notice
+  step "låneren får aktivert følgende meldingstyper:", table(%{
+    |type           |dagerfør|epost|sms|sammendrag|deaktivert|
+    |forfalt        |        | 1   |   |          |          |
+    |forhåndsvarsel | 2      | 1   |   |          |          |
+    |reservert      |        | 1   |   |          |          |
+    |innlevert      |        | 1   |   |          |          |
+    |utlånt         |        | 1   |   |          |          |
+  })
+end
+
+When(/^låneren får aktivert følgende meldingstyper:$/) do | table |
+  patron = @site.Home.visit.search_patrons @active[:patron].cardnumber
+  # TODO: actually parse table. For now only activates email notice
+  patron.set_messaging_preferences(table)
 end
 
 Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  step "meldingskøen kjøres"
+  usermail = "knut@knutby.no"
+  inbox = Messaging::EmailAPI.new.get_inbox(usermail)
+  mail = inbox[0]
+  # perhaps scan entire inbox?
+  mail["To"].should == usermail
+  mail["Data"].should include(@context[:publication_maintitle])
+  @cleanup.push("email box #{usermail}" =>
+              lambda do
+                Messaging::EmailAPI.new.delete_inbox(usermail)
+              end
+  )
 end
 
 Then(/^vil låneren få epost om at boka skulle vært levert på forfallsdato$/) do

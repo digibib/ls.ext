@@ -51,4 +51,12 @@ class PatronDetails < IntraPage
     #@browser.alert.ok #works in chrome & firefox, but not phantomjs
     self
   end
+
+  def set_messaging_preferences(table)
+    @browser.div(:id => "patron-messaging-prefs").element(:xpath => './following-sibling::*').link.click # Click "Edit"
+    table = @browser.fieldset(:id => "memberentry_messaging_prefs").table
+    @browser.form(:id => "entryform").wait_until_present
+    @browser.checkbox(:id => "email4").set
+    @browser.form(:id => "entryform").submit
+  end
 end
