@@ -109,7 +109,7 @@ rebuild_overview:					## Force rebuilds overview
 
 cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
-	vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
+	@vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && \
 		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
