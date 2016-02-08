@@ -221,3 +221,9 @@
   rdfs:label "Land"@no ;
   rdfs:domain :PlaceOfPublication ;
   rdfs:range xsd:string .
+
+:placeOfPublication a rdfs:Property ;
+  rdfs:label "Place of publication"@en ;
+  rdfs:label "Utgivelsessted"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range :PlaceOfPublication .

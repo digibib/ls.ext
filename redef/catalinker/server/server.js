@@ -133,7 +133,8 @@ app.get('/config', function (request, response) {
           "language",
           "format",
           "writingSystem",
-          "adaptationOfPublicationForParticularUserGroups"
+          "adaptationOfPublicationForParticularUserGroups",
+          "placeOfPublication"
         ],
         nextStep: {
           buttonLabel: "Avslutt registrering av utgivelsen"

@@ -258,6 +258,7 @@
                         case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
                             input.type = "input-nonNegativeInteger";
                             break;
+                        case "deichman:PlaceOfPublication":
                         case "deichman:Work":
                         case "deichman:Person":
                             // TODO infer from ontology that this is an URI
