@@ -8,7 +8,7 @@ class Patrons < IntraPage
     self
   end
 
-  def create(categorydesc, firstname, surname, userid, passwd)
+  def create(categorydesc, firstname, surname, userid, passwd, email=nil)
     @browser.button(:text => "New patron").click
     @browser.div(:class => "btn-group").ul(:class => "dropdown-menu").a(:text => categorydesc).click
     form = @browser.form(:name => "form")
@@ -17,6 +17,7 @@ class Patrons < IntraPage
     form.text_field(:id => "userid").set userid
     form.text_field(:id => "password").set passwd
     form.text_field(:id => "password2").set passwd
+    form.text_field(:id => "email").set email
     form.button(:name => "save").click
   end
 

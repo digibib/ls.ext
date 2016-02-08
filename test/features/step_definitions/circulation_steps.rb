@@ -557,6 +557,50 @@ Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
   # perhaps scan entire inbox?
   mail["To"].should == usermail
   mail["Data"].should include(@context[:publication_maintitle])
+
+  @cleanup.push("email box #{usermail}" =>
+              lambda do
+                Messaging::EmailAPI.new.delete_inbox(usermail)
+              end
+  )
+end
+
+Gitt(/^at epost er aktivert ved brukerregistrering$/) do
+  SVC::Preference.new(@browser).set("pref_ AutoEmailOpacUser ", 1)
+end
+
+Når(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
+  step "at det finnes en avdeling"        unless @active[:branch]
+  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
+  patron = Patron.new
+  patron.firstname = "Knut"
+  patron.password = "1234"
+  patron.email = "knut@knutby.no"
+  @site.Patrons.visit.create(
+    @active[:patroncategory].description,
+    patron.firstname,
+    patron.surname,
+    patron.userid,
+    patron.password,
+    patron.email
+  )
+  @context[:patron] = patron
+  @cleanup.push("patron #{patron.surname}" =>
+              lambda do
+                @site.Patrons.visit.delete(patron.firstname, patron.surname)
+              end
+  )
+end
+
+Så(/^vil låneren motta en velkomst\-epost fra biblioteket$/) do
+  step "meldingskøen kjøres"
+  usermail = "knut@knutby.no"
+  inbox = Messaging::EmailAPI.new.get_inbox(usermail)
+  mail = inbox[0]
+  mail["To"].should == usermail
+  mail["Data"].should include(@context[:patron].surname)
+  mail["Data"].should include(@context[:patron].userid)
+
   @cleanup.push("email box #{usermail}" =>
               lambda do
                 Messaging::EmailAPI.new.delete_inbox(usermail)

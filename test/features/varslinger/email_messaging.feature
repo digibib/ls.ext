@@ -8,13 +8,18 @@ Egenskap: Varsling på epost
 
   Bakgrunn:
     Gitt at jeg er pålogget som adminbruker
-    Og at det finnes en låner med lånekort
-      | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags | email          |
-      | Knut      | 01/08/2015   | 01/01/2020 | 0             | 0     | false    | 1234     | 0     | knut@knutby.no |
-    Og et verk med en utgivelse og et eksemplar
+
+  Scenario: Epost ved registrering av låner
+    Gitt at epost er aktivert ved brukerregistrering
+    Når jeg registrerer en ny låner med gyldig epostadresse
+    Så vil låneren motta en velkomst-epost fra biblioteket
 
   Scenario: Epost om reservert tittel som er klar til avhenting
-    Gitt at meldingstyper er aktivert for låneren
+    Gitt at det finnes en låner med lånekort
+      | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags | email          |
+      | Knut      | 01/08/2015   | 01/01/2020 | 0             | 0     | false    | 1234     | 0     | knut@knutby.no |
+    Og at meldingstyper er aktivert for låneren
+    Og et verk med en utgivelse og et eksemplar
     Og at bok er reservert av låner
     Og boka sjekkes inn på låners henteavdeling
     Og det bekreftes at boka skal holdes av
@@ -23,4 +28,5 @@ Egenskap: Varsling på epost
   @wip
   Scenario: Epost om bok som skulle vært levert
     Gitt at eksemplaret er utlånt til en låner
+    Når boka har passert forfallsdato
     Så vil låneren få epost om at boka skulle vært levert på forfallsdato

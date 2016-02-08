@@ -92,10 +92,11 @@ ItemType = Struct.new(:code, :desc) do
   end
 end unless defined?(ItemType)
 
-Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password, :debarred) do
+Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password, :debarred, :userid, :email) do
   def initialize
     self.cardnumber = generateRandomString
     self.surname    = generateRandomString
+    self.userid     = generateRandomString
     self.branch     = Branch.new
     self.category   = PatronCategory.new
     self.debarred   = false
