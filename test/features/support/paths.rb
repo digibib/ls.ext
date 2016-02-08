@@ -17,6 +17,7 @@ module Paths
       :catalinker => 8010,
       :patron_client => 8000,
       :services => 8005,
+      :email_api => 8100,
       :triplestore => 3030
     }
     raise ArgumentError, "Invalid port argument" unless port && ports[port.to_sym]
