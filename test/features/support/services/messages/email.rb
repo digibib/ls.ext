@@ -33,9 +33,11 @@ module Messaging
     def get_inbox(address)
       self.status
       uri = URI("#{self.api}/inbox/#{address}")
-      res = Net::HTTP.get_response(uri)
-      expect(res.code).to eq("200"), "got unexpected #{res.code} when fetching inbox"
-      JSON.parse(res.body)
+      retry_http_request do
+        res = Net::HTTP.get_response(uri)
+        expect(res.code).to eq("200"), "got unexpected #{res.code} when fetching inbox"
+        JSON.parse(res.body)
+      end
     end
 
     def delete_inbox(address)

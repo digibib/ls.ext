@@ -550,13 +550,16 @@ When(/^låneren får aktivert følgende meldingstyper:$/) do | table |
 end
 
 Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
-  step "meldingskøen kjøres"
-  usermail = "knut@knutby.no"
-  inbox = Messaging::EmailAPI.new.get_inbox(usermail)
-  mail = inbox[0]
-  # perhaps scan entire inbox?
-  mail["To"].should == usermail
-  mail["Data"].should include(@context[:publication_maintitle])
+  usermail = @context[:patrons][0].email
+  retry_wait do
+    step "meldingskøen kjøres"
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+      inbox = Messaging::EmailAPI.new.get_inbox(usermail)
+      mail = inbox[0]
+      mail["To"].should == usermail
+      mail["Data"].should include(@context[:publication_maintitle])
+    end # wait until dom-tree has been populated
+  end
 
   @cleanup.push("email box #{usermail}" =>
               lambda do
@@ -565,17 +568,16 @@ Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
   )
 end
 
-Gitt(/^at epost er aktivert ved brukerregistrering$/) do
-  SVC::Preference.new(@browser).set("pref_ AutoEmailOpacUser ", 1)
+Given(/^at epost er aktivert ved brukerregistrering$/) do
+  SVC::Preference.new(@browser).set("pref_AutoEmailOpacUser ", 1)
 end
 
-Når(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
+When(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
   step "at det finnes en avdeling"        unless @active[:branch]
   step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
   patron = Patron.new
   patron.firstname = "Knut"
   patron.password = "1234"
-  patron.email = "knut@knutby.no"
   @site.Patrons.visit.create(
     @active[:patroncategory].description,
     patron.firstname,
@@ -584,7 +586,7 @@ Når(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
     patron.password,
     patron.email
   )
-  @context[:patron] = patron
+  @active[:patron] = patron
   @cleanup.push("patron #{patron.surname}" =>
               lambda do
                 @site.Patrons.visit.delete(patron.firstname, patron.surname)
@@ -592,14 +594,18 @@ Når(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
   )
 end
 
-Så(/^vil låneren motta en velkomst\-epost fra biblioteket$/) do
-  step "meldingskøen kjøres"
-  usermail = "knut@knutby.no"
-  inbox = Messaging::EmailAPI.new.get_inbox(usermail)
-  mail = inbox[0]
-  mail["To"].should == usermail
-  mail["Data"].should include(@context[:patron].surname)
-  mail["Data"].should include(@context[:patron].userid)
+Then(/^vil låneren motta en velkomst\-epost fra biblioteket$/) do
+  usermail = @active[:patron].email
+  retry_wait do
+    step "meldingskøen kjøres"
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+      inbox = Messaging::EmailAPI.new.get_inbox(usermail)
+      mail = inbox[0]
+      mail["To"].should == usermail
+      mail["Data"].should include(@active[:patron].surname)
+      mail["Data"].should include(@active[:patron].userid)
+    end # wait until dom-tree has been populated
+  end
 
   @cleanup.push("email box #{usermail}" =>
               lambda do
