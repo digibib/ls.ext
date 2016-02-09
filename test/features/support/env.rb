@@ -35,3 +35,18 @@ def retry_wait
 	  end
 	end
 end
+
+def retry_http_request(tries=3, &block)
+	begin
+		yield
+	rescue Errno::ETIMEDOUT, Timeout::Error, Errno::ECONNREFUSED
+		STDERR.puts "HTTP Timeout: retrying ...  #{(tries -= 1)}"
+		fail if (tries == 0)
+		retry
+	rescue RSpec::Expectations::ExpectationNotMetError => e
+		STDERR.puts "Error in HTTP Request: #{e} - retrying ...  #{(tries -= 1)}"
+		fail if (tries == 0)
+		sleep(3)
+		retry
+	end
+end
