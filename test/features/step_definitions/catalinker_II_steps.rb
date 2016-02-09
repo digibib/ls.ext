@@ -125,22 +125,36 @@ When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label
   @site.WorkFlow.add_prop(domain, predicate, value)
   fragment = predicate.partition('#').last()
   symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym
-  @context[symbol] = value
+  @context[parameter_label] = value
 end
 
-When(/^jeg velger verdien "([^"]*)" for "([^"]*)"$/) do |value, selectable_parameter_label|
+def do_select_value(selectable_parameter_label, value)
   select = @browser.selects(:xpath => '//select[preceding-sibling::label/@data-uri-escaped-label = "' + URI::escape(selectable_parameter_label) + '"]')[0]
   select_id = select.attribute_value('data-automation-id')
   predicate = select_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
   domain = select_id.match(/^(Work|Publication|Person)_.*/).captures[0]
   @site.WorkFlow.select_prop(domain, predicate, value)
   fragment = predicate.partition('#').last()
-  symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym
-  @context[symbol] = value
+  "#{domain.downcase}_#{fragment.downcase}".to_sym
+end
+
+When(/^jeg velger verdien "([^"]*)" for "([^"]*)"$/) do |value, selectable_parameter_label|
+  do_select_value(selectable_parameter_label, value)
+  @context[selectable_parameter_label] = value
+end
+
+When(/^jeg velger verdiene "([^"]*)" og "([^"]*)" for "([^"]*)"$/) do |value_1, value_2, selectable_parameter_label|
+  do_select_value(selectable_parameter_label, value_1)
+  do_select_value(selectable_parameter_label, value_2)
+  @context[selectable_parameter_label] = [value_1, value_2]
 end
 
 When(/^jeg følger lenken til posten i Koha i arbeidsflyten$/) do
   link = @browser.a(:data_automation_id => 'biblio_record_link').href
   steps 'at jeg er logget inn som adminbruker'
   @browser.goto(link)
+end
+
+When(/^tar jeg en liten pause$/) do
+  sleep(1)
 end

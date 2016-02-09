@@ -29,7 +29,7 @@
                             {{^disabled}}
                             <button class="prop-add" on-click="addValue">+</button>
                             {{/}}
-                            <label>{{label}}</label>
+                            <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
                         </div>
                     </div>
                     <div class="column three-fifths prop-values">

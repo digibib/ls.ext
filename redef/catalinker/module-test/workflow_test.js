@@ -72,9 +72,8 @@ describe("Catalinker", function () {
       });
 
       // load module
-      Main.init("/main_template.html").then(function (m) {
-        testRactive = m;
-        return Main.loadOntology();
+      Main.init().then(function (m) {
+        testRactive = Main.getRactive();
       }).then(function () {
         done();
       }).catch(function (err) {

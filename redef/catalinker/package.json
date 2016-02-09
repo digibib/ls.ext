@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "axios": "0.7.0",
+    "Select2": "select2/select2",
     "browserify-middleware": "^3.0.0",
     "debug": "~2.2.0",
     "express": "~4.13.1",

@@ -145,15 +145,15 @@
 {{/search_result}}
 {{/partial}}
 
-{{#partial select-authorized-value}}
+{{#partial select-predefined-value}}
 <select
-        class="authorized"
+        class="authorized" style="width: 100%;"
+        value="{{current.value}}"
+        decoratot="select2"
         data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
-        on-change='patchResource:{{predicate}},{{this}},{{rdfType}}'
-        on-keyup="countdownToSave"
-        value="{{current.value}}">
-    <option value="">(ikke valgt)</option>
-    {{#getAuthorizedValues(fragment)}}
+        on-change='patchResource:{{predicate}},{{rdfType}}'
+        multiple="multiple">
+    {{#each predefinedValues[fragment]}}
     <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
     {{/each}}
 </select>
@@ -163,9 +163,7 @@
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
-on-keyup="countdownToSave"
-on-change="countdownToSave"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
 value="{{current.value}}" />
 {{/partial}}
@@ -185,9 +183,7 @@ value="{{current.displayValue}}" />
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
-on-keyup="countdownToSave"
-on-change="countdownToSave"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
 value="{{current.value}}" />
 <select value="{{current.lang}}" on-change='patchResource:{{predicate}},' class="select_lang">
@@ -202,8 +198,7 @@ value="{{current.value}}" />
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
-on-keyup="countdownToSave"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
 value="{{current.value}}" />
 {{/partial}}
@@ -212,9 +207,7 @@ value="{{current.value}}" />
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}},{{this}},{{rdfType}}'
-on-keyup="countdownToSave"
-on-change="countdownToSave"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{rdfType}}_{{predicate}}_{{@index}},rdfType"
 value="{{current.value}}" />
 {{/partial}}

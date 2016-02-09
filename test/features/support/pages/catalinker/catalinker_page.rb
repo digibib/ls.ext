@@ -79,13 +79,31 @@ class CatalinkerPage < PageRoot
     input.value
   end
 
+  def get_prop_by_label(input_label, nr=0)
+    input = @browser.inputs(:xpath => '//label[@data-uri-escaped-label="' + URI::escape(input_label) + '"]/../../following-sibling::div/input')[0]
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value != "" }
+    input.value
+  end
+
   def get_select_prop(predicate, nr=0)
     input = @browser.select_list(:data_automation_id => "#{predicate}_#{nr}")
     selected_options = input.selected_options
     if (selected_options.size.eql? 1)
       selected_options.first.text
     else
-      false
+      selected_options.map do |option|
+      end
+    end
+  end
+
+  def get_select_prop_by_label(selectable_parameter_label, index=0)
+    select = @browser.selects(:xpath => '//label[@data-uri-escaped-label="' + URI::escape(selectable_parameter_label) + '"]/../../following-sibling::div/select')[index]
+    selected_options = select.selected_options
+    if (selected_options.size.eql? 1)
+      selected_options.first.text
+    else
+      selected_options.map do |option|
+      end
     end
   end
 

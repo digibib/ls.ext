@@ -12,14 +12,15 @@
         var _ = require("underscore");
         var $ = require("jquery");
         var ldGraph = require("ld-graph");
+        var select2 = require("select2");
 
-        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph);
+        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, select2);
 
     } else {
         // Browser globals (root is window)
-        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph);
+        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.select2);
     }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, select2) {
     "use strict";
 
     Ractive.DEBUG = false;
@@ -60,52 +61,80 @@
         }
     }
 
-    var loadExistingResource = function (uri) {
-        axios.get(uri)
-            .then(function (response) {
-                ractive.set("resource_uri", uri);
-                var graphData = ensureJSON(response.data);
+    function propertyName(predicate) {
+        return _.last(predicate.split("#"));
+    }
 
-                var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(uri)[1]);
-                ractive.set("targetResources." + type + ".uri", uri);
-                var root = ldGraph.parse(graphData).byType(type)[0];
+    function setMultiValues(values, inputs_n) {
+        if (values && values.length > 0) {
+            var valuesAsArray = values.length == 0 ? [] : _.map(values, function (value) {
+                return value.value;
+            });
+            ractive.set(inputs_n + ".values.0", {
+                old: {
+                    value: valuesAsArray
+                },
+                current: {
+                    value: valuesAsArray
+                }
+            });
+            console.log("Setting " + inputs_n + ".values.0.current.value -> " + ractive.get(inputs_n + ".values.0.current.value"));
+        }
+    }
 
-                _.each(ractive.get("inputs"), function (input, inputIndex) {
-                    if (type == unPrefix(input.domain)) {
-                        var kp = "inputs." + inputIndex;
-                        var values = [];
-                        var authorizedValue = input.type === "select-authorized-value";
-                        if (authorizedValue) {
-                            values = root.outAll(_.last(input.predicate.split("#")));
-                        } else {
-                            values = root.getAll(_.last(input.predicate.split("#")));
-                        }
-                        if (values.length > 0) {
-                            var idx;
-                            for (idx = 0; idx < values.length; idx++) {
-                                ractive.set(kp + ".values." + idx, {
-                                    old: {
-                                        value: "",
-                                        lang: ""
-                                    },
-                                    current: {
-                                        value: authorizedValue ? values[idx].id : values[idx].value,
-                                        lang: values[idx].lang
-                                    }
-                                });
-                                console.log("Setting " + kp + ".values." + idx + ".current.value -> " + ractive.get(kp + ".values." + idx + ".current.value"));
-                            }
-                        }
+    function setSingleValues(values, inputs_n) {
+        if (values.length > 0) {
+            var idx;
+            for (idx = 0; idx < values.length; idx++) {
+                ractive.set(inputs_n + ".values." + idx, {
+                    old: {
+                        value: values[idx].value,
+                        lang: values[idx].lang
+                    },
+                    current: {
+                        value: values[idx].value,
+                        lang: values[idx].lang
                     }
                 });
-                ractive.update();
-                ractive.set("save_status", "åpnet eksisterende ressurs");
-            })
-            .catch(function (err) {
-                console.log("HTTP GET existing resource failed with:");
-                console.log(err);
-            });
-    };
+                console.log("Setting " + inputs_n + ".values." + idx + ".current.value -> " + ractive.get(inputs_n + ".values." + idx + ".current.value"));
+            }
+        }
+    }
+
+    var loadExistingResource = function (uri) {
+            axios.get(uri)
+                .then(function (response) {
+                    ractive.set("resource_uri", uri);
+                    var graphData = ensureJSON(response.data);
+
+                    var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(uri)[1]);
+                    ractive.set("targetResources." + type + ".uri", uri);
+                    var root = ldGraph.parse(graphData).byType(type)[0];
+
+                        _.each(ractive.get("inputs"), function (input, inputIndex) {
+                            if (type == unPrefix(input.domain)) {
+                                var inputs_n = "inputs." + inputIndex;
+                                var predicate = input.predicate;
+                                if (input.type === "select-authorized-value") {
+                                    setMultiValues(root.outAll(propertyName(predicate)), inputs_n);
+                                } else if (input.type === "select-predefined-value") {
+                                    setMultiValues(root.getAll(propertyName(predicate)), inputs_n);
+                                } else {
+                                    setSingleValues(root.getAll(propertyName(predicate)), inputs_n);
+                                }
+                            }
+                        });
+                        ractive.update();
+                        ractive.set("save_status", "åpnet eksisterende ressurs");
+                    $("select").select2();
+                    }
+                )
+                //.catch(function (err) {
+                //    console.log("HTTP GET existing resource failed with:");
+                //    console.log(err);
+                //});
+        }
+        ;
 
     var saveNewResourceFromInputs = function (resourceType) {
         // collect inputs related to resource type
@@ -144,9 +173,8 @@
             });
     };
 
-    var loadAuthorizedValues = function (url, predicate) {
-
-        axios.get(url)
+    var loadPredefinedValues = function (url, property) {
+        return axios.get(url)
             .then(function (response) {
                 var values = ensureJSON(response.data);
                 // resolve all @id uris
@@ -154,7 +182,7 @@
                     v["@id"] = Ontology.resolveURI(values, v["@id"]);
                 });
 
-                var values_sorted = values["@graph"].sort(function (a, b) {
+                var valuesSorted = values["@graph"].sort(function (a, b) {
                     if (a["rdfs:label"]["@value"] < b["rdfs:label"]["@value"]) {
                         return -1;
                     }
@@ -163,22 +191,19 @@
                     }
                     return 0;
                 });
-                ractive.set("authorized_values." + unPrefix(predicate), values_sorted);
-            })
-            .catch(function (err) {
-                console.log("GET authorized values error: " + err);
+                return {property: property, values: valuesSorted};
+            }).catch(function (error) {
+                console.log(error);
             });
     };
 
-    var onOntologyLoad = function (ont) {
-        var props = Ontology.allProps(ont),
+    var createInputGroups = function (applicationData) {
+        var props = Ontology.allProps(applicationData.ontology),
             inputs = [],
             inputMap = {},
             targetUri = {};
-
-        ractive.set("ontology", ont);
-        ractive.set("targetUri", targetUri);
-
+        applicationData.predefinedValues = {};
+        var predefinedValues = [];
         for (var i = 0; i < props.length; i++) {
             var disabled = false;
             if (props[i]["http://data.deichman.no/ui#editable"] !== undefined && props[i]["http://data.deichman.no/ui#editable"] !== true) {
@@ -186,9 +211,10 @@
             }
 
             // Fetch authorized values, if required
+            var predicate = Ontology.resolveURI(applicationData.ontology, props[i]["@id"]);
             if (props[i]["http://data.deichman.no/utility#valuesFrom"]) {
                 var url = props[i]["http://data.deichman.no/utility#valuesFrom"]["@id"];
-                loadAuthorizedValues(url, props[i]["@id"]);
+                predefinedValues.push(loadPredefinedValues(url, props[i]["@id"]))
             }
             var datatype = props[i]["rdfs:range"]["@id"];
             var domains = props[i]["rdfs:domain"];
@@ -196,28 +222,28 @@
                 if (_.isObject(domain)) {
                     domain = domain['@id'];
                 }
-                var predicate = Ontology.resolveURI(ont, props[i]["@id"]);
+                var predefined = props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false;
                 var input = {
                     disabled: disabled,
                     searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
                     predicate: predicate,
                     fragment: predicate.substring(predicate.lastIndexOf("#") + 1),
-                    authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
+                    predefined: predefined,
                     range: datatype,
                     datatype: datatype,
                     label: i18nLabelValue(props[i]["rdfs:label"]),
                     domain: domain,
                     values: [{
                         old: {value: "", lang: ""},
-                        current: {value: "", lang: ""}
+                        current: {value: predefined ? [] : "", lang: ""}
                     }]
                 };
 
                 if (input.searchable) {
                     input.type = "input-string-searchable";
                     input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                } else if (input.authorized) {
-                    input.type = "select-authorized-value";
+                } else if (input.predefined) {
+                    input.type = "select-predefined-value";
                     input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                 } else {
                     switch (input.range) {
@@ -251,8 +277,8 @@
 
         }
         var inputGroups = [];
-        var ontologyUri = ractive.get("config.ontologyUri");
-        var tabs = ractive.get("config.tabs");
+        var ontologyUri = applicationData.config.ontologyUri;
+        var tabs = applicationData.config.tabs;
         _.each(tabs, function (tab) {
             var group = {};
             var groupInputs = [];
@@ -280,8 +306,14 @@
         if (inputGroups.length > 0) {
             inputGroups[0].tabSelected = true;
         }
-        ractive.set("inputs", inputs);
-        ractive.set("inputGroups", inputGroups);
+        applicationData.inputGroups = inputGroups;
+        applicationData.inputs = inputs;
+        return axios.all(predefinedValues).then(function (values) {
+            _.each(values, function (predefinedValue) {
+                applicationData.predefinedValues[unPrefix(predefinedValue.property)] = predefinedValue.values;
+            });
+            return applicationData;
+        });
     };
 
     /* public API */
@@ -297,6 +329,7 @@
         patchResourceFromValue: function (subject, predicate, inputValue, datatype, errors, keypath) {
             var patch = Ontology.createPatch(subject, predicate, inputValue, datatype);
             if (patch && patch.trim() != "") {
+                ractive.set("save_status", "arbeider...");
                 axios.patch(subject, patch, {
                         headers: {
                             Accept: "application/ld+json",
@@ -312,19 +345,20 @@
                             ractive.set(keypath + ".old.value", cur.value);
                             ractive.set(keypath + ".old.lang", cur.lang);
 
-                            ractive.set("save_status", "alle endringer er lagret");
                         }
+                        ractive.set("save_status", "alle endringer er lagret");
+                        ractive.update();
                     })
                     .catch(function (response) {
                         // failed to patch resource
                         console.log("HTTP PATCH failed with: ");
                         errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+                        ractive.set("save_status", "");
                     });
             }
         },
         init: function () {
             var template = "/main_template.html";
-            var config;
             window.onerror = function (message, url, line) {
                 // Log any uncaught exceptions to assist debugging tests.
                 // TODO remove this when everything works perfectly (as if...)
@@ -339,313 +373,330 @@
             var errors = [];
 
             // Start initializing - return a Promise
-            return axios.get("/config")
-                .then(function (response) {
-                    config = ensureJSON(response.data);
-                    return;
-                })
-                .then(function () {
-                    return axios.get(template);
-                })
-                .then(function (response) {
-                    // Initialize ractive component from template
-                    ractive = new Ractive({
-                        el: "#container",
-                        lang: "no",
-                        template: response.data,
-                        data: {
-                            authorized_values: {},
-                            errors: errors,
-                            resource_type: "",
-                            resource_label: "",
-                            resource_uri: "",
-                            inputs: {},
-                            inputMap: {},
-                            ontology: null,
-                            search_result: null,
-                            config: config,
-                            save_status: "ny ressurs",
-                            getAuthorizedValues: function (fragment) {
-                                return ractive.get("authorized_values." + fragment);
+            var loadTemplate = function (applicationData) {
+                return axios.get(template).then(
+                    function (response) {
+                        applicationData.template = response.data;
+                        return applicationData;
+                    });
+            };
+
+            var extractConfig = function (response) {
+                return {config: ensureJSON(response.data)};
+            };
+
+            var initRactive = function (applicationData) {
+                // Initialize ractive component from template
+                ractive = new Ractive({
+                    el: "#container",
+                    lang: "no",
+                    template: applicationData.template,
+                    data: {
+                        predefinedValues: applicationData.predefinedValues,
+                        errors: errors,
+                        resource_type: "",
+                        resource_label: "",
+                        resource_uri: "",
+                        iputGroups: applicationData.inputGroups,
+                        ontology: null,
+                        search_result: null,
+                        config: applicationData.config,
+                        save_status: "ny ressurs",
+                        isSelected: function (option, value) {
+                            return option["@id"].contains(value) ? "selected='selected'" : "";
+                        },
+                        getRdfsLabelValue: function (label) {
+                            return i18nLabelValue(label)
+                        },
+                        tabEnabled: function (tabSelected, domainType) {
+                            return tabSelected === true || ractive.get("targetUri." + domainType);
+                        },
+                        nextStepEnabled: function (domainType) {
+                            return !(domainType === 'Work' && !ractive.get('targetUri.Person'));
+                        },
+                        publicationId: function () {
+                            var publicationIdInput = _.find(ractive.get("inputs"), function (input) {
+                                return input.predicate.indexOf("#recordID") != -1;
+                            });
+                            if (publicationIdInput) {
+                                return _.first(publicationIdInput.values).current.value;
+                            }
+                        },
+                        inPreferredLanguage: function (text) {
+                            if (typeof text === 'string') {
+                                return text;
+                            } else {
+                                var preferredTexts = _.compact([
+                                    _.find(text, function (value, lang) {
+                                        return lang === "nb";
+                                    }), _.find(text, function (value, lang) {
+                                        return lang === "nn";
+                                    }), _.find(text, function (value, lang) {
+                                        return lang === "default";
+                                    }), _.find(text, function () {
+                                        return true;
+                                    })]);
+                                return _.first(preferredTexts);
+                            }
+                        },
+                        selected: function(values, option) {
+                            return _.contains(values, option["@id"]) ? "selected='selected'" : "";
+                        },
+                        targetResources: {
+                            Work: {
+                                uri: "",
+                                pendingProperties: []
                             },
-                            getRdfsLabelValue: function (label) {
-                                return i18nLabelValue(label)
+                            Person: {
+                                uri: "",
+                                pendingProperties: []
                             },
-                            tabEnabled: function (tabSelected, domainType) {
-                                return tabSelected === true || ractive.get("targetUri." + domainType);
-                            },
-                            nextStepEnabled: function (domainType) {
-                                return !(domainType === 'Work' && !ractive.get('targetUri.Person'));
-                            },
-                            publicationId: function () {
-                                var publicationIdInput = _.find(ractive.get("inputs"), function (input) {
-                                    return input.predicate.indexOf("#recordID") != -1;
+                            Publication: {
+                                uri: "",
+                                pendingProperties: []
+                            }
+                        }
+                    },
+                    decorators: {
+                        repositionSupportPanel: function (node) {
+                            $(node).find(".support-panel").css({top: $(node).position().top})
+                            Main.repositionSupportPanelsHorizontally();
+                            return {
+                                teardown: function () {
+                                }
+                            }
+                        },
+                        select2: function (node) {
+                            $(node).select2();
+                            return {
+                                teardown: function () {
+                                }
+                            }
+                        }
+                    }
+                });
+                ractive.on({
+                    // addValue adds another input field for the predicate.
+                    addValue: function (event) {
+                        ractive.get(event.keypath).values.push({
+                            old: {value: "", lang: ""},
+                            current: {value: "", lang: ""}
+                        });
+                    },
+                    // patchResource creates a patch request based on previous and current value of
+                    // input field, and sends this to the backend.
+                    patchResource: function (event, predicate, rdfType) {
+                        var inputValue = event.context;
+                        if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
+                            return;
+                        }
+                        var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
+                        var subject = ractive.get("targetUri." + rdfType);
+                        if (subject) {
+                            Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
+                            ractive.update();
+                        }
+                    },
+                    searchResource: function (event, predicate, searchString) {
+                        // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
+                        var searchType = "person";
+                        var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search";
+                        var searchData = {
+                            query: {
+                                match: {
+                                    'person.name': {
+                                        query: searchString,
+                                        operator: "and"
+                                    }
+                                }
+                            }
+                        };
+                        axios.post(searchURI, searchData)
+                            .then(function (response) {
+                                var results = ensureJSON(response.data);
+                                results.hits.hits.forEach(function (hit) {
+                                    var person = hit._source.person;
+                                    person.isChecked = false;
+                                    _.each(person.work, function (work) {
+                                        work.isChecked = false;
+                                    });
                                 });
-                                if (publicationIdInput) {
-                                    return _.first(publicationIdInput.values).current.value;
-                                }
-                            },
-                            inPreferredLanguage: function(text) {
-                                if (typeof text === 'string') {
-                                    return text;
-                                } else {
-                                    var preferredTexts = _.compact([
-                                        _.find(text, function (value, lang) {
-                                            return lang === "nb";
-                                        }), _.find(text, function (value, lang) {
-                                            return lang === "nn";
-                                        }), _.find(text, function (value, lang) {
-                                            return lang === "default";
-                                        }), _.find(text, function () {
-                                            return true;
-                                        })]);
-                                    return _.first(preferredTexts);
-                                }
-                            },
-                            targetResources: {
-                                Work: {
-                                    uri: "",
-                                    pendingProperties: []
-                                },
-                                Person: {
-                                    uri: "",
-                                    pendingProperties: []
-                                },
-                                Publication: {
-                                    uri: "",
-                                    pendingProperties: []
-                                }
-                            }
-                        },
-                        decorators: {
-                            repositionSupportPanel: function (node) {
-                                $(node).find(".support-panel").css({top: $(node).position().top})
-                                Main.repositionSupportPanelsHorizontally();
-                                return {
-                                    teardown: function () {
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    ractive.on({
-                        countdownToSave: function (event) {
-                            // TODO find better name to this function
-                            if (event.context.current.value === "" && event.context.old.value === "") {
-                                return;
-                            }
-                            ractive.set("save_status", "arbeider...");
-                        },
-                        // addValue adds another input field for the predicate.
-                        addValue: function (event) {
-                            ractive.get(event.keypath).values.push({
-                                old: {value: "", lang: ""},
-                                current: {value: "", lang: ""}
-                            });
-                        },
-                        // patchResource creates a patch request based on previous and current value of
-                        // input field, and sends this to the backend.
-                        patchResource: function (event, predicate, origin, rdfType) {
-                            var inputValue = event.context;
-                            if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
-                                return;
-                            }
-                            var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                            var subject = ractive.get("targetUri." + rdfType);
-                            if (subject) {
-                                Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
-                                ractive.update();
-                            }
-                        },
-                        searchResource: function (event, predicate, searchString) {
-                            // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
-                            var searchType = "person";
-                            var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search";
-                            var searchData = {
-                                query: {
-                                    match: {
-                                        'person.name': {
-                                            query: searchString,
-                                            operator: "and"
-                                        }
-                                    }
-                                }
-                            };
-                            axios.post(searchURI, searchData)
-                                .then(function (response) {
-                                    var results = ensureJSON(response.data);
-                                    results.hits.hits.forEach(function (hit) {
-                                        var person = hit._source.person;
-                                        person.isChecked = false;
-                                        _.each(person.work, function (work) {
-                                            work.isChecked = false;
-                                        });
-                                    });
 
-                                    ractive.set("search_result", {
-                                        origin: event.keypath,
-                                        predicate: predicate,
-                                        results: results
-                                    });
-                                }).catch(function (err) {
-                                console.log(err);
-                            });
-                        },
-                        toggleWork: function (event) {
-                            var keypath = event.keypath + '.toggleWork';
-                            ractive.get(keypath) !== true ?
-                                ractive.set(keypath, true) :
-                                ractive.set(keypath, false);
-                        },
-                        selectPersonResource: function (event, predicate, origin) {
-                            console.log("select resource");
-                            if (ractive.get("targetUri.Person")) {
-                                ractive.set("targetUri.Work", null);
-                                unsetInputsForDomain("Work");
-                            }
-                            // selectPersonResource takes origin as param, as we don't know where clicked search hits comes from
-                            var uri = event.context.uri;
-                            var name = event.context.name;
-                            ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
-                            ractive.set(origin + ".current.value", uri);
-                            ractive.set(origin + ".current.displayValue", name);
-                            ractive.set(origin + ".deletable", true);
-                            ractive.set(origin + ".searchable", false);
-                            loadExistingResource(uri);
-                            ractive.set("targetUri.Person", uri);
-                            ractive.update();
-                        },
-                        selectWorkResource: function (event) {
-                            console.log("select work resource");
-                            var uri = event.context.uri;
-                            loadExistingResource(uri);
-                            ractive.set("targetUri.Work", uri);
-                            ractive.update();
-                        },
-                        setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
-                            ractive.fire("selectPersonResource", {context: person}, predicate, origin, domainType);
-                            ractive.fire("selectWorkResource", {context: event.context});
-                        },
-                        delResource: function (event, predicate) {
-                            ractive.set("search_result", null);
-                            ractive.set(event.keypath + ".current.value", "");
-                            ractive.set(event.keypath + ".current.displayValue", "");
-                            ractive.set(event.keypath + ".deletable", false);
-                            ractive.set(event.keypath + ".searchable", true);
-                            ractive.update();
-                            ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
-                        },
-                        unselectWorkAndPerson: function (event) {
-                            ractive.set("search_result", null);
-                            ractive.set(event.keypath + ".current.value", "");
-                            ractive.set(event.keypath + ".current.displayValue", "");
-                            ractive.set(event.keypath + ".deletable", false);
-                            ractive.set(event.keypath + ".searchable", true);
+                                ractive.set("search_result", {
+                                    origin: event.keypath,
+                                    predicate: predicate,
+                                    results: results
+                                });
+                            }).catch(function (err) {
+                            console.log(err);
+                        });
+                    },
+                    toggleWork: function (event) {
+                        var keypath = event.keypath + '.toggleWork';
+                        ractive.get(keypath) !== true ?
+                            ractive.set(keypath, true) :
+                            ractive.set(keypath, false);
+                    },
+                    selectPersonResource: function (event, predicate, origin) {
+                        console.log("select resource");
+                        if (ractive.get("targetUri.Person")) {
                             ractive.set("targetUri.Work", null);
-                            unsetInputsForDomain('Work');
-                            ractive.set("targetUri.Person", null);
-                            unsetInputsForDomain('Person');
-                            ractive.update();
-                        },
-                        activateTab: function (event) {
-                            _.each(ractive.get("inputGroups"), function (group, groupIndex) {
-                                var keyPath = "inputGroups." + groupIndex;
-                                ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
-                            });
-                        },
-                        nextStep: function (event) {
-                            var newResourceType = event.context.createNewResource;
-                            if (newResourceType && (!ractive.get("targetUri." + newResourceType))) {
-                                saveNewResourceFromInputs(newResourceType);
-                            }
-                            var foundSelectedTab = false;
-                            _.each(ractive.get("inputGroups"), function (group, groupIndex) {
-                                var keyPath = "inputGroups." + groupIndex;
-                                if (foundSelectedTab) {
-                                    ractive.set(keyPath + ".tabSelected", true);
-                                    foundSelectedTab = false;
-                                } else {
-                                    if (ractive.get(keyPath + ".tabSelected")) {
-                                        foundSelectedTab = true;
-                                    }
-                                    ractive.set(keyPath + ".tabSelected", false);
+                            unsetInputsForDomain("Work");
+                        }
+                        // selectPersonResource takes origin as param, as we don't know where clicked search hits comes from
+                        var uri = event.context.uri;
+                        var name = event.context.name;
+                        ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
+                        ractive.set(origin + ".current.value", uri);
+                        ractive.set(origin + ".current.displayValue", name);
+                        ractive.set(origin + ".deletable", true);
+                        ractive.set(origin + ".searchable", false);
+                        loadExistingResource(uri);
+                        ractive.set("targetUri.Person", uri);
+                        ractive.update();
+                    },
+                    selectWorkResource: function (event) {
+                        console.log("select work resource");
+                        var uri = event.context.uri;
+                        loadExistingResource(uri);
+                        ractive.set("targetUri.Work", uri);
+                        ractive.update();
+                    },
+                    setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
+                        ractive.fire("selectPersonResource", {context: person}, predicate, origin, domainType);
+                        ractive.fire("selectWorkResource", {context: event.context});
+                    },
+                    delResource: function (event, predicate) {
+                        ractive.set("search_result", null);
+                        ractive.set(event.keypath + ".current.value", "");
+                        ractive.set(event.keypath + ".current.displayValue", "");
+                        ractive.set(event.keypath + ".deletable", false);
+                        ractive.set(event.keypath + ".searchable", true);
+                        ractive.update();
+                        ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
+                    },
+                    unselectWorkAndPerson: function (event) {
+                        ractive.set("search_result", null);
+                        ractive.set(event.keypath + ".current.value", "");
+                        ractive.set(event.keypath + ".current.displayValue", "");
+                        ractive.set(event.keypath + ".deletable", false);
+                        ractive.set(event.keypath + ".searchable", true);
+                        ractive.set("targetUri.Work", null);
+                        unsetInputsForDomain('Work');
+                        ractive.set("targetUri.Person", null);
+                        unsetInputsForDomain('Person');
+                        ractive.update();
+                    },
+                    activateTab: function (event) {
+                        _.each(ractive.get("inputGroups"), function (group, groupIndex) {
+                            var keyPath = "inputGroups." + groupIndex;
+                            ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
+                        });
+                    },
+                    nextStep: function (event) {
+                        var newResourceType = event.context.createNewResource;
+                        if (newResourceType && (!ractive.get("targetUri." + newResourceType))) {
+                            saveNewResourceFromInputs(newResourceType);
+                        }
+                        var foundSelectedTab = false;
+                        _.each(ractive.get("inputGroups"), function (group, groupIndex) {
+                            var keyPath = "inputGroups." + groupIndex;
+                            if (foundSelectedTab) {
+                                ractive.set(keyPath + ".tabSelected", true);
+                                foundSelectedTab = false;
+                            } else {
+                                if (ractive.get(keyPath + ".tabSelected")) {
+                                    foundSelectedTab = true;
                                 }
-                            });
-                        }
-                    });
-
-                    // Observing input for instant validation:
-                    ractive.observe("inputs.*.values.*", function (newValue, oldValue, keypath) {
-                        if (newValue.current.value === "") {
-                            ractive.set(keypath + ".error", false);
-                            return;
-                        }
-                        var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
-                        var valid = false;
-                        try {
-                            valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range);
-                        } catch (e) {
-                            console.log(e);
-                            return;
-                        }
-                        if (valid) {
-                            ractive.set(keypath + ".error", false);
-                        } else {
-                            ractive.set(keypath + ".error", "ugyldig input");
-                        }
-                    });
-
-                    ractive.observe("search_result.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
-                        if (newValue === true) {
-                            var workPath = getParentFromKeypath(keypath);
-                            checkSelectedSearchResults([workPath]);
-                        }
-                    });
-
-                    ractive.observe("search_result.results.hits.hits.*._source.person.work.*.isChecked", function (newValue, oldValue, keypath) {
-                        if (newValue === true) {
-                            var workPath = getParentFromKeypath(keypath);
-                            var personPath = getParentFromKeypath(keypath, 3);
-                            checkSelectedSearchResults([personPath, workPath]);
-                        }
-                    });
-
-                    ractive.observe("targetUri.Work", function (newValue, oldValue, keypath) {
-                        _.each(ractive.get("inputs"), function (input, inputIndex) {
-                            if (input.predicate.indexOf("#publicationOf") != -1) {
-                                ractive.set("inputs." + inputIndex + ".values.0.current.value", newValue);
-                                ractive.set("inputs." + inputIndex + ".values.0.old.value", "");
+                                ractive.set(keyPath + ".tabSelected", false);
                             }
                         });
+                    }
+                });
+
+                // Observing input for instant validation:
+                ractive.observe("inputGroups.*.inputs.*.values.*", function (newValue, oldValue, keypath) {
+                    if (newValue.current.value === "") {
+                        ractive.set(keypath + ".error", false);
+                        return;
+                    }
+                    var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
+                    var valid = false;
+                    try {
+                        valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range);
+                    } catch (e) {
+                        console.log(e);
+                        return;
+                    }
+                    if (valid) {
+                        ractive.set(keypath + ".error", false);
+                    } else {
+                        ractive.set(keypath + ".error", "ugyldig input");
+                    }
+                });
+
+                ractive.observe("search_result.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
+                    if (newValue === true) {
+                        var workPath = getParentFromKeypath(keypath);
+                        checkSelectedSearchResults([workPath]);
+                    }
+                });
+
+                ractive.observe("search_result.results.hits.hits.*._source.person.work.*.isChecked", function (newValue, oldValue, keypath) {
+                    if (newValue === true) {
+                        var workPath = getParentFromKeypath(keypath);
+                        var personPath = getParentFromKeypath(keypath, 3);
+                        checkSelectedSearchResults([personPath, workPath]);
+                    }
+                });
+
+                ractive.observe("targetUri.Work", function (newValue, oldValue, keypath) {
+                    _.each(ractive.get("inputs"), function (input, inputIndex) {
+                        if (input.predicate.indexOf("#publicationOf") != -1) {
+                            ractive.set("inputs." + inputIndex + ".values.0.current.value", newValue);
+                            ractive.set("inputs." + inputIndex + ".values.0.old.value", "");
+                        }
                     });
-
-                    function getParentFromKeypath(keypath, parentLevels) {
-                        parentLevels = parentLevels || 1;
-                        var split = keypath.split('.');
-                        return split.splice(0, split.length - parentLevels).join('.');
-                    }
-
-                    function checkSelectedSearchResults(pathsToCheck) {
-                        ractive.set("search_result.results.hits.hits.*._source.person.isChecked", false);
-                        ractive.set("search_result.results.hits.hits.*._source.person.work.*.isChecked", false);
-                        pathsToCheck.forEach(function (path) {
-                            ractive.set(path + '.isChecked', true);
-                        });
-                    }
-
-                    return ractive;
-                })
-                .catch(function (err) {
-                    console.log("Error initiating ractive template: " + err);
                 });
-        },
-        loadOntology: function () {
-            return axios.get(ractive.get("config.ontologyUri"))
-                .then(function (response) {
-                    return onOntologyLoad(ensureJSON(response.data));
-                }).catch(function (err) {
-                    console.log("Error loading ontology: " + err);
-                });
+
+                function getParentFromKeypath(keypath, parentLevels) {
+                    parentLevels = parentLevels || 1;
+                    var split = keypath.split('.');
+                    return split.splice(0, split.length - parentLevels).join('.');
+                }
+
+                function checkSelectedSearchResults(pathsToCheck) {
+                    ractive.set("search_result.results.hits.hits.*._source.person.isChecked", false);
+                    ractive.set("search_result.results.hits.hits.*._source.person.work.*.isChecked", false);
+                    pathsToCheck.forEach(function (path) {
+                        ractive.set(path + '.isChecked', true);
+                    });
+                }
+
+                ractive.set("inputGroups", applicationData.inputGroups);
+                ractive.set("inputs", applicationData.inputs);
+                ractive.set("predefinedValues", applicationData.predefinedValues);
+                ractive.update();
+                return applicationData;
+            };
+
+            var loadOntology = function (applicationData) {
+                return axios.get(applicationData.config.ontologyUri)
+                    .then(function (response) {
+                        applicationData.ontology = ensureJSON(response.data);
+                        return applicationData;
+                    });
+            };
+
+            return axios.get("/config")
+                .then(extractConfig)
+                .then(loadTemplate)
+                .then(loadOntology)
+                .then(createInputGroups)
+                .then(initRactive)
+            .catch(function (err) {
+                console.log("Error initiating Main: " + err);
+            });
         },
         repositionSupportPanelsHorizontally: function () {
             var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
@@ -663,4 +714,5 @@
     };
 
     return Main;
-}));
+}))
+;

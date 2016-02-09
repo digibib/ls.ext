@@ -9,14 +9,16 @@
         var Graph = require("./graph");
         var Ontology = require("./ontology");
         var StringUtil = require("./stringutil");
+        var _ = require("underscore");
 
-        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil);
+
+        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _);
 
     } else {
         // Browser globals (root is window)
-        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil);
+        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._);
     }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _) {
     "use strict";
 
     Ractive.DEBUG = false;
@@ -30,6 +32,21 @@
     String.prototype.lowerCaseFirstLetter = function () {
         return this.charAt(0).toLowerCase() + this.slice(1);
     };
+
+    function i18nLabelValue(label) {
+        if (Array.isArray(label)) {
+            var value = _.find(label, function (labelValue) {
+                return ("no" === labelValue['@language']);
+            })['@value'];
+            if (value === undefined) {
+                value = labelValue[0]['@value'];
+            }
+            return value;
+        }
+        else {
+            return label['@value'];
+        }
+    }
 
     /* Private functions */
     var loadExistingResource = function (uri) {
@@ -176,7 +193,7 @@
                 authorized: props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false,
                 range: datatype,
                 datatype: datatype,
-                label: props[i]["rdfs:label"][0]["@value"],
+                label: i18nLabelValue(props[i]["rdfs:label"]),
                 values: [{old: { value: "", lang: "" },
                     current: { value: "", lang: "" }}]
             };

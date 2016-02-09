@@ -575,16 +575,31 @@ When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   batch_verify_props @site.RegPublication, 'Publication', data
 end
 
-def batch_verify_props(page_object, domain, data)
-  data.each do |fragment, method|
-    symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
-    predicate = "http://#{ENV['HOST']}:8005/ontology##{fragment}"
-    begin
-      page_object.method(method).call(predicate).should eq @context[symbol]
-    rescue
-      fail "Failed getting field for #{fragment}"
+def batch_verify_props(page_object, domain, data, locate_by = 'locate_by_fragment'.to_sym)
+  data.each do |id, method|
+    if locate_by == :locate_by_fragment
+      symbol = "#{domain.downcase}_#{id.downcase}".to_sym # e.g. :publication_format
+      inputLocator = "http://#{ENV['HOST']}:8005/ontology##{id}"
+    else
+      symbol = id
+      inputLocator = id
     end
-    fail "More than one field for #{fragment}" if page_object.get_prop_count(predicate) > 1
+
+    begin
+      expected_value = @context[symbol]
+      if expected_value.kind_of?(Array)
+        actual_values = Array.new
+        expected_value.length.times do |index|
+          actual_values.push page_object.method(method).call(inputLocator, index)
+        end
+        actual_values.should=~expected_value
+      else
+        page_object.method(method).call(inputLocator).should eq expected_value
+      end
+    rescue
+      fail "Failed getting field for #{id}"
+    end
+    fail "More than one field for #{id}" if page_object.get_prop_count(inputLocator && !expected_value.kind_of?(Array)) > 1
   end
 end
 
@@ -602,13 +617,24 @@ def verify_fragment(fragment, prop_get_method)
   resource_type = @browser.span(:id, "resource-type").attribute_value("data-resource-type")
   data = Hash.new
   data[fragment] = prop_get_method
-  batch_verify_props @site.RegWork, resource_type, data
+  batch_verify_props @site.RegWork, resource_type, data, :locate_by_label
+end
+
+def verify_by_label(label, prop_get_method)
+  resource_type = @browser.span(:id, "resource-type").attribute_value("data-resource-type")
+  data = Hash.new
+  data[label] = prop_get_method
+  batch_verify_props @site.RegWork, resource_type, data, :locate_by_label
 end
 
 When(/^verifiserer jeg innskrevet verdi for "([^"]*)"$/) do |fragment|
-  verify_fragment(fragment, :get_prop)
+  verify_fragment(fragment, :get_prop_by_label)
 end
 
-When(/^verifiserer jeg valgt verdi for "([^"]*)"$/) do |fragment|
-  verify_fragment(fragment, :get_select_prop)
+When(/^verifiserer jeg valgt verdi for "([^"]*)"$/) do |label|
+  verify_fragment(label, :get_select_prop_by_label)
+end
+
+When(/^verifiserer jeg valgte verdier for "([^"]*)"$/) do |label|
+  verify_fragment(label, :get_select_prop_by_label)
 end

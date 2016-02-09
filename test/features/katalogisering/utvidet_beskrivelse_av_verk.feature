@@ -29,7 +29,7 @@ Egenskap: Utvidet beskrivelse av verk
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om verket
 
-  Scenario: Verk finnes - registrer litterær form, målgruppe, biografisk innhold og spesiell tilrettelegging for verket
+  Scenario: Verk finnes - registrer to verdier litterær form, målgruppe, biografisk innhold og spesiell tilrettelegging for verket
     Gitt at jeg har en bok
     Og at jeg har lagt til en person
     Når jeg legger inn forfatternavnet på startsida
@@ -38,13 +38,13 @@ Egenskap: Utvidet beskrivelse av verk
     Og legger inn basisopplysningene om verket for hovedtittel og undertittel
     Og bekrefter for å gå videre til beskriv verket
     Og jeg skriver verdien "2015" for "Utgivelsesår"
-    Og jeg velger verdien "Bildebok" for "Litterær form"
+    Og jeg velger verdiene "Bildebok" og "Pekebok" for "Litterær form"
     Og jeg velger verdien "Voksne" for "Målgruppe"
     Og jeg velger verdien "Selvbiografi" for "Biografisk innhold"
     Og jeg velger verdien "Lettlest, enkelt språk" for "Tilrettelegging"
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
-    Så verifiserer jeg innskrevet verdi for "publicationYear"
-    Så verifiserer jeg valgt verdi for "literaryForm"
-    Så verifiserer jeg valgt verdi for "audience"
-    Så verifiserer jeg valgt verdi for "biography"
-    Så verifiserer jeg valgt verdi for "adaptationOfWorkForParticularUserGroups"
+    Så verifiserer jeg innskrevet verdi for "Utgivelsesår"
+    Så verifiserer jeg valgte verdier for "Litterær form"
+    Så verifiserer jeg valgt verdi for "Målgruppe"
+    Så verifiserer jeg valgt verdi for "Biografisk innhold"
+    Så verifiserer jeg valgt verdi for "Tilrettelegging"

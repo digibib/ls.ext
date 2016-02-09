@@ -4,12 +4,14 @@
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
-        module.exports = factory();
+        var _ = require("underscore");
+
+        module.exports = factory(_);
     } else {
         // Browser globals (root is window)
-        root.Ontology = factory();
+        root.Ontology = factory(root._);
     }
-}(this, function () {
+}(this, function (_) {
     "use strict";
     var Ontology = {
 
@@ -74,33 +76,45 @@
         // createPatch creates a patch request for a given subject, predicate and value (el)
         // as it is represented in the client UI.
         createPatch: function (subject, predicate, el, datatype) {
-            var addPatch,
-                delPatch;
+            var addPatches = [],
+                delPatches = [];
 
-            if (el.current.value !== "") {
-                addPatch = {op: "add", s: subject, p: predicate, o: {value: el.current.value}};
-                if (el.current.lang !== "") {
-                    addPatch.o.lang = el.current.lang;
-                }
-                addPatch.o.type = datatype;
-            }
-
-            if (el.old.value !== "") {
-                delPatch = {op: "del", s: subject, p: predicate, o: {value: el.old.value}};
-                if (el.old.lang !== "") {
-                    delPatch.o.lang = el.old.lang;
+            var currentValue = el.current.value;
+            var oldValue = el.old.value;
+            if (typeof currentValue == 'string') {
+                if (currentValue !== "") {
+                    var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue}};
+                    if (el.current.lang !== "") {
+                        addPatch.o.lang = el.current.lang;
+                    }
+                    addPatch.o.type = datatype;
+                    addPatches.push(addPatch);
                 }
 
-                delPatch.o.type = datatype;
-            }
+                if (oldValue !== "") {
+                    var delPatch = {op: "del", s: subject, p: predicate, o: {value: oldValue}};
+                    if (el.old.lang !== "") {
+                        delPatch.o.lang = el.old.lang;
+                    }
 
-            if (delPatch && addPatch) {
-                return JSON.stringify([delPatch, addPatch]);
-            } else if (delPatch) {
-                return JSON.stringify(delPatch);
+                    delPatch.o.type = datatype;
+                    delPatches.push(delPatch);
+                }
             } else {
-                return JSON.stringify(addPatch);
+                if (_.isArray(currentValue)) {
+                    var addValues = _.difference(currentValue, oldValue);
+                    _.each(addValues, function (value) {
+                        addPatches.push({op: "add", s: subject, p: predicate, o: {value: value}});
+                    });
+
+                    var delValues = _.difference(oldValue, currentValue);
+                    _.each(delValues, function (value) {
+                        delPatches.push({op: "del", s: subject, p: predicate, o: {value: value}});
+                    });
+                }
             }
+
+            return JSON.stringify(_.union(delPatches, addPatches));
         },
 
         // extractValues extracts the values (properties) from the given resource in JSON-LD format,

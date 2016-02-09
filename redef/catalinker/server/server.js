@@ -21,6 +21,11 @@ app.use(express.static(path.join(__dirname, '/../public')));
 app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery']));
 app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']));
 
+app.get('/css/vendor/:cssFile', function (request, response) {
+  response.sendFile(request.params.cssFile, {root: path.resolve(path.join(__dirname, "/../node_modules/select2/dist/css/"))});
+});
+
+
 function newResource(type) {
   return axios.post(process.env.SERVICES_PORT + "/" + type, {}, {
       headers: {
