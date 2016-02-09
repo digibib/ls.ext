@@ -97,6 +97,7 @@ Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch,
     self.cardnumber = generateRandomString
     self.surname    = generateRandomString
     self.userid     = generateRandomString
+    self.email      = generateRandomString + "@" + generateRandomString + ".dot"
     self.branch     = Branch.new
     self.category   = PatronCategory.new
     self.debarred   = false

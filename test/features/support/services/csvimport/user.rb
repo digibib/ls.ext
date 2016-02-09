@@ -28,6 +28,7 @@ module CSVImport
       user[:cardnumber]   = patron.cardnumber
       user[:surname]      = patron.surname
       user[:debarred]     = patron.debarred
+      user[:email]        = patron.email
 
       # To convert to CSV via Migration 
       importuser = { patron.cardnumber => user }
