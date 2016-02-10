@@ -368,7 +368,7 @@ end
 
 Then(/^jeg kan legge til språk for det nye verket$/) do
   @context[:work_lang] = "http://lexvo.org/id/iso639-3/nob"
-  @site.RegWork.select_prop("http://#{ENV['HOST']}:8005/ontology#language", "Norsk")
+  @site.RegWork.select_prop("http://#{ENV['HOST']}:8005/ontology#language", "Norsk (bokmål)")
 end
 
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
