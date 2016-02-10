@@ -1,6 +1,6 @@
 FROM node:4.2.1
 
-ENV REFRESHED_AT 2016-13T21:50
+ENV REFRESHED_AT 2016-02-10T08:58
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
