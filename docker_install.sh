@@ -1,8 +1,8 @@
 #!/bin/bash
-VERSION=docker-engine=1.10.0-0~trusty
+VERSION=1.10.0-0~trusty
 INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
 if [ $VERSION = $INSTALLED ] ; then
-  echo "docker version $VERSION already installed, skipping ...";
+  echo "docker version $VERSION already installed";
 else
   echo "Installing docker version $VERSION ...";
   sudo apt-get purge --assume-yes --quiet docker-engine >/dev/null 2>&1
