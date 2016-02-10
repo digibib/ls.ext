@@ -272,9 +272,6 @@ language:nob	a	lvont:Language ;
 language:non	a	lvont:Language ;
 	rdfs:label	"Norrønt"@no .
 
-language:nor	a	lvont:Language ;
-	rdfs:label	"Norsk"@no .
-
 language:orm	a	lvont:Language ;
 	rdfs:label	"Oromo"@no .
 
