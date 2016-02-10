@@ -45,11 +45,11 @@ public final class KohaSvcMock {
         return clientdriverPort;
     }
 
-    public void addLoginExpectation(){
+    public void addLoginExpectation() {
         String authenticationOKResponse = "<?xml version='1.0' standalone='yes'?>\n"
-                +"<response>\n"
-                +"  <status>ok</status>\n"
-                +"</response>";
+                + "<response>\n"
+                + "  <status>ok</status>\n"
+                + "</response>";
 
         clientDriver.addExpectation(
                 onRequestTo("/cgi-bin/koha/svc/authentication")
@@ -68,6 +68,35 @@ public final class KohaSvcMock {
                 giveResponse(
                         responseMarcXML,
                         "application/xml"));
+    }
+
+    public void addLenientUpdateExpectation(String biblioId) {
+        String responseXml = "<?xml version='1.0' standalone='yes'?>\n"
+                + "<response>\n"
+                + "  <biblionumber>" + biblioId + "</biblionumber>\n"
+                + "  <marcxml>\n"
+                + "<record\n"
+                + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                + "    xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"\n"
+                + "    xmlns=\"http://www.loc.gov/MARC21/slim\">\n"
+                + "\n"
+                + "  <leader>00049    a2200037   4500</leader>\n"
+                + "  <datafield tag=\"999\" ind1=\" \" ind2=\" \">\n"
+                + "    <subfield code=\"c\">26</subfield>\n"
+                + "    <subfield code=\"d\">26</subfield>\n"
+                + "  </datafield>\n"
+                + "</record>\n"
+                + "</marcxml>\n"
+                + "  <status>ok</status>\n"
+                + "</response>\n";
+
+        clientDriver.addExpectation(
+                onRequestTo("/cgi-bin/koha/svc/bib/" + biblioId + "?items=0")
+                        .withMethod(POST)
+                        .withBody(Pattern.compile("(?s).*"), MediaType.TEXT_XML)
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
+                        .withStatus(OK.getStatusCode()));
     }
 
     public void addGetBiblioExpectation(String biblioId, int noOfItems) throws IOException {
@@ -96,7 +125,7 @@ public final class KohaSvcMock {
     }
 
     private String itemXml(final String barcode) {
-        return "  <datafield tag=\""+ MarcConstants.FIELD_952+"\" ind1=\" \" ind2=\" \">\n"
+        return "  <datafield tag=\"" + MarcConstants.FIELD_952 + "\" ind1=\" \" ind2=\" \">\n"
                 + "    <subfield code=\"0\">0</subfield>\n"
                 + "    <subfield code=\"1\">0</subfield>\n"
                 + "    <subfield code=\"2\">ddc</subfield>\n"
@@ -174,8 +203,8 @@ public final class KohaSvcMock {
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
                 + "<marcxml:record><marcxml:leader>00080    a2200049   4500</marcxml:leader>"
-                + "<marcxml:datafield tag=\""+ MarcConstants.FIELD_245+"\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">"+ "Test test test" + "</marcxml:subfield>"
+                + "<marcxml:datafield tag=\"" + MarcConstants.FIELD_245 + "\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">" + "Test test test" + "</marcxml:subfield>"
                 + "</marcxml:datafield>"
                 + Stream.of(barcode).map(KohaSvcMock::itemMarc).reduce("", String::concat)
                 + "</marcxml:record>"

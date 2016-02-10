@@ -59,6 +59,7 @@ public class AppTest {
     public static final int FIVE = 5;
     public static final int TEN_TIMES = 10;
     public static final int FIFTY_TIMES = 50;
+    public static final boolean SHOULD_NOT_FIND = true;
     private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
     private static final boolean USE_IN_MEMORY_REPO = true;
     private static final String LOCALHOST = "http://127.0.0.1";
@@ -66,7 +67,6 @@ public class AppTest {
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private static final String ANOTHER_BIBLIO_ID = "333333";
-    public static final boolean SHOULD_NOT_FIND = true;
     private static String baseUri;
     private static App app;
 
@@ -160,6 +160,61 @@ public class AppTest {
                 .body(body);
     }
 
+    private void doSearchForWorkWithFormat(String name, String format) throws UnirestException, InterruptedException {
+        boolean foundWorkInIndex;
+        int attempts = FIFTY_TIMES;
+        do {
+            HttpRequest request = Unirest
+                    .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle=" + name);
+            HttpResponse<?> response = request.asJson();
+            assertResponse(Status.OK, response);
+            String responseBody = response.getBody().toString();
+            foundWorkInIndex = responseBody.contains(name)
+                    && responseBody.contains(format);
+            if (!foundWorkInIndex) {
+                LOG.info("Work not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (attempts-- > 0);
+        System.out.println("derp");
+    }
+
+    @Test
+    public void test_update_work_index_when_publication_is_updated() throws Exception {
+        kohaSvcMock.addLoginExpectation();
+        kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
+
+        final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
+        assertResponse(Status.CREATED, createWorkResponse);
+        final String workUri = getLocation(createWorkResponse);
+        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Paris"));
+        final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
+        assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
+
+        final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
+
+        assertResponse(Status.CREATED, createPublicationResponse);
+        final String publicationUri = getLocation(createPublicationResponse);
+        assertIsUri(publicationUri);
+        assertThat(publicationUri, startsWith(baseUri));
+
+        kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
+        final JsonArray addPublicationOfToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
+        final HttpResponse<String> patchAddPublicationOfToPublicationPatchResponse = buildPatchRequest(publicationUri, addPublicationOfToPublicationPatch).asString();
+        assertResponse(Status.OK, patchAddPublicationOfToPublicationPatchResponse);
+
+        kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
+        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#format", "http://data.deichman.no/format#Atlas", ANY_URI));
+        final HttpResponse<String> patchAddFormatToPublicationPatchResponse = buildPatchRequest(publicationUri, addFormatToPublicationPatch).asString();
+        assertResponse(Status.OK, patchAddFormatToPublicationPatchResponse);
+
+        final JsonArray addNameToWorkPatch1 = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#partTitle", "Paris"));
+        final HttpResponse<String> patchAddNameToWorkPatchResponse1 = buildPatchRequest(workUri, addNameToWorkPatch1).asString();
+        assertResponse(Status.OK, patchAddNameToWorkPatchResponse1);
+
+
+        doSearchForWorkWithFormat("Paris", "Atlas");
+    }
 
     @Test
     public void happy_day_scenario() throws Exception {
@@ -514,7 +569,7 @@ public class AppTest {
         doSearchForWorks("Sult");
     }
 
-    private void doSearchForWorks(String name, boolean...invert) throws UnirestException, InterruptedException {
+    private void doSearchForWorks(String name, boolean... invert) throws UnirestException, InterruptedException {
         boolean foundWorkInIndex;
         boolean doInvert = invert != null && invert.length > 0 && invert[0];
         int attempts = FIFTY_TIMES;
@@ -560,7 +615,7 @@ public class AppTest {
         boolean foundPlaceOfPublicationInIndex;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/placeOfPublication/_search").queryString("q","placeOfPublication.place:" + place);
+            HttpRequest request = Unirest.get(baseUri + "search/placeOfPublication/_search").queryString("q", "placeOfPublication.place:" + place);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundPlaceOfPublicationInIndex = responseBody.contains(place);

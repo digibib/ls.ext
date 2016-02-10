@@ -320,11 +320,11 @@ public final class EntityServiceImpl implements EntityService {
         }
         repository.patch(PatchParser.parse(ldPatchJson));
 
-        return synchronizeKohaAndIndex(type, id);
+        return synchronizeKoha(type, id);
     }
 
     @Override
-    public Model synchronizeKohaAndIndex(EntityType type, String id) {
+    public Model synchronizeKoha(EntityType type, String id) {
         Model model = retrieveById(type, id);
 
         if (type.equals(EntityType.PERSON)) {

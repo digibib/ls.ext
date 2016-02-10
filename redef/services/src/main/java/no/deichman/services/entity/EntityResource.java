@@ -9,6 +9,7 @@ import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
@@ -228,6 +229,14 @@ public final class EntityResource extends ResourceBase {
             case PLACE_OF_PUBLICATION:
                 getSearchService().indexPlaceOfPublication(id);
                 break;
+            case PUBLICATION:
+                Property publicationOfProperty = ResourceFactory.createProperty(getBaseURI().ontology("publicationOf"));
+                if (m.getProperty(null, publicationOfProperty) != null) {
+                    String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
+                    String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
+                    getSearchService().indexWork(workId);
+                }
+                break;
             default:
                 break;
         }
@@ -273,7 +282,7 @@ public final class EntityResource extends ResourceBase {
     @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/sync")
     public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws PatchParserException {
         EntityType entityType = EntityType.get(type);
-        getEntityService().synchronizeKohaAndIndex(entityType, id);
+        getEntityService().synchronizeKoha(entityType, id);
         return accepted().build();
     }
 

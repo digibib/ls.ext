@@ -21,7 +21,7 @@ public interface EntityService {
     void delete(Model model);
     Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException;
 
-    Model synchronizeKohaAndIndex(EntityType type, String id);
+    Model synchronizeKoha(EntityType type, String id);
 
     boolean resourceExists(String resourceUri);
 
