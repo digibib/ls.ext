@@ -220,6 +220,7 @@
                         break;
                     case "deichman:Work":
                     case "deichman:Person":
+                    case "deichman:PlaceOfPublication":
                         // TODO infer from ontology that this is an URI
                         // (because deichman:Work a rdfs:Class)
                         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
