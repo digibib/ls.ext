@@ -98,6 +98,9 @@ sip:
   image: "digibib/biblio-sip2:${SIP_IMAGE_TAG}"
   ports:
     - "6002:6001"
+  environment:
+    USE_LOCAL_MODS: "True"
+    SIPSERVER_HOST_PORT: "${HOST}:${SIP_PORT}"
 
 catalinker:
   container_name: redef_catalinker_container
