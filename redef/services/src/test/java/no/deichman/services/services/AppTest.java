@@ -461,6 +461,33 @@ public class AppTest {
     }
 
     @Test
+    public void publisher_resource_can_be_created_if_not_a_duplicate() throws UnirestException {
+        String input = "<__BASEURI__externalPublisher/i1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Publisher> .\n"
+                + "<__BASEURI__externalPublisher/i1234> <__BASEURI__ontology#name> \"Publisher name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPublisher/i1234> <http://data.deichman.no/duo#bibliofilPublisherId> \"1234\" .\n";
+        input = input.replace("__BASEURI__", baseUri);
+
+        String duplicateInput = "<__BASEURI__externalPublisher/i1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Publisher> .\n"
+                + "<__BASEURI__externalPublisher/i1234> <__BASEURI__ontology#name> \"Publisher name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
+                + "<__BASEURI__externalPublisher/i1234> <http://data.deichman.no/duo#bibliofilPublisherId> \"1234\" .\n";
+        duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
+
+        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
+
+        Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
+        String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
+
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", body).asString();
+        HttpResponse<String> result2 = buildCreateRequest(baseUri + "publisher", body).asString();
+
+        assertResponse(Status.CONFLICT, result2);
+        String location1 = getLocation(result1);
+        String location2 = getLocation(result2);
+        assertTrue(location1.equals(location2));
+    }
+
+    @Test
     public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.newBiblioWithItemsExpectation(ANOTHER_BIBLIO_ID, "03011527411001");

@@ -23,10 +23,14 @@
   rdfs:label "Place of publication"@en ;
   rdfs:label "Utgivelsessted"@no .
 
+:Publisher a rdfs:Class ;
+  rdfs:label "Publisher"@en ;
+  rdfs:label "Utgiver"@no .
+
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person ;
+  rdfs:domain :Person, :Publisher ;
   rdfs:range xsd:string .
 
 :personTitle a rdfs:Property ;
@@ -227,3 +231,9 @@
   rdfs:label "Utgivelsessted"@no ;
   rdfs:domain :Publication ;
   rdfs:range :PlaceOfPublication .
+
+:publishedBy a rdfs:Propperty ;
+  rdfs:label "Published by"@en ;
+  rdfs:label "Utgitt av"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range :Publisher .

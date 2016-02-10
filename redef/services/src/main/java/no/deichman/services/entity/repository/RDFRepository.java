@@ -17,6 +17,7 @@ public interface RDFRepository {
     String createPublication(Model model, String recordID);
     String createPerson(Model inputModel);
     String createPlaceOfPublication(Model inputModel);
+    String createPublisher(Model inputModel);
 
     void updateWork(String work);
     Model retrieveWorkByURI(String uri);
@@ -41,9 +42,13 @@ public interface RDFRepository {
 
     Optional<String> getPlaceOfPublicationResourceURIByBibliofilId(String id);
 
+    Optional<String> getPublisherResourceURIByBibliofilId(String bibliofilId);
+
     Model retrieveWorksByCreator(String creatorUri);
 
     Model retrievePublicationsByWork(String work);
 
     void findAllUrisOfType(String type, Consumer<String> uriConsumer);
+
+    Optional<String> getResourceURIByBibliofilId(String id, String type);
 }

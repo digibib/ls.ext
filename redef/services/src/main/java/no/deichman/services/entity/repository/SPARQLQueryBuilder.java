@@ -195,6 +195,13 @@ public final class SPARQLQueryBuilder {
         return q.toString();
     }
 
+    public Query getImportedResourceById(String id, String type) {
+        String q = "SELECT ?uri "
+                + "WHERE "
+                + "  { ?uri <http://data.deichman.no/duo#bibliofil" + type + "Id> \"" + id + "\" }";
+        return QueryFactory.create(q);
+    }
+
     public Query getBibliofilPersonResource(String personId) {
         String q = "SELECT ?uri "
                 + "WHERE "
@@ -240,6 +247,13 @@ public final class SPARQLQueryBuilder {
                 + "    {\n"
                 + "        ?uri a deichman:%s .\n"
                 + "    }", baseURI.ontology(), capitalize(type));
+        return QueryFactory.create(q);
+    }
+
+    public Query getBibliofilPublisherResource(String id) {
+        String q = "SELECT ?uri "
+                + "WHERE "
+                + "  { ?uri <http://data.deichman.no/duo#bibliofilPublisherId> \"" + id + "\" }";
         return QueryFactory.create(q);
     }
 }

@@ -56,4 +56,8 @@ public final class BaseURI {
     public String placeOfPublication() {
         return baseUriRoot + "placeOfPublication/";
     }
+
+    public String publisher() {
+        return baseUriRoot + "publisher/";
+    }
 }

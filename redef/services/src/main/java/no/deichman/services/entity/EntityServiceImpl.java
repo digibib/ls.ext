@@ -82,10 +82,6 @@ public final class EntityServiceImpl implements EntityService {
         publicationYearProperty = ResourceFactory.createProperty(baseURI.ontology("publicationYear"));
     }
 
-    private static <T> Map[] asArray(List<T> list) {
-        return list.toArray(new Map[list.size()]);
-    }
-
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
         Set<Resource> resources = new HashSet<>();
         inputModel
@@ -245,6 +241,9 @@ public final class EntityServiceImpl implements EntityService {
                 break;
             case PLACE_OF_PUBLICATION:
                 uri = repository.createPlaceOfPublication(inputModel);
+                break;
+            case PUBLISHER:
+                uri = repository.createPublisher(inputModel);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
@@ -429,11 +428,6 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Optional<String> retrieveBibliofilPerson(String personId) {
-        return repository.getResourceURIByBibliofilId(personId);
-    }
-
-    @Override
     public Model retrieveWorksByCreator(String creatorId) {
         return repository.retrieveWorksByCreator(creatorId);
     }
@@ -443,8 +437,9 @@ public final class EntityServiceImpl implements EntityService {
     public void retrieveAllWorkUris(String type, Consumer<String> uriConsumer) {
         repository.findAllUrisOfType(type, uriConsumer);
     }
-    public Optional<String> retrieveBibliofilPlaceOfPublication(String bibliofilId) {
-        return repository.getPlaceOfPublicationResourceURIByBibliofilId(bibliofilId);
 
+    @Override
+    public Optional<String> retrieveImportedResource(String id, String type) {
+        return repository.getResourceURIByBibliofilId(id, type);
     }
 }

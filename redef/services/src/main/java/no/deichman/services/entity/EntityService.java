@@ -25,11 +25,9 @@ public interface EntityService {
 
     boolean resourceExists(String resourceUri);
 
-    Optional<String> retrieveBibliofilPerson(String personId);
-
     Model retrieveWorksByCreator(String creatorId);
 
     void retrieveAllWorkUris(String type, Consumer<String> uriConsumer);
 
-    Optional<String> retrieveBibliofilPlaceOfPublication(String bibliofilId);
+    Optional<String> retrieveImportedResource(String id, String type);
 }

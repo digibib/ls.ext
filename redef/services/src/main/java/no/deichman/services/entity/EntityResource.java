@@ -7,6 +7,7 @@ import no.deichman.services.restutils.PATCH;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
@@ -47,7 +48,6 @@ import static no.deichman.services.restutils.MimeType.NTRIPLES;
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
-    public static final String UTF_8 = "UTF-8";
 
     @Context
     private ServletConfig servletConfig;
@@ -78,79 +78,54 @@ public final class EntityResource extends ResourceBase {
         String bibliofilId = null;
         Optional<String> message = Optional.ofNullable(null);
         Optional<String> uri = Optional.ofNullable(null);
+        Response.ResponseBuilder rb;
+        Response.ResponseBuilder response = buildResponse(type, body, lang);
 
-        switch (type) {
-            case "person":
-                Model model = RDFModelUtil.modelFrom(body, lang);
-                NodeIterator nodes = model.listObjectsOfProperty(ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofilPersonId"));
-                List<RDFNode> nodeList = nodes.toList();
-                if (nodeList.size() > 1) {
-                    message = Optional.of("Request with greater than one bibliofil personal authority ID per resource");
-                    status = Response.Status.BAD_REQUEST;
-                    break;
-                }
-                if (nodeList.size() > 0) {
-                    bibliofilId = nodeList.get(0).asLiteral().toString();
-                    if (checkBibliofilPersonResourceExistence(bibliofilId).isPresent()) {
-                        uri = checkBibliofilPersonResourceExistence(bibliofilId);
-                    }
-                }
+        return response.build();
+    }
 
-                if (uri.isPresent()) {
-                    status = Response.Status.CONFLICT;
-                    message = Optional.of("Resource with ID <" + uri.get() + "> was found to have Bibliofil ID " + bibliofilId);
-                } else {
-                    uri = Optional.of(getEntityService().create(EntityType.get(type), model));
-                    status = Response.Status.CREATED;
-                }
-                break;
-            case "placeOfPublication":
-                Model placeOfPublicationModel = RDFModelUtil.modelFrom(body, lang);
-                NodeIterator placeOfPublicationNodes =
-                        placeOfPublicationModel.listObjectsOfProperty(
-                                ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofilPlaceOfPublicationId"));
-                List<RDFNode> placeOfPublicationNodeList = placeOfPublicationNodes.toList();
-                if (placeOfPublicationNodeList.size() > 1) {
-                    message = Optional.of("Request with greater than one bibliofil place of publication authority ID per resource");
-                    status = Response.Status.BAD_REQUEST;
-                    break;
-                }
-                if (placeOfPublicationNodeList.size() > 0) {
-                    bibliofilId = placeOfPublicationNodeList.get(0).asLiteral().toString();
-                    if (checkBibliofilPlaceOfPublicationResourceExistence(bibliofilId).isPresent()) {
-                        uri = checkBibliofilPlaceOfPublicationResourceExistence(bibliofilId);
-                    }
-                }
+    private Response.ResponseBuilder buildResponse(String type, String body, Lang lang) throws URISyntaxException {
+        Response.ResponseBuilder rb = null;
+        String canonicalTypeId = WordUtils.capitalize(type);
 
-                if (uri.isPresent()) {
-                    status = Response.Status.CONFLICT;
-                    message = Optional.of("Resource with ID <" + uri.get() + "> was found to have Bibliofil ID " + bibliofilId);
-                } else {
-                    uri = Optional.of(getEntityService().create(EntityType.get(type), placeOfPublicationModel));
-                    status = Response.Status.CREATED;
-                }
-                break;
-            default:
-                uri = Optional.of(getEntityService().create(EntityType.get(type), RDFModelUtil.modelFrom(body, lang)));
-                status = Response.Status.CREATED;
-                break;
+        Optional<String> message = Optional.ofNullable(null);
+        Optional<String> uri = Optional.ofNullable(null);
+        Response.Status status;
+        String bibliofilId = null;
+
+        Model model = RDFModelUtil.modelFrom(body, lang);
+        NodeIterator nodes = model.listObjectsOfProperty(ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofil" + canonicalTypeId + "Id"));
+        List<RDFNode> nodeList = nodes.toList();
+        if (nodeList.size() > 1) {
+            message = Optional.of("Request with greater than one bibliofil " + type + " authority ID per resource");
+            status = Response.Status.BAD_REQUEST;
+        }
+        if (nodeList.size() > 0) {
+            bibliofilId = nodeList.get(0).asLiteral().toString();
+            if (checkForExistingImportedResource(bibliofilId, canonicalTypeId).isPresent()) {
+                uri = checkForExistingImportedResource(bibliofilId, canonicalTypeId);
+            }
         }
 
-        Response.ResponseBuilder rb = Response.status(status);
+        if (uri.isPresent()) {
+            status = Response.Status.CONFLICT;
+            message = Optional.of("Resource with ID <" + uri.get() + "> was found to have Bibliofil ID " + bibliofilId);
+        } else {
+            uri = Optional.of(getEntityService().create(EntityType.get(type), model));
+            status = Response.Status.CREATED;
+        }
+        rb = Response.status(status);
         rb.location(new URI(uri.get()));
         if (message.isPresent()) {
             rb.entity(message.get());
         }
 
-        return rb.build();
+        return rb;
+
     }
 
-    private Optional<String> checkBibliofilPlaceOfPublicationResourceExistence(String bibliofilId) {
-        return getEntityService().retrieveBibliofilPlaceOfPublication(bibliofilId);
-    }
-
-    private Optional<String> checkBibliofilPersonResourceExistence(String personId) {
-        return getEntityService().retrieveBibliofilPerson(personId);
+    private Optional<String>  checkForExistingImportedResource(String id, String type) {
+        return getEntityService().retrieveImportedResource(id, type);
     }
 
     @GET

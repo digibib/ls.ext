@@ -137,9 +137,6 @@ public final class Marc2Rdf {
     }
 
     private boolean isLoanable(String expectedReturnDate, String loanableCode) {
-        if (loanableCode.equals(KOHA_LOANABLE_VALUE) && expectedReturnDate.contentEquals("AVAIL")) {
-            return false;
-        }
-        return true;
+        return !(loanableCode.equals(KOHA_LOANABLE_VALUE) && expectedReturnDate.contentEquals("AVAIL"));
     }
 }
