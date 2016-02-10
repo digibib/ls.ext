@@ -112,8 +112,8 @@ cuke_test:						## Run Cucumber tests
 	@vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && \
-		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
-		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)'"
+		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` `if [ -z \"$(BROWSER_ARG)\" ]; then echo --tags ~@no_phantomjs; fi` $(CUKE_ARGS) || \
+		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` `if [ -z \"$(BROWSER_ARG)\" ]; then echo --tags ~@no_phantomjs; fi` $(CUKE_ARGS)'"
 	@$(XHOST_REMOVE)
 
 test_one:						## Run 'utlaan_via_adminbruker'.
@@ -170,8 +170,8 @@ cuke_redef:						## Run only redef cucumber tests
 	@vagrant ssh $(SHIP) -c "rm -rf /vagrant/test/report/*.* && \
 	  cd /vagrant/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
-		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt \
-		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)'"
+		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` `if [ -z \"$(BROWSER_ARG)\" ]; then echo --tags ~@no_phantomjs; fi` --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt \
+		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` `if [ -z \"$(BROWSER_ARG)\" ]; then echo --tags ~@no_phantomjs; fi` --tags @redef $(CUKE_ARGS)'"
 	@$(XHOST_REMOVE)
 
 test_patron_client:					## Run unit and module tests of patron-client

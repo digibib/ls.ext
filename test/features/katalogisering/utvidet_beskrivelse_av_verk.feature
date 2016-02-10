@@ -3,6 +3,7 @@
 
 @redef
 @check-for-errors
+@no_phantomjs
 Egenskap: Utvidet beskrivelse av verk
   Som katalogisator
   For å gi brukerne bedre gjenfinningsmuligheter
