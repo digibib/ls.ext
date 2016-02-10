@@ -129,12 +129,11 @@
                     $("select").select2();
                     }
                 )
-                //.catch(function (err) {
-                //    console.log("HTTP GET existing resource failed with:");
-                //    console.log(err);
-                //});
+                .catch(function (err) {
+                    console.log("HTTP GET existing resource failed with:");
+                    console.log(err);
+                });
         }
-        ;
 
     var saveNewResourceFromInputs = function (resourceType) {
         // collect inputs related to resource type
