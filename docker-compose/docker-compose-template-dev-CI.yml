@@ -127,7 +127,7 @@ services:
 
 patron-client:
   container_name: redef_patron_client_container
-  build: /vagrant/redef/patron-client2
+  build: /vagrant/redef/patron-client
   dockerfile: Dockerfile
   ports:
     - "8000:8000"

@@ -135,7 +135,7 @@ services:
 
 patron-client:
   container_name: redef_patron_client_container
-  build: /vagrant/redef/patron-client2
+  build: /vagrant/redef/patron-client
   volumes:
     - /mnt/patron-client_src:/usr/src/app/src
     - /mnt/patron-client_test:/usr/src/app/test

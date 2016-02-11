@@ -3,24 +3,7 @@
   "version": "0.0.1",
   "description": "Patron client for the redef part of ls.ext.",
   "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
-  "contributors": [
-    {
-      "name": "akafred",
-      "email": "github@akafred.com"
-    }
-  ],
-  "scripts": {
-    "start": "node server/server.js",
-    "test": "mocha test module-test --timeout 5000",
-    "start-dev": "nodemon",
-    "start-dev-debug": "nodemon debug",
-    "test-debug": "mocha debug",
-    "module-test-debug": "mocha debug module-test",
-    "jscs": "jscs",
-    "jshint": "jshint",
-    "build": ""
-  },
-  "main": "server/server.js",
+  "main": "src/frontend/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/digibib/ls.ext"
@@ -32,32 +15,50 @@
     "library",
     "patron"
   ],
-  "engines": {
-    "node": ">=4.1"
+  "directories": {
+    "test": "test"
   },
-  "dependencies": {
-    "axios": "0.7.0",
-    "browserify-middleware": "^7.0.0",
-    "express": "*",
-    "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61",
-    "ractive": "0.7.3",
-    "ractive-events-keys": "0.2.1",
-    "underscore": "^1.8.3"
+  "scripts": {
+    "lint": "gulp lint",
+    "start": "gulp serve",
+    "test": "cross-env NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
+    "test:debug": "cross-env NODE_ENV=test mocha debug --recursive --compilers js:babel-core/register --require ./test/setup.js",
+    "test:watch": "npm test -- --watch"
   },
   "devDependencies": {
-    "browserify": "^11.2.0",
-    "chai": "*",
-    "del": "^2.0.2",
-    "jscs": "*",
-    "jshint": "*",
-    "mocha": "*",
-    "mocha-jsdom": "*",
-    "nodemon": "*",
-    "sinon": "*",
-    "vinyl-buffer": "^1.0.0",
+    "babel-polyfill": "^6.5.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "connect-history-api-fallback": "^1.1.0",
+    "cross-env": "^1.0.7",
+    "del": "^2.2.0",
+    "expect": "^1.14.0",
+    "gulp": "^3.9.0",
+    "gulp-connect": "^2.3.1",
+    "gulp-sass": "^2.1.1",
+    "gulp-standard": "^5.2.2",
+    "jsdom": "^8.0.2",
+    "mocha": "^2.4.5",
+    "react-addons-test-utils": "^0.14.7",
+    "sinon": "^1.17.3",
     "vinyl-source-stream": "^1.1.0"
   },
-  "private": true,
-  "analyze": true,
-  "license": "MIT"
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "ld-graph": "git+https://github.com/digibib/ld-graph.git#6abf76d7f915eca3ee6a7550f977ff7de146fc26",
+    "object-assign": "^4.0.1",
+    "react": "^0.14.7",
+    "react-addons-linked-state-mixin": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-redux": "^4.1.2",
+    "react-router": "^2.0.0",
+    "react-router-redux": "^3.0.0",
+    "redux": "^3.1.7",
+    "redux-devtools": "^3.0.2",
+    "redux-logger": "^2.4.0",
+    "redux-thunk": "^1.0.3",
+    "urijs": "^1.17.0"
+  }
 }

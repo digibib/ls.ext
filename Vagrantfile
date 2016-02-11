@@ -78,15 +78,15 @@ Vagrant.configure(2) do |config|
         config.vm.synced_folder "redef/catalinker/client", "/mnt/catalinker_client", type: "nfs"
         config.vm.synced_folder "redef/catalinker/public", "/mnt/catalinker_public", type: "nfs"
 
-        config.vm.synced_folder "redef/patron-client2/src", "/mnt/patron-client_src", type: "nfs"
-        config.vm.synced_folder "redef/patron-client2/test", "/mnt/patron-client_test", type: "nfs"
+        config.vm.synced_folder "redef/patron-client/src", "/mnt/patron-client_src", type: "nfs"
+        config.vm.synced_folder "redef/patron-client/test", "/mnt/patron-client_test", type: "nfs"
       else
         config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server"
         config.vm.synced_folder "redef/catalinker/client", "/mnt/catalinker_client"
         config.vm.synced_folder "redef/catalinker/public", "/mnt/catalinker_public"
 
-        config.vm.synced_folder "redef/patron-client2/src", "/mnt/patron-client_src"
-        config.vm.synced_folder "redef/patron-client2/test", "/mnt/patron-client_test"
+        config.vm.synced_folder "redef/patron-client/src", "/mnt/patron-client_src"
+        config.vm.synced_folder "redef/patron-client/test", "/mnt/patron-client_test"
       end
     end
 

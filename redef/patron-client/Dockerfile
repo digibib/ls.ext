@@ -1,15 +1,16 @@
-FROM node:4.2.1
+FROM node:5.6.0
 
-ENV REFRESHED_AT 2015-10-27
+ENV REFRESHED_AT 2016-01-10
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-
-COPY package.json /usr/src/app/
-
-RUN npm install > install.log 2>&1
 COPY . /usr/src/app
-VOLUME /usr/src/app/
+
+RUN npm set progress=false
+RUN npm install > install.log 2>&1
+
+VOLUME /usr/src/app/src
+VOLUME /usr/src/app/test
 
 EXPOSE 8000
 

@@ -1,6 +1,8 @@
 # Patron client
 
-Patron client is a browser-based viewer (for now) for data from [Services](../services/README.md).
+Patron client is the main interface for patrons to interact with the library on the internet, including searching and browsing the catalogue.
+
+Patron-client is a browser-based application. It is consuming data data from [Services](../services/README.md) and the search index.
 
 ## Technologies used
 
@@ -8,13 +10,15 @@ All modules are specified in package.json.
 
 * [Node.JS](https://nodejs.org/)
 * Server
-  * [Express](http://expressjs.com/)
+  * [Glup](http://gulpjs.com/) temporarily?
 * Templating/Browser rendering
-  * [Ractive.js](http://www.ractivejs.org/)
-  * [UMD](https://github.com/umdjs/umd)
+  * [React](http://facebook.github.io/react/)
+  * [React-router](https://github.com/rackt/react-routerq)
+  * [Redux](https://github.com/rackt/redux)
+  *
 * Testing
-  * [Chai](http://chaijs.com/)
   * [Mocha](https://mochajs.org/)
+  * React-test-utils
   * [Jsdom](https://github.com/tmpvar/jsdom)
 * Build
   * Gulp (watch, uglify, generate sourcemaps, browserify)
@@ -26,5 +30,4 @@ See [Makefile](Makefile).
 ## Troubleshooting
 
 Logs can be viewed via:
-* [Core ls.ext log viewer](https://github.com/digibib/ls.ext#monitoring-of-logs-with-devops-the-logserver)
 * Running `make log-f` in the Patron client catalogue
