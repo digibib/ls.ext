@@ -20,20 +20,6 @@ if !FileUtils.compare_file(pillar_file, koha_pillar_example)
   puts "Note: You are running a customized #{pillar_file}."
 end
 
-# Template of Docker Compose env vars copied if not existing
-docker_compose_env_example = "#{vagrant_root}/docker-compose/docker-compose.env.example"
-docker_compose_env_example_prev = docker_compose_env_example + "_prev"
-env_file = docker_compose_env_example.sub(/\.example$/, '')
-if !File.file?(env_file) || FileUtils.compare_file(env_file, koha_pillar_example_prev)
-  puts "Note! Copying #{env_file} from #{docker_compose_env_example} ..."
-  FileUtils.cp(docker_compose_env_example, env_file)
-else
-  puts "Note! #{env_file} is in sync with original."
-end
-if !FileUtils.compare_file(env_file, docker_compose_env_example)
-  puts "Note: You are running a customized #{env_file}."
-end
-
 # Migration example config
 migration_pillar_example_file= "#{vagrant_root}/pillar/migration/admin.sls.example"
 migration_pillar_file = migration_pillar_example_file.sub(/\.example$/, '')
