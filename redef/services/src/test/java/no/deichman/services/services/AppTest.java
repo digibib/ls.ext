@@ -48,6 +48,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class AppTest {
     public static final int ONE_SECOND = 1000;
@@ -162,6 +163,7 @@ public class AppTest {
 
     private void doSearchForWorkWithFormat(String name, String format) throws UnirestException, InterruptedException {
         boolean foundWorkInIndex;
+        boolean foundFormatInIndex;
         int attempts = FIFTY_TIMES;
         do {
             HttpRequest request = Unirest
@@ -169,14 +171,20 @@ public class AppTest {
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
-            foundWorkInIndex = responseBody.contains(name)
-                    && responseBody.contains(format);
-            if (!foundWorkInIndex) {
-                LOG.info("Work not found in index yet, waiting one second");
+            foundWorkInIndex = responseBody.contains(name);
+            foundFormatInIndex = responseBody.contains(format);
+            if (!foundWorkInIndex || !foundFormatInIndex) {
+                LOG.info("Work with given format not found in index yet, waiting one second.");
                 Thread.sleep(ONE_SECOND);
             }
-        } while (attempts-- > 0);
-        System.out.println("derp");
+        } while ((!foundWorkInIndex || !foundFormatInIndex) && attempts-- > 0);
+        if (foundWorkInIndex && foundFormatInIndex) {
+            assertTrue("Work with given format found in index", (foundWorkInIndex && foundFormatInIndex));
+        } else if (foundWorkInIndex) {
+            fail("Work found in index, but not with the correct format.");
+        } else {
+            fail("Work not found in index.");
+        }
     }
 
     @Test
