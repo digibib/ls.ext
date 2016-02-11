@@ -46,6 +46,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "es5-shim": "^4.5.2",
     "isomorphic-fetch": "^2.2.1",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#6abf76d7f915eca3ee6a7550f977ff7de146fc26",
     "object-assign": "^4.0.1",
