@@ -13,7 +13,7 @@ export default React.createClass({
       <p>Forfatter: {creators.map(creator => {
         return <strong key={creator.relativeUri}><Link to={creator.relativeUri}> {creator.name} </Link></strong>
       })}
-     </p>
+      </p>
     )
   },
   render () {
@@ -21,10 +21,12 @@ export default React.createClass({
 
     let originalTitle = ''
     if (result.originalTitle) {
-      originalTitle = <p>
-        Originaltittel:
-        {result.originalTitle}
-      </p>
+      originalTitle = (
+        <p>
+          Originaltittel:
+          {result.originalTitle}
+        </p>
+      )
     }
 
     let displayTitle = result.mainTitle
@@ -32,9 +34,7 @@ export default React.createClass({
       displayTitle += ' — ' + result.partTitle
     }
 
-    if (!result.formats) {
-      result.formats = []
-    }
+    let formats = result.formats || []
 
     return (
       <div className='result panel'>
@@ -56,7 +56,7 @@ export default React.createClass({
           <div className='col'>
             Tilgjengelige formater:
             <br/>
-            {result.formats.join(', ')}
+            {formats.join(', ')}
           </div>
           <div className='col'>
             <span className='hidden'>Språk:<br/>TODO</span>&nbsp;
