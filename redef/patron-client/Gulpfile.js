@@ -6,7 +6,7 @@ var gulp = require('gulp'),
   source = require('vinyl-source-stream'),
   del = require('del'),
   sass = require('gulp-sass'),
-  history = require('connect-history-api-fallback')
+  server = require('gulp-express');
 
 gulp.task('lint', function () {
   return gulp.src(['./src/frontend/**/*.js'])
@@ -20,7 +20,7 @@ gulp.task('clean', function () {
   return del.sync(['public/dist'])
 })
 
-gulp.task('build', ['clean', 'copy:md', 'sass'], function () {
+gulp.task('build', [ 'clean', 'sass' ], function () {
   return browserify({
     entries: './src/frontend/main.js',
     extensions: ['.jsx'],
@@ -36,11 +36,6 @@ gulp.task('build', ['clean', 'copy:md', 'sass'], function () {
     .pipe(gulp.dest('public/dist'))
 })
 
-gulp.task('copy:md', function () {
-  console.log('derp')
-  return gulp.src('./src/text/**/*.md').pipe(gulp.dest('public/dist'))
-})
-
 gulp.task('sass', function () {
   return gulp.src('./src/sass/*.scss')
     .pipe(sass.sync().on('error', sass.logError))
@@ -48,33 +43,20 @@ gulp.task('sass', function () {
 })
 
 gulp.task('reload:js', ['build'], function () {
-  return gulp.src('./src/').pipe(connect.reload())
-})
-
-gulp.task('reload:md', ['copy:md'], function () {
-  return gulp.src('./src/').pipe(connect.reload())
+  return gulp.src('./src/').pipe(server.notify())
 })
 
 gulp.task('reload:sass', ['sass'], function () {
-  return gulp.src('./src/').pipe(connect.reload())
+  return gulp.src('./src/').pipe(server.notify())
 })
 
 gulp.task('watch', function () {
-  gulp.watch(['./src/frontend/**/*.js'], ['reload:js'])
-  gulp.watch(['./src/text/**/*.md'], ['reload:md'])
-  gulp.watch(['./src/scss/*.scss'], ['reload:sass'])
+  gulp.watch([ './src/frontend/**/*.js' ], [ 'reload:js' ])
+  gulp.watch([ './src/scss/*.scss' ], [ 'reload:sass' ])
 })
 
-gulp.task('connect', function () {
-  connect.server({
-    root: './public',
-    port: 8000,
-    livereload: true,
-    middleware: function () {
-      return [history()]
-    }
-
-  })
+gulp.task('express', function () {
+  server.run([ 'server.js' ]);
 })
 
-gulp.task('serve', ['build', 'watch', 'connect'])
+gulp.task('serve', [ 'build', 'watch', 'express' ])
