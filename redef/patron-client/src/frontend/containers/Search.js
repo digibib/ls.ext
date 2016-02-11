@@ -13,7 +13,7 @@ const Search = React.createClass({
     searchResults: PropTypes.array.isRequired,
     isSearching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
-    isError: PropTypes.bool.isRequired,
+    searchError: PropTypes.any.isRequired,
     filtersByQuery: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     searchFieldInput: PropTypes.string,
@@ -31,7 +31,7 @@ const Search = React.createClass({
             searchQuery={this.props.searchFieldInput}
             searchResults={this.props.searchResults}
             totalHits={this.props.totalHits}
-            isError={this.props.isError}/>
+            searchError={this.props.searchError}/>
         </div>
       </div>
     )
@@ -44,7 +44,7 @@ function mapStateToProps (state) {
     totalHits: state.search.totalHits,
     isSearching: state.search.isSearching,
     searchQuery: state.search.searchQuery,
-    isError: state.search.isError,
+    searchError: state.search.searchError,
     filtersByQuery: state.search.filtersByQuery
   }
 }

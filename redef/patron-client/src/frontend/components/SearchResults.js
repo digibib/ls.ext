@@ -5,7 +5,7 @@ export default React.createClass({
   propTypes: {
     locationQuery: PropTypes.object,
     searchActions: PropTypes.object.isRequired,
-    isError: PropTypes.bool.isRequired,
+    searchError: PropTypes.any.isRequired,
     totalHits: PropTypes.number.isRequired,
     searchResults: PropTypes.array.isRequired
   },
@@ -15,7 +15,7 @@ export default React.createClass({
     }
   },
   componentDidUpdate (prevProps) {
-    if (this.props.locationQuery.query && this.props.locationQuery !== prevProps.locationQuery) {
+    if (this.props.locationQuery.query && JSON.stringify(this.props.locationQuery) !== JSON.stringify(prevProps.locationQuery)) {
       this.search()
     }
   },
@@ -35,7 +35,7 @@ export default React.createClass({
     return filters
   },
   render () {
-    if (this.props.isError) {
+    if (this.props.searchError) {
       return (
         <p>
           Noe gikk galt med søket.

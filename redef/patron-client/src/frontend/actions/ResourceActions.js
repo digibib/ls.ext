@@ -22,8 +22,17 @@ export function receiveResource (uri, resource) {
   }
 }
 
+export function resourceFailure (error) {
+  return {
+    type: types.RESOURCE_FAILURE,
+    payload: {
+      message: error
+    },
+    error: true
+  }
+}
+
 export function getPersonResource (uri) {
-  // TODO Error handling, use multi fetching with axios
   let personResponse
   let worksResponse
   return dispatch => {
@@ -44,11 +53,11 @@ export function getPersonResource (uri) {
       })
       .then(() => parsePersonResponse(uri, personResponse, worksResponse))
       .then(person => dispatch(receiveResource(uri, person)))
+      .catch(error => dispatch(resourceFailure(error)))
   }
 }
 
 export function getWorkResource (uri) {
-  // TODO Error handling, use multi fetching with axios
   let workResponse
   let itemsResponse
   return dispatch => {
@@ -69,14 +78,6 @@ export function getWorkResource (uri) {
       })
       .then(() => parseWorkResponse(uri, workResponse, itemsResponse))
       .then(work => dispatch(receiveResource(uri, work)))
-  }
-}
-
-export function getResource (uri) {
-  return dispatch => {
-    dispatch(requestResource(uri))
-    return fetch(uri)
-      .then(response => response.json())
-      .then(json => dispatch(receiveResource(uri, json)))
+      .catch(error => dispatch(resourceFailure(error)))
   }
 }

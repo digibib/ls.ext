@@ -1,4 +1,4 @@
-import { SEARCH_FAILURE, RECEIVE_SEARCH, REQUEST_SEARCH, RECEIVE_AGGREGATION, REQUEST_AGGREGATION } from '../constants/ActionTypes'
+import { AGGREGATION_FAILURE, SEARCH_FAILURE, RECEIVE_SEARCH, REQUEST_SEARCH, RECEIVE_AGGREGATION, REQUEST_AGGREGATION } from '../constants/ActionTypes'
 
 const initialState = {
   searchResults: [],
@@ -8,7 +8,8 @@ const initialState = {
   isSearching: false,
   isRequestingAggregation: false,
   totalHits: 0,
-  isError: false
+  searchError: false,
+  aggregationError: false
 }
 
 export default function search (state = initialState, action) {
@@ -18,12 +19,12 @@ export default function search (state = initialState, action) {
         searchResults: action.payload.searchResults,
         totalHits: action.payload.totalHits,
         isSearching: false,
-        isError: false
+        searchError: false
       })
     case SEARCH_FAILURE:
       return Object.assign({}, state, {
         isSearching: false,
-        isError: true
+        searchError: action.payload.message
       })
     case RECEIVE_AGGREGATION:
       let filtersByQuery = {}
@@ -31,11 +32,16 @@ export default function search (state = initialState, action) {
       filtersByQuery = Object.assign({}, state.filtersByQuery, filtersByQuery)
       return Object.assign({}, state, {
         filtersByQuery: filtersByQuery,
-        isRequestingAggregation: false
+        isRequestingAggregation: false,
+        aggregationError: false
       })
     case REQUEST_AGGREGATION:
       return Object.assign({}, state, {
         isRequestingAggregation: true
+      })
+    case AGGREGATION_FAILURE:
+      return Object.assign({}, state, {
+        aggregationError: action.payload.message
       })
     case REQUEST_SEARCH:
       return Object.assign({}, state, {

@@ -35,9 +35,22 @@ export function requestAggregation (inputQuery, elasticSearchQuery) {
   }
 }
 
-export function searchFailure (processedResponse) {
+export function searchFailure (error) {
   return {
     type: types.SEARCH_FAILURE,
+    payload: {
+      message: error
+    },
+    error: true
+  }
+}
+
+export function aggregationFailure (error) {
+  return {
+    type: types.AGGREGATION_FAILURE,
+    payload: {
+      message: error
+    },
     error: true
   }
 }
@@ -54,8 +67,6 @@ export function receiveAggregation (processedResponse, inputQuery) {
 
 export function aggregate (inputQuery) {
   let elasticSearchQuery = aggregationQuery(inputQuery)
-
-  // TODO Error handling
   return dispatch => {
     dispatch(requestAggregation(inputQuery, elasticSearchQuery))
     return fetch(Constants.backendUri + '/search/work/_search', {
@@ -67,13 +78,12 @@ export function aggregate (inputQuery) {
       .then(response => response.json())
       .then(json => processAggregationResponse(json))
       .then(processedResponse => dispatch(receiveAggregation(processedResponse, inputQuery)))
+      .catch(error => dispatch(aggregationFailure(error)))
   }
 }
 
 export function search (inputQuery, filters) {
   let elasticSearchQuery = filteredSearchQuery(inputQuery, filters)
-
-  // TODO Error handling
   return (dispatch, getState) => {
     const { search } = getState()
     if (!search.filtersByQuery[ inputQuery ]) {
@@ -95,5 +105,6 @@ export function search (inputQuery, filters) {
           return dispatch(receiveSearch(processedResponse))
         }
       })
+      .catch(error => dispatch(searchFailure(error)))
   }
 }
