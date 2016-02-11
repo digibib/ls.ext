@@ -27,7 +27,7 @@ export default React.createClass({
       return (a.bucket > b.bucket) ? 1 : ((b.bucket > a.bucket) ? -1 : 0)
     })
     return filters.map((filter, index) => {
-      if (!this.state.showAll && index > 4) {
+      if (!this.state.showAll && index >= Constants.maxVisibleFilterItems) {
         return ''
       }
 
