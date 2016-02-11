@@ -74,7 +74,7 @@ export default React.createClass({
         delete locationQuery[ queryParamName ]
       }
     }
-    var url = this.context.router.createPath({ pathname: '/search', query: locationQuery })
+    let url = this.context.router.createPath({ pathname: '/search', query: locationQuery })
     this.props.dispatch(routeActions.push(url))
   },
   render () {
