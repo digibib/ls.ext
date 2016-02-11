@@ -155,6 +155,8 @@ services:
       TRIPLESTORE_PORT: "${TRIPLESTORE_PORT}"
       ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT}"
       KOHA_VERSION: "${KOHA_IMAGE_TAG}"
+      GITREF: "${GITREF}"
+      JENKINSID: "${JENKINSID}"
 
   cuke_tests:
     container_name: cuke_tests
