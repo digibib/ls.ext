@@ -5,7 +5,7 @@ export function parsePersonResponse (personUri, personResponse, worksResponse) {
   let personGraph = worksResponse
     ? graph.parse(worksResponse, personResponse)
     : graph.parse(personResponse)
-  let personResource = personGraph.byId(personUri)
+  let personResource = personGraph.byType('Person')[ 0 ]
   let person = {}
 
   populate(person, 'personTitle', personResource)
@@ -23,7 +23,7 @@ export function parsePersonResponse (personUri, personResponse, worksResponse) {
     person.works.push(work)
   })
 
-  person.uri = personUri
+  person.uri = personResource.id
 
   return person
 }
@@ -33,7 +33,7 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
     ? graph.parse(workResponse, itemsResponse)
     : graph.parse(workResponse)
 
-  let workResource = workGraph.byId(workUri)
+  let workResource = workGraph.byType('Work')[ 0 ]
   let work = {}
 
   // TODO: availCount
@@ -78,7 +78,7 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
     work.publications.push(publication)
   })
 
-  work.uri = workUri
+  work.uri = workResource.id
 
   return work
 }

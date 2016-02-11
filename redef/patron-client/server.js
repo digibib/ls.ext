@@ -8,13 +8,9 @@ app.use(require('connect-livereload')())
 
 app.use(express.static(__dirname + '/public'))
 
-app.get('/services/*', requestProxy({
-  url: "http://192.168.50.12:8005/*"
-}));
-
-app.post('/services/*', requestProxy({
-  url: "http://192.168.50.12:8005/*"
-}));
+app.all('/services/*', requestProxy({
+  url: "http://services:8005/*"
+}))
 
 app.get('*', function (request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
