@@ -1,182 +1,189 @@
 ---
-koha:
-  container_name: koha_container
-  image: "digibib/koha:${KOHA_IMAGE_TAG}"
-  cap_add:
-    - SYS_NICE
-    - DAC_READ_SEARCH
-    - MKNOD
-  environment:
-    KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
-    KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
-    KOHA_INSTANCE: "$KOHA_INSTANCE"
-    DEFAULT_LANGUAGE: nb-NO
-    EMAIL_ENABLED: "True"
-    SMTP_SERVER_HOST: mailrelay # handled by link to smtp container
-    SMTP_SERVER_PORT: 2525
-    MESSAGE_QUEUE_FREQUENCY: 1
-  links:
-    - koha_mysql:db
-    - smtp:mailrelay
-  ports:
-    - "6001:6001"
-    - "8080:8080"
-    - "8081:8081"
-  volumes:
-    - "/var/migration_workdir:/var/migration_workdir:rw"
-
-koha_mysql:
-  container_name: koha_mysql_container
-  cap_add:
-    - MKNOD
-  command:
-    - mysqld
-    - "--datadir=/var/lib/mysql"
-    - "--user=mysql"
-    - "--max_allowed_packet=64M"
-    - "--wait_timeout=6000"
-    - "--bind-address=0.0.0.0"
-  environment:
-    MYSQL_DATABASE: "koha_${KOHA_INSTANCE}"
-    MYSQL_PASSWORD: "${KOHA_ADMINPASS}"
-    MYSQL_ROOT_PASSWORD: "${KOHA_ADMINPASS}"
-    MYSQL_USER: "${KOHA_ADMINUSER}"
-  image: mysql:5.6.20
-  ports:
-    - "3306:3306"
-  volumes_from:
-    - koha_mysql_data
-
-koha_mysql_data:
-  container_name: koha_mysql_data
-  image: "busybox:latest"
-  volumes:
-    - /var/lib/mysql
-
-smtp:
-  container_name: mailrelay
-  image: "digibib/gosmtpd:77b8ca230bbfcac7a9f40d5eead79acb50639f14"
-  ports:
-    - "8100:8000"
-
-elasticsearch_data:
-  container_name: elasticsearch_data
-  image: "busybox:latest"
-  volumes:
-    - /usr/share/elasticsearch/data
-
-elasticsearch:
-  container_name: elasticsearch_container
-  image: elasticsearch:2.1.0
-  ports:
-    - "8200:9200"
-    - "8300:9300"
-  command: "elasticsearch --network.host _non_loopback_"
-  volumes_from:
-    - elasticsearch_data
-
-fuseki_data:
-  container_name: fuseki_data
-  image: "busybox:latest"
-  volumes:
-    - /data
-
-fuseki:
-  container_name: fuseki_container
-  image: fisch42/fuseki
-  ports:
-    - "3030:3030"
-  volumes_from:
-    - fuseki_data
-
-sip:
-  container_name: sip_proxy_container
-  image: "digibib/biblio-sip2:${SIP_IMAGE_TAG}"
-  ports:
-    - "6002:6001"
-  environment:
-    USE_LOCAL_MODS: "True"
-    SIPSERVER_HOST_PORT: "${HOST}:${SIP_PORT}"
-
-catalinker:
-  container_name: redef_catalinker_container
-  build: /vagrant/redef/catalinker
-  dockerfile: Dockerfile-dev
-  volumes:
-    - /mnt/catalinker_client:/usr/src/app/client
-    - /mnt/catalinker_public:/usr/src/app/public
-    - /mnt/catalinker_server:/usr/src/app/server
-  ports:
-    - "8010:8010"
-  environment:
-    KOHA_OPAC_PORT: "http://${HOST}:8080"
-    KOHA_INTRA_PORT: "http://${HOST}:8081"
-    SERVICES_PORT: "http://${HOST}:8005"
-    GITREF: "${GITREF}"
-    JENKINSID: "${JENKINSID}"
-
+version: '2'
 services:
-  container_name: redef_services_container
-  image: "digibib/redef-services"
-  ports:
-    - "8005:8005"
-    - "8006:8006"
-    - "5070:5070"
-  environment:
-    JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070 \
-    -DKOHA_USER=${KOHA_ADMINUSER} \
-    -DKOHA_PASSWORD=${KOHA_ADMINPASS} \
-    -DKOHA_PORT=http://${HOST}:8081 \
-    -DTRIPLESTORE_PORT=http://${HOST}:${TRIPLESTORE_PORT} \
-    -DELASTICSEARCH_URL=http://${HOST}:${ELASTICSEARCH_PORT} \
-    -DDATA_BASEURI=${DATA_BASEURI}"
-    GITREF: "${GITREF}"
-    JENKINSID: "${JENKINSID}"
+  koha:
+    container_name: koha_container
+    image: "digibib/koha:${KOHA_IMAGE_TAG}"
+    cap_add:
+      - SYS_NICE
+      - DAC_READ_SEARCH
+      - MKNOD
+    environment:
+      KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
+      KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
+      KOHA_INSTANCE: "$KOHA_INSTANCE"
+      DEFAULT_LANGUAGE: nb-NO
+      EMAIL_ENABLED: "True"
+      SMTP_SERVER_HOST: mailrelay # handled by link to smtp container
+      SMTP_SERVER_PORT: 2525
+      MESSAGE_QUEUE_FREQUENCY: 1
+    links:
+      - koha_mysql:db
+      - smtp:mailrelay
+    ports:
+      - "6001:6001"
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - "/var/migration_workdir:/var/migration_workdir:rw"
 
-patron-client:
-  container_name: redef_patron_client_container
-  build: /vagrant/redef/patron-client
-  volumes:
-    - /mnt/patron-client_src:/usr/src/app/src
-    - /mnt/patron-client_test:/usr/src/app/test
-  ports:
-    - "8000:8000"
-    - "35729:35729"
-  environment:
-    SERVICES_PORT: "http://${HOST}:${SERVICES_PORT}"
-    GITREF: "${GITREF}"
-    JENKINSID: "${JENKINSID}"
+  koha_mysql:
+    container_name: koha_mysql_container
+    cap_add:
+      - MKNOD
+    command:
+      - mysqld
+      - "--datadir=/var/lib/mysql"
+      - "--user=mysql"
+      - "--max_allowed_packet=64M"
+      - "--wait_timeout=6000"
+      - "--bind-address=0.0.0.0"
+    environment:
+      MYSQL_DATABASE: "koha_${KOHA_INSTANCE}"
+      MYSQL_PASSWORD: "${KOHA_ADMINPASS}"
+      MYSQL_ROOT_PASSWORD: "${KOHA_ADMINPASS}"
+      MYSQL_USER: "${KOHA_ADMINUSER}"
+    image: mysql:5.6.20
+    ports:
+      - "3306:3306"
+    volumes_from:
+      - koha_mysql_data
 
-overview:
-  container_name: overview_container
-  build: /vagrant/redef/overview
-  ports:
-    - "${OVERVIEW_PORT}:${OVERVIEW_PORT}"
-  environment:
-    HOST: "${HOST}"
-    PATRON_CLIENT_PORT: "8000"
-    SERVICES_PORT: "8005"
-    CATALINKER_PORT: "8010"
-    KOHA_OPAC_PORT: "8080"
-    KOHA_INTRA_PORT: "8081"
-    JAMON_PORT: "5070"
-    TRIPLESTORE_PORT: "${TRIPLESTORE_PORT}"
-    ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT}"
-    KOHA_VERSION: "${KOHA_IMAGE_TAG}"
-    GITREF: "${GITREF}"
-    JENKINSID: "${JENKINSID}"
+  koha_mysql_data:
+    container_name: koha_mysql_data
+    image: "busybox:latest"
+    volumes:
+      - /var/lib/mysql
 
-cuke_tests:
-  container_name: cuke_tests
-  build: /vagrant/test
-  volumes:
-    - /usr/bin/docker:/usr/bin/docker
-    - /var/run/docker.sock:/var/run/docker.sock
-    - /lib/x86_64-linux-gnu/libsystemd-journal.so.0:/lib/x86_64-linux-gnu/libsystemd-journal.so.0
-    - /vagrant/pillar:/srv/pillar
-    - /vagrant/test:/tests
-  environment:
-    HOST: "${HOST}"
-    KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
-    KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
-    KOHA_INSTANCE: "${KOHA_INSTANCE}"
+  smtp:
+    container_name: mailrelay
+    image: "digibib/gosmtpd:77b8ca230bbfcac7a9f40d5eead79acb50639f14"
+    ports:
+      - "8100:8000"
+
+  elasticsearch_data:
+    container_name: elasticsearch_data
+    image: "busybox:latest"
+    volumes:
+      - /usr/share/elasticsearch/data
+
+  elasticsearch:
+    container_name: elasticsearch_container
+    image: elasticsearch:2.1.0
+    ports:
+      - "8200:9200"
+      - "8300:9300"
+    command: "elasticsearch --network.host _non_loopback_"
+    volumes_from:
+      - elasticsearch_data
+
+  fuseki_data:
+    container_name: fuseki_data
+    image: "busybox:latest"
+    volumes:
+      - /data
+
+  fuseki:
+    container_name: fuseki_container
+    image: fisch42/fuseki
+    ports:
+      - "3030:3030"
+    volumes_from:
+      - fuseki_data
+
+  sip:
+    container_name: sip_proxy_container
+    image: "digibib/biblio-sip2:${SIP_IMAGE_TAG}"
+    ports:
+      - "6002:6001"
+    environment:
+      USE_LOCAL_MODS: "True"
+      SIPSERVER_HOST_PORT: "${HOST}:${SIP_PORT}"
+
+  catalinker:
+    container_name: redef_catalinker_container
+    build:
+      context: /vagrant/redef/catalinker
+      dockerfile: Dockerfile-dev
+    volumes:
+      - /mnt/catalinker_client:/usr/src/app/client
+      - /mnt/catalinker_public:/usr/src/app/public
+      - /mnt/catalinker_server:/usr/src/app/server
+    ports:
+      - "8010:8010"
+    environment:
+      KOHA_OPAC_PORT: "http://${HOST}:8080"
+      KOHA_INTRA_PORT: "http://${HOST}:8081"
+      SERVICES_PORT: "http://${HOST}:8005"
+      GITREF: "${GITREF}"
+      JENKINSID: "${JENKINSID}"
+
+  services:
+    container_name: redef_services_container
+    image: "digibib/redef-services"
+    ports:
+      - "8005:8005"
+      - "8006:8006"
+      - "5070:5070"
+    environment:
+      JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070 \
+      -DKOHA_USER=${KOHA_ADMINUSER} \
+      -DKOHA_PASSWORD=${KOHA_ADMINPASS} \
+      -DKOHA_PORT=http://${HOST}:8081 \
+      -DTRIPLESTORE_PORT=http://${HOST}:${TRIPLESTORE_PORT} \
+      -DELASTICSEARCH_URL=http://${HOST}:${ELASTICSEARCH_PORT} \
+      -DDATA_BASEURI=${DATA_BASEURI}"
+      GITREF: "${GITREF}"
+      JENKINSID: "${JENKINSID}"
+
+  patron-client:
+    container_name: redef_patron_client_container
+    build:
+      context: /vagrant/redef/patron-client
+      dockerfile: Dockerfile-dev
+    volumes:
+      - /mnt/patron-client_src:/usr/src/app/src
+      - /mnt/patron-client_test:/usr/src/app/test
+    ports:
+      - "8000:8000"
+      - "35729:35729"
+    environment:
+      SERVICES_PORT: "http://${HOST}:${SERVICES_PORT}"
+      GITREF: "${GITREF}"
+      JENKINSID: "${JENKINSID}"
+
+  overview:
+    container_name: overview_container
+    build:
+      context: /vagrant/redef/overview
+    ports:
+      - "${OVERVIEW_PORT}:${OVERVIEW_PORT}"
+    environment:
+      HOST: "${HOST}"
+      PATRON_CLIENT_PORT: "8000"
+      SERVICES_PORT: "8005"
+      CATALINKER_PORT: "8010"
+      KOHA_OPAC_PORT: "8080"
+      KOHA_INTRA_PORT: "8081"
+      JAMON_PORT: "5070"
+      TRIPLESTORE_PORT: "${TRIPLESTORE_PORT}"
+      ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT}"
+      KOHA_VERSION: "${KOHA_IMAGE_TAG}"
+      GITREF: "${GITREF}"
+      JENKINSID: "${JENKINSID}"
+
+  cuke_tests:
+    container_name: cuke_tests
+    build:
+      context: /vagrant/test
+    volumes:
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /lib/x86_64-linux-gnu/libsystemd-journal.so.0:/lib/x86_64-linux-gnu/libsystemd-journal.so.0
+      - /vagrant/pillar:/srv/pillar
+      - /vagrant/test:/tests
+    environment:
+      HOST: "${HOST}"
+      KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
+      KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
+      KOHA_INSTANCE: "${KOHA_INSTANCE}"
