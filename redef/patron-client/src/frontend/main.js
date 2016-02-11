@@ -32,8 +32,8 @@ const routes = (
       <Route path='/' component={App}>
         <IndexRoute component={Search}/>
         <Route path='search' component={Search}/>
-        <route path='work/:id' component={Work}/>
-        <route path='person/:id' component={Person}/>
+        <Route path='work/:id' component={Work}/>
+        <Route path='person/:id' component={Person}/>
       </Route>
     </Router>
   </Provider>
