@@ -140,7 +140,7 @@ services:
     container_name: redef_patron_client_container
     build:
       context: /vagrant/redef/patron-client
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile
     volumes:
       - /mnt/patron-client_src:/usr/src/app/src
       - /mnt/patron-client_test:/usr/src/app/test
