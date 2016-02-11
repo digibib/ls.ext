@@ -1,0 +1,73 @@
+import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
+
+export default React.createClass({
+  propTypes: {
+    result: PropTypes.object.isRequired
+  },
+  renderAuthors (creators) {
+    if (creators.length === 0) {
+      return
+    }
+    return (
+      <p>Forfatter: {creators.map(creator => {
+        return <strong><Link key={creator.relativeUri} to={creator.relativeUri}> {creator.name} </Link></strong>
+      })}
+     </p>
+    )
+  },
+  render () {
+    let result = this.props.result
+
+    let originalTitle = ''
+    if (result.originalTitle) {
+      originalTitle = <p>
+        Originaltittel:
+        {result.originalTitle}
+      </p>
+    }
+
+    let displayTitle = result.mainTitle
+    if (result.partTitle) {
+      displayTitle += ' — ' + result.partTitle
+    }
+
+    if (!result.formats) {
+      result.formats = []
+    }
+
+    return (
+      <div className='result panel'>
+        <div className='row'>
+          <div className='col book-cover'>
+          </div>
+          <div className='col result-info'>
+            <p>
+              <strong><span data-automation-id='work-title'>{displayTitle}</span></strong>
+            </p>
+            {this.renderAuthors(result.creators)}
+            {originalTitle}
+          </div>
+        </div>
+        <div className='row result-more'>
+          <div className='col'>
+            <strong>Finnes også som:</strong>
+          </div>
+          <div className='col'>
+            Tilgjengelige formater:
+            <br/>
+            {result.formats.join(', ')}
+          </div>
+          <div className='col'>
+            <span className='hidden'>Språk:<br/>TODO</span>&nbsp;
+          </div>
+          <div className='col'>
+            <span className='hidden'>TODO Utgivelser</span>
+            <Link to={result.relativeUri} className='more'> les mer ►
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+})

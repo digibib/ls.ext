@@ -12,7 +12,7 @@ end
 
 Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
   step "jeg er på sida til verket"
-  @site.PatronClientWorkPage.getDate().should_not include(@context[:work_publicationyear])
+  @site.browser.span(:data_automation_id => /work_date/).text.should_not include(@context[:work_publicationyear])
 end
 
 Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do
@@ -37,12 +37,6 @@ end
 Then(/^verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
   @site.PatronClientWorkPage.getTitle.should include(@context[:work_maintitle])
-end
-
-Then(/^verkets alternative tittel vises på verks\-siden$/) do
-  step "jeg er på sida til verket"
-  @browser.refresh
-  @site.PatronClientWorkPage.getTitle.should include(@context[:alt_title])
 end
 
 Then(/^vises eksemplaret på verkssiden$/) do

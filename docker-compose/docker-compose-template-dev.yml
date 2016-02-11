@@ -135,14 +135,13 @@ services:
 
 patron-client:
   container_name: redef_patron_client_container
-  build: /vagrant/redef/patron-client
-  dockerfile: Dockerfile-dev
+  build: /vagrant/redef/patron-client2
   volumes:
-    - /mnt/patron-client_client:/usr/src/app/client
-    - /mnt/patron-client_public:/usr/src/app/public
-    - /mnt/patron-client_server:/usr/src/app/server
+    - /mnt/patron-client_src:/usr/src/app/src
+    - /mnt/patron-client_test:/usr/src/app/test
   ports:
     - "8000:8000"
+    - "35729:35729"
   environment:
     SERVICES_PORT: "http://${HOST}:${SERVICES_PORT}"
     GITREF: "${GITREF}"

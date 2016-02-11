@@ -104,7 +104,7 @@ module Paths
   end
 
   def patron_client_search_page()
-    "http://#{host}:#{port(:patron_client)}/search"
+    "http://#{host}:#{port(:patron_client)}/"
   end
 
   def services(path=nil)

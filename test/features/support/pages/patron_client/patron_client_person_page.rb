@@ -21,11 +21,13 @@ class PatronClientPersonPage < PageRoot
     end
 
     def getBirth
-      return @browser.span(:data_automation_id => "person-birth").when_present(BROWSER_WAIT_TIMEOUT).text
+      lifespan = @browser.span(:data_automation_id => "lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
+      return lifespan[1..lifespan.index("-")-1]
     end
 
     def getDeath
-      return @browser.span(:data_automation_id => "person-death").when_present(BROWSER_WAIT_TIMEOUT).text
+      lifespan = @browser.span(:data_automation_id => "lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
+      return lifespan[lifespan.index("-")+1..-2]
     end
 
     def getNationality
@@ -34,8 +36,8 @@ class PatronClientPersonPage < PageRoot
 
     def getWorkslist
       works = Array.new
-      @browser.divs(:class => "work").each do |work|
-        works.push(work.p.a.strong.text)
+      @browser.ps(:class => "work").each do |work|
+        works.push(work.a.strong.text)
       end
       works
     end

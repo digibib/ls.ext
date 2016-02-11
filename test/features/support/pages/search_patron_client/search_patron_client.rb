@@ -14,7 +14,7 @@ class SearchPatronClient < PageRoot
   end
 
   def get_search_result_list
-    return @browser.div(:class=> 'result')
+    return @browser.divs(:class=> 'result')
   end
 
   def follow_first_item_in_search_result

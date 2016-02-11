@@ -1,0 +1,109 @@
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body{margin:0}
+article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}
+audio,canvas,progress,video{display:inline-block;vertical-align:baseline}
+audio:not([controls]){display:none;height:0}
+[hidden],template{display:none}
+a{background-color:transparent}
+a:active,a:hover{outline:0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:700}
+dfn{font-style:italic}
+h1{font-size:2em;margin:.67em 0}
+mark{background:#ff0;color:#000}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:1em 40px}
+hr{box-sizing:content-box;height:0}
+pre{overflow:auto}
+code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}
+button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}
+button{overflow:visible}
+button,select{text-transform:none}
+button,html input[type="button"],/* 1 */
+input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+input{line-height:normal}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}
+input[type="search"]{-webkit-appearance:textfield;box-sizing:content-box}
+input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+textarea{overflow:auto}
+optgroup{font-weight:700}
+table{border-collapse:collapse;border-spacing:0}
+td,th{padding:0}
+
+/* grid */
+
+.row .row { margin:  0 -1.5em; }
+.col      { padding: 0  1.5em; }
+
+.row:before, .row:after {
+    content: "";
+    display: table;
+}
+.row:after { clear: both; }
+
+@media only screen { .col {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+}}
+
+
+/* responsive logic */
+
+@media only screen and (min-width: 76em) {
+  .filters { width: 25% }
+  .search-results { width: 75% }
+}
+
+/* application styles */
+
+body { color: #242424 }
+th { padding: 0.5em; text-align: left }
+td { padding: 0.5em; }
+.small-text { font-size: 0.8em; }
+input[type="checkbox"] { margin-right: 0.5em; }
+.hidden { display:none }
+
+.container {
+  margin: 0 auto;
+  max-width: 75rem;
+  width: 90%;
+}
+
+header {
+  background: #eee;
+  padding: 1em 0;
+}
+
+header .col { width: 50% }
+header input[type="search"] { width: 60%; }
+header button { margin-left: 2em; }
+
+header button, input[type="search"] {
+  padding: 0;
+  height: 2em;
+  min-width: 6em;
+  font-size: 1em;
+}
+
+.panel { border-top: 1px solid #ddd; margin-bottom: 1em }
+.panel-header { background: #eee; height: 2em; padding: 0.5em; font-size:1.2em }
+.panel-arrow { font-size:1.5em; display:inline-block; float:right; cursor: pointer; }
+.panel-open:after { content: '▲'; }
+.panel-closed:after { content: '▼'; }
+
+.book-cover { width: 25%; display: none }
+.result-info { width: 75% }
+.result-more { background: #ddd; padding: 0.5em }
+.result-more .col { width: 25% }

@@ -12,7 +12,7 @@ Ports = {
   :koha_opac =>  { :port => REDEF["koha"]["port_opac"], :path =>'/' },
   :koha_intra => { :port => REDEF["koha"]["port_intra"], :path =>'/' },
   :services => { :port => REDEF["services"]["port"], :path =>'/application.wadl?detail=true' },
-  :patron_client_search => { :port => REDEF["patron-client"]["port"], :path =>'/search' },
+  :patron_client_search => { :port => REDEF["patron-client"]["port"], :path =>'/' },
   :patron_client_person => { :port => REDEF["patron-client"]["port"], :path =>'/person/dummyid' },
   :patron_client_work => { :port => REDEF["patron-client"]["port"], :path =>'/work/dummyid' },
   :catalinker => { :port => REDEF["catalinker"]["port"], :path =>'/' },

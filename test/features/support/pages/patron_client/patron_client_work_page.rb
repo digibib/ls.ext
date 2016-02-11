@@ -5,7 +5,7 @@ require_relative '../page_root.rb'
 class PatronClientWorkPage < PageRoot
     def visit(workId)
       @browser.goto patron_client(:work) + "/" + workId
-      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.h2(:data_automation_id => /work_title/).present? }
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.h2(:data_automation_id => /work_title/).exists? }
       self
     end
 
@@ -14,11 +14,11 @@ class PatronClientWorkPage < PageRoot
     end
 
     def getAuthor
-      return @browser.p(:data_automation_id => /work_author/).when_present(BROWSER_WAIT_TIMEOUT).text
+      return @browser.a(:data_automation_id => /work_author/).when_present(BROWSER_WAIT_TIMEOUT).text
     end
 
     def getAuthorLink
-      return @browser.p(:'data_automation_id' => /work_author/).when_present(BROWSER_WAIT_TIMEOUT).a
+      return @browser.a(:'data_automation_id' => /work_author/).when_present(BROWSER_WAIT_TIMEOUT)
     end
 
     def getDate

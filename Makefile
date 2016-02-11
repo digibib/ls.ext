@@ -175,7 +175,7 @@ cuke_redef:						## Run only redef cucumber tests
 	@$(XHOST_REMOVE)
 
 test_patron_client:					## Run unit and module tests of patron-client
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'
+	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client2 && make test'
 
 test_services:						## Run unit and module tests of services
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make test'

@@ -30,7 +30,6 @@ Egenskap: Legg til verk med tittel
     Og at verket har en tittel
     Når jeg legger til en inn alternativ tittel på det nye verket
     Så viser systemet at alternativ tittel på verket har blitt registrert
-    Og verkets alternative tittel vises på verks-siden
 
   Scenario: Katalogisator møter et system som feiler
     Gitt at det er en feil i systemet for katalogisering
