@@ -11,7 +11,7 @@ export default React.createClass({
     }
     return (
       <p>Forfatter: {creators.map(creator => {
-        return <strong><Link key={creator.relativeUri} to={creator.relativeUri}> {creator.name} </Link></strong>
+        return <strong key={creator.relativeUri}><Link to={creator.relativeUri}> {creator.name} </Link></strong>
       })}
      </p>
     )
