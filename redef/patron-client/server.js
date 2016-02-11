@@ -9,7 +9,7 @@ app.use(require('connect-livereload')())
 app.use(express.static(__dirname + '/public'))
 
 app.all('/services/*', requestProxy({
-  url: "http://services:8005/*"
+  url: 'http://services:8005/*'
 }))
 
 app.get('*', function (request, response) {
@@ -17,5 +17,5 @@ app.get('*', function (request, response) {
 })
 
 app.listen(port)
-console.log("server started on port " + port)
+console.log('Server started on port ' + port)
 
