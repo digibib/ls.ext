@@ -7,7 +7,7 @@ import { browserHistory } from 'react-router'
 import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 import { syncHistory } from 'react-router-redux'
-import createLogger from 'redux-logger'
+// import createLogger from 'redux-logger'
 
 import App from './containers/App'
 import Search from './containers/Search'
@@ -16,10 +16,10 @@ import Person from './containers/Person'
 import rootReducer from './reducers'
 
 const reduxRouterMiddleware = syncHistory(browserHistory)
-const loggerMiddleware = createLogger()
+// const loggerMiddleware = createLogger()
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware,
-  //loggerMiddleware,
+  // loggerMiddleware,
   reduxRouterMiddleware
 )(createStore)
 const store = createStoreWithMiddleware(rootReducer)
