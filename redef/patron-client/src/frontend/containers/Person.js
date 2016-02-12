@@ -18,10 +18,15 @@ const Person = React.createClass({
   componentWillMount () {
     this.props.resourceActions.getPersonResource(Constants.backendUri + '/person/' + this.props.params.id)
   },
-  renderEmpty () {
-    return <div>
-      No person
-    </div>
+  renderNoPerson () {
+    return (
+      <div>
+        No person
+      </div>
+    )
+  },
+  renderEmpty() {
+    return <div></div>
   },
   renderLifeSpan (person) {
     let lifeSpan = ''
@@ -60,9 +65,12 @@ const Person = React.createClass({
   },
   render () {
     // TODO Better renderEmpty and showing something while it loads the resource.
+    if (this.props.isRequesting) {
+      return this.renderEmpty()
+    }
     let person = this.props.resources[ Constants.backendUri + '/person/' + this.props.params.id ]
     if (!person) {
-      return this.renderEmpty()
+      return this.renderNoPerson()
     }
 
     return (

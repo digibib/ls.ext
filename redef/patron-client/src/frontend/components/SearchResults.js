@@ -15,7 +15,8 @@ export default React.createClass({
     }
   },
   componentDidUpdate (prevProps) {
-    if (this.props.locationQuery.query && JSON.stringify(this.props.locationQuery) !== JSON.stringify(prevProps.locationQuery)) {
+    // TODO: Fix double requests
+    if (this.props.locationQuery.query && this.props.locationQuery !== prevProps.locationQuery) {
       this.search()
     }
   },

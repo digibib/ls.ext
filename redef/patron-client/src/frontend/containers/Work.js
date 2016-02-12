@@ -21,10 +21,15 @@ const Work = React.createClass({
   componentWillMount () {
     this.props.resourceActions.getWorkResource(Constants.backendUri + '/work/' + this.props.params.id)
   },
-  renderEmpty () {
-    return <div>
-      No work
-    </div>
+  renderNoWork () {
+    return (
+      <div>
+        No work
+      </div>
+    )
+  },
+  renderEmpty() {
+    return <div></div>
   },
   renderCreators (creators) {
     return creators.map(creator => {
@@ -50,9 +55,12 @@ const Work = React.createClass({
   },
   render () {
     // TODO Better renderEmpty and showing something while it loads the resource.
+    if (this.props.isRequesting) {
+      return this.renderEmpty()
+    }
     let work = this.props.resources[ Constants.backendUri + '/work/' + this.props.params.id ]
     if (!work) {
-      return this.renderEmpty()
+      return this.renderNoWork()
     }
 
     return (

@@ -1,4 +1,4 @@
-const filterableFields = [ 'work.formats' ]
+const filterableFields = [ 'work.formats' , 'work.languages']
 
 export function filteredSearchQuery (query, filters) {
   let elasticSearchQuery = {}
