@@ -25,7 +25,7 @@ const Person = React.createClass({
       </div>
     )
   },
-  renderEmpty() {
+  renderEmpty () {
     return <div></div>
   },
   renderLifeSpan (person) {

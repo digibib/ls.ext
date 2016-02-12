@@ -28,7 +28,7 @@ const Work = React.createClass({
       </div>
     )
   },
-  renderEmpty() {
+  renderEmpty () {
     return <div></div>
   },
   renderCreators (creators) {
