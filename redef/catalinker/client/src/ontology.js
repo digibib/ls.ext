@@ -81,7 +81,7 @@
 
             var currentValue = el.current.value;
             var oldValue = el.old.value;
-            if (typeof currentValue == 'string') {
+            if (typeof currentValue == 'string' && currentValue != oldValue) {
                 if (currentValue !== "") {
                     var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue}};
                     if (el.current.lang !== "") {
