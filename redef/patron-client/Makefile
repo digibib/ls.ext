@@ -9,8 +9,7 @@ lint:
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE) npm run -s lint
 
 test: lint
-	@echo "TODO enable tests again!"
-	#sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE) npm test
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE) npm test
 
 logs:
 	sudo docker logs -f $(CONTAINER)
