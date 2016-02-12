@@ -57,6 +57,10 @@
         "formats": {
           "type": "string",
           "index": "not_analyzed"
+        },
+        "languages": {
+          "type": "string",
+          "index": "not_analyzed"
         }
       }
     }

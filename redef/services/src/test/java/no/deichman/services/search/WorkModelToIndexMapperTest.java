@@ -68,6 +68,11 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createResource("http://data.deichman.no/format#Book")));
 
         model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_1"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#language"),
+                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng")));
+
+        model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman2.no/publication_2"),
                 ResourceFactory.createProperty("http://deichman2.no/ontology#publicationOf"),
                 ResourceFactory.createResource("http://deichman2.no/work_1")));
@@ -76,6 +81,11 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createResource("http://deichman2.no/publication_2"),
                 ResourceFactory.createProperty("http://deichman2.no/ontology#format"),
                 ResourceFactory.createResource("http://data.deichman.no/format#DVD")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_2"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#language"),
+                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman2.no/publication_3"),
@@ -88,6 +98,11 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createResource("http://data.deichman.no/format#Bok")));
 
         model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman2.no/publication_3"),
+                ResourceFactory.createProperty("http://deichman2.no/ontology#language"),
+                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
+
+        model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://data.deichman.no/format#DVD"),
                 ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                 ResourceFactory.createPlainLiteral("DVD")));
@@ -96,6 +111,16 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createResource("http://data.deichman.no/format#Book"),
                 ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                 ResourceFactory.createPlainLiteral("Bok")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob"),
+                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
+                ResourceFactory.createPlainLiteral("Norsk (bokmål)")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng"),
+                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
+                ResourceFactory.createPlainLiteral("Engelsk")));
 
 
         Pair<String, String> uriAndDocument = WorkModelToIndexMapper.getModelToIndexMapperBuilder()
@@ -125,6 +150,9 @@ public class WorkModelToIndexMapperTest {
                 + "       },\n"
                 + "       \"formats\": [\n"
                 + "            \"Bok\", \"DVD\""
+                + "      ],\n"
+                + "       \"languages\": [\n"
+                + "            \"Norsk (bokmål)\", \"Engelsk\""
                 + "      ]\n"
                 + "  }\n"
                 + "}").allowingAnyArrayOrdering());
