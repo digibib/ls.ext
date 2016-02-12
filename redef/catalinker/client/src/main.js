@@ -12,15 +12,14 @@
         var _ = require("underscore");
         var $ = require("jquery");
         var ldGraph = require("ld-graph");
-        var select2 = require("select2");
 
-        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, select2);
+        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph);
 
     } else {
         // Browser globals (root is window)
-        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.select2);
+        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph);
     }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, select2) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph) {
     "use strict";
 
     Ractive.DEBUG = false;
@@ -126,7 +125,6 @@
                         });
                         ractive.update();
                         ractive.set("save_status", "åpnet eksisterende ressurs");
-                    $("select").select2();
                     }
                 )
                 .catch(function (err) {
@@ -328,7 +326,7 @@
         },
         patchResourceFromValue: function (subject, predicate, inputValue, datatype, errors, keypath) {
             var patch = Ontology.createPatch(subject, predicate, inputValue, datatype);
-            if (patch && patch.trim() != "") {
+            if (patch && patch.trim() != "" && patch.trim()  != "[]") {
                 ractive.set("save_status", "arbeider...");
                 axios.patch(subject, patch, {
                         headers: {
@@ -461,13 +459,6 @@
                         repositionSupportPanel: function (node) {
                             $(node).find(".support-panel").css({top: $(node).position().top})
                             Main.repositionSupportPanelsHorizontally();
-                            return {
-                                teardown: function () {
-                                }
-                            }
-                        },
-                        select2: function (node) {
-                            $(node).select2();
                             return {
                                 teardown: function () {
                                 }
