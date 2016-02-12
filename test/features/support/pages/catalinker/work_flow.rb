@@ -61,4 +61,8 @@ class WorkFlow < CatalinkerPage
     end
     element.attribute_value(attribute_name)
   end
+
+  def finish
+    @browser.buttons(:text => "Avslutt registrering av utgivelsen").first.click
+  end
 end

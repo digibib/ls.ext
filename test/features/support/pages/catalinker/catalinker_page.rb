@@ -57,6 +57,7 @@ class CatalinkerPage < PageRoot
     input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }
     input.select(value)
+#    @browser.screenshot.save "./report/#{Time.now}_screenshot.png"
     unless skip_wait
       retry_wait do
         Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === 'alle endringer er lagret' }

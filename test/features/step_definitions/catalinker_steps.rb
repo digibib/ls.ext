@@ -586,7 +586,7 @@ def batch_verify_props(page_object, domain, data, locate_by = 'locate_by_fragmen
     end
 
     begin
-      expected_value = @context[symbol]
+      expected_value = @context[symbol] || @context["#{id.downcase}_identifier".to_sym]
       if expected_value.kind_of?(Array)
         actual_values = Array.new
         expected_value.length.times do |index|
@@ -637,4 +637,10 @@ end
 
 When(/^verifiserer jeg valgte verdier for "([^"]*)"$/) do |label|
   verify_fragment(label, :get_select_prop_by_label)
+end
+
+When(/^at utgivelsen er tilkoplet riktig utgivelsessted$/) do
+  data = Hash.new
+  data["placeOfPublication"] = :get_prop
+  batch_verify_props @site.RegPublication, 'Publication', data, :locate_by_fragment
 end

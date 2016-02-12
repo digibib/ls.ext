@@ -158,3 +158,18 @@ end
 When(/^tar jeg en liten pause$/) do
   sleep(1)
 end
+
+
+When(/^at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter$/) do
+  publication_place_field = @browser.text_field(:data_automation_id => "Publication_http://#{ENV['HOST']}:8005/ontology#placeOfPublication_0")
+  publication_place_field.set(@context[:placeofpublication_identifier])
+  publication_place_field.send_keys :enter
+end
+
+When(/^velger jeg første utgivelsessted i listen som dukker opp$/) do
+  #pending
+end
+
+When(/^trykker jeg på knappen for å avslutte$/) do
+  @site.WorkFlow.finish
+end
