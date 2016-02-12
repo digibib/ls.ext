@@ -45,6 +45,7 @@ describe('reducers', () => {
           }
         })
       ).toEqual({
+        error: false,
         isRequesting: false,
         resources: { 'test uri': 'test resource' }
       })
@@ -60,6 +61,7 @@ describe('reducers', () => {
           }
         })
       ).toEqual({
+        error: false,
         isRequesting: false,
         resources: { initial: 'value', toBeAdded: 'value to be added' }
       })
@@ -75,6 +77,7 @@ describe('reducers', () => {
           }
         })
       ).toEqual({
+        error: false,
         isRequesting: false,
         resources: { toBeOverwritten: 'overwritten' }
       })

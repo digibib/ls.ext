@@ -15,7 +15,8 @@ describe('reducers', () => {
         isSearching: false,
         isRequestingAggregation: false,
         totalHits: 0,
-        isError: false
+        searchError: false,
+        aggregationError: false
       })
     })
 
@@ -46,7 +47,7 @@ describe('reducers', () => {
         })
       ).toEqual({
         isSearching: false,
-        isError: false,
+        searchError: false,
         searchResults: 'searchResults',
         totalHits: 'totalHits'
       })
@@ -62,6 +63,7 @@ describe('reducers', () => {
           }
         })
       ).toEqual({
+        aggregationError: false,
         filtersByQuery: { 'inputQuery': 'filters' },
         isRequestingAggregation: false
       })
@@ -77,6 +79,7 @@ describe('reducers', () => {
           }
         })
       ).toEqual({
+        aggregationError: false,
         filtersByQuery: { existing: 'existing filters', 'new query': 'new filters' },
         isRequestingAggregation: false
       })
@@ -95,11 +98,15 @@ describe('reducers', () => {
     it('should handle ' + types.SEARCH_FAILURE, () => {
       expect(
         search({}, {
-          type: types.SEARCH_FAILURE
+          type: types.SEARCH_FAILURE,
+          payload: {
+            message: 'message'
+          },
+          error: true
         })
       ).toEqual({
+        searchError: 'message',
         isSearching: false,
-        isError: true
       })
     })
   })
