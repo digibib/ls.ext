@@ -13,13 +13,16 @@ export default React.createClass({
     router: React.PropTypes.object
   },
   getInitialState () {
-    return { showAll: false }
+    return {
+      filters: [],
+      showAll: false
+    }
   },
   handleShowAllClick () {
     this.setState({ showAll: !this.state.showAll })
   },
   renderEmpty () {
-    return <div></div>
+    return <div data-automation-id='empty'></div>
   },
   renderFilters () {
     let filters = this.props.filters.slice()
@@ -34,13 +37,14 @@ export default React.createClass({
       let aggregationFilter = this.props.locationQuery[ 'filter_' + filter.aggregation ]
       let checked
       if (aggregationFilter instanceof Array) {
-        checked = aggregationFilter.includes(filter.bucket)
+        checked = aggregationFilter.indexOf(filter.bucket) > -1
       } else {
         checked = aggregationFilter === filter.bucket
       }
 
       return (
-        <p key={filter.aggregation + '_' + filter.bucket}>
+        <p key={filter.aggregation + '_' + filter.bucket}
+           data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
           <input type='checkbox' checked={checked} onChange={this.handleChange.bind(this, filter)}/>
           {filter.bucket} (
           {filter.count})

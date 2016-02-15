@@ -16,8 +16,18 @@ function setup (propOverrides) {
     }
   }, propOverrides)
 
+  const Wrapper = React.createClass({
+    render: function () {
+      return (
+        <table>
+          <tbody>{this.props.children}</tbody>
+        </table>
+      );
+    }
+  });
+
   const output = TestUtils.renderIntoDocument(
-    <table><Publication {...props} /></table>
+    <Wrapper><Publication {...props} /></Wrapper>
   );
 
   return {
@@ -29,11 +39,6 @@ function setup (propOverrides) {
 
 describe('components', () => {
   describe('Publication', () => {
-    it('should render', () => {
-      const { output } = setup()
-      expect(output.props.children.type.displayName).toBe('Publication')
-    })
-
     it('should render the publication with title, year, language, format and item count', () => {
       const { node, props } = setup()
       expect(node.querySelector("[data-automation-id='publication_title']").innerHTML).toBe(props.publication.mainTitle)

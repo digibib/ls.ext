@@ -1,3 +1,5 @@
+// Test of shallow rendering, without any supporting libraries.
+
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
