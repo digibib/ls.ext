@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 
-import Creators from './Creators'
-
 export default React.createClass({
   propTypes: {
     result: PropTypes.object.isRequired
@@ -69,8 +67,6 @@ export default React.createClass({
             </Link>
           </div>
         </div>
-        <Creators creators={[{name: 'TEEEEST', relativeUri: 'laaal'}]}/>
-
       </div>
     )
   }
