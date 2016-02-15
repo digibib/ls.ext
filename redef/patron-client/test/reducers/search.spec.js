@@ -11,12 +11,10 @@ describe('reducers', () => {
         searchResults: [],
         filtersByQuery: {},
         filters: [],
-        searchQuery: '',
         isSearching: false,
-        isRequestingAggregation: false,
         totalHits: 0,
         searchError: false,
-        aggregationError: false
+        inputQuery: ''
       })
     })
 
@@ -42,56 +40,16 @@ describe('reducers', () => {
           type: types.RECEIVE_SEARCH,
           payload: {
             searchResults: 'searchResults',
-            totalHits: 'totalHits'
+            totalHits: 'totalHits',
+            filters: 'filters'
           }
         })
       ).toEqual({
         isSearching: false,
         searchError: false,
         searchResults: 'searchResults',
-        totalHits: 'totalHits'
-      })
-    })
-
-    it('should handle ' + types.RECEIVE_AGGREGATION, () => {
-      expect(
-        search({}, {
-          type: types.RECEIVE_AGGREGATION,
-          payload: {
-            filters: 'filters',
-            inputQuery: 'inputQuery'
-          }
-        })
-      ).toEqual({
-        aggregationError: false,
-        filtersByQuery: { 'inputQuery': 'filters' },
-        isRequestingAggregation: false
-      })
-
-      expect(
-        search({
-          filtersByQuery: { 'existing': 'existing filters' }
-        }, {
-          type: types.RECEIVE_AGGREGATION,
-          payload: {
-            filters: 'new filters',
-            inputQuery: 'new query'
-          }
-        })
-      ).toEqual({
-        aggregationError: false,
-        filtersByQuery: { existing: 'existing filters', 'new query': 'new filters' },
-        isRequestingAggregation: false
-      })
-    })
-
-    it('should handle ' + types.REQUEST_AGGREGATION, () => {
-      expect(
-        search({}, {
-          type: types.REQUEST_AGGREGATION
-        })
-      ).toEqual({
-        isRequestingAggregation: true
+        totalHits: 'totalHits',
+        filters: 'filters'
       })
     })
 
@@ -106,7 +64,7 @@ describe('reducers', () => {
         })
       ).toEqual({
         searchError: 'message',
-        isSearching: false,
+        isSearching: false
       })
     })
   })
