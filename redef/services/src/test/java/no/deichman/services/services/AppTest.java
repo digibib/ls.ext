@@ -179,7 +179,7 @@ public class AppTest {
             }
         } while ((!foundWorkInIndex || !foundFormatInIndex) && attempts-- > 0);
         if (foundWorkInIndex && foundFormatInIndex) {
-            assertTrue("Work with given format found in index", (foundWorkInIndex && foundFormatInIndex));
+            assertTrue("Work with given format found in index", foundWorkInIndex);
         } else if (foundWorkInIndex) {
             fail("Work found in index, but not with the correct format.");
         } else {
