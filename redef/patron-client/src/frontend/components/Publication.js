@@ -7,7 +7,7 @@ export default React.createClass({
   renderTitle (publication) {
     let title = publication.mainTitle
     if (publication.partTitle) {
-      title += ' — ' + publication.partTitle
+      title += ' - ' + publication.partTitle
     }
     return title
   },
