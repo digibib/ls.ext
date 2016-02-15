@@ -1,5 +1,6 @@
 import urijs from 'urijs'
 
+const filterableFields = [ 'work.formats', 'work.languages' ]
 import { inPreferredLanguage } from '../utils/languageHelpers'
 
 export function processSearchResponse (response) {
@@ -24,20 +25,23 @@ export function processSearchResponse (response) {
     })
     processedResponse.searchResults = searchResults
     processedResponse.totalHits = response.hits.total
+    processedResponse.filters = processAggregationResponse(response).filters
   }
-
   return processedResponse
 }
 
 export function processAggregationResponse (response) {
   let processedResponse = {}
   let filters = []
-  if (response.aggregations) {
-    Object.keys(response.aggregations).forEach(key => {
-      let aggregation = response.aggregations[ key ]
-      aggregation.buckets.forEach(bucket => {
-        filters.push({ aggregation: key, bucket: bucket.key, available: bucket.doc_count })
-      })
+  if (response.aggregations && response.aggregations.all) {
+    let all = response.aggregations.all
+    filterableFields.forEach(field => {
+      let aggregation = all[ field ][ field ]
+      if (aggregation) {
+        aggregation.buckets.forEach(bucket => {
+          filters.push({ aggregation: field, bucket: bucket.key, available: bucket.doc_count })
+        })
+      }
     })
   }
   processedResponse.filters = filters

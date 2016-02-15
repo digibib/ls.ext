@@ -87,7 +87,7 @@ export function search (inputQuery, filters) {
   return (dispatch, getState) => {
     const { search } = getState()
     if (!search.filtersByQuery[ inputQuery ]) {
-      dispatch(aggregate(inputQuery))
+      //dispatch(aggregate(inputQuery))
     }
     dispatch(requestSearch(inputQuery, elasticSearchQuery))
     return fetch(Constants.backendUri + '/search/work/_search', {
@@ -102,6 +102,7 @@ export function search (inputQuery, filters) {
         if (processedResponse.error) {
           return dispatch(searchFailure(processedResponse))
         } else {
+          dispatch(receiveAggregation(processedResponse, inputQuery))
           return dispatch(receiveSearch(processedResponse))
         }
       })
