@@ -413,11 +413,13 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   @context[:publication_format] = ['Bok', 'CD', 'DVD', 'CD-ROM', 'DVD-ROM'].sample
   @context[:publication_language] = ['Engelsk', 'Norsk (bokmål)', 'Finsk', 'Baskisk', 'Grønlandsk'].sample
   @context[:publication_maintitle] = generateRandomString
+  @context[:publication_parttitle] = generateRandomString
   step "får utgivelsen tildelt en post-ID i Koha"
 
   page.select_prop("http://#{ENV['HOST']}:8005/ontology#format", @context[:publication_format])
   page.select_prop("http://#{ENV['HOST']}:8005/ontology#language", @context[:publication_language])
   page.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
+  page.add_prop("http://#{ENV['HOST']}:8005/ontology#partTitle", @context[:publication_parttitle])
 end
 
 
