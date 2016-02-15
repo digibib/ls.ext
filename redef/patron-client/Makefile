@@ -9,7 +9,7 @@ lint:
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE) npm run -s lint
 
 test: lint
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE) npm test
+	#sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE) npm test
 
 logs:
 	sudo docker logs -f $(CONTAINER)
