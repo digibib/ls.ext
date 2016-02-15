@@ -1,6 +1,6 @@
 import urijs from 'urijs'
 
-const filterableFields = [ 'work.formats', 'work.languages' ]
+import Constants from '../constants/Constants'
 import { inPreferredLanguage } from '../utils/languageHelpers'
 
 export function processSearchResponse (response) {
@@ -35,7 +35,7 @@ export function processAggregationResponse (response) {
   let filters = []
   if (response.aggregations && response.aggregations.all) {
     let all = response.aggregations.all
-    filterableFields.forEach(field => {
+    Constants.filterableFields.forEach(field => {
       let aggregation = all[ field ][ field ]
       if (aggregation) {
         aggregation.buckets.forEach(bucket => {

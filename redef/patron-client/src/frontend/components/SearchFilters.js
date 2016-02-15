@@ -5,19 +5,19 @@ import Labels from '../constants/Labels'
 
 export default React.createClass({
   propTypes: {
-    filtersByQuery: PropTypes.array.isRequired,
+    filters: PropTypes.array.isRequired,
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired
   },
   getDefaultProps () {
     return {
-      filtersByQuery: []
+      filters: []
     }
   },
   render () {
     let groupedFilters = {}
-    if (this.props.filtersByQuery) {
-      this.props.filtersByQuery.forEach(filter => {
+    if (this.props.filters) {
+      this.props.filters.forEach(filter => {
         groupedFilters[ filter.aggregation ] = groupedFilters[ filter.aggregation ] || []
         groupedFilters[ filter.aggregation ].push(filter)
       })

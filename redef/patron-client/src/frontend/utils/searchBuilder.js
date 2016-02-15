@@ -1,4 +1,4 @@
-const filterableFields = [ 'work.formats', 'work.languages' ]
+import Constants from '../constants/Constants'
 
 export function filteredSearchQuery (query, filters) {
   let elasticSearchQuery = {}
@@ -72,7 +72,7 @@ export function filteredSearchQuery (query, filters) {
    })
    */
 
-  filterableFields.forEach(field => {
+  Constants.filterableFields.forEach(field => {
     elasticSearchQuery.aggregations.all.aggregations[ field ] = {
       filter: {
         and: [ elasticSearchQuery.query.filtered.query ]
@@ -92,47 +92,6 @@ export function filteredSearchQuery (query, filters) {
         elasticSearchQuery.aggregations.all.aggregations[ field ].filter.and.push({ bool: { must: must } })
       }
     })
-  })
-
-  return elasticSearchQuery
-}
-
-export function aggregationQuery (query) {
-  let elasticSearchQuery = {}
-  elasticSearchQuery.query = {
-    query: {
-      bool: {
-        should: [
-          {
-            multi_match: {
-              query: query,
-              fields: [ 'work.mainTitle.*^2', 'work.partTitle.*' ]
-            }
-          },
-          {
-            nested: {
-              path: 'work.creator',
-              query: {
-                multi_match: {
-                  query: query,
-                  fields: [ 'work.creator.name^2' ]
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-  }
-
-  elasticSearchQuery.size = 0
-  elasticSearchQuery.aggregations = {}
-  filterableFields.forEach(field => {
-    elasticSearchQuery.aggregations[ field ] = {
-      terms: {
-        field: field
-      }
-    }
   })
 
   return elasticSearchQuery

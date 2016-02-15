@@ -14,7 +14,7 @@ const Search = React.createClass({
     isSearching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     searchError: PropTypes.any.isRequired,
-    filtersByQuery: PropTypes.object.isRequired,
+    filters: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     searchFieldInput: PropTypes.string,
     totalHits: PropTypes.number.isRequired
@@ -23,7 +23,7 @@ const Search = React.createClass({
     return (
       <div className='container'>
         <div className='row'>
-          <SearchFilters filtersByQuery={this.props.filtersByQuery[this.props.location.query.query]}
+          <SearchFilters filters={this.props.filters}
                          locationQuery={this.props.location.query} dispatch={this.props.dispatch}/>
           <SearchResults
             locationQuery={this.props.location.query}
@@ -45,7 +45,7 @@ function mapStateToProps (state) {
     isSearching: state.search.isSearching,
     searchQuery: state.search.searchQuery,
     searchError: state.search.searchError,
-    filtersByQuery: state.search.filtersByQuery
+    filters: state.search.filters
   }
 }
 
