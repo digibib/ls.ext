@@ -5,7 +5,7 @@ import Constants from '../constants/Constants'
 export default React.createClass({
   propTypes: {
     title: PropTypes.string.isRequired,
-    filters: PropTypes.array.isRequired,
+    filters: PropTypes.array,
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired
   },
@@ -82,7 +82,7 @@ export default React.createClass({
     this.props.dispatch(routeActions.push(url))
   },
   render () {
-    if (!this.props.filters) {
+    if (!this.props.filters || this.props.filters.size === 0) {
       return this.renderEmpty()
     }
     return (

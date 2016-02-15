@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 
+import Creators from './Creators'
+
 export default React.createClass({
   propTypes: {
     result: PropTypes.object.isRequired
@@ -10,7 +12,7 @@ export default React.createClass({
       return
     }
     return (
-      <p>Forfatter: {creators.map(creator => {
+      <p data-automation-id='work_creators'>Forfatter: {creators.map(creator => {
         return <strong key={creator.relativeUri}><Link to={creator.relativeUri}> {creator.name} </Link></strong>
       })}
       </p>
@@ -22,7 +24,7 @@ export default React.createClass({
     let originalTitle = ''
     if (result.originalTitle) {
       originalTitle = (
-        <p>
+        <p data-automation-id='work_originaltitle'>
           Originaltittel:
           {result.originalTitle}
         </p>
@@ -31,7 +33,7 @@ export default React.createClass({
 
     let displayTitle = result.mainTitle
     if (result.partTitle) {
-      displayTitle += ' — ' + result.partTitle
+      displayTitle += ' - ' + result.partTitle
     }
 
     let formats = result.formats || []
@@ -53,7 +55,7 @@ export default React.createClass({
           <div className='col'>
             <strong>Finnes også som:</strong>
           </div>
-          <div className='col'>
+          <div className='col' data-automation-id='work_formats'>
             Tilgjengelige formater:
             <br/>
             {formats.join(', ')}
@@ -67,6 +69,8 @@ export default React.createClass({
             </Link>
           </div>
         </div>
+        <Creators creators={[{name: 'TEEEEST', relativeUri: 'laaal'}]}/>
+
       </div>
     )
   }

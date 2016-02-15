@@ -38,7 +38,7 @@ export default React.createClass({
   render () {
     if (this.props.searchError) {
       return (
-        <p>
+        <p data-automation-id='searchError'>
           Noe gikk galt med søket.
         </p>
       )
