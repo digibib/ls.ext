@@ -30,7 +30,8 @@ class WorkFlow < CatalinkerPage
   end
 
   def select_prop(domain, predicate, value, nr=0, skip_wait=false)
-    super "#{domain}_#{predicate}", value, nr, skip_wait
+    @browser.inputs(:xpath => "//span[@data-automation-id='#{domain}_#{predicate}_#{nr}']//input[@type='search']")[0].click
+    @browser.elements(:xpath => "//span[@class='select2-results']/ul/li[text()='#{value}']")[0].click
   end
 
   def get_available_select_choices(domain, predicate, nr=0)

@@ -146,16 +146,18 @@
 {{/partial}}
 
 {{#partial select-predefined-value}}
-<select
-        class="authorized" style="width: 100%;"
-        value="{{current.value}}"
-        data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
-        on-change='patchResource:{{predicate}},{{rdfType}}'
-        multiple="multiple">
-    {{#each predefinedValues[fragment]}}
-    <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
-    {{/each}}
-</select>
+<span data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}">
+    <select
+            class="authorized" style="width: 100%;"
+            decorator="multi:{select2:[{{#!multiple}}'singleSelect'{{/multiple}}], detectChange:[]}"
+            value="{{current.value}}"
+            data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
+            multiple>
+        {{#each predefinedValues[fragment]}}
+        <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
+        {{/each}}
+    </select>
+</span>
 {{/partial}}
 
 {{#partial input-string}}

@@ -75,36 +75,35 @@
 
         // createPatch creates a patch request for a given subject, predicate and value (el)
         // as it is represented in the client UI.
-        createPatch: function (subject, predicate, el, datatype) {
+        createPatch: function (subject, predicate, oldAndCurrentValue, datatype) {
             var addPatches = [],
                 delPatches = [];
 
-            var currentValue = el.current.value;
-            var oldValue = el.old.value;
+            var currentValue = oldAndCurrentValue.current.value;
+            var oldValue = oldAndCurrentValue.old.value;
             if (typeof currentValue == 'string' && currentValue != oldValue) {
                 if (currentValue !== "") {
-                    var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue}};
-                    if (el.current.lang !== "") {
-                        addPatch.o.lang = el.current.lang;
+                    var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue, type: datatype}};
+                    if (oldAndCurrentValue.current.lang !== "") {
+                        addPatch.o.lang = oldAndCurrentValue.current.lang;
                     }
-                    addPatch.o.type = datatype;
                     addPatches.push(addPatch);
                 }
 
                 if (oldValue !== "") {
                     var delPatch = {op: "del", s: subject, p: predicate, o: {value: oldValue}};
-                    if (el.old.lang !== "") {
-                        delPatch.o.lang = el.old.lang;
+                    if (oldAndCurrentValue.old.lang !== "") {
+                        delPatch.o.lang = oldAndCurrentValue.old.lang;
                     }
 
                     delPatch.o.type = datatype;
                     delPatches.push(delPatch);
                 }
             } else {
-                if (_.isArray(currentValue)) {
+                if (_.isArray(currentValue) || _.isArray(oldValue)) {
                     var addValues = _.difference(currentValue, oldValue);
                     _.each(addValues, function (value) {
-                        addPatches.push({op: "add", s: subject, p: predicate, o: {value: value}});
+                        addPatches.push({op: "add", s: subject, p: predicate, o: {value: value, type: datatype}});
                     });
 
                     var delValues = _.difference(oldValue, currentValue);

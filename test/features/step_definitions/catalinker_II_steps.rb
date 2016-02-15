@@ -92,8 +92,8 @@ def workflow_batch_add_props(domain, data)
     rescue
       fail "Error adding #{fragment} for #{domain}"
     end
+    sleep 1
   end
-  sleep 2
 end
 
 When(/^bekrefter at utgivelsesinformasjonen er korrekt$/) do
@@ -129,7 +129,7 @@ When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label
 end
 
 def do_select_value(selectable_parameter_label, value)
-  select = @browser.selects(:xpath => '//select[preceding-sibling::label/@data-uri-escaped-label = "' + URI::escape(selectable_parameter_label) + '"]')[0]
+  select = @browser.selects(:xpath => '//span[preceding-sibling::label/@data-uri-escaped-label = "' + URI::escape(selectable_parameter_label) + '"]/select')[0]
   select_id = select.attribute_value('data-automation-id')
   predicate = select_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
   domain = select_id.match(/^(Work|Publication|Person)_.*/).captures[0]

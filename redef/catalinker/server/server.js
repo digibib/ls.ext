@@ -18,7 +18,7 @@ var Server;
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, '/../public')));
 
-app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery']));
+app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator']));
 app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']));
 
 app.get('/css/vendor/:cssFile', function (request, response) {
@@ -28,24 +28,24 @@ app.get('/css/vendor/:cssFile', function (request, response) {
 
 function newResource(type) {
   return axios.post(process.env.SERVICES_PORT + "/" + type, {}, {
-      headers: {
-        Accept: "application/ld+json",
-        "Content-Type": "application/ld+json"
-      }
-    })
-    .catch(function (response) {
-      if (response instanceof Error) {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', response.message);
-      } else {
-        // The request was made, but the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(response.data);
-        console.log(response.status);
-        console.log(response.headers);
-        console.log(response.config);
-      }
-    });
+    headers: {
+      Accept: "application/ld+json",
+      "Content-Type": "application/ld+json"
+    }
+  })
+        .catch(function (response) {
+          if (response instanceof Error) {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', response.message);
+          } else {
+            // The request was made, but the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(response.data);
+            console.log(response.status);
+            console.log(response.headers);
+            console.log(response.config);
+          }
+        });
 }
 
 app.get('/', function (res) {
@@ -68,80 +68,80 @@ app.get('/:type(person|work|publication|placeOfPublication)', function (req, res
 
 app.get('/config', function (request, response) {
   var config =
-  {
-    kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
-    kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
-    ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/ontology',
-    resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
-    tabs: [
-      {
-        id: "confirm-person",
-        rdfType: "Work",
-        label: "Bekreft person",
-        rdfProperties: [/* isbn later*/"creator"],
-        nextStep: {
-          buttonLabel: "Bekreft verk",
-          createNewResource: "Work"
-        }
-      },
-      {
-        id: "confirm-work",
-        rdfType: "Work",
-        label: "Bekreft verk",
-        rdfProperties: [
-          "mainTitle",
-          "subtitle",
-          "partTitle",
-          "partNumber"
-        ],
-        nextStep: {
-          buttonLabel: "Beskriv verket"
-        }
-      },
-      {
-        id: "describe-work",
-        rdfType: "Work",
-        label: "Beskriv verket",
-        rdfProperties: [
-          "publicationYear",
-          "language",
-          "literaryForm",
-          "audience",
-          "biography",
-          "adaptationOfWorkForParticularUserGroups"
-        ],
-        nextStep: {
-          buttonLabel: "Beskriv utgivelsen",
-          createNewResource: "Publication"
-        }
-      },
-      {
-        id: "describe-publication",
-        rdfType: "Publication",
-        label: "Beskriv utgivelsen",
-        rdfProperties: [
-          "mainTitle",
-          "subtitle",
-          "partTitle",
-          "partNumber",
-          "edition",
-          "publicationYear",
-          "numberOfPages",
-          "illustrativeMatter",
-          "isbn",
-          "binding",
-          "language",
-          "format",
-          "writingSystem",
-          "adaptationOfPublicationForParticularUserGroups",
-          "placeOfPublication"
-        ],
-        nextStep: {
-          buttonLabel: "Avslutt registrering av utgivelsen"
-        }
-      }
-    ]
-  };
+    {
+      kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
+      kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
+      ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/ontology',
+      resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
+      tabs: [
+            {
+              id: "confirm-person",
+              rdfType: "Work",
+              label: "Bekreft person",
+              inputs: [/* isbn later*/{rdfProperty: "creator"}],
+              nextStep: {
+                buttonLabel: "Bekreft verk",
+                createNewResource: "Work"
+              }
+            },
+            {
+              id: "confirm-work",
+              rdfType: "Work",
+              label: "Bekreft verk",
+              inputs: [
+                  {rdfProperty: "mainTitle"},
+                  {rdfProperty: "subtitle"},
+                  {rdfProperty: "partTitle"},
+                  {rdfProperty: "partNumber"}
+              ],
+              nextStep: {
+                buttonLabel: "Beskriv verket"
+              }
+            },
+            {
+              id: "describe-work",
+              rdfType: "Work",
+              label: "Beskriv verket",
+              inputs: [
+                  {rdfProperty: "publicationYear"},
+                  {rdfProperty: "language", multiple: true},
+                  {rdfProperty: "literaryForm", multiple: true},
+                  {rdfProperty: "audience", multiple: true},
+                  {rdfProperty: "biography", multiple: true},
+                  {rdfProperty: "adaptationOfWorkForParticularUserGroups", multiple: true}
+              ],
+              nextStep: {
+                buttonLabel: "Beskriv utgivelsen",
+                createNewResource: "Publication"
+              }
+            },
+            {
+              id: "describe-publication",
+              rdfType: "Publication",
+              label: "Beskriv utgivelsen",
+              inputs: [
+                  {rdfProperty: "mainTitle"},
+                  {rdfProperty: "subtitle"},
+                  {rdfProperty: "partTitle"},
+                  {rdfProperty: "partNumber"},
+                  {rdfProperty: "edition"},
+                  {rdfProperty: "publicationYear"},
+                  {rdfProperty: "numberOfPages"},
+                  {rdfProperty: "illustrativeMatter"},
+                  {rdfProperty: "isbn"},
+                  {rdfProperty: "binding"},
+                  {rdfProperty: "language"},
+                  {rdfProperty: "format", multiple: true},
+                  {rdfProperty: "writingSystem", multiple: true},
+                  {rdfProperty: "adaptationOfPublicationForParticularUserGroups", multiple: true},
+                  {rdfProperty: "placeOfPublication"}
+              ],
+              nextStep: {
+                buttonLabel: "Avslutt registrering av utgivelsen"
+              }
+            }
+        ]
+    };
 
   response.json(config);
 });
@@ -191,7 +191,7 @@ app.use(function (err, req, res, next) {
 
 Server = app.listen(process.env.BIND_PORT || 8010, process.env.BIND_IP, function () {
   var host = Server.address().address,
-    port = Server.address().port;
+      port = Server.address().port;
   console.log('Catalinker server listening at http://%s:%s', host, port);
 });
 

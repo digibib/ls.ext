@@ -252,7 +252,7 @@ When(/^jeg velger språk for tittelen$/) do
 end
 
 When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
-  @context[:work_publicationyear] = rand(2015).to_s
+  @context[:work_publicationyear] = (rand(1015)+1000).to_s
   @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:work_publicationyear])
 end
 
@@ -537,8 +537,9 @@ When(/^jeg endrer forfatteren på verket$/) do
   step "grensesnittet viser at endringene er lagret"
 end
 
-When(/^jeg venter litt.*$/) do
+When(/^jeg venter litt$/) do
   sleep 5
+  @browser.execute_script("console.log('waiting...')")
 end
 
 When(/^viser trefflisten at personen har et verk fra før$/) do

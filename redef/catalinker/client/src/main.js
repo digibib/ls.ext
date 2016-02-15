@@ -101,8 +101,8 @@
     }
 
     var loadExistingResource = function (uri) {
-            axios.get(uri)
-                .then(function (response) {
+        axios.get(uri)
+            .then(function (response) {
                     ractive.set("resource_uri", uri);
                     var graphData = ensureJSON(response.data);
 
@@ -110,28 +110,28 @@
                     ractive.set("targetResources." + type + ".uri", uri);
                     var root = ldGraph.parse(graphData).byType(type)[0];
 
-                        _.each(ractive.get("inputs"), function (input, inputIndex) {
-                            if (type == unPrefix(input.domain)) {
-                                var inputs_n = "inputs." + inputIndex;
-                                var predicate = input.predicate;
-                                if (input.type === "select-authorized-value") {
-                                    setMultiValues(root.outAll(propertyName(predicate)), inputs_n);
-                                } else if (input.type === "select-predefined-value") {
-                                    setMultiValues(root.getAll(propertyName(predicate)), inputs_n);
-                                } else {
-                                    setSingleValues(root.getAll(propertyName(predicate)), inputs_n);
-                                }
+                    _.each(ractive.get("inputs"), function (input, inputIndex) {
+                        if (type == unPrefix(input.domain)) {
+                            var inputs_n = "inputs." + inputIndex;
+                            var predicate = input.predicate;
+                            if (input.type === "select-authorized-value") {
+                                setMultiValues(root.outAll(propertyName(predicate)), inputs_n);
+                            } else if (input.type === "select-predefined-value") {
+                                setMultiValues(root.getAll(propertyName(predicate)), inputs_n);
+                            } else {
+                                setSingleValues(root.getAll(propertyName(predicate)), inputs_n);
                             }
-                        });
-                        ractive.update();
-                        ractive.set("save_status", "åpnet eksisterende ressurs");
-                    }
-                )
-                .catch(function (err) {
-                    console.log("HTTP GET existing resource failed with:");
-                    console.log(err);
-                });
-        }
+                        }
+                    });
+                    ractive.update();
+                    ractive.set("save_status", "åpnet eksisterende ressurs");
+                }
+            )
+            .catch(function (err) {
+                console.log("HTTP GET existing resource failed with:");
+                console.log(err);
+            });
+    };
 
     var saveNewResourceFromInputs = function (resourceType) {
         // collect inputs related to resource type
@@ -280,14 +280,17 @@
         _.each(tabs, function (tab) {
             var group = {};
             var groupInputs = [];
-            _.each(tab.rdfProperties, function (prop) {
-                var currentInput = inputMap[tab.rdfType + "." + ontologyUri + "#" + prop];
+            _.each(tab.inputs, function (prop) {
+                var currentInput = inputMap[tab.rdfType + "." + ontologyUri + "#" + prop.rdfProperty];
                 if (typeof currentInput === 'undefined') {
-                    throw "Tab '" + tab.label + "' specified unknown property '" + prop + "'";
+                    throw "Tab '" + tab.label + "' specified unknown property '" + prop.rdfProperty + "'";
                 }
                 if (tab.rdfType === unPrefix(currentInput.domain)) {
                     groupInputs.push(currentInput);
                     currentInput.rdfType = tab.rdfType;
+                }
+                if (prop.multiple) {
+                    currentInput.multiple = true;
                 }
             });
             group.inputs = groupInputs;
@@ -324,9 +327,9 @@
             var results = regex.exec(location.search);
             return results === null ? null : results[1];
         },
-        patchResourceFromValue: function (subject, predicate, inputValue, datatype, errors, keypath) {
-            var patch = Ontology.createPatch(subject, predicate, inputValue, datatype);
-            if (patch && patch.trim() != "" && patch.trim()  != "[]") {
+        patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
+            var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype);
+            if (patch && patch.trim() != "" && patch.trim() != "[]") {
                 ractive.set("save_status", "arbeider...");
                 axios.patch(subject, patch, {
                         headers: {
@@ -384,9 +387,15 @@
             };
 
             var initRactive = function (applicationData) {
+                Ractive.decorators.select2.type.singleSelect = function (node) {
+                    return {
+                        maximumSelectionLength: 1
+                    }
+                };
+
                 // Initialize ractive component from template
                 ractive = new Ractive({
-                    el: "#container",
+                    el: "container",
                     lang: "no",
                     template: applicationData.template,
                     data: {
@@ -437,9 +446,6 @@
                                 return _.first(preferredTexts);
                             }
                         },
-                        selected: function(values, option) {
-                            return _.contains(values, option["@id"]) ? "selected='selected'" : "";
-                        },
                         targetResources: {
                             Work: {
                                 uri: "",
@@ -456,9 +462,30 @@
                         }
                     },
                     decorators: {
+                        multi: require('ractive-multi-decorator'),
                         repositionSupportPanel: function (node) {
                             $(node).find(".support-panel").css({top: $(node).position().top})
                             Main.repositionSupportPanelsHorizontally();
+                            return {
+                                teardown: function () {
+                                }
+                            }
+                        },
+                        detectChange: function (node) {
+                            var enable=false;
+                            $(node).on("select2:selecting select2:unselecting", function(){
+                                enable = true;
+                            });
+                            $(node).on("change", function (e) {
+                                if (enable) {
+                                    enable = false;
+                                    var inputValue = Ractive.getNodeInfo(e.target);
+                                    ractive.set(inputValue.keypath + ".current.value", $(e.target).val());
+                                    var inputNode = ractive.get(_.initial(_.initial(inputValue.keypath.split("."))).join("."));
+                                    Main.patchResourceFromValue(ractive.get("targetResources." + inputNode.rdfType).uri, inputNode.predicate,
+                                        ractive.get(inputValue.keypath), inputNode.datatype, errors, inputValue.keypath)
+                                }
+                            });
                             return {
                                 teardown: function () {
                                 }
@@ -679,11 +706,18 @@
                     });
             };
 
+            function initSelect2(applicationData) {
+                require('select2');
+                require('ractive-decorators-select2');
+                return applicationData;
+            }
+
             return axios.get("/config")
                 .then(extractConfig)
                 .then(loadTemplate)
                 .then(loadOntology)
                 .then(createInputGroups)
+                .then(initSelect2)
                 .then(initRactive)
             .catch(function (err) {
                 console.log("Error initiating Main: " + err);

@@ -47,7 +47,7 @@ end
 When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
   step "jeg er på sida til verket"
   @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
-    row.td(:data_automation_id => "publication_title").text.should eq(@context[:publication_maintitle])
+    row.td(:data_automation_id => "publication_title").text.should equal?(@context[:publication_maintitle] + " — " + @context[:publication_parttitle])
     row.td(:data_automation_id => "publication_format").text.should eq(@context[:publication_format])
     row.td(:data_automation_id => "publication_language").text.should eq(@context[:publication_language])
   end
