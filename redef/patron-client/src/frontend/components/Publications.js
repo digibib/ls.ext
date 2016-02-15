@@ -7,7 +7,7 @@ export default React.createClass({
     publications: PropTypes.array.isRequired
   },
   renderEmpty () {
-    return (<h2>Vi har ingen utgaver</h2>)
+    return (<h2 data-automation-id='no_publications'>Vi har ingen utgaver</h2>)
   },
   renderPublications () {
     return (
@@ -36,7 +36,7 @@ export default React.createClass({
           <span><strong>Utgivelser ({this.props.publications.length})</strong></span>
           <div className='panel-arrow panel-open'></div>
         </div>
-        <div className='col'>
+        <div className='col' data-automation-id='publications'>
           {this.props.publications.length > 0 ? this.renderPublications() : this.renderEmpty()}
         </div>
       </div>
