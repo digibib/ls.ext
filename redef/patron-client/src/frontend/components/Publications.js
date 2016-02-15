@@ -21,7 +21,7 @@ export default React.createClass({
           <th>eksemplarer</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody data-automation-id='publications'>
         {this.props.publications.map(publication => {
           return <Publication key={publication.id} publication={publication}/>
         })}
@@ -36,7 +36,7 @@ export default React.createClass({
           <span><strong>Utgivelser ({this.props.publications.length})</strong></span>
           <div className='panel-arrow panel-open'></div>
         </div>
-        <div className='col' data-automation-id='publications'>
+        <div className='col'>
           {this.props.publications.length > 0 ? this.renderPublications() : this.renderEmpty()}
         </div>
       </div>

@@ -38,7 +38,7 @@ export default React.createClass({
   render () {
     if (this.props.searchError) {
       return (
-        <p data-automation-id='searchError'>
+        <p data-automation-id='search-error'>
           Noe gikk galt med søket.
         </p>
       )
@@ -65,7 +65,9 @@ export default React.createClass({
         <div className='panel'>
           {resultsText}
         </div>
-        {entries}
+        <div data-automation-id='search-result-entries'>
+          {entries}
+        </div>
       </section>
     )
   }

@@ -7,7 +7,7 @@ export default React.createClass({
     items: PropTypes.array.isRequired
   },
   renderEmpty () {
-    return <h2>Vi har ingen eksemplarer</h2>
+    return <h2 data-automation-id='no_items'>Vi har ingen eksemplarer</h2>
   },
   renderAllItems () {
     return (
@@ -23,9 +23,9 @@ export default React.createClass({
           <th>oppstilling</th>
         </tr>
         </thead>
-        <tbody>
-        {this.props.items.map(i => {
-          return <Item key={i.barcode} item={i}/>
+        <tbody data-automation-id='work_items'>
+        {this.props.items.map(item => {
+          return <Item key={item.barcode} item={item}/>
         })}
         </tbody>
       </table>
