@@ -24,7 +24,7 @@ export default React.createClass({
   renderFilters () {
     let filters = this.props.filters.slice()
     filters.sort(function (a, b) {
-      return (a.bucket > b.bucket) ? 1 : ((b.bucket > a.bucket) ? -1 : 0)
+      return (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0)
     })
     return filters.map((filter, index) => {
       if (!this.state.showAll && index >= Constants.maxVisibleFilterItems) {
@@ -43,7 +43,7 @@ export default React.createClass({
         <p key={filter.aggregation + '_' + filter.bucket}>
           <input type='checkbox' checked={checked} onChange={this.handleChange.bind(this, filter)}/>
           {filter.bucket} (
-          {filter.available})
+          {filter.count})
         </p>
       )
     })

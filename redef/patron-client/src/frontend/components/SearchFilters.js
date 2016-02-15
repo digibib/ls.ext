@@ -15,6 +15,9 @@ export default React.createClass({
     }
   },
   render () {
+    if (!this.props.locationQuery) {
+      return <div></div>
+    }
     let groupedFilters = {}
     if (this.props.filters) {
       this.props.filters.forEach(filter => {

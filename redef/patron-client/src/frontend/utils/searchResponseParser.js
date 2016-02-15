@@ -39,7 +39,7 @@ export function processAggregationResponse (response) {
       let aggregation = all[ field ][ field ]
       if (aggregation) {
         aggregation.buckets.forEach(bucket => {
-          filters.push({ aggregation: field, bucket: bucket.key, available: bucket.doc_count })
+          filters.push({ aggregation: field, bucket: bucket.key, count: bucket.doc_count })
         })
       }
     })

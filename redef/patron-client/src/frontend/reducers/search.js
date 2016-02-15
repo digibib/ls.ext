@@ -4,10 +4,10 @@ const initialState = {
   searchResults: [],
   filtersByQuery: {},
   filters: [],
-  searchQuery: '',
   isSearching: false,
   totalHits: 0,
   searchError: false,
+  inputQuery: ''
 }
 
 export default function search (state = initialState, action) {

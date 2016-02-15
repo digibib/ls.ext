@@ -8,13 +8,12 @@ import SearchFilters from '../components/SearchFilters'
 
 const Search = React.createClass({
   propTypes: {
-    searchQuery: PropTypes.string.isRequired,
     searchActions: PropTypes.object.isRequired,
     searchResults: PropTypes.array.isRequired,
     isSearching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     searchError: PropTypes.any.isRequired,
-    filters: PropTypes.object.isRequired,
+    filters: PropTypes.array.isRequired,
     location: PropTypes.object.isRequired,
     searchFieldInput: PropTypes.string,
     totalHits: PropTypes.number.isRequired
@@ -28,7 +27,6 @@ const Search = React.createClass({
           <SearchResults
             locationQuery={this.props.location.query}
             searchActions={this.props.searchActions}
-            searchQuery={this.props.searchFieldInput}
             searchResults={this.props.searchResults}
             totalHits={this.props.totalHits}
             searchError={this.props.searchError}/>
@@ -43,7 +41,6 @@ function mapStateToProps (state) {
     searchResults: state.search.searchResults,
     totalHits: state.search.totalHits,
     isSearching: state.search.isSearching,
-    searchQuery: state.search.searchQuery,
     searchError: state.search.searchError,
     filters: state.search.filters
   }

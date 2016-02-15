@@ -15,14 +15,13 @@ export function requestSearch (inputQuery, elasticSearchQuery) {
   }
 }
 
-export function receiveSearch (processedResponse, inputQuery) {
+export function receiveSearch (processedResponse) {
   return {
     type: types.RECEIVE_SEARCH,
     payload: {
       searchResults: processedResponse.searchResults,
       totalHits: processedResponse.totalHits,
-      filters: processedResponse.filters,
-      inputQuery: inputQuery
+      filters: processedResponse.filters
     }
   }
 }

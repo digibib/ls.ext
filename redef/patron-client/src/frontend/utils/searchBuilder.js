@@ -48,39 +48,22 @@ export function filteredSearchQuery (query, filters) {
     }
   })
 
-  Object.keys(musts).forEach(key => {
-    elasticSearchQuery.query.filtered.filter.bool.must.push(musts[ key ])
+  Object.keys(musts).forEach(aggregation => {
+    elasticSearchQuery.query.filtered.filter.bool.must.push(musts[ aggregation ])
   })
 
-  let groupedFilters = {}
-  filters.forEach(filter => {
-    groupedFilters[ filter.aggregation ] = groupedFilters[ filter.aggregation ] || []
-    groupedFilters[ filter.aggregation ].push(filter.bucket)
-  })
-
-  elasticSearchQuery.size = 10
-  elasticSearchQuery.aggregations = {}
-  elasticSearchQuery.aggregations.all = { global: {}, aggregations: {} }
-
-  /*
-   let filterableFieldMusts = {}
-
-   filterableFields.forEach(field => {
-   filterableFieldMust = {terms: {}}
-
-   filterableFieldMusts[field] = filterableFieldMust
-   })
-   */
+  elasticSearchQuery.size = Constants.searchQuerySize
+  elasticSearchQuery.aggregations = { all: { global: {}, aggregations: {} } }
 
   Constants.filterableFields.forEach(field => {
-    elasticSearchQuery.aggregations.all.aggregations[ field ] = {
+    let aggregations = {
       filter: {
         and: [ elasticSearchQuery.query.filtered.query ]
       },
       aggregations: {}
     }
 
-    elasticSearchQuery.aggregations.all.aggregations[ field ].aggregations[ field ] = {
+    aggregations.aggregations[ field ] = {
       terms: {
         field: field
       }
@@ -89,9 +72,11 @@ export function filteredSearchQuery (query, filters) {
     Object.keys(musts).forEach(aggregation => {
       let must = musts[ aggregation ]
       if (aggregation !== field) {
-        elasticSearchQuery.aggregations.all.aggregations[ field ].filter.and.push({ bool: { must: must } })
+        aggregations.filter.and.push({ bool: { must: must } })
       }
     })
+
+    elasticSearchQuery.aggregations.all.aggregations[ field ] = aggregations
   })
 
   return elasticSearchQuery
