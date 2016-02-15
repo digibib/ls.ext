@@ -60,13 +60,13 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
     populateLabel(publication, 'format', publicationResource)
     publication.id = publicationResource.id
     publication.itemsCount = 0
-    publicationResource.inAll('editionOf').map(item => {
+    publicationResource.inAll('editionOf').map(itemResource => {
       publication.itemsCount++
       let item = {}
-      populate(item, 'location', item)
-      populate(item, 'status', item)
-      populate(item, 'barcode', item)
-      populate(item, 'shelfmark', item)
+      populate(item, 'location', itemResource)
+      populate(item, 'status', itemResource)
+      populate(item, 'barcode', itemResource)
+      populate(item, 'shelfmark', itemResource)
       item.title = publication.mainTitle
       if (publication.partTitle) {
         item.title += ' — ' + publication.partTitle
