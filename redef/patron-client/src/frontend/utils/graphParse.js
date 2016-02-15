@@ -62,18 +62,18 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
     publication.itemsCount = 0
     publicationResource.inAll('editionOf').map(item => {
       publication.itemsCount++
-      let i = {}
-      populate(i, 'location', item)
-      populate(i, 'status', item)
-      populate(i, 'barcode', item)
-      populate(i, 'shelfmark', item)
-      i.title = publication.mainTitle
+      let item = {}
+      populate(item, 'location', item)
+      populate(item, 'status', item)
+      populate(item, 'barcode', item)
+      populate(item, 'shelfmark', item)
+      item.title = publication.mainTitle
       if (publication.partTitle) {
-        i.title += ' — ' + publication.partTitle
+        item.title += ' — ' + publication.partTitle
       }
-      i.language = publication.language
-      i.format = publication.format
-      work.items.push(i)
+      item.language = publication.language
+      item.format = publication.format
+      work.items.push(item)
     })
     work.publications.push(publication)
   })

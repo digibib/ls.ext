@@ -31,7 +31,7 @@ export default React.createClass({
 
     let displayTitle = result.mainTitle
     if (result.partTitle) {
-      displayTitle += ' - ' + result.partTitle
+      displayTitle += ' — ' + result.partTitle
     }
 
     let formats = result.formats || []

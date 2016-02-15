@@ -49,7 +49,7 @@ describe('components', () => {
 
     it('should combine main title and part title as title', () => {
       const { node, props } = setup({ publication: { mainTitle: 'test_maintitle', partTitle: 'test_parttitle' } })
-      expect(node.querySelector("[data-automation-id='publication_title']").innerHTML).toBe(props.publication.mainTitle + ' - ' + props.publication.partTitle)
+      expect(node.querySelector("[data-automation-id='publication_title']").innerHTML).toBe(props.publication.mainTitle + ' — ' + props.publication.partTitle)
     })
   })
 })

@@ -40,7 +40,7 @@ describe('components', () => {
 
     it('should render part title and main title as title', () => {
       const { node, props } = setup({ partTitle: 'test_partTitle' })
-      expect(node.querySelector("[data-automation-id='work-title']").textContent).toEqual(props.result.mainTitle + ' - ' + props.result.partTitle)
+      expect(node.querySelector("[data-automation-id='work-title']").textContent).toEqual(props.result.mainTitle + ' — ' + props.result.partTitle)
     })
 
     it('should render multiple creators', () => {
