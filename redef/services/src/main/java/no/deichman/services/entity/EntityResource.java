@@ -73,18 +73,7 @@ public final class EntityResource extends ResourceBase {
         return create(type, body, Lang.NTRIPLES);
     }
 
-    private Response create(@PathParam("type") String type, String body, Lang lang) throws URISyntaxException {
-        Response.Status status;
-        String bibliofilId = null;
-        Optional<String> message = Optional.ofNullable(null);
-        Optional<String> uri = Optional.ofNullable(null);
-        Response.ResponseBuilder rb;
-        Response.ResponseBuilder response = buildResponse(type, body, lang);
-
-        return response.build();
-    }
-
-    private Response.ResponseBuilder buildResponse(String type, String body, Lang lang) throws URISyntaxException {
+    private Response create(String type, String body, Lang lang) throws URISyntaxException {
         Response.ResponseBuilder rb = null;
         String canonicalTypeId = WordUtils.capitalize(type);
 
@@ -120,7 +109,7 @@ public final class EntityResource extends ResourceBase {
             rb.entity(message.get());
         }
 
-        return rb;
+        return rb.build();
 
     }
 
