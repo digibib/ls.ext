@@ -15,7 +15,7 @@ export default React.createClass({
     }
   },
   renderEmpty () {
-    return <div data-automation-id='no_filters'></div>
+    return <div data-automation-id='empty'></div>
   },
   render () {
     let groupedFilters = {}
@@ -28,17 +28,19 @@ export default React.createClass({
       return (
         <aside className='col filters'>
           <h3>Avgrens søket ditt</h3>
-          {Object.keys(groupedFilters).map(aggregation => {
-            let filtersByAggregation = groupedFilters[ aggregation ]
-            return (
-              <SearchFilter
-                key={aggregation}
-                title={Labels[aggregation]}
-                filters={filtersByAggregation}
-                locationQuery={this.props.locationQuery}
-                dispatch={this.props.dispatch}/>
-            )
-          })}
+          <div data-automation-id='search_filters'>
+            {Object.keys(groupedFilters).map(aggregation => {
+              let filtersByAggregation = groupedFilters[ aggregation ]
+              return (
+                <SearchFilter
+                  key={aggregation}
+                  title={Labels[aggregation]}
+                  filters={filtersByAggregation}
+                  locationQuery={this.props.locationQuery}
+                  dispatch={this.props.dispatch}/>
+              )
+            })}
+          </div>
         </aside>
       )
     } else {
