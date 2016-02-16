@@ -68,6 +68,7 @@ body {
         background: white;
         padding: 0.5em;
         margin-bottom: 0.1em;
+        min-height: 62px;
         .search-result-subitem {
           background: $lightergray;
           margin-bottom: 2px;
@@ -103,6 +104,20 @@ body {
       left: 620px;
       .prop-search-result {
         height: 300px;
+      }
+      .support-panel-content {
+        &:before {
+          content: "";
+          position: absolute;
+          left: 0px;
+          right: 100%;
+          top: 5px;
+          width: 0;
+          height: 0;
+          border-top: 32px solid transparent;
+          border-right: 11px solid white;
+          border-bottom: 32px solid transparent;
+        }
       }
     }
   }
