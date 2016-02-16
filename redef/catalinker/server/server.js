@@ -142,7 +142,6 @@ app.get('/config', function (request, response) {
             }
         ]
     };
-
   response.json(config);
 });
 
