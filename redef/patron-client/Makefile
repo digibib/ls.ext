@@ -1,4 +1,5 @@
 IMAGE=dockercompose_patron-client
+DOCKERHUB=digibib/patron-client
 CONTAINER=redef_patron_client_container
 HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/src:/usr/src/app/src \
 	-v /vagrant/redef/patron-client/test:/usr/src/app/test
@@ -19,5 +20,5 @@ ifndef TAG
 	@echo "You must specify TAG when pushing"
 	exit 1
 endif
-	sudo docker tag -f dockercompose_patron-client $(IMAGE):$(TAG)
-	sudo docker push $(IMAGE):$(TAG)
+	sudo docker tag -f $(IMAGE) $(DOCKERHUB):$(TAG)
+	sudo docker push $(DOCKERHUB):$(TAG)
