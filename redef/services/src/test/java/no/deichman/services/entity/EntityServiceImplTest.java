@@ -31,11 +31,16 @@ import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.validation.constraints.AssertTrue;
 import javax.ws.rs.BadRequestException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
 
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.PERSON;
@@ -75,6 +80,8 @@ public class EntityServiceImplTest {
     private String publicationURI;
     private String personURI;
     private String placeOfPublicationURI;
+    private String publisherURI;
+    private String baseURI;
 
     @Mock
     private KohaAdapter mockKohaAdapter;
@@ -82,7 +89,7 @@ public class EntityServiceImplTest {
     static Model modelForBiblio() { // TODO return much simpler model
         Model model = ModelFactory.createDefaultModel();
         Model m = ModelFactory.createDefaultModel();
-        InputStream in = EntityServiceImplTest.class.getClassLoader().getResourceAsStream("marc.xml");
+        InputStream in = EntityServiceImplTest.class.getClassLoader().getResourceAsStream("ragde.marcxml");
         MarcReader reader = new MarcXmlReader(in);
         Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
         while (reader.hasNext()) {
@@ -98,41 +105,34 @@ public class EntityServiceImplTest {
         BaseURI baseURI = BaseURI.local();
         repository = new InMemoryRepository();
         service = new EntityServiceImpl(baseURI, repository, mockKohaAdapter);
+        this.baseURI = baseURI.getBaseUriRoot();
         ontologyURI = baseURI.ontology();
         workURI = baseURI.work();
         publicationURI = baseURI.publication();
         personURI = baseURI.person();
         placeOfPublicationURI = baseURI.placeOfPublication();
+        publisherURI = baseURI.publisher();
     }
 
     @Test
-    public void test_retrieve_work_by_id() {
-        String testId = "work_SHOULD_EXIST";
-        String workData = getTestJSON(testId, "work");
-        Model inputModel = modelFrom(workData, JSONLD);
-        String workId = service.create(WORK, inputModel);
-        Model comparison = ModelFactory.createDefaultModel();
-        InputStream in = new ByteArrayInputStream(
-                workData.replace(workURI + testId, workId)
-                        .getBytes(StandardCharsets.UTF_8));
-        RDFDataMgr.read(comparison, in, JSONLD);
-        Model test = service.retrieveById(WORK, workId.replace(workURI, ""));
-        assertTrue(test.isIsomorphicWith(comparison));
-    }
-
-    @Test
-    public void test_retrieve_publication_by_id() throws Exception {
+    public void test_retrieving_by_id() {
         when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
-        String testId = "publication_SHOULD_EXIST";
-        String publicationData = getTestJSON(testId, "publication");
-        Model inputModel = modelFrom(publicationData, JSONLD);
-        String publicationId = service.create(PUBLICATION, inputModel);
-        Model test = service.retrieveById(PUBLICATION, publicationId.replace(publicationURI, ""));
-        Statement testStatement = createStatement(
-                createResource(publicationId),
-                createProperty(RDF.type.getURI()),
-                createResource(ontologyURI + "Publication"));
-        assertTrue(test.contains(testStatement));
+        List<EntityType> entities = new ArrayList<EntityType>(Arrays.asList(EntityType.values()));
+        entities.forEach(s -> {
+            String currentEntity = s.getPath();
+            String entityId = currentEntity + "_should_Exist";
+            String testDataURI = baseURI + currentEntity + "/" + entityId;
+            String testJSON = getTestJSON(entityId, currentEntity);
+            Model inputModel = modelFrom(testJSON, JSONLD);
+            String servicesURI = service.create(s, inputModel);
+            Model comparison = ModelFactory.createDefaultModel();
+            InputStream in = new ByteArrayInputStream(testJSON.replace(testDataURI, servicesURI).getBytes(StandardCharsets.UTF_8));
+            RDFDataMgr.read(comparison, in, JSONLD);
+            Model toBeTested = service.retrieveById(s, servicesURI.replace(baseURI + currentEntity + "/", ""));
+            boolean value = toBeTested.isIsomorphicWith(comparison);
+            assertTrue("Models were not isomorphic", value);
+        });
+
     }
 
     @Test
@@ -233,7 +233,7 @@ public class EntityServiceImplTest {
             i++;
             ni.next();
         }
-        final int expectedNoOfItems = 34;
+        final int expectedNoOfItems = 1;
         assertEquals(expectedNoOfItems, i);
     }
 
@@ -451,6 +451,7 @@ public class EntityServiceImplTest {
     private String getTestJSON(String id, String type) {
         String resourceClass = null;
         String resourceURI = null;
+        String recordID = "";
 
         switch (type.toLowerCase()) {
             case "work":
@@ -460,6 +461,7 @@ public class EntityServiceImplTest {
             case "publication":
                 resourceClass = "Publication";
                 resourceURI = publicationURI;
+                recordID = "\"deichman:recordID\": \"" + A_BIBLIO_ID + "\",";
                 break;
             case "person":
                 resourceClass = "Person";
@@ -469,9 +471,13 @@ public class EntityServiceImplTest {
                 resourceClass = "PlaceOfPublication";
                 resourceURI = placeOfPublicationURI;
                 break;
+            case "publisher":
+                resourceClass = "Publisher";
+                resourceURI = publisherURI;
             default:
                 break;
         }
+
 
         return format("{\"@context\": "
                 + "{\"dcterms\": \"http://purl.org/dc/terms/\","
@@ -481,6 +487,7 @@ public class EntityServiceImplTest {
                 + "{\"@id\": \"" + resourceURI + "" + id + "\","
                 + "\"@type\": \"deichman:" + resourceClass + "\","
                 + "\"rdfs:name\": \"%s Name\","
+                + recordID
                 + "\"dcterms:identifier\":\"" + id + "\"}}", capitalize(type));
     }
 

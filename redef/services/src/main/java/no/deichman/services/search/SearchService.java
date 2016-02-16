@@ -14,13 +14,15 @@ public interface SearchService {
 
     void indexPerson(String personUri);
 
+    void indexPlaceOfPublication(String id);
+
+    void indexPublisher(String id);
+
     Response searchPersonWithJson(String json);
 
     Response searchWorkWithJson(String json);
 
     Response clearIndex();
-
-    void indexPlaceOfPublication(String id);
 
     Response searchPlaceOfPublicationWithJson(String json);
 

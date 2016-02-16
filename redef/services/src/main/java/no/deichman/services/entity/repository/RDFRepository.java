@@ -27,8 +27,8 @@ public interface RDFRepository {
     Model retrievePublicationByURI(String uri);
     Model retrievePersonByURI(String uri);
     Model retrievePersonAndLinkedResourcesByURI(String uri);
-
     Model retrievePlaceOfPublicationByURI(String uri);
+    Model retrievePublisherByURI(String uri);
 
     boolean askIfResourceExists(String uri);
 
@@ -51,4 +51,5 @@ public interface RDFRepository {
     void findAllUrisOfType(String type, Consumer<String> uriConsumer);
 
     Optional<String> getResourceURIByBibliofilId(String id, String type);
+
 }

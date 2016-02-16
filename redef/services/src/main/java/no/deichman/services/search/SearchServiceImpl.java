@@ -40,8 +40,10 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static no.deichman.services.search.PersonModelToIndexMapper.getPersonModelToIndexMapper;
-import static no.deichman.services.search.PlaceOfPublicationModelToIndexMapper.getPlaceOfPublicationModelToIndexMapper;
+
+import static no.deichman.services.search.PublisherModelToIndexMapper.getPublisherModelToIndexMapper;
 import static no.deichman.services.search.WorkModelToIndexMapper.getworksModelToIndexMapper;
+import static no.deichman.services.search.PlaceOfPublicationModelToIndexMapper.getPlaceOfPublicationModelToIndexMapper;
 import static no.deichman.services.uridefaults.BaseURI.remote;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -58,6 +60,7 @@ public class SearchServiceImpl implements SearchService {
     public static final Property CREATOR = createProperty(remote().ontology("creator"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
+    private static final String PUBLISHER_INDEX_TYPE = "publisher";
 
 
     private final EntityService entityService;
@@ -135,6 +138,11 @@ public class SearchServiceImpl implements SearchService {
     }
     public final void indexPlaceOfPublication(String id) {
         doIndexPlaceOfPublication(id);
+    }
+
+    @Override
+    public void indexPublisher(String id) {
+        doIndexPublisher(id);
     }
 
     @Override
@@ -218,6 +226,11 @@ public class SearchServiceImpl implements SearchService {
     private void doIndexPlaceOfPublication(String id) {
         Model placeOfPublicationModel = entityService.retrieveById(EntityType.PLACE_OF_PUBLICATION, id);
         indexModel(getPlaceOfPublicationModelToIndexMapper().modelToIndexDocument(placeOfPublicationModel), PLACE_OF_PUBLICATION_INDEX_TYPE);
+    }
+
+    private void doIndexPublisher(String id) {
+        Model publisherModel = entityService.retrieveById(EntityType.PUBLISHER, id);
+        indexModel(getPublisherModelToIndexMapper().modelToIndexDocument(publisherModel), PUBLISHER_INDEX_TYPE);
     }
 
     private void doIndexWorkOnly(String workId) {

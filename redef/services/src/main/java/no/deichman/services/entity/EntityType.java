@@ -41,5 +41,9 @@ public enum EntityType {
     public static EntityType get(String path) {
         return LOOKUP.get(path);
     }
+
+    public final String getPath() {
+        return path;
+    }
 }
 

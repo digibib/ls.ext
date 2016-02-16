@@ -27,6 +27,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import riotcmd.ntriples;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -493,6 +494,26 @@ public class AppTest {
         String location1 = getLocation(result1);
         String location2 = getLocation(result2);
         assertTrue(location1.equals(location2));
+    }
+
+    @Test
+    public void publisher_is_patched() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", "{}").asString();
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p = baseUri + "ontology#name";
+        String o = "Acme Publishing Norway";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+        JsonArray body = buildLDPatch(buildPatchStatement(op, s, p, o, type));
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+    }
+
+    @Test
+    public void place_of_publisher_is_deleted() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", "{}").asString();
+        HttpResponse<String> result2 = buildDeleteRequest(getLocation(result1));
+        assertEquals(Status.NO_CONTENT.getStatusCode(), result2.getStatus());
     }
 
     @Test

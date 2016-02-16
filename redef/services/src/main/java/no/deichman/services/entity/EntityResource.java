@@ -129,7 +129,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: (p|w|h|g)[a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) {
         Model model;
@@ -147,7 +147,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @DELETE
-    @Path("/{id: (p|w|h|g)[a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) {
         Model model = getEntityService().retrieveById(EntityType.get(type), id);
         if (model.isEmpty()) {
@@ -158,7 +158,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PATCH
-    @Path("/{id: (p|w|h|g)[a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
@@ -179,6 +179,9 @@ public final class EntityResource extends ResourceBase {
                 break;
             case PLACE_OF_PUBLICATION:
                 resourceUri = getBaseURI().placeOfPublication() + id;
+                break;
+            case PUBLISHER:
+                resourceUri = getBaseURI().publisher() + id;
                 break;
             default:
                 throw new NotFoundException("Unknown entity type.");
@@ -211,6 +214,9 @@ public final class EntityResource extends ResourceBase {
                     String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
                     getSearchService().indexWork(workId);
                 }
+                break;
+            case PUBLISHER:
+                getSearchService().indexPublisher(id);
                 break;
             default:
                 break;

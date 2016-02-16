@@ -35,7 +35,7 @@ public class MarcRecordTest {
 
     @Test
     public void should_include_added_item() {
-        MarcField marcField = marcRecord.newDataField(MarcConstants.FIELD_952);
+        MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_952);
         marcField.addSubfield('a', "bugga");
         marcRecord.addMarcField(marcField);
         assertThat(marcRecord.getMarcXml(), containsString("<marcxml:subfield code=\"" + MarcConstants.SUBFIELD_A + "\">bugga</marcxml:subfield>"));
@@ -43,7 +43,7 @@ public class MarcRecordTest {
 
     @Test
     public void should_include_title() {
-        MarcField marcField = marcRecord.newDataField(MarcConstants.FIELD_245);
+        MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_245);
         marcField.addSubfield('a', "bugga");
         marcRecord.addMarcField(marcField);
         assertThat(marcRecord.getMarcXml(), containsString("<marcxml:subfield code=\"" + MarcConstants.SUBFIELD_A + "\">bugga</marcxml:subfield>"));

@@ -21,6 +21,10 @@ public final class BaseURI {
         return new BaseURI(System.getProperty("DATA_BASEURI", "http://192.168.50.12:8005/"));
     }
 
+    public String getBaseUriRoot() {
+        return baseUriRoot;
+    }
+
     public String work() {
         return baseUriRoot + "work/";
     }
