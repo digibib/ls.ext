@@ -237,7 +237,7 @@
                 };
 
                 if (input.searchable) {
-                    input.type = "input-string-searchable";
+                    input.type = "searchable-creator";
                     input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                 } else if (input.predefined) {
                     input.type = "select-predefined-value";
@@ -292,6 +292,15 @@
                 if (prop.multiple) {
                     currentInput.multiple = true;
                 }
+                if (prop.authority) {
+                    currentInput.type = 'searchable-authority'
+                }
+                if (prop.indexType) {
+                    currentInput.indexType = prop.indexType
+                }
+                if (prop.indexDocumentFields) {
+                    currentInput.indexDocumentFields = prop.indexDocumentFields
+                }
             });
             group.inputs = groupInputs;
             group.tabLabel = tab.label;
@@ -316,6 +325,10 @@
             return applicationData;
         });
     };
+
+    function grandParentOf(keypath) {
+        return _.initial(_.initial(keypath.split("."))).join(".");
+    }
 
     /* public API */
     var Main = {
@@ -390,6 +403,63 @@
                 Ractive.decorators.select2.type.singleSelect = function (node) {
                     return {
                         maximumSelectionLength: 1
+                    }
+                };
+
+                Ractive.decorators.select2.type.authoritySelectSingle = function (node) {
+                    var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath));
+                    var indexType = inputDef.indexType;
+                    return {
+                        maximumSelectionLength: 1,
+                        ajax: {
+                            url: ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search",
+                            dataType: 'json',
+                            delay: 250,
+                            id: function(item){
+                                console.log("id: " + item._source.placeOfPublication.uri);
+                                return item._source.person.uri;
+                            },
+                            data: function (params) {
+                                return {
+                                    q: params.term, // search term
+                                    page: params.page
+                                };
+                            },
+                            processResults: function (data, params) {
+                                // parse the results into the format expected by Select2
+                                // since we are using custom formatting functions we do not need to
+                                // alter the remote JSON data, except to indicate that infinite
+                                // scrolling can be used
+                                params.page = params.page || 1;
+
+                                var select2Data = $.map(data.hits.hits, function (obj) {
+                                    obj.id = obj._source[indexType].uri;
+                                    obj.text = _.map(inputDef.indexDocumentFields, function(field) {
+                                        return obj._source[indexType][field];
+                                    }).join(' - ')
+                                    return obj;
+                                });
+
+                                return {
+                                    results: select2Data,
+                                    pagination: {
+                                        more: (params.page * 30) < data.total_count
+                                    }
+                                };
+                            },
+                            cache: true
+                        },
+                        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                        minimumInputLength: 3,
+                        templateResult: function(item) {
+                            if (item.loading) {
+                                return "<div>Søker...</div>"
+                            }
+                            return "<div>" + item.text + "</div>"
+                        },
+                        templateSelection: function(item) {
+                            return item.text
+                        }
                     }
                 };
 
@@ -480,10 +550,11 @@
                                 if (enable) {
                                     enable = false;
                                     var inputValue = Ractive.getNodeInfo(e.target);
-                                    ractive.set(inputValue.keypath + ".current.value", $(e.target).val());
-                                    var inputNode = ractive.get(_.initial(_.initial(inputValue.keypath.split("."))).join("."));
+                                    var keypath = inputValue.keypath;
+                                    ractive.set(keypath + ".current.value", $(e.target).val());
+                                    var inputNode = ractive.get(grandParentOf(keypath));
                                     Main.patchResourceFromValue(ractive.get("targetResources." + inputNode.rdfType).uri, inputNode.predicate,
-                                        ractive.get(inputValue.keypath), inputNode.datatype, errors, inputValue.keypath)
+                                        ractive.get(keypath), inputNode.datatype, errors, keypath)
                                 }
                             });
                             return {

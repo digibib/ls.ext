@@ -134,7 +134,7 @@ app.get('/config', function (request, response) {
                   {rdfProperty: "format", multiple: true},
                   {rdfProperty: "writingSystem", multiple: true},
                   {rdfProperty: "adaptationOfPublicationForParticularUserGroups", multiple: true},
-                  {rdfProperty: "placeOfPublication"}
+                  {rdfProperty: "placeOfPublication", authority: true, indexType: "placeOfPublication", indexDocumentFields: ["place", "country"]}
               ],
               nextStep: {
                 buttonLabel: "Avslutt registrering av utgivelsen"

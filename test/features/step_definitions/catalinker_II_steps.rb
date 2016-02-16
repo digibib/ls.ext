@@ -161,13 +161,16 @@ end
 
 
 When(/^at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter$/) do
-  publication_place_field = @browser.text_field(:data_automation_id => "Publication_http://#{ENV['HOST']}:8005/ontology#placeOfPublication_0")
-  publication_place_field.set(@context[:placeofpublication_identifier])
+  data_automation_id = "Publication_http://#{ENV['HOST']}:8005/ontology#placeOfPublication_0"
+  publication_place_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
+  publication_place_field.click
+  publication_place_field.set(@context[:placeofpublication_place])
   publication_place_field.send_keys :enter
 end
 
 When(/^velger jeg første utgivelsessted i listen som dukker opp$/) do
-  #pending
+  sleep 10
+  @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
 end
 
 When(/^trykker jeg på knappen for å avslutte$/) do
