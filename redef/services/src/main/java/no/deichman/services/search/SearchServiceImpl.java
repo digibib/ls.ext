@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -39,8 +40,8 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static no.deichman.services.search.PersonModelToIndexMapper.getPersonModelToIndexMapper;
-import static no.deichman.services.search.WorkModelToIndexMapper.getworksModelToIndexMapper;
 import static no.deichman.services.search.PlaceOfPublicationModelToIndexMapper.getPlaceOfPublicationModelToIndexMapper;
+import static no.deichman.services.search.WorkModelToIndexMapper.getworksModelToIndexMapper;
 import static no.deichman.services.uridefaults.BaseURI.remote;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -144,7 +145,7 @@ public class SearchServiceImpl implements SearchService {
     private Response searchWithJson(String body, URIBuilder searchUriBuilder) {
         try {
             HttpPost httpPost = new HttpPost(searchUriBuilder.build());
-            httpPost.setEntity(new StringEntity(body));
+            httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
             httpPost.setHeader("Content-type", "application/json");
             return executeHttpRequest(httpPost);
         } catch (Exception e) {
