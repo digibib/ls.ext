@@ -237,3 +237,5 @@
   rdfs:label "Utgitt av"@no ;
   rdfs:domain :Publication ;
   rdfs:range :Publisher .
+  rdfs:range :PlaceOfPublication .
+

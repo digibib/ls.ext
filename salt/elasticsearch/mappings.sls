@@ -6,3 +6,4 @@ mappings:
               if [ $? = 0 ]; then break; fi;
               sleep 1s;
             done;
+            
