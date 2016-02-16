@@ -140,7 +140,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void indexPublisher(String id) {
+    public final void indexPublisher(String id) {
         doIndexPublisher(id);
     }
 

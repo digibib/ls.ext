@@ -17,7 +17,6 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.DCTerms;
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
 import org.junit.Before;
@@ -31,7 +30,6 @@ import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.validation.constraints.AssertTrue;
 import javax.ws.rs.BadRequestException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,7 +37,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -102,16 +99,16 @@ public class EntityServiceImplTest {
 
     @Before
     public void setup() {
-        BaseURI baseURI = BaseURI.local();
+        BaseURI localBaseURI = BaseURI.local();
         repository = new InMemoryRepository();
-        service = new EntityServiceImpl(baseURI, repository, mockKohaAdapter);
-        this.baseURI = baseURI.getBaseUriRoot();
-        ontologyURI = baseURI.ontology();
-        workURI = baseURI.work();
-        publicationURI = baseURI.publication();
-        personURI = baseURI.person();
-        placeOfPublicationURI = baseURI.placeOfPublication();
-        publisherURI = baseURI.publisher();
+        service = new EntityServiceImpl(localBaseURI, repository, mockKohaAdapter);
+        baseURI = localBaseURI.getBaseUriRoot();
+        ontologyURI = localBaseURI.ontology();
+        workURI = localBaseURI.work();
+        publicationURI = localBaseURI.publication();
+        personURI = localBaseURI.person();
+        placeOfPublicationURI = localBaseURI.placeOfPublication();
+        publisherURI = localBaseURI.publisher();
     }
 
     @Test
