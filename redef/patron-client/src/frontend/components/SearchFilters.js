@@ -14,12 +14,12 @@ export default React.createClass({
       filters: []
     }
   },
+  renderEmpty () {
+    return <div data-automation-id='no_filters'></div>
+  },
   render () {
-    if (!this.props.locationQuery) {
-      return <div></div>
-    }
     let groupedFilters = {}
-    if (this.props.filters) {
+    if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
         groupedFilters[ filter.aggregation ] = groupedFilters[ filter.aggregation ] || []
         groupedFilters[ filter.aggregation ].push(filter)
@@ -42,7 +42,7 @@ export default React.createClass({
         </aside>
       )
     } else {
-      return <div></div>
+      return this.renderEmpty()
     }
   }
 })
