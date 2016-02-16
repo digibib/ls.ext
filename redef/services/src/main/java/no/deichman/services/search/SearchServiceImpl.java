@@ -40,7 +40,6 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static no.deichman.services.search.PersonModelToIndexMapper.getPersonModelToIndexMapper;
-
 import static no.deichman.services.search.PublisherModelToIndexMapper.getPublisherModelToIndexMapper;
 import static no.deichman.services.search.WorkModelToIndexMapper.getworksModelToIndexMapper;
 import static no.deichman.services.search.PlaceOfPublicationModelToIndexMapper.getPlaceOfPublicationModelToIndexMapper;
