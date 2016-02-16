@@ -77,8 +77,8 @@ public final class EntityResource extends ResourceBase {
         Response.ResponseBuilder rb = null;
         String canonicalTypeId = WordUtils.capitalize(type);
 
-        Optional<String> message = Optional.ofNullable(null);
-        Optional<String> uri = Optional.ofNullable(null);
+        Optional<String> message = Optional.empty();
+        Optional<String> uri = Optional.empty();
         Response.Status status;
         String bibliofilId = null;
 
