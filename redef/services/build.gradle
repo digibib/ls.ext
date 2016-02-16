@@ -173,11 +173,6 @@ mainClassName = 'no.deichman.services.App'
 docker {
     url = dockerUrl
 
-    registryCredentials {
-        url = 'https://index.docker.io/v1'
-        username = 'deichman'
-        password = 'paaTryggGrunnForFremtiden'
-    }
     javaApplication {
         maintainer = 'digitalutvikling@gmail.com'
         port = 8005
