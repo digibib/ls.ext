@@ -41,7 +41,7 @@ export function getPersonResource (uri) {
       .then(response => response.json())
       .then(json => {
         personResponse = json
-        return fetch(uri + '/works')
+        return fetch(`${uri}/works`)
       })
       .then(response => {
         if (response.status === 200) {
@@ -66,7 +66,7 @@ export function getWorkResource (uri) {
       .then(response => response.json())
       .then(json => {
         workResponse = json
-        return fetch(uri + '/items')
+        return fetch(`${uri}/items`)
       })
       .then(response => {
         if (response.status === 200) {
