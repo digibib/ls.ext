@@ -1,5 +1,5 @@
 IMAGE=dockercompose_patron-client
-DOCKERHUB=digibib/patron-client
+DOCKERHUB=digibib/redef-patron-client
 CONTAINER=redef_patron_client_container
 HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/src:/usr/src/app/src \
 	-v /vagrant/redef/patron-client/test:/usr/src/app/test
