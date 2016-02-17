@@ -5,7 +5,7 @@ import static no.deichman.services.search.ModelToIndexMapper.ModelToIndexMapperB
 import static no.deichman.services.uridefaults.BaseURI.remote;
 
 /**
- * Responsibility: Expose a subset of Elasticsearch REST API limited to searching for places of publication.
+ * Responsibility: Map from places of publication model to index document.
  */
 public final class PlaceOfPublicationModelToIndexMapper {
     private PlaceOfPublicationModelToIndexMapper() {
