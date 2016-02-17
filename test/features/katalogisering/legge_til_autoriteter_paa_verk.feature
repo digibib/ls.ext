@@ -6,6 +6,7 @@ Egenskap: Legge til autoriteter på verk
   For å gjøre det mulig for brukere å se og søke opp emner og sjangre på verk
   Ønsker jeg å legge til emner og sjangre på verk
   
+  @wip
   Scenario: Opprettelse av emne
     Når jeg vil lage et nytt emne
     Så leverer systemet en ny ID for det nye emnet
