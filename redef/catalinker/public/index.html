@@ -18,7 +18,7 @@
 
         $.ajax({
             dataType: 'json',
-            url: 'http://192.168.50.12:8005/version',
+            url: 'http://' + window.location.hostname + ':8005/version',
             success: function (data) {
                 $('#services-gitref').text(data.gitref);
                 $('#services-jenkinsid').text(data.jenkinsId);
@@ -33,21 +33,21 @@
 </script>
 <h2>Catalinker - metadataregistrering med lenkede data</h2>
 <ul>
-	<li>
-      <a href='person'>Registrere person</a>
-  </li>
-  <li>
-  	<a href='work'>Registrere verk</a>
-   </li>
-   <li>
-   	<a href='publication'>Registrere utgivelse</a>
-   </li>
-   <li>
-    <a href='placeOfPublication'>Registrere utgivelsessted</a>
-   </li>
-   <li>
-   	<a href='workflow'>Arbeidsflyt</a>
-   </li>
+    <li>
+        <a href='person'>Registrere person</a>
+    </li>
+    <li>
+        <a href='work'>Registrere verk</a>
+    </li>
+    <li>
+        <a href='publication'>Registrere utgivelse</a>
+    </li>
+    <li>
+        <a href='placeOfPublication'>Registrere utgivelsessted</a>
+    </li>
+    <li>
+        <a href='workflow'>Arbeidsflyt</a>
+    </li>
 </ul>
 <h3>Catalinker versjonsinfo:</h3>
 <p>GITREF: <span id="catalinker-gitref"></span></p>
