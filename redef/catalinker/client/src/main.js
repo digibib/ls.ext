@@ -411,6 +411,7 @@
                     var indexType = inputDef.indexType;
                     return {
                         maximumSelectionLength: 1,
+                        minimumInputLength: 3,
                         ajax: {
                             url: ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search",
                             dataType: 'json',
@@ -426,17 +427,13 @@
                                 };
                             },
                             processResults: function (data, params) {
-                                // parse the results into the format expected by Select2
-                                // since we are using custom formatting functions we do not need to
-                                // alter the remote JSON data, except to indicate that infinite
-                                // scrolling can be used
                                 params.page = params.page || 1;
 
                                 var select2Data = $.map(data.hits.hits, function (obj) {
                                     obj.id = obj._source[indexType].uri;
                                     obj.text = _.map(inputDef.indexDocumentFields, function(field) {
                                         return obj._source[indexType][field];
-                                    }).join(' - ')
+                                    }).join(' - ');
                                     return obj;
                                 });
 
@@ -448,17 +445,6 @@
                                 };
                             },
                             cache: true
-                        },
-                        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                        minimumInputLength: 3,
-                        templateResult: function(item) {
-                            if (item.loading) {
-                                return "<div>Søker...</div>"
-                            }
-                            return "<div>" + item.text + "</div>"
-                        },
-                        templateSelection: function(item) {
-                            return item.text
                         }
                     }
                 };
@@ -778,7 +764,43 @@
             };
 
             function initSelect2(applicationData) {
-                require('select2');
+                var select2 = require('select2');
+                $.fn.select2.defaults.set("language", {
+                    inputTooLong: function (args) {
+                        var overChars = args.input.length - args.maximum;
+
+                        return 'Vennligst fjern ' + overChars + ' tegn';
+                    },
+                    inputTooShort: function (args) {
+                        var remainingChars = args.minimum - args.input.length;
+
+                        var message = 'Vennligst skriv inn ';
+
+                        if (remainingChars > 1) {
+                            message += ' flere tegn';
+                        } else {
+                            message += ' tegn til';
+                        }
+
+                        return message;
+                    },
+                    loadingMore: function () {
+                        return 'Laster flere resultater…';
+                    },
+                    maximumSelected: function (args) {
+                        if (args.maximum == 1) {
+                            return "Du kan bare velge én verdi her";
+                        } else {
+                            return 'Du kan velge maks ' + args.maximum + ' verdier her';
+                        }
+                    },
+                    noResults: function () {
+                        return 'Ingen treff';
+                    },
+                    searching: function () {
+                        return 'Søker…';
+                    }
+                });
                 require('ractive-decorators-select2');
                 return applicationData;
             }
