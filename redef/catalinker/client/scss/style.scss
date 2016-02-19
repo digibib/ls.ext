@@ -11,15 +11,18 @@ body {
   font-size: 14px;
   color: #222;
   h1, h2, h3 {
-    line-height: 1.2
+    line-height: 1.2;
   }
-  .grid-tab {
-    .grid-tab-link-selected {
-      background: $lightestgray;
-    }
-    .disabled {
-      color: lightgray;
-      cursor: default;
+  ul.grid-tabs {
+    z-index: 100;
+    .grid-tab {
+      .grid-tab-link-selected {
+        background: $lightestgray;
+      }
+      .disabled {
+        color: lightgray;
+        cursor: default;
+      }
     }
   }
 
@@ -98,9 +101,9 @@ body {
     .support-panel {
       margin-left: 2px;
       margin-right: 2px;
-      padding: 6px 11px 13px;
+      padding: 0px 15px;
       position: absolute;
-      overflow: visible;
+      overflow: scroll;
       left: 620px;
       .prop-search-result {
         height: 300px;
@@ -109,15 +112,17 @@ body {
         &:before {
           content: "";
           position: absolute;
-          left: 0px;
+          left: 4px;
           right: 100%;
-          top: 5px;
           width: 0;
           height: 0;
           border-top: 32px solid transparent;
           border-right: 11px solid white;
           border-bottom: 32px solid transparent;
         }
+        min-height: 65px;
+        overflow: scroll;
+        max-height: 525px;
       }
     }
   }

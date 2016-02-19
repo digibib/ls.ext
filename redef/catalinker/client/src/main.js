@@ -12,14 +12,14 @@
         var _ = require("underscore");
         var $ = require("jquery");
         var ldGraph = require("ld-graph");
-
-        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph);
+        var URI = require("urijs");
+        module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI);
 
     } else {
         // Browser globals (root is window)
-        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph);
+        root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI);
     }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI) {
     "use strict";
 
     Ractive.DEBUG = false;
@@ -35,7 +35,7 @@
         return _.last(prefixed.split(":"));
     }
 
-    var unsetInputsForDomain = function (domainType) {
+    var unloadResourceForDomain = function (domainType) {
         _.each(ractive.get("inputs"), function (input, inputIndex) {
             if (domainType === unPrefix(input.domain)) {
                 var kp = "inputs." + inputIndex;
@@ -43,6 +43,8 @@
                 ractive.set(kp + '.values.*.old.value', '');
             }
         });
+        ractive.set("targetUri." + domainType, null);
+        updateBrowserLocation(domainType, null);
     };
 
     function i18nLabelValue(label) {
@@ -67,7 +69,7 @@
     function setMultiValues(values, inputs_n) {
         if (values && values.length > 0) {
             var valuesAsArray = values.length == 0 ? [] : _.map(values, function (value) {
-                return value.value;
+                return value.id;
             });
             ractive.set(inputs_n + ".values.0", {
                 old: {
@@ -77,7 +79,7 @@
                     value: valuesAsArray
                 }
             });
-            console.log("Setting " + inputs_n + ".values.0.current.value -> " + ractive.get(inputs_n + ".values.0.current.value"));
+//            console.log("setMultiValues: Setting " + inputs_n + ".values.0.current.value -> " + ractive.get(inputs_n + ".values.0.current.value"));
         }
     }
 
@@ -95,29 +97,64 @@
                         lang: values[idx].lang
                     }
                 });
-                console.log("Setting " + inputs_n + ".values." + idx + ".current.value -> " + ractive.get(inputs_n + ".values." + idx + ".current.value"));
+//                console.log("setSingleValues: Setting " + inputs_n + ".values." + idx + ".current.value -> " + ractive.get(inputs_n + ".values." + idx + ".current.value"));
             }
         }
     }
 
-    var loadExistingResource = function (uri) {
-        axios.get(uri)
+    function setIdValues(values, inputs_n) {
+        if (values.length > 0) {
+            var idx;
+            for (idx = 0; idx < values.length; idx++) {
+                ractive.set(inputs_n + ".values." + idx, {
+                    old: {
+                        value: values[idx].id
+                    },
+                    current: {
+                        value: values[idx].id
+                    }
+                });
+//                console.log("setIdValues: Setting " + inputs_n + ".values." + idx + ".current.value -> " + ractive.get(inputs_n + ".values." + idx + ".current.value"));
+           }
+        }
+    }
+
+    function updateBrowserLocation(type, resourceUri) {
+        var oldUri = URI.parse(document.location.href);
+        var queryParameters = URI.parseQuery(oldUri.query);
+        var triumphRanking = {"Person": 1, "Work": 2, "Publication": 3};
+        var parametersPresentInUrl = _.keys(queryParameters);
+        var triumph = _.reduce(parametersPresentInUrl, function (memo, param) {
+            return triumphRanking[param] > triumphRanking[memo] ? param : memo;
+        }, type);
+        if (triumph === type) {
+            var queryParams = {};
+            if (resourceUri) {
+                queryParams[type] = resourceUri;
+            }
+            oldUri.query = URI.buildQuery(queryParams);
+            history.pushState("", "", URI.build(oldUri));
+        }
+    }
+
+    var loadExistingResource = function (resourceUri, options) {
+        return axios.get(resourceUri)
             .then(function (response) {
-                    ractive.set("resource_uri", uri);
                     var graphData = ensureJSON(response.data);
 
-                    var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(uri)[1]);
-                    ractive.set("targetResources." + type + ".uri", uri);
+                    var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(resourceUri)[1]);
                     var root = ldGraph.parse(graphData).byType(type)[0];
 
                     _.each(ractive.get("inputs"), function (input, inputIndex) {
-                        if (type == unPrefix(input.domain)) {
+                        if (type == unPrefix(input.domain) && !(_.contains(_.values(_.pick(options, "leaveUnchanged")), input.fragment))) {
                             var inputs_n = "inputs." + inputIndex;
                             var predicate = input.predicate;
-                            if (input.type === "select-authorized-value") {
+                            if (input.type === "select-authorized-value" || input.type === "entity") {
                                 setMultiValues(root.outAll(propertyName(predicate)), inputs_n);
+                            } else if (input.type === "searchable-creator") {
+                                setIdValues(root.outAll(propertyName(predicate)), inputs_n);
                             } else if (input.type === "select-predefined-value") {
-                                setMultiValues(root.getAll(propertyName(predicate)), inputs_n);
+                                setMultiValues(root.outAll(propertyName(predicate)), inputs_n);
                             } else {
                                 setSingleValues(root.getAll(propertyName(predicate)), inputs_n);
                             }
@@ -125,6 +162,8 @@
                     });
                     ractive.update();
                     ractive.set("save_status", "åpnet eksisterende ressurs");
+                    ractive.set("targetUri." + type, resourceUri);
+                    updateBrowserLocation(type, resourceUri);
                 }
             )
             .catch(function (err) {
@@ -197,8 +236,7 @@
     var createInputGroups = function (applicationData) {
         var props = Ontology.allProps(applicationData.ontology),
             inputs = [],
-            inputMap = {},
-            targetUri = {};
+            inputMap = {};
         applicationData.predefinedValues = {};
         var predefinedValues = [];
         for (var i = 0; i < props.length; i++) {
@@ -301,6 +339,10 @@
                 if (prop.indexDocumentFields) {
                     currentInput.indexDocumentFields = prop.indexDocumentFields
                 }
+                if (prop.type) {
+                    currentInput.type = prop.type;
+                }
+                currentInput.visible = prop.type !== 'entity'
             });
             group.inputs = groupInputs;
             group.tabLabel = tab.label;
@@ -416,8 +458,7 @@
                             url: ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search",
                             dataType: 'json',
                             delay: 250,
-                            id: function(item){
-                                console.log("id: " + item._source.placeOfPublication.uri);
+                            id: function (item) {
                                 return item._source.person.uri;
                             },
                             data: function (params) {
@@ -431,7 +472,7 @@
 
                                 var select2Data = $.map(data.hits.hits, function (obj) {
                                     obj.id = obj._source[indexType].uri;
-                                    obj.text = _.map(inputDef.indexDocumentFields, function(field) {
+                                    obj.text = _.map(inputDef.indexDocumentFields, function (field) {
                                         return obj._source[indexType][field];
                                     }).join(' - ');
                                     return obj;
@@ -459,8 +500,6 @@
                         errors: errors,
                         resource_type: "",
                         resource_label: "",
-                        resource_uri: "",
-                        iputGroups: applicationData.inputGroups,
                         ontology: null,
                         search_result: null,
                         config: applicationData.config,
@@ -472,7 +511,7 @@
                             return i18nLabelValue(label)
                         },
                         tabEnabled: function (tabSelected, domainType) {
-                            return tabSelected === true || ractive.get("targetUri." + domainType);
+                            return tabSelected === true || (typeof ractive.get("targetUri." + domainType) === "string");
                         },
                         nextStepEnabled: function (domainType) {
                             return !(domainType === 'Work' && !ractive.get('targetUri.Person'));
@@ -528,18 +567,18 @@
                             }
                         },
                         detectChange: function (node) {
-                            var enable=false;
-                            $(node).on("select2:selecting select2:unselecting", function(){
-                                enable = true;
+                            var enableChange = false;
+                            $(node).on("select2:selecting select2:unselecting", function () {
+                                enableChange = true;
                             });
                             $(node).on("change", function (e) {
-                                if (enable) {
-                                    enable = false;
+                                if (enableChange) {
+                                    enableChange = false;
                                     var inputValue = Ractive.getNodeInfo(e.target);
                                     var keypath = inputValue.keypath;
                                     ractive.set(keypath + ".current.value", $(e.target).val());
                                     var inputNode = ractive.get(grandParentOf(keypath));
-                                    Main.patchResourceFromValue(ractive.get("targetResources." + inputNode.rdfType).uri, inputNode.predicate,
+                                    Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
                                         ractive.get(keypath), inputNode.datatype, errors, keypath)
                                 }
                             });
@@ -613,29 +652,21 @@
                             ractive.set(keypath, false);
                     },
                     selectPersonResource: function (event, predicate, origin) {
-                        console.log("select resource");
-                        if (ractive.get("targetUri.Person")) {
-                            ractive.set("targetUri.Work", null);
-                            unsetInputsForDomain("Work");
-                        }
-                        // selectPersonResource takes origin as param, as we don't know where clicked search hits comes from
+                        unloadResourceForDomain("Work");
+                        unloadResourceForDomain("Publication");
                         var uri = event.context.uri;
                         var name = event.context.name;
+                        loadExistingResource(uri);
                         ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
                         ractive.set(origin + ".current.value", uri);
                         ractive.set(origin + ".current.displayValue", name);
                         ractive.set(origin + ".deletable", true);
                         ractive.set(origin + ".searchable", false);
-                        loadExistingResource(uri);
-                        ractive.set("targetUri.Person", uri);
-                        ractive.update();
                     },
                     selectWorkResource: function (event) {
-                        console.log("select work resource");
                         var uri = event.context.uri;
-                        loadExistingResource(uri);
-                        ractive.set("targetUri.Work", uri);
-                        ractive.update();
+                        unloadResourceForDomain("Publication");
+                        loadExistingResource(uri, {leaveUnchanged: "creator"});
                     },
                     setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
                         ractive.fire("selectPersonResource", {context: person}, predicate, origin, domainType);
@@ -647,7 +678,6 @@
                         ractive.set(event.keypath + ".current.displayValue", "");
                         ractive.set(event.keypath + ".deletable", false);
                         ractive.set(event.keypath + ".searchable", true);
-                        ractive.update();
                         ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
                     },
                     unselectWorkAndPerson: function (event) {
@@ -656,11 +686,8 @@
                         ractive.set(event.keypath + ".current.displayValue", "");
                         ractive.set(event.keypath + ".deletable", false);
                         ractive.set(event.keypath + ".searchable", true);
-                        ractive.set("targetUri.Work", null);
-                        unsetInputsForDomain('Work');
-                        ractive.set("targetUri.Person", null);
-                        unsetInputsForDomain('Person');
-                        ractive.update();
+                        unloadResourceForDomain('Work');
+                        unloadResourceForDomain('Person');
                     },
                     activateTab: function (event) {
                         _.each(ractive.get("inputGroups"), function (group, groupIndex) {
@@ -669,6 +696,11 @@
                         });
                     },
                     nextStep: function (event) {
+                        if (event.context.restart) {
+                            var url = URI.parse(document.location.href);
+                            url.query = {};
+                            window.location.replace(URI.build(url));
+                        }
                         var newResourceType = event.context.createNewResource;
                         if (newResourceType && (!ractive.get("targetUri." + newResourceType))) {
                             saveNewResourceFromInputs(newResourceType);
@@ -734,6 +766,22 @@
                     });
                 });
 
+                ractive.observe("targetUri.Person", function (newValue, oldValue, keypath) {
+                    if (newValue) {
+                        var inputs = ractive.get("inputs");
+                        var creatorInputOfWork = _.find(inputs, function (input) {
+                            return (input.predicate.indexOf("#creator") != -1);
+                        });
+                        var creatorNameInput = _.find(inputs, function (input) {
+                            return (unPrefix(input.domain) === "Person" && input.fragment === "name");
+                        });
+
+                        creatorInputOfWork.values[0].current.displayValue = creatorNameInput.values[0].current.value;
+                        creatorInputOfWork.values[0].deletable = true;
+                        ractive.update();
+                    }
+                });
+
                 function getParentFromKeypath(keypath, parentLevels) {
                     parentLevels = parentLevels || 1;
                     var split = keypath.split('.');
@@ -773,15 +821,12 @@
                     },
                     inputTooShort: function (args) {
                         var remainingChars = args.minimum - args.input.length;
-
                         var message = 'Vennligst skriv inn ';
-
                         if (remainingChars > 1) {
                             message += ' flere tegn';
                         } else {
                             message += ' tegn til';
                         }
-
                         return message;
                     },
                     loadingMore: function () {
@@ -805,6 +850,50 @@
                 return applicationData;
             }
 
+            function loadCreatorOfWork() {
+                var creatorUri = _.find(ractive.get("inputs"), function (input) {
+                    return (input.fragment === "creator");
+                }).values[0].current.value;
+                return loadExistingResource(creatorUri).then(function () {
+                    ractive.set("targetUri.Person", creatorUri);
+                });
+            }
+
+            function loadWorkOfPublication() {
+                var workUri = _.find(ractive.get("inputs"), function (input) {
+                    return (input.fragment === "publicationOf");
+                }).values[0].current.value[0];
+                return loadExistingResource(workUri).then(function () {
+                    ractive.set("targetUri.Work", workUri);
+                });
+            }
+
+            var loadResourceOfQuery = function (applicationData) {
+                var query = URI.parseQuery(URI.parse(document.location.href).query);
+                if (query.Publication) {
+                    loadExistingResource(query.Publication)
+                        .then(loadWorkOfPublication)
+                        .then(loadCreatorOfWork)
+                        .then(function () {
+                            ractive.set("targetUri.Publication", query.Publication);
+                            ractive.fire("activateTab", {keypath: "inputGroups.3"});
+                        });
+                } else if (query.Work) {
+                    loadExistingResource(query.Work)
+                        .then(loadCreatorOfWork)
+                        .then(function () {
+                            ractive.set("targetUri.Work", query.Work);
+                            ractive.fire("activateTab", {keypath: "inputGroups.2"});
+                        });
+                } else if (query.Person) {
+                    loadExistingResource(query.Person).then(function () {
+                        ractive.set("targetUri.Person", query.Person);
+                        ractive.fire("activateTab", {keypath: "inputGroups.0"});
+                    });
+                }
+                return applicationData;
+            };
+
             return axios.get("/config")
                 .then(extractConfig)
                 .then(loadTemplate)
@@ -812,9 +901,10 @@
                 .then(createInputGroups)
                 .then(initSelect2)
                 .then(initRactive)
-            .catch(function (err) {
-                console.log("Error initiating Main: " + err);
-            });
+                .then(loadResourceOfQuery)
+                .catch(function (err) {
+                    console.log("Error initiating Main: " + err);
+                });
         },
         repositionSupportPanelsHorizontally: function () {
             var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
@@ -832,5 +922,5 @@
     };
 
     return Main;
-}))
-;
+}));
+

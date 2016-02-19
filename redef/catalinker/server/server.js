@@ -78,7 +78,9 @@ app.get('/config', function (request, response) {
               id: "confirm-person",
               rdfType: "Work",
               label: "Bekreft person",
-              inputs: [/* isbn later*/{rdfProperty: "creator"}],
+              inputs: [
+                  {rdfProperty: "creator", type: "searchable-creator"}
+              ],
               nextStep: {
                 buttonLabel: "Bekreft verk",
                 createNewResource: "Work"
@@ -120,6 +122,7 @@ app.get('/config', function (request, response) {
               rdfType: "Publication",
               label: "Beskriv utgivelsen",
               inputs: [
+                  {rdfProperty: "publicationOf", type: "entity"},
                   {rdfProperty: "mainTitle"},
                   {rdfProperty: "subtitle"},
                   {rdfProperty: "partTitle"},
@@ -137,7 +140,8 @@ app.get('/config', function (request, response) {
                   {rdfProperty: "placeOfPublication", authority: true, indexType: "placeOfPublication", indexDocumentFields: ["place", "country"]}
               ],
               nextStep: {
-                buttonLabel: "Avslutt registrering av utgivelsen"
+                buttonLabel: "Avslutt registrering av utgivelsen",
+                restart: true
               }
             }
         ]

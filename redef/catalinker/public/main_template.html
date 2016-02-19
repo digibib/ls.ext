@@ -1,8 +1,8 @@
 <div class="content"
      data-automation-id="targetresources-uris"
-     data-work-uri="{{targetResources.Work.uri}}"
-     data-publication-uri="{{targetResources.Publication.uri}}"
-     data-person-uri="{{targetResources.Person.uri}}">
+     data-work-uri="{{targetUri.Work}}"
+     data-publication-uri="{{targetUri.Publication}}"
+     data-person-uri="{{targetUri.Person}}">
     <h2 data-automation-id="page-heading">Katalogisering av utgivelse</h2>
 
     <div class="grid-input">
@@ -24,7 +24,9 @@
                 {{#each inputGroups}}
                 <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected' : ''}} pure-g">
                     {{#each inputs}}
-                    {{>input}}
+                        {{#visible}}
+                            {{>input}}
+                        {{/visible}}
                     {{/each}}
                     <div class="pure-u-1-2">
                         {{#nextStep}}
