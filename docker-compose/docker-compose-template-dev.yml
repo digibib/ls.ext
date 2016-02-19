@@ -24,7 +24,7 @@ services:
       SMTP_SERVER_HOST: mailrelay # access through network 'backend' 
       SMTP_SERVER_PORT: 2525
       MESSAGE_QUEUE_FREQUENCY: 1
-      DB_PORT: db # TODO remove when koha-salt-docker is updated
+      SMS_SERVER_HOST: "smsproxy:8101"
     ports:
       - "6001:6001"
       - "8080:8080"
@@ -33,7 +33,7 @@ services:
       - "/var/migration_workdir:/var/migration_workdir:rw"
 
   koha_mysql:
-    container_name: db # TODO: rename to 'koha_mysql' when koha-salt-docker is updated
+    container_name: koha_mysql
     networks:
       - backend
     cap_add:
@@ -64,11 +64,24 @@ services:
 
   smtp:
     container_name: mailrelay
-    image: "digibib/gosmtpd:77b8ca230bbfcac7a9f40d5eead79acb50639f14"
+    image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
     networks:
       - backend
     ports:
       - "8100:8000"
+
+  sms:
+    container_name: smsproxy
+    image: "digibib/tcp-proxy:7660632e2afa09593941fd35ba09d6c3a948f342"
+    networks:
+      - backend
+    ports:
+      - "8101:9999"
+    command:
+      - "/app/tcp-proxy"
+      - "-vv"
+      - "-r"
+      - "${SMS_FORWARD_URL}"
 
   elasticsearch_data:
     container_name: elasticsearch_data
