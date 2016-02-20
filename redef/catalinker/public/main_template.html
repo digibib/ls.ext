@@ -154,12 +154,12 @@
 {{/partial}}
 
 {{#partial select-predefined-value}}
-<span data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}">
+<span data-automation-id="{{dataAutomationId}}">
     <select
             class="authorized" style="width: 100%;"
             decorator="multi:{select2:[{{#!multiple}}'singleSelect'{{/multiple}}], detectChange:[]}"
             value="{{current.value}}"
-            data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
+            data-automation-id="{{dataAutomationId}}"
             multiple>
         {{#each predefinedValues[fragment]}}
         <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
@@ -173,7 +173,7 @@
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
-data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
+data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
 {{/partial}}
 
@@ -182,7 +182,7 @@ value="{{current.value}}" />
        {{#deletable}}readonly {{/deletable}}
 on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}:{{predicate}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
-data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
+data-automation-id="{{dataAutomationId}}"
 on-enter='searchResource:{{predicate}}, {{current.displayValue}}'
 value="{{current.displayValue}}" />
 <span class="support-panel-expander" on-click='searchResource:{{predicate}}, {{current.displayValue}}'></span>
@@ -194,7 +194,7 @@ value="{{current.displayValue}}" />
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
-data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
+data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
 <select value="{{current.lang}}" on-change='patchResource:{{predicate}},' class="select_lang">
     <option value="">velg språk</option>
@@ -209,7 +209,7 @@ value="{{current.value}}" />
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
-data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}"
+data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
 {{/partial}}
 
@@ -218,17 +218,20 @@ value="{{current.value}}" />
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
-data-automation-id="{{rdfType}}_{{predicate}}_{{@index}},rdfType"
+data-automation-id="{{dataAutomationId}},rdfType"
 value="{{current.value}}" />
 {{/partial}}
 
 {{#partial searchable-authority}}
-<span data-automation-id="{{rdfType}}_{{predicate}}_{{@index}}">
+<span data-automation-id="{{dataAutomationId}}">
     <select style="width: 100%;"
-        decorator="multi:{select2:['authoritySelectSingle'], detectChange:[]}"
-        id="{{predicate}}_{{@index}}"
-        class="searchable-authority"
-        multiple>
+        decorator="multi:{select2:['authoritySelectSingle'], detectChange:[]}" id="{{uniqueId}}"
+        class="searchable-authority" multiple>
+        {{#each values:index}}
+            {{#if current.value[index]}}
+                <option value='{{current.value[index]}}' selected="selected">{{current.displayName}}</option>
+            {{/if}}
+        {{/each}}
     </select>
 </span>
 {{/partial}}

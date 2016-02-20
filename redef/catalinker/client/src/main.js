@@ -80,6 +80,7 @@
                 }
             });
 //            console.log("setMultiValues: Setting " + inputs_n + ".values.0.current.value -> " + ractive.get(inputs_n + ".values.0.current.value"));
+            return valuesAsArray;
         }
     }
 
@@ -137,6 +138,36 @@
         }
     }
 
+    function loadLabelsForAuthorizedValues(input, values, inputs_n) {
+        if (input.nameProperties) {
+            _.each(values, function (uri) {
+                var name = axios.get(uri).then(function (response) {
+                    var graphData = ensureJSON(response.data);
+                    var root = ldGraph.parse(graphData).byId(uri);
+                    var names = _.reduce(input.nameProperties, function (parts, propertyName) {
+                        var all = root.getAll(propertyName);
+                        _.each(all, function (value, index) {
+                            if (!parts[index]) {
+                                parts[index] = [];
+                            }
+                            parts[index].push(value.value);
+                        });
+                        return parts;
+                    }, []);
+
+                    var selectedValues = [];
+                    _.each(names, function (nameParts, index) {
+                        var label = nameParts.join(" - ");
+                        ractive.set(inputs_n + ".values." + index + ".current.displayName", label);
+                        ractive.set("authorityLabels[" + uri + "]", label);
+                        $("#" + input.uniqueId).trigger("change");
+                    });
+                });
+            });
+            ractive.update();
+        }
+    }
+
     var loadExistingResource = function (resourceUri, options) {
         return axios.get(resourceUri)
             .then(function (response) {
@@ -149,8 +180,9 @@
                         if (type == unPrefix(input.domain) && !(_.contains(_.values(_.pick(options, "leaveUnchanged")), input.fragment))) {
                             var inputs_n = "inputs." + inputIndex;
                             var predicate = input.predicate;
-                            if (input.type === "select-authorized-value" || input.type === "entity") {
-                                setMultiValues(root.outAll(propertyName(predicate)), inputs_n);
+                            if (input.type === "select-authorized-value" || input.type === "entity" || input.type === "searchable-authority") {
+                                var values = setMultiValues(root.outAll(propertyName(predicate)), inputs_n);
+                                loadLabelsForAuthorizedValues(input, values, inputs_n);
                             } else if (input.type === "searchable-creator") {
                                 setIdValues(root.outAll(propertyName(predicate)), inputs_n);
                             } else if (input.type === "select-predefined-value") {
@@ -258,11 +290,12 @@
                     domain = domain['@id'];
                 }
                 var predefined = props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false;
+                var fragment = predicate.substring(predicate.lastIndexOf("#") + 1);
                 var input = {
                     disabled: disabled,
                     searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
                     predicate: predicate,
-                    fragment: predicate.substring(predicate.lastIndexOf("#") + 1),
+                    fragment: fragment,
                     predefined: predefined,
                     range: datatype,
                     datatype: datatype,
@@ -271,7 +304,9 @@
                     values: [{
                         old: {value: "", lang: ""},
                         current: {value: predefined ? [] : "", lang: ""}
-                    }]
+                    }],
+                    dataAutomationId: unPrefix(domain) + "_" + predicate + "_0",
+                    uniqueId: _.uniqueId()
                 };
 
                 if (input.searchable) {
@@ -343,6 +378,9 @@
                     currentInput.type = prop.type;
                 }
                 currentInput.visible = prop.type !== 'entity'
+                if (prop.nameProperties) {
+                    currentInput.nameProperties = prop.nameProperties;
+                }
             });
             group.inputs = groupInputs;
             group.tabLabel = tab.label;
@@ -486,6 +524,9 @@
                                 };
                             },
                             cache: true
+                        },
+                        templateSelection: function (data) {
+                            return data.text === "" ? ractive.get("authorityLabels[" + data.id + "]") : data.text;
                         }
                     }
                 };
