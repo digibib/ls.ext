@@ -192,6 +192,11 @@ public class SearchServiceImpl implements SearchService {
         return doSearch(query, getPlaceOfPublicationUriBuilder());
     }
 
+    @Override
+    public final Response searchPublisher(String query) {
+        return doSearch(query, getPublisherSearchUriBuilder());
+    }
+
 
     private void doIndexWork(String workId, boolean indexedPerson) {
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(workId);
@@ -293,5 +298,9 @@ public class SearchServiceImpl implements SearchService {
 
     public final URIBuilder getPlaceOfPublicationUriBuilder() {
         return getIndexUriBuilder().setPath("/search/placeOfPublication/_search");
+    }
+
+    public final URIBuilder getPublisherSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/publisher/_search");
     }
 }

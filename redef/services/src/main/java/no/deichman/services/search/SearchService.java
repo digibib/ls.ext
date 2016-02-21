@@ -27,4 +27,6 @@ public interface SearchService {
     Response searchPlaceOfPublicationWithJson(String json);
 
     Response searchPlaceOfPublication(String query);
+
+    Response searchPublisher(String query);
 }

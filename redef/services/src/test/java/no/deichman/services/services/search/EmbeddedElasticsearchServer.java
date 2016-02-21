@@ -68,6 +68,11 @@ public final class EmbeddedElasticsearchServer {
                 .preparePutMapping("search").setSource(mapping)
                 .setType("person").execute().actionGet().isAcknowledged());
 
+        mapping = IOUtils.toString(getClass().getResourceAsStream("/publisher_mapping.json"), "UTF-8");
+        assertTrue(getClient().admin().indices()
+                .preparePutMapping("search").setSource(mapping)
+                .setType("publisher").execute().actionGet().isAcknowledged());
+
     }
 
     public Client getClient() {

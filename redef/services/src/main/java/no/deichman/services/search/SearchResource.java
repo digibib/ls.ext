@@ -53,6 +53,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchPerson(query);
             case "placeOfPublication":
                 return getSearchService().searchPlaceOfPublication(query);
+            case "publisher":
+                return getSearchService().searchPublisher(query);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }

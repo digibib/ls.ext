@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "placeOfPublication": {
+      "properties":
+        {
+          "place": {
+            "type": "string"
+          },
+          "country": {
+            "type": "String"
+          }
+        }
+    }
+  }
+}
