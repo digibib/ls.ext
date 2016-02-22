@@ -145,11 +145,23 @@ app.get('/config', function (request, response) {
                       indexDocumentFields: ["place", "country"]}
               ],
               nextStep: {
+                buttonLabel: "Bekreft biinførsler"
+              }
+            },
+        {
+          id: "confirm-addedentry",
+          rdfType: "Work",
+          label: "Bekreft biinførsler",
+          inputs: [
+            /* {rdfProperty: "Role", selectable: true, domainOverrides: ["Work", "Publication"]}*/
+          ],
+          nextStep: {
                 buttonLabel: "Avslutt registrering av utgivelsen",
                 restart: true
               }
             }
-        ]
+
+      ]
     };
   response.json(config);
 });
