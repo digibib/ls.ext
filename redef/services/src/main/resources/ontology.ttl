@@ -73,6 +73,13 @@
   rdfs:range duo:Format ;
   duo:valuesFrom values:format .
 
+:role a rdfs:Property ;
+  rdfs:label "Role"@en ;
+  rdfs:label "Rolle"@no ;
+  rdfs:domain :Publication, :Work ;
+  rdfs:range duo:Role ;
+  duo:valuesFrom values:role .
+
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;
   rdfs:label "Utgivelse av"@no ;

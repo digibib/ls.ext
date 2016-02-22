@@ -33,7 +33,8 @@ public final class AuthorizedValuesResource {
             + "adaptationOfWorkForParticularUserGroups|"
             + "binding|"
             + "writingSystem|"
-            + "illustrativeMatter}")
+            + "illustrativeMatter|"
+            + "role}")
     @Produces(LD_JSON + UTF_8)
     public Response getValueRange(@PathParam("valueRangeName") String valueRangeName) throws IOException {
         return getJsonLdResponse(valueRangeName + ".ttl");

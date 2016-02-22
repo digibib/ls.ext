@@ -1,0 +1,15 @@
+@prefix role: <http://data.deichman.no/role#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+
+role:scriptWriter a duo:Role;
+   rdfs:label "Manusforfatter"@no .
+
+role:actor a duo:Role;
+   rdfs:label "Skuespiller"@no .
+
+role:producer a duo:Role;
+   rdfs:label "Produsent"@no .
+
+role:commentator a duo:Role;
+   rdfs:label "Kommentator"@no .
