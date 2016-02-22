@@ -10,7 +10,7 @@ All modules are specified in package.json.
 
 * [Node.JS](https://nodejs.org/)
 * Server
-  * [Gulp](http://gulpjs.com/) (temporarily, to be decided)
+  * [Express](http://expressjs.com/)
 * Templating/Browser rendering
   * [React](http://facebook.github.io/react/)
   * [React-router](https://github.com/rackt/react-routerq)
