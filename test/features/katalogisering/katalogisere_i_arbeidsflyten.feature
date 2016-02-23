@@ -30,7 +30,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at utgivelsen er tilkoplet riktig utgivelsessted
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
-  @wip
   Scenario: Verifisere resulterende utgivelse fra arbeidsflyt med eksisterende person
     Gitt at jeg har en bok
     Og at jeg har lagt til en person
@@ -48,7 +47,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg verifiserer opplysningene om verket
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
-  @wip
   Scenario: Verifisere endring av verksopplysninger
     Gitt at jeg har en bok
     Og at det finnes et verk med forfatter

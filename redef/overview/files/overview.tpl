@@ -299,7 +299,7 @@
             Jenkins ID
         </div>
         <div class="col span_2_of_5">
-            ${JENKINSID}
+            ${BUILD_TAG}
         </div>
     </div>
 </div>

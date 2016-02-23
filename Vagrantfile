@@ -98,7 +98,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision "shell", path: "redef/set_gradle_daemon.sh"
     end
 
-    config.vm.provision "shell", inline: "sudo JENKINSID=\"#{ENV['JENKINSID']}\" \
+    config.vm.provision "shell", inline: "sudo BUILD_TAG=\"#{ENV['BUILD_TAG']}\" \
       GITREF=\"#{ENV['GITREF']}\" LSDEVMODE=\"#{ENV['LSDEVMODE']}\" \
       /vagrant/docker-compose/docker-compose.sh"
 

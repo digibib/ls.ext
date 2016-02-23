@@ -147,7 +147,7 @@ services:
       KOHA_INTRA_PORT: "http://${HOST}:8081"
       SERVICES_PORT: "http://${HOST}:8005"
       GITREF: "${GITREF}"
-      JENKINSID: "${JENKINSID}"
+      BUILD_TAG: "${BUILD_TAG}"
 
   services:
     container_name: redef_services_container
@@ -166,7 +166,7 @@ services:
       -DELASTICSEARCH_URL=http://${HOST}:${ELASTICSEARCH_PORT} \
       -DDATA_BASEURI=${DATA_BASEURI}"
       GITREF: "${GITREF}"
-      JENKINSID: "${JENKINSID}"
+      BUILD_TAG: "${BUILD_TAG}"
 
   patron-client:
     container_name: redef_patron_client_container
@@ -178,7 +178,7 @@ services:
     environment:
       SERVICES_PORT: "http://${HOST}:${SERVICES_PORT}"
       GITREF: "${GITREF}"
-      JENKINSID: "${JENKINSID}"
+      BUILD_TAG: "${BUILD_TAG}"
 
   overview:
     container_name: overview_container
@@ -200,4 +200,4 @@ services:
       ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT}"
       KOHA_VERSION: "${KOHA_IMAGE_TAG}"
       GITREF: "${GITREF}"
-      JENKINSID: "${JENKINSID}"
+      BUILD_TAG: "${BUILD_TAG}"

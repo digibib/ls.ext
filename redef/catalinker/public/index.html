@@ -8,11 +8,11 @@
             url: '/version',
             success: function (data) {
                 $('#catalinker-gitref').text(data.gitref);
-                $('#catalinker-jenkinsid').text(data.jenkinsId);
+                $('#catalinker-buildtag').text(data.buildTag);
             },
             error: function () {
                 $('#catalinker-gitref').text('Error retrieving GITREF');
-                $('#catalinker-jenkinsid').text('Error retrieving Jenkins ID');
+                $('#catalinker-buildtag').text('Error retrieving build tag');
             }
         });
 
@@ -21,11 +21,11 @@
             url: 'http://' + window.location.hostname + ':8005/version',
             success: function (data) {
                 $('#services-gitref').text(data.gitref);
-                $('#services-jenkinsid').text(data.jenkinsId);
+                $('#services-buildtag').text(data.buildTag);
             },
             error: function () {
                 $('#services-gitref').text('Error retrieving GITREF');
-                $('#services-jenkinsid').text('Error retrieving Jenkins ID');
+                $('#services-buildtag').text('Error retrieving build tag');
             }
         });
     });
@@ -51,8 +51,8 @@
 </ul>
 <h3>Catalinker versjonsinfo:</h3>
 <p>GITREF: <span id="catalinker-gitref"></span></p>
-<p>Jenkins ID: <span id="catalinker-jenkinsid"></span></p>
+<p>Jenkins ID: <span id="catalinker-buildtag"></span></p>
 <h3>Services versjonsinfo:</h3>
 <p>GITREF: <span id="services-gitref"></span></p>
-<p>Jenkins ID: <span id="services-jenkinsid"></span></p>
+<p>Jenkins ID: <span id="services-buildtag"></span></p>
 </html>

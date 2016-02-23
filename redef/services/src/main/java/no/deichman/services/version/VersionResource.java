@@ -23,7 +23,7 @@ public final class VersionResource {
     public VersionResource() {
         JsonObject json = new JsonObject();
         json.addProperty("gitref", Optional.ofNullable(System.getenv("GITREF")).orElse(""));
-        json.addProperty("jenkinsId", Optional.ofNullable(System.getenv("JENKINSID")).orElse(""));
+        json.addProperty("buildTag", Optional.ofNullable(System.getenv("BUILD_TAG")).orElse(""));
         versionJson = json.toString();
     }
 

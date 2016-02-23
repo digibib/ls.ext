@@ -21,10 +21,10 @@ public class VersionResourceTest {
     }
 
     @Test
-    public void should_return_gitref_and_jenkinsid_equal_to_environment_variables_set() throws IOException {
+    public void should_return_gitref_and_buildtag_equal_to_environment_variables_set() throws IOException {
         Gson gson = new Gson();
         Map<String, String> response = gson.fromJson(versionResource.getVersion().getEntity().toString(), HashMap.class);
         assertEquals(Optional.ofNullable(System.getenv("GITREF")).orElse(""), response.get("gitref"));
-        assertEquals(Optional.ofNullable(System.getenv("JENKINSID")).orElse(""), response.get("jenkinsId"));
+        assertEquals(Optional.ofNullable(System.getenv("BUILD_TAG")).orElse(""), response.get("buildTag"));
     }
 }

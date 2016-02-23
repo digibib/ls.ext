@@ -205,7 +205,7 @@ services:
       ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT}"
       KOHA_VERSION: "${KOHA_IMAGE_TAG}"
       GITREF: "${GITREF}"
-      JENKINSID: "${JENKINSID}"
+      BUILD_TAG: "${BUILD_TAG}"
 
   cuke_tests:
     container_name: cuke_tests
