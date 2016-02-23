@@ -83,7 +83,7 @@ app.get('/config', function (request, response) {
                       predicateType: "role",
                       subjects: ["Work"],
                       type: "searchable-person",
-                      predicate: "creator",
+                      predicate: "author",
                       label: "Opphavsperson",
                       isMainCatalogueingEntry: true
                   }

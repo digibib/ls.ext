@@ -206,8 +206,12 @@
 
     var saveNewResourceFromInputs = function (resourceType) {
         // collect inputs related to resource type
-        var inputsToSave = _.filter(ractive.get("inputs"), function (input) {
-            return unPrefix(input.domain) === resourceType;
+
+        var inputsToSave = [];
+        _.each(ractive.get("inputGroups"), function(group){
+            _.each(group.inputs, function(input){
+                inputsToSave.push(input);
+            })
         });
         // force all inputs to appear as changed
         _.each(inputsToSave, function (input) {
@@ -225,8 +229,16 @@
                 var resourceUri = response.headers.location;
                 ractive.set("targetUri." + resourceType, resourceUri);
                 _.each(inputsToSave, function (input) {
+                    var predicate;
+                        if (input.predicateType && input.predicate) {
+                            predicate = _.find(ractive.get("predefinedValues." + input.predicateType), function(predicate){
+                                return propertyName(predicate['@id']) === input.predicate;
+                            })['@id'];
+                        } else {
+                            predicate = input.predicate;
+                        }
                     _.each(input.values, function (value) {
-                        Main.patchResourceFromValue(resourceUri, input.predicate, value, input.datatype, errors);
+                        Main.patchResourceFromValue(resourceUri, predicate, value, input.datatype, errors);
                     })
                 });
                 ractive.update();
@@ -234,11 +246,11 @@
             .then(function () {
                 loadExistingResource(ractive.get("targetUri." + resourceType));
             })
-            .catch(function (err) {
-                console.log("POST to " + resourceType.toLowerCase() + " fails: " + err);
-                errors.push(err);
-                ractive.set("errors", errors);
-            });
+            //.catch(function (err) {
+            //    console.log("POST to " + resourceType.toLowerCase() + " fails: " + err);
+            //    errors.push(err);
+            //    ractive.set("errors", errors);
+            //});
     };
 
     var loadPredefinedValues = function (url, property) {
@@ -367,8 +379,10 @@
                     currentInput.domain = tab.rdfType;
                     currentInput.predicateType = prop.predicateType;
                     currentInput.subjectTypes = prop.subjects;
-                    currentInput.subjectType = undefined,
-                    currentInput.searchable = true,
+                    currentInput.subjectType = undefined;
+                    currentInput.searchable = true;
+                    currentInput.predicate = prop.predicate;
+                    currentInput.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                     currentInput.values = [{
                         old: {value: "", lang: ""},
                         current: {value: [], lang: ""}
