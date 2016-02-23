@@ -2,71 +2,17 @@
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 
-format:Atlas a duo:Format ;
-  rdfs:label "Atlas"@no .
-
 format:DVD a duo:Format ;
   rdfs:label "DVD"@no .
 
-format:Videotape a duo:Format ;
-  rdfs:label "Videokassett"@no .
-
 format:Blu-ray_Disk a duo:Format ;
-  rdfs:label "Blu-raydisk"@no .
-
-format:File_folder a duo:Format ;
-  rdfs:label "Filmappe"@no .
-
-format:Web_page a duo:Format ;
-  rdfs:label "Webside"@no .
-
-format:CD_ROM a duo:Format ;
-  rdfs:label "CD-ROM"@no .
-
-format:DVD-ROM a duo:Format ;
-  rdfs:label "DVD-ROM"@no .
-
-format:Floppy_disk a duo:Format ;
-  rdfs:label "Diskett"@no .
-
-format:Computer_file a duo:Format ;
-  rdfs:label "Datafil"@no .
-
-format:Microfiche a duo:Format ;
-  rdfs:label "Mikrofiche"@no .
-
-format:Microfilm_reel a duo:Format ;
-  rdfs:label "Mikrofilm"@no .
-
-format:Nintendo_optical_disc a duo:Format ;
-  rdfs:label "Nintendo optisk disk"@no .
-
-format:DTbook a duo:Format ;
-  rdfs:label "DTBok"@no .
+  rdfs:label "Blu-ray"@no .
 
 format:E-book a duo:Format ;
   rdfs:label "E-bok"@no .
 
-format:Portable_Document_Format a duo:Format ;
-  rdfs:label "PDF"@no .
-
-format:EPUB a duo:Format ;
-  rdfs:label "EPUB"@no .
-
 format:Periodical_literature a duo:Format ;
-  rdfs:label "Tidsskrift"@no .
-
-format:Blu-ray_Audio a duo:Format ;
-  rdfs:label "Blu-ray Audio"@no .
-
-format:DVD-Audio a duo:Format ;
-  rdfs:label "DVD-Audio"@no .
-
-format:Super_Audio_CD a duo:Format ;
-  rdfs:label "Super Audio CD"@no .
-
-format:Spoken_word_recording a duo:Format ;
-  rdfs:label "Taleopptak"@no .
+  rdfs:label "Periodika"@no .
 
 format:Language_course a duo:Format ;
   rdfs:label "Språkkurs"@no .
@@ -75,52 +21,28 @@ format:Audiobook a duo:Format ;
   rdfs:label "Lydbok"@no .
 
 format:Music a duo:Format ;
-  rdfs:label "Musikk"@no .
-
-format:Digi_book a duo:Format ;
-  rdfs:label "Digibok"@no .
+  rdfs:label "Musikkopptak"@no .
 
 format:Digi_card a duo:Format ;
-  rdfs:label "Digicard"@no .
-
-format:Compact_Cassette a duo:Format ;
-  rdfs:label "Kassett"@no .
+  rdfs:label "Digikort"@no .
 
 format:Compact_Disc a duo:Format ;
   rdfs:label "CD"@no .
 
-format:Gramophone_record a duo:Format ;
-  rdfs:label "Vinyl"@no .
-
 format:MP3 a duo:Format ;
   rdfs:label "MP3"@no .
-
-format:Photography a duo:Format ;
-  rdfs:label "Fotografi"@no .
-
-format:Poster a duo:Format ;
-  rdfs:label "Plakat"@no .
 
 format:Map a duo:Format ;
   rdfs:label "Kart"@no .
 
 format:Sheet_music a duo:Format ;
-  rdfs:label "Noter"@no .
-
-format:Manuscript a duo:Format ;
-  rdfs:label "Manuskript"@no .
-
-format:Physical_body a duo:Format ;
-  rdfs:label "Fysisk legeme"@no .
+  rdfs:label "Musikknoter"@no .
 
 format:Personal_computer_game a duo:Format ;
   rdfs:label "PC-spill"@no .
 
 format:Playstation_3_game a duo:Format ;
   rdfs:label "Playstation 3"@no .
-
-format:Playstation_2_game a duo:Format ;
-  rdfs:label "Playstation 2"@no .
 
 format:Playstation_4_game a duo:Format ;
   rdfs:label "Playstation 4"@no .
@@ -137,14 +59,5 @@ format:Nintendo_Wii_game a duo:Format ;
 format:Book a duo:Format ;
   rdfs:label "Bok"@no .
 
-format:Digital_rights_management a duo:Format ;
-  rdfs:label "DRM"@no .
-
 format:Xbox_360_game a duo:Format ;
   rdfs:label "Xbox 360"@no .
-
-format:Magazine a duo:Format ;
-  rdfs:label "Blad"@no .
-
-format:Reversal_film a duo:Format ;
-  rdfs:label "Dias"@no .
