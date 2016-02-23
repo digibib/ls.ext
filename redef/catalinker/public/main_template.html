@@ -64,7 +64,7 @@
 </div>
 
 {{#partial input}}
-<div class="{{label}} input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
+<div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
     <fieldset class="pure-u-1-2">
         <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
         {{#each values}}
@@ -90,7 +90,7 @@
 {{#search_result}}
 <div class="prop-search-results support-panel-content">
     <form action="">
-        {{#results.hits.hits}}
+        {{#search_result.results.hits.hits}}
         {{#with _source.person}}
         <div class="search-result pure-g" data-automation-id="{{uri}}">
             <div class="pure-u-1">
@@ -178,30 +178,39 @@ value="{{current.value}}" />
 {{/partial}}
 
 {{#partial searchable-person}}
-<input data-value="{{current.value}}"
-       {{#deletable}}readonly {{/deletable}}
+<input {{#deletable}}readonly {{/deletable}}
 on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
 data-automation-id="{{dataAutomationId}}"
 on-enter='searchResource:{{current.displayValue}}'
 value="{{current.displayValue}}" />
 <span class="support-panel-expander" on-click='searchResource:{{predicate}}, {{current.displayValue}}'></span>
-<div>
-    Rolle
+{{#if subjectTypes.length > 1}}
+<div class="select-role-assoc">
+    <h4>Rolle</h4>
     <div>
-    <select data-value="{{values}}" decorator="select2" disabled="{{typeof subjectType === 'undefined'}}">
-        {{#each predefinedValues[predicateType]}}
-        <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
-        {{/each}}
-    </select>
+        <select value="{{values}}" decorator="select2:singleSelect" multiple
+                value="{{role}}">
+            {{#predefinedValues[predicateType]}}
+            <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
+            {{/}}
+        </select>
     </div>
-    {{#subjects}}
-    <span class="subject-type-select">
-        <input type="radio" name={{subjectType}} value="{{.}}">
-        <label>{{subjectTypeLabel(.)}}</label>
-    </span>
-    {{/subjects}}
+    <h4>Rollen gjelder:</h4>
+    <div>
+        {{#subjectTypes}}
+        <span class="subject-type-select">
+            <input type="radio" name={{subjectType}} value="{{.}}">
+            <label>{{subjectTypeLabel(.)}}</label>
+        </span>
+        {{/subjectTypes}}
+        <a class="pure-button pure-button-primary {{#if (typeof subjectType === 'undefined' || values.length == 0)}}pure-button-disabled{{else}}primary{{/if}}"
+           disabled="{{typeof subjectType === 'undefined' || values.length == 0}}"
+           href="#"
+        on-click="patchResource:{{role[0]}},{{subjectType}}">Legg til</a>
+    </div>
 </div>
+{{/if}}
 {{/partial}}
 
 

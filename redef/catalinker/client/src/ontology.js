@@ -81,6 +81,9 @@
 
             var currentValue = oldAndCurrentValue.current.value;
             var oldValue = oldAndCurrentValue.old.value;
+            if (_.isArray(oldValue) && !_.isArray(currentValue)) {
+                currentValue = [currentValue];
+            }
             if (typeof currentValue == 'string' && currentValue != oldValue) {
                 if (currentValue !== "") {
                     var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue, type: datatype}};

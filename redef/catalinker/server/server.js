@@ -79,7 +79,14 @@ app.get('/config', function (request, response) {
               rdfType: "Work",
               label: "Bekreft person",
               inputs: [
-                  {predicateType: "role", subjects: ["Work"], type: "searchable-person", predicate: "creator", label: "Opphavsperson"}
+                  {
+                      predicateType: "role",
+                      subjects: ["Work"],
+                      type: "searchable-person",
+                      predicate: "creator",
+                      label: "Opphavsperson",
+                      isMainCatalogueingEntry: true
+                  }
               ],
               nextStep: {
                 buttonLabel: "Bekreft verk",

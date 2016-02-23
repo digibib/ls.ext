@@ -13,6 +13,11 @@ body {
   h1, h2, h3 {
     line-height: 1.2;
   }
+  h4 {
+    font-size: 1.0em;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
   ul.grid-tabs {
     z-index: 100;
     .grid-tab {
@@ -27,6 +32,9 @@ body {
   }
 
   .tab-content {
+    select {
+      width: 100%;
+    }
     min-height: 600px;
     background: $lightestgray;
     .inner-content {
@@ -56,17 +64,15 @@ body {
         background-repeat: no-repeat;
         background-color: lightgrey;
         background-position: left top;
-        padding-left: 1.4em;
+        padding-left: 2em;
         cursor: pointer;
       }
-
       .searchable:not(.deletable) {
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='20' font-size='20'>▶</text></svg>");
         background-repeat: no-repeat;
         background-position: right top;
         padding-right: 1.5em;
       }
-
       .search-result {
         background: white;
         padding: 0.5em;
@@ -90,9 +96,6 @@ body {
         .creator-name, .creator-years {
           margin: 0;
         }
-        .select-creator-radio {
-          vertical-align: middle;
-        }
       }
       .subject-type-select {
         margin-top: 5px;
@@ -100,6 +103,15 @@ body {
         label {
         padding-right: 25px;
         padding-left: 5px;
+        }
+      }
+      .select-role-assoc {
+        .select-creator-radio {
+          vertical-align: middle;
+        }
+        a {
+          float: right;
+          min-width: 60px;
         }
       }
     }

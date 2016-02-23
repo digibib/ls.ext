@@ -362,17 +362,18 @@
                     }
                 } else if (prop.predicateType) {
                     currentInput = {};
-                    currentInput.subjectTypes = tab.subjects;
                     currentInput.type = prop.type;
                     currentInput.label = prop.label;
                     currentInput.domain = tab.rdfType;
                     currentInput.predicateType = prop.predicateType;
-                    currentInput.subjects = prop.subjects;
+                    currentInput.subjectTypes = prop.subjects;
                     currentInput.subjectType = undefined,
+                    currentInput.searchable = true,
                     currentInput.values = [{
                         old: {value: "", lang: ""},
                         current: {value: [], lang: ""}
                     }];
+                    currentInput.search_result = [];
                     predefinedValues.push(loadPredefinedValues(applicationData.config.resourceApiUri + "authorized_values/" + prop.predicateType, prop.predicateType))
                 } else {
                     throw "Input #" + index + " of tab '" + tab.label + "' must have rdfProperty or predicateType";
@@ -585,6 +586,12 @@
                         nextStepEnabled: function (domainType) {
                             return !(domainType === 'Work' && !ractive.get('targetUri.Person'));
                         },
+                        readyToAddRole: function (node) {
+                            return true;
+                        },
+                        spy: function(node){
+                        },
+
                         publicationId: function () {
                             var publicationIdInput = _.find(ractive.get("inputs"), function (input) {
                                 return input.predicate.indexOf("#recordID") != -1;
@@ -702,9 +709,9 @@
                                     });
                                 });
 
-                                ractive.set("search_result", {
-                                    origin: event.keypath,
-                                    results: results
+                                ractive.set(grandParentOf(event.keypath) + ".search_result", {
+                                    results: results,
+                                    origin: event.keypath
                                 });
                             }).catch(function (err) {
                             console.log(err);
@@ -717,8 +724,11 @@
                             ractive.set(keypath, false);
                     },
                     selectPersonResource: function (event, origin) {
-                        unloadResourceForDomain("Work");
-                        unloadResourceForDomain("Publication");
+                        var inputKeyPath = grandParentOf(origin);
+                        if (ractive.get(inputKeyPath).isMainCatalogueingEntry) {
+                            unloadResourceForDomain("Work");
+                            unloadResourceForDomain("Publication");
+                        }
                         var uri = event.context.uri;
                         var name = event.context.name;
                         loadExistingResource(uri);
