@@ -197,7 +197,7 @@ end
 
 Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   fullname = "#{name} #{@active[:patron].surname}"
-  patron_details = @site.Home.visit.search_patrons fullname
+  patron_details = @site.Patrons.visit.search fullname
   patron_details.header.should include fullname
   @active[:patron].cardnumber = patron_details.card_number
 end
