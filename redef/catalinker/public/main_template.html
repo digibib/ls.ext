@@ -24,9 +24,9 @@
                 {{#each inputGroups}}
                 <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected' : ''}} pure-g">
                     {{#each inputs}}
-                        {{#visible}}
-                            {{>input}}
-                        {{/visible}}
+                    {{#visible}}
+                    {{>input}}
+                    {{/visible}}
                     {{/each}}
                     <div class="pure-u-1-2">
                         {{#nextStep}}
@@ -64,7 +64,7 @@
 </div>
 
 {{#partial input}}
-<div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
+<div class="{{label}} input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
     <fieldset class="pure-u-1-2">
         <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
         {{#each values}}
@@ -86,7 +86,7 @@
     </span>
 </div>
 {{/partial}}
-{{#partial support-for-searchable-creator}}
+{{#partial support-for-searchable-person}}
 {{#search_result}}
 <div class="prop-search-results support-panel-content">
     <form action="">
@@ -97,7 +97,7 @@
                 <div class="pure-g">
                     <div class="pure-u-1-12">
                         <input class="select-creator-radio" type="radio"
-                               on-click="selectPersonResource:{{predicate}},{{origin}}"
+                               on-click="selectPersonResource:{{origin}}"
                                checked="{{isChecked}}"/>
                     </div>
 
@@ -132,7 +132,7 @@
                         </div>
                             <span class="search-result-work-selector pure-u-2-24">
                             <input class="select-work-radio" type="radio" checked="{{isChecked}}"
-                                   on-click="setResourceAndWorkResource:{{../../../person}},{{predicate}},{{origin}},'Person'"/>
+                                   on-click="setResourceAndWorkResource:{{../../../person}},{{origin}},'Person'"/>
                         </span>
                     </div>
                     {{/work}}
@@ -144,7 +144,7 @@
         {{else}}
         <div class="search-result pure-g">
             <div class="pure-u-1">
-            Ingen treff
+                Ingen treff
             </div>
         </div>
         {{/if}}
@@ -177,15 +177,31 @@ data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
 {{/partial}}
 
-{{#partial searchable-creator}}
+{{#partial searchable-person}}
 <input data-value="{{current.value}}"
        {{#deletable}}readonly {{/deletable}}
-on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}:{{predicate}}"
+on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
 data-automation-id="{{dataAutomationId}}"
-on-enter='searchResource:{{predicate}}, {{current.displayValue}}'
+on-enter='searchResource:{{current.displayValue}}'
 value="{{current.displayValue}}" />
 <span class="support-panel-expander" on-click='searchResource:{{predicate}}, {{current.displayValue}}'></span>
+<div>
+    Rolle
+    <div>
+    <select data-value="{{values}}" decorator="select2" disabled="{{typeof subjectType === 'undefined'}}">
+        {{#each predefinedValues[predicateType]}}
+        <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
+        {{/each}}
+    </select>
+    </div>
+    {{#subjects}}
+    <span class="subject-type-select">
+        <input type="radio" name={{subjectType}} value="{{.}}">
+        <label>{{subjectTypeLabel(.)}}</label>
+    </span>
+    {{/subjects}}
+</div>
 {{/partial}}
 
 
@@ -225,12 +241,12 @@ value="{{current.value}}" />
 {{#partial searchable-authority}}
 <span data-automation-id="{{dataAutomationId}}">
     <select style="width: 100%;"
-        decorator="multi:{select2:['authoritySelectSingle'], detectChange:[]}" id="{{uniqueId}}"
-        class="searchable-authority" multiple>
+            decorator="multi:{select2:['authoritySelectSingle'], detectChange:[]}" id="{{uniqueId}}"
+            class="searchable-authority" multiple>
         {{#each values:index}}
-            {{#if current.value[index]}}
-                <option value='{{current.value[index]}}' selected="selected">{{current.displayName}}</option>
-            {{/if}}
+        {{#if current.value[index]}}
+        <option value='{{current.value[index]}}' selected="selected">{{current.displayName}}</option>
+        {{/if}}
         {{/each}}
     </select>
 </span>

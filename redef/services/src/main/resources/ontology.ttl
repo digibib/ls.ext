@@ -78,7 +78,6 @@
   rdfs:label "Rolle"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range duo:Role ;
-  duo:valuesFrom values:role .
 
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;

@@ -79,7 +79,7 @@ app.get('/config', function (request, response) {
               rdfType: "Work",
               label: "Bekreft person",
               inputs: [
-                  {rdfProperty: "creator", type: "searchable-creator"}
+                  {predicateType: "role", subjects: ["Work"], type: "searchable-person", predicate: "creator", label: "Opphavsperson"}
               ],
               nextStep: {
                 buttonLabel: "Bekreft verk",
@@ -153,7 +153,7 @@ app.get('/config', function (request, response) {
           rdfType: "Work",
           label: "Bekreft biinførsler",
           inputs: [
-            /* {rdfProperty: "Role", selectable: true, domainOverrides: ["Work", "Publication"]}*/
+              {predicateType: "role", subjects: ["Work", "Publication"], type: "searchable-person", label: "Legg til person"}
           ],
           nextStep: {
                 buttonLabel: "Avslutt registrering av utgivelsen",

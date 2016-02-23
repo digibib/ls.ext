@@ -116,7 +116,7 @@
                     }
                 });
 //                console.log("setIdValues: Setting " + inputs_n + ".values." + idx + ".current.value -> " + ractive.get(inputs_n + ".values." + idx + ".current.value"));
-           }
+            }
         }
     }
 
@@ -277,7 +277,7 @@
                 disabled = true;
             }
 
-            // Fetch authorized values, if required
+            // Fetch predefined values, if required
             var predicate = Ontology.resolveURI(applicationData.ontology, props[i]["@id"]);
             if (props[i]["http://data.deichman.no/utility#valuesFrom"]) {
                 var url = props[i]["http://data.deichman.no/utility#valuesFrom"]["@id"];
@@ -353,10 +353,29 @@
         _.each(tabs, function (tab) {
             var group = {};
             var groupInputs = [];
-            _.each(tab.inputs, function (prop) {
-                var currentInput = inputMap[tab.rdfType + "." + ontologyUri + "#" + prop.rdfProperty];
-                if (typeof currentInput === 'undefined') {
-                    throw "Tab '" + tab.label + "' specified unknown property '" + prop.rdfProperty + "'";
+            _.each(tab.inputs, function (prop, index) {
+                var currentInput;
+                if (prop.rdfProperty) {
+                    currentInput = inputMap[tab.rdfType + "." + ontologyUri + "#" + prop.rdfProperty];
+                    if (typeof currentInput === 'undefined') {
+                        throw "Tab '" + tab.label + "' specified unknown property '" + prop.rdfProperty + "'";
+                    }
+                } else if (prop.predicateType) {
+                    currentInput = {};
+                    currentInput.subjectTypes = tab.subjects;
+                    currentInput.type = prop.type;
+                    currentInput.label = prop.label;
+                    currentInput.domain = tab.rdfType;
+                    currentInput.predicateType = prop.predicateType;
+                    currentInput.subjects = prop.subjects;
+                    currentInput.subjectType = undefined,
+                    currentInput.values = [{
+                        old: {value: "", lang: ""},
+                        current: {value: [], lang: ""}
+                    }];
+                    predefinedValues.push(loadPredefinedValues(applicationData.config.resourceApiUri + "authorized_values/" + prop.predicateType, prop.predicateType))
+                } else {
+                    throw "Input #" + index + " of tab '" + tab.label + "' must have rdfProperty or predicateType";
                 }
                 if (tab.rdfType === unPrefix(currentInput.domain)) {
                     groupInputs.push(currentInput);
@@ -532,11 +551,20 @@
                 };
 
                 // Initialize ractive component from template
+                var repositionSupportPanel = function (node) {
+                    //$(node).find(".support-panel").css({top: $(node).position().top})
+                    Main.repositionSupportPanelsHorizontally();
+                    return {
+                        teardown: function () {
+                        }
+                    }
+                };
                 ractive = new Ractive({
                     el: "container",
                     lang: "no",
                     template: applicationData.template,
                     data: {
+                        applicationData: applicationData,
                         predefinedValues: applicationData.predefinedValues,
                         errors: errors,
                         resource_type: "",
@@ -582,6 +610,10 @@
                                 return _.first(preferredTexts);
                             }
                         },
+                        subjectTypeLabel: function(subject) {
+                            var resourceLabel = Ontology.resourceLabel(applicationData.ontology, subject, 'no');
+                            return resourceLabel || "";
+                        },
                         targetResources: {
                             Work: {
                                 uri: "",
@@ -599,14 +631,7 @@
                     },
                     decorators: {
                         multi: require('ractive-multi-decorator'),
-                        repositionSupportPanel: function (node) {
-                            //$(node).find(".support-panel").css({top: $(node).position().top})
-                            Main.repositionSupportPanelsHorizontally();
-                            return {
-                                teardown: function () {
-                                }
-                            }
-                        },
+                        repositionSupportPanel: repositionSupportPanel,
                         detectChange: function (node) {
                             var enableChange = false;
                             $(node).on("select2:selecting select2:unselecting", function () {
@@ -652,7 +677,7 @@
                             ractive.update();
                         }
                     },
-                    searchResource: function (event, predicate, searchString) {
+                    searchResource: function (event, searchString) {
                         // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
                         var searchType = "person";
                         var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search";
@@ -679,7 +704,6 @@
 
                                 ractive.set("search_result", {
                                     origin: event.keypath,
-                                    predicate: predicate,
                                     results: results
                                 });
                             }).catch(function (err) {
@@ -692,7 +716,7 @@
                             ractive.set(keypath, true) :
                             ractive.set(keypath, false);
                     },
-                    selectPersonResource: function (event, predicate, origin) {
+                    selectPersonResource: function (event, origin) {
                         unloadResourceForDomain("Work");
                         unloadResourceForDomain("Publication");
                         var uri = event.context.uri;
@@ -709,8 +733,8 @@
                         unloadResourceForDomain("Publication");
                         loadExistingResource(uri, {leaveUnchanged: "creator"});
                     },
-                    setResourceAndWorkResource: function (event, person, predicate, origin, domainType) {
-                        ractive.fire("selectPersonResource", {context: person}, predicate, origin, domainType);
+                    setResourceAndWorkResource: function (event, person, origin, domainType) {
+                        ractive.fire("selectPersonResource", {context: person}, origin, domainType);
                         ractive.fire("selectWorkResource", {context: event.context});
                     },
                     delResource: function (event, predicate) {
@@ -734,6 +758,9 @@
                         _.each(ractive.get("inputGroups"), function (group, groupIndex) {
                             var keyPath = "inputGroups." + groupIndex;
                             ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
+                        });
+                        $("span.support-panel").parents().each(function(index, node){
+                            repositionSupportPanel(node);
                         });
                     },
                     nextStep: function (event) {
@@ -895,9 +922,11 @@
                 var creatorUri = _.find(ractive.get("inputs"), function (input) {
                     return (input.fragment === "creator");
                 }).values[0].current.value;
-                return loadExistingResource(creatorUri).then(function () {
-                    ractive.set("targetUri.Person", creatorUri);
-                });
+                if (creatorUri !== "") {
+                    return loadExistingResource(creatorUri).then(function () {
+                        ractive.set("targetUri.Person", creatorUri);
+                    });
+                }
             }
 
             function loadWorkOfPublication() {
