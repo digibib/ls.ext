@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION=1.10.0-0~trusty
+VERSION="1.10.0-0~$(lsb_release -c -s)"
 INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
 if [ $VERSION = $INSTALLED ] ; then
   echo "docker version $VERSION already installed";
