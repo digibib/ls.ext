@@ -77,12 +77,24 @@ services:
     networks:
       - backend
     ports:
-      - "8101:9999"
+      - "8101:9999" # Can be removed, as we use docker networking for access
     command:
       - "/app/tcp-proxy"
       - "-vv"
       - "-r"
       - "${SMS_FORWARD_URL}"
+
+  tcpsink: # Fake webserver response, for testing
+    container_name: tcpsink
+    image: "alpine:3.3"
+    networks:
+      - backend
+    ports:
+      - "9999:9999"
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "mkfifo pipe; while true ; do { read line<pipe;echo -e 'HTTP/1.1 200 OK\\r\\n' ; } | nc -l -p 9999 > pipe; done"
 
   elasticsearch_data:
     container_name: elasticsearch_data
