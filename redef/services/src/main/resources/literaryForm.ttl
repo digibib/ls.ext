@@ -15,7 +15,7 @@ literaryForm:novel a duo:LiteraryForm ;
   rdfs:label "Novel"@en .
 literaryForm:shortStory a duo:LiteraryForm ;
   duo:code "n" ;
-  rdfs:label "Novelle"@no ;
+  rdfs:label "Novelle/fortelling"@no ;
   rdfs:label "Short story"@en .
 literaryForm:poem a duo:LiteraryForm ;
   duo:code "d" ;
@@ -35,7 +35,7 @@ literaryForm:anthology a duo:LiteraryForm ;
   rdfs:label "Anthology"@en .
 literaryForm:textBook a duo:LiteraryForm ;
   duo:code "l" ;
-  rdfs:label "Lærenok, brevkurs"@no ;
+  rdfs:label "Lærebok"@no ;
   rdfs:label "Text book"@en .
 literaryForm:pointingBook a duo:LiteraryForm ;
   duo:code "p" ;
