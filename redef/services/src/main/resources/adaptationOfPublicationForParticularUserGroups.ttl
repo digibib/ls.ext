@@ -29,3 +29,11 @@ adaptation:capitalLetters a duo:AdaptationOfPublicationForParticularUserGroups ;
   duo:code "tj" ;
   rdfs:label "Store bokstaver(versaler)"@no ;
   rdfs:label "Capital letters only"@en .
+adaptation:easyLanguage a duo:AdaptationOfPublicationForParticularUserGroups ;
+  duo:code "ta" ;
+  rdfs:label "Lettlest, enkelt språk"@no ;
+  rdfs:label "Easy to read, easy language"@en .
+adaptation:easyContent a duo:AdaptationOfPublicationForParticularUserGroups ;
+  duo:code "tb" ;
+  rdfs:label "Lettlest, enkelt innhold"@no ;
+  rdfs:label "Easy to read, easy content"@en .
