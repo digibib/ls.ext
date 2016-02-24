@@ -210,7 +210,9 @@
         var inputsToSave = [];
         _.each(ractive.get("inputGroups"), function(group){
             _.each(group.inputs, function(input){
-                inputsToSave.push(input);
+                if (resourceType === input.rdfType) {
+                    inputsToSave.push(input);
+                }
             })
         });
         // force all inputs to appear as changed
@@ -313,6 +315,7 @@
                     datatype: datatype,
                     label: i18nLabelValue(props[i]["rdfs:label"]),
                     domain: domain,
+                    search_result: null,
                     values: [{
                         old: {value: "", lang: ""},
                         current: {value: predefined ? [] : "", lang: ""}
@@ -604,6 +607,7 @@
                             return true;
                         },
                         spy: function(node){
+                            console.log("spy: " + node.keypath);
                         },
 
                         publicationId: function () {
@@ -722,7 +726,6 @@
                                         work.isChecked = false;
                                     });
                                 });
-
                                 ractive.set(grandParentOf(event.keypath) + ".search_result", {
                                     results: results,
                                     origin: event.keypath
