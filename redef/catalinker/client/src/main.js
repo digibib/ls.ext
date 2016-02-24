@@ -600,7 +600,7 @@
                     decorators: {
                         multi: require('ractive-multi-decorator'),
                         repositionSupportPanel: function (node) {
-                            $(node).find(".support-panel").css({top: $(node).position().top})
+                            //$(node).find(".support-panel").css({top: $(node).position().top})
                             Main.repositionSupportPanelsHorizontally();
                             return {
                                 teardown: function () {
