@@ -1,5 +1,0 @@
----
-http:
-  cors:
-    enabled: True
-    allow-origin: '*'

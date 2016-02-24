@@ -26,17 +26,6 @@ services_gradle_build_docker_image:
     - cwd: /vagrant/redef/services
     - user: vagrant
 
-##########
-# Elasticsearch specifig config
-##########
-
-/etc/elasticsearch.yml:
-  file.managed:
-    - source: salt://elasticsearch/config/elasticsearch.yml
-    - user: root
-    - group: root
-    - file_mode: 644
-
 docker_compose_up:
   cmd.run:
     - name: docker-compose up -d
