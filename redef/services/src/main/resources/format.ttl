@@ -17,7 +17,7 @@ format:File_folder a duo:Format ;
 format:Web_page a duo:Format ;
   rdfs:label "Webside"@no .
 
-format:CD_ROM a duo:Format ;
+format:CD-ROM a duo:Format ;
   rdfs:label "CD-ROM"@no .
 
 format:DVD-ROM a duo:Format ;
@@ -35,7 +35,7 @@ format:DAISY a duo:Format ;
 format:E-book a duo:Format ;
   rdfs:label "E-bok"@no .
 
-format:Periodical_literature a duo:Format ;
+format:Periodical a duo:Format ;
   rdfs:label "Periodika"@no .
 
 format:Blu-ray_Audio a duo:Format ;
@@ -47,17 +47,14 @@ format:DVD-Audio a duo:Format ;
 format:Super_Audio_CD a duo:Format ;
   rdfs:label "Super Audio CD"@no .
 
-format:Spoken_word_recording a duo:Format ;
-  rdfs:label "Taleopptak"@no .
-
 format:Language_course a duo:Format ;
   rdfs:label "Språkkurs"@no .
 
 format:Audiobook a duo:Format ;
   rdfs:label "Lydbok"@no .
 
-format:Music a duo:Format ;
-  rdfs:label "Musikk"@no .
+format:Music_recording a duo:Format ;
+  rdfs:label "Musikkopptak"@no .
 
 format:Digi_book a duo:Format ;
   rdfs:label "Digibok"@no .
