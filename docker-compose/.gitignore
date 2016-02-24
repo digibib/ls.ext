@@ -1,3 +1,4 @@
 # .gitignore
 docker-compose.yml
 docker-compose.env
+secrets.env

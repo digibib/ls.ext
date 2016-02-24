@@ -19,6 +19,7 @@ case "$LSDEVMODE" in
 	;;
 	*)
 	source docker-compose.env.example
+	source secrets.env
 	envsubst < "docker-compose-template-dev.yml" > "docker-compose.yml"
 	;;
 esac
