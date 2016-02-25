@@ -1,14 +1,10 @@
-@prefix adaptation: <http://data.deichman.no/adaptationOfPublicationForParticularUserGroups#> .
+@prefix adaptation: <http://data.deichman.no/adaptationForParticularUserGroups#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-adaptation:largeFontDefinedByPublisher a duo:AdaptationOfPublicationForParticularUserGroups ;
-  duo:code "tc" ;
-  rdfs:label "Storskrift, forlagsdefinert"@no ;
-  rdfs:label "Large type, publisher defined"@en .
-adaptation:largeFontMeasured a duo:AdaptationOfPublicationForParticularUserGroups ;
-  duo:code "td" ;
-  rdfs:label "Storskrift, selvmålt"@no ;
-  rdfs:label "Large type, measured"@en .
+adaptation:largePrint a duo:AdaptationOfPublicationForParticularUserGroups ;
+  duo:code "tc", "td" ;
+  rdfs:label "Storskrift"@no ;
+  rdfs:label "Large print"@en .
 adaptation:braille a duo:AdaptationOfPublicationForParticularUserGroups ;
   duo:code "te" ;
   rdfs:label "Blindeskrift"@no ;
@@ -21,13 +17,9 @@ adaptation:tactile a duo:AdaptationOfPublicationForParticularUserGroups ;
   duo:code "tg" ;
   rdfs:label "Følebok"@no ;
   rdfs:label "Tactile"@en .
-adaptation:blissSymbols a duo:AdaptationOfPublicationForParticularUserGroups ;
-  duo:code "th" ;
-  rdfs:label "Bliss symbolspråk"@no ;
-  rdfs:label "Blisssymbols"@en .
 adaptation:capitalLetters a duo:AdaptationOfPublicationForParticularUserGroups ;
   duo:code "tj" ;
-  rdfs:label "Store bokstaver(versaler)"@no ;
+  rdfs:label "Store bokstaver"@no ;
   rdfs:label "Capital letters only"@en .
 adaptation:easyLanguage a duo:AdaptationOfPublicationForParticularUserGroups ;
   duo:code "ta" ;
