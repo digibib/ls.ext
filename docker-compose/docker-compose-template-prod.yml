@@ -100,7 +100,10 @@ services:
     ports:
       - "8200:9200"
       - "8300:9300"
-    command: "elasticsearch --network.host _non_loopback_"
+    command:
+      - "elasticsearch"
+      - "--network.host"
+      - "_non_loopback_"
     volumes_from:
       - elasticsearch_data
 
