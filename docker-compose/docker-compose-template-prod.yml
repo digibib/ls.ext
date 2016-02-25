@@ -11,6 +11,11 @@ services:
     image: "digibib/koha:${KOHA_IMAGE_TAG}"
     networks:
       - backend
+    depends_on:
+      - koha_mysql
+      - sms
+      - smtp
+      - sip
     cap_add:
       - SYS_NICE
       - DAC_READ_SEARCH
@@ -139,6 +144,9 @@ services:
     image: "digibib/redef-catalinker:${GITREF}"
     networks:
       - backend
+    depends_on:
+      - services
+      - z3950proxy
     ports:
       - "8010:8010"
     environment:
@@ -153,6 +161,10 @@ services:
     image: "digibib/redef-services:${GITREF}"
     networks:
       - backend
+    depends_on:
+      - fuseki
+      - elasticsearch
+      - koha
     ports:
       - "8005:8005"
       - "8006:8006"
@@ -172,6 +184,9 @@ services:
     image: "digibib/redef-patron-client:${GITREF}"
     networks:
       - backend
+    depends_on:
+      - elasticsearch
+      - services
     ports:
       - "8000:8000"
     environment:

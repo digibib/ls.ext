@@ -11,6 +11,11 @@ services:
     image: "digibib/koha:${KOHA_IMAGE_TAG}"
     networks:
       - backend
+    depends_on:
+      - koha_mysql
+      - sms
+      - smtp
+      - sip
     cap_add:
       - SYS_NICE
       - DAC_READ_SEARCH
@@ -151,6 +156,9 @@ services:
       dockerfile: Dockerfile-dev
     networks:
       - backend
+    depends_on:
+      - services
+      - z3950proxy
     volumes:
       - /mnt/catalinker_client:/usr/src/app/client
       - /mnt/catalinker_public:/usr/src/app/public
@@ -169,6 +177,10 @@ services:
     image: "digibib/redef-services"
     networks:
       - backend
+    depends_on:
+      - fuseki
+      - elasticsearch
+      - koha
     ports:
       - "8005:8005"
       - "8006:8006"
@@ -188,6 +200,9 @@ services:
     container_name: redef_patron_client_container
     networks:
       - backend
+    depends_on:
+      - elasticsearch
+      - services
     build:
       context: /vagrant/redef/patron-client
       dockerfile: Dockerfile
