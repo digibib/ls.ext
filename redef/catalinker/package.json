@@ -5,10 +5,10 @@
   "author": "Digital Development Team at Oslo Public Library <digibib@gmail.com>",
   "scripts": {
     "start": "node server/server.js",
-    "test": "mocha module-test --timeout 5000",
+    "test": "mocha --compilers js:babel-core/register --require module-test/testdom.js module-test --timeout 5000",
     "start-dev": "NODE_ENV=development nodemon -L",
     "start-dev-debug": "nodemon debug",
-    "module-test-debug": "mocha debug module-test",
+    "module-test-debug": "mocha --compilers js:babel-core/register debug module-test",
     "jscs": "jscs",
     "jshint": "jshint"
   },
@@ -27,11 +27,14 @@
     "node": ">=4.1"
   },
   "dependencies": {
+    "es5-shim": "^4.5.2",
     "axios": "0.7.0",
     "browserify-middleware": "^3.0.0",
     "debug": "~2.2.0",
     "express": "~4.13.1",
+    "express-request-proxy": "^1.1.0",
     "express-compile-sass": "*",
+    "express-babelify-middleware": "*",
     "jade": "~1.11.0",
     "jquery": "^2.1.4",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61",
@@ -50,7 +53,7 @@
     "urijs": "^1.17.0"
   },
   "devDependencies": {
-    "browserify": "^11.2.0",
+    "browserify": "^13.0.0",
     "chai": "*",
     "connect-livereload": "^0.5.4",
     "del": "^2.0.2",
@@ -60,7 +63,10 @@
     "mocha": "*",
     "jsdom": "^7.2.2",
     "nodemon": "*",
-    "sinon": "*"
+    "sinon": "*",
+    "babel-preset-es2015": "^6.3.13",
+    "babelify": "7.2.0",
+    "babel-polyfill": "^6.5.0"
   },
   "private": true,
   "analyze": true,

@@ -1,5 +1,6 @@
 {
   "node": true,
   "undef": true,
-  "predef": [ "require", "describe", "it", "define" ]
+  "predef": [ "require", "describe", "it", "define" ],
+  "esnext": true
 }

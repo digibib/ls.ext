@@ -1,9 +1,12 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var browserify = require('browserify-middleware');
-var axios = require('axios');
-var compileSass = require('express-compile-sass');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const browserify = require('browserify-middleware');
+const axios = require('axios');
+const compileSass = require('express-compile-sass');
+const requestProxy = require('express-request-proxy');
+const babelify = require('express-babelify-middleware');
+
 var app = express();
 if (app.get('env') === 'development') {
   var livereload = require('express-livereload');
@@ -16,10 +19,14 @@ if (app.get('env') === 'development') {
 var Server;
 
 app.use(logger('dev'));
+
 app.use(express.static(path.join(__dirname, '/../public')));
 
-app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator']));
-app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']));
+app.get('/js/bundle.js',
+  babelify([{'jquery': {expose: 'jquery'}}, {'./client/src/main.js': {expose: 'Main'}}], {}, {presets: ["es2015"]}));
+
+app.get('/js/bundle_for_old.js',
+  babelify([{'./client/src/main_old.js': {expose: 'Main'}}], {}, {presets: ["es2015"]}));
 
 app.get('/css/vendor/:cssFile', function (request, response) {
   response.sendFile(request.params.cssFile, {root: path.resolve(path.join(__dirname, "/../node_modules/select2/dist/css/"))});
@@ -164,6 +171,10 @@ app.use("/style", compileSass({
   sourceComments: false, // Includes source comments in output css
   watchFiles: true, // Watches sass files and updates mtime on main files for each change
   logToConsole: true // If true, will log to console.error on errors
+}));
+
+app.get('/z3950/*', requestProxy({
+  url: 'http://z3950proxy:3000/*'
 }));
 
 // catch 404 and forward to error handler

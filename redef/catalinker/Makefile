@@ -32,7 +32,7 @@ run-test-instance: rm-test-instance
 	sudo docker run -d -p 7010:8000 --name $(MODULE_TEST_CONTAINER) $(HOST_VOLUME_BINDINGS) dockercompose_catalinker
 
 lint:
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_catalinker npm run jscs -- server/server.js module-test client/test --fix
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_catalinker npm run jscs -- server/server.js module-test client/test --fix --esnext
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_catalinker npm run jshint -- server/server.js module-test client/test
 
 

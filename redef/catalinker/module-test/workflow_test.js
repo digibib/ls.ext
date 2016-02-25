@@ -1,22 +1,20 @@
-/*global require, it, describe, before, after, document, Promise*/
-"use strict";
+/*global it, describe, before, after, document, Promise*/
 
-var chai = require("chai"),
-  expect = chai.expect,
-  sinon = require("sinon"),
-  axios = require("axios"),
-  fs = require("fs");
+import chai from 'chai';
+import sinon from 'sinon';
+import axios from 'axios';
+import fs from 'fs';
+import Main from '../client/src/main.js';
+
+const expect = chai.expect;
 
 describe("Catalinker", function () {
   describe("/Workflow", function () {
 
-    require('./testdom')('<html><body><div id="container"/></body></html>');
-    var testRactive, Main;
+    var testRactive;
 
     before(function (done) {
 
-      // load module
-      Main = require("../client/src/main.js");
 
       // STUBS
 

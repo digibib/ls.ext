@@ -16,20 +16,11 @@
 
 <script src="/js/bundle.js"></script>
 <script>
-    try {
-        var $ = require("jquery");
-        var Main = require('./client/src/main');
-        Main.init().then(function(){
-            $(window).resize(Main.repositionSupportPanelsHorizontally);
-        });
-
-    } catch (error) {
-        console.log(error)
-        console.log("Failed to initialise, reloading page")
-        setTimeout(function () {
-            location.reload();
-        }, 1000);
-    }
+    var $ = require('jquery')
+    var Main = require('Main').default
+    Main.init().then(function(){
+        $(window).resize(Main.repositionSupportPanelsHorizontally);
+     });
 </script>
 </body>
 </html>

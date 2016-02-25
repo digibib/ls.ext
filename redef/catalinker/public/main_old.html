@@ -11,7 +11,7 @@
 
 <script src="/js/bundle_for_old.js"></script>
 <script>
-    var Main = require('./client/src/main_old');
+    var Main = require('Main').default;
     Main.init().then(function () { Main.loadOntology() });
 </script>
 </body>
