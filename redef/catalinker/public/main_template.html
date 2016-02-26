@@ -183,7 +183,7 @@ value="{{current.value}}" />
 on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}:{{predicate}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
 data-automation-id="{{dataAutomationId}}"
-on-enter='searchResource:{{predicate}}, {{current.displayValue}}'
+on-keyup='searchResource:{{predicate}}, {{current.displayValue}}'
 value="{{current.displayValue}}" />
 <span class="support-panel-expander" on-click='searchResource:{{predicate}}, {{current.displayValue}}'></span>
 {{/partial}}

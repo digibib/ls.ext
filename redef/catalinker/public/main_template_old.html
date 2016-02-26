@@ -110,7 +110,7 @@ value="{{current.value}}" />
 on-click="{{#deletable}}delResource{{/deletable}}:{{predicate}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
 data-automation-id="{{predicate}}_{{@index}}"
-on-enter='searchResource:{{predicate}}, {{current.value}}'
+on-keyup='searchResource:{{predicate}}, {{current.value}}'
 value="{{current.value}}" />
 {{/partial}}
 

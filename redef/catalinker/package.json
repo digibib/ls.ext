@@ -45,7 +45,6 @@
     "purecss-sass": "^0.6.0",
     "ractive": "0.7.3",
     "ractive-decorators-select2": "git+https://github.com/Prezent/ractive-decorators-select2.git#0.1.7",
-    "ractive-events-keys": "0.2.1",
     "ractive-express": "^0.1.5",
     "ractive-multi-decorator": "^0.1.0",
     "select2": "git+https://github.com/select2/select2.git#4.0.2-rc.1",
