@@ -212,7 +212,7 @@ public class AppTest {
         assertResponse(Status.OK, patchAddPublicationOfToPublicationPatchResponse);
 
         kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
-        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#format", "http://data.deichman.no/format#Atlas", ANY_URI));
+        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#format", "http://data.deichman.no/format#Audiobook", ANY_URI));
         final HttpResponse<String> patchAddFormatToPublicationPatchResponse = buildPatchRequest(publicationUri, addFormatToPublicationPatch).asString();
         assertResponse(Status.OK, patchAddFormatToPublicationPatchResponse);
 
@@ -221,7 +221,7 @@ public class AppTest {
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse1);
 
 
-        doSearchForWorkWithFormat("Paris", "Atlas");
+        doSearchForWorkWithFormat("Paris", "Lydbok");
     }
 
     @Test
