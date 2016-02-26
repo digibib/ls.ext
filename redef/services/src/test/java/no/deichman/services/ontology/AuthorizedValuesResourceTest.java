@@ -114,7 +114,7 @@ public class AuthorizedValuesResourceTest {
         Object body = authorizedValuesResource.getValueRange("adaptationOfPublicationForParticularUserGroups").getEntity();
         Model model = RDFModelUtil.modelFrom((String) body, Lang.JSONLD);
         boolean hasBraille = model.contains(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://data.deichman.no/adaptationOfPublicationForParticularUserGroups#braille"),
+                ResourceFactory.createResource("http://data.deichman.no/adaptationForParticularUserGroups#braille"),
                 RDFS.label,
                 ResourceFactory.createLangLiteral("Blindeskrift", "no")
         ));
