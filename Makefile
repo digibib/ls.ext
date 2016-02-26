@@ -209,3 +209,11 @@ push:
 docker_cleanup:						## Clean up unused docker containers and images
 	@echo "cleaning up unused containers and images"
 	@vagrant ssh $(SHIP) -c 'sudo /vagrant/redef/docker_cleanup.sh'
+
+DOCKER_COMPOSE_DOT_IMAGE ?= 21af6b4fd714903cebd3d4658ad35da4d0db0051
+create_dev_stack_image:
+	@echo "creating dot file for docker-compose templates"
+	@vagrant ssh $(SHIP) -c "sudo docker run --rm -v /vagrant/docker-compose:/tmp \
+		-t digibib/docker-compose-dot:$(DOCKER_COMPOSE_DOT_IMAGE) \
+		./app /tmp/docker-compose-template-dev.yml | \
+		dot -Tpng > /vagrant/docker-compose/dev-stack.png"
