@@ -1,8 +1,5 @@
 package no.deichman.services.search;
 
-import no.deichman.services.uridefaults.BaseURI;
-
-import static java.lang.String.format;
 import static no.deichman.services.search.ModelToIndexMapper.ModelToIndexMapperBuilder.modelToIndexMapperBuilder;
 
 /**
