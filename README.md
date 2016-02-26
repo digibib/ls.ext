@@ -41,6 +41,8 @@ make cuke_test  Run only feature tests
 
 ## Docker Compose
 
+Docker Compose is used for orchestration/deployment of service components (Docker containers).
+
 Three environment setups:
 ```
 dev:    template: docker-compose-template-dev.yml
@@ -56,7 +58,7 @@ Develop:
 ```
 export LSDEVMODE=dev
 
-* docker containers are built and run on demand:
+* some docker containers are built and run on demand:
   - catalinker    (handled by docker-compose)
   - patron-client (handled by docker-compose)
   - overview      (handled by docker-compose)
@@ -80,7 +82,7 @@ GITREF is used to pull correct docker images of (services, catalinker and patron
 
 KOHA_IMAGE_TAG is used to pull specified Koha build
 
-## Installation
+## Installation of local development environment
 
 1. Install virtualbox and vagrant (and X11-server on OSX - for development):
     - Ubuntu:
@@ -217,4 +219,4 @@ git push
 ```
 
 ## Illustration
-![Alt text](stack.png?raw=true "Stack")
+![Alt text](docker-compose/dev-stack.png?raw=true "Dev environment")

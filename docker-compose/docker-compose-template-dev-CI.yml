@@ -11,6 +11,11 @@ services:
     image: "digibib/koha:${KOHA_IMAGE_TAG}"
     networks:
       - backend
+    depends_on:
+      - koha_mysql
+      - sms
+      - smtp
+      - sip
     cap_add:
       - SYS_NICE
       - DAC_READ_SEARCH
@@ -110,7 +115,10 @@ services:
     ports:
       - "8200:9200"
       - "8300:9300"
-    command: "elasticsearch --network.host _non_loopback_"
+    command:
+      - "elasticsearch"
+      - "--network.host"
+      - "_non_loopback_"
     volumes_from:
       - elasticsearch_data
 
@@ -148,6 +156,9 @@ services:
       dockerfile: Dockerfile
     networks:
       - backend
+    depends_on:
+      - services
+      - z3950proxy
     ports:
       - "8010:8010"
     environment:
@@ -160,6 +171,10 @@ services:
     image: "digibib/redef-services"
     networks:
       - backend
+    depends_on:
+      - fuseki
+      - elasticsearch
+      - koha
     ports:
       - "8005:8005"
       - "8006:8006"
@@ -180,6 +195,9 @@ services:
       dockerfile: Dockerfile
     networks:
       - backend
+    depends_on:
+      - elasticsearch
+      - services
     ports:
       - "8000:8000"
     environment:
