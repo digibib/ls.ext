@@ -562,7 +562,7 @@ When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   data['subtitle'] = :get_prop
   data['publicationYear'] = :get_prop
   data['format'] = :get_select_prop
-  data['language'] = :get_select_prop
+  # data['language'] = :get_select_prop
   data['partTitle'] = :get_prop
   data['partNumber'] = :get_prop
   data['edition'] = :get_prop

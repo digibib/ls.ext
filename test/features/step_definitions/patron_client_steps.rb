@@ -53,7 +53,7 @@ When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
       row.td(:data_automation_id => "publication_title").text.should equal?(@context[:publication_maintitle])
     end
     row.td(:data_automation_id => "publication_format").text.should eq(@context[:publication_format])
-    row.td(:data_automation_id => "publication_language").text.should eq(@context[:publication_language])
+#    row.td(:data_automation_id => "publication_language").text.should eq(@context[:publication_language])
   end
 end
 

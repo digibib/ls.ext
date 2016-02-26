@@ -70,7 +70,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['subtitle'] = [generateRandomString, :add_prop]
   data['publicationYear'] = [rand(2015).to_s, :add_prop]
   data['format'] = [:random, :select_prop]
-  data['language'] = [:random, :select_prop]
+  # data['language'] = [:random, :select_prop]
   data['partTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
   data['edition'] = [generateRandomString, :add_prop]

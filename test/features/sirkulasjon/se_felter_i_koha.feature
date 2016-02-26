@@ -2,7 +2,7 @@
 # language: no
 
 @redef
-@check-for-errors
+@check-for-errors @no_phantomjs
 Egenskap: Se felter i Koha
   Som bibliotekar
   Skal jeg kunne se utvalgt data om en utgivelse i Koha
