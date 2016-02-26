@@ -105,6 +105,9 @@ body {
         padding-left: 5px;
         }
       }
+      .add-new-btn-row {
+        float: right;
+      }
       .select-role-assoc {
         .select-creator-radio {
           vertical-align: middle;
@@ -123,7 +126,8 @@ body {
       margin-right: 2px;
       padding: 0 15px;
       position: absolute;
-      left: 620px;
+      width: 340px;
+      overflow: scroll;
       .prop-search-result {
         height: 300px;
       }

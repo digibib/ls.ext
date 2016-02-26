@@ -2,7 +2,8 @@
      data-automation-id="targetresources-uris"
      data-work-uri="{{targetUri.Work}}"
      data-publication-uri="{{targetUri.Publication}}"
-     data-person-uri="{{targetUri.Person}}">
+     data-person-uri="{{targetUri.Person}}"
+     decorator="clickOutsideSupportPanelDetector">
     <h2 data-automation-id="page-heading">Katalogisering av utgivelse</h2>
 
     <div class="grid-input">
@@ -65,9 +66,9 @@
 
 {{#partial input}}
 <div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
-    <fieldset class="pure-u-1-2">
-        <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
-        {{#each values}}
+    <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
+    {{#each values:index}}
+    <fieldset class="pure-u-1-2" id="support_panel_base_{{uniqueId}}">
         {{>type }}
         {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
         <a data-automation-id="biblio_record_link" target="_blank"
@@ -79,11 +80,20 @@
            class="link"></a>
         {{/}}
         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-        {{/each}}
     </fieldset>
-    <span class="support-panel">
+    {{#index == values.length -1}}
+    <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
         {{>"support-for-"+type}}
     </span>
+    {{/}}
+    {{/each}}
+    {{#multiple && allowAddNewButton}}
+    <fieldset class="pure-u-1-2">
+        <div class="add-new-btn-row">
+            <a class="pure-button" on-click="addValue">Legg til ny</a>
+        </div>
+    </fieldset>
+    {{/}}
 </div>
 {{/partial}}
 {{#partial support-for-searchable-person}}
@@ -157,7 +167,7 @@
 <span data-automation-id="{{dataAutomationId}}">
     <select
             class="authorized" style="width: 100%;"
-            decorator="multi:{select2:[{{#!multiple}}'singleSelect'{{/multiple}}], detectChange:[]}"
+            decorator="multi:{select2:[{{#!multiple}}'singleSelect'{{/multiple}}], detectChange:[], handleAddNewBySelect2:[]}"
             value="{{current.value}}"
             data-automation-id="{{dataAutomationId}}"
             multiple>
@@ -178,19 +188,25 @@ value="{{current.value}}" />
 {{/partial}}
 
 {{#partial searchable-person}}
+{{#./predicate}}
+<div>
+    <h4>{{./current.displayValue}} - {{predefinedLabelValue(../../predicateType, ./predicate)}}</h4>
+    Rollen er knyttet til {{subjectTypeLabelDet(../../domain)}}.
+</div>
+{{else}}
 <input {{#deletable}}readonly {{/deletable}}
 on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}"
 class="{{#error}}invalid-input{{else}}valid{{/error}}{{#searchable}} searchable{{/searchable}}{{#deletable}} deletable{{/deletable}}"
 data-automation-id="{{dataAutomationId}}"
 on-enter='searchResource:{{current.displayValue}}'
 value="{{current.displayValue}}" />
-<span class="support-panel-expander" on-click='searchResource:{{predicate}}, {{current.displayValue}}'></span>
+<span class="support-panel-expander" on-click='searchResource:{{current.displayValue}}'></span>
 {{#if subjectTypes.length > 1}}
 <div class="select-role-assoc">
     <h4>Rolle</h4>
     <div>
         <select value="{{values}}" decorator="select2:singleSelect" multiple
-                value="{{role}}">
+                value="{{role[0]}}">
             {{#predefinedValues[predicateType]}}
             <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
             {{/}}
@@ -207,10 +223,11 @@ value="{{current.displayValue}}" />
         <a class="pure-button pure-button-primary {{#if (typeof subjectType === 'undefined' || values.length == 0)}}pure-button-disabled{{else}}primary{{/if}}"
            disabled="{{typeof subjectType === 'undefined' || values.length == 0}}"
            href="#"
-        on-click="patchResource:{{role[0]}},{{subjectType}}">Legg til</a>
+           on-click="patchResource:{{role[0][0]}},{{subjectType}}">Legg til</a>
     </div>
 </div>
 {{/if}}
+{{/}}
 {{/partial}}
 
 

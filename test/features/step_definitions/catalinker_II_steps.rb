@@ -50,6 +50,11 @@ When(/^bekrefter for å gå videre til beskriv utgivelsen$/) do
   @site.WorkFlow.assert_selected_tab("Beskriv utgivelsen")
 end
 
+When(/^bekrefter for å gå videre til biinførsler/) do
+  @site.WorkFlow.next_step
+  @site.WorkFlow.assert_selected_tab("Bekreft biinførsler")
+end
+
 When(/^verifiserer at verkets basisopplysninger uten endringer er korrekte$/) do
   @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#mainTitle_0").value.should eq @context[:work_maintitle]
 end
@@ -171,6 +176,12 @@ end
 When(/^velger jeg første utgivelsessted i listen som dukker opp$/) do
   sleep 10
   @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
+end
+
+When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
+  # person_name_field = @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#creator_0")
+  # person_name_field.set(@context[:person_name])
+  # person_name_field.send_keys :enter
 end
 
 When(/^trykker jeg på knappen for å avslutte$/) do

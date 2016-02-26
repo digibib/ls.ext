@@ -24,6 +24,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter
     Så velger jeg første utgivelsessted i listen som dukker opp
+    Og bekrefter for å gå videre til biinførsler
+    Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Så trykker jeg på knappen for å avslutte
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om utgivelsen
