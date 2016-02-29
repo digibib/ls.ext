@@ -3,115 +3,153 @@
 @prefix duo: <http://data.deichman.no/utility#> .
 
 format:DVD a duo:Format ;
+  duo:code "ee" ;
   rdfs:label "DVD"@no .
 
 format:Videotape a duo:Format ;
+  duo:code "ed" ;
   rdfs:label "VHS"@no .
 
 format:Blu-ray_Disk a duo:Format ;
+  duo:code "ef" ;
   rdfs:label "Blu-ray"@no .
 
 format:File_folder a duo:Format ;
+  duo:code "vo" ;
   rdfs:label "Arkivmappe"@no .
 
 format:Web_page a duo:Format ;
+  duo:code "ge" ;
   rdfs:label "Webside"@no .
 
 format:CD-ROM a duo:Format ;
+  duo:code "gd" ;
   rdfs:label "CD-ROM"@no .
 
 format:DVD-ROM a duo:Format ;
+  duo:code "gc" ;
   rdfs:label "DVD-ROM"@no .
 
 format:Microfiche a duo:Format ;
+  duo:code "ic" ;
   rdfs:label "Mikrofiche"@no .
 
 format:Microfilm_reel a duo:Format ;
+  duo:code "ib" ;
   rdfs:label "Mikrofilm"@no .
 
 format:DAISY a duo:Format ;
+  duo:code "gt" ;
   rdfs:label "DAISY-lydbok"@no .
 
 format:E-book a duo:Format ;
+  duo:code "la" ;
   rdfs:label "E-bok"@no .
 
 format:Periodical a duo:Format ;
+  duo:code "j" ;
   rdfs:label "Periodika"@no .
 
 format:Blu-ray_Audio a duo:Format ;
+  duo:code "dn" ;
   rdfs:label "Blu-ray-audio"@no .
 
 format:DVD-Audio a duo:Format ;
+  duo:code "dm" ;
   rdfs:label "DVD-audio"@no .
 
 format:Super_Audio_CD a duo:Format ;
+  duo:code "dl" ;
   rdfs:label "Super Audio CD"@no .
 
 format:Language_course a duo:Format ;
+  duo:code "dh" ;
   rdfs:label "Språkkurs"@no .
 
 format:Audiobook a duo:Format ;
+  duo:code "di" ;
   rdfs:label "Lydbok"@no .
 
 format:Music_recording a duo:Format ;
+  duo:code "dg" ;
   rdfs:label "Musikkopptak"@no .
 
 format:Digi_book a duo:Format ;
+  duo:code "dd" ;
   rdfs:label "Digibok"@no .
 
 format:Digi_card a duo:Format ;
+  duo:code "de" ;
   rdfs:label "Digicard"@no .
 
 format:Compact_Cassette a duo:Format ;
+  duo:code "db" ;
   rdfs:label "Kassett"@no .
 
 format:Compact_Disc a duo:Format ;
+  duo:code "dc" ;
   rdfs:label "CD"@no .
 
 format:Gramophone_record a duo:Format ;
+  duo:code "da" ;
   rdfs:label "Vinylplate"@no .
 
 format:MP3 a duo:Format ;
+  duo:code "dz" ;
   rdfs:label "MP3"@no .
 
 format:Poster a duo:Format ;
+  duo:code "fm" ;
   rdfs:label "Plansje"@no .
 
 format:Map a duo:Format ;
+  duo:code "a" ;
   rdfs:label "Kart"@no .
 
 format:Sheet_music a duo:Format ;
+  duo:code "c" ;
   rdfs:label "Musikknoter"@no .
 
 format:Physical_body a duo:Format ;
+  duo:code "h" ;
   rdfs:label "Fysisk gjenstand"@no .
 
 format:Personal_computer_game a duo:Format ;
+  duo:code "ma" ;
   rdfs:label "PC-spill"@no .
 
 format:Playstation_3_game a duo:Format ;
+  duo:code "mc" ;
   rdfs:label "Playstation 3"@no .
 
 format:Playstation_2_game a duo:Format ;
+  duo:code "mb" ;
   rdfs:label "Playstation 2"@no .
 
 format:Playstation_4_game a duo:Format ;
+  duo:code "me" ;
   rdfs:label "Playstation 4"@no .
 
 format:Xbox_One_game a duo:Format ;
+  duo:code "mk" ;
   rdfs:label "Xbox One"@no .
 
 format:Nintendo_DS_game a duo:Format ;
+  duo:code "mn" ;
   rdfs:label "Nintendo DS"@no .
 
 format:Nintendo_Wii_game a duo:Format ;
+  duo:code "mo" ;
   rdfs:label "Nintendo Wii"@no .
 
 format:Book a duo:Format ;
+  duo:code "l" ;
   rdfs:label "Bok"@no .
 
 format:Xbox_360_game a duo:Format ;
+  duo:code "mj" ;
   rdfs:label "Xbox 360"@no .
 
 format:Diapositive a duo:Format ;
+  duo:code "fd" ;
   rdfs:label "Dias"@no .
