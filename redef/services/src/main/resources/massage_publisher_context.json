@@ -1,0 +1,11 @@
+{
+  "type": "Publisher",
+  "@context": {
+    "deichman": "__ONTOLOGY__",
+    "name": "deichman:name",
+    "Publisher": "deichman:Publisher",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph"
+  }
+}

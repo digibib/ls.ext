@@ -1,0 +1,12 @@
+{
+  "type": "PlaceOfPublication",
+  "@context": {
+    "country": "deichman:country",
+    "PlaceOfPublication": "deichman:PlaceOfPublication",
+    "deichman": "__ONTOLOGY__",
+    "place": "deichman:place",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph"
+  }
+}

@@ -1,6 +1,6 @@
 package no.deichman.services.search;
 
-import org.apache.commons.lang3.tuple.Pair;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -92,41 +92,32 @@ public class PersonModelToIndexMapperTest {
                 ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createLangLiteral("work_2_english_part_title", "en")));
 
-        Pair<String, String> uriAndDocument = PersonModelToIndexMapper.getModelToIndexMapperBuilder()
-                .withOntologyPrefix("http://deichman.no/ontology#")
-                .build()
-                .modelToIndexDocument(model)
-                .get();
+        String jsonDocument = new ModelToIndexMapper("person", BaseURI.local()).createIndexDocument(model, "http://deichman.no/person_1");
 
-        Assert.assertEquals("http://deichman.no/person_1", uriAndDocument.getKey());
-
-        String jsonDocument = uriAndDocument.getValue();
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"person\": {"
-                + "      \"uri\": \"http://deichman.no/person_1\","
-                + "      \"name\": \"personName_value\","
-                + "      \"nationality\": \"Norsk\","
-                + "      \"work\": ["
-                + "           {"
-                + "               \"uri\": \"http://deichman.no/work_1\","
-                + "               \"mainTitle\": {"
-                + "                    \"default\": \"work_1_title\""
-                + "                }"
-                + "           },"
-                + "           {"
-                + "               \"uri\": \"http://deichman.no/work_2\","
-                + "               \"mainTitle\": {"
-                + "                    \"default\": \"work_2_title\", "
-                + "                    \"en\": \"work_2_english_title\" "
-                + "                 },\n"
-                + "               \"partTitle\": {"
-                + "                    \"default\": \"work_2_part_title\", "
-                + "                    \"en\": \"work_2_english_part_title\" "
-                + "                 }\n"
-                + "           }\n"
-                + "       ]\n"
-                + "  }\n"
+                + "   \"person\":{"
+                + "      \"uri\":\"http://deichman.no/person_1\","
+                + "      \"name\":\"personName_value\","
+                + "      \"nationality\":\"Norsk\","
+                + "      \"work\":["
+                + "         {"
+                + "            \"uri\":\"http://deichman.no/work_1\","
+                + "            \"mainTitle\":\"work_1_title\""
+                + "         },"
+                + "         {"
+                + "            \"uri\":\"http://deichman.no/work_2\","
+                + "            \"mainTitle\":["
+                + "               \"work_2_title\","
+                + "               \"work_2_english_title\""
+                + "            ],"
+                + "            \"partTitle\":["
+                + "               \"work_2_part_title\","
+                + "               \"work_2_english_part_title\""
+                + "            ]"
+                + "         }"
+                + "      ]"
+                + "   }"
                 + "}").allowingAnyArrayOrdering());
     }
 }

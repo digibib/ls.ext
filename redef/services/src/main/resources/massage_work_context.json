@@ -1,0 +1,29 @@
+{
+  "creator": {
+    "type": "Person"
+  },
+  "publication": {
+    "type": "Publication"
+  },
+  "type": "Work",
+  "@context": {
+    "creator": "deichman:creator",
+    "format": "deichman:format",
+    "Publication": "deichman:Publication",
+    "partTitle": "deichman:partTitle",
+    "language": "deichman:language",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph",
+    "birthYear": "deichman:birthYear",
+    "deathYear": "deichman:deathYear",
+    "deichman": "__ONTOLOGY__",
+    "mainTitle": "deichman:mainTitle",
+    "publication": "deichman:publication",
+    "name": "deichman:name",
+    "Work": "deichman:Work",
+    "publicationYear": "deichman:publicationYear",
+    "issued": "deichman:issued",
+    "Person": "deichman:Person"
+  }
+}

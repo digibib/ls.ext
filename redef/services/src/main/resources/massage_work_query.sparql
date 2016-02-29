@@ -1,0 +1,71 @@
+PREFIX  deich: <__ONTOLOGY__>
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT
+  { ?workUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Work .
+    ?workUri deich:mainTitle ?mainTitle .
+    ?workUri deich:partTitle ?partTitle .
+    ?workUri deich:publicationYear ?publicationYear .
+    ?workUri deich:publication ?publication .
+    ?workUri deich:creator ?person .
+    ?publication <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Publication .
+    ?publication deich:mainTitle ?publicationMainTitle .
+    ?publication deich:language ?language .
+    ?publication deich:format ?format .
+    ?publication deich:issued ?publicationPublicationYear .
+    ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Person .
+    ?person deich:name ?name .
+    ?person deich:birthYear ?birthYear .
+    ?person deich:deathYear ?deathYear .}
+WHERE
+  { SELECT  ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle ?format ?publicationPublicationYear ?language ?person
+    WHERE
+      { BIND(uri("__WORKURI__") AS ?workUri)
+        ?workUri  a                     deich:Work
+        OPTIONAL
+          { ?workUri  deich:mainTitle  ?mainTitleO
+                   BIND(str(?mainTitleO) as ?mainTitle)
+          }
+        OPTIONAL
+          { ?workUri  deich:partTitle  ?partTitleO
+                   BIND(str(?partTitleO) as ?partTitle)
+          }
+        OPTIONAL
+          { ?workUri  deich:creator  ?creator }
+        OPTIONAL
+          { ?workUri  deich:publicationYear  ?publicationYearO
+                   BIND(str(?publicationYearO) AS ?publicationYear)}
+        OPTIONAL
+          { ?publication  a                 deich:Publication ;
+                  deich:publicationOf   ?workUri }
+        OPTIONAL
+          { ?publication  a                 deich:Publication ;
+                  deich:mainTitle   ?publicationMainTitle }
+        OPTIONAL
+          { ?publication  deich:language  ?languageO .
+            ?languageO  rdfs:label    ?languageL
+                  BIND(str(?languageL) AS ?language)
+          }
+        OPTIONAL
+          { ?publication  deich:format  ?formatO .
+            ?formatO  rdfs:label    ?formatL
+            BIND(str(?formatL) AS ?format)
+          }
+        OPTIONAL
+          { ?publication  deich:publicationYear  ?publicationPublicationYearO
+            BIND(str(?publicationPublicationYearO) AS ?publicationPublicationYear)
+          }
+        OPTIONAL
+          { ?person  a                     deich:Person }
+        OPTIONAL
+          { ?person  deich:name  ?name }
+        OPTIONAL
+          { ?person  deich:birthYear  ?birthYearO
+                   BIND(str(?birthYearO) AS ?birthYear)
+          }
+        OPTIONAL
+          { ?person  deich:deathYear  ?deathYearO
+                   BIND(str(?deathYearO) AS ?deathYear)
+          }
+      }
+  }

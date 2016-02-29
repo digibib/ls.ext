@@ -1,7 +1,6 @@
 package no.deichman.services.search;
 
 import no.deichman.services.uridefaults.BaseURI;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -34,15 +33,8 @@ public class PlaceOfPublicationModelToIndexMapperTest {
                 ResourceFactory.createProperty(baseURI.ontology() + "place"),
                 ResourceFactory.createPlainLiteral("placeOfPublicationName_value")));
 
-        Pair<String, String> uriAndDocument = PlaceOfPublicationModelToIndexMapper.getModelToIndexMapperBuilder()
-                .withOntologyPrefix(baseURI.ontology())
-                .build()
-                .modelToIndexDocument(model)
-                .get();
+        String jsonDocument = new ModelToIndexMapper("placeOfPublication", BaseURI.local()).createIndexDocument(model, "http://deichman.no/placeOfPublication_1");
 
-        Assert.assertEquals("http://deichman.no/placeOfPublication_1", uriAndDocument.getKey());
-
-        String jsonDocument = uriAndDocument.getValue();
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
                 + "  \"placeOfPublication\": {"

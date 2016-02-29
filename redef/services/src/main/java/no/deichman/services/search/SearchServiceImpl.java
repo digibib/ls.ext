@@ -39,10 +39,6 @@ import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
-import static no.deichman.services.search.PersonModelToIndexMapper.getPersonModelToIndexMapper;
-import static no.deichman.services.search.PublisherModelToIndexMapper.getPublisherModelToIndexMapper;
-import static no.deichman.services.search.WorkModelToIndexMapper.getworksModelToIndexMapper;
-import static no.deichman.services.search.PlaceOfPublicationModelToIndexMapper.getPlaceOfPublicationModelToIndexMapper;
 import static no.deichman.services.uridefaults.BaseURI.remote;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -52,18 +48,15 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  * Responsibility: perform indexing and searching.
  */
 public class SearchServiceImpl implements SearchService {
-
-    public static final String WORK_INDEX_TYPE = "work";
-    public static final String PERSON_INDEX_TYPE = "person";
-    public static final String PLACE_OF_PUBLICATION_INDEX_TYPE = "placeOfPublication";
     public static final Property CREATOR = createProperty(remote().ontology("creator"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
-    private static final String PUBLISHER_INDEX_TYPE = "publisher";
-
-
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
+    private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
+    private ModelToIndexMapper publisherModelToIndexMapper = new ModelToIndexMapper("publisher");
+    private ModelToIndexMapper placeOfPublicationModelToIndexMapper = new ModelToIndexMapper("placeOfPublication");
+    private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -135,6 +128,7 @@ public class SearchServiceImpl implements SearchService {
             }
         }
     }
+
     public final void indexPlaceOfPublication(String id) {
         doIndexPlaceOfPublication(id);
     }
@@ -200,10 +194,13 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexWork(String workId, boolean indexedPerson) {
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(workId);
-        indexModel(getworksModelToIndexMapper().modelToIndexDocument(workModelWithLinkedResources), "work");
+        //indexModel(getworksModelToIndexMapper().modelToIndexDocument(workModelWithLinkedResources), "work");
+        String workUri = remote().work() + workId;
+        indexDocument("work", workUri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, workUri));
+
         if (!indexedPerson) {
             Statement creatorProperty = workModelWithLinkedResources.getProperty(
-                    createResource(remote().work() + workId),
+                    createResource(workUri),
                     CREATOR);
             if (creatorProperty != null) {
                 String creatorUri = creatorProperty.getObject().asNode().getURI();
@@ -223,18 +220,21 @@ public class SearchServiceImpl implements SearchService {
                 doIndexWorkOnly(workId);
             }
         }
+        String personUri = remote().person() + personId;
         Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(personId).add(works);
-        indexModel(getPersonModelToIndexMapper().modelToIndexDocument(personWithWorksModel), "person");
+        indexDocument("person", personUri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, personUri));
     }
 
     private void doIndexPlaceOfPublication(String id) {
         Model placeOfPublicationModel = entityService.retrieveById(EntityType.PLACE_OF_PUBLICATION, id);
-        indexModel(getPlaceOfPublicationModelToIndexMapper().modelToIndexDocument(placeOfPublicationModel), PLACE_OF_PUBLICATION_INDEX_TYPE);
+        String placeOfPublicationUri = remote().placeOfPublication() + id;
+        indexDocument("placeOfPublication", placeOfPublicationUri, placeOfPublicationModelToIndexMapper.createIndexDocument(placeOfPublicationModel, placeOfPublicationUri));
     }
 
     private void doIndexPublisher(String id) {
         Model publisherModel = entityService.retrieveById(EntityType.PUBLISHER, id);
-        indexModel(getPublisherModelToIndexMapper().modelToIndexDocument(publisherModel), PUBLISHER_INDEX_TYPE);
+        String publisherUri = remote().publisher() + id;
+        indexDocument("publisher", publisherUri, publisherModelToIndexMapper.createIndexDocument(publisherModel, publisherUri));
     }
 
     private void doIndexWorkOnly(String workId) {

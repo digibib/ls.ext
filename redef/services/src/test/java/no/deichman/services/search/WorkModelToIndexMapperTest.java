@@ -1,6 +1,6 @@
 package no.deichman.services.search;
 
-import org.apache.commons.lang3.tuple.Pair;
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -18,88 +18,88 @@ public class WorkModelToIndexMapperTest {
     public void testModelToIndexDocument() throws Exception {
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/person_1"),
+                ResourceFactory.createResource("http://deichman.no/person_1"),
                 RDF.type,
-                ResourceFactory.createResource("http://deichman2.no/ontology#Person")));
+                ResourceFactory.createResource("http://deichman.no/ontology#Person")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/person_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#name"),
+                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#name"),
                 ResourceFactory.createPlainLiteral("personName_value")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/work_1"),
+                ResourceFactory.createResource("http://deichman.no/work_1"),
                 RDF.type,
-                ResourceFactory.createResource("http://deichman2.no/ontology#Work")));
+                ResourceFactory.createResource("http://deichman.no/ontology#Work")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/work_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#creator"),
-                ResourceFactory.createResource("http://deichman2.no/person_1")));
+                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#creator"),
+                ResourceFactory.createResource("http://deichman.no/person_1")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/work_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#mainTitle"),
+                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createLangLiteral("work_1_title", "no")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/work_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#mainTitle"),
+                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createLangLiteral("work_1_english_title", "en")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/work_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#partTitle"),
+                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createPlainLiteral("work_1_part_title")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/work_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#partTitle"),
+                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createLangLiteral("work_1_english_part_title", "en")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#publicationOf"),
-                ResourceFactory.createResource("http://deichman2.no/work_1")));
+                ResourceFactory.createResource("http://deichman.no/publication_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#publicationOf"),
+                ResourceFactory.createResource("http://deichman.no/work_1")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#format"),
+                ResourceFactory.createResource("http://deichman.no/publication_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#format"),
                 ResourceFactory.createResource("http://data.deichman.no/format#Book")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_1"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#language"),
+                ResourceFactory.createResource("http://deichman.no/publication_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_2"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#publicationOf"),
-                ResourceFactory.createResource("http://deichman2.no/work_1")));
+                ResourceFactory.createResource("http://deichman.no/publication_2"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#publicationOf"),
+                ResourceFactory.createResource("http://deichman.no/work_1")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_2"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#format"),
+                ResourceFactory.createResource("http://deichman.no/publication_2"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#format"),
                 ResourceFactory.createResource("http://data.deichman.no/format#DVD")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_2"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#language"),
+                ResourceFactory.createResource("http://deichman.no/publication_2"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_3"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#publicationOf"),
-                ResourceFactory.createResource("http://deichman2.no/work_1")));
+                ResourceFactory.createResource("http://deichman.no/publication_3"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#publicationOf"),
+                ResourceFactory.createResource("http://deichman.no/work_1")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_3"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#format"),
+                ResourceFactory.createResource("http://deichman.no/publication_3"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#format"),
                 ResourceFactory.createResource("http://data.deichman.no/format#Bok")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman2.no/publication_3"),
-                ResourceFactory.createProperty("http://deichman2.no/ontology#language"),
+                ResourceFactory.createResource("http://deichman.no/publication_3"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
 
         model.add(ResourceFactory.createStatement(
@@ -122,39 +122,41 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                 ResourceFactory.createPlainLiteral("Engelsk")));
 
+        String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, "http://deichman.no/work_1");
 
-        Pair<String, String> uriAndDocument = WorkModelToIndexMapper.getModelToIndexMapperBuilder()
-                .withOntologyPrefix("http://deichman2.no/ontology#")
-                .build()
-                .modelToIndexDocument(model)
-                .get();
-
-        Assert.assertEquals("http://deichman2.no/work_1", uriAndDocument.getKey());
-
-        String jsonDocument = uriAndDocument.getValue();
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"work\": {\n"
-                + "      \"uri\": \"http://deichman2.no/work_1\",\n"
-                + "      \"mainTitle\": {\n"
-                + "             \"no\": \"work_1_title\", \n"
-                + "             \"en\": \"work_1_english_title\" \n"
-                + "       },\n"
-                + "      \"partTitle\": {\n"
-                + "             \"default\": \"work_1_part_title\", \n"
-                + "             \"en\": \"work_1_english_part_title\" \n"
-                + "       },\n"
-                + "       \"creator\": {\n"
-                + "            \"name\": \"personName_value\",\n"
-                + "            \"uri\": \"http://deichman2.no/person_1\"\n"
-                + "       },\n"
-                + "       \"formats\": [\n"
-                + "            \"Bok\", \"DVD\""
-                + "      ],\n"
-                + "       \"languages\": [\n"
-                + "            \"Norsk (bokmål)\", \"Engelsk\""
-                + "      ]\n"
-                + "  }\n"
+                + "   \"work\":{"
+                + "      \"uri\":\"http://deichman.no/work_1\","
+                + "      \"creator\":{"
+                + "         \"uri\":\"http://deichman.no/person_1\","
+                + "         \"name\":\"personName_value\""
+                + "      },"
+                + "      \"mainTitle\":["
+                + "         \"work_1_title\","
+                + "         \"work_1_english_title\""
+                + "      ],"
+                + "      \"partTitle\":["
+                + "         \"work_1_part_title\","
+                + "         \"work_1_english_part_title\""
+                + "      ],"
+                + "      \"publication\":["
+                + "         {"
+                + "            \"uri\":\"http://deichman.no/publication_1\","
+                + "            \"format\":\"Bok\","
+                + "            \"language\":\"Engelsk\""
+                + "         },"
+                + "         {"
+                + "            \"uri\":\"http://deichman.no/publication_2\","
+                + "            \"format\":\"DVD\","
+                + "            \"language\":\"Norsk (bokmål)\""
+                + "         },"
+                + "         {"
+                + "            \"uri\":\"http://deichman.no/publication_3\","
+                + "            \"language\":\"Norsk (bokmål)\""
+                + "         }"
+                + "      ]"
+                + "   }"
                 + "}").allowingAnyArrayOrdering());
     }
 }

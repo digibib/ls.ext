@@ -1,0 +1,22 @@
+{
+  "work": {
+    "type": "Work"
+  },
+  "type": "Person",
+  "@context": {
+    "work": "deichman:work",
+    "partTitle": "deichman:partTitle",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph",
+    "nationality": "deichman:nationality",
+    "birthYear": "deichman:birthYear",
+    "deathYear": "deichman:deathYear",
+    "deichman": "__ONTOLOGY__",
+    "mainTitle": "deichman:mainTitle",
+    "Work": "deichman:Work",
+    "name": "deichman:name",
+    "publicationYear": "deichman:publicationYear",
+    "Person": "deichman:Person"
+  }
+}

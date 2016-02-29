@@ -1,0 +1,17 @@
+PREFIX  :     <__ONTOLOGY__>
+
+CONSTRUCT
+  { ?publisherUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Publisher .
+    ?publisherUri :name ?name .
+  }
+WHERE
+  { SELECT DISTINCT  ?publisherUri ?name
+    WHERE
+      { BIND(uri("__PUBLISHERURI__") AS ?publisherUri)
+        ?publisherUri  a                   :Publisher ;
+
+        OPTIONAL
+          { ?publisherUri  :name  ?name
+          }
+      }
+  }
