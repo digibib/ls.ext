@@ -1,7 +1,6 @@
 import urijs from 'urijs'
 
 import Constants from '../constants/Constants'
-import { inPreferredLanguage } from '../utils/languageHelpers'
 
 export function processSearchResponse (response) {
   let processedResponse = {}
@@ -18,9 +17,10 @@ export function processSearchResponse (response) {
         let creator = work.creator
         work.creators.push(creator)
       }
-      // Choose preferred display language for properties with multiple languages
-      work.mainTitle = inPreferredLanguage(work.mainTitle)
-      work.partTitle = inPreferredLanguage(work.partTitle)
+      work.publications = work.publication || []
+      if (!(work.publications instanceof Array)) {
+        work.publications = [ work.publications ]
+      }
       return work
     })
     processedResponse.searchResults = searchResults
@@ -36,7 +36,7 @@ export function processAggregationResponse (response) {
   if (response.aggregations && response.aggregations.all) {
     let all = response.aggregations.all
     Constants.filterableFields.forEach(field => {
-      let aggregation = all[ field ][ field ]
+      let aggregation = all[ field ][ field ][ field ]
       if (aggregation) {
         aggregation.buckets.forEach(bucket => {
           filters.push({ aggregation: field, bucket: bucket.key, count: bucket.doc_count })

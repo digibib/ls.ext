@@ -34,7 +34,9 @@ export default React.createClass({
       displayTitle += ' — ' + result.partTitle
     }
 
-    let formats = result.formats || []
+    let formats = result.publications
+      ? [ ...new Set(result.publications.filter(publication => publication.format).map(publication => publication.format)) ]
+      : []
 
     return (
       <div className='result panel'>

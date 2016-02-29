@@ -19,7 +19,7 @@ const Work = React.createClass({
     params: PropTypes.object.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getWorkResource(Constants.backendUri + '/work/' + this.props.params.id)
+    this.props.resourceActions.getWorkResource(`${Constants.backendUri}/work/${this.props.params.id}`)
   },
   renderNoWork () {
     return (
@@ -58,7 +58,7 @@ const Work = React.createClass({
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let work = this.props.resources[ Constants.backendUri + '/work/' + this.props.params.id ]
+    let work = this.props.resources[ `${Constants.backendUri}/work/${this.props.params.id}` ]
     if (!work) {
       return this.renderNoWork()
     }

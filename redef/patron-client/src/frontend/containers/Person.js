@@ -3,9 +3,9 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as ResourceActions from '../actions/ResourceActions'
 import { Link } from 'react-router'
-import { inPreferredLanguage } from '../utils/languageHelpers'
 
 import Constants from '../constants/Constants'
+import { inPreferredLanguage } from '../utils/languageHelpers'
 
 const Person = React.createClass({
   propTypes: {
@@ -16,7 +16,7 @@ const Person = React.createClass({
     params: PropTypes.object.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getPersonResource(Constants.backendUri + '/person/' + this.props.params.id)
+    this.props.resourceActions.getPersonResource(`${Constants.backendUri}/person/${this.props.params.id}`)
   },
   renderNoPerson () {
     return (
@@ -68,7 +68,7 @@ const Person = React.createClass({
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let person = this.props.resources[ Constants.backendUri + '/person/' + this.props.params.id ]
+    let person = this.props.resources[ `${Constants.backendUri}/person/${this.props.params.id}` ]
     if (!person) {
       return this.renderNoPerson()
     }

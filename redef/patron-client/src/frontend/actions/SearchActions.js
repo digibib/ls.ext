@@ -40,7 +40,7 @@ export function search (inputQuery, filters) {
   let elasticSearchQuery = filteredSearchQuery(inputQuery, filters)
   return (dispatch) => {
     dispatch(requestSearch(inputQuery, elasticSearchQuery))
-    return fetch(Constants.backendUri + '/search/work/_search', {
+    return fetch(`${Constants.backendUri}/search/work/_search`, {
       method: 'POST', headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

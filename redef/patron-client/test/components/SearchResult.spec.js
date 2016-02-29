@@ -63,9 +63,11 @@ describe('components', () => {
     })
 
     it('should render formats', () => {
-      const { node, props } = setup({ formats: [ 'format_1', 'format_2', 'format_3' ] })
+      const { node, props } = setup({
+        publications: [ { format: 'format_1' }, { format: 'format_2' }, { format: 'format_3' } ]
+      })
       expect(node.querySelector("[data-automation-id='work_formats']").innerHTML)
-        .toContain(props.result.formats[ 0 ] + ', ' + props.result.formats[ 1 ] + ', ' + props.result.formats[ 2 ])
+        .toContain(props.result.publications[ 0 ].format + ', ' + props.result.publications[ 1 ].format + ', ' + props.result.publications[ 2 ].format)
     })
   })
 })

@@ -1,4 +1,4 @@
 export default {
-  'work.formats': 'Formater',
-  'work.languages': 'Språk'
+  'work.publication.format': 'Formater',
+  'work.publication.language': 'Språk'
 }

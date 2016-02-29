@@ -7,10 +7,10 @@ import ReactDOM from 'react-dom'
 function setup (propOverrides) {
   const props = Object.assign({
     filters: [
-      { aggregation: 'work.language', bucket: 'filter_1', count: '10' },
-      { aggregation: 'work.language', bucket: 'filter_2', count: '40' },
-      { aggregation: 'work.format', bucket: 'filter_3', count: '30' },
-      { aggregation: 'work.format', bucket: 'filter_4', count: '20' }
+      { aggregation: 'work.publication.language', bucket: 'filter_1', count: '10' },
+      { aggregation: 'work.publication.language', bucket: 'filter_2', count: '40' },
+      { aggregation: 'work.publication.format', bucket: 'filter_3', count: '30' },
+      { aggregation: 'work.publication.format', bucket: 'filter_4', count: '20' }
     ],
     locationQuery: {},
     dispatch: () => {}
@@ -37,8 +37,8 @@ describe('components', () => {
     it('should render only one group if just one type of aggregation', () => {
       const {node, props} = setup({
         filters: [
-          { aggregation: 'work.language', bucket: 'filter_1', count: '10' },
-          { aggregation: 'work.language', bucket: 'filter_2', count: '40' }
+          { aggregation: 'work.publication.language', bucket: 'filter_1', count: '10' },
+          { aggregation: 'work.publication.language', bucket: 'filter_2', count: '40' }
         ],
         locationQuery: { query: 'test_query' }
       })
