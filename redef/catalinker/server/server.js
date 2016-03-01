@@ -18,7 +18,7 @@ var Server;
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, '/../public')));
 
-app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator']));
+app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator', {'./client/src/bootstrap': {run: true}}]));
 app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']));
 
 app.get('/css/vendor/:cssFile', function (request, response) {
