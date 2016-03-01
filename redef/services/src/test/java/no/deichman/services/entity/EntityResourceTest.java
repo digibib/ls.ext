@@ -432,6 +432,7 @@ public class EntityResourceTest {
         String labelsComparison = "{\n"
                 + "    \"@id\" : \"http://data.deichman.no/format#Book\",\n"
                 + "    \"@type\" : \"http://data.deichman.no/utility#Format\",\n"
+                + "    \"http://data.deichman.no/utility#code\" : \"l\",\n"
                 + "    \"rdfs:label\" : {\n"
                 + "      \"@language\" : \"no\",\n"
                 + "      \"@value\" : \"Bok\"\n"
