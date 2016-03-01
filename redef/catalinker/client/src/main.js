@@ -674,7 +674,7 @@
                                     spy: function (node) {
                                         console.log("spy: " + node.keypath);
                                     },
-                                    predefinedLabelValue(type, uri) {
+                                    predefinedLabelValue: function(type, uri) {
                                         return i18nLabelValue(_.find(ractive.get("predefinedValues." + type), function (predefinedValue) {
                                             return predefinedValue['@id'] === uri;
                                         })['rdfs:label']);
@@ -1109,10 +1109,7 @@
                     return ractive;
                 }
             }
-            ;
-
         return Main;
     }
-))
-;
+));
 
