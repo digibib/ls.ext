@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN add-apt-repository ppa:tanguy-patte/phantomjs
 RUN add-apt-repository ppa:brightbox/ruby-ng
-RUN apt-get update && apt-get install -y --force-yes phantomjs ruby2.2 ruby2.2-dev && apt-get clean
+RUN apt-get update && apt-get install -y --force-yes phantomjs ruby2.2 ruby2.2-dev xvfb firefox && apt-get clean
 
 RUN wget http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && rm chromedriver_linux64.zip
@@ -25,7 +25,8 @@ RUN gem install \
     rdf \
     json-ld \
     rest-client \
-    nokogiri
+    nokogiri \
+    headless
 
 RUN gem install cucumber -v 2.1.0
 RUN gem install selenium-webdriver -v 2.48.1
