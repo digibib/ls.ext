@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@redef @arbeidsflyt @check-for-errors @no_phantomjs
+@redef @arbeidsflyt @check-for-errors @xvfb
 Egenskap: Katalogisere i arbeidsflyt
   Som katalogisator
   Ønsker jeg å kunne katalogisere en bok
