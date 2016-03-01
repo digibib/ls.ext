@@ -19,6 +19,12 @@ class CatalinkerPage < PageRoot
     self
   end
 
+  def open_readonly(resource, res_type)
+    @browser.goto "#{catalinker(:home)}/#{res_type}?resource=#{resource}&readOnly=true"
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.divs(:class => "prop-input").size > 1 }
+    self
+  end
+
   def add_prop_skip_wait(predicate, value, nr=0)
     return add_prop predicate, value, nr, true
   end
@@ -53,8 +59,11 @@ class CatalinkerPage < PageRoot
     end
   end
 
-  def select_prop(predicate, value, nr=0, skip_wait=false)
-    input = @browser.select_list(:data_automation_id => predicate+"_#{nr}")
+  def select_prop(predicate, value, nr=0, skip_wait=false, domain="")
+    if (domain != "")
+      domain="_#{domain}"
+    end
+    input = @browser.select_list(:data_automation_id => "#{domain}#{predicate}_#{nr}")
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }
     input.select(value)
 #    @browser.screenshot.save "./report/#{Time.now}_screenshot.png"
@@ -67,6 +76,10 @@ class CatalinkerPage < PageRoot
   end
 
   def get_available_select_choices(predicate, nr=0)
+    @browser.select_list(:data_automation_id => "#{predicate}_#{nr}").options
+  end
+
+  def get_available_select_choices_as_text(predicate, nr=0)
     @browser.select_list(:data_automation_id => "#{predicate}_#{nr}").options.map(&:text)
   end
 
@@ -78,6 +91,12 @@ class CatalinkerPage < PageRoot
     input = @browser.text_field(:data_automation_id => "#{predicate}_#{nr}")
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value != "" }
     input.value
+  end
+
+  def get_prop_from_span(predicate, nr=0)
+    span = @browser.span(:data_automation_id => "#{predicate}_#{nr}")
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { span.text != "" }
+    span.text
   end
 
   def get_prop_by_label(input_label, nr=0)

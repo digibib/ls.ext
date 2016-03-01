@@ -80,6 +80,7 @@
 </div>
 
 {{#partial select-authorized-value}}
+{{#if ! readOnly}}
 <select
         class="authorized"
         data-automation-id="{{predicate}}_{{@index}}"
@@ -91,9 +92,13 @@
     <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
     {{/each}}
 </select>
+{{else}}
+<span  class="readonly" data-automation-id="{{predicate}}_{{@index}}">{{current.value}}</span>
+{{/if}}
 {{/partial}}
 
 {{#partial input-string}}
+{{#if ! readOnly}}
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
@@ -102,6 +107,9 @@ on-keyup="countdownToSave"
 on-change="countdownToSave"
 data-automation-id="{{predicate}}_{{@index}}"
 value="{{current.value}}" />
+{{else}}
+<span class="readonly" data-automation-id="{{predicate}}_{{@index}}">{{current.value}}</span>
+{{/if}}
 {{/partial}}
 
 {{#partial input-string-searchable}}
@@ -130,8 +138,9 @@ value="{{current.value}}" />
     <option value="fr">fransk</option>
 </select>
 {{/partial}}
-
 {{#partial input-gYear}}
+{{#if ! readOnly}}
+
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
@@ -139,9 +148,13 @@ on-blur='patchResource:{{predicate}}'
 on-keyup="countdownToSave"
 data-automation-id="{{predicate}}_{{@index}}"
 value="{{current.value}}" />
+{{else}}
+<span data-automation-id="{{predicate}}_{{@index}}">{{current.value}}</span>
+{{/if}}
 {{/partial}}
 
 {{#partial input-nonNegativeInteger}}
+{{#if ! readOnly}}
 <input
         {{#disabled}} disabled="true" {{/}}
 class="{{#error}}invalid-input{{else}}valid{{/error}}"
@@ -150,4 +163,7 @@ on-keyup="countdownToSave"
 on-change="countdownToSave"
 data-automation-id="{{predicate}}_{{@index}}"
 value="{{current.value}}" />
+{{else}}
+<span data-automation-id="{{predicate}}_{{@index}}">{{current.value}}</span>
+{{/if}}
 {{/partial}}

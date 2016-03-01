@@ -70,7 +70,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['subtitle'] = [generateRandomString, :add_prop]
   data['publicationYear'] = [rand(2015).to_s, :add_prop]
   data['format'] = [:random, :select_prop]
-  # data['language'] = [:random, :select_prop]
+  data['language'] = [:random, :select_prop]
   data['partTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
   data['edition'] = [generateRandomString, :add_prop]
@@ -79,7 +79,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['illustrativeMatter'] = [:random, :select_prop]
   data['adaptationOfPublicationForParticularUserGroups'] = [:random, :select_prop]
   data['binding'] = [:random, :select_prop]
-  data['writingSystem'] = [:random, :select_prop]
+  data['writingSystem'] = [:first, :select_prop]
 
   workflow_batch_add_props 'Publication', data
 end
@@ -88,16 +88,26 @@ def workflow_batch_add_props(domain, data)
   data.each do |fragment, (value, method)|
     begin
       predicate = "http://#{ENV['HOST']}:8005/ontology##{fragment}"
+      textualValue = value;
       if value.eql?(:random) && method.eql?(:select_prop)
-        value = @site.WorkFlow.get_available_select_choices(domain, predicate).sample
+        choices = @site.WorkFlow.get_available_select_choices(domain, predicate)
+        sampleNr = rand(choices.length)
+        value = choices[sampleNr].value
+        textualValue = choices[sampleNr].text
+      end
+      if value.eql?(:first) && method.eql?(:select_prop)
+        first = @site.WorkFlow.get_available_select_choices(domain, predicate).first
+        value = first.value
+        textualValue = first.text
       end
       symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym # e.g. :publication_format
+      label_symbol = "#{domain.downcase}_#{fragment.downcase}_label".to_sym # e.g. :publication_format
       @context[symbol] = value
-      @site.WorkFlow.method(method).call(domain, predicate, @context[symbol], 0, true)
+      @context[label_symbol] = textualValue
+      @site.WorkFlow.method(method).call(domain, predicate, textualValue, 0, true)
     rescue
       fail "Error adding #{fragment} for #{domain}"
     end
-    sleep 1
   end
 end
 
@@ -174,7 +184,7 @@ When(/^at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker 
 end
 
 When(/^velger jeg første utgivelsessted i listen som dukker opp$/) do
-  sleep 10
+  sleep 5
   @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
 end
 

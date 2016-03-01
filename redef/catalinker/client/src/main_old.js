@@ -289,6 +289,7 @@
                         lang: "no",
                         template: response.data,
                         data: {
+                            readOnly: window.location.href.indexOf("readOnly") != -1,
                             authorized_values: {},
                             getAuthorizedValues: function (fragment) {
                                 return ractive.get("authorized_values." + fragment);

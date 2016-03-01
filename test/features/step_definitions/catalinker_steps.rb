@@ -197,7 +197,7 @@ When(/^jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt$/) do
   unless (@context[:publication_identifier])
     fail 'No publication identifier added to context'
   end
-  step 'jeg åpner utgivelsen for redigering'
+  step 'jeg åpner utgivelsen for lesing'
 end
 
 When(/^jeg åpner verket i gammelt katalogiseringsgrensesnitt$/) do
@@ -213,6 +213,10 @@ end
 
 When(/^jeg åpner utgivelsen for redigering$/) do
   @site.RegPublication.open(@context[:publication_identifier])
+end
+
+When(/^jeg åpner utgivelsen for lesing$/) do
+  @site.RegPublication.open_readonly(@context[:publication_identifier])
 end
 
 When(/^jeg åpner personen for redigering$/) do
@@ -411,7 +415,9 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
 
   @context[:publication_identifier] = @site.RegPublication.get_link
   @context[:publication_format] = ['Bok', 'CD', 'DVD', 'CD-ROM', 'DVD-ROM'].sample
+  @context[:publication_format_label] = @context[:publication_format]
   @context[:publication_language] = ['Engelsk', 'Norsk (bokmål)', 'Finsk', 'Baskisk', 'Grønlandsk'].sample
+  @context[:publication_language_label] = @context[:publication_language]
   @context[:publication_maintitle] = generateRandomString
   step "får utgivelsen tildelt en post-ID i Koha"
 
@@ -558,25 +564,26 @@ end
 When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   # TODO: Unify get_prop and get_select_prop in the page objects to avoid having to specify it.
   data = Hash.new
-  data['mainTitle'] = :get_prop
-  data['subtitle'] = :get_prop
-  data['publicationYear'] = :get_prop
-  data['format'] = :get_select_prop
-  # data['language'] = :get_select_prop
-  data['partTitle'] = :get_prop
-  data['partNumber'] = :get_prop
-  data['edition'] = :get_prop
-  data['numberOfPages'] = :get_prop
-  data['isbn'] = :get_prop
-  data['illustrativeMatter'] = :get_select_prop
-  data['adaptationOfPublicationForParticularUserGroups'] = :get_select_prop
-  data['binding'] = :get_select_prop
-  data['writingSystem'] = :get_select_prop
+  data['mainTitle'] = :get_prop_from_span
+  data['subtitle'] = :get_prop_from_span
+  data['publicationYear'] = :get_prop_from_span
+  data['format'] = :get_prop_from_span
+  data['language'] = :get_prop_from_span
+  data['partTitle'] = :get_prop_from_span
+  data['partNumber'] = :get_prop_from_span
+  data['edition'] = :get_prop_from_span
+  data['numberOfPages'] = :get_prop_from_span
+  data['isbn'] = :get_prop_from_span
+  data['illustrativeMatter'] = :get_prop_from_span
+  data['adaptationOfPublicationForParticularUserGroups'] = :get_prop_from_span
+  data['binding'] = :get_prop_from_span
+  data['writingSystem'] = :get_prop_from_span
 
   batch_verify_props @site.RegPublication, 'Publication', data
 end
 
 def batch_verify_props(page_object, domain, data, locate_by = 'locate_by_fragment'.to_sym)
+  @browser.refresh
   data.each do |id, method|
     if locate_by == :locate_by_fragment
       symbol = "#{domain.downcase}_#{id.downcase}".to_sym # e.g. :publication_format
@@ -598,7 +605,8 @@ def batch_verify_props(page_object, domain, data, locate_by = 'locate_by_fragmen
         page_object.method(method).call(inputLocator).should eq expected_value
       end
     rescue
-      fail "Failed getting field for #{id}"
+      sleep 10
+      fail "Failed getting field for #{id} with #{method} and #{inputLocator}"
     end
     fail "More than one field for #{id}" if page_object.get_prop_count(inputLocator && !expected_value.kind_of?(Array)) > 1
   end
@@ -642,6 +650,6 @@ end
 
 When(/^at utgivelsen er tilkoplet riktig utgivelsessted$/) do
   data = Hash.new
-  data["placeOfPublication"] = :get_prop
+  data["placeOfPublication"] = :get_prop_from_span
   batch_verify_props @site.RegPublication, 'Publication', data, :locate_by_fragment
 end

@@ -4,11 +4,11 @@ require_relative 'catalinker_page.rb'
 
 class WorkFlow < CatalinkerPage
   def visit
-    @browser.goto catalinker(:workflow)
-    @browser.execute_script('console.log("test")')
     retry_wait do
       @browser.goto catalinker(:workflow)
       Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+        @browser.refresh
+        sleep 5
         @browser.divs(:class => 'prop-input').size > 1
       end # wait until dom-tree has been populated
     end
@@ -35,6 +35,10 @@ class WorkFlow < CatalinkerPage
   end
 
   def get_available_select_choices(domain, predicate, nr=0)
+    super "#{domain}_#{predicate}", nr
+  end
+
+  def get_available_select_choices_as_text(domain, predicate, nr=0)
     super "#{domain}_#{predicate}", nr
   end
 

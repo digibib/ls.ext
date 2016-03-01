@@ -21,4 +21,8 @@ class RegPublication < CatalinkerPage
   def open(resource)
     super(resource, "publication")
   end
+
+  def open_readonly(resource)
+    super(resource, "publication")
+  end
 end
