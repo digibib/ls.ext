@@ -28,7 +28,7 @@ services_gradle_build_docker_image:
 
 docker_compose_up:
   cmd.run:
-    - name: docker-compose up -d
+    - name: docker-compose up -d --force-recreate
     - cwd: /vagrant/docker-compose
     - require:
       - cmd: services_gradle_build_docker_image
