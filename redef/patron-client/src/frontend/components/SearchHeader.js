@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import LinkedStateMixin from 'react-addons-linked-state-mixin'
 import { routeActions } from 'react-router-redux'
 
 export default React.createClass({
@@ -8,7 +7,6 @@ export default React.createClass({
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired
   },
-  mixins: [ LinkedStateMixin ],
   contextTypes: {
     router: React.PropTypes.object
   },
@@ -20,9 +18,12 @@ export default React.createClass({
       searchFieldInput: ''
     }
   },
+  handleChange (event) {
+    this.setState({ searchFieldInput: event.target.value })
+  },
   search (event) {
     event.preventDefault()
-    var url = this.context.router.createPath({ pathname: '/search', query: { query: this.state.searchFieldInput } })
+    let url = this.context.router.createPath({ pathname: '/search', query: { query: this.state.searchFieldInput } })
     this.props.dispatch(routeActions.push(url))
   },
   render () {
@@ -40,12 +41,14 @@ export default React.createClass({
           </div>
           <div className='col'>
             <form onSubmit={this.search}>
-              <input
-                placeholder='søk etter noe da...'
-                id='search'
-                type='search'
-                valueLink={this.linkState('searchFieldInput')}/>
-              <button type='submit' id='submit'>
+              <input testRef='searchInput'
+                     placeholder='søk etter noe da...'
+                     id='search'
+                     type='search'
+                     value={this.state.searchFieldInput}
+                     onChange={this.handleChange}
+              />
+              <button testRef='searchButton' type='submit' id='submit'>
                 søk
               </button>
             </form>
