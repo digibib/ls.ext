@@ -96,7 +96,7 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
 
   if @browser && @browser.driver.manage.logs.get("browser").length > 0
     STDOUT.puts "--------------- Messages to browser console:"
-    STDOUT.puts @browser.driver.manage.logs.get "browser"
+    STDOUT.puts @browser.driver.manage.logs.get("browser").select { |l| !l.to_s.start_with?("INFO") }
   end
 
   STDOUT.puts "--------------- Cleanup: #{title_of(scenario)} "
