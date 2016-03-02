@@ -205,7 +205,7 @@ value="{{current.displayValue}}" />
 <div class="select-role-assoc">
     <h4>Rolle</h4>
     <div>
-        <select value="{{values}}" decorator="select2:singleSelect" multiple
+        <select decorator="select2:singleSelect" multiple
                 value="{{role[0]}}">
             {{#predefinedValues[predicateType]}}
             <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
@@ -222,8 +222,7 @@ value="{{current.displayValue}}" />
         {{/subjectTypes}}
         <a class="pure-button pure-button-primary {{#if (typeof subjectType === 'undefined' || values.length == 0)}}pure-button-disabled{{else}}primary{{/if}}"
            disabled="{{typeof subjectType === 'undefined' || values.length == 0}}"
-           href="#"
-           on-click="patchResource:{{role[0][0]}},{{subjectType}}">Legg til</a>
+           on-click="patchResource:{{role[0][0]}},{{subjectType}},'role'">Legg til</a>
     </div>
 </div>
 {{/if}}

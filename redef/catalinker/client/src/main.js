@@ -196,7 +196,7 @@
                         var selectedValues = [];
                         _.each(names, function (nameParts, index) {
                             var label = nameParts.join(" - ");
-                            values[index].current.diaplayName = label;
+                            values[index].current.displayName = label;
                             ractive.set("authorityLabels[" + uri + "]", label);
                             $("#" + input.uniqueId + ":parent").trigger("change");
                         });
@@ -560,11 +560,11 @@
                 },
                 init: function () {
                     var template = "/main_template.html";
-                    window.onerror = function (message, url, line) {
-                        // Log any uncaught exceptions to assist debugging tests.
-                        // TODO remove this when everything works perfectly (as if...)
-                        console.log('ERROR: "' + message + '" in file: ' + url + ', line: ' + line);
-                    };
+                    //window.onerror = function (message, url, line) {
+                    //    // Log any uncaught exceptions to assist debugging tests.
+                    //    // TODO remove this when everything works perfectly (as if...)
+                    //    console.log('ERROR: "' + message + '" in file: ' + url + ', line: ' + line);
+                    //};
 
                     // axios and phantomjs needs a Promise polyfill, so we use the one provided by ractive.
                     if (window && !window.Promise) {
@@ -789,11 +789,12 @@
                                             old: {value: "", lang: ""},
                                             current: {value: "", lang: ""}
                                         });
+                                        ractive.set(event.keypath + ".allowAddNewButton", false);
                                         ractive.update();
                                     },
                                     // patchResource creates a patch request based on previous and current value of
                                     // input field, and sends this to the backend.
-                                    patchResource: function (event, predicate, rdfType) {
+                                    patchResource: function (event, predicate, rdfType, clearProperty) {
                                         var inputValue = event.context;
                                         if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
                                             return;
@@ -806,8 +807,12 @@
                                             if (input.predicateType) {
                                                 ractive.set(event.keypath + ".predicate", predicate);
                                             }
-                                            ractive.update();
+                                            input.allowAddNewButton = true;
                                         }
+                                        if (clearProperty) {
+                                            ractive.set(grandParentOf(event.keypath) + "." + clearProperty, null);
+                                        }
+                                        ractive.update();
                                     },
                                     searchResource: function (event, searchString) {
                                         // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
