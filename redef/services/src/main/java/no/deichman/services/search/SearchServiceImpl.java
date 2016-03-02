@@ -194,7 +194,6 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexWork(String workId, boolean indexedPerson) {
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(workId);
-        //indexModel(getworksModelToIndexMapper().modelToIndexDocument(workModelWithLinkedResources), "work");
         String workUri = remote().work() + workId;
         indexDocument("work", workUri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, workUri));
 
