@@ -29,6 +29,7 @@ export default React.createClass({
   render () {
     return (
       <header className='row'>
+        <span>{this.state.searchFieldInput}</span>
         <div className='container'>
           <div className='col'>
             <Link to='/'>
@@ -41,14 +42,13 @@ export default React.createClass({
           </div>
           <div className='col'>
             <form onSubmit={this.search}>
-              <input testRef='searchInput'
-                     placeholder='søk etter noe da...'
+              <input placeholder='søk etter noe da...'
                      id='search'
                      type='search'
                      value={this.state.searchFieldInput}
                      onChange={this.handleChange}
               />
-              <button testRef='searchButton' type='submit' id='submit'>
+              <button type='submit' id='submit'>
                 søk
               </button>
             </form>
