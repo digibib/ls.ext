@@ -3,7 +3,7 @@
 
 @redef
 @check-for-errors
-@no_phantomjs
+@xvfb
 Egenskap: Utvidet beskrivelse av verk
   Som katalogisator
   For å gi brukerne bedre gjenfinningsmuligheter
