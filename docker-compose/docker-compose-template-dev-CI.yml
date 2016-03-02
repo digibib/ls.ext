@@ -164,7 +164,7 @@ services:
     environment:
       KOHA_OPAC_PORT: "http://${HOST}:8080"
       KOHA_INTRA_PORT: "http://${HOST}:8081"
-      SERVICES_PORT: "http://${HOST}:8005"
+      SERVICES_PORT: "http://services:8005"
 
   services:
     container_name: redef_services_container
@@ -183,9 +183,9 @@ services:
       JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5070 \
       -DKOHA_USER=${KOHA_ADMINUSER} \
       -DKOHA_PASSWORD=${KOHA_ADMINPASS} \
-      -DKOHA_PORT=http://${HOST}:8081 \
-      -DTRIPLESTORE_PORT=http://${HOST}:${TRIPLESTORE_PORT} \
-      -DELASTICSEARCH_URL=http://${HOST}:${ELASTICSEARCH_PORT} \
+      -DKOHA_PORT=http://koha:8081 \
+      -DTRIPLESTORE_PORT=http://fuseki:${TRIPLESTORE_PORT} \
+      -DELASTICSEARCH_URL=http://elasticsearch:9200 \
       -DDATA_BASEURI=${DATA_BASEURI}"
 
   patron-client:

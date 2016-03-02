@@ -26,7 +26,7 @@ describe("Catalinker", function () {
 
       // URL parameter
       sinon.stub(Main, "getURLParameter", function () {
-        return "http://192.168.50.12:7000/person/h123456";
+        return "/services/person/h123456";
       });
 
       // http requests from axios used in module, faking returned promises
@@ -37,16 +37,16 @@ describe("Catalinker", function () {
           return Promise.resolve({data: {
             kohaOpacUri: "http://koha.deichman.no",
             kohaIntraUri: "http://koha.deichman.no",
-            ontologyUri: "http://192.168.50.12:7000/ontology",
-            resourceApiUri: "http://192.168.50.12:7000/"
+            ontologyUri: "/services/ontology",
+            resourceApiUri: "/services/"
           }});
         case "/main_template_old.html":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template_old.html", "UTF-8") });
-        case "http://192.168.50.12:7000/ontology":
+        case "/services/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/nationality":
+        case "/services/authorized_values/nationality":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_nationality.json", "UTF-8") });
-        case "http://192.168.50.12:7000/person/h123456":
+        case "/services/person/h123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/h123456.json", "UTF-8") });
         }
       });
@@ -94,7 +94,7 @@ describe("Catalinker", function () {
       });
 
       it("gir riktig ressurs-URI", function (done) {
-        expect(document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value).to.equal("http://192.168.50.12:7000/person/h123456");
+        expect(document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value).to.equal("/services/person/h123456");
         done();
       });
     });

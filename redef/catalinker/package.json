@@ -32,6 +32,7 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "express-compile-sass": "*",
+    "express-request-proxy": "^1.1.0",
     "jade": "~1.11.0",
     "jquery": "^2.1.4",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61",

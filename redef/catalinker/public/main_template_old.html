@@ -35,10 +35,10 @@
                     <div class="column three-fifths prop-values">
                         {{#each values}}
                         {{>type}}
-                        {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
+                        {{#predicate.endsWith("#recordID") && current.value !== ""}}
                         <a data-automation-id="biblio_record_link" target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
                         {{/}}
-                        {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
+                        {{#predicate.endsWith("#publicationOf") && current.value !== ""}}
                         <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}" class="link"></a>
                         {{/}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>

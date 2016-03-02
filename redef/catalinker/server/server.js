@@ -5,6 +5,8 @@ var browserify = require('browserify-middleware');
 var axios = require('axios');
 var compileSass = require('express-compile-sass');
 var app = express();
+var requestProxy = require('express-request-proxy');
+
 if (app.get('env') === 'development') {
   var livereload = require('express-livereload');
   livereload(app, {});
@@ -71,8 +73,8 @@ app.get('/config', function (request, response) {
     {
       kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
       kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
-      ontologyUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/ontology',
-      resourceApiUri: (process.env.SERVICES_PORT || 'http://192.168.50.12:8005').replace(/^tcp:\//, 'http:/') + '/',
+      ontologyUri:  '/services/ontology',
+      resourceApiUri: '/services/',
       tabs: [
             {
               id: "confirm-person",
@@ -176,6 +178,11 @@ app.get('/config', function (request, response) {
 app.get('/version', function (request, response) {
   response.json({ 'buildTag': process.env.BUILD_TAG, 'gitref': process.env.GITREF });
 });
+
+var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/');
+app.all('/services/*', requestProxy({
+  url: services + '/*'
+}));
 
 app.use("/style", compileSass({
   root: path.join(__dirname, '/../client/scss'),

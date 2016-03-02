@@ -29,9 +29,28 @@
         return (typeof res === "string") ? JSON.parse(res) : res;
     };
 
+    var proxyToServices = function(url) {
+        var r = new RegExp('http://[^/]+/');
+        return url.replace(url.match(r), '/services/');
+    };
+
     String.prototype.lowerCaseFirstLetter = function () {
         return this.charAt(0).toLowerCase() + this.slice(1);
     };
+
+    // polyfill for phantomjs
+    if (!String.prototype.endsWith) {
+      String.prototype.endsWith = function(searchString, position) {
+          var subjectString = this.toString();
+          if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+            position = subjectString.length;
+          }
+          position -= searchString.length;
+          var lastIndex = subjectString.indexOf(searchString, position);
+          return lastIndex !== -1 && lastIndex === position;
+      };
+    }
+
 
     function i18nLabelValue(label) {
         if (Array.isArray(label)) {
@@ -140,7 +159,7 @@
 
     var loadAuthorizedValues = function (url, predicate) {
 
-        axios.get(url)
+        axios.get(proxyToServices(url))
             .then(function (response) {
                 var values = ensureJSON(response.data);
                 // resolve all @id uris
@@ -347,7 +366,7 @@
                             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
                             var patch = Ontology.createPatch(ractive.get("resource_uri"), predicate, event.context, ractive.get(datatype));
                             if (patch.trim() != "") {
-                                axios.patch(ractive.get("resource_uri"), patch, {
+                                axios.patch(proxyToServices(ractive.get('resource_uri')), patch, {
                                         headers: {
                                             Accept: "application/ld+json",
                                             "Content-Type": "application/ldpatch+json"
@@ -365,7 +384,7 @@
                                     })
                                     .catch(function (response) {
                                         // failed to patch resource
-                                        console.log("HTTP PATCH failed with: ");
+                                        console.log("HTTP PATCH failed with: ", response);
                                         errors.push("Noe gikk galt! Fikk ikke lagret endringene");
                                     });
                             }

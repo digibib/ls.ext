@@ -26,7 +26,7 @@ describe("Catalinker", function () {
 
       // URL parameter
       sinon.stub(Main, "getURLParameter", function () {
-        return "http://192.168.50.12:7000/publication/p123456";
+        return "/services/publication/p123456";
       });
 
       // http requests from axios used in module, faking returned promises
@@ -37,18 +37,18 @@ describe("Catalinker", function () {
           return Promise.resolve({data: {
             kohaOpacUri: "http://koha.deichman.no",
             kohaIntraUri: "http://koha.deichman.no",
-            ontologyUri: "http://192.168.50.12:7000/ontology",
-            resourceApiUri: "http://192.168.50.12:7000/"
+            ontologyUri: "/services/ontology",
+            resourceApiUri: "/services/"
           }});
         case "/main_template_old.html":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template_old.html", "UTF-8") });
-        case "http://192.168.50.12:7000/ontology":
+        case "/services/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/language":
+        case "/services/authorized_values/language":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_language.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/format":
+        case "/services/authorized_values/format":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_format.json", "UTF-8") });
-        case "http://192.168.50.12:7000/publication/p123456":
+        case "/services/publication/p123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/p123456.json", "UTF-8") });
         }
       });

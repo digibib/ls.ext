@@ -88,7 +88,7 @@ Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
 end
 
 Given(/^at det er en feil i systemet for katalogisering$/) do
-  `docker stop redef_services_container`
+  `sudo docker stop redef_services_container`
   @cleanup.push("restarting redef_services_container" =>
                     lambda do
                       `sudo docker start redef_services_container`

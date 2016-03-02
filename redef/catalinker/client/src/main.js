@@ -30,6 +30,11 @@
             return (typeof res === "string") ? JSON.parse(res) : res;
         };
 
+        var proxyToServices = function(url) {
+            var r = new RegExp('http://[^/]+/');
+            return url.replace(url.match(r), '/services/');
+        };
+
         /* Private functions */
         function unPrefix(prefixed) {
             return _.last(prefixed.split(":"));
@@ -174,7 +179,7 @@
         function loadLabelsForAuthorizedValues(values, input) {
             if (input.nameProperties) {
                 _.each(values, function (uri) {
-                    var name = axios.get(uri).then(function (response) {
+                    var name = axios.get(proxyToServices(uri)).then(function (response) {
                         var graphData = ensureJSON(response.data);
                         var root = ldGraph.parse(graphData).byId(uri);
                         var names = _.reduce(input.nameProperties, function (parts, propertyName) {
@@ -421,7 +426,7 @@
 //        graph.byType()
 //        applicationData.ontology
             var inputGroups = [];
-            var ontologyUri = applicationData.config.ontologyUri;
+            var ontologyUri = applicationData.ontology["@context"]["deichman"];
             var tabs = applicationData.config.tabs;
             _.each(tabs, function (tab) {
                 var group = {};
@@ -429,7 +434,7 @@
                 _.each(tab.inputs, function (prop, index) {
                     var currentInput;
                     if (prop.rdfProperty) {
-                        currentInput = inputMap[tab.rdfType + "." + ontologyUri + "#" + prop.rdfProperty];
+                        currentInput = inputMap[tab.rdfType + "." + ontologyUri + prop.rdfProperty];
                         if (typeof currentInput === 'undefined') {
                             throw "Tab '" + tab.label + "' specified unknown property '" + prop.rdfProperty + "'";
                         }
