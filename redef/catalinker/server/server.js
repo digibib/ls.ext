@@ -139,29 +139,30 @@ app.get('/config', function (request, response) {
                   {rdfProperty: "format", multiple: true},
                   {rdfProperty: "writingSystem", multiple: true},
                   {rdfProperty: "adaptationOfPublicationForParticularUserGroups", multiple: true},
-                    {
-                      rdfProperty: "placeOfPublication",
-                      authority: true,
-                      nameProperties: ["place", "country"],
-                      indexType: "placeOfPublication",
-                      indexDocumentFields: ["place", "country"]
-                    }
+                  {
+                    rdfProperty: "placeOfPublication",
+                    authority: true, // this indicates it is an authorized entity
+                    nameProperties: ["place", "country"], // these are proeprty names used to label already connected entities
+                    indexType: "placeOfPublication", // this is the name of the elasticsearch index type from which authorities are searched within
+                    indexDocumentFields: ["place", "country"] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
+                  }
                 ],
               nextStep: {
                 buttonLabel: "Bekreft biinførsler"
               }
             },
             {
+              // additional entries, such as translator, illustrator, composer etc
               id: "confirm-addedentry",
               rdfType: "Work",
               label: "Bekreft biinførsler",
               inputs: [
                     {
-                      predicateType: "role",
-                      subjects: ["Work", "Publication"],
-                      type: "searchable-person",
-                      label: "Legg til person",
-                      multiple: true
+                      predicateType: "role", // the possible values for this input is fetched from predefined list in services with this name (...ontology#role in this case)
+                      subjects: ["Work", "Publication"], // the triple may have a subject of one of these types as subject, fetched from one of the loaded resources
+                      type: "searchable-person", // type if input widget
+                      label: "Legg til biinførsel",
+                      multiple: true // there may be more than one additional entry
                     }
                 ],
               nextStep: {
