@@ -29,7 +29,6 @@ export default React.createClass({
   render () {
     return (
       <header className='row'>
-        <span>{this.state.searchFieldInput}</span>
         <div className='container'>
           <div className='col'>
             <Link to='/'>
