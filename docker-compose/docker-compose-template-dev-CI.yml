@@ -78,7 +78,7 @@ services:
 
   sms:
     container_name: smsproxy
-    image: "digibib/tcp-proxy:7660632e2afa09593941fd35ba09d6c3a948f342"
+    image: "digibib/tcp-proxy:14dc5417bf211317351a0bae084db12c64a1dd45"
     networks:
       - backend
     ports:

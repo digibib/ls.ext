@@ -78,19 +78,6 @@ services:
     environment:
       FORWARD_SMTP: "${FORWARD_SMTP}"
 
-  sms:
-    container_name: smsproxy
-    image: "digibib/tcp-proxy:7660632e2afa09593941fd35ba09d6c3a948f342"
-    networks:
-      - backend
-    ports:
-      - "8101:9999"
-    command:
-      - "/app/tcp-proxy"
-      - "-vv"
-      - "-r"
-      - "${SMS_FORWARD_URL}"
-
   elasticsearch_data:
     container_name: elasticsearch_data
     image: "busybox:latest"
