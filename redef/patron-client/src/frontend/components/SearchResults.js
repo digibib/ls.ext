@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+
 import SearchResult from './SearchResult'
 
 export default React.createClass({
@@ -22,7 +23,7 @@ export default React.createClass({
   },
   search () {
     let filters = this.parseQuery(this.props.locationQuery)
-    this.props.searchActions.search(this.props.locationQuery.query, filters)
+    this.props.searchActions.search(this.props.locationQuery.query, filters, this.props.locationQuery.page)
   },
   parseQuery (query) {
     let filters = []

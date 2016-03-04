@@ -51,7 +51,7 @@ gulp.task('reload:sass', [ 'sass' ], function () {
 
 gulp.task('watch', function () {
   gulp.watch([ './src/frontend/**/*.js' ], [ 'reload:js' ])
-  gulp.watch([ './src/scss/*.scss' ], [ 'reload:sass' ])
+  gulp.watch([ './src/scss/**/*.scss' ], [ 'reload:sass' ])
   gulp.watch([ 'server.js' ], [ server.run ])
 })
 

@@ -107,3 +107,33 @@ header button, input[type="search"] {
 .result-info { width: 75% }
 .result-more { background: #ddd; padding: 0.5em }
 .result-more .col { width: 25% }
+
+.pagination ul {
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.pagination li {
+  display: inline-block;
+}
+
+.pagination .break a {
+  cursor: default;
+}
+
+ul.pagination li a, ul.pagination li span {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+ul.pagination li.active a {
+  background-color: #ccc;
+  color: white;
+}
+
+ul.pagination li:not(.active) a:hover {
+  background-color: #eee;
+}

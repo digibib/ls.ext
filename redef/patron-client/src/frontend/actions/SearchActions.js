@@ -36,11 +36,14 @@ export function searchFailure (error) {
   }
 }
 
-export function search (inputQuery, filters) {
+export function search (inputQuery, filters, page) {
+  let uri = page
+    ? `${Constants.backendUri}/search/work/_search?from=${(page - 1) * Constants.searchQuerySize}`
+    : `${Constants.backendUri}/search/work/_search`
   let elasticSearchQuery = filteredSearchQuery(inputQuery, filters)
   return (dispatch) => {
     dispatch(requestSearch(inputQuery, elasticSearchQuery))
-    return fetch(`${Constants.backendUri}/search/work/_search`, {
+    return fetch(uri, {
       method: 'POST', headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
