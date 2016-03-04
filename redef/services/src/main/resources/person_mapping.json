@@ -1,24 +1,4 @@
 {
-  "dynamic_templates": [
-    {
-      "workTitle_template": {
-        "path_match": "person.work.mainTitle.*",
-        "mapping": {
-          "type": "string",
-          "index": "no"
-        }
-      }
-    },
-    {
-      "partTitle_template": {
-        "path_match": "person.work.partTitle.*",
-        "mapping": {
-          "type": "string",
-          "index": "no"
-        }
-      }
-    }
-  ],
   "properties": {
     "person": {
       "properties": {
@@ -48,11 +28,11 @@
               "type": "string",
               "index": "no"
             },
-            "originalTitle": {
+            "mainTitle": {
               "type": "string",
               "index": "no"
             },
-            "originalPartTitle": {
+            "partTitle": {
               "type": "string",
               "index": "no"
             },
