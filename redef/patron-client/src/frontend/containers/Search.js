@@ -29,19 +29,21 @@ const Search = React.createClass({
     this.props.dispatch(routeActions.push({ query: newQuery }))
   },
   renderPagination() {
-    if (this.props.totalHits > Constants.searchQuerySize) {
+    if ((this.props.totalHits > Constants.searchQuerySize) && this.props.location.query.query) {
       return (
-        <ReactPaginate previousLabel={'<'}
-                       nextLabel={'>'}
-                       breakLabel={<li className='break'><span>...</span></li>}
-                       forceSelected={parseInt(this.props.location.query.page) -1 || 0}
-                       marginPagesDisplayed={1}
-                       pageRangeDisplayed={5}
-                       pageNum={Math.ceil(this.props.totalHits / Constants.searchQuerySize)}
-                       clickCallback={this.handlePageClick}
-                       containerClassName={'pagination'}
-                       subContainerClassName={'pages pagination'}
-                       activeClassName={'active'}/>
+        <section className='col pagination-area'>
+          <ReactPaginate previousLabel={'<'}
+                         nextLabel={'>'}
+                         breakLabel={<li className='break'><span>...</span></li>}
+                         forceSelected={parseInt(this.props.location.query.page) -1 || 0}
+                         marginPagesDisplayed={1}
+                         pageRangeDisplayed={5}
+                         pageNum={Math.ceil(this.props.totalHits / Constants.searchQuerySize)}
+                         clickCallback={this.handlePageClick}
+                         containerClassName={'pagination'}
+                         subContainerClassName={'pages pagination'}
+                         activeClassName={'active'}/>
+        </section>
       )
     }
   },

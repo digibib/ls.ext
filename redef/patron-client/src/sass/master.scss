@@ -62,8 +62,19 @@ td,th{padding:0}
 /* responsive logic */
 
 @media only screen and (min-width: 76em) {
-  .filters { width: 25% }
-  .search-results { width: 75% }
+  .filters {
+    width: 25%;
+    height: 100%;
+    bottom: 0px
+  }
+  .search-results {
+    width: 75%
+  }
+  .pagination-area {
+    width: 75%;
+    position: relative;
+    float: right;
+  }
 }
 
 /* application styles */
