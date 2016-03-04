@@ -189,9 +189,9 @@ value="{{current.value}}" />
 
 {{#partial searchable-person}}
 {{#./predicate}}
-<div>
-    <h4>{{./current.displayValue}} - {{predefinedLabelValue(../../predicateType, ./predicate)}}</h4>
-    Rollen er knyttet til {{subjectTypeLabelDet(../../domain)}}.
+<div data-role-association="" id="role_assoc_{{uniqueId}}">
+    <h4 data-role-player="">{{./current.displayValue +" - " + predefinedLabelValue(../../predicateType, ./predicate)}}</h4>
+    <div>{{"Rollen er knyttet til " + subjectTypeLabelDet(./domain) + "."}}</div>
 </div>
 {{else}}
 <input {{#deletable}}readonly {{/deletable}}
@@ -203,17 +203,17 @@ value="{{current.displayValue}}" />
 <span class="support-panel-expander" on-click='searchResource:{{current.displayValue}}'></span>
 {{#if subjectTypes.length > 1}}
 <div class="select-role-assoc">
-    <h4>Rolle</h4>
-    <div>
+    <label>Rolle</label>
+    <span>
         <select decorator="select2:singleSelect" multiple
                 value="{{role[0]}}">
             {{#predefinedValues[predicateType]}}
             <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
             {{/}}
         </select>
-    </div>
-    <h4>Rollen gjelder:</h4>
+    </span>
     <div>
+        <label>Rollen gjelder:</label>
         {{#subjectTypes}}
         <span class="subject-type-select">
             <input type="radio" name={{subjectType}} value="{{.}}">

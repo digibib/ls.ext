@@ -90,7 +90,8 @@
                     value: valuesAsArray
                 };
                 input.values[0].current = {
-                    value: valuesAsArray
+                    value: valuesAsArray,
+                    uniqueId: _.uniqueId()
                 };
                 input.values[0].uniqueId = _.uniqueId();
                 return valuesAsArray;
@@ -143,6 +144,14 @@
                 value: id,
             };
             input.values[index].uniqueId = _.uniqueId();
+        }
+
+        function setDomain(input, index, domain) {
+            input.values = input.values || [];
+            if (!input.values[index]) {
+                input.values[index] = {};
+            }
+            input.values[index].domain = domain;
         }
 
         function setDisplayValue(input, index, property) {
@@ -222,7 +231,7 @@
                     });
 
                     _.each(inputsToLoad, function (input, inputIndex) {
-                        if (type == unPrefix(input.domain) && !(_.contains(_.values(_.pick(options, "leaveUnchanged")), input.fragment))) {
+                        if ((type == unPrefix(input.domain) || _.contains((input.subjects), type)) && !(_.contains(_.values(_.pick(options, "leaveUnchanged")), input.fragment))) {
                             var inputs_n = "inputs." + inputIndex;
                             var predicate = input.predicate;
                             if (input.type === "select-authorized-value" || input.type === "entity" || input.type === "searchable-authority") {
@@ -230,13 +239,17 @@
                                 loadLabelsForAuthorizedValues(values, input);
                             } else if (input.type === "searchable-person") {
                                 if (input.predicateType) {
-                                    var index = 0;
+                                    var index = input.values.length;
+                                    if (index == 1 && _.isArray(input.values[0].current.value) &&  input.values[0].current.value.length == 0) {
+                                        index = 0;
+                                    }
                                     var predicates = ractive.get("predefinedValues." + input.predicateType);
                                     _.each(predicates, function (predicate) {
                                         var uri = predicate['@id'];
                                         var value = root.outAll(propertyName(uri));
                                         _.each(value, function (val) {
                                             setIdValue(val.id, input, index, uri);
+                                            setDomain(input, index, type);
                                             setDisplayValue(input, index, "name");
                                             value.nonEditable = true;
                                             index++;
@@ -379,7 +392,7 @@
                         allowAddNewButton: true,
                         values: [{
                             old: {value: "", lang: ""},
-                            current: {value: predefined ? [] : "", lang: ""},
+                            current: {value: predefined ? [] : null, lang: ""},
                             uniqueId: _.uniqueId()
                         }],
                         dataAutomationId: unPrefix(domain) + "_" + predicate + "_0",
@@ -483,6 +496,12 @@
                     currentInput.visible = prop.type !== 'entity'
                     if (prop.nameProperties) {
                         currentInput.nameProperties = prop.nameProperties;
+                    }
+                    if (prop.dataAutomationId){
+                        currentInput.dataAutomationId = prop.dataAutomationId;
+                    }
+                    if (prop.subjects) {
+                        currentInput.subjects = prop.subjects;
                     }
                 });
                 group.inputs = groupInputs;
@@ -804,6 +823,7 @@
                                         if (subject) {
                                             Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
                                             var input = ractive.get(grandParentOf(event.keypath));
+                                            event.context.domain = rdfType;
                                             if (input.predicateType) {
                                                 ractive.set(event.keypath + ".predicate", predicate);
                                             }

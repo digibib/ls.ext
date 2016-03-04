@@ -24,7 +24,7 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
   creator_name_field.send_keys :enter
 end
 
-When(/^velger jeg forfatter fra treffliste fra personregisteret$/) do
+When(/^velger jeg en person fra treffliste fra personregisteret$/) do
   @browser.inputs(:class => "select-creator-radio")[0].click
 end
 
@@ -144,7 +144,7 @@ When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label
 end
 
 def do_select_value(selectable_parameter_label, value)
-  select = @browser.selects(:xpath => '//span[preceding-sibling::label/@data-uri-escaped-label = "' + URI::escape(selectable_parameter_label) + '"]/select')[0]
+  select = @browser.selects(:xpath => "//span[preceding-sibling::label/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']/select")[0]
   select_id = select.attribute_value('data-automation-id')
   predicate = select_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
   domain = select_id.match(/^(Work|Publication|Person)_.*/).captures[0]
@@ -189,11 +189,40 @@ When(/^velger jeg første utgivelsessted i listen som dukker opp$/) do
 end
 
 When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
-  # person_name_field = @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#creator_0")
-  # person_name_field.set(@context[:person_name])
-  # person_name_field.send_keys :enter
+  person_name_field = @browser.text_field(:data_automation_id => "search_role_player")
+  person_name_field.set(@context[:person_name])
+  person_name_field.send_keys :enter
 end
 
 When(/^trykker jeg på knappen for å avslutte$/) do
   @site.WorkFlow.finish
+end
+
+When(/^velger radioknappen for "([^"]*)" for å velge "([^"]*)"$/) do |value, label|
+  input = @browser.inputs(:xpath => "//span[preceding-sibling::label='#{label}']//input[@type='radio'][following-sibling::label='#{value}']")[0]
+  input.click
+end
+
+When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
+  role_select_field = @browser.text_fields(:xpath => "//span[preceding-sibling::label/text()='Rolle']//input[@type='search']")[0]
+  role_select_field.click
+  role_select_field.set(role_name)
+  @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
+end
+
+When(/^trykker jeg på knappen for legge til biinnførselen$/) do
+  @browser.as(:xpath => "//div[@class='select-role-assoc']//a[text()='Legg til']")[0].click
+end
+
+When(/^trykker jeg på knappen for legge til mer$/) do
+  @browser.as(:xpath => "//a[text()='Legg til ny']")[0].click
+end
+
+When(/^sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |role, association|
+  name_and_role_line = @browser.h4(:xpath => "//div[@data-role-association]/h4[@data-role-player][normalize-space()='#{@context[:person_name]} - #{role}']")
+  name_and_role_line.should exist
+  parent_id = name_and_role_line.parent.id
+  role_association = @browser.div(:id => parent_id).div
+  role_association.text.should equal? "Rollen er knyttet til #{association}"
+
 end

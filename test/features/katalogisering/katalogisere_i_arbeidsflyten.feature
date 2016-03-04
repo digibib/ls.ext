@@ -14,7 +14,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg kan legge inn stedsnavn og land
     Og grensesnittet viser at endringene er lagret
     Når jeg legger inn forfatternavnet på startsida
-    Så velger jeg forfatter fra treffliste fra personregisteret
+    Så velger jeg en person fra treffliste fra personregisteret
     Og velger verket fra lista tilkoplet forfatteren
     Og bekrefter for å gå videre til bekreft verk
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
@@ -26,6 +26,19 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg første utgivelsessted i listen som dukker opp
     Og bekrefter for å gå videre til biinførsler
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
+    Så velger jeg en person fra treffliste fra personregisteret
+    Og jeg velger rollen "Komponist"
+    Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"
+    Så trykker jeg på knappen for legge til biinnførselen
+    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "verket"
+    Så trykker jeg på knappen for legge til mer
+    Og jeg legger inn navn på en person som skal knyttes til biinnførsel
+    Så velger jeg en person fra treffliste fra personregisteret
+    Og jeg velger rollen "Fotograf"
+    Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
+    Så trykker jeg på knappen for legge til biinnførselen
+    Og jeg venter litt
+    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
     Så trykker jeg på knappen for å avslutte
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om utgivelsen
@@ -37,7 +50,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Gitt at jeg har en bok
     Og at jeg har lagt til en person
     Når jeg legger inn forfatternavnet på startsida
-    Så velger jeg forfatter fra treffliste fra personregisteret
+    Så velger jeg en person fra treffliste fra personregisteret
     Og bekrefter for å gå videre til bekreft verk
     Og legger inn basisopplysningene om verket for hovedtittel og undertittel
     Og bekrefter for å gå videre til beskriv verket
@@ -55,7 +68,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Gitt at jeg har en bok
     Og at det finnes et verk med forfatter
     Når jeg legger inn forfatternavnet på startsida
-    Så velger jeg forfatter fra treffliste fra personregisteret
+    Så velger jeg en person fra treffliste fra personregisteret
     Og velger verket fra lista tilkoplet forfatteren
     Og bekrefter for å gå videre til bekreft verk
     Og legger inn basisopplysningene om verket for hovedtittel og undertittel

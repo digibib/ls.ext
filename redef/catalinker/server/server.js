@@ -162,7 +162,8 @@ app.get('/config', function (request, response) {
                       subjects: ["Work", "Publication"], // the triple may have a subject of one of these types as subject, fetched from one of the loaded resources
                       type: "searchable-person", // type if input widget
                       label: "Legg til biinførsel",
-                      multiple: true // there may be more than one additional entry
+                      multiple: true, // there may be more than one additional entry
+                      dataAutomationId: "search_role_player" // override or define automation-id for test purposes
                     }
                 ],
               nextStep: {
