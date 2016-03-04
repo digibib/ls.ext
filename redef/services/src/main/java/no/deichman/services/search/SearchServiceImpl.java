@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -17,6 +18,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
@@ -26,12 +28,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -80,8 +85,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final Response searchWorkWithJson(String json) {
-        return searchWithJson(json, getWorkSearchUriBuilder());
+    public final Response searchWorkWithJson(String json, MultivaluedMap<String, String> queryParams) {
+        return searchWithJson(json, getWorkSearchUriBuilder(queryParams));
     }
 
     @Override
@@ -173,7 +178,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response searchWork(String query) {
-        return doSearch(query, getWorkSearchUriBuilder());
+        return doSearch(query, getWorkSearchUriBuilder(null));
     }
 
     @Override
@@ -287,8 +292,18 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private URIBuilder getWorkSearchUriBuilder() {
-        return getIndexUriBuilder().setPath("/search/work/_search");
+    private URIBuilder getWorkSearchUriBuilder(MultivaluedMap<String, String> queryParams) {
+        URIBuilder uriBuilder = getIndexUriBuilder().setPath("/search/work/_search");
+        if (queryParams != null && !queryParams.isEmpty()) {
+            List<NameValuePair> nvpList = new ArrayList<>(queryParams.size());
+            queryParams.forEach((key, values) -> {
+                values.forEach(value -> {
+                    nvpList.add(new BasicNameValuePair(key, value));
+                });
+            });
+            uriBuilder.setParameters(nvpList);
+        }
+        return uriBuilder;
     }
 
     private URIBuilder getPersonSearchUriBuilder() {

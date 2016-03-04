@@ -1,5 +1,6 @@
 package no.deichman.services.search;
 
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 /**
@@ -20,7 +21,7 @@ public interface SearchService {
 
     Response searchPersonWithJson(String json);
 
-    Response searchWorkWithJson(String json);
+    Response searchWorkWithJson(String json, MultivaluedMap<String, String> queryParams);
 
     Response clearIndex();
 

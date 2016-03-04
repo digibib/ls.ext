@@ -15,7 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 
@@ -27,8 +29,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Singleton
 @Path("search")
 public class SearchResource extends ResourceBase {
-    private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
     public static final String ALL_EXCEPT_LAST_PATH_ELEMENT = "^.+/";
+    private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
     @Context
     private ServletConfig servletConfig;
 
@@ -64,13 +66,14 @@ public class SearchResource extends ResourceBase {
     @Path("{type: work|person|placeOfPublication}/_search")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public final Response searchJson(String body, @PathParam("type") String type) {
+    public final Response searchJson(String body, @PathParam("type") String type, @Context UriInfo uriInfo) {
         if (isBlank(body)) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
         switch (type) {
             case "work":
-                return getSearchService().searchWorkWithJson(body);
+                return getSearchService().searchWorkWithJson(body, queryParams);
             case "person":
                 return getSearchService().searchPersonWithJson(body);
             case "placeOfPublication":
