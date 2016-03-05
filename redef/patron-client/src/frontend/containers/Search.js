@@ -28,14 +28,14 @@ const Search = React.createClass({
     )
     this.props.dispatch(routeActions.push({ query: newQuery }))
   },
-  renderPagination() {
+  renderPagination () {
     if ((this.props.totalHits > Constants.searchQuerySize) && this.props.location.query.query) {
       return (
         <section className='col pagination-area'>
           <ReactPaginate previousLabel={'<'}
                          nextLabel={'>'}
                          breakLabel={<li className='break'><span>...</span></li>}
-                         forceSelected={parseInt(this.props.location.query.page) -1 || 0}
+                         forceSelected={this.props.location.query.page - 1 || 0}
                          marginPagesDisplayed={1}
                          pageRangeDisplayed={5}
                          pageNum={Math.ceil(this.props.totalHits / Constants.searchQuerySize)}
