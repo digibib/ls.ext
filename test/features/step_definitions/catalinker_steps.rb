@@ -544,7 +544,7 @@ When(/^jeg endrer forfatteren på verket$/) do
 end
 
 When(/^jeg venter litt$/) do
-  sleep 1
+  sleep 2
   @browser.execute_script("console.log('waiting...')")
 end
 
