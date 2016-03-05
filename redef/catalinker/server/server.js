@@ -81,7 +81,11 @@ app.get('/config', function (request, response) {
               rdfType: "Work",
               label: "Bekreft person",
               inputs: [
-                  {rdfProperty: "creator", type: "searchable-person"}
+                  {
+                      rdfProperty: "creator",
+                      type: "searchable-person",
+                      dependentResourceTypes:["Work", "Publication"] // when the creator is changed, unload curent work an publication
+                  }
               ],
               nextStep: {
                 buttonLabel: "Bekreft verk",
@@ -163,7 +167,10 @@ app.get('/config', function (request, response) {
                       type: "searchable-person", // type if input widget
                       label: "Legg til biinførsel",
                       multiple: true, // there may be more than one additional entry
-                      dataAutomationId: "search_role_player" // override or define automation-id for test purposes
+                      dataAutomationId: "search_role_player", // override or define automation-id for test purposes
+                      widgetOptions: {
+                          hideSelectWork: true
+                      }
                     }
                 ],
               nextStep: {

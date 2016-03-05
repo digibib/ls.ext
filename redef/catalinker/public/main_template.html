@@ -69,7 +69,7 @@
     <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
     {{#each values:index}}
     <fieldset class="pure-u-1-2" id="support_panel_base_{{uniqueId}}">
-        {{>type }}
+        {{>type}}
         {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
         <a data-automation-id="biblio_record_link" target="_blank"
            href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}"
@@ -128,7 +128,6 @@
                                 class="deathYear">{{deathYear}}</span>{{/death}}{{/birthYear}}</span></small>
                     </div>
                 </div>
-
                 {{#toggleWork}}
                 <div class="work-items pure-u-1">
                     {{#work}}
@@ -140,10 +139,12 @@
                             <span class="part-name pure-u-21-22">{{inPreferredLanguage(partTitle)}}</span>
                             {{/}}
                         </div>
-                            <span class="search-result-work-selector pure-u-2-24">
+                        {{# ! ../../../../../../../../../widgetOptions.hideSelectWork}}
+                        <span class="search-result-work-selector pure-u-2-24">
                             <input class="select-work-radio" type="radio" checked="{{isChecked}}"
                                    on-click="setResourceAndWorkResource:{{../../../person}},{{origin}},'Person'"/>
                         </span>
+                        {{/}}
                     </div>
                     {{/work}}
                 </div>
@@ -216,7 +217,8 @@ value="{{current.displayValue}}" />
         <label>Rollen gjelder:</label>
         {{#subjectTypes}}
         <span class="subject-type-select">
-            <input type="radio" name={{subjectType}} value="{{.}}">
+            <input type="radio" name={{subjectType}} value="{{.}}"
+                   {{# ! targetUri[.]}}title='Denne rolleknytningen ikke velges før tilhørende ressurstype er lastet' disabled='disabled'{{/}}>
             <label>{{subjectTypeLabel(.)}}</label>
         </span>
         {{/subjectTypes}}

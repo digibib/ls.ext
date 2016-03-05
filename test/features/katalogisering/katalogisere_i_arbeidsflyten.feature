@@ -14,6 +14,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg kan legge inn stedsnavn og land
     Og grensesnittet viser at endringene er lagret
     Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret
     Og velger verket fra lista tilkoplet forfatteren
     Og bekrefter for å gå videre til bekreft verk
@@ -26,6 +27,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg første utgivelsessted i listen som dukker opp
     Og bekrefter for å gå videre til biinførsler
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
+    Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret
     Og jeg velger rollen "Komponist"
     Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"

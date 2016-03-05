@@ -30,7 +30,7 @@
             return (typeof res === "string") ? JSON.parse(res) : res;
         };
 
-        var proxyToServices = function(url) {
+        var proxyToServices = function (url) {
             var r = new RegExp('http://[^/]+/');
             return url.replace(url.match(r), '/services/');
         };
@@ -40,9 +40,9 @@
             return _.last(prefixed.split(":"));
         }
 
-        function clearSearchResults(){
-            _.each(ractive.get("inputGroups"), function(group, groupIndex){
-                _.each(group.inputs, function(input, inputIndex) {
+        function clearSearchResults() {
+            _.each(ractive.get("inputGroups"), function (group, groupIndex) {
+                _.each(group.inputs, function (input, inputIndex) {
                     if (input.search_result) {
                         ractive.set("inputGroups." + groupIndex + ".inputs." + inputIndex + ".search_result", null);
                     }
@@ -218,64 +218,64 @@
         var loadExistingResource = function (resourceUri, options) {
             return axios.get(resourceUri)
                 .then(function (response) {
-                    var graphData = ensureJSON(response.data);
+                        var graphData = ensureJSON(response.data);
 
-                    var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(resourceUri)[1]);
-                    var root = ldGraph.parse(graphData).byType(type)[0];
+                        var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(resourceUri)[1]);
+                        var root = ldGraph.parse(graphData).byType(type)[0];
 
-                    var inputsToLoad = [];
-                    _.each(ractive.get("inputGroups"), function (group) {
-                        _.each(group.inputs, function (input) {
-                            inputsToLoad.push(input);
-                        })
-                    });
+                        var inputsToLoad = [];
+                        _.each(ractive.get("inputGroups"), function (group) {
+                            _.each(group.inputs, function (input) {
+                                inputsToLoad.push(input);
+                            })
+                        });
 
-                    _.each(inputsToLoad, function (input, inputIndex) {
-                        if ((type == unPrefix(input.domain) || _.contains((input.subjects), type)) && !(_.contains(_.values(_.pick(options, "leaveUnchanged")), input.fragment))) {
-                            var inputs_n = "inputs." + inputIndex;
-                            var predicate = input.predicate;
-                            if (input.type === "select-authorized-value" || input.type === "entity" || input.type === "searchable-authority") {
-                                var values = setMultiValues(root.outAll(propertyName(predicate)), input);
-                                loadLabelsForAuthorizedValues(values, input);
-                            } else if (input.type === "searchable-person") {
-                                if (input.predicateType) {
-                                    var index = input.values.length;
-                                    if (index == 1 && _.isArray(input.values[0].current.value) &&  input.values[0].current.value.length == 0) {
-                                        index = 0;
-                                    }
-                                    var predicates = ractive.get("predefinedValues." + input.predicateType);
-                                    _.each(predicates, function (predicate) {
-                                        var uri = predicate['@id'];
-                                        var value = root.outAll(propertyName(uri));
-                                        _.each(value, function (val) {
-                                            setIdValue(val.id, input, index, uri);
-                                            setDomain(input, index, type);
-                                            setDisplayValue(input, index, "name");
-                                            value.nonEditable = true;
-                                            index++;
+                        _.each(inputsToLoad, function (input, inputIndex) {
+                            if ((type == unPrefix(input.domain) || _.contains((input.subjects), type)) && !(_.contains(_.values(_.pick(options, "leaveUnchanged")), input.fragment))) {
+                                var inputs_n = "inputs." + inputIndex;
+                                var predicate = input.predicate;
+                                if (input.type === "select-authorized-value" || input.type === "entity" || input.type === "searchable-authority") {
+                                    var values = setMultiValues(root.outAll(propertyName(predicate)), input);
+                                    loadLabelsForAuthorizedValues(values, input);
+                                } else if (input.type === "searchable-person") {
+                                    if (input.predicateType) {
+                                        var index = input.values.length;
+                                        if (index == 1 && _.isArray(input.values[0].current.value) && input.values[0].current.value.length == 0) {
+                                            index = 0;
+                                        }
+                                        var predicates = ractive.get("predefinedValues." + input.predicateType);
+                                        _.each(predicates, function (predicate) {
+                                            var uri = predicate['@id'];
+                                            var value = root.outAll(propertyName(uri));
+                                            _.each(value, function (val) {
+                                                setIdValue(val.id, input, index, uri);
+                                                setDomain(input, index, type);
+                                                setDisplayValue(input, index, "name");
+                                                value.nonEditable = true;
+                                                index++;
+                                            });
                                         });
-                                    });
+                                    } else {
+                                        setIdValues(root.outAll(propertyName(predicate)), input);
+                                    }
+                                } else if (input.type === "select-predefined-value") {
+                                    setMultiValues(root.outAll(propertyName(predicate)), input);
                                 } else {
-                                    setIdValues(root.outAll(propertyName(predicate)), input);
+                                    setSingleValues(root.getAll(propertyName(predicate)), input);
                                 }
-                            } else if (input.type === "select-predefined-value") {
-                                setMultiValues(root.outAll(propertyName(predicate)), input);
-                            } else {
-                                setSingleValues(root.getAll(propertyName(predicate)), input);
                             }
-                        }
-                    });
-                    ractive.update();
-                    ractive.set("save_status", "åpnet eksisterende ressurs");
-                    ractive.set("targetUri." + type, resourceUri);
-                    updateBrowserLocation(type, resourceUri);
-                }
-            )
-            .catch(function (err) {
-                console.log("HTTP GET existing resource failed with:");
-                console.log(err);
-            });
-    };
+                        });
+                        ractive.update();
+                        ractive.set("save_status", "åpnet eksisterende ressurs");
+                        ractive.set("targetUri." + type, resourceUri);
+                        updateBrowserLocation(type, resourceUri);
+                    }
+                )
+                .catch(function (err) {
+                    console.log("HTTP GET existing resource failed with:");
+                    console.log(err);
+                });
+        };
 
         var saveNewResourceFromInputs = function (resourceType) {
             // collect inputs related to resource type
@@ -497,11 +497,14 @@
                     if (prop.nameProperties) {
                         currentInput.nameProperties = prop.nameProperties;
                     }
-                    if (prop.dataAutomationId){
+                    if (prop.dataAutomationId) {
                         currentInput.dataAutomationId = prop.dataAutomationId;
                     }
                     if (prop.subjects) {
                         currentInput.subjects = prop.subjects;
+                    }
+                    if (prop.widgetOptions) {
+                        currentInput.widgetOptions = prop.widgetOptions;
                     }
                 });
                 group.inputs = groupInputs;
@@ -538,607 +541,616 @@
 
         /* public API */
         var Main = {
-                getURLParameter: function (name) {
-                    // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
-                    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-                    var regexS = "[\\?&]" + name + "=([^&#]*)";
-                    var regex = new RegExp(regexS);
-                    var results = regex.exec(location.search);
-                    return results === null ? null : results[1];
-                },
-                patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
-                    var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype);
-                    if (patch && patch.trim() != "" && patch.trim() != "[]") {
-                        ractive.set("save_status", "arbeider...");
-                        axios.patch(subject, patch, {
-                                headers: {
-                                    Accept: "application/ld+json",
-                                    "Content-Type": "application/ldpatch+json"
-                                }
-                            })
-                            .then(function (response) {
-                                // successfully patched resource
+            getURLParameter: function (name) {
+                // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
+                name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+                var regexS = "[\\?&]" + name + "=([^&#]*)";
+                var regex = new RegExp(regexS);
+                var results = regex.exec(location.search);
+                return results === null ? null : results[1];
+            },
+            patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
+                var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype);
+                if (patch && patch.trim() != "" && patch.trim() != "[]") {
+                    ractive.set("save_status", "arbeider...");
+                    axios.patch(subject, patch, {
+                            headers: {
+                                Accept: "application/ld+json",
+                                "Content-Type": "application/ldpatch+json"
+                            }
+                        })
+                        .then(function (response) {
+                            // successfully patched resource
 
-                                // keep the value in current.old - so we can do create delete triple patches later
-                                if (keypath) {
-                                    var cur = ractive.get(keypath + ".current");
-                                    ractive.set(keypath + ".old.value", cur.value);
-                                    ractive.set(keypath + ".old.lang", cur.lang);
+                            // keep the value in current.old - so we can do create delete triple patches later
+                            if (keypath) {
+                                var cur = ractive.get(keypath + ".current");
+                                ractive.set(keypath + ".old.value", cur.value);
+                                ractive.set(keypath + ".old.lang", cur.lang);
 
-                                }
-                                ractive.set("save_status", "alle endringer er lagret");
-                                ractive.update();
-                            })
-                            .catch(function (response) {
-                                // failed to patch resource
-                                console.log("HTTP PATCH failed with: ");
-                                errors.push("Noe gikk galt! Fikk ikke lagret endringene");
-                                ractive.set("save_status", "");
-                            });
-                    }
-                },
-                init: function () {
-                    var template = "/main_template.html";
-                    //window.onerror = function (message, url, line) {
-                    //    // Log any uncaught exceptions to assist debugging tests.
-                    //    // TODO remove this when everything works perfectly (as if...)
-                    //    console.log('ERROR: "' + message + '" in file: ' + url + ', line: ' + line);
-                    //};
+                            }
+                            ractive.set("save_status", "alle endringer er lagret");
+                            ractive.update();
+                        })
+                        .catch(function (response) {
+                            // failed to patch resource
+                            console.log("HTTP PATCH failed with: ");
+                            errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+                            ractive.set("save_status", "");
+                        });
+                }
+            },
+            init: function () {
+                var template = "/main_template.html";
+                //window.onerror = function (message, url, line) {
+                //    // Log any uncaught exceptions to assist debugging tests.
+                //    // TODO remove this when everything works perfectly (as if...)
+                //    console.log('ERROR: "' + message + '" in file: ' + url + ', line: ' + line);
+                //};
 
-                    // axios and phantomjs needs a Promise polyfill, so we use the one provided by ractive.
-                    if (window && !window.Promise) {
-                        window.Promise = Ractive.Promise;
-                    }
+                // axios and phantomjs needs a Promise polyfill, so we use the one provided by ractive.
+                if (window && !window.Promise) {
+                    window.Promise = Ractive.Promise;
+                }
 
-                    var errors = [];
+                var errors = [];
 
-                    // Start initializing - return a Promise
-                    var loadTemplate = function (applicationData) {
-                        return axios.get(template).then(
-                            function (response) {
-                                applicationData.template = response.data;
-                                return applicationData;
-                            });
-                    };
+                // Start initializing - return a Promise
+                var loadTemplate = function (applicationData) {
+                    return axios.get(template).then(
+                        function (response) {
+                            applicationData.template = response.data;
+                            return applicationData;
+                        });
+                };
 
-                    var extractConfig = function (response) {
-                        return {config: ensureJSON(response.data)};
-                    };
+                var extractConfig = function (response) {
+                    return {config: ensureJSON(response.data)};
+                };
 
-                    var initRactive = function (applicationData) {
-                            Ractive.decorators.select2.type.singleSelect = function (node) {
-                                return {
-                                    maximumSelectionLength: 1
-                                }
-                            };
+                var initRactive = function (applicationData) {
+                        Ractive.decorators.select2.type.singleSelect = function (node) {
+                            return {
+                                maximumSelectionLength: 1
+                            }
+                        };
 
-                            Ractive.decorators.select2.type.authoritySelectSingle = function (node) {
-                                var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath));
-                                var indexType = inputDef.indexType;
-                                return {
-                                    maximumSelectionLength: 1,
-                                    minimumInputLength: 3,
-                                    ajax: {
-                                        url: ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search",
-                                        dataType: 'json',
-                                        delay: 250,
-                                        id: function (item) {
-                                            return item._source.person.uri;
-                                        },
-                                        data: function (params) {
-                                            return {
-                                                q: params.term, // search term
-                                                page: params.page
-                                            };
-                                        },
-                                        processResults: function (data, params) {
-                                            params.page = params.page || 1;
-
-                                            var select2Data = $.map(data.hits.hits, function (obj) {
-                                                obj.id = obj._source[indexType].uri;
-                                                obj.text = _.map(inputDef.indexDocumentFields, function (field) {
-                                                    return obj._source[indexType][field];
-                                                }).join(' - ');
-                                                return obj;
-                                            });
-
-                                            return {
-                                                results: select2Data,
-                                                pagination: {
-                                                    more: (params.page * 30) < data.total_count
-                                                }
-                                            };
-                                        },
-                                        cache: true
+                        Ractive.decorators.select2.type.authoritySelectSingle = function (node) {
+                            var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath));
+                            var indexType = inputDef.indexType;
+                            return {
+                                maximumSelectionLength: 1,
+                                minimumInputLength: 3,
+                                ajax: {
+                                    url: ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search",
+                                    dataType: 'json',
+                                    delay: 250,
+                                    id: function (item) {
+                                        return item._source.person.uri;
                                     },
-                                    templateSelection: function (data) {
-                                        return data.text === "" ? ractive.get("authorityLabels[" + data.id + "]") : data.text;
-                                    }
-                                }
-                            };
+                                    data: function (params) {
+                                        return {
+                                            q: params.term, // search term
+                                            page: params.page
+                                        };
+                                    },
+                                    processResults: function (data, params) {
+                                        params.page = params.page || 1;
 
-                            // Initialize ractive component from template
-                            var repositionSupportPanel = function (node) {
-                                //$(node).find(".support-panel").css({top: $(node).position().top})
-                                Main.repositionSupportPanelsHorizontally();
-                                return {
-                                    teardown: function () {
-                                    }
-                                }
-                            };
-                            ractive = new Ractive({
-                                el: "container",
-                                lang: "no",
-                                template: applicationData.template,
-                                data: {
-                                    applicationData: applicationData,
-                                    predefinedValues: applicationData.predefinedValues,
-                                    errors: errors,
-                                    resource_type: "",
-                                    resource_label: "",
-                                    ontology: null,
-                                    search_result: null,
-                                    config: applicationData.config,
-                                    save_status: "ny ressurs",
-                                    isSelected: function (option, value) {
-                                        return option["@id"].contains(value) ? "selected='selected'" : "";
-                                    },
-                                    getRdfsLabelValue: function (label) {
-                                        return i18nLabelValue(label)
-                                    },
-                                    tabEnabled: function (tabSelected, domainType) {
-                                        return tabSelected === true || (typeof ractive.get("targetUri." + domainType) === "string");
-                                    },
-                                    nextStepEnabled: function (domainType) {
-                                        return !(domainType === 'Work' && !ractive.get('targetUri.Person'));
-                                    },
-                                    readyToAddRole: function (node) {
-                                        return true;
-                                    },
-                                    spy: function (node) {
-                                        console.log("spy: " + node.keypath);
-                                    },
-                                    predefinedLabelValue: function(type, uri) {
-                                        return i18nLabelValue(_.find(ractive.get("predefinedValues." + type), function (predefinedValue) {
-                                            return predefinedValue['@id'] === uri;
-                                        })['rdfs:label']);
-                                    },
-                                    publicationId: function () {
-                                        var publicationIdInput = _.find(ractive.get("inputs"), function (input) {
-                                            return input.predicate.indexOf("#recordID") != -1;
+                                        var select2Data = $.map(data.hits.hits, function (obj) {
+                                            obj.id = obj._source[indexType].uri;
+                                            obj.text = _.map(inputDef.indexDocumentFields, function (field) {
+                                                return obj._source[indexType][field];
+                                            }).join(' - ');
+                                            return obj;
                                         });
-                                        if (publicationIdInput) {
-                                            return _.first(publicationIdInput.values).current.value;
+
+                                        return {
+                                            results: select2Data,
+                                            pagination: {
+                                                more: (params.page * 30) < data.total_count
+                                            }
+                                        };
+                                    },
+                                    cache: true
+                                },
+                                templateSelection: function (data) {
+                                    return data.text === "" ? ractive.get("authorityLabels[" + data.id + "]") : data.text;
+                                }
+                            }
+                        };
+
+                        // Initialize ractive component from template
+                        var repositionSupportPanel = function (node) {
+                            //$(node).find(".support-panel").css({top: $(node).position().top})
+                            Main.repositionSupportPanelsHorizontally();
+                            return {
+                                teardown: function () {
+                                }
+                            }
+                        };
+                        ractive = new Ractive({
+                            el: "container",
+                            lang: "no",
+                            template: applicationData.template,
+                            data: {
+                                applicationData: applicationData,
+                                predefinedValues: applicationData.predefinedValues,
+                                errors: errors,
+                                resource_type: "",
+                                resource_label: "",
+                                ontology: null,
+                                search_result: null,
+                                config: applicationData.config,
+                                save_status: "ny ressurs",
+                                isSelected: function (option, value) {
+                                    return option["@id"].contains(value) ? "selected='selected'" : "";
+                                },
+                                getRdfsLabelValue: function (label) {
+                                    return i18nLabelValue(label)
+                                },
+                                tabEnabled: function (tabSelected, domainType) {
+                                    return tabSelected === true || (typeof ractive.get("targetUri." + domainType) === "string");
+                                },
+                                nextStepEnabled: function (domainType) {
+                                    return !(domainType === 'Work' && !ractive.get('targetUri.Person'));
+                                },
+                                readyToAddRole: function (node) {
+                                    return true;
+                                },
+                                spy: function (node) {
+                                    console.log("spy: " + node.keypath);
+                                },
+                                predefinedLabelValue: function (type, uri) {
+                                    return i18nLabelValue(_.find(ractive.get("predefinedValues." + type), function (predefinedValue) {
+                                        return predefinedValue['@id'] === uri;
+                                    })['rdfs:label']);
+                                },
+                                publicationId: function () {
+                                    var publicationIdInput = _.find(ractive.get("inputs"), function (input) {
+                                        return input.predicate.indexOf("#recordID") != -1;
+                                    });
+                                    if (publicationIdInput) {
+                                        return _.first(publicationIdInput.values).current.value;
+                                    }
+                                },
+                                inPreferredLanguage: function (text) {
+                                    if (typeof text === 'string') {
+                                        return text;
+                                    } else {
+                                        var preferredTexts = _.compact([
+                                            _.find(text, function (value, lang) {
+                                                return lang === "nb";
+                                            }), _.find(text, function (value, lang) {
+                                                return lang === "nn";
+                                            }), _.find(text, function (value, lang) {
+                                                return lang === "default";
+                                            }), _.find(text, function () {
+                                                return true;
+                                            })]);
+                                        return _.first(preferredTexts);
+                                    }
+                                },
+                                subjectTypeLabel: function (subject) {
+                                    var resourceLabel = Ontology.resourceLabel(applicationData.ontology, subject, 'no');
+                                    return resourceLabel || "";
+                                },
+                                subjectTypeLabelDet: function (subjectType) {
+                                    switch (subjectType) {
+                                        case "Work":
+                                            return "verket";
+                                        case "Publication":
+                                            return "utgivelsen";
+                                        default:
+                                            return subjectType;
+                                    }
+                                },
+                                targetResources: {
+                                    Work: {
+                                        uri: "",
+                                        pendingProperties: []
+                                    },
+                                    Person: {
+                                        uri: "",
+                                        pendingProperties: []
+                                    },
+                                    Publication: {
+                                        uri: "",
+                                        pendingProperties: []
+                                    }
+                                }
+                            },
+                            decorators: {
+                                multi: require('ractive-multi-decorator'),
+                                repositionSupportPanel: repositionSupportPanel,
+                                detectChange: function (node) {
+                                    var enableChange = false;
+                                    $(node).on("select2:selecting select2:unselecting", function () {
+                                        enableChange = true;
+                                    });
+                                    $(node).on("change", function (e) {
+                                        if (enableChange) {
+                                            enableChange = false;
+                                            var inputValue = Ractive.getNodeInfo(e.target);
+                                            var keypath = inputValue.keypath;
+                                            ractive.set(keypath + ".current.value", $(e.target).val());
+                                            var inputNode = ractive.get(grandParentOf(keypath));
+                                            Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
+                                                ractive.get(keypath), inputNode.datatype, errors, keypath)
                                         }
-                                    },
-                                    inPreferredLanguage: function (text) {
-                                        if (typeof text === 'string') {
-                                            return text;
-                                        } else {
-                                            var preferredTexts = _.compact([
-                                                _.find(text, function (value, lang) {
-                                                    return lang === "nb";
-                                                }), _.find(text, function (value, lang) {
-                                                    return lang === "nn";
-                                                }), _.find(text, function (value, lang) {
-                                                    return lang === "default";
-                                                }), _.find(text, function () {
-                                                    return true;
-                                                })]);
-                                            return _.first(preferredTexts);
-                                        }
-                                    },
-                                    subjectTypeLabel: function (subject) {
-                                        var resourceLabel = Ontology.resourceLabel(applicationData.ontology, subject, 'no');
-                                        return resourceLabel || "";
-                                    },
-                                    subjectTypeLabelDet: function (subjectType) {
-                                        switch (subjectType) {
-                                            case "Work":
-                                                return "verket";
-                                            case "Publication":
-                                                return "utgivelsen";
-                                            default:
-                                                return subjectType;
-                                        }
-                                    },
-                                    targetResources: {
-                                        Work: {
-                                            uri: "",
-                                            pendingProperties: []
-                                        },
-                                        Person: {
-                                            uri: "",
-                                            pendingProperties: []
-                                        },
-                                        Publication: {
-                                            uri: "",
-                                            pendingProperties: []
+                                    });
+                                    return {
+                                        teardown: function () {
                                         }
                                     }
                                 },
-                                decorators: {
-                                    multi: require('ractive-multi-decorator'),
-                                    repositionSupportPanel: repositionSupportPanel,
-                                    detectChange: function (node) {
-                                        var enableChange = false;
-                                        $(node).on("select2:selecting select2:unselecting", function () {
-                                            enableChange = true;
-                                        });
-                                        $(node).on("change", function (e) {
-                                            if (enableChange) {
-                                                enableChange = false;
-                                                var inputValue = Ractive.getNodeInfo(e.target);
-                                                var keypath = inputValue.keypath;
-                                                ractive.set(keypath + ".current.value", $(e.target).val());
-                                                var inputNode = ractive.get(grandParentOf(keypath));
-                                                Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
-                                                    ractive.get(keypath), inputNode.datatype, errors, keypath)
-                                            }
-                                        });
-                                        return {
-                                            teardown: function () {
-                                            }
+                                handleAddNewBySelect2: function (node) {
+                                    ractive.set(grandParentOf(Ractive.getNodeInfo(node).keypath) + ".allowAddNewButton", false);
+                                    return {
+                                        teardown: function () {
                                         }
-                                    },
-                                    handleAddNewBySelect2: function (node) {
-                                        ractive.set(grandParentOf(Ractive.getNodeInfo(node).keypath) + ".allowAddNewButton", false);
-                                        return {
-                                            teardown: function () {
-                                            }
+                                    }
+                                },
+                                clickOutsideSupportPanelDetector: function (node) {
+                                    $(document).click(function (event) {
+                                        if (!$(event.target).closest("span.support-panel").length && !$(event.target).is("span.support-panel")) {
+                                            clearSearchResults();
                                         }
-                                    },
-                                    clickOutsideSupportPanelDetector: function(node){
-                                        $(document).click(function(event){
-                                            if(!$(event.target).closest("span.support-panel").length && !$(event.target).is("span.support-panel")) {
-                                                clearSearchResults();
-                                            }
-                                        });
-                                        return {
-                                            teardown: function () {
-                                            }
+                                    });
+                                    return {
+                                        teardown: function () {
                                         }
                                     }
                                 }
-                            });
-                            ractive.on({
-                                    // addValue adds another input field for the predicate.
-                                    addValue: function (event) {
-                                        ractive.get(event.keypath).values.push({
-                                            old: {value: "", lang: ""},
-                                            current: {value: "", lang: ""}
-                                        });
-                                        ractive.set(event.keypath + ".allowAddNewButton", false);
-                                        ractive.update();
-                                    },
-                                    // patchResource creates a patch request based on previous and current value of
-                                    // input field, and sends this to the backend.
-                                    patchResource: function (event, predicate, rdfType, clearProperty) {
-                                        var inputValue = event.context;
-                                        if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
-                                            return;
+                            }
+                        });
+                        ractive.on({
+                                // addValue adds another input field for the predicate.
+                                addValue: function (event) {
+                                    ractive.get(event.keypath).values.push({
+                                        old: {value: "", lang: ""},
+                                        current: {value: "", lang: ""}
+                                    });
+                                    ractive.set(event.keypath + ".allowAddNewButton", false);
+                                    ractive.update();
+                                },
+                                // patchResource creates a patch request based on previous and current value of
+                                // input field, and sends this to the backend.
+                                patchResource: function (event, predicate, rdfType, clearProperty) {
+                                    var inputValue = event.context;
+                                    if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
+                                        return;
+                                    }
+                                    var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
+                                    var subject = ractive.get("targetUri." + rdfType);
+                                    if (subject) {
+                                        Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
+                                        var input = ractive.get(grandParentOf(event.keypath));
+                                        event.context.domain = rdfType;
+                                        if (input.predicateType) {
+                                            ractive.set(event.keypath + ".predicate", predicate);
                                         }
-                                        var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                                        var subject = ractive.get("targetUri." + rdfType);
-                                        if (subject) {
-                                            Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
-                                            var input = ractive.get(grandParentOf(event.keypath));
-                                            event.context.domain = rdfType;
-                                            if (input.predicateType) {
-                                                ractive.set(event.keypath + ".predicate", predicate);
-                                            }
-                                            input.allowAddNewButton = true;
-                                        }
-                                        if (clearProperty) {
-                                            ractive.set(grandParentOf(event.keypath) + "." + clearProperty, null);
-                                        }
-                                        ractive.update();
-                                    },
-                                    searchResource: function (event, searchString) {
-                                        // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
-                                        var searchType = "person";
-                                        var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search";
-                                        var searchData = {
-                                            query: {
-                                                match: {
-                                                    'person.name': {
-                                                        query: searchString,
-                                                        operator: "and"
-                                                    }
+                                        input.allowAddNewButton = true;
+                                    }
+                                    if (clearProperty) {
+                                        ractive.set(grandParentOf(event.keypath) + "." + clearProperty, null);
+                                    }
+                                    ractive.update();
+                                },
+                                searchResource: function (event, searchString) {
+                                    // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
+                                    var searchType = "person";
+                                    var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search";
+                                    var searchData = {
+                                        query: {
+                                            match: {
+                                                'person.name': {
+                                                    query: searchString,
+                                                    operator: "and"
                                                 }
                                             }
-                                        };
-                                        axios.post(searchURI, searchData)
-                                            .then(function (response) {
-                                                var results = ensureJSON(response.data);
-                                                results.hits.hits.forEach(function (hit) {
-                                                    var person = hit._source.person;
-                                                    person.isChecked = false;
+                                        }
+                                    };
+                                    axios.post(searchURI, searchData)
+                                        .then(function (response) {
+                                            var results = ensureJSON(response.data);
+                                            results.hits.hits.forEach(function (hit) {
+                                                var person = hit._source.person;
+                                                person.isChecked = false;
+                                                if (person.work) {
+                                                    if (!_.isArray(person.work)) {
+                                                        person.work = [person.work];
+                                                    }
                                                     _.each(person.work, function (work) {
                                                         work.isChecked = false;
                                                     });
-                                                });
-                                                ractive.set(grandParentOf(event.keypath) + ".search_result", {
-                                                    results: results,
-                                                    origin: event.keypath
-                                                });
-                                            });
-                                        //    .catch(function (err) {
-                                        //    console.log(err);
-                                        //});
-                                    },
-                                    toggleWork: function (event) {
-                                        var keypath = event.keypath + '.toggleWork';
-                                        ractive.get(keypath) !== true ?
-                                            ractive.set(keypath, true) :
-                                            ractive.set(keypath, false);
-                                    },
-                                    selectPersonResource: function (event, origin) {
-                                        var inputKeyPath = grandParentOf(origin);
-                                        if (ractive.get(inputKeyPath).isMainCatalogueingEntry) {
-                                            unloadResourceForDomain("Work");
-                                            unloadResourceForDomain("Publication");
-                                        }
-                                        var uri = event.context.uri;
-                                        var name = event.context.name;
-                                        loadExistingResource(uri);
-                                        ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
-                                        ractive.set(origin + ".current.value", uri);
-                                        ractive.set(origin + ".current.displayValue", name);
-                                        ractive.set(origin + ".deletable", true);
-                                        ractive.set(origin + ".searchable", false);
-                                    },
-                                    selectWorkResource: function (event) {
-                                        var uri = event.context.uri;
-                                        unloadResourceForDomain("Publication");
-                                        loadExistingResource(uri, {leaveUnchanged: "creator"});
-                                    },
-                                    setResourceAndWorkResource: function (event, person, origin, domainType) {
-                                        ractive.fire("selectPersonResource", {context: person}, origin, domainType);
-                                        ractive.fire("selectWorkResource", {context: event.context});
-                                    },
-                                    delResource: function (event, predicate) {
-                                        ractive.set("search_result", null);
-                                        ractive.set(event.keypath + ".current.value", "");
-                                        ractive.set(event.keypath + ".current.displayValue", "");
-                                        ractive.set(event.keypath + ".deletable", false);
-                                        ractive.set(event.keypath + ".searchable", true);
-                                        ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
-                                    },
-                                    unselectWorkAndPerson: function (event) {
-                                        ractive.set("search_result", null);
-                                        ractive.set(event.keypath + ".current.value", "");
-                                        ractive.set(event.keypath + ".current.displayValue", "");
-                                        ractive.set(event.keypath + ".deletable", false);
-                                        ractive.set(event.keypath + ".searchable", true);
-                                        unloadResourceForDomain('Work');
-                                        unloadResourceForDomain('Person');
-                                    },
-                                    activateTab: function (event) {
-                                        _.each(ractive.get("inputGroups"), function (group, groupIndex) {
-                                            var keyPath = "inputGroups." + groupIndex;
-                                            ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
-                                        });
-                                        $("span.support-panel").each(function (index, panel) {
-                                            var supportPanelBaseId = $(panel).attr("data-support-panel-base-ref");
-                                            var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
-                                            var supportPanelWidth = $("#right-dummy-panel").width();
-                                            $(panel).css({top: $("#" + supportPanelBaseId).position().top, left: supportPanelLeftEdge, width: supportPanelWidth});
-                                        });
-                                    },
-                                    nextStep: function (event) {
-                                        if (event.context.restart) {
-                                            var url = URI.parse(document.location.href);
-                                            url.query = {};
-                                            window.location.replace(URI.build(url));
-                                        }
-                                        var newResourceType = event.context.createNewResource;
-                                        if (newResourceType && (!ractive.get("targetUri." + newResourceType))) {
-                                            saveNewResourceFromInputs(newResourceType);
-                                        }
-                                        var foundSelectedTab = false;
-                                        _.each(ractive.get("inputGroups"), function (group, groupIndex) {
-                                            var keyPath = "inputGroups." + groupIndex;
-                                            if (foundSelectedTab) {
-                                                ractive.set(keyPath + ".tabSelected", true);
-                                                foundSelectedTab = false;
-                                            } else {
-                                                if (ractive.get(keyPath + ".tabSelected")) {
-                                                    foundSelectedTab = true;
                                                 }
-                                                ractive.set(keyPath + ".tabSelected", false);
-                                            }
+                                            });
+                                            ractive.set(grandParentOf(event.keypath) + ".search_result", {
+                                                results: results,
+                                                origin: event.keypath
+                                            });
                                         });
+                                    //    .catch(function (err) {
+                                    //    console.log(err);
+                                    //});
+                                },
+                                toggleWork: function (event) {
+                                    var keypath = event.keypath + '.toggleWork';
+                                    ractive.get(keypath) !== true ?
+                                        ractive.set(keypath, true) :
+                                        ractive.set(keypath, false);
+                                },
+                                selectPersonResource: function (event, origin) {
+                                    var inputKeyPath = grandParentOf(origin);
+                                    var input = ractive.get(inputKeyPath);
+                                    var uri = event.context.uri;
+                                    var name = event.context.name;
+                                    loadExistingResource(uri);
+                                    ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
+                                    ractive.set(origin + ".current.value", uri);
+                                    ractive.set(origin + ".current.displayValue", name);
+                                    ractive.set(origin + ".deletable", true);
+                                    ractive.set(origin + ".searchable", false);
+                                    _.each(input.dependentResourceTypes, function (resourceType) {
+                                        unloadResourceForDomain(resourceType);
+                                    });
+                                },
+                                selectWorkResource: function (event) {
+                                    var uri = event.context.uri;
+                                    unloadResourceForDomain("Publication");
+                                    loadExistingResource(uri, {leaveUnchanged: "creator"});
+                                },
+                                setResourceAndWorkResource: function (event, person, origin, domainType) {
+                                    ractive.fire("selectPersonResource", {context: person}, origin, domainType);
+                                    ractive.fire("selectWorkResource", {context: event.context});
+                                },
+                                delResource: function (event, predicate) {
+                                    ractive.set("search_result", null);
+                                    ractive.set(event.keypath + ".current.value", "");
+                                    ractive.set(event.keypath + ".current.displayValue", "");
+                                    ractive.set(event.keypath + ".deletable", false);
+                                    ractive.set(event.keypath + ".searchable", true);
+                                    ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
+                                },
+                                unselectWorkAndPerson: function (event) {
+                                    ractive.set("search_result", null);
+                                    ractive.set(event.keypath + ".current.value", "");
+                                    ractive.set(event.keypath + ".current.displayValue", "");
+                                    ractive.set(event.keypath + ".deletable", false);
+                                    ractive.set(event.keypath + ".searchable", true);
+                                    unloadResourceForDomain('Work');
+                                    unloadResourceForDomain('Person');
+                                },
+                                activateTab: function (event) {
+                                    _.each(ractive.get("inputGroups"), function (group, groupIndex) {
+                                        var keyPath = "inputGroups." + groupIndex;
+                                        ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
+                                    });
+                                    $("span.support-panel").each(function (index, panel) {
+                                        var supportPanelBaseId = $(panel).attr("data-support-panel-base-ref");
+                                        var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
+                                        var supportPanelWidth = $("#right-dummy-panel").width();
+                                        $(panel).css({
+                                            top: $("#" + supportPanelBaseId).position().top,
+                                            left: supportPanelLeftEdge,
+                                            width: supportPanelWidth
+                                        });
+                                    });
+                                },
+                                nextStep: function (event) {
+                                    if (event.context.restart) {
+                                        var url = URI.parse(document.location.href);
+                                        url.query = {};
+                                        window.location.replace(URI.build(url));
                                     }
-                                }
-                            );
-
-                            ractive.observe("inputGroups.*.inputs.*.values.*", function (newValue, oldValue, keypath) {
-                                if (newValue.current.value === "") {
-                                    ractive.set(keypath + ".error", false);
-                                    return;
-                                }
-                                var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
-                                var valid = false;
-                                try {
-                                    valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range);
-                                } catch (e) {
-                                    console.log(e);
-                                    return;
-                                }
-                                if (valid) {
-                                    ractive.set(keypath + ".error", false);
-                                } else {
-                                    ractive.set(keypath + ".error", "ugyldig input");
-                                }
-                            });
-
-                            ractive.observe("search_result.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
-                                if (newValue === true) {
-                                    var workPath = getParentFromKeypath(keypath);
-                                    checkSelectedSearchResults([workPath]);
-                                }
-                            });
-
-                            ractive.observe("search_result.results.hits.hits.*._source.person.work.*.isChecked", function (newValue, oldValue, keypath) {
-                                if (newValue === true) {
-                                    var workPath = getParentFromKeypath(keypath);
-                                    var personPath = getParentFromKeypath(keypath, 3);
-                                    checkSelectedSearchResults([personPath, workPath]);
-                                }
-                            });
-
-                            ractive.observe("targetUri.Work", function (newValue, oldValue, keypath) {
-                                _.each(ractive.get("inputs"), function (input, inputIndex) {
-                                    if (input.predicate.indexOf("#publicationOf") != -1) {
-                                        ractive.set("inputs." + inputIndex + ".values.0.current.value", newValue);
-                                        ractive.set("inputs." + inputIndex + ".values.0.old.value", "");
+                                    var newResourceType = event.context.createNewResource;
+                                    if (newResourceType && (!ractive.get("targetUri." + newResourceType))) {
+                                        saveNewResourceFromInputs(newResourceType);
                                     }
-                                });
+                                    var foundSelectedTab = false;
+                                    _.each(ractive.get("inputGroups"), function (group, groupIndex) {
+                                        var keyPath = "inputGroups." + groupIndex;
+                                        if (foundSelectedTab) {
+                                            ractive.set(keyPath + ".tabSelected", true);
+                                            foundSelectedTab = false;
+                                        } else {
+                                            if (ractive.get(keyPath + ".tabSelected")) {
+                                                foundSelectedTab = true;
+                                            }
+                                            ractive.set(keyPath + ".tabSelected", false);
+                                        }
+                                    });
+                                }
+                            }
+                        );
+
+                        ractive.observe("inputGroups.*.inputs.*.values.*", function (newValue, oldValue, keypath) {
+                            if (newValue.current.value === "") {
+                                ractive.set(keypath + ".error", false);
+                                return;
+                            }
+                            var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
+                            var valid = false;
+                            try {
+                                valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range);
+                            } catch (e) {
+                                console.log(e);
+                                return;
+                            }
+                            if (valid) {
+                                ractive.set(keypath + ".error", false);
+                            } else {
+                                ractive.set(keypath + ".error", "ugyldig input");
+                            }
+                        });
+
+                        ractive.observe("search_result.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
+                            if (newValue === true) {
+                                var workPath = getParentFromKeypath(keypath);
+                                checkSelectedSearchResults([workPath]);
+                            }
+                        });
+
+                        ractive.observe("search_result.results.hits.hits.*._source.person.work.*.isChecked", function (newValue, oldValue, keypath) {
+                            if (newValue === true) {
+                                var workPath = getParentFromKeypath(keypath);
+                                var personPath = getParentFromKeypath(keypath, 3);
+                                checkSelectedSearchResults([personPath, workPath]);
+                            }
+                        });
+
+                        ractive.observe("targetUri.Work", function (newValue, oldValue, keypath) {
+                            _.each(ractive.get("inputs"), function (input, inputIndex) {
+                                if (input.predicate.indexOf("#publicationOf") != -1) {
+                                    ractive.set("inputs." + inputIndex + ".values.0.current.value", newValue);
+                                    ractive.set("inputs." + inputIndex + ".values.0.old.value", "");
+                                }
                             });
+                        });
 
-                            function getParentFromKeypath(keypath, parentLevels) {
-                                parentLevels = parentLevels || 1;
-                                var split = keypath.split('.');
-                                return split.splice(0, split.length - parentLevels).join('.');
-                            }
+                        function getParentFromKeypath(keypath, parentLevels) {
+                            parentLevels = parentLevels || 1;
+                            var split = keypath.split('.');
+                            return split.splice(0, split.length - parentLevels).join('.');
+                        }
 
-                            function checkSelectedSearchResults(pathsToCheck) {
-                                ractive.set("search_result.results.hits.hits.*._source.person.isChecked", false);
-                                ractive.set("search_result.results.hits.hits.*._source.person.work.*.isChecked", false);
-                                pathsToCheck.forEach(function (path) {
-                                    ractive.set(path + '.isChecked', true);
-                                });
-                            }
+                        function checkSelectedSearchResults(pathsToCheck) {
+                            ractive.set("search_result.results.hits.hits.*._source.person.isChecked", false);
+                            ractive.set("search_result.results.hits.hits.*._source.person.work.*.isChecked", false);
+                            pathsToCheck.forEach(function (path) {
+                                ractive.set(path + '.isChecked', true);
+                            });
+                        }
 
-                            ractive.set("inputGroups", applicationData.inputGroups);
-                            ractive.set("inputs", applicationData.inputs);
-                            ractive.set("predefinedValues", applicationData.predefinedValues);
-                            ractive.update();
+                        ractive.set("inputGroups", applicationData.inputGroups);
+                        ractive.set("inputs", applicationData.inputs);
+                        ractive.set("predefinedValues", applicationData.predefinedValues);
+                        ractive.update();
+                        return applicationData;
+                    }
+                    ;
+
+                var loadOntology = function (applicationData) {
+                    return axios.get(applicationData.config.ontologyUri)
+                        .then(function (response) {
+                            applicationData.ontology = ensureJSON(response.data);
                             return applicationData;
-                        }
-                        ;
+                        });
+                };
 
-                    var loadOntology = function (applicationData) {
-                        return axios.get(applicationData.config.ontologyUri)
-                            .then(function (response) {
-                                applicationData.ontology = ensureJSON(response.data);
-                                return applicationData;
-                            });
-                    };
+                function initSelect2(applicationData) {
+                    var select2 = require('select2');
+                    $.fn.select2.defaults.set("language", {
+                        inputTooLong: function (args) {
+                            var overChars = args.input.length - args.maximum;
 
-                    function initSelect2(applicationData) {
-                        var select2 = require('select2');
-                        $.fn.select2.defaults.set("language", {
-                            inputTooLong: function (args) {
-                                var overChars = args.input.length - args.maximum;
-
-                                return 'Vennligst fjern ' + overChars + ' tegn';
-                            },
-                            inputTooShort: function (args) {
-                                var remainingChars = args.minimum - args.input.length;
-                                var message = 'Vennligst skriv inn ';
-                                if (remainingChars > 1) {
-                                    message += ' flere tegn';
-                                } else {
-                                    message += ' tegn til';
-                                }
-                                return message;
-                            },
-                            loadingMore: function () {
-                                return 'Laster flere resultater…';
-                            },
-                            maximumSelected: function (args) {
-                                if (args.maximum == 1) {
-                                    return "Du kan bare velge én verdi her";
-                                } else {
-                                    return 'Du kan velge maks ' + args.maximum + ' verdier her';
-                                }
-                            },
-                            noResults: function () {
-                                return 'Ingen treff';
-                            },
-                            searching: function () {
-                                return 'Søker…';
+                            return 'Vennligst fjern ' + overChars + ' tegn';
+                        },
+                        inputTooShort: function (args) {
+                            var remainingChars = args.minimum - args.input.length;
+                            var message = 'Vennligst skriv inn ';
+                            if (remainingChars > 1) {
+                                message += ' flere tegn';
+                            } else {
+                                message += ' tegn til';
                             }
-                        });
-                        require('ractive-decorators-select2');
-                        return applicationData;
-                    }
-
-                    function loadCreatorOfWork() {
-                        var creatorUri = _.find(ractive.get("inputs"), function (input) {
-                            return (input.fragment === "creator");
-                        }).values[0].current.value;
-                        if (creatorUri !== "") {
-                            return loadExistingResource(creatorUri).then(function () {
-                                ractive.set("targetUri.Person", creatorUri);
-                            });
+                            return message;
+                        },
+                        loadingMore: function () {
+                            return 'Laster flere resultater…';
+                        },
+                        maximumSelected: function (args) {
+                            if (args.maximum == 1) {
+                                return "Du kan bare velge én verdi her";
+                            } else {
+                                return 'Du kan velge maks ' + args.maximum + ' verdier her';
+                            }
+                        },
+                        noResults: function () {
+                            return 'Ingen treff';
+                        },
+                        searching: function () {
+                            return 'Søker…';
                         }
-                    }
+                    });
+                    require('ractive-decorators-select2');
+                    return applicationData;
+                }
 
-                    function loadWorkOfPublication() {
-                        var workUri = _.find(ractive.get("inputs"), function (input) {
-                            return (input.fragment === "publicationOf");
-                        }).values[0].current.value[0];
-                        return loadExistingResource(workUri).then(function () {
-                            ractive.set("targetUri.Work", workUri);
+                function loadCreatorOfWork() {
+                    var creatorUri = _.find(ractive.get("inputs"), function (input) {
+                        return (input.fragment === "creator");
+                    }).values[0].current.value;
+                    if (creatorUri !== "") {
+                        return loadExistingResource(creatorUri).then(function () {
+                            ractive.set("targetUri.Person", creatorUri);
                         });
                     }
+                }
 
-                    var loadResourceOfQuery = function (applicationData) {
-                        var query = URI.parseQuery(URI.parse(document.location.href).query);
-                        if (query.Publication) {
-                            loadExistingResource(query.Publication)
-                                .then(loadWorkOfPublication)
-                                .then(loadCreatorOfWork)
-                                .then(function () {
-                                    ractive.set("targetUri.Publication", query.Publication);
-                                    ractive.fire("activateTab", {keypath: "inputGroups.3"});
-                                });
-                        } else if (query.Work) {
-                            loadExistingResource(query.Work)
-                                .then(loadCreatorOfWork)
-                                .then(function () {
-                                    ractive.set("targetUri.Work", query.Work);
-                                    ractive.fire("activateTab", {keypath: "inputGroups.2"});
-                                });
-                        } else if (query.Person) {
-                            loadExistingResource(query.Person).then(function () {
-                                ractive.set("targetUri.Person", query.Person);
-                                ractive.fire("activateTab", {keypath: "inputGroups.0"});
-                            });
-                        }
-                        return applicationData;
-                    };
-
-            return axios.get("/config")
-                .then(extractConfig)
-                .then(loadTemplate)
-                .then(loadOntology)
-                .then(createInputGroups)
-                .then(initSelect2)
-                .then(initRactive)
-                .then(loadResourceOfQuery)
-                .catch(function (err) {
-                    console.log("Error initiating Main: " + err);
-                });
-        },
-        repositionSupportPanelsHorizontally: function () {
-            var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
-            var supportPanelWidth = $("#right-dummy-panel").width();
-
-                    //var existingTop = $(".support-panel").position().top;
-                    $(".support-panel").each(function (index, panel) {
-                        var existingTop = $(panel).position().top;
-                        $(panel).css({left: supportPanelLeftEdge, width: supportPanelWidth});
+                function loadWorkOfPublication() {
+                    var workUri = _.find(ractive.get("inputs"), function (input) {
+                        return (input.fragment === "publicationOf");
+                    }).values[0].current.value[0];
+                    return loadExistingResource(workUri).then(function () {
+                        ractive.set("targetUri.Work", workUri);
                     });
                 }
-                ,
-                getRactive: function () {
-                    return ractive;
-                }
+
+                var loadResourceOfQuery = function (applicationData) {
+                    var query = URI.parseQuery(URI.parse(document.location.href).query);
+                    if (query.Publication) {
+                        loadExistingResource(query.Publication)
+                            .then(loadWorkOfPublication)
+                            .then(loadCreatorOfWork)
+                            .then(function () {
+                                ractive.set("targetUri.Publication", query.Publication);
+                                ractive.fire("activateTab", {keypath: "inputGroups.3"});
+                            });
+                    } else if (query.Work) {
+                        loadExistingResource(query.Work)
+                            .then(loadCreatorOfWork)
+                            .then(function () {
+                                ractive.set("targetUri.Work", query.Work);
+                                ractive.fire("activateTab", {keypath: "inputGroups.2"});
+                            });
+                    } else if (query.Person) {
+                        loadExistingResource(query.Person).then(function () {
+                            ractive.set("targetUri.Person", query.Person);
+                            ractive.fire("activateTab", {keypath: "inputGroups.0"});
+                        });
+                    }
+                    return applicationData;
+                };
+
+                return axios.get("/config")
+                    .then(extractConfig)
+                    .then(loadTemplate)
+                    .then(loadOntology)
+                    .then(createInputGroups)
+                    .then(initSelect2)
+                    .then(initRactive)
+                    .then(loadResourceOfQuery)
+                    .catch(function (err) {
+                        console.log("Error initiating Main: " + err);
+                    });
+            },
+            repositionSupportPanelsHorizontally: function () {
+                var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
+                var supportPanelWidth = $("#right-dummy-panel").width();
+
+                //var existingTop = $(".support-panel").position().top;
+                $(".support-panel").each(function (index, panel) {
+                    var existingTop = $(panel).position().top;
+                    $(panel).css({left: supportPanelLeftEdge, width: supportPanelWidth});
+                });
             }
+            ,
+            getRactive: function () {
+                return ractive;
+            }
+        }
         return Main;
     }
 ));
