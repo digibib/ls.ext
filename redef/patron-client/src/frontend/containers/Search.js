@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactPaginate from 'react-paginate'
-import { routeActions } from 'react-router-redux'
+import { push } from 'react-router-redux'
 
 import * as SearchActions from '../actions/SearchActions'
 import SearchResults from '../components/SearchResults'
@@ -22,11 +22,14 @@ const Search = React.createClass({
     totalHits: PropTypes.number.isRequired
   },
   handlePageClick (data) {
-    let newQuery = Object.assign({},
-      this.props.location.query,
-      { page: data.selected + 1 }
-    )
-    this.props.dispatch(routeActions.push({ query: newQuery }))
+    let page = String(data.selected + 1)
+    if (page !== this.props.location.query.page) {
+      let newQuery = Object.assign({},
+        this.props.location.query,
+        { page: page }
+      )
+      this.props.dispatch(push({ query: newQuery }))
+    }
   },
   renderPagination () {
     if ((this.props.totalHits > Constants.searchQuerySize) && this.props.location.query.query) {
@@ -35,6 +38,7 @@ const Search = React.createClass({
           <ReactPaginate previousLabel={'<'}
                          nextLabel={'>'}
                          breakLabel={<li className='break'><span>...</span></li>}
+                         initialSelected={this.props.location.query.page - 1 || 0}
                          forceSelected={this.props.location.query.page - 1 || 0}
                          marginPagesDisplayed={1}
                          pageRangeDisplayed={5}

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import { routeActions } from 'react-router-redux'
+import { push } from 'react-router-redux'
 
 export default React.createClass({
   propTypes: {
@@ -24,7 +24,7 @@ export default React.createClass({
   search (event) {
     event.preventDefault()
     let url = this.context.router.createPath({ pathname: '/search', query: { query: this.state.searchFieldInput } })
-    this.props.dispatch(routeActions.push(url))
+    this.props.dispatch(push(url))
   },
   render () {
     return (

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { routeActions } from 'react-router-redux'
+import { push } from 'react-router-redux'
 import Constants from '../constants/Constants'
 
 export default React.createClass({
@@ -80,7 +80,7 @@ export default React.createClass({
     }
     delete locationQuery[ 'page' ]
     let url = this.context.router.createPath({ pathname: '/search', query: locationQuery })
-    this.props.dispatch(routeActions.push(url))
+    this.props.dispatch(push(url))
   },
   render () {
     if (!this.props.filters || this.props.filters.size === 0) {
