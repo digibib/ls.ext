@@ -148,3 +148,10 @@ ul.pagination li.active a {
 ul.pagination li:not(.active) a:hover {
   background-color: #eee;
 }
+
+ul.searchfilters {
+  list-style-type: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

@@ -35,6 +35,7 @@ export default React.createClass({
                 <SearchFilter
                   key={aggregation}
                   title={Labels[aggregation]}
+                  aggregation={aggregation}
                   filters={filtersByAggregation}
                   locationQuery={this.props.locationQuery}
                   dispatch={this.props.dispatch}/>

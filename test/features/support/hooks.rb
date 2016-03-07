@@ -37,7 +37,7 @@ Before do |scenario|
     # Run scenarios tagged @xvfb with firefox in a virual framebuffer
     @headless = Headless.new
     @headless.start
-    @browser = @browser || (Watir::Browser.new :firefox )
+    @browser = @browser || (Watir::Browser.new :firefox)
   else
     @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
   end
@@ -56,6 +56,18 @@ Before do
     $testingLanguageSwitch = true
   end
 end
+
+
+Before do |scenario|
+  $random_migrate ||= false
+  unless $random_migrate
+    if scenario.source_tag_names.include?('@random_migrate')
+      $random_migrate = RandomMigrate::Migrator.new.generate_quick_test_set() #random_migrate(16, 2, 2)
+    end
+  end
+  @context[:random_migrate_id] = $random_migrate
+end
+
 
 # After all test are run
 at_exit do

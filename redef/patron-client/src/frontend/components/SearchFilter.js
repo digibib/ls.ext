@@ -5,6 +5,7 @@ import Constants from '../constants/Constants'
 export default React.createClass({
   propTypes: {
     title: PropTypes.string.isRequired,
+    aggregation: PropTypes.string.isRequired,
     filters: PropTypes.array,
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired
@@ -43,12 +44,12 @@ export default React.createClass({
       }
 
       return (
-        <p key={filter.aggregation + '_' + filter.bucket}
-           data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
+        <li key={filter.aggregation + '_' + filter.bucket}
+            data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
           <input type='checkbox' checked={checked} onChange={this.handleChange.bind(this, filter)}/>
           {filter.bucket} (
           {filter.count})
-        </p>
+        </li>
       )
     })
   },
@@ -87,14 +88,16 @@ export default React.createClass({
       return this.renderEmpty()
     }
     return (
-      <div>
+      <div data-automation-id={`filter_${this.props.aggregation}`}>
         <h4>{this.props.title}</h4>
-        {this.renderFilters()}
-        {(this.state.showAll || this.props.filters.length <= Constants.maxVisibleFilterItems) ? '' : (
-          <p onClick={this.handleShowAllClick}>
-            + vis alle
-          </p>
-        )}
+        <ul className='searchfilters'>
+          {this.renderFilters()}
+          {(this.state.showAll || this.props.filters.length <= Constants.maxVisibleFilterItems) ? '' : (
+            <li onClick={this.handleShowAllClick}>
+              + vis alle
+            </li>
+          )}
+        </ul>
       </div>
     )
   }
