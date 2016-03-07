@@ -1,6 +1,7 @@
 package no.deichman.services.entity.repository;
 
 import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -8,13 +9,17 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.update.UpdateAction;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -151,7 +156,9 @@ public class SPARQLQueryBuilderTest {
         Patch patch = new Patch("add", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
-        String expected = "INSERT DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .}";
+        String expected = "INSERT DATA {\n"
+                + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
+                + "}";
         assertEquals(expected,sqb.patch(patches));
     }
 
@@ -162,12 +169,14 @@ public class SPARQLQueryBuilderTest {
         Patch patch = new Patch("del", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
-        String expected = "DELETE DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .}";
+        String expected = "DELETE DATA {\n"
+                + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
+                + "}";
         assertEquals(expected,sqb.patch(patches));
     }
 
     @Test
-    public void test_delete_add_multi_patch() throws Exception{
+    public void test_delete_insert_patch_combination_one() throws Exception{
         List<Patch> patches = new ArrayList<Patch>();
         Statement s1 = statement("http://example.com/a", "http://example.com/ontology/name", "json");
         Patch patch1 = new Patch("del", s1, null);
@@ -179,11 +188,131 @@ public class SPARQLQueryBuilderTest {
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
-        String expected = "DELETE DATA {<http://example.com/a> <http://example.com/ontology/name> \"json\" .} ;\n"
-                        + "DELETE DATA {<http://example.com/a> <http://example.com/ontology/test> \"json\" .} ;\n"
-                        + "INSERT DATA {<http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .}";
-
+        String expected = "DELETE DATA {\n"
+                + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
+                + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
+                + "} ;\n"
+                + "INSERT DATA {\n"
+                + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
+                + "}";
         assertEquals(expected,sqb.patch(patches));
+    }
+
+    @Test
+    public void test_delete_insert_patch_combination_two() {
+        List<Patch> patches = new ArrayList<Patch>();
+        Statement s0 = statement("http://example.com/a", "http://example.com/ontology/farmhouse", "Fiffle");
+        Patch patch0 = new Patch("add", s0, null);
+        patches.add(patch0);
+        Statement s1 = statement("http://example.com/a", "http://example.com/ontology/name", "json");
+        Patch patch1 = new Patch("del", s1, null);
+        patches.add(patch1);
+        Statement s2 = statement("http://example.com/a", "http://example.com/ontology/test", "json");
+        Patch patch2 = new Patch("del", s2, null);
+        patches.add(patch2);
+        Statement s3 = statement("http://example.com/a", "http://example.com/ontology/cress", "false fish");
+        Patch patch3 = new Patch("add", s3, null);
+        patches.add(patch3);
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        String expected = "DELETE DATA {\n"
+                + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
+                + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
+                + "} ;\n"
+                + "INSERT DATA {\n"
+                + "    <http://example.com/a> <http://example.com/ontology/farmhouse> \"Fiffle\" .\n"
+                + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
+                + "}";
+        assertEquals(expected,sqb.patch(patches));
+    }
+
+    @Test
+    public void test_bnode_insert_patch_one() {
+        List<Patch> patches = new ArrayList<Patch>();
+        Statement s0 = ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://example.org/a"),
+                ResourceFactory.createProperty("http://example.org/prop#a"), ResourceFactory.createResource("_:b0"));
+        Patch patch0 = new Patch("add", s0, null);
+        patches.add(patch0);
+        Statement s1 = statement("_:b0", "http://example.com/ontology/name", "json");
+        Patch patch1 = new Patch("add", s1, null);
+        patches.add(patch1);
+        Statement s2 = statement("_:b0", "http://example.com/ontology/test", "json");
+        Patch patch2 = new Patch("add", s2, null);
+        patches.add(patch2);
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        String expected = "INSERT DATA {\n"
+                + "    <http://example.org/a> <http://example.org/prop#a> <_:b0> .\n"
+                + "    <_:b0> <http://example.com/ontology/name> \"json\" .\n"
+                + "    <_:b0> <http://example.com/ontology/test> \"json\" .\n"
+                + "}";
+        assertEquals(expected,sqb.patch(patches));
+    }
+
+    @Test
+    public void test_bnode_insert_delete_patch_one() {
+
+        String addData = "@prefix : <http://example.com/> .\n"
+                + "\n"
+                + ":a :b _:b0 ;\n"
+                + "   :c \"A test\" .\n"
+                + "\n"
+                + "_:b0 :c \"another test\" .";
+
+        String delData ="@prefix : <http://example.com/> .\n"
+                + "\n"
+                + ":a :b _:b0 ;\n"
+                + "   :c \"A delete test\" .\n"
+                + "\n"
+                + "_:b0 :c \"another delete test\" .";
+
+        List<Patch> patches = new ArrayList<Patch>();
+
+        Model addModel = RDFModelUtil.modelFrom(addData, Lang.TURTLE);
+        Model delModel = RDFModelUtil.modelFrom(delData, Lang.TURTLE);
+
+        List<Statement> addStatements = addModel.listStatements().toList();
+        List<Statement> delStatements = delModel.listStatements().toList();
+
+        patches.addAll(addStatements.stream().map(s -> createPatch("add", s)).collect(Collectors.toList()));
+        patches.addAll(delStatements.stream().map(s -> createPatch("del", s)).collect(Collectors.toList()));
+
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+
+
+        String[] expectedDelLines = new String[]{"    <http://example.com/a> <http://example.com/b> _:b0 .",
+                            "    <http://example.com/a> <http://example.com/c> \"A delete test\" .",
+                            "    _:b0 <http://example.com/c> \"another delete test\" ."};
+
+        String[] expectedDelSelect = new String[]{"    <http://example.com/a> <http://example.com/b> ?b0 .",
+                "    <http://example.com/a> <http://example.com/c> \"A delete test\" .",
+                "    ?b0 <http://example.com/c> \"another delete test\" ."};
+
+        String[] expectedAddLines = new String[]{"    <http://example.com/a> <http://example.com/b> _:b0 .",
+                "    <http://example.com/a> <http://example.com/c> \"A test\" .",
+                "    _:b0 <http://example.com/c> \"another test\" ."};
+
+        String actual = sqb.patch(patches).replaceAll("(\\?|_:)[A-Za-z0-9]+", "$1b0");
+        actual = actual.replaceAll("(DELETE DATA \\{\\n| WHERE \\{\\n| ;\\nINSERT DATA \\{\\n)", "");
+        String[] actualCleaned = actual.split("\n}");
+        String[] actualDelLines = actualCleaned[0].split("\n");
+        String[] actualDelSelect = actualCleaned[1].split("\n");
+        String[] actualAddLines = actualCleaned[2].split("\n");
+
+        Arrays.sort(actualDelLines);
+        Arrays.sort(actualDelSelect);
+        Arrays.sort(actualAddLines);
+
+        assertArrayEquals(expectedDelLines, actualDelLines);
+        assertArrayEquals(expectedDelSelect, actualDelSelect);
+        assertArrayEquals(expectedAddLines, actualAddLines);
+
+    }
+
+    private Patch createPatch(String operation, Statement s) {
+
+        Patch p = new Patch(operation, s, null);
+
+        return p;
     }
 
     private static Statement statement(String resource, String property, String literal) {
@@ -191,7 +320,7 @@ public class SPARQLQueryBuilderTest {
                 ResourceFactory.createResource(resource),
                 ResourceFactory.createProperty(property), ResourceFactory.createPlainLiteral(literal));
     }
-
+/* Is this the role of this class?
     @Test(expected=Exception.class)
     public void test_invalid_patch_fails() throws Exception{
         List<Patch> patches = new ArrayList<Patch>();
@@ -201,7 +330,7 @@ public class SPARQLQueryBuilderTest {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         sqb.patch(patches);
     }
-
+*/
     @Test
     public void test_get_Bibliofil_person_resource() {
         String personId = "n12345";

@@ -1,6 +1,7 @@
 package no.deichman.services.entity.repository;
 
 import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.query.Query;
@@ -13,8 +14,8 @@ import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
@@ -22,6 +23,11 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
  * Responsibility: TODO.
  */
 public final class SPARQLQueryBuilder {
+    public static final String INSERT = "INSERT";
+    public static final String DELETE = "DELETE";
+    public static final String NEWLINE = "\n";
+    private static final String INDENT = "    ";
+
     private final BaseURI baseURI;
 
     SPARQLQueryBuilder() {
@@ -165,34 +171,67 @@ public final class SPARQLQueryBuilder {
 
     public String patch(List<Patch> patches) {
         StringBuilder q = new StringBuilder();
-        Iterator<Patch> patchIterator = patches.iterator();
-        while (patchIterator.hasNext()) {
-            Patch currentPatch = patchIterator.next();
-            String sep = " ;\n";
-            String operation = null;
-            if (!patchIterator.hasNext()) {
-                sep = "";
-            }
-            switch (currentPatch.getOperation().toUpperCase()) {
-                case "ADD":
-                    operation = "INSERT";
-                    break;
-                case "DEL":
-                    operation = "DELETE";
-                    break;
-                default:
-                    throw new RuntimeException("Invalid patch operation");
-            }
 
-            Model temp = ModelFactory.createDefaultModel();
-            temp.add(currentPatch.getStatement());
-            StringWriter sw = new StringWriter();
-            RDFDataMgr.write(sw, temp, Lang.NTRIPLES);
-            String triple = sw.toString();
-            String phrase = operation + " DATA {" + triple.trim() + "}" + sep;
-            q.append(phrase);
+        String del = getStringOfStatments(patches, "DEL");
+        String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
+        String add = getStringOfStatments(patches, "ADD");
+
+        if (del.length() > 0) {
+            q.append(DELETE + " DATA {" + NEWLINE + del +  "}");
         }
+        if (delSelect.length() > 0) {
+            q.append(" WHERE {" + NEWLINE + delSelect + "}");
+        }
+        if (add.length() > 0 && del.length() > 0) {
+            q.append(" ;\n");
+        }
+        if (add.length() > 0) {
+            q.append(INSERT + " DATA {" + NEWLINE + add + "}");
+        }
+
         return q.toString();
+    }
+
+    private String getStringOfStatementsWithVariables(List<Patch> patches, String operation) {
+
+        String retVal = "";
+
+        String bnodeSubjectCheck = patches.stream()
+                .filter(s -> s.getStatement().getSubject().isAnon())
+                .map(s -> {return "a"; })
+                .collect(Collectors.joining(""));
+
+        String bnodeObjectCheck = patches.stream()
+                .filter(s -> s.getStatement().getObject().isAnon())
+                .map(s -> {return "a"; })
+                .collect(Collectors.joining());
+
+        if (bnodeSubjectCheck.contains("a") && bnodeObjectCheck.contains("a")) {
+            retVal = patches.stream()
+                    .filter(patch -> patch.getOperation().toUpperCase().equals(operation.toUpperCase()))
+                    .map(patch2 -> {
+                                Model model = ModelFactory.createDefaultModel();
+                                model.add(patch2.getStatement());
+                                String withoutBnodes = RDFModelUtil.stringFrom(model, Lang.NTRIPLES).replaceAll("_:", "?");
+                                return INDENT + withoutBnodes;
+                            }
+                    ).filter(s -> !s.isEmpty()).collect(Collectors.joining());
+
+        }
+
+        return retVal;
+    }
+
+    private String getStringOfStatments(List<Patch> patches, String operation) {
+        return patches.stream()
+                .filter(patch -> patch.getOperation().toUpperCase().equals(operation.toUpperCase()))
+                .map(patch2 -> {
+                    Model model = ModelFactory.createDefaultModel();
+                    model.add(patch2.getStatement());
+                    return INDENT + RDFModelUtil.stringFrom(model, Lang.NTRIPLES);
+                }
+        ).filter(s -> !s.isEmpty()).collect(Collectors.joining());
+
     }
 
     public Query getImportedResourceById(String id, String type) {

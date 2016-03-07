@@ -463,6 +463,46 @@ public class AppTest {
         doSearchForPlaceOfPublication("Oslo");
     }
 
+    @Test
+    public void test_patching_with_bnodes() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#place";
+        String o1 = "_:b0";
+        String type = ANY_URI;
+        String p2 = baseUri + "ontology#country";
+        String o2 = "Norway";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .add(buildLDPatch(buildPatchStatement(op, o1, p2, o2)).get(0))
+                .build();
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+    }
+
+    @Test
+    public void test_deletion_of_bnodes() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#place";
+        String o1 = "_:b0";
+        String type = ANY_URI;
+        String p2 = baseUri + "ontology#country";
+        String o2 = "Norway";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .add(buildLDPatch(buildPatchStatement(op, o1, p2, o2)).get(0))
+                .build();
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+    }
+
     private HttpResponse<String> buildDeleteRequest(String location) throws UnirestException {
         return Unirest
                 .delete(location).asString();
