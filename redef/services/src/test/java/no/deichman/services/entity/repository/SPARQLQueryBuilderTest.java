@@ -88,26 +88,27 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_get_items_query(){
         String uri = "http://example.com/a";
-        String test = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
-                + "PREFIX duo: <http://data.deichman.no/utility#>\n"
-                + "CONSTRUCT {\n"
-                + "  <" + uri + "> deichman:hasEdition"
-                + " ["
-                + "    a deichman:Item ;"
-                + "    deichman:location ?location ;"
-                + "    deichman:status ?status ;"
-                + "    deichman:barcode ?barcode ;"
-                + "    duo:shelfmark ?shelfmark ;"
-                + "    duo:onloan ?onloan"
-                + "  ]"
-                + "} WHERE { \n"
-                + "  ?uri a deichman:Item ;\n"
-                + "    deichman:location ?location;\n"
-                + "    deichman:status ?status ;"
-                + "    deichman:barcode ?barcode ;\n"
-                + "    duo:shelfmark ?shelfmark ;\n"
-                + "    duo:onloan ?onloan .\n"
-                + "}";
+        String test = "PREFIX  deichman: <" + baseURI.ontology() + ">\n"
+                + "PREFIX  duo:  <http://data.deichman.no/utility#>\n"
+                + "\n"
+                + "CONSTRUCT \n"
+                + "  { \n"
+                + "    ?uri deichman:editionOf <" + uri + "> .\n"
+                + "    ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deichman:Item .\n"
+                + "    ?uri deichman:location ?location .\n"
+                + "    ?uri deichman:status ?status .\n"
+                + "    ?uri deichman:barcode ?barcode .\n"
+                + "    ?uri duo:shelfmark ?shelfmark .\n"
+                + "    ?uri duo:onloan ?onloan .\n"
+                + "  }\n"
+                + "WHERE\n"
+                + "  { ?uri  a                     deichman:Item ;\n"
+                + "          deichman:location     ?location ;\n"
+                + "          deichman:status       ?status ;\n"
+                + "          deichman:barcode      ?barcode ;\n"
+                + "          duo:shelfmark         ?shelfmark ;\n"
+                + "          duo:onloan            ?onloan\n"
+                + "  }\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         Query query = sqb.getItemsFromModelQuery(uri);
         Query expected = QueryFactory.create(test);
