@@ -43,7 +43,7 @@ def version_jetty = '9.2.10.v20150310'
 def version_jersey = '2.21'
 def version_jackson = '2.6.2'
 def version_slf4j = '1.7.12'
-def version_jena = '3.0.0'
+def version_jena = '3.0.1'
 def version_commons_lang = '2.6'
 def version_commons_io = '2.4'
 
@@ -60,7 +60,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-smile', version: version_jackson
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
     compile group: 'org.apache.jena', name: 'apache-jena-libs', version: version_jena
-    compile group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.5.1'
+    compile group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.8.2'
     compile group: 'commons-io', name: 'commons-io', version: version_commons_io
     compile group: 'commons-lang', name: 'commons-lang', version: version_commons_lang
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
