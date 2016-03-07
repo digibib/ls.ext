@@ -21,7 +21,7 @@ class WorkFlow < CatalinkerPage
 
   def assert_selected_tab(name_of_visible_tag)
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
-      @browser.ul(:id => 'workflow-tabs').a(:class => 'grid-tab-link-selected').text.should eq name_of_visible_tag
+      @browser.ul(:id => 'workflow-tabs').a(:class => 'grid-tab-link-selected').text.eql? name_of_visible_tag
     end
   end
 

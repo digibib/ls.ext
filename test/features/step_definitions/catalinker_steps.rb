@@ -549,16 +549,16 @@ When(/^jeg venter litt$/) do
 end
 
 When(/^viser trefflisten at personen har et verk fra før$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "search-result-name", :text => @context[:person_name]).should exist }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "search-result-name", :text => @context[:person_name]).exists? }
 end
 
 When(/^trefflisten viser at personen har riktig nasjonalitet$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text => @context[:person_nationality]).should exist }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text => @context[:person_nationality]).exists? }
 end
 
 When(/^trefflisten viser at personen har riktig levetid$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "birthYear", :text => @context[:person_birthyear]).should exist }
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text => @context[:person_deathyear]).should exist }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "birthYear", :text => @context[:person_birthyear]).exists? }
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text => @context[:person_deathyear]).exists? }
 end
 
 When(/^jeg verifiserer opplysningene om utgivelsen$/) do
