@@ -36,7 +36,8 @@ const Search = React.createClass({
   renderPagination () {
     if ((this.props.totalHits > Constants.searchQuerySize) && this.props.location.query.query) {
       return (
-        <section className='col pagination-area'>
+        <section className='col pagination-area'
+                 data-automation-id='search-results-pagination'>
           <ReactPaginate previousLabel={'<'}
                          nextLabel={'>'}
                          breakLabel={<li className='break'><span>...</span></li>}
