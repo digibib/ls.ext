@@ -8,8 +8,7 @@ export default React.createClass({
     searchActions: PropTypes.object.isRequired,
     searchError: PropTypes.any.isRequired,
     totalHits: PropTypes.number.isRequired,
-    searchResults: PropTypes.array.isRequired,
-    isSearching: PropTypes.bool.isRequired
+    searchResults: PropTypes.array.isRequired
   },
   componentWillMount () {
     if (this.props.locationQuery.query) {
@@ -37,9 +36,6 @@ export default React.createClass({
     })
     return filters
   },
-  renderIsSearching () {
-    return <div data-automation-id='is_searching'>Søker...</div>
-  },
   render () {
     if (this.props.searchError) {
       return (
@@ -47,8 +43,6 @@ export default React.createClass({
           Noe gikk galt med søket.
         </p>
       )
-    } else if (this.props.isSearching) {
-      return this.renderIsSearching()
     }
     let total = this.props.totalHits
     let searchQuery = this.props.locationQuery.query
