@@ -4,9 +4,9 @@ require 'pry'
 
 module RandomMigrate
   class Migrator
-    def initialize
+    def initialize(services)
       @id = generate_random_string
-      @ns = 'http://192.168.50.12:8005'
+      @services = services
       @formats = %w(Atlas Book DVD Microfiche Nintendo_optical_disc Blu-ray_Audio DTbook)
       @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/mul http://lexvo.org/id/iso639-3/swe)
       @a = %w(largeFontMeasured braille tactile capitalLetters)
@@ -18,41 +18,41 @@ module RandomMigrate
 
     def generate_person()
       person_name = generate_random_string
-      ntriples = "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@ns}/ontology#Person> .
-                  <person> <#{@ns}/ontology#name> \"#{person_name}\" ."
+      ntriples = "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Person> .
+                  <person> <#{@services}/ontology#name> \"#{person_name}\" ."
       return person_name, ntriples
     end
 
     def generate_work(person_uri, prefix = '')
       work_title = generate_random_string
       work_part_title = generate_random_string
-      ntriples = "<work> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@ns}/ontology#Work> .
-                  <work> <#{@ns}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
-                  <work> <#{@ns}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
-                  <work> <#{@ns}/ontology#creator> <#{person_uri}> ."
+      ntriples = "<work> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Work> .
+                  <work> <#{@services}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
+                  <work> <#{@services}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
+                  <work> <#{@services}/ontology#creator> <#{person_uri}> ."
       return work_title, ntriples
     end
 
     def generate_publication(work_uri)
       publication_title = generate_random_string
-      ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@ns}/ontology#Publication> .
-                  <publication> <#{@ns}/ontology#publicationOf> <#{work_uri}> .
-                  <publication> <#{@ns}/ontology#mainTitle> \"#{publication_title}\" .
-                  <publication> <#{@ns}/ontology#format> <#{'http://data.deichman.no/format#' + @formats.sample}> .
-                  <publication> <#{@ns}/ontology#language> <#{@languages.sample}> .
-                  <publication> <#{@ns}/ontology#adaptationOfPublicationForParticularUserGroups> <http://data.deichman.no/format#adaptationOfPublicationForParticularUserGroups#{@a.sample}> ."
+      ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Publication> .
+                  <publication> <#{@services}/ontology#publicationOf> <#{work_uri}> .
+                  <publication> <#{@services}/ontology#mainTitle> \"#{publication_title}\" .
+                  <publication> <#{@services}/ontology#format> <#{'http://data.deichman.no/format#' + @formats.sample}> .
+                  <publication> <#{@services}/ontology#language> <#{@languages.sample}> .
+                  <publication> <#{@services}/ontology#adaptationOfPublicationForParticularUserGroups> <http://data.deichman.no/format#adaptationOfPublicationForParticularUserGroups#{@a.sample}> ."
       return publication_title, ntriples
     end
 
     def post_ntriples(type, ntriples)
-      response = RestClient.post "#{@ns}/#{type}", ntriples, :content_type => 'application/n-triples'
+      response = RestClient.post "#{@services}/#{type}", ntriples, :content_type => 'application/n-triples'
       uri = response.headers[:location]
       return uri
     end
 
     def index(type, uri)
       id = uri[uri.rindex('/')+1..-1]
-      response = RestClient.put "#{@ns}/#{type}/#{id}/index", {}
+      response = RestClient.put "#{@services}/#{type}/#{id}/index", {}
       return response
     end
 

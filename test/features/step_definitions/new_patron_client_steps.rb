@@ -49,15 +49,17 @@ end
 
 When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do
   filter_values = CGI::parse(URI(@browser.url).query)['filter_work.publication.format']
-  @browser.div(data_automation_id: 'search-result-entries').elements(:xpath, '*').each do |element|
-    match = false
-    filter_values.each do |filter_value|
-      if element.text.include? filter_value
-        match = true
+  wait_for {
+    @browser.div(data_automation_id: 'search-result-entries').elements(:xpath, '*').each do |element|
+      match = false
+      filter_values.each do |filter_value|
+        if element.text.include? filter_value
+          match = true
+        end
       end
+      match.should eq true
     end
-    match.should eq true
-  end
+  }
 end
 
 When(/^skal filterne være valgt i grensesnittet$/) do

@@ -62,7 +62,7 @@ Before do |scenario|
   $random_migrate ||= false
   unless $random_migrate
     if scenario.source_tag_names.include?('@random_migrate')
-      $random_migrate = RandomMigrate::Migrator.new.generate_quick_test_set() #random_migrate(16, 2, 2)
+      $random_migrate = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}").generate_quick_test_set()
     end
   end
   @context[:random_migrate_id] = $random_migrate
