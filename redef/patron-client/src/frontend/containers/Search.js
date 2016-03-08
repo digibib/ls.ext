@@ -71,6 +71,8 @@ const Search = React.createClass({
   }
 })
 
+export { Search as Search }
+
 function mapStateToProps (state) {
   return {
     searchResults: state.search.searchResults,

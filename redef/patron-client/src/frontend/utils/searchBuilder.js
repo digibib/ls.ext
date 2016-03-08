@@ -1,6 +1,21 @@
 import Constants from '../constants/Constants'
 
-export function filteredSearchQuery (query, filters) {
+export function parseFilters (locationQuery) {
+  let filters = []
+  Object.keys(locationQuery).forEach(key => {
+    if (key.startsWith('filter_')) {
+      let aggregation = key.split('_')[ 1 ]
+      let bucket = locationQuery[ key ]
+      filters.push({ aggregation: aggregation, bucket: bucket })
+    }
+  })
+  return filters
+}
+
+export function filteredSearchQuery (locationQuery) {
+  let query = locationQuery.query
+  let filters = parseFilters(locationQuery)
+
   let elasticSearchQuery = initQuery(query)
   let musts = {}
   let nestedMusts = {}

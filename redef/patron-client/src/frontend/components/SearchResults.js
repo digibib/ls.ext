@@ -22,19 +22,7 @@ export default React.createClass({
     }
   },
   search () {
-    let filters = this.parseQuery(this.props.locationQuery)
-    this.props.searchActions.search(this.props.locationQuery.query, filters, this.props.locationQuery.page)
-  },
-  parseQuery (query) {
-    let filters = []
-    Object.keys(query).forEach(key => {
-      if (key.startsWith('filter_')) {
-        let aggregation = key.split('_')[ 1 ]
-        let bucket = query[ key ]
-        filters.push({ aggregation: aggregation, bucket: bucket })
-      }
-    })
-    return filters
+    this.props.searchActions.search()
   },
   render () {
     if (this.props.searchError) {
