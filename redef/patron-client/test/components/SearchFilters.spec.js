@@ -13,7 +13,7 @@ function setup (propOverrides) {
       { aggregation: 'work.publication.format', bucket: 'filter_4', count: '20' }
     ],
     locationQuery: {},
-    dispatch: () => {}
+    setFilter: () => {}
   }, propOverrides)
 
   const output = TestUtils.renderIntoDocument(
@@ -28,7 +28,7 @@ function setup (propOverrides) {
 }
 
 describe('components', () => {
-  describe('SearchFilter', () => {
+  describe('SearchFilters', () => {
     it('should render empty if no query in locationQuery', () => {
       const { node } = setup()
       expect(node.getAttribute('data-automation-id')).toBe('empty')
@@ -40,7 +40,8 @@ describe('components', () => {
           { aggregation: 'work.publication.language', bucket: 'filter_1', count: '10' },
           { aggregation: 'work.publication.language', bucket: 'filter_2', count: '40' }
         ],
-        locationQuery: { query: 'test_query' }
+        locationQuery: { query: 'test_query' },
+        setFilter: () => {}
       })
       expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(1)
     })

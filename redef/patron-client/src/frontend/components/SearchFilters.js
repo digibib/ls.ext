@@ -7,7 +7,7 @@ export default React.createClass({
   propTypes: {
     filters: PropTypes.array.isRequired,
     locationQuery: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired
+    setFilter: PropTypes.func.isRequired
   },
   getDefaultProps () {
     return {
@@ -38,7 +38,7 @@ export default React.createClass({
                   aggregation={aggregation}
                   filters={filtersByAggregation}
                   locationQuery={this.props.locationQuery}
-                  dispatch={this.props.dispatch}/>
+                  setFilter={this.props.setFilter}/>
               )
             })}
           </div>

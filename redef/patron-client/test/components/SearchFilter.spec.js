@@ -14,7 +14,8 @@ function setup (propOverrides) {
       { aggregation: 'test_aggregation', bucket: 'filter_4', count: '20' }
     ],
     locationQuery: {},
-    dispatch: () => {}
+    aggregation: 'aggregation',
+    setFilter: () => {}
   }, propOverrides)
 
   const output = TestUtils.renderIntoDocument(

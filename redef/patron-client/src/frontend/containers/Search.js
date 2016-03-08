@@ -5,6 +5,7 @@ import ReactPaginate from 'react-paginate'
 import { push } from 'react-router-redux'
 
 import * as SearchActions from '../actions/SearchActions'
+import * as SearchFilterActions from '../actions/SearchFilterActions'
 import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
@@ -12,6 +13,7 @@ import Constants from '../constants/Constants'
 const Search = React.createClass({
   propTypes: {
     searchActions: PropTypes.object.isRequired,
+    searchFilterActions: PropTypes.object.isRequired,
     searchResults: PropTypes.array.isRequired,
     isSearching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -56,7 +58,9 @@ const Search = React.createClass({
       <div className='container'>
         <div className='row'>
           <SearchFilters filters={this.props.filters}
-                         locationQuery={this.props.location.query} dispatch={this.props.dispatch}/>
+                         locationQuery={this.props.location.query}
+                         setFilter={this.props.searchFilterActions.setFilter}
+          />
           {this.renderPagination()}
           <SearchResults
             locationQuery={this.props.location.query}
@@ -86,6 +90,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     searchActions: bindActionCreators(SearchActions, dispatch),
+    searchFilterActions: bindActionCreators(SearchFilterActions, dispatch),
     dispatch: dispatch
   }
 }
