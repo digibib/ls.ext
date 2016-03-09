@@ -138,21 +138,9 @@
   rdfs:domain :Work, :Publication ;
   rdfs:range xsd:string .
 
-:originalTitle a rdfs:Property ;
-  rdfs:label "Original title"@en ;
-  rdfs:label "Originaltittel"@no ;
-  rdfs:domain :Work, :Publication ;
-  rdfs:range xsd:string .
-
 :partTitle a rdfs:Property ;
   rdfs:label "Part title"@no ;
   rdfs:label "Deltittel"@no ;
-  rdfs:domain :Publication, :Work ;
-  rdfs:range xsd:string .
-
-:originalPartTitle a rdfs:Property ;
-  rdfs:label "Original part title"@no ;
-  rdfs:label "Original deltittel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
