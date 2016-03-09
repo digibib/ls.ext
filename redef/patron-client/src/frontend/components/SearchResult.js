@@ -9,8 +9,12 @@ export default React.createClass({
     if (creators.length === 0) {
       return
     }
+    let authorLabel = 'Forfatter'
+    if (creators.length > 1) {
+      authorLabel = 'Forfattere'
+    }
     return (
-      <p data-automation-id='work_creators'>Forfatter: {creators.map(creator => {
+      <p data-automation-id='work_creators'>{authorLabel}: {creators.map(creator => {
         return <strong key={creator.relativeUri}><Link to={creator.relativeUri}> {creator.name} </Link></strong>
       })}
       </p>

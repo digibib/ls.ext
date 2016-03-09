@@ -10,13 +10,17 @@ export function processSearchResponse (response) {
     let searchResults = response.hits.hits.map(element => {
       let work = element._source.work
       work.relativeUri = urijs(work.uri).path()
+
       work.creators = []
-      if (work.creator) {
-        // TODO handle more than one creators from Elasticsearch response
-        work.creator.relativeUri = urijs(work.creator.uri).path()
-        let creator = work.creator
-        work.creators.push(creator)
+      if (Array.isArray(work.creator)) {
+        work.creators = work.creator
+      } else if (work.creator) {
+        work.creators.push(work.creator)
       }
+      work.creators.forEach(function (w, i, creators) {
+        creators[i].relativeUri = urijs(w.uri).path()
+      })
+
       work.publications = work.publication || []
       if (!(work.publications instanceof Array)) {
         work.publications = [ work.publications ]
