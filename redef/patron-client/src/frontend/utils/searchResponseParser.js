@@ -17,8 +17,8 @@ export function processSearchResponse (response) {
       } else if (work.creator) {
         work.creators.push(work.creator)
       }
-      work.creators.forEach(function (w, i, creators) {
-        creators[i].relativeUri = urijs(w.uri).path()
+      work.creators.forEach(function (creator, i, creators) {
+        creators[i].relativeUri = urijs(creator.uri).path()
       })
 
       work.publications = work.publication || []
