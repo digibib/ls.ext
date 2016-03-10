@@ -136,6 +136,9 @@ delete_db: stop_ship
 wipe_db: delete_ship
 	vagrant ssh $(SHIP) -c 'sudo docker rm -v koha_mysql_data'
 
+clean_report:
+	rm -rf test/report || true
+
 clean: 					## Destroy $(SHIP) box. Prompts for ok.
 	vagrant destroy -f $(SHIP)
 
