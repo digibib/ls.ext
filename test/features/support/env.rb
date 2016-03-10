@@ -4,7 +4,6 @@ require 'pry'
 require 'pry-nav' # https://banisterfiend.wordpress.com/2012/02/14/the-pry-ecosystem/
 
 require 'rspec'
-require 'yaml'
 require 'securerandom'
 
 BROWSER_WAIT_TIMEOUT = 5 # timeout for waiting for elements to appear using Watir::Wait.until {}

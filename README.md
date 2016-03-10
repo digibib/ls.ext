@@ -14,7 +14,7 @@ browser automation we use [Watir WebDriver](http://watirwebdriver.com).
 
 This setup uses [Vagrant](http://www.vagrantup.com/) for local virtualisation
 and [Docker Engine](https://www.docker.com/docker-engine) for Docker container orchestration.
-A minimal [SaltStack](http://docs.saltstack.com/) is used for provisioning, but is planned removed in the future.
+
 
 ## Usage
 

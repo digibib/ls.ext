@@ -34,16 +34,11 @@ shell_provision_ship:					## Run ONLY shell provisioners
 
 provision:  shell_provision_ship provision_ship   	## Full provision
 
-provision_ship: provision_ship_highstate wait_until_ready ## Provision ship and wait for koha to be ready.
+provision_ship: wait_until_ready ## Wait for koha to be ready.
 
-ifdef GITREF
-PILLAR = "pillar={\"GITREF\": \"$(GITREF)\"}"
-else
+ifndef GITREF
 export GITREF=$(shell git rev-parse HEAD)
 endif
-
-provision_ship_highstate:				## Run state.highstate on $(SHIP)
-	vagrant ssh $(SHIP) -c 'sudo salt-call --retcode-passthrough --local state.highstate $(PILLAR)'
 
 wait_until_ready:					## Checks if koha is up and running
 	vagrant ssh $(SHIP) -c 'sudo docker exec -t koha_container ./wait_until_ready.py'
@@ -141,12 +136,7 @@ delete_db: stop_ship
 wipe_db: delete_ship
 	vagrant ssh $(SHIP) -c 'sudo docker rm -v koha_mysql_data'
 
-clean: clean_report					## Destroy boxes (except $(SHIP)).
-
-clean_report:						## Clean cucumber reports.
-	rm -rf test/report || true
-
-clean_ship:						## Destroy $(SHIP) box. Prompts for ok.
+clean: 					## Destroy $(SHIP) box. Prompts for ok.
 	vagrant destroy -f $(SHIP)
 
 dump_ship:						## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).

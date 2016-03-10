@@ -3,20 +3,17 @@
 
 require "net/http"
 require "uri"
-require 'yaml'
-
-REDEF = YAML.load_file('/srv/pillar/redef/init.sls')["redef"]
 
 HOST = ENV["HOST"] || "192.168.50.12"
 Ports = {
-  :koha_opac =>  { :port => REDEF["koha"]["port_opac"], :path =>'/' },
-  :koha_intra => { :port => REDEF["koha"]["port_intra"], :path =>'/' },
-  :services => { :port => REDEF["services"]["port"], :path =>'/application.wadl?detail=true' },
-  :patron_client_search => { :port => REDEF["patron-client"]["port"], :path =>'/' },
-  :patron_client_person => { :port => REDEF["patron-client"]["port"], :path =>'/person/dummyid' },
-  :patron_client_work => { :port => REDEF["patron-client"]["port"], :path =>'/work/dummyid' },
-  :catalinker => { :port => REDEF["catalinker"]["port"], :path =>'/' },
-  :elasticsearch => { :port => REDEF["elasticsearch"]["http"]["port"], :path =>'/' }
+  :koha_opac =>  { :port => "8080", :path =>'/' },
+  :koha_intra => { :port => "8081", :path =>'/' },
+  :services => { :port => "8005", :path =>'/application.wadl?detail=true' },
+  :patron_client_search => { :port => "8000", :path =>'/' },
+  :patron_client_person => { :port => "8000", :path =>'/person/dummyid' },
+  :patron_client_work => { :port => "8000", :path =>'/work/dummyid' },
+  :catalinker => { :port => "8010", :path =>'/' },
+  :elasticsearch => { :port => "8200", :path =>'/' }
 }
 
 failed = []
