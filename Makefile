@@ -76,9 +76,9 @@ FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
 rebuild=vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
-	  sudo docker-compose stop catalinker || true &&\
-	  sudo docker-compose rm -f catalinker || true &&\
-	  sudo docker-compose build catalinker &&\
+	  sudo docker-compose stop $(1) || true &&\
+	  sudo docker-compose rm -f $(1) || true &&\
+	  sudo docker-compose build $(1) &&\
 	  sudo docker-compose up --force-recreate -d $(1)"
 
 rebuild_services:					## Force rebuilds services
