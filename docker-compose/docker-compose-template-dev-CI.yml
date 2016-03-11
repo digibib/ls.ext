@@ -165,23 +165,14 @@ services:
       KOHA_INTRA_PORT: "http://${HOST}:8081"
       SERVICES_PORT: "http://services:8005"
 
-  build_services:
-    container_name: redef_build_services
-    build:
-      context: /vagrant/redef/services
-      dockerfile: Dockerfile.build
-    volumes:
-      - /services/build/libs
-
   services:
     container_name: redef_services_container
     build:
       context: /vagrant/redef/services
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.build
     networks:
       - backend
     depends_on:
-      - build_services
       - fuseki
       - koha
     ports:
@@ -197,8 +188,7 @@ services:
       DATA_BASEURI: "${DATA_BASEURI}"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
-    volumes_from:
-      - build_services
+
   patron-client:
     container_name: redef_patron_client_container
     build:
