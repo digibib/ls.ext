@@ -7,7 +7,10 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
 
+RUN npm set progress=false
+RUN npm set color=false
 RUN npm install > install.log 2>&1
+
 COPY . /usr/src/app
 VOLUME /usr/src/app/
 
