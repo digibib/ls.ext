@@ -5,6 +5,10 @@ networks:
   backend:
     driver: bridge
 
+volumes:
+  build_services:
+    driver: local
+
 services:
   koha:
     container_name: koha_container
@@ -171,16 +175,27 @@ services:
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
 
+  tmp_build_services:
+    container_name: tmp_build_services
+    build:
+      context: /vagrant/redef/services
+      dockerfile: Dockerfile.build
+    volumes:
+      - build_services:/services/build/libs
+
   services:
     container_name: redef_services_container
     build:
       context: /vagrant/redef/services
-      dockerfile: Dockerfile.build
+      dockerfile: Dockerfile
     networks:
       - backend
     depends_on:
+      - tmp_build_services
       - fuseki
       - koha
+    volumes:
+      - build_services:/services/build/libs
     ports:
       - "8005:8005"
       - "8006:8006"
