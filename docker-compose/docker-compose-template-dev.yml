@@ -189,7 +189,6 @@ services:
     depends_on:
       - build_services
       - fuseki
-      - elasticsearch
       - koha
     ports:
       - "8005:8005"

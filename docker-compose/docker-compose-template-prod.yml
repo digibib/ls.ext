@@ -149,7 +149,6 @@ services:
       - backend
     depends_on:
       - fuseki
-      - elasticsearch
       - koha
     ports:
       - "8005:8005"
