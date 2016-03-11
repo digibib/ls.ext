@@ -170,7 +170,6 @@ services:
     networks:
       - backend
     depends_on:
-      - elasticsearch
       - services
     ports:
       - "8000:8000"
