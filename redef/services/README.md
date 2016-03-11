@@ -1,8 +1,8 @@
 # Service layer/backend
 
-Services is the API layer for LS.ext. 
+Services is the API layer for LS.ext.
 
-It is packaged as an embedded Jetty application which provides REST services for integration between components 
+It is packaged as an embedded Jetty application which provides REST services for integration between components
 (including linked data and library holdings) creation and maintenance of resources for LS.Ext.
 
 ## Technologies
@@ -29,5 +29,4 @@ See [Makefile](Makefile).
 ## Trobleshooting
 
 Logs can be viewed via:
-* [Core ls.ext log viewer](https://github.com/digibib/ls.ext#monitoring-of-logs-with-devops-the-logserver)
 * Running `make log-f` in the Services catalogue

@@ -75,32 +75,32 @@ ifdef FAIL_FAST
 FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
-rebuild_services:					## Force rebuilds services
-	@vagrant ssh $(SHIP) -c "cd /vagrant/redef/services && ./gradlew --no-daemon -PdockerUrl=http://localhost:2375 dockerBuildImage && \
-	cd /vagrant/docker-compose && sudo docker-compose build services && sudo docker-compose up -d --force-recreate services"
-
-rebuild_catalinker:					## Force rebuilds catalinker
-	@echo "======= FORCE RECREATING CATALINKER ======\n"
-	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
+rebuild=vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
 	  sudo docker-compose stop catalinker || true &&\
 	  sudo docker-compose rm -f catalinker || true &&\
 	  sudo docker-compose build catalinker &&\
-	  sudo docker-compose up --force-recreate -d catalinker"
+	  sudo docker-compose up --force-recreate -d $(1)"
 
-restart_catalinker:					## Restarts catalinker
-	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose restart catalinker"
+rebuild_services:					## Force rebuilds services
+	@echo "======= FORCE RECREATING SERVICES ======\n"
+	$(call rebuild,services)
+
+rebuild_catalinker:					## Force rebuilds catalinker
+	@echo "======= FORCE RECREATING CATALINKER ======\n"
+	$(call rebuild,catalinker)
 
 rebuild_patron_client:					## Force rebuilds patron-client
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
-	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
-	  sudo docker-compose stop patron-client || true && \
-	  sudo docker-compose rm -f patron-client || true && \
-	  sudo docker-compose build patron-client && \
-	  sudo docker-compose up --force-recreate -d patron-client"
+	$(call rebuild,patron-client)
 
 rebuild_overview:					## Force rebuilds overview
 	@echo "======= FORCE RECREATING OVERVIEW ======\n"
-	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose && sudo docker-compose build overview && sudo docker-compose up --force-recreate -d overview"
+	$(call rebuild,overview)
+
+graph:                              ## Redraw graph of components (replaces docker-compose/dev-stack.png)
+	@vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
+	sudo docker run --rm -v /vagrant/docker-compose:/tmp digibib/docker-compose-dot:21af6b4fd714903cebd3d4658ad35da4d0db0051 ./app /tmp/docker-compose.yml 2> /dev/null 1> docker-compose.dot && \
+	dot docker-compose.dot -Tpng > dev-stack.png"
 
 cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
@@ -175,20 +175,6 @@ test_services:						## Run unit and module tests of services
 
 test_catalinker:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make test'
-
-run_redef: run_patron_client run_services run_catalinker
-
-run_patron_client:
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make run-dev'
-
-run_services:
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make run-dev'
-
-clean_services:
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make clean'
-
-run_catalinker:
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make run-dev'
 
 login: # needs EMAIL, PASSWORD, USER
 	@ vagrant ssh $(SHIP) -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'
