@@ -21,7 +21,7 @@
   "scripts": {
     "lint": "gulp lint",
     "start": "gulp serve",
-    "test": "cross-env NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
+    "test": "cross-env NODE_ENV=test mocha -R min --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:debug": "cross-env NODE_ENV=test mocha debug --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:watch": "npm test -- --watch"
   },
