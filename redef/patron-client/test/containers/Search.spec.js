@@ -13,10 +13,11 @@ function setup (propOverrides) {
     isSearching: false,
     dispatch: () => {},
     searchError: false,
-    filters: null,
+    filters: [],
     location: { query: {} },
     locationQuery: {},
-    totalHits: 0
+    totalHits: 0,
+    searchFilterActions: { setFilter: () => {} }
   }, propOverrides)
 
   const output = TestUtils.renderIntoDocument(
