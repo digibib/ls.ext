@@ -52,19 +52,19 @@ export function filteredSearchQuery (locationQuery) {
       filter: {
         and: [ elasticSearchQuery.query.filtered.query ]
       },
-      aggregations: {}
-    }
-
-    aggregations.aggregations[ field ] = {
-      nested: {
-        path: getPath(field)
-      },
-      aggregations: {}
-    }
-
-    aggregations.aggregations[ field ].aggregations[ field ] = {
-      terms: {
-        field: field
+      aggregations: {
+        [ field ]: {
+          nested: {
+            path: getPath(field)
+          },
+          aggregations: {
+            [ field ]: {
+              terms: {
+                field: field
+              }
+            }
+          }
+        }
       }
     }
 

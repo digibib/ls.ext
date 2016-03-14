@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 
 function setup (propOverrides) {
   const props = Object.assign({
-    searchActions: { search: ()=> {} },
+    searchActions: { search: () => {} },
     searchResults: [],
     isSearching: false,
     dispatch: () => {},
