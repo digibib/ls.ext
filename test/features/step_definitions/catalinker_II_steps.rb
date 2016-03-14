@@ -224,5 +224,12 @@ When(/^sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har ro
   parent_id = name_and_role_line.parent.id
   role_association = @browser.div(:id => parent_id).div
   role_association.text.should equal? "Rollen er knyttet til #{association}"
+end
 
+When(/^sjekker jeg at det er "([^"]*)" biinnførsler totalt$/) do |number_of_additional_entries|
+  @browser.divs(:xpath => "//div[@data-role-association]").length.should equal?(number_of_additional_entries.to_i)
+end
+
+When(/^fjerner jeg den første biinførselen$/) do
+  @browser.as(:xpath => "//div[@data-role-association]/a[@class='delete']")[0].click
 end

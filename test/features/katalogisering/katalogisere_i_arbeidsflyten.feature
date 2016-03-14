@@ -41,6 +41,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på knappen for legge til biinnførselen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
+    Så sjekker jeg at det er "2" biinnførsler totalt
+    Så fjerner jeg den første biinførselen
+    Så sjekker jeg at det er "1" biinnførsler totalt
+    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
     Så trykker jeg på knappen for å avslutte
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om utgivelsen

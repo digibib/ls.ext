@@ -108,6 +108,14 @@ body {
       .add-new-btn-row {
         float: right;
       }
+      .role-association a.delete {
+        background-image: url('/images/delete_cross.svg');
+        background-repeat: no-repeat;
+        background-position: left top;
+        padding-left: 2em;
+        cursor: pointer;
+        min-width: 20px;
+      }
       .select-role-assoc {
         .select-creator-radio {
           vertical-align: middle;

@@ -190,7 +190,8 @@ value="{{current.value}}" />
 
 {{#partial searchable-person}}
 {{#./predicate}}
-<div data-role-association="" id="role_assoc_{{uniqueId}}">
+<div class="role-association" data-role-association="" id="role_assoc_{{uniqueId}}">
+    <a class="delete" title="Slett biinnførsel" on-click="deleteAdditionalEntry:{{.}}"></a>
     <h4 data-role-player="">{{./current.displayValue +" - " + predefinedLabelValue(../../predicateType, ./predicate)}}</h4>
     <div>{{"Rollen er knyttet til " + subjectTypeLabelDet(./domain) + "."}}</div>
 </div>

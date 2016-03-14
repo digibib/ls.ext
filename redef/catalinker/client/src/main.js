@@ -565,19 +565,21 @@
                             // keep the value in current.old - so we can do create delete triple patches later
                             if (keypath) {
                                 var cur = ractive.get(keypath + ".current");
-                                ractive.set(keypath + ".old.value", cur.value);
-                                ractive.set(keypath + ".old.lang", cur.lang);
+                                if (cur) {
+                                    ractive.set(keypath + ".old.value", cur.value);
+                                    ractive.set(keypath + ".old.lang", cur.lang);
+                                }
 
                             }
                             ractive.set("save_status", "alle endringer er lagret");
                             ractive.update();
                         })
-                        .catch(function (response) {
-                            // failed to patch resource
-                            console.log("HTTP PATCH failed with: ");
-                            errors.push("Noe gikk galt! Fikk ikke lagret endringene");
-                            ractive.set("save_status", "");
-                        });
+                        //.catch(function (response) {
+                        //    // failed to patch resource
+                        //    console.log("HTTP PATCH failed with: ");
+                        //    errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+                        //    ractive.set("save_status", "");
+                        //});
                 }
             },
             init: function () {
@@ -961,27 +963,35 @@
                                             ractive.set(keyPath + ".tabSelected", false);
                                         }
                                     });
+                                },
+                                deleteAdditionalEntry: function (event) {
+                                    ractive.set(event.keypath + ".current.value", "");
+                                    ractive.set(event.keypath + ".current.displayValue", "");
+                                    ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, event.context.predicate, event.context.domain);
+                                    ractive.splice(parentOf(event.keypath), +_.last(event.keypath.split('.')), 1);
                                 }
                             }
                         );
 
                         ractive.observe("inputGroups.*.inputs.*.values.*", function (newValue, oldValue, keypath) {
-                            if (newValue.current.value === "") {
-                                ractive.set(keypath + ".error", false);
-                                return;
-                            }
-                            var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
-                            var valid = false;
-                            try {
-                                valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range);
-                            } catch (e) {
-                                console.log(e);
-                                return;
-                            }
-                            if (valid) {
-                                ractive.set(keypath + ".error", false);
-                            } else {
-                                ractive.set(keypath + ".error", "ugyldig input");
+                            if (newValue && newValue.current) {
+                                if (newValue.current.value === "") {
+                                    ractive.set(keypath + ".error", false);
+                                    return;
+                                }
+                                var parent = keypath.substr(0, keypath.substr(0, keypath.lastIndexOf(".")).lastIndexOf("."));
+                                var valid = false;
+                                try {
+                                    valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range);
+                                } catch (e) {
+                                    console.log(e);
+                                    return;
+                                }
+                                if (valid) {
+                                    ractive.set(keypath + ".error", false);
+                                } else {
+                                    ractive.set(keypath + ".error", "ugyldig input");
+                                }
                             }
                         });
 
