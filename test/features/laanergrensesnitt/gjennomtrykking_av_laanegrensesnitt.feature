@@ -4,7 +4,7 @@
 @patron_client
 @random_migrate
 @redef
-Egenskap: Gå gjennom lånegrensesnittet
+Egenskap: Ga gjennom lanegrensesnittet
   Som bruker av bibliotekets websider
   Skal jeg kunne søke på verk
   Og kunne filtrere søkeresultatene
@@ -14,7 +14,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "prefix0" (+ id på vilkårlig migrering)
     Så nåværende søketerm skal være "prefix0" (+ id på vilkårlig migrering)
-    Og skal jeg se filtre på format og språk
+    Og skal jeg se filtre på format, språk og målgruppe
     Når jeg slår på et filter for et vilkårlig format
     Så skal filterne være valgt i grensesnittet
     Og skal jeg kun se treff med valgte format tilgjengelig

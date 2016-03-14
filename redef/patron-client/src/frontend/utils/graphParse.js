@@ -1,5 +1,6 @@
 import graph from 'ld-graph'
-import urijs from 'urijs'
+
+import { relativeUri } from './uriParser'
 
 export function parsePersonResponse (personUri, personResponse, worksResponse) {
   let personGraph = worksResponse
@@ -19,7 +20,7 @@ export function parsePersonResponse (personUri, personResponse, worksResponse) {
     let work = {}
     populateLabelsByLanguage(work, 'mainTitle', workResource)
     populateLabelsByLanguage(work, 'partTitle', workResource)
-    work.relativeUri = urijs(workResource.id).path()
+    work.relativeUri = relativeUri(workResource.id)
     person.works.push(work)
   })
 
@@ -45,7 +46,7 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
   workResource.outAll('creator').forEach(creatorResource => {
     let creator = {}
     populate(creator, 'name', creatorResource)
-    creator.relativeUri = urijs(creatorResource.id).path()
+    creator.relativeUri = relativeUri(creatorResource.id)
     work.creators.push(creator)
   })
 

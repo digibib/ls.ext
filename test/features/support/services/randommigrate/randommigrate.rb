@@ -9,6 +9,7 @@ module RandomMigrate
       @services = services
       @formats = %w(Atlas Book DVD Microfiche Nintendo_optical_disc Blu-ray_Audio DTbook)
       @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/mul http://lexvo.org/id/iso639-3/swe)
+      @audiences = %w(juvenile ages11To12 ages13To15 ages13To15)
       @a = %w(largeFontMeasured braille tactile capitalLetters)
     end
 
@@ -29,6 +30,7 @@ module RandomMigrate
       ntriples = "<work> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Work> .
                   <work> <#{@services}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
                   <work> <#{@services}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
+                  <work> <#{@services}/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
                   <work> <#{@services}/ontology#creator> <#{person_uri}> ."
       return work_title, ntriples
     end
@@ -38,7 +40,7 @@ module RandomMigrate
       ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Publication> .
                   <publication> <#{@services}/ontology#publicationOf> <#{work_uri}> .
                   <publication> <#{@services}/ontology#mainTitle> \"#{publication_title}\" .
-                  <publication> <#{@services}/ontology#format> <#{'http://data.deichman.no/format#' + @formats.sample}> .
+                  <publication> <#{@services}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
                   <publication> <#{@services}/ontology#language> <#{@languages.sample}> .
                   <publication> <#{@services}/ontology#adaptationOfPublicationForParticularUserGroups> <http://data.deichman.no/format#adaptationOfPublicationForParticularUserGroups#{@a.sample}> ."
       return publication_title, ntriples

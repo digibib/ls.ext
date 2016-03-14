@@ -1,5 +1,4 @@
-import urijs from 'urijs'
-
+import { relativeUri } from './uriParser'
 import Constants from '../constants/Constants'
 
 export function processSearchResponse (response) {
@@ -9,7 +8,7 @@ export function processSearchResponse (response) {
   } else {
     let searchResults = response.hits.hits.map(element => {
       let work = element._source.work
-      work.relativeUri = urijs(work.uri).path()
+      work.relativeUri = relativeUri(work.uri)
 
       work.creators = []
       if (Array.isArray(work.creator)) {
@@ -17,8 +16,8 @@ export function processSearchResponse (response) {
       } else if (work.creator) {
         work.creators.push(work.creator)
       }
-      work.creators.forEach(function (creator, i, creators) {
-        creators[i].relativeUri = urijs(creator.uri).path()
+      work.creators.forEach(creator => {
+        creator.relativeUri = relativeUri(creator.uri)
       })
 
       work.publications = work.publication || []
@@ -40,7 +39,7 @@ export function processAggregationResponse (response) {
   if (response.aggregations && response.aggregations.all) {
     let all = response.aggregations.all
     Constants.filterableFields.forEach(field => {
-      let aggregation = all[ field ][ field ][ field ]
+      let aggregation = all[ field ][ field ][ field ] || all[ field ][ field ]
       if (aggregation) {
         aggregation.buckets.forEach(bucket => {
           filters.push({ aggregation: field, bucket: bucket.key, count: bucket.doc_count })

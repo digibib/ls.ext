@@ -38,9 +38,10 @@ When(/^jeg trykker fremover i nettleseren$/) do
   @browser.forward
 end
 
-When(/^skal jeg se filtre på format og språk$/) do
+When(/^skal jeg se filtre på format, språk og målgruppe$/) do
   wait_for { @browser.element(data_automation_id: 'filter_work.publication.format').exists? }
   wait_for { @browser.element(data_automation_id: 'filter_work.publication.language').exists? }
+  wait_for { @browser.element(data_automation_id: 'filter_work.publication.audience').exists? }
 end
 
 When(/^jeg slår på et filter for et vilkårlig format$/) do

@@ -2,5 +2,5 @@ export default {
   backendUri: '/services',
   maxVisibleFilterItems: 5,
   searchQuerySize: 10,
-  filterableFields: [ 'work.publication.format', 'work.publication.language' ]
+  filterableFields: [ 'work.publication.format', 'work.publication.language', 'work.publication.audience' ]
 }
