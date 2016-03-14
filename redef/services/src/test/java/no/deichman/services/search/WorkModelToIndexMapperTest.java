@@ -14,6 +14,44 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
  * Responsibility: unit test WorkModelToIndexMapper.
  */
 public class WorkModelToIndexMapperTest {
+    private String comparisonJsonDocument = ""
+            + "{"
+            + "   \"work\":{"
+            + "      \"uri\":\"http://deichman.no/work_1\","
+            + "      \"creator\":{"
+            + "         \"uri\":\"http://deichman.no/person_1\","
+            + "         \"name\":\"personName_value\""
+            + "      },"
+            + "      \"mainTitle\":["
+            + "         \"work_1_title\","
+            + "         \"work_1_english_title\""
+            + "      ],"
+            + "      \"partTitle\":["
+            + "         \"work_1_part_title\","
+            + "         \"work_1_english_part_title\""
+            + "      ],"
+            + "      \"publication\":["
+            + "         {"
+            + "            \"uri\":\"http://deichman.no/publication_1\","
+            + "            \"format\":\"Bok\","
+            + "            \"audience\":\"Barn og ungdom\","
+            + "            \"language\":\"Engelsk\""
+            + "         },"
+            + "         {"
+            + "            \"uri\":\"http://deichman.no/publication_2\","
+            + "            \"format\":\"DVD\","
+            + "            \"audience\":\"Barn og ungdom\","
+            + "            \"language\":\"Norsk (bokmål)\""
+            + "         },"
+            + "         {"
+            + "            \"uri\":\"http://deichman.no/publication_3\","
+            + "            \"audience\":\"Barn og ungdom\","
+            + "            \"language\":\"Norsk (bokmål)\""
+            + "         }"
+            + "      ]"
+            + "   }"
+            + "}";
+
     @Test
     public void testModelToIndexDocument() throws Exception {
         Model model = ModelFactory.createDefaultModel();
@@ -56,6 +94,11 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createResource("http://deichman.no/work_1"),
                 ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createLangLiteral("work_1_english_part_title", "en")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createProperty("http://deichman.no/ontology#audience"),
+                ResourceFactory.createResource("http://data.deichman.no/audience#juvenile")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://deichman.no/publication_1"),
@@ -122,41 +165,13 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                 ResourceFactory.createPlainLiteral("Engelsk")));
 
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource("http://data.deichman.no/audience#juvenile"),
+                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
+                ResourceFactory.createLangLiteral("Barn og ungdom", "no")));
+
         String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, "http://deichman.no/work_1");
 
-        Assert.assertThat(jsonDocument, sameJSONAs(""
-                + "{"
-                + "   \"work\":{"
-                + "      \"uri\":\"http://deichman.no/work_1\","
-                + "      \"creator\":{"
-                + "         \"uri\":\"http://deichman.no/person_1\","
-                + "         \"name\":\"personName_value\""
-                + "      },"
-                + "      \"mainTitle\":["
-                + "         \"work_1_title\","
-                + "         \"work_1_english_title\""
-                + "      ],"
-                + "      \"partTitle\":["
-                + "         \"work_1_part_title\","
-                + "         \"work_1_english_part_title\""
-                + "      ],"
-                + "      \"publication\":["
-                + "         {"
-                + "            \"uri\":\"http://deichman.no/publication_1\","
-                + "            \"format\":\"Bok\","
-                + "            \"language\":\"Engelsk\""
-                + "         },"
-                + "         {"
-                + "            \"uri\":\"http://deichman.no/publication_2\","
-                + "            \"format\":\"DVD\","
-                + "            \"language\":\"Norsk (bokmål)\""
-                + "         },"
-                + "         {"
-                + "            \"uri\":\"http://deichman.no/publication_3\","
-                + "            \"language\":\"Norsk (bokmål)\""
-                + "         }"
-                + "      ]"
-                + "   }"
-                + "}").allowingAnyArrayOrdering());
+        Assert.assertThat(jsonDocument, sameJSONAs(comparisonJsonDocument).allowingAnyArrayOrdering());
     }
 }

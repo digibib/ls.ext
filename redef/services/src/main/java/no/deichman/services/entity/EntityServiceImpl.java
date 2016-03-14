@@ -48,6 +48,7 @@ import static java.util.stream.Collectors.groupingBy;
 public final class EntityServiceImpl implements EntityService {
 
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
+    private static final String AUDIENCE_TTL_FILE = "audience.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
     private static final String NATIONALITY_TTL_FILE = "nationality.ttl";
     private final RDFRepository repository;
@@ -126,6 +127,23 @@ public final class EntityServiceImpl implements EntityService {
         return input;
     }
 
+    private Model getLinkedAudienceResource(Model input) {
+
+        NodeIterator objects = input.listObjects();
+        if (objects.hasNext()) {
+            Set<RDFNode> objectResources = objects.toSet();
+            objectResources.stream()
+                    .filter(node -> node.toString()
+                            .contains("http://data.deichman.no/audience#")).collect(Collectors.toList())
+                    .forEach(result -> {
+                        input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(AUDIENCE_TTL_FILE), Lang.TURTLE));
+                    });
+        }
+
+        return input;
+    }
+
+
     private Model getLinkedNationalityResource(Model input) {
 
         NodeIterator objects = input.listObjects();
@@ -184,6 +202,7 @@ public final class EntityServiceImpl implements EntityService {
         m.add(repository.retrieveWorkAndLinkedResourcesByURI(baseURI.work() + id));
         m = getLinkedLexvoResource(m);
         m = getLinkedFormatResource(m);
+        m = getLinkedAudienceResource(m);
         return m;
     }
 

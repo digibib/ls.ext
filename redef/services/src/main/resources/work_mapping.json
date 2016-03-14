@@ -45,6 +45,10 @@
             },
             "publicationYear": {
               "type": "string"
+            },
+            "audience": {
+              "type": "string",
+              "index": "not_analyzed"
             }
           }
         },

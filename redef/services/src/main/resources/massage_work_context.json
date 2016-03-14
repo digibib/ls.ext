@@ -17,6 +17,7 @@
     "graph": "@graph",
     "birthYear": "deichman:birthYear",
     "deathYear": "deichman:deathYear",
+    "audience": "deichman:audience",
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
     "publication": "deichman:publication",

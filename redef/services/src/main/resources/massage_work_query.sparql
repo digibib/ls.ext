@@ -13,12 +13,13 @@ CONSTRUCT
     ?publication deich:language ?language .
     ?publication deich:format ?format .
     ?publication deich:issued ?publicationPublicationYear .
+    ?publication deich:audience ?audience .
     ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Person .
     ?person deich:name ?name .
     ?person deich:birthYear ?birthYear .
     ?person deich:deathYear ?deathYear .}
 WHERE
-  { SELECT  ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle ?format ?publicationPublicationYear ?language ?person
+  { SELECT  ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle ?format ?publicationPublicationYear ?language ?person ?audience
     WHERE
       { BIND(uri("__WORKURI__") AS ?workUri)
         ?workUri  a                     deich:Work
@@ -35,6 +36,12 @@ WHERE
         OPTIONAL
           { ?workUri  deich:publicationYear  ?publicationYearO
                    BIND(str(?publicationYearO) AS ?publicationYear)}
+        OPTIONAL
+          { ?workUri  deich:audience  ?audienceO .
+            ?audienceO  rdfs:label    ?audienceL
+            FILTER (lang(?audienceL) = 'no')
+            BIND(str(?audienceL) AS ?audience)
+          }
         OPTIONAL
           { ?publication  a                 deich:Publication ;
                   deich:publicationOf   ?workUri }
