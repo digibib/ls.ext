@@ -452,23 +452,24 @@
                             throw "Tab '" + tab.label + "' specified unknown property '" + prop.rdfProperty + "'";
                         }
                     } else if (prop.predicateType) {
-                        currentInput = {};
-                        currentInput.type = prop.type;
-                        currentInput.label = prop.label;
-                        currentInput.domain = tab.rdfType;
-                        currentInput.predicateType = prop.predicateType;
-                        currentInput.subjectTypes = prop.subjects;
-                        currentInput.subjectType = undefined;
-                        currentInput.searchable = true;
-                        currentInput.predicate = prop.predicate;
-                        currentInput.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                        currentInput.values = [{
-                            old: {value: "", lang: ""},
-                            current: {value: [], lang: ""},
-                            uniqueId: _.uniqueId()
-                        }];
-                        currentInput.search_result = [];
-                        currentInput.allowAddNewButton = true;
+                        currentInput = {
+                            type: prop.type,
+                            label: prop.label,
+                            domain: tab.rdfType,
+                            predicateType: prop.predicateType,
+                            subjectTypes: prop.subjects,
+                            subjectType: undefined,
+                            searchable:true,
+                            predicate: prop.predicate,
+                            datatype: "http://www.w3.org/2001/XMLSchema#anyURI",
+                            values: [{
+                                old: {value: "", lang: ""},
+                                current: {value: [], lang: ""},
+                                uniqueId: _.uniqueId()
+                            }],
+                            search_result: [],
+                            allowAddNewButton: true
+                        };
                         predefinedValues.push(loadPredefinedValues(applicationData.config.resourceApiUri + "authorized_values/" + prop.predicateType, prop.predicateType))
                     } else {
                         throw "Input #" + index + " of tab '" + tab.label + "' must have rdfProperty or predicateType";
@@ -493,7 +494,7 @@
                     if (prop.type) {
                         currentInput.type = prop.type;
                     }
-                    currentInput.visible = prop.type !== 'entity'
+                    currentInput.visible = prop.type !== 'entity';
                     if (prop.nameProperties) {
                         currentInput.nameProperties = prop.nameProperties;
                     }
@@ -662,7 +663,7 @@
                             }
                         };
 
-                        // Initialize ractive component from template
+                        // decorators
                         var repositionSupportPanel = function (node) {
                             //$(node).find(".support-panel").css({top: $(node).position().top})
                             Main.repositionSupportPanelsHorizontally();
@@ -671,6 +672,47 @@
                                 }
                             }
                         };
+                        var detectChange = function (node) {
+                            var enableChange = false;
+                            $(node).on("select2:selecting select2:unselecting", function () {
+                                enableChange = true;
+                            });
+                            $(node).on("change", function (e) {
+                                if (enableChange) {
+                                    enableChange = false;
+                                    var inputValue = Ractive.getNodeInfo(e.target);
+                                    var keypath = inputValue.keypath;
+                                    ractive.set(keypath + ".current.value", $(e.target).val());
+                                    var inputNode = ractive.get(grandParentOf(keypath));
+                                    Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
+                                        ractive.get(keypath), inputNode.datatype, errors, keypath)
+                                }
+                            });
+                            return {
+                                teardown: function () {
+                                }
+                            }
+                        };
+                        var handleAddNewBySelect2 = function (node) {
+                            ractive.set(grandParentOf(Ractive.getNodeInfo(node).keypath) + ".allowAddNewButton", false);
+                            return {
+                                teardown: function () {
+                                }
+                            }
+                        };
+                        var clickOutsideSupportPanelDetector = function (node) {
+                            $(document).click(function (event) {
+                                if (!$(event.target).closest("span.support-panel").length && !$(event.target).is("span.support-panel")) {
+                                    clearSearchResults();
+                                }
+                            });
+                            return {
+                                teardown: function () {
+                                }
+                            }
+                        };
+
+                        // Initialize ractive component from template
                         ractive = new Ractive({
                             el: "container",
                             lang: "no",
@@ -765,45 +807,9 @@
                             decorators: {
                                 multi: require('ractive-multi-decorator'),
                                 repositionSupportPanel: repositionSupportPanel,
-                                detectChange: function (node) {
-                                    var enableChange = false;
-                                    $(node).on("select2:selecting select2:unselecting", function () {
-                                        enableChange = true;
-                                    });
-                                    $(node).on("change", function (e) {
-                                        if (enableChange) {
-                                            enableChange = false;
-                                            var inputValue = Ractive.getNodeInfo(e.target);
-                                            var keypath = inputValue.keypath;
-                                            ractive.set(keypath + ".current.value", $(e.target).val());
-                                            var inputNode = ractive.get(grandParentOf(keypath));
-                                            Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
-                                                ractive.get(keypath), inputNode.datatype, errors, keypath)
-                                        }
-                                    });
-                                    return {
-                                        teardown: function () {
-                                        }
-                                    }
-                                },
-                                handleAddNewBySelect2: function (node) {
-                                    ractive.set(grandParentOf(Ractive.getNodeInfo(node).keypath) + ".allowAddNewButton", false);
-                                    return {
-                                        teardown: function () {
-                                        }
-                                    }
-                                },
-                                clickOutsideSupportPanelDetector: function (node) {
-                                    $(document).click(function (event) {
-                                        if (!$(event.target).closest("span.support-panel").length && !$(event.target).is("span.support-panel")) {
-                                            clearSearchResults();
-                                        }
-                                    });
-                                    return {
-                                        teardown: function () {
-                                        }
-                                    }
-                                }
+                                detectChange: detectChange,
+                                handleAddNewBySelect2: handleAddNewBySelect2,
+                                clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector
                             }
                         });
                         ractive.on({
