@@ -25,12 +25,9 @@
             margin: 0;
             color: #222;
         }
+        ul { list-style-type: none; padding: 0;}
+        ul li { margin-bottom: 0.5em; }
 
-        /* responsive grid setup */
-        /*
-        .col { margin-bottom: 1.5rem; }
-        .container { margin: 0 auto; max-width: 80rem; width: 90%; }
-        */
         /*  SECTIONS  */
         .section {
             clear: both;
@@ -68,69 +65,17 @@
             clear: both;
         }
 
-        @media (min-width: 40rem) {
-            html {
-                font-size: 112%;
-            }
-
-            /*  GRID OF FIVE  */
-            .span_5_of_5 {
-                width: 100%;
-            }
-
-            .span_4_of_5 {
-                width: 79.68%;
-            }
-
-            .span_3_of_5 {
-                width: 59.36%;
-            }
-
-            .span_2_of_5 {
-                width: 39.04%;
-            }
-
-            .span_1_of_5 {
-                width: 18.72%;
-            }
-
-            .col.flow-opposite {
-                float: right;
-            }
-        }
-
-        @media only screen and (max-width: 480px) {
-            /*  SMALL SCREEN - USE FULL WIDTH  */
-            .col {
-                margin: 1% 0 1% 0%;
-            }
-
-            .span_1_of_5, .span_2_of_5, .span_3_of_5, .span_4_of_5, .span_5_of_5 {
-                width: 100%;
-            }
-        }
 
         /* deichman ui styles */
-        a, a:visited {
-            color: navy;
-        }
+        a, a:visited { color: blue; }
+        .logo { float: right }
 
-        .logo {
-            margin-right: 3em;
-        }
-
-        .small-text {
-            font-size: 0.8em;
-        }
-
-        .big-text {
-            font-size: 1.4em;
-        }
 
         .header {
-            background: #eee;
+            background: #222;
             width: 100%;
             padding: 1em;
+            color: #fff;
         }
 
         a.more {
@@ -155,153 +100,55 @@
 <div class="header">
     <div class="section">
         <div class="row">
-            <div class="col span_1_of_5">
-                <img class="logo" width="164" height="24px" src="/logo.png"/>
-            </div>
-            <div class="col span_2_of_5">
-                <div class="big-text">ls.ext</div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="section">
-    <div class="row">
-        <div class="col full">
-            <h2>${DESCRIPTION}</h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col span_1_of_5">&nbsp;</div>
-        <div class="col span_2_of_5">
-            <strong>beskrivelse</strong>
-        </div>
-        <div class="col span_2_of_5">
-            <strong>eksempler</strong>
+            <img class="logo" src="/logo.gif"/>
+            <h1>Innlogging til nytt biblioteksystem</h1>
         </div>
     </div>
 </div>
 
 <div class="section">
-    <h3>Brukertjenester</h3>
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${KOHA_OPAC_PORT}">Kohas OPAC</a>
-        </div>
-        <div class="col span_2_of_5">
-            Kohas standard grensesnitt for brukeren. Tilbyr mappami-funksjonalitet og søk/reservering. Vil ikke bli
-            brukt i LS.ext.
-        </div>
-        <div class="col span_2_of_5">
+    <a href="http://${HOST}:${PATRON_CLIENT_PORT}/search"><h3>Søket</h3></a>
+    <p><strong>Søkegrensesnitt for ansatte og sluttbrukere.</strong></p>
+    <p>Her trenger du ikke å logge deg inn, men får bare tilgang fra Deichman.</p>
+    <p>Søket er under utvikling og vil forandre seg kontinuerlig frem til september. Test i vei!</p>
 
-        </div>
-    </div>
+    <a href="http://${HOST}:${KOHA_INTRA_PORT}"><h3>Koha</h3></a>
+    <p><strong>Ansattes grensesnitt</strong></p>
+    <p>Utlån/innlevering, brukerregistrering , endre reservasjoner osv.</p>
+    <p>Logg inn med Nasjonalt lånernummer og pinkode.</p>
+    <p>Innstillingene endres etter hvordan Deichman ønsker å ha det frem mot september.</p>
 
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${PATRON_CLIENT_PORT}/search">PatronClient</a>
-        </div>
-        <div class="col span_2_of_5">
-            LS.ext lånergrensesnitt
-        </div>
-        <div class="col span_2_of_5">
-            Søk på enkeltord i tittel eller personer
-        </div>
-    </div>
+    <a href="http://${HOST}:${CATALINKER_PORT}"><h3>Katalogisering</h3></a>
+    <p><strong>Katalogiseringsverktøy</strong></p>
+    <p>Her trenger du ikke å logge deg inn.</p>
+    <p>Grensesnittet er ikke ferdig og vil utvikles frem mot september.</p>
 
-    <h3>Interne tjenester</h3>
-
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${KOHA_INTRA_PORT}">Kohas Intra</a>
-        </div>
-        <div class="col span_2_of_5">
-            Kohas intranett. Katalogisering, brukerhåndtering, utlån/innlevering, osv.
-        </div>
-        <div class="col span_2_of_5">
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${CATALINKER_PORT}">Catalinker</a>
-        </div>
-        <div class="col span_2_of_5">
-            Katalogiseringsverktøy
-        </div>
-        <div class="col span_2_of_5">
-            <a href="http://${HOST}:${CATALINKER_PORT}/workflow">/person</a>
-            <a href="http://${HOST}:${CATALINKER_PORT}/workflow">/publication</a>
-            <a href="http://${HOST}:${CATALINKER_PORT}/workflow">/work</a>
-            <a href="http://${HOST}:${CATALINKER_PORT}/workflow">/workflow</a>
-        </div>
-    </div>
-
-    <h3>Tekniske grensesnitt</h3>
-
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${SERVICES_PORT}/application.wadl?detail=true">Services</a>
-        </div>
-        <div class="col span_2_of_5">
+    <h2>Tekniske grensesnitt</h2>
+    <ul>
+        <li>
+            <a href="http://${HOST}:${SERVICES_PORT}/application.wadl?detail=true">Services</a><br/>
             API for LS.ext som håndterer dataflyt mellom RDF, Koha og presentasjonslag.
-        </div>
-        <div class="col span_2_of_5">
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${JAMON_PORT}/jamonadmin.jsp">JAMon</a>
-        </div>
-        <div class="col span_2_of_5">
+        </li>
+        <li>
+            <a href="http://${HOST}:${JAMON_PORT}/jamonadmin.jsp">JAMon</a><br/>
             Måleverktøy for ytelse og responstider i Services
-        </div>
-        <div class="col span_2_of_5">
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${TRIPLESTORE_PORT}">Triplestore</a>
-        </div>
-        <div class="col span_2_of_5">
-            RDF-endpoint
-        </div>
-        <div class="col span_2_of_5">
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col span_1_of_5">
-            <a href="http://${HOST}:${ELASTICSEARCH_PORT}/?pretty">Elasticsearch</a>
-        </div>
-        <div class="col span_2_of_5">
+        </li>
+        <li>
+            <a href="http://${HOST}:${TRIPLESTORE_PORT}">Triplestore</a><br/>
+            RDF database og SPARQL endpoint
+        </li>
+        <li>
+            <a href="http://${HOST}:${ELASTICSEARCH_PORT}/?pretty">Elasticsearch</a><br/>
             Indekseringsmotor
-        </div>
-        <div class="col span_2_of_5">
+        </li>
+    </ul>
+    <h2>Kohas OPAC</h2>
+    <p><a href="http://${HOST}:${KOHA_OPAC_PORT}">Kohas OPAC</a> er standardgrensesnittet for brukeren for andre som bruker Koha som biblioteksystem.</p>
+    <p><strong>Dette skal ikke vi skal bruke.</strong> Vi lager eget Søk og Min side.</p>
+    <h2>Versjonsinformasjon</h2>
+    <p><strong>GITREF:</strong> ${GITREF}</p>
+    <p><strong>Jenkins bygg nr.</strong>${BUILD_TAG}</p>
 
-        </div>
-    </div>
-
-    <h3>Versjonsinformasjon</h3>
-
-    <div class="row">
-        <div class="col span_1_of_5">
-            GITREF
-        </div>
-        <div class="col span_2_of_5">
-            ${GITREF}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col span_1_of_5">
-            Jenkins ID
-        </div>
-        <div class="col span_2_of_5">
-            ${BUILD_TAG}
-        </div>
-    </div>
 </div>
 <!-- /container -->
 
