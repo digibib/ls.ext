@@ -82,9 +82,9 @@ app.get('/config', function (request, response) {
               label: "Bekreft person",
               inputs: [
                   {
-                      rdfProperty: "creator",
-                      type: "searchable-person",
-                      dependentResourceTypes:["Work", "Publication"] // when the creator is changed, unload curent work an publication
+                    rdfProperty: "creator",
+                    type: "searchable-person",
+                    dependentResourceTypes: ["Work", "Publication"] // when the creator is changed, unload current work and publication
                   }
               ],
               nextStep: {
@@ -169,7 +169,7 @@ app.get('/config', function (request, response) {
                       multiple: true, // there may be more than one additional entry
                       dataAutomationId: "search_role_player", // override or define automation-id for test purposes
                       widgetOptions: {
-                          hideSelectWork: true
+                        hideSelectWork: true
                       }
                     }
                 ],
