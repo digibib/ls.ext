@@ -178,10 +178,10 @@ When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   # form.radio(:value => book.items.first.itemnumber).set
   form.submit
   @cleanup.push("reservasjon på #{barcode}" =>
-                lambda do
-                  @browser.goto intranet(:reserve)+@context[:publication_recordid]
-                  @browser.link(:href => /action=cancel/).click
-                end
+                    lambda do
+                      @browser.goto intranet(:reserve)+@context[:publication_recordid]
+                      @browser.link(:href => /action=cancel/).click
+                    end
   )
 end
 
@@ -224,8 +224,8 @@ end
 
 When(/^boka sjekkes inn på låners henteavdeling$/) do
   barcode = @active[:book] ?
-    @active[:book].items.first.barcode :
-    @context[:item_barcode]
+      @active[:book].items.first.barcode :
+      @context[:item_barcode]
   @site.SelectBranch.visit.select_branch(@active[:patron].branch.code)
   @site.IntraPage.checkin(barcode)
 end
@@ -344,7 +344,7 @@ end
 Then(/^registrerer systemet at boka er utlånt$/) do
   @site.Home.visit.search_catalog @active[:book].title
   while @browser.text == "Internal Server Error" do
-      @site.Home.visit.search_catalog @active[:book].title
+    @site.Home.visit.search_catalog @active[:book].title
   end
   @browser.text.should include(@active[:book].title)
 end
@@ -543,7 +543,7 @@ Given(/^at meldingstyper er aktivert for låneren$/) do
   })
 end
 
-When(/^låneren får aktivert følgende meldingstyper:$/) do | table |
+When(/^låneren får aktivert følgende meldingstyper:$/) do |table|
   patron = @site.Home.visit.search_patrons @active[:patron].cardnumber
   # TODO: actually parse table. For now only activates email notice
   patron.set_messaging_preferences(table)
@@ -556,15 +556,14 @@ Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
       inbox = Messaging::EmailAPI.new.get_inbox(usermail)
       mail = inbox[0]
-      mail["To"].should == usermail
-      mail["Data"].should include(@context[:publication_maintitle])
+      mail["To"].eql?(usermail) && mail["Data"].include?(@context[:publication_maintitle])
     end # wait until dom-tree has been populated
   end
 
   @cleanup.push("email box #{usermail}" =>
-              lambda do
-                Messaging::EmailAPI.new.delete_inbox(usermail)
-              end
+                    lambda do
+                      Messaging::EmailAPI.new.delete_inbox(usermail)
+                    end
   )
 end
 
@@ -573,24 +572,24 @@ Given(/^at epost er aktivert ved brukerregistrering$/) do
 end
 
 When(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
-  step "at det finnes en avdeling"        unless @active[:branch]
-  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
+  step "at det finnes en avdeling" unless @active[:branch]
+  step "jeg legger til en lånerkategori" unless @active[:patroncategory]
   patron = Patron.new
   patron.firstname = "Knut"
   patron.password = "1234"
   @site.Patrons.visit.create(
-    @active[:patroncategory].description,
-    patron.firstname,
-    patron.surname,
-    patron.userid,
-    patron.password,
-    patron.email
+      @active[:patroncategory].description,
+      patron.firstname,
+      patron.surname,
+      patron.userid,
+      patron.password,
+      patron.email
   )
   @active[:patron] = patron
   @cleanup.push("patron #{patron.surname}" =>
-              lambda do
-                @site.Patrons.visit.delete(patron.firstname, patron.surname)
-              end
+                    lambda do
+                      @site.Patrons.visit.delete(patron.firstname, patron.surname)
+                    end
   )
 end
 
@@ -601,16 +600,14 @@ Then(/^vil låneren motta en velkomst\-epost fra biblioteket$/) do
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
       inbox = Messaging::EmailAPI.new.get_inbox(usermail)
       mail = inbox[0]
-      mail["To"].should == usermail
-      mail["Data"].should include(@active[:patron].surname)
-      mail["Data"].should include(@active[:patron].userid)
+      mail["To"].eql?(usermail) && mail["Data"].include?(@active[:patron].surname) && mail["Data"].include?(@active[:patron].userid)
     end # wait until dom-tree has been populated
   end
 
   @cleanup.push("email box #{usermail}" =>
-              lambda do
-                Messaging::EmailAPI.new.delete_inbox(usermail)
-              end
+                    lambda do
+                      Messaging::EmailAPI.new.delete_inbox(usermail)
+                    end
   )
 end
 
