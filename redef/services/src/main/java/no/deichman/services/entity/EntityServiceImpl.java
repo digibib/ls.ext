@@ -112,49 +112,26 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     private Model getLinkedFormatResource(Model input) {
-
-        NodeIterator objects = input.listObjects();
-        if (objects.hasNext()) {
-            Set<RDFNode> objectResources = objects.toSet();
-            objectResources.stream()
-                    .filter(node -> node.toString()
-                            .contains("http://data.deichman.no/format#")).collect(Collectors.toList())
-                    .forEach(result -> {
-                        input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(FORMAT_TTL_FILE), Lang.TURTLE));
-                    });
-        }
-
-        return input;
+        return getLinkedResource(input, "format", FORMAT_TTL_FILE);
     }
 
     private Model getLinkedAudienceResource(Model input) {
-
-        NodeIterator objects = input.listObjects();
-        if (objects.hasNext()) {
-            Set<RDFNode> objectResources = objects.toSet();
-            objectResources.stream()
-                    .filter(node -> node.toString()
-                            .contains("http://data.deichman.no/audience#")).collect(Collectors.toList())
-                    .forEach(result -> {
-                        input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(AUDIENCE_TTL_FILE), Lang.TURTLE));
-                    });
-        }
-
-        return input;
+        return getLinkedResource(input, "audience", AUDIENCE_TTL_FILE);
     }
 
-
     private Model getLinkedNationalityResource(Model input) {
+        return getLinkedResource(input, "nationality", NATIONALITY_TTL_FILE);
+    }
 
+    private Model getLinkedResource(Model input, String path, String filename) {
         NodeIterator objects = input.listObjects();
         if (objects.hasNext()) {
             Set<RDFNode> objectResources = objects.toSet();
             objectResources.stream()
                     .filter(node -> node.toString()
-                            .contains("http://data.deichman.no/nationality#")).collect(Collectors.toList())
+                            .contains("http://data.deichman.no/" + path + "#")).collect(Collectors.toList())
                     .forEach(result -> {
-                        input.add(
-                                extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(NATIONALITY_TTL_FILE), Lang.TURTLE)
+                        input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(filename), Lang.TURTLE)
                         );
                     });
         }
