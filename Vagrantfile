@@ -20,7 +20,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provider "virtualbox" do |vb|
       vb.memory = 5120
-      vb.cpus = 4
+      vb.cpus = (ENV['LSCPUS'] || "4").to_i
     end
 
     config.vm.provision "shell" do |s|
