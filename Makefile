@@ -81,7 +81,7 @@ rebuild=vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
 	  sudo docker-compose build $(1) &&\
 	  sudo docker-compose up --force-recreate -d $(1)"
 
-rebuild_services:					## Force rebuilds services
+rebuild_services: docker_cleanup			## Force rebuilds services
 	@echo "======= FORCE RECREATING SERVICES ======\n"
 	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
 	  sudo docker-compose stop build_services || true &&\
