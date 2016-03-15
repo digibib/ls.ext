@@ -191,8 +191,10 @@ push:
 	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make push TAG=$(TAG)'
 
 docker_cleanup:						## Clean up unused docker containers and images
-	@echo "cleaning up unused containers and images"
-	@vagrant ssh $(SHIP) -c 'sudo /vagrant/redef/docker_cleanup.sh'
+	@echo "cleaning up unused containers, images and volumes"
+	@vagrant ssh $(SHIP) -c 'sudo docker rm $(sudo docker ps -aq -f dangling=true) 2> /dev/null || true'
+	@vagrant ssh $(SHIP) -c 'sudo docker rmi $(sudo docker images -aq -f dangling=true) 2> /dev/null || true'
+	@vagrant ssh $(SHIP) -c 'sudo docker volume rm $(sudo docker volume ls -q -f=dangling=true) 2> /dev/null || true'
 
 DOCKER_COMPOSE_DOT_IMAGE ?= 21af6b4fd714903cebd3d4658ad35da4d0db0051
 create_dev_stack_image:
