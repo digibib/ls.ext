@@ -41,6 +41,10 @@ optgroup{font-weight:700}
 table{border-collapse:collapse;border-spacing:0}
 td,th{padding:0}
 
+html, body {
+  height: 100%;
+}
+
 /* grid */
 
 .row .row { margin:  0 -1.5em; }
@@ -124,11 +128,14 @@ header button, input[type="search"] {
   float: right;
 }
 
+.placeholder {
+  display: flex;
+  padding: 0;
+}
+
 .placeholder a {
-  /* Make placeholder url fill the whole placeholder div */
+  align-items: stretch;
   width: 100%;
-  height: 100%;
-  position: absolute;
 }
 
 .result-info { width: 75% }
