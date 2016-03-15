@@ -114,7 +114,23 @@ header button, input[type="search"] {
 .panel-open:after { content: '▲'; }
 .panel-closed:after { content: '▼'; }
 
-.book-cover { width: 25%; display: none }
+.book-cover {
+  width: 8em;
+  height: 10em;
+  background-color: #eee;
+}
+
+.right {
+  float: right;
+}
+
+.placeholder a {
+  /* Make placeholder url fill the whole placeholder div */
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
 .result-info { width: 75% }
 .result-more { background: #ddd; padding: 0.5em }
 .result-more .col { width: 25% }

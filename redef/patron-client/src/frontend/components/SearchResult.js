@@ -20,6 +20,13 @@ export default React.createClass({
       </p>
     )
   },
+  renderDisplayTitle (result) {
+    let displayTitle = result.mainTitle
+    if (result.partTitle) {
+      displayTitle += ' — ' + result.partTitle
+    }
+    return <a data-automation-id='work-title' href={result.relativeUri}>{displayTitle}</a>
+  },
   render () {
     let result = this.props.result
 
@@ -33,11 +40,6 @@ export default React.createClass({
       )
     }
 
-    let displayTitle = result.mainTitle
-    if (result.partTitle) {
-      displayTitle += ' — ' + result.partTitle
-    }
-
     let formats = result.publications
       ? [ ...new Set(result.publications.filter(publication => publication.format).map(publication => publication.format)) ]
       : []
@@ -45,31 +47,29 @@ export default React.createClass({
     return (
       <div className='result panel'>
         <div className='row'>
-          <div className='col book-cover'>
+          <div className='col book-cover placeholder'>
+            <Link to={result.relativeUri}/>
           </div>
           <div className='col result-info'>
             <p>
-              <strong><span data-automation-id='work-title'>{displayTitle}</span></strong>
+              <strong>{this.renderDisplayTitle(result)}</strong>
             </p>
             {this.renderAuthors(result.creators)}
             {originalTitle}
           </div>
         </div>
         <div className='row result-more'>
-          <div className='col'>
-            <strong>Finnes også som:</strong>
-          </div>
           <div className='col' data-automation-id='work_formats'>
-            Tilgjengelige formater:
+            <strong>Finnes som:</strong>
             <br/>
             {formats.join(', ')}
           </div>
           <div className='col'>
             <span className='hidden'>Språk:<br/>TODO</span>&nbsp;
           </div>
-          <div className='col'>
+          <div className='col right'>
             <span className='hidden'>TODO Utgivelser</span>
-            <Link to={result.relativeUri} className='more'> les mer ►
+            <Link to={result.relativeUri} className='more'> alle utgivelser ►
             </Link>
           </div>
         </div>
