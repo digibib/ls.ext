@@ -4,7 +4,7 @@
 @patron_client
 @random_migrate
 @redef
-Egenskap: Ga gjennom lanegrensesnittet
+Egenskap: Gå gjennom lånegrensesnittet
   Som bruker av bibliotekets websider
   Skal jeg kunne søke på verk
   Og kunne filtrere søkeresultatene
