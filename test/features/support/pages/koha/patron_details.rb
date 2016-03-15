@@ -4,7 +4,9 @@ require_relative 'intra_page.rb'
 
 class PatronDetails < IntraPage
   def header
-    @browser.div(:class => 'patroninfo').h5.text
+    header = @browser.div(:class => 'patroninfo')
+    header.wait_until_present
+    header.h5.text
   end
 
   def card_number
