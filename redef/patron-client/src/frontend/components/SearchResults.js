@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import shallowEqual from 'fbjs/lib/shallowEqual'
 
 import SearchResult from './SearchResult'
 
@@ -11,18 +12,12 @@ export default React.createClass({
     searchResults: PropTypes.array.isRequired
   },
   componentWillMount () {
-    if (this.props.locationQuery.query) {
-      this.search()
-    }
+    this.props.searchActions.search()
   },
   componentDidUpdate (prevProps) {
-    // TODO: Fix double requests
-    if (this.props.locationQuery.query && this.props.locationQuery !== prevProps.locationQuery) {
-      this.search()
+    if (!shallowEqual(this.props.locationQuery, prevProps.locationQuery)) {
+      this.props.searchActions.search()
     }
-  },
-  search () {
-    this.props.searchActions.search()
   },
   render () {
     if (this.props.searchError) {

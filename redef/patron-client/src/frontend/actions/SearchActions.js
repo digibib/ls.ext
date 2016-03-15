@@ -39,7 +39,7 @@ export function searchFailure (error) {
 export function search () {
   return (dispatch, getState) => {
     let locationQuery = getState().routing.locationBeforeTransitions.query
-    if (!locationQuery) {
+    if (!locationQuery || !locationQuery.query) {
       return
     }
     let page = locationQuery.page
