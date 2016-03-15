@@ -181,7 +181,7 @@
                     queryParams[type] = resourceUri;
                 }
                 oldUri.query = URI.buildQuery(queryParams);
-                history.pushState("", "", URI.build(oldUri));
+                history.replaceState("", "", URI.build(oldUri));
             }
         }
 
