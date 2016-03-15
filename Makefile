@@ -83,6 +83,11 @@ rebuild=vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
 
 rebuild_services:					## Force rebuilds services
 	@echo "======= FORCE RECREATING SERVICES ======\n"
+	vagrant ssh $(SHIP) -c "cd /vagrant/docker-compose &&\
+	  sudo docker-compose stop build_services || true &&\
+	  sudo docker-compose rm -f build_services || true &&\
+	  sudo docker-compose build build_services &&\
+	  sudo docker-compose run build_services"
 	$(call rebuild,services)
 
 rebuild_catalinker:					## Force rebuilds catalinker

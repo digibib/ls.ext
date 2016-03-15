@@ -171,14 +171,23 @@ services:
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
 
+  build_services:
+    container_name: build_services
+    build:
+      context: /vagrant/redef/services
+      dockerfile: Dockerfile.build
+    volumes:
+      - /vagrant/redef/services/build:/services/build
+
   services:
     container_name: redef_services_container
     build:
       context: /vagrant/redef/services
-      dockerfile: Dockerfile.build
+      dockerfile: Dockerfile
     networks:
       - backend
     depends_on:
+      - build_services
       - fuseki
       - koha
     ports:
