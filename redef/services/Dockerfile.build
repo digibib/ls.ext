@@ -1,10 +1,18 @@
 FROM java:openjdk-8-jdk
 
+ENV GRADLE_VERSION 2.6
+
+WORKDIR /usr/bin
+RUN curl -sLO https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip && \
+  unzip gradle-${GRADLE_VERSION}-all.zip > /dev/null && \
+  ln -s gradle-${GRADLE_VERSION} gradle && \
+  rm gradle-${GRADLE_VERSION}-all.zip
+
+ENV GRADLE_HOME /usr/bin/gradle
+ENV PATH $PATH:$GRADLE_HOME/bin
+
 COPY . /services
 
 WORKDIR /services
 
-# Install gradle and cache dependencies
-RUN ./gradlew --no-daemon dependencies
-
-CMD ./gradlew --no-daemon build oneJar
+CMD gradle --no-daemon build oneJar
