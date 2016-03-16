@@ -13,7 +13,6 @@ services:
       - backend
     depends_on:
       - koha_mysql
-      - sms
       - smtp
       - sip
     cap_add:
