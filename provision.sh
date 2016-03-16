@@ -34,12 +34,17 @@ sudo pip install pyopenssl ndg-httpsclient pyasn1 docker-compose==1.6.2
 echo -e "\n4) Installing Graphviz\n"
 which dot > /dev/null || sudo apt-get install -y graphviz
 
-echo -e "\n5) Provisioning system with docker-compose\n"
+echo -e "\n6) Making sure secrets.env is present\n"
+if [ ! -f /vagrant/docker-compose/secrets.env ]; then
+  touch /vagrant/docker-compose/secrets.env
+fi
+
+echo -e "\n6) Provisioning system with docker-compose\n"
 cd /vagrant/docker-compose
 ./docker-compose.sh
 sudo docker-compose up -d
 
-echo -e "\n6) Atempting to set up Elasticsearch indices and mappings"
+echo -e "\n7) Atempting to set up Elasticsearch indices and mappings"
 for i in {1..10}; do
   wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "localhost:8005/search/clear_index" &> /dev/null
   if [ $? = 0 ]; then break; fi;
