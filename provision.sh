@@ -34,7 +34,7 @@ sudo pip install pyopenssl ndg-httpsclient pyasn1 docker-compose==1.6.2
 echo -e "\n4) Installing Graphviz\n"
 which dot > /dev/null || sudo apt-get install -y graphviz
 
-echo -e "\n6) Making sure secrets.env is present\n"
+echo -e "\n5) Making sure secrets.env is present\n"
 if [ ! -f /vagrant/docker-compose/secrets.env ]; then
   touch /vagrant/docker-compose/secrets.env
 fi
