@@ -112,6 +112,17 @@ function initQuery (query) {
                     }
                   }
                 }
+              },
+              {
+                nested: {
+                  path: 'work.publication',
+                  query: {
+                    multi_match: {
+                      query: query,
+                      fields: [ 'work.publication.mainTitle^2', 'work.publication.partTitle' ]
+                    }
+                  }
+                }
               }
             ]
           }

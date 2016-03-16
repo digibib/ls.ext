@@ -48,3 +48,13 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker tilbake i nettleseren
     Så skal jeg ha "6" resultater og være på side "2"
     Og nåværende søketerm skal være "prefix0" (+ id på vilkårlig migrering)
+
+  Scenario: Vise ulike titler på verk avhengig av søketerm
+    Gitt at jeg er i søkegrensesnittet
+    Når jeg søker på "prefix2" (+ id på vilkårlig migrering)
+    Så skal jeg få "1" treff
+    Og nåværende søketerm skal være "prefix2" (+ id på vilkårlig migrering)
+    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
+    Så skal tittel prefikset "pubprefix0" og som inneholder "nob" vises
+    Når jeg søker på "pubprefix1" (+ id på vilkårlig migrering)
+    Så skal tittel prefikset "pubprefix1" og som inneholder "eng" vises

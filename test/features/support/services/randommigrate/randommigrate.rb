@@ -3,6 +3,34 @@ require 'rest-client'
 require 'pry'
 
 module RandomMigrate
+  class Entity
+    def initialize(type, services)
+      @services = services
+      @type = type.downcase
+      @literals = Hash.new
+      @authorized_values = Hash.new
+    end
+
+    def add_literal(predicate, value)
+      @literals[predicate] = value
+    end
+
+    def add_authorized(predicate, value)
+      @authorized_values[predicate] = value
+    end
+
+    def to_ntriples()
+      ntriples = "<#{@type}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology##{@type.capitalize}> .\n"
+      @literals.each do |predicate, value|
+        ntriples << "<#{@type}> <#{@services}/ontology##{predicate}> \"#{value}\" .\n"
+      end
+      @authorized_values.each do |predicate, value|
+        ntriples << "<#{@type}> <#{@services}/ontology##{predicate}> <#{value}> .\n"
+      end
+      ntriples
+    end
+  end
+
   class Migrator
     def initialize(services)
       @id = generate_random_string
@@ -35,13 +63,13 @@ module RandomMigrate
       return work_title, ntriples
     end
 
-    def generate_publication(work_uri)
+    def generate_publication(work_uri, language = nil, prefix = nil)
       publication_title = generate_random_string
       ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Publication> .
                   <publication> <#{@services}/ontology#publicationOf> <#{work_uri}> .
                   <publication> <#{@services}/ontology#mainTitle> \"#{publication_title}\" .
                   <publication> <#{@services}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <publication> <#{@services}/ontology#language> <#{@languages.sample}> .
+                  <publication> <#{@services}/ontology#language> <#{language || @languages.sample}> .
                   <publication> <#{@services}/ontology#adaptationOfPublicationForParticularUserGroups> <http://data.deichman.no/format#adaptationOfPublicationForParticularUserGroups#{@a.sample}> ."
       return publication_title, ntriples
     end
@@ -60,12 +88,19 @@ module RandomMigrate
 
     def generate_quick_test_set()
       # For Patron client
-      # For search on prefix0#{@id}, get two pages with 10 and 6 results
-      # For search on prefix1#{@id}, get one page with 1 results
-      # Generated publications shall trigger filters for language and format
       puts 'Migrating quick test set'
+
+      # For search on prefix0#{@id}, get 2 pages with 10 and 6 results
+      # For search on prefix1#{@id}, get 2 page with 1 result
+      # Generated publications shall trigger filters for language and format
       random_migrate(16, 1, 2, "prefix0#{@id}")
       random_migrate(1, 1, 2, "prefix1#{@id}")
+
+      # For search on prefix1#{@id}, get 1 page with 1 result
+      # For search on pubprefix0#{@id}, display Norwegian title on work
+      # For search on pubprefix1#{@id}, display English title on work
+      specialized_migrate("prefix2#{@id}")
+
       return @id
     end
 
@@ -81,6 +116,37 @@ module RandomMigrate
         end
       end
       return @id
+    end
+
+    def specialized_migrate(prefix)
+      person_uri = post_ntriples 'person', generate_person[1]
+      work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
+
+      publication_1 = Entity.new('publication', @services)
+      publication_1.add_authorized('publicationOf', work_uri)
+      publication_1.add_literal('mainTitle', "pubprefix0#{@id} #{@id}nob")
+      publication_1.add_authorized('language', 'http://lexvo.org/id/iso639-3/nob')
+      post_ntriples('publication', publication_1.to_ntriples)
+
+      publication_2 = Entity.new('publication', @services)
+      publication_2.add_authorized('publicationOf', work_uri)
+      publication_2.add_literal('mainTitle', "pubprefix0#{@id} #{@id}eng")
+      publication_2.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
+      post_ntriples('publication', publication_2.to_ntriples)
+
+      publication_3 = Entity.new('publication', @services)
+      publication_3.add_authorized('publicationOf', work_uri)
+      publication_3.add_literal('mainTitle', "pubprefix1#{@id} #{@id}eng")
+      publication_3.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
+      post_ntriples('publication', publication_3.to_ntriples)
+
+      publication_4 = Entity.new('publication', @services)
+      publication_4.add_authorized('publicationOf', work_uri)
+      publication_4.add_literal('mainTitle', "pubprefix1#{@id} #{@id}dan")
+      publication_4.add_authorized('language', 'http://lexvo.org/id/iso639-3/dan')
+      post_ntriples('publication', publication_4.to_ntriples)
+
+      index('work', work_uri)
     end
   end
 end

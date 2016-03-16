@@ -59,7 +59,7 @@ export function search () {
       }, body: JSON.stringify(elasticSearchQuery)
     })
       .then(response => response.json())
-      .then(json => processSearchResponse(json))
+      .then(json => processSearchResponse(json, inputQuery))
       .then(processedResponse => {
         if (processedResponse.error) {
           return dispatch(searchFailure(processedResponse))

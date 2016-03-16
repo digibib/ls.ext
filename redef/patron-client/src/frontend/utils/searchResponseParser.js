@@ -1,7 +1,7 @@
 import { relativeUri } from './uriParser'
 import Constants from '../constants/Constants'
 
-export function processSearchResponse (response) {
+export function processSearchResponse (response, query) {
   let processedResponse = {}
   if (response.error) {
     processedResponse.error = response.error
@@ -24,6 +24,13 @@ export function processSearchResponse (response) {
       if (!(work.publications instanceof Array)) {
         work.publications = [ work.publications ]
       }
+
+      let chosenPublication = approximateBestTitle(work.publications, query)
+      if (chosenPublication) {
+        work.mainTitle = chosenPublication.mainTitle
+        work.partTitle = chosenPublication.partTitle
+      }
+
       return work
     })
     processedResponse.searchResults = searchResults
@@ -39,7 +46,7 @@ export function processAggregationResponse (response) {
   if (response.aggregations && response.aggregations.all) {
     let all = response.aggregations.all
     Constants.filterableFields.forEach(field => {
-      let aggregation = all[ field ][ field ][ field ] || all[ field ][ field ]
+      let aggregation = all[ field ][ field ][ field ]
       if (aggregation) {
         aggregation.buckets.forEach(bucket => {
           filters.push({ aggregation: field, bucket: bucket.key, count: bucket.doc_count })
@@ -49,4 +56,18 @@ export function processAggregationResponse (response) {
   }
   processedResponse.filters = filters
   return processedResponse
+}
+
+export function approximateBestTitle (publications, query) {
+  query = query.toLowerCase()
+  publications = publications.filter(publication => {
+    return (publication.mainTitle && publication.mainTitle.toLowerCase().indexOf(query) > -1) ||
+      (publication.partTitle && publication.partTitle.toLowerCase().indexOf(query) > -1)
+  })
+  let chosenPublication =
+    publications.filter(publication => publication.language === 'Norsk (bokmål)')[ 0 ] ||
+    publications.filter(publication => publication.language === 'Engelsk')[ 0 ] ||
+    publications[ 0 ]
+
+  return chosenPublication
 }
