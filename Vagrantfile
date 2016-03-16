@@ -1,8 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-vagrant_root = File.dirname(__FILE__)
-
 Vagrant.configure(2) do |config|
 
   # **** vm-ship - Docker container ship ****
