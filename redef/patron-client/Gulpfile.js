@@ -8,7 +8,7 @@ var gulp = require('gulp'),
   server = require('gulp-express')
 
 gulp.task('lint', function () {
-  return gulp.src([ './src/frontend/**/*.js' ])
+  return gulp.src([ './src/frontend/**/*.js', './src/backend/**/*.js' ])
     .pipe(standard())
     .pipe(standard.reporter('default', {
       breakOnError: true
@@ -52,11 +52,11 @@ gulp.task('reload:sass', [ 'sass' ], function () {
 gulp.task('watch', function () {
   gulp.watch([ './src/frontend/**/*.js' ], [ 'reload:js' ])
   gulp.watch([ './src/scss/**/*.scss' ], [ 'reload:sass' ])
-  gulp.watch([ 'server.js' ], [ server.run ])
+  gulp.watch([ './src/backend/server.js' ], [ server.run ])
 })
 
 gulp.task('express', function () {
-  server.run([ 'server.js' ])
+  server.run([ './src/backend/server.js' ])
 })
 
 gulp.task('serve', [ 'build', 'watch', 'express' ])
