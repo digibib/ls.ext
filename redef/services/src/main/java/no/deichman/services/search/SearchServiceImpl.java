@@ -2,6 +2,7 @@ package no.deichman.services.search;
 
 import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.Header;
@@ -70,12 +71,12 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void indexWork(String workId) {
+    public final void indexWork(String workId) throws Exception {
         doIndexWork(workId, false);
     }
 
     @Override
-    public final void indexPerson(String personId) {
+    public final void indexPerson(String personId) throws Exception {
         doIndexPerson(personId, false);
     }
 
@@ -197,9 +198,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    private void doIndexWork(String workId, boolean indexedPerson) {
-        Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(workId);
+    private void doIndexWork(String workId, boolean indexedPerson) throws Exception {
         String workUri = remote().work() + workId;
+        XURI xuri = new XURI(workUri);
+
+        Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(xuri);
         indexDocument("work", workUri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, workUri));
 
         if (!indexedPerson) {
@@ -214,7 +217,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    private void doIndexPerson(String personId, boolean indexedWork) {
+    private void doIndexPerson(String personId, boolean indexedWork) throws Exception {
         Model works = entityService.retrieveWorksByCreator(personId);
         if (!indexedWork) {
             ResIterator subjectIterator = works.listSubjects();
@@ -241,7 +244,7 @@ public class SearchServiceImpl implements SearchService {
         indexDocument("publisher", publisherUri, publisherModelToIndexMapper.createIndexDocument(publisherModel, publisherUri));
     }
 
-    private void doIndexWorkOnly(String workId) {
+    private void doIndexWorkOnly(String workId) throws Exception {
         doIndexWork(workId, true);
     }
 
@@ -279,7 +282,7 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private void doIndexPersonOnly(String personId) {
+    private void doIndexPersonOnly(String personId) throws Exception {
         doIndexPerson(personId, true);
     }
 

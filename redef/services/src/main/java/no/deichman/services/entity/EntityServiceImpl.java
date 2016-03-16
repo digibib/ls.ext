@@ -9,6 +9,7 @@ import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -174,9 +175,9 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model retrieveWorkWithLinkedResources(String id) {
+    public Model retrieveWorkWithLinkedResources(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrieveWorkAndLinkedResourcesByURI(baseURI.work() + id));
+        m.add(repository.retrieveWorkAndLinkedResourcesByURI(xuri.getUri()));
         m = getLinkedLexvoResource(m);
         m = getLinkedFormatResource(m);
         m = getLinkedAudienceResource(m);

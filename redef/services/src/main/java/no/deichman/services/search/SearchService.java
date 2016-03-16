@@ -7,13 +7,13 @@ import javax.ws.rs.core.Response;
  * Responsibility: perform indexing and searching.
  */
 public interface SearchService {
-    void indexWork(String workUri);
+    void indexWork(String workUri) throws Exception;
 
     Response searchWork(String query);
 
     Response searchPerson(String query);
 
-    void indexPerson(String personUri);
+    void indexPerson(String personUri) throws Exception;
 
     void indexPlaceOfPublication(String id);
 

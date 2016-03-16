@@ -99,9 +99,17 @@ public class SearchResource extends ResourceBase {
                 long start = System.currentTimeMillis();
                 getEntityService().retrieveAllWorkUris(type, uri -> CompletableFuture.runAsync(() -> {
                     if (type.equals("person")) {
-                        getSearchService().indexPerson(idFromUri(uri));
+                        try {
+                            getSearchService().indexPerson(idFromUri(uri));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
-                        getSearchService().indexWork(idFromUri(uri));
+                        try {
+                            getSearchService().indexWork(idFromUri(uri));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }));
                 LOG.info("Done reindexing " + type + " in " + (System.currentTimeMillis() - start) + " seconds");

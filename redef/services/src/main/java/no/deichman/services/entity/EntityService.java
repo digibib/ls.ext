@@ -1,6 +1,7 @@
 package no.deichman.services.entity;
 
 import no.deichman.services.entity.patch.PatchParserException;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 
 import java.util.Optional;
@@ -13,7 +14,7 @@ public interface EntityService {
     
     void updateWork(String work);
     Model retrieveById(EntityType type, String id);
-    Model retrieveWorkWithLinkedResources(String id);
+    Model retrieveWorkWithLinkedResources(XURI xuri);
     Model retrievePersonWithLinkedResources(String id);
 
     Model retrieveWorkItemsById(String id);

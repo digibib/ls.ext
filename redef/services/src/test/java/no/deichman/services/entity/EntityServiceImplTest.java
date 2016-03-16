@@ -8,6 +8,7 @@ import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -133,7 +134,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_work_by_id_with_language() {
+    public void test_retrieve_work_by_id_with_language() throws Exception {
         String testId = "test_retrieve_work_by_id_with_language";
         String workData = "{\n"
                 + "    \"@context\": {\n"
@@ -148,7 +149,8 @@ public class EntityServiceImplTest {
                 + "}";
         Model inputModel = modelFrom(workData, JSONLD);
         String workId = service.create(WORK, inputModel);
-        Model test = service.retrieveWorkWithLinkedResources(workId.replace(workURI, ""));
+        XURI xuri = new XURI(workId);
+        Model test = service.retrieveWorkWithLinkedResources(xuri);
         assertTrue(
                 test.contains(
                         createStatement(
@@ -161,7 +163,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_work_by_id_with_format() {
+    public void test_retrieve_work_by_id_with_format() throws Exception {
         String testId = "test_retrieve_work_by_id_with_format";
         String workData = "{\n"
                 + "    \"@context\": {\n"
@@ -176,7 +178,8 @@ public class EntityServiceImplTest {
                 + "}";
         Model inputModel = modelFrom(workData, JSONLD);
         String workId = service.create(WORK, inputModel);
-        Model test = service.retrieveWorkWithLinkedResources(workId.replace(workURI, ""));
+        XURI xuri = new XURI(workId);
+        Model test = service.retrieveWorkWithLinkedResources(xuri);
         assertTrue(
                 test.contains(
                         createStatement(
