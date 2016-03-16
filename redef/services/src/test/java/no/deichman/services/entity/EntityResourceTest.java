@@ -82,7 +82,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void get_should_return_a_valid_json_work() {
+    public void get_should_return_a_valid_json_work() throws Exception {
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null), mockSearchService);
         String workId = "work_00001";
 
@@ -94,7 +94,7 @@ public class EntityResourceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void get_should_throw_exception_when_work_is_not_found() {
+    public void get_should_throw_exception_when_work_is_not_found() throws Exception {
         String workId = "work_DOES_NOT_EXIST";
         entityResource.get(WORK, workId);
     }
@@ -198,7 +198,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_return_the_new_work() throws URISyntaxException{
+    public void create_should_return_the_new_work() throws Exception {
         String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
 
         Response createResponse = entityResource.createFromLDJSON(WORK, work);
@@ -214,7 +214,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_index_the_new_work() throws URISyntaxException{
+    public void create_should_index_the_new_work() throws Exception {
         String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
 
         Response createResponse = entityResource.createFromLDJSON(WORK, work);
@@ -229,7 +229,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_index_the_new_person() throws URISyntaxException{
+    public void create_should_index_the_new_person() throws Exception {
         String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
 
         Response createResponse = entityResource.createFromLDJSON(PERSON, person);
@@ -244,7 +244,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_index_the_new_place_of_publication() throws URISyntaxException{
+    public void create_should_index_the_new_place_of_publication() throws Exception {
         String placeOfPublication = createTestRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION);
 
         Response createResponse = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
@@ -306,16 +306,16 @@ public class EntityResourceTest {
 
     @Test(expected = NotFoundException.class)
     public void patch_on_a_non_existing_resource_should_return_404() throws Exception {
-        entityResource.patch(WORK, "a_missing_work1234", "{}");
+        entityResource.patch(WORK, "w0000000012131231", "{}");
     }
 
     @Test(expected=NotFoundException.class)
-    public void delete__non_existing_work_should_raise_not_found_exception(){
+    public void delete__non_existing_work_should_raise_not_found_exception() throws Exception {
         entityResource.delete(WORK, "work_DOES_NOT_EXIST_AND_FAILS");
     }
 
     @Test
-    public void delete_existing_work_should_return_no_content() throws URISyntaxException{
+    public void delete_existing_work_should_return_no_content() throws Exception {
         String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
         Response createResponse = entityResource.createFromLDJSON(WORK, work);
         String workId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/" + WORK + "/", "");
@@ -383,7 +383,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void work_should_have_language_labels() throws URISyntaxException {
+    public void work_should_have_language_labels() throws Exception {
         String work = "{\n"
                 + "    \"@context\": {\n"
                 + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
@@ -413,7 +413,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void work_should_have_format_labels() throws URISyntaxException {
+    public void work_should_have_format_labels() throws Exception {
         String work = "{\n"
                 + "    \"@context\": {\n"
                 + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"

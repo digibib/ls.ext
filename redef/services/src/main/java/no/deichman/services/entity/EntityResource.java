@@ -6,6 +6,7 @@ import no.deichman.services.restutils.MimeType;
 import no.deichman.services.restutils.PATCH;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.jena.rdf.model.Model;
@@ -120,14 +121,16 @@ public final class EntityResource extends ResourceBase {
     @GET
     @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
     @Produces(LD_JSON + MimeType.UTF_8)
-    public Response get(@PathParam("type") String type, @PathParam("id") String id) {
+    public Response get(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         Model model;
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+
         if ("work".equals(type)) {
-            model = getEntityService().retrieveWorkWithLinkedResources(id);
+            model = getEntityService().retrieveWorkWithLinkedResources(xuri.getId());
         } else if ("person".equals(type)) {
-            model = getEntityService().retrievePersonWithLinkedResources(id);
+            model = getEntityService().retrievePersonWithLinkedResources(xuri.getId());
         } else {
-            model = getEntityService().retrieveById(EntityType.get(type), id);
+            model = getEntityService().retrieveById(xuri.getTypeAsEntityType(), xuri.getId());
         }
         if (model.isEmpty()) {
             throw new NotFoundException();
@@ -137,8 +140,11 @@ public final class EntityResource extends ResourceBase {
 
     @DELETE
     @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
-    public Response delete(@PathParam("type") String type, @PathParam("id") String id) {
-        Model model = getEntityService().retrieveById(EntityType.get(type), id);
+    public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+
+        Model model = getEntityService().retrieveById(xuri.getTypeAsEntityType(), xuri.getId());
+
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
@@ -151,61 +157,43 @@ public final class EntityResource extends ResourceBase {
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+
         if (StringUtils.isBlank(jsonLd)) {
             throw new BadRequestException("Empty json body");
         }
-        EntityType entityType = EntityType.get(type);
-        String resourceUri;
-        switch (entityType) {
-            case WORK:
-                resourceUri = getBaseURI().work() + id;
-                break;
-            case PUBLICATION:
-                resourceUri = getBaseURI().publication() + id;
-                break;
-            case PERSON:
-                resourceUri = getBaseURI().person() + id;
-                break;
-            case PLACE_OF_PUBLICATION:
-                resourceUri = getBaseURI().placeOfPublication() + id;
-                break;
-            case PUBLISHER:
-                resourceUri = getBaseURI().publisher() + id;
-                break;
-            default:
-                throw new NotFoundException("Unknown entity type.");
-        }
 
-        if (!getEntityService().resourceExists(resourceUri)) {
+        if (!getEntityService().resourceExists(xuri.getUri())) {
             throw new NotFoundException();
         }
         Model m;
         try {
-            m = getEntityService().patch(entityType, id, jsonLd);
+            m = getEntityService().patch(xuri.getTypeAsEntityType(), xuri.getId(), jsonLd);
         } catch (PatchParserException e) {
             throw new BadRequestException(e);
         }
 
-        switch (entityType) {
+        switch (xuri.getTypeAsEntityType()) {
             case WORK:
-                getSearchService().indexWork(id);
+                getSearchService().indexWork(xuri.getId());
                 break;
             case PERSON:
-                getSearchService().indexPerson(id);
+                getSearchService().indexPerson(xuri.getId());
                 break;
             case PLACE_OF_PUBLICATION:
-                getSearchService().indexPlaceOfPublication(id);
+                getSearchService().indexPlaceOfPublication(xuri.getId());
                 break;
             case PUBLICATION:
                 Property publicationOfProperty = ResourceFactory.createProperty(getBaseURI().ontology("publicationOf"));
                 if (m.getProperty(null, publicationOfProperty) != null) {
                     String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
-                    String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
-                    getSearchService().indexWork(workId);
+                    XURI workXURI = new XURI(workUri);
+
+                    getSearchService().indexWork(workXURI.getId());
                 }
                 break;
             case PUBLISHER:
-                getSearchService().indexPublisher(id);
+                getSearchService().indexPublisher(xuri.getId());
                 break;
             default:
                 break;
@@ -233,14 +221,14 @@ public final class EntityResource extends ResourceBase {
 
     @PUT
     @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
-    public Response index(@PathParam("type") final String type, @PathParam("id") String id) {
-        EntityType entityType = EntityType.get(type);
-        switch (entityType) {
+    public Response index(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        switch (xuri.getTypeAsEntityType()) {
             case WORK:
-                getSearchService().indexWork(id);
+                getSearchService().indexWork(xuri.getId());
                 break;
             case PERSON:
-                getSearchService().indexPerson(id);
+                getSearchService().indexPerson(xuri.getId());
                 break;
             default: /* will never get to here */
                 break;
@@ -250,9 +238,9 @@ public final class EntityResource extends ResourceBase {
 
     @PUT
     @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/sync")
-    public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws PatchParserException {
-        EntityType entityType = EntityType.get(type);
-        getEntityService().synchronizeKoha(entityType, id);
+    public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        getEntityService().synchronizeKoha(xuri.getTypeAsEntityType(), xuri.getId());
         return accepted().build();
     }
 
