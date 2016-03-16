@@ -128,7 +128,7 @@ public final class EntityResource extends ResourceBase {
         if ("work".equals(type)) {
             model = getEntityService().retrieveWorkWithLinkedResources(xuri);
         } else if ("person".equals(type)) {
-            model = getEntityService().retrievePersonWithLinkedResources(xuri.getId());
+            model = getEntityService().retrievePersonWithLinkedResources(xuri);
         } else {
             model = getEntityService().retrieveById(xuri.getTypeAsEntityType(), xuri.getId());
         }

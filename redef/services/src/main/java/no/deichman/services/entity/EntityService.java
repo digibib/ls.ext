@@ -15,7 +15,7 @@ public interface EntityService {
     void updateWork(String work);
     Model retrieveById(EntityType type, String id);
     Model retrieveWorkWithLinkedResources(XURI xuri);
-    Model retrievePersonWithLinkedResources(String id);
+    Model retrievePersonWithLinkedResources(XURI xuri);
 
     Model retrieveWorkItemsById(String id);
     String create(EntityType type, Model inputModel);

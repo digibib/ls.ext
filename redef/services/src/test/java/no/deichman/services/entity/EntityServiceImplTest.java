@@ -192,7 +192,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_person_by_id_with_nationality() {
+    public void test_retrieve_person_by_id_with_nationality() throws Exception {
         String testId = "test_retrieve_person_by_id_with_nationality";
         String personData = "{\n"
                 + "    \"@context\": {\n"
@@ -207,7 +207,8 @@ public class EntityServiceImplTest {
                 + "}";
         Model inputModel = modelFrom(personData, JSONLD);
         String personId = service.create(PERSON, inputModel);
-        Model test = service.retrievePersonWithLinkedResources(personId.replace(personURI, ""));
+        XURI xuri = new XURI(personId);
+        Model test = service.retrievePersonWithLinkedResources(xuri);
         assertTrue(
                 test.contains(
                         createStatement(

@@ -185,9 +185,9 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model retrievePersonWithLinkedResources(String id) {
+    public Model retrievePersonWithLinkedResources(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrievePersonAndLinkedResourcesByURI(baseURI.person() + id));
+        m.add(repository.retrievePersonAndLinkedResourcesByURI(xuri.getUri()));
         m = getLinkedNationalityResource(m);
         return m;
     }

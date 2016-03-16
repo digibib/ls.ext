@@ -228,7 +228,8 @@ public class SearchServiceImpl implements SearchService {
             }
         }
         String personUri = remote().person() + personId;
-        Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(personId).add(works);
+        XURI xuri = new XURI(personUri);
+        Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(xuri).add(works);
         indexDocument("person", personUri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, personUri));
     }
 
