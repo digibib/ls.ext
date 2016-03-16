@@ -30,6 +30,7 @@ up_ship:                                              ##
 	vagrant up $(SHIP)
 
 shell_provision_ship:					## Run ONLY shell provisioners
+	cd docker-compose && ./docker-compose.sh
 	vagrant provision $(SHIP) --provision-with shell
 
 provision:  shell_provision_ship provision_ship   	## Full provision

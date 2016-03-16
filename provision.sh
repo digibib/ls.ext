@@ -41,7 +41,6 @@ fi
 
 echo -e "\n6) Provisioning system with docker-compose\n"
 cd /vagrant/docker-compose
-./docker-compose.sh
 sudo docker-compose up -d
 
 echo -e "\n7) Atempting to set up Elasticsearch indices and mappings"
