@@ -12,6 +12,8 @@ else
   echo "deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -c -s) main" | sudo tee /etc/apt/sources.list.d/docker.list
   sudo apt-get update
   sudo apt-get -y install linux-image-extra-$(uname -r) make git docker-engine=$VERSION
+  sudo echo 'DOCKER_OPTS="--storage-driver=aufs"' > /etc/default/docker
+  sudo service docker restart
   echo "docker installed."
 fi
 
