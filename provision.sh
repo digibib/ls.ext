@@ -30,7 +30,7 @@ echo -e "\n3) Installing Docker-compose\n"
 sudo pip install pyopenssl ndg-httpsclient pyasn1 docker-compose==1.6.2
 
 echo -e "\n4) Installing Graphviz\n"
-sudo apt-get install -y graphviz
+which dot > /dev/null || sudo apt-get install -y graphviz
 
 echo -e "\n5) Provisioning system with docker-compose\n"
 cd /vagrant/docker-compose
