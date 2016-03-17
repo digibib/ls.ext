@@ -153,7 +153,7 @@ services:
       - "-vv"
       - "-r"
       - "${HOST}:${SIP_PORT}"
-      - "-replace=(|AB)10([0-9]{14})~\\1\\2"
+      - "-replace=(|AB)10([0-9]{14})~$$1$$2"
 
   catalinker:
     container_name: redef_catalinker_container
