@@ -13,6 +13,7 @@ services:
       - backend
     depends_on:
       - koha_mysql
+      - koha_index
       - smtp
       - sip
     cap_add:
@@ -35,7 +36,7 @@ services:
       - "8080:8080"
       - "8081:8081"
     volumes:
-      - "/var/migration_workdir:/var/migration_workdir:rw"
+      - koha_index
 
   koha_mysql:
     container_name: koha_mysql
@@ -66,6 +67,12 @@ services:
     image: "busybox:latest"
     volumes:
       - /var/lib/mysql
+
+  koha_index:
+    container_name: koha_index
+    image: "busybox:latest"
+    volumes:
+      - "/var/lib/koha/${KOHA_INSTANCE}"
 
   smtp:
     container_name: mailrelay

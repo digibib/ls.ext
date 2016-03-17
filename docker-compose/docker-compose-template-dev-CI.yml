@@ -13,6 +13,7 @@ services:
       - backend
     depends_on:
       - koha_mysql
+      - koha_index
       - sms
       - smtp
       - sip
@@ -35,8 +36,8 @@ services:
       - "6001:6001"
       - "8080:8080"
       - "8081:8081"
-    volumes:
-      - "/var/migration_workdir:/var/migration_workdir:rw"
+    volumes_from:
+      - koha_index
 
   koha_mysql:
     container_name: koha_mysql
@@ -67,6 +68,13 @@ services:
     image: "busybox:latest"
     volumes:
       - /var/lib/mysql
+
+  koha_index:
+    container_name: koha_index
+    image: "busybox:latest"
+    driver:
+    volumes:
+      - "/var/lib/koha/${KOHA_INSTANCE}"
 
   smtp:
     container_name: mailrelay
