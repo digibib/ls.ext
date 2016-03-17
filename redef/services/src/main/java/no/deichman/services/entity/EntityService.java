@@ -19,9 +19,9 @@ public interface EntityService {
     Model retrieveWorkItemsById(String id);
     String create(EntityType type, Model inputModel) throws Exception;
     void delete(Model model);
-    Model patch(EntityType type, String id, String ldPatchJson) throws Exception;
+    Model patch(XURI xuri, String ldPatchJson) throws Exception;
 
-    Model synchronizeKoha(EntityType type, String id) throws Exception;
+    Model synchronizeKoha(XURI xuri) throws Exception;
 
     boolean resourceExists(XURI xuri);
 

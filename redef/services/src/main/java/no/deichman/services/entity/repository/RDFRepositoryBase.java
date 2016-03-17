@@ -302,10 +302,9 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final Model retrievePublicationsByWork(String id) {
-        String uri = baseURI.work() + id;
-        log.debug("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = getQueryExecution(sqb.describeLinkedPublications(uri))) {
+    public final Model retrievePublicationsByWork(XURI xuri) {
+        log.debug("Attempting to retrieve: " + xuri.getUri());
+        try (QueryExecution qexec = getQueryExecution(sqb.describeLinkedPublications(xuri))) {
             disableCompression(qexec);
             return qexec.execDescribe();
         }

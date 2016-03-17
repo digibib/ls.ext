@@ -167,7 +167,7 @@ public final class EntityResource extends ResourceBase {
         }
         Model m;
         try {
-            m = getEntityService().patch(xuri.getTypeAsEntityType(), xuri.getId(), jsonLd);
+            m = getEntityService().patch(xuri, jsonLd);
         } catch (PatchParserException e) {
             throw new BadRequestException(e);
         }
@@ -239,7 +239,7 @@ public final class EntityResource extends ResourceBase {
     @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/sync")
     public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
-        getEntityService().synchronizeKoha(xuri.getTypeAsEntityType(), xuri.getId());
+        getEntityService().synchronizeKoha(xuri);
         return accepted().build();
     }
 

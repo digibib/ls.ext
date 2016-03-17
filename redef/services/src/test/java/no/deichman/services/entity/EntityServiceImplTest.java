@@ -362,26 +362,25 @@ public class EntityServiceImplTest {
         String testId = "work_SHOULD_BE_PATCHABLE";
         String workData = getTestJSON(testId, "work");
         Model inputModel = modelFrom(workData, JSONLD);
-        String workId = service.create(WORK, inputModel);
+        XURI workUri = new XURI(service.create(WORK, inputModel));
 
         Model oldModel = ModelFactory.createDefaultModel();
 
-        String comparisonRDF = workData.replace(workURI + testId, workId);
+        String comparisonRDF = workData.replace(workURI + testId, workUri.getUri());
         InputStream oldIn = new ByteArrayInputStream(comparisonRDF.getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(oldModel, oldIn, JSONLD);
-        String nonUriWorkId = workId.replace(workURI, "");
-        Model data = service.retrieveById(new XURI(workId));
+        Model data = service.retrieveById(workUri);
         assertTrue(oldModel.isIsomorphicWith(data));
-        String patchData = getTestPatch("add", workId);
-        Model patchedModel = service.patch(WORK, nonUriWorkId, patchData);
+        String patchData = getTestPatch("add", workUri.getUri());
+        Model patchedModel = service.patch(workUri, patchData);
         assertTrue(patchedModel.contains(
-                createResource(workId),
+                createResource(workUri.getUri()),
                 createProperty(ontologyURI + "color"),
                 "red"));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         RDFDataMgr.write(baos, patchedModel.difference(oldModel), Lang.NT);
         assertEquals(baos.toString("UTF-8").trim(),
-                "<" + workId + "> <" + ontologyURI + "color> \"red\" .");
+                "<" + workUri.getUri() + "> <" + ontologyURI + "color> \"red\" .");
     }
 
     @Test
@@ -390,12 +389,11 @@ public class EntityServiceImplTest {
         String testId = "publication_SHOULD_BE_PATCHABLE";
         String publicationData = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publicationData, JSONLD);
-        String publicationId = service.create(PUBLICATION, inputModel);
-        String nonUriPublicationId = publicationId.replace(publicationURI, "");
-        String patchData = getTestPatch("add", publicationId);
-        Model patchedModel = service.patch(PUBLICATION, nonUriPublicationId, patchData);
+        XURI publicationId = new XURI(service.create(PUBLICATION, inputModel));
+        String patchData = getTestPatch("add", publicationId.getUri());
+        Model patchedModel = service.patch(publicationId, patchData);
         assertTrue(patchedModel.contains(
-                createResource(publicationId),
+                createResource(publicationId.getUri()),
                 createProperty(ontologyURI + "color"),
                 "red"));
     }
@@ -404,9 +402,9 @@ public class EntityServiceImplTest {
     public void test_bad_patch_fails() throws Exception {
         String workData = getTestJSON("SHOULD_FAIL", "work");
         Model inputModel = modelFrom(workData, JSONLD);
-        String workId = service.create(WORK, inputModel);
+        XURI workId = new XURI(service.create(WORK, inputModel));
         String badPatchData = "{\"po\":\"cas\",\"s\":\"http://example.com/a\"}";
-        service.patch(WORK, workId.replace(workURI, ""), badPatchData);
+        service.patch(workId, badPatchData);
     }
 
     @Test
@@ -415,19 +413,19 @@ public class EntityServiceImplTest {
         String person = getTestJSON(testId, "person");
         Model personModel = modelFrom(person, JSONLD);
 
-        final String personUri = service.create(PERSON, personModel);
+        final XURI personUri = new XURI(service.create(PERSON, personModel));
 
         String work = getTestJSON("workId", "work");
         Model workModel = modelFrom(work, JSONLD);
-        final String workUri = service.create(WORK, workModel);
+        final XURI workUri = new XURI(service.create(WORK, workModel));
 
         String work2 = getTestJSON("workId2", "work");
         Model workModel2 = modelFrom(work2, JSONLD);
-        String workUri2 = service.create(WORK, workModel2);
+        XURI workUri2 = new XURI(service.create(WORK, workModel2));
 
         addCreatorToWorkPatch(personUri, workUri);
         addCreatorToWorkPatch(personUri, workUri2);
-        Model worksByCreator = service.retrieveWorksByCreator(personUri.substring(personUri.lastIndexOf("/h") + 1));
+        Model worksByCreator = service.retrieveWorksByCreator(personUri.getId());
         assertFalse(worksByCreator.isEmpty());
         assertThat(stringFrom(worksByCreator, JSONLD),
                 sameJSONAs(format(""
@@ -442,13 +440,13 @@ public class EntityServiceImplTest {
                         + "        \"rdfs:name\": \"Work Name\""
                         + "      }"
                         + "    ]"
-                        + "}", workUri, workUri2))
+                        + "}", workUri.getUri(), workUri2.getUri()))
                         .allowingExtraUnexpectedFields()
                         .allowingAnyArrayOrdering());
     }
 
-    private void addCreatorToWorkPatch(String personUri, String workUri) throws Exception {
-        service.patch(WORK, workUri, format(""
+    private void addCreatorToWorkPatch(XURI personUri, XURI workUri) throws Exception {
+        service.patch(workUri, format(""
                 + "{"
                 + "  \"op\":\"add\",\n"
                 + "  \"s\": \"%s\",\n"
@@ -457,7 +455,7 @@ public class EntityServiceImplTest {
                 + "    \"value\":\"%s\",\n"
                 + "    \"type\": \"%s\"\n"
                 + "   }\n"
-                + "}\n", workUri, ontologyURI, personUri, XSD.anyURI.getURI()));
+                + "}\n", workUri.getUri(), ontologyURI, personUri.getUri(), XSD.anyURI.getURI()));
     }
 
     private String getTestJSON(String id, String type) {
@@ -550,11 +548,10 @@ public class EntityServiceImplTest {
                 + "<publication> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
 
         Model inputPublication = modelFrom(publicationTriples, Lang.NTRIPLES);
-        String publicationUri = service.create(PUBLICATION, inputPublication);
+        XURI publicationUri = new XURI(service.create(PUBLICATION, inputPublication));
 
-        String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalMainTitle, newMainTitle));
-        Model publicationModel = service.retrieveById(new XURI(publicationUri));
+        service.patch(publicationUri, getPatch(publicationUri.getUri(), "mainTitle", originalMainTitle, newMainTitle));
+        Model publicationModel = service.retrieveById(publicationUri);
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newMainTitle, null, partTitle, partNumber, isbn, publicationYear));
@@ -599,28 +596,25 @@ public class EntityServiceImplTest {
                 + "<person> <" + ontologyURI + "name> \"" + originalCreator + "\" .";
 
         Model inputPerson = modelFrom(personTriples, Lang.NTRIPLES);
-        String personUri = service.create(PERSON, inputPerson);
+        XURI personUri = new XURI(service.create(PERSON, inputPerson));
 
-        Model inputWork = modelFrom(workTriples.replace("__CREATORURI__", personUri), Lang.NTRIPLES);
-        String workUri = service.create(WORK, inputWork);
+        Model inputWork = modelFrom(workTriples.replace("__CREATORURI__", personUri.getUri()), Lang.NTRIPLES);
+        XURI workUri = new XURI(service.create(WORK, inputWork));
 
-        Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workUri), Lang.NTRIPLES);
-        String publicationUri = service.create(PUBLICATION, inputPublication);
+        Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workUri.getUri()), Lang.NTRIPLES);
+        XURI publicationUri = new XURI(service.create(PUBLICATION, inputPublication));
         verify(mockKohaAdapter).getNewBiblioWithMarcRecord(marcRecord);
 
-        String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalPublicationTitle, newPublicationTitle));
-        Model publicationModel = service.retrieveById(new XURI(publicationUri));
+        service.patch(publicationUri, getPatch(publicationUri.getUri(), "mainTitle", originalPublicationTitle, newPublicationTitle));
+        Model publicationModel = service.retrieveById(publicationUri);
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator));
 
-        String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.WORK, workId, getPatch(workUri, "mainTitle", originalWorkTitle, newWorkTitle));
+        service.patch(workUri, getPatch(workUri.getUri(), "mainTitle", originalWorkTitle, newWorkTitle));
         verify(mockKohaAdapter, times(2)).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator)); // Need times(2) because publication has not changed.
 
-        String personId = personUri.substring(personUri.lastIndexOf("/") + 1);
-        service.patch(EntityType.PERSON, personId, getPatch(personUri, "name", originalCreator, newCreator));
+        service.patch(personUri, getPatch(personUri.getUri(), "name", originalCreator, newCreator));
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator));
     }
 

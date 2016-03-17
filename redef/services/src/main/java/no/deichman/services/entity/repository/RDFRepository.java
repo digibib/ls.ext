@@ -47,7 +47,7 @@ public interface RDFRepository {
 
     Model retrieveWorksByCreator(String creatorUri);
 
-    Model retrievePublicationsByWork(String work);
+    Model retrievePublicationsByWork(XURI xuri);
 
     void findAllUrisOfType(String type, Consumer<String> uriConsumer);
 

@@ -355,15 +355,15 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test
-    public void test_describe_publications_query(){
-        String uri = "http://example.com/a";
+    public void test_describe_publications_query() throws Exception {
+        XURI xuri = new XURI("http://deichman.no/work/w123123");
         String test = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
                 + "DESCRIBE ?publication WHERE \n"
                 + "    {\n"
-                + "        ?publication deichman:publicationOf <"+uri+">\n"
+                + "        ?publication deichman:publicationOf <"+ xuri.getUri() +">\n"
                 + "    }";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
-        Query query = sqb.describeLinkedPublications(uri);
+        Query query = sqb.describeLinkedPublications(xuri);
         Query expected = QueryFactory.create(test);
         assertEquals(expected,query);
     }

@@ -270,13 +270,13 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public Query describeLinkedPublications(String uri) {
+    public Query describeLinkedPublications(XURI xuri) {
         String q = String.format(""
                 + "PREFIX deichman: <%s>\n"
                 + "DESCRIBE ?publication WHERE \n"
                 + "    {\n"
                 + "        ?publication deichman:publicationOf <%s>\n"
-                + "    }", baseURI.ontology(), uri);
+                + "    }", baseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }
 

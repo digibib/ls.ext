@@ -311,39 +311,41 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model patch(EntityType type, String id, String ldPatchJson) throws Exception {
+    public Model patch(XURI xuri, String ldPatchJson) throws Exception {
         if (StringUtils.isBlank(ldPatchJson)) {
             throw new BadRequestException("Empty JSON-LD patch");
         }
         repository.patch(PatchParser.parse(ldPatchJson));
 
-        return synchronizeKoha(type, id);
+        return synchronizeKoha(xuri);
     }
 
     @Override
-    public Model synchronizeKoha(EntityType type, String id) throws Exception {
-        if (!id.matches("^[a-z][0-9]+")) {
-            id = id.replace(baseURI.getBaseUriRoot() + type.getPath() + "/", "");
-        }
-        XURI xuri = new XURI(baseURI.getBaseUriRoot(), type.getPath(), id);
+    public Model synchronizeKoha(XURI xuri) throws Exception {
+
         Model model = retrieveById(xuri);
 
-        if (type.equals(EntityType.PERSON)) {
-            Model works = repository.retrieveWorksByCreator(id);
+        if (xuri.getTypeAsEntityType().equals(EntityType.PERSON)) {
+            Model works = repository.retrieveWorksByCreator(xuri.getId());
             streamFrom(works.listStatements())
                     .collect(groupingBy(Statement::getSubject))
                     .forEach((subject, statements) -> {
                         Model work = ModelFactory.createDefaultModel();
                         work.add(statements);
-                        String workUri = subject.toString();
+                        XURI workUri = null;
+                        try {
+                            workUri = new XURI(subject.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         updatePublicationsByWork(workUri, work);
                     });
-        } else if (type.equals(EntityType.WORK)) {
-            updatePublicationsByWork(id, model);
-        } else if (type.equals(EntityType.PUBLICATION) && model.getProperty(null, publicationOfProperty) != null) {
+        } else if (xuri.getTypeAsEntityType().equals(EntityType.WORK)) {
+            updatePublicationsByWork(xuri, model);
+        } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION) && model.getProperty(null, publicationOfProperty) != null) {
             String workUri = model.getProperty(null, publicationOfProperty).getObject().toString();
             updatePublicationWithWork(workUri, model);
-        } else if (type.equals(EntityType.PUBLICATION)) {
+        } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION)) {
             updatePublicationInKoha(model, new ArrayList<>());
         }
         return model;
@@ -355,11 +357,10 @@ public final class EntityServiceImpl implements EntityService {
         updatePublicationInKoha(publication, personNames);
     }
 
-    private void updatePublicationsByWork(String workUri, Model work) {
-        String workId = workUri.substring(workUri.lastIndexOf("/") + 1);
+    private void updatePublicationsByWork(XURI xuri, Model work) {
 
         List<String> personNames = getPersonNames(work);
-        Model publications = repository.retrievePublicationsByWork(workId);
+        Model publications = repository.retrievePublicationsByWork(xuri);
 
         streamFrom(publications.listStatements())
                 .collect(groupingBy(Statement::getSubject))
