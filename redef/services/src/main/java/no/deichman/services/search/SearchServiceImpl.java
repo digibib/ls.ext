@@ -135,12 +135,12 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    public final void indexPlaceOfPublication(String id) {
+    public final void indexPlaceOfPublication(String id) throws Exception {
         doIndexPlaceOfPublication(id);
     }
 
     @Override
-    public final void indexPublisher(String id) {
+    public final void indexPublisher(String id) throws Exception {
         doIndexPublisher(id);
     }
 
@@ -233,14 +233,16 @@ public class SearchServiceImpl implements SearchService {
         indexDocument("person", personUri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, personUri));
     }
 
-    private void doIndexPlaceOfPublication(String id) {
-        Model placeOfPublicationModel = entityService.retrieveById(EntityType.PLACE_OF_PUBLICATION, id);
+    private void doIndexPlaceOfPublication(String id) throws Exception {
+        XURI xuri = new XURI(remote().getBaseUriRoot(), EntityType.PLACE_OF_PUBLICATION.getPath(), id);
+        Model placeOfPublicationModel = entityService.retrieveById(xuri);
         String placeOfPublicationUri = remote().placeOfPublication() + id;
         indexDocument("placeOfPublication", placeOfPublicationUri, placeOfPublicationModelToIndexMapper.createIndexDocument(placeOfPublicationModel, placeOfPublicationUri));
     }
 
-    private void doIndexPublisher(String id) {
-        Model publisherModel = entityService.retrieveById(EntityType.PUBLISHER, id);
+    private void doIndexPublisher(String id) throws Exception {
+        XURI xuri = new XURI(remote().getBaseUriRoot(), EntityType.PUBLISHER.getPath(), id);
+        Model publisherModel = entityService.retrieveById(xuri);
         String publisherUri = remote().publisher() + id;
         indexDocument("publisher", publisherUri, publisherModelToIndexMapper.createIndexDocument(publisherModel, publisherUri));
     }

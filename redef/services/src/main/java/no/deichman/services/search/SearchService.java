@@ -15,9 +15,9 @@ public interface SearchService {
 
     void indexPerson(String personUri) throws Exception;
 
-    void indexPlaceOfPublication(String id);
+    void indexPlaceOfPublication(String id) throws Exception;
 
-    void indexPublisher(String id);
+    void indexPublisher(String id) throws Exception;
 
     Response searchPersonWithJson(String json);
 

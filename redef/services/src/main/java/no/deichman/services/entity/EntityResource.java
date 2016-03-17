@@ -130,7 +130,7 @@ public final class EntityResource extends ResourceBase {
         } else if ("person".equals(type)) {
             model = getEntityService().retrievePersonWithLinkedResources(xuri);
         } else {
-            model = getEntityService().retrieveById(xuri.getTypeAsEntityType(), xuri.getId());
+            model = getEntityService().retrieveById(xuri);
         }
         if (model.isEmpty()) {
             throw new NotFoundException();
@@ -143,7 +143,7 @@ public final class EntityResource extends ResourceBase {
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
 
-        Model model = getEntityService().retrieveById(xuri.getTypeAsEntityType(), xuri.getId());
+        Model model = getEntityService().retrieveById(xuri);
 
         if (model.isEmpty()) {
             throw new NotFoundException();

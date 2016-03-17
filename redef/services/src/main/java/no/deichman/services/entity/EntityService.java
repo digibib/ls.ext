@@ -1,6 +1,5 @@
 package no.deichman.services.entity;
 
-import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 
@@ -13,16 +12,16 @@ import java.util.function.Consumer;
 public interface EntityService {
     
     void updateWork(String work);
-    Model retrieveById(EntityType type, String id);
+    Model retrieveById(XURI xuri);
     Model retrieveWorkWithLinkedResources(XURI xuri);
     Model retrievePersonWithLinkedResources(XURI xuri);
 
     Model retrieveWorkItemsById(String id);
     String create(EntityType type, Model inputModel);
     void delete(Model model);
-    Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException;
+    Model patch(EntityType type, String id, String ldPatchJson) throws Exception;
 
-    Model synchronizeKoha(EntityType type, String id);
+    Model synchronizeKoha(EntityType type, String id) throws Exception;
 
     boolean resourceExists(String resourceUri);
 

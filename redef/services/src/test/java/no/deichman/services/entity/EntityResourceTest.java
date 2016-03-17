@@ -359,7 +359,7 @@ public class EntityResourceTest {
     @Test
     public void patch_should_actually_persist_changes() throws Exception {
         when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
-        String publication = createTestRDF("publication_SHOULD_BE_PATCHABLE", PUBLICATION);
+        String publication = createTestRDF("p00001", PUBLICATION);
         Response result = entityResource.createFromLDJSON(PUBLICATION, publication);
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
         String patchData = "{"

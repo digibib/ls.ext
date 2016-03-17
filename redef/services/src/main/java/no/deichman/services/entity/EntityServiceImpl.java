@@ -5,7 +5,6 @@ import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParser;
-import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
@@ -150,26 +149,26 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model retrieveById(EntityType type, String id) {
+    public Model retrieveById(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
-        switch (type) {
+        switch (xuri.getTypeAsEntityType()) {
             case PUBLICATION:
-                m.add(repository.retrievePublicationByURI(baseURI.publication() + id));
+                m.add(repository.retrievePublicationByURI(xuri.getUri()));
                 break;
             case PERSON:
-                m.add(repository.retrievePersonByURI(baseURI.person() + id));
+                m.add(repository.retrievePersonByURI(xuri.getUri()));
                 break;
             case WORK:
-                m.add(repository.retrieveWorkByURI(baseURI.work() + id));
+                m.add(repository.retrieveWorkByURI(xuri.getUri()));
                 break;
             case PLACE_OF_PUBLICATION:
-                m.add(repository.retrievePlaceOfPublicationByURI(baseURI.placeOfPublication() + id));
+                m.add(repository.retrievePlaceOfPublicationByURI(xuri.getUri()));
                 break;
             case PUBLISHER:
-                m.add(repository.retrievePublisherByURI(baseURI.publisher() + id));
+                m.add(repository.retrievePublisherByURI(xuri.getUri()));
                 break;
             default:
-                throw new IllegalArgumentException("Unknown entity type:" + type);
+                throw new IllegalArgumentException("Unknown entity type:" + xuri.getType());
         }
         return m;
     }
@@ -312,7 +311,7 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model patch(EntityType type, String id, String ldPatchJson) throws PatchParserException {
+    public Model patch(EntityType type, String id, String ldPatchJson) throws Exception {
         if (StringUtils.isBlank(ldPatchJson)) {
             throw new BadRequestException("Empty JSON-LD patch");
         }
@@ -322,8 +321,12 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model synchronizeKoha(EntityType type, String id) {
-        Model model = retrieveById(type, id);
+    public Model synchronizeKoha(EntityType type, String id) throws Exception {
+        if (!id.matches("^[a-z][0-9]+")) {
+            id = id.replace(baseURI.getBaseUriRoot() + type.getPath() + "/", "");
+        }
+        XURI xuri = new XURI(baseURI.getBaseUriRoot(), type.getPath(), id);
+        Model model = retrieveById(xuri);
 
         if (type.equals(EntityType.PERSON)) {
             Model works = repository.retrieveWorksByCreator(id);

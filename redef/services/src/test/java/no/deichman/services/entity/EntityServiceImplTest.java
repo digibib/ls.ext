@@ -126,7 +126,13 @@ public class EntityServiceImplTest {
             Model comparison = ModelFactory.createDefaultModel();
             InputStream in = new ByteArrayInputStream(testJSON.replace(testDataURI, servicesURI).getBytes(StandardCharsets.UTF_8));
             RDFDataMgr.read(comparison, in, JSONLD);
-            Model toBeTested = service.retrieveById(s, servicesURI.replace(baseURI + currentEntity + "/", ""));
+            XURI xuri = null;
+            try {
+                xuri = new XURI(servicesURI);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Model toBeTested = service.retrieveById(xuri);
             boolean value = toBeTested.isIsomorphicWith(comparison);
             assertTrue("Models were not isomorphic", value);
         });
@@ -359,7 +365,7 @@ public class EntityServiceImplTest {
         InputStream oldIn = new ByteArrayInputStream(comparisonRDF.getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(oldModel, oldIn, JSONLD);
         String nonUriWorkId = workId.replace(workURI, "");
-        Model data = service.retrieveById(WORK, nonUriWorkId);
+        Model data = service.retrieveById(new XURI(workId));
         assertTrue(oldModel.isIsomorphicWith(data));
         String patchData = getTestPatch("add", workId);
         Model patchedModel = service.patch(WORK, nonUriWorkId, patchData);
@@ -436,7 +442,7 @@ public class EntityServiceImplTest {
                         .allowingAnyArrayOrdering());
     }
 
-    private void addCreatorToWorkPatch(String personUri, String workUri) throws PatchParserException {
+    private void addCreatorToWorkPatch(String personUri, String workUri) throws Exception {
         service.patch(WORK, workUri, format(""
                 + "{"
                 + "  \"op\":\"add\",\n"
@@ -520,7 +526,7 @@ public class EntityServiceImplTest {
 
 
     @Test
-    public void test_generate_marc_record_in_publication_without_work_patch() throws PatchParserException {
+    public void test_generate_marc_record_in_publication_without_work_patch() throws Exception {
         String originalMainTitle = "Sult";
         String newMainTitle = "Torst";
         String partTitle = "Svolten";
@@ -543,7 +549,7 @@ public class EntityServiceImplTest {
 
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
         service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalMainTitle, newMainTitle));
-        Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationUri.substring(publicationUri.lastIndexOf("/") + 1));
+        Model publicationModel = service.retrieveById(new XURI(publicationUri));
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newMainTitle, null, partTitle, partNumber, isbn, publicationYear));
@@ -564,7 +570,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_generate_marc_record_in_publication_patch() throws PatchParserException {
+    public void test_generate_marc_record_in_publication_patch() throws Exception {
         String originalCreator = "Knut Hamsun";
         String newCreator = "Ellisiv Lindkvist";
         String originalWorkTitle = "Hunger";
@@ -599,7 +605,7 @@ public class EntityServiceImplTest {
 
         String publicationId = publicationUri.substring(publicationUri.lastIndexOf("/") + 1);
         service.patch(EntityType.PUBLICATION, publicationId, getPatch(publicationUri, "mainTitle", originalPublicationTitle, newPublicationTitle));
-        Model publicationModel = service.retrieveById(EntityType.PUBLICATION, publicationId);
+        Model publicationModel = service.retrieveById(new XURI(publicationUri));
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator));
