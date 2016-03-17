@@ -72,7 +72,6 @@ services:
   koha_index:
     container_name: koha_index
     image: "busybox:latest"
-    driver:
     volumes:
       - "/var/lib/koha/${KOHA_INSTANCE}"
 
