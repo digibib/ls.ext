@@ -1,6 +1,15 @@
 import 'es5-shim'
 import 'babel-polyfill'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import routes from './routes'
+import { Provider } from 'react-redux'
+import store from './store'
+import Root from './containers/Root'
+import { addLocaleData } from 'react-intl'
+import en from 'react-intl/locale-data/en'
+import no from 'react-intl/locale-data/no'
 
-ReactDOM.render(routes, document.getElementById('app'))
+addLocaleData(en)
+addLocaleData(no)
+
+ReactDOM.render(<Provider store={store}><Root /></Provider>, document.getElementById('app'))

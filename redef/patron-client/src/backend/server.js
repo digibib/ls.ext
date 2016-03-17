@@ -7,14 +7,14 @@ const app = express()
 
 app.use(require('connect-livereload')())
 
-app.use(express.static(`${__dirname}/public`))
+app.use(express.static(`${__dirname}/../../public`))
 
 app.all('/services/*', requestProxy({
   url: 'http://services:8005/*'
 }))
 
 app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+  response.sendFile(path.resolve(__dirname, '..', '..', 'public', 'index.html'))
 })
 
 app.listen(port)

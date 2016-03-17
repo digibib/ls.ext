@@ -1,6 +1,15 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
+import { defineMessages, FormattedMessage } from 'react-intl'
+
+const messages = defineMessages({
+  search: {
+    id: 'search',
+    description: 'Mweep',
+    defaultMessage: 'qweep'
+  }
+})
 
 export default React.createClass({
   propTypes: {
@@ -48,7 +57,7 @@ export default React.createClass({
                      onChange={this.handleChange}
               />
               <button type='submit' id='submit'>
-                søk
+                <FormattedMessage {...messages.search}/>
               </button>
             </form>
           </div>
