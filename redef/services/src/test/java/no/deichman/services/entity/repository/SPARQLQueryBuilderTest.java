@@ -3,6 +3,7 @@ package no.deichman.services.entity.repository;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
@@ -116,9 +117,9 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test
-    public void test_resource_existence_query(){
-        String uri = "http://example.com/a";
-        String test = "ASK {<" + uri + "> ?p ?o}";
+    public void test_resource_existence_query() throws Exception {
+        XURI uri = new XURI("http://deichman.no/work/w123");
+        String test = "ASK {<" + uri.getUri() + "> ?p ?o}";
         Query expected = QueryFactory.create(test);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         assertEquals(expected,sqb.checkIfResourceExists(uri));

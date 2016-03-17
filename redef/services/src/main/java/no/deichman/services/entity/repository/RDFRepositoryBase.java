@@ -2,6 +2,7 @@ package no.deichman.services.entity.repository;
 
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -125,15 +126,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final boolean askIfResourceExists(String uri) {
-        try (QueryExecution qexec = getQueryExecution(sqb.checkIfResourceExists(uri))) {
+    public final boolean askIfResourceExists(XURI xuri) {
+        try (QueryExecution qexec = getQueryExecution(sqb.checkIfResourceExists(xuri))) {
             disableCompression(qexec);
             return qexec.execAsk();
         }
     }
 
     @Override
-    public final String createWork(Model inputModel) {
+    public final String createWork(Model inputModel) throws Exception {
         String type = "Work";
         inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
@@ -146,7 +147,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createPerson(Model inputModel) {
+    public final String createPerson(Model inputModel) throws Exception {
         String type = "Person";
         inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
@@ -159,7 +160,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createPlaceOfPublication(Model inputModel) {
+    public final String createPlaceOfPublication(Model inputModel) throws Exception {
         String type = "PlaceOfPublication";
         inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
@@ -172,7 +173,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createPublisher(Model inputModel) {
+    public final String createPublisher(Model inputModel) throws Exception {
         String type = "Publisher";
         inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
@@ -185,7 +186,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createPublication(Model inputModel, String recordID) {
+    public final String createPublication(Model inputModel, String recordID) throws Exception {
         String type = "Publication";
 
         inputModel.add(tempTypeStatement(type));

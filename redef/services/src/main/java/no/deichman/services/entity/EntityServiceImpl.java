@@ -225,7 +225,7 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public String create(EntityType type, Model inputModel) {
+    public String create(EntityType type, Model inputModel) throws Exception {
         String uri;
         switch (type) {
             case PUBLICATION:
@@ -249,7 +249,7 @@ public final class EntityServiceImpl implements EntityService {
         return uri;
     }
 
-    private String createPublication(Model inputModel) {
+    private String createPublication(Model inputModel) throws Exception {
         Set<Resource> items = objectsOfProperty(hasItemProperty, inputModel);
         Model modelWithoutItems;
         if (items.isEmpty()) {
@@ -425,8 +425,8 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public boolean resourceExists(String resourceUri) {
-        return repository.askIfResourceExists(resourceUri);
+    public boolean resourceExists(XURI xuri) {
+        return repository.askIfResourceExists(xuri);
     }
 
     @Override

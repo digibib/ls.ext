@@ -7,7 +7,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://deichman.no/work/work_00001> a deichman:Work ;
+<http://deichman.no/work/w00001> a deichman:Work ;
   dcterms:identifier "work_00001" ;
   rdfs:label "Sult" ;
   dcterms:mainTitle "Sult"@no ;

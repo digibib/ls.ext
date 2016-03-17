@@ -122,7 +122,12 @@ public class EntityServiceImplTest {
             String testDataURI = baseURI + currentEntity + "/" + entityId;
             String testJSON = getTestJSON(entityId, currentEntity);
             Model inputModel = modelFrom(testJSON, JSONLD);
-            String servicesURI = service.create(s, inputModel);
+            String servicesURI = null;
+            try {
+                servicesURI = service.create(s, inputModel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Model comparison = ModelFactory.createDefaultModel();
             InputStream in = new ByteArrayInputStream(testJSON.replace(testDataURI, servicesURI).getBytes(StandardCharsets.UTF_8));
             RDFDataMgr.read(comparison, in, JSONLD);
@@ -245,7 +250,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_work() {
+    public void test_create_work() throws Exception {
         String testId = "SERVICE_WORK_SHOULD_EXIST";
         String work = getTestJSON(testId, "work");
         Model inputModel = modelFrom(work, JSONLD);
@@ -260,7 +265,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_publication() {
+    public void test_create_publication() throws Exception {
         when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         String testId = "SERVICE_PUBLICATION_SHOULD_EXIST";
         String publication = getTestJSON(testId, "publication");
@@ -276,7 +281,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_person() {
+    public void test_create_person() throws Exception {
         String testId = "SERVICE_PERSON_SHOULD_EXIST";
         String person = getTestJSON(testId, "person");
         Model inputModel = modelFrom(person, JSONLD);
@@ -291,7 +296,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_place_of_publication() {
+    public void test_create_place_of_publication() throws Exception {
         String testId = "SERVICE_PLACE_OF_PUBLICATION_SHOULD_EXIST";
         String placeOfPublication = getTestJSON(testId, "placeOfPublication");
         Model inputModel = modelFrom(placeOfPublication, JSONLD);
@@ -306,7 +311,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_publication_with_items() {
+    public void test_create_publication_with_items() throws Exception {
         MarcRecord marcRecord = new MarcRecord();
         String title = "Titely title";
         MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
@@ -556,7 +561,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void should_throw_exception_if_posting_publication_with_nonexistant_work() {
+    public void should_throw_exception_if_posting_publication_with_nonexistant_work() throws Exception {
         thrown.expect(BadRequestException.class);
         thrown.expectMessage("Associated work does not exist.");
         String publicationTitle = "Sult";

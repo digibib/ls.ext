@@ -1,6 +1,7 @@
 package no.deichman.services.entity.repository;
 
 import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 
@@ -13,11 +14,11 @@ import java.util.function.Consumer;
  */
 public interface RDFRepository {
 
-    String createWork(Model model);
-    String createPublication(Model model, String recordID);
-    String createPerson(Model inputModel);
-    String createPlaceOfPublication(Model inputModel);
-    String createPublisher(Model inputModel);
+    String createWork(Model model) throws Exception;
+    String createPublication(Model model, String recordID) throws Exception;
+    String createPerson(Model inputModel) throws Exception;
+    String createPlaceOfPublication(Model inputModel) throws Exception;
+    String createPublisher(Model inputModel) throws Exception;
 
     void updateWork(String work);
     Model retrieveWorkByURI(String uri);
@@ -30,7 +31,7 @@ public interface RDFRepository {
     Model retrievePlaceOfPublicationByURI(String uri);
     Model retrievePublisherByURI(String uri);
 
-    boolean askIfResourceExists(String uri);
+    boolean askIfResourceExists(XURI xuri);
 
     boolean askIfStatementExists(Statement statement);
 

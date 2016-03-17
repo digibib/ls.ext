@@ -17,13 +17,13 @@ public interface EntityService {
     Model retrievePersonWithLinkedResources(XURI xuri);
 
     Model retrieveWorkItemsById(String id);
-    String create(EntityType type, Model inputModel);
+    String create(EntityType type, Model inputModel) throws Exception;
     void delete(Model model);
     Model patch(EntityType type, String id, String ldPatchJson) throws Exception;
 
     Model synchronizeKoha(EntityType type, String id) throws Exception;
 
-    boolean resourceExists(String resourceUri);
+    boolean resourceExists(XURI xuri);
 
     Model retrieveWorksByCreator(String creatorId);
 

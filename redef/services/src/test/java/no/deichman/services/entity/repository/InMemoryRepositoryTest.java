@@ -3,6 +3,7 @@ package no.deichman.services.entity.repository;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -155,20 +156,20 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void shouldReturnThatIDisAvailable() {
-        String test = "http://deichman.no/work/work_00009";
+    public void shouldReturnThatIDisAvailable() throws Exception {
+        XURI test = new XURI("http://deichman.no/work/w00009");
         assertFalse(repository.askIfResourceExists(test));
     }
 
     @Test
-    public void shouldReturnThatIDisNotAvailable() {
+    public void shouldReturnThatIDisNotAvailable() throws Exception {
         repository = repositoryWithDataFrom("testdata.ttl");
-        String test = "http://deichman.no/work/work_00001";
+        XURI test = new XURI("http://deichman.no/work/w00001");
         assertTrue(repository.askIfResourceExists(test));
     }
 
     @Test
-    public void test_get_person_resource_URI_by_Bibliofil_id() {
+    public void test_get_person_resource_URI_by_Bibliofil_id() throws Exception {
         String personId = "n12345";
         String person = setUpBibliofilImportedTestNTriples(PERSON, personId);
         Optional personExists = queryBibliofilResource(PERSON, personId);
@@ -176,7 +177,7 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void test_get_place_of_publication_resource_URI_by_bibliofil_id() {
+    public void test_get_place_of_publication_resource_URI_by_bibliofil_id() throws Exception {
         String placeOfPublicationId = "n12345";
         String placeOfPublication = setUpBibliofilImportedTestNTriples(PERSON, placeOfPublicationId);
         Optional personExists = queryBibliofilResource(PERSON, placeOfPublicationId);
@@ -201,7 +202,7 @@ public class InMemoryRepositoryTest {
         return exists;
     }
 
-    private String setUpBibliofilImportedTestNTriples(String type, String identifier) {
+    private String setUpBibliofilImportedTestNTriples(String type, String identifier) throws Exception {
         String testData = "<#> <http://data.deichman.no/duo#bibliofil" + type + "Id> \"" + identifier + "\" .";
         Model model = RDFModelUtil.modelFrom(testData, Lang.NTRIPLES);
 

@@ -21,7 +21,7 @@ public class UniqueURIGeneratorTest {
     }
 
     @Test
-    public void should_return_new_work_ID() {
+    public void should_return_new_work_ID() throws Exception {
         String uri = uriGenerator.getNewURI("Work", s -> false);
         assertNotNull(uri);
         assertTrue(uri.contains("/work"));
@@ -29,7 +29,7 @@ public class UniqueURIGeneratorTest {
     }
 
     @Test
-    public void should_return_new_publication_id_even_if_first_attempt_fails() {
+    public void should_return_new_publication_id_even_if_first_attempt_fails() throws Exception {
         boolean[] existsFlag = new boolean[1];
         existsFlag[0] = true;
         String uri = uriGenerator.getNewURI(
@@ -46,7 +46,7 @@ public class UniqueURIGeneratorTest {
     }
 
     @Test
-    public void should_get_new_person_id() {
+    public void should_get_new_person_id() throws Exception {
         String uri = uriGenerator.getNewURI("Person", s -> false);
         assertNotNull(uri);
         assertTrue(uri.contains("/person"));
@@ -54,7 +54,7 @@ public class UniqueURIGeneratorTest {
     }
 
     @Test
-    public void should_get_new_place_of_publication_id() {
+    public void should_get_new_place_of_publication_id() throws Exception {
         String uri = uriGenerator.getNewURI("PlaceOfPublication", s -> false);
         assertNotNull(uri);
         assertTrue(uri.contains("/placeOfPublication"));

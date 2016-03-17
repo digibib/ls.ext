@@ -24,7 +24,6 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
@@ -84,7 +83,7 @@ public class EntityResourceTest {
     @Test
     public void get_should_return_a_valid_json_work() throws Exception {
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null), mockSearchService);
-        String workId = "work_00001";
+        String workId = "w00001";
 
         Response result = entityResource.get(WORK, workId);
 
@@ -100,7 +99,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_return_201_when_work_created() throws URISyntaxException {
+    public void create_should_return_201_when_work_created() throws Exception {
         String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
         Response result = entityResource.createFromLDJSON(WORK, work);
 
@@ -109,7 +108,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_return_201_when_person_created() throws URISyntaxException {
+    public void create_should_return_201_when_person_created() throws Exception {
         String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
         Response result = entityResource.createFromLDJSON(PERSON, person);
 
@@ -118,7 +117,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_return_201_when_place_of_publication_created() throws URISyntaxException {
+    public void create_should_return_201_when_place_of_publication_created() throws Exception {
         String placeOfPublication = createTestRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION);
         Response result = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
 
@@ -127,7 +126,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_duplicate_person_returns_409() throws URISyntaxException {
+    public void create_duplicate_person_returns_409() throws Exception {
         String personId = "n019283";
         String person = createPersonImportRDF(SOME_PERSON_IDENTIFIER, PERSON, personId);
         Response result = entityResource.createFromLDJSON(PERSON, person);
@@ -139,7 +138,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_duplicate_place_of_publication_returns_409() throws URISyntaxException {
+    public void create_duplicate_place_of_publication_returns_409() throws Exception {
         String id = "g019283";
         String placeOfPublication = createPlaceOfPublicationImportRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION, id);
         Response result = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
@@ -152,7 +151,7 @@ public class EntityResourceTest {
 
 
     @Test
-    public void create_should_return_location_header_when_work_created() throws URISyntaxException {
+    public void create_should_return_location_header_when_work_created() throws Exception {
         String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
 
         Response result = entityResource.createFromLDJSON(WORK, work);
@@ -165,7 +164,7 @@ public class EntityResourceTest {
 
 
     @Test
-    public void create_should_return_location_header_when_person_created() throws URISyntaxException {
+    public void create_should_return_location_header_when_person_created() throws Exception {
         String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
 
         Response result = entityResource.createFromLDJSON(PERSON, person);
@@ -177,7 +176,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_return_location_header_when_place_of_publication_created() throws URISyntaxException {
+    public void create_should_return_location_header_when_place_of_publication_created() throws Exception {
         String placeOfPublication = createTestRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION);
 
         Response result = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
@@ -443,14 +442,14 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void should_return_created_response_from_ntriples_input() throws URISyntaxException {
+    public void should_return_created_response_from_ntriples_input() throws Exception {
         String ntriples = "<#> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://deichman.no/ontology#Work> .";
         Response createResponse = entityResource.createFromNTriples("work", ntriples);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
     }
 
     @Test
-    public void should_return_location_from_ntriples_input() throws URISyntaxException {
+    public void should_return_location_from_ntriples_input() throws Exception {
         String ntriples = "<#> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://deichman.no/ontology#Work> .";
         Response createResponse = entityResource.createFromNTriples("work", ntriples);
         assertTrue(createResponse.getLocation().toString().contains("http://"));

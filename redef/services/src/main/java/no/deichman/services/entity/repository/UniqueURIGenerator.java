@@ -1,6 +1,7 @@
 package no.deichman.services.entity.repository;
 
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.function.Predicate;
@@ -39,13 +40,13 @@ class UniqueURIGenerator {
         return result;
     }
 
-    String getNewURI(String type, Predicate<String> existsChecker) {
+    String getNewURI(String type, Predicate<XURI> existsChecker) throws Exception {
         String random = null;
         boolean exists = true;
 
         while (exists) {
             random = buildUri(type, getRandom());
-            exists = existsChecker.test(random);
+            exists = existsChecker.test(new XURI(random));
         }
         return random;
     }

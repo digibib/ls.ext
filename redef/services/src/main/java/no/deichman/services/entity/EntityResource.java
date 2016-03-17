@@ -31,7 +31,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,17 +63,17 @@ public final class EntityResource extends ResourceBase {
 
     @POST
     @Consumes(LD_JSON)
-    public Response createFromLDJSON(@PathParam("type") String type, String body) throws URISyntaxException {
+    public Response createFromLDJSON(@PathParam("type") String type, String body) throws Exception {
         return create(type, body, Lang.JSONLD);
     }
 
     @POST
     @Consumes(NTRIPLES)
-    public Response createFromNTriples(@PathParam("type") String type, String body) throws URISyntaxException {
+    public Response createFromNTriples(@PathParam("type") String type, String body) throws Exception {
         return create(type, body, Lang.NTRIPLES);
     }
 
-    private Response create(String type, String body, Lang lang) throws URISyntaxException {
+    private Response create(String type, String body, Lang lang) throws Exception {
         Response.ResponseBuilder rb = null;
         String canonicalTypeId = WordUtils.capitalize(type);
 
@@ -163,7 +162,7 @@ public final class EntityResource extends ResourceBase {
             throw new BadRequestException("Empty json body");
         }
 
-        if (!getEntityService().resourceExists(xuri.getUri())) {
+        if (!getEntityService().resourceExists(xuri)) {
             throw new NotFoundException();
         }
         Model m;
