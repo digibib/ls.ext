@@ -62,7 +62,7 @@ export default React.createClass({
     }
     return (
       <div data-automation-id={`filter_${this.props.aggregation}`}>
-        <h4 className="filterTitle">{this.props.title}</h4>
+        <h4 className='filterTitle'>{this.props.title}</h4>
         <ul className='searchfilters'>
           {this.renderFilters()}
           {(this.state.showAll || this.props.filters.length <= Constants.maxVisibleFilterItems) ? '' : (
