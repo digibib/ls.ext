@@ -19,7 +19,7 @@ public interface SearchService {
 
     void indexPlaceOfPublication(XURI xuri) throws Exception;
 
-    void indexPublisher(String id) throws Exception;
+    void indexPublisher(XURI xuri) throws Exception;
 
     Response searchPersonWithJson(String json);
 

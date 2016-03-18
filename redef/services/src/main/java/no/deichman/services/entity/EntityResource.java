@@ -192,7 +192,7 @@ public final class EntityResource extends ResourceBase {
                 }
                 break;
             case PUBLISHER:
-                getSearchService().indexPublisher(xuri.getId());
+                getSearchService().indexPublisher(xuri);
                 break;
             default:
                 break;

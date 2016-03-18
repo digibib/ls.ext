@@ -138,8 +138,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void indexPublisher(String id) throws Exception {
-        doIndexPublisher(id);
+    public final void indexPublisher(XURI xuri) throws Exception {
+        doIndexPublisher(xuri);
     }
 
     @Override
@@ -212,7 +212,6 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-
     private void doIndexPerson(XURI xuri, boolean indexedWork) throws Exception {
         Model works = entityService.retrieveWorksByCreator(xuri);
         if (!indexedWork) {
@@ -231,8 +230,7 @@ public class SearchServiceImpl implements SearchService {
         indexDocument(xuri, placeOfPublicationModelToIndexMapper.createIndexDocument(placeOfPublicationModel, xuri));
     }
 
-    private void doIndexPublisher(String id) throws Exception {
-        XURI xuri = new XURI(remote().getBaseUriRoot(), EntityType.PUBLISHER.getPath(), id);
+    private void doIndexPublisher(XURI xuri) throws Exception {
         Model publisherModel = entityService.retrieveById(xuri);
         indexDocument(xuri, publisherModelToIndexMapper.createIndexDocument(publisherModel, xuri));
     }
