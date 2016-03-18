@@ -26,7 +26,11 @@ export default React.createClass({
     if (result.partTitle) {
       displayTitle += ' — ' + result.partTitle
     }
-    return <a className='workTitle' data-automation-id='work-title' href={result.relativeUri}>{displayTitle}</a>
+    return (
+      <Link to={result.relativeUri}>
+        <span className='workTitle' data-automation-id='work-title'>{displayTitle}</span>
+      </Link>
+    )
   },
   render () {
     let result = this.props.result
