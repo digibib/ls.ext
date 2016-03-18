@@ -28,7 +28,7 @@ export default React.createClass({
     let filters = this.props.filters.slice()
     filters.sort(function (a, b) {
       return (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0)
-    }).map(filter => {return { ...filter }})
+    }).map(filter => { return { ...filter } })
     return filters.map((filter, index) => {
       if (!this.state.showAll && index >= Constants.maxVisibleFilterItems) {
         return ''
