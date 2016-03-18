@@ -3,6 +3,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import SearchResult from '../../src/frontend/components/SearchResult'
 import ReactDOM from 'react-dom'
+import { IntlProvider } from 'react-intl'
 
 function setup (resultPropOverrides) {
   const props = {
@@ -17,7 +18,9 @@ function setup (resultPropOverrides) {
     }, resultPropOverrides)
   }
   const output = TestUtils.renderIntoDocument(
-    <SearchResult {...props} />
+    <IntlProvider locale='en'>
+      <SearchResult {...props} />
+    </IntlProvider>
   );
 
   return {

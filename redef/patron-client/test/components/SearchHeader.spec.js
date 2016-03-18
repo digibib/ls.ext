@@ -4,6 +4,7 @@ import TestUtils from 'react-addons-test-utils'
 import SearchHeader from '../../src/frontend/components/SearchHeader'
 import ReactDOM from 'react-dom'
 import StubContext from 'react-stub-context'
+import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = Object.assign({
@@ -18,7 +19,9 @@ function setup (propOverrides) {
     }
   })
   const output = TestUtils.renderIntoDocument(
-    <StubbedSearchHeader {...props} />
+    <IntlProvider locale='en'>
+      <StubbedSearchHeader {...props} />
+    </IntlProvider>
   );
 
   return {

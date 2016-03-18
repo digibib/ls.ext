@@ -4,6 +4,7 @@ import TestUtils from 'react-addons-test-utils'
 import { Search } from '../../src/frontend/containers/Search'
 import Constants from '../../src/frontend/constants/Constants'
 import ReactDOM from 'react-dom'
+import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = Object.assign({
@@ -20,7 +21,9 @@ function setup (propOverrides) {
   }, propOverrides)
 
   const output = TestUtils.renderIntoDocument(
-    <Search {...props} />
+    <IntlProvider locale='en'>
+      <Search {...props} />
+    </IntlProvider>
   );
 
   return {

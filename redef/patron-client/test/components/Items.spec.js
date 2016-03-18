@@ -3,6 +3,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Items from '../../src/frontend/components/Items'
 import ReactDOM from 'react-dom'
+import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = Object.assign({
@@ -12,7 +13,9 @@ function setup (propOverrides) {
   }, propOverrides)
 
   const output = TestUtils.renderIntoDocument(
-    <Items {...props} />
+    <IntlProvider locale='en'>
+      <Items {...props} />
+    </IntlProvider>
   );
 
   return {

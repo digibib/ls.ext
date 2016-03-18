@@ -4,12 +4,13 @@ import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Item from '../../src/frontend/components/Item'
+import { IntlProvider } from 'react-intl';
 
 function setup (props) {
   let renderer = TestUtils.createRenderer()
-  renderer.render(<Item {...props} />)
+  let intlProvider = new IntlProvider({ locale: 'en', defaultLocale: 'en' }, {});
+  renderer.render(<Item {...props} />, intlProvider.getChildContext())
   let output = renderer.getRenderOutput()
-
   return {
     props,
     output,
@@ -36,6 +37,7 @@ describe('components', () => {
       expect(output.props.about).toBe('barcode')
 
       let [ title, language, format, barcode, location, status, shelfmark ] = output.props.children
+
       expect(title.type).toBe('td')
       expect(title.props.children).toBe('title')
       expect(language.type).toBe('td')
@@ -48,7 +50,7 @@ describe('components', () => {
       expect(location.props.children).toBe('location')
       expect(status.type).toBe('td')
       expect(status.props.children.type).toBe('span')
-      expect(status.props.children.props.children.join('')).toBe('Forventet status')
+      expect(status.props.children.props.children.props.id).toBe('Item.expectedAvailable')
       expect(shelfmark.type).toBe('td')
       expect(shelfmark.props.children).toBe('shelfmark')
     })
@@ -81,7 +83,7 @@ describe('components', () => {
       expect(location.props.children).toBe('location')
       expect(status.type).toBe('td')
       expect(status.props.children.type).toBe('span')
-      expect(status.props.children.props.children).toBe('Ledig')
+      expect(status.props.children.props.children.props.id).toBe('Item.available')
       expect(shelfmark.type).toBe('td')
       expect(shelfmark.props.children).toBe('shelfmark')
     })

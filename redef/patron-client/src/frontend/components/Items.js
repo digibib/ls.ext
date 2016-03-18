@@ -21,7 +21,7 @@ export default React.createClass({
           <th><FormattedMessage {...messages.barcode}/></th>
           <th><FormattedMessage {...messages.placement}/></th>
           <th><FormattedMessage {...messages.status}/></th>
-          <th><FormattedMessage {...messages.alignment}/></th>
+          <th><FormattedMessage {...messages.shelfmark}/></th>
         </tr>
         </thead>
         <tbody data-automation-id='work_items'>
@@ -42,8 +42,8 @@ export default React.createClass({
     return (
       <div id='items' className='panel row'>
         <div className='panel-header'>
-          <span><strong><FormattedMessage {...messages.copies}
-            values={{copies: this.props.items.length}}/></strong></span>
+          <span><strong><FormattedMessage {...messages.numberOfCopies}
+            values={{numberOfCopies: this.props.items.length}}/></strong></span>
           <div className='panel-arrow panel-open'></div>
         </div>
         <div className='col'>
@@ -73,13 +73,13 @@ const messages = defineMessages({
   status: {
     id: 'Items.status', description: 'Status of item', defaultMessage: 'status'
   },
-  alignment: {
-    id: 'Items.alignment', description: 'Alignment of item', defaultMessage: 'alignment'
+  shelfmark: {
+    id: 'Items.shelfmark', description: 'Shelfmark of item', defaultMessage: 'shelfmark'
   },
   noItems: {
     id: 'Items.noItems', description: 'When no items', defaultMessage: 'We have no copies'
   },
   numberOfCopies: {
-    id: 'Items.numberOfCopies', description: 'The number of copies', defaultMessage: 'Copies ({copies})'
+    id: 'Items.numberOfCopies', description: 'The number of copies', defaultMessage: 'Copies ({numberOfCopies})'
   }
 })

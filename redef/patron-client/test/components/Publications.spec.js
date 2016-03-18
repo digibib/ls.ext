@@ -3,6 +3,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Publications from '../../src/frontend/components/Publications'
 import ReactDOM from 'react-dom'
+import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = Object.assign({
@@ -12,7 +13,9 @@ function setup (propOverrides) {
   }, propOverrides)
 
   const output = TestUtils.renderIntoDocument(
-    <Publications {...props} />
+    <IntlProvider locale='en'>
+      <Publications {...props} />
+    </IntlProvider>
   );
 
   return {
