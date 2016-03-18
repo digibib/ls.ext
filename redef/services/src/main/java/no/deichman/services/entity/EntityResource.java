@@ -180,7 +180,7 @@ public final class EntityResource extends ResourceBase {
                 getSearchService().indexPerson(xuri);
                 break;
             case PLACE_OF_PUBLICATION:
-                getSearchService().indexPlaceOfPublication(xuri.getId());
+                getSearchService().indexPlaceOfPublication(xuri);
                 break;
             case PUBLICATION:
                 Property publicationOfProperty = ResourceFactory.createProperty(getBaseURI().ontology("publicationOf"));

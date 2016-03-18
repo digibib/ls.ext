@@ -133,8 +133,8 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    public final void indexPlaceOfPublication(String id) throws Exception {
-        doIndexPlaceOfPublication(id);
+    public final void indexPlaceOfPublication(XURI xuri) throws Exception {
+        doIndexPlaceOfPublication(xuri);
     }
 
     @Override
@@ -226,8 +226,7 @@ public class SearchServiceImpl implements SearchService {
         indexDocument(xuri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, xuri));
     }
 
-    private void doIndexPlaceOfPublication(String id) throws Exception {
-        XURI xuri = new XURI(remote().getBaseUriRoot(), EntityType.PLACE_OF_PUBLICATION.getPath(), id);
+    private void doIndexPlaceOfPublication(XURI xuri) throws Exception {
         Model placeOfPublicationModel = entityService.retrieveById(xuri);
         indexDocument(xuri, placeOfPublicationModelToIndexMapper.createIndexDocument(placeOfPublicationModel, xuri));
     }
