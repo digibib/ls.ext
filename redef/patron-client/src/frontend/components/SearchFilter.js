@@ -62,12 +62,12 @@ export default React.createClass({
     }
     return (
       <div data-automation-id={`filter_${this.props.aggregation}`}>
-        <h4>{this.props.title}</h4>
+        <h4 className="filterTitle">{this.props.title}</h4>
         <ul className='searchfilters'>
           {this.renderFilters()}
           {(this.state.showAll || this.props.filters.length <= Constants.maxVisibleFilterItems) ? '' : (
             <li onClick={this.handleShowAllClick}>
-              + vis alle
+              + vis alle<br/>
             </li>
           )}
         </ul>

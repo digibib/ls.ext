@@ -82,10 +82,14 @@ html, body {
 }
 
 /* application styles */
+a { color: #242424; text-decoration: none }
+a:hover { text-decoration: underline }
 
 body { color: #242424 }
 th { padding: 0.5em; text-align: left }
 td { padding: 0.5em; }
+.filterTitle { margin-bottom: 0.5em; border-top: 1px solid #ddd; padding-top: 0.2em }
+
 .small-text { font-size: 0.8em; }
 input[type="checkbox"] { margin-right: 0.5em; }
 .hidden { display:none }
@@ -112,11 +116,12 @@ header button, input[type="search"] {
   font-size: 1em;
 }
 
-.panel { border-top: 1px solid #ddd; margin-bottom: 1em }
+.panel {  }
 .panel-header { background: #eee; height: 2em; padding: 0.5em; font-size:1.2em }
 .panel-arrow { font-size:1.5em; display:inline-block; float:right; cursor: pointer; }
 .panel-open:after { content: '▲'; }
 .panel-closed:after { content: '▼'; }
+.result { border: 1px solid #ccc; margin-bottom: 1em; margin-bottom: 1em }
 
 .book-cover {
   width: 8em;
@@ -178,3 +183,7 @@ ul.searchfilters {
   margin: 0;
   padding: 0;
 }
+
+ul.searchfilters li { cursor: default }
+
+a.workTitle { font-size:110%; }

@@ -25,7 +25,7 @@ export default React.createClass({
     if (result.partTitle) {
       displayTitle += ' — ' + result.partTitle
     }
-    return <a data-automation-id='work-title' href={result.relativeUri}>{displayTitle}</a>
+    return <a className="workTitle" data-automation-id='work-title' href={result.relativeUri}>{displayTitle}</a>
   },
   render () {
     let result = this.props.result
@@ -45,7 +45,7 @@ export default React.createClass({
       : []
 
     return (
-      <div className='result panel'>
+      <div className="col result panel">
         <div className='row'>
           <div className='col book-cover placeholder'>
             <Link to={result.relativeUri}/>
