@@ -101,7 +101,7 @@ public class SearchResource extends ResourceBase {
                 getEntityService().retrieveAllWorkUris(type, uri -> CompletableFuture.runAsync(() -> {
                     if (type.equals("person")) {
                         try {
-                            getSearchService().indexPerson(idFromUri(uri));
+                            getSearchService().indexPerson(new XURI(uri));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

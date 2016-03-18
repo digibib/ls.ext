@@ -256,7 +256,7 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public Query describeWorksByCreator(String uri) {
+    public Query describeWorksByCreator(XURI xuri) {
         String q = String.format(""
                 + "PREFIX deichman: <%s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -266,7 +266,7 @@ public final class SPARQLQueryBuilder {
                 + "WHERE {\n"
                 + "      ?work a deichman:Work ;\n"
                 + "            deichman:creator <%s> .\n"
-                + "}", baseURI.ontology(), uri);
+                + "}", baseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }
 

@@ -6,6 +6,7 @@ import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.ontology.OntologyService;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang.WordUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -273,10 +274,11 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void get_creator_works_should_return_list_of_works(){
+    public void get_creator_works_should_return_list_of_works() throws Exception {
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService);
 
-        Response result = entityResource.getWorksByCreator("person_00001");
+        XURI xuri = new XURI("http://deichman.no/person/h12321011");
+        Response result = entityResource.getWorksByCreator(xuri. getType(), xuri.getId());
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());

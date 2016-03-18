@@ -45,7 +45,7 @@ public interface RDFRepository {
 
     Optional<String> getPublisherResourceURIByBibliofilId(String bibliofilId);
 
-    Model retrieveWorksByCreator(String creatorUri);
+    Model retrieveWorksByCreator(XURI xuri);
 
     Model retrievePublicationsByWork(XURI xuri);
 

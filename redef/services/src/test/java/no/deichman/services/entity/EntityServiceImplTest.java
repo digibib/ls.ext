@@ -425,7 +425,7 @@ public class EntityServiceImplTest {
 
         addCreatorToWorkPatch(personUri, workUri);
         addCreatorToWorkPatch(personUri, workUri2);
-        Model worksByCreator = service.retrieveWorksByCreator(personUri.getId());
+        Model worksByCreator = service.retrieveWorksByCreator(personUri);
         assertFalse(worksByCreator.isEmpty());
         assertThat(stringFrom(worksByCreator, JSONLD),
                 sameJSONAs(format(""

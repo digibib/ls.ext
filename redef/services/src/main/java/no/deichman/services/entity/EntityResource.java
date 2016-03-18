@@ -177,7 +177,7 @@ public final class EntityResource extends ResourceBase {
                 getSearchService().indexWork(xuri);
                 break;
             case PERSON:
-                getSearchService().indexPerson(xuri.getId());
+                getSearchService().indexPerson(xuri);
                 break;
             case PLACE_OF_PUBLICATION:
                 getSearchService().indexPlaceOfPublication(xuri.getId());
@@ -227,7 +227,7 @@ public final class EntityResource extends ResourceBase {
                 getSearchService().indexWork(xuri);
                 break;
             case PERSON:
-                getSearchService().indexPerson(xuri.getId());
+                getSearchService().indexPerson(xuri);
                 break;
             default: /* will never get to here */
                 break;
@@ -244,9 +244,10 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{creatorId: h[a-zA-Z0-9_]+}/works")
-    public Response getWorksByCreator(@PathParam("creatorId") String creatorId) {
-        return zeroOrMoreResponseFromModel(getEntityService().retrieveWorksByCreator(creatorId));
+    @Path("{type}/{creatorId: h[a-zA-Z0-9_]+}/works")
+    public Response getWorksByCreator(@PathParam("type") String type, @PathParam("creatorId") String creatorId) throws Exception {
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, creatorId);
+        return zeroOrMoreResponseFromModel(getEntityService().retrieveWorksByCreator(xuri));
     }
 
     @Override

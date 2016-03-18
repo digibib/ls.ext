@@ -326,19 +326,19 @@ public final class EntityServiceImpl implements EntityService {
         Model model = retrieveById(xuri);
 
         if (xuri.getTypeAsEntityType().equals(EntityType.PERSON)) {
-            Model works = repository.retrieveWorksByCreator(xuri.getId());
+            Model works = repository.retrieveWorksByCreator(xuri);
             streamFrom(works.listStatements())
                     .collect(groupingBy(Statement::getSubject))
                     .forEach((subject, statements) -> {
                         Model work = ModelFactory.createDefaultModel();
                         work.add(statements);
-                        XURI workUri = null;
+                        XURI workXuri = null;
                         try {
-                            workUri = new XURI(subject.toString());
+                            workXuri = new XURI(subject.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        updatePublicationsByWork(workUri, work);
+                        updatePublicationsByWork(workXuri, work);
                     });
         } else if (xuri.getTypeAsEntityType().equals(EntityType.WORK)) {
             updatePublicationsByWork(xuri, model);
@@ -431,8 +431,8 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model retrieveWorksByCreator(String creatorId) {
-        return repository.retrieveWorksByCreator(creatorId);
+    public Model retrieveWorksByCreator(XURI xuri) {
+        return repository.retrieveWorksByCreator(xuri);
     }
 
     @Override

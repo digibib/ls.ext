@@ -15,7 +15,7 @@ public interface SearchService {
 
     Response searchPerson(String query);
 
-    void indexPerson(String personUri) throws Exception;
+    void indexPerson(XURI xuri) throws Exception;
 
     void indexPlaceOfPublication(String id) throws Exception;
 

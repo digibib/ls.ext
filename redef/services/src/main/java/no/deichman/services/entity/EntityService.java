@@ -25,7 +25,7 @@ public interface EntityService {
 
     boolean resourceExists(XURI xuri);
 
-    Model retrieveWorksByCreator(String creatorId);
+    Model retrieveWorksByCreator(XURI xuri);
 
     void retrieveAllWorkUris(String type, Consumer<String> uriConsumer);
 

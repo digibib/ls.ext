@@ -292,10 +292,9 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final Model retrieveWorksByCreator(String creatorId) {
-        String uri = baseURI.person() + creatorId;
-        log.debug("Attempting to retrieve: works created by " + uri);
-        try (QueryExecution qexec = getQueryExecution(sqb.describeWorksByCreator(uri))) {
+    public final Model retrieveWorksByCreator(XURI xuri) {
+        log.debug("Attempting to retrieve: works created by " + xuri.getUri());
+        try (QueryExecution qexec = getQueryExecution(sqb.describeWorksByCreator(xuri))) {
             disableCompression(qexec);
             return qexec.execDescribe();
         }

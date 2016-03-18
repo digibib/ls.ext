@@ -74,8 +74,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void indexPerson(String personId) throws Exception {
-        doIndexPerson(personId, false);
+    public final void indexPerson(XURI xuri) throws Exception {
+        doIndexPerson(xuri, false);
     }
 
     @Override
@@ -207,14 +207,14 @@ public class SearchServiceImpl implements SearchService {
                     CREATOR);
             if (creatorProperty != null) {
                 String creatorUri = creatorProperty.getObject().asNode().getURI();
-                doIndexPersonOnly(idFromEntityUri(creatorUri));
+                doIndexPersonOnly(xuri);
             }
         }
     }
 
 
-    private void doIndexPerson(String personId, boolean indexedWork) throws Exception {
-        Model works = entityService.retrieveWorksByCreator(personId);
+    private void doIndexPerson(XURI xuri, boolean indexedWork) throws Exception {
+        Model works = entityService.retrieveWorksByCreator(xuri);
         if (!indexedWork) {
             ResIterator subjectIterator = works.listSubjects();
             while (subjectIterator.hasNext()) {
@@ -222,8 +222,6 @@ public class SearchServiceImpl implements SearchService {
                 doIndexWorkOnly(workUri);
             }
         }
-        String personUri = remote().person() + personId;
-        XURI xuri = new XURI(personUri);
         Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(xuri).add(works);
         indexDocument(xuri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, xuri));
     }
@@ -274,8 +272,8 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private void doIndexPersonOnly(String personId) throws Exception {
-        doIndexPerson(personId, true);
+    private void doIndexPersonOnly(XURI xuri) throws Exception {
+        doIndexPerson(xuri, true);
     }
 
     private URIBuilder getIndexUriBuilder() {
