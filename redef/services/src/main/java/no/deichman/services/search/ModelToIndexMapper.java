@@ -7,6 +7,7 @@ import com.github.jsonldjava.utils.JsonUtils;
 import com.google.gson.Gson;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
@@ -52,10 +53,10 @@ public class ModelToIndexMapper {
         }
     }
 
-    public final String createIndexDocument(Model model, String uri) {
-        Model massagedModel = massageModel(model, uri);
+    public final String createIndexDocument(Model model, XURI xuri) {
+        Model massagedModel = massageModel(model, xuri);
         if (massagedModel.isEmpty()) {
-            throw new RuntimeException("Massaged model of " + uri + " is empty");
+            throw new RuntimeException("Massaged model of " + xuri.getUri() + " is empty");
         }
         String json = null;
         try {
@@ -66,8 +67,8 @@ public class ModelToIndexMapper {
         return json;
     }
 
-    private Model massageModel(Model model, String uri) {
-        QueryExecution queryExecution = QueryExecutionFactory.create(query.replace("__" + type.toUpperCase() + "URI__", uri), model);
+    private Model massageModel(Model model, XURI xuri) {
+        QueryExecution queryExecution = QueryExecutionFactory.create(query.replace("__" + type.toUpperCase() + "URI__", xuri.getUri()), model);
         return queryExecution.execConstruct();
     }
 

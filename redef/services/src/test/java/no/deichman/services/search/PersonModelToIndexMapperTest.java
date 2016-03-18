@@ -1,6 +1,7 @@
 package no.deichman.services.search;
 
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -16,24 +17,28 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 public class PersonModelToIndexMapperTest {
     @Test
     public void testModelToIndexDocument() throws Exception {
+        XURI personXuri = new XURI("http://deichman.no/person/p000101");
+        XURI workXuri1 = new XURI("http://deichman.no/work/w0000000001");
+        XURI workXuri2 = new XURI("http://deichman.no/work/w0000000002");
+
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createResource(personXuri.getUri()),
                 RDF.type,
                 ResourceFactory.createResource("http://deichman.no/ontology#Person")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createResource(personXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/a_prop"),
                 ResourceFactory.createPlainLiteral("a_prop_value")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createResource(personXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#name"),
                 ResourceFactory.createPlainLiteral("personName_value")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createResource(personXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#nationality"),
                 ResourceFactory.createResource("http://deichman.no/nationality#n")));
 
@@ -48,65 +53,65 @@ public class PersonModelToIndexMapperTest {
                 ResourceFactory.createLangLiteral("Norsk", "no")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri1.getUri()),
                 RDF.type,
                 ResourceFactory.createResource("http://deichman.no/ontology#Work")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri1.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#creator"),
-                ResourceFactory.createResource("http://deichman.no/person_1")));
+                ResourceFactory.createResource(personXuri.getUri())));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri1.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createPlainLiteral("work_1_title")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_2"),
+                ResourceFactory.createResource(workXuri2.getUri()),
                 RDF.type,
                 ResourceFactory.createResource("http://deichman.no/ontology#Work")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_2"),
+                ResourceFactory.createResource(workXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#creator"),
-                ResourceFactory.createResource("http://deichman.no/person_1")));
+                ResourceFactory.createResource(personXuri.getUri())));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_2"),
+                ResourceFactory.createResource(workXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createPlainLiteral("work_2_title")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_2"),
+                ResourceFactory.createResource(workXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createLangLiteral("work_2_english_title", "en")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_2"),
+                ResourceFactory.createResource(workXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createPlainLiteral("work_2_part_title")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_2"),
+                ResourceFactory.createResource(workXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createLangLiteral("work_2_english_part_title", "en")));
 
-        String jsonDocument = new ModelToIndexMapper("person", BaseURI.local()).createIndexDocument(model, "http://deichman.no/person_1");
+        String jsonDocument = new ModelToIndexMapper("person", BaseURI.local()).createIndexDocument(model, personXuri);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
                 + "   \"person\":{"
-                + "      \"uri\":\"http://deichman.no/person_1\","
+                + "      \"uri\":\"" + personXuri.getUri() + "\","
                 + "      \"name\":\"personName_value\","
                 + "      \"nationality\":\"Norsk\","
                 + "      \"work\":["
                 + "         {"
-                + "            \"uri\":\"http://deichman.no/work_1\","
+                + "            \"uri\":\"" + workXuri1.getUri() + "\","
                 + "            \"mainTitle\":\"work_1_title\""
                 + "         },"
                 + "         {"
-                + "            \"uri\":\"http://deichman.no/work_2\","
+                + "            \"uri\":\"" + workXuri2.getUri() + "\","
                 + "            \"mainTitle\":["
                 + "               \"work_2_title\","
                 + "               \"work_2_english_title\""

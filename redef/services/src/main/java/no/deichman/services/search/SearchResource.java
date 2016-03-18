@@ -1,6 +1,7 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.ResourceBase;
+import no.deichman.services.uridefaults.XURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +107,7 @@ public class SearchResource extends ResourceBase {
                         }
                     } else {
                         try {
-                            getSearchService().indexWork(idFromUri(uri));
+                            getSearchService().indexWork(new XURI(uri));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

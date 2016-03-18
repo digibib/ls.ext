@@ -1,6 +1,7 @@
 package no.deichman.services.search;
 
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -17,9 +18,9 @@ public class WorkModelToIndexMapperTest {
     private String comparisonJsonDocument = ""
             + "{"
             + "   \"work\":{"
-            + "      \"uri\":\"http://deichman.no/work_1\","
+            + "      \"uri\":\"%1$s\","
             + "      \"creator\":{"
-            + "         \"uri\":\"http://deichman.no/person_1\","
+            + "         \"uri\":\"%2$s\","
             + "         \"name\":\"personName_value\""
             + "      },"
             + "      \"mainTitle\":["
@@ -32,19 +33,19 @@ public class WorkModelToIndexMapperTest {
             + "      ],"
             + "      \"publication\":["
             + "         {"
-            + "            \"uri\":\"http://deichman.no/publication_1\","
+            + "            \"uri\":\"%3$s\","
             + "            \"format\":\"Bok\","
             + "            \"audience\":\"Barn og ungdom\","
             + "            \"language\":\"Engelsk\""
             + "         },"
             + "         {"
-            + "            \"uri\":\"http://deichman.no/publication_2\","
+            + "            \"uri\":\"%4$s\","
             + "            \"format\":\"DVD\","
             + "            \"audience\":\"Barn og ungdom\","
             + "            \"language\":\"Norsk (bokmål)\""
             + "         },"
             + "         {"
-            + "            \"uri\":\"http://deichman.no/publication_3\","
+            + "            \"uri\":\"%5$s\","
             + "            \"audience\":\"Barn og ungdom\","
             + "            \"language\":\"Norsk (bokmål)\""
             + "         }"
@@ -54,94 +55,100 @@ public class WorkModelToIndexMapperTest {
 
     @Test
     public void testModelToIndexDocument() throws Exception {
+        XURI workXuri = new XURI("http://deichman.no/work/w00000012123");
+        XURI personXuri = new XURI("http://deichman.no/person/p5523125");
+        XURI publicationXuri1 = new XURI("http://deichman.no/publication/p1200001");
+        XURI publicationXuri2 = new XURI("http://deichman.no/publication/p1200002");
+        XURI publicationXuri3 = new XURI("http://deichman.no/publication/p1200003");
+
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createResource(personXuri.getUri()),
                 RDF.type,
                 ResourceFactory.createResource("http://deichman.no/ontology#Person")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/person_1"),
+                ResourceFactory.createResource(personXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#name"),
                 ResourceFactory.createPlainLiteral("personName_value")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri.getUri()),
                 RDF.type,
                 ResourceFactory.createResource("http://deichman.no/ontology#Work")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#creator"),
-                ResourceFactory.createResource("http://deichman.no/person_1")));
+                ResourceFactory.createResource(personXuri.getUri())));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createLangLiteral("work_1_title", "no")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
                 ResourceFactory.createLangLiteral("work_1_english_title", "en")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createPlainLiteral("work_1_part_title")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
                 ResourceFactory.createLangLiteral("work_1_english_part_title", "en")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/work_1"),
+                ResourceFactory.createResource(workXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#audience"),
                 ResourceFactory.createResource("http://data.deichman.no/audience#juvenile")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_1"),
+                ResourceFactory.createResource(publicationXuri1.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#publicationOf"),
-                ResourceFactory.createResource("http://deichman.no/work_1")));
+                ResourceFactory.createResource(workXuri.getUri())));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_1"),
+                ResourceFactory.createResource(publicationXuri1.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#format"),
                 ResourceFactory.createResource("http://data.deichman.no/format#Book")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_1"),
+                ResourceFactory.createResource(publicationXuri1.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_2"),
+                ResourceFactory.createResource(publicationXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#publicationOf"),
-                ResourceFactory.createResource("http://deichman.no/work_1")));
+                ResourceFactory.createResource(workXuri.getUri())));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_2"),
+                ResourceFactory.createResource(publicationXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#format"),
                 ResourceFactory.createResource("http://data.deichman.no/format#DVD")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_2"),
+                ResourceFactory.createResource(publicationXuri2.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_3"),
+                ResourceFactory.createResource(publicationXuri3.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#publicationOf"),
-                ResourceFactory.createResource("http://deichman.no/work_1")));
+                ResourceFactory.createResource(workXuri.getUri())));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_3"),
+                ResourceFactory.createResource(publicationXuri3.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#format"),
                 ResourceFactory.createResource("http://data.deichman.no/format#Bok")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/publication_3"),
+                ResourceFactory.createResource(publicationXuri3.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
 
@@ -170,8 +177,8 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
                 ResourceFactory.createLangLiteral("Barn og ungdom", "no")));
 
-        String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, "http://deichman.no/work_1");
+        String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, workXuri);
 
-        Assert.assertThat(jsonDocument, sameJSONAs(comparisonJsonDocument).allowingAnyArrayOrdering());
+        Assert.assertThat(jsonDocument, sameJSONAs(String.format(comparisonJsonDocument, workXuri.getUri(), personXuri.getUri(), publicationXuri1.getUri(), publicationXuri2.getUri(), publicationXuri3.getUri())).allowingAnyArrayOrdering());
     }
 }

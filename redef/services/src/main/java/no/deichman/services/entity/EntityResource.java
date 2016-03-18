@@ -174,7 +174,7 @@ public final class EntityResource extends ResourceBase {
 
         switch (xuri.getTypeAsEntityType()) {
             case WORK:
-                getSearchService().indexWork(xuri.getId());
+                getSearchService().indexWork(xuri);
                 break;
             case PERSON:
                 getSearchService().indexPerson(xuri.getId());
@@ -188,7 +188,7 @@ public final class EntityResource extends ResourceBase {
                     String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
                     XURI workXURI = new XURI(workUri);
 
-                    getSearchService().indexWork(workXURI.getId());
+                    getSearchService().indexWork(workXURI);
                 }
                 break;
             case PUBLISHER:
@@ -224,7 +224,7 @@ public final class EntityResource extends ResourceBase {
         XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
         switch (xuri.getTypeAsEntityType()) {
             case WORK:
-                getSearchService().indexWork(xuri.getId());
+                getSearchService().indexWork(xuri);
                 break;
             case PERSON:
                 getSearchService().indexPerson(xuri.getId());

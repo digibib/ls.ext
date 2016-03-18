@@ -4,7 +4,6 @@ import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -38,7 +37,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
@@ -71,8 +69,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void indexWork(String workId) throws Exception {
-        doIndexWork(workId, false);
+    public final void indexWork(XURI xuri) throws Exception {
+        doIndexWork(xuri, false);
     }
 
     @Override
@@ -198,16 +196,14 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    private void doIndexWork(String workId, boolean indexedPerson) throws Exception {
-        String workUri = remote().work() + workId;
-        XURI xuri = new XURI(workUri);
+    private void doIndexWork(XURI xuri, boolean indexedPerson) throws Exception {
 
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(xuri);
-        indexDocument("work", workUri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, workUri));
+        indexDocument(xuri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, xuri));
 
         if (!indexedPerson) {
             Statement creatorProperty = workModelWithLinkedResources.getProperty(
-                    createResource(workUri),
+                    createResource(xuri.getUri()),
                     CREATOR);
             if (creatorProperty != null) {
                 String creatorUri = creatorProperty.getObject().asNode().getURI();
@@ -222,47 +218,40 @@ public class SearchServiceImpl implements SearchService {
         if (!indexedWork) {
             ResIterator subjectIterator = works.listSubjects();
             while (subjectIterator.hasNext()) {
-                String workUri = subjectIterator.next().toString();
-                String workId = idFromEntityUri(workUri);
-                doIndexWorkOnly(workId);
+                XURI workUri = new XURI(subjectIterator.next().toString());
+                doIndexWorkOnly(workUri);
             }
         }
         String personUri = remote().person() + personId;
         XURI xuri = new XURI(personUri);
         Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(xuri).add(works);
-        indexDocument("person", personUri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, personUri));
+        indexDocument(xuri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, xuri));
     }
 
     private void doIndexPlaceOfPublication(String id) throws Exception {
         XURI xuri = new XURI(remote().getBaseUriRoot(), EntityType.PLACE_OF_PUBLICATION.getPath(), id);
         Model placeOfPublicationModel = entityService.retrieveById(xuri);
-        String placeOfPublicationUri = remote().placeOfPublication() + id;
-        indexDocument("placeOfPublication", placeOfPublicationUri, placeOfPublicationModelToIndexMapper.createIndexDocument(placeOfPublicationModel, placeOfPublicationUri));
+        indexDocument(xuri, placeOfPublicationModelToIndexMapper.createIndexDocument(placeOfPublicationModel, xuri));
     }
 
     private void doIndexPublisher(String id) throws Exception {
         XURI xuri = new XURI(remote().getBaseUriRoot(), EntityType.PUBLISHER.getPath(), id);
         Model publisherModel = entityService.retrieveById(xuri);
-        String publisherUri = remote().publisher() + id;
-        indexDocument("publisher", publisherUri, publisherModelToIndexMapper.createIndexDocument(publisherModel, publisherUri));
+        indexDocument(xuri, publisherModelToIndexMapper.createIndexDocument(publisherModel, xuri));
     }
 
-    private void doIndexWorkOnly(String workId) throws Exception {
-        doIndexWork(workId, true);
+    private void doIndexWorkOnly(XURI xuri) throws Exception {
+        doIndexWork(xuri, true);
     }
 
     private String idFromEntityUri(String uri) {
         return uri.substring(uri.lastIndexOf("/") + 1);
     }
 
-    private void indexModel(Optional<Pair<String, String>> documentWithId, String indexType) {
-        documentWithId.ifPresent(document -> indexDocument(indexType, document.getKey(), document.getValue()));
-    }
-
-    private void indexDocument(String type, String uri, String document) {
+    private void indexDocument(XURI xuri, String document) {
         try (CloseableHttpClient httpclient = createDefault()) {
             HttpPut httpPut = new HttpPut(getIndexUriBuilder()
-                    .setPath(format("/search/%s/%s", type, encode(uri, UTF_8)))
+                    .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8)))
                     .build());
             httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
             httpPut.setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.withCharset(UTF_8).toString());
@@ -270,7 +259,7 @@ public class SearchServiceImpl implements SearchService {
                 LOG.debug(putResponse.getStatusLine().toString());
             }
         } catch (Exception e) {
-            LOG.error(format("Failed to index %s in elasticsearch", uri), e);
+            LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
     }

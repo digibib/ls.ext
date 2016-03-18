@@ -1,5 +1,7 @@
 package no.deichman.services.search;
 
+import no.deichman.services.uridefaults.XURI;
+
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -7,7 +9,7 @@ import javax.ws.rs.core.Response;
  * Responsibility: perform indexing and searching.
  */
 public interface SearchService {
-    void indexWork(String workUri) throws Exception;
+    void indexWork(XURI xuri) throws Exception;
 
     Response searchWork(String query);
 
