@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as ResourceActions from '../actions/ResourceActions'
 import { Link } from 'react-router'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Constants from '../constants/Constants'
 import { inPreferredLanguage } from '../utils/languageHelpers'
@@ -21,7 +22,7 @@ const Person = React.createClass({
   renderNoPerson () {
     return (
       <div>
-        No person
+        <FormattedMessage {...messages.noPerson} />
       </div>
     )
   },
@@ -85,7 +86,7 @@ const Person = React.createClass({
             <h3><span data-automation-id='lifespan'>{this.renderLifeSpan(person)}</span></h3>
             <div className='small-text'>
               <p className={this.hiddenIfFalse(person.nationality)}>
-                <strong>nasjonalitet:</strong>&nbsp;<span
+                <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
                 data-automation-id='person-nationality'>{person.nationality}</span>
               </p>
             </div>
@@ -93,12 +94,30 @@ const Person = React.createClass({
         </div>
         <div className='panel column full'>
           <div className='col'>
-            <h3>Verk</h3>
+            <h3><FormattedMessage {...messages.work} /></h3>
             {this.renderWorks(person)}
           </div>
         </div>
       </div>
     )
+  }
+})
+
+const messages = defineMessages({
+  noPerson: {
+    id: 'Person.noPerson',
+    description: 'When no person was found',
+    defaultMessage: 'No person'
+  },
+  nationality: {
+    id: 'Person.nationality',
+    description: 'The text before the nationality of the person',
+    defaultMessage: 'First published:'
+  },
+  work: {
+    id: 'Person.work',
+    description: 'The header for the list of works',
+    defaultMessage: 'Works'
   }
 })
 

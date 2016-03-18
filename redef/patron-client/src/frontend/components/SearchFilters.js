@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 import SearchFilter from './SearchFilter'
 import Labels from '../constants/Labels'
@@ -27,7 +28,7 @@ export default React.createClass({
 
       return (
         <aside className='col filters'>
-          <h3>Avgrens søket ditt</h3>
+          <h3><FormattedMessage {...messages.limit} /></h3>
           <div data-automation-id='search_filters'>
             {Object.keys(groupedFilters).map(aggregation => {
               let filtersByAggregation = groupedFilters[ aggregation ]
@@ -47,5 +48,13 @@ export default React.createClass({
     } else {
       return this.renderEmpty()
     }
+  }
+})
+
+const messages = defineMessages({
+  limit: {
+    id: 'SearchFilters.limit',
+    description: 'The header of the filter groups',
+    defaultMessage: 'Limit your search'
   }
 })

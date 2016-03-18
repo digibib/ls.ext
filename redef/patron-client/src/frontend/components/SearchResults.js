@@ -33,7 +33,7 @@ export default React.createClass({
       resultsText = <h3 data-automation-id='no-search'><FormattedMessage {...messages.searchForWork} /></h3>
     } else {
       resultsText = (
-        <h3><FormattedMessage {...messages.totalHits}
+        <h3><FormattedHTMLMessage {...messages.totalHits}
           values={{ searchQuery: this.props.locationQuery.query, totalHits: this.props.totalHits }}/></h3>
       )
     }

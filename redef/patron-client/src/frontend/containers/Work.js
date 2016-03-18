@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as ResourceActions from '../actions/ResourceActions'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Constants from '../constants/Constants'
 import Creators from '../components/Creators'
@@ -24,7 +25,7 @@ const Work = React.createClass({
   renderNoWork () {
     return (
       <div>
-        No work
+        <FormattedMessage {...messages.noWork} />
       </div>
     )
   },
@@ -47,11 +48,12 @@ const Work = React.createClass({
     if (work.publicationYear) {
       return (
         <p>
-          <strong>Første gang utgitt:</strong> <span data-automation-id='work_date'>{work.publicationYear}</span>
+          <strong><FormattedMessage {...messages.firstTimePublished} /></strong> <span
+          data-automation-id='work_date'>{work.publicationYear}</span>
         </p>
       )
     }
-    return <span data-automation-id='work_date'></span>
+    return <span data-automation-id='work_date'/>
   },
   render () {
     // TODO Better renderEmpty and showing something while it loads the resource.
@@ -67,7 +69,7 @@ const Work = React.createClass({
       <div className='container'>
         <div className='panel row'>
           <div className='panel-header'>
-            <span><strong>Verksinformasjon</strong></span>
+            <span><strong><FormattedMessage {...messages.workInformation} /></strong></span>
             <div className='panel-arrow panel-open'></div>
           </div>
           <div id='work' className='col work-info'>
@@ -80,6 +82,24 @@ const Work = React.createClass({
         <Items items={work.items}/>
       </div>
     )
+  }
+})
+
+const messages = defineMessages({
+  noWork: {
+    id: 'Work.noWork',
+    description: 'When no work was found',
+    defaultMessage: 'No work'
+  },
+  firstTimePublished: {
+    id: 'Work.firstTimePublished',
+    description: 'The year the work was first published',
+    defaultMessage: 'First published:'
+  },
+  workInformation: {
+    id: 'Work.workInformation',
+    description: 'The header text for the work information',
+    defaultMessage: 'Work information'
   }
 })
 
