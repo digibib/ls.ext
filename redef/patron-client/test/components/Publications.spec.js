@@ -6,11 +6,11 @@ import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
-  const props = Object.assign({
+  const props = {
     publications: [
       { id: 'publication_id1' }, { id: 'publication_id2' }, { id: 'publication_id3' }
-    ]
-  }, propOverrides)
+    ], ...propOverrides
+  }
 
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>

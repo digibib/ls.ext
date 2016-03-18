@@ -12,9 +12,10 @@ const initialState = {
 export default function application (state = initialState, action) {
   switch (action.type) {
     case (CHANGE_LANGUAGE):
-      return Object.assign({}, state, {
+      return {
+        ...state,
         locale: action.payload.locale
-      })
+      }
     default:
       return state
   }

@@ -26,10 +26,10 @@ const Search = React.createClass({
   handlePageClick (data) {
     let page = String(data.selected + 1)
     if (page !== this.props.location.query.page) {
-      let newQuery = Object.assign({},
-        this.props.location.query,
-        { page: page }
-      )
+      let newQuery = {
+        ...this.props.location.query,
+        page: page
+      }
       this.props.dispatch(push({ query: newQuery }))
     }
   },

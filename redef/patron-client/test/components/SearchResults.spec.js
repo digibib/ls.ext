@@ -6,13 +6,14 @@ import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
-  const props = Object.assign({
+  const props = {
     locationQuery: {},
     searchError: false,
     totalHits: 0,
     searchResults: [],
-    searchActions: { search: expect.createSpy() }
-  }, propOverrides)
+    searchActions: { search: expect.createSpy() },
+    ...propOverrides
+  }
 
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>

@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
-  const props = Object.assign({
+  const props = {
     searchActions: { search: () => {} },
     searchResults: [],
     isSearching: false,
@@ -17,8 +17,9 @@ function setup (propOverrides) {
     location: { query: {} },
     locationQuery: {},
     totalHits: 0,
-    searchFilterActions: { setFilter: () => {} }
-  }, propOverrides)
+    searchFilterActions: { setFilter: () => {} },
+    ...propOverrides
+  }
 
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>

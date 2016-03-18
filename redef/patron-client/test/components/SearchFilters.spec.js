@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
-  const props = Object.assign({
+  const props = {
     filters: [
       { aggregation: 'work.publication.language', bucket: 'filter_1', count: '10' },
       { aggregation: 'work.publication.language', bucket: 'filter_2', count: '40' },
@@ -14,8 +14,9 @@ function setup (propOverrides) {
       { aggregation: 'work.publication.format', bucket: 'filter_4', count: '20' }
     ],
     locationQuery: {},
-    setFilter: () => {}
-  }, propOverrides)
+    setFilter: () => {},
+    ...propOverrides
+  }
 
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>

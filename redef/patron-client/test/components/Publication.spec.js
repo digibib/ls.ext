@@ -5,7 +5,7 @@ import Publication from '../../src/frontend/components/Publication'
 import ReactDOM from 'react-dom'
 
 function setup (propOverrides) {
-  const props = Object.assign({
+  const props = {
     publication: {
       id: 'test_id',
       mainTitle: 'test_maintitle',
@@ -13,8 +13,8 @@ function setup (propOverrides) {
       language: 'test_language',
       format: 'test_format',
       itemsCount: 'test_itemsCount'
-    }
-  }, propOverrides)
+    }, ...propOverrides
+  }
 
   const Wrapper = React.createClass({
     render: function () {

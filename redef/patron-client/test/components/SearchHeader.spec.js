@@ -7,10 +7,11 @@ import StubContext from 'react-stub-context'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
-  const props = Object.assign({
+  const props = {
     dispatch: expect.createSpy(),
-    locationQuery: {}
-  }, propOverrides)
+    locationQuery: {},
+    ...propOverrides
+  }
 
   let StubbedSearchHeader = StubContext(SearchHeader, {
     router: {

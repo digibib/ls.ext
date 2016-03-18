@@ -7,15 +7,16 @@ import { IntlProvider } from 'react-intl'
 
 function setup (resultPropOverrides) {
   const props = {
-    result: Object.assign({
+    result: {
       originalTitle: 'test_originalTitle',
       mainTitle: 'test_mainTitle',
       creators: [ {
         name: 'test_creator_name',
         relativeUri: 'test_creator_relativeUri'
       } ],
-      relativeUri: 'test_relativeUri'
-    }, resultPropOverrides)
+      relativeUri: 'test_relativeUri',
+      ...resultPropOverrides
+    }
   }
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>

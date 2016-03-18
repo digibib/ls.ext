@@ -5,7 +5,7 @@ import SearchFilter from '../../src/frontend/components/SearchFilter'
 import ReactDOM from 'react-dom'
 
 function setup (propOverrides) {
-  const props = Object.assign({
+  const props = {
     title: 'test_filter',
     filters: [
       { aggregation: 'test_aggregation', bucket: 'filter_1', count: '10' },
@@ -15,8 +15,9 @@ function setup (propOverrides) {
     ],
     locationQuery: {},
     aggregation: 'aggregation',
-    setFilter: () => {}
-  }, propOverrides)
+    setFilter: () => {},
+    ...propOverrides
+  }
 
   const output = TestUtils.renderIntoDocument(
     <SearchFilter {...props} />

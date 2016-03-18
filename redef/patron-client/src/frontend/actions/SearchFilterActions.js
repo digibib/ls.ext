@@ -3,7 +3,7 @@ import { push } from 'react-router-redux'
 export function setFilter (filter, router) {
   return (dispatch, getState) => {
     let queryParamName = 'filter_' + filter.aggregation
-    let locationQuery = Object.assign({}, getState().routing.locationBeforeTransitions.query)
+    let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     let queryParam = locationQuery[ queryParamName ]
     if (filter.active) {
       if (queryParam && Array.isArray(queryParam)) {

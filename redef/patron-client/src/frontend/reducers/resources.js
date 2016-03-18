@@ -5,22 +5,26 @@ const initialState = { isRequesting: false, resources: {} }
 export default function resources (state = initialState, action) {
   switch (action.type) {
     case RECEIVE_RESOURCE:
-      return Object.assign({}, state, {
-        resources: Object.assign({}, state.resources, {
+      return {
+        ...state,
+        resources: {
+          ...state.resources,
           [action.payload.uri]: action.payload.resource
-        }),
+        },
         isRequesting: false,
         error: false
-      })
+      }
     case RESOURCE_FAILURE:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         error: action.payload.message,
         isRequesting: false
-      })
+      }
     case REQUEST_RESOURCE:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isRequesting: true
-      })
+      }
     default:
       return state
   }
