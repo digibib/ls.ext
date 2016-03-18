@@ -28,32 +28,31 @@ export default React.createClass({
     let filters = this.props.filters.slice()
     filters.sort(function (a, b) {
       return (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0)
-    })
+    }).map(filter => {return { ...filter }})
     return filters.map((filter, index) => {
       if (!this.state.showAll && index >= Constants.maxVisibleFilterItems) {
         return ''
       }
 
       let aggregationFilter = this.props.locationQuery[ 'filter_' + filter.aggregation ]
-      let checked
       if (aggregationFilter instanceof Array) {
-        checked = aggregationFilter.indexOf(filter.bucket) > -1
+        filter.active = aggregationFilter.indexOf(filter.bucket) > -1
       } else {
-        checked = aggregationFilter === filter.bucket
+        filter.active = aggregationFilter === filter.bucket
       }
 
       return (
-        <li key={filter.aggregation + '_' + filter.bucket}
+        <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
             data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
-          <input type='checkbox' checked={checked} onChange={this.handleChange.bind(this, filter)}/>
+          <input type='checkbox' readOnly checked={filter.active}/>
           {filter.bucket} (
           {filter.count})
         </li>
       )
     })
   },
-  handleChange (filter, event) {
-    filter.active = event.target.checked
+  handleClick (filter) {
+    filter.active = !filter.active
     this.props.setFilter(filter, this.context.router)
   },
   render () {
