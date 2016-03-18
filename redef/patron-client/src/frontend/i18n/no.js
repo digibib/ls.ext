@@ -14,6 +14,7 @@ export default {
   'Publications.title': 'tittel',
   'Publications.publicationYear': 'utgivelsesår',
   'Publications.language': 'språk',
+  'Publications.format': 'format',
   'Publications.copies': 'eksemplarer',
   'Publications.numberOfPublications': 'Eksemplarer {numberOfPublications}',
   'SearchFilter.showAll': '+ vis alle',
