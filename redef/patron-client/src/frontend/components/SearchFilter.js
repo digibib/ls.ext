@@ -67,11 +67,19 @@ export default React.createClass({
           {this.renderFilters()}
           {(this.state.showAll || this.props.filters.length <= Constants.maxVisibleFilterItems) ? '' : (
             <li onClick={this.handleShowAllClick}>
-              + vis alle<br/>
+              <FormattedMessage {...messages.showAll} /><br/>
             </li>
           )}
         </ul>
       </div>
     )
+  }
+})
+
+const messages = defineMessages({
+  showAll: {
+    id: 'SearchFilter.showAll',
+    description: 'Show all filters for a group',
+    defaultMessage: '+ show all'
   }
 })

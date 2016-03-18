@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 export default React.createClass({
   propTypes: {
@@ -6,9 +7,9 @@ export default React.createClass({
   },
   renderStatus (status) {
     if (status === 'AVAIL') {
-      return <span>Ledig</span>
+      return <span><FormattedMessage {...messages.available} /></span>
     }
-    return <span>Forventet {status}</span>
+    return <span><FormattedMessage {...messages.expectedAvailable} values={{status: status}}/></span>
   },
   render () {
     let item = this.props.item
@@ -23,5 +24,18 @@ export default React.createClass({
         <td data-automation-id='item_shelfmark'>{item.shelfmark}</td>
       </tr>
     )
+  }
+})
+
+const messages = defineMessages({
+  available: {
+    id: 'Item.available',
+    description: 'Available item',
+    defaultMessage: 'Available'
+  },
+  expectedAvailable: {
+    id: 'Item.expectedAvailable',
+    description: 'When the item is expected available',
+    defaultMessage: 'Expected {status}'
   }
 })

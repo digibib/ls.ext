@@ -1,9 +1,9 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": ["es2015", "stage-0", "react"],
   "plugins": [
     ["react-intl", {
       "messagesDir": "./build/messages/",
-      "enforceDescriptions": true
+      "enforceDescriptions": false
     }]
   ]
 }

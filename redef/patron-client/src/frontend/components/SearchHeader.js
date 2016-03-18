@@ -1,17 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 
-const messages = defineMessages({
-  search: {
-    id: 'search',
-    description: 'Mweep',
-    defaultMessage: 'qweep'
-  }
-})
-
-export default React.createClass({
+let SearchHeader = React.createClass({
   propTypes: {
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired
@@ -36,6 +28,7 @@ export default React.createClass({
     this.props.dispatch(push(url))
   },
   render () {
+    debugger
     return (
       <header className='row'>
         <div className='container'>
@@ -50,14 +43,14 @@ export default React.createClass({
           </div>
           <div className='col'>
             <form onSubmit={this.search}>
-              <input placeholder='søk etter noe da...'
+              <input placeholder={this.props.intl.formatMessage({...messages.searchInputPlaceholder})}
                      id='search'
                      type='search'
                      value={this.state.searchFieldInput}
                      onChange={this.handleChange}
               />
               <button type='submit' id='submit'>
-                <FormattedMessage {...messages.search}/>
+                <FormattedMessage {...messages.search} />
               </button>
             </form>
           </div>
@@ -66,3 +59,18 @@ export default React.createClass({
     )
   }
 })
+
+const messages = defineMessages({
+  searchInputPlaceholder: {
+    id: 'SearchHeader.searchInputPlaceholder',
+    description: 'Placeholder for the search field',
+    defaultMessage: 'Search for something...'
+  },
+  search: {
+    id: 'SearchHeader.search',
+    description: 'Label on search button',
+    defaultMessage: 'Search'
+  }
+})
+
+export default injectIntl(SearchHeader)

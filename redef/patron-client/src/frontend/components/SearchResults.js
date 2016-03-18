@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
+import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 
 import SearchResult from './SearchResult'
 
@@ -23,19 +24,17 @@ export default React.createClass({
     if (this.props.searchError) {
       return (
         <p data-automation-id='search-error'>
-          Noe gikk galt med søket.
+          <FormattedMessage {...messages.searchError} />
         </p>
       )
     }
-    let total = this.props.totalHits
-    let searchQuery = this.props.locationQuery.query
     let resultsText
     if (!this.props.locationQuery.query) {
-      resultsText = <h3 data-automation-id='no-search'>Søk etter verk</h3>
+      resultsText = <h3 data-automation-id='no-search'><FormattedMessage {...messages.searchForWork} /></h3>
     } else {
       resultsText = (
-        <h3>Ditt søk på '<span data-automation-id='current-search-term'>{searchQuery}</span>' ga <span
-          data-automation-id='hits-total'>{total}</span> treff</h3>
+        <h3><FormattedMessage {...messages.totalHits}
+          values={{ searchQuery: this.props.locationQuery.query, totalHits: this.props.totalHits }}/></h3>
       )
     }
     let entries = []
@@ -54,5 +53,23 @@ export default React.createClass({
         </div>
       </section>
     )
+  }
+})
+
+const messages = defineMessages({
+  totalHits: {
+    id: 'SearchResults.totalHits',
+    description: 'The number of total hits spelled out',
+    defaultMessage: 'Your search for "<span data-automation-id="current-search-term">{searchQuery}</span>" resulted in <span data-automation-id="hits-total">{totalHits}</span> hits'
+  },
+  searchError: {
+    id: 'SearchResults.searchError',
+    description: 'A message to display when the search fails',
+    defaultMessage: 'Something went wrong with the search #sadpanda'
+  },
+  searchForWork: {
+    id: 'SearchResults.searchForWork',
+    description: 'A message to show when no search',
+    defaultMessage: 'Search for works'
   }
 })

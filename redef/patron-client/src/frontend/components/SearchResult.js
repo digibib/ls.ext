@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 export default React.createClass({
   propTypes: {
@@ -60,20 +61,30 @@ export default React.createClass({
         </div>
         <div className='row result-more'>
           <div className='col' data-automation-id='work_formats'>
-            <strong>Finnes som:</strong>
+            <strong><FormattedMessage {...messages.availableAs} /></strong>
             <br/>
             {formats.join(', ')}
           </div>
-          <div className='col'>
-            <span className='hidden'>Språk:<br/>TODO</span>&nbsp;
-          </div>
           <div className='col right'>
-            <span className='hidden'>TODO Utgivelser</span>
-            <Link to={result.relativeUri} className='more'> alle utgivelser ►
+            <Link to={result.relativeUri} className='more'>
+              <FormattedMessage {...messages.allPublications} />
             </Link>
           </div>
         </div>
       </div>
     )
+  }
+})
+
+const messages = defineMessages({
+  allPublications: {
+    id: 'SearchResult.allPublications',
+    description: 'Link to go to all publications',
+    defaultMessage: 'all publications ►'
+  },
+  availableAs: {
+    id: 'SearchResult.availableAs',
+    description: 'What formats the results is available as',
+    defaultMessage: 'Available as:'
   }
 })

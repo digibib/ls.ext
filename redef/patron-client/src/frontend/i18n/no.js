@@ -1,4 +1,31 @@
 /*eslint-disable max-len,quotes*/
 export default {
-  "searching": "Søker"
+  'Item.available': 'Ledig',
+  'Item.expectedAvailable': 'Forventet {status}',
+  'Items.title': 'tittel',
+  'Items.language': 'språk',
+  'Items.format': 'format',
+  'Items.barcode': 'strekkode',
+  'Items.placement': 'plassering',
+  'Items.status': 'status',
+  'Items.alignment': 'oppstilling',
+  'Items.noItems': 'Vi har ingen eksemplarer',
+  'Items.numberOfCopies': 'Eksemplarer ({copies})',
+  'Publications.title': 'tittel',
+  'Publications.publicationYear': 'utgivelsesår',
+  'Publications.language': 'språk',
+  'Publications.copies': 'eksemplarer',
+  'Publications.numberOfPublications': 'Eksemplarer {numberOfPublications}',
+  'SearchFilters.showAll': '+ vis alle',
+  'SearchResult.allPublications': 'alle utgivelser ►',
+  'SearchResult.availableAs': 'Finnes som:',
+  'SearchResults.totalHits': 'Ditt søk på "<span data-automation-id="current-search-term">{searchQuery}</span>" ga <span data-automation-id="hits-total">{totalHits}</span> treff',
+  'SearchResults.searchError': 'Noe gikk galt med søket',
+  'SearchResults.searchForWork': 'Søk etter verk',
+
+  "ui.search": "Søk",
+  "ui.searchinputplaceholder": "søk etter noe da...",
+  "ui.noitems": "Vi har ingen eksemplarer",
+  "ui.expectedstatus": "Forventet {status}",
+  "ui.test": 'Dette er en <span data-automation-id="meep"><i>{test}</i></span> sthsth'
 }
