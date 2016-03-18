@@ -30,5 +30,5 @@ export default {
   'Person.work': 'Verk',
   'Work.noWork': 'Inget verk',
   'Work.firstTimePublished': 'Første gang utgitt:',
-  'Work.workInformation': 'Verksinformasjon',
+  'Work.workInformation': 'Verksinformasjon'
 }

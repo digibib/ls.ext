@@ -4,7 +4,10 @@ import routes from '../routes'
 import { IntlProvider } from 'react-intl'
 
 const Root = React.createClass({
-  propTypes: {},
+  propTypes: {
+    locale: PropTypes.string.isRequired,
+    messages: PropTypes.object.isRequired
+  },
   render () {
     return (
       <IntlProvider key='intl' locale={this.props.locale}

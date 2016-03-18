@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
-import { injectIntl, defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
 let SearchHeader = React.createClass({
   propTypes: {
     locationQuery: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
+    intl: intlShape.isRequired
   },
   contextTypes: {
     router: React.PropTypes.object
@@ -28,7 +29,6 @@ let SearchHeader = React.createClass({
     this.props.dispatch(push(url))
   },
   render () {
-    debugger
     return (
       <header className='row'>
         <div className='container'>
