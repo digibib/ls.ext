@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Constants from '../constants/Constants'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 export default React.createClass({
   propTypes: {
