@@ -10,6 +10,7 @@ CONSTRUCT
     ?workUri deich:creator ?person .
     ?publication <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Publication .
     ?publication deich:mainTitle ?publicationMainTitle .
+    ?publication deich:partTitle ?publicationPartTitle .
     ?publication deich:language ?language .
     ?publication deich:format ?format .
     ?publication deich:issued ?publicationPublicationYear .
@@ -19,7 +20,7 @@ CONSTRUCT
     ?person deich:birthYear ?birthYear .
     ?person deich:deathYear ?deathYear .}
 WHERE
-  { SELECT  ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle ?format ?publicationPublicationYear ?language ?person ?audience
+  { SELECT  ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle ?publicationPartTitle ?format ?publicationPublicationYear ?language ?person ?audience
     WHERE
       { BIND(uri("__WORKURI__") AS ?workUri)
         ?workUri  a                     deich:Work
@@ -48,6 +49,9 @@ WHERE
         OPTIONAL
           { ?publication  a                 deich:Publication ;
                   deich:mainTitle   ?publicationMainTitle }
+        OPTIONAL
+          { ?publication  a                 deich:Publication ;
+                  deich:partTitle   ?publicationPartTitle }
         OPTIONAL
           { ?publication  deich:language  ?languageO .
             ?languageO  rdfs:label    ?languageL
