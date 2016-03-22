@@ -67,10 +67,14 @@
 
 
         /* deichman ui styles */
-        a, a:visited { color: blue; }
+        a, a:visited { color: #444; }
+        a:hover { background-color: #eee; }
         .logo { float: right }
 
-
+        .panel { width: 33%; background: #eee; border:5px solid #fff; padding: 1em; height: 310px;}
+        .panel a { display:block; color: #fff; background-color: #E6A817; font-size: 120%;
+                   text-decoration: none; padding: 0.5em; text-align: center; border: 2px solid #fff;}
+        .panel a:hover { background-color: #777; }
         .header {
             background: #222;
             width: 100%;
@@ -107,22 +111,27 @@
 </div>
 
 <div class="section">
-    <a href="http://${HOST}:${PATRON_CLIENT_PORT}/search"><h3>Søket</h3></a>
-    <p><strong>Søkegrensesnitt for ansatte og sluttbrukere.</strong></p>
-    <p>Her trenger du ikke å logge deg inn, men får bare tilgang fra Deichman.</p>
-    <p>Søket er under utvikling og vil forandre seg kontinuerlig frem til september. Test i vei!</p>
-
-    <a href="http://${HOST}:${KOHA_INTRA_PORT}"><h3>Koha</h3></a>
-    <p><strong>Ansattes grensesnitt</strong></p>
-    <p>Utlån/innlevering, brukerregistrering , endre reservasjoner osv.</p>
-    <p>Logg inn med Nasjonalt lånernummer og pinkode.</p>
-    <p>Innstillingene endres etter hvordan Deichman ønsker å ha det frem mot september.</p>
-
-    <a href="http://${HOST}:${CATALINKER_PORT}"><h3>Katalogisering</h3></a>
-    <p><strong>Katalogiseringsverktøy</strong></p>
-    <p>Her trenger du ikke å logge deg inn.</p>
-    <p>Grensesnittet er ikke ferdig og vil utvikles frem mot september.</p>
-
+    <div class="row">
+        <div class="col panel">
+            <a href="http://${HOST}:${PATRON_CLIENT_PORT}/search"><h3>Søket</h3></a>
+            <p><strong>Søkegrensesnitt for ansatte og sluttbrukere.</strong></p>
+            <p>Her trenger du ikke å logge deg inn, men får bare tilgang fra Deichman.</p>
+            <p>Søket er under utvikling og vil forandre seg kontinuerlig frem til september. Test i vei!</p>
+        </div>
+        <div class="col panel">
+            <a href="http://${HOST}:${KOHA_INTRA_PORT}"><h3>Koha</h3></a>
+            <p><strong>Ansattes grensesnitt</strong></p>
+            <p>Utlån/innlevering, brukerregistrering , endre reservasjoner osv.</p>
+            <p>Logg inn med Nasjonalt lånernummer og pinkode.</p>
+            <p>Innstillingene endres etter hvordan Deichman ønsker å ha det frem mot september.</p>
+        </div>
+        <div class="col panel">
+            <a href="http://${HOST}:${CATALINKER_PORT}"><h3>Katalogisering</h3></a>
+            <p><strong>Katalogiseringsverktøy</strong></p>
+            <p>Her trenger du ikke å logge deg inn.</p>
+            <p>Grensesnittet er ikke ferdig og vil utvikles frem mot september.</p>
+        </div>
+    </div>
     <h2>Tekniske grensesnitt</h2>
     <ul>
         <li>
