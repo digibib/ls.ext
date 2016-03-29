@@ -11,7 +11,7 @@
   dcterms:identifier "work_00001" ;
   rdfs:label "Sult" ;
   dcterms:mainTitle "Sult"@no ;
-  deichman:creator <http://deichman.no/person/person_00001> ;
+  deichman:creator <http://deichman.no/person/h12321011> ;
   dcterms:date "1890"^^xsd:gYear ;
   deichman:hasEdition <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
  
@@ -26,7 +26,7 @@
   deichman:location <http://deichman.no/department/d_00001> ;
   deichman:status <http://deichman.no/status/available> .
 
-<http://deichman.no/person/person_00001> a foaf:Person ;
+<http://deichman.no/person/h12321011> a foaf:Person ;
   rdfs:label "Knut Hamsun" ;
   foaf:name "Knut Hamsun" ;
   foaf:givenName "Knut" ;
@@ -102,13 +102,13 @@
   bibo:isbn "82-05-26285-3" ;
   deichman:biblio "626460" .
 
-<http://deichman.no/work/work_TEST_KOHA_ITEMS_LINK> a deichman:Work ;
+<http://deichman.no/work/w0009112> a deichman:Work ;
   rdfs:label "Berlinerpoplene" ;
   dcterms:mainTitle "Berlinerpoplene"@no ;
   deichman:creator <http://deichman.no/person/person_00004> ;
   dcterms:date "2004"^^xsd:gYear ;
-  dcterms:identifier "work_TEST_KOHA_ITEMS_LINK" .
+  dcterms:identifier "w0009112" .
 
 <http://deichman.no/publication/publication_TEST_KOHA_ITEMS_LINK> a deichman:Publication ;
   deichman:recordID "626460" ;
-  deichman:publicationOf <http://deichman.no/work/work_TEST_KOHA_ITEMS_LINK> .
+  deichman:publicationOf <http://deichman.no/work/w0009112> .

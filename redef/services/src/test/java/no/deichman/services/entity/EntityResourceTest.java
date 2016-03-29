@@ -259,14 +259,14 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void get_work_items_should_return_list_of_items(){
+    public void get_work_items_should_return_list_of_items() throws Exception {
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService);
 
-        String workId = "work_TEST_KOHA_ITEMS_LINK";
+        XURI xuri = new XURI("http://deichman.no/work/w0009112");
 
-        Response result = entityResource.getWorkItems(workId, WORK);
+        Response result = entityResource.getWorkItems(xuri.getId(), xuri.getType());
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -278,7 +278,7 @@ public class EntityResourceTest {
         entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService);
 
         XURI xuri = new XURI("http://deichman.no/person/h12321011");
-        Response result = entityResource.getWorksByCreator(xuri. getType(), xuri.getId());
+        Response result = entityResource.getWorksByCreator(xuri.getType(), xuri.getId());
 
         assertNotNull(result);
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -286,8 +286,8 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void get_work_items_should_204_on_empty_items_list(){
-        Response result = entityResource.getWorkItems("DOES_NOT_EXIST", WORK);
+    public void get_work_items_should_204_on_empty_items_list() throws Exception {
+        Response result = entityResource.getWorkItems("w4544454", WORK);
         assertEquals(result.getStatus(), NO_CONTENT.getStatusCode());
     }
 
@@ -498,6 +498,24 @@ public class EntityResourceTest {
                 + "        \"@id\": \"http://deichman.no/" + type + "/" + identifier + "\",\n"
                 + "        \"@type\": \"deichman:" + ontologyClass + "\",\n"
                 + "        \"http://data.deichman.no/duo#bibliofilPlaceOfPublicationId\": \"" + placeId + "\"\n"
+                + "    }\n"
+                + "}";
+    }
+
+    private String createWorkWithCreatorRDF(String workURI, String personURI) {
+        return "{\n"
+                + "    \"@context\": {\n"
+                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"" + workURI + "\",\n"
+                + "        \"@type\": \"deichman:Work\",\n"
+                + "        \"deichman:mainTitle\": \"Wienerbrød\",\n"
+                + "        \"deichman:creator\": \n"
+                + "            {\n"
+                + "              \"@id\": \"" + personURI + "\"\n"
+                + "            }\n"
                 + "    }\n"
                 + "}";
     }

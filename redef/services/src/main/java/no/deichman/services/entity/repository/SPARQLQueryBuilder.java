@@ -44,7 +44,7 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-    public Query describeWorkAndLinkedResources(String workId) {
+    public Query describeWorkAndLinkedResources(XURI xuri) {
         String queryString = String.format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -64,7 +64,7 @@ public final class SPARQLQueryBuilder {
                 + "                        ?format rdfs:label ?label .\n"
                 + "            }\n"
                 + "    }\n"
-                + "}", baseURI.ontology(), workId);
+                + "}", baseURI.ontology(), xuri.getUri());
         return QueryFactory.create(queryString);
     }
 
@@ -177,8 +177,10 @@ public final class SPARQLQueryBuilder {
         String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
         String add = getStringOfStatments(patches, "ADD");
 
+        String keyword = delSelect.length() > 0 ? "" : " DATA";
+
         if (del.length() > 0) {
-            q.append(DELETE + " DATA {" + NEWLINE + del +  "}");
+            q.append(DELETE + keyword + " {" + NEWLINE + del +  "}");
         }
         if (delSelect.length() > 0) {
             q.append(" WHERE {" + NEWLINE + delSelect + "}");
@@ -258,14 +260,14 @@ public final class SPARQLQueryBuilder {
 
     public Query describeWorksByCreator(XURI xuri) {
         String q = String.format(""
-                + "PREFIX deichman: <%s>\n"
+                + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
                 + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "DESCRIBE ?work \n"
                 + "WHERE {\n"
                 + "      ?work a deichman:Work ;\n"
-                + "            deichman:creator <%s> .\n"
+                + "            deichman:creator <%2$s> .\n"
                 + "}", baseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }

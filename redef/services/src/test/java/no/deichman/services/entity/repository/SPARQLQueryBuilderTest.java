@@ -122,7 +122,7 @@ public class SPARQLQueryBuilderTest {
         String test = "ASK {<" + uri.getUri() + "> ?p ?o}";
         Query expected = QueryFactory.create(test);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
-        assertEquals(expected,sqb.checkIfResourceExists(uri));
+        assertEquals(expected, sqb.checkIfResourceExists(uri));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class SPARQLQueryBuilderTest {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String test = "ASK {<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . }";
         Query expected = QueryFactory.create(test);
-        assertEquals(expected,sqb.checkIfStatementExists(s));
+        assertEquals(expected, sqb.checkIfStatementExists(s));
     }
 
     @Test
@@ -294,7 +294,7 @@ public class SPARQLQueryBuilderTest {
                 "    _:b0 <http://example.com/c> \"another test\" ."};
 
         String actual = sqb.patch(patches).replaceAll("(\\?|_:)[A-Za-z0-9]+", "$1b0");
-        actual = actual.replaceAll("(DELETE DATA \\{\\n| WHERE \\{\\n| ;\\nINSERT DATA \\{\\n)", "");
+        actual = actual.replaceAll("(DELETE( DATA)? \\{\\n| WHERE \\{\\n| ;\\nINSERT DATA \\{\\n)", "");
         String[] actualCleaned = actual.split("\n}");
         String[] actualDelLines = actualCleaned[0].split("\n");
         String[] actualDelSelect = actualCleaned[1].split("\n");

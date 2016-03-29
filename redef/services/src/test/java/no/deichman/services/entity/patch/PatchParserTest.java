@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import org.apache.jena.graph.Node;
 import org.apache.jena.vocabulary.XSD;
 import org.junit.Test;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -150,5 +152,35 @@ public class PatchParserTest {
         JsonElement l2 = parser.parse(target);
 
         assertEquals(l1,l2);
+    }
+
+    @Test
+    public void test_parse_patch_with_blank_nodes() throws Exception {
+        String testData = "[{\n"
+                + "    \"op\": \"add\",\n"
+                + "    \"s\": \"http://192.168.50.12:8005/publication/p597971010779\",\n"
+                + "    \"p\": \"http://192.168.50.12:8005/ontology#inSerial\",\n"
+                + "    \"o\": {\"value\": \"_:b0\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}\n"
+                + "}, {\n"
+                + "    \"op\": \"add\",\n"
+                + "    \"s\": \"_:b0\",\n"
+                + "    \"p\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#type\",\n"
+                + "    \"o\": {\"value\": \"http://192.168.50.12:8005/ontology#SerialIssue\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}\n"
+                + "}, {\n"
+                + "    \"op\": \"add\",\n"
+                + "    \"s\": \"_:b0\",\n"
+                + "    \"p\": \"http://192.168.50.12:8005/ontology#serial\",\n"
+                + "    \"o\": {\"value\": \"http://192.168.50.12:8005/serial/ser12345\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}\n"
+                + "}, {\n"
+                + "    \"op\": \"add\",\n"
+                + "    \"s\": \"_:b0\",\n"
+                + "    \"p\": \"http://192.168.50.12:8005/ontology#issue\",\n"
+                + "    \"o\": {\"value\": \"12\", \"type\": \"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\"}\n"
+                + "}]";
+        Iterator<Patch> lpo = PatchParser.parse(testData).iterator();
+        Node seriaIssueNode = lpo.next().getStatement().getObject().asNode();
+        assertEquals(seriaIssueNode, lpo.next().getStatement().getSubject().asNode());
+        assertEquals(seriaIssueNode, lpo.next().getStatement().getSubject().asNode());
+        assertEquals(seriaIssueNode, lpo.next().getStatement().getSubject().asNode());
     }
 }

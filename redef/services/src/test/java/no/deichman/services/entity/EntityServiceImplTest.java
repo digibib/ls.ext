@@ -232,11 +232,11 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_work_items_by_id() {
+    public void test_retrieve_work_items_by_id() throws Exception {
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(EntityServiceImplTest.modelForBiblio());
         EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
-        Model m = myService.retrieveWorkItemsById("work_TEST_KOHA_ITEMS_LINK");
+        Model m = myService.retrieveWorkItemsByURI(new XURI("http://deichman.no/work/w0009112"));
         Property p = createProperty("http://deichman.no/ontology#editionOf");
         ResIterator ni = m.listSubjectsWithProperty(p);
 

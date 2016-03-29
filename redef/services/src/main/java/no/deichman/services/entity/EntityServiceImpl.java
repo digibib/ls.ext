@@ -176,7 +176,7 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public Model retrieveWorkWithLinkedResources(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrieveWorkAndLinkedResourcesByURI(xuri.getUri()));
+        m.add(repository.retrieveWorkAndLinkedResourcesByURI(xuri));
         m = getLinkedLexvoResource(m);
         m = getLinkedFormatResource(m);
         m = getLinkedAudienceResource(m);
@@ -197,10 +197,10 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model retrieveWorkItemsById(String id) {
+    public Model retrieveWorkItemsByURI(XURI xuri) {
         Model allItemsModel = ModelFactory.createDefaultModel();
 
-        Model workModel = repository.retrieveWorkAndLinkedResourcesByURI(baseURI.work() + id);
+        Model workModel = repository.retrieveWorkAndLinkedResourcesByURI(xuri);
         QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
                 "PREFIX  deichman: <" + baseURI.ontology() + "> "
                         + "SELECT  * "

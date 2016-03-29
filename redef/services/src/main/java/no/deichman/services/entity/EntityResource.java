@@ -214,8 +214,9 @@ public final class EntityResource extends ResourceBase {
     @GET
     @Path("/{workId: w[a-zA-Z0-9_]+}/items")
     @Produces(LD_JSON + MimeType.UTF_8)
-    public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) {
-        return zeroOrMoreResponseFromModel(getEntityService().retrieveWorkItemsById(workId));
+    public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) throws Exception {
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), EntityType.WORK.getPath(), workId);
+        return zeroOrMoreResponseFromModel(getEntityService().retrieveWorkItemsByURI(xuri));
     }
 
     @PUT

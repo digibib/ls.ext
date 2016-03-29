@@ -16,7 +16,7 @@ public interface EntityService {
     Model retrieveWorkWithLinkedResources(XURI xuri);
     Model retrievePersonWithLinkedResources(XURI xuri);
 
-    Model retrieveWorkItemsById(String id);
+    Model retrieveWorkItemsByURI(XURI xuri);
     String create(EntityType type, Model inputModel) throws Exception;
     void delete(Model model);
     Model patch(XURI xuri, String ldPatchJson) throws Exception;

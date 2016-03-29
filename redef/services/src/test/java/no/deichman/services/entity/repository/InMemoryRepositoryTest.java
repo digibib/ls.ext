@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 
 public class InMemoryRepositoryTest {
     public static final String A_BIBLIO_NO = "34567";
-    public static final String WORK_ID = "test_id_1234";
+    public static final String WORK_ID = "w12340000";
     public static final String PUBLICATION_ID = "test_id_12345";
     private static final BaseURI BASE_URI = BaseURI.local();
     private static final Property NAME = createProperty(BASE_URI.ontology("name"));
@@ -117,11 +117,11 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void test_retrieve_work_by_id2(){
+    public void test_retrieve_work_by_id2() throws Exception {
         Model temp = ModelFactory.createDefaultModel();
         temp.add(workWithPublicationStatements);
         repository.addData(temp);
-        Model testModel = repository.retrieveWorkAndLinkedResourcesByURI(workUri);
+        Model testModel = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(workUri));
         List<Statement> missing = workWithPublicationStatements.stream()
                 .filter(stmt -> !testModel.contains(stmt))
                 .collect(Collectors.<Statement>toList());

@@ -1,7 +1,6 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.EntityService;
-import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -206,8 +205,8 @@ public class SearchServiceImpl implements SearchService {
                     createResource(xuri.getUri()),
                     CREATOR);
             if (creatorProperty != null) {
-                String creatorUri = creatorProperty.getObject().asNode().getURI();
-                doIndexPersonOnly(xuri);
+                XURI creatorXuri = new XURI(creatorProperty.getObject().asNode().getURI());
+                doIndexPersonOnly(creatorXuri);
             }
         }
     }

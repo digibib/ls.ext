@@ -2,12 +2,20 @@ package no.deichman.services.entity.patch;
 
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.XSD;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
+import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
 
 /**
  * Responsibility: TODO.
@@ -17,31 +25,43 @@ final class PatchObject {
     private String op;
     private String s;
     private String p;
-    private Map<String,String> o =  new HashMap<String,String>();
+    private Map<String, String> o = new HashMap<String, String>();
 
-    private RDFNode getDataTypeNode() {
+    public static boolean isBlankNodeUri(String objectValue) {
+        return objectValue.startsWith("_:");
+    }
+
+
+    private RDFNode getDataTypeNode(Map<String, RDFNode> blankNodes) {
         RDFNode rdfNode = null;
         String datatype = getObjectDatatype();
 
+        String objectValue = null;
+        try {
+            objectValue = getObjectValue();
+        } catch (PatchParserException e) {
+            e.printStackTrace();
+        }
         if (datatype.contentEquals(XSD.anyURI.getURI())) {
-            try {
-                rdfNode = ResourceFactory.createResource(getObjectValue());
-            } catch (PatchParserException e) {
-                e.printStackTrace();
+            if (isBlankNodeUri(objectValue)) {
+                if (!blankNodes.containsKey(objectValue)) {
+                    rdfNode = createResource();
+                    blankNodes.put(objectValue, rdfNode);
+                } else {
+                    rdfNode = blankNodes.get(objectValue);
+                }
+            } else {
+                rdfNode = createResource(objectValue);
             }
         } else {
             TypeMapper typeMapper = new TypeMapper();
-            try {
-                rdfNode = ResourceFactory.createTypedLiteral(getObjectValue(), typeMapper.getSafeTypeByName(datatype));
-            } catch (PatchParserException e) {
-                e.printStackTrace();
-            }
+            rdfNode = createTypedLiteral(objectValue, typeMapper.getSafeTypeByName(datatype));
         }
 
         return rdfNode;
     }
 
-    PatchObject(){
+    PatchObject() {
     }
 
     public void setSubject(String uri) {
@@ -59,6 +79,7 @@ final class PatchObject {
     public void setPredicate(String pred) {
         p = pred;
     }
+
     public String getPredicate() throws PatchParserException {
         if (p != null) {
             return p;
@@ -107,24 +128,29 @@ final class PatchObject {
         }
     }
 
-    public Patch toPatch() throws PatchParserException {
+    public Patch toPatch(Map<String, RDFNode> blankNodes) throws PatchParserException {
 
         RDFNode rdfNode;
-        if (getObjectLanguage() != null && getObjectValue() != null){
-            rdfNode = ResourceFactory.createLangLiteral(getObjectValue(), getObjectLanguage());
+        if (getObjectLanguage() != null && getObjectValue() != null) {
+            rdfNode = createLangLiteral(getObjectValue(), getObjectLanguage());
         } else if (getObjectDatatype() != null && getObjectValue() != null) {
-            rdfNode = getDataTypeNode();
+            rdfNode = getDataTypeNode(blankNodes);
         } else if (getObjectValue() != null) {
-            rdfNode = ResourceFactory.createPlainLiteral(getObjectValue());
+            rdfNode = createPlainLiteral(getObjectValue());
         } else {
             throw new PatchParserException("No object was found");
         }
 
-        Statement statement = ResourceFactory.createStatement(
-                ResourceFactory.createResource(getSubject()),
-                ResourceFactory.createProperty(getPredicate()),
+        Resource subject = blankNodes.containsKey(getSubject()) ? blankNodes.get(getSubject()).asResource() : createResource(getSubject());
+        Statement statement = createStatement(
+                subject,
+                createProperty(getPredicate()),
                 rdfNode);
 
         return new Patch(op, statement, null);
+    }
+
+    public Patch toPatch() throws PatchParserException {
+        return toPatch(Collections.emptyMap());
     }
 }
