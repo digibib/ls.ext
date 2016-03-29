@@ -4,6 +4,9 @@
 cd /vagrant/docker-compose
 
 echo "Provisioning docker-compose.yml template for ${LSDEVMODE} environment..."
+
+type envsubst >/dev/null 2>&1 || { echo >&2 "ERROR: docker-compose.sh requires envsubst, but this is not available.  Aborting."; exit 1; }
+
 case "$LSDEVMODE" in
 	'build')
 	source docker-compose.env.example
