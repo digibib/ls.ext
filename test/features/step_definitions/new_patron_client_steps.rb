@@ -38,6 +38,10 @@ When(/^jeg trykker fremover i nettleseren$/) do
   @browser.forward
 end
 
+When(/^jeg trykker oppfrisk i nettleseren$/) do
+  @browser.refresh
+end
+
 When(/^skal jeg se filtre på format, språk og målgruppe$/) do
   wait_for { @browser.element(data_automation_id: 'filter_work.publication.format').exists? }
   wait_for { @browser.element(data_automation_id: 'filter_work.publication.language').exists? }
@@ -85,4 +89,16 @@ When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises$/) do |
     @browser.element(data_automation_id: 'work-title')
         .text.eql?("#{prefix}#{@context[:random_migrate_id]} #{@context[:random_migrate_id]}#{str}")
   }
+end
+
+When(/^skal språket "([^"]*)" være valgt$/) do |language|
+  @browser.select(class: 'languageselector').value.should eq language
+end
+
+When(/^jeg velger språket "([^"]*)"$/) do |language|
+  @browser.select(class: 'languageselector').select(language)
+end
+
+When(/^søkeknappen skal vise ordet "([^"]*)"$/) do |button_text|
+  @browser.element(id: 'submit').text.should eq button_text
 end

@@ -58,3 +58,14 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal tittel prefikset "pubprefix0" og som inneholder "nob" vises
     Når jeg søker på "pubprefix1" (+ id på vilkårlig migrering)
     Så skal tittel prefikset "pubprefix1" og som inneholder "eng" vises
+
+  Scenario: Velge språk
+    Gitt at jeg er i søkegrensesnittet
+    Så skal språket "no" være valgt
+    Og søkeknappen skal vise ordet "Søk"
+    Når jeg velger språket "en"
+    Så søkeknappen skal vise ordet "Search"
+    Og skal språket "en" være valgt
+    Når jeg trykker oppfrisk i nettleseren
+    Så skal språket "en" være valgt
+    Og søkeknappen skal vise ordet "Search"
