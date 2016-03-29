@@ -8,10 +8,10 @@ function setup (propOverrides) {
   const props = {
     title: 'test_filter',
     filters: [
-      { aggregation: 'test_aggregation', bucket: 'filter_1', count: '10' },
-      { aggregation: 'test_aggregation', bucket: 'filter_2', count: '40' },
-      { aggregation: 'test_aggregation', bucket: 'filter_3', count: '30' },
-      { aggregation: 'test_aggregation', bucket: 'filter_4', count: '20' }
+      { aggregation: 'test_aggregation', bucket: 'filter_1', count: '10', active: true },
+      { aggregation: 'test_aggregation', bucket: 'filter_2', count: '40', active: false },
+      { aggregation: 'test_aggregation', bucket: 'filter_3', count: '30', active: false },
+      { aggregation: 'test_aggregation', bucket: 'filter_4', count: '20', active: true }
     ],
     locationQuery: {},
     aggregation: 'aggregation',
@@ -50,7 +50,7 @@ describe('components', () => {
     })
 
     it('should render checked filters', () => {
-      const {node, props } = setup({ locationQuery: { 'filter_test_aggregation': [ 'filter_1', 'filter_4' ] } })
+      const {node, props } = setup()
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").getElementsByTagName('input')[ 0 ].checked).toBe(true)
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_2']").getElementsByTagName('input')[ 0 ].checked).toBe(false)
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_3']").getElementsByTagName('input')[ 0 ].checked).toBe(false)

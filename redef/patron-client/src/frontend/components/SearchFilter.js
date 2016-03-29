@@ -7,7 +7,6 @@ export default React.createClass({
     title: PropTypes.string.isRequired,
     aggregation: PropTypes.string.isRequired,
     filters: PropTypes.array,
-    locationQuery: PropTypes.object.isRequired,
     setFilter: PropTypes.func.isRequired
   },
   contextTypes: {
@@ -26,22 +25,12 @@ export default React.createClass({
     return <div data-automation-id='empty'></div>
   },
   renderFilters () {
-    let filters = this.props.filters.slice()
-    filters.sort(function (a, b) {
+    return [ ...this.props.filters ].sort(function (a, b) {
       return (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0)
-    }).map(filter => { return { ...filter } })
-    return filters.map((filter, index) => {
+    }).map((filter, index) => {
       if (!this.state.showAll && index >= Constants.maxVisibleFilterItems) {
         return ''
       }
-
-      let aggregationFilter = this.props.locationQuery[ 'filter_' + filter.aggregation ]
-      if (aggregationFilter instanceof Array) {
-        filter.active = aggregationFilter.indexOf(filter.bucket) > -1
-      } else {
-        filter.active = aggregationFilter === filter.bucket
-      }
-
       return (
         <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
             data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
@@ -53,8 +42,7 @@ export default React.createClass({
     })
   },
   handleClick (filter) {
-    filter.active = !filter.active
-    this.props.setFilter(filter, this.context.router)
+    this.props.setFilter(filter.aggregation, filter.bucket, !filter.active, this.context.router)
   },
   render () {
     if (!this.props.filters || this.props.filters.size === 0) {

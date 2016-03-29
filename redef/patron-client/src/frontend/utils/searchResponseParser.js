@@ -1,7 +1,7 @@
 import { relativeUri } from './uriParser'
 import Constants from '../constants/Constants'
 
-export function processSearchResponse (response, query) {
+export function processSearchResponse (response, locationQuery) {
   let processedResponse = {}
   if (response.error) {
     processedResponse.error = response.error
@@ -25,7 +25,7 @@ export function processSearchResponse (response, query) {
         work.publications = [ work.publications ]
       }
 
-      let chosenPublication = approximateBestTitle(work.publications, query)
+      let chosenPublication = approximateBestTitle(work.publications, locationQuery.query)
       if (chosenPublication) {
         work.mainTitle = chosenPublication.mainTitle
         work.partTitle = chosenPublication.partTitle
@@ -35,12 +35,12 @@ export function processSearchResponse (response, query) {
     })
     processedResponse.searchResults = searchResults
     processedResponse.totalHits = response.hits.total
-    processedResponse.filters = processAggregationResponse(response).filters
+    processedResponse.filters = processAggregationResponse(response, locationQuery).filters
   }
   return processedResponse
 }
 
-export function processAggregationResponse (response) {
+export function processAggregationResponse (response, locationQuery) {
   let processedResponse = {}
   let filters = []
   if (response.aggregations && response.aggregations.all) {
@@ -49,7 +49,11 @@ export function processAggregationResponse (response) {
       let aggregation = all[ field ][ field ][ field ]
       if (aggregation) {
         aggregation.buckets.forEach(bucket => {
-          filters.push({ aggregation: field, bucket: bucket.key, count: bucket.doc_count })
+          let aggregationFilter = locationQuery[ 'filter_' + field ]
+          let active = aggregationFilter instanceof Array
+            ? aggregationFilter.includes(bucket.key)
+            : aggregationFilter === bucket.key
+          filters.push({ aggregation: field, bucket: bucket.key, count: bucket.doc_count, active: active })
         })
       }
     })

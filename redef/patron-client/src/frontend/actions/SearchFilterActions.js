@@ -1,26 +1,26 @@
 import { push } from 'react-router-redux'
 
-export function setFilter (filter, router) {
+export function setFilter (aggregation, bucket, active, router) {
   return (dispatch, getState) => {
-    let queryParamName = 'filter_' + filter.aggregation
+    let queryParamName = 'filter_' + aggregation
     let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     let queryParam = locationQuery[ queryParamName ]
-    if (filter.active) {
+    if (active) {
       if (queryParam && Array.isArray(queryParam)) {
-        if (queryParam.indexOf(filter.bucket) === -1) {
-          queryParam.push(filter.bucket)
+        if (queryParam.indexOf(bucket) === -1) {
+          queryParam.push(bucket)
         }
-      } else if (queryParam && queryParam !== filter.bucket) {
-        locationQuery[ queryParamName ] = [ queryParam, filter.bucket ]
+      } else if (queryParam && queryParam !== bucket) {
+        locationQuery[ queryParamName ] = [ queryParam, bucket ]
       } else {
-        locationQuery[ queryParamName ] = filter.bucket
+        locationQuery[ queryParamName ] = bucket
       }
     } else {
       if (queryParam && Array.isArray(queryParam)) {
-        if (queryParam.indexOf(filter.bucket) >= 0) {
-          queryParam.splice(queryParam.indexOf(filter.bucket), 1)
+        if (queryParam.indexOf(bucket) >= 0) {
+          queryParam.splice(queryParam.indexOf(bucket), 1)
         }
-      } else if (queryParam === filter.bucket) {
+      } else if (queryParam === bucket) {
         delete locationQuery[ queryParamName ]
       }
     }
