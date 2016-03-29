@@ -244,7 +244,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{type}/{creatorId: h[a-zA-Z0-9_]+}/works")
+    @Path("{creatorId: h[a-zA-Z0-9_]+}/works")
     public Response getWorksByCreator(@PathParam("type") String type, @PathParam("creatorId") String creatorId) throws Exception {
         XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, creatorId);
         return zeroOrMoreResponseFromModel(getEntityService().retrieveWorksByCreator(xuri));
