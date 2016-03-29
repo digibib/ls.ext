@@ -45,19 +45,6 @@ Before do |scenario|
   @site = @site || Site.new(@browser)
 end
 
-
-# Set language to English during testing, use global var to avvoid running before each scenario
-Before do
-  $testingLanguageSwitch ||= false
-  unless $testingLanguageSwitch
-    step "at jeg er logget inn som adminbruker"
-    SVC::Preference.new(@browser).set("pref_language", "en")
-    SVC::Preference.new(@browser).set("pref_opaclanguages", "en")
-    $testingLanguageSwitch = true
-  end
-end
-
-
 Before do |scenario|
   $random_migrate ||= false
   unless $random_migrate
@@ -66,19 +53,6 @@ Before do |scenario|
     end
   end
   @context[:random_migrate_id] = $random_migrate
-end
-
-
-# After all test are run
-at_exit do
-  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-  Site.new(@browser).Login.visit.login(ENV['KOHA_ADMINUSER'], ENV['KOHA_ADMINPASS'])
-  # Reset to Norwegian after all tests are run
-  SVC::Preference.new(@browser).set("pref_language", "nb-NO")
-  SVC::Preference.new(@browser).set("pref_opaclanguages", "nb-NO")
-  $testingLanguageSwitch = false
-  @browser.close if @browser
-  @headless.destroy if @headless
 end
 
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.
