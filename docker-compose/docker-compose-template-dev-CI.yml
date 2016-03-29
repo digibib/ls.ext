@@ -75,6 +75,20 @@ services:
     volumes:
       - "/var/lib/koha/${KOHA_INSTANCE}"
 
+  rfidhub:
+    container_name: rfidhub
+    image: "digibib/rfidhub:fd78f904ae3c58adfb9629ad67bab0418c3d5802"
+    networks:
+      - backend
+    depends_on:
+      - sip
+    ports:
+      - "6005:6005"
+      - "8899:8899"
+    environment:
+      SIP_SERVER: sip:9999
+      SIP_CONNS: 1
+
   smtp:
     container_name: mailrelay
     image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
