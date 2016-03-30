@@ -44,7 +44,7 @@ import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
 
 /**
- * Responsibility: Expose entitites as r/w REST resources.
+ * Responsibility: Expose entities as r/w REST resources.
  */
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
