@@ -18,11 +18,18 @@ function setup (resultPropOverrides) {
       ...resultPropOverrides
     }
   }
+
+  const messages = {
+    format_1: 'format_1',
+    format_2: 'format_2',
+    format_3: 'format_3'
+  }
+  
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en'>
+    <IntlProvider locale='en' messages={messages}>
       <SearchResult {...props} />
     </IntlProvider>
-  );
+  )
 
   return {
     props: props,

@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react'
 import Constants from '../constants/Constants'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-export default React.createClass({
+let SearchFilter = React.createClass({
   propTypes: {
     title: PropTypes.string.isRequired,
     aggregation: PropTypes.string.isRequired,
     filters: PropTypes.array,
-    setFilter: PropTypes.func.isRequired
+    setFilter: PropTypes.func.isRequired,
+    intl: intlShape.isRequired
   },
   contextTypes: {
     router: React.PropTypes.object
@@ -35,8 +36,7 @@ export default React.createClass({
         <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
             data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
           <input type='checkbox' readOnly checked={filter.active}/>
-          {filter.bucket} (
-          {filter.count})
+          {this.props.intl.formatMessage({ id: filter.bucket })} ({filter.count})
         </li>
       )
     })
@@ -71,3 +71,5 @@ const messages = defineMessages({
     defaultMessage: '+ show all'
   }
 })
+
+export default injectIntl(SearchFilter)

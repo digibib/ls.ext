@@ -3,6 +3,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import SearchFilter from '../../src/frontend/components/SearchFilter'
 import ReactDOM from 'react-dom'
+import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
@@ -19,9 +20,17 @@ function setup (propOverrides) {
     ...propOverrides
   }
 
+  const messages = {
+    filter_1: 'filter_1',
+    filter_2: 'filter_2',
+    filter_3: 'filter_3',
+    filter_4: 'filter_4'
+  }
+
   const output = TestUtils.renderIntoDocument(
-    <SearchFilter {...props} />
-  );
+    <IntlProvider locale='en' messages={messages}>
+      <SearchFilter {...props} />
+    </IntlProvider>);
 
   return {
     props: props,
@@ -50,7 +59,7 @@ describe('components', () => {
     })
 
     it('should render checked filters', () => {
-      const {node, props } = setup()
+      const { node, props } = setup()
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").getElementsByTagName('input')[ 0 ].checked).toBe(true)
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_2']").getElementsByTagName('input')[ 0 ].checked).toBe(false)
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_3']").getElementsByTagName('input')[ 0 ].checked).toBe(false)

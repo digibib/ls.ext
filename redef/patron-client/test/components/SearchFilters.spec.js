@@ -18,11 +18,18 @@ function setup (propOverrides) {
     ...propOverrides
   }
 
+  const messages = {
+    filter_1: 'filter_1',
+    filter_2: 'filter_2',
+    filter_3: 'filter_3',
+    filter_4: 'filter_4'
+  }
+  
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en'>
+    <IntlProvider locale='en' messages={messages}>
       <SearchFilters {...props} />
     </IntlProvider>
-  );
+  )
 
   return {
     props: props,

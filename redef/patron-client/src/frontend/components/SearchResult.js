@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-export default React.createClass({
+let SearchResult = React.createClass({
   propTypes: {
-    result: PropTypes.object.isRequired
+    result: PropTypes.object.isRequired,
+    intl: intlShape.isRequired
   },
   renderAuthors (creators) {
     if (creators.length === 0) {
@@ -46,7 +47,7 @@ export default React.createClass({
     }
 
     let formats = result.publications
-      ? [ ...new Set(result.publications.filter(publication => publication.format).map(publication => publication.format)) ]
+      ? [ ...new Set(result.publications.filter(publication => publication.format).map(publication => this.props.intl.formatMessage({ id: publication.format }))) ]
       : []
 
     return (
@@ -92,3 +93,5 @@ const messages = defineMessages({
     defaultMessage: 'Available as:'
   }
 })
+
+export default injectIntl(SearchResult)

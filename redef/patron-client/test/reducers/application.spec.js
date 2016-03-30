@@ -1,5 +1,4 @@
 import expect from 'expect'
-
 import application from '../../src/frontend/reducers/application'
 import * as types from '../../src/frontend/constants/ActionTypes'
 import * as i18n from '../../src/frontend/i18n'
@@ -17,16 +16,22 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.CHANGE_LANGUAGE, () => {
+    it('should handle ' + types.RECEIVE_TRANSLATION, () => {
+      let messages = { 'testkey': 'testvalue' }
       expect(
-        application({}, {
-          type: types.CHANGE_LANGUAGE,
+        application(undefined, {
+          type: types.RECEIVE_TRANSLATION,
           payload: {
-            locale: 'en'
+            locale: 'en',
+            messages: messages
           }
         })
       ).toEqual({
-        locale: 'en'
+        locale: 'en',
+        messages: {
+          no: { ...i18n.no },
+          en: messages
+        }
       })
     })
   })

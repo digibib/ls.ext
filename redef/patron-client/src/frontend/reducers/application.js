@@ -1,5 +1,4 @@
-import { CHANGE_LANGUAGE } from '../constants/ActionTypes'
-
+import { RECEIVE_TRANSLATION } from '../constants/ActionTypes'
 import * as i18n from '../i18n'
 
 const initialState = {
@@ -11,10 +10,17 @@ const initialState = {
 
 export default function application (state = initialState, action) {
   switch (action.type) {
-    case (CHANGE_LANGUAGE):
+    case RECEIVE_TRANSLATION:
       return {
         ...state,
-        locale: action.payload.locale
+        locale: action.payload.locale,
+        messages: {
+          ...state.messages,
+          [action.payload.locale]: {
+            ...state.messages[ action.payload.locale ],
+            ...action.payload.messages
+          }
+        }
       }
     default:
       return state

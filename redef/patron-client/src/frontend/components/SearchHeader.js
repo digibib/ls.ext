@@ -7,6 +7,8 @@ let SearchHeader = React.createClass({
   propTypes: {
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    loadLanguage: PropTypes.func.isRequired,
+    locale: PropTypes.string.isRequired,
     intl: intlShape.isRequired
   },
   contextTypes: {
@@ -22,6 +24,9 @@ let SearchHeader = React.createClass({
   },
   handleChange (event) {
     this.setState({ searchFieldInput: event.target.value })
+  },
+  handleChangeLanguage (event) {
+    this.props.loadLanguage(event.target.value)
   },
   search (event) {
     event.preventDefault()
@@ -52,6 +57,10 @@ let SearchHeader = React.createClass({
               <button type='submit' id='submit'>
                 <FormattedMessage {...messages.search} />
               </button>
+              <select className='languageselector' value={this.props.locale} onChange={this.handleChangeLanguage}>
+                <option value='en'>en</option>
+                <option value='no'>no</option>
+              </select>
             </form>
           </div>
         </div>
