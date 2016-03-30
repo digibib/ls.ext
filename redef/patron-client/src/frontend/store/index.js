@@ -4,8 +4,13 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
 import createLogger from 'redux-logger'
 import persistState from 'redux-localstorage'
-
+import adapter from 'redux-localstorage/lib/adapters/localStorage'
+import filter from 'redux-localstorage-filter'
 import rootReducer from '../reducers'
+
+const storage = compose(
+  filter([ 'application.locale' ])
+)(adapter(window.localStorage))
 
 const reduxRouterMiddleware = routerMiddleware(browserHistory)
 const loggerMiddleware = createLogger()
@@ -15,7 +20,7 @@ const createPersistentStoreWithMiddleware = compose(
     loggerMiddleware,
     reduxRouterMiddleware
   ),
-  persistState('application', { key: 'patron-client' })
+  persistState(storage, 'patron-client')
 )(createStore)
 const store = createPersistentStoreWithMiddleware(rootReducer)
 

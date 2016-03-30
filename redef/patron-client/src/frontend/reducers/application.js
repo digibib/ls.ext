@@ -1,3 +1,4 @@
+import { actionTypes } from 'redux-localstorage'
 import { RECEIVE_TRANSLATION } from '../constants/ActionTypes'
 import * as i18n from '../i18n'
 
@@ -10,6 +11,8 @@ const initialState = {
 
 export default function application (state = initialState, action) {
   switch (action.type) {
+    case actionTypes.INIT:
+      return { ...state, ...action.payload[ 'application' ] }
     case RECEIVE_TRANSLATION:
       return {
         ...state,
