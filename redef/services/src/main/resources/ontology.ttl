@@ -19,6 +19,14 @@
   rdfs:label "Person"@en ;
   rdfs:label "Person"@no .
 
+:Corporation a rdfs:Class ;
+  rdfs:label "Corporation"@en ;
+  rdfs:label "Korporasjon"@no .
+
+:Subject a rdfs:Class ;
+  rdfs:label "Subject"@en ;
+  rdfs:label "Emne"@no .
+
 :PlaceOfPublication a rdfs:Class ;
   rdfs:label "Place of publication"@en ;
   rdfs:label "Utgivelsessted"@no .
@@ -30,7 +38,7 @@
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person, :Publisher ;
+  rdfs:domain :Person, :Publisher, :Corporation ;
   rdfs:range xsd:string .
 
 :personTitle a rdfs:Property ;
