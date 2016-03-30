@@ -9,17 +9,11 @@ import javax.ws.rs.core.Response;
  * Responsibility: perform indexing and searching.
  */
 public interface SearchService {
-    void indexWork(XURI xuri) throws Exception;
+    void index(XURI xuri) throws Exception;
 
     Response searchWork(String query);
 
     Response searchPerson(String query);
-
-    void indexPerson(XURI xuri) throws Exception;
-
-    void indexPlaceOfPublication(XURI xuri) throws Exception;
-
-    void indexPublisher(XURI xuri) throws Exception;
 
     Response searchPersonWithJson(String json);
 

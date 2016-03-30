@@ -37,6 +37,7 @@ import java.util.Optional;
 import static javax.ws.rs.core.Response.accepted;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
+import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
@@ -172,31 +173,18 @@ public final class EntityResource extends ResourceBase {
             throw new BadRequestException(e);
         }
 
-        switch (xuri.getTypeAsEntityType()) {
-            case WORK:
-                getSearchService().indexWork(xuri);
-                break;
-            case PERSON:
-                getSearchService().indexPerson(xuri);
-                break;
-            case PLACE_OF_PUBLICATION:
-                getSearchService().indexPlaceOfPublication(xuri);
-                break;
-            case PUBLICATION:
-                Property publicationOfProperty = ResourceFactory.createProperty(getBaseURI().ontology("publicationOf"));
-                if (m.getProperty(null, publicationOfProperty) != null) {
-                    String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
-                    XURI workXURI = new XURI(workUri);
+        if (xuri.getTypeAsEntityType() == PUBLICATION) {
+            Property publicationOfProperty = ResourceFactory.createProperty(getBaseURI().ontology("publicationOf"));
+            if (m.getProperty(null, publicationOfProperty) != null) {
+                String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
+                XURI workXURI = new XURI(workUri);
 
-                    getSearchService().indexWork(workXURI);
-                }
-                break;
-            case PUBLISHER:
-                getSearchService().indexPublisher(xuri);
-                break;
-            default:
-                break;
+                getSearchService().index(workXURI);
+            }
+        } else {
+            getSearchService().index(xuri);
         }
+
         return ok().entity(getJsonldCreator().asJSONLD(m)).build();
     }
 
@@ -223,16 +211,7 @@ public final class EntityResource extends ResourceBase {
     @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
     public Response index(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
-        switch (xuri.getTypeAsEntityType()) {
-            case WORK:
-                getSearchService().indexWork(xuri);
-                break;
-            case PERSON:
-                getSearchService().indexPerson(xuri);
-                break;
-            default: /* will never get to here */
-                break;
-        }
+        getSearchService().index(xuri);
         return accepted().build();
     }
 

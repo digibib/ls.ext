@@ -99,28 +99,16 @@ public class SearchResource extends ResourceBase {
                 LOG.info("Starting to reindex " + type);
                 long start = System.currentTimeMillis();
                 getEntityService().retrieveAllWorkUris(type, uri -> CompletableFuture.runAsync(() -> {
-                    if (type.equals("person")) {
-                        try {
-                            getSearchService().indexPerson(new XURI(uri));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            getSearchService().indexWork(new XURI(uri));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        getSearchService().index(new XURI(uri));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }));
                 LOG.info("Done reindexing " + type + " in " + (System.currentTimeMillis() - start) + " seconds");
             }
         });
         return Response.accepted().build();
-    }
-
-    private String idFromUri(String uri) {
-        return uri.replaceAll(ALL_EXCEPT_LAST_PATH_ELEMENT, "");
     }
 
     @Override

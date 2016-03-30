@@ -68,13 +68,18 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void indexWork(XURI xuri) throws Exception {
-        doIndexWork(xuri, false);
-    }
-
-    @Override
-    public final void indexPerson(XURI xuri) throws Exception {
-        doIndexPerson(xuri, false);
+    public final void index(XURI xuri) throws Exception {
+        switch (xuri.getTypeAsEntityType()) {
+            case WORK: doIndexWork(xuri, false);
+                break;
+            case PERSON: doIndexPerson(xuri, false);
+                break;
+            case PLACE_OF_PUBLICATION: doIndexPlaceOfPublication(xuri);
+                break;
+            case PUBLISHER: doIndexPublisher(xuri);
+                break;
+            default: break;
+        }
     }
 
     @Override
@@ -130,15 +135,6 @@ public class SearchServiceImpl implements SearchService {
                 throw new ServerErrorException("Failed to create elasticsearch mapping for " + type, HTTP_INTERNAL_ERROR);
             }
         }
-    }
-
-    public final void indexPlaceOfPublication(XURI xuri) throws Exception {
-        doIndexPlaceOfPublication(xuri);
-    }
-
-    @Override
-    public final void indexPublisher(XURI xuri) throws Exception {
-        doIndexPublisher(xuri);
     }
 
     @Override
@@ -236,10 +232,6 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {
         doIndexWork(xuri, true);
-    }
-
-    private String idFromEntityUri(String uri) {
-        return uri.substring(uri.lastIndexOf("/") + 1);
     }
 
     private void indexDocument(XURI xuri, String document) {
