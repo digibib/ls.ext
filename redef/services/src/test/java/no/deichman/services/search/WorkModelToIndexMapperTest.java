@@ -34,20 +34,21 @@ public class WorkModelToIndexMapperTest {
             + "      \"publication\":["
             + "         {"
             + "            \"uri\":\"%3$s\","
-            + "            \"format\":\"Bok\","
-            + "            \"audience\":\"Barn og ungdom\","
-            + "            \"language\":\"Engelsk\""
+            + "            \"format\":\"http://data.deichman.no/format#Book\","
+            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\","
+            + "            \"language\":\"http://lexvo.org/id/iso639-3/eng\""
             + "         },"
             + "         {"
             + "            \"uri\":\"%4$s\","
-            + "            \"format\":\"DVD\","
-            + "            \"audience\":\"Barn og ungdom\","
-            + "            \"language\":\"Norsk (bokmål)\""
+            + "            \"format\":\"http://data.deichman.no/format#DVD\","
+            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\","
+            + "            \"language\":\"http://lexvo.org/id/iso639-3/nob\""
             + "         },"
             + "         {"
             + "            \"uri\":\"%5$s\","
-            + "            \"audience\":\"Barn og ungdom\","
-            + "            \"language\":\"Norsk (bokmål)\""
+            + "            \"format\":\"http://data.deichman.no/format#Book\","
+            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\","
+            + "            \"language\":\"http://lexvo.org/id/iso639-3/nob\""
             + "         }"
             + "      ]"
             + "   }"
@@ -145,37 +146,12 @@ public class WorkModelToIndexMapperTest {
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationXuri3.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#format"),
-                ResourceFactory.createResource("http://data.deichman.no/format#Bok")));
+                ResourceFactory.createResource("http://data.deichman.no/format#Book")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(publicationXuri3.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://data.deichman.no/format#DVD"),
-                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
-                ResourceFactory.createPlainLiteral("DVD")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://data.deichman.no/format#Book"),
-                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
-                ResourceFactory.createPlainLiteral("Bok")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob"),
-                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
-                ResourceFactory.createPlainLiteral("Norsk (bokmål)")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://lexvo.org/id/iso639-3/eng"),
-                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
-                ResourceFactory.createPlainLiteral("Engelsk")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://data.deichman.no/audience#juvenile"),
-                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
-                ResourceFactory.createLangLiteral("Barn og ungdom", "no")));
 
         String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, workXuri);
 

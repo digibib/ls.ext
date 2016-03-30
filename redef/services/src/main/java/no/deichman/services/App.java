@@ -7,6 +7,7 @@ import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.marc.MarcResource;
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
+import no.deichman.services.ontology.TranslationResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
 import no.deichman.services.version.VersionResource;
@@ -129,7 +130,8 @@ public final class App {
                         AuthorizedValuesResource.class.getCanonicalName(),
                         MarcResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName(),
-                        VersionResource.class.getCanonicalName()
+                        VersionResource.class.getCanonicalName(),
+                        TranslationResource.class.getCanonicalName()
                 )));
 
         jettyServer.start();

@@ -39,9 +39,7 @@ WHERE
                    BIND(str(?publicationYearO) AS ?publicationYear)}
         OPTIONAL
           { ?workUri  deich:audience  ?audienceO .
-            ?audienceO  rdfs:label    ?audienceL
-            FILTER (lang(?audienceL) = 'no')
-            BIND(str(?audienceL) AS ?audience)
+                   BIND(str(?audienceO) AS ?audience)
           }
         OPTIONAL
           { ?publication  a                 deich:Publication ;
@@ -54,17 +52,15 @@ WHERE
                   deich:partTitle   ?publicationPartTitle }
         OPTIONAL
           { ?publication  deich:language  ?languageO .
-            ?languageO  rdfs:label    ?languageL
-                  BIND(str(?languageL) AS ?language)
-          }
+                  BIND(str(?languageO) AS ?language)
+         }
         OPTIONAL
           { ?publication  deich:format  ?formatO .
-            ?formatO  rdfs:label    ?formatL
-            BIND(str(?formatL) AS ?format)
+                  BIND(str(?formatO) AS ?format)
           }
         OPTIONAL
           { ?publication  deich:publicationYear  ?publicationPublicationYearO
-            BIND(str(?publicationPublicationYearO) AS ?publicationPublicationYear)
+                  BIND(str(?publicationPublicationYearO) AS ?publicationPublicationYear)
           }
         OPTIONAL
           { ?person  a                     deich:Person }
@@ -72,11 +68,11 @@ WHERE
           { ?person  deich:name  ?name }
         OPTIONAL
           { ?person  deich:birthYear  ?birthYearO
-                   BIND(str(?birthYearO) AS ?birthYear)
+                  BIND(str(?birthYearO) AS ?birthYear)
           }
         OPTIONAL
           { ?person  deich:deathYear  ?deathYearO
-                   BIND(str(?deathYearO) AS ?deathYear)
+                  BIND(str(?deathYearO) AS ?deathYear)
           }
       }
   }

@@ -73,11 +73,11 @@ public class AppTest {
 
     private static KohaSvcMock kohaSvcMock;
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
-
+    private static int appPort;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        int appPort = PortSelector.randomFree();
+        appPort = PortSelector.randomFree();
         int jamonAppPort = PortSelector.randomFree();
         kohaSvcMock = new KohaSvcMock();
         String svcEndpoint = LOCALHOST + ":" + kohaSvcMock.getPort();
@@ -91,6 +91,7 @@ public class AppTest {
 
     private static void setupElasticSearch() throws Exception {
         embeddedElasticsearchServer = EmbeddedElasticsearchServer.getInstance();
+        Unirest.post("http://localhost:" + appPort + "/search/clear_index");
     }
 
     @AfterClass
@@ -221,7 +222,7 @@ public class AppTest {
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse1);
 
 
-        doSearchForWorkWithFormat("Paris", "Lydbok");
+        doSearchForWorkWithFormat("Paris", "Audiobook");
     }
 
     @Test
