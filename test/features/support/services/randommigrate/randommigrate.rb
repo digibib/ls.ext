@@ -35,10 +35,9 @@ module RandomMigrate
     def initialize(services)
       @id = generate_random_string
       @services = services
-      @formats = %w(Atlas Book DVD Microfiche Nintendo_optical_disc Blu-ray_Audio DTbook)
-      @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/mul http://lexvo.org/id/iso639-3/swe)
+      @formats = %w(Audiobook Book DVD Microfiche Compact_Disc Blu-ray_Audio E-book)
+      @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/jpn http://lexvo.org/id/iso639-3/swe)
       @audiences = %w(juvenile ages11To12 ages13To15 ages13To15)
-      @a = %w(largeFontMeasured braille tactile capitalLetters)
     end
 
     def generate_random_string()
@@ -69,8 +68,7 @@ module RandomMigrate
                   <publication> <#{@services}/ontology#publicationOf> <#{work_uri}> .
                   <publication> <#{@services}/ontology#mainTitle> \"#{publication_title}\" .
                   <publication> <#{@services}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <publication> <#{@services}/ontology#language> <#{language || @languages.sample}> .
-                  <publication> <#{@services}/ontology#adaptationOfPublicationForParticularUserGroups> <http://data.deichman.no/format#adaptationOfPublicationForParticularUserGroups#{@a.sample}> ."
+                  <publication> <#{@services}/ontology#language> <#{language || @languages.sample}> ."
       return publication_title, ntriples
     end
 
