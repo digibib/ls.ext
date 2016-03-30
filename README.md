@@ -92,7 +92,6 @@ KOHA_IMAGE_TAG is used to pull specified Koha build
         * `brew cask install virtualbox` -- or [Virtualbox Downloads](https://www.virtualbox.org/wiki/Downloads)
         * `brew cask install vagrant` -- or [Vagrant Downloads](https://www.vagrantup.com/downloads)
         * `brew cask install xquartz` -- or [XQuartz Download](http://xquartz.macosforge.org/landing/)
-        * `brew install gettext && brew link --force gettext` -- or [GNU gettext Downloads](http://ftp.gnu.org/pub/gnu/gettext/) (we require `envsubst` to work with yaml templates)
 2. Clone this repo from the command line (in a directory of your choice):
    ```git clone https://github.com/digibib/ls.ext.git```
 3. `cd ls.ext` into your cloned repo.

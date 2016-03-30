@@ -42,10 +42,23 @@ fi
 
 echo -e "\n6) Provisioning system with docker-compose\n"
 cd /vagrant/docker-compose
+source docker-compose.env
+source secrets.env
+case "$LSDEVMODE" in
+  'build')
+  envsubst < "docker-compose-template-dev-CI.yml" > "docker-compose.yml"
+  ;;
+  'prod')
+  envsubst < "docker-compose-template-prod.yml" > "docker-compose.yml"
+  ;;
+  *)
+  envsubst < "docker-compose-template-dev.yml" > "docker-compose.yml"
+  ;;
+esac
 sudo docker-compose stop overview && sudo docker-compose rm -f overview
 sudo docker-compose up -d
 
-echo -e "\n7) Atempting to set up Elasticsearch indices and mappings"
+echo -e "\n7) Attempting to set up Elasticsearch indices and mappings"
 for i in {1..10}; do
   wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "localhost:8005/search/clear_index" &> /dev/null
   if [ $? = 0 ]; then break; fi;
