@@ -11,8 +11,14 @@ RUN curl -sLO https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}
 ENV GRADLE_HOME /usr/bin/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
 
-COPY . /services
+COPY ./build.gradle /services/build.gradle
+COPY ./settings.gradle /services/settings.gradle
 
 WORKDIR /services
+
+RUN gradle dependencies
+
+COPY ./src /services/src
+COPY ./config /services/config
 
 CMD gradle --no-daemon build oneJar
