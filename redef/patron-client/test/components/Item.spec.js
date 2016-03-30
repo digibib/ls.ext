@@ -1,14 +1,14 @@
+/* global describe, it */
 // Test of shallow rendering, without any supporting libraries.
-
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import { IntlProvider } from 'react-intl'
 import Item from '../../src/frontend/components/Item'
-import { IntlProvider } from 'react-intl';
 
 function setup (props) {
   let renderer = TestUtils.createRenderer()
-  let intlProvider = new IntlProvider({ locale: 'en', defaultLocale: 'en' }, {});
+  let intlProvider = new IntlProvider({ locale: 'en', defaultLocale: 'en' }, {})
   renderer.render(<Item {...props} />, intlProvider.getChildContext())
   let output = renderer.getRenderOutput()
   return {

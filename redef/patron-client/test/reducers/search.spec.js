@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import search from '../../src/frontend/reducers/search'
 import * as types from '../../src/frontend/constants/ActionTypes'

@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import { approximateBestTitle } from '../../src/frontend/utils/searchResponseParser'
 

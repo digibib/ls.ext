@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -24,7 +25,6 @@ function setup (resultPropOverrides) {
     format_2: 'format_2',
     format_3: 'format_3'
   }
-  
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en' messages={messages}>
       <SearchResult {...props} />

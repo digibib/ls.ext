@@ -4,6 +4,7 @@ import TestUtils from 'react-addons-test-utils'
 import SearchResults from '../../src/frontend/components/SearchResults'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
+/* global describe, it */
 
 function setup (propOverrides) {
   const props = {
@@ -19,7 +20,7 @@ function setup (propOverrides) {
     <IntlProvider locale='en'>
       <SearchResults {...props} />
     </IntlProvider>
-  );
+  )
 
   return {
     props: props,
@@ -31,12 +32,12 @@ function setup (propOverrides) {
 describe('components', () => {
   describe('SearchResults', () => {
     it('should render no search', () => {
-      const { node, props } = setup()
+      const { node } = setup()
       expect(node.querySelectorAll("[data-automation-id='no-search']").length).toBe(1)
     })
 
     it('should search on mount when query is provided', () => {
-      const { node, props } = setup({ locationQuery: { query: 'test_query' } })
+      const { props } = setup({ locationQuery: { query: 'test_query' } })
       expect(props.searchActions.search).toHaveBeenCalled()
     })
 
@@ -46,12 +47,12 @@ describe('components', () => {
     })
 
     it('should render search error', () => {
-      const { node, props } = setup({ searchError: true })
+      const { node } = setup({ searchError: true })
       expect(node.getAttribute('data-automation-id')).toBe('search-error')
     })
 
     it('should render the correct number of results', () => {
-      const { node, props } = setup({
+      const { node } = setup({
         locationQuery: { query: 'test_query' },
         searchResults: [ {
           originalTitle: 'test_originalTitle1',
@@ -83,6 +84,5 @@ describe('components', () => {
 
       expect(node.querySelector("[data-automation-id='search-result-entries']").childNodes.length).toBe(3)
     })
-
   })
 })

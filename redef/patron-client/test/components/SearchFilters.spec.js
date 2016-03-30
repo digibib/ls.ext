@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -24,7 +25,6 @@ function setup (propOverrides) {
     filter_3: 'filter_3',
     filter_4: 'filter_4'
   }
-  
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en' messages={messages}>
       <SearchFilters {...props} />
@@ -46,7 +46,7 @@ describe('components', () => {
     })
 
     it('should render only one group if just one type of aggregation', () => {
-      const {node, props} = setup({
+      const { node } = setup({
         filters: [
           { aggregation: 'work.publication.language', bucket: 'filter_1', count: '10' },
           { aggregation: 'work.publication.language', bucket: 'filter_2', count: '40' }
@@ -58,7 +58,7 @@ describe('components', () => {
     })
 
     it('should render filters in groups', () => {
-      const { node, props } = setup({ locationQuery: { query: 'test_query' } })
+      const { node } = setup({ locationQuery: { query: 'test_query' } })
       expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(2)
     })
   })

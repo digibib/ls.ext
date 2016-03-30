@@ -8,7 +8,7 @@ var gulp = require('gulp'),
   server = require('gulp-express')
 
 gulp.task('lint', function () {
-  return gulp.src([ './src/frontend/**/*.js', './src/backend/**/*.js' ])
+  return gulp.src([ './src/frontend/**/*.js', './src/backend/**/*.js', './test/**/*.js' ])
     .pipe(standard())
     .pipe(standard.reporter('default', {
       breakOnError: true

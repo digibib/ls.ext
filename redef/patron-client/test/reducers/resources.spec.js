@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import resources from '../../src/frontend/reducers/resources'
 import * as types from '../../src/frontend/constants/ActionTypes'

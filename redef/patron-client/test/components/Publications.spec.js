@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -16,7 +17,7 @@ function setup (propOverrides) {
     <IntlProvider locale='en'>
       <Publications {...props} />
     </IntlProvider>
-  );
+  )
 
   return {
     props: props,
@@ -28,12 +29,12 @@ function setup (propOverrides) {
 describe('components', () => {
   describe('Publications', () => {
     it('should render empty when no publications', () => {
-      const { node, props } = setup({ publications: [] })
+      const { node } = setup({ publications: [] })
       expect(node.querySelectorAll("[data-automation-id='no_publications']").length).toBe(1)
     })
 
     it('should render table rows for every result', () => {
-      const { node, props } = setup()
+      const { node } = setup()
       expect(node.querySelector("[data-automation-id='publications']").childNodes.length).toBe(3)
     })
   })

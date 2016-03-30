@@ -1,8 +1,9 @@
+/* global describe, it */
 import expect from 'expect'
-import React from 'react'
+import React, { PropTypes } from 'react'
 import TestUtils from 'react-addons-test-utils'
-import Publication from '../../src/frontend/components/Publication'
 import ReactDOM from 'react-dom'
+import Publication from '../../src/frontend/components/Publication'
 
 function setup (propOverrides) {
   const props = {
@@ -17,18 +18,21 @@ function setup (propOverrides) {
   }
 
   const Wrapper = React.createClass({
+    propTypes: {
+      children: PropTypes.element.isRequired
+    },
     render: function () {
       return (
         <table>
           <tbody>{this.props.children}</tbody>
         </table>
-      );
+      )
     }
-  });
+  })
 
   const output = TestUtils.renderIntoDocument(
     <Wrapper><Publication {...props} /></Wrapper>
-  );
+  )
 
   return {
     props: props,

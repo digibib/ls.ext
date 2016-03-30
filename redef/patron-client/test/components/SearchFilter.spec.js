@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -30,7 +31,7 @@ function setup (propOverrides) {
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en' messages={messages}>
       <SearchFilter {...props} />
-    </IntlProvider>);
+    </IntlProvider>)
 
   return {
     props: props,
@@ -47,7 +48,7 @@ describe('components', () => {
     })
 
     it('should render filters', () => {
-      const { node, props } = setup()
+      const { node } = setup()
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").innerHTML).toContain('filter_1')
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").innerHTML).toContain('10')
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_2']").innerHTML).toContain('filter_2')
@@ -59,7 +60,7 @@ describe('components', () => {
     })
 
     it('should render checked filters', () => {
-      const { node, props } = setup()
+      const { node } = setup()
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").getElementsByTagName('input')[ 0 ].checked).toBe(true)
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_2']").getElementsByTagName('input')[ 0 ].checked).toBe(false)
       expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_3']").getElementsByTagName('input')[ 0 ].checked).toBe(false)
@@ -67,7 +68,7 @@ describe('components', () => {
     })
 
     it('should order by count', () => {
-      const { node, props } = setup()
+      const { node } = setup()
       let nodes = node.querySelectorAll('[data-automation-id]')
       expect(nodes[ 0 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_2')
       expect(nodes[ 1 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_3')

@@ -1,3 +1,4 @@
+/* global describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -25,7 +26,7 @@ function setup (propOverrides) {
     <IntlProvider locale='en'>
       <Search {...props} />
     </IntlProvider>
-  );
+  )
 
   return {
     props: props,
@@ -37,18 +38,18 @@ function setup (propOverrides) {
 describe('containers', () => {
   describe('Search', () => {
     it('should not render pagination when few results', () => {
-      const { node, props } = setup({ location: { query: { query: 'test' } }, totalHits: Constants.searchQuerySize })
+      const { node } = setup({ location: { query: { query: 'test' } }, totalHits: Constants.searchQuerySize })
       expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(0)
     })
     it('should render pagination when many results', () => {
-      const { node, props } = setup({
+      const { node } = setup({
         location: { query: { query: 'test' } },
         totalHits: Constants.searchQuerySize + 1
       })
       expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(2)
     })
     it('should render links to pages', () => {
-      const { node, props } = setup({
+      const { node } = setup({
         location: { query: { query: 'test' } },
         totalHits: Constants.searchQuerySize * 3
       })
