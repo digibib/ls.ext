@@ -25,20 +25,19 @@ let SearchFilter = React.createClass({
     return <div data-automation-id='empty'></div>
   },
   renderFilters () {
-    return [ ...this.props.filters ].sort(function (a, b) {
-      return (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0)
-    }).map((filter, index) => {
-      if (!this.state.showAll && index >= Constants.maxVisibleFilterItems) {
-        return ''
-      }
-      return (
-        <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
-            data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
-          <input type='checkbox' readOnly checked={filter.active}/>
-          {this.props.intl.formatMessage({ id: filter.bucket })} ({filter.count})
-        </li>
-      )
-    })
+    return [ ...this.props.filters ].sort((a, b) => (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0))
+      .map((filter, index) => {
+        if (!this.state.showAll && index >= Constants.maxVisibleFilterItems) {
+          return ''
+        }
+        return (
+          <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
+              data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
+            <input type='checkbox' readOnly checked={filter.active}/>
+            {this.props.intl.formatMessage({ id: filter.bucket })} ({filter.count})
+          </li>
+        )
+      })
   },
   renderTitle () {
     return messages[ this.props.aggregation ]
