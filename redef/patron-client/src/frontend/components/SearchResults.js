@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
-
 import SearchResult from './SearchResult'
 
 export default React.createClass({
@@ -34,7 +33,7 @@ export default React.createClass({
     } else {
       resultsText = (
         <h3><FormattedHTMLMessage {...messages.totalHits}
-          values={{ searchQuery: this.props.locationQuery.query, totalHits: this.props.totalHits }}/></h3>
+          values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }}/></h3>
       )
     }
     let entries = []
