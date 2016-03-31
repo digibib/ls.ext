@@ -186,6 +186,12 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final void createResource(Model inputModel) throws Exception {
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
+        executeUpdate(updateRequest);
+    }
+
+    @Override
     public final String createPublication(Model inputModel, String recordID) throws Exception {
         String type = "Publication";
 

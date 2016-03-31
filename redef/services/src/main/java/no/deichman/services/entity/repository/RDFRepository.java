@@ -19,6 +19,7 @@ public interface RDFRepository {
     String createPerson(Model inputModel) throws Exception;
     String createPlaceOfPublication(Model inputModel) throws Exception;
     String createPublisher(Model inputModel) throws Exception;
+    void createResource(Model model) throws Exception;
 
     void updateWork(String work);
     Model retrieveWorkByURI(String uri);

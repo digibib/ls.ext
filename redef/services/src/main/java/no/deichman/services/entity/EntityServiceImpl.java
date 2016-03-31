@@ -249,6 +249,11 @@ public final class EntityServiceImpl implements EntityService {
         return uri;
     }
 
+    @Override
+    public void create(Model inputModel) throws Exception {
+        repository.createResource(inputModel);
+    }
+
     private String createPublication(Model inputModel) throws Exception {
         Set<Resource> items = objectsOfProperty(hasItemProperty, inputModel);
         Model modelWithoutItems;

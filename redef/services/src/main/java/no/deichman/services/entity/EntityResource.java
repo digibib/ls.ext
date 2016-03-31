@@ -138,6 +138,33 @@ public final class EntityResource extends ResourceBase {
         return ok().entity(getJsonldCreator().asJSONLD(model)).build();
     }
 
+    @POST
+    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
+    @Consumes(NTRIPLES)
+    public Response create(@PathParam("type") String type, @PathParam("id") String id, String body) throws Exception {
+        Response.ResponseBuilder rb = null;
+        Response.Status status = Response.Status.CREATED;
+        Optional<String> errMessage = Optional.empty();
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+
+        if (getEntityService().resourceExists(xuri)) {
+            status = Response.Status.CONFLICT;
+        } else if ("work".equals(type) || "person".equals(type)) {
+            Model model = RDFModelUtil.modelFrom(body, Lang.NTRIPLES);
+            getEntityService().create(model);
+        } else {
+            errMessage = Optional.of("only person|work resources can be created with user assigned ID");
+            status = Response.Status.BAD_REQUEST;
+        }
+
+        rb = Response.status(status);
+        if (errMessage.isPresent()) {
+            rb.entity(errMessage.get());
+        }
+        return rb.build();
+    }
+
+
     @DELETE
     @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
