@@ -16,6 +16,7 @@ export default {
   'Publications.language': 'språk',
   'Publications.format': 'format',
   'Publications.copies': 'eksemplarer',
+  'Publications.noPublications': 'Ingen publikasjoner',
   'Publications.numberOfPublications': 'Eksemplarer {numberOfPublications}',
   'SearchFilter.showAll': '+ vis alle',
   'SearchFilter.filter[work.publication.format]': 'Formater',
