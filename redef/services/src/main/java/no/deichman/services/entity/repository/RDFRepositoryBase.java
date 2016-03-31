@@ -53,54 +53,19 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     protected abstract void executeUpdate(UpdateRequest updateRequest);
 
     @Override
-    public final Model retrieveWorkByURI(String uri) {
-        log.debug("Attempting to retrieve: <" + uri + ">");
-        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+    public final Model retrieveResourceByURI(XURI xuri) {
+        log.debug("Attempting to retrieve resource <" + xuri.getUri() +">");
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(xuri.getUri()))) {
             disableCompression(qexec);
             return qexec.execDescribe();
         }
     }
 
-    @Override
-    public final Model retrievePlaceOfPublicationByURI(String uri) {
-        log.debug("Attempting to retrieve: <" + uri + ">");
-        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
-            disableCompression(qexec);
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
-    public final Model retrievePublisherByURI(String uri) {
-        log.debug("Attempting to retrieve: <" + uri + ">");
-        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
-            disableCompression(qexec);
-            return qexec.execDescribe();
-        }
-    }
 
     @Override
     public final Model retrieveWorkAndLinkedResourcesByURI(XURI xuri) {
         log.debug("Attempting to retrieve: <" + xuri.getUri() + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedResources(xuri))) {
-            disableCompression(qexec);
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
-    public final Model retrievePublicationByURI(final String uri) {
-        log.debug("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
-            disableCompression(qexec);
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
-    public final Model retrievePersonByURI(String uri) {
-        log.debug("Attempting to retrieve: " + uri);
-        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
             disableCompression(qexec);
             return qexec.execDescribe();
         }

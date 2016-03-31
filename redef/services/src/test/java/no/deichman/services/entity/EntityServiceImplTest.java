@@ -567,7 +567,7 @@ public class EntityServiceImplTest {
                 + "<publication> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
                 + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
 
-        Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", "invalid"), Lang.NTRIPLES);
+        Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workURI + "w1230002111"), Lang.NTRIPLES);
         service.create(PUBLICATION, inputPublication);
     }
 

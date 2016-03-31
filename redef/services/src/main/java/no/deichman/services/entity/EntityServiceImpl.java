@@ -151,25 +151,7 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public Model retrieveById(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
-        switch (xuri.getTypeAsEntityType()) {
-            case PUBLICATION:
-                m.add(repository.retrievePublicationByURI(xuri.getUri()));
-                break;
-            case PERSON:
-                m.add(repository.retrievePersonByURI(xuri.getUri()));
-                break;
-            case WORK:
-                m.add(repository.retrieveWorkByURI(xuri.getUri()));
-                break;
-            case PLACE_OF_PUBLICATION:
-                m.add(repository.retrievePlaceOfPublicationByURI(xuri.getUri()));
-                break;
-            case PUBLISHER:
-                m.add(repository.retrievePublisherByURI(xuri.getUri()));
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown entity type:" + xuri.getType());
-        }
+        m.add(repository.retrieveResourceByURI(xuri));
         return m;
     }
 
@@ -265,7 +247,7 @@ public final class EntityServiceImpl implements EntityService {
 
         List<String> personNames;
         if (inputModel.contains(null, publicationOfProperty)) {
-            Model work = repository.retrieveWorkByURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString());
+            Model work = repository.retrieveResourceByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
             if (work.isEmpty()) {
                 throw new BadRequestException("Associated work does not exist.");
             }
@@ -348,16 +330,16 @@ public final class EntityServiceImpl implements EntityService {
         } else if (xuri.getTypeAsEntityType().equals(EntityType.WORK)) {
             updatePublicationsByWork(xuri, model);
         } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION) && model.getProperty(null, publicationOfProperty) != null) {
-            String workUri = model.getProperty(null, publicationOfProperty).getObject().toString();
-            updatePublicationWithWork(workUri, model);
+            XURI workXURI = new XURI(model.getProperty(null, publicationOfProperty).getObject().toString());
+            updatePublicationWithWork(workXURI, model);
         } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION)) {
             updatePublicationInKoha(model, new ArrayList<>());
         }
         return model;
     }
 
-    private void updatePublicationWithWork(String workUri, Model publication) {
-        Model work = repository.retrieveWorkByURI(workUri);
+    private void updatePublicationWithWork(XURI workXURI, Model publication) {
+        Model work = repository.retrieveResourceByURI(workXURI);
         List<String> personNames = getPersonNames(work);
         updatePublicationInKoha(publication, personNames);
     }
@@ -418,11 +400,14 @@ public final class EntityServiceImpl implements EntityService {
                 .forEach((subject, statements) -> {
                     statements.forEach(s -> {
                         if (s.getPredicate().equals(creatorProperty)) {
-                            String personUri = s.getObject().toString();
-                            Model person = repository.retrievePersonByURI(personUri);
-                            NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
-                            while (nameIterator.hasNext()) {
-                                personNames.add(nameIterator.next().asLiteral().toString());
+                            try {
+                                Model person = repository.retrieveResourceByURI(new XURI(s.getObject().toString()));
+                                NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
+                                while (nameIterator.hasNext()) {
+                                    personNames.add(nameIterator.next().asLiteral().toString());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     });

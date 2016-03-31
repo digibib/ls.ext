@@ -22,15 +22,12 @@ public interface RDFRepository {
     void createResource(Model model) throws Exception;
 
     void updateWork(String work);
-    Model retrieveWorkByURI(String uri);
 
     Model retrieveWorkAndLinkedResourcesByURI(XURI xuri);
 
-    Model retrievePublicationByURI(String uri);
-    Model retrievePersonByURI(String uri);
+    Model retrieveResourceByURI(XURI xuri);
+
     Model retrievePersonAndLinkedResourcesByURI(String uri);
-    Model retrievePlaceOfPublicationByURI(String uri);
-    Model retrievePublisherByURI(String uri);
 
     boolean askIfResourceExists(XURI xuri);
 

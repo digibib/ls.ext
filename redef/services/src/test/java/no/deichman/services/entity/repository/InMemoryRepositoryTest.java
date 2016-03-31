@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 public class InMemoryRepositoryTest {
     public static final String A_BIBLIO_NO = "34567";
     public static final String WORK_ID = "w12340000";
-    public static final String PUBLICATION_ID = "test_id_12345";
+    public static final String PUBLICATION_ID = "p000111000";
     private static final BaseURI BASE_URI = BaseURI.local();
     private static final Property NAME = createProperty(BASE_URI.ontology("name"));
     private static final String UNRECOGNISED_TYPE_ERROR = "The type wasn't recognised";
@@ -109,9 +109,9 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void test_retrieve_work_by_id(){
+    public void test_retrieve_work_by_id() throws Exception {
         repository.addData(ModelFactory.createDefaultModel().add(workWithPublicationStatements));
-        Model testModel = repository.retrieveWorkByURI(workUri);
+        Model testModel = repository.retrieveResourceByURI(new XURI(workUri));
         assertTrue("Work <" + workUri + "> should be a Work", testModel.contains(workIsAWorkStmt));
         assertTrue("Work <" + workUri + "> should should have name", testModel.contains(workHasNameStmt));
     }
@@ -129,11 +129,11 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void test_retrieve_publication_by_id(){
+    public void test_retrieve_publication_by_id() throws Exception {
         Model temp = ModelFactory.createDefaultModel();
         temp.add(publHasANameStmt);
         repository.addData(temp);
-        Model testModel = repository.retrievePublicationByURI(publicationUri);
+        Model testModel = repository.retrieveResourceByURI(new XURI(publicationUri));
         assertTrue(testModel.contains(publHasANameStmt));
     }
 
