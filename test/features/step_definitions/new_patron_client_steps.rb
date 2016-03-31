@@ -53,17 +53,19 @@ When(/^jeg slår på et filter for et vilkårlig format$/) do
 end
 
 When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do
-  filter_values = CGI::parse(URI(@browser.url).query)['filter_work.publication.format']
+  filter_values = @browser.element(data_automation_id: 'filter_work.publication.format').lis
+                      .select { |li| li.checkbox.present? && li.checkbox.set? }
+                      .map { |li| li.span(data_automation_id: 'filter_label').text }
   wait_for {
-    @browser.div(data_automation_id: 'search-result-entries').elements(:xpath, '*').each do |element|
-      match = false
+    match = false
+    @browser.div(data_automation_id: 'search-result-entries').elements(data_automation_id: 'work_formats').each do |element|
       filter_values.each do |filter_value|
         if element.text.include? filter_value
           match = true
         end
       end
-      match.should eq true
     end
+    match
   }
 end
 

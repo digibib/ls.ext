@@ -69,8 +69,8 @@ export function approximateBestTitle (publications, query) {
       (publication.partTitle && publication.partTitle.toLowerCase().indexOf(query) > -1)
   })
   let chosenPublication =
-    publications.filter(publication => publication.language === 'Norsk (bokmål)')[ 0 ] ||
-    publications.filter(publication => publication.language === 'Engelsk')[ 0 ] ||
+    publications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/nob')[ 0 ] ||
+    publications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/eng')[ 0 ] ||
     publications[ 0 ]
 
   return chosenPublication

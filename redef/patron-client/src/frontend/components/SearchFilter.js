@@ -34,7 +34,8 @@ let SearchFilter = React.createClass({
           <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
               data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
             <input type='checkbox' readOnly checked={filter.active}/>
-            {this.props.intl.formatMessage({ id: filter.bucket })} ({filter.count})
+            <span data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</span> (
+            <span data-automation-id='filter_count'>{filter.count}</span>)
           </li>
         )
       })

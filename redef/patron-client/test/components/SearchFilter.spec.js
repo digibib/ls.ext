@@ -68,7 +68,7 @@ describe('components', () => {
 
     it('should order by count', () => {
       const { node } = setup()
-      let nodes = node.querySelectorAll('[data-automation-id]')
+      let nodes = node.querySelectorAll("[data-automation-id^='filter_test_aggregation_']")
       expect(nodes[ 0 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_2')
       expect(nodes[ 1 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_3')
       expect(nodes[ 2 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_4')
