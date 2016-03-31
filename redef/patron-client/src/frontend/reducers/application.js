@@ -12,7 +12,9 @@ const initialState = {
 export default function application (state = initialState, action) {
   switch (action.type) {
     case actionTypes.INIT:
-      return { ...state, ...action.payload[ 'application' ] }
+      return action.payload
+        ? { ...state, ...action.payload[ 'application' ] }
+        : state
     case RECEIVE_TRANSLATION:
       return {
         ...state,
