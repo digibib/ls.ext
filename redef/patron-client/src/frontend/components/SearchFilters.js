@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
-
 import SearchFilter from './SearchFilter'
-import Labels from '../constants/Labels'
 
 export default React.createClass({
   propTypes: {
@@ -35,7 +33,6 @@ export default React.createClass({
               return (
                 <SearchFilter
                   key={aggregation}
-                  title={Labels[aggregation] || aggregation}
                   aggregation={aggregation}
                   filters={filtersByAggregation}
                   locationQuery={this.props.locationQuery}

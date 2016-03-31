@@ -8,7 +8,7 @@ import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
-    title: 'test_filter',
+    aggregation: 'aggregation',
     filters: [
       { aggregation: 'test_aggregation', bucket: 'filter_1', count: '10', active: true },
       { aggregation: 'test_aggregation', bucket: 'filter_2', count: '40', active: false },
@@ -16,7 +16,6 @@ function setup (propOverrides) {
       { aggregation: 'test_aggregation', bucket: 'filter_4', count: '20', active: true }
     ],
     locationQuery: {},
-    aggregation: 'aggregation',
     setFilter: () => {},
     ...propOverrides
   }

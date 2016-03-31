@@ -4,7 +4,6 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 
 let SearchFilter = React.createClass({
   propTypes: {
-    title: PropTypes.string.isRequired,
     aggregation: PropTypes.string.isRequired,
     filters: PropTypes.array,
     setFilter: PropTypes.func.isRequired,
@@ -41,6 +40,11 @@ let SearchFilter = React.createClass({
       )
     })
   },
+  renderTitle () {
+    return messages[ this.props.aggregation ]
+      ? this.props.intl.formatMessage({ ...messages[ this.props.aggregation ] })
+      : this.props.aggregation
+  },
   handleClick (filter) {
     this.props.setFilter(filter.aggregation, filter.bucket, !filter.active, this.context.router)
   },
@@ -50,7 +54,7 @@ let SearchFilter = React.createClass({
     }
     return (
       <div data-automation-id={`filter_${this.props.aggregation}`}>
-        <h4 className='filterTitle'>{this.props.title}</h4>
+        <h4 className='filterTitle'>{this.renderTitle()}</h4>
         <ul className='searchfilters'>
           {this.renderFilters()}
           {(this.state.showAll || this.props.filters.length <= Constants.maxVisibleFilterItems) ? '' : (
@@ -69,6 +73,21 @@ const messages = defineMessages({
     id: 'SearchFilter.showAll',
     description: 'Show all filters for a group',
     defaultMessage: '+ show all'
+  },
+  'work.publication.format': {
+    id: 'SearchFilter.filter[work.publication.format]',
+    description: 'Label of the format filter',
+    defaultMessage: 'Format'
+  },
+  'work.publication.language': {
+    id: 'SearchFilter.filter[work.publication.language]',
+    description: 'Label of the language filter',
+    defaultMessage: 'Language'
+  },
+  'work.publication.audience': {
+    id: 'SearchFilter.filter[work.publication.audience]',
+    description: 'Label of the audience filter',
+    defaultMessage: 'Audience'
   }
 })
 
