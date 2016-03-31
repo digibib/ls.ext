@@ -97,12 +97,6 @@ function initQuery (query) {
           bool: {
             should: [
               {
-                multi_match: {
-                  query: query,
-                  fields: [ 'work.mainTitle^2', 'work.partTitle' ]
-                }
-              },
-              {
                 nested: {
                   path: 'work.creator',
                   query: {
@@ -127,6 +121,15 @@ function initQuery (query) {
             ]
           }
         }
+      }
+    },
+    highlight: {
+      'pre_tags': [ '' ],
+      'post_tags': [ '' ],
+      fields: {
+        'work.publication.mainTitle': {},
+        'work.publication.partTitle': {},
+        'work.creator.name': {}
       }
     }
   }

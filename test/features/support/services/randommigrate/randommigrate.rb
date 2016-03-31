@@ -66,7 +66,7 @@ module RandomMigrate
       publication_title = generate_random_string
       ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Publication> .
                   <publication> <#{@services}/ontology#publicationOf> <#{work_uri}> .
-                  <publication> <#{@services}/ontology#mainTitle> \"#{publication_title}\" .
+                  <publication> <#{@services}/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
                   <publication> <#{@services}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
                   <publication> <#{@services}/ontology#language> <#{language || @languages.sample}> ."
       return publication_title, ntriples
@@ -97,7 +97,7 @@ module RandomMigrate
       # For search on prefix1#{@id}, get 1 page with 1 result
       # For search on pubprefix0#{@id}, display Norwegian title on work
       # For search on pubprefix1#{@id}, display English title on work
-      specialized_migrate("prefix2#{@id}")
+      specialized_migrate()
 
       return @id
     end
@@ -108,7 +108,7 @@ module RandomMigrate
         number_of_works_per_person.times do
           work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
           number_of_publications_per_work.times do
-            post_ntriples('publication', generate_publication(work_uri)[1])
+            post_ntriples('publication', generate_publication(work_uri, nil, prefix)[1])
           end
           index('work', work_uri)
         end
@@ -116,9 +116,9 @@ module RandomMigrate
       return @id
     end
 
-    def specialized_migrate(prefix)
+    def specialized_migrate()
       person_uri = post_ntriples 'person', generate_person[1]
-      work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
+      work_uri = post_ntriples('work', generate_work(person_uri)[1])
 
       publication_1 = Entity.new('publication', @services)
       publication_1.add_authorized('publicationOf', work_uri)

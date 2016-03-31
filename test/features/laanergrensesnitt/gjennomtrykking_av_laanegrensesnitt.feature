@@ -51,9 +51,6 @@ Egenskap: Gå gjennom lånegrensesnittet
 
   Scenario: Vise ulike titler på verk avhengig av søketerm
     Gitt at jeg er i søkegrensesnittet
-    Når jeg søker på "prefix2" (+ id på vilkårlig migrering)
-    Så skal jeg få "1" treff
-    Og nåværende søketerm skal være "prefix2" (+ id på vilkårlig migrering)
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
     Så skal tittel prefikset "pubprefix0" og som inneholder "nob" vises
     Når jeg søker på "pubprefix1" (+ id på vilkårlig migrering)

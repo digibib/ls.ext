@@ -25,7 +25,7 @@ export function processSearchResponse (response, locationQuery) {
         work.publications = [ work.publications ]
       }
 
-      let chosenPublication = approximateBestTitle(work.publications, locationQuery.query)
+      let chosenPublication = approximateBestTitle(work.publications, element.highlight)
       if (chosenPublication) {
         work.mainTitle = chosenPublication.mainTitle
         work.partTitle = chosenPublication.partTitle
@@ -35,13 +35,12 @@ export function processSearchResponse (response, locationQuery) {
     })
     processedResponse.searchResults = searchResults
     processedResponse.totalHits = response.hits.total
-    processedResponse.filters = processAggregationResponse(response, locationQuery).filters
+    processedResponse.filters = processAggregationsToFilters(response, locationQuery)
   }
   return processedResponse
 }
 
-export function processAggregationResponse (response, locationQuery) {
-  let processedResponse = {}
+export function processAggregationsToFilters (response, locationQuery) {
   let filters = []
   if (response.aggregations && response.aggregations.all) {
     let all = response.aggregations.all
@@ -58,20 +57,26 @@ export function processAggregationResponse (response, locationQuery) {
       }
     })
   }
-  processedResponse.filters = filters
-  return processedResponse
+  return filters
 }
 
-export function approximateBestTitle (publications, query) {
-  query = query.toLowerCase()
-  publications = publications.filter(publication => {
-    return (publication.mainTitle && publication.mainTitle.toLowerCase().indexOf(query) > -1) ||
-      (publication.partTitle && publication.partTitle.toLowerCase().indexOf(query) > -1)
+export function approximateBestTitle (publications, highlight) {
+  highlight[ 'work.publication.mainTitle' ] = highlight[ 'work.publication.mainTitle' ] || []
+  highlight[ 'work.publication.partTitle' ] = highlight[ 'work.publication.partTitle' ] || []
+
+  let filteredPublications = publications.filter(publication => {
+    return (
+      highlight[ 'work.publication.mainTitle' ].includes(publication.mainTitle) ||
+      highlight[ 'work.publication.partTitle' ].includes(publication.partTitle)
+    )
   })
-  let chosenPublication =
+
+  return (
+    filteredPublications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/nob')[ 0 ] ||
+    filteredPublications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/eng')[ 0 ] ||
+    filteredPublications[ 0 ] ||
     publications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/nob')[ 0 ] ||
     publications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/eng')[ 0 ] ||
     publications[ 0 ]
-
-  return chosenPublication
+  )
 }

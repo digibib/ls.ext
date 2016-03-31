@@ -9,7 +9,8 @@ Egenskap: Finn verk
 
   Bakgrunn:
     Gitt at jeg har lagt til en person
-    Og at det finnes et verk
+    Og et verk med en utgivelse
+    Og jeg åpner verket for redigering
     Og jeg legger til forfatter av det nye verket
     Og jeg søker på verket i lånergrensesnittet
 
