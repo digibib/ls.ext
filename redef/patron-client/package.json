@@ -54,6 +54,7 @@
     "express": "^4.13.4",
     "express-request-proxy": "^2.0.0",
     "gulp-express": "^0.3.5",
+    "intl": "^1.1.0",
     "isomorphic-fetch": "^2.2.1",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#6abf76d7f915eca3ee6a7550f977ff7de146fc26",
     "object-assign": "^4.0.1",
