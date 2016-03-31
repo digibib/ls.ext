@@ -100,6 +100,7 @@ public final class SPARQLQueryBuilder {
                 + "}\n"
                 + "WHERE {\n"
                 + " ?s ?p ?o .\n"
+                + " FILTER (!isBlank(?s))\n"
                 + "}\n";
     }
 

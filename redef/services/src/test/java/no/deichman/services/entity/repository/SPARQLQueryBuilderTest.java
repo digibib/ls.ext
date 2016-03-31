@@ -69,6 +69,23 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test
+    public void test_it_replaces_subject_but_not_if_bnode() {
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        String query = sqb.getReplaceSubjectQueryString("mylovelyuri");
+        String expected = "DELETE {\n"
+                + " ?s ?p ?o .\n"
+                + "}\n"
+                + "INSERT {\n"
+                + " <mylovelyuri> ?p ?o .\n"
+                + "}\n"
+                + "WHERE {\n"
+                + " ?s ?p ?o .\n"
+                + " FILTER (!isBlank(?s))\n"
+                + "}\n";
+        assertEquals(expected,query);
+    }
+
+    @Test
     public void test_it_creates_work_query(){
         Model m = ModelFactory.createDefaultModel();
         Statement s = getTestStatement();
