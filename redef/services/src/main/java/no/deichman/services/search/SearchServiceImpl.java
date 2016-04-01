@@ -60,6 +60,7 @@ public class SearchServiceImpl implements SearchService {
     private ModelToIndexMapper publisherModelToIndexMapper = new ModelToIndexMapper("publisher");
     private ModelToIndexMapper placeOfPublicationModelToIndexMapper = new ModelToIndexMapper("placeOfPublication");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
+    private ModelToIndexMapper serialModelToIndexMapper = new ModelToIndexMapper("serial");
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -117,6 +118,9 @@ public class SearchServiceImpl implements SearchService {
             }
             putIndexMapping(httpclient, "work");
             putIndexMapping(httpclient, "person");
+            putIndexMapping(httpclient, "placeOfPublication");
+            putIndexMapping(httpclient, "publisher");
+            putIndexMapping(httpclient, "serial");
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -188,6 +192,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public final Response searchPublisher(String query) {
         return doSearch(query, getPublisherSearchUriBuilder());
+    }
+
+    @Override
+    public final Response searchSerial(String query) {
+        return doSearch(query, getSerialSearchUriBuilder());
     }
 
 
@@ -297,5 +306,9 @@ public class SearchServiceImpl implements SearchService {
 
     public final URIBuilder getPublisherSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/publisher/_search");
+    }
+
+    public final URIBuilder getSerialSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/serial/_search");
     }
 }

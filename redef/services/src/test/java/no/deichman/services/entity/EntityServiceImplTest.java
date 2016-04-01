@@ -42,9 +42,9 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.PERSON;
+import static no.deichman.services.entity.EntityType.PLACE_OF_PUBLICATION;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
-import static no.deichman.services.entity.EntityType.PLACE_OF_PUBLICATION;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static no.deichman.services.rdf.RDFModelUtil.stringFrom;
@@ -79,6 +79,7 @@ public class EntityServiceImplTest {
     private String personURI;
     private String placeOfPublicationURI;
     private String publisherURI;
+    private String serialURI;
     private String baseURI;
 
     @Mock
@@ -110,6 +111,7 @@ public class EntityServiceImplTest {
         personURI = localBaseURI.person();
         placeOfPublicationURI = localBaseURI.placeOfPublication();
         publisherURI = localBaseURI.publisher();
+        serialURI = localBaseURI.serial();
     }
 
     @Test
@@ -484,6 +486,11 @@ public class EntityServiceImplTest {
             case "publisher":
                 resourceClass = "Publisher";
                 resourceURI = publisherURI;
+                break;
+            case "serial":
+                resourceClass = "Serial";
+                resourceURI = serialURI;
+                break;
             default:
                 break;
         }

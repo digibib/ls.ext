@@ -64,4 +64,8 @@ public final class BaseURI {
     public String publisher() {
         return baseUriRoot + "publisher/";
     }
+
+    public String serial() {
+        return baseUriRoot + "serial/";
+    }
 }

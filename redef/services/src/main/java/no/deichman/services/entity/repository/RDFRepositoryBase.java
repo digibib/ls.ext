@@ -63,6 +63,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
 
     @Override
+    public final Model retrieveSerialByURI(String uri) {
+        log.debug("Attempting to retrieve: <" + uri + ">");
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
     public final Model retrieveWorkAndLinkedResourcesByURI(XURI xuri) {
         log.debug("Attempting to retrieve: <" + xuri.getUri() + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedResources(xuri))) {
@@ -101,6 +110,10 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final String createWork(Model inputModel) throws Exception {
         String type = "Work";
+        return createResource(inputModel, type);
+    }
+
+    private String createResource(Model inputModel, String type) throws Exception {
         inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
 
@@ -113,41 +126,22 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final String createPerson(Model inputModel) throws Exception {
-        String type = "Person";
-        inputModel.add(tempTypeStatement(type));
-        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
-
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
-
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
-        executeUpdate(updateRequest);
-        return uri;
+        return createResource(inputModel, "Person");
     }
 
     @Override
     public final String createPlaceOfPublication(Model inputModel) throws Exception {
-        String type = "PlaceOfPublication";
-        inputModel.add(tempTypeStatement(type));
-        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
-
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
-
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
-        executeUpdate(updateRequest);
-        return uri;
+        return createResource(inputModel, "PlaceOfPublication");
     }
 
     @Override
     public final String createPublisher(Model inputModel) throws Exception {
-        String type = "Publisher";
-        inputModel.add(tempTypeStatement(type));
-        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
+        return createResource(inputModel, "Publisher");
+    }
 
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
-
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
-        executeUpdate(updateRequest);
-        return uri;
+    @Override
+    public final String createSerial(Model inputModel) throws Exception {
+        return createResource(inputModel, "Serial");
     }
 
     @Override

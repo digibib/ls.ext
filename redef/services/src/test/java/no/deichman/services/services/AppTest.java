@@ -465,6 +465,25 @@ public class AppTest {
     }
 
     @Test
+    public void serial_is_searchable() throws UnirestException, InterruptedException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "serial", "{}").asString();
+
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#name";
+        String o1 = "Morgan Kane";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .build();
+
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+        doSearchForSerial("Morgan Kane");
+    }
+
+    @Test
     public void test_patching_with_bnodes() throws UnirestException {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
         String op = "ADD";
@@ -534,6 +553,20 @@ public class AppTest {
         String location1 = getLocation(result1);
         String location2 = getLocation(result2);
         assertTrue(location1.equals(location2));
+    }
+
+    @Test
+    public void serial_resource_can_be_created() throws UnirestException {
+        String input = "<__BASEURI__serial/s1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Serial> .\n"
+                + "<__BASEURI__serial/s1234> <__BASEURI__ontology#name> \"Serial name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
+        input = input.replace("__BASEURI__", baseUri);
+
+        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
+
+        HttpResponse<String> result = buildCreateRequest(baseUri + "serial", body).asString();
+
+        assertResponse(Status.CREATED, result);
     }
 
     @Test
@@ -722,6 +755,23 @@ public class AppTest {
         } while (!foundPlaceOfPublicationInIndex && attempts-- > 0);
 
         assertTrue("Should have found place of publication in index by now", foundPlaceOfPublicationInIndex);
+    }
+
+    private void doSearchForSerial(String name) throws UnirestException, InterruptedException {
+        boolean foundSerial;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(baseUri + "search/serial/_search").queryString("q", "name:" + name);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundSerial = responseBody.contains(name);
+            if (!foundSerial) {
+                LOG.info("Serial not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundSerial && attempts-- > 0);
+
+        assertTrue("Should have found name of serial in index by now", foundSerial);
     }
 
     private void indexWork(String workId, String title) {

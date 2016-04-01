@@ -16,11 +16,9 @@ import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -177,7 +175,7 @@ public class SPARQLQueryBuilderTest {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String expected = "INSERT DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
-                + "}";
+                + "};\n";
         assertEquals(expected,sqb.patch(patches));
     }
 
@@ -190,7 +188,7 @@ public class SPARQLQueryBuilderTest {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         String expected = "DELETE DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
-                + "}";
+                + "};\n";
         assertEquals(expected,sqb.patch(patches));
     }
 
@@ -210,10 +208,10 @@ public class SPARQLQueryBuilderTest {
         String expected = "DELETE DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
-                + "} ;\n"
+                + "};\n"
                 + "INSERT DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
-                + "}";
+                + "};\n";
         assertEquals(expected,sqb.patch(patches));
     }
 
@@ -236,11 +234,11 @@ public class SPARQLQueryBuilderTest {
         String expected = "DELETE DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
-                + "} ;\n"
+                + "};\n"
                 + "INSERT DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/farmhouse> \"Fiffle\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
-                + "}";
+                + "};\n";
         assertEquals(expected,sqb.patch(patches));
     }
 
@@ -263,7 +261,7 @@ public class SPARQLQueryBuilderTest {
                 + "    <http://example.org/a> <http://example.org/prop#a> <_:b0> .\n"
                 + "    <_:b0> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <_:b0> <http://example.com/ontology/test> \"json\" .\n"
-                + "}";
+                + "};\n";
         assertEquals(expected,sqb.patch(patches));
     }
 
@@ -290,7 +288,9 @@ public class SPARQLQueryBuilderTest {
         Model delModel = RDFModelUtil.modelFrom(delData, Lang.TURTLE);
 
         List<Statement> addStatements = addModel.listStatements().toList();
+        addStatements.sort((o1, o2) -> sortableTag(o1).compareTo(sortableTag(o2)));
         List<Statement> delStatements = delModel.listStatements().toList();
+        delStatements.sort((o1, o2) -> sortableTag(o1).compareTo(sortableTag(o2)));
 
         patches.addAll(addStatements.stream().map(s -> createPatch("add", s)).collect(Collectors.toList()));
         patches.addAll(delStatements.stream().map(s -> createPatch("del", s)).collect(Collectors.toList()));
@@ -298,33 +298,27 @@ public class SPARQLQueryBuilderTest {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
 
 
-        String[] expectedDelLines = new String[]{"    <http://example.com/a> <http://example.com/b> _:b0 .",
-                            "    <http://example.com/a> <http://example.com/c> \"A delete test\" .",
-                            "    _:b0 <http://example.com/c> \"another delete test\" ."};
-
-        String[] expectedDelSelect = new String[]{"    <http://example.com/a> <http://example.com/b> ?b0 .",
-                "    <http://example.com/a> <http://example.com/c> \"A delete test\" .",
-                "    ?b0 <http://example.com/c> \"another delete test\" ."};
-
-        String[] expectedAddLines = new String[]{"    <http://example.com/a> <http://example.com/b> _:b0 .",
-                "    <http://example.com/a> <http://example.com/c> \"A test\" .",
-                "    _:b0 <http://example.com/c> \"another test\" ."};
-
         String actual = sqb.patch(patches).replaceAll("(\\?|_:)[A-Za-z0-9]+", "$1b0");
-        actual = actual.replaceAll("(DELETE( DATA)? \\{\\n| WHERE \\{\\n| ;\\nINSERT DATA \\{\\n)", "");
-        String[] actualCleaned = actual.split("\n}");
-        String[] actualDelLines = actualCleaned[0].split("\n");
-        String[] actualDelSelect = actualCleaned[1].split("\n");
-        String[] actualAddLines = actualCleaned[2].split("\n");
+        assertEquals("DELETE DATA {\n"
+                + "    <http://example.com/a> <http://example.com/c> \"A delete test\" .\n"
+                + "};\n"
+                + "DELETE {\n"
+                + "    ?b0 <http://example.com/c> \"another delete test\" .\n"
+                + "    <http://example.com/a> <http://example.com/b> ?b0 .\n"
+                + "}\n"
+                + "WHERE {\n"
+                + "    ?b0 <http://example.com/c> \"another delete test\" .\n"
+                + "    <http://example.com/a> <http://example.com/b> ?b0 .\n"
+                + "};\n"
+                + "INSERT DATA {\n"
+                + "    _:b0 <http://example.com/c> \"another test\" .\n"
+                + "    <http://example.com/a> <http://example.com/c> \"A test\" .\n"
+                + "    <http://example.com/a> <http://example.com/b> _:b0 .\n"
+                + "};\n", actual);
+    }
 
-        Arrays.sort(actualDelLines);
-        Arrays.sort(actualDelSelect);
-        Arrays.sort(actualAddLines);
-
-        assertArrayEquals(expectedDelLines, actualDelLines);
-        assertArrayEquals(expectedDelSelect, actualDelSelect);
-        assertArrayEquals(expectedAddLines, actualAddLines);
-
+    private String sortableTag(Statement o1) {
+        return o1.getSubject().isAnon()? "_:b0" : o1.getSubject().getURI();
     }
 
     private Patch createPatch(String operation, Statement s) {

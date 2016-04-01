@@ -50,6 +50,7 @@ import static no.deichman.services.restutils.MimeType.NTRIPLES;
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
 
+    public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|i|s";
     @Context
     private ServletConfig servletConfig;
 
@@ -119,7 +120,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
+    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         Model model;
@@ -166,7 +167,7 @@ public final class EntityResource extends ResourceBase {
 
 
     @DELETE
-    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
+    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
 
@@ -180,7 +181,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PATCH
-    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
+    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {

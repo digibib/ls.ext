@@ -7,6 +7,10 @@
 @prefix values: <__BASE_URI_VALUES__> .
 @prefix duo: <http://data.deichman.no/utility#> .
 
+:MainEntry a rdfs:Class ;
+  rdfs:label "Main entry"@en ;
+  rdfs:label "Hovedinnførsel"@no .
+
 :Work a rdfs:Class ;
   rdfs:label "Work"@en ;
   rdfs:label "Verk"@no .
@@ -35,10 +39,26 @@
   rdfs:label "Publisher"@en ;
   rdfs:label "Utgiver"@no .
 
+:Serial a rdfs:Class ;
+  rdfs:label "Serial"@en ;
+  rdfs:label "Serie"@no .
+
+:SerialIssue a rdfs:Class ;
+  rdfs:label "Serial issue"@en ;
+  rdfs:label "Nummer"@no .
+
+:Contribution a rdfs:Class ;
+  rdfs:label "Contribution"@en ;
+  rdfs:label "Bidrag"@no .
+
+:Role a rdfs:Class ;
+  rdfs:label "Role"@en ;
+  rdfs:label "Rolle"@no .
+
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person, :Publisher, :Corporation ;
+  rdfs:domain :Person, :Publisher, :Serial, :Corporation ;
   rdfs:range xsd:string .
 
 :personTitle a rdfs:Property ;
@@ -80,13 +100,6 @@
   rdfs:domain :Publication ;
   rdfs:range duo:Format ;
   duo:valuesFrom values:format .
-
-:role a rdfs:Property ;
-  rdfs:label "Role"@en ;
-  rdfs:label "Rolle"@no ;
-  rdfs:domain :Publication, :Work ;
-  rdfs:range duo:Role ;
-  duo:valuesFrom values:role .
 
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;
@@ -240,3 +253,42 @@
   rdfs:label "Utgitt av"@no ;
   rdfs:domain :Publication ;
   rdfs:range :Publisher .
+
+:inSerial a rdfs:Property ;
+  rdfs:label "In serial"@en ;
+  rdfs:label "I serie"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range :SerialIssue .
+
+:serial a rdfs:Property ;
+  rdfs:label "Serial"@en ;
+  rdfs:label "Serie"@no ;
+  rdfs:domain :SerialIssue ;
+  rdfs:range :Serial .
+
+:issue a rdfs:Property ;
+  rdfs:label "Issue"@en ;
+  rdfs:label "Nummer i serie"@no ;
+  rdfs:domain :SerialIssue ;
+  rdfs:range xsd:nonNegativeInteger .
+
+:contributor a rdfs:Property ;
+  rdfs:label "Additional entry"@en ;
+  rdfs:label "Biinnførsel"@no ;
+  rdfs:domain :Publication, :Work ;
+  rdfs:range :Contribution .
+
+:role a rdfs:Property ;
+  rdfs:label "Role"@en ;
+  rdfs:label "Rolle"@no ;
+  duo:valuesFrom values:role ;
+  rdfs:range :Role ;
+  rdfs:domain :Contribution .
+
+:agent a rdfs:Property ;
+  ui:searchable true ;
+  rdfs:label "Agent"@en ;
+  rdfs:label "Agent"@no ;
+  rdfs:range :Person ;
+  rdfs:domain :Contribution .
+

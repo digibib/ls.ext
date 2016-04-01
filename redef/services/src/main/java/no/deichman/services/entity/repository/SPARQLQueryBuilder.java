@@ -28,6 +28,8 @@ public final class SPARQLQueryBuilder {
     public static final String DELETE = "DELETE";
     public static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
+    public static final boolean KEEP_BLANK_NODES = true;
+    public static final boolean SKIP_BLANK_NODES = false;
 
     private final BaseURI baseURI;
 
@@ -174,23 +176,18 @@ public final class SPARQLQueryBuilder {
     public String patch(List<Patch> patches) {
         StringBuilder q = new StringBuilder();
 
-        String del = getStringOfStatments(patches, "DEL");
+        String del = getStringOfStatments(patches, "DEL", SKIP_BLANK_NODES);
         String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
-        String add = getStringOfStatments(patches, "ADD");
-
-        String keyword = delSelect.length() > 0 ? "" : " DATA";
+        String add = getStringOfStatments(patches, "ADD", KEEP_BLANK_NODES);
 
         if (del.length() > 0) {
-            q.append(DELETE + keyword + " {" + NEWLINE + del +  "}");
+            q.append("DELETE DATA {" + NEWLINE + del + "};" + NEWLINE);
         }
         if (delSelect.length() > 0) {
-            q.append(" WHERE {" + NEWLINE + delSelect + "}");
-        }
-        if (add.length() > 0 && del.length() > 0) {
-            q.append(" ;\n");
+            q.append("DELETE {" + NEWLINE + delSelect + "}" + NEWLINE + "WHERE {" + NEWLINE + delSelect + "};" + NEWLINE);
         }
         if (add.length() > 0) {
-            q.append(INSERT + " DATA {" + NEWLINE + add + "}");
+            q.append(INSERT + " DATA {" + NEWLINE + add + "};" + NEWLINE);
         }
 
         return q.toString();
@@ -202,17 +199,22 @@ public final class SPARQLQueryBuilder {
 
         String bnodeSubjectCheck = patches.stream()
                 .filter(s -> s.getStatement().getSubject().isAnon())
-                .map(s -> {return "a"; })
+                .map(s -> {
+                    return "a";
+                })
                 .collect(Collectors.joining(""));
 
         String bnodeObjectCheck = patches.stream()
                 .filter(s -> s.getStatement().getObject().isAnon())
-                .map(s -> {return "a"; })
+                .map(s -> {
+                    return "a";
+                })
                 .collect(Collectors.joining());
 
         if (bnodeSubjectCheck.contains("a") && bnodeObjectCheck.contains("a")) {
             retVal = patches.stream()
-                    .filter(patch -> patch.getOperation().toUpperCase().equals(operation.toUpperCase()))
+                    .filter(patch -> patch.getOperation().toUpperCase().equals(operation.toUpperCase())
+                            && (patch.getStatement().getSubject().isAnon() || patch.getStatement().getObject().isAnon()))
                     .map(patch2 -> {
                                 Model model = ModelFactory.createDefaultModel();
                                 model.add(patch2.getStatement());
@@ -226,15 +228,16 @@ public final class SPARQLQueryBuilder {
         return retVal;
     }
 
-    private String getStringOfStatments(List<Patch> patches, String operation) {
+    private String getStringOfStatments(List<Patch> patches, String operation, boolean keepBlankNodes) {
         return patches.stream()
-                .filter(patch -> patch.getOperation().toUpperCase().equals(operation.toUpperCase()))
+                .filter(patch -> patch.getOperation().toUpperCase().equals(operation.toUpperCase())
+                        && (keepBlankNodes || !patch.getStatement().getObject().isAnon() && !patch.getStatement().getSubject().isAnon()))
                 .map(patch2 -> {
-                    Model model = ModelFactory.createDefaultModel();
-                    model.add(patch2.getStatement());
-                    return INDENT + RDFModelUtil.stringFrom(model, Lang.NTRIPLES);
-                }
-        ).filter(s -> !s.isEmpty()).collect(Collectors.joining());
+                            Model model = ModelFactory.createDefaultModel();
+                            model.add(patch2.getStatement());
+                            return INDENT + RDFModelUtil.stringFrom(model, Lang.NTRIPLES);
+                        }
+                ).filter(s -> !s.isEmpty()).collect(Collectors.joining());
 
     }
 

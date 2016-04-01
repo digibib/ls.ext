@@ -1,6 +1,7 @@
 package no.deichman.services.services.search;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Responsibility: An embedded elasticsearch server for test purposes.
@@ -38,12 +40,23 @@ public final class EmbeddedElasticsearchServer {
                 .settings(elasticsearchSettings.build())
                 .node();
 
+        prepareMappingOf("work");
+        prepareMappingOf("publisher");
+        prepareMappingOf("serial");
+    }
+
+    private void prepareMappingOf(String type) throws IOException {
+        String mapping = IOUtils.toString(getClass().getResourceAsStream("/" + type + "_mapping.json"), "UTF-8");
+        assertTrue(getClient().admin().indices()
+                .preparePutMapping("search").setSource(mapping)
+                .setType(type).execute().actionGet().isAcknowledged());
     }
 
     public static EmbeddedElasticsearchServer getInstance() throws Exception {
         if (server == null) {
             server = new EmbeddedElasticsearchServer();
         }
+
         return server;
     }
 

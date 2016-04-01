@@ -26,6 +26,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.vocabulary.RDF;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -148,6 +150,11 @@ public final class EntityServiceImpl implements EntityService {
         return qexec.execDescribe();
     }
 
+    private Predicate<Statement> typeStatement(String type) {
+        return s ->
+                s.getPredicate().equals(RDF.type) && s.getObject().equals(ResourceFactory.createResource(baseURI.ontology() + type));
+    }
+
     @Override
     public Model retrieveById(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
@@ -224,6 +231,9 @@ public final class EntityServiceImpl implements EntityService {
                 break;
             case PUBLISHER:
                 uri = repository.createPublisher(inputModel);
+                break;
+            case SERIAL:
+                uri = repository.createSerial(inputModel);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
@@ -352,10 +362,16 @@ public final class EntityServiceImpl implements EntityService {
         streamFrom(publications.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
-                    Model publication = ModelFactory.createDefaultModel();
-                    publication.add(statements);
-                    updatePublicationInKoha(publication, personNames);
+                    if (isPublication(statements)) {
+                        Model publication = ModelFactory.createDefaultModel();
+                        publication.add(statements);
+                        updatePublicationInKoha(publication, personNames);
+                    }
                 });
+    }
+
+    private boolean isPublication(List<Statement> statements) {
+        return statements.stream().anyMatch(typeStatement("Publication"));
     }
 
     private void updatePublicationInKoha(Model publication, List<String> personNames) {

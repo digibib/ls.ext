@@ -1,0 +1,11 @@
+{
+  "type": "Serial",
+  "@context": {
+    "deichman": "__ONTOLOGY__",
+    "name": "deichman:name",
+    "Serial": "deichman:Serial",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph"
+  }
+}
