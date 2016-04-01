@@ -4,6 +4,7 @@ import React, { PropTypes } from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import Publication from '../../src/frontend/components/Publication'
+import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
@@ -30,8 +31,14 @@ function setup (propOverrides) {
     }
   })
 
+  const messages = {
+    'test_format': 'test_format_english',
+    'test_language': 'test_language_english'
+  }
   const output = TestUtils.renderIntoDocument(
-    <Wrapper><Publication {...props} /></Wrapper>
+    <IntlProvider locale='en' messages={messages}>
+      <Wrapper><Publication {...props} /></Wrapper>
+    </IntlProvider>
   )
 
   return {
@@ -45,15 +52,15 @@ describe('components', () => {
   describe('Publication', () => {
     it('should render the publication with title, year, language, format and item count', () => {
       const { node, props } = setup()
-      expect(node.querySelector("[data-automation-id='publication_title']").innerHTML).toBe(props.publication.mainTitle)
-      expect(node.querySelector("[data-automation-id='publication_year']").innerHTML).toBe(props.publication.publicationYear)
-      expect(node.querySelector("[data-automation-id='publication_language']").innerHTML).toBe(props.publication.language)
-      expect(node.querySelector("[data-automation-id='publication_format']").innerHTML).toBe(props.publication.format)
+      expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle)
+      expect(node.querySelector("[data-automation-id='publication_year']").textContent).toBe(props.publication.publicationYear)
+      expect(node.querySelector("[data-automation-id='publication_language']").textContent).toBe(`${props.publication.language}_english`)
+      expect(node.querySelector("[data-automation-id='publication_format']").textContent).toBe(`${props.publication.format}_english`)
     })
 
     it('should combine main title and part title as title', () => {
       const { node, props } = setup({ publication: { mainTitle: 'test_maintitle', partTitle: 'test_parttitle' } })
-      expect(node.querySelector("[data-automation-id='publication_title']").innerHTML).toBe(props.publication.mainTitle + ' — ' + props.publication.partTitle)
+      expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle + ' — ' + props.publication.partTitle)
     })
   })
 })

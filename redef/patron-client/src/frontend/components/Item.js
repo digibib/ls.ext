@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-export default React.createClass({
+const Item = React.createClass({
   propTypes: {
-    item: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired,
+    intl: intlShape.isRequired
   },
   renderStatus (status) {
     if (status === 'AVAIL') {
@@ -16,8 +17,8 @@ export default React.createClass({
     return (
       <tr about={item.barcode}>
         <td data-automation-id='item_title'>{item.title}</td>
-        <td data-automation-id='item_language'>{item.language}</td>
-        <td data-automation-id='item_format'>{item.format}</td>
+        <td data-automation-id='item_language'>{this.props.intl.formatMessage({ id: item.language })}</td>
+        <td data-automation-id='item_format'>{this.props.intl.formatMessage({ id: item.format })}</td>
         <td data-automation-id='item_barcode'>{item.barcode}</td>
         <td data-automation-id='item_location'>{item.location}</td>
         <td data-automation-id='item_status'>{this.renderStatus(item.status)}</td>
@@ -39,3 +40,5 @@ const messages = defineMessages({
     defaultMessage: 'Expected {status}'
   }
 })
+
+export default injectIntl(Item)

@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { push } from 'react-router-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-let SearchHeader = React.createClass({
+const SearchHeader = React.createClass({
   propTypes: {
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,

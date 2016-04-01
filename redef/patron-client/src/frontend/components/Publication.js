@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react'
+import { injectIntl, intlShape } from 'react-intl'
 
-export default React.createClass({
+const Publication = React.createClass({
   propTypes: {
-    publication: PropTypes.object.isRequired
+    publication: PropTypes.object.isRequired,
+    intl: intlShape.isRequired
   },
   renderTitle (publication) {
     let title = publication.mainTitle
@@ -22,10 +24,10 @@ export default React.createClass({
           {publication.publicationYear}
         </td>
         <td data-automation-id='publication_language'>
-          {publication.language}
+          {publication.language ? this.props.intl.formatMessage({ id: publication.language }) : ''}
         </td>
         <td data-automation-id='publication_format'>
-          {publication.format}
+          {publication.format ? this.props.intl.formatMessage({ id: publication.format }) : ''}
         </td>
         <td>
           {publication.itemsCount}
@@ -34,3 +36,5 @@ export default React.createClass({
     )
   }
 })
+
+export default injectIntl(Publication)

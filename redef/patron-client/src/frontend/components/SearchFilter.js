@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import Constants from '../constants/Constants'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-let SearchFilter = React.createClass({
+const SearchFilter = React.createClass({
   propTypes: {
     aggregation: PropTypes.string.isRequired,
     filters: PropTypes.array,

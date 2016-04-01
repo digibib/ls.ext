@@ -1,10 +1,10 @@
-/* global describe, it */
+/* global before, after, describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import Items from '../../src/frontend/components/Items'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
+import Items, { __RewireAPI__ as DefaultExportItemsRewireApi } from '../../src/frontend/components/Items'
 
 function setup (propOverrides) {
   const props = {
@@ -27,6 +27,20 @@ function setup (propOverrides) {
 }
 
 describe('components', () => {
+  before(() => {
+    DefaultExportItemsRewireApi.__Rewire__('Item', React.createClass({
+      render () {
+        return (
+          <tr />
+        )
+      }
+    }))
+  })
+
+  after(() => {
+    DefaultExportItemsRewireApi.__ResetDependency__
+  })
+
   describe('Items', () => {
     it('should render empty when no items', () => {
       const { node } = setup({ items: [] })

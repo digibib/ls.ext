@@ -1,8 +1,8 @@
-/* global describe, it */
+/* global before, after, describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import Publications from '../../src/frontend/components/Publications'
+import Publications, { __RewireAPI__ as DefaultExportPublicationsRewireApi } from '../../src/frontend/components/Publications'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
@@ -27,6 +27,20 @@ function setup (propOverrides) {
 }
 
 describe('components', () => {
+  before(() => {
+    DefaultExportPublicationsRewireApi.__Rewire__('Publication', React.createClass({
+      render () {
+        return (
+          <tr />
+        )
+      }
+    }))
+  })
+
+  after(() => {
+    DefaultExportPublicationsRewireApi.__ResetDependency__
+  })
+
   describe('Publications', () => {
     it('should render empty when no publications', () => {
       const { node } = setup({ publications: [] })

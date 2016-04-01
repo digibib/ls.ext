@@ -9,11 +9,11 @@ export function parsePersonResponse (personUri, personResponse, worksResponse) {
   let personResource = personGraph.byType('Person')[ 0 ]
   let person = {}
 
-  populate(person, 'personTitle', personResource)
-  populate(person, 'name', personResource)
-  populate(person, 'birthYear', personResource)
-  populate(person, 'deathYear', personResource)
-  populateLabel(person, 'nationality', personResource)
+  populateLiteral(person, 'personTitle', personResource)
+  populateLiteral(person, 'name', personResource)
+  populateLiteral(person, 'birthYear', personResource)
+  populateLiteral(person, 'deathYear', personResource)
+  populateUri(person, 'nationality', personResource)
 
   person.works = []
   personGraph.byType('Work').forEach(workResource => {
@@ -40,12 +40,12 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
   // TODO: availCount
   populateLabelsByLanguage(work, 'mainTitle', workResource)
   populateLabelsByLanguage(work, 'partTitle', workResource)
-  populate(work, 'publicationYear', workResource)
+  populateLiteral(work, 'publicationYear', workResource)
 
   work.creators = []
   workResource.outAll('creator').forEach(creatorResource => {
     let creator = {}
-    populate(creator, 'name', creatorResource)
+    populateLiteral(creator, 'name', creatorResource)
     creator.relativeUri = relativeUri(creatorResource.id)
     work.creators.push(creator)
   })
@@ -54,20 +54,20 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
   work.items = []
   workGraph.byType('Publication').forEach(publicationResource => {
     let publication = {}
-    populate(publication, 'mainTitle', publicationResource)
-    populate(publication, 'partTitle', publicationResource)
-    populate(publication, 'publicationYear', publicationResource)
-    populateLabel(publication, 'language', publicationResource)
-    populateLabel(publication, 'format', publicationResource)
+    populateLiteral(publication, 'mainTitle', publicationResource)
+    populateLiteral(publication, 'partTitle', publicationResource)
+    populateLiteral(publication, 'publicationYear', publicationResource)
+    populateUri(publication, 'language', publicationResource)
+    populateUri(publication, 'format', publicationResource)
     publication.id = publicationResource.id
     publication.itemsCount = 0
     publicationResource.inAll('editionOf').map(itemResource => {
       publication.itemsCount++
       let item = {}
-      populate(item, 'location', itemResource)
-      populate(item, 'status', itemResource)
-      populate(item, 'barcode', itemResource)
-      populate(item, 'shelfmark', itemResource)
+      populateLiteral(item, 'location', itemResource)
+      populateLiteral(item, 'status', itemResource)
+      populateLiteral(item, 'barcode', itemResource)
+      populateLiteral(item, 'shelfmark', itemResource)
       item.title = publication.mainTitle
       if (publication.partTitle) {
         item.title += ' — ' + publication.partTitle
@@ -84,17 +84,17 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
   return work
 }
 
-function populate (target, field, sourceResource) {
+function populateLiteral (target, field, sourceResource) {
   target[ field ] = ''
   if (sourceResource.has(field)) {
     target[ field ] = sourceResource.get(field).value
   }
 }
 
-function populateLabel (target, field, sourceResource) {
+function populateUri (target, field, sourceResource) {
   target[ field ] = ''
-  if (sourceResource.hasOut(field) && sourceResource.out(field).has('label')) {
-    target[ field ] = sourceResource.out(field).get('label').value
+  if (sourceResource.hasOut(field)) {
+    target[ field ] = sourceResource.out(field).id
   }
 }
 

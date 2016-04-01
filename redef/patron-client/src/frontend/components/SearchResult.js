@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-let SearchResult = React.createClass({
+const SearchResult = React.createClass({
   propTypes: {
     result: PropTypes.object.isRequired,
     intl: intlShape.isRequired
