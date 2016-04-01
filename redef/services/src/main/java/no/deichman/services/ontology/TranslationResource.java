@@ -2,6 +2,7 @@ package no.deichman.services.ontology;
 
 import com.google.gson.Gson;
 import no.deichman.services.rdf.RDFModelUtil;
+import no.deichman.services.utils.ResourceReader;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
@@ -16,12 +17,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Responsibility: Return translated strings.
@@ -41,12 +38,7 @@ public class TranslationResource {
     public TranslationResource() {
         Model model = ModelFactory.createDefaultModel();
         for (String translateableFile : inputFiles) {
-            try (BufferedReader queryBuffer = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(translateableFile)));) {
-                String temp = queryBuffer.lines().collect(Collectors.joining("\n"));
-                model.add(RDFModelUtil.modelFrom(temp, Lang.TURTLE));
-            } catch (IOException | NullPointerException e) {
-                throw new RuntimeException("Could not load ttl file: " + translateableFile, e);
-            }
+            model.add(RDFModelUtil.modelFrom(new ResourceReader().readFile(translateableFile), Lang.TURTLE));
         }
         for (String locale : locales) {
             Map<String, String> translations = new HashMap<>();

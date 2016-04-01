@@ -1,6 +1,8 @@
 package no.deichman.services.entity.kohaadapter;
 
+import com.google.gson.Gson;
 import no.deichman.services.uridefaults.BaseURI;
+import no.deichman.services.utils.ResourceReader;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -8,7 +10,9 @@ import org.apache.jena.rdf.model.Resource;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.VariableField;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -27,6 +31,7 @@ public final class Marc2Rdf {
     private static final String DEICHMAN_ITEM = "Item";
     private static final String DEICHMAN_STATUS = "status";
     private static final String DEICHMAN_LOCATION = "location";
+    private static final String DEICHMAN_BRANCH = "branch";
     private static final String DEICHMAN_BARCODE = "barcode";
     private static final String DUO_SHELFMARK = "shelfmark";
     private static final String DUO_NS = "http://data.deichman.no/utility#";
@@ -39,22 +44,32 @@ public final class Marc2Rdf {
     private static final String KOHA_LOANABLE_VALUE = "0";
     private static final String DUO_ONLOAN = "onloan";
 
+    private Map<String, String> branches;
     private BaseURI baseURI;
 
-    public Marc2Rdf(){
-        baseURI = BaseURI.remote();
+    public Marc2Rdf() {
+        this(BaseURI.remote());
     }
 
     public Marc2Rdf(BaseURI base) {
         baseURI = base;
     }
 
-    public void setBaseURI(BaseURI base){
-        baseURI = base;
+    private Map<String, String> readBranchesJson() {
+        return new Gson().fromJson(new ResourceReader().readFile("branches.json"), HashMap.class);
     }
 
-    public BaseURI getBaseURI(){
+    private String getBranch(String code) {
+        branches = readBranchesJson();
+        return branches.containsKey(code) ? branches.get(code) : code;
+    }
+
+    public BaseURI getBaseURI() {
         return baseURI;
+    }
+
+    public void setBaseURI(BaseURI base) {
+        baseURI = base;
     }
 
     public Model mapItemsToModel(List<VariableField> itemsFields) {
@@ -115,6 +130,13 @@ public final class Marc2Rdf {
                             subject,
                             createProperty(ontologyNS + DEICHMAN_LOCATION),
                             createPlainLiteral(itemData.getSubfield(KOHA_HOMEBRANCH).getData())
+                    )
+            );
+            model.add(
+                    createStatement(
+                            subject,
+                            createProperty(ontologyNS + DEICHMAN_BRANCH),
+                            createPlainLiteral(getBranch(itemData.getSubfield(KOHA_HOMEBRANCH).getData()))
                     )
             );
             model.add(

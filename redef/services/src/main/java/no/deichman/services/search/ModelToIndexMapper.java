@@ -8,19 +8,17 @@ import com.google.gson.Gson;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
+import no.deichman.services.utils.ResourceReader;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Responsibility: Map models to index documents with a massaging query and a json-ld context.
@@ -37,20 +35,9 @@ public class ModelToIndexMapper {
     public ModelToIndexMapper(String type, BaseURI baseURI) {
         this.type = type;
         String sparqlQueryFilename = "massage_" + type + "_query.sparql";
-        try (BufferedReader queryBuffer = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(sparqlQueryFilename)));) {
-            query = queryBuffer.lines().collect(Collectors.joining("\n"));
-            query = query.replace("__ONTOLOGY__", baseURI.ontology());
-        } catch (IOException | NullPointerException e) {
-            throw new RuntimeException("Could not load sparql query file: " + sparqlQueryFilename, e);
-        }
+        query = new ResourceReader().readFile(sparqlQueryFilename).replace("__ONTOLOGY__", baseURI.ontology());
         String contextFilename = "massage_" + type + "_context.json";
-        try (BufferedReader contextBuffer = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(contextFilename)))
-        ) {
-            String contextString = contextBuffer.lines().collect(Collectors.joining("\n")).replace("__ONTOLOGY__", baseURI.ontology());
-            context = new Gson().fromJson(contextString, HashMap.class);
-        } catch (IOException | NullPointerException e) {
-            throw new RuntimeException("Could not load context file: " + contextFilename, e);
-        }
+        context = new Gson().fromJson(new ResourceReader().readFile(contextFilename).replace("__ONTOLOGY__", baseURI.ontology()), HashMap.class);
     }
 
     public final String createIndexDocument(Model model, XURI xuri) {

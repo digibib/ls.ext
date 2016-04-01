@@ -191,4 +191,4 @@ format:Diapositive a duo:Format ;
   duo:code "fd" ;
   rdfs:label "Dias"@no ;
   rdfs:label "Diapositive"@en .
-  
+

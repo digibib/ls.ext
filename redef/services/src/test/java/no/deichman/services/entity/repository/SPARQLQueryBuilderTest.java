@@ -26,6 +26,12 @@ public class SPARQLQueryBuilderTest {
 
     private BaseURI baseURI = BaseURI.local();
 
+    private static Statement statement(String resource, String property, String literal) {
+        return ResourceFactory.createStatement(
+                ResourceFactory.createResource(resource),
+                ResourceFactory.createProperty(property), ResourceFactory.createPlainLiteral(literal));
+    }
+
     private Statement getTestStatement(){
         return ResourceFactory.createStatement(
                 ResourceFactory.createResource("http://example.com/a"),
@@ -111,6 +117,7 @@ public class SPARQLQueryBuilderTest {
                 + "  { \n"
                 + "    ?uri deichman:editionOf <" + uri + "> .\n"
                 + "    ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deichman:Item .\n"
+                + "    ?uri deichman:branch ?branch .\n"
                 + "    ?uri deichman:location ?location .\n"
                 + "    ?uri deichman:status ?status .\n"
                 + "    ?uri deichman:barcode ?barcode .\n"
@@ -119,6 +126,7 @@ public class SPARQLQueryBuilderTest {
                 + "  }\n"
                 + "WHERE\n"
                 + "  { ?uri  a                     deichman:Item ;\n"
+                + "          deichman:branch       ?branch ;\n"
                 + "          deichman:location     ?location ;\n"
                 + "          deichman:status       ?status ;\n"
                 + "          deichman:barcode      ?barcode ;\n"
@@ -328,11 +336,6 @@ public class SPARQLQueryBuilderTest {
         return p;
     }
 
-    private static Statement statement(String resource, String property, String literal) {
-        return ResourceFactory.createStatement(
-                ResourceFactory.createResource(resource),
-                ResourceFactory.createProperty(property), ResourceFactory.createPlainLiteral(literal));
-    }
 /* Is this the role of this class?
     @Test(expected=Exception.class)
     public void test_invalid_patch_fails() throws Exception{
