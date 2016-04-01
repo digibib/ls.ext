@@ -24,9 +24,11 @@ import java.util.Map;
  * Responsibility: Map models to index documents with a massaging query and a json-ld context.
  */
 public class ModelToIndexMapper {
+    private static final String AGENT = "Agent";
     private String query;
     private Map<String, Object> context;
     private String type;
+    private Map<String, Object> nodeIndex;
 
     public ModelToIndexMapper(String type) {
         this(type, BaseURI.remote());
@@ -62,22 +64,48 @@ public class ModelToIndexMapper {
     private String applyContext(Model model) throws IOException, JsonLdError {
         Object json = JsonUtils.fromString(RDFModelUtil.stringFrom(model, Lang.JSONLD));
         JsonLdOptions options = new JsonLdOptions();
+        options.setEmbed(true);
         Map<String, Object> framed = JsonLdProcessor.frame(json, context, options);
         Map<String, Object> graph = (Map<String, Object>) ((ArrayList<Object>) framed.get("@graph")).get(0);
-        removeType(graph);
+        nodeIndex = new HashMap<>();
+        indexNodes(graph);
+        removeTypeAndBnodeIdAndEmbedAllNodes(graph);
         Map<String, Object> root = new HashMap<>();
         root.put(type, graph);
         return new Gson().toJson(root);
     }
 
-    private void removeType(Object input) {
+    private void indexNodes(Object input) {
         if (input instanceof Map) {
             Map map = (Map) input;
-            map.remove("type");
-            map.forEach((key, value) -> removeType(value));
+            if (map.get("uri").getClass() == String.class && map.get("uri") != null) {
+                String uri = (String) map.get("uri");
+                if (nodeIndex.get(uri) == null && map.get("type") != null && map.get("type").equals(AGENT)) {
+                    nodeIndex.put(uri, map);
+                }
+            }
+             map.forEach((key, value) -> indexNodes(value));
         } else if (input instanceof List) {
             List list = (List) input;
-            list.forEach(this::removeType);
+            list.forEach(this::indexNodes);
+        }
+    }
+
+    private void removeTypeAndBnodeIdAndEmbedAllNodes(Object input) {
+        if (input instanceof Map) {
+            Map map = (Map) input;
+            String uri = (String) map.get("uri");
+            if (uri != null && map.get("type") == null && nodeIndex.get(uri) != null) {
+                map.putAll((Map) nodeIndex.get(uri));
+            }
+            map.remove("type");
+            if (map.get("uri").toString().startsWith("_:")) {
+                map.remove("uri");
+            }
+            map.forEach((key, value) -> removeTypeAndBnodeIdAndEmbedAllNodes(value));
+        } else if (input instanceof List) {
+            List list = (List) input;
+            list.forEach(this::removeTypeAndBnodeIdAndEmbedAllNodes);
         }
     }
 }

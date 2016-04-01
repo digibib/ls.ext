@@ -1,23 +1,44 @@
 {
-  "creator": {
-    "type": "Person"
-  },
-  "publication": {
-    "type": "Publication"
-  },
   "type": "Work",
+  "publication": {
+    "type": "Publication",
+    "contributor": {
+    "type": "Contribution",
+    "agent": {
+      "type": "Agent"
+    }
+  }
+  },
+  "contributor": {
+    "type": "Contribution",
+    "agent": {
+      "type": "Agent"
+    }
+  },
   "@context": {
-    "creator": "deichman:creator",
-    "format": "deichman:format",
+    "contributor": {
+      "@id": "deichman:contributor",
+      "@container": "@set"
+    },
+    "format": {
+      "@id": "deichman:format",
+      "@container": "@set"
+    },
     "Publication": "deichman:Publication",
     "partTitle": "deichman:partTitle",
-    "language": "deichman:language",
+    "language": {
+      "@id": "deichman:language",
+      "@container": "@set"
+    },
     "type": "@type",
     "uri": "@id",
     "graph": "@graph",
     "birthYear": "deichman:birthYear",
     "deathYear": "deichman:deathYear",
-    "audience": "deichman:audience",
+    "audience": {
+      "@id": "deichman:audience",
+      "@container": "@set"
+    },
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
     "publication": {
@@ -33,6 +54,12 @@
       "@id": "deichman:subject",
       "@container": "@set"
     },
-    "Subject": "deichman:Subject"
+    "Subject": "deichman:Subject",
+    "role": "deichman:role",
+    "author": "http://data.deichman.no/role#author",
+    "translator": "http://data.deichman.no/role#translator",
+    "agent": "deichman:agent",
+    "Contribution": "deichman:Contribution",
+    "Agent": "deichman:Agent"
   }
 }

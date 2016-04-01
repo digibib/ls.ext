@@ -1,101 +1,83 @@
-PREFIX  deich: <__ONTOLOGY__>
+PREFIX deich: <__ONTOLOGY__>
 PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX  role: <http://data.deichman.no/role#>
 
-CONSTRUCT
-  { ?workUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Work .
-    ?workUri deich:mainTitle ?mainTitle .
-    ?workUri deich:partTitle ?partTitle .
-    ?workUri deich:publicationYear ?publicationYear .
-    ?workUri deich:publication ?publication .
-    ?workUri deich:creator ?person .
-    ?publication <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Publication .
-    ?publication deich:mainTitle ?publicationMainTitle .
-    ?publication deich:partTitle ?publicationPartTitle .
-    ?publication deich:language ?language .
-    ?publication deich:format ?format .
-    ?publication deich:issued ?publicationPublicationYear .
-    ?publication deich:audience ?audience .
-    ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Person .
-    ?person deich:name ?name .
-    ?person deich:birthYear ?birthYear .
-    ?person deich:deathYear ?deathYear .
-    ?workUri deich:subject ?subject .
-    ?subject deich:name ?subjectName .}
-WHERE
-  { SELECT
-         ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle
-         ?publicationPartTitle ?format ?publicationPublicationYear ?language ?person ?audience ?subject ?subjectName
-    WHERE
-      { BIND(uri("__WORKURI__") AS ?workUri)
-        ?workUri  a                     deich:Work
-        OPTIONAL
-          { ?workUri  deich:mainTitle  ?mainTitleO
-                   BIND(str(?mainTitleO) as ?mainTitle)
-          }
-        OPTIONAL
-          { ?workUri  deich:partTitle  ?partTitleO
-                   BIND(str(?partTitleO) as ?partTitle)
-          }
-        OPTIONAL
-          { ?workUri  deich:creator  ?creator }
-        OPTIONAL
-          { ?workUri  deich:publicationYear  ?publicationYearO
-                   BIND(str(?publicationYearO) AS ?publicationYear)}
-        OPTIONAL
-          { ?workUri  deich:audience  ?audienceO .
-                   BIND(str(?audienceO) AS ?audience)
-          }
-        OPTIONAL
-          { ?publication  a                 deich:Publication ;
-                  deich:publicationOf   ?workUri }
-        OPTIONAL
-          { ?publication  a                 deich:Publication ;
-                  deich:mainTitle   ?publicationMainTitle }
-        OPTIONAL
-          { ?publication  a                 deich:Publication ;
-                  deich:partTitle   ?publicationPartTitle }
-        OPTIONAL
-          { ?publication  deich:language  ?languageO .
-                  BIND(str(?languageO) AS ?language)
-         }
-        OPTIONAL
-          { ?publication  deich:format  ?formatO .
-                  BIND(str(?formatO) AS ?format)
-          }
-        OPTIONAL
-          { ?publication  deich:publicationYear  ?publicationPublicationYearO
-                  BIND(str(?publicationPublicationYearO) AS ?publicationPublicationYear)
-          }
-        OPTIONAL
-          { ?person  a                     deich:Person }
-        OPTIONAL
-          { ?person  deich:name  ?name }
-        OPTIONAL
-          { ?person  deich:birthYear  ?birthYearO
-                  BIND(str(?birthYearO) AS ?birthYear)
-          }
-        OPTIONAL
-          { ?person  deich:deathYear  ?deathYearO
-                  BIND(str(?deathYearO) AS ?deathYear)
-          }
-        OPTIONAL{
-              {
-                ?workUri  deich:subject  ?subject .
-                ?subject  deich:name     ?subjectName ;
-                          a              deich:Subject .
-              }
-            UNION
-              {
-                ?workUri  deich:subject  ?subject .
-                ?subject  deich:mainTitle     ?subjectName ;
-                          a              deich:Work .
-              }
-            UNION
-              {
-                ?workUri  deich:subject  ?subject .
-                ?subject  deich:name     ?subjectName ;
-                          a              deich:Person .
-              }
-          }
-      }
+CONSTRUCT {
+       ?work a deich:Work ;
+               deich:mainTitle ?mainTitle ;
+               deich:partTitle ?partTitle ;
+               deich:publicationYear ?publicationYear ;
+               deich:publication ?pub ;
+               deich:contributor ?workContrib ;
+               deich:subject ?subject .
+        ?pub a deich:Publication ;
+               deich:mainTitle ?pubMainTitle ;
+               deich:partTitle ?pubPartTitle ;
+               deich:language ?language ;
+               deich:format ?format ;
+               deich:issued ?pubPublicationYear ;
+               deich:audience ?audience ;
+               deich:contributor ?pubContrib .
+?workContrib a deich:Contribution ;
+               deich:role ?role ;
+               deich:agent ?agent .
+ ?pubContrib a deich:Contribution ;
+               deich:role ?pubRole ;
+               deich:agent ?pubAgent .
+   ?pubAgent a deich:Agent ;
+               deich:name ?pubAgentName ;
+               deich:birthYear ?pubAgentBirthYear ;
+               deich:deathYear ?pubAgentDeathYear .
+      ?agent a deich:Agent ;
+               deich:name ?name ;
+               deich:birthYear ?birthYear ;
+               deich:deathYear ?deathYear .
+      ?subject deich:name ?subjectName .
+}
+WHERE {
+  BIND(uri("__WORKURI__") AS ?work)
+  ?work a deich:Work .
+
+  OPTIONAL { ?work deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
+  OPTIONAL { ?work deich:partTitle ?partTitleO . BIND(str(?partTitleO) as ?partTitle) }
+  OPTIONAL { ?work deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
+  OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
+
+  OPTIONAL {
+    ?work deich:subject ?subject .
+    ?subject a deich:Subject ;
+            deich:name ?subjectName  .
   }
+
+  OPTIONAL {
+    ?work deich:contributor ?workContrib .
+    ?workContrib a deich:Contribution ;
+             deich:agent ?agent ;
+             deich:role ?roleURI .
+    ?agent deich:name ?name .
+    BIND(str(?roleURI) AS ?role)
+  }
+  OPTIONAL { ?agent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
+  OPTIONAL { ?agent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
+
+  OPTIONAL {
+    ?pub a deich:Publication ;
+         deich:publicationOf ?work .
+    OPTIONAL { ?pub deich:mainTitle ?pubMainTitle }
+    OPTIONAL { ?pub deich:partTitle ?pubPartTitle }
+    OPTIONAL { ?pub deich:contributor ?pubContrib .
+               ?pubContrib a deich:Contribution ;
+                            deich:agent ?pubAgent ;
+                            deich:role ?pubRoleURI .
+               ?pubAgent deich:name ?pubAgentName .
+               BIND(str(?pubRoleURI) AS ?pubRole)
+    }
+  }
+  OPTIONAL { ?pubAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?pubAgentBirthYear) }
+  OPTIONAL { ?pubAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?pubAgentDeathYear) }
+
+  OPTIONAL { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
+  OPTIONAL { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
+  OPTIONAL { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
+
+}
