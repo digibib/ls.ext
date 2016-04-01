@@ -403,10 +403,13 @@ public class EntityResourceTest {
         String labelsComparison = "{\n"
                 + "    \"@id\" : \"http://lexvo.org/id/iso639-3/eng\",\n"
                 + "    \"@type\" : \"http://lexvo.org/ontology#Language\",\n"
-                + "    \"rdfs:label\" : {\n"
+                + "    \"rdfs:label\" : [ {\n"
+                + "      \"@language\" : \"en\",\n"
+                + "      \"@value\" : \"English\"\n"
+                + "    }, {\n"
                 + "      \"@language\" : \"no\",\n"
                 + "      \"@value\" : \"Engelsk\"\n"
-                + "    }\n"
+                + "    } ]\n"
                 + "  }";
 
         assertEquals(OK.getStatusCode(), result.getStatus());
@@ -434,10 +437,13 @@ public class EntityResourceTest {
                 + "    \"@id\" : \"http://data.deichman.no/format#Book\",\n"
                 + "    \"@type\" : \"http://data.deichman.no/utility#Format\",\n"
                 + "    \"http://data.deichman.no/utility#code\" : \"l\",\n"
-                + "    \"rdfs:label\" : {\n"
+                + "    \"rdfs:label\" : [ {\n"
+                + "      \"@language\" : \"en\",\n"
+                + "      \"@value\" : \"Book\"\n"
+                + "    }, {\n"
                 + "      \"@language\" : \"no\",\n"
                 + "      \"@value\" : \"Bok\"\n"
-                + "    }\n"
+                + "    } ]\n"
                 + "  }";
         assertEquals(OK.getStatusCode(), result.getStatus());
         assertTrue(result.getEntity().toString().contains(labelsComparison));
