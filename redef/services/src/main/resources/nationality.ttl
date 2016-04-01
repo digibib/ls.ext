@@ -3,402 +3,801 @@
 @prefix duo: <http://data.deichman.no/utility#> .
 
 nationality:aborig a duo:Nationality ;
-  rdfs:label "Aboriginsk"@no .
+	rdfs:label	"Aboriginsk"@no ;
+	rdfs:label	"Aboriginal Australian"@en .
+
 nationality:afg a duo:Nationality ;
-  rdfs:label "Afghansk"@no .
+	rdfs:label	"Afghansk"@no ;
+	rdfs:label	"Afghan"@en .
+
 nationality:afr a duo:Nationality ;
-  rdfs:label "Afrikansk"@no .
+	rdfs:label	"Afrikansk"@no ;
+	rdfs:label	"African"@en .
+
 nationality:alb a duo:Nationality ;
-  rdfs:label "Albansk"@no .
+	rdfs:label	"Albansk"@no ;
+	rdfs:label	"Albanian"@en .
+
 nationality:alg a duo:Nationality ;
-  rdfs:label "Algerisk"@no .
+	rdfs:label	"Algerisk"@no ;
+	rdfs:label	"Algerian"@en .
+
 nationality:am a duo:Nationality ;
-  rdfs:label "Amerikansk (USA)"@no .
+	rdfs:label	"Amerikansk"@no ;
+	rdfs:label	"American"@en .
+	
 nationality:andor a duo:Nationality ;
-  rdfs:label "Andorransk"@no .
+	rdfs:label	"Andorransk"@no ;
+	rdfs:label	"Andorran"@en .
+
 nationality:angol a duo:Nationality ;
-  rdfs:label "Angolsk"@no .
+	rdfs:label	"Angolansk"@no ;
+	rdfs:label	"Angolan"@en .
+
 nationality:antig a duo:Nationality ;
-  rdfs:label "Antiguansk"@no .
+	rdfs:label	"Antiguansk"@no ;
+	rdfs:label	"Antiguan"@en .
+
 nationality:arab a duo:Nationality ;
-  rdfs:label "Arabisk"@no .
+	rdfs:label	"Arabisk"@no ;
+	rdfs:label	"Arab"@en .
+
 nationality:argen a duo:Nationality ;
-  rdfs:label "Argentinsk"@no .
+	rdfs:label	"Argentinsk"@no ;
+	rdfs:label	"Argentine"@en .
+
 nationality:arm a duo:Nationality ;
-  rdfs:label "Armensk"@no .
+	rdfs:label	"Armensk"@no ;
+	rdfs:label	"Armenian"@en .
+
 nationality:aserb a duo:Nationality ;
-  rdfs:label "Aserbajdsjansk"@no .
+	rdfs:label	"Aserbajdsjansk"@no ;
+	rdfs:label	"Azerbaijani"@en .
+
 nationality:au a duo:Nationality ;
-  rdfs:label "Australsk"@no .
+	rdfs:label	"Australsk"@no ;
+	rdfs:label	"Australian"@en .
+
 nationality:babyl a duo:Nationality ;
-  rdfs:label "Babylonsk"@no .
+	rdfs:label	"Babylonsk"@no ;
+	rdfs:label	"Babylonian"@en .
+
 nationality:baham a duo:Nationality ;
-  rdfs:label "Bahamansk"@no .
+	rdfs:label	"Bahamansk"@no ;
+	rdfs:label	"Bahamian"@en .
+
 nationality:bahr a duo:Nationality ;
-  rdfs:label "Bahrainsk"@no .
+	rdfs:label	"Bahrainsk"@no ;
+	rdfs:label	"Bahraini"@en .
+
 nationality:bangl a duo:Nationality ;
-  rdfs:label "Bangladeshisk"@no .
+	rdfs:label	"Bangladeshisk"@no ;
+	rdfs:label	"Bangladeshi"@en .
+
 nationality:barb a duo:Nationality ;
-  rdfs:label "Barbadisk"@no .
+	rdfs:label	"Barbadisk"@no ;
+	rdfs:label	"Barbadian"@en .
+
 nationality:belg a duo:Nationality ;
-  rdfs:label "Belgisk"@no .
+	rdfs:label	"Belgisk"@no ;
+	rdfs:label	"Belgian"@en .
+
 nationality:beliz a duo:Nationality ;
-  rdfs:label "Belizisk"@no .
+	rdfs:label	"Belizisk"@no ;
+	rdfs:label	"Belizean"@en .
+
 nationality:benin a duo:Nationality ;
-  rdfs:label "Beninsk"@no .
+	rdfs:label	"Beninsk"@no ;
+	rdfs:label	"Beninese"@en .
+
 nationality:bhut a duo:Nationality ;
-  rdfs:label "Bhutansk"@no .
+	rdfs:label	"Bhutansk"@no ;
+	rdfs:label	"Bhutanese"@en .
+
 nationality:boliv a duo:Nationality ;
-  rdfs:label "Boliviansk"@no .
+	rdfs:label	"Boliviansk"@no ;
+	rdfs:label	"Bolivian"@en .
+
 nationality:bosn a duo:Nationality ;
-  rdfs:label "Bosnisk"@no .
+	rdfs:label	"Bosnisk"@no ;
+	rdfs:label	"Bosniak"@en .
+
 nationality:botsw a duo:Nationality ;
-  rdfs:label "Botswansk"@no .
+	rdfs:label	"Botswansk"@no ;
+	rdfs:label	"Botswanan"@en .
+
 nationality:bras a duo:Nationality ;
-  rdfs:label "Brasiliansk"@no .
+	rdfs:label	"Brasiliansk"@no ;
+	rdfs:label	"Brazilian"@en .
+
 nationality:brun a duo:Nationality ;
-  rdfs:label "Bruneisk"@no .
+	rdfs:label	"Bruneisk"@no ;
+	rdfs:label	"Bruneian"@en .
+
 nationality:bulg a duo:Nationality ;
-  rdfs:label "Bulgarsk"@no .
+	rdfs:label	"Bulgarsk"@no ;
+	rdfs:label	"Bulgarian"@en .
+
 nationality:burkin a duo:Nationality ;
-  rdfs:label "Burkinsk"@no .
+	rdfs:label	"Burkinsk"@no ;
+	rdfs:label	"Burkinan"@en .
+
 nationality:burm a duo:Nationality ;
-  rdfs:label "Burmesisk"@no .
+	rdfs:label	"Burmesisk"@no ;
+	rdfs:label	"Burmese"@en .
+
 nationality:burund a duo:Nationality ;
-  rdfs:label "Burundisk"@no .
+	rdfs:label	"Burundisk"@no ;
+	rdfs:label	"Burundian"@en .
+
 nationality:chil a duo:Nationality ;
-  rdfs:label "Chilensk"@no .
+	rdfs:label	"Chilensk"@no ;
+	rdfs:label	"Chilean"@en .
+
 nationality:colomb a duo:Nationality ;
-  rdfs:label "Columbiansk"@no .
+	rdfs:label	"Columbiansk"@no ;
+	rdfs:label	"Columbian"@en .
+
 nationality:costaric a duo:Nationality ;
-  rdfs:label "Costaricansk"@no .
+	rdfs:label	"Costaricansk"@no ;
+	rdfs:label	"Costa Rican"@en .
+
 nationality:cub a duo:Nationality ;
-  rdfs:label "Cubansk"@no .
+	rdfs:label	"Cubansk"@no ;
+	rdfs:label	"Cuban"@en .
+
 nationality:d a duo:Nationality ;
-  rdfs:label "Dansk"@no .
+	rdfs:label	"Dansk"@no ;
+	rdfs:label	"Danish"@en .
+
 nationality:dominik a duo:Nationality ;
-  rdfs:label "Dominikansk"@no .
+	rdfs:label	"Dominikansk"@no ;
+	rdfs:label	"Dominican"@en .
+
 nationality:ecuad a duo:Nationality ;
-  rdfs:label "Ecuadoriansk"@no .
+	rdfs:label	"Ecuadoriansk"@no ;
+	rdfs:label	"Ecuadorian"@en .
+
 nationality:egypt a duo:Nationality ;
-  rdfs:label "Egyptisk"@no .
+	rdfs:label	"Egyptisk"@no ;
+	rdfs:label	"Egyptian"@en .
+
 nationality:emiratarab a duo:Nationality ;
-  rdfs:label "Emiratarabisk"@no .
+	rdfs:label	"Emiratarabisk"@no ;
+	rdfs:label	"Emirati"@en .
+
 nationality:eng a duo:Nationality ;
-  rdfs:label "Engelsk"@no .
+	rdfs:label	"Engelsk"@no ;
+	rdfs:label	"English"@en .
+
 nationality:eritr a duo:Nationality ;
-  rdfs:label "Eritreisk"@no .
+	rdfs:label	"Eritreisk"@no ;
+	rdfs:label	"Eritrean"@en .
+
 nationality:est a duo:Nationality ;
-  rdfs:label "Estisk"@no .
+	rdfs:label	"Estisk"@no ;
+	rdfs:label	"Estonian"@en .
+
 nationality:etiop a duo:Nationality ;
-  rdfs:label "Etiopisk"@no .
+	rdfs:label	"Etiopisk"@no ;
+	rdfs:label	"Ethiopian"@en .
+
 nationality:fi a duo:Nationality ;
-  rdfs:label "Finsk"@no .
+	rdfs:label	"Finsk"@no ;
+	rdfs:label	"Finnish"@en .
+
 nationality:filip a duo:Nationality ;
-  rdfs:label "Filippinsk"@no .
+	rdfs:label	"Filippinsk"@no ;
+	rdfs:label	"Filippino"@en .
+
 nationality:fr a duo:Nationality ;
-  rdfs:label "Fransk"@no .
+	rdfs:label	"Fransk"@no ;
+	rdfs:label	"French"@en .
+
 nationality:fær a duo:Nationality ;
-  rdfs:label "Færøyisk"@no .
+	rdfs:label	"Færøyisk"@no ;
+	rdfs:label	"Faroese"@en .
+
 nationality:gabon a duo:Nationality ;
-  rdfs:label "Gabonsk"@no .
+	rdfs:label	"Gabonsk"@no ;
+	rdfs:label	"Gabonese"@en .
+
 nationality:gamb a duo:Nationality ;
-  rdfs:label "Gambisk"@no .
+	rdfs:label	"Gambisk"@no ;
+	rdfs:label	"Gambian"@en .
+
 nationality:gas a duo:Nationality ;
-  rdfs:label "Gassisk"@no .
+	rdfs:label	"Gassisk"@no ;
+	rdfs:label	"Madagascan"@en .
+
 nationality:georg a duo:Nationality ;
-  rdfs:label "Georgisk"@no .
+	rdfs:label	"Georgisk"@no ;
+	rdfs:label	"Georgian"@en .
+
 nationality:ghan a duo:Nationality ;
-  rdfs:label "Ghanesisk"@no .
+	rdfs:label	"Ghanesisk"@no ;
+	rdfs:label	"Ghanaian"@en .
+
 nationality:gr a duo:Nationality ;
-  rdfs:label "Gresk"@no .
+	rdfs:label	"Gresk"@no ;
+	rdfs:label	"Greek"@en .
+
 nationality:grenad a duo:Nationality ;
-  rdfs:label "Grenadisk"@no .
+	rdfs:label	"Grenadisk"@no ;
+	rdfs:label	"Grenadian"@en .
+
 nationality:grønl a duo:Nationality ;
-  rdfs:label "Grønlandsk"@no .
+	rdfs:label	"Grønlandsk"@no ;
+	rdfs:label	"Greenlandic"@en .
+
 nationality:guadel a duo:Nationality ;
-  rdfs:label "Guadeloupisk"@no .
+	rdfs:label	"Guadeloupisk"@no ;
+	rdfs:label	"Guadeloupian"@en .
+
 nationality:guatem a duo:Nationality ;
-  rdfs:label "Guatemalsk"@no .
+	rdfs:label	"Guatemalsk"@no ;
+	rdfs:label	"Guatemalan"@en .
+
 nationality:guin a duo:Nationality ;
-  rdfs:label "Guineansk"@no .
+	rdfs:label	"Guineansk"@no ;
+	rdfs:label	"Guinean"@en .
+
 nationality:guineab a duo:Nationality ;
-  rdfs:label "Guinea-Bissau"@no .
+	rdfs:label	"Bissau-guineansk"@no ;
+	rdfs:label	"Guinea-Bissau national"@en .
+  
 nationality:guyan a duo:Nationality ;
-  rdfs:label "Guyansk"@no .
+	rdfs:label	"Guyansk"@no ;
+	rdfs:label	"Guyanese"@en .
+
 nationality:hait a duo:Nationality ;
-  rdfs:label "Haitiansk"@no .
+	rdfs:label	"Haitiansk"@no ;
+	rdfs:label	"Haitian"@en .
+
 nationality:hond a duo:Nationality ;
-  rdfs:label "Honduransk"@no .
+	rdfs:label	"Honduransk"@no ;
+	rdfs:label	"Honduran"@en .
+
 nationality:hviter a duo:Nationality ;
-  rdfs:label "Hviterussisk"@no .
+	rdfs:label	"Hviterussisk"@no ;
+	rdfs:label	"Belorusian"@en .
+
 nationality:ind a duo:Nationality ;
-  rdfs:label "Indisk"@no .
+	rdfs:label	"Indisk"@no ;
+	rdfs:label	"Indian"@en .
+
 nationality:indian a duo:Nationality ;
-  rdfs:label "Indiansk"@no .
+	rdfs:label	"Indiansk"@no ;
+	rdfs:label	"Native American"@en .
+
 nationality:indon a duo:Nationality ;
-  rdfs:label "Indonesisk"@no .
+	rdfs:label	"Indonesisk"@no ;
+	rdfs:label	"Indonesian"@en .
+
 nationality:inuit a duo:Nationality ;
-  rdfs:label "Inuittisk"@no .
+	rdfs:label	"Inuittisk"@no ;
+	rdfs:label	"Inuit"@en .
+
 nationality:ir a duo:Nationality ;
-  rdfs:label "Irsk"@no .
+	rdfs:label	"Irsk"@no ;
+	rdfs:label	"Irish"@en .
+
 nationality:irak a duo:Nationality ;
-  rdfs:label "Irakisk"@no .
+	rdfs:label	"Irakisk"@no ;
+	rdfs:label	"Iraqi"@en .
+
 nationality:iran a duo:Nationality ;
-  rdfs:label "Iransk"@no .
+	rdfs:label	"Iransk"@no ;
+	rdfs:label	"Iranian"@en .
+
 nationality:isl a duo:Nationality ;
-  rdfs:label "Islandsk"@no .
+	rdfs:label	"Islandsk"@no ;
+	rdfs:label	"Icelandic"@en .
+
 nationality:isr a duo:Nationality ;
-  rdfs:label "Israelsk"@no .
+	rdfs:label	"Israelsk"@no ;
+	rdfs:label	"Israeli"@en .
+
 nationality:it a duo:Nationality ;
-  rdfs:label "Italiensk"@no .
+	rdfs:label	"Italiensk"@no ;
+	rdfs:label	"Italian"@en .
+
 nationality:ivor a duo:Nationality ;
-  rdfs:label "Elfenbenskysten (Ivoriansk)"@no .
+	rdfs:label	"Ivoriansk"@no ;
+	rdfs:label	"Ivorian"@en .
+	
 nationality:jam a duo:Nationality ;
-  rdfs:label "Jamaicansk"@no .
+	rdfs:label	"Jamaicansk"@no ;
+	rdfs:label	"Jamaican"@en .
+
 nationality:jap a duo:Nationality ;
-  rdfs:label "Japansk"@no .
+	rdfs:label	"Japansk"@no ;
+	rdfs:label	"Japanese"@en .
+
 nationality:jord a duo:Nationality ;
-  rdfs:label "Jordansk"@no .
+	rdfs:label	"Jordansk"@no ;
+	rdfs:label	"Jordanian"@en .
+
 nationality:jug a duo:Nationality ;
-  rdfs:label "Jugoslavisk"@no .
+	rdfs:label	"Jugoslavisk"@no ;
+	rdfs:label	"Yugoslavian"@en .
+
 nationality:kamb a duo:Nationality ;
-  rdfs:label "Kambodsjansk"@no .
+	rdfs:label	"Kambodsjansk"@no ;
+	rdfs:label	"Cambodian"@en .
+
 nationality:kamer a duo:Nationality ;
-  rdfs:label "Kamerunsk"@no .
+	rdfs:label	"Kamerunsk"@no ;
+	rdfs:label	"Cameroonian"@en .
+	
 nationality:kan a duo:Nationality ;
-  rdfs:label "Kanadisk"@no .
+	rdfs:label	"Kanadisk"@no ;
+	rdfs:label	"Canadian"@en .
+
 nationality:kappverd a duo:Nationality ;
-  rdfs:label "Kappverdisk"@no .
+	rdfs:label	"Kappverdisk"@no ;
+	rdfs:label	"Cape Verdean"@en .
+
 nationality:kas a duo:Nationality ;
-  rdfs:label "Kasakstansk"@no .
+	rdfs:label	"Kasakstansk"@no ;
+	rdfs:label	"Kazakh"@en .
+
 nationality:ken a duo:Nationality ;
-  rdfs:label "Kenyansk"@no .
+	rdfs:label	"Kenyansk"@no ;
+	rdfs:label	"Kenyan"@en .
+
 nationality:kin a duo:Nationality ;
-  rdfs:label "Kinesisk"@no .
+	rdfs:label	"Kinesisk"@no ;
+	rdfs:label	"Chinese"@en .
+
 nationality:kirg a duo:Nationality ;
-  rdfs:label "Kirgisisk"@no .
+	rdfs:label	"Kirgisisk"@no ;
+	rdfs:label	"Kyrgyz"@en .
+
 nationality:komor a duo:Nationality ;
-  rdfs:label "Komorisk"@no .
+	rdfs:label	"Komorisk"@no ;
+	rdfs:label	"Komorian"@en .
+
 nationality:kongol a duo:Nationality ;
-  rdfs:label "Kongolesisk"@no .
+	rdfs:label	"Kongolesisk"@no ;
+	rdfs:label	"DEmocratic Republic of Congo national"@en .
+
 nationality:kongolbraz a duo:Nationality ;
-  rdfs:label "Brazzavillekongolesisk"@no .
+	rdfs:label	"Brazzavillekongolesisk"@no ;
+	rdfs:label	"Congolese"@en .
+
 nationality:kor a duo:Nationality ;
-  rdfs:label "Koreansk"@no .
+	rdfs:label	"Koreansk"@no ;
+	rdfs:label	"Korean"@en .
+
 nationality:kosov a duo:Nationality ;
-  rdfs:label "Kosovisk"@no .
+	rdfs:label	"Kosovisk"@no ;
+	rdfs:label	"Kosovan"@en .
+
 nationality:kroat a duo:Nationality ;
-  rdfs:label "Kroatisk"@no .
+	rdfs:label	"Kroatisk"@no ;
+	rdfs:label	"Croatian"@en .
+
 nationality:kurd a duo:Nationality ;
-  rdfs:label "Kurdisk"@no .
+	rdfs:label	"Kurdisk"@no ;
+	rdfs:label	"Kurd"@en .
+
 nationality:kuw a duo:Nationality ;
-  rdfs:label "Kuwaitisk"@no .
+	rdfs:label	"Kuwaitisk"@no ;
+	rdfs:label	"Kuwaiti"@en .
+
 nationality:kypr a duo:Nationality ;
-  rdfs:label "Kypriotisk"@no .
+	rdfs:label	"Kypriotisk"@no ;
+	rdfs:label	"Cypriot"@en .
+
 nationality:lank a duo:Nationality ;
-  rdfs:label "Srilankisk"@no .
+	rdfs:label	"Srilankisk"@no ;
+	rdfs:label	"Sri Lankan"@en .
+
 nationality:laot a duo:Nationality ;
-  rdfs:label "Laotisk"@no .
+	rdfs:label	"Laotisk"@no ;
+	rdfs:label	"Laotian"@en .
+
 nationality:latv a duo:Nationality ;
-  rdfs:label "Latvisk"@no .
+	rdfs:label	"Latvisk"@no ;
+	rdfs:label	"Latvian"@en .
+
 nationality:lesot a duo:Nationality ;
-  rdfs:label "Lesothisk"@no .
+	rdfs:label	"Lesothisk"@no ;
+	rdfs:label	"Lesothian"@en .
+
 nationality:liban a duo:Nationality ;
-  rdfs:label "Libanesisk"@no .
+	rdfs:label	"Libanesisk"@no ;
+	rdfs:label	"Lebanese"@en .
+
 nationality:liber a duo:Nationality ;
-  rdfs:label "Liberiansk"@no .
+	rdfs:label	"Liberiansk"@no ;
+	rdfs:label	"Liberian"@en .
+
 nationality:liby a duo:Nationality ;
-  rdfs:label "Libysk"@no .
+	rdfs:label	"Libysk"@no ;
+	rdfs:label	"Libyan"@en .
+
 nationality:liecht a duo:Nationality ;
-  rdfs:label "Liechtensteinsk"@no .
+	rdfs:label	"Liechtensteinsk"@no ;
+	rdfs:label	"Liechtensteiner"@en .
+
 nationality:lit a duo:Nationality ;
-  rdfs:label "Litauisk"@no .
+	rdfs:label	"Litauisk"@no ;
+	rdfs:label	"Lithuanian"@en .
+
 nationality:lux a duo:Nationality ;
-  rdfs:label "Luxembourgsk"@no .
+	rdfs:label	"Luxembourgsk"@no ;
+	rdfs:label	"Luxembourger"@en .
+
 nationality:maked a duo:Nationality ;
-  rdfs:label "Makedonsk"@no .
+	rdfs:label	"Makedonsk"@no ;
+	rdfs:label	"Macedonian"@en .
+
 nationality:malaw a duo:Nationality ;
-  rdfs:label "Malawisk"@no .
+	rdfs:label	"Malawisk"@no ;
+	rdfs:label	"Malawian"@en .
+
 nationality:malay a duo:Nationality ;
-  rdfs:label "Malayisk"@no .
+	rdfs:label	"Malayisk"@no ;
+	rdfs:label	"Malaysian"@en .
+
 nationality:mali a duo:Nationality ;
-  rdfs:label "Malisk"@no .
+	rdfs:label	"Malisk"@no ;
+	rdfs:label	"Malian"@en .
+
 nationality:malt a duo:Nationality ;
-  rdfs:label "Maltesisk"@no .
+	rdfs:label	"Maltesisk"@no ;
+	rdfs:label	"Maltese"@en .
+
 nationality:maori a duo:Nationality ;
-  rdfs:label "Maorisk"@no .
+	rdfs:label	"Maorisk"@no ;
+	rdfs:label	"Maori"@en .
+
 nationality:marok a duo:Nationality ;
-  rdfs:label "Marokkansk"@no .
+	rdfs:label	"Marokkansk"@no ;
+	rdfs:label	"Moroccan"@en .
+
 nationality:martinik a duo:Nationality ;
-  rdfs:label "Martinikisk"@no .
+	rdfs:label	"Martinikisk"@no ;
+	rdfs:label	"Martiniquan"@en .
+
 nationality:mauret a duo:Nationality ;
-  rdfs:label "Mauritansk"@no .
+	rdfs:label	"Mauritansk"@no ;
+	rdfs:label	"Mauritan"@en .
+
 nationality:maurit a duo:Nationality ;
-  rdfs:label "Mauritisk"@no .
+	rdfs:label	"Mauritisk"@no ;
+	rdfs:label	"Mauritian"@en .
+
 nationality:mesop a duo:Nationality ;
-  rdfs:label "Mesopotamisk"@no .
+	rdfs:label	"Mesopotamisk"@no ;
+	rdfs:label	"Mesopotamian"@en .
+
 nationality:mex a duo:Nationality ;
-  rdfs:label "Meksikansk"@no .
+	rdfs:label	"Meksikansk"@no ;
+	rdfs:label	"Mexican"@en .
+
 nationality:mold a duo:Nationality ;
-  rdfs:label "Moldovsk"@no .
+	rdfs:label	"Moldovsk"@no ;
+	rdfs:label	"Moldovian"@en .
+
 nationality:moneg a duo:Nationality ;
-  rdfs:label "Monegaskisk"@no .
+	rdfs:label	"Monegaskisk"@no ;
+	rdfs:label	"Monacan"@en .
+
 nationality:mong a duo:Nationality ;
-  rdfs:label "Mongolsk"@no .
+	rdfs:label	"Mongolsk"@no ;
+	rdfs:label	"Mongolian"@en .
+
 nationality:montenegr a duo:Nationality ;
-  rdfs:label "Montenegrinsk"@no .
+	rdfs:label	"Montenegrinsk"@no ;
+	rdfs:label	"Montenegrin"@en .
+
 nationality:mosam a duo:Nationality ;
-  rdfs:label "Mosambikisk"@no .
+	rdfs:label	"Mosambikisk"@no ;
+	rdfs:label	"Mozambican"@en .
+
 nationality:n a duo:Nationality ;
-  rdfs:label "Norsk"@no .
+	rdfs:label	"Norsk"@no ;
+	rdfs:label	"Norwegian"@en .
+
 nationality:namib a duo:Nationality ;
-  rdfs:label "Namibisk"@no .
+	rdfs:label	"Namibisk"@no ;
+	rdfs:label	"Namibian"@en .
+
 nationality:ned a duo:Nationality ;
-  rdfs:label "Nederlandsk"@no .
+	rdfs:label	"Nederlandsk"@no ;
+	rdfs:label	"Dutch"@en .
+
 nationality:nep a duo:Nationality ;
-  rdfs:label "Nepalsk"@no .
+	rdfs:label	"Nepalsk"@no ;
+	rdfs:label	"Nepalese"@en .
+
 nationality:newzeal a duo:Nationality ;
-  rdfs:label "Newzealandsk"@no .
+	rdfs:label	"Newzealandsk"@no ;
+	rdfs:label	"New Zealander"@en .
+
 nationality:nicarag a duo:Nationality ;
-  rdfs:label "Nicaraguansk"@no .
+	rdfs:label	"Nicaraguansk"@no ;
+	rdfs:label	"Nicaraguan"@en .
+
 nationality:nig a duo:Nationality ;
-  rdfs:label "Nigersk"@no .
+	rdfs:label	"Nigersk"@no ;
+	rdfs:label	"Nigerien"@en .
+
 nationality:niger a duo:Nationality ;
-  rdfs:label "Nigeriansk"@no .
+	rdfs:label	"Nigeriansk"@no ;
+	rdfs:label	"Nigerian"@en .
+
 nationality:nordir a duo:Nationality ;
-  rdfs:label "Nordirsk"@no .
+	rdfs:label	"Nordirsk"@no ;
+	rdfs:label	"Northern Irish"@en .
+
 nationality:nordkor a duo:Nationality ;
-  rdfs:label "Nordkoreansk"@no .
+	rdfs:label	"Nordkoreansk"@no ;
+	rdfs:label	"North Korean"@en .
+
 nationality:om a duo:Nationality ;
-  rdfs:label "Omansk"@no .
+	rdfs:label	"Omansk"@no ;
+	rdfs:label	"Omani"@en .
+
 nationality:pak a duo:Nationality ;
-  rdfs:label "Pakistansk"@no .
+	rdfs:label	"Pakistansk"@no ;
+	rdfs:label	"Pakistani"@en .
+
 nationality:pal a duo:Nationality ;
-  rdfs:label "Palestinsk"@no .
+	rdfs:label	"Palestinsk"@no ;
+	rdfs:label	"Palestinian"@en .
+
 nationality:panam a duo:Nationality ;
-  rdfs:label "Panamansk"@no .
+	rdfs:label	"Panamansk"@no ;
+	rdfs:label	"Panamanian"@en .
+
 nationality:pap a duo:Nationality ;
-  rdfs:label "Papuansk"@no .
+	rdfs:label	"Papuansk"@no ;
+	rdfs:label	"Papuan"@en .
+
 nationality:parag a duo:Nationality ;
-  rdfs:label "Paraguyansk"@no .
+	rdfs:label	"Paraguayansk"@no ;
+	rdfs:label	"Paraguayan"@en .
+
 nationality:pers a duo:Nationality ;
-  rdfs:label "Persisk"@no .
+	rdfs:label	"Persisk"@no ;
+	rdfs:label	"Persian"@en .
+
 nationality:peru a duo:Nationality ;
-  rdfs:label "Peruansk"@no .
+	rdfs:label	"Peruansk"@no ;
+	rdfs:label	"Peruvian"@en .
+
 nationality:pol a duo:Nationality ;
-  rdfs:label "Polsk"@no .
+	rdfs:label	"Polsk"@no ;
+	rdfs:label	"Polish"@en .
+
 nationality:portug a duo:Nationality ;
-  rdfs:label "Portugisisk"@no .
+	rdfs:label	"Portugisisk"@no ;
+	rdfs:label	"Portuguese"@en .
+
 nationality:puert a duo:Nationality ;
-  rdfs:label "Puertoricansk"@no .
+	rdfs:label	"Puertoricansk"@no ;
+	rdfs:label	"Puerto Rican"@en .
+
 nationality:qat a duo:Nationality ;
-  rdfs:label "Qatarsk"@no .
+	rdfs:label	"Qatarsk"@no ;
+	rdfs:label	"Qatari"@en .
+
 nationality:r a duo:Nationality ;
-  rdfs:label "Russisk"@no .
+	rdfs:label	"Russisk"@no ;
+	rdfs:label	"Russian"@en .
+
 nationality:rom a duo:Nationality ;
-  rdfs:label "Romersk"@no .
+	rdfs:label	"Romersk"@no ;
+	rdfs:label	"Roman"@en .
+
 nationality:rum a duo:Nationality ;
-  rdfs:label "Rumensk"@no .
+	rdfs:label	"Rumensk"@no ;
+	rdfs:label	"Romanian"@en .
+
 nationality:rwand a duo:Nationality ;
-  rdfs:label "Rwandisk"@no .
+	rdfs:label	"Rwandisk"@no ;
+	rdfs:label	"Rwandan"@en .
+
 nationality:salvad a duo:Nationality ;
-  rdfs:label "Salvadoriansk"@no .
+	rdfs:label	"Salvadoriansk"@no ;
+	rdfs:label	"Salvadoran"@en .
+
 nationality:sam a duo:Nationality ;
-  rdfs:label "Samisk"@no .
+	rdfs:label	"Samisk"@no ;
+	rdfs:label	"Sami"@en .
+
 nationality:samoan a duo:Nationality ;
-  rdfs:label "Samoansk"@no .
+	rdfs:label	"Samoansk"@no ;
+	rdfs:label	"Samoan"@en .
+
 nationality:sanktluc a duo:Nationality ;
-  rdfs:label "Sanktluciansk"@no .
+	rdfs:label	"Sanktluciansk"@no ;
+	rdfs:label	"Saint Lucian"@en .
+
 nationality:saudiarab a duo:Nationality ;
-  rdfs:label "Saudiarabisk"@no .
+	rdfs:label	"Saudiarabisk"@no ;
+	rdfs:label	"Saudi Arabian"@en .
+
 nationality:senegal a duo:Nationality ;
-  rdfs:label "Senegalesisk"@no .
+	rdfs:label	"Senegalesisk"@no ;
+	rdfs:label	"Senegalese"@en .
+
 nationality:serb a duo:Nationality ;
-  rdfs:label "Serbisk"@no .
+	rdfs:label	"Serbisk"@no ;
+	rdfs:label	"Serb"@en .
+
 nationality:sierral a duo:Nationality ;
-  rdfs:label "Sierraleonsk"@no .
+	rdfs:label	"Sierraleonsk"@no ;
+	rdfs:label	"Sierra Leonean"@en .
+
 nationality:sk a duo:Nationality ;
-  rdfs:label "Skotsk"@no .
+	rdfs:label	"Skotsk"@no ;
+	rdfs:label	"Scottish"@en .
+
 nationality:slovak a duo:Nationality ;
-  rdfs:label "Slovakisk"@no .
+	rdfs:label	"Slovakisk"@no ;
+	rdfs:label	"Slovak"@en .
+
 nationality:sloven a duo:Nationality ;
-  rdfs:label "Slovensk"@no .
+	rdfs:label	"Slovensk"@no ;
+	rdfs:label	"Slovene"@en .
+
 nationality:somal a duo:Nationality ;
-  rdfs:label "Somalisk"@no .
+	rdfs:label	"Somalisk"@no ;
+	rdfs:label	"Somali"@en .
+
 nationality:sp a duo:Nationality ;
-  rdfs:label "Spansk"@no .
+	rdfs:label	"Spansk"@no ;
+	rdfs:label	"Spanish"@en .
+
 nationality:sudan a duo:Nationality ;
-  rdfs:label "Sudansk"@no .
+	rdfs:label	"Sudansk"@no ;
+	rdfs:label	"Sudanese"@en .
+
 nationality:surin a duo:Nationality ;
-  rdfs:label "Surinamsk"@no .
+	rdfs:label	"Surinamsk"@no ;
+	rdfs:label	"Surinamese"@en .
+
 nationality:sv a duo:Nationality ;
-  rdfs:label "Svensk"@no .
+	rdfs:label	"Svensk"@no ;
+	rdfs:label	"Swedish"@en .
+
 nationality:sveits a duo:Nationality ;
-  rdfs:label "Sveitsisk"@no .
+	rdfs:label	"Sveitsisk"@no ;
+	rdfs:label	"Swiss"@en .
+
 nationality:swazil a duo:Nationality ;
-  rdfs:label "Swazilandsk"@no .
+	rdfs:label	"Swazilandsk"@no ;
+	rdfs:label	"Swazi"@en .
+
 nationality:syr a duo:Nationality ;
-  rdfs:label "Syrisk"@no .
+	rdfs:label	"Syrisk"@no ;
+	rdfs:label	"Syrian"@en .
+
 nationality:sørafr a duo:Nationality ;
-  rdfs:label "Sørafrikansk"@no .
+	rdfs:label	"Sørafrikansk"@no ;
+	rdfs:label	"South African"@en .
+
 nationality:sørkor a duo:Nationality ;
-  rdfs:label "Sørkoreansk"@no .
+	rdfs:label	"Sørkoreansk"@no ;
+	rdfs:label	"South Korean"@en .
+
 nationality:sørsudan a duo:Nationality ;
-  rdfs:label "Sørsudansk"@no .
+	rdfs:label	"Sørsudansk"@no ;
+	rdfs:label	"South Sudanese"@en .
+
 nationality:t a duo:Nationality ;
-  rdfs:label "Tysk"@no .
+	rdfs:label	"Tysk"@no ;
+	rdfs:label	"German"@en .
+
 nationality:tadsj a duo:Nationality ;
-  rdfs:label "Tadsjikisk"@no .
+	rdfs:label	"Tadsjikisk"@no ;
+	rdfs:label	"Tajik"@en .
+
 nationality:tahit a duo:Nationality ;
-  rdfs:label "Tahitisk"@no .
+	rdfs:label	"Tahitisk"@no ;
+	rdfs:label	"Tahitian"@en .
+
 nationality:taiw a duo:Nationality ;
-  rdfs:label "Taiwansk"@no .
+	rdfs:label	"Taiwansk"@no ;
+	rdfs:label	"Taiwanese"@en .
+
 nationality:tanz a duo:Nationality ;
-  rdfs:label "Tanzaniansk"@no .
+	rdfs:label	"Tanzaniansk"@no ;
+	rdfs:label	"Tanzanian"@en .
+
 nationality:tchad a duo:Nationality ;
-  rdfs:label "Tchadisk"@no .
+	rdfs:label	"Tchadisk"@no ;
+	rdfs:label	"Chadian"@en .
+
 nationality:thai a duo:Nationality ;
-  rdfs:label "Thailandsk"@no .
+	rdfs:label	"Thailandsk"@no ;
+	rdfs:label	"Thai"@en .
+
 nationality:tib a duo:Nationality ;
-  rdfs:label "Tibetansk"@no .
+	rdfs:label	"Tibetansk"@no ;
+	rdfs:label	"Tibetan"@en .
+
 nationality:togo a duo:Nationality ;
-  rdfs:label "Togolesisk"@no .
+	rdfs:label	"Togolesisk"@no ;
+	rdfs:label	"Togolese"@en .
+
 nationality:trinid a duo:Nationality ;
-  rdfs:label "Trinidadisk"@no .
+	rdfs:label	"Trinidadisk"@no ;
+	rdfs:label	"Trinidadian"@en .
+
 nationality:tsj a duo:Nationality ;
-  rdfs:label "Tsjekkisk"@no .
+	rdfs:label	"Tsjekkisk"@no ;
+	rdfs:label	"Czech"@en .
+
 nationality:tsjet a duo:Nationality ;
-  rdfs:label "Tsjetsjensk"@no .
+	rdfs:label	"Tsjetsjensk"@no ;
+	rdfs:label	"Chechen"@en .
+
 nationality:tun a duo:Nationality ;
-  rdfs:label "Tunisisk"@no .
+	rdfs:label	"Tunisisk"@no ;
+	rdfs:label	"Tunisian"@en .
+
 nationality:turkm a duo:Nationality ;
-  rdfs:label "Turkmensk"@no .
+	rdfs:label	"Turkmensk"@no ;
+	rdfs:label	"Turkmen"@en .
+
 nationality:tyrk a duo:Nationality ;
-  rdfs:label "Tyrkisk"@no .
+	rdfs:label	"Tyrkisk"@no ;
+	rdfs:label	"Turkish"@en .
+
 nationality:ugand a duo:Nationality ;
-  rdfs:label "Ugandisk"@no .
+	rdfs:label	"Ugandisk"@no ;
+	rdfs:label	"Ugandan"@en .
+
 nationality:ukr a duo:Nationality ;
-  rdfs:label "Ukrainsk"@no .
+	rdfs:label	"Ukrainsk"@no ;
+	rdfs:label	"Ukrainian"@en .
+
 nationality:ung a duo:Nationality ;
-  rdfs:label "Ungarsk"@no .
+	rdfs:label	"Ungarsk"@no ;
+	rdfs:label	"Hungarian"@en .
+
 nationality:urug a duo:Nationality ;
-  rdfs:label "Uruguyansk"@no .
+	rdfs:label	"Uruguayansk"@no ;
+	rdfs:label	"Uruguayan"@en .
+
 nationality:usb a duo:Nationality ;
-  rdfs:label "Usbekisk"@no .
+	rdfs:label	"Usbekisk"@no ;
+	rdfs:label	"Uzbek"@en .
+
 nationality:venez a duo:Nationality ;
-  rdfs:label "Venezuelansk"@no .
+	rdfs:label	"Venezuelansk"@no ;
+	rdfs:label	"Venezuelan"@en .
+
 nationality:viet a duo:Nationality ;
-  rdfs:label "Vietnamesisk"@no .
+	rdfs:label	"Vietnamesisk"@no ;
+	rdfs:label	"Vietnamese"@en .
+
 nationality:wal a duo:Nationality ;
-  rdfs:label "Walisisk"@no .
+	rdfs:label	"Walisisk"@no ;
+	rdfs:label	"Welsh"@en .
+
 nationality:yemen a duo:Nationality ;
-  rdfs:label "Jemenittisk"@no .
+	rdfs:label	"Jemenittisk"@no ;
+	rdfs:label	"Yemeni"@en .
+
 nationality:zair a duo:Nationality ;
-  rdfs:label "Zairisk"@no .
+	rdfs:label	"Zairisk"@no ;
+	rdfs:label	"Zairean"@en .
+
 nationality:zamb a duo:Nationality ;
-  rdfs:label "Zambisk"@no .
+	rdfs:label	"Zambisk"@no ;
+	rdfs:label	"Zambian"@en .
+
 nationality:zimb a duo:Nationality ;
-  rdfs:label "Zimbabwisk"@no .
+	rdfs:label	"Zimbabwisk"@no ;
+	rdfs:label	"Zimbabweab"@en .
+
 nationality:øst a duo:Nationality ;
-  rdfs:label "Østerriksk"@no .
+	rdfs:label	"Østerriksk"@no ;
+	rdfs:label	"Austrian"@en .
