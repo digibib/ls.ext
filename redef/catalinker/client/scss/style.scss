@@ -45,6 +45,9 @@ body {
         display: block;
         margin-top: 20px;
       }
+      .add-item-button {
+        float: right;
+      }
       label {
         display: block;
       }
@@ -108,13 +111,40 @@ body {
       .add-new-btn-row {
         float: right;
       }
-      .role-association a.delete {
+      a.delete {
         background-image: url('/images/delete_cross.svg');
         background-repeat: no-repeat;
         background-position: left top;
         padding-left: 2em;
         cursor: pointer;
         min-width: 20px;
+      }
+      .additional-entries-non-editable {
+        min-height: 60px;
+        border: 1px solid;
+        padding: 8px;
+        margin-bottom: 10px;
+        .inputs {
+          display: block;
+          border: 1px solid;
+          text-align: center;
+          padding: 5px 22px;
+          .label {
+            display: none;
+          }
+          span.input:last-child:before {
+            content: " — ";
+          }
+        }
+
+        .subject-type-association {
+          display: block;
+          text-align: center;
+          padding: 10px;
+          &:before {
+            content: "Rollen er knyttet til ";
+          }
+        }
       }
       .select-role-assoc {
         .select-creator-radio {

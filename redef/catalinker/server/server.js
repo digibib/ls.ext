@@ -62,7 +62,7 @@ app.get('/workflow', function (req, res, next) {
   res.sendFile('main.html', {title: 'Katalogisering', root: __dirname + '/../public/'});
 });
 
-app.get('/:type(person|work|publication|placeOfPublication)', function (req, res, next) {
+app.get('/:type(person|work|publication|placeOfPublication|serial)', function (req, res, next) {
   newResource(req.params.type).then(function (response) {
     res.redirect('/cataloguing/' + req.params.type + '?resource=' + response.headers.location);
   });
@@ -73,7 +73,7 @@ app.get('/config', function (request, response) {
     {
       kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
       kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
-      ontologyUri:  '/services/ontology',
+      ontologyUri: '/services/ontology',
       resourceApiUri: '/services/',
       tabs: [
             {
@@ -81,12 +81,13 @@ app.get('/config', function (request, response) {
               rdfType: "Work",
               label: "Bekreft person",
               inputs: [
-                  {
-                    rdfProperty: "creator",
-                    type: "searchable-person",
-                    dependentResourceTypes: ["Work", "Publication"] // when the creator is changed, unload current work and publication
-                  }
-              ],
+                    {
+                      rdfProperty: "creator",
+                      type: "searchable-person",
+                      dependentResourceTypes: ["Work", "Publication"], // when the creator is changed, unload current work and publication
+                      isMainEntry: true
+                    }
+                ],
               nextStep: {
                 buttonLabel: "Bekreft verk",
                 createNewResource: "Work"
@@ -143,13 +144,35 @@ app.get('/config', function (request, response) {
                   {rdfProperty: "format", multiple: true},
                   {rdfProperty: "writingSystem", multiple: true},
                   {rdfProperty: "adaptationOfPublicationForParticularUserGroups", multiple: true},
-                  {
-                    rdfProperty: "placeOfPublication",
-                    authority: true, // this indicates it is an authorized entity
-                    nameProperties: ["place", "country"], // these are proeprty names used to label already connected entities
-                    indexType: "placeOfPublication", // this is the name of the elasticsearch index type from which authorities are searched within
-                    indexDocumentFields: ["place", "country"] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
-                  }
+                    {
+                      rdfProperty: "placeOfPublication",
+                      authority: true, // this indicates it is an authorized entity
+                      nameProperties: ["place", "country"], // these are proeprty names used to label already connected entities
+                      indexType: "placeOfPublication", // this is the name of the elasticsearch index type from which authorities are searched within
+                      indexDocumentFields: ["place", "country"] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
+                    },
+                    {
+                      label: "Serie",
+                      multiple: true,
+                      subInputs: {
+                        rdfProperty: "inSerial",
+                        range: "SerialIssue",
+                        inputs: [
+                                {
+                                  label: "Serie",
+                                  rdfProperty: "serial",
+                                  indexType: "serial",
+                                  indexDocumentFields: ["name"],
+                                  nameProperties: ["name"],
+                                  type: "searchable-authority"
+                                },
+                                {
+                                  label: "Nummer i serien",
+                                  rdfProperty: "issue"
+                                }
+                            ]
+                      }
+                    }
                 ],
               nextStep: {
                 buttonLabel: "Bekreft biinførsler"
@@ -162,15 +185,26 @@ app.get('/config', function (request, response) {
               label: "Bekreft biinførsler",
               inputs: [
                     {
-                      predicateType: "role", // the possible values for this input is fetched from predefined list in services with this name (...ontology#role in this case)
-                      subjects: ["Work", "Publication"], // the triple may have a subject of one of these types as subject, fetched from one of the loaded resources
-                      type: "searchable-person", // type if input widget
-                      label: "Legg til biinførsel",
-                      multiple: true, // there may be more than one additional entry
-                      dataAutomationId: "search_role_player", // override or define automation-id for test purposes
-                      widgetOptions: {
-                        hideSelectWork: true
-                      }
+                      label: "Biinnførsel",
+                      multiple: true, // can have many of these
+                      subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
+                        rdfProperty: "contributor", // the rdf property of the resource
+                        range: "Contribution", // this is the shorthand name of the type of the blank node
+                        inputs: [// these are the actual sub inputs
+                                {
+                                  label: "Person",
+                                  rdfProperty: "agent",
+                                  type: "searchable-person"
+                                },
+                                {
+                                  label: "Rolle",
+                                  rdfProperty: "role"
+                                }
+                            ]
+                      },
+                      subjects: ["Work", "Publication"], // blank node can be attached to the the loaded resource of one of these types
+                      cssClassPrefix: "additional-entries" // prefix of class names to identify a span surrounding this input or group of sub inputs.
+                      // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
                     }
                 ],
               nextStep: {
@@ -185,7 +219,7 @@ app.get('/config', function (request, response) {
 });
 
 app.get('/version', function (request, response) {
-  response.json({ 'buildTag': process.env.BUILD_TAG, 'gitref': process.env.GITREF });
+  response.json({'buildTag': process.env.BUILD_TAG, 'gitref': process.env.GITREF});
 });
 
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/');

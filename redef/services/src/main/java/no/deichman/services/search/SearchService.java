@@ -26,4 +26,6 @@ public interface SearchService {
     Response searchPlaceOfPublication(String query);
 
     Response searchPublisher(String query);
+
+    Response searchSerial(String query);
 }

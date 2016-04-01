@@ -9,13 +9,6 @@ class GlobalSetup
   def initialize
     STDOUT.puts "Flushing memcached"
 
-    socket = TCPSocket.new("memcached", 11211)
-    socket.write("flush_all\r\n")
-    result = socket.recv(2)
-
-    if result != 'OK'
-      STDERR.puts "Error flushing memcached: #{result}"
-    end
     STDOUT.puts "SETUP: Populating global test settings"
     @growser = (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
     Site.new(@growser).Login.visit.login(ENV['KOHA_ADMINUSER'], ENV['KOHA_ADMINPASS'])

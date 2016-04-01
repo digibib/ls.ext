@@ -81,19 +81,23 @@
             return _.last(predicate.split("#"));
         }
 
-        function setMultiValues(values, input) {
+        function setMultiValues(values, input, index) {
             if (values && values.length > 0) {
                 var valuesAsArray = values.length == 0 ? [] : _.map(values, function (value) {
                     return value.id;
                 });
-                input.values[0].old = {
+                if (input.values.length < index + 1) {
+                    input.values[input.values.length] = {};
+                }
+                input.values[index].old = {
                     value: valuesAsArray
                 };
-                input.values[0].current = {
+                input.values[index].current = {
                     value: valuesAsArray,
                     uniqueId: _.uniqueId()
                 };
-                input.values[0].uniqueId = _.uniqueId();
+                input.values[index].uniqueId = _.uniqueId();
+                input.values[index].valueIndex = index;
                 return valuesAsArray;
             }
         }
@@ -115,11 +119,27 @@
             }
         }
 
+        function setSingleValue(value, input, index) {
+            if (value) {
+                if (!input.values[index]) {
+                    input.values[index] = {};
+                }
+                input.values[index].old = {
+                    value: value.value,
+                    lang: value.lang
+                };
+                input.values[index].current = {
+                    value: value.value,
+                    lang: value.lang,
+                };
+                input.values[index].uniqueId = _.uniqueId();
+            }
+        }
+
         function setIdValues(values, input) {
             if (values.length > 0) {
                 var idx;
                 for (idx = 0; idx < values.length; idx++) {
-
                     input.values[idx].old = {
                         value: values[idx].id
                     };
@@ -127,6 +147,7 @@
                         value: values[idx].id,
                     };
                     input.values[idx].uniqueId = _.uniqueId();
+                    input.values[idx].index = idx;
                 }
             }
         }
@@ -136,7 +157,9 @@
             if (!input.values[index]) {
                 input.values[index] = {};
             }
-            input.values[index].predicate = predicate;
+            if (predicate) {
+                input.values[index].predicate = predicate;
+            }
             input.values[index].old = {
                 value: id
             };
@@ -185,10 +208,11 @@
             }
         }
 
-        function loadLabelsForAuthorizedValues(values, input) {
+        function loadLabelsForAuthorizedValues(values, input, index) {
+            var promises = [];
             if (input.nameProperties) {
                 _.each(values, function (uri) {
-                    var name = axios.get(proxyToServices(uri)).then(function (response) {
+                    promises.push(axios.get(proxyToServices(uri)).then(function (response) {
                         var graphData = ensureJSON(response.data);
                         var root = ldGraph.parse(graphData).byId(uri);
                         var names = _.reduce(input.nameProperties, function (parts, propertyName) {
@@ -203,16 +227,18 @@
                         }, []);
 
                         var selectedValues = [];
-                        _.each(names, function (nameParts, index) {
+                        _.each(names, function (nameParts) {
                             var label = nameParts.join(" - ");
-                            values[index].current.displayName = label;
-                            ractive.set("authorityLabels[" + uri + "]", label);
-                            $("#" + input.uniqueId + ":parent").trigger("change");
+                            ractive.set("authorityLabels." + uri.replace(/[:\/\.]/g, "_"), label);
+                            input.values[index].current.displayName = label;
+                            console.log("setting label of input " + input.values[index].current.value[0] + " to " + input.values[index].current.displayName)
+                            ractive.update();
+                            $("#sel_" + input.values[index].uniqueId).trigger("change");
                         });
-                    });
+                    }));
                 });
-                ractive.update();
             }
+            return promises;
         }
 
         var loadExistingResource = function (resourceUri, options) {
@@ -226,55 +252,68 @@
                         var inputsToLoad = [];
                         _.each(ractive.get("inputGroups"), function (group) {
                             _.each(group.inputs, function (input) {
-                                inputsToLoad.push(input);
+                                if (input.subInputs) {
+                                    _.each(input.subInputs, function (subInput) {
+                                        inputsToLoad.push(subInput.input);
+                                    });
+                                } else {
+                                    inputsToLoad.push(input);
+                                }
                             })
                         });
 
+                        function skipProperty(fragment) {
+                            return _.contains(_.values(_.pick(options, "leaveUnchanged")), fragment);
+                        }
+
+                        var promises = [];
                         _.each(inputsToLoad, function (input, inputIndex) {
-                            if ((type == unPrefix(input.domain) || _.contains((input.subjects), type)) && !(_.contains(_.values(_.pick(options, "leaveUnchanged")), input.fragment))) {
-                                var inputs_n = "inputs." + inputIndex;
+                            if ((type == unPrefix(input.domain) || _.contains((input.subjects), type))
+                                || (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))
+                                && !(skipProperty(input.fragment))) {
                                 var predicate = input.predicate;
-                                if (input.type === "select-authorized-value" || input.type === "entity" || input.type === "searchable-authority") {
-                                    var values = setMultiValues(root.outAll(propertyName(predicate)), input);
-                                    loadLabelsForAuthorizedValues(values, input);
-                                } else if (input.type === "searchable-person") {
-                                    if (input.predicateType) {
-                                        var index = input.values.length;
-                                        if (index == 1 && _.isArray(input.values[0].current.value) && input.values[0].current.value.length == 0) {
-                                            index = 0;
-                                        }
-                                        var predicates = ractive.get("predefinedValues." + input.predicateType);
-                                        _.each(predicates, function (predicate) {
-                                            var uri = predicate['@id'];
-                                            var value = root.outAll(propertyName(uri));
-                                            _.each(value, function (val) {
-                                                setIdValue(val.id, input, index, uri);
-                                                setDomain(input, index, type);
-                                                setDisplayValue(input, index, "name");
-                                                value.nonEditable = true;
-                                                index++;
-                                            });
-                                        });
+                                var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [root];
+                                _.each(actualRoots, function (root, index) {
+                                    if (_.contains(["select-authorized-value", "entity", "searchable-authority"], input.type)) {
+                                        var values = setMultiValues(root.outAll(propertyName(predicate)), input, index);
+                                        promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, index));
+                                    } else if (input.type === "searchable-person") {
+                                        _.each(root.outAll(propertyName(predicate)), function (node) {
+                                            setIdValue(node.id, input, index);
+                                            setDisplayValue(input, index, "name");
+                                        })
+                                    } else if (input.type === "select-predefined-value") {
+                                        setMultiValues(root.outAll(propertyName(predicate)), input, index);
                                     } else {
-                                        setIdValues(root.outAll(propertyName(predicate)), input);
+                                        setSingleValue(root.getAll(propertyName(predicate))[0], input, index);
                                     }
-                                } else if (input.type === "select-predefined-value") {
-                                    setMultiValues(root.outAll(propertyName(predicate)), input);
-                                } else {
-                                    setSingleValues(root.getAll(propertyName(predicate)), input);
+                                    if (input.isSubInput) {
+                                        input.values[index].nonEditable = true;
+                                        input.values[index].subjectType = type;
+                                    }
+                                });
+                                var mainInput = input.isSubInput ? input.parentInput : input;
+                                mainInput.subjectType = type;
+                                if (mainInput.multiple) {
+                                    if (!mainInput.addNewHandledBySelect2) {
+                                        mainInput.allowAddNewButton = true;
+                                    }
                                 }
                             }
                         });
-                        ractive.update();
-                        ractive.set("save_status", "åpnet eksisterende ressurs");
-                        ractive.set("targetUri." + type, resourceUri);
-                        updateBrowserLocation(type, resourceUri);
+                        Promise.all(promises).then(function () {
+                            ractive.update();
+                            ractive.set("save_status", "åpnet eksisterende ressurs");
+                            ractive.set("targetUri." + type, resourceUri);
+                            updateBrowserLocation(type, resourceUri);
+//                            $("select").select2();
+                        })
                     }
                 )
-                .catch(function (err) {
-                    console.log("HTTP GET existing resource failed with:");
-                    console.log(err);
-                });
+            //.catch(function (err) {
+            //    console.log("HTTP GET existing resource failed with:");
+            //    console.log(err);
+            //});
         };
 
         var saveNewResourceFromInputs = function (resourceType) {
@@ -304,14 +343,7 @@
                     var resourceUri = response.headers.location;
                     ractive.set("targetUri." + resourceType, resourceUri);
                     _.each(inputsToSave, function (input) {
-                        var predicate;
-                        if (input.predicateType && input.predicate) {
-                            predicate = _.find(ractive.get("predefinedValues." + input.predicateType), function (predicate) {
-                                return propertyName(predicate['@id']) === input.predicate;
-                            })['@id'];
-                        } else {
-                            predicate = input.predicate;
-                        }
+                        var predicate = input.predicate;
                         _.each(input.values, function (value) {
                             Main.patchResourceFromValue(resourceUri, predicate, value, input.datatype, errors);
                         })
@@ -352,6 +384,26 @@
                 });
         };
 
+        function createInputForPredefinedValues(prop, tab) {
+            return {
+                type: prop.type,
+                label: prop.label,
+                domain: tab.rdfType,
+                subjectTypes: prop.subjects,
+                subjectType: undefined,
+                searchable: true,
+                predicate: prop.predicate,
+                datatype: "http://www.w3.org/2001/XMLSchema#anyURI",
+                values: [{
+                    old: {value: "", lang: ""},
+                    current: {value: [], lang: ""},
+                    uniqueId: _.uniqueId()
+                }],
+                search_result: [],
+                allowAddNewButton: false
+            };
+        }
+
         var createInputGroups = function (applicationData) {
             var props = Ontology.allProps(applicationData.ontology),
                 inputs = [],
@@ -366,9 +418,13 @@
 
                 // Fetch predefined values, if required
                 var predicate = Ontology.resolveURI(applicationData.ontology, props[i]["@id"]);
-                if (props[i]["http://data.deichman.no/utility#valuesFrom"]) {
-                    var url = props[i]["http://data.deichman.no/utility#valuesFrom"]["@id"];
+                var valuesFrom = props[i]["http://data.deichman.no/utility#valuesFrom"];
+                if (valuesFrom) {
+                    var url = valuesFrom["@id"];
                     predefinedValues.push(loadPredefinedValues(url, props[i]["@id"]))
+                }
+                if (!props[i]["rdfs:range"]) {
+                    debugger;
                 }
                 var datatype = props[i]["rdfs:range"]["@id"];
                 var domains = props[i]["rdfs:domain"];
@@ -376,7 +432,7 @@
                     if (_.isObject(domain)) {
                         domain = domain['@id'];
                     }
-                    var predefined = props[i]["http://data.deichman.no/utility#valuesFrom"] ? true : false;
+                    var predefined = valuesFrom ? true : false;
                     var fragment = predicate.substring(predicate.lastIndexOf("#") + 1);
                     var input = {
                         disabled: disabled,
@@ -389,7 +445,7 @@
                         label: i18nLabelValue(props[i]["rdfs:label"]),
                         domain: domain,
                         search_result: null,
-                        allowAddNewButton: true,
+                        allowAddNewButton: false,
                         values: [{
                             old: {value: "", lang: ""},
                             current: {value: predefined ? [] : null, lang: ""},
@@ -421,13 +477,18 @@
                             case "deichman:PlaceOfPublication":
                             case "deichman:Work":
                             case "deichman:Person":
+                            case "deichman:Publisher":
+                            case "deichman:Role":
+                            case "deichman:Serial":
+                            case "deichman:Contribution":
+                            case "deichman:SerialIssue":
                                 // TODO infer from ontology that this is an URI
                                 // (because deichman:Work a rdfs:Class)
                                 input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                                 input.type = "input-string"; // temporarily
                                 break;
                             default:
-                                throw "Doesn't know which input-type to assign to range: " + input.range;
+                                throw "Don't know which input-type to assign to range: " + input.range;
                         }
                     }
                     inputs.push(input);
@@ -451,28 +512,38 @@
                         if (typeof currentInput === 'undefined') {
                             throw "Tab '" + tab.label + "' specified unknown property '" + prop.rdfProperty + "'";
                         }
-                    } else if (prop.predicateType) {
+                    } else if (prop.subInputs) {
                         currentInput = {
-                            type: prop.type,
+                            type: "compound",
                             label: prop.label,
                             domain: tab.rdfType,
-                            predicateType: prop.predicateType,
                             subjectTypes: prop.subjects,
                             subjectType: undefined,
-                            searchable:true,
-                            predicate: prop.predicate,
-                            datatype: "http://www.w3.org/2001/XMLSchema#anyURI",
-                            values: [{
-                                old: {value: "", lang: ""},
-                                current: {value: [], lang: ""},
-                                uniqueId: _.uniqueId()
-                            }],
-                            search_result: [],
-                            allowAddNewButton: true
+                            allowAddNewButton: false,
+                            subInputs: [],
+                            predicate: ontologyUri + prop.subInputs.rdfProperty,
+                            range: prop.subInputs.range
                         };
-                        predefinedValues.push(loadPredefinedValues(applicationData.config.resourceApiUri + "authorized_values/" + prop.predicateType, prop.predicateType))
+                        _.each(prop.subInputs.inputs, function (subInput) {
+                            var inputFromOntology = inputMap[prop.subInputs.range + "." + ontologyUri + subInput.rdfProperty];
+                            currentInput.subInputs.push({
+                                    label: subInput.label,
+                                    input: _.extend(inputFromOntology, {
+                                        type: subInput.type || inputFromOntology.type,
+                                        isSubInput: true,
+                                        parentInput: currentInput,
+                                        searchable: inputFromOntology.searchable,
+                                        indexType: subInput.indexType,
+                                        indexDocumentFields: subInput.indexDocumentFields,
+                                        nameProperties: subInput.nameProperties,
+                                        dataAutomationId: inputFromOntology.dataAutomationId
+                                    }),
+                                    parentInput: currentInput
+                                }
+                            );
+                        });
                     } else {
-                        throw "Input #" + index + " of tab '" + tab.label + "' must have rdfProperty or predicateType";
+                        throw "Input #" + index + " of tab '" + tab.label + "' must have rdfProperty";
                     }
 
                     if (tab.rdfType === unPrefix(currentInput.domain)) {
@@ -506,6 +577,12 @@
                     }
                     if (prop.widgetOptions) {
                         currentInput.widgetOptions = prop.widgetOptions;
+                    }
+                    if (prop.isMainEntry) {
+                        currentInput.isMainEntry = prop.isMainEntry;
+                    }
+                    if (prop.cssClassPrefix) {
+                        currentInput.cssClassPrefix = prop.cssClassPrefix;
                     }
                 });
                 group.inputs = groupInputs;
@@ -541,6 +618,10 @@
         }
 
         /* public API */
+        function visitInputs(mainInput, visitor) {
+            _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, "input") : [mainInput], visitor);
+        }
+
         var Main = {
             getURLParameter: function (name) {
                 // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
@@ -575,12 +656,12 @@
                             ractive.set("save_status", "alle endringer er lagret");
                             ractive.update();
                         })
-                        //.catch(function (response) {
-                        //    // failed to patch resource
-                        //    console.log("HTTP PATCH failed with: ");
-                        //    errors.push("Noe gikk galt! Fikk ikke lagret endringene");
-                        //    ractive.set("save_status", "");
-                        //});
+                    //.catch(function (response) {
+                    //    // failed to patch resource
+                    //    console.log("HTTP PATCH failed with: ");
+                    //    errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+                    //    ractive.set("save_status", "");
+                    //});
                 }
             },
             init: function () {
@@ -610,6 +691,61 @@
                 var extractConfig = function (response) {
                     return {config: ensureJSON(response.data)};
                 };
+
+                function patchObject(input, applicationData, index, operation) {
+                    var patch = [];
+                    var actualSubjectType = _.first(input.subInputs).input.values[index].subjectType || input.subjectType || input.rdfType;
+                    var mainSubject = ractive.get("targetUri." + actualSubjectType);
+                    patch.push({
+                        op: operation,
+                        s: mainSubject,
+                        p: input.predicate,
+                        o: {
+                            value: "_:b0",
+                            type: "http://www.w3.org/2001/XMLSchema#anyURI"
+                        }
+                    });
+                    if (input.range) {
+                        patch.push({
+                            op: operation,
+                            s: "_:b0",
+                            p: "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                            o: {
+                                value: applicationData.ontology["@context"]["deichman"] + input.range,
+                                type: "http://www.w3.org/2001/XMLSchema#anyURI"
+                            }
+                        })
+                    }
+                    _.each(input.subInputs, function (subInput) {
+                        var value = subInput.input.values[index].current.value;
+                        patch.push({
+                            op: operation,
+                            s: "_:b0",
+                            p: subInput.input.predicate,
+                            o: {
+                                value: _.isArray(value) ? value[0] : value,
+                                type: subInput.input.datatype
+                            }
+                        });
+                    });
+                    ractive.set("save_status", "arbeider...");
+                    return axios.patch(mainSubject, JSON.stringify(patch), {
+                            headers: {
+                                Accept: "application/ld+json",
+                                "Content-Type": "application/ldpatch+json"
+                            }
+                        })
+                        .then(function (response) {
+                            // successfully patched resource
+                            ractive.set("save_status", "alle endringer er lagret");
+                        })
+                    //.catch(function (response) {
+                    //    // failed to patch resource
+                    //    console.log("HTTP PATCH failed with: ");
+                    //    errors.push("Noe gikk galt! Fikk ikke lagret endringene");
+                    //    ractive.set("save_status", "");
+                    //});
+                }
 
                 var initRactive = function (applicationData) {
                         Ractive.decorators.select2.type.singleSelect = function (node) {
@@ -684,8 +820,10 @@
                                     var keypath = inputValue.keypath;
                                     ractive.set(keypath + ".current.value", $(e.target).val());
                                     var inputNode = ractive.get(grandParentOf(keypath));
-                                    Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
-                                        ractive.get(keypath), inputNode.datatype, errors, keypath)
+                                    if (!inputNode.isSubInput) {
+                                        Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
+                                            ractive.get(keypath), inputNode.datatype, errors, keypath);
+                                    }
                                 }
                             });
                             return {
@@ -694,7 +832,9 @@
                             }
                         };
                         var handleAddNewBySelect2 = function (node) {
-                            ractive.set(grandParentOf(Ractive.getNodeInfo(node).keypath) + ".allowAddNewButton", false);
+                            var inputKeyPath = grandParentOf(Ractive.getNodeInfo(node).keypath);
+                            ractive.set(inputKeyPath + ".allowAddNewButton", false);
+                            ractive.set(inputKeyPath + ".addNewHandledBySelect2", true);
                             return {
                                 teardown: function () {
                                 }
@@ -727,6 +867,13 @@
                                 search_result: null,
                                 config: applicationData.config,
                                 save_status: "ny ressurs",
+                                authorityLabels: {},
+                                getAuthorityLabel: function (uri) {
+                                    return ractive.get("authorityLabels")[uri];
+                                },
+                                urlEscape: function (url) {
+                                    return url.replace(/[:\/\.]/g, "_");
+                                },
                                 isSelected: function (option, value) {
                                     return option["@id"].contains(value) ? "selected='selected'" : "";
                                 },
@@ -815,35 +962,71 @@
                         ractive.on({
                                 // addValue adds another input field for the predicate.
                                 addValue: function (event) {
-                                    ractive.get(event.keypath).values.push({
-                                        old: {value: "", lang: ""},
-                                        current: {value: "", lang: ""}
+                                    var mainInput = ractive.get(event.keypath);
+                                    visitInputs(mainInput, function (input) {
+                                        console.log("creating input for predicate " + input.predicate + " lalues lenbth before: " + input.values.length);
+                                        input.values[input.values.length] = {
+                                            old: {value: "", lang: ""},
+                                            current: {value: "", lang: ""},
+                                            uniqueId: _.uniqueId()
+                                        };
                                     });
-                                    ractive.set(event.keypath + ".allowAddNewButton", false);
                                     ractive.update();
+                                    ractive.set(event.keypath + ".allowAddNewButton", false);
+                                    Main.repositionSupportPanelsHorizontally();
                                 },
                                 // patchResource creates a patch request based on previous and current value of
                                 // input field, and sends this to the backend.
                                 patchResource: function (event, predicate, rdfType, clearProperty) {
-                                    var inputValue = event.context;
-                                    if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
-                                        return;
-                                    }
-                                    var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                                    var subject = ractive.get("targetUri." + rdfType);
-                                    if (subject) {
-                                        Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
-                                        var input = ractive.get(grandParentOf(event.keypath));
-                                        event.context.domain = rdfType;
-                                        if (input.predicateType) {
-                                            ractive.set(event.keypath + ".predicate", predicate);
+                                    var input = ractive.get(grandParentOf(event.keypath));
+                                    if (!input.isSubInput) {
+                                        var inputValue = event.context;
+                                        if (inputValue.error || (inputValue.current.value === "" && inputValue.old.value === "")) {
+                                            return;
                                         }
+                                        var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
+                                        var subject = ractive.get("targetUri." + rdfType);
+                                        if (subject) {
+                                            Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatype), errors, event.keypath);
+                                            event.context.domain = rdfType;
+                                            input.allowAddNewButton = true;
+                                        }
+                                        if (clearProperty) {
+                                            ractive.set(grandParentOf(event.keypath) + "." + clearProperty, null);
+                                        }
+                                        ractive.update();
+                                    }
+                                },
+                                saveObject: function (event, index) {
+                                    var input = event.context;
+                                    patchObject(input, applicationData, index, "add").then(function () {
+                                        visitInputs(input, function (input) {
+                                            if (input.isSubInput) {
+                                                _.each(input.values, function (value) {
+                                                    value.nonEditable = true;
+                                                });
+                                            }
+                                        });
                                         input.allowAddNewButton = true;
-                                    }
-                                    if (clearProperty) {
-                                        ractive.set(grandParentOf(event.keypath) + "." + clearProperty, null);
-                                    }
-                                    ractive.update();
+                                        ractive.update();
+                                        var subInputs = grandParentOf(event.keypath);
+                                        _.each(event.context.subInputs, function (input, subInputIndex) {
+                                            if (_.contains(["select-authorized-value", "entity", "searchable-authority"], input.input.type)) {
+                                                var valuesKeypath = subInputs + "." + subInputIndex + ".input.values." + index + ".current.value.0";
+                                                loadLabelsForAuthorizedValues([ractive.get(valuesKeypath)], input.input, index);
+                                            }
+                                        });
+                                    });
+
+                                },
+                                deleteObject: function (event, parentInput, index) {
+                                    patchObject(parentInput, applicationData, index, "del").then(function () {
+                                        var subInputs = grandParentOf(grandParentOf(event.keypath));
+                                        _.each(parentInput.subInputs, function (input, subInputIndex) {
+                                            ractive.get(subInputs + "." + subInputIndex + ".input.values").splice(index, 1);
+                                        });
+                                        ractive.update();
+                                    })
                                 },
                                 searchResource: function (event, searchString) {
                                     // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
@@ -894,7 +1077,9 @@
                                     var input = ractive.get(inputKeyPath);
                                     var uri = event.context.uri;
                                     var name = event.context.name;
-                                    loadExistingResource(uri);
+                                    if (input.isMainEntry) {
+                                        loadExistingResource(uri);
+                                    }
                                     ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
                                     ractive.set(origin + ".current.value", uri);
                                     ractive.set(origin + ".current.displayValue", name);
@@ -969,19 +1154,13 @@
                                             ractive.set(keyPath + ".tabSelected", false);
                                         }
                                     });
-                                },
-                                deleteAdditionalEntry: function (event) {
-                                    ractive.set(event.keypath + ".current.value", "");
-                                    ractive.set(event.keypath + ".current.displayValue", "");
-                                    ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, event.context.predicate, event.context.domain);
-                                    ractive.splice(parentOf(event.keypath), +_.last(event.keypath.split('.')), 1);
                                 }
                             }
                         );
 
                         ractive.observe("inputGroups.*.inputs.*.values.*", function (newValue, oldValue, keypath) {
                             if (newValue && newValue.current) {
-                                if (newValue.current.value === "") {
+                                if (!newValue.current.value) {
                                     ractive.set(keypath + ".error", false);
                                     return;
                                 }
@@ -1000,7 +1179,6 @@
                                 }
                             }
                         });
-
                         ractive.observe("search_result.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
                             if (newValue === true) {
                                 var workPath = getParentFromKeypath(keypath);
@@ -1148,9 +1326,9 @@
                     .then(initSelect2)
                     .then(initRactive)
                     .then(loadResourceOfQuery)
-                    .catch(function (err) {
-                        console.log("Error initiating Main: " + err);
-                    });
+                //.catch(function (err) {
+                //    console.log("Error initiating Main: " + err);
+                //});
             },
             repositionSupportPanelsHorizontally: function () {
                 var supportPanelLeftEdge = $("#right-dummy-panel").position().left;

@@ -32,6 +32,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg velger rollen "Komponist"
     Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"
     Så trykker jeg på knappen for legge til biinnførselen
+    Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "verket"
     Så trykker jeg på knappen for legge til mer
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel

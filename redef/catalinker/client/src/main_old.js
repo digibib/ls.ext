@@ -101,6 +101,18 @@
                             resource = graph;
                         }
                         break;
+                    case "Publication":
+                        if (graph["@graph"]) {
+                            graph["@graph"].forEach(function (g) {
+                                if (g["@type"] === "deichman:Publication") {
+                                    resource = g;
+                                    resource["@context"] = graph["@context"];
+                                }
+                            });
+                        } else {
+                            resource = graph;
+                        }
+                        break;
                     case "PlaceOfPublication":
                         if (graph["@graph"]) {
                             graph["@graph"].forEach(function (g) {
@@ -244,6 +256,9 @@
                         // (because deichman:Work a rdfs:Class)
                         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                         input.type = "input-string"; // temporarily
+                        break;
+                    case "deichman:Contribution": //ignore, as these are blank nodes
+                    case "deichman:SerialIssue":
                         break;
                     default:
                         throw "Doesn't know which input-type to assign to range: " + input.range;

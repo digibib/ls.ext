@@ -79,6 +79,8 @@ public class SearchServiceImpl implements SearchService {
                 break;
             case PUBLISHER: doIndexPublisher(xuri);
                 break;
+            case SERIAL: doIndexSerial(xuri);
+                break;
             default: break;
         }
     }
@@ -241,6 +243,11 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {
         doIndexWork(xuri, true);
+    }
+
+    private void doIndexSerial(XURI xuri) {
+        Model serialModel = entityService.retrieveById(xuri);
+        indexDocument(xuri, serialModelToIndexMapper.createIndexDocument(serialModel, xuri));
     }
 
     private void indexDocument(XURI xuri, String document) {

@@ -63,15 +63,6 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
 
     @Override
-    public final Model retrieveSerialByURI(String uri) {
-        log.debug("Attempting to retrieve: <" + uri + ">");
-        try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(uri))) {
-            disableCompression(qexec);
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
     public final Model retrieveWorkAndLinkedResourcesByURI(XURI xuri) {
         log.debug("Attempting to retrieve: <" + xuri.getUri() + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedResources(xuri))) {

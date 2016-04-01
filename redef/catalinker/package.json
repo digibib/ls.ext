@@ -35,7 +35,7 @@
     "express-request-proxy": "^1.1.0",
     "jade": "~1.11.0",
     "jquery": "^2.1.4",
-    "ld-graph": "git+https://github.com/digibib/ld-graph.git#f99cd2176a08b6f9997dbb08c1bfd303f5da7c61",
+    "ld-graph": "git+https://github.com/digibib/ld-graph.git#9db0bef909e6dfb10662959c499541251ca346ec",
     "morgan": "~1.6.1",
     "node-sass": "^3.4.2",
     "node-sass-evergreen": "*",
