@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as ResourceActions from '../actions/ResourceActions'
 import { Link } from 'react-router'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
 import Constants from '../constants/Constants'
 import { inPreferredLanguage } from '../utils/languageHelpers'
@@ -14,7 +14,8 @@ const Person = React.createClass({
     isRequesting: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     resourceActions: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired
+    params: PropTypes.object.isRequired,
+    intl: intlShape.isRequired
   },
   componentWillMount () {
     this.props.resourceActions.getPersonResource(`${Constants.backendUri}/person/${this.props.params.id}`)
@@ -87,7 +88,7 @@ const Person = React.createClass({
             <div className='small-text'>
               <p className={this.hiddenIfFalse(person.nationality)}>
                 <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
-                data-automation-id='person-nationality'>{person.nationality}</span>
+                data-automation-id='person-nationality'>{this.props.intl.formatMessage({ id: person.nationality })}</span>
               </p>
             </div>
           </div>
@@ -138,4 +139,4 @@ function mapDispatchToProps (dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Person)
+)(injectIntl(Person))
