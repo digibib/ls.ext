@@ -7,7 +7,7 @@ export function setFilter (aggregation, bucket, active, router) {
     let queryParam = locationQuery[ queryParamName ]
     if (active) {
       if (queryParam && Array.isArray(queryParam)) {
-        if (queryParam.indexOf(bucket) === -1) {
+        if (!queryParam.includes(bucket)) {
           queryParam.push(bucket)
         }
       } else if (queryParam && queryParam !== bucket) {
@@ -17,7 +17,7 @@ export function setFilter (aggregation, bucket, active, router) {
       }
     } else {
       if (queryParam && Array.isArray(queryParam)) {
-        if (queryParam.indexOf(bucket) >= 0) {
+        if (queryParam.includes(bucket)) {
           queryParam.splice(queryParam.indexOf(bucket), 1)
         }
       } else if (queryParam === bucket) {

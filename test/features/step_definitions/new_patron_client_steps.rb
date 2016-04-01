@@ -83,7 +83,10 @@ When(/^skal filterne være valgt i grensesnittet$/) do
 end
 
 When(/^nåværende søketerm skal være "([^"]*)" \(\+ id på vilkårlig migrering\)$/) do |query|
-  wait_for { @browser.element(data_automation_id: 'current-search-term').text.eql? "#{query}#{@context[:random_migrate_id]}" }
+  wait_for {
+    current_search_term = @browser.element(data_automation_id: 'current-search-term')
+    current_search_term.present? && current_search_term.text.eql?("#{query}#{@context[:random_migrate_id]}")
+  }
 end
 
 When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises$/) do |prefix, str|
