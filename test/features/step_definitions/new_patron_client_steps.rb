@@ -94,7 +94,7 @@ When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises$/) do |
 end
 
 When(/^skal språket "([^"]*)" være valgt$/) do |language|
-  @browser.select(class: 'languageselector').value.should eq language
+  @browser.select(class: 'languageselector').selected_options.first.text.should eq language
 end
 
 When(/^jeg velger språket "([^"]*)"$/) do |language|

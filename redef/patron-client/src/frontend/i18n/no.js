@@ -23,6 +23,8 @@ export default {
   'SearchFilter.filter[work.publication.language]': 'Språk',
   'SearchFilter.filter[work.publication.audience]': 'Målgruppe',
   'SearchFilters.limit': 'Begrens søket ditt',
+  'SearchHeader.english': 'Engelsk',
+  'SearchHeader.norwegian': 'Norsk',
   'SearchHeader.searchInputPlaceholder': 'Søk på noe da...',
   'SearchHeader.search': 'Søk',
   'SearchResult.allPublications': 'alle utgivelser ►',

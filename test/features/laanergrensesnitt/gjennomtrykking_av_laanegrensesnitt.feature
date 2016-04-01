@@ -58,11 +58,11 @@ Egenskap: Gå gjennom lånegrensesnittet
 
   Scenario: Velge språk
     Gitt at jeg er i søkegrensesnittet
-    Så skal språket "no" være valgt
+    Så skal språket "Norsk" være valgt
     Og søkeknappen skal vise ordet "Søk"
-    Når jeg velger språket "en"
+    Når jeg velger språket "Engelsk"
     Så søkeknappen skal vise ordet "Search"
-    Og skal språket "en" være valgt
+    Og skal språket "English" være valgt
     Når jeg trykker oppfrisk i nettleseren
-    Så skal språket "en" være valgt
+    Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "Search"

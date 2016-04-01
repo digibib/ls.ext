@@ -58,8 +58,8 @@ let SearchHeader = React.createClass({
                 <FormattedMessage {...messages.search} />
               </button>
               <select className='languageselector' value={this.props.locale} onChange={this.handleChangeLanguage}>
-                <option value='en'>en</option>
-                <option value='no'>no</option>
+                <option value='en'>{this.props.intl.formatMessage({ ...messages.english })}</option>
+                <option value='no'>{this.props.intl.formatMessage({ ...messages.norwegian })}</option>
               </select>
             </form>
           </div>
@@ -70,6 +70,16 @@ let SearchHeader = React.createClass({
 })
 
 const messages = defineMessages({
+  english: {
+    id: 'SearchHeader.english',
+    description: 'Label for the English language choice',
+    defaultMessage: 'English'
+  },
+  norwegian: {
+    id: 'SearchHeader.norwegian',
+    description: 'Label for the Norwegian language choice',
+    defaultMessage: 'Norwegian'
+  },
   searchInputPlaceholder: {
     id: 'SearchHeader.searchInputPlaceholder',
     description: 'Placeholder for the search field',
