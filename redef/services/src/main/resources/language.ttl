@@ -322,6 +322,10 @@ language:non	a	lvont:Language ;
 	rdfs:label	"Norrønt"@no ;
 	rdfs:label	"Old Norse"@en .
 
+language:nor	a	lvont:Language ;
+	rdfs:label	"Norsk"@no ;
+	rdfs:label	"Norwegian"@en .
+
 language:nso	a	lvont:Language ;
 	rdfs:label	"Nordsotho"@no ;
 	rdfs:label	"Northern Sotho"@en .
