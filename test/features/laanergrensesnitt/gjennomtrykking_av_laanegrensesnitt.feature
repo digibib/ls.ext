@@ -66,3 +66,13 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker oppfrisk i nettleseren
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "Search"
+
+  @wip
+  Scenario: Se informasjon om utgivelse
+    Gitt at jeg er i søkegrensesnittet
+    Når jeg søker på "prefix0" (+ id på vilkårlig migrering)
+    Og jeg trykker på første treff
+    Så skal jeg se informasjon om verket
+    Når jeg trykker på en utgivelse
+    Så skal jeg se informasjon om utgivelsen
+    Og informasjon om ledige eksemplarer
