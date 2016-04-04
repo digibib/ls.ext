@@ -6,12 +6,31 @@
   ],
   "plugins": [
     [
+      "react-transform",
+      {
+        "transforms": [
+          {
+            "transform": "react-transform-hmr",
+            "imports": [
+              "react"
+            ],
+            "locals": [
+              "module"
+            ]
+          }
+        ]
+      }
+    ],
+    [
       "array-includes"
     ],
-    ["react-intl", {
-      "messagesDir": "./build/messages/",
-      "enforceDescriptions": false
-    }]
+    [
+      "react-intl",
+      {
+        "messagesDir": "./build/messages/",
+        "enforceDescriptions": true
+      }
+    ]
   ],
   "env": {
     "test": {
