@@ -13,8 +13,7 @@ function setup (propOverrides) {
       mainTitle: 'test_maintitle',
       publicationYear: 'test_publicationYear',
       language: 'test_language',
-      format: 'test_format',
-      itemsCount: 'test_itemsCount'
+      format: 'test_format'
     }, ...propOverrides
   }
 

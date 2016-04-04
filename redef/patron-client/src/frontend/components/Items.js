@@ -15,13 +15,10 @@ export default React.createClass({
       <table>
         <thead>
         <tr>
-          <th><FormattedMessage {...messages.title}/></th>
-          <th><FormattedMessage {...messages.language}/></th>
-          <th><FormattedMessage {...messages.format}/></th>
-          <th><FormattedMessage {...messages.barcode}/></th>
-          <th><FormattedMessage {...messages.placement}/></th>
-          <th><FormattedMessage {...messages.status}/></th>
+          <th><FormattedMessage {...messages.branch}/></th>
+          <th><FormattedMessage {...messages.count}/></th>
           <th><FormattedMessage {...messages.shelfmark}/></th>
+          <th><FormattedMessage {...messages.status}/></th>
         </tr>
         </thead>
         <tbody data-automation-id='work_items'>
@@ -33,28 +30,24 @@ export default React.createClass({
     )
   },
   renderItems () {
-    if (this.props.items.length > 0) {
-      return this.renderAllItems()
-    }
-    return this.renderEmpty()
+    return this.props.items.length > 0
+      ? this.renderAllItems()
+      : this.renderEmpty()
   },
   render () {
-    return (
-      <div id='items' className='panel row'>
-        <div className='panel-header'>
-          <span><strong><FormattedMessage {...messages.numberOfCopies}
-            values={{numberOfCopies: this.props.items.length}}/></strong></span>
-          <div className='panel-arrow panel-open'></div>
-        </div>
-        <div className='col'>
-          {this.renderItems()}
-        </div>
-      </div>
-    )
+    return this.props.items.length > 0
+      ? this.renderAllItems()
+      : this.renderEmpty()
   }
 })
 
 const messages = defineMessages({
+  branch: {
+    id: 'Items.branch', description: 'Branch of item', defaultMessage: 'branch'
+  },
+  count: {
+    id: 'Items.count', description: 'Count of item', defaultMessage: 'count'
+  },
   title: {
     id: 'Items.title', description: 'Title of item', defaultMessage: 'title'
   },

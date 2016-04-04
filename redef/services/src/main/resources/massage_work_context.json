@@ -20,7 +20,10 @@
     "audience": "deichman:audience",
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
-    "publication": "deichman:publication",
+    "publication": {
+      "@id": "deichman:publication",
+      "@container": "@set"
+    },
     "name": "deichman:name",
     "Work": "deichman:Work",
     "publicationYear": "deichman:publicationYear",

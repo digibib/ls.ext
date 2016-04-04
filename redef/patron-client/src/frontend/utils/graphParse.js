@@ -51,30 +51,24 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
   })
 
   work.publications = []
-  work.items = []
   workGraph.byType('Publication').forEach(publicationResource => {
-    let publication = {}
+    let publication = { items: [] }
     populateLiteral(publication, 'mainTitle', publicationResource)
     populateLiteral(publication, 'partTitle', publicationResource)
     populateLiteral(publication, 'publicationYear', publicationResource)
     populateUri(publication, 'language', publicationResource)
     populateUri(publication, 'format', publicationResource)
     publication.id = publicationResource.id
-    publication.itemsCount = 0
     publicationResource.inAll('editionOf').map(itemResource => {
-      publication.itemsCount++
       let item = {}
+      populateLiteral(item, 'branch', itemResource)
       populateLiteral(item, 'location', itemResource)
       populateLiteral(item, 'status', itemResource)
       populateLiteral(item, 'barcode', itemResource)
       populateLiteral(item, 'shelfmark', itemResource)
-      item.title = publication.mainTitle
-      if (publication.partTitle) {
-        item.title += ' — ' + publication.partTitle
-      }
-      item.language = publication.language
-      item.format = publication.format
-      work.items.push(item)
+      item.count = '555'
+      publication.items.push(item)
+      publication.available = publication.items.filter(item => item.status === 'AVAIL').length > 0 
     })
     work.publications.push(publication)
   })
@@ -82,6 +76,12 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
   work.uri = workResource.id
 
   return work
+}
+
+function getLiteral (field, sourceResource) {
+  return sourceResource.has(field)
+    ? sourceResource.get(field).value
+    : ''
 }
 
 function populateLiteral (target, field, sourceResource) {

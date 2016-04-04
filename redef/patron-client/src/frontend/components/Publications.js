@@ -2,32 +2,49 @@ import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Publication from './Publication'
+import PublicationInfo from './PublicationInfo'
 
 export default React.createClass({
   propTypes: {
     publications: PropTypes.array.isRequired
   },
+  getInitialState () {
+    return {
+      moreInfo: undefined
+    }
+  },
   renderEmpty () {
     return (<h2 data-automation-id='no_publications'><FormattedMessage {...messages.noPublications} /></h2>)
   },
+  handleClick (publication, row, column) {
+    this.setState({
+      moreInfo: {
+        publication: publication,
+        row: row,
+        column: column
+      }
+    })
+  },
   renderPublications () {
+    let publicationsCopy = [ ...this.props.publications ]
+    let threeAndThreePublications = []
+    while (publicationsCopy.length > 0) {
+      threeAndThreePublications.push(publicationsCopy.splice(0, 3))
+    }
     return (
-      <table>
-        <thead>
-        <tr>
-          <th><FormattedMessage {...messages.title} /></th>
-          <th><FormattedMessage {...messages.publicationYear} /></th>
-          <th><FormattedMessage {...messages.language} /></th>
-          <th><FormattedMessage {...messages.format} /></th>
-          <th><FormattedMessage {...messages.copies} /></th>
-        </tr>
-        </thead>
-        <tbody data-automation-id='publications'>
-        {this.props.publications.map(publication => {
-          return <Publication key={publication.id} publication={publication}/>
-        })}
-        </tbody>
-      </table>
+      <div>
+        {threeAndThreePublications.map((publications, row) => {
+          let output = [ publications.map((publication, column) => <Publication key={publication.id}
+                                                                                onClick={this.handleClick.bind(this, publication, row, column)}
+                                                                                publication={publication}/>) ]
+          if (this.state.moreInfo && row === this.state.moreInfo.row) {
+            console.log("yay")
+            output.push(<PublicationInfo publication={this.state.moreInfo.publication}/>)
+          }
+          return output
+        })
+        }
+      </div>
     )
   },
   render () {

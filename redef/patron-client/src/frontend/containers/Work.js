@@ -7,8 +7,6 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import Constants from '../constants/Constants'
 import Creators from '../components/Creators'
 import Publications from '../components/Publications'
-import Items from '../components/Items'
-
 import { inPreferredLanguage } from '../utils/languageHelpers'
 
 const Work = React.createClass({
@@ -79,7 +77,6 @@ const Work = React.createClass({
           </div>
         </div>
         <Publications publications={work.publications}/>
-        <Items items={work.items}/>
       </div>
     )
   }
