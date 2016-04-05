@@ -105,13 +105,13 @@
             } else {
                 if (_.isArray(currentValue) || _.isArray(oldValue)) {
                     var addValues = _.difference(currentValue, oldValue);
-                    _.each(addValues, function (value) {
+                    _.each(_.compact(addValues), function (value) {
                         addPatches.push({op: "add", s: subject, p: predicate, o: {value: value, type: datatype}});
                     });
 
                     var delValues = _.difference(oldValue, currentValue);
-                    _.each(delValues, function (value) {
-                        delPatches.push({op: "del", s: subject, p: predicate, o: {value: value}});
+                    _.each(_.compact(delValues), function (value) {
+                        delPatches.push({op: "del", s: subject, p: predicate, o: {value: value, type: datatype}});
                     });
                 }
             }
