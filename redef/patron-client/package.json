@@ -27,7 +27,8 @@
     "lint": "eslint src",
     "dist": "npm run clean && npm run lint && npm test && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
     "start": "npm run build && node src/backend/server.js",
-    "production": "npm run dist && node src/backend/server.js",
+    "docker": "npm run clean && NODE_ENV=docker webpack --config webpack.config.docker.js && NODE_ENV=docker node src/backend/server.js",
+    "production": "npm run dist && NODE_ENV=production node src/backend/server.js",
     "test": "cross-env NODE_ENV=test mocha -R min --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:debug": "cross-env NODE_ENV=test mocha debug --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:watch": "npm test -- --watch"

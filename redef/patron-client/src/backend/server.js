@@ -6,16 +6,23 @@ const port = process.env.PORT || 8000
 const app = express()
 
 const webpack = require('webpack')
-const webpackConfig = require('../../webpack.config')
+let webpackConfig
+if (process.env.NODE_ENV === 'docker') {
+  webpackConfig = require('../../webpack.config.docker')
+} else if (process.env.NODE_ENV === 'production') {
+  webpackConfig = require('../../webpack.config.production')
+} else {
+  webpackConfig = require('../../webpack.config')
+}
 const compiler = webpack(webpackConfig)
 
 app.use(require('webpack-dev-middleware')(compiler, {
   watchOptions: {
     poll: true
   },
-  noInfo: true, publicPath: webpackConfig.output.publicPath
+  noInfo: true,
+  publicPath: webpackConfig.output.publicPath
 }))
-
 app.use(require('webpack-hot-middleware')(compiler))
 
 app.use(express.static(`${__dirname}/../../public`))
