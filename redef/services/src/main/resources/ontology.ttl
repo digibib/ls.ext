@@ -248,7 +248,7 @@
   rdfs:domain :Publication ;
   rdfs:range :PlaceOfPublication .
 
-:publishedBy a rdfs:Propperty ;
+:publishedBy a rdfs:Property ;
   rdfs:label "Published by"@en ;
   rdfs:label "Utgitt av"@no ;
   rdfs:domain :Publication ;
