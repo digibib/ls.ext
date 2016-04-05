@@ -183,9 +183,20 @@ When(/^at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker 
   publication_place_field.send_keys :enter
 end
 
-When(/^velger jeg første utgivelsessted i listen som dukker opp$/) do
-  sleep 5
+When(/^at jeg skriver inn (.*) i feltet "([^"]*)" og trykker enter$/) do |concept, label|
+  field = @site.WorkFlow.get_text_field_from_label(label)
+  field.click
+  field.set(@context[("#{@site.WorkFlow.translate(concept)}_name").to_sym])
+  field.send_keys :enter
+end
+
+def select_first_in_open_dropdown
   @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
+end
+
+When(/^velger jeg første (.*) i listen som dukker opp$/) do |concept|
+  sleep 5
+  select_first_in_open_dropdown
 end
 
 When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
@@ -209,7 +220,7 @@ When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
   role_select_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search'][not(@disabled)]")
   role_select_field.click
   role_select_field.set(role_name)
-  @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
+  select_first_in_open_dropdown
 end
 
 When(/^trykker jeg på knappen for legge til biinnførselen$/) do
@@ -252,10 +263,14 @@ When(/^at jeg skriver inn serie i feltet for serie og trykker enter$/) do
 
 end
 
-
 When(/^jeg kan legge inn seriens navn$/) do
   @context[:serial_name] = generateRandomString
   @site.RegSerial.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:serial_name])
+end
+
+When(/^jeg kan legge inn utgiverens navn$/) do
+  @context[:publisher_name] = generateRandomString
+  @site.RegPublisher.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:publisher_name])
 end
 
 When(/^skriver jeg inn "([^"]*)" som utgivelsens nummer i serien$/) do |issue|
@@ -266,7 +281,7 @@ end
 
 When(/^velger jeg den første serien i listen som dukker opp$/) do
   sleep 5
-  @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
+  select_first_in_open_dropdown
 end
 
 When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|

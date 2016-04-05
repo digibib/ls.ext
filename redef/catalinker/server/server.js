@@ -145,6 +145,13 @@ app.get('/config', function (request, response) {
                   {rdfProperty: "writingSystem", multiple: true},
                   {rdfProperty: "adaptationOfPublicationForParticularUserGroups", multiple: true},
                     {
+                      rdfProperty: "publishedBy",
+                      authority: true, // this indicates it is an authorized entity
+                      nameProperties: ["name"], // these are proeprty names used to label already connected entities
+                      indexType: "publisher", // this is the name of the elasticsearch index type from which authorities are searched within
+                      indexDocumentFields: ["name"] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
+                    },
+                    {
                       rdfProperty: "placeOfPublication",
                       authority: true, // this indicates it is an authorized entity
                       nameProperties: ["place", "country"], // these are proeprty names used to label already connected entities

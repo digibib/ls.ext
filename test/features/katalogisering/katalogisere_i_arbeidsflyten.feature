@@ -16,6 +16,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Så leverer systemet en ny ID for det nye utgivelsesstedet
     Og jeg kan legge inn stedsnavn og land
     Og grensesnittet viser at endringene er lagret
+    Og jeg vil lage en ny utgiver
+    Så leverer systemet en ny ID for den nye utgiveren
+    Og jeg kan legge inn utgiverens navn
+    Og grensesnittet viser at endringene er lagret
     Når jeg legger inn forfatternavnet på startsida
     Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret
@@ -34,6 +38,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på knappen for legge til serieinformasjon
     Og jeg venter litt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
+    Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
+    Så velger jeg første utgiver i listen som dukker opp
     Og bekrefter for å gå videre til biinførsler
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt

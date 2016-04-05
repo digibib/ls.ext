@@ -3,6 +3,17 @@
 require_relative 'catalinker_page.rb'
 
 class WorkFlow < CatalinkerPage
+  def translate(concept)
+    {
+        'utgiver' => 'publisher',
+        'verk' => 'work',
+        'utgivelse' => 'publication',
+        'person' => 'person',
+        'utgivelsessted' => 'placeOfPublication',
+        'serie' => 'serial'
+    }[concept]
+  end
+
   def visit
     retry_wait do
       @browser.goto catalinker(:workflow)
@@ -65,6 +76,10 @@ class WorkFlow < CatalinkerPage
       not element.attribute_value(attribute_name).empty?
     end
     element.attribute_value(attribute_name)
+  end
+
+  def get_text_field_from_label(label)
+    @browser.text_field(:xpath => "//span[./preceding-sibling::div[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input[@type='search']")
   end
 
   def finish
