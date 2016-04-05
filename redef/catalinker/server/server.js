@@ -62,7 +62,7 @@ app.get('/workflow', function (req, res, next) {
   res.sendFile('main.html', {title: 'Katalogisering', root: __dirname + '/../public/'});
 });
 
-app.get('/:type(person|work|publication|placeOfPublication|serial)', function (req, res, next) {
+app.get('/:type(person|work|publication|placeOfPublication|serial|publisher)', function (req, res, next) {
   newResource(req.params.type).then(function (response) {
     res.redirect('/cataloguing/' + req.params.type + '?resource=' + response.headers.location);
   });
