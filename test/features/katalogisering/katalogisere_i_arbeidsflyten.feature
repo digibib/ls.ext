@@ -9,6 +9,9 @@ Egenskap: Katalogisere i arbeidsflyt
   Scenario: Verifisere resulterende utgivelse fra arbeidsflyt med eksisterende person og verk
     Gitt at jeg har en bok
     Og at det finnes et verk med forfatter
+    Og jeg vil lage en ny serie
+    Så leverer systemet en ny ID for den nye serien
+    Og jeg kan legge inn seriens navn
     Og jeg vil lage et nytt utgivelsessted
     Så leverer systemet en ny ID for det nye utgivelsesstedet
     Og jeg kan legge inn stedsnavn og land
@@ -25,6 +28,12 @@ Egenskap: Katalogisere i arbeidsflyt
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter
     Så velger jeg første utgivelsessted i listen som dukker opp
+    Og at jeg skriver inn serie i feltet for serie og trykker enter
+    Så velger jeg den første serien i listen som dukker opp
+    Så skriver jeg inn "12" som utgivelsens nummer i serien
+    Så trykker jeg på knappen for legge til serieinformasjon
+    Og jeg venter litt
+    Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og bekrefter for å gå videre til biinførsler
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt

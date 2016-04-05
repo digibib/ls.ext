@@ -216,8 +216,12 @@ When(/^trykker jeg på knappen for legge til biinnførselen$/) do
   @browser.as(:xpath => "//*[@id='confirm-addedentry']//span[@class='subject-type-association']//a[text()='Legg til']")[0].click
 end
 
+When(/^trykker jeg på knappen for legge til serieinformasjon$/) do
+  @browser.as(:xpath => "//*[@id='describe-publication']//a[text()='Legg til']")[0].click
+end
+
 When(/^trykker jeg på knappen for legge til mer$/) do
-  @browser.as(:xpath => "//div[./label[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//a[text()='Legg til ny']")[0].click
+  @browser.as(:xpath => "//div[./div[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//a[text()='Legg til ny']")[0].click
 end
 
 When(/^sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |role, association|
@@ -232,9 +236,45 @@ When(/^sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har ro
 end
 
 When(/^sjekker jeg at det er "([^"]*)" biinnførsler totalt$/) do |number_of_additional_entries|
-  @browser.divs(:xpath => "//div[@data-role-association]").length.should equal?(number_of_additional_entries.to_i)
+  @browser.divs(:xpath => "//div[@data-issue-association]").length.should equal?(number_of_additional_entries.to_i)
 end
 
 When(/^fjerner jeg den første biinførselen$/) do
-  @browser.as(:xpath => "//a[@class='delete']")[0].click
+  @browser.as(:xpath => "//*[@id='confirm-addedentry']//a[@class='delete']")[0].click
+end
+
+When(/^at jeg skriver inn serie i feltet for serie og trykker enter$/) do
+  data_automation_id = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#serial_0"
+  serial_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
+  serial_field.click
+  serial_field.set(@context[:serial_name])
+  serial_field.send_keys :enter
+
+end
+
+
+When(/^jeg kan legge inn seriens navn$/) do
+  @context[:serial_name] = generateRandomString
+  @site.RegSerial.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:serial_name])
+end
+
+When(/^skriver jeg inn "([^"]*)" som utgivelsens nummer i serien$/) do |issue|
+  data_automation_id = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
+  issue_field = @browser.text_field(:data_automation_id => data_automation_id)
+  issue_field.set(issue)
+end
+
+When(/^velger jeg den første serien i listen som dukker opp$/) do
+  sleep 5
+  @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
+end
+
+When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
+  data_automation_id_serial = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#serial_0"
+  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']")
+  name.should exist
+  data_automation_id_issue = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
+  issueSpan = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']")
+  issueSpan.should exist
+
 end

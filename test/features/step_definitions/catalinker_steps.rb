@@ -458,6 +458,10 @@ When(/^jeg vil lage et nytt utgivelsessted$/) do
   @site.RegPlaceOfPublication.visit
 end
 
+When(/^jeg vil lage en ny serie/) do
+  @site.RegSerial.visit
+end
+
 When(/^leverer systemet en ny ID for den nye personen$/) do
   @context[:person_identifier] = @site.RegPerson.get_id()
   @context[:person_identifier].should_not be_empty
@@ -466,6 +470,11 @@ end
 When(/^leverer systemet en ny ID for det nye utgivelsesstedet$/) do
   @context[:placeofpublication_identifier] = @site.RegPlaceOfPublication.get_id()
   @context[:placeofpublication_identifier].should_not be_empty
+end
+
+When(/^leverer systemet en ny ID for den nye serien/) do
+  @context[:serial_identifier] = @site.RegSerial.get_id()
+  @context[:serial_identifier].should_not be_empty
 end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
@@ -584,6 +593,7 @@ end
 
 def batch_verify_props(page_object, domain, data, locate_by = 'locate_by_fragment'.to_sym)
   @browser.refresh
+  sleep 4
   data.each do |id, method|
     if locate_by == :locate_by_fragment
       symbol = "#{domain.downcase}_#{id.downcase}".to_sym # e.g. :publication_format
@@ -605,7 +615,6 @@ def batch_verify_props(page_object, domain, data, locate_by = 'locate_by_fragmen
         page_object.method(method).call(inputLocator).should eq expected_value
       end
     rescue
-      sleep 10
       fail "Failed getting field for #{id} with #{method} and #{inputLocator}"
     end
     fail "More than one field for #{id}" if page_object.get_prop_count(inputLocator && !expected_value.kind_of?(Array)) > 1

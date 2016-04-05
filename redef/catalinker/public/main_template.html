@@ -249,7 +249,7 @@
 <input {{#disabled}} disabled="true" {{/}}
 class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
-data-automation-id="{{dataAutomationId}}"
+data-automation-id="{{../../dataAutomationId}}"
 value="{{current.value}}" />
 {{/partial}}
 
@@ -272,7 +272,7 @@ value="{{current.value}}" />
     <input {{#disabled}} disabled="true" {{/}}
     class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
     on-blur='patchResource:{{predicate}},{{rdfType}}'
-    data-automation-id="{{dataAutomationId}}"
+    data-automation-id="{{../../dataAutomationId}}"
     value="{{current.value}}" />
     <select value="{{current.lang}}" on-change='patchResource:{{predicate}},' class="select_lang">
         <option value="">velg språk</option>
@@ -293,12 +293,12 @@ value="{{current.value}}" />
 
 {{#partial input-nonNegativeInteger}}
 {{#if nonEditable}}
-<span>{{./current.value}}</span>
+<span data-automation-id="{{../../dataAutomationId}}">{{./current.value}}</span>
 {{else}}
 <input {{#disabled}} disabled="true" {{/}}
 class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
-data-automation-id="{{dataAutomationId}},rdfType"
+data-automation-id="{{../../dataAutomationId}}"
 value="{{./current.value}}" />
 {{/if}}
 {{/partial}}
