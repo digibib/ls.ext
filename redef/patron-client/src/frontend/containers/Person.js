@@ -76,7 +76,7 @@ const Person = React.createClass({
             <div className='small-text'>
               <p className={person.nationality ? '' : 'hidden'}>
                 <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
-                data-automation-id='person-nationality'>{this.props.intl.formatMessage({ id: person.nationality })}</span>
+                data-automation-id='person-nationality'>{person.nationality ? this.props.intl.formatMessage({ id: person.nationality }) : ''}</span>
               </p>
             </div>
           </div>
