@@ -11,9 +11,9 @@ const SearchResult = React.createClass({
     if (creators.length === 0) {
       return
     }
-    let authorLabel = 'Forfatter'
+    let authorLabel = <FormattedMessage {...messages.author} />
     if (creators.length > 1) {
-      authorLabel = 'Forfattere'
+      authorLabel = <FormattedMessage {...messages.authors} />
     }
     return (
       <p data-automation-id='work_creators'>{authorLabel}: {creators.map(creator => {
@@ -25,7 +25,7 @@ const SearchResult = React.createClass({
   renderDisplayTitle (result) {
     let displayTitle = result.mainTitle
     if (result.partTitle) {
-      displayTitle += ' — ' + result.partTitle
+      displayTitle += ` — ${result.partTitle}`
     }
     return (
       <Link to={result.relativeUri}>
@@ -33,19 +33,17 @@ const SearchResult = React.createClass({
       </Link>
     )
   },
-  render () {
-    let result = this.props.result
-
-    let originalTitle = ''
+  renderOriginalTitle (result) {
     if (result.originalTitle) {
-      originalTitle = (
+      return (
         <p data-automation-id='work_originaltitle'>
-          Originaltittel:
-          {result.originalTitle}
+          <FormattedMessage {...messages.originalTitle} /> {result.originalTitle}
         </p>
       )
     }
-
+  },
+  render () {
+    let result = this.props.result
     let formats = result.publications
       ? [ ...new Set(result.publications.filter(publication => publication.format).map(publication => this.props.intl.formatMessage({ id: publication.format }))) ]
       : []
@@ -61,7 +59,7 @@ const SearchResult = React.createClass({
               <strong>{this.renderDisplayTitle(result)}</strong>
             </p>
             {this.renderAuthors(result.creators)}
-            {originalTitle}
+            {this.renderOriginalTitle(result)}
           </div>
         </div>
         <div className='row result-more'>
@@ -82,6 +80,21 @@ const SearchResult = React.createClass({
 })
 
 const messages = defineMessages({
+  author: {
+    id: 'SearchResult.author',
+    description: 'The label when one author',
+    defaultMessage: 'Author'
+  },
+  authors: {
+    id: 'SearchResult.authors',
+    description: 'The label when multiple authors',
+    defaultMessage: 'Authors'
+  },
+  originalTitle: {
+    id: 'SearchResult.originalTitle',
+    description: 'The label for the original title',
+    defaultMessage: 'Original title:'
+  },
   allPublications: {
     id: 'SearchResult.allPublications',
     description: 'Link to go to all publications',
