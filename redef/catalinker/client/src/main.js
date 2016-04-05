@@ -231,7 +231,6 @@
                             var label = nameParts.join(" - ");
                             ractive.set("authorityLabels." + uri.replace(/[:\/\.]/g, "_"), label);
                             input.values[index].current.displayName = label;
-                            console.log("setting label of input " + input.values[index].current.value[0] + " to " + input.values[index].current.displayName)
                             ractive.update();
                             $("#sel_" + input.values[index].uniqueId).trigger("change");
                         });
@@ -290,12 +289,14 @@
                                     if (input.isSubInput) {
                                         input.values[index].nonEditable = true;
                                         input.values[index].subjectType = type;
+                                        input.parentInput.allowAddNewButton = true;
                                     }
                                 });
                                 var mainInput = input.isSubInput ? input.parentInput : input;
                                 mainInput.subjectType = type;
                                 if (mainInput.multiple) {
-                                    if (!mainInput.addNewHandledBySelect2) {
+                                    if (typeof mainInput.addNewHandledBySelect2 !== 'undefined' && !mainInput.addNewHandledBySelect2) {
+                                        console.log("setting allowAddNewButton to true " + mainInput.addNewHandledBySelect2)
                                         mainInput.allowAddNewButton = true;
                                     }
                                 }
@@ -306,7 +307,6 @@
                             ractive.set("save_status", "åpnet eksisterende ressurs");
                             ractive.set("targetUri." + type, resourceUri);
                             updateBrowserLocation(type, resourceUri);
-//                            $("select").select2();
                         })
                     }
                 )
@@ -384,34 +384,126 @@
                 });
         };
 
-        function createInputForPredefinedValues(prop, tab) {
-            return {
-                type: prop.type,
+    function createInputForCompoundInput(prop, tab, ontologyUri, inputMap) {
+            var currentInput = {
+                type: "compound",
                 label: prop.label,
                 domain: tab.rdfType,
                 subjectTypes: prop.subjects,
                 subjectType: undefined,
-                searchable: true,
-                predicate: prop.predicate,
-                datatype: "http://www.w3.org/2001/XMLSchema#anyURI",
-                values: [{
-                    old: {value: "", lang: ""},
-                    current: {value: [], lang: ""},
-                    uniqueId: _.uniqueId()
-                }],
-                search_result: [],
-                allowAddNewButton: false
+                allowAddNewButton: false,
+                subInputs: [],
+                predicate: ontologyUri + prop.subInputs.rdfProperty,
+                range: prop.subInputs.range
             };
+            _.each(prop.subInputs.inputs, function (subInput) {
+                var inputFromOntology = inputMap[prop.subInputs.range + "." + ontologyUri + subInput.rdfProperty];
+                currentInput.subInputs.push({
+                        label: subInput.label,
+                        input: _.extend(inputFromOntology, {
+                            type: subInput.type || inputFromOntology.type,
+                            isSubInput: true,
+                            parentInput: currentInput,
+                            searchable: inputFromOntology.searchable,
+                            indexType: subInput.indexType,
+                            indexDocumentFields: subInput.indexDocumentFields,
+                            nameProperties: subInput.nameProperties,
+                            dataAutomationId: inputFromOntology.dataAutomationId
+                        }),
+                        parentInput: currentInput
+                    }
+                );
+            });
+            return currentInput;
         }
 
-        var createInputGroups = function (applicationData) {
-            var props = Ontology.allProps(applicationData.ontology),
-                inputs = [],
-                inputMap = {};
-            applicationData.predefinedValues = {};
-            var predefinedValues = [];
-            for (var i = 0; i < props.length; i++) {
-                var disabled = false;
+        function transferInputGroupOptions(prop, currentInput) {
+            if (prop.multiple) {
+                currentInput.multiple = true;
+            }
+            if (prop.authority) {
+                currentInput.type = 'searchable-authority'
+            }
+            if (prop.indexType) {
+                currentInput.indexType = prop.indexType
+            }
+            if (prop.indexDocumentFields) {
+                currentInput.indexDocumentFields = prop.indexDocumentFields
+            }
+            if (prop.type) {
+                currentInput.type = prop.type;
+            }
+            currentInput.visible = prop.type !== 'entity';
+            if (prop.nameProperties) {
+                currentInput.nameProperties = prop.nameProperties;
+            }
+            if (prop.dataAutomationId) {
+                currentInput.dataAutomationId = prop.dataAutomationId;
+            }
+            if (prop.subjects) {
+                currentInput.subjects = prop.subjects;
+            }
+            if (prop.widgetOptions) {
+                currentInput.widgetOptions = prop.widgetOptions;
+            }
+            if (prop.isMainEntry) {
+                currentInput.isMainEntry = prop.isMainEntry;
+            }
+            if (prop.cssClassPrefix) {
+                currentInput.cssClassPrefix = prop.cssClassPrefix;
+            } else {
+                currentInput.cssClassPrefix = 'default';
+            }
+        }
+
+        function markFirstAndLastInputsInGroup(group) {
+            _.findWhere(group.inputs, {visible: true}).firstInGroup = true;
+
+            group.inputs[_.findLastIndex(group.inputs, function (input) {
+                return input.visible === true;
+            })].lastInGroup = true;
+        }
+
+    function assignInputTypeFromRange(input){
+            switch (input.range) {
+                case "http://www.w3.org/2001/XMLSchema#string":
+                    input.type = "input-string";
+                    break;
+                case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
+                    input.type = "input-lang-string";
+                    break;
+                case "http://www.w3.org/2001/XMLSchema#gYear":
+                    input.type = "input-gYear";
+                    break;
+                case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
+                    input.type = "input-nonNegativeInteger";
+                    break;
+                case "deichman:PlaceOfPublication":
+                case "deichman:Work":
+                case "deichman:Person":
+                case "deichman:Publisher":
+                case "deichman:Role":
+                case "deichman:Serial":
+                case "deichman:Contribution":
+                case "deichman:SerialIssue":
+                    // TODO infer from ontology that this is an URI
+                    // (because deichman:Work a rdfs:Class)
+                    input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
+                    input.type = "input-string"; // temporarily
+                    break;
+                default:
+                    throw "Don't know which input-type to assign to range: " + input.range;
+            }
+        }
+
+    var createInputGroups = function (applicationData) {
+        var props = Ontology.allProps(applicationData.ontology),
+            inputs = [],
+            inputMap = {};
+        applicationData.predefinedValues = {};
+        var predefinedValues = [];
+        for (var i = 0; i < props.length; i++) {
+            var disabled = false;
                 if (props[i]["http://data.deichman.no/ui#editable"] !== undefined && props[i]["http://data.deichman.no/ui#editable"] !== true) {
                     disabled = true;
                 }
@@ -494,11 +586,7 @@
                     inputs.push(input);
                     inputMap[unPrefix(domain) + "." + input.predicate] = input;
                 });
-
-
             }
-//        graph.byType()
-//        applicationData.ontology
             var inputGroups = [];
             var ontologyUri = applicationData.ontology["@context"]["deichman"];
             var tabs = applicationData.config.tabs;
@@ -513,35 +601,7 @@
                             throw "Tab '" + tab.label + "' specified unknown property '" + prop.rdfProperty + "'";
                         }
                     } else if (prop.subInputs) {
-                        currentInput = {
-                            type: "compound",
-                            label: prop.label,
-                            domain: tab.rdfType,
-                            subjectTypes: prop.subjects,
-                            subjectType: undefined,
-                            allowAddNewButton: false,
-                            subInputs: [],
-                            predicate: ontologyUri + prop.subInputs.rdfProperty,
-                            range: prop.subInputs.range
-                        };
-                        _.each(prop.subInputs.inputs, function (subInput) {
-                            var inputFromOntology = inputMap[prop.subInputs.range + "." + ontologyUri + subInput.rdfProperty];
-                            currentInput.subInputs.push({
-                                    label: subInput.label,
-                                    input: _.extend(inputFromOntology, {
-                                        type: subInput.type || inputFromOntology.type,
-                                        isSubInput: true,
-                                        parentInput: currentInput,
-                                        searchable: inputFromOntology.searchable,
-                                        indexType: subInput.indexType,
-                                        indexDocumentFields: subInput.indexDocumentFields,
-                                        nameProperties: subInput.nameProperties,
-                                        dataAutomationId: inputFromOntology.dataAutomationId
-                                    }),
-                                    parentInput: currentInput
-                                }
-                            );
-                        });
+                        currentInput = createInputForCompoundInput(prop, tab, ontologyUri, inputMap);
                     } else {
                         throw "Input #" + index + " of tab '" + tab.label + "' must have rdfProperty";
                     }
@@ -550,50 +610,19 @@
                         groupInputs.push(currentInput);
                         currentInput.rdfType = tab.rdfType;
                     }
-                    if (prop.multiple) {
-                        currentInput.multiple = true;
-                    }
-                    if (prop.authority) {
-                        currentInput.type = 'searchable-authority'
-                    }
-                    if (prop.indexType) {
-                        currentInput.indexType = prop.indexType
-                    }
-                    if (prop.indexDocumentFields) {
-                        currentInput.indexDocumentFields = prop.indexDocumentFields
-                    }
-                    if (prop.type) {
-                        currentInput.type = prop.type;
-                    }
-                    currentInput.visible = prop.type !== 'entity';
-                    if (prop.nameProperties) {
-                        currentInput.nameProperties = prop.nameProperties;
-                    }
-                    if (prop.dataAutomationId) {
-                        currentInput.dataAutomationId = prop.dataAutomationId;
-                    }
-                    if (prop.subjects) {
-                        currentInput.subjects = prop.subjects;
-                    }
-                    if (prop.widgetOptions) {
-                        currentInput.widgetOptions = prop.widgetOptions;
-                    }
-                    if (prop.isMainEntry) {
-                        currentInput.isMainEntry = prop.isMainEntry;
-                    }
-                    if (prop.cssClassPrefix) {
-                        currentInput.cssClassPrefix = prop.cssClassPrefix;
-                    }
+                    transferInputGroupOptions(prop, currentInput);
                 });
                 group.inputs = groupInputs;
                 group.tabLabel = tab.label;
                 group.tabId = tab.id;
                 group.tabSelected = false;
+                group.domain = tab.rdfType;
+
                 if (tab.nextStep) {
                     group.nextStep = tab.nextStep;
                 }
 
-                group.domain = tab.rdfType;
+                markFirstAndLastInputsInGroup(group);
                 inputGroups.push(group);
             });
             if (inputGroups.length > 0) {
@@ -621,6 +650,21 @@
         function visitInputs(mainInput, visitor) {
             _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, "input") : [mainInput], visitor);
         }
+
+        function positionSupportPanels() {
+            $("span.support-panel").each(function (index, panel) {
+                var supportPanelBaseId = $(panel).attr("data-support-panel-base-ref");
+                var dummyPanel = $("#right-dummy-panel");
+                var supportPanelLeftEdge = dummyPanel.position().left;
+                var supportPanelWidth = dummyPanel.width();
+                $(panel).css({
+                    top: $("#" + supportPanelBaseId).position().top - 15,
+                    left: supportPanelLeftEdge,
+                    width: supportPanelWidth
+                });
+            });
+        }
+
 
         var Main = {
             getURLParameter: function (name) {
@@ -964,16 +1008,17 @@
                                 addValue: function (event) {
                                     var mainInput = ractive.get(event.keypath);
                                     visitInputs(mainInput, function (input) {
-                                        console.log("creating input for predicate " + input.predicate + " lalues lenbth before: " + input.values.length);
                                         input.values[input.values.length] = {
                                             old: {value: "", lang: ""},
                                             current: {value: "", lang: ""},
                                             uniqueId: _.uniqueId()
                                         };
+                                        input.search_result = null;
                                     });
                                     ractive.update();
                                     ractive.set(event.keypath + ".allowAddNewButton", false);
-                                    Main.repositionSupportPanelsHorizontally();
+                                    console.log("setting " + event.keypath + ".allowAddNewButton to false");
+                                    positionSupportPanels();
                                 },
                                 // patchResource creates a patch request based on previous and current value of
                                 // input field, and sends this to the backend.
@@ -1026,6 +1071,10 @@
                                             ractive.get(subInputs + "." + subInputIndex + ".input.values").splice(index, 1);
                                         });
                                         ractive.update();
+                                        if (ractive.get(subInputs + ".0.input.values").length === 0) {
+                                            var addValueEvent = {keypath: parentOf(subInputs)};
+                                            ractive.fire("addValue", addValueEvent);
+                                        }
                                     })
                                 },
                                 searchResource: function (event, searchString) {
@@ -1120,16 +1169,7 @@
                                         var keyPath = "inputGroups." + groupIndex;
                                         ractive.set(keyPath + ".tabSelected", keyPath === event.keypath);
                                     });
-                                    $("span.support-panel").each(function (index, panel) {
-                                        var supportPanelBaseId = $(panel).attr("data-support-panel-base-ref");
-                                        var supportPanelLeftEdge = $("#right-dummy-panel").position().left;
-                                        var supportPanelWidth = $("#right-dummy-panel").width();
-                                        $(panel).css({
-                                            top: $("#" + supportPanelBaseId).position().top,
-                                            left: supportPanelLeftEdge,
-                                            width: supportPanelWidth
-                                        });
-                                    });
+                                    positionSupportPanels();
                                 },
                                 nextStep: function (event) {
                                     if (event.context.restart) {

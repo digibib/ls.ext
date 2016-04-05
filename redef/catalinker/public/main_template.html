@@ -65,10 +65,11 @@
 </div>
 
 {{#partial input}}
+{{inputIndex}}
 <div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
-    <label data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</label>
+    <div class="pure-u-1-2 label {{firstInGroup ? 'first':''}} panel-part" data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</div>
     {{#each values:index}}
-    <fieldset class="pure-u-1-2" id="support_panel_base_{{uniqueId}}">
+    <span class="pure-u-1-2 field panel-part {{lastInGroup ? 'last':''}}" id="support_panel_base_{{uniqueId}}">
         {{>type}}
         {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
         <a data-automation-id="biblio_record_link" target="_blank"
@@ -80,7 +81,7 @@
            class="link"></a>
         {{/}}
         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-    </fieldset>
+    </span>
     {{#index == values.length -1}}
     <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
         {{>"support-for-"+type}}
@@ -90,7 +91,7 @@
 
     {{#if subInputs}}
     {{#each subInputs[0].input.values:inputValueIndex}}
-    <span class="pure-u-1-2 {{#if cssClassPrefix}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}}" {{#if
+    <span class="pure-u-1-2 panel-part field {{lastInGroup ? 'last':''}} {{#if cssClassPrefix}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}}" {{#if
           nonEditable}}disabled="disabled" {{/if}}>
     {{#if nonEditable}}
     <a class="delete" title="Slett oppføring"
@@ -102,7 +103,7 @@
                 <span class="label {{#if !nonEditable}}pure-u-1-1{{/if}}"
                       data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
                 {{#with input.values[inputValueIndex]}}
-                    <span class="value" id="support_panel_base_{{uniqueId}}">
+                    <span class="value sub-field" id="support_panel_base_{{uniqueId}}">
                         {{>../../../input.type}}
                     </span>
                     {{#if ! nonEditable }}
@@ -147,7 +148,7 @@
     {{/each}}
     {{/if}}
     {{#multiple && allowAddNewButton}}
-    <span class="pure-u-1-2">
+    <span class="pure-u-1-2 panel-part">
         <div class="add-new-btn-row">
             <a class="pure-button pure-button-primary" on-click="addValue">Legg til ny</a>
         </div>

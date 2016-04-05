@@ -1,7 +1,21 @@
 $lightestgray: #f6f6f6;
 $lightergray: #e8e8e8;
+$input-background: white;
+$mintgreen: #DCFC9F;
+
+.label-font {
+  font-weight: bold;
+}
 
 body {
+  [class^='select2'] {
+    border-radius: 2px !important;
+  }
+  .select2-container .select2-choice, .select2-result-label {
+    font-size: 1.5em;
+    height: 41px;
+    overflow: auto;
+  }
   background: no-repeat url('/images/logo.png') 15px 20px / 170px;
   margin: 40px auto;
   max-width: 1050px;
@@ -48,8 +62,39 @@ body {
       .add-item-button {
         float: right;
       }
-      label {
+      .label {
         display: block;
+        background: $input-background;
+        padding: 12px 12px 4px 12px;
+        font-weight: bold;
+        &:after {
+          content: ":";
+        }
+      }
+      .field {
+        height: 30px;
+        padding: 0px 12px 15px 12px;
+        background: $input-background;
+        &.last {
+          border-bottom: 1px solid lightgrey;
+        }
+        &:not(.last):after{
+          display: block;
+          height: 2px;
+          width: 100%;
+          background: lightgrey;
+          content: "";
+          margin-top: 24px;
+        }
+      }
+      .panel-part {
+        border-left: 1px solid lightgrey;
+        border-right: 1px solid lightgrey;
+        height: 100%;
+        background: white;
+        &.first {
+          border-top: 1px solid lightgrey;
+        }
       }
       input {
         height: 26px;
@@ -104,12 +149,13 @@ body {
         margin-top: 5px;
         display: inline-flex;
         label {
-        padding-right: 25px;
-        padding-left: 5px;
+          padding-right: 25px;
+          padding-left: 5px;
         }
       }
       .add-new-btn-row {
         float: right;
+        padding: 4px 8px 8px 8px;
       }
       a.delete {
         background-image: url('/images/delete_cross.svg');
@@ -119,18 +165,100 @@ body {
         cursor: pointer;
         min-width: 20px;
       }
-      .additional-entries-non-editable {
+      .default-editable {
         min-height: 60px;
-        border: 1px solid;
+        padding: 0 0 12px 0;
+        height: 100%;
+        .inputs {
+          background: $mintgreen;
+          display: block;
+          border: 1px solid lightgrey;
+          padding: 5px 22px;
+          margin: 10px;
+          .input {
+            display: block;
+            .label {
+              background: inherit;
+              padding: 0;
+              @extend .label-font;
+              display: inline;
+              &:after {
+                content: ":";
+              }
+            }
+            .field {
+              background: inherit;
+              padding: 0;
+            }
+          }
+        }
+        .subject-type-association {
+          margin: -10px;
+        }
+
+      }
+      .default-non-editable {
+        min-height: 60px;
         padding: 8px;
-        margin-bottom: 10px;
         .inputs {
           display: block;
-          border: 1px solid;
+          border: 1px solid lightgrey;
+          padding: 5px 22px;
+          .input {
+            display: block;
+            .label {
+              padding: 0;
+              @extend .label-font;
+              display: inline;
+              &:after {
+                content: ":";
+              }
+            }
+            .field {
+              padding: 0;
+            }
+          }
+        }
+        .subject-type-association {
+          display: none;
+        }
+      }
+      .additional-entries-editable {
+        min-height: 60px;
+        padding: 8px;
+        .inputs {
+          .input {
+            background: $mintgreen;
+            padding: 0 12px;
+            .label {
+              background: inherit;
+            }
+            .field {
+              padding: 0;
+              background: inherit;
+            }
+          }
+        }
+        .subject-type-association {
+          span {
+            background: $mintgreen;
+            padding: 0 12px;
+          }
+        }
+      }
+      .additional-entries-non-editable {
+        min-height: 60px;
+        padding: 8px;
+        .inputs {
+          display: block;
+          border: 1px solid lightgrey;
           text-align: center;
           padding: 5px 22px;
           .label {
             display: none;
+          }
+          .field {
+            padding: 0;
           }
           span.input:last-child:before {
             content: " — ";
