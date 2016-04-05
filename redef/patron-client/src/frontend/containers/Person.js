@@ -31,27 +31,15 @@ const Person = React.createClass({
     return <div></div>
   },
   renderLifeSpan (person) {
-    let lifeSpan = ''
     if (person.birthYear) {
-      lifeSpan = '(' + person.birthYear + '-'
-      if (person.deathYear) {
-        lifeSpan += person.deathYear
-      }
-      lifeSpan += ')'
+      return `(${person.birthYear}-${person.deathYear || ''})`
     }
-    return lifeSpan
-  },
-  hiddenIfFalse (val) {
-    if (!val) {
-      return 'hidden'
-    }
-    return ''
   },
   renderWorks (person) {
     let workTitle = function (work) {
       let title = inPreferredLanguage(work.mainTitle)
       if (Object.keys(work.partTitle).length > 0) {
-        title += ' — ' + inPreferredLanguage(work.partTitle)
+        title += ` —  ${inPreferredLanguage(work.partTitle)}`
       }
       return title
     }
@@ -86,7 +74,7 @@ const Person = React.createClass({
               data-automation-id='person-name'>{person.name}</span></h2>
             <h3><span data-automation-id='lifespan'>{this.renderLifeSpan(person)}</span></h3>
             <div className='small-text'>
-              <p className={this.hiddenIfFalse(person.nationality)}>
+              <p className={person.nationality ? '' : 'hidden'}>
                 <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
                 data-automation-id='person-nationality'>{this.props.intl.formatMessage({ id: person.nationality })}</span>
               </p>
