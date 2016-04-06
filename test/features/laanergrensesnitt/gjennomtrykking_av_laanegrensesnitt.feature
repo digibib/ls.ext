@@ -70,9 +70,9 @@ Egenskap: Gå gjennom lånegrensesnittet
   @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
-    Når jeg søker på "prefix0" (+ id på vilkårlig migrering)
+    Når jeg søker på "Berlinerpoplene"
     Og jeg trykker på første treff
-    Så skal jeg se informasjon om verket
+    Så skal jeg se fire utgivelser
     Når jeg trykker på en utgivelse
     Så skal jeg se informasjon om utgivelsen
     Og informasjon om ledige eksemplarer

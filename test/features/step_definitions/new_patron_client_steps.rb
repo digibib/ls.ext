@@ -107,3 +107,12 @@ end
 When(/^søkeknappen skal vise ordet "([^"]*)"$/) do |button_text|
   @browser.element(id: 'submit').text.should eq button_text
 end
+
+When(/^jeg søker på "([^"]*)"$/) do |query|
+  @site.SearchPatronClient.search_with_text "#{query}"
+end
+
+When(/^jeg trykker på første treff$/) do
+  wait_for { @browser.element(class: 'result-more').a.present? }
+  @browser.element(class: 'result-more').a.click
+end

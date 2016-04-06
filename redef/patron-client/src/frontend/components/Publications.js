@@ -46,7 +46,7 @@ export default React.createClass({
           if (this.state.moreInfo && row === this.state.moreInfo.row) {
             output.push(<div className='row'>
               {this.getArrow(this.state.moreInfo.column)}
-                <div class='col'>
+              <div className='col'>
                   <PublicationInfo publication={this.state.moreInfo.publication}/>
                 </div>
               </div>
