@@ -854,20 +854,26 @@
                         };
                         var detectChange = function (node) {
                             var enableChange = false;
-                            $(node).on("select2:selecting select2:unselecting", function () {
+                            var changeType = null;
+                            $(node).on("select2:selecting select2:unselecting", function (event) {
                                 enableChange = true;
+                                changeType = event.type;
                             });
                             $(node).on("change", function (e) {
                                 if (enableChange) {
                                     enableChange = false;
                                     var inputValue = Ractive.getNodeInfo(e.target);
                                     var keypath = inputValue.keypath;
-                                    ractive.set(keypath + ".current.value", $(e.target).val());
+                                    ractive.set(keypath + ".current.value", changeType === "select2:unselecting" ? [] : $(e.target).val());
+                                    if (changeType === "select2:unselecting") {
+                                        $(e.target).select2("val", "");
+                                    }
                                     var inputNode = ractive.get(grandParentOf(keypath));
                                     if (!inputNode.isSubInput) {
                                         Main.patchResourceFromValue(ractive.get("targetUri." + inputNode.rdfType), inputNode.predicate,
                                             ractive.get(keypath), inputNode.datatype, errors, keypath);
                                     }
+                                    changeType = null;
                                 }
                             });
                             return {
