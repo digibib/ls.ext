@@ -199,7 +199,7 @@
                             <span class="part-name pure-u-21-22">{{inPreferredLanguage(partTitle)}}</span>
                             {{/}}
                         </div>
-                        {{# ! ../../../../../../../../../widgetOptions.hideSelectWork}}
+                        {{# widgetOptions.showSelectWork}}
                         <span class="search-result-work-selector pure-u-2-24">
                             <input class="select-work-radio" type="radio" checked="{{isChecked}}"
                                    on-click="setResourceAndWorkResource:{{../../../person}},{{origin}},'Person'"/>
