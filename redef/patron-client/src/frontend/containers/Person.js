@@ -53,6 +53,16 @@ const Person = React.createClass({
       )
     })
   },
+  renderNationality (person) {
+    if (person.nationality) {
+      return (
+        <p>
+          <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
+          data-automation-id='person-nationality'>{this.props.intl.formatMessage({ id: person.nationality })}</span>
+        </p>
+      )
+    }
+  },
   render () {
     // TODO Better renderEmpty and showing something while it loads the resource.
     if (this.props.isRequesting) {
@@ -74,10 +84,7 @@ const Person = React.createClass({
               data-automation-id='person-name'>{person.name}</span></h2>
             <h3><span data-automation-id='lifespan'>{this.renderLifeSpan(person)}</span></h3>
             <div className='small-text'>
-              <p className={person.nationality ? '' : 'hidden'}>
-                <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
-                data-automation-id='person-nationality'>{person.nationality ? this.props.intl.formatMessage({ id: person.nationality }) : ''}</span>
-              </p>
+              {this.renderNationality(person)}
             </div>
           </div>
         </div>
