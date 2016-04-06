@@ -198,13 +198,29 @@ span.workTitle {
   display: inline-block;
 }
 
+.col-1-1 {
+  width: 100%;
+}
+
 .col-1-3 {
   width: calc(100% / 3);
 }
 
 .publication-info {
   background: #eee;
-  height: 2em;
-  padding: 0.5em;
-  font-size: 1.2em
+  margin-bottom: 1em;
+}
+
+.triangle-up {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 50px solid #eee;
+  margin-left: 1.1em;
+  margin-bottom: -1.2em;
+}
+
+.row-no-margin {
+  margin-bottom: 0;
 }

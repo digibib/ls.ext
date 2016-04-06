@@ -25,6 +25,11 @@ export default React.createClass({
       }
     })
   },
+  getArrow (column) {
+    return [ 0, 1, 2 ].map(number =>
+      <div className='col col-1-3'>{number === column ? <div className='triangle-up'/> : ''}&nbsp;</div>
+    )
+  },
   renderPublications () {
     let publicationsCopy = [ ...this.props.publications ]
     let threeAndThreePublications = []
@@ -34,12 +39,18 @@ export default React.createClass({
     return (
       <div>
         {threeAndThreePublications.map((publications, row) => {
-          let output = [ publications.map((publication, column) => <Publication key={publication.id}
-                                                                                onClick={this.handleClick.bind(this, publication, row, column)}
-                                                                                publication={publication}/>) ]
+          let output = [ <div className='row'>{publications.map((publication, column) => <Publication
+            key={publication.id}
+            onClick={this.handleClick.bind(this, publication, row, column)}
+            publication={publication}/>)}</div> ]
           if (this.state.moreInfo && row === this.state.moreInfo.row) {
-            console.log("yay")
-            output.push(<PublicationInfo publication={this.state.moreInfo.publication}/>)
+            output.push(<div className='row'>
+              {this.getArrow(this.state.moreInfo.column)}
+                <div class='col'>
+                  <PublicationInfo publication={this.state.moreInfo.publication}/>
+                </div>
+              </div>
+            )
           }
           return output
         })

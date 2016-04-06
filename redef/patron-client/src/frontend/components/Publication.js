@@ -16,8 +16,7 @@ const Publication = React.createClass({
   render () {
     let publication = this.props.publication
     return (
-      <div onClick={this.props.onClick} className='col-1-3 inline-block'>
-        <div className='row'>
+      <div onClick={this.props.onClick} className='col col-1-3'>
           <div className='col book-cover placeholder'/>
           <div className='result-info'>
             <p>
@@ -41,7 +40,6 @@ const Publication = React.createClass({
               </span>
             </p>
           </div>
-        </div>
       </div>
     )
   }
