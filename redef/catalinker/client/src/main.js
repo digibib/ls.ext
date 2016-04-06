@@ -813,7 +813,7 @@
                                     },
                                     data: function (params) {
                                         return {
-                                            q: params.term, // search term
+                                            q: params.term + "*", // search term
                                             page: params.page
                                         };
                                     },
@@ -1085,7 +1085,7 @@
                                         query: {
                                             match: {
                                                 'person.name': {
-                                                    query: searchString,
+                                                    query: searchString + "*",
                                                     operator: "and"
                                                 }
                                             }
