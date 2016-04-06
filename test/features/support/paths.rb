@@ -73,9 +73,12 @@ module Paths
       :stage_marc => "/cgi-bin/koha/tools/stage-marc-import.pl",
 
       # svc
+      :svc_auth => "/cgi-bin/koha/svc/authentication?",
       :search_patrons => "/cgi-bin/koha/svc/members/search",
-      :preferences => "/cgi-bin/koha/svc/config/systempreferences/"
+      :preferences => "/cgi-bin/koha/svc/config/systempreferences/",
 
+      # koha rest api
+      :koha_rest_api => "/api/v1/"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{host}:#{port(:koha_intra)}#{paths[path.to_sym]}"
