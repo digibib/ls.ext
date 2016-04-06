@@ -5,25 +5,7 @@ const requestProxy = require('express-request-proxy')
 const port = process.env.PORT || 8000
 const app = express()
 
-const webpack = require('webpack')
-let webpackConfig
-if (process.env.NODE_ENV === 'docker') {
-  webpackConfig = require('../../webpack.config.docker')
-} else if (process.env.NODE_ENV === 'production') {
-  webpackConfig = require('../../webpack.config.production')
-} else {
-  webpackConfig = require('../../webpack.config')
-}
-const compiler = webpack(webpackConfig)
-
-app.use(require('webpack-dev-middleware')(compiler, {
-  watchOptions: {
-    poll: true
-  },
-  noInfo: true,
-  publicPath: webpackConfig.output.publicPath
-}))
-app.use(require('webpack-hot-middleware')(compiler))
+app.use(require('connect-livereload')())
 
 app.use(express.static(`${__dirname}/../../public`))
 
@@ -32,7 +14,7 @@ app.all('/services/*', requestProxy({
 }))
 
 app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, '..', '..', 'public', 'dist', 'index.html'))
+  response.sendFile(path.resolve(__dirname, '..', '..', 'public', 'index.html'))
 })
 
 app.listen(port)
