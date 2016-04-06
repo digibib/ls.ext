@@ -29,14 +29,22 @@ end
 
 When(/^låneren reserverer boka via API$/) do
 	params = {
-		biblionumber: @active[:biblionumber],
+		biblionumber: @active[:book].biblionumber.to_i,
 		branchcode: @active[:branch].code,
-		borrowernumber: @active[:patron].borrowernumber
+		borrowernumber: @active[:patron].borrowernumber.to_i
 	}
 	res = KohaRESTAPI::Reserve.new(@browser,@context,@active).add(params)
-	STDOUT.puts res.inspect
+  @context[:reserve] = JSON.parse(res)
+
+  @cleanup.push("reservering #{@context[:reserve]["reserve_id"]} på bok #{@context[:reserve]["biblionumber"]}" =>
+    lambda do
+      KohaRESTAPI::Reserve.new(@browser,@context,@active).delete(@context[:reserve]["reserve_id"])
+    end
+  )
 end
 
 Then(/^gir APIet tilbakemelding om at boka er reservert$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @context[:reserve]["biblionumber"].should eq(@active[:book].biblionumber)
+  @context[:reserve]["branchcode"].should eq(@active[:branch].code)
+  @context[:reserve]["borrowernumber"].should eq(@active[:patron].borrowernumber)
 end

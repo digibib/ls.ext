@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Reservering av bok via API
   Som låner
   For å få tak i en bestemt bok
@@ -12,7 +11,6 @@ Bakgrunn:
   Og at boka finnes i biblioteket
   Og at det finnes en låner med passord
 
-  @wip
   Scenario: Låner reserverer bok via API
     Gitt at låner er pålogget som låner (Opac)
     Og at låneren har funnet en bok
