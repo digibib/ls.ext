@@ -169,14 +169,6 @@
             input.values[index].uniqueId = _.uniqueId();
         }
 
-        function setDomain(input, index, domain) {
-            input.values = input.values || [];
-            if (!input.values[index]) {
-                input.values[index] = {};
-            }
-            input.values[index].domain = domain;
-        }
-
         function setDisplayValue(input, index, property) {
             axios.get(input.values[index].current.value).then(function (response) {
                 var graphData = ensureJSON(response.data);
@@ -384,7 +376,7 @@
                 });
         };
 
-    function createInputForCompoundInput(prop, tab, ontologyUri, inputMap) {
+        function createInputForCompoundInput(prop, tab, ontologyUri, inputMap) {
             var currentInput = {
                 type: "compound",
                 label: prop.label,
@@ -464,7 +456,7 @@
             })].lastInGroup = true;
         }
 
-    function assignInputTypeFromRange(input){
+        function assignInputTypeFromRange(input) {
             switch (input.range) {
                 case "http://www.w3.org/2001/XMLSchema#string":
                     input.type = "input-string";
@@ -496,14 +488,14 @@
             }
         }
 
-    var createInputGroups = function (applicationData) {
-        var props = Ontology.allProps(applicationData.ontology),
-            inputs = [],
-            inputMap = {};
-        applicationData.predefinedValues = {};
-        var predefinedValues = [];
-        for (var i = 0; i < props.length; i++) {
-            var disabled = false;
+        var createInputGroups = function (applicationData) {
+            var props = Ontology.allProps(applicationData.ontology),
+                inputs = [],
+                inputMap = {};
+            applicationData.predefinedValues = {};
+            var predefinedValues = [];
+            for (var i = 0; i < props.length; i++) {
+                var disabled = false;
                 if (props[i]["http://data.deichman.no/ui#editable"] !== undefined && props[i]["http://data.deichman.no/ui#editable"] !== true) {
                     disabled = true;
                 }
