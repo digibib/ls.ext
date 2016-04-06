@@ -3,17 +3,6 @@
 require_relative 'catalinker_page.rb'
 
 class WorkFlow < CatalinkerPage
-  def translate(concept)
-    {
-        'utgiver' => 'publisher',
-        'verk' => 'work',
-        'utgivelse' => 'publication',
-        'person' => 'person',
-        'utgivelsessted' => 'placeOfPublication',
-        'serie' => 'serial'
-    }[concept]
-  end
-
   def visit
     retry_wait do
       @browser.goto catalinker(:workflow)

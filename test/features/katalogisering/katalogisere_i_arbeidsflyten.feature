@@ -65,6 +65,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om utgivelsen
     Og at utgivelsen er tilkoplet riktig utgivelsessted
+    Og at utgivelsen er tilkoplet riktig utgitt av
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
   @wip

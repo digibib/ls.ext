@@ -482,8 +482,9 @@ When(/^leverer systemet en ny ID for den nye serien/) do
 end
 
 When(/^leverer systemet en ny ID for den nye utgiveren/) do
-  @context[:serial_identifier] = @site.RegPublisher.get_id()
-  @context[:serial_identifier].should_not be_empty
+  @context[:publisher_identifier] = @site.RegPublisher.get_id()
+  @context[:publisher_identifier].should_not be_empty
+  @context[:publishedby_identifier] = @context[:publisher_identifier]
 end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
@@ -666,8 +667,8 @@ When(/^verifiserer jeg valgte verdier for "([^"]*)"$/) do |label|
   verify_fragment(label, :get_select_prop_by_label)
 end
 
-When(/^at utgivelsen er tilkoplet riktig utgivelsessted$/) do
+When(/^at utgivelsen er tilkoplet riktig (.*)$/) do |concept|
   data = Hash.new
-  data["placeOfPublication"] = :get_prop_from_span
+  data[@site.translate(concept)] = :get_prop_from_span
   batch_verify_props @site.RegPublication, 'Publication', data, :locate_by_fragment
 end

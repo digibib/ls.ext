@@ -4,6 +4,17 @@
 Dir[File.dirname(__FILE__) + '/pages/**/*.rb'].each {|file| require file }
 
 class Site
+  def translate(concept)
+    {
+        'verk' => 'work',
+        'utgivelse' => 'publication',
+        'person' => 'person',
+        'utgivelsessted' => 'placeOfPublication',
+        'utgiver' => 'publisher',
+        'utgitt av' => 'publishedBy',
+        'serie' => 'serial'
+    }[concept]
+  end
 
   def initialize(browser)
     @browser = browser

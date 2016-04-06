@@ -186,7 +186,7 @@ end
 When(/^at jeg skriver inn (.*) i feltet "([^"]*)" og trykker enter$/) do |concept, label|
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
-  field.set(@context[("#{@site.WorkFlow.translate(concept)}_name").to_sym])
+  field.set(@context[("#{@site.translate(concept)}_name").to_sym])
   field.send_keys :enter
 end
 
@@ -291,5 +291,4 @@ When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
   data_automation_id_issue = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
   issueSpan = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']")
   issueSpan.should exist
-
 end
