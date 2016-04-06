@@ -1,5 +1,4 @@
-import 'es5-shim'
-import 'babel-polyfill'
+import '../sass/master.scss'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
