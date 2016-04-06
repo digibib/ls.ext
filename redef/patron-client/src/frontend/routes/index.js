@@ -16,8 +16,9 @@ export default (
     <Route path='/' component={App}>
       <IndexRoute component={Search}/>
       <Route path='search' component={Search}/>
-      <Route path='work/:id' component={Work}/>
-      <Route path='person/:id' component={Person}/>
+      <Route path='work/:workId' component={Work}/>
+      <Route path='work/:workId/publication/:publicationId' component={Work}/>
+      <Route path='person/:personId' component={Person}/>
     </Route>
   </Router>
 )

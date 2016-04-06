@@ -9,7 +9,7 @@ export default React.createClass({
   render () {
     console.log(this.props.publication)
     return (
-      <div className='col publication-info'>
+      <div className='col publication-info' data-automation-id={`publication_info_${this.props.publication.id}`}>
         <h3><FormattedMessage {...messages.items}/></h3>
         <Items items={this.props.publication.items}/>
       </div>

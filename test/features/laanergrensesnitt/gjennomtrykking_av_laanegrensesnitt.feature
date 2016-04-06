@@ -72,7 +72,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "Berlinerpoplene"
     Og jeg trykker på første treff
-    Så skal jeg se fire utgivelser
-    Når jeg trykker på en utgivelse
-    Så skal jeg se informasjon om utgivelsen
+    Så skal jeg se "4" utgivelser
+    Når jeg trykker på første utgivelse
+    Så skal jeg se et panel med informasjon om utgivelsen
     Og informasjon om ledige eksemplarer

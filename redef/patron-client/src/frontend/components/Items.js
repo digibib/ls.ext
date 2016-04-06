@@ -17,7 +17,7 @@ export default React.createClass({
         <tr>
           <th><FormattedMessage {...messages.branch}/></th>
           <th><FormattedMessage {...messages.count}/></th>
-          <th><FormattedMessage {...messages.shelfmark}/></th>
+          <th><FormattedMessage {...messages.placement}/></th>
           <th><FormattedMessage {...messages.status}/></th>
         </tr>
         </thead>

@@ -1,8 +1,8 @@
 import graph from 'ld-graph'
 
-import { relativeUri } from './uriParser'
+import { relativeUri, getId } from './uriParser'
 
-export function parsePersonResponse (personUri, personResponse, worksResponse) {
+export function parsePersonResponse (personResponse, worksResponse) {
   let personGraph = worksResponse
     ? graph.parse(worksResponse, personResponse)
     : graph.parse(personResponse)
@@ -29,7 +29,7 @@ export function parsePersonResponse (personUri, personResponse, worksResponse) {
   return person
 }
 
-export function parseWorkResponse (workUri, workResponse, itemsResponse) {
+export function parseWorkResponse (workResponse, itemsResponse) {
   let workGraph = itemsResponse
     ? graph.parse(workResponse, itemsResponse)
     : graph.parse(workResponse)
@@ -58,18 +58,30 @@ export function parseWorkResponse (workUri, workResponse, itemsResponse) {
     populateLiteral(publication, 'publicationYear', publicationResource)
     populateUri(publication, 'language', publicationResource)
     populateUri(publication, 'format', publicationResource)
-    publication.id = publicationResource.id
+    publication.uri = publicationResource.id
+    publication.id = getId(publicationResource.id)
+    let items = {}
     publicationResource.inAll('editionOf').map(itemResource => {
       let item = {}
-      populateLiteral(item, 'branch', itemResource)
-      populateLiteral(item, 'location', itemResource)
-      populateLiteral(item, 'status', itemResource)
-      populateLiteral(item, 'barcode', itemResource)
       populateLiteral(item, 'shelfmark', itemResource)
-      item.count = '555'
-      publication.items.push(item)
-      publication.available = publication.items.filter(item => item.status === 'AVAIL').length > 0 
+      populateLiteral(item, 'status', itemResource)
+      if (items[ item.shelfmark ]) {
+        items[ item.status ].count++
+        if (item.status === 'AVAIL') {
+          items[ item.status ].status = 'AVAIL'
+        }
+      } else {
+        populateLiteral(item, 'branch', itemResource)
+        populateLiteral(item, 'barcode', itemResource)
+        item.count = 1
+        items[ items.status ] = item
+      }
     })
+    Object.keys(items).forEach(key => {
+      publication.items.push(items[ key ])
+    })
+    publication.available = publication.items.filter(item => item.status === 'AVAIL').length > 0
+
     work.publications.push(publication)
   })
 

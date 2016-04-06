@@ -18,7 +18,7 @@ const Person = React.createClass({
     intl: intlShape.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getPersonResource(`${Constants.backendUri}/person/${this.props.params.id}`)
+    this.props.resourceActions.getPersonResource(`${Constants.backendUri}/person/${this.props.params.personId}`)
   },
   renderNoPerson () {
     return (
@@ -68,7 +68,7 @@ const Person = React.createClass({
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let person = this.props.resources[ `${Constants.backendUri}/person/${this.props.params.id}` ]
+    let person = this.props.resources[ `${Constants.backendUri}/person/${this.props.params.personId}` ]
     if (!person) {
       return this.renderNoPerson()
     }

@@ -32,16 +32,16 @@ export function resourceFailure (error) {
   }
 }
 
-export function getPersonResource (uri) {
+export function getPersonResource (url) {
   let personResponse
   let worksResponse
   return dispatch => {
-    dispatch(requestResource(uri))
-    return fetch(uri)
+    dispatch(requestResource(url))
+    return fetch(url)
       .then(response => response.json())
       .then(json => {
         personResponse = json
-        return fetch(`${uri}/works`)
+        return fetch(`${url}/works`)
       })
       .then(response => {
         if (response.status === 200) {
@@ -51,22 +51,22 @@ export function getPersonResource (uri) {
       .then(json => {
         worksResponse = json
       })
-      .then(() => parsePersonResponse(uri, personResponse, worksResponse))
-      .then(person => dispatch(receiveResource(uri, person)))
+      .then(() => parsePersonResponse(personResponse, worksResponse))
+      .then(person => dispatch(receiveResource(url, person)))
       .catch(error => dispatch(resourceFailure(error)))
   }
 }
 
-export function getWorkResource (uri) {
+export function getWorkResource (url) {
   let workResponse
   let itemsResponse
   return dispatch => {
-    dispatch(requestResource(uri))
-    return fetch(uri)
+    dispatch(requestResource(url))
+    return fetch(url)
       .then(response => response.json())
       .then(json => {
         workResponse = json
-        return fetch(`${uri}/items`)
+        return fetch(`${url}/items`)
       })
       .then(response => {
         if (response.status === 200) {
@@ -76,8 +76,8 @@ export function getWorkResource (uri) {
       .then(json => {
         itemsResponse = json
       })
-      .then(() => parseWorkResponse(uri, workResponse, itemsResponse))
-      .then(work => dispatch(receiveResource(uri, work)))
+      .then(() => parseWorkResponse(workResponse, itemsResponse))
+      .then(work => dispatch(receiveResource(url, work)))
       .catch(error => dispatch(resourceFailure(error)))
   }
 }

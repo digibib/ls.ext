@@ -116,3 +116,21 @@ When(/^jeg trykker på første treff$/) do
   wait_for { @browser.element(class: 'result-more').a.present? }
   @browser.element(class: 'result-more').a.click
 end
+
+When(/^skal jeg se "([^"]*)" utgivelser$/) do |count|
+  wait_for { @browser.elements(class: 'publication-small').size.to_s.eql count }
+end
+
+When(/^jeg trykker på første utgivelse$/) do
+  @browser.element(class: 'publication-small').click
+end
+
+When(/^skal jeg se et panel med informasjon om utgivelsen$/) do
+  wait_for { @browser.elements(class: 'publication-info').size.eql? 1 } #There should only be one
+  wait_for { @browser.element(data_automation_id: "publication_info_http://192.168.50.12:8005/work/w960978848314").present? }
+end
+
+When(/^informasjon om ledige eksemplarer$/) do
+  items = @browser.element(data_automation_id: "publication_info_http://192.168.50.12:8005/work/w960978848314").table
+  binding.pry
+end

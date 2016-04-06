@@ -7,7 +7,6 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import Constants from '../constants/Constants'
 import Creators from '../components/Creators'
 import Publications from '../components/Publications'
-import { inPreferredLanguage } from '../utils/languageHelpers'
 
 const Work = React.createClass({
   propTypes: {
@@ -18,7 +17,7 @@ const Work = React.createClass({
     params: PropTypes.object.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getWorkResource(`${Constants.backendUri}/work/${this.props.params.id}`)
+    this.props.resourceActions.getWorkResource(`${Constants.backendUri}/work/${this.props.params.workId}`)
   },
   renderNoWork () {
     return (
@@ -36,9 +35,9 @@ const Work = React.createClass({
     })
   },
   renderTitle (work) {
-    let title = inPreferredLanguage(work.mainTitle)
-    if (work.partTitle && Object.keys(work.partTitle).length > 0) {
-      title += ' — ' + inPreferredLanguage(work.partTitle)
+    let title = work.mainTitle
+    if (work.partTitle) {
+      title += ` — ${work.partTitle}`
     }
     return title
   },
@@ -58,9 +57,17 @@ const Work = React.createClass({
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let work = this.props.resources[ `${Constants.backendUri}/work/${this.props.params.id}` ]
+    let work = this.props.resources[ `${Constants.backendUri}/work/${this.props.params.workId}` ]
     if (!work) {
       return this.renderNoWork()
+    }
+
+    if (this.props.params.publicationId) {
+      const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
+      if (chosenPublication) {
+        work.mainTitle = chosenPublication.mainTitle
+        work.partTitle = chosenPublication.partTitle
+      }
     }
 
     return (

@@ -44,6 +44,20 @@ module RandomMigrate
       return SecureRandom.hex(8)
     end
 
+    def generate_item()
+      item_barcode = generate_random_string
+      ntriples = "<publication> <#{@services}/ontology#hasItem> <item> .
+                  <item> <#{@services}/itemSubfieldCode/a> \"hbar\" .
+                  <item> <#{@services}/itemSubfieldCode/b> \"hbar\" .
+                  <item> <#{@services}/itemSubfieldCode/l> \"13\" .
+                  <item> <#{@services}/itemSubfieldCode/o> \"u Nil\" .
+                  <item> <#{@services}/itemSubfieldCode/p> \"03010186999003\" .
+                  <item> <#{@services}/itemSubfieldCode/t> \"3\" .
+                  <item> <#{@services}/itemSubfieldCode/y> \"l\" .
+                  <item> <#{@services}/itemSubfieldCode/q> \"2011-06-20\" ."
+      return item_barcode, ntriples
+    end
+
     def generate_person()
       person_name = generate_random_string
       ntriples = "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Person> .
@@ -62,13 +76,14 @@ module RandomMigrate
       return work_title, ntriples
     end
 
-    def generate_publication(work_uri, language = nil, prefix = nil)
+    def generate_publication(work_uri, language = nil, prefix = nil, items = nil)
       publication_title = generate_random_string
       ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Publication> .
                   <publication> <#{@services}/ontology#publicationOf> <#{work_uri}> .
                   <publication> <#{@services}/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
                   <publication> <#{@services}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <publication> <#{@services}/ontology#language> <#{language || @languages.sample}> ."
+                  <publication> <#{@services}/ontology#language> <#{language || @languages.sample}> .
+                  #{items ? items[1] : nil}"
       return publication_title, ntriples
     end
 
@@ -108,7 +123,7 @@ module RandomMigrate
         number_of_works_per_person.times do
           work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
           number_of_publications_per_work.times do
-            post_ntriples('publication', generate_publication(work_uri, nil, prefix)[1])
+            post_ntriples('publication', generate_publication(work_uri, nil, prefix, generate_item())[1])
           end
           index('work', work_uri)
         end

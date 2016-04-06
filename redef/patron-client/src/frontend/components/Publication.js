@@ -16,7 +16,7 @@ const Publication = React.createClass({
   render () {
     let publication = this.props.publication
     return (
-      <div onClick={this.props.onClick} className='col col-1-3'>
+      <div onClick={this.props.onClick} className='col col-1-3 publication-small'>
           <div className='col book-cover placeholder'/>
           <div className='result-info'>
             <p>
