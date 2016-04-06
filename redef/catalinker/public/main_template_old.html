@@ -55,7 +55,7 @@
                     <div class="search-result" data-automation-id="{{uri}}" on-click="selectResource:{{predicate}},{{origin}}">
                         <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
                         <span class="birth-and-death">{{#birthYear}}(<span class="birthYear">{{birthYear}}</span>-<span class="deathYear">{{deathYear}}</span>){{/birthYear}}</span>
-                        <span class="nationality">{{nationality}}</span>
+                        <span class="nationality">{{nationality[0]}}</span>
                         <div class="search-result-more-info">
                             {{#work.length}}
                             <div class="search-result-work-list">

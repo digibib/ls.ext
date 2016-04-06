@@ -11,7 +11,7 @@
             "name": "Test Monkey",
             "birthYear": "1944",
             "deathYear": "1988",
-            "nationality": "Norsk",
+            "nationality": ["Norsk","Norwegian"],
             "uri": "http://192.168.50.12:7000/person/h123456"
           }
         }
