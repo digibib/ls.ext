@@ -39,6 +39,10 @@ Given(/^at det finnes en låner med lånekort$/) do |table|
     patron = patron.inject({}){|h,(k,v)| h.merge({ k.to_sym => v}) } # Symbolize keys
     user = CSVImport::User.new(@browser,@context,@active).import(patron)
 
+    # retrieve generated borrowernumber
+    u = SVC::User.new(@browser,@context,@active).get(user.cardnumber)
+    user.borrowernumber = u.first["borrowernumber"]
+
     @active[:patron] = user
     (@context[:patrons] ||= []) << user
 
