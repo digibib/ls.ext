@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "subject": {
+      "properties":
+      {
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -68,4 +68,8 @@ public final class BaseURI {
     public String serial() {
         return baseUriRoot + "serial/";
     }
+
+    public String subject() {
+        return baseUriRoot + "subject/";
+    }
 }

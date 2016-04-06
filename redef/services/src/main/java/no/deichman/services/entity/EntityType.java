@@ -15,10 +15,12 @@ public enum EntityType {
     PERSON("person"),
     PLACE_OF_PUBLICATION("placeOfPublication"),
     PUBLISHER("publisher"),
-    SERIAL("serial");
+    SERIAL("serial"),
+    SUBJECT("subject");
+
 
     // must be handwritten because of stupid Java
-    public static final String ALL_TYPES_PATTERN = "(work|publication|person|placeOfPublication|publisher|serial)";
+    public static final String ALL_TYPES_PATTERN = "(work|publication|person|placeOfPublication|publisher|serial|subject)";
 
     private final String path;
 

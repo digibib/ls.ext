@@ -57,8 +57,6 @@ public class SearchServiceImpl implements SearchService {
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
-    private ModelToIndexMapper publisherModelToIndexMapper = new ModelToIndexMapper("publisher");
-    private ModelToIndexMapper placeOfPublicationModelToIndexMapper = new ModelToIndexMapper("placeOfPublication");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
     private ModelToIndexMapper serialModelToIndexMapper = new ModelToIndexMapper("serial");
 
@@ -75,9 +73,11 @@ public class SearchServiceImpl implements SearchService {
                 break;
             case PERSON: doIndexPerson(xuri, false);
                 break;
-            case PLACE_OF_PUBLICATION: doIndexPlaceOfPublication(xuri);
+            case PLACE_OF_PUBLICATION: doIndex(xuri);
                 break;
-            case PUBLISHER: doIndexPublisher(xuri);
+            case PUBLISHER: doIndex(xuri);
+                break;
+            case SUBJECT: doIndex(xuri);
                 break;
             case SERIAL: doIndexSerial(xuri);
                 break;
@@ -120,9 +120,11 @@ public class SearchServiceImpl implements SearchService {
             }
             putIndexMapping(httpclient, "work");
             putIndexMapping(httpclient, "person");
-            putIndexMapping(httpclient, "placeOfPublication");
-            putIndexMapping(httpclient, "publisher");
             putIndexMapping(httpclient, "serial");
+            putIndexMapping(httpclient, "publisher");
+            putIndexMapping(httpclient, "placeOfPublication");
+            putIndexMapping(httpclient, "subject");
+
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -131,7 +133,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void putIndexMapping(CloseableHttpClient httpclient, String type) throws URISyntaxException, IOException {
-        URI workIndexUri = getIndexUriBuilder().setPath("search/_mapping/" + type).build();
+        URI workIndexUri = getIndexUriBuilder().setPath("/search/_mapping/" + type).build();
         HttpPut putWorkMappingRequest = new HttpPut(workIndexUri);
         putWorkMappingRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/" + type + "_mapping.json"), ContentType.APPLICATION_JSON));
         try (CloseableHttpResponse create = httpclient.execute(putWorkMappingRequest)) {
@@ -231,14 +233,9 @@ public class SearchServiceImpl implements SearchService {
         indexDocument(xuri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, xuri));
     }
 
-    private void doIndexPlaceOfPublication(XURI xuri) throws Exception {
-        Model placeOfPublicationModel = entityService.retrieveById(xuri);
-        indexDocument(xuri, placeOfPublicationModelToIndexMapper.createIndexDocument(placeOfPublicationModel, xuri));
-    }
-
-    private void doIndexPublisher(XURI xuri) throws Exception {
-        Model publisherModel = entityService.retrieveById(xuri);
-        indexDocument(xuri, publisherModelToIndexMapper.createIndexDocument(publisherModel, xuri));
+    private void doIndex(XURI xuri) throws Exception {
+        Model indexModel = entityService.retrieveById(xuri);
+        indexDocument(xuri, new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri));
     }
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {

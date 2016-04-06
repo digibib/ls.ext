@@ -20,6 +20,8 @@ public interface RDFRepository {
     String createPlaceOfPublication(Model inputModel) throws Exception;
     String createPublisher(Model inputModel) throws Exception;
     String createSerial(Model inputModel)  throws Exception;
+    String createSubject(Model inputModel) throws Exception;
+
     void createResource(Model model) throws Exception;
 
     void updateWork(String work);
@@ -51,5 +53,4 @@ public interface RDFRepository {
     void findAllUrisOfType(String type, Consumer<String> uriConsumer);
 
     Optional<String> getResourceURIByBibliofilId(String id, String type);
-
 }

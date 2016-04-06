@@ -136,6 +136,18 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final String createSubject(Model inputModel) throws Exception {
+        String type = "Subject";
+        inputModel.add(tempTypeStatement(type));
+        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
+
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
+        executeUpdate(updateRequest);
+        return uri;
+    }
+
+    @Override
     public final void createResource(Model inputModel) throws Exception {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
         executeUpdate(updateRequest);

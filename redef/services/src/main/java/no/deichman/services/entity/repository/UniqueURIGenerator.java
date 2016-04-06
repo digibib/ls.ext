@@ -37,6 +37,8 @@ class UniqueURIGenerator {
                 break;
             case "Serial": result = baseURI.serial() + "s" + uniquePart;
                 break;
+            case "Subject": result = baseURI.subject() + "e" + uniquePart;
+                break;
             default:            throw new IllegalArgumentException("Unknown URI-type");
         }
         return result;

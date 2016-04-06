@@ -1,0 +1,17 @@
+PREFIX  :     <__ONTOLOGY__>
+
+CONSTRUCT
+  { ?subjectUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Subject .
+    ?subjectUri :name ?name .
+  }
+WHERE
+  { SELECT DISTINCT  ?subjectUri ?name
+    WHERE
+      { BIND(uri("__PUBLISHERURI__") AS ?subjectUri)
+        ?subjectUri  a                   :Subject ;
+
+        OPTIONAL
+          { ?subjectUri  :name  ?name
+          }
+      }
+  }

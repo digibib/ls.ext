@@ -1,0 +1,11 @@
+{
+  "type": "Subject",
+  "@context": {
+    "deichman": "__ONTOLOGY__",
+    "name": "deichman:name",
+    "Subject": "deichman:Subject",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph"
+  }
+}

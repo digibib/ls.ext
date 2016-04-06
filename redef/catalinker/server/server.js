@@ -85,9 +85,9 @@ app.get('/config', function (request, response) {
                       rdfProperty: "creator",
                       type: "searchable-person",
                       dependentResourceTypes: ["Work", "Publication"], // when the creator is changed, unload current work and publication
-                      isMainEntry: true, 
+                      isMainEntry: true,
                       widgetOptions: {
-                          showSelectWork: true
+                        showSelectWork: true
                       }
                     }
                 ],

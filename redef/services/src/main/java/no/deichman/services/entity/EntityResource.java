@@ -37,6 +37,7 @@ import java.util.Optional;
 import static javax.ws.rs.core.Response.accepted;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
+import static no.deichman.services.entity.EntityResource.RESOURCE_TYPE_PREFIXES_PATTERN;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
@@ -50,7 +51,7 @@ import static no.deichman.services.restutils.MimeType.NTRIPLES;
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
 
-    public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|i|s";
+    public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|i|s|e";
     @Context
     private ServletConfig servletConfig;
 
@@ -87,11 +88,12 @@ public final class EntityResource extends ResourceBase {
         Model model = RDFModelUtil.modelFrom(body, lang);
         NodeIterator nodes = model.listObjectsOfProperty(ResourceFactory.createProperty("http://data.deichman.no/duo#bibliofil" + canonicalTypeId + "Id"));
         List<RDFNode> nodeList = nodes.toList();
+
         if (nodeList.size() > 1) {
             message = Optional.of("Request with greater than one bibliofil " + type + " authority ID per resource");
             status = Response.Status.BAD_REQUEST;
         }
-        if (nodeList.size() > 0) {
+        if (nodeList.size() > 0 && nodeList.size() < 2) {
             bibliofilId = nodeList.get(0).asLiteral().toString();
             if (checkForExistingImportedResource(bibliofilId, canonicalTypeId).isPresent()) {
                 uri = checkForExistingImportedResource(bibliofilId, canonicalTypeId);
@@ -140,7 +142,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @POST
-    @Path("/{id: (p|w|h|g|i)[a-zA-Z0-9_]+}")
+    @Path("/{id: (p|w|h|g|i|s)[a-zA-Z0-9_]+}")
     @Consumes(NTRIPLES)
     public Response create(@PathParam("type") String type, @PathParam("id") String id, String body) throws Exception {
         Response.ResponseBuilder rb = null;

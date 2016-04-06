@@ -80,6 +80,7 @@ public class EntityServiceImplTest {
     private String placeOfPublicationURI;
     private String publisherURI;
     private String serialURI;
+    private String subjectURI;
     private String baseURI;
 
     @Mock
@@ -112,6 +113,7 @@ public class EntityServiceImplTest {
         placeOfPublicationURI = localBaseURI.placeOfPublication();
         publisherURI = localBaseURI.publisher();
         serialURI = localBaseURI.serial();
+        subjectURI = localBaseURI.subject();
     }
 
     @Test
@@ -490,6 +492,10 @@ public class EntityServiceImplTest {
             case "serial":
                 resourceClass = "Serial";
                 resourceURI = serialURI;
+                break;
+            case "subject":
+                resourceClass = "Subject";
+                resourceURI = subjectURI;
                 break;
             default:
                 break;
