@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { push } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import { parsePersonResponse, parseWorkResponse } from '../utils/graphParse'
@@ -29,6 +30,19 @@ export function resourceFailure (error) {
       message: error
     },
     error: true
+  }
+}
+
+export function expandSubResource (id, router) {
+  return (dispatch, getState) => {
+    let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    locationQuery.showMore = id
+
+    let url = router.createPath({
+      pathname: getState().routing.locationBeforeTransitions.pathname,
+      query: locationQuery
+    })
+    return dispatch(push(url))
   }
 }
 

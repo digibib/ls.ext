@@ -83,7 +83,9 @@ const Work = React.createClass({
             {this.renderYear(work)}
           </div>
         </div>
-        <Publications publications={work.publications}/>
+        <Publications locationQuery={this.props.locationQuery}
+                      expandSubResource={this.props.resourceActions.expandSubResource}
+                      publications={work.publications}/>
       </div>
     )
   }
@@ -110,6 +112,7 @@ const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     resources: state.resources.resources,
+    locationQuery: state.routing.locationBeforeTransitions.query,
     isRequesting: state.resources.isRequesting
   }
 }

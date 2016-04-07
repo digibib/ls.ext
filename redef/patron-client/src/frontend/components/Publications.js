@@ -3,10 +3,14 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
+import { getId } from '../utils/uriParser'
 
 export default React.createClass({
   propTypes: {
     publications: PropTypes.array.isRequired
+  },
+  contextTypes: {
+    router: React.PropTypes.object
   },
   getInitialState () {
     return {
@@ -14,7 +18,11 @@ export default React.createClass({
     }
   },
   renderEmpty () {
-    return (<h2 data-automation-id='no_publications'><FormattedMessage {...messages.noPublications} /></h2>)
+    return (
+      <h2 data-automation-id='no_publications'>
+        <FormattedMessage {...messages.noPublications} />
+      </h2>
+    )
   },
   handleClick (publication, row, column) {
     this.setState({
@@ -24,6 +32,7 @@ export default React.createClass({
         column: column
       }
     })
+    this.props.expandSubResource(publication.id, this.context.router)
   },
   getArrow (column) {
     return [ 0, 1, 2 ].map(number =>
@@ -36,6 +45,7 @@ export default React.createClass({
     while (publicationsCopy.length > 0) {
       threeAndThreePublications.push(publicationsCopy.splice(0, 3))
     }
+    let showMore
     return (
       <div>
         {threeAndThreePublications.map((publications, row) => {
@@ -43,11 +53,20 @@ export default React.createClass({
             key={publication.id}
             onClick={this.handleClick.bind(this, publication, row, column)}
             publication={publication}/>)}</div> ]
-          if (this.state.moreInfo && row === this.state.moreInfo.row) {
+          let showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
+          if (showMorePublication) {
+            showMore = {
+              publication: showMorePublication,
+              row: row,
+              column: publications.indexOf(showMorePublication)
+            }
+          }
+
+          if (showMore && row === showMore.row) {
             output.push(<div className='row'>
-              {this.getArrow(this.state.moreInfo.column)}
+              {this.getArrow(showMore.column)}
               <div className='col'>
-                  <PublicationInfo publication={this.state.moreInfo.publication}/>
+                <PublicationInfo publication={showMore.publication}/>
                 </div>
               </div>
             )

@@ -8,7 +8,7 @@ export default React.createClass({
     items: PropTypes.array.isRequired
   },
   renderEmpty () {
-    return <h2 data-automation-id='no_items'><FormattedMessage {...messages.noItems}/></h2>
+    return <p data-automation-id='no_items'><FormattedMessage {...messages.noItems}/></p>
   },
   renderAllItems () {
     return (
