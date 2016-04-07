@@ -92,3 +92,7 @@ Egenskap: Gå gjennom lånegrensesnittet
       | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
     Når jeg trykker tilbake i nettleseren
     Så skal jeg ikke se et panel med informasjon om utgivelsen
+    Når jeg trykker fremover i nettleseren
+    Så den skal inneholde eksemplarinformasjonen
+      | filial                         | antall | plassering | status               |
+      | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
