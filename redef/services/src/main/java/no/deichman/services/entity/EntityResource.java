@@ -37,7 +37,6 @@ import java.util.Optional;
 import static javax.ws.rs.core.Response.accepted;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
-import static no.deichman.services.entity.EntityResource.RESOURCE_TYPE_PREFIXES_PATTERN;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
@@ -77,7 +76,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     private Response create(String type, String body, Lang lang) throws Exception {
-        Response.ResponseBuilder rb = null;
+        Response.ResponseBuilder rb;
         String canonicalTypeId = WordUtils.capitalize(type);
 
         Optional<String> message = Optional.empty();
@@ -142,10 +141,10 @@ public final class EntityResource extends ResourceBase {
     }
 
     @POST
-    @Path("/{id: (p|w|h|g|i|s)[a-zA-Z0-9_]+}")
+    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
     @Consumes(NTRIPLES)
     public Response create(@PathParam("type") String type, @PathParam("id") String id, String body) throws Exception {
-        Response.ResponseBuilder rb = null;
+        Response.ResponseBuilder rb;
         Response.Status status = Response.Status.CREATED;
         Optional<String> errMessage = Optional.empty();
         XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
