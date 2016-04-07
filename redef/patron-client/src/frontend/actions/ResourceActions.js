@@ -36,7 +36,11 @@ export function resourceFailure (error) {
 export function expandSubResource (id, router) {
   return (dispatch, getState) => {
     let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
-    locationQuery.showMore = id
+    if (locationQuery.showMore === id) {
+      delete locationQuery.showMore
+    } else {
+      locationQuery.showMore = id
+    }
 
     let url = router.createPath({
       pathname: getState().routing.locationBeforeTransitions.pathname,

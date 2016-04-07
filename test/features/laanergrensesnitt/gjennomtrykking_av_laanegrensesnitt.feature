@@ -79,6 +79,8 @@ Egenskap: Gå gjennom lånegrensesnittet
       | filial                         | antall | plassering | status               |
       | Barneavdelingen (Hovedutlånet) | 2      | placement1 | Ledig                |
       | Barneavdelingen (Hovedutlånet) | 1      | placement2 | Forventet 2011-06-20 |
+    Når jeg trykker på utgivelsen med "Norsk (bokmål)" språk
+    Så skal jeg ikke se et panel med informasjon om utgivelsen
     Når jeg trykker på utgivelsen med "Dansk" språk
     Så skal jeg se et panel med informasjon om utgivelsen
     Og den skal inneholde eksemplarinformasjonen
@@ -89,7 +91,4 @@ Egenskap: Gå gjennom lånegrensesnittet
       | filial                         | antall | plassering | status               |
       | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
     Når jeg trykker tilbake i nettleseren
-    Så den skal inneholde eksemplarinformasjonen
-      | filial                         | antall | plassering | status               |
-      | Barneavdelingen (Hovedutlånet) | 2      | placement1 | Ledig                |
-      | Barneavdelingen (Hovedutlånet) | 1      | placement2 | Forventet 2011-06-20 |
+    Så skal jeg ikke se et panel med informasjon om utgivelsen

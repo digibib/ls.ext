@@ -133,3 +133,7 @@ When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
   publication_info = @browser.element(data_automation_id: /^publication_info_/).table
   table.diff!(publication_info.hashes).should eq nil
 end
+
+When(/^skal jeg ikke se et panel med informasjon om utgivelsen$/) do
+  wait_for { @browser.elements(data_automation_id: /^publication_info_/).size.eql? 0 }
+end

@@ -12,11 +12,6 @@ export default React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
-  getInitialState () {
-    return {
-      moreInfo: undefined
-    }
-  },
   renderEmpty () {
     return (
       <h2 data-automation-id='no_publications'>
@@ -24,14 +19,7 @@ export default React.createClass({
       </h2>
     )
   },
-  handleClick (publication, row, column) {
-    this.setState({
-      moreInfo: {
-        publication: publication,
-        row: row,
-        column: column
-      }
-    })
+  handleClick (publication) {
     this.props.expandSubResource(publication.id, this.context.router)
   },
   getArrow (column) {
@@ -51,7 +39,7 @@ export default React.createClass({
         {threeAndThreePublications.map((publications, row) => {
           let output = [ <div className='row'>{publications.map((publication, column) => <Publication
             key={publication.id}
-            onClick={this.handleClick.bind(this, publication, row, column)}
+            onClick={this.handleClick.bind(this, publication)}
             publication={publication}/>)}</div> ]
           let showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
           if (showMorePublication) {
