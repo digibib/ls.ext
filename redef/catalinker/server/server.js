@@ -62,7 +62,7 @@ app.get('/workflow', function (req, res, next) {
   res.sendFile('main.html', {title: 'Katalogisering', root: __dirname + '/../public/'});
 });
 
-app.get('/:type(person|work|publication|placeOfPublication|serial|publisher)', function (req, res, next) {
+app.get('/:type(person|work|publication|placeOfPublication|serial|publisher|subject)', function (req, res, next) {
   newResource(req.params.type).then(function (response) {
     res.redirect('/cataloguing/' + req.params.type + '?resource=' + response.headers.location);
   });
@@ -83,12 +83,14 @@ app.get('/config', function (request, response) {
               inputs: [
                     {
                       rdfProperty: "creator",
-                      type: "searchable-person",
+                      type: "searchable-with-result-in-side-panel",
+                      indexType: "person",
                       dependentResourceTypes: ["Work", "Publication"], // when the creator is changed, unload current work and publication
                       isMainEntry: true,
                       widgetOptions: {
                         showSelectWork: true
-                      }
+                      },
+                      loadWorksAsSubjectOfItem: true
                     }
                 ],
               nextStep: {
@@ -117,6 +119,16 @@ app.get('/config', function (request, response) {
               inputs: [
                   {rdfProperty: "publicationYear"},
                   {rdfProperty: "language", multiple: true},
+                  {
+                    rdfProperty: "subject",
+                    multiple: true,
+                    type: "searchable-with-result-in-side-panel",
+                    loadWorksAsSubjectOfItem: true,
+                    authority: true, // this indicates it is an authorized entity
+                    nameProperties: ["name"], // these are proeprty names used to label already connected entities
+                    indexType: "subject", // this is the name of the elasticsearch index type from which authorities are searched within
+                    indexDocumentFields: ["name"] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
+                  },
                   {rdfProperty: "literaryForm", multiple: true},
                   {rdfProperty: "audience", multiple: true},
                   {rdfProperty: "biography", multiple: true},
@@ -174,7 +186,7 @@ app.get('/config', function (request, response) {
                                   indexType: "serial",
                                   indexDocumentFields: ["name"],
                                   nameProperties: ["name"],
-                                  type: "searchable-authority"
+                                  type: "searchable-authority-dropdown"
                                 },
                                 {
                                   label: "Nummer i serien",
@@ -204,7 +216,8 @@ app.get('/config', function (request, response) {
                                 {
                                   label: "Person",
                                   rdfProperty: "agent",
-                                  type: "searchable-person"
+                                  indexType: "person",
+                                  type: "searchable-with-result-in-side-panel"
                                 },
                                 {
                                   label: "Rolle",

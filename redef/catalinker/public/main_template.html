@@ -65,7 +65,6 @@
 </div>
 
 {{#partial input}}
-{{inputIndex}}
 <div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
     <div class="pure-u-1-2 label {{firstInGroup ? 'first':''}} panel-part" data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</div>
     {{#each values:index}}
@@ -91,60 +90,60 @@
 
     {{#if subInputs}}
     {{#each subInputs[0].input.values:inputValueIndex}}
-    <span class="pure-u-1-2 panel-part field {{lastInGroup ? 'last':''}} {{#if cssClassPrefix}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}}" {{#if
-          nonEditable}}disabled="disabled" {{/if}}>
-    {{#if nonEditable}}
-    <a class="delete" title="Slett oppføring"
-       on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
-    {{/if}}
-        <span class="inputs">
-        {{#each ../../../../../subInputs}}
-            <span class="input {{#if !nonEditable}}pure-u-1-1{{/if}}">
-                <span class="label {{#if !nonEditable}}pure-u-1-1{{/if}}"
-                      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
-                {{#with input.values[inputValueIndex]}}
-                    <span class="value sub-field" id="support_panel_base_{{uniqueId}}">
-                        {{>../../../input.type}}
-                    </span>
-                    {{#if ! nonEditable }}
-                        <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
-                            {{#with ../../../input}}
-                            {{>"support-for-"+type}}
-                            {{/with}}
+        <span class="pure-u-1-2 panel-part field {{lastInGroup ? 'last':''}} {{#if cssClassPrefix}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}}" {{#if
+              nonEditable}}disabled="disabled" {{/if}}>
+        {{#if nonEditable}}
+        <a class="delete" title="Slett oppføring"
+           on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
+        {{/if}}
+            <span class="inputs">
+            {{#each ../../../../../subInputs}}
+                <span class="input {{#if !nonEditable}}pure-u-1-1{{/if}}">
+                    <span class="label {{#if !nonEditable}}pure-u-1-1{{/if}}"
+                          data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
+                    {{#with input.values[inputValueIndex]}}
+                        <span class="value sub-field" id="support_panel_base_{{uniqueId}}">
+                            {{>../../../input.type}}
                         </span>
-                    {{/if}}
-                {{/with}}
-                <span class="invalid-msg {{#if !nonEditable}}pure-u-1-1{{/if}}">{{#error}}{{error}}{{/error}}</span>
-            </span>
-        {{/each}}
-        </span>
-            <span class="subject-type-association">
-                <span class="{{#if !nonEditable}}pure-u-1-1{{/if}}">
-                    {{#with ../../../parentInput}}
-                    {{#if ! nonEditable }}
-                    {{#subjectTypes}}
-                        <span class="subject-type-select">
-                            <input type="radio" name={{subjectType}} value="{{.}}"
-                                   {{# !
-                                   targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
-                                   disabled='disabled' {{/}}>
-                            <label>{{subjectTypeLabel(.)}}</label>
-                        </span>
-                    {{/subjectTypes}}
-                    <a class="pure-button pure-button-primary add-item-button"
-                       disabled="{{typeof subjectType === 'undefined' || values.length == 0}}"
-                       on-click="saveObject:{{inputValueIndex}}">Legg til</a>
-                    {{/if}}
+                        {{#if ! nonEditable }}
+                            <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+                                {{#with ../../../input}}
+                                {{>"support-for-"+type}}
+                                {{/with}}
+                            </span>
+                        {{/if}}
                     {{/with}}
-
-                    {{#if nonEditable}}
-                    {{subjectTypeLabelDet(subjectType)}}
-                    {{/if}}
-
+                    <span class="invalid-msg {{#if !nonEditable}}pure-u-1-1{{/if}}">{{#error}}{{error}}{{/error}}</span>
                 </span>
+            {{/each}}
             </span>
-    </span>
-    <span class="pure-1-2"> </span>
+                <span class="subject-type-association">
+                    <span class="{{#if !nonEditable}}pure-u-1-1{{/if}}">
+                        {{#with ../../../parentInput}}
+                        {{#if ! nonEditable }}
+                        {{#subjectTypes}}
+                            <span class="subject-type-select">
+                                <input type="radio" name={{subjectType}} value="{{.}}"
+                                       {{# !
+                                       targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
+                                       disabled='disabled' {{/}}>
+                                <label>{{subjectTypeLabel(.)}}</label>
+                            </span>
+                        {{/subjectTypes}}
+                        <a class="pure-button pure-button-primary add-item-button"
+                           disabled="{{typeof subjectType === 'undefined' || values.length == 0}}"
+                           on-click="saveObject:{{inputValueIndex}}">Legg til</a>
+                        {{/if}}
+                        {{/with}}
+
+                        {{#if nonEditable}}
+                        {{subjectTypeLabelDet(subjectType)}}
+                        {{/if}}
+
+                    </span>
+                </span>
+        </span>
+        <span class="pure-1-2"> </span>
     {{/each}}
     {{/if}}
     {{#multiple && allowAddNewButton}}
@@ -156,12 +155,13 @@
     {{/}}
 </div>
 {{/partial}}
-{{#partial support-for-searchable-person}}
-{{#search_result}}
+
+{{#partial support-for-searchable-with-result-in-side-panel}}
+{{#searchResult}}
 <div class="prop-search-results support-panel-content">
     <form action="">
-        {{#search_result.results.hits.hits}}
-        {{#with _source.person}}
+        {{#if items}}
+        {{#each items:itemIndex}}
         <div class="search-result pure-g" data-automation-id="{{uri}}">
             <div class="pure-u-1">
                 <div class="pure-g">
@@ -176,33 +176,19 @@
                     </div>
 
                     <div class="pure-u-1-12">
-                        {{#work.length}}<span class="toggle-show-works" on-click="toggleWork">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>{{/}}
+                        {{#work.length || loadWorksAsSubjectOfItem}}
+                        <span class="toggle-show-works" on-click="toggleWork:{{loadWorksAsSubjectOfItem}},{{.}}">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>{{/}}
                     </div>
-                </div>
-
-                <div class="pure-g">
-                    <div class="pure-u-1-12"></div>
-                    <div class="pure-u-9-12">
-                        <small><span class="birth-and-death">{{#birthYear}}f. <span
-                                class="birthYear">{{birthYear}}</span> - {{#deathYear}}d. <span
-                                class="deathYear">{{deathYear}}</span>{{/death}}{{/birthYear}}</span></small>
-                    </div>
-                </div>
+                   {{>"additional-search-result-item-info-for-"+type}}
                 {{#toggleWork}}
                 <div class="work-items pure-u-1">
                     {{#work}}
                     <div class="search-result-subitem pure-g">
-                        <div class="work-name pure-u-22-24">
-                            <span class="pure-u-23-24">{{inPreferredLanguage(mainTitle)}}</span>
-                            {{#partTitle}}
-                            <span class="pure-u-1-24"/>
-                            <span class="part-name pure-u-21-22">{{inPreferredLanguage(partTitle)}}</span>
-                            {{/}}
-                        </div>
+                        {{>work}}
                         {{# widgetOptions.showSelectWork}}
                         <span class="search-result-work-selector pure-u-2-24">
                             <input class="select-work-radio" type="radio" checked="{{isChecked}}"
-                                   on-click="setResourceAndWorkResource:{{../../../person}},{{origin}},'Person'"/>
+                                   on-click="setResourceAndWorkResource:{{items[itemIndex]}},{{origin}},'Person'"/>
                         </span>
                         {{/}}
                     </div>
@@ -211,7 +197,7 @@
                 {{/toggleWork}}
             </div>
         </div>
-        {{/with}}
+        {{/each}}
         {{else}}
         <div class="search-result pure-g">
             <div class="pure-u-1">
@@ -221,8 +207,29 @@
         {{/if}}
     </form>
 </div>
-{{/search_result}}
+{{/searchResult}}
 {{/partial}}
+
+{{#partial work}}
+<div class="work-name pure-u-22-24">
+    <span class="pure-u-23-24">{{inPreferredLanguage(mainTitle)}}</span>
+    {{#partTitle}}
+    <span class="pure-u-1-24"/>
+    <span class="part-name pure-u-21-22">{{inPreferredLanguage(partTitle)}}</span>
+    {{/}}
+</div>
+{{/partial}}
+
+{{#partial additional-search-result-item-info-for-searchable-person}}
+<div class="pure-g">
+    <div class="pure-u-1-12"></div>
+    <div class="pure-u-9-12">
+        <small><span class="birth-and-death">{{#birthYear}}f. <span
+                class="birthYear">{{birthYear}}</span> - {{#deathYear}}d. <span
+                class="deathYear">{{deathYear}}</span>{{/death}}{{/birthYear}}</span></small>
+    </div>
+</div>
+{{/partal}}
 
 {{#partial select-predefined-value}}
 <span data-automation-id="{{../../dataAutomationId}}">
@@ -253,15 +260,15 @@ data-automation-id="{{../../dataAutomationId}}"
 value="{{current.value}}" />
 {{/partial}}
 
-{{#partial searchable-person}}
+{{#partial searchable-with-result-in-side-panel}}
 <span data-automation-id="{{../../dataAutomationId}}">
     {{#if nonEditable}}{{current.displayValue}}{{else}}
     <input {{#deletable}}readonly {{/deletable}} type="search"
-    on-click="{{#deletable}}unselectWorkAndPerson{{/deletable}}"
+    on-click="{{#deletable}}unselectEntity{{/deletable}}"
     class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}}{{#if ../../searchable}} searchable{{/if}}"
     data-automation-id="{{dataAutomationId}}"
-    on-enter='searchResource:{{./current.displayValue}}'
-    on-keyup='searchResource:{{./current.displayValue}}'
+    on-enter='searchResource:{{./current.displayValue}},{{../../indexType}}'
+    on-keyup='searchResource:{{./current.displayValue}},{{../../indexType}}'
     value="{{current.displayValue}}" />
     <span class="support-panel-expander" on-click='searchResource:{{current.displayValue}}'></span>
     {{/if}}
@@ -304,7 +311,7 @@ value="{{./current.value}}" />
 {{/if}}
 {{/partial}}
 
-{{#partial searchable-authority}}
+{{#partial searchable-authority-dropdown}}
 <span data-automation-id="{{../../dataAutomationId}}">
     {{#if nonEditable}}
     <span>{{authorityLabels[urlEscape(current.value[0])]}}</span>

@@ -43,8 +43,8 @@
         function clearSearchResults() {
             _.each(ractive.get("inputGroups"), function (group, groupIndex) {
                 _.each(group.inputs, function (input, inputIndex) {
-                    if (input.search_result) {
-                        ractive.set("inputGroups." + groupIndex + ".inputs." + inputIndex + ".search_result", null);
+                    if (input.searchResult) {
+                        ractive.set("inputGroups." + groupIndex + ".inputs." + inputIndex + ".searchResult", null);
                     }
                 });
             });
@@ -265,13 +265,15 @@
                                 var predicate = input.predicate;
                                 var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [root];
                                 _.each(actualRoots, function (root, index) {
-                                    if (_.contains(["select-authorized-value", "entity", "searchable-authority"], input.type)) {
+                                    if (_.contains(["select-authorized-value", "entity", "searchable-authority-dropdown"], input.type)) {
                                         var values = setMultiValues(root.outAll(propertyName(predicate)), input, index);
                                         promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, index));
-                                    } else if (input.type === "searchable-person") {
+                                    } else if (input.type === "searchable-with-result-in-side-panel") {
                                         _.each(root.outAll(propertyName(predicate)), function (node) {
                                             setIdValue(node.id, input, index);
                                             setDisplayValue(input, index, "name");
+                                            input.values[index].deletable = true;
+                                            input.values[index].searchable = true;
                                         })
                                     } else if (input.type === "select-predefined-value") {
                                         setMultiValues(root.outAll(propertyName(predicate)), input, index);
@@ -386,7 +388,7 @@
                 allowAddNewButton: false,
                 subInputs: [],
                 predicate: ontologyUri + prop.subInputs.rdfProperty,
-                range: prop.subInputs.range
+                ranges: prop.subInputs.ranges
             };
             _.each(prop.subInputs.inputs, function (subInput) {
                 var inputFromOntology = inputMap[prop.subInputs.range + "." + ontologyUri + subInput.rdfProperty];
@@ -414,7 +416,7 @@
                 currentInput.multiple = true;
             }
             if (prop.authority) {
-                currentInput.type = 'searchable-authority'
+                currentInput.type = 'searchable-authority-dropdown'
             }
             if (prop.indexType) {
                 currentInput.indexType = prop.indexType
@@ -446,6 +448,9 @@
             } else {
                 currentInput.cssClassPrefix = 'default';
             }
+            if (prop.loadWorksAsSubjectOfItem) {
+                currentInput.loadWorksAsSubjectOfItem = prop.loadWorksAsSubjectOfItem;
+            }
         }
 
         function markFirstAndLastInputsInGroup(group) {
@@ -457,7 +462,7 @@
         }
 
         function assignInputTypeFromRange(input) {
-            switch (input.range) {
+            switch (input.ranges[0]) {
                 case "http://www.w3.org/2001/XMLSchema#string":
                     input.type = "input-string";
                     break;
@@ -478,6 +483,7 @@
                 case "deichman:Serial":
                 case "deichman:Contribution":
                 case "deichman:SerialIssue":
+                case "deichman:Subject":
                     // TODO infer from ontology that this is an URI
                     // (because deichman:Work a rdfs:Class)
                     input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
@@ -507,10 +513,11 @@
                     var url = valuesFrom["@id"];
                     predefinedValues.push(loadPredefinedValues(url, props[i]["@id"]))
                 }
-                if (!props[i]["rdfs:range"]) {
+                var ranges = props[i]["rdfs:range"];
+                if (!ranges) {
                     debugger;
                 }
-                var datatype = props[i]["rdfs:range"]["@id"];
+                var datatypes = _.isArray(ranges) ? _.pluck(ranges, "@id") : [ranges["@id"]];
                 var domains = props[i]["rdfs:domain"];
                 _.each(domains, function (domain) {
                     if (_.isObject(domain)) {
@@ -524,18 +531,18 @@
                         predicate: predicate,
                         fragment: fragment,
                         predefined: predefined,
-                        range: datatype,
-                        datatype: datatype,
+                        ranges: datatypes,
+                        datatypes: datatypes,
                         label: i18nLabelValue(props[i]["rdfs:label"]),
                         domain: domain,
-                        search_result: null,
+                        searchResult: null,
                         allowAddNewButton: false,
                         values: [{
                             old: {value: "", lang: ""},
                             current: {value: predefined ? [] : null, lang: ""},
                             uniqueId: _.uniqueId()
                         }],
-                        dataAutomationId: unPrefix(domain) + "_" + predicate + "_0",
+                        dataAutomationId: unPrefix(domain) + "_" + predicate + "_0"
                     };
 
                     if (input.searchable) {
@@ -545,35 +552,7 @@
                         input.type = "select-predefined-value";
                         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                     } else {
-                        switch (input.range) {
-                            case "http://www.w3.org/2001/XMLSchema#string":
-                                input.type = "input-string";
-                                break;
-                            case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
-                                input.type = "input-lang-string";
-                                break;
-                            case "http://www.w3.org/2001/XMLSchema#gYear":
-                                input.type = "input-gYear";
-                                break;
-                            case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
-                                input.type = "input-nonNegativeInteger";
-                                break;
-                            case "deichman:PlaceOfPublication":
-                            case "deichman:Work":
-                            case "deichman:Person":
-                            case "deichman:Publisher":
-                            case "deichman:Role":
-                            case "deichman:Serial":
-                            case "deichman:Contribution":
-                            case "deichman:SerialIssue":
-                                // TODO infer from ontology that this is an URI
-                                // (because deichman:Work a rdfs:Class)
-                                input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                                input.type = "input-string"; // temporarily
-                                break;
-                            default:
-                                throw "Don't know which input-type to assign to range: " + input.range;
-                        }
+                        assignInputTypeFromRange(input);
                     }
                     inputs.push(input);
                     inputMap[unPrefix(domain) + "." + input.predicate] = input;
@@ -655,6 +634,13 @@
                     width: supportPanelWidth
                 });
             });
+        }
+
+        function loadWorksAsSubject(target) {
+            axios.get(proxyToServices(target.uri + "/asSubjectOfWorks")).then(function (response) {
+                target.work = _.pluck(_.pluck(ensureJSON(response).data.hits.hits, "_source"), "work");
+                ractive.update();
+            })
         }
 
 
@@ -906,7 +892,7 @@
                                 resource_type: "",
                                 resource_label: "",
                                 ontology: null,
-                                search_result: null,
+                                searchResult: null,
                                 config: applicationData.config,
                                 save_status: "ny ressurs",
                                 authorityLabels: {},
@@ -1011,7 +997,7 @@
                                             current: {value: "", lang: ""},
                                             uniqueId: _.uniqueId()
                                         };
-                                        input.search_result = null;
+                                        input.searchResult = null;
                                     });
                                     ractive.update();
                                     ractive.set(event.keypath + ".allowAddNewButton", false);
@@ -1054,7 +1040,7 @@
                                         ractive.update();
                                         var subInputs = grandParentOf(event.keypath);
                                         _.each(event.context.subInputs, function (input, subInputIndex) {
-                                            if (_.contains(["select-authorized-value", "entity", "searchable-authority"], input.input.type)) {
+                                            if (_.contains(["select-authorized-value", "entity", "searchable-authority-dropdown"], input.input.type)) {
                                                 var valuesKeypath = subInputs + "." + subInputIndex + ".input.values." + index + ".current.value.0";
                                                 loadLabelsForAuthorizedValues([ractive.get(valuesKeypath)], input.input, index);
                                             }
@@ -1075,37 +1061,31 @@
                                         }
                                     })
                                 },
-                                searchResource: function (event, searchString) {
+                                searchResource: function (event, searchString, indexType) {
                                     // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
-                                    var searchType = "person";
-                                    var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search";
+                                    var searchURI = ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search";
                                     var searchData = {
-                                        query: {
-                                            match: {
-                                                'person.name': {
-                                                    query: searchString + "*",
-                                                    operator: "and"
-                                                }
-                                            }
+                                        params: {
+                                                q: indexType + '.name:' + searchString + "*"
                                         }
                                     };
-                                    axios.post(searchURI, searchData)
+                                    axios.get(searchURI, searchData)
                                         .then(function (response) {
                                             var results = ensureJSON(response.data);
                                             results.hits.hits.forEach(function (hit) {
-                                                var person = hit._source.person;
-                                                person.isChecked = false;
-                                                if (person.work) {
-                                                    if (!_.isArray(person.work)) {
-                                                        person.work = [person.work];
+                                                var item = hit._source[indexType];
+                                                item.isChecked = false;
+                                                if (item.work) {
+                                                    if (!_.isArray(item.work)) {
+                                                        item.work = [item.work];
                                                     }
-                                                    _.each(person.work, function (work) {
+                                                    _.each(item.work, function (work) {
                                                         work.isChecked = false;
                                                     });
                                                 }
                                             });
-                                            ractive.set(grandParentOf(event.keypath) + ".search_result", {
-                                                results: results,
+                                            ractive.set(grandParentOf(event.keypath) + ".searchResult", {
+                                                items: _.pluck(_.pluck(results.hits.hits, "_source"), indexType),
                                                 origin: event.keypath
                                             });
                                         });
@@ -1113,11 +1093,14 @@
                                     //    console.log(err);
                                     //});
                                 },
-                                toggleWork: function (event) {
+                                toggleWork: function (event, findWorksAsSubjectOfType, origin) {
                                     var keypath = event.keypath + '.toggleWork';
                                     ractive.get(keypath) !== true ?
                                         ractive.set(keypath, true) :
                                         ractive.set(keypath, false);
+                                    if (findWorksAsSubjectOfType && !origin.work) {
+                                        loadWorksAsSubject(origin);
+                                    }
                                 },
                                 selectPersonResource: function (event, origin) {
                                     var inputKeyPath = grandParentOf(origin);
@@ -1135,32 +1118,34 @@
                                     _.each(input.dependentResourceTypes, function (resourceType) {
                                         unloadResourceForDomain(resourceType);
                                     });
+                                    if (ractive.get("targetUri." + input.subjectType)) {
+                                        ractive.fire("patchResource",
+                                            {keypath: origin, context: ractive.get(origin)},
+                                            ractive.get(grandParentOf(origin)).predicate,
+                                            input.subjectType);
+                                    }
                                 },
                                 selectWorkResource: function (event) {
                                     var uri = event.context.uri;
                                     unloadResourceForDomain("Publication");
                                     loadExistingResource(uri, {leaveUnchanged: "creator"});
                                 },
-                                setResourceAndWorkResource: function (event, person, origin, domainType) {
-                                    ractive.fire("selectPersonResource", {context: person}, origin, domainType);
+                                setResourceAndWorkResource: function (event, mainItem, origin, domainType) {
+                                    ractive.fire("selectPersonResource", {context: {uri: mainItem.uri, name: mainItem.name}}, origin, domainType);
                                     ractive.fire("selectWorkResource", {context: event.context});
                                 },
-                                delResource: function (event, predicate) {
-                                    ractive.set("search_result", null);
+                                unselectEntity: function (event) {
+                                    ractive.set(event.keypath + ".searchResult", null);
                                     ractive.set(event.keypath + ".current.value", "");
                                     ractive.set(event.keypath + ".current.displayValue", "");
                                     ractive.set(event.keypath + ".deletable", false);
                                     ractive.set(event.keypath + ".searchable", true);
-                                    ractive.fire("patchResource", {keypath: event.keypath, context: event.context}, predicate);
-                                },
-                                unselectWorkAndPerson: function (event) {
-                                    ractive.set("search_result", null);
-                                    ractive.set(event.keypath + ".current.value", "");
-                                    ractive.set(event.keypath + ".current.displayValue", "");
-                                    ractive.set(event.keypath + ".deletable", false);
-                                    ractive.set(event.keypath + ".searchable", true);
-                                    unloadResourceForDomain('Work');
-                                    unloadResourceForDomain('Person');
+                                    var input = ractive.get(grandParentOf(event.keypath));
+                                    ractive.fire("patchResource", event, input.predicate, input.subjectType);
+                                    if (input.isMainEntry) {
+                                        unloadResourceForDomain('Work');
+                                        unloadResourceForDomain('Person');
+                                    }
                                 },
                                 activateTab: function (event) {
                                     _.each(ractive.get("inputGroups"), function (group, groupIndex) {
@@ -1217,14 +1202,14 @@
                                 }
                             }
                         });
-                        ractive.observe("search_result.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
+                        ractive.observe("searchResult.results.hits.hits.*._source.person.isChecked", function (newValue, oldValue, keypath) {
                             if (newValue === true) {
                                 var workPath = getParentFromKeypath(keypath);
                                 checkSelectedSearchResults([workPath]);
                             }
                         });
 
-                        ractive.observe("search_result.results.hits.hits.*._source.person.work.*.isChecked", function (newValue, oldValue, keypath) {
+                        ractive.observe("searchResult.results.hits.hits.*._source.person.work.*.isChecked", function (newValue, oldValue, keypath) {
                             if (newValue === true) {
                                 var workPath = getParentFromKeypath(keypath);
                                 var personPath = getParentFromKeypath(keypath, 3);
@@ -1248,8 +1233,8 @@
                         }
 
                         function checkSelectedSearchResults(pathsToCheck) {
-                            ractive.set("search_result.results.hits.hits.*._source.person.isChecked", false);
-                            ractive.set("search_result.results.hits.hits.*._source.person.work.*.isChecked", false);
+                            ractive.set("searchResult.results.hits.hits.*._source.person.isChecked", false);
+                            ractive.set("searchResult.results.hits.hits.*._source.person.work.*.isChecked", false);
                             pathsToCheck.forEach(function (path) {
                                 ractive.set(path + '.isChecked', true);
                             });

@@ -214,7 +214,8 @@
                 var url = props[i]["http://data.deichman.no/utility#valuesFrom"]["@id"];
                 loadAuthorizedValues(url, props[i]["@id"]);
             }
-            var datatype = props[i]["rdfs:range"]["@id"];
+            var ranges = props[i]["rdfs:range"];
+            var datatype = _.isArray(ranges) ? ranges[0]["@id"] : ranges["@id"];
             var predicate = Ontology.resolveURI(ont, props[i]["@id"]);
             var input = {
                 disabled: disabled,
@@ -260,6 +261,7 @@
                         break;
                     case "deichman:Contribution": //ignore, as these are blank nodes
                     case "deichman:SerialIssue":
+                    case "deichman:Subject":
                         break;
                     default:
                         throw "Doesn't know which input-type to assign to range: " + input.range;

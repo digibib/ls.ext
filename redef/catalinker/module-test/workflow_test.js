@@ -35,7 +35,7 @@ describe("Catalinker", function () {
                 id: "confirm-person",
                 rdfType: "Work",
                 label: "Bekreft person",
-                inputs: [{rdfProperty: "creator", type: "searchable-person"}],
+                inputs: [{rdfProperty: "creator", type: "searchable-with-result-in-side-panel"}],
                 nextStep: {
                   buttonLabel: "Bekreft verk",
                   createNewResource: "Work"
