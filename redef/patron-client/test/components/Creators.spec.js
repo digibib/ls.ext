@@ -1,4 +1,4 @@
-/* global describe, it */
+/* eslint-env mocha */
 // Test of shallow rendering, without any supporting libraries.
 import expect from 'expect'
 import React from 'react'

@@ -1,10 +1,10 @@
+/* eslint-env mocha */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import SearchResults from '../../src/frontend/components/SearchResults'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
-/* global describe, it */
 
 function setup (propOverrides) {
   const props = {

@@ -1,4 +1,4 @@
-/* global before, after, describe, it */
+/* eslint-env mocha */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'

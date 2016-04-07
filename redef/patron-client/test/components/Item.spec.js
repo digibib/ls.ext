@@ -1,4 +1,4 @@
-/* global describe, it */
+/* eslint-env mocha */
 import expect from 'expect'
 import React, { PropTypes } from 'react'
 import TestUtils from 'react-addons-test-utils'
