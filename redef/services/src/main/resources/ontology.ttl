@@ -58,7 +58,7 @@
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person, :Publisher, :Serial, :Corporation ;
+  rdfs:domain :Person, :Publisher, :Serial, :Corporation, :Subject ;
   rdfs:range xsd:string .
 
 :personTitle a rdfs:Property ;
@@ -73,6 +73,12 @@
   rdfs:label "Opphavsperson"@no ;
   rdfs:domain :Work ;
   rdfs:range :Person .
+
+:subject a rdfs:Property ;
+  rdfs:label "Subject"@en ;
+  rdfs:label "Emne"@no ;
+  rdfs:domain :Work ;
+  rdfs:range :Subject, :Person, :Work .
 
 :publicationYear a rdfs:Property ;
   rdfs:label "Publication year"@en ;
