@@ -9,6 +9,7 @@ module RandomMigrate
       @type = type.downcase
       @literals = Hash.new
       @authorized_values = Hash.new
+      @raw = []
     end
 
     def add_literal(predicate, value)
@@ -19,6 +20,29 @@ module RandomMigrate
       @authorized_values[predicate] = value
     end
 
+    def add_triple(subject, predicate, value)
+      @triples << [subject, predicate, value]
+    end
+
+    def add_raw(raw)
+      @raw << raw
+    end
+
+    def add_item(available, placement)
+      barcode = SecureRandom.hex(8)
+      type = "item-#{barcode}"
+      add_raw("<publication> <#{@services}/ontology#hasItem> <#{type}> .
+               <#{type}> <#{@services}/itemSubfieldCode/a> \"hbar\" .
+               <#{type}> <#{@services}/itemSubfieldCode/b> \"hbar\" .
+               <#{type}> <#{@services}/itemSubfieldCode/l> \"12\" .
+               <#{type}> <#{@services}/itemSubfieldCode/o> \"#{placement}\" .
+               <#{type}> <#{@services}/itemSubfieldCode/p> \"#{barcode}\" .
+               <#{type}> <#{@services}/itemSubfieldCode/t> \"#{@raw.size}\" .
+               <#{type}> <#{@services}/itemSubfieldCode/y> \"l\" .
+               #{available ? '' : "<#{type}> <#{@services}/itemSubfieldCode/q> \"2011-06-20\" ."}"
+      )
+    end
+
     def to_ntriples()
       ntriples = "<#{@type}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology##{@type.capitalize}> .\n"
       @literals.each do |predicate, value|
@@ -26,6 +50,9 @@ module RandomMigrate
       end
       @authorized_values.each do |predicate, value|
         ntriples << "<#{@type}> <#{@services}/ontology##{predicate}> <#{value}> .\n"
+      end
+      @raw.each do |raw|
+        ntriples << "#{raw}\n"
       end
       ntriples
     end
@@ -42,20 +69,6 @@ module RandomMigrate
 
     def generate_random_string()
       return SecureRandom.hex(8)
-    end
-
-    def generate_item()
-      item_barcode = generate_random_string
-      ntriples = "<publication> <#{@services}/ontology#hasItem> <item> .
-                  <item> <#{@services}/itemSubfieldCode/a> \"hbar\" .
-                  <item> <#{@services}/itemSubfieldCode/b> \"hbar\" .
-                  <item> <#{@services}/itemSubfieldCode/l> \"13\" .
-                  <item> <#{@services}/itemSubfieldCode/o> \"u Nil\" .
-                  <item> <#{@services}/itemSubfieldCode/p> \"03010186999003\" .
-                  <item> <#{@services}/itemSubfieldCode/t> \"3\" .
-                  <item> <#{@services}/itemSubfieldCode/y> \"l\" .
-                  <item> <#{@services}/itemSubfieldCode/q> \"2011-06-20\" ."
-      return item_barcode, ntriples
     end
 
     def generate_person()
@@ -139,6 +152,9 @@ module RandomMigrate
       publication_1.add_authorized('publicationOf', work_uri)
       publication_1.add_literal('mainTitle', "pubprefix0#{@id} #{@id}nob")
       publication_1.add_authorized('language', 'http://lexvo.org/id/iso639-3/nob')
+      publication_1.add_item(true, 'placement1')
+      publication_1.add_item(false, 'placement2')
+      publication_1.add_item(false, 'placement1')
       post_ntriples('publication', publication_1.to_ntriples)
 
       publication_2 = Entity.new('publication', @services)
@@ -157,9 +173,12 @@ module RandomMigrate
       publication_4.add_authorized('publicationOf', work_uri)
       publication_4.add_literal('mainTitle', "pubprefix1#{@id} #{@id}dan")
       publication_4.add_authorized('language', 'http://lexvo.org/id/iso639-3/dan')
+      publication_4.add_item(false, 'placement1')
       post_ntriples('publication', publication_4.to_ntriples)
 
       index('work', work_uri)
+
+      work_uri
     end
   end
 end

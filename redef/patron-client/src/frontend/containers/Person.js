@@ -6,7 +6,6 @@ import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
 import Constants from '../constants/Constants'
-import { inPreferredLanguage } from '../utils/languageHelpers'
 
 const Person = React.createClass({
   propTypes: {
@@ -36,10 +35,10 @@ const Person = React.createClass({
     }
   },
   renderWorks (person) {
-    let workTitle = function (work) {
-      let title = inPreferredLanguage(work.mainTitle)
+    let workTitle = work => {
+      let title = work.mainTitle
       if (Object.keys(work.partTitle).length > 0) {
-        title += ` —  ${inPreferredLanguage(work.partTitle)}`
+        title += ` —  ${work.partTitle}`
       }
       return title
     }

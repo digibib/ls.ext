@@ -18,8 +18,8 @@ export function parsePersonResponse (personResponse, worksResponse) {
   person.works = []
   personGraph.byType('Work').forEach(workResource => {
     let work = {}
-    populateLabelsByLanguage(work, 'mainTitle', workResource)
-    populateLabelsByLanguage(work, 'partTitle', workResource)
+    populateLiteral(work, 'mainTitle', workResource)
+    populateLiteral(work, 'partTitle', workResource)
     work.relativeUri = relativeUri(workResource.id)
     person.works.push(work)
   })
@@ -36,10 +36,8 @@ export function parseWorkResponse (workResponse, itemsResponse) {
 
   let workResource = workGraph.byType('Work')[ 0 ]
   let work = {}
-
-  // TODO: availCount
-  populateLabelsByLanguage(work, 'mainTitle', workResource)
-  populateLabelsByLanguage(work, 'partTitle', workResource)
+  populateLiteral(work, 'mainTitle', workResource)
+  populateLiteral(work, 'partTitle', workResource)
   populateLiteral(work, 'publicationYear', workResource)
 
   work.creators = []
@@ -65,16 +63,17 @@ export function parseWorkResponse (workResponse, itemsResponse) {
       let item = {}
       populateLiteral(item, 'shelfmark', itemResource)
       populateLiteral(item, 'status', itemResource)
+      console.log(item.shelfmark, item.status)
       if (items[ item.shelfmark ]) {
-        items[ item.status ].count++
+        items[ item.shelfmark ].count++
         if (item.status === 'AVAIL') {
-          items[ item.status ].status = 'AVAIL'
+          items[ item.shelfmark ].status = 'AVAIL'
         }
       } else {
         populateLiteral(item, 'branch', itemResource)
         populateLiteral(item, 'barcode', itemResource)
         item.count = 1
-        items[ items.status ] = item
+        items[ item.shelfmark ] = item
       }
     })
     Object.keys(items).forEach(key => {

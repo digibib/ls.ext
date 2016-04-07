@@ -67,12 +67,19 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "Search"
 
-  @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
-    Når jeg søker på "Berlinerpoplene"
+    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
     Og jeg trykker på første treff
     Så skal jeg se "4" utgivelser
-    Når jeg trykker på første utgivelse
+    Når jeg trykker på utgivelsen med "Norsk (bokmål)" språk
     Så skal jeg se et panel med informasjon om utgivelsen
-    Og informasjon om ledige eksemplarer
+    Og den skal inneholde eksemplarinformasjonen
+      | filial                         | antall | plassering | status               |
+      | Barneavdelingen (Hovedutlånet) | 2      | placement1 | Ledig                |
+      | Barneavdelingen (Hovedutlånet) | 1      | placement2 | Forventet 2011-06-20 |
+    Når jeg trykker på utgivelsen med "Dansk" språk
+    Så skal jeg se et panel med informasjon om utgivelsen
+    Og den skal inneholde eksemplarinformasjonen
+      | filial                         | antall | plassering | status               |
+      | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
