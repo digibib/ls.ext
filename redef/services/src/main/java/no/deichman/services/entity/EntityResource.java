@@ -259,6 +259,13 @@ public final class EntityResource extends ResourceBase {
         return zeroOrMoreResponseFromModel(getEntityService().retrieveWorksByCreator(xuri));
     }
 
+    @GET
+    @Path("{id: (p|w|h|e)[a-zA-Z0-9_]+}/asSubjectOfWorks")
+    public Response getWorksWhereUriIsSubject(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        return getSearchService().searchWork("work.subject.uri:\"" + xuri.getUri() + "\"");
+    }
+
     @Override
     protected ServletConfig getConfig() {
         return servletConfig;

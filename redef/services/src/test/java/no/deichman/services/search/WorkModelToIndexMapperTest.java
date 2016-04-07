@@ -16,42 +16,48 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
  */
 public class WorkModelToIndexMapperTest {
     private String comparisonJsonDocument = ""
-            + "{"
-            + "   \"work\":{"
-            + "      \"uri\":\"%1$s\","
-            + "      \"creator\":{"
-            + "         \"uri\":\"%2$s\","
-            + "         \"name\":\"personName_value\""
-            + "      },"
-            + "      \"mainTitle\":["
-            + "         \"work_1_title\","
-            + "         \"work_1_english_title\""
-            + "      ],"
-            + "      \"partTitle\":["
-            + "         \"work_1_part_title\","
-            + "         \"work_1_english_part_title\""
-            + "      ],"
-            + "      \"publication\":["
-            + "         {"
-            + "            \"uri\":\"%3$s\","
-            + "            \"format\":\"http://data.deichman.no/format#Book\","
-            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\","
-            + "            \"language\":\"http://lexvo.org/id/iso639-3/eng\""
-            + "         },"
-            + "         {"
-            + "            \"uri\":\"%4$s\","
-            + "            \"format\":\"http://data.deichman.no/format#DVD\","
-            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\","
-            + "            \"language\":\"http://lexvo.org/id/iso639-3/nob\""
-            + "         },"
-            + "         {"
-            + "            \"uri\":\"%5$s\","
-            + "            \"format\":\"http://data.deichman.no/format#Book\","
-            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\","
-            + "            \"language\":\"http://lexvo.org/id/iso639-3/nob\""
-            + "         }"
-            + "      ]"
-            + "   }"
+            + "{\n"
+            + "   \"work\":{\n"
+            + "      \"uri\":\"%1$s\",\n"
+            + "      \"creator\":{\n"
+            + "         \"uri\":\"%2$s\",\n"
+            + "         \"name\":\"personName_value\"\n"
+            + "      },\n"
+            + "      \"mainTitle\":[\n"
+            + "         \"work_1_title\",\n"
+            + "         \"work_1_english_title\"\n"
+            + "      ],\n"
+            + "      \"partTitle\":[\n"
+            + "         \"work_1_part_title\",\n"
+            + "         \"work_1_english_part_title\"\n"
+            + "      ],\n"
+            + "      \"publication\":[\n"
+            + "         {\n"
+            + "            \"uri\":\"%3$s\",\n"
+            + "            \"format\":\"http://data.deichman.no/format#Book\",\n"
+            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\",\n"
+            + "            \"language\":\"http://lexvo.org/id/iso639-3/eng\"\n"
+            + "         },\n"
+            + "         {\n"
+            + "            \"uri\":\"%4$s\",\n"
+            + "            \"format\":\"http://data.deichman.no/format#DVD\",\n"
+            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\",\n"
+            + "            \"language\":\"http://lexvo.org/id/iso639-3/nob\"\n"
+            + "         },\n"
+            + "         {\n"
+            + "            \"uri\":\"%5$s\",\n"
+            + "            \"format\":\"http://data.deichman.no/format#Book\",\n"
+            + "            \"audience\":\"http://data.deichman.no/audience#juvenile\",\n"
+            + "            \"language\":\"http://lexvo.org/id/iso639-3/nob\"\n"
+            + "         }\n"
+            + "      ],\n"
+            + "      \"subject\":[\n"
+            + "         {\n"
+            + "            \"uri\":\"%6$s\",\n"
+            + "            \"name\":\"Nitting\"\n"
+            + "         }\n"
+            + "      ]\n"
+            + "   }\n"
             + "}";
 
     @Test
@@ -61,6 +67,7 @@ public class WorkModelToIndexMapperTest {
         XURI publicationXuri1 = new XURI("http://deichman.no/publication/p1200001");
         XURI publicationXuri2 = new XURI("http://deichman.no/publication/p1200002");
         XURI publicationXuri3 = new XURI("http://deichman.no/publication/p1200003");
+        XURI subjectXuri = new XURI("http://deichman.no/subject/e1200005");
 
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
@@ -153,8 +160,31 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createProperty("http://deichman.no/ontology#language"),
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
 
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(subjectXuri.getUri()),
+                RDF.type,
+                ResourceFactory.createResource("http://deichman.no/ontology#Subject")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(subjectXuri.getUri()),
+                ResourceFactory.createProperty("http://deichman.no/ontology#name"),
+                ResourceFactory.createPlainLiteral("Nitting")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(workXuri.getUri()),
+                ResourceFactory.createProperty("http://deichman.no/ontology#subject"),
+                ResourceFactory.createResource(subjectXuri.getUri())));
+
         String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, workXuri);
 
-        Assert.assertThat(jsonDocument, sameJSONAs(String.format(comparisonJsonDocument, workXuri.getUri(), personXuri.getUri(), publicationXuri1.getUri(), publicationXuri2.getUri(), publicationXuri3.getUri())).allowingAnyArrayOrdering());
+        Assert.assertThat(jsonDocument, sameJSONAs(String.format(
+                comparisonJsonDocument,
+                workXuri.getUri(),
+                personXuri.getUri(),
+                publicationXuri1.getUri(),
+                publicationXuri2.getUri(),
+                publicationXuri3.getUri(),
+                subjectXuri.getUri())
+        ).allowingAnyArrayOrdering());
     }
 }

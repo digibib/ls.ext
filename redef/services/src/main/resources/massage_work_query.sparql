@@ -18,9 +18,13 @@ CONSTRUCT
     ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> deich:Person .
     ?person deich:name ?name .
     ?person deich:birthYear ?birthYear .
-    ?person deich:deathYear ?deathYear .}
+    ?person deich:deathYear ?deathYear .
+    ?workUri deich:subject ?subject .
+    ?subject deich:name ?subjectName .}
 WHERE
-  { SELECT  ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle ?publicationPartTitle ?format ?publicationPublicationYear ?language ?person ?audience
+  { SELECT
+         ?workUri ?name ?deathYear ?birthYear ?publication ?mainTitle ?partTitle ?publicationYear ?publicationMainTitle
+         ?publicationPartTitle ?format ?publicationPublicationYear ?language ?person ?audience ?subject ?subjectName
     WHERE
       { BIND(uri("__WORKURI__") AS ?workUri)
         ?workUri  a                     deich:Work
@@ -73,6 +77,12 @@ WHERE
         OPTIONAL
           { ?person  deich:deathYear  ?deathYearO
                   BIND(str(?deathYearO) AS ?deathYear)
+          }
+        OPTIONAL
+          {
+            ?workUri  deich:subject  ?subject .
+            ?subject  deich:name     ?subjectName ;
+                      a              deich:Subject .
           }
       }
   }

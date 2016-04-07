@@ -25,6 +25,11 @@
     "Work": "deichman:Work",
     "publicationYear": "deichman:publicationYear",
     "issued": "deichman:issued",
-    "Person": "deichman:Person"
+    "Person": "deichman:Person",
+    "subject": {
+      "@id": "deichman:subject",
+      "@container": "@set"
+    },
+    "Subject": "deichman:Subject"
   }
 }
