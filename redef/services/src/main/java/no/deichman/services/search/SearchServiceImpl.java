@@ -203,6 +203,10 @@ public class SearchServiceImpl implements SearchService {
         return doSearch(query, getSerialSearchUriBuilder());
     }
 
+    @Override
+    public final Response searchSubject(String query) {
+        return doSearch(query, getSubjectSearchUriBuilder());
+    }
 
     private void doIndexWork(XURI xuri, boolean indexedPerson) throws Exception {
 
@@ -314,5 +318,9 @@ public class SearchServiceImpl implements SearchService {
 
     public final URIBuilder getSerialSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/serial/_search");
+    }
+
+    public final URIBuilder getSubjectSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/subject/_search");
     }
 }

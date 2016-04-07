@@ -3,7 +3,6 @@ package no.deichman.services.services.search;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
@@ -43,16 +42,17 @@ public final class EmbeddedElasticsearchServer {
                 .node();
 
         IndicesExistsResponse existsResponse = getClient().admin().indices().prepareExists("search").execute().actionGet();
-        AcknowledgedResponse response;
         if (existsResponse.isExists()) {
             assertTrue(getClient().admin().indices().prepareDelete("search").execute().actionGet().isAcknowledged());
         }
         assertTrue(getClient().admin().indices().prepareCreate("search").execute().actionGet().isAcknowledged());
 
 
+        prepareMappingOf("person");
         prepareMappingOf("work");
         prepareMappingOf("publisher");
         prepareMappingOf("serial");
+        prepareMappingOf("subject");
     }
 
     private void prepareMappingOf(String type) throws IOException {

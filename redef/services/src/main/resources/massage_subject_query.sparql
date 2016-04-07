@@ -7,7 +7,7 @@ CONSTRUCT
 WHERE
   { SELECT DISTINCT  ?subjectUri ?name
     WHERE
-      { BIND(uri("__PUBLISHERURI__") AS ?subjectUri)
+      { BIND(uri("__SUBJECTURI__") AS ?subjectUri)
         ?subjectUri  a                   :Subject ;
 
         OPTIONAL

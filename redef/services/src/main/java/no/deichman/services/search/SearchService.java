@@ -28,4 +28,6 @@ public interface SearchService {
     Response searchPublisher(String query);
 
     Response searchSerial(String query);
+
+    Response searchSubject(String query);
 }

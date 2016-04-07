@@ -484,6 +484,25 @@ public class AppTest {
     }
 
     @Test
+    public void subject_is_searchable() throws UnirestException, InterruptedException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "subject", "{}").asString();
+
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#name";
+        String o1 = "Nitting";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .build();
+
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+        doSearchForSubject("Nitting");
+    }
+
+    @Test
     public void test_patching_with_bnodes() throws UnirestException {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
         String op = "ADD";
@@ -761,7 +780,7 @@ public class AppTest {
         boolean foundSerial;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/serial/_search").queryString("q", "name:" + name);
+            HttpRequest request = Unirest.get(baseUri + "search/serial/_search").queryString("q", "serial.name:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSerial = responseBody.contains(name);
@@ -772,6 +791,23 @@ public class AppTest {
         } while (!foundSerial && attempts-- > 0);
 
         assertTrue("Should have found name of serial in index by now", foundSerial);
+    }
+
+    private void doSearchForSubject(String name) throws UnirestException, InterruptedException {
+        boolean foundSubject;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(baseUri + "search/subject/_search").queryString("q", "subject.name:" + name);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundSubject = responseBody.contains(name);
+            if (!foundSubject) {
+                LOG.info("Subject not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundSubject && attempts-- > 0);
+
+        assertTrue("Should have found name of serial in index by now", foundSubject);
     }
 
     private void indexWork(String workId, String title) {

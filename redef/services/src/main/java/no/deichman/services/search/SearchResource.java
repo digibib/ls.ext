@@ -43,7 +43,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @GET
-    @Path("{type: work|person|placeOfPublication|publisher|serial}/_search")
+    @Path("{type: work|person|placeOfPublication|publisher|serial|subject}/_search")
     @Produces(MediaType.APPLICATION_JSON)
     public final Response search(@PathParam("type") String type, @QueryParam("q") String query) {
         if (isBlank(query)) {
@@ -60,13 +60,15 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchPublisher(query);
             case "serial":
                 return getSearchService().searchSerial(query);
+            case "subject":
+                return getSearchService().searchSubject(query);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
     }
 
     @POST
-    @Path("{type: work|person|placeOfPublication|publisher|serial}/_search")
+    @Path("{type: work|person|placeOfPublication|publisher|serial|subject}/_search")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public final Response searchJson(String body, @PathParam("type") String type, @Context UriInfo uriInfo) {
@@ -85,6 +87,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchPublisher(body);
             case "serial":
                 return getSearchService().searchSerial(body);
+            case "subject":
+                return getSearchService().searchSubject(body);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
