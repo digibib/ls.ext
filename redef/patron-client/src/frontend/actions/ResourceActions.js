@@ -41,7 +41,6 @@ export function expandSubResource (id, router) {
     } else {
       locationQuery.showMore = id
     }
-
     let url = router.createPath({
       pathname: getState().routing.locationBeforeTransitions.pathname,
       query: locationQuery
