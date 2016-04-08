@@ -6,6 +6,9 @@ const Publication = React.createClass({
     publication: PropTypes.object.isRequired,
     intl: intlShape.isRequired
   },
+  contextTypes: {
+    router: React.PropTypes.object
+  },
   renderTitle (publication) {
     let title = publication.mainTitle
     if (publication.partTitle) {
@@ -13,10 +16,13 @@ const Publication = React.createClass({
     }
     return title
   },
+  handleClick () {
+    this.props.expandSubResource(this.props.publication.id, this.context.router)
+  },
   render () {
     let publication = this.props.publication
     return (
-      <div onClick={this.props.onClick} className='col col-1-3 publication-small'>
+      <div onClick={this.handleClick} className='col col-1-3 publication-small'>
           <div className='col book-cover placeholder'/>
           <div className='result-info'>
             <p>

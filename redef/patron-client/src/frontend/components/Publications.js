@@ -9,18 +9,12 @@ export default React.createClass({
   propTypes: {
     publications: PropTypes.array.isRequired
   },
-  contextTypes: {
-    router: React.PropTypes.object
-  },
   renderEmpty () {
     return (
       <h2 data-automation-id='no_publications'>
         <FormattedMessage {...messages.noPublications} />
       </h2>
     )
-  },
-  handleClick (publication) {
-    this.props.expandSubResource(publication.id, this.context.router)
   },
   getArrow (column) {
     return [ 0, 1, 2 ].map(number =>
@@ -39,7 +33,7 @@ export default React.createClass({
         {threeAndThreePublications.map((publications, row) => {
           let output = [ <div className='row'>{publications.map((publication, column) => <Publication
             key={publication.id}
-            onClick={this.handleClick.bind(this, publication)}
+            expandSubResource={this.props.expandSubResource}
             publication={publication}/>)}</div> ]
           let showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
           if (showMorePublication) {
