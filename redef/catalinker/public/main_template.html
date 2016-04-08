@@ -67,30 +67,30 @@
 {{#partial input}}
 <div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel">
     <div class="pure-u-1-2 label {{firstInGroup ? 'first':''}} panel-part" data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</div>
-    {{#each values:index}}
-    <span class="pure-u-1-2 field panel-part {{lastInGroup ? 'last':''}}" id="support_panel_base_{{uniqueId}}">
-        {{>type}}
-        {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
-        <a data-automation-id="biblio_record_link" target="_blank"
-           href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}"
-           class="link"></a>
+    <span class="panel-part pure-u-1-2 {{lastInGroup ? 'last':''}}">
+        {{#each values:index}}
+        <span class="field pure-u-1-1" id="support_panel_base_{{uniqueId}}">
+            {{>type}}
+            {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
+            <a data-automation-id="biblio_record_link" target="_blank"
+               href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}"
+               class="link"></a>
+            {{/}}
+            {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
+            <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}"
+               class="link"></a>
+            {{/}}
+            <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+        </span>
+        {{#index == values.length -1}}
+        <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+            {{>"support-for-"+type}}
+        </span>
         {{/}}
-        {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
-        <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}"
-           class="link"></a>
-        {{/}}
-        <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-    </span>
-    {{#index == values.length -1}}
-    <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
-        {{>"support-for-"+type}}
-    </span>
-    {{/}}
-    {{/each}}
-
+        {{/each}}
     {{#if subInputs}}
     {{#each subInputs[0].input.values:inputValueIndex}}
-        <span class="pure-u-1-2 panel-part field {{lastInGroup ? 'last':''}} {{#if cssClassPrefix}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}}" {{#if
+        <span class="pure-u-1-1 field {{#if cssClassPrefix}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}}" {{#if
               nonEditable}}disabled="disabled" {{/if}}>
         {{#if nonEditable}}
         <a class="delete" title="Slett oppføring"
@@ -130,26 +130,28 @@
                                 <label>{{subjectTypeLabel(.)}}</label>
                             </span>
                         {{/subjectTypes}}
-                        <a class="pure-button pure-button-primary add-item-button"
-                           disabled="{{typeof subjectType === 'undefined' || values.length == 0}}"
-                           on-click="saveObject:{{inputValueIndex}}">Legg til</a>
+                        <div>
+                            <a class="pure-button pure-button-primary add-item-button"
+                               disabled="{{typeof subjectType === 'undefined' || values.length == 0}}"
+                               on-click="saveObject:{{inputValueIndex}}">Legg til</a>
+                            </div>
                         {{/if}}
                         {{/with}}
 
                         {{#if nonEditable}}
                         {{subjectTypeLabelDet(subjectType)}}
                         {{/if}}
-
-                    </span>
                 </span>
         </span>
         <span class="pure-1-2"> </span>
     {{/each}}
+    <span class="panel-part pure-u-1-2 {{lastInGroup ? 'last':''}}">
     {{/if}}
     {{#multiple && allowAddNewButton}}
-    <span class="pure-u-1-2 panel-part">
+    <span class="pure-u-1-1">
         <div class="add-new-btn-row">
-            <a class="pure-button pure-button-primary" on-click="addValue">Legg til ny</a>
+            <div class="pure-u-2-3"> </div>
+            <a class="pure-u-1-3 pure-button pure-button-primary" on-click="addValue">Legg til ny</a>
         </div>
     </span>
     {{/}}
@@ -167,12 +169,11 @@
                 <div class="pure-g">
                     <div class="pure-u-1-12">
                         <input class="select-creator-radio" type="radio"
-                               on-click="selectPersonResource:{{origin}}"
+                               on-click="selectSearchableItem:{{origin}},{{.[config.search[selectedIndexType].resultItemLabelProperty]}}"
                                checked="{{isChecked}}"/>
                     </div>
-
                     <div class="pure-u-5-6">
-                        <p class="creator-name">{{name}}</p>
+                        <p class="subitem-label">{{.[config.search[selectedIndexType].resultItemLabelProperty]}}</p>
                     </div>
 
                     <div class="pure-u-1-12">
@@ -232,7 +233,7 @@
 {{/partal}}
 
 {{#partial select-predefined-value}}
-<span data-automation-id="{{../../dataAutomationId}}">
+<span data-automation-id="{{../../dataAutomationId}}" class="pure-u-1-1">
     {{#if nonEditable}}
     <span>{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
     {{/if}}
@@ -261,14 +262,26 @@ value="{{current.value}}" />
 {{/partial}}
 
 {{#partial searchable-with-result-in-side-panel}}
-<span data-automation-id="{{../../dataAutomationId}}">
+<span data-automation-id="{{../../dataAutomationId}}" class="pure-u-1-1">
     {{#if nonEditable}}{{current.displayValue}}{{else}}
+    {{#if ../../indexTypes.length > 1 && !deletable}}
+    <span class="index-type-select pure-u-1-2">
+        <select value="{{../../selectedIndexType}}">
+            {{#with widgetOptions.selectIndexTypeLegend}}
+                <option disabled selected>{{.}}</option>
+            {{/with}}
+            {{#each ../../indexTypes}}
+            <option value="{{.}}">{{config.search[.].selectIndexLabel}}</option>
+            {{/each}}
+        </select>
+    </span>
+    {{/if}}
     <input {{#deletable}}readonly {{/deletable}} type="search"
     on-click="{{#deletable}}unselectEntity{{/deletable}}"
-    class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}}{{#if ../../searchable}} searchable{{/if}}"
+    class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}}{{#if searchable}} searchable{{/if}}"
     data-automation-id="{{dataAutomationId}}"
-    on-enter='searchResource:{{./current.displayValue}},{{../../indexType}}'
-    on-keyup='searchResource:{{./current.displayValue}},{{../../indexType}}'
+    on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}}'
+    on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}}'
     value="{{current.displayValue}}" />
     <span class="support-panel-expander" on-click='searchResource:{{current.displayValue}}'></span>
     {{/if}}

@@ -164,7 +164,7 @@
                 value: id
             };
             input.values[index].current = {
-                value: id,
+                value: id
             };
             input.values[index].uniqueId = _.uniqueId();
         }
@@ -232,6 +232,14 @@
             return promises;
         }
 
+        function setAllowNewButtonForInput(input) {
+            if (input.multiple) {
+                if (typeof input.addNewHandledBySelect2 === 'undefined' || (typeof input.addNewHandledBySelect2 !== 'undefined' && !input.addNewHandledBySelect2)) {
+                    input.allowAddNewButton = true;
+                }
+            }
+        }
+
         var loadExistingResource = function (resourceUri, options) {
             return axios.get(resourceUri)
                 .then(function (response) {
@@ -269,11 +277,12 @@
                                         var values = setMultiValues(root.outAll(propertyName(predicate)), input, index);
                                         promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, index));
                                     } else if (input.type === "searchable-with-result-in-side-panel") {
-                                        _.each(root.outAll(propertyName(predicate)), function (node) {
+                                        _.each(root.outAll(propertyName(predicate)), function (node, index) {
                                             setIdValue(node.id, input, index);
                                             setDisplayValue(input, index, "name");
                                             input.values[index].deletable = true;
                                             input.values[index].searchable = true;
+                                            setAllowNewButtonForInput(input);
                                         })
                                     } else if (input.type === "select-predefined-value") {
                                         setMultiValues(root.outAll(propertyName(predicate)), input, index);
@@ -288,12 +297,7 @@
                                 });
                                 var mainInput = input.isSubInput ? input.parentInput : input;
                                 mainInput.subjectType = type;
-                                if (mainInput.multiple) {
-                                    if (typeof mainInput.addNewHandledBySelect2 !== 'undefined' && !mainInput.addNewHandledBySelect2) {
-                                        console.log("setting allowAddNewButton to true " + mainInput.addNewHandledBySelect2)
-                                        mainInput.allowAddNewButton = true;
-                                    }
-                                }
+                                setAllowNewButtonForInput(mainInput);
                             }
                         });
                         Promise.all(promises).then(function () {
@@ -392,14 +396,15 @@
             };
             _.each(prop.subInputs.inputs, function (subInput) {
                 var inputFromOntology = inputMap[prop.subInputs.range + "." + ontologyUri + subInput.rdfProperty];
+                var indexTypes = _.isArray(subInput.indexTypes) ? subInput.indexTypes : [subInput.indexTypes];
                 currentInput.subInputs.push({
                         label: subInput.label,
                         input: _.extend(inputFromOntology, {
                             type: subInput.type || inputFromOntology.type,
                             isSubInput: true,
                             parentInput: currentInput,
-                            searchable: inputFromOntology.searchable,
-                            indexType: subInput.indexType,
+                            indexTypes: indexTypes,
+                            selectedIndexType: indexTypes.length == 1 ? indexTypes[0] : undefined,
                             indexDocumentFields: subInput.indexDocumentFields,
                             nameProperties: subInput.nameProperties,
                             dataAutomationId: inputFromOntology.dataAutomationId
@@ -418,8 +423,11 @@
             if (prop.authority) {
                 currentInput.type = 'searchable-authority-dropdown'
             }
-            if (prop.indexType) {
-                currentInput.indexType = prop.indexType
+            if (prop.indexTypes) {
+                currentInput.indexTypes = _.isArray(prop.indexTypes) ? prop.indexTypes : [prop.indexTypes];
+                currentInput.selectedIndexType = currentInput.indexTypes.length == 1 ? currentInput.indexTypes[0] : undefined;
+            } else {
+                currentInput.selectedIndexType = "";
             }
             if (prop.indexDocumentFields) {
                 currentInput.indexDocumentFields = prop.indexDocumentFields
@@ -450,6 +458,9 @@
             }
             if (prop.loadWorksAsSubjectOfItem) {
                 currentInput.loadWorksAsSubjectOfItem = prop.loadWorksAsSubjectOfItem;
+            }
+            if (prop.type === "searchable-with-result-in-side-panel") {
+                currentInput.values[0].searchable = true;
             }
         }
 
@@ -527,7 +538,6 @@
                     var fragment = predicate.substring(predicate.lastIndexOf("#") + 1);
                     var input = {
                         disabled: disabled,
-                        searchable: props[i]["http://data.deichman.no/ui#searchable"] ? true : false,
                         predicate: predicate,
                         fragment: fragment,
                         predefined: predefined,
@@ -545,10 +555,7 @@
                         dataAutomationId: unPrefix(domain) + "_" + predicate + "_0"
                     };
 
-                    if (input.searchable) {
-                        input.type = "searchable-creator";
-                        input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
-                    } else if (input.predefined) {
+                    if (input.predefined) {
                         input.type = "select-predefined-value";
                         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
                     } else {
@@ -629,7 +636,7 @@
                 var supportPanelLeftEdge = dummyPanel.position().left;
                 var supportPanelWidth = dummyPanel.width();
                 $(panel).css({
-                    top: $("#" + supportPanelBaseId).position().top - 15,
+                    top: $("#" + supportPanelBaseId + " input").position().top - 15,
                     left: supportPanelLeftEdge,
                     width: supportPanelWidth
                 });
@@ -778,12 +785,16 @@
 
                         Ractive.decorators.select2.type.authoritySelectSingle = function (node) {
                             var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath));
-                            var indexType = inputDef.indexType;
+                            if (_.isArray(inputDef.indexTypes) && inputDef.indexTypes.length > 1) {
+                                throw "searchable-authority-dropdown supports only supports singe indexType"
+                            }
+                            var indexType = _.isArray(inputDef.indexTypes) ? inputDef.indexTypes[0] : inputDef.indexTypes;
+                            var config = ractive.get("config");
                             return {
                                 maximumSelectionLength: 1,
                                 minimumInputLength: 3,
                                 ajax: {
-                                    url: ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search",
+                                    url: config.resourceApiUri + "search/" + indexType + "/_search",
                                     dataType: 'json',
                                     delay: 250,
                                     id: function (item) {
@@ -995,13 +1006,13 @@
                                         input.values[input.values.length] = {
                                             old: {value: "", lang: ""},
                                             current: {value: "", lang: ""},
-                                            uniqueId: _.uniqueId()
+                                            uniqueId: _.uniqueId(),
+                                            searchable: mainInput.type === "searchable-with-result-in-side-panel"
                                         };
                                         input.searchResult = null;
                                     });
                                     ractive.update();
                                     ractive.set(event.keypath + ".allowAddNewButton", false);
-                                    console.log("setting " + event.keypath + ".allowAddNewButton to false");
                                     positionSupportPanels();
                                 },
                                 // patchResource creates a patch request based on previous and current value of
@@ -1063,10 +1074,11 @@
                                 },
                                 searchResource: function (event, searchString, indexType) {
                                     // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
-                                    var searchURI = ractive.get("config.resourceApiUri") + "search/" + indexType + "/_search";
+                                    var config = ractive.get("config");
+                                    var searchURI = config.resourceApiUri + "search/" + indexType + "/_search";
                                     var searchData = {
                                         params: {
-                                                q: indexType + '.name:' + searchString + "*"
+                                            q: config.search[indexType].queryTerm + ':' + searchString + "*"
                                         }
                                     };
                                     axios.get(searchURI, searchData)
@@ -1102,17 +1114,16 @@
                                         loadWorksAsSubject(origin);
                                     }
                                 },
-                                selectPersonResource: function (event, origin) {
+                                selectSearchableItem: function (event, origin, displayValue) {
                                     var inputKeyPath = grandParentOf(origin);
                                     var input = ractive.get(inputKeyPath);
                                     var uri = event.context.uri;
-                                    var name = event.context.name;
                                     if (input.isMainEntry) {
                                         loadExistingResource(uri);
                                     }
                                     ractive.set(origin + ".old.value", ractive.get(origin + ".current.value"));
                                     ractive.set(origin + ".current.value", uri);
-                                    ractive.set(origin + ".current.displayValue", name);
+                                    ractive.set(origin + ".current.displayValue", displayValue);
                                     ractive.set(origin + ".deletable", true);
                                     ractive.set(origin + ".searchable", false);
                                     _.each(input.dependentResourceTypes, function (resourceType) {
@@ -1131,7 +1142,12 @@
                                     loadExistingResource(uri, {leaveUnchanged: "creator"});
                                 },
                                 setResourceAndWorkResource: function (event, mainItem, origin, domainType) {
-                                    ractive.fire("selectPersonResource", {context: {uri: mainItem.uri, name: mainItem.name}}, origin, domainType);
+                                    ractive.fire("selectPersonResource", {
+                                        context: {
+                                            uri: mainItem.uri,
+                                            name: mainItem.name
+                                        }
+                                    }, origin, domainType);
                                     ractive.fire("selectWorkResource", {context: event.context});
                                 },
                                 unselectEntity: function (event) {
@@ -1142,6 +1158,9 @@
                                     ractive.set(event.keypath + ".searchable", true);
                                     var input = ractive.get(grandParentOf(event.keypath));
                                     ractive.fire("patchResource", event, input.predicate, input.subjectType);
+                                    if (ractive.get(parentOf(event.keypath)).length > 1) {
+                                        ractive.splice(parentOf(event.keypath), _.last(event.keypath.split(".")), 1);
+                                    }
                                     if (input.isMainEntry) {
                                         unloadResourceForDomain('Work');
                                         unloadResourceForDomain('Person');
@@ -1349,6 +1368,7 @@
                     .then(initSelect2)
                     .then(initRactive)
                     .then(loadResourceOfQuery)
+                    .then(positionSupportPanels)
                 //.catch(function (err) {
                 //    console.log("Error initiating Main: " + err);
                 //});

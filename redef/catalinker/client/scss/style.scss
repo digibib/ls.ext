@@ -59,228 +59,237 @@ body {
         display: block;
         margin-top: 20px;
       }
-      .add-item-button {
-        float: right;
-      }
-      .label {
-        display: block;
-        background: $input-background;
-        padding: 12px 12px 4px 12px;
-        font-weight: bold;
-        &:after {
-          content: ":";
+      .prop-input {
+        .add-item-button {
+          float: right;
+          margin-bottom: 12px;
         }
-      }
-      .field {
-        height: 30px;
-        padding: 0px 12px 15px 12px;
-        background: $input-background;
-        &.last {
-          border-bottom: 1px solid lightgrey;
-        }
-        &:not(.last):after{
+        .label {
           display: block;
-          height: 2px;
-          width: 100%;
-          background: lightgrey;
-          content: "";
-          margin-top: 24px;
-        }
-      }
-      .panel-part {
-        border-left: 1px solid lightgrey;
-        border-right: 1px solid lightgrey;
-        height: 100%;
-        background: white;
-        &.first {
-          border-top: 1px solid lightgrey;
-        }
-      }
-      input {
-        height: 26px;
-      }
-      span.support-panel-expander {
-        min-width: 22px;
-        position: relative;
-        left: -27px;
-        display: inline-block;
-        min-height: 22px;
-        top: 6px;
-      }
-      .deletable {
-        background-image: url('/images/delete_cross.svg');
-        background-repeat: no-repeat;
-        background-color: lightgrey;
-        background-position: left top;
-        padding-left: 2em;
-        cursor: pointer;
-      }
-      .searchable:not(.deletable) {
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='20' font-size='20'>▶</text></svg>");
-        background-repeat: no-repeat;
-        background-position: right top;
-        padding-right: 1.5em;
-      }
-      .search-result {
-        background: white;
-        padding: 0.5em;
-        margin-bottom: 0.1em;
-        min-height: 62px;
-        .search-result-subitem {
-          background: $lightergray;
-          margin-bottom: 2px;
-          padding-left: 0.4em;
-          padding-right: 0.4em;
-          .search-result-work-selector {
-            text-align: right;
+          background: $input-background;
+          padding: 12px 12px 4px 12px;
+          font-weight: bold;
+          &:after {
+            content: ":";
           }
         }
-        .part-name {
-          font-style: italic;
-        }
-        .search-result-subitem:last-child {
-          margin-bottom: 0;
-        }
-        .creator-name, .creator-years {
-          margin: 0;
-        }
-      }
-      .subject-type-select {
-        margin-top: 5px;
-        display: inline-flex;
-        label {
-          padding-right: 25px;
-          padding-left: 5px;
-        }
-      }
-      .add-new-btn-row {
-        float: right;
-        padding: 4px 8px 8px 8px;
-      }
-      a.delete {
-        background-image: url('/images/delete_cross.svg');
-        background-repeat: no-repeat;
-        background-position: left top;
-        padding-left: 2em;
-        cursor: pointer;
-        min-width: 20px;
-      }
-      .default-editable {
-        min-height: 60px;
-        padding: 0 0 12px 0;
-        height: 100%;
-        .inputs {
-          background: $mintgreen;
-          display: block;
-          border: 1px solid lightgrey;
-          padding: 5px 22px;
-          margin: 10px;
-          .input {
+        .panel-part {
+          .field {
+            padding: 0px 12px 15px 12px;
+            background: $input-background;
+            .index-type-select {
+              margin-bottom: 12px;
+            }
+          }
+          border-left: 1px solid lightgrey;
+          border-right: 1px solid lightgrey;
+          height: 100%;
+          background: white;
+          &.first {
+            border-top: 1px solid lightgrey;
+          }
+          &:last-child:not(.last):after {
             display: block;
-            .label {
-              background: inherit;
-              padding: 0;
-              @extend .label-font;
-              display: inline;
-              &:after {
-                content: ":";
-              }
-            }
-            .field {
-              background: inherit;
-              padding: 0;
-            }
+            height: 2px;
+//            width: 100%;
+            background: lightgrey;
+            content: "";
+            margin: 0px 12px 0px 12px;
           }
+          &:last-child.last {
+            border-bottom: 1px solid lightgrey;          }
         }
-        .subject-type-association {
-          margin: -10px;
-        }
+        .index-type-select {
 
-      }
-      .default-non-editable {
-        min-height: 60px;
-        padding: 8px;
-        .inputs {
-          display: block;
-          border: 1px solid lightgrey;
-          padding: 5px 22px;
-          .input {
+        }
+        input {
+          height: 26px;
+        }
+        .add-new-btn-row {
+          padding: 4px 8px 8px 8px;
+          a {
+            float: right;
+          }
+          margin-bottom: 12px;
+        }
+        span.support-panel-expander {
+          min-width: 22px;
+          position: relative;
+          left: -27px;
+          display: inline-block;
+          min-height: 22px;
+          top: 6px;
+        }
+        .deletable {
+          background-image: url('/images/delete_cross.svg');
+          background-repeat: no-repeat;
+          background-color: lightgrey;
+          background-position: left top;
+          padding-left: 2em;
+          cursor: pointer;
+        }
+        .searchable:not(.deletable) {
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='20' font-size='20'>▶</text></svg>");
+          background-repeat: no-repeat;
+          background-position: right top;
+          padding-right: 1.5em;
+        }
+        .search-result {
+          background: white;
+          padding: 0.5em;
+          margin-bottom: 0.1em;
+          min-height: 62px;
+          .search-result-subitem {
+            background: $lightergray;
+            margin-bottom: 2px;
+            padding-left: 0.4em;
+            padding-right: 0.4em;
+            .search-result-work-selector {
+              text-align: right;
+            }
+          }
+          .part-name {
+            font-style: italic;
+          }
+          .search-result-subitem:last-child {
+            margin-bottom: 0;
+          }
+          .subitem-label, .creator-years {
+            margin: 0;
+          }
+        }
+        .subject-type-select {
+          margin-top: 5px;
+          display: inline-flex;
+          label {
+            padding-right: 25px;
+            padding-left: 5px;
+          }
+        }
+        a.delete {
+          background-image: url('/images/delete_cross.svg');
+          background-repeat: no-repeat;
+          background-position: left top;
+          padding-left: 2em;
+          cursor: pointer;
+          min-width: 20px;
+        }
+        .default-editable {
+          min-height: 60px;
+          padding: 0 0 12px 0;
+          height: 100%;
+          .inputs {
+            background: $mintgreen;
             display: block;
-            .label {
-              padding: 0;
-              @extend .label-font;
-              display: inline;
-              &:after {
-                content: ":";
+            border: 1px solid lightgrey;
+            padding: 5px 22px;
+            .input {
+              display: block;
+              .label {
+                background: inherit;
+                padding: 0;
+                @extend .label-font;
+                display: inline;
+                &:after {
+                  content: ":";
+                }
+              }
+              .field {
+                background: inherit;
+                padding: 0;
               }
             }
-            .field {
-              padding: 0;
+          }
+          .subject-type-association {
+            margin: -10px;
+          }
+
+        }
+        .default-non-editable {
+          margin-bottom: 44px;
+          padding: 8px;
+          .inputs {
+            display: block;
+            border: 1px solid lightgrey;
+            padding: 5px 22px;
+            .input {
+              display: block;
+              .label {
+                padding: 0;
+                @extend .label-font;
+                display: inline;
+                &:after {
+                  content: ":";
+                }
+              }
+              .field {
+                padding: 0;
+              }
             }
           }
-        }
-        .subject-type-association {
-          display: none;
-        }
-      }
-      .additional-entries-editable {
-        min-height: 60px;
-        padding: 8px;
-        .inputs {
-          .input {
-            background: $mintgreen;
-            padding: 0 12px;
-            .label {
-              background: inherit;
-            }
-            .field {
-              padding: 0;
-              background: inherit;
-            }
-          }
-        }
-        .subject-type-association {
-          span {
-            background: $mintgreen;
-            padding: 0 12px;
-          }
-        }
-      }
-      .additional-entries-non-editable {
-        min-height: 60px;
-        padding: 8px;
-        .inputs {
-          display: block;
-          border: 1px solid lightgrey;
-          text-align: center;
-          padding: 5px 22px;
-          .label {
+          .subject-type-association {
             display: none;
           }
-          .field {
-            padding: 0;
+        }
+        .additional-entries-editable {
+          min-height: 60px;
+          padding: 8px;
+          .inputs {
+            .input {
+              background: $mintgreen;
+              padding: 0 12px;
+              .label {
+                background: inherit;
+              }
+              .field {
+                padding: 0;
+                background: inherit;
+              }
+            }
           }
-          span.input:last-child:before {
-            content: " — ";
+          .subject-type-association {
+            span {
+              background: $mintgreen;
+              padding: 0 12px;
+            }
           }
         }
+        .additional-entries-non-editable {
+          min-height: 60px;
+          padding: 8px;
+          .inputs {
+            display: block;
+            border: 1px solid lightgrey;
+            text-align: center;
+            padding: 5px 22px;
+            .label {
+              display: none;
+            }
+            .field {
+              padding: 0;
+            }
+            span.input:last-child:before {
+              content: " — ";
+            }
+          }
 
-        .subject-type-association {
-          display: block;
-          text-align: center;
-          padding: 10px;
-          &:before {
-            content: "Rollen er knyttet til ";
+          .subject-type-association {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            &:before {
+              content: "Rollen er knyttet til ";
+            }
           }
         }
-      }
-      .select-role-assoc {
-        .select-creator-radio {
-          vertical-align: middle;
-        }
-        a {
-          float: right;
-          min-width: 60px;
+        .select-role-assoc {
+          .select-creator-radio {
+            vertical-align: middle;
+          }
+          a {
+            float: right;
+            min-width: 60px;
+          }
         }
       }
     }
