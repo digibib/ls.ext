@@ -16,7 +16,7 @@ export default React.createClass({
   render () {
     return (
       <div>
-        <div className='col publication-info' data-automation-id={`publication_info_${this.props.publication.id}`}>
+        <div className='col publication-info' data-automation-id={`publication_info_${this.props.publication.uri}`}>
           <div className='col col-1-6'><h3><FormattedMessage {...messages.items}/></h3></div>
           <div className='col col-5-6 col-right'><h3>
             <span className='close-publication-info'
