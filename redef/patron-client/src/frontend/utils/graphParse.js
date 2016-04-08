@@ -89,12 +89,6 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   return work
 }
 
-function getLiteral (field, sourceResource) {
-  return sourceResource.has(field)
-    ? sourceResource.get(field).value
-    : ''
-}
-
 function populateLiteral (target, field, sourceResource) {
   target[ field ] = ''
   if (sourceResource.has(field)) {
@@ -107,11 +101,4 @@ function populateUri (target, field, sourceResource) {
   if (sourceResource.hasOut(field)) {
     target[ field ] = sourceResource.out(field).id
   }
-}
-
-function populateLabelsByLanguage (target, field, sourceResource) {
-  target[ field ] = {}
-  sourceResource.getAll(field).map(literal => {
-    target[ field ][ literal.lang ] = literal.value
-  })
 }

@@ -7,7 +7,9 @@ import { getId } from '../utils/uriParser'
 
 export default React.createClass({
   propTypes: {
-    publications: PropTypes.array.isRequired
+    publications: PropTypes.array.isRequired,
+    expandSubResource: PropTypes.func.isRequired,
+    locationQuery: PropTypes.object.isRequired
   },
   renderEmpty () {
     return (

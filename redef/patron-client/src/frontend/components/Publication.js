@@ -4,6 +4,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 const Publication = React.createClass({
   propTypes: {
     publication: PropTypes.object.isRequired,
+    expandSubResource: PropTypes.func.isRequired,
     intl: intlShape.isRequired
   },
   contextTypes: {

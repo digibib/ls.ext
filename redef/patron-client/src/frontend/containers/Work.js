@@ -14,7 +14,8 @@ const Work = React.createClass({
     resources: PropTypes.object.isRequired,
     isRequesting: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
-    params: PropTypes.object.isRequired
+    params: PropTypes.object.isRequired,
+    locationQuery: PropTypes.object.isRequired
   },
   componentWillMount () {
     this.props.resourceActions.getWorkResource(`${Constants.backendUri}/work/${this.props.params.workId}`)
