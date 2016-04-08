@@ -8,8 +8,13 @@ import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
+    expandSubResource: () => {},
+    locationQuery: {},
     publications: [
-      { id: 'publication_id1' }, { id: 'publication_id2' }, { id: 'publication_id3' }
+      { uri: '/publication_id1', id: 'publication_id1' },
+      { uri: '/publication_id2', id: 'publication_id2' },
+      { uri: '/publication_id3', id: 'publication_id3' },
+      { uri: '/publication_id4', id: 'publication_id4' }
     ], ...propOverrides
   }
 
@@ -31,7 +36,7 @@ describe('components', () => {
     DefaultExportPublicationsRewireApi.__Rewire__('Publication', React.createClass({
       render () {
         return (
-          <tr />
+          <div className='publication'/>
         )
       }
     }))
@@ -47,9 +52,14 @@ describe('components', () => {
       expect(node.querySelectorAll("[data-automation-id='no_publications']").length).toBe(1)
     })
 
-    it('should render table rows for every result', () => {
+    it('should render publications', () => {
       const { node } = setup()
-      expect(node.querySelector("[data-automation-id='publications']").childNodes.length).toBe(3)
+      expect(node.getElementsByClassName('publication').length).toBe(4)
+    })
+
+    it('should render row for every three publications', () => {
+      const { node } = setup()
+      expect(node.getElementsByClassName('row').length).toBe(2)
     })
   })
 })

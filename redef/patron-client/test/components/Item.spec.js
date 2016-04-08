@@ -24,12 +24,8 @@ function setup (propOverrides) {
     }
   })
 
-  const messages = {
-    'format': 'format_english',
-    'language': 'language_english'
-  }
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en' messages={messages}>
+    <IntlProvider locale='en'>
       <Wrapper><Item {...props} /></Wrapper>
     </IntlProvider>
   )
@@ -46,45 +42,33 @@ describe('components', () => {
     it('should render one unavailable item', () => {
       const { node, props } = setup({
         item: {
-          title: 'title',
-          language: 'language',
-          format: 'format',
-          barcode: 'barcode',
-          location: 'location',
-          status: '01.01.2020',
-          shelfmark: 'shelfmark'
+          branch: 'branch',
+          count: 'count',
+          shelfmark: 'shelfmark',
+          status: '01.01.2020'
         }
       })
 
-      expect(node.querySelector("[data-automation-id='item_title']").textContent).toBe(props.item.title)
-      expect(node.querySelector("[data-automation-id='item_language']").textContent).toBe(`${props.item.language}_english`)
-      expect(node.querySelector("[data-automation-id='item_format']").textContent).toBe(`${props.item.format}_english`)
-      expect(node.querySelector("[data-automation-id='item_barcode']").textContent).toBe(props.item.barcode)
-      expect(node.querySelector("[data-automation-id='item_location']").textContent).toBe(props.item.location)
-      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe(`Expected ${props.item.status}`)
+      expect(node.querySelector("[data-automation-id='item_branch']").textContent).toBe(props.item.branch)
+      expect(node.querySelector("[data-automation-id='item_count']").textContent).toBe(props.item.count)
       expect(node.querySelector("[data-automation-id='item_shelfmark']").textContent).toBe(props.item.shelfmark)
+      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe(`Expected ${props.item.status}`)
     })
 
     it('should render one available item', () => {
       const { node, props } = setup({
         item: {
-          title: 'title',
-          language: 'language',
-          format: 'format',
-          barcode: 'barcode',
-          location: 'location',
-          status: 'AVAIL',
-          shelfmark: 'shelfmark'
+          branch: 'branch',
+          count: 'count',
+          shelfmark: 'shelfmark',
+          status: 'AVAIL'
         }
       })
 
-      expect(node.querySelector("[data-automation-id='item_title']").textContent).toBe(props.item.title)
-      expect(node.querySelector("[data-automation-id='item_language']").textContent).toBe(`${props.item.language}_english`)
-      expect(node.querySelector("[data-automation-id='item_format']").textContent).toBe(`${props.item.format}_english`)
-      expect(node.querySelector("[data-automation-id='item_barcode']").textContent).toBe(props.item.barcode)
-      expect(node.querySelector("[data-automation-id='item_location']").textContent).toBe(props.item.location)
-      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe('Available')
+      expect(node.querySelector("[data-automation-id='item_branch']").textContent).toBe(props.item.branch)
+      expect(node.querySelector("[data-automation-id='item_count']").textContent).toBe(props.item.count)
       expect(node.querySelector("[data-automation-id='item_shelfmark']").textContent).toBe(props.item.shelfmark)
+      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe('Available')
     })
   })
 })

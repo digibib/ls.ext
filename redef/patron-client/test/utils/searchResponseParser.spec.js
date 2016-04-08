@@ -1,4 +1,4 @@
-/* global describe, it */
+/* eslint-env mocha */
 import expect from 'expect'
 import { approximateBestTitle } from '../../src/frontend/utils/searchResponseParser'
 

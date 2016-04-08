@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import expect from 'expect'
-import React, { PropTypes } from 'react'
+import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import Publication from '../../src/frontend/components/Publication'
@@ -8,27 +8,16 @@ import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
+    expandSubResource: () => {},
     publication: {
       id: 'test_id',
       mainTitle: 'test_maintitle',
       publicationYear: 'test_publicationYear',
       language: 'test_language',
-      format: 'test_format'
+      format: 'test_format',
+      available: true
     }, ...propOverrides
   }
-
-  const Wrapper = React.createClass({
-    propTypes: {
-      children: PropTypes.element.isRequired
-    },
-    render: function () {
-      return (
-        <table>
-          <tbody>{this.props.children}</tbody>
-        </table>
-      )
-    }
-  })
 
   const messages = {
     'test_format': 'test_format_english',
@@ -36,7 +25,7 @@ function setup (propOverrides) {
   }
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en' messages={messages}>
-      <Wrapper><Publication {...props} /></Wrapper>
+      <Publication {...props} />
     </IntlProvider>
   )
 
@@ -55,6 +44,7 @@ describe('components', () => {
       expect(node.querySelector("[data-automation-id='publication_year']").textContent).toBe(props.publication.publicationYear)
       expect(node.querySelector("[data-automation-id='publication_language']").textContent).toBe(`${props.publication.language}_english`)
       expect(node.querySelector("[data-automation-id='publication_format']").textContent).toBe(`${props.publication.format}_english`)
+      expect(node.querySelector("[data-automation-id='publication_available']").textContent).toBe('Available')
     })
 
     it('should combine main title and part title as title', () => {

@@ -1,4 +1,4 @@
-/* global describe, it */
+/* eslint-env mocha */
 import expect from 'expect'
 import resources from '../../src/frontend/reducers/resources'
 import * as types from '../../src/frontend/constants/ActionTypes'

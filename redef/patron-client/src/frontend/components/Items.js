@@ -8,9 +8,9 @@ export default React.createClass({
     items: PropTypes.array.isRequired
   },
   renderEmpty () {
-    return <p data-automation-id='no_items'><FormattedMessage {...messages.noItems}/></p>
+    return <p><span data-automation-id='no_items'><FormattedMessage {...messages.noItems}/></span></p>
   },
-  renderAllItems () {
+  renderItems () {
     return (
       <table>
         <thead>
@@ -29,14 +29,9 @@ export default React.createClass({
       </table>
     )
   },
-  renderItems () {
-    return this.props.items.length > 0
-      ? this.renderAllItems()
-      : this.renderEmpty()
-  },
   render () {
     return this.props.items.length > 0
-      ? this.renderAllItems()
+      ? this.renderItems()
       : this.renderEmpty()
   }
 })

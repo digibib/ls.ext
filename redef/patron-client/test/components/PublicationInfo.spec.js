@@ -4,14 +4,29 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
+import StubContext from 'react-stub-context'
 import PublicationInfo, { __RewireAPI__ as DefaultExportPublicationInfoRewireApi } from '../../src/frontend/components/PublicationInfo'
 
 function setup (propOverrides) {
-  const props = { ...propOverrides }
+  const props = {
+    publication: {
+      id: 'test_id',
+      uri: 'test_uri'
+    },
+    expandSubResource: expect.createSpy(),
+    ...propOverrides
+  }
+
+  let StubbedPublicationInfo = StubContext(PublicationInfo, {
+    router: {
+      createPath: arg => `testprefix_${arg.query.query}`,
+      createHref: () => {}
+    }
+  })
 
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>
-      <PublicationInfo {...props} />
+      <StubbedPublicationInfo {...props} />
     </IntlProvider>
   )
 
@@ -34,13 +49,16 @@ describe('components', () => {
   })
 
   after(() => {
-    DefaultExportItemsRewireApi.__ResetDependency__
+    DefaultExportPublicationInfoRewireApi.__ResetDependency__
   })
 
   describe('PublicationInfo', () => {
-    it('should xxx when yyy', () => {
-      const { node } = setup({ items: [] })
-      //expect(node.querySelectorAll("[data-automation-id='no_items']").length).toBe(1)
+    it('should send call to close panel when close element is clicked', () => {
+      const { output, props } = setup()
+      let closeButton = TestUtils.findRenderedDOMComponentWithClass(output, 'close-publication-info')
+      TestUtils.Simulate.click(closeButton)
+      expect(props.expandSubResource).toHaveBeenCalled()
+      expect(props.expandSubResource.calls[ 0 ].arguments[ 0 ]).toBe(null)
     })
   })
 })

@@ -13,7 +13,7 @@ const Publication = React.createClass({
   renderTitle (publication) {
     let title = publication.mainTitle
     if (publication.partTitle) {
-      title += ` —  ${publication.partTitle}`
+      title += ` — ${publication.partTitle}`
     }
     return title
   },
@@ -39,6 +39,11 @@ const Publication = React.createClass({
             <p>
               <span data-automation-id='publication_language'>
                 {publication.language ? this.props.intl.formatMessage({ id: publication.language }) : ''}
+              </span>
+            </p>
+            <p>
+              <span data-automation-id='publication_format'>
+                {publication.format ? this.props.intl.formatMessage({ id: publication.format }) : ''}
               </span>
             </p>
             <p>
