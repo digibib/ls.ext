@@ -105,7 +105,7 @@ When(/^jeg velger språket "([^"]*)"$/) do |language|
 end
 
 When(/^søkeknappen skal vise ordet "([^"]*)"$/) do |button_text|
-  @browser.element(id: 'submit').text.should eq button_text
+  wait_for { @browser.element(id: 'submit').text.eql? button_text }
 end
 
 When(/^jeg søker på "([^"]*)"$/) do |query|
