@@ -151,11 +151,11 @@ public final class EntityResource extends ResourceBase {
 
         if (getEntityService().resourceExists(xuri)) {
             status = Response.Status.CONFLICT;
-        } else if ("work".equals(type) || "person".equals(type)) {
+        } else if ("work".equals(type) || "person".equals(type) || "serial".equals(type)) {
             Model model = RDFModelUtil.modelFrom(body, Lang.NTRIPLES);
             getEntityService().create(model);
         } else {
-            errMessage = Optional.of("only person|work resources can be created with user assigned ID");
+            errMessage = Optional.of("only person|work|serial resources can be created with user assigned ID");
             status = Response.Status.BAD_REQUEST;
         }
 
