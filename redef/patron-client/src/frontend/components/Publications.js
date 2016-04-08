@@ -11,6 +11,14 @@ export default React.createClass({
     expandSubResource: PropTypes.func.isRequired,
     locationQuery: PropTypes.object.isRequired
   },
+  contextTypes: {
+    router: React.PropTypes.object
+  },
+  componentWillMount () {
+    if (this.props.publications.length === 1) {
+      this.props.expandSubResource(this.props.publications[ 0 ].id, this.context.router)
+    }
+  },
   renderEmpty () {
     return (
       <h2 data-automation-id='no_publications'>
