@@ -31,7 +31,7 @@ export default React.createClass({
     return (
       <div>
         {threeAndThreePublications.map((publications, row) => {
-          let output = [ <div className='row'>{publications.map((publication, column) => <Publication
+          let output = [ <div className='row'>{publications.map(publication => <Publication
             key={publication.id}
             expandSubResource={this.props.expandSubResource}
             publication={publication}/>)}</div> ]
@@ -43,7 +43,6 @@ export default React.createClass({
               column: publications.indexOf(showMorePublication)
             }
           }
-
           if (showMore && row === showMore.row) {
             output.push(<div className='row'>
               {this.getArrow(showMore.column)}
