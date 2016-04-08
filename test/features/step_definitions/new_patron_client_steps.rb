@@ -89,7 +89,7 @@ When(/^nåværende søketerm skal være "([^"]*)" \(\+ id på vilkårlig migreri
   }
 end
 
-When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises$/) do |prefix, str|
+When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises i søkeresultatet$/) do |prefix, str|
   wait_for {
     @browser.element(data_automation_id: 'work-title')
         .text.eql?("#{prefix}#{@context[:random_migrate_id]} #{@context[:random_migrate_id]}#{str}")
@@ -136,4 +136,11 @@ end
 
 When(/^skal jeg ikke se et panel med informasjon om utgivelsen$/) do
   wait_for { @browser.elements(data_automation_id: /^publication_info_/).size.eql? 0 }
+end
+
+When(/^skal skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises på verkssiden$/) do |prefix, str|
+  wait_for {
+    @browser.element(data_automation_id: 'work_title')
+        .text.eql?("#{prefix}#{@context[:random_migrate_id]} #{@context[:random_migrate_id]}#{str}")
+  }
 end

@@ -52,9 +52,13 @@ Egenskap: Gå gjennom lånegrensesnittet
   Scenario: Vise ulike titler på verk avhengig av søketerm
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
-    Så skal tittel prefikset "pubprefix0" og som inneholder "nob" vises
+    Så skal tittel prefikset "pubprefix0" og som inneholder "nob" vises i søkeresultatet
+    Når jeg trykker på første treff
+    Så skal skal tittel prefikset "pubprefix0" og som inneholder "nob" vises på verkssiden
     Når jeg søker på "pubprefix1" (+ id på vilkårlig migrering)
-    Så skal tittel prefikset "pubprefix1" og som inneholder "eng" vises
+    Så skal tittel prefikset "pubprefix1" og som inneholder "eng" vises i søkeresultatet
+    Når jeg trykker på første treff
+    Så skal skal tittel prefikset "pubprefix1" og som inneholder "eng" vises på verkssiden
 
   Scenario: Velge språk
     Gitt at jeg er i søkegrensesnittet
@@ -67,7 +71,6 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "Search"
 
-  @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
