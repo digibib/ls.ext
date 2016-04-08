@@ -28,7 +28,8 @@ export default React.createClass({
   },
   getArrow (column) {
     return [ 0, 1, 2 ].map(number =>
-      <div className='col col-1-3'>{number === column ? <div className='triangle-up'/> : ''}&nbsp;</div>
+      <div key={`column-${number}`} className='col col-1-3'>
+        {number === column ? <div className='triangle-up'/> : ''}&nbsp;</div>
     )
   },
   renderPublications () {
@@ -41,7 +42,7 @@ export default React.createClass({
     return (
       <div>
         {threeAndThreePublications.map((publications, row) => {
-          let output = [ <div className='row'>{publications.map(publication => <Publication
+          let output = [ <div key={`row-${row}`} className='row'>{publications.map(publication => <Publication
             key={publication.id}
             expandSubResource={this.props.expandSubResource}
             publication={publication}/>)}</div> ]
@@ -54,7 +55,7 @@ export default React.createClass({
             }
           }
           if (showMore && row === showMore.row) {
-            output.push(<div className='row'>
+            output.push(<div className='row' key={showMore.publication.id}>
               {this.getArrow(showMore.column)}
               <div className='col'>
                 <PublicationInfo expandSubResource={this.props.expandSubResource}
