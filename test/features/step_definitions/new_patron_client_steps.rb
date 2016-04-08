@@ -146,5 +146,5 @@ When(/^skal skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises p√
 end
 
 When(/^jeg trykker p√• krysset i boksen med utgivelsesinformasjon$/) do
-  @browser.elements(data_automation_id: /^close_publication_info_/)
+  @browser.element(data_automation_id: /^close_publication_info_/).click
 end
