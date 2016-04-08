@@ -23,7 +23,8 @@ const Publication = React.createClass({
   render () {
     let publication = this.props.publication
     return (
-      <div onClick={this.handleClick} className='col col-1-3 publication-small'>
+      <div onClick={this.handleClick} className='col col-1-3 publication-small'
+           data-automation-id={`publication_${publication.uri}`}>
           <div className='col book-cover placeholder'/>
           <div className='result-info'>
             <p>

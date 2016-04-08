@@ -45,15 +45,15 @@ Then(/^vises eksemplaret på verkssiden$/) do
 end
 
 When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
-  step "jeg er på sida til verket"
-  @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
+  step 'jeg er på sida til verket'
+  @site.PatronClientWorkPage.publication_entries().each do |entry|
     if (@context[:publication_maintitle] && @context[:publication_parttitle])
-      row.td(:data_automation_id => "publication_title").text.should equal?(@context[:publication_maintitle] + " — " + @context[:publication_parttitle])
+      entry.element(:data_automation_id => 'publication_title').text.should equal?("#{@context[:publication_maintitle]} — #{@context[:publication_parttitle]}")
     else
-      row.td(:data_automation_id => "publication_title").text.should equal?(@context[:publication_maintitle])
+      entry.element(:data_automation_id => 'publication_title').text.should equal?(@context[:publication_maintitle])
     end
-    row.td(:data_automation_id => "publication_format").text.should eq(@context[:publication_format_label])
-    row.td(:data_automation_id => "publication_language").text.should eq(@context[:publication_language_label])
+    entry.element(:data_automation_id => 'publication_format').text.should eq(@context[:publication_format_label])
+    entry.element(:data_automation_id => 'publication_language').text.should eq(@context[:publication_language_label])
   end
 end
 
@@ -69,7 +69,7 @@ Then(/^har eksemplarene en identifikator \(strekkode\)$/) do
 end
 
 Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$/) do
-  @site.PatronClientWorkPage.getPublicationsTableRows().each do |row|
+  @site.PatronClientWorkPage.publication_entries().each do |row|
     row.td(:data_automation_id => "publication_title").text.should_not be_empty
     row.td(:data_automation_id => "publication_language").text.should_not be_empty
     row.td(:data_automation_id => "publication_format").text.should_not be_empty

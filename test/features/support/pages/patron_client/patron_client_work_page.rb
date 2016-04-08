@@ -34,8 +34,8 @@ class PatronClientWorkPage < PageRoot
       return location
     end
 
-    def getPublicationsTableRows
-      return @browser.div(:id=> "publications").when_present(BROWSER_WAIT_TIMEOUT).table.tbody.rows
+    def publication_entries
+      return @browser.div(id: 'publications').when_present(BROWSER_WAIT_TIMEOUT).elements(data_automation_id: /^publication_http/)
     end
 
     def getItemsTableRows
