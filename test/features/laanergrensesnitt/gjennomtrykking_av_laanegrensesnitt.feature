@@ -49,7 +49,6 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg ha "6" resultater og være på side "2"
     Og nåværende søketerm skal være "prefix0" (+ id på vilkårlig migrering)
 
-  @wip
   Scenario: Vise ulike titler på verk avhengig av søketerm
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
@@ -72,6 +71,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "Search"
 
+  @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
