@@ -144,3 +144,7 @@ When(/^skal skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises p√
         .text.eql?("#{prefix}#{@context[:random_migrate_id]} #{@context[:random_migrate_id]}#{str}")
   }
 end
+
+When(/^jeg trykker p√• krysset i boksen med utgivelsesinformasjon$/) do
+  @browser.elements(data_automation_id: /^close_publication_info_/)
+end

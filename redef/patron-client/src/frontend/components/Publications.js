@@ -24,10 +24,10 @@ export default React.createClass({
     )
   },
   renderPublications () {
-    let publicationsCopy = [ ...this.props.publications ]
+    let publications = [ ...this.props.publications ]
     let threeAndThreePublications = []
-    while (publicationsCopy.length > 0) {
-      threeAndThreePublications.push(publicationsCopy.splice(0, 3))
+    while (publications.length > 0) {
+      threeAndThreePublications.push(publications.splice(0, 3))
     }
     let showMore
     return (
@@ -49,7 +49,8 @@ export default React.createClass({
             output.push(<div className='row'>
               {this.getArrow(showMore.column)}
               <div className='col'>
-                <PublicationInfo publication={showMore.publication}/>
+                <PublicationInfo expandSubResource={this.props.expandSubResource}
+                                 publication={showMore.publication}/>
                 </div>
               </div>
             )
