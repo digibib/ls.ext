@@ -1,8 +1,8 @@
 # encoding: UTF-8
 
 Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.h2(:data_automation_id => /work_title/).present? }
-  @site.PatronClientWorkPage.getTitle.should include(@context[:work_maintitle])
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.element(data_automation_id: /work_title/).present? }
+  @site.PatronClientWorkPage.title.should include(@context[:publication_maintitle] || @context[:work_maintitle]) #Work page will show publication title
 end
 
 
@@ -12,7 +12,7 @@ end
 
 Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
   step "jeg er på sida til verket"
-  @site.browser.span(:data_automation_id => /work_date/).text.should_not include(@context[:work_publicationyear])
+  @site.browser.span(data_automation_id: /work_date/).text.should_not include(@context[:work_publicationyear])
 end
 
 Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do
@@ -25,18 +25,18 @@ end
 Then(/^språket til verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
   @browser.refresh
-  @site.PatronClientWorkPage.getTitle.should include("@" + @context[:work_maintitle_lang])
+  @site.PatronClientWorkPage.title.should include("@" + @context[:work_maintitle_lang])
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {@site.PatronClientWorkPage.getTitle != ""}
-  @site.PatronClientWorkPage.getTitle.should include(@context[:work_maintitle])
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientWorkPage.title != "" }
+  @site.PatronClientWorkPage.title.should include(@context[:publication_maintitle] || @context[:work_maintitle]) #Work page will show publication title
   @site.PatronClientWorkPage.getDate.should include(@context[:work_publicationyear])
 end
 
 Then(/^verkets tittel vises på verks\-siden$/) do
   step "jeg er på sida til verket"
-  @site.PatronClientWorkPage.getTitle.should include(@context[:work_maintitle])
+  @site.PatronClientWorkPage.title.should include(@context[:work_maintitle])
 end
 
 Then(/^vises eksemplaret på verkssiden$/) do
@@ -48,12 +48,12 @@ When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
   step 'jeg er på sida til verket'
   @site.PatronClientWorkPage.publication_entries().each do |entry|
     if (@context[:publication_maintitle] && @context[:publication_parttitle])
-      entry.element(:data_automation_id => 'publication_title').text.should equal?("#{@context[:publication_maintitle]} — #{@context[:publication_parttitle]}")
+      entry.element(data_automation_id: 'publication_title').text.should equal?("#{@context[:publication_maintitle]} — #{@context[:publication_parttitle]}")
     else
-      entry.element(:data_automation_id => 'publication_title').text.should equal?(@context[:publication_maintitle])
+      entry.element(data_automation_id: 'publication_title').text.should equal?(@context[:publication_maintitle])
     end
-    entry.element(:data_automation_id => 'publication_format').text.should eq(@context[:publication_format_label])
-    entry.element(:data_automation_id => 'publication_language').text.should eq(@context[:publication_language_label])
+    entry.element(data_automation_id: 'publication_format').text.should eq(@context[:publication_format_label])
+    entry.element(data_automation_id: 'publication_language').text.should eq(@context[:publication_language_label])
   end
 end
 
@@ -63,25 +63,25 @@ Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
 end
 
 Then(/^har eksemplarene en identifikator \(strekkode\)$/) do
-  @site.PatronClientWorkPage.getItemsTableRows().each do |row|
-    row.td(:data_automation_id => "item_barcode").text.should_not be_empty
+  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+    row.td(data_automation_id: "item_barcode").text.should_not be_empty
   end
 end
 
 Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$/) do
   @site.PatronClientWorkPage.publication_entries().each do |row|
-    row.td(:data_automation_id => "publication_title").text.should_not be_empty
-    row.td(:data_automation_id => "publication_language").text.should_not be_empty
-    row.td(:data_automation_id => "publication_format").text.should_not be_empty
+    row.td(data_automation_id: "publication_title").text.should_not be_empty
+    row.td(data_automation_id: "publication_language").text.should_not be_empty
+    row.td(data_automation_id: "publication_format").text.should_not be_empty
   end
 
-  @site.PatronClientWorkPage.getItemsTableRows().each do |row|
-    row.td(:data_automation_id => "item_title").text.should_not be_empty
-    row.td(:data_automation_id => "item_language").text.should_not be_empty
-    row.td(:data_automation_id => "item_format").text.should_not be_empty
-    row.td(:data_automation_id => "item_barcode").text.should_not be_empty
-    row.td(:data_automation_id => "item_location").text.should_not be_empty
-    row.td(:data_automation_id => "item_status").text.should_not be_empty
+  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+    row.td(data_automation_id: "item_title").text.should_not be_empty
+    row.td(data_automation_id: "item_language").text.should_not be_empty
+    row.td(data_automation_id: "item_format").text.should_not be_empty
+    row.td(data_automation_id: "item_barcode").text.should_not be_empty
+    row.td(data_automation_id: "item_location").text.should_not be_empty
+    row.td(data_automation_id: "item_status").text.should_not be_empty
   end
 end
 
@@ -89,26 +89,22 @@ Then(/^ser jeg format og språk for utgivelsen$/) do
   step "vises opplysningene brukerne skal se om utgivelsen på verkssiden"
 end
 
-When(/^ser jeg eksemplarene gruppert etter utgave m\/informasjon om format og språk$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^ser jeg lokasjon og oppstillinga av eksemplaret$/) do
-  @site.PatronClientWorkPage.getItemsTableRows().each do |row|
-    row.td(:data_automation_id => "item_location").text.should_not be_empty
-    row.td(:data_automation_id => "item_shelfmark").text.should_not be_empty
+Then(/^ser jeg avdelinga og oppstillinga av eksemplaret$/) do
+  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+    row.td(data_automation_id: 'item_branch').text.should_not be_empty
+    row.td(data_automation_id: 'item_shelfmark').text.should_not be_empty
   end
 end
 
 Then(/^ser jeg at eksemplaret er ledig$/) do
-  @site.PatronClientWorkPage.getItemsTableRows().each do |row|
-    row.td(:data_automation_id => "item_status").text.should eq("Ledig")
+  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+    row.td(data_automation_id: "item_status").text.should eq("Ledig")
   end
 end
 
 Then(/^ser jeg at eksemplaret ikke er ledig$/) do
-  @site.PatronClientWorkPage.getItemsTableRows().each do |row|
-    row.td(:data_automation_id => "item_status").text.should match(/Forventet [0-9]{4}-[0-9]{2}-[0-9]{2}/)
+  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+    row.td(data_automation_id: "item_status").text.should match(/Forventet [0-9]{4}-[0-9]{2}-[0-9]{2}/)
   end
 end
 

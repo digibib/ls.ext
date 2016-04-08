@@ -10,7 +10,7 @@ Egenskap: Finne ledige eksemplar av et bestemt utgivelse
   Scenario: Se hvor eksemplaret er
     Gitt et verk med en utgivelse og et eksemplar
     Når jeg er på sida til verket
-    Så ser jeg lokasjon og oppstillinga av eksemplaret
+    Så ser jeg avdelinga og oppstillinga av eksemplaret
 
   Scenario: Se at eksemplaret er ledig
     Gitt et verk med en utgivelse og et eksemplar
