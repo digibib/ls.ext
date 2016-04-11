@@ -10,9 +10,6 @@ RUN npm set progress=false
 RUN npm set color=false
 RUN npm install > install.log 2>&1
 
-VOLUME /usr/src/app/src
-VOLUME /usr/src/app/test
-
 EXPOSE 8000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "production"]

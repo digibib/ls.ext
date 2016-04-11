@@ -241,7 +241,7 @@ services:
       - services
     build:
       context: /vagrant/redef/patron-client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     volumes:
       - /mnt/patron-client_src:/usr/src/app/src
       - /mnt/patron-client_test:/usr/src/app/test

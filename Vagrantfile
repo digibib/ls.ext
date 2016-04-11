@@ -5,7 +5,7 @@ Vagrant.configure(2) do |config|
 
   # **** vm-ship - Docker container ship ****
 
-  ship_name = (ENV['LSDEVMODE'] || "vm") + "-ship" # Set LSDEVMODE to 'dev' or 'build'
+  ship_name = (ENV['LSDEVMODE'] || "dev") + "-ship" # Set LSDEVMODE to 'dev' or 'build'
   config.vm.define ship_name do |config|
     # https://vagrantcloud.com/ubuntu/trusty64
     config.vm.box = "ubuntu/trusty64"
@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.network "private_network", ip: "192.168.50.12"
 
-    if ENV['LSDEVMODE'] == 'vm' || ENV['LSDEVMODE'] == 'dev'
+    if ENV['LSDEVMODE'] == 'dev'
       # sync node app source trees. Use NFS to enable instant reload (for MAC-users)
       if ENV['MOUNT_WITH_NFS']
         config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server", type: "nfs"
