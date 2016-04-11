@@ -112,7 +112,7 @@ module RandomMigrate
     end
 
     def generate_quick_test_set()
-      # For Patron client
+      # For Patron Client
       puts 'Migrating quick test set'
 
       # For search on prefix0#{@id}, get 2 pages with 10 and 6 results
@@ -124,6 +124,10 @@ module RandomMigrate
       # For search on prefix1#{@id}, get 1 page with 1 result
       # For search on pubprefix0#{@id}, display Norwegian title on work
       # For search on pubprefix1#{@id}, display English title on work
+      # Work page has four publications
+      # The Norwegian publication has three items, one available and two unavailable
+      # The available item has the same placement as one of the unavailable items
+      # One of the English publications has one unavailable item
       specialized_migrate()
 
       return @id
