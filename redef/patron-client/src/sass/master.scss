@@ -329,7 +329,6 @@ header button, input[type="search"] {
 .result {
   border: 1px solid #ccc;
   margin-bottom: 1em;
-  margin-bottom: 1em
 }
 
 .book-cover {
@@ -396,8 +395,7 @@ ul.pagination li:not(.active) a:hover {
 }
 
 ul.searchfilters {
-  list-style-type: none;
-  list-style: none;
+  list-style: none none;
   margin: 0;
   padding: 0;
 }
@@ -441,6 +439,8 @@ span.workTitle {
 .publication-info {
   background: #eee;
   margin-bottom: 1em;
+  padding: 0.8em;
+  padding-bottom: 1em;
 }
 
 .triangle-up {
@@ -455,4 +455,21 @@ span.workTitle {
 
 .row-no-margin {
   margin-bottom: 0;
+}
+
+.publication-small div {
+  display: inline-block;
+  margin: 0.2em;
+}
+
+.publication-small p {
+  margin-top: 0.1em;
+}
+
+.publication-small div {
+  vertical-align: top
+}
+
+.publication-text {
+  min-width: 50%
 }
