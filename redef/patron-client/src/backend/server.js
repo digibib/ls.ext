@@ -5,7 +5,20 @@ const requestProxy = require('express-request-proxy')
 const port = process.env.PORT || 8000
 const app = express()
 
-app.use(require('connect-livereload')())
+if (process.env.NODE_ENV !== 'production') {
+  const webpack = require('webpack')
+  const webpackConfig = require('../../webpack.config')
+  const compiler = webpack(webpackConfig)
+  app.use(require('webpack-dev-middleware')(compiler, {
+    watchOptions: {
+      poll: process.env.POLL || false
+    },
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath
+  }))
+  app.use(require('webpack-hot-middleware')(compiler))
+  console.log('HMR activated')
+}
 
 app.use(express.static(`${__dirname}/../../public`))
 
@@ -14,8 +27,8 @@ app.all('/services/*', requestProxy({
 }))
 
 app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, '..', '..', 'public', 'index.html'))
+  response.sendFile(path.resolve(__dirname, '..', '..', 'public', 'dist', 'index.html'))
 })
 
 app.listen(port)
-console.log(`Server started on port ${port}`)
+console.log(`Server started on port ${port} with environment ${process.env.NODE_ENV || 'development'}`)

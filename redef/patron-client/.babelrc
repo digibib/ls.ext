@@ -12,11 +12,31 @@
       "react-intl",
       {
         "messagesDir": "./build/messages/",
-        "enforceDescriptions": false
+        "enforceDescriptions": true
       }
     ]
   ],
   "env": {
+    "development": {
+      "plugins": [
+        [
+          "react-transform",
+          {
+            "transforms": [
+              {
+                "transform": "react-transform-hmr",
+                "imports": [
+                  "react"
+                ],
+                "locals": [
+                  "module"
+                ]
+              }
+            ]
+          }
+        ]
+      ]
+    },
     "test": {
       "plugins": [
         "rewire"
