@@ -23,11 +23,8 @@ class SearchPatronClient < PageRoot
   end
 
   def search_term
-    wait_for {
-      current_search_term = @browser.element(data_automation_id: 'current-search-term')
-      current_search_term.present?
-      current_search_term.text
-    }
+    wait_for { @browser.element(data_automation_id: 'current-search-term').present? }
+    @browser.element(data_automation_id: 'current-search-term').text
   end
 
   def total_hits
