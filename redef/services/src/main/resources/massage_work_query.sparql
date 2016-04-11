@@ -78,11 +78,24 @@ WHERE
           { ?person  deich:deathYear  ?deathYearO
                   BIND(str(?deathYearO) AS ?deathYear)
           }
-        OPTIONAL
-          {
-            ?workUri  deich:subject  ?subject .
-            ?subject  deich:name     ?subjectName ;
-                      a              deich:Subject .
+        OPTIONAL{
+              {
+                ?workUri  deich:subject  ?subject .
+                ?subject  deich:name     ?subjectName ;
+                          a              deich:Subject .
+              }
+            UNION
+              {
+                ?workUri  deich:subject  ?subject .
+                ?subject  deich:mainTitle     ?subjectName ;
+                          a              deich:Work .
+              }
+            UNION
+              {
+                ?workUri  deich:subject  ?subject .
+                ?subject  deich:name     ?subjectName ;
+                          a              deich:Person .
+              }
           }
       }
   }

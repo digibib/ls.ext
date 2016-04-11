@@ -12,6 +12,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg vil lage en ny serie
     Så leverer systemet en ny ID for den nye serien
     Og jeg kan legge inn seriens navn
+    Og jeg vil lage et nytt emne
+    Så leverer systemet en ny ID for det nye emnet
+    Og jeg kan legge inn emnets navn
     Og jeg vil lage et nytt utgivelsessted
     Så leverer systemet en ny ID for det nye utgivelsesstedet
     Og jeg kan legge inn stedsnavn og land
@@ -28,6 +31,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og bekrefter for å gå videre til beskriv verket
     Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
+    Og jeg velger emnetype "Generelt" emne
+    Og jeg legger inn emnet i søkefelt for emne og trykker enter
+    Og velger første emne i trefflisten
+    Så sjekker jeg at emnet er listet opp på verket
     Og bekrefter for å gå videre til beskriv utgivelsen
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter

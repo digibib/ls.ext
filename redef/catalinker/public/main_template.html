@@ -168,7 +168,7 @@
             <div class="pure-u-1">
                 <div class="pure-g">
                     <div class="pure-u-1-12">
-                        <input class="select-creator-radio" type="radio"
+                        <input class="select-result-item-radio" type="radio"
                                on-click="selectSearchableItem:{{origin}},{{.[config.search[selectedIndexType].resultItemLabelProperty]}}"
                                checked="{{isChecked}}"/>
                     </div>
@@ -180,7 +180,7 @@
                         {{#work.length || loadWorksAsSubjectOfItem}}
                         <span class="toggle-show-works" on-click="toggleWork:{{loadWorksAsSubjectOfItem}},{{.}}">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>{{/}}
                     </div>
-                   {{>"additional-search-result-item-info-for-"+type}}
+                   {{>"additional-search-result-item-info-for-"+selectedIndexType}}
                 {{#toggleWork}}
                 <div class="work-items pure-u-1">
                     {{#work}}
@@ -221,7 +221,7 @@
 </div>
 {{/partial}}
 
-{{#partial additional-search-result-item-info-for-searchable-person}}
+{{#partial additional-search-result-item-info-for-person}}
 <div class="pure-g">
     <div class="pure-u-1-12"></div>
     <div class="pure-u-9-12">
@@ -280,8 +280,8 @@ value="{{current.value}}" />
     on-click="{{#deletable}}unselectEntity{{/deletable}}"
     class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}}{{#if searchable}} searchable{{/if}}"
     data-automation-id="{{dataAutomationId}}"
-    on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}}'
-    on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}}'
+    on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
+    on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
     value="{{current.displayValue}}" />
     <span class="support-panel-expander" on-click='searchResource:{{current.displayValue}}'></span>
     {{/if}}

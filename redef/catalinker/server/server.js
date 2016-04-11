@@ -85,7 +85,7 @@ app.get('/config', function (request, response) {
                       rdfProperty: "creator",
                       type: "searchable-with-result-in-side-panel",
                       indexTypes: "person",
-                      dependentResourceTypes: [ "Work", "Publication" ], // when the creator is changed, unload current work and publication
+                      dependentResourceTypes: ["Work", "Publication"], // when the creator is changed, unload current work and publication
                       isMainEntry: true,
                       widgetOptions: {
                         showSelectWork: true
@@ -125,9 +125,9 @@ app.get('/config', function (request, response) {
                       type: "searchable-with-result-in-side-panel",
                       loadWorksAsSubjectOfItem: true,
                       authority: true, // this indicates it is an authorized entity
-                      nameProperties: [ "name" ], // these are proeprty names used to label already connected entities
-                      indexTypes: [ "subject", "person", "work" ], // this is the name of the elasticsearch index type from which authorities are searched within
-                      indexDocumentFields: [ "name" ], // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
+                      nameProperties: ["name"], // these are proeprty names used to label already connected entities
+                      indexTypes: ["subject", "person", "work"], // this is the name of the elasticsearch index type from which authorities are searched within
+                      indexDocumentFields: ["name"], // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
                       widgetOptions: {
                         selectIndexTypeLegend: "Velg emnetype"
                       }
@@ -165,16 +165,16 @@ app.get('/config', function (request, response) {
                     {
                       rdfProperty: "publishedBy",
                       authority: true, // this indicates it is an authorized entity
-                      nameProperties: [ "name" ], // these are proeprty names used to label already connected entities
+                      nameProperties: ["name"], // these are proeprty names used to label already connected entities
                       indexTypes: "publisher", // this is the name of the elasticsearch index type from which authorities are searched within
-                      indexDocumentFields: [ "name" ] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
+                      indexDocumentFields: ["name"] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
                     },
                     {
                       rdfProperty: "placeOfPublication",
                       authority: true, // this indicates it is an authorized entity
-                      nameProperties: [ "place", "country" ], // these are proeprty names used to label already connected entities
+                      nameProperties: ["place", "country"], // these are proeprty names used to label already connected entities
                       indexTypes: "placeOfPublication", // this is the name of the elasticsearch index type from which authorities are searched within
-                      indexDocumentFields: [ "place", "country" ] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
+                      indexDocumentFields: ["place", "country"] // these are indexed document JSON properties from which the labels for authoroty select list are concatenated
                     },
                     {
                       label: "Serie",
@@ -187,8 +187,8 @@ app.get('/config', function (request, response) {
                                   label: "Serie",
                                   rdfProperty: "serial",
                                   indexTypes: "serial",
-                                  indexDocumentFields: [ "name" ],
-                                  nameProperties: [ "name" ],
+                                  indexDocumentFields: ["name"],
+                                  nameProperties: ["name"],
                                   type: "searchable-authority-dropdown"
                                 },
                                 {
@@ -228,7 +228,7 @@ app.get('/config', function (request, response) {
                                 }
                             ]
                       },
-                      subjects: [ "Work", "Publication" ], // blank node can be attached to the the loaded resource of one of these types
+                      subjects: ["Work", "Publication"], // blank node can be attached to the the loaded resource of one of these types
                       cssClassPrefix: "additional-entries" // prefix of class names to identify a span surrounding this input or group of sub inputs.
                       // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
                     }

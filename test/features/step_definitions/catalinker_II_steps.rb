@@ -25,7 +25,7 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
 end
 
 When(/^velger jeg en person fra treffliste fra personregisteret$/) do
-  @browser.inputs(:class => "select-creator-radio")[0].click
+  @browser.inputs(:class => "select-result-item-radio")[0].click
 end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
@@ -268,6 +268,11 @@ When(/^jeg kan legge inn seriens navn$/) do
   @site.RegSerial.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:serial_name])
 end
 
+When(/^jeg kan legge inn emnets navn$/) do
+  @context[:subject_name] = generateRandomString
+  @site.RegSubject.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:subject_name])
+end
+
 When(/^jeg kan legge inn utgiverens navn$/) do
   @context[:publisher_name] = generateRandomString
   @site.RegPublisher.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:publisher_name])
@@ -291,4 +296,30 @@ When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
   data_automation_id_issue = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
   issueSpan = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']")
   issueSpan.should exist
+end
+
+When(/^jeg velger emnetype "([^"]*)" emne$/) do |subject_type|
+  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+  subject_type_select = @browser.select(:xpath => "//span[@data-automation-id='#{data_automation_id}']//select[not(@disabled)]")
+  subject_type_select.select(subject_type)
+  sleep 1
+end
+
+When(/^jeg legger inn emnet i søkefelt for emne og trykker enter$/) do
+  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+  subject_search_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search'][not(@disabled)]")
+  subject_search_field.set(@context[:subject_name])
+  sleep 1
+  subject_search_field.send_keys :enter
+end
+
+When(/^velger første emne i trefflisten$/) do
+  sleep 1
+  @browser.inputs(:class => "select-result-item-radio")[0].click
+end
+
+When(/^sjekker jeg at emnet er listet opp på verket$/) do
+  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+  subject_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input")
+  subject_field.value.should eq @context[:subject_name]
 end

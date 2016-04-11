@@ -55,6 +55,10 @@ public class WorkModelToIndexMapperTest {
             + "         {\n"
             + "            \"uri\":\"%6$s\",\n"
             + "            \"name\":\"Nitting\"\n"
+            + "         },\n"
+            + "         {\n"
+            + "            \"uri\":\"%7$s\",\n"
+            + "            \"name\":\"The great book about nitting\"\n"
             + "         }\n"
             + "      ]\n"
             + "   }\n"
@@ -67,7 +71,8 @@ public class WorkModelToIndexMapperTest {
         XURI publicationXuri1 = new XURI("http://deichman.no/publication/p1200001");
         XURI publicationXuri2 = new XURI("http://deichman.no/publication/p1200002");
         XURI publicationXuri3 = new XURI("http://deichman.no/publication/p1200003");
-        XURI subjectXuri = new XURI("http://deichman.no/subject/e1200005");
+        XURI subjectXuri1 = new XURI("http://deichman.no/subject/e1200005");
+        XURI subjectXuri2 = new XURI("http://deichman.no/work/w1200006");
 
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
@@ -161,19 +166,34 @@ public class WorkModelToIndexMapperTest {
                 ResourceFactory.createResource("http://lexvo.org/id/iso639-3/nob")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(subjectXuri.getUri()),
+                ResourceFactory.createResource(subjectXuri1.getUri()),
                 RDF.type,
                 ResourceFactory.createResource("http://deichman.no/ontology#Subject")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(subjectXuri.getUri()),
+                ResourceFactory.createResource(subjectXuri1.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#name"),
                 ResourceFactory.createPlainLiteral("Nitting")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(workXuri.getUri()),
                 ResourceFactory.createProperty("http://deichman.no/ontology#subject"),
-                ResourceFactory.createResource(subjectXuri.getUri())));
+                ResourceFactory.createResource(subjectXuri1.getUri())));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(subjectXuri2.getUri()),
+                RDF.type,
+                ResourceFactory.createResource("http://deichman.no/ontology#Work")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(subjectXuri2.getUri()),
+                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
+                ResourceFactory.createPlainLiteral("The great book about nitting")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(workXuri.getUri()),
+                ResourceFactory.createProperty("http://deichman.no/ontology#subject"),
+                ResourceFactory.createResource(subjectXuri2.getUri())));
 
         String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, workXuri);
 
@@ -184,7 +204,8 @@ public class WorkModelToIndexMapperTest {
                 publicationXuri1.getUri(),
                 publicationXuri2.getUri(),
                 publicationXuri3.getUri(),
-                subjectXuri.getUri())
+                subjectXuri1.getUri(),
+                subjectXuri2.getUri())
         ).allowingAnyArrayOrdering());
     }
 }

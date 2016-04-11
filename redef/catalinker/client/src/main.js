@@ -1072,7 +1072,7 @@
                                         }
                                     })
                                 },
-                                searchResource: function (event, searchString, indexType) {
+                                searchResource: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
                                     // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
                                     var config = ractive.get("config");
                                     var searchURI = config.resourceApiUri + "search/" + indexType + "/_search";
@@ -1087,6 +1087,9 @@
                                             results.hits.hits.forEach(function (hit) {
                                                 var item = hit._source[indexType];
                                                 item.isChecked = false;
+                                                if (loadWorksAsSubjectOfItem) {
+                                                    item.work = null;
+                                                }
                                                 if (item.work) {
                                                     if (!_.isArray(item.work)) {
                                                         item.work = [item.work];
@@ -1100,6 +1103,7 @@
                                                 items: _.pluck(_.pluck(results.hits.hits, "_source"), indexType),
                                                 origin: event.keypath
                                             });
+                                            positionSupportPanels();
                                         });
                                     //    .catch(function (err) {
                                     //    console.log(err);

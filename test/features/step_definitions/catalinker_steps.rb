@@ -462,6 +462,10 @@ When(/^jeg vil lage en ny serie/) do
   @site.RegSerial.visit
 end
 
+When(/^jeg vil lage et nytt emne/) do
+  @site.RegSubject.visit
+end
+
 When(/^jeg vil lage en ny utgiver/) do
   @site.RegPublisher.visit
 end
@@ -479,6 +483,11 @@ end
 When(/^leverer systemet en ny ID for den nye serien/) do
   @context[:serial_identifier] = @site.RegSerial.get_id()
   @context[:serial_identifier].should_not be_empty
+end
+
+When(/^leverer systemet en ny ID for det nye emnet/) do
+  @context[:subject_identifier] = @site.RegSubject.get_id()
+  @context[:subject_identifier].should_not be_empty
 end
 
 When(/^leverer systemet en ny ID for den nye utgiveren/) do
