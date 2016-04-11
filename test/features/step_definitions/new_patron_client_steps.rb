@@ -9,17 +9,11 @@ When(/^jeg søker på "([^"]*)" \(\+ id på vilkårlig migrering\)$/) do |query|
 end
 
 When(/^skal jeg få "([^"]*)" treff$/) do |hits|
-  wait_for { @browser.element(data_automation_id: 'hits-total').text.eql? hits }
+  wait_for { @site.SearchPatronClient.total_hits.eql? hits }
 end
 
 When(/^jeg går til side "([^"]*)" i resultatlisten$/) do |page|
-  pagination_element = @browser.element(class: 'pagination').a(text: page)
-  wait_for { pagination_element.exists? }
-  unless pagination_element.parent.class_name.eql? 'active'
-    pagination_element.click
-  end
-  wait_for { @browser.element(class: 'pagination').a(text: page).parent.class_name.eql? 'active' }
-  wait_for { CGI::parse(URI(@browser.url).query)['page'].include? page }
+  @site.SearchPatronClient.goto_search_result_page page
 end
 
 When(/^skal jeg ha "([^"]*)" resultater og være på side "([^"]*)"$/) do |hits, page|
@@ -83,10 +77,7 @@ When(/^skal filterne være valgt i grensesnittet$/) do
 end
 
 When(/^nåværende søketerm skal være "([^"]*)" \(\+ id på vilkårlig migrering\)$/) do |query|
-  wait_for {
-    current_search_term = @browser.element(data_automation_id: 'current-search-term')
-    current_search_term.present? && current_search_term.text.eql?("#{query}#{@context[:random_migrate_id]}")
-  }
+  @site.SearchPatronClient.search_term.eql?("#{query}#{@context[:random_migrate_id]}")
 end
 
 When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises i søkeresultatet$/) do |prefix, str|
@@ -97,11 +88,11 @@ When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises i søke
 end
 
 When(/^skal språket "([^"]*)" være valgt$/) do |language|
-  @browser.select(class: 'languageselector').selected_options.first.text.should eq language
+  @site.PatronClientCommon.current_language.should eq language
 end
 
 When(/^jeg velger språket "([^"]*)"$/) do |language|
-  @browser.select(class: 'languageselector').select(language)
+  @site.PatronClientCommon.select_language language
 end
 
 When(/^søkeknappen skal vise ordet "([^"]*)"$/) do |button_text|
@@ -113,12 +104,11 @@ When(/^jeg søker på "([^"]*)"$/) do |query|
 end
 
 When(/^jeg trykker på første treff$/) do
-  wait_for { @browser.element(class: 'result-more').a.present? }
-  @browser.element(class: 'result-more').a.click
+  @site.SearchPatronClient.follow_first_item_in_search_result
 end
 
 When(/^skal jeg se "([^"]*)" utgivelser$/) do |count|
-  wait_for { @browser.elements(class: 'publication-small').size.to_s.eql? count }
+  wait_for { @site.PatronClientWorkPage.publication_entries.size.to_s.eql? count }
 end
 
 When(/^skal jeg se et panel med informasjon om utgivelsen$/) do
@@ -130,8 +120,10 @@ When(/^jeg trykker på utgivelsen med "([^"]*)" språk$/) do |language|
 end
 
 When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
-  publication_info = @browser.element(data_automation_id: /^publication_info_/).table
-  table.diff!(publication_info.hashes).should eq nil
+  table = table.hashes.sort_by { |r| r.to_s }
+  wait_for { @browser.element(data_automation_id: /^publication_info_/).present? }
+  publication_info = @browser.element(data_automation_id: /^publication_info_/).table.hashes.sort_by { |r| r.to_s }
+  table.should eq publication_info
 end
 
 When(/^skal jeg ikke se et panel med informasjon om utgivelsen$/) do

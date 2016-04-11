@@ -41,7 +41,7 @@ end
 
 Then(/^vises eksemplaret på verkssiden$/) do
   page = @site.PatronClientWorkPage.visit(@context[:work_identifier].split("/").last)
-  page.existsExemplar.should be(true)
+  page.exists_exemplar?.should be(true)
 end
 
 When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
@@ -59,7 +59,7 @@ end
 
 Then(/^ser jeg en liste over eksemplarer knyttet til verket$/) do
   @browser.refresh
-  @site.PatronClientWorkPage.existsExemplar().should == true
+  @site.PatronClientWorkPage.exists_exemplar?().should == true
 end
 
 Then(/^har eksemplarene en identifikator \(strekkode\)$/) do
