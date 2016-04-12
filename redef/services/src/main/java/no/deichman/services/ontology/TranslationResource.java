@@ -26,7 +26,7 @@ import java.util.Map;
 @Singleton
 @Path("translations")
 public class TranslationResource {
-    private String[] inputFiles = {"format.ttl", "language.ttl", "audience.ttl", "nationality.ttl"};
+    private String[] inputFiles = {"format.ttl", "language.ttl", "audience.ttl", "nationality.ttl", "role.ttl"};
     private String[] locales = {"no", "en"};
     private Map<String, String> cachedTranslations = new HashMap<>();
     private String query = ""

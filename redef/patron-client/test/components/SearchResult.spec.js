@@ -11,9 +11,12 @@ function setup (resultPropOverrides) {
     result: {
       originalTitle: 'test_originalTitle',
       mainTitle: 'test_mainTitle',
-      creators: [ {
-        name: 'test_creator_name',
-        relativeUri: 'test_creator_relativeUri'
+      contributor: [ {
+        role: 'author',
+        agent: {
+          name: 'test_creator_name',
+          relativeUri: 'test_creator_relativeUri'
+        }
       } ],
       relativeUri: 'test_relativeUri',
       ...resultPropOverrides
@@ -45,8 +48,8 @@ describe('components', () => {
 
       expect(node.querySelector("[data-automation-id='work-title']").textContent).toBe(props.result.mainTitle)
       expect(node.querySelector("[data-automation-id='work_originaltitle']").textContent.endsWith(props.result.originalTitle)).toBe(true)
-      expect(node.querySelector("[data-automation-id='work_creators']").innerHTML).toContain(props.result.creators[ 0 ].name)
-      expect(node.querySelector("[data-automation-id='work_creators']").innerHTML).toContain(props.result.creators[ 0 ].relativeUri)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributor[ 0 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributor[ 0 ].agent.relativeUri)
     })
 
     it('should render part title and main title as title', () => {
@@ -54,23 +57,29 @@ describe('components', () => {
       expect(node.querySelector("[data-automation-id='work-title']").textContent).toEqual(props.result.mainTitle + ' — ' + props.result.partTitle)
     })
 
-    it('should render multiple creators', () => {
+    it('should render multiple contributors', () => {
       const { node, props } = setup({
-        creators: [
+        contributor: [
           {
-            name: 'creator_1',
-            relativeUri: 'relativeUri_1'
+            role: 'author',
+            agent: {
+              name: 'creator_1',
+              relativeUri: 'relativeUri_1'
+            }
           },
           {
-            name: 'creator_2',
-            relativeUri: 'relativeUri_2'
+            role: 'illustrator',
+            agent: {
+              name: 'creator_2',
+              relativeUri: 'relativeUri_2'
+            }
           }
         ]
       })
-      expect(node.querySelector("[data-automation-id='work_creators']").innerHTML).toContain(props.result.creators[ 0 ].name)
-      expect(node.querySelector("[data-automation-id='work_creators']").innerHTML).toContain(props.result.creators[ 0 ].relativeUri)
-      expect(node.querySelector("[data-automation-id='work_creators']").innerHTML).toContain(props.result.creators[ 1 ].name)
-      expect(node.querySelector("[data-automation-id='work_creators']").innerHTML).toContain(props.result.creators[ 1 ].relativeUri)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributor[ 0 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributor[ 0 ].agent.relativeUri)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributor[ 1 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributor[ 1 ].agent.relativeUri)
     })
 
     it('should render formats', () => {

@@ -106,11 +106,11 @@ function initQuery (query) {
             should: [
               {
                 nested: {
-                  path: 'work.creator',
+                  path: 'work.contributor.agent',
                   query: {
                     multi_match: {
                       query: query,
-                      fields: [ 'work.creator.name^2' ]
+                      fields: [ 'work.contributor.agent.name^2' ]
                     }
                   }
                 }

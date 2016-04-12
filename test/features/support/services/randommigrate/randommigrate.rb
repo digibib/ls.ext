@@ -85,7 +85,10 @@ module RandomMigrate
                   <work> <#{@services}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
                   <work> <#{@services}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
                   <work> <#{@services}/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
-                  <work> <#{@services}/ontology#creator> <#{person_uri}> ."
+                  <work> <#{@services}/ontology#contributor> _:c1 .
+                  _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Contribution> .
+                  _:c1 <#{@services}/ontology#agent> <#{person_uri}> .
+                  _:c1 <#{@services}/ontology#role> <http://data.deichman.no/role#author> ."
       return work_title, ntriples
     end
 

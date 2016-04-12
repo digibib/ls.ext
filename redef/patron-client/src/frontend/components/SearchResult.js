@@ -7,18 +7,14 @@ const SearchResult = React.createClass({
     result: PropTypes.object.isRequired,
     intl: intlShape.isRequired
   },
-  renderAuthors (creators) {
-    if (creators.length === 0) {
+  renderContributors (contributors) {
+    if (contributors.length === 0) {
       return
     }
-    let authorLabel = <FormattedMessage {...messages.author} />
-    if (creators.length > 1) {
-      authorLabel = <FormattedMessage {...messages.authors} />
-    }
     return (
-      <p data-automation-id='work_creators'>{authorLabel}: {creators.map(creator => {
-        return <strong key={creator.relativeUri}><Link to={creator.relativeUri}> {creator.name} </Link></strong>
-      })}
+      <p data-automation-id='work_contributors'> {contributors.map(contribution => (
+        <span key={contribution.agent.relativeUri}>{this.props.intl.formatMessage({id: contribution.role})}: <strong><Link to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></strong></span>
+      ))}
       </p>
     )
   },
@@ -58,7 +54,7 @@ const SearchResult = React.createClass({
             <p>
               <strong>{this.renderDisplayTitle(result)}</strong>
             </p>
-            {this.renderAuthors(result.creators)}
+            {this.renderContributors(result.contributor)}
             {this.renderOriginalTitle(result)}
           </div>
         </div>
@@ -80,16 +76,6 @@ const SearchResult = React.createClass({
 })
 
 const messages = defineMessages({
-  author: {
-    id: 'SearchResult.author',
-    description: 'The label when one author',
-    defaultMessage: 'Author'
-  },
-  authors: {
-    id: 'SearchResult.authors',
-    description: 'The label when multiple authors',
-    defaultMessage: 'Authors'
-  },
   originalTitle: {
     id: 'SearchResult.originalTitle',
     description: 'The label for the original title',

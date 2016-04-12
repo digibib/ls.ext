@@ -10,14 +10,9 @@ export function processSearchResponse (response, locationQuery) {
       let work = element._source.work
       work.relativeUri = relativeUri(work.uri)
 
-      work.creators = []
-      if (Array.isArray(work.creator)) {
-        work.creators = work.creator
-      } else if (work.creator) {
-        work.creators.push(work.creator)
-      }
-      work.creators.forEach(creator => {
-        creator.relativeUri = relativeUri(creator.uri)
+      work.contributor = work.contributor || []
+      work.contributor.forEach(contrib => {
+        contrib.agent.relativeUri = relativeUri(contrib.agent.uri)
       })
 
       work.publications = work.publication || []
@@ -62,6 +57,7 @@ export function processAggregationsToFilters (response, locationQuery) {
 }
 
 export function approximateBestTitle (publications, highlight) {
+  highlight = highlight || []
   highlight[ 'work.publication.mainTitle' ] = highlight[ 'work.publication.mainTitle' ] || []
   highlight[ 'work.publication.partTitle' ] = highlight[ 'work.publication.partTitle' ] || []
 
@@ -71,7 +67,6 @@ export function approximateBestTitle (publications, highlight) {
       highlight[ 'work.publication.partTitle' ].includes(publication.partTitle)
     )
   })
-
   return (
     filteredPublications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/nob')[ 0 ] ||
     filteredPublications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/eng')[ 0 ] ||

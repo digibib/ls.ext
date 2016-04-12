@@ -57,25 +57,34 @@ describe('components', () => {
         searchResults: [ {
           originalTitle: 'test_originalTitle1',
           mainTitle: 'test_mainTitle1',
-          creators: [ {
-            name: 'test_creator_name1',
-            relativeUri: 'test_creator_relativeUri1'
+          contributor: [ {
+            role: 'author',
+            agent: {
+              name: 'test_creator_name1',
+              relativeUri: 'test_creator_relativeUri1'
+            }
           } ],
           relativeUri: 'test_relativeUri1'
         }, {
           originalTitle: 'test_originalTitle2',
           mainTitle: 'test_mainTitle2',
-          creators: [ {
-            name: 'test_creator_name2',
-            relativeUri: 'test_creator_relativeUri2'
+          contributor: [ {
+            role: 'author',
+            agent: {
+              name: 'test_creator_name2',
+              relativeUri: 'test_creator_relativeUri2'
+            }
           } ],
           relativeUri: 'test_relativeUri2'
         }, {
           originalTitle: 'test_originalTitle3',
           mainTitle: 'test_mainTitle3',
-          creators: [ {
-            name: 'test_creator_name3',
-            relativeUri: 'test_creator_relativeUri3'
+          contributor: [ {
+            role: 'author',
+            agent: {
+              name: 'test_creator_name3',
+              relativeUri: 'test_creator_relativeUri3'
+            }
           } ],
           relativeUri: 'test_relativeUri3'
         } ],
