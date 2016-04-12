@@ -211,6 +211,10 @@ When(/^jeg åpner verket for redigering$/) do
   @site.RegWork.open(@context[:work_identifier], "work")
 end
 
+When(/^jeg åpner verket for lesing$/) do
+  @site.RegWork.open_readonly(@context[:work_identifier], "work")
+end
+
 When(/^jeg åpner utgivelsen for redigering$/) do
   @site.RegPublication.open(@context[:publication_identifier])
 end
@@ -680,4 +684,10 @@ When(/^at utgivelsen er tilkoplet riktig (.*)$/) do |concept|
   data = Hash.new
   data[@site.translate(concept)] = :get_prop_from_span
   batch_verify_props @site.RegPublication, 'Publication', data, :locate_by_fragment
+  end
+
+When(/^at verket er tilkoplet riktig (.*)$/) do |concept|
+  data = Hash.new
+  data[@site.translate(concept)] = :get_prop_from_span
+  batch_verify_props @site.RegWork, 'Work', data, :locate_by_fragment
 end

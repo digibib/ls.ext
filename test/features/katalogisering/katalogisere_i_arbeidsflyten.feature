@@ -73,6 +73,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg verifiserer opplysningene om utgivelsen
     Og at utgivelsen er tilkoplet riktig utgivelsessted
     Og at utgivelsen er tilkoplet riktig utgitt av
+    Så jeg åpner verket for lesing
+    Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
   @wip
@@ -87,7 +89,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og legger inn tilleggsopplyningene om verket for utgivelsesår og språk
     Og bekrefter for å gå videre til beskriv utgivelsen
     Og legger inn opplysningene om utgivelsen
-    Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
+    Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt for lesing
     Så jeg verifiserer opplysningene om utgivelsen
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om verket

@@ -12,7 +12,8 @@ class Site
         'utgivelsessted' => 'placeOfPublication',
         'utgiver' => 'publisher',
         'utgitt av' => 'publishedBy',
-        'serie' => 'serial'
+        'serie' => 'serial',
+        'emne' => 'subject'
     }[concept]
   end
 
