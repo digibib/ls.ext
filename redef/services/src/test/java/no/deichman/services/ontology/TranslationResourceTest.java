@@ -43,5 +43,6 @@ public class TranslationResourceTest {
         assertThat(translations.get("http://data.deichman.no/format#DVD"), equalTo("DVD"));
         assertThat(translations.get("http://lexvo.org/id/iso639-3/nob"), equalTo("Norsk (bokmål)"));
         assertThat(translations.get("http://data.deichman.no/audience#juvenile"), equalTo("Barn og ungdom"));
+        assertThat(translations.get("http://data.deichman.no/role#performer"), equalTo("Utøver"));
     }
 }

@@ -426,8 +426,8 @@ public class EntityServiceImplTest {
         Model workModel2 = modelFrom(work2, JSONLD);
         XURI workUri2 = new XURI(service.create(WORK, workModel2));
 
-        addCreatorToWorkPatch(personUri, workUri);
-        addCreatorToWorkPatch(personUri, workUri2);
+        addContributorToWorkPatch(personUri, workUri);
+        addContributorToWorkPatch(personUri, workUri2);
         Model worksByCreator = service.retrieveWorksByCreator(personUri);
         assertFalse(worksByCreator.isEmpty());
         assertThat(stringFrom(worksByCreator, JSONLD),
@@ -441,24 +441,43 @@ public class EntityServiceImplTest {
                         + "      {"
                         + "        \"@id\":\"%s\","
                         + "        \"rdfs:name\": \"Work Name\""
-                        + "      }"
+                        + "      },"
+                        + "      { \"@type\": \"deichman:Contribution\" },"
+                        + "      { \"@type\": \"deichman:Contribution\" },"
+                        + "      { \"@id\": \"%3$s\" }"
                         + "    ]"
-                        + "}", workUri.getUri(), workUri2.getUri()))
+                        + "}", workUri.getUri(), workUri2.getUri(), personUri.getUri()))
                         .allowingExtraUnexpectedFields()
                         .allowingAnyArrayOrdering());
     }
 
-    private void addCreatorToWorkPatch(XURI personUri, XURI workUri) throws Exception {
-        service.patch(workUri, format(""
+    private void addContributorToWorkPatch(XURI personUri, XURI workUri) throws Exception {
+        service.patch(workUri, format("["
                 + "{"
                 + "  \"op\":\"add\",\n"
-                + "  \"s\": \"%s\",\n"
-                + "  \"p\":\"%screator\",\n"
-                + "  \"o\":{\n"
-                + "    \"value\":\"%s\",\n"
-                + "    \"type\": \"%s\"\n"
-                + "   }\n"
-                + "}\n", workUri.getUri(), ontologyURI, personUri.getUri(), XSD.anyURI.getURI()));
+                + "  \"s\": \"%1$s\",\n"
+                + "  \"p\":\"%2$scontributor\",\n"
+                + "  \"o\": {\"value\": \"_:b0\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "},\n"
+                + "{"
+                + "  \"op\":\"add\",\n"
+                + "  \"s\": \"_:b0\",\n"
+                + "  \"p\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#type\",\n"
+                + "  \"o\": {\"value\": \"%2$sContribution\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "},\n"
+                + "{"
+                + "  \"op\":\"add\",\n"
+                + "  \"s\": \"_:b0\",\n"
+                + "  \"p\":\"%2$sagent\",\n"
+                + "  \"o\": {\"value\": \"%3$s\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "},\n"
+                + "{"
+                + "  \"op\":\"add\",\n"
+                + "  \"s\": \"_:b0\",\n"
+                + "  \"p\":\"%2$srole\",\n"
+                + "  \"o\": {\"value\": \"http://data.deichman.no/role#author\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "}\n"
+                + "]", workUri.getUri(), ontologyURI, personUri.getUri(), XSD.anyURI.getURI()));
     }
 
     private String getTestJSON(String id, String type) {
@@ -602,7 +621,10 @@ public class EntityServiceImplTest {
         String workTriples = ""
                 + "<work> <" + ontologyURI + "mainTitle> \"" + originalWorkTitle + "\" .\n"
                 + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
-                + "<work> <" + ontologyURI + "creator> <__CREATORURI__> .\n";
+                + "<work> <" + ontologyURI + "contributor> _:b0 .\n"
+                + "_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Contribution> .\n"
+                + "_:b0 <" + ontologyURI + "agent> <__CREATORURI__> .\n"
+                + "_:b0 <" + ontologyURI + "role> <http://data.deichman.no/role#author> .\n";
         String publicationTriples = ""
                 + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
                 + "<publication> <" + ontologyURI + "mainTitle> \"" + originalPublicationTitle + "\" .\n"

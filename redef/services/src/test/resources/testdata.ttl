@@ -11,10 +11,14 @@
   dcterms:identifier "work_00001" ;
   rdfs:label "Sult" ;
   dcterms:mainTitle "Sult"@no ;
-  deichman:creator <http://deichman.no/person/h12321011> ;
+  deichman:contributor _:c1 ;
   dcterms:date "1890"^^xsd:gYear ;
   deichman:hasEdition <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
- 
+
+_:c1 a deichman:Contribution ;
+   deichman:agent <http://deichman.no/person/h12321011> ;
+   deichman:role <http://data.deichman.no/role#author> .
+
 <http://deichman.no/edition/edition_00001> a deichman:Edition ;
   bibo:isbn "82-05-27748-6" ;
   deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
@@ -45,10 +49,14 @@
   dcterms:identifier "work_00002" ;
   rdfs:label "Trist som faen" ;
   dcterms:mainTitle "Trist som faen"@no ;
-  deichman:creator <http://deichman.no/person/person_00002> ;
+  deichman:contributor _:c2 ;
   dcterms:date "1999"^^xsd:gYear ;
   deichman:hasEdition <http://deichman.no/edition/edition_00003> .
- 
+
+ _:c2 a deichman:Contribution ;
+    deichman:agent <http://deichman.no/person/person_00002> ;
+    deichman:role <http://data.deichman.no/role#author> .
+
 <http://deichman.no/edition/edition_00003> a deichman:Edition ;
   bibo:isbn "82-05-26285-3" ;
   deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
@@ -73,8 +81,12 @@
   dcterms:identifier "work_00003" ;
   rdfs:label "A minimalist analysis trousers" ;
   dcterms:mainTitle "A minimalist analysis of trousers"@en ;
-  deichman:creator <http://deichman.no/person/person_00003> ;
+  deichman:contributor _:c3 ;
   dcterms:date "2004"^^xsd:gYear .
+
+ _:c3 a deichman:Contribution ;
+    deichman:agent <http://deichman.no/person/person_00003> ;
+    deichman:role <http://data.deichman.no/role#author> .
 
 <http://deichman.no/person/person_00003> a foaf:Person ;
   rdfs:label "Stephen Tubs" ;
@@ -87,9 +99,13 @@
   dcterms:identifier "work_00004" ;
   rdfs:label "Berlinerpoplene" ;
   dcterms:mainTitle "Berlinerpoplene"@no ;
-  deichman:creator <http://deichman.no/person/person_00004> ;
+  deichman:contributor _:c4 ;
   dcterms:date "2004"^^xsd:gYear ;
   deichman:hasEdition <http://deichman.no/edition/edition_00004> .
+
+ _:c4 a deichman:Contribution ;
+    deichman:agent <http://deichman.no/person/person_00004> ;
+    deichman:role <http://data.deichman.no/role#author> .
 
 <http://deichman.no/person/person_00004> a foaf:Person ;
   rdfs:label "Anne B. Ragde" ;
@@ -105,9 +121,13 @@
 <http://deichman.no/work/w0009112> a deichman:Work ;
   rdfs:label "Berlinerpoplene" ;
   dcterms:mainTitle "Berlinerpoplene"@no ;
-  deichman:creator <http://deichman.no/person/person_00004> ;
+  deichman:contributor _:c5 ;
   dcterms:date "2004"^^xsd:gYear ;
   dcterms:identifier "w0009112" .
+
+ _:c5 a deichman:Contribution ;
+    deichman:agent <http://deichman.no/person/person_00004> ;
+    deichman:role <http://data.deichman.no/role#author> .
 
 <http://deichman.no/publication/publication_TEST_KOHA_ITEMS_LINK> a deichman:Publication ;
   deichman:recordID "626460" ;

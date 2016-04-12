@@ -104,7 +104,7 @@ public class PersonModelToIndexMapperTest {
                 + "   \"person\":{"
                 + "      \"uri\":\"" + personXuri.getUri() + "\","
                 + "      \"name\":\"personName_value\","
-                + "      \"nationality\":\"Norsk\","
+                + "      \"nationality\":\"http://deichman.no/nationality#n\","
                 + "      \"work\":["
                 + "         {"
                 + "            \"uri\":\"" + workXuri1.getUri() + "\","

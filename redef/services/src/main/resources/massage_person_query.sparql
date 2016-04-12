@@ -31,13 +31,12 @@ WHERE
           }
         OPTIONAL
           { ?personUri  :nationality  ?nationalityO .
-            ?nationalityO
-                      rdfs:label    ?nationalityL
-            BIND(str(?nationalityL) AS ?nationality)
+            BIND(str(?nationalityO) AS ?nationality)
           }
         OPTIONAL
           { ?work  a                     :Work ;
-                   :creator              ?personUri
+                   :contributor ?contrib .
+            ?contrib        :agent              ?personUri
           }
         OPTIONAL
           { ?work  :mainTitle  ?mainTitleO

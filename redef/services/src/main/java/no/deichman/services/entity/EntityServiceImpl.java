@@ -59,7 +59,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property hasItemProperty;
     private final Property mainTitleProperty;
     private final Property nameProperty;
-    private final Property creatorProperty;
+    private final Property agentProperty;
     private final Property publicationOfProperty;
     private final Property recordIdProperty;
     private final Property partTitleProperty;
@@ -75,7 +75,7 @@ public final class EntityServiceImpl implements EntityService {
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
         mainTitleProperty = ResourceFactory.createProperty(baseURI.ontology("mainTitle"));
         nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
-        creatorProperty = ResourceFactory.createProperty(baseURI.ontology("creator"));
+        agentProperty = ResourceFactory.createProperty(baseURI.ontology("agent"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
         recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
         partTitleProperty = ResourceFactory.createProperty(baseURI.ontology("partTitle"));
@@ -263,7 +263,7 @@ public final class EntityServiceImpl implements EntityService {
 
         List<String> personNames;
         if (inputModel.contains(null, publicationOfProperty)) {
-            Model work = repository.retrieveResourceByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
+            Model work = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
             if (work.isEmpty()) {
                 throw new BadRequestException("Associated work does not exist.");
             }
@@ -333,8 +333,15 @@ public final class EntityServiceImpl implements EntityService {
             streamFrom(works.listStatements())
                     .collect(groupingBy(Statement::getSubject))
                     .forEach((subject, statements) -> {
+                        if (subject.isAnon()) {
+                            return;
+                        }
                         Model work = ModelFactory.createDefaultModel();
                         work.add(statements);
+                        work.add(ResourceFactory.createStatement(
+                                subject,
+                                ResourceFactory.createProperty(baseURI.ontology() + "agent"),
+                                ResourceFactory.createResource(xuri.getUri())));
                         XURI workXuri = null;
                         try {
                             workXuri = new XURI(subject.toString());
@@ -415,25 +422,24 @@ public final class EntityServiceImpl implements EntityService {
         return marcRecord;
     }
 
+
     private List<String> getPersonNames(Model work) {
         List<String> personNames = new ArrayList<>();
-        streamFrom(work.listStatements())
-                .collect(groupingBy(Statement::getSubject))
-                .forEach((subject, statements) -> {
-                    statements.forEach(s -> {
-                        if (s.getPredicate().equals(creatorProperty)) {
-                            try {
-                                Model person = repository.retrieveResourceByURI(new XURI(s.getObject().toString()));
-                                NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
-                                while (nameIterator.hasNext()) {
-                                    personNames.add(nameIterator.next().asLiteral().toString());
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                });
+
+        for (Statement stmt : work.listStatements().toList()) {
+            if (stmt.getPredicate().equals(agentProperty)) {
+                try {
+                    Model person = repository.retrieveResourceByURI(new XURI(stmt.getObject().toString()));
+                    NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
+                    while (nameIterator.hasNext()) {
+                        personNames.add(nameIterator.next().asLiteral().toString());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return personNames;
     }
 

@@ -45,13 +45,12 @@ import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static no.deichman.services.uridefaults.BaseURI.remote;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
-import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 /**
  * Responsibility: perform indexing and searching.
  */
 public class SearchServiceImpl implements SearchService {
-    public static final Property CREATOR = createProperty(remote().ontology("creator"));
+    public static final Property AGENT = createProperty(remote().ontology("agent"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     private final EntityService entityService;
@@ -222,12 +221,11 @@ public class SearchServiceImpl implements SearchService {
         indexDocument(xuri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, xuri));
 
         if (!indexedPerson) {
-            Statement creatorProperty = workModelWithLinkedResources.getProperty(
-                    createResource(xuri.getUri()),
-                    CREATOR);
-            if (creatorProperty != null) {
-                XURI creatorXuri = new XURI(creatorProperty.getObject().asNode().getURI());
-                doIndexPersonOnly(creatorXuri);
+            for (Statement stmt : workModelWithLinkedResources .listStatements().toList()) {
+                if (stmt.getPredicate().equals(AGENT)) {
+                    XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
+                    doIndexPersonOnly(creatorXuri);
+                }
             }
         }
     }
@@ -238,7 +236,9 @@ public class SearchServiceImpl implements SearchService {
             ResIterator subjectIterator = works.listSubjects();
             while (subjectIterator.hasNext()) {
                 XURI workUri = new XURI(subjectIterator.next().toString());
-                doIndexWorkOnly(workUri);
+                if (!workUri.getUri().equals(xuri.getUri())) {
+                    doIndexWorkOnly(workUri);
+                }
             }
         }
         Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(xuri).add(works);

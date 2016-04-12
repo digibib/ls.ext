@@ -33,7 +33,7 @@ public final class SPARQLQueryBuilder {
 
     private final BaseURI baseURI;
 
-    SPARQLQueryBuilder() {
+    public SPARQLQueryBuilder() {
         baseURI = BaseURI.remote();
     }
 
@@ -278,10 +278,11 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
                 + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
-                + "DESCRIBE ?work \n"
+                + "DESCRIBE ?work <%2$s>\n"
                 + "WHERE {\n"
                 + "      ?work a deichman:Work ;\n"
-                + "            deichman:creator <%2$s> .\n"
+                + "            deichman:contributor ?contrib .\n"
+                + "      ?contrib deichman:agent <%2$s> .\n"
                 + "}", baseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }
