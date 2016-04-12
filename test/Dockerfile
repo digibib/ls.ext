@@ -3,16 +3,19 @@ FROM ubuntu:trusty
 RUN apt-get update && apt-get install -y \
     build-essential \
     zlib1g-dev \
-   	wget \
-   	unzip \
-   	software-properties-common \
-   	lxc \
-   	firefox \
+    wget \
+    unzip \
+    software-properties-common \
+    lxc \
     chromium-browser && \
     apt-get clean
 
 RUN add-apt-repository ppa:brightbox/ruby-ng
-RUN apt-get update && apt-get install -y --force-yes ruby2.2 ruby2.2-dev xvfb firefox && apt-get clean
+RUN apt-get update && apt-get install -y --force-yes ruby2.2 ruby2.2-dev xvfb && apt-get clean
+
+RUN wget --quiet http://heanet.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_45.0-0ubuntu1_amd64.deb && \
+    dpkg -i firefox-mozilla-build_45.0-0ubuntu1_amd64.deb && \
+    rm -rf firefox-mozilla-build_45.0-0ubuntu1_amd64.deb
 
 RUN wget --quiet http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && rm chromedriver_linux64.zip
