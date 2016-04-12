@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+echo -e "\n Provisioning for $1 env\n"
 echo -e "\n1) Installing Docker\n"
 VERSION="1.10.3-0~$(lsb_release -c -s)"
 INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
@@ -44,7 +44,7 @@ echo -e "\n6) Provisioning system with docker-compose\n"
 cd /vagrant/docker-compose
 source docker-compose.env
 source secrets.env
-case "$LSDEVMODE" in
+case "$1" in
   'build')
   envsubst < "docker-compose-template-dev-CI.yml" > "docker-compose.yml"
   ;;
@@ -58,9 +58,11 @@ esac
 sudo docker-compose stop overview && sudo docker-compose rm -f overview
 sudo docker-compose up -d
 
-echo -e "\n7) Attempting to set up Elasticsearch indices and mappings"
-for i in {1..10}; do
-  wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "localhost:8005/search/clear_index" &> /dev/null
-  if [ $? = 0 ]; then break; fi;
-  sleep 3s;
-done;
+if [ ! "$1" = "prod"]
+  echo -e "\n7) Attempting to set up Elasticsearch indices and mappings"
+  for i in {1..10}; do
+    wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "localhost:8005/search/clear_index" &> /dev/null
+    if [ $? = 0 ]; then break; fi;
+    sleep 3s;
+  done;
+fi

@@ -49,7 +49,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.provision "shell" do |s|
       s.path = "provision.sh"
-      s.args = "LSDEVMODE=#{ENV['LSDEVMODE']}"
+      s.args = ["#{ENV['LSDEVMODE']}"]
     end
 
   end
