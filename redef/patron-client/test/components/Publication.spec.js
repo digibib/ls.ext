@@ -9,12 +9,14 @@ import { IntlProvider } from 'react-intl'
 function setup (propOverrides) {
   const props = {
     expandSubResource: () => {},
+    startReservation: () => {},
     publication: {
       id: 'test_id',
       mainTitle: 'test_maintitle',
       publicationYear: 'test_publicationYear',
       languages: ['test_language'],
       formats: ['test_format'],
+      items: [],
       available: true
     }, ...propOverrides
   }
@@ -48,7 +50,15 @@ describe('components', () => {
     })
 
     it('should combine main title and part title as title', () => {
-      const { node, props } = setup({ publication: { mainTitle: 'test_maintitle', partTitle: 'test_parttitle', formats: [], languages: [] } })
+      const { node, props } = setup({
+        publication: {
+          mainTitle: 'test_maintitle',
+          partTitle: 'test_parttitle',
+          formats: [],
+          languages: [],
+          items: []
+        }
+      })
       expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle + ' — ' + props.publication.partTitle)
     })
   })

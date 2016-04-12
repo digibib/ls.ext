@@ -12,6 +12,9 @@ const SearchHeader = React.createClass({
     loadLanguage: PropTypes.func.isRequired,
     locale: PropTypes.string.isRequired,
     totalHits: PropTypes.number.isRequired,
+    showLoginDialog: PropTypes.func.isRequired,
+    isLoggedIn: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired,
     intl: intlShape.isRequired
   },
   contextTypes: {
@@ -24,6 +27,10 @@ const SearchHeader = React.createClass({
     event.preventDefault()
     let url = this.context.router.createPath({ pathname: '/search', query: { query: this.searchFieldInput.value } })
     this.props.dispatch(push(url))
+  },
+  handleLoginClick (event) {
+    event.preventDefault()
+    this.props.showLoginDialog()
   },
   render () {
     return (
@@ -46,6 +53,10 @@ const SearchHeader = React.createClass({
                 <li><FormattedMessage {...messages.myLoans} /></li>
                 <li><FormattedMessage {...messages.more} /></li>
                 <li><FormattedMessage {...messages.contactUs} /></li>
+                {this.props.isLoggedIn
+                  ? <li onClick={this.props.logout}><FormattedMessage { ...messages.logout }/></li>
+                  : <li onClick={this.handleLoginClick}><FormattedMessage {...messages.logIn } />
+                </li>}
               </ul>
             </div>
           </div>
@@ -126,6 +137,16 @@ const messages = defineMessages({
     id: 'SearchHeader.search',
     description: 'Label on search button',
     defaultMessage: 'Search'
+  },
+  logout: {
+    id: 'SearchHeader.logout',
+    description: 'Shown when logged in',
+    defaultMessage: 'Log out'
+  },
+  logIn: {
+    id: 'SearchHeader.logIn',
+    description: 'Shown when logged out',
+    defaultMessage: 'Log in'
   }
 })
 

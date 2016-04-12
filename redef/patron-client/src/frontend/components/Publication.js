@@ -5,6 +5,7 @@ const Publication = React.createClass({
   propTypes: {
     publication: PropTypes.object.isRequired,
     expandSubResource: PropTypes.func.isRequired,
+    startReservation: PropTypes.func.isRequired,
     intl: intlShape.isRequired
   },
   contextTypes: {
@@ -20,10 +21,15 @@ const Publication = React.createClass({
   handleClick () {
     this.props.expandSubResource(this.props.publication.id, this.context.router)
   },
+  handleReservationClick (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    this.props.startReservation(this.props.publication.recordId)
+  },
   render () {
-    let publication = this.props.publication
-    let languages = [...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language })))]
-    let formats = [...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format })))]
+    const publication = this.props.publication
+    const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
+    const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
     return (
       <div onClick={this.handleClick} className='col col-1-3 publication-small'
            data-automation-id={`publication_${publication.uri}`}>
@@ -54,6 +60,12 @@ const Publication = React.createClass({
                 <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
               </span>
           </p>
+          {publication.items.length > 0
+            ? (<p>
+              <span data-automation-id='publication_reserve'>
+                <a onClick={this.handleReservationClick}><FormattedMessage {...messages.reserve} /></a>
+              </span>
+          </p>) : null}
         </div>
       </div>
     )
@@ -70,6 +82,11 @@ const messages = defineMessages({
     id: 'Publication.unavailable',
     description: 'The text displayed when the publication unavailable',
     defaultMessage: 'Unavailable'
+  },
+  reserve: {
+    id: 'Publication.reserve',
+    description: 'The button that allows users to reserve a publication',
+    defaultMessage: 'Reserve'
   }
 })
 

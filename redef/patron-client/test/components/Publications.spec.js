@@ -9,6 +9,7 @@ import { IntlProvider } from 'react-intl'
 function setup (propOverrides) {
   const props = {
     expandSubResource: () => {},
+    startReservation: () => {},
     locationQuery: {},
     publications: [
       { uri: '/publication_id1', id: 'publication_id1' },
