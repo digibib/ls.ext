@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+/* global findElementByDataAutomationId */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -55,7 +56,7 @@ describe('components', () => {
   describe('PublicationInfo', () => {
     it('should send call to close panel when close element is clicked', () => {
       const { output, props } = setup()
-      let closeButton = TestUtils.findRenderedDOMComponentWithClass(output, 'close-publication-info')
+      let closeButton = findElementByDataAutomationId(output, `close_publication_info_${props.publication.uri}`)
       TestUtils.Simulate.click(closeButton)
       expect(props.expandSubResource).toHaveBeenCalled()
       expect(props.expandSubResource.calls[ 0 ].arguments[ 0 ]).toBe(null)
