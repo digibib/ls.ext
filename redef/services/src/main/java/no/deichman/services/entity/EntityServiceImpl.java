@@ -238,6 +238,9 @@ public final class EntityServiceImpl implements EntityService {
             case SUBJECT:
                 uri = repository.createSubject(inputModel);
                 break;
+            case GENRE:
+                uri = repository.createGenre(inputModel);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
         }

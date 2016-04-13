@@ -8,11 +8,13 @@ import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import no.deichman.services.App;
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.kohaadapter.KohaSvcMock;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
 import no.deichman.services.services.search.EmbeddedElasticsearchServer;
 import no.deichman.services.testutil.PortSelector;
+import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -36,6 +38,7 @@ import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 
 import static java.net.HttpURLConnection.HTTP_OK;
+import static javax.ws.rs.core.Response.Status.CREATED;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -68,6 +71,9 @@ public class AppTest {
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private static final String ANOTHER_BIBLIO_ID = "333333";
+    private static final  String EMPTY_STRING = "";
+    private static final String ADD = "ADD";
+    private static final String DEL = "DEL";
     private static String baseUri;
     private static App app;
 
@@ -154,6 +160,15 @@ public class AppTest {
                 .body(body);
     }
 
+    private static HttpResponse<String> createEmptyResource(EntityType entityType) throws UnirestException {
+        return buildCreateRequest(baseUri + entityType.getPath(), "{}").asString();
+    }
+
+    private static void setUpKohaExpectation(String biblioNumber) {
+            kohaSvcMock.addLoginExpectation();
+            kohaSvcMock.addPostNewBiblioExpectation(biblioNumber);
+    }
+
     private static RequestBodyEntity buildCreateRequest(String uri, String body) {
         return Unirest
                 .post(uri)
@@ -194,7 +209,7 @@ public class AppTest {
         kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
 
         final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
-        assertResponse(Status.CREATED, createWorkResponse);
+        assertResponse(CREATED, createWorkResponse);
         final String workUri = getLocation(createWorkResponse);
         final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Paris"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
@@ -202,7 +217,7 @@ public class AppTest {
 
         final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
 
-        assertResponse(Status.CREATED, createPublicationResponse);
+        assertResponse(CREATED, createPublicationResponse);
         final String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
         assertThat(publicationUri, startsWith(baseUri));
@@ -233,14 +248,14 @@ public class AppTest {
 
         final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
 
-        assertResponse(Status.CREATED, createPublicationResponse);
+        assertResponse(CREATED, createPublicationResponse);
         final String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
         assertThat(publicationUri, startsWith(baseUri));
 
         final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
 
-        assertResponse(Status.CREATED, createWorkResponse);
+        assertResponse(CREATED, createWorkResponse);
         final String workUri = getLocation(createWorkResponse);
         assertIsUri(workUri);
         assertThat(workUri, startsWith(baseUri));
@@ -254,7 +269,7 @@ public class AppTest {
         assertResponse(Status.OK, patchAddYearToWorkPatchResponse);
 
         final HttpResponse<JsonNode> createPersonResponse = buildEmptyCreateRequest(baseUri + "person").asJson();
-        assertResponse(Status.CREATED, createPersonResponse);
+        assertResponse(CREATED, createPersonResponse);
         final String personUri = getLocation(createPersonResponse);
         assertIsUri(personUri);
         assertThat(personUri, startsWith(baseUri));
@@ -286,7 +301,7 @@ public class AppTest {
         kohaSvcMock.addPostNewBiblioExpectation(SECOND_BIBLIO_ID);
 
         final HttpResponse<JsonNode> createSecondPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
-        assertResponse(Status.CREATED, createSecondPublicationResponse);
+        assertResponse(CREATED, createSecondPublicationResponse);
         final String secondPublicationUri = getLocation(createSecondPublicationResponse);
 
         final JsonArray workIntoSecondPublicationPatch = buildLDPatch(buildPatchStatement("add", secondPublicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
@@ -503,6 +518,73 @@ public class AppTest {
     }
 
     @Test
+    public void genre_is_searchable() throws UnirestException, InterruptedException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "genre", "{}").asString();
+
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#name";
+        String o1 = "Romance";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .build();
+
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+        doSearchForGenre("Romance");
+    }
+
+    @Test
+    public void test_resource_is_patchable() throws Exception {
+        for (EntityType entityType : EntityType.values()) {
+            if (entityType.equals(EntityType.PUBLICATION)) {
+                setUpKohaExpectation(SECOND_BIBLIO_ID);
+            }
+            HttpResponse<String> createResult = createEmptyResource(entityType);
+            XURI location = new XURI(getLocation(createResult));
+            HttpResponse<String> addResult = buildPatchRequest(location.getUri(), createSimplePatch(ADD, location)).asString();
+            assertEquals(Status.OK.getStatusCode(), addResult.getStatus());
+            HttpResponse<String> delResult = buildPatchRequest(location.getUri(), createSimplePatch(DEL, location)).asString();
+            assertEquals(Status.OK.getStatusCode(), delResult.getStatus());
+        }
+    }
+
+    private JsonArray createSimplePatch(String operation, XURI xuri) throws Exception {
+
+        if (!operation.matches("ADD|DEL")) {
+            throw new Exception("You did not specify a valid patch operation (ADD|DEL)");
+        }
+
+        String op = operation;
+        String s = xuri.getUri();
+        String p1 = baseUri + "ontology#name";
+        String o1 = "TestTestTest";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+
+        return Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .build();
+    }
+
+    @Test
+    public void test_resource_can_be_created() throws UnirestException {
+
+        for (EntityType entityType : EntityType.values()) {
+
+            if (entityType.equals(EntityType.PUBLICATION)) {
+                setUpKohaExpectation(SECOND_BIBLIO_ID);
+            }
+
+            System.out.println("Testing resource creation for " + entityType.name());
+            HttpResponse<String> result = createEmptyResource(entityType);
+            assertEquals(Status.CREATED.getStatusCode(), result.getStatus());
+            assertEquals(EMPTY_STRING, result.getBody());
+        }
+    }
+
+    @Test
     public void test_patching_with_bnodes() throws UnirestException {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
         String op = "ADD";
@@ -585,7 +667,7 @@ public class AppTest {
 
         HttpResponse<String> result = buildCreateRequest(baseUri + "serial", body).asString();
 
-        assertResponse(Status.CREATED, result);
+        assertResponse(CREATED, result);
     }
 
     @Test
@@ -807,7 +889,24 @@ public class AppTest {
             }
         } while (!foundSubject && attempts-- > 0);
 
-        assertTrue("Should have found name of serial in index by now", foundSubject);
+        assertTrue("Should have found name of subject in index by now", foundSubject);
+    }
+
+    private void doSearchForGenre(String name) throws UnirestException, InterruptedException {
+        boolean foundSubject;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(baseUri + "search/genre/_search").queryString("q", "genre.name:" + name);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundSubject = responseBody.contains(name);
+            if (!foundSubject) {
+                LOG.info("Genre not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundSubject && attempts-- > 0);
+
+        assertTrue("Should have found name of genre in index by now", foundSubject);
     }
 
     private void indexWork(String workId, String title) {

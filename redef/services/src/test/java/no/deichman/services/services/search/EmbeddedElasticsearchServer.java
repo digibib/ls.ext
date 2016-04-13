@@ -47,12 +47,12 @@ public final class EmbeddedElasticsearchServer {
         }
         assertTrue(getClient().admin().indices().prepareCreate("search").execute().actionGet().isAcknowledged());
 
-
         prepareMappingOf("person");
         prepareMappingOf("work");
         prepareMappingOf("publisher");
         prepareMappingOf("serial");
         prepareMappingOf("subject");
+        prepareMappingOf("genre");
     }
 
     private void prepareMappingOf(String type) throws IOException {

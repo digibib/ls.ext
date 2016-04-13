@@ -62,7 +62,8 @@ app.get('/workflow', function (req, res, next) {
   res.sendFile('main.html', { title: 'Katalogisering', root: __dirname + '/../public/' });
 });
 
-app.get('/:type(person|work|publication|placeOfPublication|serial|publisher|subject)', function (req, res, next) {
+app.get('/:type(person|work|publication|placeOfPublication|serial|publisher|subject|genre)', function (req, res, next) {
+
   newResource(req.params.type).then(function (response) {
     res.redirect('/cataloguing/' + req.params.type + '?resource=' + response.headers.location);
   });
@@ -103,10 +104,10 @@ app.get('/config', function (request, response) {
               rdfType: "Work",
               label: "Bekreft verk",
               inputs: [
-                { rdfProperty: "mainTitle" },
-                { rdfProperty: "subtitle" },
-                { rdfProperty: "partTitle" },
-                { rdfProperty: "partNumber" }
+                  {rdfProperty: "mainTitle"},
+                  {rdfProperty: "subtitle"},
+                  {rdfProperty: "partTitle"},
+                  {rdfProperty: "partNumber"}
               ],
               nextStep: {
                 buttonLabel: "Beskriv verket"
@@ -131,6 +132,14 @@ app.get('/config', function (request, response) {
                       widgetOptions: {
                         selectIndexTypeLegend: "Velg emnetype"
                       }
+                    },
+                    {
+                      rdfProperty: "genre",
+                      multiple: true,
+                      authority: true,
+                      nameProperties: ["name"],
+                      indexTypes: "genre",
+                      indexDocumentFields: ["name"]
                     },
                     {rdfProperty: "literaryForm", multiple: true},
                     {rdfProperty: "audience", multiple: true},

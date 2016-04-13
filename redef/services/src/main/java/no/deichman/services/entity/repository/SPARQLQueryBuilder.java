@@ -50,7 +50,7 @@ public final class SPARQLQueryBuilder {
         String queryString = String.format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                + "DESCRIBE <%2$s> ?publication ?creator ?format ?label ?subject\n"
+                + "DESCRIBE <%2$s> ?publication ?creator ?format ?label ?subject ?genre\n"
                 + "WHERE {\n"
                 + "    <%2$s> a deichman:Work .\n"
                 + "    optional {\n"
@@ -68,6 +68,9 @@ public final class SPARQLQueryBuilder {
                 + "    }\n"
                 + "    optional { \n"
                 + "           <%2$s> deichman:subject ?subject .\n"
+                + "    }\n"
+                + "    optional {\n"
+                + "           <%2$s> deichman:genre ?genre .\n"
                 + "    }\n"
                 + "}", baseURI.ontology(), xuri.getUri());
         return QueryFactory.create(queryString);

@@ -57,6 +57,20 @@
       ]
     },
     {
+      "@id": "deichman:Genre",
+      "@type": "rdfs:Class",
+      "rdfs:label": [
+        {
+          "@language": "no",
+          "@value": "Sjanger"
+        },
+        {
+          "@language": "en",
+          "@value": "Genre"
+        }
+      ]
+    },
+    {
       "@id": "deichman:biblio",
       "@type": "rdfs:Property",
       "rdfs:domain": {
@@ -170,9 +184,12 @@
     {
       "@id": "deichman:name",
       "@type": "rdfs:Property",
-      "rdfs:domain": {
+      "rdfs:domain": [{
         "@id": "deichman:Person"
       },
+      {
+        "@id": "deichman:Genre"
+      }],
       "rdfs:label": [
         {
           "@language": "no",

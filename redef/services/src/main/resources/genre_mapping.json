@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "genre": {
+      "properties":
+      {
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

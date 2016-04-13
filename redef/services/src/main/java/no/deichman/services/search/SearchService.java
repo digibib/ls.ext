@@ -30,4 +30,6 @@ public interface SearchService {
     Response searchSerial(String query);
 
     Response searchSubject(String query);
+
+    Response searchGenre(String query);
 }

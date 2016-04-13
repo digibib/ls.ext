@@ -55,10 +55,14 @@
   rdfs:label "Role"@en ;
   rdfs:label "Rolle"@no .
 
+:Genre a rdfs:Class ;
+  rdfs:label "Genre"@en ;
+  rdfs:label "Sjanger"@no .
+
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person, :Publisher, :Serial, :Corporation, :Subject ;
+  rdfs:domain :Person, :Publisher, :Serial, :Corporation, :Subject, :Genre ;
   rdfs:range xsd:string .
 
 :personTitle a rdfs:Property ;
@@ -298,3 +302,8 @@
   rdfs:range :Person ;
   rdfs:domain :Contribution .
 
+:genre a rdfs:Property ;
+  rdfs:label "Genre"@en ;
+  rdfs:label "Sjanger"@no ;
+  rdfs:range :Genre ;
+  rdfs:domain :Work .

@@ -36,9 +36,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.PERSON;
@@ -81,6 +79,7 @@ public class EntityServiceImplTest {
     private String publisherURI;
     private String serialURI;
     private String subjectURI;
+    private String genreURI;
     private String baseURI;
 
     @Mock
@@ -114,26 +113,27 @@ public class EntityServiceImplTest {
         publisherURI = localBaseURI.publisher();
         serialURI = localBaseURI.serial();
         subjectURI = localBaseURI.subject();
+        genreURI = localBaseURI.genre();
     }
 
     @Test
     public void test_retrieving_by_id() {
         when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
-        List<EntityType> entities = new ArrayList<EntityType>(Arrays.asList(EntityType.values()));
-        entities.forEach(s -> {
-            String currentEntity = s.getPath();
+        for (EntityType entityType : EntityType.values()) {
+            String currentEntity = entityType.getPath();
             String entityId = currentEntity + "_should_Exist";
             String testDataURI = baseURI + currentEntity + "/" + entityId;
             String testJSON = getTestJSON(entityId, currentEntity);
             Model inputModel = modelFrom(testJSON, JSONLD);
             String servicesURI = null;
             try {
-                servicesURI = service.create(s, inputModel);
+                servicesURI = service.create(entityType, inputModel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             Model comparison = ModelFactory.createDefaultModel();
-            InputStream in = new ByteArrayInputStream(testJSON.replace(testDataURI, servicesURI).getBytes(StandardCharsets.UTF_8));
+            InputStream in = new ByteArrayInputStream(testJSON.replace(testDataURI, servicesURI).
+                    getBytes(StandardCharsets.UTF_8));
             RDFDataMgr.read(comparison, in, JSONLD);
             XURI xuri = null;
             try {
@@ -144,8 +144,7 @@ public class EntityServiceImplTest {
             Model toBeTested = service.retrieveById(xuri);
             boolean value = toBeTested.isIsomorphicWith(comparison);
             assertTrue("Models were not isomorphic", value);
-        });
-
+        }
     }
 
     @Test
@@ -496,6 +495,10 @@ public class EntityServiceImplTest {
             case "subject":
                 resourceClass = "Subject";
                 resourceURI = subjectURI;
+                break;
+            case "genre":
+                resourceClass = "Genre";
+                resourceURI = genreURI;
                 break;
             default:
                 break;

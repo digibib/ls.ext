@@ -39,7 +39,9 @@ class UniqueURIGenerator {
                 break;
             case "Subject": result = baseURI.subject() + "e" + uniquePart;
                 break;
-            default:            throw new IllegalArgumentException("Unknown URI-type");
+            case "Genre": result = baseURI.genre() + "m" + uniquePart;
+                break;
+            default:            throw new IllegalArgumentException("Unknown URI-type " + type);
         }
         return result;
     }

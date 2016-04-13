@@ -81,6 +81,8 @@ public class SearchServiceImpl implements SearchService {
                 break;
             case SERIAL: doIndexSerial(xuri);
                 break;
+            case GENRE: doIndex(xuri);
+                break;
             default: break;
         }
     }
@@ -124,6 +126,7 @@ public class SearchServiceImpl implements SearchService {
             putIndexMapping(httpclient, "publisher");
             putIndexMapping(httpclient, "placeOfPublication");
             putIndexMapping(httpclient, "subject");
+            putIndexMapping(httpclient, "genre");
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
@@ -206,6 +209,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public final Response searchSubject(String query) {
         return doSearch(query, getSubjectSearchUriBuilder());
+    }
+
+    @Override
+    public final Response searchGenre(String query) {
+        return doSearch(query, getGenreSearchUriBuilder());
     }
 
     private void doIndexWork(XURI xuri, boolean indexedPerson) throws Exception {
@@ -322,5 +330,9 @@ public class SearchServiceImpl implements SearchService {
 
     public final URIBuilder getSubjectSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/subject/_search");
+    }
+
+    public final URIBuilder getGenreSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/genre/_search");
     }
 }

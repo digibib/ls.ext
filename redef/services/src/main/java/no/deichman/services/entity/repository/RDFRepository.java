@@ -21,6 +21,7 @@ public interface RDFRepository {
     String createPublisher(Model inputModel) throws Exception;
     String createSerial(Model inputModel)  throws Exception;
     String createSubject(Model inputModel) throws Exception;
+    String createGenre(Model inputModel) throws Exception;
 
     void createResource(Model model) throws Exception;
 

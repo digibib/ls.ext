@@ -61,7 +61,6 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         }
     }
 
-
     @Override
     public final Model retrieveWorkAndLinkedResourcesByURI(XURI xuri) {
         log.debug("Attempting to retrieve: <" + xuri.getUri() + ">");
@@ -145,6 +144,11 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
         executeUpdate(updateRequest);
         return uri;
+    }
+
+    @Override
+    public final String createGenre(Model inputModel) throws Exception {
+        return createResource(inputModel, "Genre");
     }
 
     @Override

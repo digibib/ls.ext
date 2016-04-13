@@ -72,4 +72,8 @@ public final class BaseURI {
     public String subject() {
         return baseUriRoot + "subject/";
     }
+
+    public String genre() {
+        return baseUriRoot + "genre/";
+    }
 }
