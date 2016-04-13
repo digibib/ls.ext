@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
   const compiler = webpack(webpackConfig)
   app.use(require('webpack-dev-middleware')(compiler, {
     watchOptions: {
-      poll: process.env.POLL || false
+      poll: JSON.parse(process.env.POLL || false)
     },
     noInfo: true,
     publicPath: webpackConfig.output.publicPath

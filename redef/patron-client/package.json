@@ -25,6 +25,7 @@
     "build": "npm run clean && webpack",
     "clean": "rimraf public/dist",
     "lint": "eslint *.js test src",
+    "dockerdev": "cross-env POLL=true npm start",
     "dist": "npm run clean && npm run lint && npm test && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
     "productionbuild": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
     "start": "npm run build && node src/backend/server.js",
