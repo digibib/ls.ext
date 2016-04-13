@@ -58,7 +58,7 @@ esac
 sudo docker-compose stop overview && sudo docker-compose rm -f overview
 sudo docker-compose up -d
 
-if [ ! "$1" = "prod"]
+if [ "$1" = "prod"]
   exit 0
 fi
 
