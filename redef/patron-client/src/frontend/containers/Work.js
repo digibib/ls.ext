@@ -7,6 +7,7 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import Constants from '../constants/Constants'
 import Creators from '../components/Creators'
 import Publications from '../components/Publications'
+import Genres from '../components/Genres'
 
 const Work = React.createClass({
   propTypes: {
@@ -31,9 +32,7 @@ const Work = React.createClass({
     return <div></div>
   },
   renderCreators (creators) {
-    return creators.map(creator => {
-      return <u key={creator.relativeUri}>{creator.name}</u>
-    })
+    return creators.map(creator => <u key={creator.relativeUri}>{creator.name}</u>)
   },
   renderTitle (work) {
     let title = work.mainTitle
@@ -82,6 +81,7 @@ const Work = React.createClass({
             <h2 data-automation-id='work_title'>{this.renderTitle(work)}</h2>
             <Creators creators={work.creators}/>
             {this.renderYear(work)}
+            <Genres genres={work.genres}/>
           </div>
         </div>
         <Publications locationQuery={this.props.locationQuery}
