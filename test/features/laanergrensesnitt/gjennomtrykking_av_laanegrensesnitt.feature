@@ -71,6 +71,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "Search"
 
+  @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
