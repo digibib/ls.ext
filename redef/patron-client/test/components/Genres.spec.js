@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 import expect from 'expect'
-import React, { PropTypes } from 'react'
+import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
