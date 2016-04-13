@@ -44,9 +44,19 @@ WHERE {
   OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
 
   OPTIONAL {
-    ?work deich:subject ?subject .
-    ?subject a deich:Subject ;
-            deich:name ?subjectName  .
+    {
+      ?work deich:subject ?subject .
+      ?subject a deich:Subject ;
+              deich:name ?subjectName  .
+    } UNION {
+      ?work deich:subject ?subject .
+      ?subject a deich:Work ;
+              deich:mainTitle ?subjectName  .
+    } UNION {
+      ?work deich:subject ?subject .
+      ?subject a deich:Person ;
+              deich:name ?subjectName  .
+    }
   }
 
   OPTIONAL {
