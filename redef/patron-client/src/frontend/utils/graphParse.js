@@ -56,6 +56,14 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     work.genres.push(genre)
   })
 
+  work.subjects = []
+  workResource.outAll('subject').forEach(subjectResource => {
+    let subject = {}
+    populateLiteral(subject, 'name', subjectResource)
+    subject.relativeUri = relativeUri(subjectResource.id)
+    work.subjects.push(subject)
+  })
+
   work.publications = []
   workGraph.byType('Publication').forEach(publicationResource => {
     let publication = { items: [] }

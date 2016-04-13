@@ -46,5 +46,6 @@ export default {
   'Work.noWork': 'Inget verk',
   'Work.firstTimePublished': 'Første gang utgitt:',
   'Work.workInformation': 'Verksinformasjon',
-  'Genres.genre': 'Sjanger:'
+  'Genres.genre': 'Sjanger:',
+  'Subjects.subject': 'Emne:'
 }

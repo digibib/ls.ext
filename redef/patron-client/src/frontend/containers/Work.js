@@ -8,6 +8,7 @@ import Constants from '../constants/Constants'
 import Creators from '../components/Creators'
 import Publications from '../components/Publications'
 import Genres from '../components/Genres'
+import Subjects from '../components/Subjects'
 
 const Work = React.createClass({
   propTypes: {
@@ -81,6 +82,7 @@ const Work = React.createClass({
             <h2 data-automation-id='work_title'>{this.renderTitle(work)}</h2>
             <Creators creators={work.creators}/>
             {this.renderYear(work)}
+            <Subjects subjects={work.subjects}/>
             <Genres genres={work.genres}/>
           </div>
         </div>
