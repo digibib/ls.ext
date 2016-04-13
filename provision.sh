@@ -59,10 +59,12 @@ sudo docker-compose stop overview && sudo docker-compose rm -f overview
 sudo docker-compose up -d
 
 if [ ! "$1" = "prod"]
-  echo -e "\n7) Attempting to set up Elasticsearch indices and mappings"
-  for i in {1..10}; do
-    wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "localhost:8005/search/clear_index" &> /dev/null
-    if [ $? = 0 ]; then break; fi;
-    sleep 3s;
-  done;
+  exit 0
 fi
+
+echo -e "\n7) Attempting to set up Elasticsearch indices and mappings"
+for i in {1..10}; do
+  wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "localhost:8005/search/clear_index" &> /dev/null
+  if [ $? = 0 ]; then break; fi;
+  sleep 3s;
+done;
