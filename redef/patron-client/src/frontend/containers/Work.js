@@ -30,10 +30,7 @@ const Work = React.createClass({
     )
   },
   renderEmpty () {
-    return <div></div>
-  },
-  renderCreators (creators) {
-    return creators.map(creator => <u key={creator.relativeUri}>{creator.name}</u>)
+    return <div />
   },
   renderTitle (work) {
     let title = work.mainTitle
@@ -61,6 +58,8 @@ const Work = React.createClass({
     let work = this.props.resources[ `${Constants.backendUri}/work/${this.props.params.workId}` ]
     if (!work) {
       return this.renderNoWork()
+    } else {
+      work = { ...work }
     }
 
     if (this.props.params.publicationId) {
