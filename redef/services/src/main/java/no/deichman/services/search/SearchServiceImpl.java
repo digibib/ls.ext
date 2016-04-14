@@ -21,6 +21,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -235,7 +236,11 @@ public class SearchServiceImpl implements SearchService {
         if (!indexedWork) {
             ResIterator subjectIterator = works.listSubjects();
             while (subjectIterator.hasNext()) {
-                XURI workUri = new XURI(subjectIterator.next().toString());
+                Resource subj = subjectIterator.next();
+                if (subj.isAnon()) {
+                    continue;
+                }
+                XURI workUri = new XURI(subj.toString());
                 if (!workUri.getUri().equals(xuri.getUri())) {
                     doIndexWorkOnly(workUri);
                 }
