@@ -22,9 +22,7 @@ export default React.createClass({
         </tr>
         </thead>
         <tbody data-automation-id='work_items'>
-        {this.props.items.map(item => {
-          return <Item key={item.barcode} item={item}/>
-        })}
+        {this.props.items.map(item => <Item key={item.barcode} item={item}/>)}
         </tbody>
       </table>
     )

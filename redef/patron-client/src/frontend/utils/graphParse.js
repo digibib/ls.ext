@@ -79,17 +79,23 @@ export function parseWorkResponse (workResponse, itemsResponse) {
       let item = {}
       populateLiteral(item, 'shelfmark', itemResource)
       populateLiteral(item, 'status', itemResource)
-      console.log(item.shelfmark, item.status)
-      if (items[ item.shelfmark ]) {
-        items[ item.shelfmark ].count++
+      populateLiteral(item, 'location', itemResource)
+      let key = `${item.location}_${item.shelfmark}`
+      if (items[ key ]) {
+        items[ key ].count++
         if (item.status === 'AVAIL') {
-          items[ item.shelfmark ].status = 'AVAIL'
+          items[ key ].status = 'AVAIL'
+        } else {
+          let date = new Date(item.status)
+          if (items[ key ].status !== 'AVAIL' && !isNaN(date.getTime()) && date > items[ key ].status) {
+            items[ key ].status = date
+          }
         }
       } else {
         populateLiteral(item, 'branch', itemResource)
         populateLiteral(item, 'barcode', itemResource)
         item.count = 1
-        items[ item.shelfmark ] = item
+        items[ key ] = item
       }
     })
     Object.keys(items).forEach(key => {
