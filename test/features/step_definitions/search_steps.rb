@@ -53,5 +53,10 @@ When(/^jeg søker på verket i lånergrensesnittet basert på det første og sis
   page.visit
   split_title = @context[:work_maintitle].split(' ')
   search_query = [split_title.first, split_title.last].join(' ')
+
+  # step "jeg vil finne verket i trefflista" is checking publication title, not sure why
+  # for this particular test it should be work title. TODO find out why and make it consistent
+  @context[:publication_maintitle] = @context[:work_maintitle]
+
   page.search_with_text(search_query)
 end

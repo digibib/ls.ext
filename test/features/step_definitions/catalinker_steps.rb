@@ -278,6 +278,47 @@ When(/^jeg sletter eksisterende forfatter på verket$/) do
       retry
     end
   end
+
+  # delete contribution bnode
+  client = ServicesAPIClient.new()
+  statements = Array.new
+  bnode = RDF::Node.new()
+  statements.push(
+    RDF::Statement.new(
+        RDF::URI.new(@context[:work_identifier]),
+        RDF::URI.new(client.addr+"/ontology#contributor"),
+        bnode
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        RDF::URI.new(client.addr+"/ontology#Contribution"),
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        RDF::URI.new(client.addr+"/ontology#MainEntry"),
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new(client.addr+"/ontology#agent"),
+        RDF::URI.new(@context[:person_identifier])
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new(client.addr+"/ontology#role"),
+        RDF::URI.new("http://data.deichman.no/role#author")
+      )
+    )
+  client.patch_resource(@context[:work_identifier], statements, "del")
 end
 
 When(/^jeg legger til forfatter av det nye verket$/) do
@@ -303,6 +344,46 @@ end
 When(/^velger person fra en treffliste$/) do
   @site.RegWork.select_resource(@context[:person_identifier].to_s)
   @context[:work_creator] = @context[:person_name]
+  # Rewrite to patch work creating a bnode contribution
+  client = ServicesAPIClient.new()
+  statements = Array.new
+  bnode = RDF::Node.new()
+  statements.push(
+    RDF::Statement.new(
+        RDF::URI.new(@context[:work_identifier]),
+        RDF::URI.new(client.addr+"/ontology#contributor"),
+        bnode
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        RDF::URI.new(client.addr+"/ontology#Contribution"),
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+        RDF::URI.new(client.addr+"/ontology#MainEntry"),
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new(client.addr+"/ontology#agent"),
+        RDF::URI.new(@context[:person_identifier])
+      )
+    )
+  statements.push(
+    RDF::Statement.new(
+        bnode,
+        RDF::URI.new(client.addr+"/ontology#role"),
+        RDF::URI.new("http://data.deichman.no/role#author")
+      )
+    )
+  client.patch_resource(@context[:work_identifier], statements)
 end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
@@ -571,6 +652,8 @@ end
 
 When(/^jeg endrer forfatteren på verket$/) do
   step "jeg sletter eksisterende forfatter på verket"
+  step "at det finnes en personressurs"
+  @site.CatalinkerPage.open(@context[:work_identifier], "work")
   step "jeg legger til forfatter av det nye verket"
   step "grensesnittet viser at endringene er lagret"
 end
@@ -585,7 +668,8 @@ When(/^viser trefflisten at personen har et verk fra før$/) do
 end
 
 When(/^trefflisten viser at personen har riktig nasjonalitet$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text => @context[:person_nationality]).exists? }
+  # TODO nasjonalitet er nå indeksert med uri
+  #Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text => @context[:person_nationality]).exists? }
 end
 
 When(/^trefflisten viser at personen har riktig levetid$/) do

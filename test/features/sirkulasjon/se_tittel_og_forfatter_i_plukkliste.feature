@@ -65,7 +65,6 @@ Egenskap: Se tittel og forfatter i plukkliste
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Og jeg besøker bokposten
     Så ser jeg forfatteren i bokposten
-    Gitt at det finnes en personressurs
     Når jeg åpner verket for redigering
     Og jeg endrer forfatteren på verket
     Og jeg sørger for at utgivelsen er synkronisert i Koha

@@ -21,7 +21,7 @@ export function processSearchResponse (response, locationQuery) {
       }
 
       let chosenPublication = approximateBestTitle(work.publications, element.highlight)
-      if (chosenPublication) {
+      if (chosenPublication && chosenPublication.mainTitle) {
         work.mainTitle = chosenPublication.mainTitle
         work.partTitle = chosenPublication.partTitle
         work.relativeUri = `${work.relativeUri}${relativeUri(chosenPublication.uri)}`

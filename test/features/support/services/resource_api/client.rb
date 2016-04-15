@@ -33,14 +33,14 @@ class ServicesAPIClient < Service
     RDF::Graph.load(URI(resource), format: :jsonld)
   end
 
-  def patch_resource(resource, statements)
+  def patch_resource(resource, statements, op="add")
     patches = []
     statements.each { |stmt|
-      patches << {:op => "add",
+      patches << {:op => op,
                   :s => stmt.subject,
                   :p => stmt.predicate,
-                  :o => { :value => stmt.object.uri? ?  stmt.object.value : stmt.object,
-                          :type => stmt.object.uri? ? "http://www.w3.org/2001/XMLSchema#anyURI" : stmt.object.datatype}
+                  :o => { :value => stmt.object.uri? ? stmt.object.value : stmt.object,
+                          :type => (stmt.object.uri? || stmt.object.node?) ? "http://www.w3.org/2001/XMLSchema#anyURI" : stmt.object.datatype}
       }
     }
     uri = URI(resource)
