@@ -1,5 +1,6 @@
 /*eslint-disable max-len,quotes*/
 export default {
+  'Genres.genre': 'Sjanger:',
   'Item.available': 'Ledig',
   'Item.expectedAvailable': 'Forventet {status}',
   'Items.branch': 'filial',
@@ -40,12 +41,11 @@ export default {
   'SearchResults.totalHits': 'Ditt søk på "<span data-automation-id="current-search-term">{searchQuery}</span>" ga <span data-automation-id="hits-total">{totalHits}</span> treff',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResults.searchForWork': 'Søk etter verk',
+  'Subjects.subject': 'Emne:',
   'Person.noPerson': 'Ingen person',
   'Person.nationality': 'nasjonalitet:',
   'Person.work': 'Verk',
   'Work.noWork': 'Inget verk',
   'Work.firstTimePublished': 'Første gang utgitt:',
-  'Work.workInformation': 'Verksinformasjon',
-  'Genres.genre': 'Sjanger:',
-  'Subjects.subject': 'Emne:'
+  'Work.workInformation': 'Verksinformasjon'
 }
