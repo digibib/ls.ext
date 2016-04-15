@@ -119,10 +119,10 @@ public class AppTest {
 
     private static JsonArrayBuilder buildContributorPatchStatement(String resource, String person) {
         return Json.createArrayBuilder()
-                .add(createObjectBuilder().add("op", "add").add("s", resource).add("p", baseUri+"contributor").add("o", createObjectBuilder().add("value", "_:c1").add("type", ANY_URI)))
-                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type").add("o", createObjectBuilder().add("value", baseUri+"Contribution").add("type", ANY_URI)))
-                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", baseUri+"role").add("o", createObjectBuilder().add("value", "http://data.deichman.no/role#author").add("type", ANY_URI)))
-                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", baseUri+"agent").add("o", createObjectBuilder().add("value", person).add("type", ANY_URI)));
+                .add(createObjectBuilder().add("op", "add").add("s", resource).add("p", baseUri+"ontology#contributor").add("o", createObjectBuilder().add("value", "_:c1").add("type", ANY_URI)))
+                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type").add("o", createObjectBuilder().add("value", baseUri+"ontology#Contribution").add("type", ANY_URI)))
+                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", baseUri+"ontology#role").add("o", createObjectBuilder().add("value", "http://data.deichman.no/role#author").add("type", ANY_URI)))
+                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", baseUri+"ontology#agent").add("o", createObjectBuilder().add("value", person).add("type", ANY_URI)));
     }
 
     private static JsonArray buildLDPatch(JsonObjectBuilder... patchStatements) {
@@ -360,7 +360,7 @@ public class AppTest {
         Unirest.get(workUri).asJson();
         HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
         assertNotNull(stringHttpResponse);
-    //    doSearchForWorks("Sult");
+        doSearchForWorks("Sult");
         doSearchForPersons("Hamsun");
 
         //Change the work title and search for it again.
@@ -370,7 +370,7 @@ public class AppTest {
         final JsonArray addNewTitleToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Metthet"));
         final HttpResponse<String> patchAddNewTitleToWorkPatchResponse = buildPatchRequest(workUri, addNewTitleToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNewTitleToWorkPatchResponse);
-    //    doSearchForWorks("Metthet");
+        doSearchForWorks("Metthet");
 
         //Change the person name and search for it again.
         final JsonArray delCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("del", personUri, baseUri + "ontology#name", "Knut Hamsun"));
@@ -379,7 +379,7 @@ public class AppTest {
         final JsonArray addNewCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#name", "George Orwell"));
         final HttpResponse<String> patchAddNewCreatorNameToPersonPatchResponse = buildPatchRequest(personUri, addNewCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchAddNewCreatorNameToPersonPatchResponse);
-    //    doSearchForPersons("Orwell");
+        doSearchForPersons("Orwell");
     }
 
     @Test
