@@ -87,7 +87,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
           items[ key ].status = 'AVAIL'
         } else {
           let date = new Date(item.status)
-          if (items[ key ].status !== 'AVAIL' && !isNaN(date.getTime()) && date > items[ key ].status) {
+          if (items[ key ].status !== 'AVAIL' && !isNaN(date.getTime()) && date < items[ key ].status) {
             items[ key ].status = date
           }
         }
