@@ -60,6 +60,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker på første treff
     Så skal skal tittel prefikset "pubprefix1" og som inneholder "eng" vises på verkssiden
 
+  @wip
   Scenario: Velge språk
     Gitt at jeg er i søkegrensesnittet
     Så skal språket "Norsk" være valgt
@@ -71,7 +72,6 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "Search"
 
-  @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)

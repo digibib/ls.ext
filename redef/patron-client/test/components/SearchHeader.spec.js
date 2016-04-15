@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+/* global findElementByDataAutomationId */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -40,8 +41,8 @@ describe('components', () => {
   describe('SearchHeader', () => {
     it('should search initial value from locationQuery', () => {
       const { output, props } = setup({ locationQuery: { query: 'testvalue' } })
-      let searchButton = TestUtils.findRenderedDOMComponentWithTag(output, 'form')
-      TestUtils.Simulate.submit(searchButton)
+      let searchButton = findElementByDataAutomationId(output, 'search_button')
+      TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
       expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ 'testprefix_testvalue' ])
     })
@@ -49,8 +50,8 @@ describe('components', () => {
       const { output, props } = setup()
       let searchInput = TestUtils.findRenderedDOMComponentWithTag(output, 'input')
       TestUtils.Simulate.change(searchInput, { target: { value: 'testvalue' } })
-      let searchButton = TestUtils.findRenderedDOMComponentWithTag(output, 'form')
-      TestUtils.Simulate.submit(searchButton)
+      let searchButton = findElementByDataAutomationId(output, 'search_button')
+      TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
       expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ 'testprefix_testvalue' ])
     })

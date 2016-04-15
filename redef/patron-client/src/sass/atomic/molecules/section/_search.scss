@@ -1,0 +1,30 @@
+.search-container {
+  @extend %container;
+  margin: rhythm(2) 0;
+}
+
+
+.search-box {
+  @include span(12 of 12);
+  background: $greyColor;
+  padding: rhythm(1);
+
+  input {
+    @include span(9 of 12);
+
+    @include breakpoint($medium){
+      @include span(9 of 11);
+      margin: auto 1% auto 0;
+    }
+  }
+
+  .search-submit {
+    background: $blackColor;
+    color: $white;
+    padding: rhythm(3);
+    @include span(2 of 12);
+    margin: auto 0;
+    text-transform: uppercase;
+    text-align: center;
+  }
+}

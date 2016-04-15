@@ -13,7 +13,9 @@ const SearchResult = React.createClass({
     }
     return (
       <p data-automation-id='work_contributors'> {contributors.map(contribution => (
-        <span key={contribution.agent.relativeUri}>{this.props.intl.formatMessage({id: contribution.role})}: <strong><Link to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></strong></span>
+        <span
+          key={contribution.agent.relativeUri}>{this.props.intl.formatMessage({ id: contribution.role })}: <strong><Link
+          to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></strong></span>
       ))}
       </p>
     )

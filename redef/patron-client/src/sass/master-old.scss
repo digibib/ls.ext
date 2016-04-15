@@ -214,7 +214,7 @@ html, body {
 
 /* responsive logic */
 
-@media only screen and (min-width: 76em) {
+/*@media only screen and (min-width: 76em) {
   .filters {
     width: 25%;
     height: 100%;
@@ -228,7 +228,7 @@ html, body {
     position: relative;
     float: right;
   }
-}
+}*/
 
 /* application styles */
 a {
@@ -271,26 +271,26 @@ input[type="checkbox"] {
   display: none
 }
 
-.container {
+/*.container {
   margin: 0 auto;
   max-width: 75rem;
   width: 90%;
-}
+}*/
 
-header {
+/*header {
   background: #eee;
   padding: 1em 0;
-}
+}*/
 
-header .col {
+/*header .col {
   width: 50%
 }
 
 header input[type="search"] {
   width: 60%;
-}
+}*/
 
-header button {
+/*header button {
   margin-left: 2em;
 }
 
@@ -299,7 +299,7 @@ header button, input[type="search"] {
   height: 2em;
   min-width: 6em;
   font-size: 1em;
-}
+}*/
 
 .panel {
 }
@@ -394,7 +394,7 @@ ul.pagination li:not(.active) a:hover {
   background-color: #eee;
 }
 
-ul.searchfilters {
+/*ul.searchfilters {
   list-style: none none;
   margin: 0;
   padding: 0;
@@ -402,7 +402,7 @@ ul.searchfilters {
 
 ul.searchfilters li {
   cursor: default
-}
+}*/
 
 span.workTitle {
   font-size: 110%;

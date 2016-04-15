@@ -31,19 +31,9 @@ function setup (propOverrides) {
 
 describe('components', () => {
   describe('SearchResults', () => {
-    it('should render no search', () => {
-      const { node } = setup()
-      expect(node.querySelectorAll("[data-automation-id='no-search']").length).toBe(1)
-    })
-
     it('should search on mount when query is provided', () => {
       const { props } = setup({ locationQuery: { query: 'test_query' } })
       expect(props.searchActions.search).toHaveBeenCalled()
-    })
-
-    it('should render search term', () => {
-      const { node, props } = setup({ locationQuery: { query: 'test_query' } })
-      expect(node.querySelector("[data-automation-id='current-search-term']").textContent).toEqual(props.locationQuery.query)
     })
 
     it('should render search error', () => {

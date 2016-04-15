@@ -1,0 +1,47 @@
+@mixin createListGallery($totalNumberOfColumns, $numberOfColsPrRow, $m:4) {
+  @include gallery(($totalNumberOfColumns / $numberOfColsPrRow) of $totalNumberOfColumns);
+  &:nth-child(#{"n+"}#{$numberOfColsPrRow + 1}) {margin-top: rhythm($m);}
+  margin-bottom: 0;
+}
+
+@mixin center-list-items() {
+  display: table;   //Allow the centering to work
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin no-hyphination() {
+  -ms-word-break: normal;
+  word-break: normal;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  -webkit-hyphens: none;
+  hyphens: none;
+}
+
+@mixin show-my-grid {
+
+  $susy : (
+          debug: (
+                  image: show
+          ),
+  );
+
+  @include container();
+
+  @media (min-width: $lt-small) {
+    @include show-grid(2);
+  }
+
+  @media (min-width: $small) {
+    @include show-grid(4);
+  }
+
+  @media (min-width: $medium) {
+    @include show-grid(8);
+  }
+
+  @media (min-width: 1200px) {
+    @include show-grid(12);
+  }
+}

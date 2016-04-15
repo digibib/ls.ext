@@ -12,6 +12,6 @@ export function inPreferredLanguage (literals) {
     return literals.en
   }
   for (var lang in literals) { // 4. Velg et vilkårlig språk
-    return literals[lang]
+    return literals[ lang ]
   }
 }

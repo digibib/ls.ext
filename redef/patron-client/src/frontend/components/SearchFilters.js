@@ -25,7 +25,7 @@ export default React.createClass({
       })
 
       return (
-        <aside className='col filters'>
+        <aside className='filters'>
           <h3><FormattedMessage {...messages.limit} /></h3>
           <div data-automation-id='search_filters'>
             {Object.keys(groupedFilters).map(aggregation => {

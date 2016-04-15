@@ -27,32 +27,32 @@ const Publication = React.createClass({
            data-automation-id={`publication_${publication.uri}`}>
         <div className='book-cover'/>
         <div className='publication-text'>
-            <p>
+          <p>
               <span data-automation-id='publication_title'>
                 {this.renderTitle(publication)}
               </span>
-            </p>
-            <p>
+          </p>
+          <p>
               <span data-automation-id='publication_year'>
                 {publication.publicationYear}
               </span>
-            </p>
-            <p>
+          </p>
+          <p>
               <span data-automation-id='publication_language'>
                 {publication.language ? this.props.intl.formatMessage({ id: publication.language }) : ''}
               </span>
-            </p>
-            <p>
+          </p>
+          <p>
               <span data-automation-id='publication_format'>
                 {publication.format ? this.props.intl.formatMessage({ id: publication.format }) : ''}
               </span>
-            </p>
-            <p>
+          </p>
+          <p>
               <span data-automation-id='publication_available'>
                 <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
               </span>
-            </p>
-          </div>
+          </p>
+        </div>
       </div>
     )
   }

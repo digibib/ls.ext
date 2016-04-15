@@ -33,7 +33,7 @@ module.exports = {
     loaders: [
       {
         test: /\.scss$/,
-        loaders: [ 'style', 'css', 'sass' ],
+        loaders: [ 'style-loader', 'raw-loader', `sass-loader?includePaths[]=${path.resolve(__dirname, './node_modules/compass-mixins/lib')}&includePaths[]=${path.resolve(__dirname, './mixins/app_mixins')}` ],
         include: path.join(__dirname, 'src/sass')
       },
       {

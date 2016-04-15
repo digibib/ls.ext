@@ -11,7 +11,8 @@ const App = React.createClass({
     location: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired,
     languageActions: PropTypes.object.isRequired,
-    locale: PropTypes.string.isRequired
+    locale: PropTypes.string.isRequired,
+    totalHits: PropTypes.number.isRequired
   },
   componentWillMount () {
     this.props.languageActions.loadLanguage()
@@ -22,6 +23,7 @@ const App = React.createClass({
         <SearchHeader locationQuery={this.props.location.query} dispatch={this.props.dispatch}
                       loadLanguage={this.props.languageActions.loadLanguage}
                       locale={this.props.locale}
+                      totalHits={this.props.totalHits}
         />
         {this.props.children}
       </div>
@@ -32,7 +34,8 @@ const App = React.createClass({
 function mapStateToProps (state) {
   return {
     routing: state.routing,
-    locale: state.application.locale
+    locale: state.application.locale,
+    totalHits: state.search.totalHits
   }
 }
 

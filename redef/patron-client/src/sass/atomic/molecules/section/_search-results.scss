@@ -1,0 +1,30 @@
+.search-results {
+  @include span(8 of 12);
+  margin-right: 0;
+  border-top: 2px solid $blackColor;
+  padding-top: rhythm(2);
+}
+
+.search-results-footer {
+  @include span(8 of 12);
+  @include push(4 of 12);
+  margin-bottom: rhythm(2);
+}
+
+.search-results-number {
+  @include span(5 of 12);
+}
+
+.search-sorting {
+  @include span(3 of 12);
+  float: right;
+
+  select {
+    width: 100%;
+  }
+
+  option {
+    padding: rhythm(2);
+  }
+
+}
