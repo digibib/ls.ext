@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { replace } from 'react-router-redux'
+import { push, replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import { parsePersonResponse, parseWorkResponse } from '../utils/graphParse'
@@ -33,7 +33,7 @@ export function resourceFailure (error) {
   }
 }
 
-export function expandSubResource (id, router) {
+export function expandSubResource (id, router, replacePath) {
   return (dispatch, getState) => {
     let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     if (!id) {
@@ -45,7 +45,9 @@ export function expandSubResource (id, router) {
       pathname: getState().routing.locationBeforeTransitions.pathname,
       query: locationQuery
     })
-    return dispatch(replace(url))
+    return replacePath
+      ? dispatch(replace(url))
+      : dispatch(push(url))
   }
 }
 

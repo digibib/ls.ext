@@ -9,7 +9,7 @@ import { IntlProvider } from 'react-intl'
 function setup (propOverrides) {
   const props = {
     locationQuery: {},
-    totalHits: '0',
+    totalHits: 0,
     ...propOverrides
   }
 
@@ -34,9 +34,9 @@ describe('components', () => {
     })
 
     it('should render search term and total hits', () => {
-      const { node, props } = setup({ locationQuery: { query: 'test_query' }, totalHits: '11' })
+      const { node, props } = setup({ locationQuery: { query: 'test_query' }, totalHits: 11 })
       expect(node.querySelector("[data-automation-id='current-search-term']").textContent).toEqual(props.locationQuery.query)
-      expect(node.querySelector("[data-automation-id='hits-total']").textContent).toEqual(props.totalHits)
+      expect(node.querySelector("[data-automation-id='hits-total']").textContent).toEqual(String(props.totalHits))
     })
   })
 })

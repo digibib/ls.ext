@@ -16,7 +16,7 @@ export default React.createClass({
   },
   componentWillMount () {
     if (this.props.publications.length === 1) {
-      this.props.expandSubResource(this.props.publications[ 0 ].id, this.context.router)
+      this.props.expandSubResource(this.props.publications[ 0 ].id, this.context.router, true)
     }
   },
   renderEmpty () {

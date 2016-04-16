@@ -14,6 +14,7 @@ function setup (propOverrides) {
     loadLanguage: expect.createSpy(),
     dispatch: expect.createSpy(),
     locationQuery: {},
+    totalHits: 0,
     ...propOverrides
   }
 
