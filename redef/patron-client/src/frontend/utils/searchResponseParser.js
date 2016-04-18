@@ -19,6 +19,9 @@ export function processSearchResponse (response, locationQuery) {
       if (!(work.publications instanceof Array)) {
         work.publications = [ work.publications ]
       }
+      work.publications.forEach(publication => {
+        publication.language = publication.language || []
+      })
 
       let chosenPublication = approximateBestTitle(work.publications, element.highlight)
       if (chosenPublication && chosenPublication.mainTitle) {
