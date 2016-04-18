@@ -68,11 +68,11 @@ export function approximateBestTitle (publications, highlight) {
     )
   })
   return (
-    filteredPublications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/nob')[ 0 ] ||
-    filteredPublications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/eng')[ 0 ] ||
+    filteredPublications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/nob'))[ 0 ] ||
+    filteredPublications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/eng'))[ 0 ] ||
     filteredPublications[ 0 ] ||
-    publications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/nob')[ 0 ] ||
-    publications.filter(publication => publication.language === 'http://lexvo.org/id/iso639-3/eng')[ 0 ] ||
+    publications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/nob'))[ 0 ] ||
+    publications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/eng'))[ 0 ] ||
     publications[ 0 ]
   )
 }
