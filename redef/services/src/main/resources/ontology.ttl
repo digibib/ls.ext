@@ -112,6 +112,7 @@
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:gYear .
 
+# Todo: Endres til :hasRecordID
 :recordID a rdfs:Property ;
   ui:editable false ;
   rdfs:label "Record ID"@en ;
@@ -119,6 +120,7 @@
   rdfs:domain :Publication ;
   rdfs:range xsd:nonNegativeInteger .
 
+# Todo: Endres til :hasLanguage
 :language a rdfs:Property ;
   rdfs:label "Language"@en ;
   rdfs:label "Språk"@no ;
@@ -126,6 +128,7 @@
   rdfs:range lvont:Language ;
   duo:valuesFrom values:language .
 
+# Todo: Endres til :hasFormat
 :format a rdfs:Property ;
   rdfs:label "Format"@en ;
   rdfs:label "Format"@no ;
@@ -151,6 +154,7 @@
   rdfs:domain :Person ;
   rdfs:range xsd:gYear.
 
+# Todo: Endres til :hasNationality
 :nationality a rdfs:Property ;
   rdfs:label "Nationality"@en ;
   rdfs:label "Nasjonalitet"@no ;
@@ -158,6 +162,7 @@
   rdfs:range duo:Nationality ;
   duo:valuesFrom values:nationality .
 
+# Todo: Endres til :hasWritingSystem
 :writingSystem a rdfs:Property ;
   rdfs:label "Writing system"@en ;
   rdfs:label "Skriftsystem"@no ;
@@ -165,6 +170,7 @@
   rdfs:range duo:WritingSystem ;
   duo:valuesFrom values:writingSystem .
 
+# Todo: Endres til :hasBinding
 :binding a rdfs:Property ;
   rdfs:label "Binding"@en ;
   rdfs:label "Innbinding"@no ;
@@ -172,6 +178,7 @@
   rdfs:range duo:Binding ;
   duo:valuesFrom values:binding .
 
+# Todo: Endres til :hasIllustrativeMatter
 :illustrativeMatter a rdfs:Property ;
   rdfs:label "Illustrative matter"@en ;
   rdfs:label "Illustrasjonsmateriale"@no ;
@@ -179,30 +186,35 @@
   rdfs:range duo:IllustrativeMatter ;
   duo:valuesFrom values:illustrativeMatter .
 
+# Todo: Endres til :hasGender
 :gender a rdfs:Property ;
   rdfs:label "Gender"@en ;
   rdfs:label "Kjønn"@no ;
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasMainTitle
 :mainTitle a rdfs:Property ;
   rdfs:label "Main title"@en ;
   rdfs:label "Hovedtittel"@no ;
   rdfs:domain :Work, :Publication ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasPartTitle
 :partTitle a rdfs:Property ;
   rdfs:label "Part title"@no ;
   rdfs:label "Deltittel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasSubtitle
 :subtitle a rdfs:Property ;
   rdfs:label "Subtitle"@en ;
   rdfs:label "Undertittel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasPartNumber
 :partNumber a rdfs:Property ;
   rdfs:label "Part number"@en ;
   rdfs:label "Delnummer"@no ;
@@ -215,18 +227,21 @@
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasNumberOfPages
 :numberOfPages a rdfs:Property ;
   rdfs:label "Number of pages"@en ;
   rdfs:label "Sidetall"@no ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasISBN
 :isbn a rdfs:Property ;
   rdfs:label "ISBN"@en ;
   rdfs:label "ISBN"@no ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasLiteraryForm
 :literaryForm a rdfs:Property;
   rdfs:label "Litterær form"@no ;
   rdfs:label "Literary form"@en ;
@@ -234,6 +249,7 @@
   rdfs:range duo:LiteraryForm ;
   duo:valuesFrom values:literaryForm .
 
+# ToDo: Erstattes med :hasAudience
 :audience a rdfs:Property;
   rdfs:label "Målgruppe"@no ;
   rdfs:label "Audience"@en ;
@@ -241,6 +257,7 @@
   rdfs:range duo:Audience ;
   duo:valuesFrom values:audience .
 
+# ToDo: Erstattes med :hasBiograhpical Content
 :biography a rdfs:Property;
   rdfs:label "Biografisk innhold"@no ;
   rdfs:label "Biography"@en ;
@@ -248,6 +265,7 @@
   rdfs:range duo:Biography ;
   duo:valuesFrom values:biography .
 
+# ToDo: Erstattes med :hasFormatAdaptation
 :adaptationOfPublicationForParticularUserGroups a rdfs:Property ;
   rdfs:label "Adaptation for particular user groups"@en ;
   rdfs:label "Tilrettelegging"@no ;
@@ -255,6 +273,7 @@
   rdfs:range duo:AdaptationOfPublicationForParticularUserGroups ;
   duo:valuesFrom values:adaptationOfPublicationForParticularUserGroups .
 
+# ToDo: Erstattes med :hasContentAdaptation
 :adaptationOfWorkForParticularUserGroups a rdfs:Property ;
   rdfs:label "Adaptation for particular user groups"@en ;
   rdfs:label "Tilrettelegging"@no ;
@@ -262,54 +281,66 @@
   rdfs:range duo:AdaptationOfWorkForParticularUserGroups ;
   duo:valuesFrom values:adaptationOfWorkForParticularUserGroups .
 
+# Erstattes med :prefLabel
 :place a rdfs:Property ;
   rdfs:label "Place"@en ;
   rdfs:label "Sted"@no ;
   rdfs:domain :PlaceOfPublication ;
   rdfs:range xsd:string .
 
+# Erstattes med :specification
 :country a rdfs:Property ;
   rdfs:label "Country"@en ;
   rdfs:label "Land"@no ;
   rdfs:domain :PlaceOfPublication ;
   rdfs:range xsd:string .
 
+# ToDo: Erstattes med :hasPlaceOfPublication
 :placeOfPublication a rdfs:Property ;
   rdfs:label "Place of publication"@en ;
   rdfs:label "Utgivelsessted"@no ;
   rdfs:domain :Publication ;
   rdfs:range :PlaceOfPublication .
 
+# ToDo: Erstattes med :hasPublisher
 :publishedBy a rdfs:Property ;
   rdfs:label "Published by"@en ;
   rdfs:label "Utgitt av"@no ;
   rdfs:domain :Publication ;
   rdfs:range :Publisher .
 
+# ToDo: Erstattes med :hasSeriesEntry
+# ToDo: Range: :Issue
 :inSerial a rdfs:Property ;
   rdfs:label "In serial"@en ;
   rdfs:label "I serie"@no ;
   rdfs:domain :Publication ;
   rdfs:range :SerialIssue .
 
+# ToDo: Erstattes med :issueOf
+# ToDo: Domain: :Issue
 :serial a rdfs:Property ;
   rdfs:label "Serial"@en ;
   rdfs:label "Serie"@no ;
   rdfs:domain :SerialIssue ;
   rdfs:range :Serial .
 
+# ToDo: Erstattes med :issueNumber
+# ToDo: Domain: :Issue
 :issue a rdfs:Property ;
   rdfs:label "Issue"@en ;
   rdfs:label "Nummer i serie"@no ;
   rdfs:domain :SerialIssue ;
   rdfs:range xsd:nonNegativeInteger .
 
+# ToDo: Erstattes med :hasContributor
 :contributor a rdfs:Property ;
   rdfs:label "Additional entry"@en ;
   rdfs:label "Biinnførsel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range :Contribution .
 
+# ToDo: Erstattes med :hasRole
 :role a rdfs:Property ;
   rdfs:label "Role"@en ;
   rdfs:label "Rolle"@no ;
@@ -317,6 +348,7 @@
   rdfs:range :Role ;
   rdfs:domain :Contribution .
 
+# ToDo: Erstattes med :hasAgent
 :agent a rdfs:Property ;
   ui:searchable true ;
   rdfs:label "Agent"@en ;
@@ -324,6 +356,7 @@
   rdfs:range :Person ;
   rdfs:domain :Contribution .
 
+# ToDo: Erstattes med :hasGenre
 :genre a rdfs:Property ;
   rdfs:label "Genre"@en ;
   rdfs:label "Sjanger"@no ;
