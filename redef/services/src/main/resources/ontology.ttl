@@ -18,6 +18,10 @@
 :Publication a rdfs:Class ;
   rdfs:label "Publication"@en ;
   rdfs:label "Utgivelse"@no .
+  
+:Agent a rdfs:Class ;
+  rdfs:label "Agent"@en ;
+  rdfs:label "Aktør"@no .
 
 :Person a rdfs:Class ;
   rdfs:label "Person"@en ;
@@ -27,10 +31,12 @@
   rdfs:label "Corporation"@en ;
   rdfs:label "Korporasjon"@no .
 
+# ToDo: Erstattes med :Concept
 :Subject a rdfs:Class ;
   rdfs:label "Subject"@en ;
   rdfs:label "Emne"@no .
 
+# ToDo: Erstattes med :Place
 :PlaceOfPublication a rdfs:Class ;
   rdfs:label "Place of publication"@en ;
   rdfs:label "Utgivelsessted"@no .
@@ -39,10 +45,12 @@
   rdfs:label "Publisher"@en ;
   rdfs:label "Utgiver"@no .
 
+# ToDo: Erstattes med :Series
 :Serial a rdfs:Class ;
   rdfs:label "Serial"@en ;
   rdfs:label "Serie"@no .
 
+# ToDo: Erstattes med :Issue
 :SerialIssue a rdfs:Class ;
   rdfs:label "Serial issue"@en ;
   rdfs:label "Nummer"@no .
@@ -59,18 +67,30 @@
   rdfs:label "Genre"@en ;
   rdfs:label "Sjanger"@no .
 
+:prefLabel a rdfs:Property ;
+  rdfs:label "preferred label"@en ;
+  rdfs:label "foretrukket betegnelse"@no ;
+  rdfs:range xsd:string .
+
+:altLabel a rdfs:Property ;
+  rdfs:label "alternative label"@en ;
+  rdfs:label "alternativ betegnelse"@no ;
+  rdfs:range xsd:string .
+
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
   rdfs:domain :Person, :Publisher, :Serial, :Corporation, :Subject, :Genre ;
   rdfs:range xsd:string .
 
+# ToDo: Erstatte personTitle med :specification. Domain: Person, Corporation, Subject, Place
 :personTitle a rdfs:Property ;
   rdfs:label "Person title"@en ;
   rdfs:label "Personens tittel"@no ;
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
+# ToDo: Fjernes
 :creator a rdfs:Property ;
   ui:searchable true ;
   rdfs:label "Creator"@en ;
@@ -78,12 +98,14 @@
   rdfs:domain :Work ;
   rdfs:range :Person .
 
+# ToDo: Endres til :hasSubject
 :subject a rdfs:Property ;
   rdfs:label "Subject"@en ;
   rdfs:label "Emne"@no ;
   rdfs:domain :Work ;
   rdfs:range :Subject, :Person, :Work .
 
+# Todo: Endres til :hasYear
 :publicationYear a rdfs:Property ;
   rdfs:label "Publication year"@en ;
   rdfs:label "Utgivelsesår"@no ;
