@@ -38,6 +38,8 @@ export function expandSubResource (id, router, replacePath) {
     let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     if (!id) {
       delete locationQuery.showMore
+    } else if (locationQuery.showMore === id) {
+      return
     } else {
       locationQuery.showMore = id
     }
