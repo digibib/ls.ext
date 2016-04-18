@@ -1,10 +1,10 @@
 /* eslint-env mocha */
 import expect from 'expect'
-import React from 'react'
+import React, { PropTypes } from 'react'
 import TestUtils from 'react-addons-test-utils'
-import SearchResult from '../../src/frontend/components/SearchResult'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
+import SearchResult, { __RewireAPI__ as DefaultExportSearchResultRewireApi } from '../../src/frontend/components/SearchResult'
 
 function setup (resultPropOverrides) {
   const props = {
@@ -26,7 +26,9 @@ function setup (resultPropOverrides) {
   const messages = {
     format_1: 'format_1',
     format_2: 'format_2',
-    format_3: 'format_3'
+    format_3: 'format_3',
+    author: 'author',
+    illustrator: 'illustrator'
   }
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en' messages={messages}>
@@ -42,6 +44,24 @@ function setup (resultPropOverrides) {
 }
 
 describe('components', () => {
+  before(() => {
+    DefaultExportSearchResultRewireApi.__Rewire__('Link', React.createClass({
+      propTypes: {
+        to: PropTypes.string.isRequired,
+        children: PropTypes.node
+      },
+      render () {
+        return (
+          <a href={this.props.to}>{this.props.children}</a>
+        )
+      }
+    }))
+  })
+
+  after(() => {
+    DefaultExportSearchResultRewireApi.__ResetDependency__
+  })
+
   describe('SearchResult', () => {
     it('should render the result', () => {
       const { node, props } = setup()

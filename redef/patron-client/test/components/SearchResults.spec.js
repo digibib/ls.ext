@@ -2,7 +2,7 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import SearchResults from '../../src/frontend/components/SearchResults'
+import SearchResults, { __RewireAPI__ as DefaultExportSearchResultsRewireApi } from '../../src/frontend/components/SearchResults'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
@@ -30,6 +30,20 @@ function setup (propOverrides) {
 }
 
 describe('components', () => {
+  before(() => {
+    DefaultExportSearchResultsRewireApi.__Rewire__('SearchResult', React.createClass({
+      render () {
+        return (
+          <div />
+        )
+      }
+    }))
+  })
+
+  after(() => {
+    DefaultExportSearchResultsRewireApi.__ResetDependency__
+  })
+
   describe('SearchResults', () => {
     it('should search on mount when query is provided', () => {
       const { props } = setup({ locationQuery: { query: 'test_query' } })
@@ -44,40 +58,7 @@ describe('components', () => {
     it('should render the correct number of results', () => {
       const { node } = setup({
         locationQuery: { query: 'test_query' },
-        searchResults: [ {
-          originalTitle: 'test_originalTitle1',
-          mainTitle: 'test_mainTitle1',
-          contributor: [ {
-            role: 'author',
-            agent: {
-              name: 'test_creator_name1',
-              relativeUri: 'test_creator_relativeUri1'
-            }
-          } ],
-          relativeUri: 'test_relativeUri1'
-        }, {
-          originalTitle: 'test_originalTitle2',
-          mainTitle: 'test_mainTitle2',
-          contributor: [ {
-            role: 'author',
-            agent: {
-              name: 'test_creator_name2',
-              relativeUri: 'test_creator_relativeUri2'
-            }
-          } ],
-          relativeUri: 'test_relativeUri2'
-        }, {
-          originalTitle: 'test_originalTitle3',
-          mainTitle: 'test_mainTitle3',
-          contributor: [ {
-            role: 'author',
-            agent: {
-              name: 'test_creator_name3',
-              relativeUri: 'test_creator_relativeUri3'
-            }
-          } ],
-          relativeUri: 'test_relativeUri3'
-        } ],
+        searchResults: [ { relativeUri: 'relativeUri_1' }, { relativeUri: 'relativeUri_2' }, { relativeUri: 'relativeUri_3' } ],
         totalHits: 3
       })
 

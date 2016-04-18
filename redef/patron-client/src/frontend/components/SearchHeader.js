@@ -17,23 +17,12 @@ const SearchHeader = React.createClass({
   contextTypes: {
     router: React.PropTypes.object
   },
-  componentWillMount () {
-    this.setState({ searchFieldInput: this.props.locationQuery.query })
-  },
-  getInitialState () {
-    return {
-      searchFieldInput: ''
-    }
-  },
-  handleChange (event) {
-    this.setState({ searchFieldInput: event.target.value })
-  },
   handleChangeLanguage (event) {
     this.props.loadLanguage(event.target.value)
   },
   search (event) {
     event.preventDefault()
-    let url = this.context.router.createPath({ pathname: '/search', query: { query: this.state.searchFieldInput } })
+    let url = this.context.router.createPath({ pathname: '/search', query: { query: this.searchFieldInput.value } })
     this.props.dispatch(push(url))
   },
   render () {
@@ -66,8 +55,8 @@ const SearchHeader = React.createClass({
             <form onSubmit={this.search}>
               <input placeholder={this.props.intl.formatMessage({...messages.searchInputPlaceholder})}
                      type='search'
-                     value={this.state.searchFieldInput}
-                     onChange={this.handleChange}
+                     defaultValue={this.props.locationQuery.query || ''}
+                     ref={e => this.searchFieldInput = e}
                      data-automation-id='search_input_field'
               />
               <button onClick={this.search} type='button' className='search-submit' data-automation-id='search_button'>

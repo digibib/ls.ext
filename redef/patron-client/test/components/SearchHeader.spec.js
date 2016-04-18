@@ -50,7 +50,7 @@ describe('components', () => {
     it('should search with value set from input', () => {
       const { output, props } = setup()
       let searchInput = TestUtils.findRenderedDOMComponentWithTag(output, 'input')
-      TestUtils.Simulate.change(searchInput, { target: { value: 'testvalue' } })
+      ReactDOM.findDOMNode(searchInput).value = 'testvalue'
       let searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()

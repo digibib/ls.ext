@@ -9,9 +9,9 @@ import Genres from '../../src/frontend/components/Genres'
 function setup (propOverrides) {
   const props = {
     genres: [
-      { name: 'genre_1', key: 'relativeUri_1' },
-      { name: 'genre_2', key: 'relativeUri_2' },
-      { name: 'genre_3', key: 'relativeUri_3' }
+      { name: 'genre_1', relativeUri: 'relativeUri_1' },
+      { name: 'genre_2', relativeUri: 'relativeUri_2' },
+      { name: 'genre_3', relativeUri: 'relativeUri_3' }
     ], ...propOverrides
   }
 

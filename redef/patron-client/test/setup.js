@@ -33,3 +33,11 @@ let findElementByDataAutomationId = (root, dataAutomationId, startsWith) => {
 
 global.findElementsByDataAutomationId = findElementsByDataAutomationId
 global.findElementByDataAutomationId = findElementByDataAutomationId
+
+let error = console.error
+console.error = warning => {
+  if (/(Invalid prop|Failed propType|flattenChildren|React Intl|)/.test(warning)) {
+    throw new Error(`Test failed because of warning (warnings not allowed): ${warning}`)
+  }
+  error.apply(console, arguments)
+}

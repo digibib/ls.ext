@@ -9,7 +9,9 @@ import Subjects from '../../src/frontend/components/Subjects'
 function setup (propOverrides) {
   const props = {
     subjects: [
-      { name: 'subject_1' }, { name: 'subject_2' }, { name: 'subject_3' }
+      { name: 'subject_1', relativeUri: 'relativeUri_1' },
+      { name: 'subject_2', relativeUri: 'relativeUri_2' },
+      { name: 'subject_3', relativeUri: 'relativeUri_3' }
     ], ...propOverrides
   }
 
