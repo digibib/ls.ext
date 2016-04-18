@@ -78,7 +78,7 @@ public class ModelToIndexMapper {
     private void indexNodes(Object input) {
         if (input instanceof Map) {
             Map map = (Map) input;
-            if (map.get("uri").getClass() == String.class && map.get("uri") != null) {
+            if (map.containsKey("uri") && map.get("uri").getClass() == String.class && map.get("uri") != null) {
                 String uri = (String) map.get("uri");
                 if (nodeIndex.get(uri) == null && map.get("type") != null && map.get("type").equals(AGENT)) {
                     nodeIndex.put(uri, map);
@@ -99,7 +99,7 @@ public class ModelToIndexMapper {
                 map.putAll((Map) nodeIndex.get(uri));
             }
             map.remove("type");
-            if (map.get("uri").toString().startsWith("_:")) {
+            if (map.containsKey("uri") && map.get("uri").toString().startsWith("_:")) {
                 map.remove("uri");
             }
             map.forEach((key, value) -> removeTypeAndBnodeIdAndEmbedAllNodes(value));

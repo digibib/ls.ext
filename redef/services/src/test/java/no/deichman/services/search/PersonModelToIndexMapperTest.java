@@ -1,11 +1,10 @@
 package no.deichman.services.search;
 
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.riot.Lang;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,109 +16,55 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 public class PersonModelToIndexMapperTest {
     @Test
     public void testModelToIndexDocument() throws Exception {
-        XURI personXuri = new XURI("http://deichman.no/person/p000101");
-        XURI workXuri1 = new XURI("http://deichman.no/work/w0000000001");
-        XURI workXuri2 = new XURI("http://deichman.no/work/w0000000002");
+        XURI personXuri = new XURI("http://deichman.no/person/h1");
 
-        Model model = ModelFactory.createDefaultModel();
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(personXuri.getUri()),
-                RDF.type,
-                ResourceFactory.createResource("http://deichman.no/ontology#Person")));
+        String inputGraph = ""
+                + "@prefix deich: <http://deichman.no/ontology#> .\n"
+                + "@prefix   xsd: <http://www.w3.org/2001/XMLSchema#> .\n"
+                + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+                + "<http://deichman.no/person/h1> a deich:Person ;\n"
+                + "    deich:name \"Hamsun, Knut\" ;\n"
+                + "    deich:nationality <http://deichman.no/nationality#n> ;\n"
+                + "    deich:birthYear \"1859\"^^xsd:gYear ;\n"
+                + "    deich:deathYear \"1952\"^^xsd:gYear .\n"
+                + "\n"
+                + "<http://deichman.no/work/w1> a deich:Work ;\n"
+                + "    deich:mainTitle \"Sult\" ;\n"
+                + "    deich:contributor [\n"
+                + "        a deich:Contribution, deich:MainEntry ;\n"
+                + "        deich:agent <http://deichman.no/person/h1> ;\n"
+                + "        deich:role <http://data.deichman.no/role#author>\n"
+                + "    ] .\n"
+                + "\n"
+                + "<http://deichman.no/work/w2> a deich:Work ;\n"
+                + "    deich:mainTitle \"Pan\" ;\n"
+                + "    deich:contributor [\n"
+                + "        a deich:Contribution, deich:MainEntry ;\n"
+                + "        deich:agent <http://deichman.no/person/h1> ;\n"
+                + "        deich:role <http://data.deichman.no/role#author>\n"
+                + "    ] .\n"
+                + "\n"
+                + "<http://deichman.no/nationality#n> rdfs:label \"Norsk\"@no, \"Norwegian\"@en .";
 
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(personXuri.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/a_prop"),
-                ResourceFactory.createPlainLiteral("a_prop_value")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(personXuri.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#name"),
-                ResourceFactory.createPlainLiteral("personName_value")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(personXuri.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#nationality"),
-                ResourceFactory.createResource("http://deichman.no/nationality#n")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/nationality#n"),
-                RDF.type,
-                ResourceFactory.createResource("http://data.deichman.no/utility#Nationality")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource("http://deichman.no/nationality#n"),
-                ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#label"),
-                ResourceFactory.createLangLiteral("Norsk", "no")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri1.getUri()),
-                RDF.type,
-                ResourceFactory.createResource("http://deichman.no/ontology#Work")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri1.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#creator"),
-                ResourceFactory.createResource(personXuri.getUri())));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri1.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
-                ResourceFactory.createPlainLiteral("work_1_title")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri2.getUri()),
-                RDF.type,
-                ResourceFactory.createResource("http://deichman.no/ontology#Work")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri2.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#creator"),
-                ResourceFactory.createResource(personXuri.getUri())));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri2.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
-                ResourceFactory.createPlainLiteral("work_2_title")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri2.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#mainTitle"),
-                ResourceFactory.createLangLiteral("work_2_english_title", "en")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri2.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
-                ResourceFactory.createPlainLiteral("work_2_part_title")));
-
-        model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(workXuri2.getUri()),
-                ResourceFactory.createProperty("http://deichman.no/ontology#partTitle"),
-                ResourceFactory.createLangLiteral("work_2_english_part_title", "en")));
-
+        Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("person", BaseURI.local()).createIndexDocument(model, personXuri);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
                 + "   \"person\":{"
-                + "      \"uri\":\"" + personXuri.getUri() + "\","
-                + "      \"name\":\"personName_value\","
-                + "      \"nationality\":\"http://deichman.no/nationality#n\","
+                + "      \"uri\":\"http://deichman.no/person/h1\","
+                + "      \"name\":\"Hamsun, Knut\","
+                + "      \"birthYear\":\"1859\","
+                + "      \"deathYear\":\"1952\","
+                + "      \"nationality\":\"Norsk\","
                 + "      \"work\":["
                 + "         {"
-                + "            \"uri\":\"" + workXuri1.getUri() + "\","
-                + "            \"mainTitle\":\"work_1_title\""
+                + "            \"uri\":\"http://deichman.no/work/w1\","
+                + "            \"mainTitle\":\"Sult\""
                 + "         },"
                 + "         {"
-                + "            \"uri\":\"" + workXuri2.getUri() + "\","
-                + "            \"mainTitle\":["
-                + "               \"work_2_title\","
-                + "               \"work_2_english_title\""
-                + "            ],"
-                + "            \"partTitle\":["
-                + "               \"work_2_part_title\","
-                + "               \"work_2_english_part_title\""
-                + "            ]"
+                + "            \"uri\":\"http://deichman.no/work/w2\","
+                + "            \"mainTitle\":\"Pan\""
                 + "         }"
                 + "      ]"
                 + "   }"

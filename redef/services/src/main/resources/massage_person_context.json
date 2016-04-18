@@ -4,7 +4,10 @@
   },
   "type": "Person",
   "@context": {
-    "work": "deichman:work",
+    "work": {
+      "@id": "deichman:work",
+      "@container": "@set"
+    },
     "partTitle": "deichman:partTitle",
     "type": "@type",
     "uri": "@id",
