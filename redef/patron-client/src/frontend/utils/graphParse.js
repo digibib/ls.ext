@@ -70,8 +70,8 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateLiteral(publication, 'mainTitle', publicationResource)
     populateLiteral(publication, 'partTitle', publicationResource)
     populateLiteral(publication, 'publicationYear', publicationResource)
-    populateUri(publication, 'language', publicationResource)
-    populateUri(publication, 'format', publicationResource)
+    populateUris(publication, 'language', publicationResource, 'languages')
+    populateUris(publication, 'format', publicationResource, 'formats')
     publication.uri = publicationResource.id
     publication.id = getId(publicationResource.id)
     let items = {}
@@ -118,9 +118,16 @@ function populateLiteral (target, field, sourceResource) {
   }
 }
 
-function populateUri (target, field, sourceResource) {
-  target[ field ] = ''
+function populateUri (target, field, sourceResource, targetFieldOverride) {
+  target[ targetFieldOverride || field ] = ''
   if (sourceResource.hasOut(field)) {
-    target[ field ] = sourceResource.out(field).id
+    target[ targetFieldOverride || field ] = sourceResource.out(field).id
   }
+}
+
+function populateUris (target, field, sourceResource, targetFieldOverride) {
+  target[ targetFieldOverride || target ] = []
+  sourceResource.outAll(field).forEach(resource => {
+    target[ targetFieldOverride || target ].push(resource.id)
+  })
 }

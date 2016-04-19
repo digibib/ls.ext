@@ -10,17 +10,15 @@ export function processSearchResponse (response, locationQuery) {
       let work = element._source.work
       work.relativeUri = relativeUri(work.uri)
 
-      work.contributor = work.contributor || []
-      work.contributor.forEach(contributor => {
+      work.contributors = work.contributors || []
+      work.contributors.forEach(contributor => {
         contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
       })
 
-      work.publications = work.publication || []
-      if (!(work.publications instanceof Array)) {
-        work.publications = [ work.publications ]
-      }
+      work.publications = work.publications || []
       work.publications.forEach(publication => {
-        publication.language = publication.language || []
+        publication.formats = publication.formats || []
+        publication.languages = publication.languages || []
       })
 
       let chosenPublication = approximateBestTitle(work.publications, element.highlight)
@@ -61,21 +59,21 @@ export function processAggregationsToFilters (response, locationQuery) {
 
 export function approximateBestTitle (publications, highlight) {
   highlight = highlight || []
-  highlight[ 'work.publication.mainTitle' ] = highlight[ 'work.publication.mainTitle' ] || []
-  highlight[ 'work.publication.partTitle' ] = highlight[ 'work.publication.partTitle' ] || []
+  highlight[ 'work.publications.mainTitle' ] = highlight[ 'work.publications.mainTitle' ] || []
+  highlight[ 'work.publications.partTitle' ] = highlight[ 'work.publications.partTitle' ] || []
 
   let filteredPublications = publications.filter(publication => {
     return (
-      highlight[ 'work.publication.mainTitle' ].includes(publication.mainTitle) ||
-      highlight[ 'work.publication.partTitle' ].includes(publication.partTitle)
+      highlight[ 'work.publications.mainTitle' ].includes(publication.mainTitle) ||
+      highlight[ 'work.publications.partTitle' ].includes(publication.partTitle)
     )
   })
   return (
-    filteredPublications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/nob'))[ 0 ] ||
-    filteredPublications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/eng'))[ 0 ] ||
+    filteredPublications.filter(publication => publication.languages.includes('http://lexvo.org/id/iso639-3/nob'))[ 0 ] ||
+    filteredPublications.filter(publication => publication.languages.includes('http://lexvo.org/id/iso639-3/eng'))[ 0 ] ||
     filteredPublications[ 0 ] ||
-    publications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/nob'))[ 0 ] ||
-    publications.filter(publication => publication.language.includes('http://lexvo.org/id/iso639-3/eng'))[ 0 ] ||
+    publications.filter(publication => publication.languages.includes('http://lexvo.org/id/iso639-3/nob'))[ 0 ] ||
+    publications.filter(publication => publication.languages.includes('http://lexvo.org/id/iso639-3/eng'))[ 0 ] ||
     publications[ 0 ]
   )
 }

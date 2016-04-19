@@ -9,10 +9,10 @@ import { IntlProvider } from 'react-intl'
 function setup (propOverrides) {
   const props = {
     filters: [
-      { aggregation: 'work.publication.language', bucket: 'filter_1', count: '10' },
-      { aggregation: 'work.publication.language', bucket: 'filter_2', count: '40' },
-      { aggregation: 'work.publication.format', bucket: 'filter_3', count: '30' },
-      { aggregation: 'work.publication.format', bucket: 'filter_4', count: '20' }
+      { aggregation: 'work.publication.languages', bucket: 'filter_1', count: '10' },
+      { aggregation: 'work.publication.languages', bucket: 'filter_2', count: '40' },
+      { aggregation: 'work.publication.formats', bucket: 'filter_3', count: '30' },
+      { aggregation: 'work.publication.formats', bucket: 'filter_4', count: '20' }
     ],
     locationQuery: {},
     setFilter: () => {},
@@ -48,8 +48,8 @@ describe('components', () => {
     it('should render only one group if just one type of aggregation', () => {
       const { node } = setup({
         filters: [
-          { aggregation: 'work.publication.language', bucket: 'filter_1', count: '10' },
-          { aggregation: 'work.publication.language', bucket: 'filter_2', count: '40' }
+          { aggregation: 'work.publication.languages', bucket: 'filter_1', count: '10' },
+          { aggregation: 'work.publication.languages', bucket: 'filter_2', count: '40' }
         ],
         locationQuery: { query: 'test_query' },
         setFilter: () => {}

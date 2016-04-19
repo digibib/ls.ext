@@ -13,8 +13,8 @@ function setup (propOverrides) {
       id: 'test_id',
       mainTitle: 'test_maintitle',
       publicationYear: 'test_publicationYear',
-      language: 'test_language',
-      format: 'test_format',
+      languages: ['test_language'],
+      formats: ['test_format'],
       available: true
     }, ...propOverrides
   }
@@ -42,13 +42,13 @@ describe('components', () => {
       const { node, props } = setup()
       expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle)
       expect(node.querySelector("[data-automation-id='publication_year']").textContent).toBe(props.publication.publicationYear)
-      expect(node.querySelector("[data-automation-id='publication_language']").textContent).toBe(`${props.publication.language}_english`)
-      expect(node.querySelector("[data-automation-id='publication_format']").textContent).toBe(`${props.publication.format}_english`)
+      expect(node.querySelector("[data-automation-id='publication_languages']").textContent).toBe(`${props.publication.languages[0]}_english`)
+      expect(node.querySelector("[data-automation-id='publication_formats']").textContent).toBe(`${props.publication.formats[0]}_english`)
       expect(node.querySelector("[data-automation-id='publication_available']").textContent).toBe('Available')
     })
 
     it('should combine main title and part title as title', () => {
-      const { node, props } = setup({ publication: { mainTitle: 'test_maintitle', partTitle: 'test_parttitle' } })
+      const { node, props } = setup({ publication: { mainTitle: 'test_maintitle', partTitle: 'test_parttitle', formats: [], languages: [] } })
       expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle + ' — ' + props.publication.partTitle)
     })
   })

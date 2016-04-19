@@ -42,9 +42,14 @@ const SearchResult = React.createClass({
   },
   render () {
     let result = this.props.result
-    let formats = result.publications
-      ? [ ...new Set(result.publications.filter(publication => publication.format).map(publication => this.props.intl.formatMessage({ id: publication.format }))) ]
-      : []
+
+    let pubFormats = new Set()
+    result.publications.forEach(publication => {
+      publication.formats.forEach(format => {
+        pubFormats.add(this.props.intl.formatMessage({ id: format }))
+      })
+    })
+    let formats = [...pubFormats]
 
     return (
       <div className='col result panel'>
@@ -56,7 +61,7 @@ const SearchResult = React.createClass({
             <p>
               <strong>{this.renderDisplayTitle(result)}</strong>
             </p>
-            {this.renderContributors(result.contributor)}
+            {this.renderContributors(result.contributors)}
             {this.renderOriginalTitle(result)}
           </div>
         </div>

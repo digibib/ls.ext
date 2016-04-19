@@ -2,7 +2,7 @@
   "properties": {
     "work": {
       "properties": {
-        "contributor": {
+        "contributors": {
           "type": "nested",
           "properties": {
             "role": {
@@ -31,10 +31,10 @@
             }
           }
         },
-        "publication": {
+        "publications": {
           "type": "nested",
           "properties": {
-            "contributor": {
+            "contributors": {
               "type": "nested",
               "properties": {
                 "role": {
@@ -73,18 +73,18 @@
             "partTitle": {
               "type": "string"
             },
-            "language": {
+            "languages": {
               "type": "string",
               "index": "not_analyzed"
             },
-            "format": {
+            "formats": {
               "type": "string",
               "index": "not_analyzed"
             },
             "publicationYear": {
               "type": "string"
             },
-            "audience": {
+            "audiences": {
               "type": "string",
               "index": "not_analyzed"
             }

@@ -74,18 +74,18 @@ const messages = defineMessages({
     description: 'Show all filters for a group',
     defaultMessage: '+ show all'
   },
-  'work.publication.format': {
-    id: 'SearchFilter.filter[work.publication.format]',
+  'work.publications.formats': {
+    id: 'SearchFilter.filter[work.publications.formats]',
     description: 'Label of the format filter',
     defaultMessage: 'Format'
   },
-  'work.publication.language': {
-    id: 'SearchFilter.filter[work.publication.language]',
+  'work.publications.languages': {
+    id: 'SearchFilter.filter[work.publications.languages]',
     description: 'Label of the language filter',
     defaultMessage: 'Language'
   },
-  'work.publication.audience': {
-    id: 'SearchFilter.filter[work.publication.audience]',
+  'work.publications.audiences': {
+    id: 'SearchFilter.filter[work.publications.audiences]',
     description: 'Label of the audience filter',
     defaultMessage: 'Audience'
   }

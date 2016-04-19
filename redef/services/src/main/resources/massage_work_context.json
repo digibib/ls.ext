@@ -1,32 +1,32 @@
 {
   "type": "Work",
-  "publication": {
+  "publications": {
     "type": "Publication",
-    "contributor": {
+    "contributors": {
     "type": "Contribution",
     "agent": {
       "type": "Agent"
     }
   }
   },
-  "contributor": {
+  "contributors": {
     "type": "Contribution",
     "agent": {
       "type": "Agent"
     }
   },
   "@context": {
-    "contributor": {
+    "contributors": {
       "@id": "deichman:contributor",
       "@container": "@set"
     },
-    "format": {
+    "formats": {
       "@id": "deichman:format",
       "@container": "@set"
     },
     "Publication": "deichman:Publication",
     "partTitle": "deichman:partTitle",
-    "language": {
+    "languages": {
       "@id": "deichman:language",
       "@container": "@set"
     },
@@ -35,13 +35,13 @@
     "graph": "@graph",
     "birthYear": "deichman:birthYear",
     "deathYear": "deichman:deathYear",
-    "audience": {
+    "audiences": {
       "@id": "deichman:audience",
       "@container": "@set"
     },
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
-    "publication": {
+    "publications": {
       "@id": "deichman:publication",
       "@container": "@set"
     },
@@ -50,7 +50,7 @@
     "publicationYear": "deichman:publicationYear",
     "issued": "deichman:issued",
     "Person": "deichman:Person",
-    "subject": {
+    "subjects": {
       "@id": "deichman:subject",
       "@container": "@set"
     },

@@ -37,17 +37,17 @@ When(/^jeg trykker oppfrisk i nettleseren$/) do
 end
 
 When(/^skal jeg se filtre på format, språk og målgruppe$/) do
-  wait_for { @browser.element(data_automation_id: 'filter_work.publication.format').exists? }
-  wait_for { @browser.element(data_automation_id: 'filter_work.publication.language').exists? }
-  wait_for { @browser.element(data_automation_id: 'filter_work.publication.audience').exists? }
+  wait_for { @browser.element(data_automation_id: 'filter_work.publications.formats').exists? }
+  wait_for { @browser.element(data_automation_id: 'filter_work.publications.languages').exists? }
+  wait_for { @browser.element(data_automation_id: 'filter_work.publications.audiences').exists? }
 end
 
 When(/^jeg slår på et filter for et vilkårlig format$/) do
-  @browser.element(data_automation_id: 'filter_work.publication.format').checkboxes.to_a.select { |checkbox| not checkbox.set? }.sample.set
+  @browser.element(data_automation_id: 'filter_work.publications.formats').checkboxes.to_a.select { |checkbox| not checkbox.set? }.sample.set
 end
 
 When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do
-  filter_values = @browser.element(data_automation_id: 'filter_work.publication.format').lis
+  filter_values = @browser.element(data_automation_id: 'filter_work.publications.formats').lis
                       .select { |li| li.checkbox.present? && li.checkbox.set? }
                       .map { |li| li.span(data_automation_id: 'filter_label').text }
   wait_for {

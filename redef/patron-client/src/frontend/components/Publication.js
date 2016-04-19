@@ -22,6 +22,8 @@ const Publication = React.createClass({
   },
   render () {
     let publication = this.props.publication
+    let languages = [...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language })))]
+    let formats = [...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format })))]
     return (
       <div onClick={this.handleClick} className='col col-1-3 publication-small'
            data-automation-id={`publication_${publication.uri}`}>
@@ -38,13 +40,13 @@ const Publication = React.createClass({
               </span>
           </p>
           <p>
-              <span data-automation-id='publication_language'>
-                {publication.language ? this.props.intl.formatMessage({ id: publication.language }) : ''}
+              <span data-automation-id='publication_languages'>
+                {languages.join(', ')}
               </span>
           </p>
           <p>
-              <span data-automation-id='publication_format'>
-                {publication.format ? this.props.intl.formatMessage({ id: publication.format }) : ''}
+              <span data-automation-id='publication_formats'>
+                {formats.join(', ')}
               </span>
           </p>
           <p>

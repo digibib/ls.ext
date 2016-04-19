@@ -58,7 +58,10 @@ describe('components', () => {
     it('should render the correct number of results', () => {
       const { node } = setup({
         locationQuery: { query: 'test_query' },
-        searchResults: [ { relativeUri: 'relativeUri_1' }, { relativeUri: 'relativeUri_2' }, { relativeUri: 'relativeUri_3' } ],
+        searchResults: [
+        { relativeUri: 'relativeUri_1', publications: [] },
+        { relativeUri: 'relativeUri_2', publications: [] },
+        { relativeUri: 'relativeUri_3', publications: [] } ],
         totalHits: 3
       })
 

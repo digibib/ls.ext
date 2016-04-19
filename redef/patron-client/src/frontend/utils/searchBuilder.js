@@ -106,22 +106,22 @@ function initQuery (query) {
             should: [
               {
                 nested: {
-                  path: 'work.contributor.agent',
+                  path: 'work.contributors.agent',
                   query: {
                     multi_match: {
                       query: query,
-                      fields: [ 'work.contributor.agent.name^2' ]
+                      fields: [ 'work.contributors.agent.name^2' ]
                     }
                   }
                 }
               },
               {
                 nested: {
-                  path: 'work.publication',
+                  path: 'work.publications',
                   query: {
                     multi_match: {
                       query: query,
-                      fields: [ 'work.publication.mainTitle^2', 'work.publication.partTitle' ]
+                      fields: [ 'work.publications.mainTitle^2', 'work.publications.partTitle' ]
                     }
                   }
                 }
@@ -135,9 +135,9 @@ function initQuery (query) {
       'pre_tags': [ '' ],
       'post_tags': [ '' ],
       fields: {
-        'work.publication.mainTitle': {},
-        'work.publication.partTitle': {},
-        'work.creator.name': {}
+        'work.publications.mainTitle': {},
+        'work.publications.partTitle': {},
+        'work.contributors.agent.name': {}
       }
     }
   }

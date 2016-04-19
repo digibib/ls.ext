@@ -52,8 +52,8 @@ When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
     else
       entry.element(data_automation_id: 'publication_title').text.should equal?(@context[:publication_maintitle])
     end
-    entry.element(data_automation_id: 'publication_format').text.should eq(@context[:publication_format_label])
-    entry.element(data_automation_id: 'publication_language').text.should eq(@context[:publication_language_label])
+    entry.element(data_automation_id: 'publication_formats').text.should eq(@context[:publication_format_label])
+    entry.element(data_automation_id: 'publication_languages').text.should eq(@context[:publication_language_label])
   end
 end
 
@@ -71,8 +71,8 @@ end
 Then(/^eksemplarene er gruppert etter utgave m\/informasjon om format og språk$/) do
   @site.PatronClientWorkPage.publication_entries().each do |row|
     row.td(data_automation_id: "publication_title").text.should_not be_empty
-    row.td(data_automation_id: "publication_language").text.should_not be_empty
-    row.td(data_automation_id: "publication_format").text.should_not be_empty
+    row.td(data_automation_id: "publication_languages").text.should_not be_empty
+    row.td(data_automation_id: "publication_formats").text.should_not be_empty
   end
 
   @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
