@@ -9,9 +9,9 @@ import Genres from '../../src/frontend/components/Genres'
 function setup (propOverrides) {
   const props = {
     genres: [
-      { name: 'genre_1', relativeUri: 'relativeUri_1' },
-      { name: 'genre_2', relativeUri: 'relativeUri_2' },
-      { name: 'genre_3', relativeUri: 'relativeUri_3' }
+      { prefLabel: 'genre_1', genreSubdivision: 'x' },
+      { prefLabel: 'genre_2', genreSubdivision: 'y' },
+      { prefLabel: 'genre_3', genreSubdivision: 'z' }
     ], ...propOverrides
   }
 
@@ -30,9 +30,13 @@ function setup (propOverrides) {
 
 describe('components', () => {
   describe('Genres', () => {
-    it('should render spans for every genre', () => {
-      const { node } = setup()
-      expect(node.querySelectorAll("[data-automation-id='work_genre']").length).toBe(3)
+    it('should render all genres', () => {
+      const { node, props } = setup()
+      let text = node.querySelector("[data-automation-id='work_genres']").textContent
+      props.genres.forEach(genre => {
+        expect(text).toContain(genre.prefLabel)
+        expect(text).toContain(genre.genreSubdivision)
+      })
     })
   })
 })

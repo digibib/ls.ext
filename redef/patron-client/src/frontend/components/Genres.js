@@ -5,14 +5,20 @@ export default React.createClass({
   propTypes: {
     genres: PropTypes.array.isRequired
   },
+  renderLabel (genre) {
+    let label = genre.prefLabel
+    if (genre.genreSubdivision) {
+      label += ` (${genre.genreSubdivision})`
+    }
+    return label
+  },
   render () {
+    let genres = this.props.genres.map(genre => this.renderLabel(genre))
     return (
-      <h3><FormattedMessage {...messages.genre} /> {this.props.genres.map(genre => (
-          <span data-automation-id='work_genre' key={genre.relativeUri}>
-            {genre.name}
-          </span>
-        )
-      )}</h3>
+      <p>
+        <strong><FormattedMessage {...messages.genre} /> </strong>
+        <span data-automation-id='work_genres'>{genres.join(', ')}</span>
+      </p>
     )
   }
 })

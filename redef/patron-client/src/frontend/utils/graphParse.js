@@ -51,15 +51,15 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   work.genres = []
   workResource.outAll('genre').forEach(genreResource => {
     let genre = {}
-    populateLiteral(genre, 'name', genreResource)
-    genre.relativeUri = relativeUri(genreResource.id)
+    populateLiteral(genre, 'prefLabel', genreResource)
+    populateLiteral(genre, 'genreSubdivision', genreResource)
     work.genres.push(genre)
   })
 
   work.subjects = []
   workResource.outAll('subject').forEach(subjectResource => {
     let subject = {}
-    populateLiteral(subject, 'name', subjectResource)
+    populateLiteral(subject, 'prefLabel', subjectResource)
     subject.relativeUri = relativeUri(subjectResource.id)
     work.subjects.push(subject)
   })
