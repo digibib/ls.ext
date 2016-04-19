@@ -60,7 +60,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   workResource.outAll('subject').forEach(subjectResource => {
     let subject = {}
     populateLiteral(subject, 'prefLabel', subjectResource)
-    subject.relativeUri = relativeUri(subjectResource.id)
+    populateLiteral(subject, 'specification', subjectResource)
     work.subjects.push(subject)
   })
 

@@ -5,14 +5,20 @@ export default React.createClass({
   propTypes: {
     subjects: PropTypes.array.isRequired
   },
+  renderLabel (subject) {
+    let label = subject.prefLabel
+    if (subject.specification) {
+      label += ` (${subject.specification})`
+    }
+    return label
+  },
   render () {
+    let subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
     return (
-      <h3><FormattedMessage {...messages.subject} /> {this.props.subjects.map(subject => (
-          <span data-automation-id='work_subject' key={subject.relativeUri}>
-            {subject.name}
-          </span>
-        )
-      )}</h3>
+      <p>
+        <strong><FormattedMessage {...messages.subject} /> </strong>
+        <span data-automation-id='work_subjects'>{subjects.join(', ')}</span>
+      </p>
     )
   }
 })

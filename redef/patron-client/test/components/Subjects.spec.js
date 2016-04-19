@@ -9,9 +9,9 @@ import Subjects from '../../src/frontend/components/Subjects'
 function setup (propOverrides) {
   const props = {
     subjects: [
-      { name: 'subject_1', relativeUri: 'relativeUri_1' },
-      { name: 'subject_2', relativeUri: 'relativeUri_2' },
-      { name: 'subject_3', relativeUri: 'relativeUri_3' }
+      { prefLabel: 'subject_1', specification: 'x' },
+      { prefLabel: 'subject_2', specification: 'y' },
+      { prefLabel: 'subject_3', specification: 'z' }
     ], ...propOverrides
   }
 
@@ -30,9 +30,13 @@ function setup (propOverrides) {
 
 describe('components', () => {
   describe('Subjects', () => {
-    it('should render spans for every subject', () => {
-      const { node } = setup()
-      expect(node.querySelectorAll("[data-automation-id='work_subject']").length).toBe(3)
+    it('should render all subjects', () => {
+      const { node, props } = setup()
+      let text = node.querySelector("[data-automation-id='work_subjects']").textContent
+      props.subjects.forEach(genre => {
+        expect(text).toContain(genre.prefLabel)
+        expect(text).toContain(genre.specification)
+      })
     })
   })
 })
