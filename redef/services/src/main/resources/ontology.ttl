@@ -35,11 +35,19 @@
 :Subject a rdfs:Class ;
   rdfs:label "Subject"@en ;
   rdfs:label "Emne"@no .
+  
+:Concept a rdfs:Class ;
+  rdfs:label "Concept"@en ;
+  rdfs:label "Konsept"@no .
 
 # ToDo: Erstattes med :Place
 :PlaceOfPublication a rdfs:Class ;
   rdfs:label "Place of publication"@en ;
   rdfs:label "Utgivelsessted"@no .
+  
+:Place a rdfs:Class ;
+  rdfs:label "Place"@en ;
+  rdfs:label "Sted"@no .
 
 :Publisher a rdfs:Class ;
   rdfs:label "Publisher"@en ;
@@ -49,11 +57,19 @@
 :Serial a rdfs:Class ;
   rdfs:label "Serial"@en ;
   rdfs:label "Serie"@no .
+  
+:Series a rdfs:Class ;
+  rdfs:label "Series"@en ;
+  rdfs:label "Serie"@no .
 
 # ToDo: Erstattes med :Issue
 :SerialIssue a rdfs:Class ;
   rdfs:label "Serial issue"@en ;
   rdfs:label "Nummer"@no .
+  
+:Issue a rdfs:Class ;
+  rdfs:label "Issue"@en ;
+  rdfs:label "Serieutgivelse"@no .
 
 :Contribution a rdfs:Class ;
   rdfs:label "Contribution"@en ;
@@ -68,13 +84,13 @@
   rdfs:label "Sjanger"@no .
 
 :prefLabel a rdfs:Property ;
-  rdfs:label "preferred label"@en ;
-  rdfs:label "foretrukket betegnelse"@no ;
+  rdfs:label "Preferred label"@en ;
+  rdfs:label "oFordretrukket betegnelse"@no ;
   rdfs:range xsd:string .
 
 :altLabel a rdfs:Property ;
-  rdfs:label "alternative label"@en ;
-  rdfs:label "alternativ betegnelse"@no ;
+  rdfs:label "Alternative label"@en ;
+  rdfs:label "Alternativ betegnelse"@no ;
   rdfs:range xsd:string .
 
 :name a rdfs:Property ;
@@ -88,6 +104,12 @@
   rdfs:label "Person title"@en ;
   rdfs:label "Personens tittel"@no ;
   rdfs:domain :Person ;
+  rdfs:range xsd:string .
+  
+:specification a rdfs:Property ;
+  rdfs:label "Specification"@en ;
+  rdfs:label "Forklarende tilføyelse"@no ;
+  rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre ;
   rdfs:range xsd:string .
 
 # ToDo: Fjernes
@@ -135,6 +157,13 @@
   rdfs:domain :Publication ;
   rdfs:range duo:Format ;
   duo:valuesFrom values:format .
+  
+:hasMediatype a rdfs:Property ;
+  rdfs:label "Mediatype"@en ;
+  rdfs:label "Medietype"@no ;
+  rdfs:domain :Work ;
+  rdfs:range duo:Mediatype ;
+  duo:valuesFrom values:mediatype .
 
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;
