@@ -40,12 +40,13 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   populateLiteral(work, 'partTitle', workResource)
   populateLiteral(work, 'publicationYear', workResource)
 
-  work.creators = []
-  workResource.outAll('creator').forEach(creatorResource => {
-    let creator = {}
-    populateLiteral(creator, 'name', creatorResource)
-    creator.relativeUri = relativeUri(creatorResource.id)
-    work.creators.push(creator)
+  work.contributors = {}
+  workResource.outAll('contributor').forEach(contribution => {
+    work.contributors[contribution.out('role').id] = work.contributors[contribution.out('role').id] || []
+    work.contributors[contribution.out('role').id].push({
+      name: contribution.out('agent').get('name').value,
+      relativeUri: relativeUri(contribution.out('agent').id)
+    })
   })
 
   work.genres = []

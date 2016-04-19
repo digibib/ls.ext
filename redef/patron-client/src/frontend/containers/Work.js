@@ -5,7 +5,7 @@ import * as ResourceActions from '../actions/ResourceActions'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Constants from '../constants/Constants'
-import Creators from '../components/Creators'
+import Contributors from '../components/Contributors'
 import Publications from '../components/Publications'
 import Genres from '../components/Genres'
 import Subjects from '../components/Subjects'
@@ -79,7 +79,7 @@ const Work = React.createClass({
           </div>
           <div id='work' className='col work-info'>
             <h2 data-automation-id='work_title'>{this.renderTitle(work)}</h2>
-            <Creators creators={work.creators}/>
+            <Contributors contributors={work.contributors}/>
             {this.renderYear(work)}
             <Subjects subjects={work.subjects}/>
             <Genres genres={work.genres}/>
