@@ -9,8 +9,7 @@
     "start-dev": "NODE_ENV=development nodemon -L",
     "start-dev-debug": "nodemon debug",
     "module-test-debug": "mocha debug module-test",
-    "jscs": "jscs",
-    "jshint": "jshint"
+    "eslint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -30,12 +29,16 @@
     "axios": "0.7.0",
     "browserify-middleware": "^3.0.0",
     "debug": "~2.2.0",
+    "eslint": "^2.8.0",
+    "eslint-config-standard": "^5.1.0",
+    "eslint-plugin-promise": "^1.1.0",
+    "eslint-plugin-standard": "^1.3.2",
     "express": "~4.13.1",
     "express-compile-sass": "*",
     "express-request-proxy": "^1.1.0",
     "jade": "~1.11.0",
     "jquery": "^2.1.4",
-    "ld-graph": "git+https://github.com/digibib/ld-graph.git#9db0bef909e6dfb10662959c499541251ca346ec",
+    "ld-graph": "git+https://github.com/digibib/ld-graph.git#c85905ea5370a657c46b0e8058ec06844727731b",
     "morgan": "~1.6.1",
     "node-sass": "^3.4.2",
     "node-sass-evergreen": "*",

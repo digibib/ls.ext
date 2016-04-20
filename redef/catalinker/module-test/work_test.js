@@ -50,7 +50,7 @@ describe("Catalinker", function () {
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/person_search_hit.json", "UTF-8") });
         case "http://192.168.50.12:7000/person/h123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/h123456.json", "UTF-8") });
-        }
+      }
       });
       // Stub creating new resource
       sinon.stub(axios, "post", function (path, data, headers) {

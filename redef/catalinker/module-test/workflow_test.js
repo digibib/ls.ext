@@ -14,6 +14,11 @@ describe("Catalinker", function () {
     var testRactive, Main;
 
     before(function (done) {
+      global.history = {
+        replaceState: function () {
+
+        }
+      }
 
       // load module
       Main = require("../client/src/main.js");
@@ -61,7 +66,7 @@ describe("Catalinker", function () {
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_nationality.json", "UTF-8") });
         case "http://192.168.50.12:7000/genre/m123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/m123456.json", "UTF-8") });
-        }
+      }
       });
       // Stub creating new resource
       sinon.stub(axios, "post", function (path, data, headers) {

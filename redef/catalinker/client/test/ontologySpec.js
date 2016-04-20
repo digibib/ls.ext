@@ -119,7 +119,7 @@ describe("Parsing JSON-LD", function () {
           [{ old: { value: "the title", lang: "en" },
             current: { value: "the title", lang: "en" } },
            { old: { value: "tittelen", lang: "no" },
-                   current: { value: "tittelen", lang: "no" } }],
+                  current: { value: "tittelen", lang: "no" } }],
         "http://192.168.50.12:8005/ontology#year":
           [{ old: { value: "1981", lang: "" },
             current: { value: "1981", lang: "" } }]

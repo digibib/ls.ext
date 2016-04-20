@@ -115,8 +115,9 @@ body {
         span.support-panel-expander {
           min-width: 22px;
           position: relative;
-          left: -27px;
-          display: inline-block;
+          left: 270px;
+          top: -26px;
+          display: inline;
           min-height: 22px;
           top: 6px;
         }
@@ -129,7 +130,7 @@ body {
           cursor: pointer;
         }
         .searchable:not(.deletable) {
-          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='20' font-size='20'>▶</text></svg>");
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='22' font-size='20'>▶</text></svg>");
           background-repeat: no-repeat;
           background-position: right top;
           padding-right: 1.5em;
@@ -251,6 +252,10 @@ body {
             span {
               background: $mintgreen;
               padding: 0 12px;
+              span.add-association-legend {
+                padding: 0 6px;
+                display: inline-block;
+              }
             }
           }
         }
@@ -258,23 +263,25 @@ body {
           min-height: 60px;
           padding: 8px;
           .inputs {
-            display: block;
-            border: 1px solid lightgrey;
+          border: 1px solid lightgrey;
             text-align: center;
-            padding: 5px 22px;
-            .label {
-              display: none;
-            }
-            .field {
-              padding: 0;
-            }
-            span.input:last-child:before {
-              content: " — ";
+            padding-right: 24px;
+            .input {
+              &.input:last-child:before {
+                content: " — ";
+              }
+              display: inline;
+              .label {
+                display: none;
+              }
+              .field {
+                padding: 0;
+              }
             }
           }
 
           .subject-type-association {
-            display: block;
+            display: inline-block;
             text-align: center;
             padding: 10px;
             &:before {
@@ -309,12 +316,12 @@ body {
         &:before {
           content: "";
           position: absolute;
-          left: 4px;
+          left: 0px;
           right: 100%;
           width: 0;
           height: 0;
           border-top: 32px solid transparent;
-          border-right: 11px solid white;
+          border-right: 16px solid white;
           border-bottom: 32px solid transparent;
         }
         min-height: 65px;

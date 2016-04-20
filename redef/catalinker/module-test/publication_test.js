@@ -50,7 +50,7 @@ describe("Catalinker", function () {
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_format.json", "UTF-8") });
         case "/services/publication/p123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/p123456.json", "UTF-8") });
-        }
+      }
       });
       // Stub creating new resource
       sinon.stub(axios, "post", function (path, data, headers) {
