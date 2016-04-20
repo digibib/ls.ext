@@ -143,7 +143,10 @@
                                 values[input.predicate][idx].deletable = true;
                                 values[input.predicate][idx].searchable = false;
                             }
-                            ractive.set(kp + ".values." + idx, values[input.predicate][idx]);
+                          var value = values[input.predicate][idx]
+                            if (!/^_:.*/.test(value.current.value)) {
+                                ractive.set(kp + ".values." + idx, value);
+                            }
                         }
                     }
                 }

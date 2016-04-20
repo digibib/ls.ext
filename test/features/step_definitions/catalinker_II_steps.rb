@@ -19,7 +19,7 @@ end
 
 When(/^jeg legger inn forfatternavnet på startsida$/) do
   @site.WorkFlow.visit
-  creator_name_field = @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#creator_0")
+  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end
@@ -31,28 +31,6 @@ end
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
   @browser.spans(:class => "toggle-show-works")[0].click
   @browser.inputs(:class => "select-work-radio")[0].click
-end
-
-When(/^bekrefter for å gå videre til bekreft verk$/) do
-  @site.WorkFlow.next_step
-  @context[:work_identifier] = @site.WorkFlow.get_work_uri
-  @site.WorkFlow.assert_selected_tab("Bekreft verk")
-end
-
-When(/^bekrefter for å gå videre til beskriv verket$/) do
-  @site.WorkFlow.next_step
-  @site.WorkFlow.assert_selected_tab("Beskriv verket")
-end
-
-When(/^bekrefter for å gå videre til beskriv utgivelsen$/) do
-  @site.WorkFlow.next_step
-  @context[:publication_identifier] = @site.WorkFlow.get_publication_uri
-  @site.WorkFlow.assert_selected_tab("Beskriv utgivelsen")
-end
-
-When(/^bekrefter for å gå videre til biinførsler/) do
-  @site.WorkFlow.next_step
-  @site.WorkFlow.assert_selected_tab("Bekreft biinførsler")
 end
 
 When(/^verifiserer at verkets basisopplysninger uten endringer er korrekte$/) do
@@ -322,4 +300,11 @@ When(/^sjekker jeg at emnet er listet opp på verket$/) do
   data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
   subject_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input")
   subject_field.value.should eq @context[:subject_name]
+end
+
+When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
+  @site.WorkFlow.next_step
+  @context[:work_identifier] = @site.WorkFlow.get_work_uri || @context[:work_identifier]
+  @context[:publication_identifier] = @site.WorkFlow.get_publication_uri || @context[:publication_identifier]
+  @site.WorkFlow.assert_selected_tab(tab_label  )
 end

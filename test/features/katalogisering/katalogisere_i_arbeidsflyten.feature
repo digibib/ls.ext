@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@redef @arbeidsflyt @check-for-errors @xvfb @wip
+@redef @arbeidsflyt @check-for-errors @xvfb
 Egenskap: Katalogisere i arbeidsflyt
   Som katalogisator
   Ønsker jeg å kunne katalogisere en bok
@@ -25,17 +25,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og grensesnittet viser at endringene er lagret
     Når jeg legger inn forfatternavnet på startsida
     Og jeg venter litt
-    Så velger jeg en person fra treffliste fra personregisteret
     Og velger verket fra lista tilkoplet forfatteren
-    Og bekrefter for å gå videre til bekreft verk
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
-    Og bekrefter for å gå videre til beskriv verket
-    Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
-    Og jeg velger emnetype "Generelt" emne
-    Og jeg legger inn emnet i søkefelt for emne og trykker enter
-    Og velger første emne i trefflisten
-    Så sjekker jeg at emnet er listet opp på verket
-    Og bekrefter for å gå videre til beskriv utgivelsen
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter
     Så velger jeg første utgivelsessted i listen som dukker opp
@@ -47,7 +39,14 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
     Så velger jeg første utgiver i listen som dukker opp
-    Og bekrefter for å gå videre til biinførsler
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
+    Og bekrefter for å gå videre til "Emneopplysninger"
+    Og jeg velger emnetype "Generelt" emne
+    Og jeg legger inn emnet i søkefelt for emne og trykker enter
+    Og velger første emne i trefflisten
+    Så sjekker jeg at emnet er listet opp på verket
+    Og bekrefter for å gå videre til "Biinnførsler"
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret

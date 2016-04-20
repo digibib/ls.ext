@@ -658,7 +658,9 @@
     applicationData.inputs = inputs
     return axios.all(predefinedValues).then(function (values) {
       _.each(values, function (predefinedValue) {
-        applicationData.predefinedValues[unPrefix(predefinedValue.property)] = predefinedValue.values
+        if (predefinedValue) {
+          applicationData.predefinedValues[ unPrefix(predefinedValue.property) ] = predefinedValue.values
+        }
       })
       return applicationData
     })
