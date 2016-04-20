@@ -3,7 +3,7 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import SearchHeader from '../../src/frontend/components/SearchHeader'
+import SearchHeader, { __RewireAPI__ as DefaultExportSearchHeaderRewireApi } from '../../src/frontend/components/SearchHeader'
 import ReactDOM from 'react-dom'
 import StubContext from 'react-stub-context'
 import { IntlProvider } from 'react-intl'
@@ -39,6 +39,20 @@ function setup (propOverrides) {
 }
 
 describe('components', () => {
+  before(() => {
+    DefaultExportSearchHeaderRewireApi.__Rewire__('Link', React.createClass({
+      render () {
+        return (
+          <div />
+        )
+      }
+    }))
+  })
+
+  after(() => {
+    DefaultExportSearchHeaderRewireApi.__ResetDependency__
+  })
+
   describe('SearchHeader', () => {
     it('should search initial value from locationQuery', () => {
       const { output, props } = setup({ locationQuery: { query: 'testvalue' } })
