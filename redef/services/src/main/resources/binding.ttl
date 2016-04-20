@@ -1,5 +1,5 @@
-@prefix binding: <http://data.duo.no/binding#> .
-@prefix duo: <http://data.duo.no/utility#> .
+@prefix binding: <http://data.deichman.no/binding#> .
+@prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 binding:innbundet a duo:Binding ;
   duo:code "ib" ;

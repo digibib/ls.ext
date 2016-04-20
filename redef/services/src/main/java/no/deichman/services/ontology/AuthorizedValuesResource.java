@@ -22,19 +22,7 @@ import static no.deichman.services.restutils.MimeType.UTF_8;
 @Path("authorized_values")
 public final class AuthorizedValuesResource {
     @GET
-    @Path("{valueRangeName:"
-            + "language|"
-            + "format|"
-            + "nationality|"
-            + "literaryForm|"
-            + "audience|"
-            + "biography|"
-            + "adaptationOfPublicationForParticularUserGroups|"
-            + "adaptationOfWorkForParticularUserGroups|"
-            + "binding|"
-            + "writingSystem|"
-            + "illustrativeMatter|"
-            + "role}")
+    @Path("{valueRangeName:" + AuthorizedValue.ALL_TYPES_PATTERN + "}")
     @Produces(LD_JSON + UTF_8)
     public Response getValueRange(@PathParam("valueRangeName") String valueRangeName) throws IOException {
         return getJsonLdResponse(valueRangeName + ".ttl");

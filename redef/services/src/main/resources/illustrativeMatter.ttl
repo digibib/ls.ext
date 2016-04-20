@@ -1,5 +1,5 @@
-@prefix illustrativeMatter: <http://data.duo.no/illustrativeMatter#> .
-@prefix duo: <http://data.duo.no/utility#> .
+@prefix illustrativeMatter: <http://data.deichman.no/illustrativeMatter#> .
+@prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 illustrativeMatter:illustrert a duo:IllustrativeMatter ;
   duo:code "ill" ;

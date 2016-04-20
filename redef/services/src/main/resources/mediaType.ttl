@@ -1,0 +1,7 @@
+@prefix mediaType: <http://data.deichman.no/mediaType#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+mediaType:Test a duo:MediaType ;
+  rdfs:label "Test"@no ;
+  rdfs:label "Test"@en .

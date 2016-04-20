@@ -10,11 +10,13 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import no.deichman.services.App;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.kohaadapter.KohaSvcMock;
+import no.deichman.services.ontology.AuthorizedValue;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
 import no.deichman.services.services.search.EmbeddedElasticsearchServer;
 import no.deichman.services.testutil.PortSelector;
 import no.deichman.services.uridefaults.XURI;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -36,10 +38,14 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.json.Json.createObjectBuilder;
+import static no.deichman.services.restutils.MimeType.LD_JSON;
+import static org.apache.jena.enhanced.BuiltinPersonalities.model;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -731,61 +737,76 @@ public class AppTest {
     }
 
     @Test
-    public void get_authorized_values_for_language() throws Exception {
-        HttpRequest languageRequest = Unirest
-                .get(baseUri + "authorized_values/language")
-                .header("Accept", "application/ld+json");
-        HttpResponse<?> languageResponse = languageRequest.asString();
-        assertResponse(Status.OK, languageResponse);
+    public void get_authorized_values() throws Exception {
 
-        Model model = RDFModelUtil.modelFrom(languageResponse.getBody().toString(), Lang.JSONLD);
-        boolean hasEnglish = model.contains(createStatement(
-                createResource("http://lexvo.org/id/iso639-3/eng"),
-                RDFS.label,
-                createLangLiteral("Engelsk", "no")
-        ));
-        assertTrue("model doesn't have English", hasEnglish);
+        for (AuthorizedValue authorizedValue : AuthorizedValue.values()) {
+            HttpRequest authorizedValueRequest = Unirest
+                    .get(baseUri + "authorized_values/" + authorizedValue.getPath())
+                    .header("Accept", LD_JSON);
+            HttpResponse<?> authorizedValueResponse = authorizedValueRequest.asString();
+            System.out.println("Testing authorized value: " + authorizedValue.getPath());
+            assertResponse(Status.OK, authorizedValueResponse);
+            Model test = RDFModelUtil.modelFrom(authorizedValueResponse.getBody().toString(), Lang.JSONLD);
+            assertTrue(authorizedValue.getPath() + " response didn't contain expected data", test.containsAll(getAuthorizedValueTestData(authorizedValue)));
+
+        }
+
     }
 
-    @Test
-    public void get_authorized_values_for_format() throws Exception {
-        HttpRequest formatRequest = Unirest
-                .get(baseUri + "authorized_values/format")
-                .header("Accept", "application/ld+json");
-        HttpResponse<?> formatResponse = formatRequest.asString();
-        assertResponse(Status.OK, formatResponse);
+    public Model getAuthorizedValueTestData(AuthorizedValue authorizedValue) throws Exception {
 
-        Model model = RDFModelUtil.modelFrom(formatResponse.getBody().toString(), Lang.JSONLD);
-        boolean hasBook = model.contains(createStatement(
-                createResource("http://data.deichman.no/format#Book"),
-                RDFS.label,
-                createLangLiteral("Bok", "no")
-        ));
-        assertTrue("model doesn't have Book", hasBook);
-    }
-
-    @Test
-    public void get_authorized_values_for_nationality() throws Exception {
-        HttpRequest nationalityRequest = Unirest
-                .get(baseUri + "authorized_values/nationality")
-                .header("Accept", "application/ld+json");
-        HttpResponse<?> nationalityResponse = nationalityRequest.asString();
-        assertResponse(Status.OK, nationalityResponse);
-
-        Model model = RDFModelUtil.modelFrom(nationalityResponse.getBody().toString(), Lang.JSONLD);
-        boolean hasNationality = model.contains(createStatement(
-                createResource("http://data.deichman.no/nationality#eng"),
-                RDFS.label,
-                createLangLiteral("Engelsk", "no")
-        ));
-        assertTrue("model doesn't have English nationality", hasNationality);
+        String testData = null;
+        switch (authorizedValue) {
+            case ADAPTATION_OF_PUBLICATION_FOR_PARTICULAR_USER_GROUPS:
+                testData = "<http://data.deichman.no/adaptationForParticularUserGroups#easyLanguage> <http://www.w3.org/2000/01/rdf-schema#label> \"Easy to read, easy language\"@en .";
+                break;
+            case ADAPTATION_OF_WORK_FOR_PARTICULAR_USER_GROUPS:
+                testData = "<http://data.deichman.no/adaptationOfWorkForParticularUserGroups#easyLanguage> <http://www.w3.org/2000/01/rdf-schema#label> \"Easy to read, easy language\"@en .";
+                break;
+            case AUDIENCE:
+                testData = "<http://data.deichman.no/audience#adult> <http://www.w3.org/2000/01/rdf-schema#label> \"Adults\"@en .";
+                break;
+            case BINDING:
+                testData = "<http://data.deichman.no/binding#innbundet> <http://www.w3.org/2000/01/rdf-schema#label> \"Hardback\"@en .";
+                break;
+            case BIOGRAPHY:
+                testData = "<http://data.deichman.no/biography#biographicalContent> <http://www.w3.org/2000/01/rdf-schema#label> \"Biographical content\"@en .";
+                break;
+            case FORMAT:
+                testData = "<http://data.deichman.no/format#DVD> <http://www.w3.org/2000/01/rdf-schema#label> \"DVD\"@en .";
+                break;
+            case ILLUSTRATIVE_MATTER:
+                testData = "<http://data.deichman.no/illustrativeMatter#illustrert> <http://www.w3.org/2000/01/rdf-schema#label> \"Illustration\"@en .";
+                break;
+            case LANGUAGE:
+                testData = "<http://lexvo.org/id/iso639-3/afr> <http://www.w3.org/2000/01/rdf-schema#label> \"Afrikaans\"@en .";
+                break;
+            case LITERARY_FORM:
+                testData = "<http://data.deichman.no/literaryForm#nonfiction> <http://www.w3.org/2000/01/rdf-schema#label> \"Nonfiction\"@en .";
+                break;
+            case MEDIA_TYPE:
+                testData = "<http://data.deichman.no/mediaType#Test> <http://www.w3.org/2000/01/rdf-schema#label> \"Test\"@en .";
+                break;
+            case NATIONALITY:
+                testData = "<http://data.deichman.no/nationality#aborig> <http://www.w3.org/2000/01/rdf-schema#label> \"Aboriginal Australian\"@en .";
+                break;
+            case ROLE:
+                testData = "<http://data.deichman.no/role#scriptWriter> <http://www.w3.org/2000/01/rdf-schema#label> \"Script writer\"@en .";
+                break;
+            case WRITING_SYSTEM:
+                testData = "<http://data.deichman.no/writingSystem#cyrillic> <http://www.w3.org/2000/01/rdf-schema#label> \"Cyrillic\"@en .";
+                break;
+            default:
+                throw new Exception("Couldn't find test data for authorized value: " + authorizedValue.getPath());
+        }
+        return RDFModelUtil.modelFrom(testData, Lang.NTRIPLES);
     }
 
     @Test
     public void get_ontology() throws Exception {
         HttpRequest request = Unirest
                 .get(baseUri + "ontology")
-                .header("Accept", MimeType.LD_JSON);
+                .header("Accept", LD_JSON);
         HttpResponse<?> response = request.asString();
         assertResponse(Status.OK, response);
 
