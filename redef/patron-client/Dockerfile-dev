@@ -1,4 +1,4 @@
-FROM node:5.9.1
+FROM node:5.10.1
 
 ENV REFRESHED_AT 2016-01-10
 
