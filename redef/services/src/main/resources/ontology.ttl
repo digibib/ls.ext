@@ -85,7 +85,7 @@
 
 :prefLabel a rdfs:Property ;
   rdfs:label "Preferred label"@en ;
-  rdfs:label "oFordretrukket betegnelse"@no ;
+  rdfs:label "Foretrukket betegnelse"@no ;
   rdfs:range xsd:string .
 
 :altLabel a rdfs:Property ;
