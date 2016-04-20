@@ -289,7 +289,7 @@ app.get('/config', function (request, response) {
         // additional entries, such as translator, illustrator, composer etc
         id: 'confirm-addedentry',
         rdfType: 'Work',
-        label: 'Biinførsler',
+        label: 'Biinnførsler',
         inputs: [
           {
             label: 'Biinnførsel',
