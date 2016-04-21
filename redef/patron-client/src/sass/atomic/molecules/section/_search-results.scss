@@ -1,30 +1,81 @@
 .search-results {
-  @include span(8 of 12);
-  margin-right: 0;
-  border-top: 2px solid $blackColor;
+  
+  @include span(12 of 12);
+  @extend %border-top;
   padding-top: rhythm(2);
+
+  @include breakpoint($small){
+    @include span(9 of 12);
+    margin-right: 0;
+  }
+
 }
 
 .search-results-footer {
-  @include span(8 of 12);
-  @include push(4 of 12);
+  @include span(12 of 12);
+
+  @include breakpoint($small){
+    @include span(9 of 12);
+    @include push(3 of 12);
+  }
+
   margin-bottom: rhythm(2);
 }
 
 .search-results-number {
   @include span(5 of 12);
+  margin-top: rhythm(4);
+
+  @include breakpoint($small){
+     margin-top: rhythm(4);
+    @include span(7 of 12);
+  }
+
+  .result-name {
+    font-weight: 700;
+  }
+
 }
 
 .search-sorting {
-  @include span(3 of 12);
+  @include span(6 of 12);
   float: right;
+
+  @include breakpoint($small){
+     @include span(3 of 12);
+    float: right;
+  }
+
+  p {
+    color: $darkGreyColor;
+    text-transform: uppercase;
+    font-size: 0.8em;
+  }
+
+  .search-sorting-arrow {
+    position: absolute;
+    right: -50px;
+  }
 
   select {
     width: 100%;
+    padding: rhythm(2);
+    @extend %border;
+    font-family: inherit;
+    font-size: 1em;
+/*
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    -o-appearance:none;*/
+
   }
 
   option {
     padding: rhythm(2);
+    font-size: inherit;
+
+
+
   }
 
 }

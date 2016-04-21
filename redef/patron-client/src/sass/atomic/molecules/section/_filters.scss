@@ -1,3 +1,49 @@
 .filters {
-  @include span(4 of 12);
+  @include span(12 of 12);
+
+  @include breakpoint($small){
+     @include span(3 of 12);
+  }
+
+  .limit-filters {
+    display: none;
+  }
+
+  @include breakpoint($lt-small){
+    .limit-filters {
+      display: block;
+      color: $redColor;
+      @include span(12 of 12);
+      margin-bottom: rhythm(2);
+      @extend %border-bottom;
+
+      span {
+        @include span(10 of 12);
+        text-transform: uppercase;
+      }
+
+      .limit-filters-open {
+        @include span(1.2 of 12);
+        float: right;
+        margin-top: rhythm(2);
+      }
+    }
+  }
+
+
+  .limit-filters-header {
+    display: none;
+
+    @include breakpoint($small){
+      display: block;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      color: $darkGreyColor;
+      @include span(12 of 12);
+      padding-bottom: rhythm(2);
+      margin-top: rhythm(-3);
+      @extend %border-bottom;
+    }
+  }
+
 }

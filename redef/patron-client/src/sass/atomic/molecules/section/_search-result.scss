@@ -1,0 +1,43 @@
+.single-entry {
+  @include span(12 of 12);
+  margin-bottom: rhythm(4);
+  padding-bottom: rhythm(2);
+  @extend %border-bottom;
+}
+
+.book-cover {
+  @include span(4 of 12);
+  
+  @include breakpoint($small){
+     @include span(2 of 12);
+  }
+  
+}
+
+.entry-content {
+  @include span(7 of 12);
+
+  @include breakpoint($small){
+    @include span(10 of 12);
+    margin-right: 0;
+  }
+
+  h1 a {
+    color: $redColor;
+    font-size: 0.8em;
+  }
+}
+
+
+// TEMP -->
+
+.entry-content {
+  span {
+    display: block;
+    margin: rhythm(3) 0;
+  }
+}
+
+.result-more {
+  display: none;
+}

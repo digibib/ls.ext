@@ -36,7 +36,7 @@ const Search = React.createClass({
   renderPagination () {
     if ((this.props.totalHits > Constants.searchQuerySize) && this.props.location.query.query) {
       return (
-        <section className='col pagination-area'
+        <section className='pagination-area'
                  data-automation-id='search-results-pagination'>
           <ReactPaginate previousLabel={'<'}
                          nextLabel={'>'}
@@ -61,8 +61,9 @@ const Search = React.createClass({
           <SearchFilters filters={this.props.filters}
                          locationQuery={this.props.location.query}
                          setFilter={this.props.searchFilterActions.setFilter}
+                         setFiltersVisibility={this.props.searchFilterActions.setFiltersVisibility}
+                         setAllFiltersVisibility={this.props.searchFilterActions.setAllFiltersVisibility}
           />
-          {this.renderPagination()}
           <SearchResults
             locationQuery={this.props.location.query}
             searchActions={this.props.searchActions}

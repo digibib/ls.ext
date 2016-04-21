@@ -1,0 +1,54 @@
+.filterTitle {
+  h1 {
+    @include span(10 of 12);
+    font-size: 1.5em;
+  }
+
+  .single-filter-close {
+    @include span(1.5 of 12);
+    float: right;
+
+    @include breakpoint($small){
+       @include span(2 of 12);
+      margin-right: 0;
+      margin-top: rhythm(1);
+    }
+
+  }
+}
+
+.filter_label {
+  font-size: 1em;
+  font-weight: normal;
+  display: inline-block;
+}
+
+.searchfilters {
+  list-style-type: none;
+  display: inline-block;
+
+  input[type="checkbox"] {
+    border: 1px solid $blackColor;
+    border-radius: 2px;
+    margin-right: rhythm(1.5);
+    padding: rhythm(1.2);
+
+
+/*    -moz-appearance:none;
+    -webkit-appearance:none;
+    -o-appearance:none;*/
+
+  }
+
+}
+
+label {
+  @extend %is-vishidden;
+}
+
+.show-all {
+  font-size: 1em;
+  font-weight: normal;
+  color: $redColor;
+}
+

@@ -26,5 +26,12 @@
     margin: auto 0;
     text-transform: uppercase;
     text-align: center;
+
+    @include breakpoint($lt-small){
+       span {
+         margin-left: -8px;
+       }
+    }
+
   }
 }
