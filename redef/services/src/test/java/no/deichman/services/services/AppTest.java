@@ -578,14 +578,13 @@ public class AppTest {
             throw new Exception("You did not specify a valid patch operation (ADD|DEL)");
         }
 
-        String op = operation;
         String s = xuri.getUri();
         String p1 = baseUri + "ontology#name";
         String o1 = "TestTestTest";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
         return Json.createArrayBuilder()
-                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .add(buildLDPatch(buildPatchStatement(operation, s, p1, o1, type)).get(0))
                 .build();
     }
 
