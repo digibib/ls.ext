@@ -42,8 +42,8 @@ export function parseWorkResponse (workResponse, itemsResponse) {
 
   work.contributors = {}
   workResource.outAll('contributor').forEach(contribution => {
-    work.contributors[contribution.out('role').id] = work.contributors[contribution.out('role').id] || []
-    work.contributors[contribution.out('role').id].push({
+    work.contributors[ contribution.out('role').id ] = work.contributors[ contribution.out('role').id ] || []
+    work.contributors[ contribution.out('role').id ].push({
       name: contribution.out('agent').get('name').value,
       relativeUri: relativeUri(contribution.out('agent').id)
     })

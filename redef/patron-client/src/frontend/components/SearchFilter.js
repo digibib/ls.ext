@@ -7,6 +7,8 @@ const SearchFilter = React.createClass({
     aggregation: PropTypes.string.isRequired,
     filters: PropTypes.array,
     setFilter: PropTypes.func.isRequired,
+    setFiltersVisibility: PropTypes.func.isRequired,
+    locationQuery: PropTypes.object.isRequired,
     intl: intlShape.isRequired
   },
   contextTypes: {
@@ -33,8 +35,8 @@ const SearchFilter = React.createClass({
           <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
               data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
             <input type='checkbox' readOnly checked={filter.active}/>
-            <label for='checkbox'>Checkbox</label>
-            <h2 className="filter_label"
+            <label htmlFor='checkbox'>Checkbox</label>
+            <h2 className='filter_label'
                 data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2>
             (
             <span data-automation-id='filter_count'>{filter.count}</span>)

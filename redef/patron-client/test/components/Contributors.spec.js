@@ -8,7 +8,7 @@ import { IntlProvider } from 'react-intl'
 import Contributors, { __RewireAPI__ as DefaultExportContributorsRewireApi } from '../../src/frontend/components/Contributors'
 
 function setup (propOverrides) {
-  const props = {...propOverrides}
+  const props = { ...propOverrides }
 
   const messages = {
     'http://data.deichman.no/role#author': 'author'
@@ -50,7 +50,7 @@ describe('components', () => {
     it('should render one contributor', () => {
       const { node } = setup({
         contributors: {
-          'http://data.deichman.no/role#author': [{ name: 'name', relativeUri: 'relativeUri' }]
+          'http://data.deichman.no/role#author': [ { name: 'name', relativeUri: 'relativeUri' } ]
         }
       })
 

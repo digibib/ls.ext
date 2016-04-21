@@ -16,6 +16,8 @@ function setup (propOverrides) {
     ],
     locationQuery: {},
     setFilter: () => {},
+    setFiltersVisibility: () => {},
+    setAllFiltersVisibility: () => {},
     ...propOverrides
   }
 

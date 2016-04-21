@@ -82,7 +82,7 @@ const SearchHeader = React.createClass({
           </div>
           <div className='search-sorting'>
             <p>Sorter treff på</p>
-            <div className="search-sorting-arrow">
+            <div className='search-sorting-arrow'>
               <img src='/images/btn-search-sorting.svg' alt='black arrow pointing down'/>
             </div>
             <select>

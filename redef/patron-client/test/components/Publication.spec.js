@@ -14,8 +14,8 @@ function setup (propOverrides) {
       id: 'test_id',
       mainTitle: 'test_maintitle',
       publicationYear: 'test_publicationYear',
-      languages: ['test_language'],
-      formats: ['test_format'],
+      languages: [ 'test_language' ],
+      formats: [ 'test_format' ],
       items: [],
       available: true
     }, ...propOverrides
@@ -44,8 +44,8 @@ describe('components', () => {
       const { node, props } = setup()
       expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle)
       expect(node.querySelector("[data-automation-id='publication_year']").textContent).toBe(props.publication.publicationYear)
-      expect(node.querySelector("[data-automation-id='publication_languages']").textContent).toBe(`${props.publication.languages[0]}_english`)
-      expect(node.querySelector("[data-automation-id='publication_formats']").textContent).toBe(`${props.publication.formats[0]}_english`)
+      expect(node.querySelector("[data-automation-id='publication_languages']").textContent).toBe(`${props.publication.languages[ 0 ]}_english`)
+      expect(node.querySelector("[data-automation-id='publication_formats']").textContent).toBe(`${props.publication.formats[ 0 ]}_english`)
       expect(node.querySelector("[data-automation-id='publication_available']").textContent).toBe('Available')
     })
 

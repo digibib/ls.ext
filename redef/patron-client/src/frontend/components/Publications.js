@@ -58,10 +58,10 @@ export default React.createClass({
           }
           if (showMore && row === showMore.row) {
             output.push(<div className='row' key={showMore.publication.id}>
-              {this.getArrow(showMore.column)}
-              <div className='col'>
-                <PublicationInfo expandSubResource={this.props.expandSubResource}
-                                 publication={showMore.publication}/>
+                {this.getArrow(showMore.column)}
+                <div className='col'>
+                  <PublicationInfo expandSubResource={this.props.expandSubResource}
+                                   publication={showMore.publication}/>
                 </div>
               </div>
             )

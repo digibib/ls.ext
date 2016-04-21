@@ -14,12 +14,13 @@ const Contributors = React.createClass({
           return (
             <p key={role}>
               <strong>{this.props.intl.formatMessage({ id: role })}</strong>:&nbsp;
-                {this.props.contributors[role].map(person => {
-                  return <Link data-automation-id='work_contributor_link' key={person.relativeUri + role} to={person.relativeUri}>{person.name}</Link>
-                })
+              {this.props.contributors[ role ].map(person => {
+                return <Link data-automation-id='work_contributor_link' key={person.relativeUri + role}
+                             to={person.relativeUri}>{person.name}</Link>
+              })
               }
             </p>
-            )
+          )
         })}
       </div>
     )

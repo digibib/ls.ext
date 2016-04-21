@@ -18,7 +18,11 @@ function setup (propOverrides) {
     location: { query: {} },
     locationQuery: {},
     totalHits: 0,
-    searchFilterActions: { setFilter: () => {} },
+    searchFilterActions: {
+      setFilter: () => {},
+      setFiltersVisibility: () => {},
+      setAllFiltersVisibility: () => {}
+    },
     ...propOverrides
   }
 
@@ -46,7 +50,7 @@ describe('containers', () => {
         location: { query: { query: 'test' } },
         totalHits: Constants.searchQuerySize + 1
       })
-      expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(2)
+      expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(1)
     })
     it('should render links to pages', () => {
       const { node } = setup({

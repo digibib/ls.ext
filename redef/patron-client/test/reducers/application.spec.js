@@ -17,11 +17,11 @@ describe('reducers', () => {
         isLoggedIn: false,
         borrowerNumber: null,
         isRequestingLogin: false,
-        loginError: false,
+        loginError: null,
         isRequestingLogout: false,
-        logoutError: false,
+        logoutError: null,
         isRequestingLoginStatus: false,
-        loginStatusError: false
+        loginStatusError: null
       })
     })
 
@@ -44,11 +44,11 @@ describe('reducers', () => {
         isLoggedIn: false,
         borrowerNumber: null,
         isRequestingLogin: false,
-        loginError: false,
+        loginError: null,
         isRequestingLogout: false,
-        logoutError: false,
+        logoutError: null,
         isRequestingLoginStatus: false,
-        loginStatusError: false
+        loginStatusError: null
       })
     })
   })

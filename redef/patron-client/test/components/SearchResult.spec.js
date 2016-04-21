@@ -105,10 +105,10 @@ describe('components', () => {
 
     it('should render formats', () => {
       const { node, props } = setup({
-        publications: [ { formats: ['format_1'] }, { formats: ['format_2'] }, { formats: ['format_3'] } ]
+        publications: [ { formats: [ 'format_1' ] }, { formats: [ 'format_2' ] }, { formats: [ 'format_3' ] } ]
       })
       expect(node.querySelector("[data-automation-id='work_formats']").innerHTML)
-        .toContain(props.result.publications[ 0 ].formats[0] + ', ' + props.result.publications[ 1 ].formats[0] + ', ' + props.result.publications[ 2 ].formats[0])
+        .toContain(props.result.publications[ 0 ].formats[ 0 ] + ', ' + props.result.publications[ 1 ].formats[ 0 ] + ', ' + props.result.publications[ 2 ].formats[ 0 ])
     })
   })
 })

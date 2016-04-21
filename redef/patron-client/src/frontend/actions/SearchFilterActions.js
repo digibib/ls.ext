@@ -53,15 +53,15 @@ export function setFiltersVisibility (aggregation, router) {
   }
 }
 
-export function setAllFiltersVisibility(router) {
+export function setAllFiltersVisibility (router) {
   return (dispatch, getState) => {
     let queryParamName = 'hideFilters'
     let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     let queryParam = locationQuery[ queryParamName ]
-    if(queryParam) {
-      delete locationQuery[queryParamName]
+    if (queryParam) {
+      delete locationQuery[ queryParamName ]
     } else {
-      locationQuery[queryParamName] = true
+      locationQuery[ queryParamName ] = true
     }
     let url = router.createPath({ pathname: '/search', query: locationQuery })
     return dispatch(replace(url))
