@@ -112,7 +112,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch_container
-    image: elasticsearch:2.2.0
+    image: elasticsearch:2.3.1
     networks:
       - backend
     ports:
