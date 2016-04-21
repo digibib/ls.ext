@@ -114,10 +114,31 @@ public class AppTest {
 
     private static JsonArrayBuilder buildContributorPatchStatement(String resource, String person) {
         return Json.createArrayBuilder()
-                .add(createObjectBuilder().add("op", "add").add("s", resource).add("p", baseUri+"ontology#contributor").add("o", createObjectBuilder().add("value", "_:c1").add("type", ANY_URI)))
-                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type").add("o", createObjectBuilder().add("value", baseUri+"ontology#Contribution").add("type", ANY_URI)))
-                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", baseUri+"ontology#role").add("o", createObjectBuilder().add("value", "http://data.deichman.no/role#author").add("type", ANY_URI)))
-                .add(createObjectBuilder().add("op", "add").add("s", "_:c1").add("p", baseUri+"ontology#agent").add("o", createObjectBuilder().add("value", person).add("type", ANY_URI)));
+                .add(createObjectBuilder()
+                        .add("op", "add")
+                        .add("s", resource).add("p", baseUri+"ontology#contributor")
+                        .add("o", createObjectBuilder()
+                                .add("value", "_:c1")
+                                .add("type", ANY_URI)))
+                .add(createObjectBuilder()
+                        .add("op", "add")
+                        .add("s", "_:c1")
+                        .add("p", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+                        .add("o", createObjectBuilder()
+                                .add("value", baseUri+"ontology#Contribution")
+                                .add("type", ANY_URI)))
+                .add(createObjectBuilder()
+                        .add("op", "add").add("s", "_:c1")
+                        .add("p", baseUri+"ontology#role")
+                        .add("o", createObjectBuilder()
+                                .add("value", "http://data.deichman.no/role#author")
+                                .add("type", ANY_URI)))
+                .add(createObjectBuilder()
+                        .add("op", "add").add("s", "_:c1")
+                        .add("p", baseUri+"ontology#agent")
+                        .add("o", createObjectBuilder()
+                                .add("value", person)
+                                .add("type", ANY_URI)));
     }
 
     private static JsonArray buildLDPatch(JsonObjectBuilder... patchStatements) {
