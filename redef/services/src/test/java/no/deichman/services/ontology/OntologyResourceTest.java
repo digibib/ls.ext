@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 public class OntologyResourceTest {
 
-    public static final Model THE_MODEL = ModelFactory.createDefaultModel();
+    private static final Model THE_MODEL = ModelFactory.createDefaultModel();
     private OntologyResource resource;
     private OntologyService mockOntologyService;
 
