@@ -49,7 +49,7 @@ end
 When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do
   filter_values = @browser.element(data_automation_id: 'filter_work.publications.formats').lis
                       .select { |li| li.checkbox.present? && li.checkbox.set? }
-                      .map { |li| li.span(data_automation_id: 'filter_label').text }
+                      .map { |li| li.element(data_automation_id: 'filter_label').text }
   wait_for {
     match = false
     @browser.div(data_automation_id: 'search-result-entries').elements(data_automation_id: 'work_formats').each do |element|

@@ -26,7 +26,7 @@ const SearchResult = React.createClass({
       displayTitle += ` — ${result.partTitle}`
     }
     return (
-      <Link to={result.relativeUri}>
+      <Link data-automation-id='work-link' to={result.relativeUri}>
         <span className='workTitle' data-automation-id='work-title'>{displayTitle}</span>
       </Link>
     )

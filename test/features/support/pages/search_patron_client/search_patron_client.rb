@@ -14,12 +14,12 @@ class SearchPatronClient < PageRoot
   end
 
   def get_search_result_list
-    @browser.divs(:class => 'result')
+    @browser.elements(:class => 'single-entry')
   end
 
   def follow_first_item_in_search_result
-    wait_for { @browser.element(class: 'result-more').a.present? }
-    @browser.element(class: 'result-more').link.click
+    wait_for { @browser.link(data_automation_id: 'work-link').present? }
+    @browser.link(data_automation_id: 'work-link').click
   end
 
   def search_term
