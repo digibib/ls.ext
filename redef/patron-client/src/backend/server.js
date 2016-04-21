@@ -37,14 +37,14 @@ app.post('/login', jsonParser, (request, response) => {
   if (!request.body.username || !request.body.password) {
     return response.sendStatus(403)
   }
-  fetch(`http://192.168.50.12:8081/cgi-bin/koha/svc/authentication?userid=${request.body.username}&password=${request.body.password}`,
+  fetch(`http://services:8081/cgi-bin/koha/svc/authentication?userid=${request.body.username}&password=${request.body.password}`,
     { method: 'GET', body: {} })
     .then(res => {
       if (res.headers && res.headers._headers && res.headers._headers[ 'set-cookie' ] && res.headers._headers[ 'set-cookie' ][ 0 ]) {
         request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
         request.session.username = request.body.username
 
-        fetch('http://192.168.50.12:8081/cgi-bin/koha/svc/members/search', {
+        fetch('http://services:8081/cgi-bin/koha/svc/members/search', {
           method: 'POST',
           headers: {
             'Cookie': request.session.kohaSession,
@@ -73,7 +73,7 @@ app.post('/login', jsonParser, (request, response) => {
 })
 
 app.post('/reserve', jsonParser, (request, response) => {
-  fetch('http://192.168.50.12:8081/api/v1/reserves', {
+  fetch('http://services:8081/api/v1/reserves', {
     method: 'POST',
     headers: {
       'Cookie': request.session.kohaSession
@@ -114,7 +114,7 @@ app.get('/loginStatus', (request, response) => {
 })
 
 app.get('/kohaLoginStatus', (request, response) => {
-  fetch('http://192.168.50.12:8081/cgi-bin/koha/svc/authentication',
+  fetch('http://services:8081/cgi-bin/koha/svc/authentication',
     {
       method: 'GET',
       body: {},
