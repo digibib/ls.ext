@@ -235,7 +235,8 @@ public class AppTest {
         final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
         assertResponse(CREATED, createWorkResponse);
         final String workUri = getLocation(createWorkResponse);
-        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Paris"));
+        final JsonArray addNameToWorkPatch =
+                buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Paris"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
@@ -656,16 +657,8 @@ public class AppTest {
                 + "<__BASEURI__externalPublisher/i1234> <http://data.deichman.no/duo#bibliofilPublisherId> \"1234\" .\n";
         input = input.replace("__BASEURI__", baseUri);
 
-        String duplicateInput = "<__BASEURI__externalPublisher/i1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Publisher> .\n"
-                + "<__BASEURI__externalPublisher/i1234> <__BASEURI__ontology#name> \"Publisher name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
-                + "<__BASEURI__externalPublisher/i1234> <http://data.deichman.no/duo#bibliofilPublisherId> \"1234\" .\n";
-        duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
-
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
-
-        Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
-        String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
 
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", body).asString();
         HttpResponse<String> result2 = buildCreateRequest(baseUri + "publisher", body).asString();
