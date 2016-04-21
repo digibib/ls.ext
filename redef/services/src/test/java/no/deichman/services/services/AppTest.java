@@ -57,9 +57,9 @@ import static org.junit.Assert.fail;
 
 public class AppTest {
     private static final int ONE_SECOND = 1000;
-    public static final int TEN_TIMES = 10;
-    public static final int FIFTY_TIMES = 50;
-    public static final boolean SHOULD_NOT_FIND = true;
+    private static final int TEN_TIMES = 10;
+    private static final int FIFTY_TIMES = 50;
+    private static final boolean SHOULD_NOT_FIND = true;
     private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
     private static final boolean USE_IN_MEMORY_REPO = true;
     private static final String LOCALHOST = "http://127.0.0.1";
