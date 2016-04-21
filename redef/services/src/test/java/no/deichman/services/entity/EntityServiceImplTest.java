@@ -65,7 +65,6 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityServiceImplTest {
 
-    public static final String SOME_BARCODE = "0123456789";
     private static final String A_BIBLIO_ID = "234567";
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -85,7 +84,7 @@ public class EntityServiceImplTest {
     @Mock
     private KohaAdapter mockKohaAdapter;
 
-    static Model modelForBiblio() { // TODO return much simpler model
+    static Model modelForBiblio() {
         Model model = ModelFactory.createDefaultModel();
         Model m = ModelFactory.createDefaultModel();
         InputStream in = EntityServiceImplTest.class.getClassLoader().getResourceAsStream("ragde.marcxml");
@@ -117,7 +116,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieving_by_id() {
+    public void test_retrieving_by_id() throws Exception {
         when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         for (EntityType entityType : EntityType.values()) {
             String currentEntity = entityType.getPath();
@@ -125,22 +124,14 @@ public class EntityServiceImplTest {
             String testDataURI = baseURI + currentEntity + "/" + entityId;
             String testJSON = getTestJSON(entityId, currentEntity);
             Model inputModel = modelFrom(testJSON, JSONLD);
-            String servicesURI = null;
-            try {
-                servicesURI = service.create(entityType, inputModel);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            String servicesURI = service.create(entityType, inputModel);
             Model comparison = ModelFactory.createDefaultModel();
             InputStream in = new ByteArrayInputStream(testJSON.replace(testDataURI, servicesURI).
                     getBytes(StandardCharsets.UTF_8));
             RDFDataMgr.read(comparison, in, JSONLD);
-            XURI xuri = null;
-            try {
-                xuri = new XURI(servicesURI);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            XURI xuri;
+            xuri = new XURI(servicesURI);
             Model toBeTested = service.retrieveById(xuri);
             boolean value = toBeTested.isIsomorphicWith(comparison);
             assertTrue("Models were not isomorphic", value);
@@ -457,25 +448,25 @@ public class EntityServiceImplTest {
                 + "  \"op\":\"add\",\n"
                 + "  \"s\": \"%1$s\",\n"
                 + "  \"p\":\"%2$scontributor\",\n"
-                + "  \"o\": {\"value\": \"_:b0\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "  \"o\": {\"value\": \"_:b0\", \"type\": \"%4$s\"}"
                 + "},\n"
                 + "{"
                 + "  \"op\":\"add\",\n"
                 + "  \"s\": \"_:b0\",\n"
                 + "  \"p\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#type\",\n"
-                + "  \"o\": {\"value\": \"%2$sContribution\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "  \"o\": {\"value\": \"%2$sContribution\", \"type\": \"%4$s\"}"
                 + "},\n"
                 + "{"
                 + "  \"op\":\"add\",\n"
                 + "  \"s\": \"_:b0\",\n"
                 + "  \"p\":\"%2$sagent\",\n"
-                + "  \"o\": {\"value\": \"%3$s\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "  \"o\": {\"value\": \"%3$s\", \"type\": \"%4$s\"}"
                 + "},\n"
                 + "{"
                 + "  \"op\":\"add\",\n"
                 + "  \"s\": \"_:b0\",\n"
                 + "  \"p\":\"%2$srole\",\n"
-                + "  \"o\": {\"value\": \"http://data.deichman.no/role#author\", \"type\": \"http://www.w3.org/2001/XMLSchema#anyURI\"}"
+                + "  \"o\": {\"value\": \"http://data.deichman.no/role#author\", \"type\": \"%4$s\"}"
                 + "}\n"
                 + "]", workUri.getUri(), ontologyURI, personUri.getUri(), XSD.anyURI.getURI()));
     }
