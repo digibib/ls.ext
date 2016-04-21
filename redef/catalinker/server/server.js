@@ -168,7 +168,12 @@ app.get('/config', function (request, response) {
         ],
         nextStep: {
           buttonLabel: 'Neste steg: Beskrivelse',
-          createNewResource: 'Publication'
+          createNewResource: {
+            type: 'Publication',
+            prefillValuesFromResource: {
+              "Work": [ "mainTitle", "subtitle", "partTitle", "partNumber", "language" ]
+            }
+          }
         }
       },
       {

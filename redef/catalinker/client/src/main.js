@@ -219,6 +219,27 @@
       }
     }
   }
+  
+  function allInputs () {
+    var inputs = _.select(ractive.get('inputs'), function (input) {
+      return (input.fragment === 'publicationOf' || input.fragment === 'recordID')
+    })
+
+    _.each(ractive.get('inputGroups'), function (group) {
+      _.each(group.inputs, function (input) {
+        if (input.subInputs) {
+          _.each(input.subInputs, function (subInput) {
+            inputs.push(subInput.input)
+          })
+        } else {
+          if (!input.isRoot) {
+            inputs.push(input)
+          }
+        }
+      })
+    })
+    return inputs;
+  }
 
   var loadExistingResource = function (resourceUri, options) {
     return axios.get(resourceUri)
@@ -228,26 +249,9 @@
         var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(resourceUri)[1])
         var root = ldGraph.parse(graphData).byType(type)[0]
 
-        var inputsToLoad = _.select(ractive.get('inputs'), function (input) {
-          return (input.fragment === 'publicationOf' || input.fragment === 'recordID')
-        })
-
-        _.each(ractive.get('inputGroups'), function (group) {
-          _.each(group.inputs, function (input) {
-            if (input.subInputs) {
-              _.each(input.subInputs, function (subInput) {
-                inputsToLoad.push(subInput.input)
-              })
-            } else {
-              if (!input.isRoot) {
-                inputsToLoad.push(input)
-              }
-            }
-          })
-        })
 
         var promises = []
-        _.each(inputsToLoad, function (input, inputIndex) {
+        _.each(allInputs(), function (input, inputIndex) {
           if ((type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
             (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))) {
             var predicate = input.predicate
@@ -1239,7 +1243,24 @@
             }
             var newResourceType = event.context.createNewResource
             if (newResourceType && (!ractive.get('targetUri.' + newResourceType))) {
-              saveNewResourceFromInputs(newResourceType)
+              _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
+                _.each(newResourceType.prefillValuesFromResource[copyFromType], function (fragment) {
+                  var inputs = allInputs()
+                  var sourceInput = _.find(inputs, function (input) {
+                    return (input.fragment === fragment && unPrefix(input.domain) === copyFromType)
+                  })
+                  if (sourceInput) {
+                    var targetInput = _.find(inputs, function (input) {
+                      return (input.fragment === fragment && unPrefix(input.domain) === newResourceType.type)
+                    })
+                    if (targetInput) {
+                      targetInput.values = deepClone(sourceInput.values)
+                    }
+                  }
+                })
+              })
+              saveNewResourceFromInputs(newResourceType.type)
+              ractive.update();
             }
             var foundSelectedTab = false
             _.each(ractive.get('inputGroups'), function (group, groupIndex) {

@@ -455,9 +455,15 @@ Then(/^jeg kan legge til tittel for det nye verket$/) do
   @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
 end
 
+Then(/^jeg kan legge til undertittel for det nye verket$/) do
+  @context[:work_subtitle] = generateRandomString
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#subtitle", @context[:work_subtitle])
+end
+
 Then(/^jeg kan legge til språk for det nye verket$/) do
   @context[:work_lang] = "http://lexvo.org/id/iso639-3/nob"
-  @site.RegWork.select_prop("http://#{ENV['HOST']}:8005/ontology#language", "Norsk (bokmål)")
+  @context[:work_lang_label] = "Norsk (bokmål)"
+  @site.RegWork.select_prop("http://#{ENV['HOST']}:8005/ontology#language", @context[:work_lang_label])
 end
 
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
@@ -680,11 +686,8 @@ end
 When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   # TODO: Unify get_prop and get_select_prop in the page objects to avoid having to specify it.
   data = Hash.new
-  data['mainTitle'] = :get_prop_from_span
-  data['subtitle'] = :get_prop_from_span
   data['publicationYear'] = :get_prop_from_span
   data['format'] = :get_prop_from_span
-  data['language'] = :get_prop_from_span
   data['partTitle'] = :get_prop_from_span
   data['partNumber'] = :get_prop_from_span
   data['edition'] = :get_prop_from_span
@@ -775,3 +778,10 @@ When(/^at verket er tilkoplet riktig (.*)$/) do |concept|
   data[@site.translate(concept)] = :get_prop_from_span
   batch_verify_props @site.RegWork, 'Work', data, :locate_by_fragment
 end
+
+When(/^at utgivelsen har samme (.*) som verket$/) do |field|
+  data = Hash.new
+  data[@site.translate(field)] = :get_prop_from_span
+  batch_verify_props @site.RegPublication, 'Work', data, :locate_by_fragment
+end
+

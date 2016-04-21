@@ -12,6 +12,7 @@ When(/^at det finnes et verk med forfatter$/) do
   step "jeg søker på navn til opphavsperson for det nye verket"
   step "velger person fra en treffliste"
   step "jeg kan legge til tittel for det nye verket"
+  step "jeg kan legge til undertittel for det nye verket"
   step "jeg legger til et årstall for førsteutgave av nye verket"
   step "jeg kan legge til språk for det nye verket"
   step "grensesnittet viser at endringene er lagret"
@@ -44,11 +45,8 @@ end
 When(/^legger inn opplysningene om utgivelsen$/) do
   # TODO: Unify add_prop and select_prop in the page objects to avoid having to specify it.
   data = Hash.new
-  data['mainTitle'] = [generateRandomString, :add_prop]
-  data['subtitle'] = [generateRandomString, :add_prop]
   data['publicationYear'] = [rand(2015).to_s, :add_prop]
   data['format'] = [:random, :select_prop]
-  data['language'] = [:random, :select_prop]
   data['partTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
   data['edition'] = [generateRandomString, :add_prop]

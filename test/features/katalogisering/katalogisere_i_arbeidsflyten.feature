@@ -72,6 +72,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg verifiserer opplysningene om utgivelsen
     Og at utgivelsen er tilkoplet riktig utgivelsessted
     Og at utgivelsen er tilkoplet riktig utgitt av
+    Og at utgivelsen har samme hovedtittel som verket
+    Og at utgivelsen har samme undertittel som verket
     Så jeg åpner verket for lesing
     Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden

@@ -298,6 +298,8 @@ services:
     image: "digibib/z3950proxy"
     networks:
       - backend
+    ports:
+      - 3000:3000
     environment:
       APPSECRET: "${Z3950SECRET}"
       BS_SERVER: "${BS_SERVER}"

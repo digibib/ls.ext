@@ -13,8 +13,10 @@ class Site
         'utgiver' => 'publisher',
         'utgitt av' => 'publishedBy',
         'serie' => 'serial',
-        'emne' => 'subject'
-    }[concept]
+        'emne' => 'subject',
+        'hovedtittel' => "mainTitle",
+        'undertittel' => "subtitle"
+    }[concept.downcase]
   end
 
   def initialize(browser)
