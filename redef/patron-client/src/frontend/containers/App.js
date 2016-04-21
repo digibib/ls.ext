@@ -4,9 +4,6 @@ import { bindActionCreators } from 'redux'
 import SearchHeader from '../components/SearchHeader'
 import * as LanguageActions from '../actions/LanguageActions'
 
-import * as LoginActions from '../actions/LoginActions'
-import ModalRoot from './ModalRoot'
-
 const App = React.createClass({
   propTypes: {
     dispatch: PropTypes.func.isRequired,
@@ -14,26 +11,19 @@ const App = React.createClass({
     location: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired,
     languageActions: PropTypes.object.isRequired,
-    loginActions: PropTypes.object.isRequired,
     locale: PropTypes.string.isRequired,
-    totalHits: PropTypes.number.isRequired,
-    isLoggedIn: PropTypes.bool.isRequired
+    totalHits: PropTypes.number.isRequired
   },
   componentWillMount () {
-    this.props.loginActions.updateLoginStatus()
     this.props.languageActions.loadLanguage()
   },
   render () {
     return (
       <div>
-        <ModalRoot />
         <SearchHeader locationQuery={this.props.location.query} dispatch={this.props.dispatch}
                       loadLanguage={this.props.languageActions.loadLanguage}
                       locale={this.props.locale}
                       totalHits={this.props.totalHits}
-                      isLoggedIn={this.props.isLoggedIn}
-                      logout={this.props.loginActions.logout}
-                      showLoginDialog={this.props.loginActions.showLoginDialog}
         />
         {this.props.children}
       </div>
@@ -45,7 +35,6 @@ function mapStateToProps (state) {
   return {
     routing: state.routing,
     locale: state.application.locale,
-    isLoggedIn: state.application.isLoggedIn,
     totalHits: state.search.totalHits
   }
 }
@@ -53,8 +42,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    languageActions: bindActionCreators(LanguageActions, dispatch),
-    loginActions: bindActionCreators(LoginActions, dispatch)
+    languageActions: bindActionCreators(LanguageActions, dispatch)
   }
 }
 

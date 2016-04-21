@@ -9,8 +9,7 @@ export default React.createClass({
   propTypes: {
     publications: PropTypes.array.isRequired,
     expandSubResource: PropTypes.func.isRequired,
-    locationQuery: PropTypes.object.isRequired,
-    startReservation: PropTypes.func.isRequired
+    locationQuery: PropTypes.object.isRequired
   },
   contextTypes: {
     router: React.PropTypes.object
@@ -44,7 +43,6 @@ export default React.createClass({
       <div>
         {threeAndThreePublications.map((publications, row) => {
           let output = [ <div key={`row-${row}`} className='row'>{publications.map(publication => <Publication
-            startReservation={this.props.startReservation}
             key={publication.id}
             expandSubResource={this.props.expandSubResource}
             publication={publication}/>)}</div> ]

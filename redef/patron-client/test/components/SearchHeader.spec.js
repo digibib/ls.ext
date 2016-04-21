@@ -15,9 +15,6 @@ function setup (propOverrides) {
     dispatch: expect.createSpy(),
     locationQuery: {},
     totalHits: 0,
-    isLoggedIn: false,
-    logout: () => {},
-    showLoginDialog: () => {},
     ...propOverrides
   }
 

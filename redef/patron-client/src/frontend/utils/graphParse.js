@@ -71,7 +71,6 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateLiteral(publication, 'mainTitle', publicationResource)
     populateLiteral(publication, 'partTitle', publicationResource)
     populateLiteral(publication, 'publicationYear', publicationResource)
-    populateLiteral(publication, 'recordID', publicationResource, 'recordId')
     populateUris(publication, 'language', publicationResource, 'languages')
     populateUris(publication, 'format', publicationResource, 'formats')
     publication.uri = publicationResource.id
@@ -113,10 +112,10 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   return work
 }
 
-function populateLiteral (target, field, sourceResource, targetFieldOverride) {
+function populateLiteral (target, field, sourceResource) {
   target[ field ] = ''
   if (sourceResource.has(field)) {
-    target[ targetFieldOverride || field ] = sourceResource.get(field).value
+    target[ field ] = sourceResource.get(field).value
   }
 }
 

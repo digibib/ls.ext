@@ -103,20 +103,3 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så den skal inneholde eksemplarinformasjonen
       | filial                         | antall | plassering | status               |
       | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
-
-  @wip
-  Scenario: Logge inn
-    Gitt at jeg er i søkegrensesnittet
-    Og jeg går til Min Side
-    Så skal jeg se innloggingsvinduet
-    Når jeg logger inn
-    Så skal jeg se informasjonen min
-
-  @wip
-  Scenario: Låner reserverer bok på verkssiden
-    Gitt at låneren har funnet en bok
-    Og at låneren går inn på verkssiden
-    Når låneren reserverer boka på verkssiden
-    Og låneren autentiserer seg
-    Og låneren velger henteavdeling på boka og trykker reserver
-    Så får låneren tilbakemelding om at boka er reservert

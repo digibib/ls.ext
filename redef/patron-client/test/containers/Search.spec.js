@@ -1,4 +1,4 @@
-/* eslint-env mocha */
+/* global describe, it */
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
@@ -54,7 +54,7 @@ describe('containers', () => {
         totalHits: Constants.searchQuerySize * 3
       })
       expect(node.querySelector("[data-automation-id='search-results-pagination']")
-        .getElementsByClassName('pagination')[ 0 ].children.length).toBe(5) // including next and prev
+        .getElementsByClassName('pages')[ 0 ].children.length).toBe(3)
     })
   })
 })

@@ -14,7 +14,9 @@ export function requestTranslation (locale) {
 export function translationFailure (error) {
   return {
     type: types.TRANSLATION_FAILURE,
-    payload: error,
+    payload: {
+      error: error
+    },
     error: true
   }
 }

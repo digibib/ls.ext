@@ -13,15 +13,7 @@ describe('reducers', () => {
         locale: 'no',
         messages: {
           no: { ...i18n.no }
-        },
-        isLoggedIn: false,
-        borrowerNumber: null,
-        isRequestingLogin: false,
-        loginError: false,
-        isRequestingLogout: false,
-        logoutError: false,
-        isRequestingLoginStatus: false,
-        loginStatusError: false
+        }
       })
     })
 
@@ -40,15 +32,7 @@ describe('reducers', () => {
         messages: {
           no: { ...i18n.no },
           en: messages
-        },
-        isLoggedIn: false,
-        borrowerNumber: null,
-        isRequestingLogin: false,
-        loginError: false,
-        isRequestingLogout: false,
-        logoutError: false,
-        isRequestingLoginStatus: false,
-        loginStatusError: false
+        }
       })
     })
   })

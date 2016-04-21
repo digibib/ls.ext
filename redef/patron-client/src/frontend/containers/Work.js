@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import * as ResourceActions from '../actions/ResourceActions'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Constants from '../constants/Constants'
@@ -8,8 +9,6 @@ import Contributors from '../components/Contributors'
 import Publications from '../components/Publications'
 import Genres from '../components/Genres'
 import Subjects from '../components/Subjects'
-import * as ResourceActions from '../actions/ResourceActions'
-import * as ReservationActions from '../actions/ReservationActions'
 
 const Work = React.createClass({
   propTypes: {
@@ -18,9 +17,7 @@ const Work = React.createClass({
     isRequesting: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
-    locationQuery: PropTypes.object.isRequired,
-    reservationActions: PropTypes.object.isRequired
-
+    locationQuery: PropTypes.object.isRequired
   },
   componentWillMount () {
     this.props.resourceActions.getWorkResource(`${Constants.backendUri}/work/${this.props.params.workId}`)
@@ -90,8 +87,7 @@ const Work = React.createClass({
         </div>
         <Publications locationQuery={this.props.locationQuery}
                       expandSubResource={this.props.resourceActions.expandSubResource}
-                      publications={work.publications}
-                      startReservation={this.props.reservationActions.startReservation}/>
+                      publications={work.publications}/>
       </div>
     )
   }
@@ -126,7 +122,6 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     resourceActions: bindActionCreators(ResourceActions, dispatch),
-    reservationActions: bindActionCreators(ReservationActions, dispatch),
     dispatch: dispatch
   }
 }
