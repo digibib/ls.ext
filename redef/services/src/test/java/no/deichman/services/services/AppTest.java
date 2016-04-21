@@ -628,7 +628,7 @@ public class AppTest {
     @Test
     public void test_deletion_of_bnodes() throws UnirestException {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "placeOfPublication", "{}").asString();
-        String op = "ADD";
+        String op = ADD;
         String s = getLocation(result1);
         String p1 = baseUri + "ontology#place";
         String o1 = "_:b0";
@@ -636,13 +636,21 @@ public class AppTest {
         String p2 = baseUri + "ontology#country";
         String o2 = "Norway";
 
-        JsonArray body = Json.createArrayBuilder()
+        JsonArray addBody = Json.createArrayBuilder()
                 .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
                 .add(buildLDPatch(buildPatchStatement(op, o1, p2, o2)).get(0))
                 .build();
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(s, addBody).asString();
 
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+
+        JsonArray delBody = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(DEL, s, p1, o1, type)).get(0))
+                .add(buildLDPatch(buildPatchStatement(DEL, o1, p2, o2)).get(0))
+                .build();
+        HttpResponse<String> result3 = buildPatchRequest(s, delBody).asString();
+
+        assertEquals(Status.OK.getStatusCode(), result3.getStatus());
     }
 
     private HttpResponse<String> buildDeleteRequest(String location) throws UnirestException {
