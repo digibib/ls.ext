@@ -100,8 +100,6 @@ function mapDispatchToProps (dispatch) {
     modalActions: bindActionCreators(ModalActions, dispatch)
   }
 }
-let boop = injectIntl(Login)
-export { boop as Login }
 
 export default connect(
   mapStateToProps,
