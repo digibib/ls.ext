@@ -984,7 +984,7 @@ public class AppTest {
                 .header("Accept", "application/ld+json");
     }
 
-    protected Client getClient() {
+    private Client getClient() {
         return embeddedElasticsearchServer.getClient();
     }
 
