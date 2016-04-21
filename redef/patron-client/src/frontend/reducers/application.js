@@ -1,12 +1,32 @@
 import { actionTypes } from 'redux-localstorage'
-import { RECEIVE_TRANSLATION } from '../constants/ActionTypes'
+import {
+  RECEIVE_TRANSLATION,
+  SHOW_LOGIN_DIALOG,
+  REQUEST_LOGIN,
+  LOGIN_FAILURE,
+  LOGIN_SUCCESS,
+  REQUEST_LOGOUT,
+  LOGOUT_FAILURE,
+  LOGOUT_SUCCESS,
+  REQUEST_LOGIN_STATUS,
+  LOGIN_STATUS_FAILURE,
+  RECEIVE_LOGIN_STATUS
+} from '../constants/ActionTypes'
 import * as i18n from '../i18n'
 
 const initialState = {
   locale: 'no',
   messages: {
     no: { ...i18n.no }
-  }
+  },
+  isLoggedIn: false,
+  borrowerNumber: null,
+  isRequestingLogin: false,
+  loginError: false,
+  isRequestingLogout: false,
+  logoutError: false,
+  isRequestingLoginStatus: false,
+  loginStatusError: false
 }
 
 export default function application (state = initialState, action) {
@@ -26,6 +46,42 @@ export default function application (state = initialState, action) {
             ...action.payload.messages
           }
         }
+      }
+    case SHOW_LOGIN_DIALOG:
+      return { ...state, loginError: null }
+    case REQUEST_LOGIN:
+      return { ...state, isRequestingLogin: true }
+    case LOGIN_FAILURE:
+      return {
+        ...state,
+        isRequestingLogin: false,
+        loginError: action.payload.message
+      }
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        isRequestingLogin: false,
+        isLoggedIn: true,
+        loginError: false,
+        borrowerNumber: action.payload.borrowerNumber
+      }
+    case REQUEST_LOGOUT:
+      return { ...state, isRequestingLogout: true }
+    case LOGOUT_FAILURE:
+      return { ...state, isRequestingLogout: false, logoutError: action.payload.message }
+    case LOGOUT_SUCCESS:
+      return { ...state, isRequestingLogout: false, isLoggedIn: false, logoutError: false, borrowerNumber: null }
+    case REQUEST_LOGIN_STATUS:
+      return { ...state, isRequestingLoginStatus: true }
+    case LOGIN_STATUS_FAILURE:
+      return { ...state, isRequestingLoginStatus: false, loginStatusError: action.payload.message }
+    case RECEIVE_LOGIN_STATUS:
+      return {
+        ...state,
+        isRequestingLoginStatus: false,
+        isLoggedIn: action.payload.isLoggedIn,
+        loginStatusError: false,
+        borrowerNumber: action.payload.borrowerNumber
       }
     default:
       return state

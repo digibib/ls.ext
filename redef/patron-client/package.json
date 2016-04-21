@@ -28,7 +28,7 @@
     "dockerdev": "cross-env POLL=true npm start",
     "dist": "npm run clean && npm run lint && npm test && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
     "productionbuild": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
-    "start": "npm run build && node src/backend/server.js",
+    "start": "npm run build && node --debug src/backend/server.js",
     "production": "npm run productionbuild && cross-env NODE_ENV=production node src/backend/server.js",
     "test": "cross-env NODE_ENV=test mocha -R min --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:debug": "cross-env NODE_ENV=test mocha debug --recursive --compilers js:babel-core/register --require ./test/setup.js",
@@ -65,6 +65,8 @@
     "raw-loader": "^0.5.1",
     "react-addons-test-utils": "^15.0.1",
     "react-intl": "^2.0.0-rc-1",
+    "react-modal": "^1.1.2",
+    "react-paginate": "^1.0.3",
     "react-stub-context": "^0.4.0",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",
@@ -82,17 +84,20 @@
     "webpack-hot-middleware": "^2.10.0"
   },
   "dependencies": {
+    "body-parser": "^1.15.0",
     "compass-mixins": "^0.12.7",
     "es5-shim": "^4.5.7",
     "express": "^4.13.4",
     "express-request-proxy": "^2.0.0",
+    "express-session": "^1.13.0",
     "intl": "^1.1.0",
     "isomorphic-fetch": "^2.2.1",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#9db0bef909e6dfb10662959c499541251ca346ec",
+    "node-uuid": "^1.4.7",
     "react": "^15.0.1",
     "react-addons-create-fragment": "^15.0.1",
     "react-dom": "^15.0.1",
-    "react-paginate": "git+https://github.com/k5o/react-paginate#3d82fbfa209b81c428741a6760b8caa0b5a04bf8",
+    "react-paginate": "1.0.3",
     "react-redux": "^4.4.1",
     "react-router": "^2.2.4",
     "react-router-redux": "^4.0.0",
@@ -101,6 +106,7 @@
     "redux-localstorage-filter": "^0.1.1",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.1",
-    "urijs": "^1.17.1"
+    "urijs": "^1.17.1",
+    "xml2js": "^0.4.16"
   }
 }

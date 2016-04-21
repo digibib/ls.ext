@@ -29,9 +29,7 @@ export function receiveSearch (processedResponse) {
 export function searchFailure (error) {
   return {
     type: types.SEARCH_FAILURE,
-    payload: {
-      message: error
-    },
+    payload: error,
     error: true
   }
 }
@@ -62,7 +60,7 @@ export function search () {
       .then(json => processSearchResponse(json, locationQuery))
       .then(processedResponse => {
         if (processedResponse.error) {
-          return dispatch(searchFailure(processedResponse))
+          return dispatch(searchFailure(Error(processedResponse)))
         } else {
           return dispatch(receiveSearch(processedResponse))
         }
