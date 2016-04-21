@@ -135,8 +135,7 @@ public class AppTest {
     }
 
     private static String getLocation(HttpResponse<?> response) {
-        String str = response.getHeaders().getFirst("Location");
-        return str;
+        return response.getHeaders().getFirst("Location");
     }
 
     private static RequestBodyEntity buildPatchRequest(String uri, JsonArray patch) {
