@@ -18,6 +18,8 @@ export default {
   'Login.cancel': 'Avbryt',
   'Login.invalidCredentials': 'Feil brukernavn og/eller passord',
   'Login.genericLoginError': 'Noe gikk galt under påloggingen, vennligst prøv igjen senere',
+  'MyPage.borrowerNumber': 'Lånernummer',
+  'MyPage.mustBeLoggedIn': 'Du må være logget inn for å se Min Side.',
   'PublicationInfo.items': 'Eksemplarer:',
   'Publication.available': 'Ledig',
   'Publication.unavailable': 'Ikke ledig',

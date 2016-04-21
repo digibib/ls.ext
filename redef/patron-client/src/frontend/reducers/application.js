@@ -22,11 +22,11 @@ const initialState = {
   isLoggedIn: false,
   borrowerNumber: null,
   isRequestingLogin: false,
-  loginError: false,
+  loginError: null,
   isRequestingLogout: false,
-  logoutError: false,
+  logoutError: null,
   isRequestingLoginStatus: false,
-  loginStatusError: false
+  loginStatusError: null
 }
 
 export default function application (state = initialState, action) {
@@ -62,7 +62,7 @@ export default function application (state = initialState, action) {
         ...state,
         isRequestingLogin: false,
         isLoggedIn: true,
-        loginError: false,
+        loginError: null,
         borrowerNumber: action.payload.borrowerNumber
       }
     case REQUEST_LOGOUT:

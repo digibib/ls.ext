@@ -7,6 +7,7 @@ import App from '../containers/App'
 import Search from '../containers/Search'
 import Work from '../containers/Work'
 import Person from '../containers/Person'
+import MyPage from '../containers/MyPage'
 import store from '../store'
 
 const history = syncHistoryWithStore(browserHistory, store)
@@ -19,6 +20,7 @@ export default (
       <Route path='work/:workId' component={Work}/>
       <Route path='work/:workId/publication/:publicationId' component={Work}/>
       <Route path='person/:personId' component={Person}/>
+      <Route path='profile' component={MyPage}/>
     </Route>
   </Router>
 )

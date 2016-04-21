@@ -49,7 +49,7 @@ const SearchHeader = React.createClass({
             </button>
             <div className='primary-menu'>
               <ul>
-                <li><FormattedMessage {...messages.myProfile} /></li>
+                <li><Link to='/profile'><FormattedMessage {...messages.myProfile} /></Link></li>
                 <li><FormattedMessage {...messages.myLoans} /></li>
                 <li><FormattedMessage {...messages.more} /></li>
                 <li><FormattedMessage {...messages.contactUs} /></li>
