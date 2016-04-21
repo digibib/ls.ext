@@ -764,7 +764,7 @@ public class AppTest {
 
     public Model getAuthorizedValueTestData(AuthorizedValue authorizedValue) throws Exception {
 
-        String testData = null;
+        String testData;
         switch (authorizedValue) {
             case ADAPTATION_OF_PUBLICATION_FOR_PARTICULAR_USER_GROUPS:
                 testData = "<http://data.deichman.no/adaptationForParticularUserGroups#easyLanguage> <http://www.w3.org/2000/01/rdf-schema#label> \"Easy to read, easy language\"@en .";
