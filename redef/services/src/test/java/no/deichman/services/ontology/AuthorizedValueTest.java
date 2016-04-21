@@ -3,12 +3,16 @@ package no.deichman.services.ontology;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Responsibility: Test AuthorizedValue.
  */
 public class AuthorizedValueTest {
 
-    private static final String[] AUTHORIZED_VALUES = new String[]{
+    private static final List<String> AUTHORIZED_VALUES = new ArrayList<>(Arrays.asList(
             "language",
             "format",
             "nationality",
@@ -21,7 +25,7 @@ public class AuthorizedValueTest {
             "writingSystem",
             "illustrativeMatter",
             "role",
-            "mediaType"};
+            "mediaType"));
 
     @Test
     public void test_all_types_pattern_is_available() {
@@ -40,7 +44,7 @@ public class AuthorizedValueTest {
 
     @Test
     public void test_enum_does_not_contain_other_values() {
-        int length = AUTHORIZED_VALUES.length;
+        int length = AUTHORIZED_VALUES.size();
         Assert.assertFalse("Authorized values contains untested values", length < AuthorizedValue.values().length);
         Assert.assertFalse("Authorized values does not contain all expected values", length > AuthorizedValue.values().length);
     }
