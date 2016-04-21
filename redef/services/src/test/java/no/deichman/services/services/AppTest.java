@@ -56,13 +56,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class AppTest {
-    public static final int ONE_SECOND = 1000;
-    public static final int ZERO = 0;
-    public static final int ONE = 1;
-    public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
+    private static final int ONE_SECOND = 1000;
     public static final int TEN_TIMES = 10;
     public static final int FIFTY_TIMES = 50;
     public static final boolean SHOULD_NOT_FIND = true;
