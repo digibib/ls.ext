@@ -12,4 +12,4 @@ RUN npm install > install.log 2>&1
 
 EXPOSE 8000
 
-CMD [ "npm", "run", "production"]
+CMD [ "npm", "start"]
