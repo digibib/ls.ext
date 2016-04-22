@@ -1,0 +1,9 @@
+.pagination-area {
+  @include span(12 of 12);
+  margin-bottom: rhythm(6);
+
+  .pagination {
+    float: right;
+  }
+
+}

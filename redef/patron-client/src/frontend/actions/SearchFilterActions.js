@@ -67,3 +67,26 @@ export function setAllFiltersVisibility (router) {
     return dispatch(replace(url))
   }
 }
+
+export function collapseFilter (aggregation, router) {
+  return (dispatch, getState) => {
+    let queryParamName = 'collapse'
+    let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    let queryParam = locationQuery[ queryParamName ] || []
+    if (!Array.isArray(queryParam)) {
+      queryParam = [ queryParam ]
+    }
+    if (queryParam.includes(aggregation)) {
+      queryParam = queryParam.filter(collapseFilter => collapseFilter !== aggregation)
+    } else {
+      queryParam.push(aggregation)
+    }
+    if (queryParam.length === 0) {
+      delete locationQuery [ queryParamName ]
+    } else {
+      locationQuery[ queryParamName ] = queryParam
+    }
+    let url = router.createPath({ pathname: '/search', query: locationQuery })
+    return dispatch(replace(url))
+  }
+}

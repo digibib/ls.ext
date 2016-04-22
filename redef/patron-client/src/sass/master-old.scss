@@ -1,12 +1,12 @@
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 html {
-  font-family: sans-serif;
+  font-family: 'poppins-regular';
   -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  margin: 0
+  margin: 0;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
@@ -102,11 +102,7 @@ code, kbd, pre, samp {
   font-size: 1em
 }
 
-button, input, optgroup, select, textarea {
-  color: inherit;
-  font: inherit;
-  margin: 0
-}
+
 
 button {
   overflow: visible

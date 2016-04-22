@@ -8,7 +8,8 @@ export default React.createClass({
     locationQuery: PropTypes.object.isRequired,
     setFilter: PropTypes.func.isRequired,
     setFiltersVisibility: PropTypes.func.isRequired,
-    setAllFiltersVisibility: PropTypes.func.isRequired
+    setAllFiltersVisibility: PropTypes.func.isRequired,
+    collapseFilter: PropTypes.func.isRequired
   },
   contextTypes: {
     router: React.PropTypes.object
@@ -44,9 +45,7 @@ export default React.createClass({
             </button>)
               : (<button onClick={this.handleFiltersOpenClick} className='limit-filters-open' type='button'>
               <img src='/images/btn-limit-filter-close.svg' alt='Red arrow pointing up'/>
-            </button>)
-
-            }
+            </button>)}
           </div>
 
           <header className='limit-filters-header'>
@@ -64,6 +63,7 @@ export default React.createClass({
                   locationQuery={this.props.locationQuery}
                   setFilter={this.props.setFilter}
                   setFiltersVisibility={this.props.setFiltersVisibility}
+                  collapseFilter={this.props.collapseFilter}
                 />
               )
             })}

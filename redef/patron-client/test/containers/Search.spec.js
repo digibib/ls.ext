@@ -21,7 +21,8 @@ function setup (propOverrides) {
     searchFilterActions: {
       setFilter: () => {},
       setFiltersVisibility: () => {},
-      setAllFiltersVisibility: () => {}
+      setAllFiltersVisibility: () => {},
+      collapseFilter: () => {}
     },
     ...propOverrides
   }

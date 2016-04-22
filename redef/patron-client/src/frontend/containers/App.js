@@ -6,6 +6,7 @@ import * as LanguageActions from '../actions/LanguageActions'
 
 import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
+import Footer from '../components/Footer'
 
 const App = React.createClass({
   propTypes: {
@@ -27,6 +28,7 @@ const App = React.createClass({
     return (
       <div>
         <ModalRoot />
+        <div className='outer-container'>
         <SearchHeader locationQuery={this.props.location.query} dispatch={this.props.dispatch}
                       loadLanguage={this.props.languageActions.loadLanguage}
                       locale={this.props.locale}
@@ -36,6 +38,8 @@ const App = React.createClass({
                       showLoginDialog={this.props.loginActions.showLoginDialog}
         />
         {this.props.children}
+          </div>
+        <Footer />
       </div>
     )
   }

@@ -24,10 +24,10 @@
 
 .search-results-number {
   @include span(5 of 12);
-  margin-top: rhythm(4);
+  margin-top: rhythm(8);
 
   @include breakpoint($small){
-     margin-top: rhythm(4);
+     margin-top: rhythm(8);
     @include span(7 of 12);
   }
 
@@ -50,32 +50,45 @@
     color: $darkGreyColor;
     text-transform: uppercase;
     font-size: 0.8em;
+    display: none;
   }
 
-  .search-sorting-arrow {
-    position: absolute;
-    right: -50px;
-  }
+    overflow: hidden;
+    background: url(../../../../../public/images/btn-search-sorting.svg);
 
-  select {
-    width: 100%;
-    padding: rhythm(2);
-    @extend %border;
-    font-family: inherit;
-    font-size: 1em;
-/*
-    -moz-appearance:none;
-    -webkit-appearance:none;
-    -o-appearance:none;*/
 
-  }
+    select {
+      background: transparent;
+      width: 100%;
+      padding: rhythm(2);
+      @extend %border;
+      font-family: sans-serif !important;
+      font-size: 1em;
+      -webkit-appearance: none;
+      -moz-appearance:none;
+      -o-appearance:none;
+    }
 
-  option {
-    padding: rhythm(2);
-    font-size: inherit;
+}
 
 
 
-  }
+.search-sorting select {
+  background: transparent;
+  width: 268px;
+  padding: 5px;
+  font-size: 16px;
+  line-height: 1;
+  border: 0;
+  border-radius: 0;
+  height: 34px;
+  -webkit-appearance: none;
+}
 
+.search-sorting {
+  width: 240px;
+  height: 34px;
+  overflow: hidden;
+  background: url(../../../../../public/images/btn-search-sorting.svg) no-repeat right #ddd;
+  border: 1px solid #ccc;
 }

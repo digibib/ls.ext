@@ -59,9 +59,7 @@ $white: #FFF !default;
 
 //Borders
 %border-top {  border-top: 2px solid #212121;  }
-
 %border-bottom {  border-bottom: 2px solid #212121;  }
-
 %border {  border: 1px solid $blackColor;  }
 
 $colors: (
@@ -75,37 +73,39 @@ $colors: (
 
 //FONTS
 
+$headerFont: 'poppins-bold', Arial, sans-serif;
+
 $fonts: (
         h1: (
-                family: #{Arial, "Open Sans", Georgia, sans-serif},
+                family: #{'poppins-bold', Arial, sans-serif},
                 weight: bold,
                 style: normal,
                 mobile-size: 26px,
                 desktop-size: 24px
         ),
         h2: (
-                family: #{Arial, "Open Sans", Georgia, sans-serif},
+                family: #{ 'poppins-regular', Arial, sans-serif},
                 weight: normal,
                 style: normal,
                 mobile-size: 24px,
                 desktop-size: 18px
         ),
         h3: (
-                family: #{Arial, "Open Sans", Georgia, sans-serif},
+                family: #{ 'poppins-regular', Arial, sans-serif},
                 weight: normal,
                 style: normal,
                 mobile-size: 18px,
                 desktop-size: 22px
         ),
         h4: (
-                family: #{Arial, "Open Sans", Georgia, sans-serif},
+                family: #{ 'poppins-regular', Arial, sans-serif},
                 weight: normal,
                 style: normal,
                 mobile-size: 16px,
                 desktop-size: 18px
         ),
         default: (
-                family: #{Arial, "Open Sans", sans-serif},
+                family: #{ 'poppins-regular', Arial, sans-serif},
                 weight: normal,
                 style: normal,
                 italic-family: null,

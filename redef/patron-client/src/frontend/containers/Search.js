@@ -63,6 +63,7 @@ const Search = React.createClass({
                          setFilter={this.props.searchFilterActions.setFilter}
                          setFiltersVisibility={this.props.searchFilterActions.setFiltersVisibility}
                          setAllFiltersVisibility={this.props.searchFilterActions.setAllFiltersVisibility}
+                         collapseFilter={this.props.searchFilterActions.collapseFilter}
           />
           <SearchResults
             locationQuery={this.props.location.query}

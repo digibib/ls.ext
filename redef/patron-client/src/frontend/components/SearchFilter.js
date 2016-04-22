@@ -8,6 +8,7 @@ const SearchFilter = React.createClass({
     filters: PropTypes.array,
     setFilter: PropTypes.func.isRequired,
     setFiltersVisibility: PropTypes.func.isRequired,
+    collapseFilter: PropTypes.func.isRequired,
     locationQuery: PropTypes.object.isRequired,
     intl: intlShape.isRequired
   },
@@ -25,7 +26,15 @@ const SearchFilter = React.createClass({
     let { aggregation } = this.props
     return (showMore && showMore === aggregation || (Array.isArray(showMore) && showMore.includes(aggregation)))
   },
+  isCollapsed () {
+    let { collapse } = this.props.locationQuery
+    let { aggregation } = this.props
+    return (collapse && collapse === aggregation || (Array.isArray(collapse) && collapse.includes(aggregation)))
+  },
   renderFilters () {
+    if (this.isCollapsed()) {
+      return
+    }
     return [ ...this.props.filters ].sort((a, b) => (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0))
       .map((filter, index) => {
         if (!this.shouldShowMore() && index >= Constants.maxVisibleFilterItems) {
@@ -44,6 +53,9 @@ const SearchFilter = React.createClass({
         )
       })
   },
+  handleCollapse () {
+    this.props.collapseFilter(this.props.aggregation, this.context.router)
+  },
   renderTitle () {
     return messages[ this.props.aggregation ]
       ? this.props.intl.formatMessage({ ...messages[ this.props.aggregation ] })
@@ -51,6 +63,18 @@ const SearchFilter = React.createClass({
   },
   handleClick (filter) {
     this.props.setFilter(filter.aggregation, filter.bucket, !filter.active, this.context.router)
+  },
+  renderShowMore () {
+    if (this.props.filters.length <= Constants.maxVisibleFilterItems) {
+      return
+    }
+    return (
+      <div className='show-more' onClick={this.handleShowAllClick}>
+        <h3>{this.shouldShowMore() || this.props.filters.length <= Constants.maxVisibleFilterItems
+          ? <FormattedMessage {...messages.showLess} />
+          : <FormattedMessage {...messages.showMore} />}</h3>
+      </div>
+    )
   },
   render () {
     if (!this.props.filters || this.props.filters.size === 0) {
@@ -60,25 +84,17 @@ const SearchFilter = React.createClass({
       <div data-automation-id={`filter_${this.props.aggregation}`}>
         <header className='filterTitle'>
           <h1>{this.renderTitle()}</h1>
-          <button className='single-filter-close' type='button'>
-            <img src='/images/btn-single-filter-close.svg' alt='Black circle with dash'/>
+          <button onClick={this.handleCollapse} className='single-filter-close' type='button'>
+            {this.isCollapsed()
+              ? <img src='/images/btn-single-filter-open.svg' alt='Black circle with plus'/>
+              : <img src='/images/btn-single-filter-close.svg' alt='Black circle with dash'/>}
           </button>
-
         </header>
-        <section>
-          <ul className='searchfilters'>
-            {this.renderFilters()}
-          </ul>
-        </section>
-        <footer>
-          {(this.shouldShowMore() || this.props.filters.length <= Constants.maxVisibleFilterItems)
-            ? (<div className='show-more' onClick={this.handleShowAllClick}>
-            <h3><FormattedMessage {...messages.showLess} /></h3>
-          </div>)
-            : (<div className='show-less' onClick={this.handleShowAllClick}>
-            <h3><FormattedMessage {...messages.showMore} /></h3>
-          </div>)}
-        </footer>
+        {this.isCollapsed() ? null
+          : [ <section key='searchfilter_header'>
+          <ul className='searchfilters'>{this.renderFilters()}</ul>
+        </section>,
+          <footer key='searchfilter_footer'>{this.renderShowMore()}</footer> ]}
       </div>
     )
   }

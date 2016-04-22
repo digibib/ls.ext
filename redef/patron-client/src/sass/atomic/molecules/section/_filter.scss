@@ -21,6 +21,7 @@
   font-size: 1em;
   font-weight: normal;
   display: inline-block;
+  margin-right: 4px;
 }
 
 .searchfilters {
@@ -46,7 +47,7 @@ label {
   @extend %is-vishidden;
 }
 
-.show-all {
+.show-all, .show-less, .show-more {
   font-size: 1em;
   font-weight: normal;
   color: $redColor;

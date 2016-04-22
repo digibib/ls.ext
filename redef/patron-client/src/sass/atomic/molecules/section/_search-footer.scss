@@ -1,0 +1,54 @@
+.search-footer {
+  @include span(12 of 12);
+  background: $blackColor;
+  color: $white;
+  line-height: 1.5em;
+
+  .footer-text {
+    @include span(12 of 12);
+
+    
+    @include breakpoint($small){
+      @include span(3 of 12);
+      @include push(2 of 12);
+      margin-top: rhythm(2)
+    }
+  }
+
+  .secondary-navigation {
+    @include span(12 of 12);
+
+    @include breakpoint($small){
+      @include span(11 of 12);
+      float: right;
+      text-align: right;
+    }
+    
+    ul, li {
+      list-style-type: none;
+      margin-bottom: rhythm(3);
+
+      @include breakpoint($small){
+        display: inline-block;
+        margin: rhythm(3);
+      }
+    }
+  }
+  
+  .footer-icon {
+    @include span(1 of 12);
+    margin: rhythm(2);
+
+
+    @include breakpoint($small){
+      float: right;
+      margin-top: rhythm(22);
+
+      img {
+        width: 50%;
+      }
+    }
+
+  }
+
+}

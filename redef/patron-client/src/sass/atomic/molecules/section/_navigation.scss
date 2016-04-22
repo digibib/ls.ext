@@ -1,8 +1,9 @@
 .primary-menu {
   display: none;
   
-  @include span(4 of 12);
+  @include span(8 of 12);
   float: right;
+  text-align: right;
 
   li {
     display: inline-block;
@@ -13,6 +14,7 @@
      display: block;
   }
 }
+
 
 .btn-mobile {
 

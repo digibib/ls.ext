@@ -142,7 +142,7 @@ app.get('/kohaLoginStatus', (request, response) => {
 app.use(express.static(`${__dirname}/../../public`))
 
 app.all('/services/*', requestProxy({
-  url: 'http://services:8005/*'
+  url: 'http://10.172.3.199:8005/*'
 }))
 
 app.get('*', (request, response) => {

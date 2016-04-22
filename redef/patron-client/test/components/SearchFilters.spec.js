@@ -18,6 +18,7 @@ function setup (propOverrides) {
     setFilter: () => {},
     setFiltersVisibility: () => {},
     setAllFiltersVisibility: () => {},
+    collapseFilter: () => {},
     ...propOverrides
   }
 

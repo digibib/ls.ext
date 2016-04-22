@@ -16,4 +16,4 @@ if (!global.Intl) {
 addLocaleData(en)
 addLocaleData(no)
 
-ReactDOM.render(<Provider store={store}><Root /></Provider>, document.getElementsByClassName('outer-container')[ 0 ])
+ReactDOM.render(<Provider store={store}><Root /></Provider>, document.getElementById('app'))
