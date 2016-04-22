@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * Responsibility: In-memory MARC record.
  */
 public class MarcRecord {
-    public static final int THIRTY_ONE = 31;
+    private static final int THIRTY_ONE = 31;
     private final MarcFactory marcFactory = MarcFactory.newInstance();
     private Record record;
 
@@ -40,11 +40,11 @@ public class MarcRecord {
         addMarcField(marcField);
     }
 
-    public final boolean hasItems() {
+    final boolean hasItems() {
         return !record.find(MarcConstants.FIELD_952, "").isEmpty();
     }
 
-    public final String getMarcXml() {
+    final String getMarcXml() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         MarcWriter writer = new MarcXmlWriter(baos);
         writer.write(getRecord());
@@ -73,13 +73,24 @@ public class MarcRecord {
 
         List<String> comparisonList1 = new ArrayList<>();
         comparisonList1.add(record.getLeader().toString());
-        comparisonList1.addAll(record.getControlFields().stream().map(controlField -> controlField.toString()).collect(Collectors.toList()));
-        comparisonList1.addAll(record.getDataFields().stream().map(dataField -> sortAndJoinMarcDataField(dataField.toString())).collect(Collectors.toList()));
+        comparisonList1.addAll(record.getControlFields()
+                .stream().map(Object::toString).collect(Collectors.toList()));
+        comparisonList1.addAll(record.getDataFields()
+                .stream()
+                .map(dataField -> sortAndJoinMarcDataField(dataField.toString()))
+                .collect(Collectors.toList()));
 
         List<String> comparisonList2 = new ArrayList<>();
         comparisonList2.add(that.getRecord().getLeader().toString());
-        comparisonList2.addAll(that.getRecord().getControlFields().stream().map(controlField -> controlField.toString()).collect(Collectors.toList()));
-        comparisonList2.addAll(that.getRecord().getDataFields().stream().map(dataField -> sortAndJoinMarcDataField(dataField.toString())).collect(Collectors.toList()));
+        comparisonList2.addAll(that.getRecord()
+                .getControlFields()
+                .stream()
+                .map(Object::toString).collect(Collectors.toList()));
+        comparisonList2.addAll(that.getRecord()
+                .getDataFields()
+                .stream()
+                .map(dataField -> sortAndJoinMarcDataField(dataField.toString()))
+                .collect(Collectors.toList()));
 
         return CollectionUtils.isEqualCollection(comparisonList1, comparisonList2);
     }
@@ -89,7 +100,7 @@ public class MarcRecord {
 
         String[] split = input.substring(fieldCode.length()).split("\\$");
         Arrays.sort(split);
-        return fieldCode + String.join("$", split);
+        return fieldCode + String.join("$", Arrays.asList(split));
     }
 
     @Override

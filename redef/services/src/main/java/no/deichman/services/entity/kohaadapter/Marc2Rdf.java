@@ -1,16 +1,18 @@
 package no.deichman.services.entity.kohaadapter;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.utils.ResourceReader;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.VariableField;
 
-import java.util.HashMap;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +46,9 @@ public final class Marc2Rdf {
     private static final String KOHA_LOANABLE_VALUE = "0";
     private static final String DUO_ONLOAN = "onloan";
 
-    private Map<String, String> branches;
     private BaseURI baseURI;
 
-    public Marc2Rdf() {
+    Marc2Rdf() {
         this(BaseURI.remote());
     }
 
@@ -56,11 +57,12 @@ public final class Marc2Rdf {
     }
 
     private Map<String, String> readBranchesJson() {
-        return new Gson().fromJson(new ResourceReader().readFile("branches.json"), HashMap.class);
+        Type type = new TypeToken<Map<String, String>>(){}.getRawType();
+        return new Gson().fromJson(new ResourceReader().readFile("branches.json"), type);
     }
 
     private String getBranch(String code) {
-        branches = readBranchesJson();
+        Map<String, String> branches = readBranchesJson();
         return branches.containsKey(code) ? branches.get(code) : code;
     }
 
@@ -78,7 +80,7 @@ public final class Marc2Rdf {
 
         model.setNsPrefix("", DEICHMAN_NS_EXEMPLAR);
         model.setNsPrefix("duo", DUO_NS);
-        model.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
+        model.setNsPrefix("xsd", XSD.getURI());
 
         itemsFields.forEach(item -> {
 

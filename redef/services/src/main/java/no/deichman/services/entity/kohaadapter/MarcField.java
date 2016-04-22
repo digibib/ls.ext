@@ -9,9 +9,9 @@ import org.marc4j.marc.MarcFactory;
  */
 public class MarcField {
     private DataField dataField;
-    private final MarcFactory marcFactory = MarcFactory.newInstance();
 
-    public MarcField(String field) {
+    MarcField(String field) {
+        MarcFactory marcFactory = MarcFactory.newInstance();
         dataField = marcFactory.newDataField(field, ' ', ' ');
     }
 
@@ -19,7 +19,7 @@ public class MarcField {
         dataField.addSubfield(new SubfieldImpl(subfield, value));
     }
 
-    public final DataField getDataField() {
+    final DataField getDataField() {
         return dataField;
     }
 }

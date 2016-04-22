@@ -9,7 +9,6 @@ import org.apache.jena.rdf.model.Resource;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ public final class PatchParser {
         setPatchData(input);
     }
 
-    public PatchParser() {
+    PatchParser() {
     }
 
     public static List<Patch> parse(String ldPatchJson) throws PatchParserException {
@@ -44,9 +43,8 @@ public final class PatchParser {
                 blankNodes.put(patchObject.getSubject(), anonymousResource);
             }
         }
-        Iterator<PatchObject> iter = patch.iterator();
-        while (iter.hasNext()) {
-            patches.add(iter.next().toPatch(blankNodes));
+        for (PatchObject aPatch : patch) {
+            patches.add(aPatch.toPatch(blankNodes));
         }
         return patches;
     }

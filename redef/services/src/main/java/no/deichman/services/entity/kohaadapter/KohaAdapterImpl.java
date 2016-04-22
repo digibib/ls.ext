@@ -36,7 +36,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
     private static final String DEFAULT_KOHA_PORT = "http://192.168.50.12:8081";
     private static final String KOHA_USER = System.getProperty("KOHA_USER", "admin");
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_PASSWORD", "secret");
-    public static final String SESSION_COOKIE_KEY = "CGISESSID";
+    static final String SESSION_COOKIE_KEY = "CGISESSID";
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final String kohaPort;
@@ -48,7 +48,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
         log.info("Koha adapter started with kohaPort: " + this.kohaPort);
     }
 
-    public KohaAdapterImpl() {
+    KohaAdapterImpl() {
         this(null);
     }
 

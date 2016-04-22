@@ -29,7 +29,7 @@ public final class InMemoryRepository extends RDFRepositoryBase {
 
     private InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         super(baseURI, sqb, uriGenerator);
-        model = DatasetFactory.createMem();
+        model = DatasetFactory.create();
         LOG.info("In-memory repository started.");
     }
 
