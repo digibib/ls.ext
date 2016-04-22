@@ -5,7 +5,6 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import SearchHeader, { __RewireAPI__ as DefaultExportSearchHeaderRewireApi } from '../../src/frontend/components/SearchHeader'
 import ReactDOM from 'react-dom'
-import StubContext from 'react-stub-context'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
@@ -21,16 +20,9 @@ function setup (propOverrides) {
     ...propOverrides
   }
 
-  let StubbedSearchHeader = StubContext(SearchHeader, {
-    router: {
-      createPath: arg => `testprefix_${arg.query.query}`,
-      createHref: () => {}
-    }
-  })
-
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>
-      <StubbedSearchHeader {...props} />
+      <SearchHeader {...props} />
     </IntlProvider>
   )
 
@@ -62,7 +54,7 @@ describe('components', () => {
       let searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ 'testprefix_testvalue' ])
+      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ '/search?query=testvalue' ])
     })
     it('should search with value set from input', () => {
       const { output, props } = setup()
@@ -71,7 +63,7 @@ describe('components', () => {
       let searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ 'testprefix_testvalue' ])
+      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ '/search?query=testvalue' ])
     })
   })
 })

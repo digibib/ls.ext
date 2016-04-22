@@ -8,9 +8,6 @@ const Publication = React.createClass({
     startReservation: PropTypes.func.isRequired,
     intl: intlShape.isRequired
   },
-  contextTypes: {
-    router: React.PropTypes.object
-  },
   renderTitle (publication) {
     let title = publication.mainTitle
     if (publication.partTitle) {
@@ -19,7 +16,7 @@ const Publication = React.createClass({
     return title
   },
   handleClick () {
-    this.props.expandSubResource(this.props.publication.id, this.context.router)
+    this.props.expandSubResource(this.props.publication.id)
   },
   handleReservationClick (event) {
     event.preventDefault()

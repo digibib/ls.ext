@@ -12,12 +12,9 @@ export default React.createClass({
     locationQuery: PropTypes.object.isRequired,
     startReservation: PropTypes.func.isRequired
   },
-  contextTypes: {
-    router: React.PropTypes.object
-  },
   componentWillMount () {
     if (this.props.publications.length === 1) {
-      this.props.expandSubResource(this.props.publications[ 0 ].id, this.context.router, true)
+      this.props.expandSubResource(this.props.publications[ 0 ].id, true)
     }
   },
   renderEmpty () {

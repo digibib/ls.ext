@@ -5,7 +5,6 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
-import StubContext from 'react-stub-context'
 import PublicationInfo, { __RewireAPI__ as DefaultExportPublicationInfoRewireApi } from '../../src/frontend/components/PublicationInfo'
 
 function setup (propOverrides) {
@@ -18,16 +17,9 @@ function setup (propOverrides) {
     ...propOverrides
   }
 
-  let StubbedPublicationInfo = StubContext(PublicationInfo, {
-    router: {
-      createPath: arg => `testprefix_${arg.query.query}`,
-      createHref: () => {}
-    }
-  })
-
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale='en'>
-      <StubbedPublicationInfo {...props} />
+      <PublicationInfo {...props} />
     </IntlProvider>
   )
 

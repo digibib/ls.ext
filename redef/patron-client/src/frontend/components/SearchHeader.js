@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import createPath from '../utils/createPath'
 
 import SearchResultsText from './SearchResultsText'
 
@@ -17,15 +18,12 @@ const SearchHeader = React.createClass({
     logout: PropTypes.func.isRequired,
     intl: intlShape.isRequired
   },
-  contextTypes: {
-    router: React.PropTypes.object
-  },
   handleChangeLanguage (event) {
     this.props.loadLanguage(event.target.value)
   },
   search (event) {
     event.preventDefault()
-    let url = this.context.router.createPath({ pathname: '/search', query: { query: this.searchFieldInput.value } })
+    let url = createPath({ pathname: '/search', query: { query: this.searchFieldInput.value } })
     this.props.dispatch(push(url))
   },
   handleLoginClick (event) {

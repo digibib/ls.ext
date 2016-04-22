@@ -7,11 +7,8 @@ export default React.createClass({
     publication: PropTypes.object.isRequired,
     expandSubResource: PropTypes.func.isRequired
   },
-  contextTypes: {
-    router: React.PropTypes.object
-  },
   handleClick () {
-    this.props.expandSubResource(null, this.context.router)
+    this.props.expandSubResource(null)
   },
   render () {
     return (
