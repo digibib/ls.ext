@@ -162,7 +162,7 @@ public class AppTest {
     }
 
     private static void assertIsUri(String uri) {
-        assertTrue("Not a URI: " + uri, uri.matches("(?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s]*)"));
+        assertTrue("Not a URI: " + uri, uri.matches("(?:http|https)(?::/{2}[\\w]+)(?:[/|\\.]?)(?:[^\\s]*)"));
     }
 
     private static void assertResponse(Status status, HttpResponse<?> response) {
