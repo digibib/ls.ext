@@ -53,7 +53,7 @@ When(/^vises opplysningene brukerne skal se om utgivelsen på verkssiden$/) do
       entry.element(data_automation_id: 'publication_title').text.should equal?(@context[:publication_maintitle])
     end
     entry.element(data_automation_id: 'publication_formats').text.should eq(@context[:publication_format_label])
-    entry.element(data_automation_id: 'publication_languages').text.should eq(@context[:publication_language_label || :work_lang_label])
+    entry.element(data_automation_id: 'publication_languages').text.should eq(@context[:publication_language_label] || @context[:work_lang_label])
   end
 end
 
@@ -114,10 +114,10 @@ When(/^jeg låner \"(.*?)\" ut til \"(.*?)$/) do |barcode, patron|
   @site.Checkout.checkout(barcode)
 
   @active[:item] = barcode
-  @cleanup.push( "utlån #{barcode}" =>
-    lambda do
-      @site.Home.visit.select_branch().checkin(barcode)
-    end
+  @cleanup.push("utlån #{barcode}" =>
+                    lambda do
+                      @site.Home.visit.select_branch().checkin(barcode)
+                    end
   )
 end
 
