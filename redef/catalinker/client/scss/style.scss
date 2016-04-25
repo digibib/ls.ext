@@ -139,7 +139,7 @@ body {
           background: white;
           padding: 0.5em;
           margin-bottom: 0.1em;
-          min-height: 62px;
+          min-height: 65px;
           .search-result-subitem {
             background: $lightergray;
             margin-bottom: 2px;
@@ -313,18 +313,20 @@ body {
         height: 300px;
       }
       .support-panel-content {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         &:before {
           content: "";
           position: absolute;
-          left: 0px;
+          left: -1px;
           right: 100%;
           width: 0;
           height: 0;
           border-top: 32px solid transparent;
           border-right: 16px solid white;
           border-bottom: 32px solid transparent;
+          min-height: 66px;
         }
-        min-height: 65px;
+        min-height: 66px;
         overflow: scroll;
         max-height: 525px;
       }

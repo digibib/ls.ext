@@ -20,8 +20,8 @@ var Server
 app.use(logger('dev'))
 app.use(express.static(path.join(__dirname, '/../public')))
 
-app.get('/js/bundle.js', browserify(['./client/src/main', 'jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator', { './client/src/bootstrap': { run: true } }]))
-app.get('/js/bundle_for_old.js', browserify(['./client/src/main_old']))
+app.get('/js/bundle.js', browserify([ './client/src/main', 'jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator', { './client/src/bootstrap': { run: true } } ]))
+app.get('/js/bundle_for_old.js', browserify([ './client/src/main_old' ]))
 
 app.get('/css/vendor/:cssFile', function (request, response) {
   response.sendFile(request.params.cssFile, { root: path.resolve(path.join(__dirname, '/../node_modules/select2/dist/css/')) })
@@ -29,11 +29,11 @@ app.get('/css/vendor/:cssFile', function (request, response) {
 
 function newResource (type) {
   return axios.post(process.env.SERVICES_PORT + '/' + type, {}, {
-    headers: {
-      Accept: 'application/ld+json',
-      'Content-Type': 'application/ld+json'
-    }
-  })
+      headers: {
+        Accept: 'application/ld+json',
+        'Content-Type': 'application/ld+json'
+      }
+    })
     .catch(function (response) {
       if (response instanceof Error) {
         // Something happened in setting up the request that triggered an Error
@@ -74,6 +74,65 @@ app.get('/config', function (request, response) {
     kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
     ontologyUri: '/services/ontology',
     resourceApiUri: '/services/',
+    inputForms: [
+      {
+        id: "create-person-form",
+        rdfType: "Person",
+        inputs: [
+          {
+            rdfProperty: 'name',
+            displayValueSource: true,
+            // after resource is created, the value entered
+            // in input marked with this is used to populate displayValue of the parent input
+            preFillFromSearchField: true,
+            type: "input-string"
+          },
+          {
+            rdfProperty: 'birthYear'
+          },
+          {
+            rdfProperty: 'deathYear'
+          },
+          {
+            rdfProperty: 'nationality'
+          },
+          {
+            rdfProperty: 'gender'
+          }
+        ]
+      },
+      {
+        id: "create-subject-form",
+        rdfType: "Subject",
+        inputs: [
+          {
+            rdfProperty: 'name',
+            displayValueSource: true,
+            // after resource is created, the value entered
+            // in input marked with this is used to populate displayValue of the parent input
+            preFillFromSearchField: true
+          }
+        ]
+      },
+      {
+        id: "create-work-form",
+        rdfType: "Work",
+        inputs: [
+          {
+            label: 'Hovedtittel',
+            rdfProperty: 'mainTitle',
+            type: 'input-string',
+            // input type must be defined explicitly, otherwise it will inherit from the search field above
+            preFillFromSearchField: true // value of this field should be copied from the search field above
+          },
+          {
+            label: 'Undertittel',
+            type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+            rdfProperty: 'subtitle'
+          }
+        ]
+      }
+    ],
     tabs: [
       {
         id: 'confirm-person',
@@ -91,33 +150,15 @@ app.get('/config', function (request, response) {
                   rdfProperty: 'agent',
                   indexTypes: 'person',
                   type: 'searchable-with-result-in-side-panel',
-                  dependentResourceTypes: ['Work', 'Publication'], // when the creator is changed, unload current work and publication
+                  dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
                   widgetOptions: {
                     showSelectWork: true, // show and enable select work radio button
                     enableCreateNewResource: {
-                      rdfType: 'Person',
-                      useAfterCreation: false,
-                      inputs: [
-                        {
-                          rdfProperty: 'name',
-                          displayValueSource: true,
-                          // after resource is created, the value entered
-                          // in input marked with this is used to populate displayValue of the parent input
-                          preFillFromSearchField: true
-                        },
-                        {
-                          rdfProperty: 'birthYear'
-                        },
-                        {
-                          rdfProperty: 'deathYear'
-                        },
-                        {
-                          rdfProperty: 'nationality'
-                        },
-                        {
-                          rdfProperty: 'gender'
-                        }
-                      ]
+                      formRefs: [ {
+                        formId: 'create-person-form',
+                        targetType: "person"
+                      } ],
+                      useAfterCreation: false
                     }
                   }
                 },
@@ -129,7 +170,7 @@ app.get('/config', function (request, response) {
             },
             isMainEntry: true,
             // blank nodes connected to this input is expected to have type deichman:MainEntry in addition to its own type (range)
-            subjects: ['Work'], // blank node can be attached to the the loaded resource of one of these types
+            subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
             cssClassPrefix: 'additional-entries' // prefix of class names to identify a span surrounding this input or group of sub inputs.
             // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
           },
@@ -146,21 +187,10 @@ app.get('/config', function (request, response) {
             widgetOptions: {
               // make it possible to create a work resource if necessary,
               enableCreateNewResource: {
-                rdfType: 'Work',
-                inputs: [
-                  {
-                    label: 'Hovedtittel',
-                    rdfProperty: 'mainTitle',
-                    type: 'input-string',
-                    // input type must be defined explicitly, otherwise it will inherit from the search field above
-                    preFillFromSearchField: true // value of this field should be copied from the search field above
-                  },
-                  {
-                    label: 'Undertittel',
-                    type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
-                    rdfProperty: 'subtitle'
-                  }
-                ],
+                formRefs: [ {
+                  formId: 'create-work-form',
+                  targetType: "work"
+                } ],
                 useAfterCreation: true
               }
             }
@@ -190,7 +220,7 @@ app.get('/config', function (request, response) {
           { rdfProperty: 'publicationYear' },
           { rdfProperty: 'numberOfPages' },
           { rdfProperty: 'illustrativeMatter' },
-          { rdfProperty: 'isbn' },
+          { rdfProperty: 'isbn', multiple: true },
           { rdfProperty: 'binding' },
           { rdfProperty: 'language' },
           { rdfProperty: 'format', multiple: true },
@@ -199,17 +229,17 @@ app.get('/config', function (request, response) {
           {
             rdfProperty: 'publishedBy',
             authority: true, // this indicates it is an authorized entity
-            nameProperties: ['name'], // these are proeprty names used to label already connected entities
+            nameProperties: [ 'name' ], // these are proeprty names used to label already connected entities
             indexTypes: 'publisher', // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: ['name'] // these are indexed document JSON properties from which the labels f
+            indexDocumentFields: [ 'name' ] // these are indexed document JSON properties from which the labels f
             // or authoroty select list are concatenated
           },
           {
             rdfProperty: 'placeOfPublication',
             authority: true, // this indicates it is an authorized entity
-            nameProperties: ['place', 'country'], // these are proeprty names used to label already connected entities
+            nameProperties: [ 'place', 'country' ], // these are proeprty names used to label already connected entities
             indexTypes: 'placeOfPublication', // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: ['place', 'country'] // these are indexed document JSON properties from which
+            indexDocumentFields: [ 'place', 'country' ] // these are indexed document JSON properties from which
             // the labels for authoroty select list are concatenated
           },
           {
@@ -223,8 +253,8 @@ app.get('/config', function (request, response) {
                   label: 'Serie',
                   rdfProperty: 'serial',
                   indexTypes: 'serial',
-                  indexDocumentFields: ['name'],
-                  nameProperties: ['name'],
+                  indexDocumentFields: [ 'name' ],
+                  nameProperties: [ 'name' ],
                   type: 'searchable-authority-dropdown'
                 },
                 {
@@ -238,7 +268,8 @@ app.get('/config', function (request, response) {
         nextStep: {
           buttonLabel: 'Neste steg: Utgaveopplysninger'
         }
-      },
+      }
+      ,
       {
         id: 'describe-work',
         rdfType: 'Work',
@@ -258,7 +289,8 @@ app.get('/config', function (request, response) {
         nextStep: {
           buttonLabel: 'Neste steg: Beskriv verket'
         }
-      },
+      }
+      ,
       {
         id: 'subjects',
         rdfType: 'Work',
@@ -270,26 +302,41 @@ app.get('/config', function (request, response) {
             type: 'searchable-with-result-in-side-panel',
             loadWorksAsSubjectOfItem: true,
             authority: true, // this indicates it is an authorized entity
-            nameProperties: ['name'], // these are proeprty names used to label already connected entities
-            indexTypes: ['subject', 'person', 'work'], // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: ['name'], // these are indexed document JSON properties from which the labels for authority select list are concatenated
+            nameProperties: [ 'name' ], // these are proeprty names used to label already connected entities
+            indexTypes: [ 'subject', 'person', 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
+            indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels for authority select list are concatenated
             widgetOptions: {
-              selectIndexTypeLegend: 'Velg emnetype'
+              selectIndexTypeLegend: 'Velg emnetype',
+              enableCreateNewResource: {
+                formRefs: [ {
+                  formId: 'create-subject-form',
+                  targetType: "subject"
+                },
+                {
+                  formId: 'create-work-form',
+                  targetType: "work"
+                },
+                {
+                  formId: 'create-person-form',
+                  targetType: "person"
+                } ]
+              }
             }
           },
           {
             rdfProperty: 'genre',
             multiple: true,
             authority: true,
-            nameProperties: ['name'],
+            nameProperties: [ 'name' ],
             indexTypes: 'genre',
-            indexDocumentFields: ['name']
+            indexDocumentFields: [ 'name' ]
           }
         ],
         nextStep: {
           buttonLabel: 'Neste steg: Biinnførsler'
         }
-      },
+      }
+      ,
       {
         // additional entries, such as translator, illustrator, composer etc
         id: 'confirm-addedentry',
@@ -311,31 +358,13 @@ app.get('/config', function (request, response) {
                   widgetOptions: {
                     showSelectWork: false, // show and enable select work radio button
                     enableCreateNewResource: {
-                      rdfType: 'Person',
-                      useAfterCreation: false,
-                      inputs: [
-                        {
-                          rdfProperty: 'name',
-                          displayValueSource: true,
-                          // after resource is created, the value entered in input marked with this is used to populate displayValue of the parent input
-                          preFillFromSearchField: true
-                        },
-                        {
-                          rdfProperty: 'birthYear'
-                        },
-                        {
-                          rdfProperty: 'deathYear'
-                        },
-                        {
-                          rdfProperty: 'nationality'
-                        },
-                        {
-                          rdfProperty: 'gender'
-                        }
-                      ]
+                      formRefs: [ {
+                        formId: 'create-person-form',
+                        targetType: "person"
+                      } ],
+                      useAfterCreation: false
                     }
                   }
-
                 },
                 {
                   label: 'Rolle',
@@ -343,7 +372,7 @@ app.get('/config', function (request, response) {
                 }
               ]
             },
-            subjects: ['Work', 'Publication'], // blank node can be attached to the the loaded resource of one of these types
+            subjects: [ 'Work', 'Publication' ], // blank node can be attached to the the loaded resource of one of these types
             cssClassPrefix: 'additional-entries' // prefix of class names to identify a span surrounding this input or group of sub inputs.
             // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
           }
@@ -360,12 +389,14 @@ app.get('/config', function (request, response) {
         selectIndexLabel: 'Person',
         queryTerm: 'person.name',
         resultItemLabelProperty: 'name'
-      },
+      }
+      ,
       subject: {
         selectIndexLabel: 'Generelt',
         queryTerm: 'subject.name',
         resultItemLabelProperty: 'name'
-      },
+      }
+      ,
       work: {
         selectIndexLabel: 'Verk',
         queryTerm: 'work.mainTitle',
