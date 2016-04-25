@@ -32,14 +32,18 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.scss$/,
-        loaders: [ 'style-loader', 'raw-loader', `sass-loader?includePaths[]=${path.resolve(__dirname, './node_modules/compass-mixins/lib')}&includePaths[]=${path.resolve(__dirname, './mixins/app_mixins')}` ],
-        include: path.join(__dirname, 'src/sass')
+        test: /\.css$/,
+        loaders: [ 'style-loader', 'css-loader' ],
+        include: path.join(__dirname, 'public/dist/styles')
       },
       {
         test: /\.js$/,
         loader: 'babel',
         include: path.join(__dirname, 'src/frontend')
+      },
+      {
+        test: /\.svg$/,
+        loader: 'url-loader?mimetype=image/svg+xml'
       }
     ]
   }

@@ -27,8 +27,9 @@
     "lint": "eslint *.js test src",
     "dockerdev": "cross-env POLL=true npm start",
     "dist": "npm run clean && npm run lint && npm test && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
-    "productionbuild": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
-    "start": "npm run build && node --debug src/backend/server.js",
+    "productionbuild": "npm run clean && compass compile && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
+    "compass-watch": "compass watch",
+    "start": "npm run clean && npm run compass-watch & compass compile -q && webpack && node --debug src/backend/server.js",
     "production": "npm run productionbuild && cross-env NODE_ENV=production node src/backend/server.js",
     "test": "cross-env NODE_ENV=test mocha -R min --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:debug": "cross-env NODE_ENV=test mocha debug --recursive --compilers js:babel-core/register --require ./test/setup.js",
@@ -50,7 +51,6 @@
     "babel-preset-react": "6.5.0",
     "babel-preset-stage-2": "6.5.0",
     "breakpoint-sass": "2.7.0",
-    "compass-mixins": "0.12.7",
     "css-loader": "0.23.1",
     "es5-shim": "4.5.8",
     "eslint-config-standard-react": "2.3.0",
@@ -62,7 +62,7 @@
     "jsdom": "8.4.0",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#9db0bef909e6dfb10662959c499541251ca346ec",
     "mocha": "2.4.5",
-    "node-sass": "3.4.2",
+    "node-sass": "3.5.3",
     "raw-loader": "0.5.1",
     "react": "15.0.1",
     "react-addons-create-fragment": "15.0.1",
@@ -98,11 +98,11 @@
   "dependencies": {
     "body-parser": "1.15.0",
     "cross-env": "^1.0.7",
-    "css-loader": "0.23.1",
     "express": "4.13.4",
     "express-request-proxy": "2.0.0",
     "express-session": "1.13.0",
     "node-uuid": "1.4.7",
+    "url-loader": "^0.5.7",
     "xml2js": "0.4.16"
   }
 }

@@ -37,14 +37,18 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('css!sass'),
-        include: path.join(__dirname, 'src/sass')
+        test: /\.css$/,
+        loaders: [ 'style-loader', 'css-loader' ],
+        include: path.join(__dirname, 'public/dist/styles')
       },
       {
         test: /\.js$/,
         loader: 'babel',
         include: path.join(__dirname, 'src/frontend')
+      },
+      {
+        test: /\.svg$/,
+        loader: 'url-loader?mimetype=image/svg+xml'
       }
     ]
   }

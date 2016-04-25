@@ -15,7 +15,7 @@
       color: $redColor;
       @include span(12 of 12);
       margin-bottom: rhythm(2);
-      @extend %border-bottom;
+      //@extend %border-bottom;
 
       span {
         @include span(10 of 12);
@@ -42,7 +42,7 @@
       @include span(12 of 12);
       padding-bottom: rhythm(2);
       margin-top: rhythm(-3);
-      @extend %border-bottom;
+      //@extend %border-bottom;
     }
   }
 

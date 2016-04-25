@@ -1,5 +1,5 @@
-import '../sass/master-old.scss'
-import '../sass/main.scss'
+import '../../public/dist/styles/master-old.css'
+import '../../public/dist/styles/main.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'

@@ -2,7 +2,7 @@
   @include span(12 of 12);
   margin-bottom: rhythm(4);
   padding-bottom: rhythm(2);
-  @extend %border-bottom;
+  //@extend %border-bottom;
 }
 
 .book-cover {
