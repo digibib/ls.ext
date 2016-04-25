@@ -29,16 +29,16 @@ const App = React.createClass({
       <div>
         <ModalRoot />
         <div className='outer-container'>
-        <SearchHeader locationQuery={this.props.location.query} dispatch={this.props.dispatch}
-                      loadLanguage={this.props.languageActions.loadLanguage}
-                      locale={this.props.locale}
-                      totalHits={this.props.totalHits}
-                      isLoggedIn={this.props.isLoggedIn}
-                      logout={this.props.loginActions.logout}
-                      showLoginDialog={this.props.loginActions.showLoginDialog}
-        />
-        {this.props.children}
-          </div>
+          <SearchHeader locationQuery={this.props.location.query} dispatch={this.props.dispatch}
+                        loadLanguage={this.props.languageActions.loadLanguage}
+                        locale={this.props.locale}
+                        totalHits={this.props.totalHits}
+                        isLoggedIn={this.props.isLoggedIn}
+                        logout={this.props.loginActions.logout}
+                        showLoginDialog={this.props.loginActions.showLoginDialog}
+          />
+          {this.props.children}
+        </div>
         <Footer />
       </div>
     )

@@ -43,7 +43,7 @@ const SearchFilter = React.createClass({
         return (
           <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
               data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
-            <input type='checkbox' readOnly checked={filter.active}/>
+            <input type='checkbox' readOnly checked={filter.active} />
             <label htmlFor='checkbox'>Checkbox</label>
             <h2 className='filter_label'
                 data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2>
@@ -86,8 +86,8 @@ const SearchFilter = React.createClass({
           <h1>{this.renderTitle()}</h1>
           <button onClick={this.handleCollapse} className='single-filter-close' type='button'>
             {this.isCollapsed()
-              ? <img src='/images/btn-single-filter-open.svg' alt='Black circle with plus'/>
-              : <img src='/images/btn-single-filter-close.svg' alt='Black circle with dash'/>}
+              ? <img src='/images/btn-single-filter-open.svg' alt='Black circle with plus' />
+              : <img src='/images/btn-single-filter-close.svg' alt='Black circle with dash' />}
           </button>
         </header>
         {this.isCollapsed() ? null

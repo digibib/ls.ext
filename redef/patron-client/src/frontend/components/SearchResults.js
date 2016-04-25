@@ -30,7 +30,7 @@ export default React.createClass({
     let entries = []
     if (this.props.locationQuery.query) {
       entries = this.props.searchResults.map(result => (
-          <SearchResult key={result.relativeUri} result={result}/>
+          <SearchResult key={result.relativeUri} result={result} />
         )
       )
     }

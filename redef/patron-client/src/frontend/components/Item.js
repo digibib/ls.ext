@@ -9,7 +9,7 @@ const Item = React.createClass({
   renderStatus (status) {
     return status === 'AVAIL'
       ? <span><FormattedMessage {...messages.available} /></span>
-      : <span><FormattedMessage {...messages.expectedAvailable} values={{status: status}}/></span>
+      : <span><FormattedMessage {...messages.expectedAvailable} values={{status: status}} /></span>
   },
   render () {
     let item = this.props.item

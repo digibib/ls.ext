@@ -27,7 +27,7 @@ export default React.createClass({
   getArrow (column) {
     return [ 0, 1, 2 ].map(number =>
       <div key={`column-${number}`} className='col col-1-3'>
-        {number === column ? <div className='triangle-up'/> : ''}&nbsp;</div>
+        {number === column ? <div className='triangle-up' /> : ''}&nbsp;</div>
     )
   },
   renderPublications () {
@@ -44,7 +44,7 @@ export default React.createClass({
             startReservation={this.props.startReservation}
             key={publication.id}
             expandSubResource={this.props.expandSubResource}
-            publication={publication}/>)}</div> ]
+            publication={publication} />)}</div> ]
           let showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
           if (showMorePublication) {
             showMore = {
@@ -58,7 +58,7 @@ export default React.createClass({
                 {this.getArrow(showMore.column)}
                 <div className='col'>
                   <PublicationInfo expandSubResource={this.props.expandSubResource}
-                                   publication={showMore.publication}/>
+                                   publication={showMore.publication} />
                 </div>
               </div>
             )
@@ -74,7 +74,7 @@ export default React.createClass({
       <div id='publications' className='panel row'>
         <div className='panel-header'>
           <span><strong><FormattedMessage {...messages.numberOfPublications}
-            values={{numberOfPublications: this.props.publications.length}}/></strong></span>
+            values={{numberOfPublications: this.props.publications.length}} /></strong></span>
           <div className='panel-arrow panel-open'></div>
         </div>
         <div className='col'>

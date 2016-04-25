@@ -41,10 +41,10 @@ export default React.createClass({
               : (<span className='limit-filters-text'><p>Skjul filter</p></span>)}
             {this.props.locationQuery.hideFilters
               ? (<button onClick={this.handleFiltersOpenClick} className='limit-filters-open' type='button'>
-              <img src='/images/btn-limit-filter-open.svg' alt='Red arrow pointing down'/>
+              <img src='/images/btn-limit-filter-open.svg' alt='Red arrow pointing down' />
             </button>)
               : (<button onClick={this.handleFiltersOpenClick} className='limit-filters-open' type='button'>
-              <img src='/images/btn-limit-filter-close.svg' alt='Red arrow pointing up'/>
+              <img src='/images/btn-limit-filter-close.svg' alt='Red arrow pointing up' />
             </button>)}
           </div>
 

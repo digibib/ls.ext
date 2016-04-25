@@ -37,21 +37,21 @@ const Reservation = React.createClass({
   renderSuccess () {
     return (
       <div>
-        <h2><FormattedMessage {...messages.headerTextSuccess}/></h2>
-        <p><FormattedMessage {...messages.messageSuccess}/></p>
-        <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button}/></button>
+        <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
+        <p><FormattedMessage {...messages.messageSuccess} /></p>
+        <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button} /></button>
       </div>
     )
   },
   renderError () {
     return (
       <div>
-        <h2><FormattedMessage {...messages.headerTextError}/></h2>
+        <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>{messages[ this.props.message ]
-          ? <FormattedMessage {...messages[ this.props.message ]}/>
-          : <FormattedMessage {...messages.genericReservationError}/>}
+          ? <FormattedMessage {...messages[ this.props.message ]} />
+          : <FormattedMessage {...messages.genericReservationError} />}
         </p>
-        <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button}/></button>
+        <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button} /></button>
       </div>
     )
   },
@@ -69,10 +69,10 @@ const Reservation = React.createClass({
             {this.renderBranches()}
           </select>
           <button disabled={this.props.isRequestingReservation} onClick={this.handleReserve}>
-            <FormattedMessage {...messages.reserve}/>
+            <FormattedMessage {...messages.reserve} />
           </button>
           <button disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
-            <FormattedMessage {...messages.cancel}/>
+            <FormattedMessage {...messages.cancel} />
           </button>
         </form>
       </div>

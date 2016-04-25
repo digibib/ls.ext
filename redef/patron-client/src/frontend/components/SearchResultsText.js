@@ -12,7 +12,7 @@ export default React.createClass({
     } else {
       return (
         <p><FormattedHTMLMessage {...messages.totalHits}
-          values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }}/></p>
+          values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} /></p>
       )
     }
   }

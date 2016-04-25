@@ -51,7 +51,7 @@ const Work = React.createClass({
         </p>
       )
     }
-    return <span data-automation-id='work_date'/>
+    return <span data-automation-id='work_date' />
   },
   render () {
     // TODO Better renderEmpty and showing something while it loads the resource.
@@ -82,16 +82,16 @@ const Work = React.createClass({
           </div>
           <div id='work' className='col work-info'>
             <h2 data-automation-id='work_title'>{this.renderTitle(work)}</h2>
-            <Contributors contributors={work.contributors}/>
+            <Contributors contributors={work.contributors} />
             {this.renderYear(work)}
-            <Subjects subjects={work.subjects}/>
-            <Genres genres={work.genres}/>
+            <Subjects subjects={work.subjects} />
+            <Genres genres={work.genres} />
           </div>
         </div>
         <Publications locationQuery={this.props.locationQuery}
                       expandSubResource={this.props.resourceActions.expandSubResource}
                       publications={work.publications}
-                      startReservation={this.props.reservationActions.startReservation}/>
+                      startReservation={this.props.reservationActions.startReservation} />
       </div>
     )
   }

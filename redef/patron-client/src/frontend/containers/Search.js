@@ -49,7 +49,7 @@ const Search = React.createClass({
                          clickCallback={this.handlePageClick}
                          containerClassName={'pagination'}
                          subContainerClassName={'pages pagination'}
-                         activeClassName={'active'}/>
+                         activeClassName={'active'} />
         </section>
       )
     }
@@ -70,7 +70,7 @@ const Search = React.createClass({
             searchActions={this.props.searchActions}
             searchResults={this.props.searchResults}
             totalHits={this.props.totalHits}
-            searchError={this.props.searchError}/>
+            searchError={this.props.searchError} />
           {this.renderPagination()}
         </div>
       </div>

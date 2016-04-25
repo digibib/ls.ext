@@ -30,7 +30,7 @@ const Publication = React.createClass({
     return (
       <div onClick={this.handleClick} className='col col-1-3 publication-small'
            data-automation-id={`publication_${publication.uri}`}>
-        <div className='book-cover'/>
+        <div className='book-cover' />
         <div className='publication-text'>
           <p>
               <span data-automation-id='publication_title'>

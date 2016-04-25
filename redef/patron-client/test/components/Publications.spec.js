@@ -37,7 +37,7 @@ describe('components', () => {
     DefaultExportPublicationsRewireApi.__Rewire__('Publication', React.createClass({
       render () {
         return (
-          <div className='publication'/>
+          <div className='publication' />
         )
       }
     }))

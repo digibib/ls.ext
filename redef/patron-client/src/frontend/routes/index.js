@@ -15,12 +15,12 @@ const history = syncHistoryWithStore(browserHistory, store)
 export default (
   <Router history={history}>
     <Route path='/' component={App}>
-      <IndexRoute component={Search}/>
-      <Route path='search' component={Search}/>
-      <Route path='work/:workId' component={Work}/>
-      <Route path='work/:workId/publication/:publicationId' component={Work}/>
-      <Route path='person/:personId' component={Person}/>
-      <Route path='profile' component={MyPage}/>
+      <IndexRoute component={Search} />
+      <Route path='search' component={Search} />
+      <Route path='work/:workId' component={Work} />
+      <Route path='work/:workId/publication/:publicationId' component={Work} />
+      <Route path='person/:personId' component={Person} />
+      <Route path='profile' component={MyPage} />
     </Route>
   </Router>
 )

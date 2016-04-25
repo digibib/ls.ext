@@ -37,12 +37,12 @@ const SearchHeader = React.createClass({
           <div className='container'>
             <div className='logo'>
               <Link to='/'>
-                <img src='/images/logo.png' alt={this.props.intl.formatMessage({...messages.logoAlt})}/>
+                <img src='/images/logo.png' alt={this.props.intl.formatMessage({...messages.logoAlt})} />
               </Link>
             </div>
             <button type='button' className='btn-mobile'>
               <Link to='/'>
-                <img src='/images/btn-mobile.svg' alt='3 black bars'/>
+                <img src='/images/btn-mobile.svg' alt='3 black bars' />
               </Link>
             </button>
             <div className='primary-menu'>
@@ -52,7 +52,7 @@ const SearchHeader = React.createClass({
                 <li><FormattedMessage {...messages.more} /></li>
                 <li><FormattedMessage {...messages.contactUs} /></li>
                 {this.props.isLoggedIn
-                  ? <li onClick={this.props.logout}><FormattedMessage { ...messages.logout }/></li>
+                  ? <li onClick={this.props.logout}><FormattedMessage { ...messages.logout } /></li>
                   : <li onClick={this.handleLoginClick}><FormattedMessage {...messages.logIn } />
                 </li>}
               </ul>
@@ -76,13 +76,13 @@ const SearchHeader = React.createClass({
         </section>
         <footer className='search-results-footer'>
           <div className='search-results-number'>
-            <SearchResultsText totalHits={this.props.totalHits} locationQuery={this.props.locationQuery}/>
+            <SearchResultsText totalHits={this.props.totalHits} locationQuery={this.props.locationQuery} />
           </div>
           <div className='search-sorting'>
             <p>Sorter treff på</p>
-              <select>
-                <option>Årstall</option>
-              </select>
+            <select>
+              <option>Årstall</option>
+            </select>
           </div>
         </footer>
       </div>

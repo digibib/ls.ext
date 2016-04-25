@@ -45,8 +45,8 @@ const Login = React.createClass({
     return (
       <div>
         <form onSubmit={this.handleLogin}>
-          <input ref={e => this.usernameInput = e} type='text'/>
-          <input ref={e => this.passwordInput = e} type='password'/>
+          <input ref={e => this.usernameInput = e} type='text' />
+          <input ref={e => this.passwordInput = e} type='password' />
           <button disabled={this.props.isRequestingLogin} onClick={this.handleLogin}
                   data-automation-id='login_button'>
             <FormattedMessage {...messages.logIn} />

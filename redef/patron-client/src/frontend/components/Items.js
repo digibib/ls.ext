@@ -8,21 +8,21 @@ export default React.createClass({
     items: PropTypes.array.isRequired
   },
   renderEmpty () {
-    return <p><span data-automation-id='no_items'><FormattedMessage {...messages.noItems}/></span></p>
+    return <p><span data-automation-id='no_items'><FormattedMessage {...messages.noItems} /></span></p>
   },
   renderItems () {
     return (
       <table>
         <thead>
         <tr>
-          <th><FormattedMessage {...messages.branch}/></th>
-          <th><FormattedMessage {...messages.count}/></th>
-          <th><FormattedMessage {...messages.placement}/></th>
-          <th><FormattedMessage {...messages.status}/></th>
+          <th><FormattedMessage {...messages.branch} /></th>
+          <th><FormattedMessage {...messages.count} /></th>
+          <th><FormattedMessage {...messages.placement} /></th>
+          <th><FormattedMessage {...messages.status} /></th>
         </tr>
         </thead>
         <tbody data-automation-id='work_items'>
-        {this.props.items.map(item => <Item key={item.barcode} item={item}/>)}
+        {this.props.items.map(item => <Item key={item.barcode} item={item} />)}
         </tbody>
       </table>
     )

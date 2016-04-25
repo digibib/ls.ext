@@ -54,7 +54,7 @@ const SearchResult = React.createClass({
     return (
       <article className='single-entry'>
         <div className='book-cover'>
-          <Link to={result.relativeUri}/>
+          <Link to={result.relativeUri} />
         </div>
         <div className='entry-content'>
           <h1>
@@ -72,7 +72,7 @@ const SearchResult = React.createClass({
         <div className='row result-more'>
           <div className='col' data-automation-id='work_formats'>
             <strong><FormattedMessage {...messages.availableAs} /></strong>
-            <br/>
+            <br />
             {formats.join(', ')}
           </div>
           <div className='col right'>
