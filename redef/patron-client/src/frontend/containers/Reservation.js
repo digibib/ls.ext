@@ -64,10 +64,12 @@ const Reservation = React.createClass({
     return (
       <div>
         <form>
-          <label><FormattedMessage {...messages.choosePickupLocation} /></label>
+          <p><FormattedMessage {...messages.choosePickupLocation} /></p>
           <select ref={e => this.branchSelect = e}>
             {this.renderBranches()}
           </select>
+          <br />
+          <br />
           <button disabled={this.props.isRequestingReservation} onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>
@@ -83,7 +85,7 @@ const Reservation = React.createClass({
 const messages = defineMessages({
   choosePickupLocation: {
     id: 'Reservation.choosePickupLocation',
-    description: 'The label for choosing pickup location',
+    description: 'The label for choosing pickup location:',
     defaultMessage: 'Choose pickup location'
   },
   reserve: {

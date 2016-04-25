@@ -45,8 +45,13 @@ const Login = React.createClass({
     return (
       <div>
         <form onSubmit={this.handleLogin}>
-          <input ref={e => this.usernameInput = e} type='text' />
+          <p><FormattedMessage {...messages.username} /></p>
+          <input name='username' ref={e => this.usernameInput = e} type='text' />
+          <br />
+          <p><FormattedMessage {...messages.password} /></p>
           <input ref={e => this.passwordInput = e} type='password' />
+          <br />
+          <br />
           <button disabled={this.props.isRequestingLogin} onClick={this.handleLogin}
                   data-automation-id='login_button'>
             <FormattedMessage {...messages.logIn} />
@@ -63,6 +68,16 @@ const Login = React.createClass({
 })
 
 const messages = defineMessages({
+  username: {
+    id: 'Login.username',
+    description: 'The label over the username field',
+    defaultMessage: 'Username:'
+  },
+  password: {
+    id: 'Login.password',
+    description: 'The label over the password field',
+    defaultMessage: 'Password:'
+  },
   logIn: {
     id: 'Login.logIn',
     description: 'The login button text',
