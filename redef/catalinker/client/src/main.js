@@ -277,6 +277,11 @@
                     if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
                       var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
                       promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, 0))
+                      if (input.isSubInput) {
+                        input.values[ rootIndex ].nonEditable = true
+                        input.values[ rootIndex ].subjectType = type
+                        input.parentInput.allowAddNewButton = true
+                      }
                     } else if (input.type === 'searchable-with-result-in-side-panel') {
                       _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
                         var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
@@ -295,7 +300,7 @@
                       setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset))
                     } else {
                       _.each(root.getAll(propertyName(predicate)), function (value, index) {
-                        setSingleValue(value, input, index + (offset))
+                        setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
                       })
                     }
                     rootIndex++

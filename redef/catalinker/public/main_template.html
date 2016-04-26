@@ -283,6 +283,7 @@
                 class="authorized" style="width: 100%;"
                 {{#if nonEditable}}disabled{{/if}}
             decorator="multi:{select2:[{{#!multiple}}'singleSelect'{{/multiple}}], detectChange:[], handleAddNewBySelect2:[]}"
+            value="{{./current.value}}"
             data-automation-id="{{dataAutomationId}}"
             multiple>
             {{#each predefinedValues[../../fragment]}}

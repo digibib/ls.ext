@@ -245,6 +245,7 @@ app.get('/config', function (request, response) {
           {
             label: 'Serie',
             multiple: true,
+            subjects: ['Publication'],
             subInputs: {
               rdfProperty: 'inSerial',
               range: 'SerialIssue',
