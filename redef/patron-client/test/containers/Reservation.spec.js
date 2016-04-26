@@ -41,7 +41,7 @@ describe('containers', () => {
       expect(node.getAttribute('data-automation-id')).toEqual('reservation_error_modal')
     })
 
-    it('should pass record ID and selected branch when clicking to reserve publication', () => {
+    it('should pass record ID and selected branch when clicking reserve publication button', () => {
       const { output, props } = setup({ recordId: '123' })
       const reserveButton = findElementByDataAutomationId(output, 'reserve_button')
       TestUtils.Simulate.click(reserveButton)
