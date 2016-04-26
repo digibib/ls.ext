@@ -145,6 +145,8 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+export { Reservation as Reservation }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
