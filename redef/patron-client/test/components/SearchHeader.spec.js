@@ -55,6 +55,7 @@ describe('components', () => {
       expect(props.dispatch).toHaveBeenCalled()
       expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ '/search?query=testvalue' ])
     })
+
     it('should search with value set from input', () => {
       const { output, props } = setup()
       let searchInput = TestUtils.findRenderedDOMComponentWithTag(output, 'input')

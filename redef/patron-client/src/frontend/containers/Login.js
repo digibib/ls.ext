@@ -36,9 +36,13 @@ const Login = React.createClass({
   },
   renderError () {
     if (this.props.loginError) {
-      return messages[ this.props.loginError ]
-        ? <p><FormattedMessage {...messages[ this.props.loginError ]} /></p>
-        : <p><FormattedMessage {...messages.genericLoginError} /></p>
+      return (
+        <p data-automation-id='login_error_message'>
+          {messages[ this.props.loginError ]
+            ? <FormattedMessage {...messages[ this.props.loginError ]} />
+            : <FormattedMessage {...messages.genericLoginError} />}
+        </p>
+      )
     }
   },
   render () {
@@ -116,7 +120,10 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+const intlLogin = injectIntl(Login)
+export { intlLogin as Login }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(Login))
+)(intlLogin)
