@@ -9,7 +9,7 @@ When(/^jeg søker på "([^"]*)" \(\+ id på vilkårlig migrering\)$/) do |query|
 end
 
 When(/^skal jeg få "([^"]*)" treff$/) do |hits|
-  wait_for { @site.SearchPatronClient.total_hits.eql? hits }
+  wait_retry { @site.SearchPatronClient.total_hits.eql? hits }
 end
 
 When(/^jeg går til side "([^"]*)" i resultatlisten$/) do |page|
@@ -17,9 +17,9 @@ When(/^jeg går til side "([^"]*)" i resultatlisten$/) do |page|
 end
 
 When(/^skal jeg ha "([^"]*)" resultater og være på side "([^"]*)"$/) do |hits, page|
-  wait_for { @browser.element(class: 'pagination').a(text: page).parent.class_name.eql? 'active' }
-  wait_for { @browser.element(data_automation_id: 'hits-total').exists? }
-  wait_for { @browser.div(data_automation_id: 'search-result-entries').elements(:xpath, '*').count.to_s.eql? hits }
+  wait_retry { @browser.element(class: 'pagination').a(text: page).parent.class_name.eql? 'active' }
+  wait_retry { @browser.element(data_automation_id: 'hits-total').exists? }
+  wait_retry { @browser.div(data_automation_id: 'search-result-entries').elements(:xpath, '*').count.to_s.eql? hits }
 end
 
 When(/^jeg trykker tilbake i nettleseren$/) do
@@ -37,9 +37,9 @@ When(/^jeg trykker oppfrisk i nettleseren$/) do
 end
 
 When(/^skal jeg se filtre på format, språk og målgruppe$/) do
-  wait_for { @browser.element(data_automation_id: 'filter_work.publications.formats').exists? }
-  wait_for { @browser.element(data_automation_id: 'filter_work.publications.languages').exists? }
-  wait_for { @browser.element(data_automation_id: 'filter_work.publications.audiences').exists? }
+  wait_retry { @browser.element(data_automation_id: 'filter_work.publications.formats').exists? }
+  wait_retry { @browser.element(data_automation_id: 'filter_work.publications.languages').exists? }
+  wait_retry { @browser.element(data_automation_id: 'filter_work.publications.audiences').exists? }
 end
 
 When(/^jeg slår på et filter for et vilkårlig format$/) do
@@ -50,7 +50,7 @@ When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do
   filter_values = @browser.element(data_automation_id: 'filter_work.publications.formats').lis
                       .select { |li| li.checkbox.present? && li.checkbox.set? }
                       .map { |li| li.element(data_automation_id: 'filter_label').text }
-  wait_for {
+  wait_retry {
     match = false
     @site.SearchPatronClient.get_search_result_list.each do |element|
       filter_values.each do |filter_value|
@@ -81,7 +81,7 @@ When(/^nåværende søketerm skal være "([^"]*)" \(\+ id på vilkårlig migreri
 end
 
 When(/^skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises i søkeresultatet$/) do |prefix, str|
-  wait_for {
+  wait_retry {
     element = @browser.element(data_automation_id: 'work-title')
     element.present? && element.text.eql?("#{prefix}#{@context[:random_migrate_id]} #{@context[:random_migrate_id]}#{str}")
   }
@@ -92,7 +92,7 @@ When(/^skal språket "([^"]*)" være valgt$/) do |language|
 end
 
 When(/^søkeknappen skal vise ordet "([^"]*)"$/) do |button_text|
-  wait_for { @browser.element(data_automation_id: 'search_button').text.eql? button_text }
+  wait_retry { @browser.element(data_automation_id: 'search_button').text.eql? button_text }
 end
 
 When(/^jeg søker på "([^"]*)"$/) do |query|
@@ -104,11 +104,11 @@ When(/^jeg trykker på første treff$/) do
 end
 
 When(/^skal jeg se "([^"]*)" utgivelser$/) do |count|
-  wait_for { @site.PatronClientWorkPage.publication_entries.size.to_s.eql? count }
+  wait_retry { @site.PatronClientWorkPage.publication_entries.size.to_s.eql? count }
 end
 
 When(/^skal jeg se et panel med informasjon om utgivelsen$/) do
-  wait_for { @browser.elements(data_automation_id: /^publication_info_/).size.eql? 1 } #There should only be one
+  wait_retry { @browser.elements(data_automation_id: /^publication_info_/).size.eql? 1 } #There should only be one
 end
 
 When(/^jeg trykker på utgivelsen med "([^"]*)" språk$/) do |language|
@@ -122,13 +122,13 @@ When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
       row['filial'] = @context[:random_migrate_branchcode]
     end
   end
-  wait_for { @browser.element(data_automation_id: /^publication_info_/).present? }
+  wait_retry { @browser.element(data_automation_id: /^publication_info_/).present? }
   publication_info = @browser.element(data_automation_id: /^publication_info_/).table.hashes.sort_by { |r| r.to_s }
   table.should eq publication_info
 end
 
 When(/^skal jeg ikke se et panel med informasjon om utgivelsen$/) do
-  wait_for { @browser.elements(data_automation_id: /^publication_info_/).size.eql? 0 }
+  wait_retry { @browser.elements(data_automation_id: /^publication_info_/).size.eql? 0 }
 end
 
 When(/^skal skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises på verkssiden$/) do |prefix, str|
@@ -160,7 +160,7 @@ When(/^låneren trykker bestill på en utgivelse$/) do
 end
 
 When(/^skal jeg se reservasjonsvinduet$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientCommon.reservation_modal_visible? }
+  wait_for { @site.PatronClientCommon.reservation_modal_visible? }
 end
 
 When(/^jeg trykker på bestill$/) do
@@ -168,7 +168,7 @@ When(/^jeg trykker på bestill$/) do
 end
 
 When(/^får låneren tilbakemelding om at boka er reservert$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientCommon.reservation_success_modal_visible? }
+  wait_for { @site.PatronClientCommon.reservation_success_modal_visible? }
 end
 
 When(/^jeg trykker for å bytte språk$/) do

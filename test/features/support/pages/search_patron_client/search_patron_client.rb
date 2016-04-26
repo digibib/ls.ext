@@ -18,27 +18,27 @@ class SearchPatronClient < PageRoot
   end
 
   def follow_first_item_in_search_result
-    wait_for { @browser.link(data_automation_id: 'work-link').present? }
+    wait_retry { @browser.link(data_automation_id: 'work-link').present? }
     @browser.link(data_automation_id: 'work-link').click
   end
 
   def search_term
-    wait_for { @browser.element(data_automation_id: 'current-search-term').present? }
+    wait_retry { @browser.element(data_automation_id: 'current-search-term').present? }
     @browser.element(data_automation_id: 'current-search-term').text
   end
 
   def total_hits
-    wait_for { @browser.element(data_automation_id: 'hits-total').present? }
+    wait_retry { @browser.element(data_automation_id: 'hits-total').present? }
     @browser.element(data_automation_id: 'hits-total').text
   end
 
   def goto_search_result_page(page)
     pagination_element = @browser.element(class: 'pagination').a(text: page)
-    wait_for { pagination_element.exists? }
+    wait_retry { pagination_element.exists? }
     unless pagination_element.parent.class_name.eql? 'active'
       pagination_element.click
     end
-    wait_for { @browser.element(class: 'pagination').a(text: page).parent.class_name.eql? 'active' }
-    wait_for { CGI::parse(URI(@browser.url).query)['page'].include? page }
+    wait_retry { @browser.element(class: 'pagination').a(text: page).parent.class_name.eql? 'active' }
+    wait_retry { CGI::parse(URI(@browser.url).query)['page'].include? page }
   end
 end

@@ -26,7 +26,7 @@ class PatronClientWorkPage < PageRoot
   end
 
   def exists_exemplar?
-    wait_for { @browser.element(data_automation_id: 'work_items').elements(xpath: './*').size > 0 }
+    wait_retry { @browser.element(data_automation_id: 'work_items').elements(xpath: './*').size > 0 }
   end
 
   def publication_entries
@@ -36,12 +36,12 @@ class PatronClientWorkPage < PageRoot
   def get_items(publication_identifier)
     @browser.element(data_automation_id: "publication_#{publication_identifier}").when_present(BROWSER_WAIT_TIMEOUT).click
     publication_info = @browser.element(data_automation_id: "publication_info_#{publication_identifier}")
-    wait_for { publication_info.present? }
+    wait_retry { publication_info.present? }
     publication_info.table.rows.select { |row| row.ths.size === 0 && row.tds.size > 0 }
   end
 
   def click_first_reserve
-    wait_for { @browser.element(data_automation_id: 'publication_reserve').exists? }
+    wait_retry { @browser.element(data_automation_id: 'publication_reserve').exists? }
     @browser.element(data_automation_id: 'publication_reserve').a.click
   end
 end
