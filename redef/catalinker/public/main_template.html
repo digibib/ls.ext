@@ -63,11 +63,12 @@
 </div>
 
 {{#partial input}}
-<div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel" {{#if resourceIsLoaded(showOnlyWhenEmpty) }} style="display:none;" {{/if}}>
-    <div class="pure-u-1-2 label {{firstInGroup ? 'first':''}} panel-part"
-         data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
-    </div>
-    <span class="panel-part pure-u-1-2 {{lastInGroup ? 'last':''}}">
+<div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel" {{#if
+     resourceIsLoaded(showOnlyWhenEmpty) }} style="display:none;" {{/if}}>
+<div class="pure-u-1-2 label {{firstInGroup ? 'first':''}} panel-part"
+     data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
+</div>
+<span class="panel-part pure-u-1-2 {{lastInGroup ? 'last':''}}">
         {{#each values:index}}
         <span class="field pure-u-1-1" id="support_panel_base_{{uniqueId}}">
             {{>type}}
@@ -108,7 +109,8 @@
                                     {{>../../../input.type}}
                                 </span>
                                 {{#if ! nonEditable }}
-                                    <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+                                    <span class="support-panel"
+                                          data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
                                         {{#with ../../../input}}
                                         {{>"support-for-"+type}}
                                         {{/with}}
@@ -124,7 +126,8 @@
                         {{#with ../../../parentInput}}
                             {{#if ! nonEditable }}
                                 {{#subjectTypes}}
-                                    <span class="subject-type-select" {{#if (subjectTypes.length== 1) }} style="display:none" {{/if}}>
+                                    <span class="subject-type-select" {{#if (subjectTypes.length== 1) }}
+                                          style="display:none" {{/if}}>
                                         <input type="radio" name={{subjectType}} value="{{.}}"
                                                {{# !
                                                targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
@@ -147,17 +150,17 @@
                     </span>
                 </span>
             </span>
-        </span>
-    {{/each}}
-    {{/if}}
-    {{#multiple && allowAddNewButton}}
-    <span class="pure-u-1-1">
+</span>
+{{/each}}
+{{/if}}
+{{#multiple && allowAddNewButton}}
+<span class="pure-u-1-1">
         <div class="add-new-btn-row">
             <div class="pure-u-2-3"> </div>
             <a class="pure-u-1-3 pure-button pure-button-primary" on-click="addValue">Legg til ny</a>
         </div>
     </span>
-    {{/}}
+{{/}}
 </div>
 {{/partial}}
 
@@ -212,25 +215,28 @@
             {{/if}}
             {{/}}
             {{#widgetOptions.enableCreateNewResource.forms[selectedIndexType]}}
-                <div class="search-result pure-u-1" {{#if widgetOptions.enableCreateNewResource.showCreateInputs}}style="display: none;"{{/if}}>
+            <div class="search-result pure-u-1" {{#if
+                 widgetOptions.enableCreateNewResource.showCreateInputs}}style="display: none;" {{
+            /if}}>
                     <span class="pure-u-1-1">
                         <div class="add-new-btn-row">
                             <div class="pure-u-2-3"> </div>
-                            <a on-click="showCreateNewResource:{{origin}}" class="pure-u-1-3 pure-button pure-button-primary">Legg til ny</a>
+                            <a on-click="showCreateNewResource:{{origin}}"
+                               class="pure-u-1-3 pure-button pure-button-primary">Legg til ny</a>
                         </div>
                     </span>
-                </div>
+        </div>
 
-                {{#if widgetOptions.enableCreateNewResource.showCreateInputs}}
-                    <div class="search-result pure-u-1">
-                        {{#each inputs}}
-                        {{./label}}:
-                        {{#each values}}
+        {{#if widgetOptions.enableCreateNewResource.showCreateInputs}}
+        <div class="search-result pure-u-1">
+            {{#each inputs}}
+            {{./label}}:
+            {{#each values}}
                         <span class="field pure-u-1-1">
                             {{>type}}
                         </span>
-                        {{/each}}
-                        {{/each}}
+            {{/each}}
+            {{/each}}
                         <span class="pure-u-1-1">
                             <div class="add-new-btn-row">
                                 <div class="pure-u-2-3"> </div>
@@ -238,9 +244,9 @@
                                    on-click="createNewResource:{{origin}}">Legg til</a>
                             </div>
                         </span>
-                    </div>
-                {{/if}}
-            {{/if}}
+        </div>
+        {{/if}}
+        {{/if}}
     </form>
 </div>
 {{/searchResult}}
@@ -268,11 +274,11 @@
 {{/partal}}
 
 {{#partial select-predefined-value}}
-<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable}}class="pure-u-1-1"{{/if}}>
-    {{#if nonEditable}}
-    <span>{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
-    {{/if}}
-    <span style="{{#if nonEditable}}display:none;{{/if}}">
+<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable}}class="pure-u-1-1" {{/if}}>
+{{#if nonEditable}}
+<span>{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
+{{/if}}
+<span style="{{#if nonEditable}}display:none;{{/if}}">
         <select
                 class="authorized" style="width: 100%;"
                 {{#if nonEditable}}disabled{{/if}}
@@ -282,7 +288,7 @@
             {{#each predefinedValues[../../fragment]}}
             <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
             {{/each}}
-        </select>
+    </select>
     </span>
 </span>
 {{/partial}}
@@ -296,10 +302,10 @@ value="{{current.value}}" />
 {{/partial}}
 
 {{#partial searchable-with-result-in-side-panel}}
-<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable}}class="pure-u-1-1"{{/if}}>
-    {{#if nonEditable}}{{current.displayValue}}{{else}}
-    {{#if ../../indexTypes.length > 1 && !deletable}}
-    <span class="index-type-select pure-u-1-2">
+<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable}}class="pure-u-1-1" {{/if}}>
+{{#if nonEditable}}{{current.displayValue}}{{else}}
+{{#if ../../indexTypes.length > 1 && !deletable}}
+<span class="index-type-select pure-u-1-2">
         <select value="{{../../selectedIndexType}}">
             {{#with widgetOptions.selectIndexTypeLegend}}
                 <option disabled selected>{{.}}</option>
@@ -309,7 +315,21 @@ value="{{current.value}}" />
             {{/each}}
         </select>
     </span>
-    {{/if}}
+{{/if}}
+{{#if deletable}}
+<div class="pure-u-1-1">
+    <span class="select2 select2-container select2-container--default select2-container--above select2-container--focus"
+    style="width: 100%;">
+        <span class="select2-selection--multiple">
+            <ul class="select2-selection__rendered">
+                <li class="select2-selection__choice">
+                    <span class="select2-selection__choice__remove" on-click="unselectEntity">×</span>{{current.displayValue}}
+                </li>
+            </ul>
+        </span>
+    </span>
+</div>
+    {{else}}
     <input {{#deletable}}readonly {{/deletable}} type="search"
     on-click="{{#deletable}}unselectEntity{{/deletable}}"
     class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}}{{#if searchable}} searchable{{/if}}"
@@ -317,6 +337,7 @@ value="{{current.value}}" />
     on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
     on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
     value="{{current.displayValue}}" />
+    {{/if}}
     <span class="support-panel-expander" on-click='searchResource:{{current.displayValue}}'> </span>
     {{/if}}
 </span>
