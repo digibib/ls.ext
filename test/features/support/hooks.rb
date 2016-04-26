@@ -47,12 +47,18 @@ end
 
 Before do |scenario|
   $random_migrate ||= false
+  $random_migrate_branchcode ||= false
+
   unless $random_migrate
+    step 'at jeg er logget inn som adminbruker'
+    $random_migrate_branchcode = generateRandomString
+    @site.Branches.visit.create(generateRandomString, $random_migrate_branchcode)
     if scenario.source_tag_names.include?('@random_migrate')
-      $random_migrate = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}").generate_quick_test_set()
+      $random_migrate = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}").generate_quick_test_set($random_migrate_branchcode)
     end
   end
   @context[:random_migrate_id] = $random_migrate
+  @context[:random_migrate_branchcode] = $random_migrate_branchcode
 end
 
 #  AFTER HOOKS will run in the OPPOSITE order of which they are registered.

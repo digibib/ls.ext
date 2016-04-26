@@ -13,6 +13,11 @@ const MyPage = React.createClass({
     isLoggedIn: PropTypes.bool.isRequired,
     intl: intlShape.isRequired
   },
+  componentDidMount () {
+    if (!this.props.isLoggedIn) {
+      this.props.loginActions.showLoginDialog()
+    }
+  },
   componentDidUpdate () {
     if (!this.props.isLoggedIn) {
       this.props.loginActions.showLoginDialog()
@@ -26,7 +31,7 @@ const MyPage = React.createClass({
       return this.renderNotLoggedIn()
     }
     return (
-      <div>
+      <div data-automation-id='profile_page'>
         <p><FormattedMessage {...messages.borrowerNumber} />: <span
           data-automation-id='borrowernumber'>{this.props.borrowerNumber}</span></p>
       </div>

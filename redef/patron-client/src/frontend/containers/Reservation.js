@@ -9,14 +9,14 @@ import * as ModalActions from '../actions/ModalActions'
 
 const Reservation = React.createClass({
   propTypes: {
-    recordId: PropTypes.string.isRequired,
     isLoggedIn: PropTypes.bool.isRequired,
     isRequestingReservation: PropTypes.bool.isRequired,
     reservationActions: PropTypes.object.isRequired,
     modalActions: PropTypes.object.isRequired,
     isSuccess: PropTypes.bool,
     isError: PropTypes.bool,
-    message: PropTypes.string
+    message: PropTypes.string,
+    recordId: PropTypes.string
   },
   renderBranches () {
     const branchOptions = []
@@ -36,7 +36,7 @@ const Reservation = React.createClass({
   },
   renderSuccess () {
     return (
-      <div>
+      <div data-automation-id='reservation_success_modal'>
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p><FormattedMessage {...messages.messageSuccess} /></p>
         <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button} /></button>
@@ -45,7 +45,7 @@ const Reservation = React.createClass({
   },
   renderError () {
     return (
-      <div>
+      <div data-automation-id='reservation_error_modal'>
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>{messages[ this.props.message ]
           ? <FormattedMessage {...messages[ this.props.message ]} />
@@ -62,7 +62,7 @@ const Reservation = React.createClass({
       return this.renderSuccess()
     }
     return (
-      <div>
+      <div data-automation-id='reservation_modal'>
         <form>
           <p><FormattedMessage {...messages.choosePickupLocation} /></p>
           <select ref={e => this.branchSelect = e}>
@@ -70,7 +70,7 @@ const Reservation = React.createClass({
           </select>
           <br />
           <br />
-          <button disabled={this.props.isRequestingReservation} onClick={this.handleReserve}>
+          <button data-automation-id='reserve_button' disabled={this.props.isRequestingReservation} onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>
           <button disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>

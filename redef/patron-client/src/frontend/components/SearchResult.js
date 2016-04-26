@@ -52,7 +52,7 @@ const SearchResult = React.createClass({
     let formats = [ ...pubFormats ]
 
     return (
-      <article className='single-entry'>
+      <article className='single-entry' data-formats={formats.join(', ')}>
         <div className='book-cover'>
           <Link to={result.relativeUri} />
         </div>

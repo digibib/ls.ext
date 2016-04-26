@@ -10,7 +10,6 @@ import { IntlProvider } from 'react-intl'
 function setup (propOverrides) {
   const props = {
     locale: 'no',
-    loadLanguage: expect.createSpy(),
     dispatch: expect.createSpy(),
     locationQuery: {},
     totalHits: 0,

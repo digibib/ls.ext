@@ -39,4 +39,9 @@ class PatronClientWorkPage < PageRoot
     wait_for { publication_info.present? }
     publication_info.table.rows.select { |row| row.ths.size === 0 && row.tds.size > 0 }
   end
+
+  def click_first_reserve
+    wait_for { @browser.element(data_automation_id: 'publication_reserve').exists? }
+    @browser.element(data_automation_id: 'publication_reserve').a.click
+  end
 end

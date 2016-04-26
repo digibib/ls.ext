@@ -9,3 +9,7 @@ end
 Then(/^viser systemet at bruker "(.*?)" har rettighet "(.*?)"$/) do |user,permission|
   @site.Patrons.visit.check_permission(user, permission).should == true
 end
+
+When(/^brukeren har rettigheten "([^"]*)"$/) do |permission|
+  @site.Patrons.visit.set_permission(@context[:patrons].first.surname, permission)
+end

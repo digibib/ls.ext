@@ -10,8 +10,6 @@ Egenskap: Gå gjennom lånegrensesnittet
   Og kunne filtrere søkeresultatene
   Og kunne paginere søkeresultatene
 
-  #Broken while implementing new design
-  @wip
   Scenario: Filtrere søkeresultater
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "prefix0" (+ id på vilkårlig migrering)
@@ -62,21 +60,17 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker på første treff
     Så skal skal tittel prefikset "pubprefix1" og som inneholder "eng" vises på verkssiden
 
-  #Broken while new design is implemented
-  @wip
   Scenario: Velge språk
     Gitt at jeg er i søkegrensesnittet
     Så skal språket "Norsk" være valgt
-    Og søkeknappen skal vise ordet "Søk"
-    Når jeg velger språket "Engelsk"
-    Så søkeknappen skal vise ordet "Search"
+    Og søkeknappen skal vise ordet "SØK"
+    Når jeg trykker for å bytte språk
+    Så søkeknappen skal vise ordet "SEARCH"
     Og skal språket "English" være valgt
     Når jeg trykker oppfrisk i nettleseren
     Så skal språket "English" være valgt
-    Og søkeknappen skal vise ordet "Search"
+    Og søkeknappen skal vise ordet "SEARCH"
 
-  #Needs fix for missing prerequisites - branch?
-  @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
@@ -85,40 +79,47 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker på utgivelsen med "Norsk (bokmål)" språk
     Så skal jeg se et panel med informasjon om utgivelsen
     Og den skal inneholde eksemplarinformasjonen
-      | filial                         | antall | plassering | status               |
-      | Barneavdelingen (Hovedutlånet) | 2      | placement1 | Ledig                |
-      | Barneavdelingen (Hovedutlånet) | 1      | placement2 | Forventet 2011-06-20 |
+      | filial                    | antall | plassering | status               |
+      | random_migrate_branchcode | 2      | placement1 | Ledig                |
+      | random_migrate_branchcode | 1      | placement2 | Forventet 2011-06-20 |
     Når jeg trykker på krysset i boksen med utgivelsesinformasjon
     Så skal jeg ikke se et panel med informasjon om utgivelsen
     Når jeg trykker på utgivelsen med "Dansk" språk
     Så skal jeg se et panel med informasjon om utgivelsen
     Og den skal inneholde eksemplarinformasjonen
-      | filial                         | antall | plassering | status               |
-      | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
+      | filial                    | antall | plassering | status               |
+      | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
     Når jeg trykker oppfrisk i nettleseren
     Så den skal inneholde eksemplarinformasjonen
-      | filial                         | antall | plassering | status               |
-      | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
+      | filial                    | antall | plassering | status               |
+      | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
     Når jeg trykker tilbake i nettleseren
     Så skal jeg ikke se et panel med informasjon om utgivelsen
     Når jeg trykker fremover i nettleseren
     Så den skal inneholde eksemplarinformasjonen
-      | filial                         | antall | plassering | status               |
-      | Barneavdelingen (Hovedutlånet) | 1      | placement1 | Forventet 2011-06-20 |
+      | filial                    | antall | plassering | status               |
+      | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
 
-  @wip
   Scenario: Logge inn
-    Gitt at jeg er i søkegrensesnittet
-    Og jeg går til Min Side
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en låner med passord
+    Og brukeren har rettigheten "superlibrarian"
+    Og at jeg er i søkegrensesnittet
+    Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
     Når jeg logger inn
     Så skal jeg se informasjonen min
 
-  @wip
   Scenario: Låner reserverer bok på verkssiden
-    Gitt at låneren har funnet en bok
-    Og at låneren går inn på verkssiden
-    Når låneren reserverer boka på verkssiden
-    Og låneren autentiserer seg
-    Og låneren velger henteavdeling på boka og trykker reserver
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en låner med passord
+    Og brukeren har rettigheten "superlibrarian"
+    Og at jeg er i søkegrensesnittet
+    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
+    Og jeg trykker på første treff
+    Og låneren trykker bestill på en utgivelse
+    Så skal jeg se innloggingsvinduet
+    Når jeg logger inn
+    Så skal jeg se reservasjonsvinduet
+    Når jeg trykker på bestill
     Så får låneren tilbakemelding om at boka er reservert

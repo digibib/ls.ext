@@ -43,7 +43,7 @@ const Login = React.createClass({
   },
   render () {
     return (
-      <div>
+      <div data-automation-id='login_modal'>
         <form onSubmit={this.handleLogin}>
           <p><FormattedMessage {...messages.username} /></p>
           <input name='username' ref={e => this.usernameInput = e} type='text' />

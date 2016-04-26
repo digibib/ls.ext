@@ -102,8 +102,9 @@ module Paths
 
   def patron_client(path=nil)
     paths = {
-      :work => "/work",
-      :person => "/person"
+      work: '/work',
+      person: '/person',
+      profile: '/profile'
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{host(:patron_client)}:#{port(:patron_client)}#{paths[path.to_sym]}"

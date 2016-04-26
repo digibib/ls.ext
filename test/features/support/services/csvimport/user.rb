@@ -29,6 +29,7 @@ module CSVImport
       user[:surname]      = patron.surname
       user[:debarred]     = patron.debarred
       user[:email]        = patron.email
+      user[:userid]       = patron.userid
 
       # To convert to CSV via Migration 
       importuser = { patron.cardnumber => user }
@@ -52,7 +53,6 @@ module CSVImport
       data << "\r\n"
       data << "1\r\n"
       data << "--#{form_boundary}--\r\n"
-
       session_cookie = "CGISESSID=#{@browser.cookies["CGISESSID"][:value]}"
       headers = {
        "Cookie" => session_cookie,

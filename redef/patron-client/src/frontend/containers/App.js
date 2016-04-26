@@ -30,7 +30,6 @@ const App = React.createClass({
         <ModalRoot />
         <div className='outer-container'>
           <SearchHeader locationQuery={this.props.location.query} dispatch={this.props.dispatch}
-                        loadLanguage={this.props.languageActions.loadLanguage}
                         locale={this.props.locale}
                         totalHits={this.props.totalHits}
                         isLoggedIn={this.props.isLoggedIn}
@@ -39,7 +38,7 @@ const App = React.createClass({
           />
           {this.props.children}
         </div>
-        <Footer />
+        <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
       </div>
     )
   }

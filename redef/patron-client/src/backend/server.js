@@ -62,6 +62,9 @@ app.post('/login', jsonParser, (request, response) => {
           .then(json => {
             request.session.borrowerNumber = json[ 'aaData' ][ 0 ][ 'borrowernumber' ]
             response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
+          }).catch(error => {
+            console.log(error)
+            response.sendStatus(500)
           })
       } else {
         response.sendStatus(403)

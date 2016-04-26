@@ -28,12 +28,12 @@ module RandomMigrate
       @raw << raw
     end
 
-    def add_item(available, placement)
+    def add_item(available, placement, branchcode)
       barcode = SecureRandom.hex(8)
       type = "item-#{barcode}"
       add_raw("<publication> <#{@services}/ontology#hasItem> <#{type}> .
-               <#{type}> <#{@services}/itemSubfieldCode/a> \"hbar\" .
-               <#{type}> <#{@services}/itemSubfieldCode/b> \"hbar\" .
+               <#{type}> <#{@services}/itemSubfieldCode/a> \"#{branchcode}\" .
+               <#{type}> <#{@services}/itemSubfieldCode/b> \"#{branchcode}\" .
                <#{type}> <#{@services}/itemSubfieldCode/l> \"12\" .
                <#{type}> <#{@services}/itemSubfieldCode/o> \"#{placement}\" .
                <#{type}> <#{@services}/itemSubfieldCode/p> \"#{barcode}\" .
@@ -114,7 +114,7 @@ module RandomMigrate
       return response
     end
 
-    def generate_quick_test_set()
+    def generate_quick_test_set(branchcode)
       # For Patron Client
       puts 'Migrating quick test set'
 
@@ -131,7 +131,7 @@ module RandomMigrate
       # The Norwegian publication has three items, one available and two unavailable
       # The available item has the same placement as one of the unavailable items
       # One of the English publications has one unavailable item
-      specialized_migrate()
+      specialized_migrate(branchcode)
 
       return @id
     end
@@ -150,7 +150,7 @@ module RandomMigrate
       return @id
     end
 
-    def specialized_migrate()
+    def specialized_migrate(branchcode)
       person_uri = post_ntriples 'person', generate_person[1]
       work_uri = post_ntriples('work', generate_work(person_uri)[1])
 
@@ -158,9 +158,9 @@ module RandomMigrate
       publication_1.add_authorized('publicationOf', work_uri)
       publication_1.add_literal('mainTitle', "pubprefix0#{@id} #{@id}nob")
       publication_1.add_authorized('language', 'http://lexvo.org/id/iso639-3/nob')
-      publication_1.add_item(true, 'placement1')
-      publication_1.add_item(false, 'placement2')
-      publication_1.add_item(false, 'placement1')
+      publication_1.add_item(true, 'placement1', branchcode)
+      publication_1.add_item(false, 'placement2', branchcode)
+      publication_1.add_item(false, 'placement1', branchcode)
       post_ntriples('publication', publication_1.to_ntriples)
 
       publication_2 = Entity.new('publication', @services)
@@ -179,7 +179,7 @@ module RandomMigrate
       publication_4.add_authorized('publicationOf', work_uri)
       publication_4.add_literal('mainTitle', "pubprefix1#{@id} #{@id}dan")
       publication_4.add_authorized('language', 'http://lexvo.org/id/iso639-3/dan')
-      publication_4.add_item(false, 'placement1')
+      publication_4.add_item(false, 'placement1', branchcode)
       post_ntriples('publication', publication_4.to_ntriples)
 
       index('work', work_uri)

@@ -10,16 +10,12 @@ const SearchHeader = React.createClass({
   propTypes: {
     locationQuery: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    loadLanguage: PropTypes.func.isRequired,
     locale: PropTypes.string.isRequired,
     totalHits: PropTypes.number.isRequired,
     showLoginDialog: PropTypes.func.isRequired,
     isLoggedIn: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
     intl: intlShape.isRequired
-  },
-  handleChangeLanguage (event) {
-    this.props.loadLanguage(event.target.value)
   },
   search (event) {
     event.preventDefault()
@@ -52,9 +48,10 @@ const SearchHeader = React.createClass({
                 <li><FormattedMessage {...messages.more} /></li>
                 <li><FormattedMessage {...messages.contactUs} /></li>
                 {this.props.isLoggedIn
-                  ? <li onClick={this.props.logout}><FormattedMessage { ...messages.logout } /></li>
-                  : <li onClick={this.handleLoginClick}><FormattedMessage {...messages.logIn } />
-                </li>}
+                  ? <li data-automation-id='logout_element' onClick={this.props.logout}>
+                  <FormattedMessage { ...messages.logout } /></li>
+                  : <li data-automation-id='login_element' onClick={this.handleLoginClick}>
+                  <FormattedMessage {...messages.logIn } /></li>}
               </ul>
             </div>
           </div>
@@ -115,16 +112,6 @@ const messages = defineMessages({
     id: 'SearchHeader.contactUs',
     description: 'Label for the link to go to the contact page',
     defaultMessage: 'Contact us'
-  },
-  english: {
-    id: 'SearchHeader.english',
-    description: 'Label for the English language choice',
-    defaultMessage: 'English'
-  },
-  norwegian: {
-    id: 'SearchHeader.norwegian',
-    description: 'Label for the Norwegian language choice',
-    defaultMessage: 'Norwegian'
   },
   searchInputPlaceholder: {
     id: 'SearchHeader.searchInputPlaceholder',

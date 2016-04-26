@@ -1,6 +1,15 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-export default React.createClass({
+const Footer = React.createClass({
+  propTypes: {
+    loadLanguage: PropTypes.func.isRequired,
+    locale: PropTypes.string.isRequired,
+    intl: intlShape.isRequired
+  },
+  handleChangeLanguage () {
+    this.props.loadLanguage(this.props.locale === 'no' ? 'en' : 'no')
+  },
   render () {
     return (
       <footer className='search-footer'>
@@ -8,7 +17,9 @@ export default React.createClass({
           <ul>
             <li>Kontakt oss</li>
             <li>Åpningstider</li>
-            <li>In English</li>
+            <li data-automation-id='change_language_element'
+                data-current-language={this.props.intl.formatMessage(messages.currentLanguage)}
+                onClick={this.handleChangeLanguage}><FormattedMessage {...messages.languageChoice} /></li>
             <li>Om Oss</li>
           </ul>
         </nav>
@@ -28,3 +39,18 @@ export default React.createClass({
     )
   }
 })
+
+const messages = defineMessages({
+  languageChoice: {
+    id: 'Footer.languageChoice',
+    description: 'Label for the link that changes the language, will be displayed in the language being chosen',
+    defaultMessage: 'På norsk'
+  },
+  currentLanguage: {
+    id: 'Footer.currentLanguage',
+    description: 'The value of the currently applied language',
+    defaultMessage: 'English'
+  }
+})
+
+export default injectIntl(Footer)

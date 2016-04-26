@@ -1,5 +1,7 @@
 /*eslint-disable max-len,quotes*/
 export default {
+  'Footer.languageChoice': 'In English',
+  'Footer.currentLanguage': 'Norsk',
   'Genres.genre': 'Sjanger:',
   'Item.available': 'Ledig',
   'Item.expectedAvailable': 'Forventet {status}',
