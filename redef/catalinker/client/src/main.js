@@ -102,7 +102,6 @@
           value: valuesAsArray
         }
         input.values[ index ].current = {
-//          value: _.union(input.values[ index ].current.value, valuesAsArray),
           value: valuesAsArray,
           uniqueId: _.uniqueId()
         }
@@ -254,6 +253,7 @@
       return axios.get(resourceUri)
         .then(function (response) {
             var graphData = ensureJSON(response.data)
+            var offsetCrossTypes = {"Work": "Publication", "Publication": "Work"}
 
             var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(resourceUri)[ 1 ])
             var root = ldGraph.parse(graphData).byId(resourceUri)
@@ -262,6 +262,11 @@
             _.each(allInputs(), function (input, inputIndex) {
               if ((type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
                 (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))) {
+                input.offset = input.offset || {}
+                var offset = 0;
+                if (input.offset[offsetCrossTypes[type]]) {
+                    offset = input.offset[offsetCrossTypes[type]]
+                }
                 var predicate = input.predicate
                 var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [ root ]
                 var rootIndex = 0;
@@ -273,24 +278,25 @@
                       var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
                       promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, 0))
                     } else if (input.type === 'searchable-with-result-in-side-panel') {
-                      _.each(root.outAll(propertyName(predicate)), function (node) {
-                        setIdValue(node.id, input, rootIndex)
-                        setDisplayValue(input, rootIndex)
-                        input.values[ rootIndex ].deletable = true
-                        input.values[ rootIndex ].searchable = true
+                      _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
+                        var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
+                        setIdValue(node.id, input, index)
+                        setDisplayValue(input, index)
+                        input.values[ index ].deletable = true
+                        input.values[ index ].searchable = true
+                        if (input.isSubInput) {
+                          input.values[ index ].nonEditable = true
+                          input.values[ index ].subjectType = type
+                          input.parentInput.allowAddNewButton = true
+                        }
                         setAllowNewButtonForInput(input)
                       })
                     } else if (input.type === 'select-predefined-value') {
-                      setMultiValues(root.outAll(propertyName(predicate)), input, input.isSubInput ? rootIndex : 0)
+                      setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset))
                     } else {
                       _.each(root.getAll(propertyName(predicate)), function (value, index) {
-                        setSingleValue(value, input, index)
+                        setSingleValue(value, input, index + (offset))
                       })
-                    }
-                    if (input.isSubInput) {
-                      input.values[ rootIndex ].nonEditable = true
-                      input.values[ rootIndex ].subjectType = type
-                      input.parentInput.allowAddNewButton = true
                     }
                     rootIndex++
                   }
@@ -298,6 +304,7 @@
                 var mainInput = input.isSubInput ? input.parentInput : input
                 mainInput.subjectType = type
                 setAllowNewButtonForInput(mainInput)
+                input.offset[type] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
               }
             })
             Promise.all(promises).then(function () {
