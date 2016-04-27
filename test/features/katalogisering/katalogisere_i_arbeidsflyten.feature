@@ -77,37 +77,3 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg åpner verket for lesing
     Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
-
-  @wip
-  Scenario: Verifisere resulterende utgivelse fra arbeidsflyt med eksisterende person
-    Gitt at jeg har en bok
-    Og at jeg har lagt til en person
-    Når jeg legger inn forfatternavnet på startsida
-    Så velger jeg en person fra treffliste fra personregisteret
-    Og bekrefter for å gå videre til bekreft verk
-    Og legger inn basisopplysningene om verket for hovedtittel og undertittel
-    Og bekrefter for å gå videre til beskriv verket
-    Og legger inn tilleggsopplyningene om verket for utgivelsesår og språk
-    Og bekrefter for å gå videre til beskriv utgivelsen
-    Og legger inn opplysningene om utgivelsen
-    Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt for lesing
-    Så jeg verifiserer opplysningene om utgivelsen
-    Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
-    Så jeg verifiserer opplysningene om verket
-    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
-
-  @wip
-  Scenario: Verifisere endring av verksopplysninger
-    Gitt at jeg har en bok
-    Og at det finnes et verk med forfatter
-    Når jeg legger inn forfatternavnet på startsida
-    Så velger jeg en person fra treffliste fra personregisteret
-    Og velger verket fra lista tilkoplet forfatteren
-    Og bekrefter for å gå videre til bekreft verk
-    Og legger inn basisopplysningene om verket for hovedtittel og undertittel
-    Og bekrefter for å gå videre til beskriv verket
-    Og legger inn tilleggsopplyningene om verket for utgivelsesår og språk
-    Og bekrefter for å gå videre til beskriv utgivelsen
-    Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
-    Så jeg verifiserer opplysningene om verket
-
