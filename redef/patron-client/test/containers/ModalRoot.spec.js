@@ -16,13 +16,12 @@ function setup (propOverrides) {
     ...propOverrides
   }
 
-  const store = createStore(rootReducer)
-  store.getState().modal = props
+  const store = createStore(rootReducer, { modal: props })
 
   const output = TestUtils.renderIntoDocument(
     <Provider store={store}>
       <IntlProvider locale='en'>
-        <ModalRoot {...props} />
+        <ModalRoot />
       </IntlProvider>
     </Provider>
   )
