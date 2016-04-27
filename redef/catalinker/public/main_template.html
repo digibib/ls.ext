@@ -276,11 +276,9 @@
 <span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable}}class="pure-u-1-1" {{/if}}>
 {{#if nonEditable}}
 <span>{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
-{{/if}}
-<span style="{{#if nonEditable}}display:none;{{/if}}">
+{{else}}
         <select
                 class="authorized" style="width: 100%;"
-                {{#if nonEditable}}disabled{{/if}}
             decorator="multi:{select2:[{{#!multiple}}'singleSelect'{{/multiple}}], detectChange:[], handleAddNewBySelect2:[]}"
             value="{{./current.value}}"
             data-automation-id="{{dataAutomationId}}"
@@ -289,7 +287,7 @@
             <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
             {{/each}}
     </select>
-    </span>
+{{/if}}
 </span>
 {{/partial}}
 
