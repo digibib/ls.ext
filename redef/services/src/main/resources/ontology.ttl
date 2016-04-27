@@ -163,7 +163,7 @@
   rdfs:label "Medietype"@no ;
   rdfs:domain :Work ;
   rdfs:range duo:Mediatype ;
-  duo:valuesFrom values:mediatype .
+  duo:valuesFrom values:mediaType .
 
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;
