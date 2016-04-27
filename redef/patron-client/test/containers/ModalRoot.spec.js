@@ -52,7 +52,7 @@ describe('containers', () => {
   })
 
   describe('ModalRoot', () => {
-    it('hould display nothing if no modal type', () => {
+    it('should display nothing if no modal type', () => {
       const { node } = setup()
       expect(node).toBe(null)
     })
