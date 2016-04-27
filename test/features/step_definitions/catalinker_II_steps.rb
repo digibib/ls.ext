@@ -197,6 +197,7 @@ When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
   role_select_field.click
   role_select_field.set(role_name)
   select_first_in_open_dropdown
+  @context[:person_role] = role_name
 end
 
 When(/^trykker jeg på knappen for legge til biinnførselen$/) do
@@ -296,8 +297,8 @@ end
 
 When(/^sjekker jeg at emnet er listet opp på verket$/) do
   data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
-  subject_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input")
-  subject_field.value.should eq @context[:subject_name]
+  subject_field = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id}']//li/span[@class='value']")
+  subject_field.text.should eq @context[:subject_name]
 end
 
 When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
@@ -305,4 +306,8 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
   @context[:work_identifier] = @site.WorkFlow.get_work_uri || @context[:work_identifier]
   @context[:publication_identifier] = @site.WorkFlow.get_publication_uri || @context[:publication_identifier]
   @site.WorkFlow.assert_selected_tab(tab_label  )
+end
+
+When(/^får jeg ingen treff$/) do
+  "#{pending}"
 end
