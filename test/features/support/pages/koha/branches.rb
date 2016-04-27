@@ -6,7 +6,10 @@ require_relative 'intra_page.rb'
 class Branches < IntraPage
   def visit
     @browser.goto intranet(:branches)
-    @browser.div(id: 'branchest_length').select_list.select_value('-1') # Show all branches
+    branch_select = @browser.div(id: 'branchest_length')
+    if (branch_select.exists? && branch_select.select_list.exists?)
+      branch_select.select_list.select_value('-1') # Show all branches
+    end
     self
   end
 
