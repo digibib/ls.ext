@@ -329,6 +329,10 @@ body {
         min-height: 66px;
         overflow: scroll;
         max-height: 525px;
+        .search-result-box {
+          max-height: 450px;
+          overflow: scroll;
+        }
       }
     }
   }
