@@ -2,8 +2,10 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { routerActions } from 'react-router-redux'
 
 import * as LoginActions from '../actions/LoginActions'
+import Tabs from '../components/Tabs'
 
 const MyPage = React.createClass({
   propTypes: {
@@ -12,11 +14,6 @@ const MyPage = React.createClass({
     borrowerNumber: PropTypes.string,
     isLoggedIn: PropTypes.bool.isRequired,
     intl: intlShape.isRequired
-  },
-  componentDidMount () {
-    if (!this.props.isLoggedIn) {
-      this.props.loginActions.showLoginDialog()
-    }
   },
   componentDidUpdate () {
     if (!this.props.isLoggedIn) {
@@ -30,25 +27,40 @@ const MyPage = React.createClass({
     if (!this.props.isLoggedIn) {
       return this.renderNotLoggedIn()
     }
+    const tabList = [
+      { label: this.props.intl.formatMessage(messages.loansAndReservations), path: '/profile/loans' },
+      { label: this.props.intl.formatMessage(messages.personalInformation), path: '/profile/info' },
+      { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' }
+    ]
     return (
       <div data-automation-id='profile_page'>
-        <p><FormattedMessage {...messages.borrowerNumber} />: <span
-          data-automation-id='borrowernumber'>{this.props.borrowerNumber}</span></p>
+        <Tabs tabList={tabList} currentPath={this.props.currentPath} push={this.props.routerActions.push} />
+        {this.props.children}
       </div>
     )
   }
 })
 
 const messages = defineMessages({
+  loansAndReservations: {
+    id: 'MyPage.loansAndReservations',
+    description: 'The label on the loans and reservations tab',
+    defaultMessage: 'Loans and reservations'
+  },
+  personalInformation: {
+    id: 'MyPage.personalInformation',
+    description: 'The label on the personal information tab',
+    defaultMessage: 'Personal information'
+  },
+  settings: {
+    id: 'MyPage.settings',
+    description: 'The label on the settings tab',
+    defaultMessage: 'Settings'
+  },
   mustBeLoggedIn: {
     id: 'MyPage.mustBeLoggedIn',
     description: 'The message shown when not logged in',
     defaultMessage: 'Must be logged in to access this page.'
-  },
-  borrowerNumber: {
-    id: 'MyPage.borrowerNumber',
-    description: 'The label for borrower number',
-    defaultMessage: 'Borrower number'
   }
 })
 
@@ -56,14 +68,15 @@ function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
     loginError: state.application.loginError,
-    borrowerNumber: state.application.borrowerNumber
+    currentPath: state.routing.locationBeforeTransitions.pathname
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    loginActions: bindActionCreators(LoginActions, dispatch)
+    loginActions: bindActionCreators(LoginActions, dispatch),
+    routerActions: bindActionCreators(routerActions, dispatch)
   }
 }
 
