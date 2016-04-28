@@ -38,7 +38,7 @@ module KohaRESTAPI
       http = Net::HTTP.new(host, 8081)
       uri = URI("#{intranet(:koha_rest_api)}reserves/#{params[:reserve_id]}")
       res = http.put(uri, params.to_json, headers)
-      expect(res.code).to eq("200"), "got unexpected #{res.code} when deleting reserve.\nResponse body: #{res.body}"
+      expect(res.code).to eq("200"), "got unexpected #{res.code} when updating reserve.\nResponse body: #{res.body}"
       res.body
     end
 
