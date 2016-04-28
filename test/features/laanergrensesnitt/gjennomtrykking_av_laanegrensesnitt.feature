@@ -110,6 +110,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg logger inn
     Så skal jeg se informasjonen min
 
+  @wip
   Scenario: Låner reserverer bok på verkssiden
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
