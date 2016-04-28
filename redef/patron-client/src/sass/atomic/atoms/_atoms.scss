@@ -1,10 +1,18 @@
-@import "images/img";
-@import "images/logo";
+@import "global/body";
+@import "global/html";
 
-@import "text/input";
+@import "images/img";
+@import "images/entry-content-icon";
 
 @import "buttons/button";
+@import "buttons/white-btn-checkmark";
+@import "buttons/black-btn";
 
 @import "fonts/fonts";
 
-// @import "text/links";
+@import "text/input";
+@import "text/links";
+@import "text/back-to-results";
+@import "text/headings";
+@import "text/paragraph";
+@import "text/tags";

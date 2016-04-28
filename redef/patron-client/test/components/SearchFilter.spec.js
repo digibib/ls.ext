@@ -16,9 +16,9 @@ function setup (propOverrides) {
       { aggregation: 'test_aggregation', bucket: 'filter_4', count: '20', active: true }
     ],
     locationQuery: {},
-    setFilter: () => {},
-    setFiltersVisibility: () => {},
-    collapseFilter: () => {},
+    toggleFilter: () => {},
+    toggleFilterVisibility: () => {},
+    toggleCollapseFilter: () => {},
     ...propOverrides
   }
 

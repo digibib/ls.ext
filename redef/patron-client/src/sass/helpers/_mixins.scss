@@ -45,3 +45,27 @@
     @include show-grid(12);
   }
 }
+
+@mixin border-bottom {
+   border-bottom: 3px solid #212121;
+}
+
+@mixin border-top {
+  border-top: 3px solid #212121;
+}
+
+@mixin border {
+  border: 3px solid #212121;
+}
+
+@mixin boldFont {
+  font-family: 'poppins-bold', Arial, sans-serif;
+}
+
+@mixin semiBoldFont {
+  font-family: 'poppins-semibold', Arial, sans-serif;
+}
+
+@mixin regularFont {
+  font-family: 'poppins-regular', Arial, sans-serif;
+}

@@ -9,7 +9,7 @@ import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
-    searchActions: { search: () => {} },
+    searchActions: { search: expect.createSpy() },
     searchResults: [],
     isSearching: false,
     dispatch: () => {},
@@ -19,10 +19,10 @@ function setup (propOverrides) {
     locationQuery: {},
     totalHits: 0,
     searchFilterActions: {
-      setFilter: () => {},
-      setFiltersVisibility: () => {},
-      setAllFiltersVisibility: () => {},
-      collapseFilter: () => {}
+      toggleFilter: () => {},
+      toggleFilterVisibility: () => {},
+      toggleAllFiltersVisibility: () => {},
+      toggleCollapseFilter: () => {}
     },
     ...propOverrides
   }
@@ -41,6 +41,11 @@ function setup (propOverrides) {
 }
 
 describe('containers', () => {
+  it('should search on mount when query is provided', () => {
+    const { props } = setup({ locationQuery: { query: 'test_query' } })
+    expect(props.searchActions.search).toHaveBeenCalled()
+  })
+
   describe('Search', () => {
     it('should not render pagination when few results', () => {
       const { node } = setup({ location: { query: { query: 'test' } }, totalHits: Constants.searchQuerySize })

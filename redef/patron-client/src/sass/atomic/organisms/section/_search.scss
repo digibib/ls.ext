@@ -1,0 +1,52 @@
+.search-container {
+  @extend %container;
+  margin: rhythm(2) 0;
+}
+
+.search-box {
+  @include span(12 of 12);
+  background: $greyColor;
+  padding: rhythm(2);
+
+  input {
+    @include span(8 of 12);
+    margin-right: 0;
+    -webkit-appearance: textfield;
+    box-sizing: content-box;
+    font-size: 1.3em;
+
+    &[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+      -webkit-appearance: none
+    }
+
+    @include breakpoint($medium){
+      @include span(9 of 11);
+      margin: auto 0;
+    }
+  }
+
+  .search-submit {
+    background: $blackColor;
+    color: $white;
+    padding: rhythm(3);
+    @include span(2 of 12);
+    margin: auto 0;
+    text-transform: uppercase;
+    text-align: center;
+
+    span {
+      font-size: 2.5em;
+    }
+
+    @include breakpoint($lt-small){
+      @include span(3 of 12);
+      margin-right: 0;
+
+      span {
+        margin-left: -8px;
+        font-size: 2.5em;
+      }
+    }
+
+  }
+}

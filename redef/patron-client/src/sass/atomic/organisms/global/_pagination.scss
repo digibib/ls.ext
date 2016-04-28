@@ -1,0 +1,40 @@
+.pagination-area {
+  @include span(12 of 12);
+  margin-bottom: rhythm(6);
+
+  .pagination {
+    float: right;
+  }
+
+  .pagination ul {
+    display: inline-block;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .pagination li {
+    display: inline-block;
+  }
+
+  .pagination .break a {
+    cursor: default;
+  }
+
+  ul.pagination li a, ul.pagination li span {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+
+  ul.pagination li.active a {
+    background-color: #ccc;
+    color: white;
+  }
+
+  ul.pagination li:not(.active) a:hover {
+    background-color: #eee;
+  }
+
+
+}

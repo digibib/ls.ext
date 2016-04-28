@@ -6,17 +6,14 @@ const SearchFilter = React.createClass({
   propTypes: {
     aggregation: PropTypes.string.isRequired,
     filters: PropTypes.array,
-    setFilter: PropTypes.func.isRequired,
-    setFiltersVisibility: PropTypes.func.isRequired,
-    collapseFilter: PropTypes.func.isRequired,
+    toggleFilter: PropTypes.func.isRequired,
+    toggleFilterVisibility: PropTypes.func.isRequired,
+    toggleCollapseFilter: PropTypes.func.isRequired,
     locationQuery: PropTypes.object.isRequired,
     intl: intlShape.isRequired
   },
-  contextTypes: {
-    router: React.PropTypes.object
-  },
   handleShowAllClick () {
-    this.props.setFiltersVisibility(this.props.aggregation, this.context.router)
+    this.props.toggleFilterVisibility(this.props.aggregation)
   },
   renderEmpty () {
     return <div data-automation-id='empty'></div>
@@ -54,15 +51,15 @@ const SearchFilter = React.createClass({
       })
   },
   handleCollapse () {
-    this.props.collapseFilter(this.props.aggregation, this.context.router)
+    this.props.toggleCollapseFilter(this.props.aggregation)
   },
   renderTitle () {
     return messages[ this.props.aggregation ]
-      ? this.props.intl.formatMessage({ ...messages[ this.props.aggregation ] })
+      ? this.props.intl.formatMessage(messages[ this.props.aggregation ])
       : this.props.aggregation
   },
   handleClick (filter) {
-    this.props.setFilter(filter.aggregation, filter.bucket, !filter.active, this.context.router)
+    this.props.toggleFilter(filter.aggregation, filter.bucket)
   },
   renderShowMore () {
     if (this.props.filters.length <= Constants.maxVisibleFilterItems) {

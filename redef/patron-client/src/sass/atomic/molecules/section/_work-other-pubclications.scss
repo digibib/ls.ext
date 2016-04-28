@@ -1,0 +1,14 @@
+.other-publications {
+  @include span(12 of 12);
+
+  .other-publications-title {
+    @include border-bottom;
+    margin-bottom: rhythm(2);
+
+    h2 {
+      margin: 0;
+      @include regularFont;
+    }
+
+  }
+}

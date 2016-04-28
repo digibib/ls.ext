@@ -5,7 +5,7 @@ require_relative '../page_root.rb'
 class PatronClientWorkPage < PageRoot
   def visit(workId)
     @browser.goto patron_client(:work) + "/" + workId
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.h2(data_automation_id: /work_title/).exists? }
+    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.element(data_automation_id: /work_title/).exists? }
     self
   end
 
@@ -22,7 +22,7 @@ class PatronClientWorkPage < PageRoot
   end
 
   def getDate
-    return @browser.span(data_automation_id: /work_date/).when_present(BROWSER_WAIT_TIMEOUT).text
+    return @browser.element(data_automation_id: /work_date/).when_present(BROWSER_WAIT_TIMEOUT).text
   end
 
   def exists_exemplar?
@@ -30,7 +30,7 @@ class PatronClientWorkPage < PageRoot
   end
 
   def publication_entries
-    @browser.div(id: 'publications').when_present(BROWSER_WAIT_TIMEOUT).elements(data_automation_id: /^publication_http/)
+    @browser.element(data_automation_id: 'work_publications').when_present(BROWSER_WAIT_TIMEOUT).elements(data_automation_id: /^publication_http/)
   end
 
   def get_items(publication_identifier)

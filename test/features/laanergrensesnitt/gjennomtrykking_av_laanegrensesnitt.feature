@@ -12,6 +12,8 @@ Egenskap: Gå gjennom lånegrensesnittet
 
   Scenario: Filtrere søkeresultater
     Gitt at jeg er i søkegrensesnittet
+    Når jeg søker på "prefix1" (+ id på vilkårlig migrering)
+    Så nåværende søketerm skal være "prefix1" (+ id på vilkårlig migrering)
     Når jeg søker på "prefix0" (+ id på vilkårlig migrering)
     Så nåværende søketerm skal være "prefix0" (+ id på vilkårlig migrering)
     Og skal jeg se filtre på format, språk og målgruppe
@@ -22,8 +24,9 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal filterne være valgt i grensesnittet
     Og skal jeg kun se treff med valgte format tilgjengelig
     Når jeg trykker tilbake i nettleseren
-    Så skal jeg kun se treff med valgte format tilgjengelig
+    Så nåværende søketerm skal være "prefix1" (+ id på vilkårlig migrering)
     Når jeg trykker fremover i nettleseren
+    Så nåværende søketerm skal være "prefix0" (+ id på vilkårlig migrering)
     Så skal jeg kun se treff med valgte format tilgjengelig
 
   Scenario: Paginere søkeresultater

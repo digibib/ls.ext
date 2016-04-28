@@ -4,8 +4,6 @@ import { push } from 'react-router-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import createPath from '../utils/createPath'
 
-import SearchResultsText from './SearchResultsText'
-
 const SearchHeader = React.createClass({
   propTypes: {
     locationQuery: PropTypes.object.isRequired,
@@ -33,7 +31,7 @@ const SearchHeader = React.createClass({
           <div className='container'>
             <div className='logo'>
               <Link to='/'>
-                <img src='/images/logo.png' alt={this.props.intl.formatMessage({...messages.logoAlt})} />
+                <img src='/images/logo.png' alt={this.props.intl.formatMessage(messages.logoAlt)} />
               </Link>
             </div>
             <button type='button' className='btn-mobile'>
@@ -59,7 +57,7 @@ const SearchHeader = React.createClass({
         <section className='search-container'>
           <div className='search-box'>
             <form onSubmit={this.search}>
-              <input placeholder={this.props.intl.formatMessage({...messages.searchInputPlaceholder})}
+              <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                      type='search'
                      defaultValue={this.props.locationQuery.query || ''}
                      ref={e => this.searchFieldInput = e}
@@ -71,17 +69,6 @@ const SearchHeader = React.createClass({
             </form>
           </div>
         </section>
-        <footer className='search-results-footer'>
-          <div className='search-results-number'>
-            <SearchResultsText totalHits={this.props.totalHits} locationQuery={this.props.locationQuery} />
-          </div>
-          <div className='search-sorting'>
-            <p>Sorter treff på</p>
-            <select>
-              <option>Årstall</option>
-            </select>
-          </div>
-        </footer>
       </div>
     )
   }

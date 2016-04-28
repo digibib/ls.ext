@@ -1,7 +1,11 @@
 /*eslint-disable max-len,quotes*/
 export default {
+  'Footer.contactUs': 'Kontakt oss',
+  'Footer.openingHours': 'Åpningstider',
   'Footer.languageChoice': 'In English',
   'Footer.currentLanguage': 'Norsk',
+  'Footer.aboutUs': 'Om oss',
+  'Footer.info': 'Deichmanske bibliotek <br />Oslo kommune <br />Arne Garborgs plass 4, 0179 Oslo, Norge <br />Telefon: +47 23 43 29 00 <br />Redaktør: Kristin Danielsen (biblioteksjef) <br />',
   'Genres.genre': 'Sjanger:',
   'Item.available': 'Ledig',
   'Item.expectedAvailable': 'Forventet {status}',
@@ -68,6 +72,7 @@ export default {
   'SearchResult.availableAs': 'Finnes som:',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',
+  'SearchResultsText.totalHitsMobile': '<span data-automation-id="hits-total">{totalHits}</span> treff',
   'SearchResultsText.searchForWork': 'Søk etter verk',
   'Subjects.subject': 'Emne:',
   'Person.noPerson': 'Ingen person',

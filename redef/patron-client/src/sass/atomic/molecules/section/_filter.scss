@@ -1,4 +1,7 @@
 .filterTitle {
+
+  border-top: 1px solid #ddd;
+
   h1 {
     @include span(10 of 12);
     font-size: 1.5em;
@@ -8,8 +11,8 @@
     @include span(1.5 of 12);
     float: right;
 
-    @include breakpoint($small){
-       @include span(2 of 12);
+    @include breakpoint($small) {
+      @include span(2 of 12);
       margin-right: 0;
       margin-top: rhythm(1);
     }
@@ -22,11 +25,15 @@
   font-weight: normal;
   display: inline-block;
   margin-right: 4px;
+  margin-bottom: 0;
+  @include regularFont;
 }
 
 .searchfilters {
   list-style-type: none;
   display: inline-block;
+  padding-left: 0;
+  margin-top: rhythm(-4);
 
   input[type="checkbox"] {
     border: 1px solid $blackColor;
@@ -34,10 +41,9 @@
     margin-right: rhythm(1.5);
     padding: rhythm(1.2);
 
-
-/*    -moz-appearance:none;
-    -webkit-appearance:none;
-    -o-appearance:none;*/
+    /*    -moz-appearance:none;
+        -webkit-appearance:none;
+        -o-appearance:none;*/
 
   }
 
@@ -48,8 +54,8 @@ label {
 }
 
 .show-all, .show-less, .show-more {
-  font-size: 1em;
   font-weight: normal;
   color: $redColor;
+  font-size: 0.8em;
 }
 

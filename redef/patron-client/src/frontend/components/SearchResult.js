@@ -5,6 +5,8 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 const SearchResult = React.createClass({
   propTypes: {
     result: PropTypes.object.isRequired,
+    locationQuery: PropTypes.object.isRequired,
+    showMoreInfo: PropTypes.func.isRequired,
     intl: intlShape.isRequired
   },
   renderContributors (contributors) {
@@ -40,6 +42,16 @@ const SearchResult = React.createClass({
       )
     }
   },
+  handleShowMoreInfoClick (event) {
+    event.stopPropagation()
+    event.preventDefault()
+    this.props.showMoreInfo(this.props.result.relativeUri)
+  },
+  shouldShowMoreInfo () {
+    let { showMore } = this.props.locationQuery
+    let { relativeUri } = this.props.result
+    return (showMore && showMore === relativeUri || (Array.isArray(showMore) && showMore.includes(relativeUri)))
+  },
   render () {
     let result = this.props.result
 
@@ -52,36 +64,65 @@ const SearchResult = React.createClass({
     let formats = [ ...pubFormats ]
 
     return (
-      <article className='single-entry' data-formats={formats.join(', ')}>
-        <div className='book-cover'>
-          <Link to={result.relativeUri} />
-        </div>
-        <div className='entry-content'>
+      <section className='single-entry' data-formats={formats.join(', ')}>
+        <aside className='book-cover'>
+          <Link to={result.relativeUri} className='book-cover-item' />
+        </aside>
+
+        <article className='entry-content'>
+
+          <div className='entry-content-icon'>
+            <div className='entry-content-icon-single'>
+              <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
+              <p>Lydbok</p>
+            </div>
+          </div>
+
           <h1>
             {this.renderDisplayTitle(result)}
           </h1>
 
-          <div>
+          <div className='contributors'>
             {this.renderContributors(result.contributors)}
+          </div>
+
+          <div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
+              porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
+              nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
+              sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.
+              Aliquam sit amet nisl non tortor elementum consequat. Morbi id nulla ac quam luctus posuere
+              nec a risus. Aenean congue quam tortor, a volutpat quam mollis nec. Nullam metus ex,
+              efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel accumsan odio, venenatis
+              fringilla ex.</p>
           </div>
 
           <div>
             {this.renderOriginalTitle(result)}
           </div>
-        </div>
-        <div className='row result-more'>
-          <div className='col' data-automation-id='work_formats'>
-            <strong><FormattedMessage {...messages.availableAs} /></strong>
-            <br />
-            {formats.join(', ')}
-          </div>
-          <div className='col right'>
-            <Link to={result.relativeUri} className='more'>
-              <FormattedMessage {...messages.allPublications} />
-            </Link>
-          </div>
-        </div>
-      </article>
+        </article>
+
+        {this.shouldShowMoreInfo()
+          ? [ (<div key='show-more-content' className='show-more-content' onClick={this.handleShowMoreInfoClick}>
+          <p>Skjul detaljer</p>
+          <img src='/images/btn-search-sorting.svg' alt='Black arrow pointing down' />
+        </div>),
+          (<div key='entry-more-content' className='entry-content-more'>
+
+            <div className='col' data-automation-id='work_formats'>
+              <strong><FormattedMessage {...messages.availableAs} /></strong>
+              <br />
+              {formats.join(', ')}
+            </div>
+
+          </div>) ]
+          : (<div className='show-more-content' onClick={this.handleShowMoreInfoClick}>
+            <p>Vis detaljer</p>
+            <img src='/images/btn-search-sorting.svg' alt='Black arrow pointing down' />
+          </div>)
+        }
+
+      </section>
     )
   }
 })

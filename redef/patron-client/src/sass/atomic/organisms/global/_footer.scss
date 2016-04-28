@@ -1,4 +1,4 @@
-.search-footer {
+.main-footer {
   @include span(12 of 12);
   background: $blackColor;
   color: $white;
@@ -7,7 +7,7 @@
   .footer-text {
     @include span(12 of 12);
 
-    
+
     @include breakpoint($small){
       @include span(3 of 12);
       @include push(2 of 12);
@@ -23,7 +23,7 @@
       float: right;
       text-align: right;
     }
-    
+
     ul, li {
       list-style-type: none;
       margin-bottom: rhythm(3);
@@ -34,7 +34,7 @@
       }
     }
   }
-  
+
   .footer-icon {
     @include span(1 of 12);
     margin: rhythm(2);

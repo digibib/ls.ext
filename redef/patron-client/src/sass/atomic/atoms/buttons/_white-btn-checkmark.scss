@@ -1,0 +1,7 @@
+.white-btn-checkmark {
+  padding: rhythm(1.5); // make space for border
+  @include border;
+  @include semiBoldFont;
+  font-size: 1em;
+  margin: rhythm(2);
+}

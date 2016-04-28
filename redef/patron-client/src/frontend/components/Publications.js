@@ -38,7 +38,7 @@ export default React.createClass({
     }
     let showMore
     return (
-      <div>
+      <div data-automation-id='work_publications'>
         {threeAndThreePublications.map((publications, row) => {
           let output = [ <div key={`row-${row}`} className='row'>{publications.map(publication => <Publication
             startReservation={this.props.startReservation}
@@ -71,16 +71,23 @@ export default React.createClass({
   },
   render () {
     return (
-      <div id='publications' className='panel row'>
-        <div className='panel-header'>
-          <span><strong><FormattedMessage {...messages.numberOfPublications}
-            values={{numberOfPublications: this.props.publications.length}} /></strong></span>
-          <div className='panel-arrow panel-open'></div>
+      <footer className='other-publications'>
+        <header className='other-publications-title'>
+          <h2><FormattedMessage {...messages.numberOfPublications}
+            values={{numberOfPublications: this.props.publications.length}} /></h2>
+        </header>
+
+        <div className='entry-content-icon'>
+          <div className='entry-content-icon-single'>
+            <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
+            <p>Lydbok</p>
+          </div>
         </div>
-        <div className='col'>
+
+        <div className='entry-content'>
           {this.props.publications.length > 0 ? this.renderPublications() : this.renderEmpty()}
         </div>
-      </div>
+      </footer>
     )
   }
 })

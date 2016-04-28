@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 
 const Footer = React.createClass({
   propTypes: {
@@ -12,25 +12,19 @@ const Footer = React.createClass({
   },
   render () {
     return (
-      <footer className='search-footer'>
+      <footer className='main-footer'>
         <nav className='secondary-navigation' type='navigation'>
           <ul>
-            <li>Kontakt oss</li>
-            <li>Åpningstider</li>
+            <li><FormattedMessage {...messages.contactUs} /></li>
+            <li><FormattedMessage {...messages.openingHours} /></li>
             <li data-automation-id='change_language_element'
                 data-current-language={this.props.intl.formatMessage(messages.currentLanguage)}
                 onClick={this.handleChangeLanguage}><FormattedMessage {...messages.languageChoice} /></li>
-            <li>Om Oss</li>
+            <li><FormattedMessage {...messages.aboutUs} /></li>
           </ul>
         </nav>
         <div className='footer-text'>
-          <p>
-            Deichmanske bibliotek <br />
-            Oslo kommune <br />
-            Arne Garborgs plass 40179 Oslo <br />
-            Telefon: +47 23 43 29 00 <br />
-            Redaktør: Kristin Danielsen (biblioteksjef) <br />
-          </p>
+          <p><FormattedHTMLMessage {...messages.info} /></p>
         </div>
         <div className='footer-icon'>
           <img src='/images/footer-icon.svg' alt='White box with black circle' />
@@ -41,6 +35,16 @@ const Footer = React.createClass({
 })
 
 const messages = defineMessages({
+  contactUs: {
+    id: 'Footer.contactUs',
+    description: 'Label for the contact us link',
+    defaultMessage: 'Contact us'
+  },
+  openingHours: {
+    id: 'Footer.openingHours',
+    description: 'Label for the opening hours link',
+    defaultMessage: 'Opening hours'
+  },
   languageChoice: {
     id: 'Footer.languageChoice',
     description: 'Label for the link that changes the language, will be displayed in the language being chosen',
@@ -50,6 +54,16 @@ const messages = defineMessages({
     id: 'Footer.currentLanguage',
     description: 'The value of the currently applied language',
     defaultMessage: 'English'
+  },
+  aboutUs: {
+    id: 'Footer.aboutUs',
+    description: 'Label for the about us link',
+    defaultMessage: 'About us'
+  },
+  info: {
+    id: 'Footer.info',
+    description: 'The text containing the address, telephone number and other information',
+    defaultMessage: 'Deichmanske bibliotek - Oslo public library <br />Oslo kommune <br />Arne Garborgs plass 4, 0179 Oslo, Norway <br />Telephone: +47 23 43 29 00 <br />Editor: Kristin Danielsen (Director) <br />'
   }
 })
 

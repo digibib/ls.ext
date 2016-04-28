@@ -4,6 +4,7 @@ import Constants from '../constants/Constants'
 import * as types from '../constants/ActionTypes'
 import { filteredSearchQuery } from '../utils/searchBuilder'
 import { processSearchResponse } from '../utils/searchResponseParser'
+import { toggleParameterValue } from './ParameterActions'
 
 export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
@@ -36,18 +37,18 @@ export function searchFailure (error) {
 
 export function search () {
   return (dispatch, getState) => {
-    let locationQuery = getState().routing.locationBeforeTransitions.query
+    const locationQuery = getState().routing.locationBeforeTransitions.query
     if (!locationQuery || !locationQuery.query) {
       return
     }
-    let page = locationQuery.page
-    let inputQuery = locationQuery.query
+    const page = locationQuery.page
+    const inputQuery = locationQuery.query
 
-    let uri = page
+    const uri = page
       ? `${Constants.backendUri}/search/work/_search?from=${(page - 1) * Constants.searchQuerySize}`
       : `${Constants.backendUri}/search/work/_search`
 
-    let elasticSearchQuery = filteredSearchQuery(locationQuery)
+    const elasticSearchQuery = filteredSearchQuery(locationQuery)
     dispatch(requestSearch(inputQuery, elasticSearchQuery))
 
     return fetch(uri, {
@@ -67,4 +68,9 @@ export function search () {
       })
       .catch(error => dispatch(searchFailure(error)))
   }
+}
+
+export function showMoreInfo (relativeUri) {
+  const queryParamName = 'showMore'
+  return toggleParameterValue('/search', queryParamName, relativeUri)
 }

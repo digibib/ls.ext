@@ -6,13 +6,10 @@ export default React.createClass({
   propTypes: {
     filters: PropTypes.array.isRequired,
     locationQuery: PropTypes.object.isRequired,
-    setFilter: PropTypes.func.isRequired,
-    setFiltersVisibility: PropTypes.func.isRequired,
-    setAllFiltersVisibility: PropTypes.func.isRequired,
-    collapseFilter: PropTypes.func.isRequired
-  },
-  contextTypes: {
-    router: React.PropTypes.object
+    toggleFilter: PropTypes.func.isRequired,
+    toggleFilterVisibility: PropTypes.func.isRequired,
+    toggleAllFiltersVisibility: PropTypes.func.isRequired,
+    toggleCollapseFilter: PropTypes.func.isRequired
   },
   getDefaultProps () {
     return {
@@ -23,7 +20,7 @@ export default React.createClass({
     return <div data-automation-id='empty'></div>
   },
   handleFiltersOpenClick () {
-    this.props.setAllFiltersVisibility(this.context.router)
+    this.props.toggleAllFiltersVisibility()
   },
   render () {
     let groupedFilters = {}
@@ -36,10 +33,10 @@ export default React.createClass({
       return (
         <aside className='filters'>
           <div className='limit-filters'>
-            {this.props.locationQuery.hideFilters
+            {this.props.locationQuery.hideFilters === null
               ? (<span className='limit-filters-text'><p>Vis filter</p></span>)
               : (<span className='limit-filters-text'><p>Skjul filter</p></span>)}
-            {this.props.locationQuery.hideFilters
+            {this.props.locationQuery.hideFilters === null
               ? (<button onClick={this.handleFiltersOpenClick} className='limit-filters-open' type='button'>
               <img src='/images/btn-limit-filter-open.svg' alt='Red arrow pointing down' />
             </button>)
@@ -53,7 +50,7 @@ export default React.createClass({
           </header>
 
           <section data-automation-id='search_filters'>
-            {this.props.locationQuery.hideFilters ? null : Object.keys(groupedFilters).map(aggregation => {
+            {this.props.locationQuery.hideFilters === null ? null : Object.keys(groupedFilters).map(aggregation => {
               let filtersByAggregation = groupedFilters[ aggregation ]
               return (
                 <SearchFilter
@@ -61,9 +58,9 @@ export default React.createClass({
                   aggregation={aggregation}
                   filters={filtersByAggregation}
                   locationQuery={this.props.locationQuery}
-                  setFilter={this.props.setFilter}
-                  setFiltersVisibility={this.props.setFiltersVisibility}
-                  collapseFilter={this.props.collapseFilter}
+                  toggleFilter={this.props.toggleFilter}
+                  toggleFilterVisibility={this.props.toggleFilterVisibility}
+                  toggleCollapseFilter={this.props.toggleCollapseFilter}
                 />
               )
             })}

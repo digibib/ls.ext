@@ -2,6 +2,11 @@
   @include span(12 of 12);
 
   @include breakpoint($small){
+    @include border-top;
+  }
+
+
+  @include breakpoint($small){
      @include span(3 of 12);
   }
 
@@ -15,7 +20,7 @@
       color: $redColor;
       @include span(12 of 12);
       margin-bottom: rhythm(2);
-      //@extend %border-bottom;
+      @include border-bottom;
 
       span {
         @include span(10 of 12);
@@ -41,8 +46,7 @@
       color: $darkGreyColor;
       @include span(12 of 12);
       padding-bottom: rhythm(2);
-      margin-top: rhythm(-3);
-      //@extend %border-bottom;
+      margin-top: rhythm(-5);
     }
   }
 

@@ -1,0 +1,27 @@
+.work-subjects {
+  @include span(12 of 12);
+  margin-bottom: rhythm(2);
+  @include border-top;
+
+  @include breakpoint($small){
+    @include span(3 of 12);
+    margin-right: 0;
+  }
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    display: inline-block;
+    padding: rhythm(3);
+    padding-left: 0;
+  }
+
+}

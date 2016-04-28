@@ -12,7 +12,7 @@ function setup (propOverrides) {
     searchError: false,
     totalHits: 0,
     searchResults: [],
-    searchActions: { search: expect.createSpy() },
+    searchActions: { search: () => {} },
     ...propOverrides
   }
 
@@ -45,11 +45,6 @@ describe('components', () => {
   })
 
   describe('SearchResults', () => {
-    it('should search on mount when query is provided', () => {
-      const { props } = setup({ locationQuery: { query: 'test_query' } })
-      expect(props.searchActions.search).toHaveBeenCalled()
-    })
-
     it('should render search error', () => {
       const { node } = setup({ searchError: true })
       expect(node.getAttribute('data-automation-id')).toBe('search-error')

@@ -8,6 +8,8 @@ import SearchResult, { __RewireAPI__ as DefaultExportSearchResultRewireApi } fro
 
 function setup (resultPropOverrides) {
   const props = {
+    showMoreInfo: () => {},
+    locationQuery: {showMore: 'test_relativeUri'},
     result: {
       originalTitle: 'test_originalTitle',
       mainTitle: 'test_mainTitle',

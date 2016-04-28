@@ -3,12 +3,14 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactPaginate from 'react-paginate'
 import { push } from 'react-router-redux'
+import shallowEqual from 'fbjs/lib/shallowEqual'
 
 import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
 import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
+import SearchResultsText from '../components/SearchResultsText'
 
 const Search = React.createClass({
   propTypes: {
@@ -21,7 +23,16 @@ const Search = React.createClass({
     filters: PropTypes.array.isRequired,
     location: PropTypes.object.isRequired,
     searchFieldInput: PropTypes.string,
-    totalHits: PropTypes.number.isRequired
+    totalHits: PropTypes.number.isRequired,
+    locationQuery: PropTypes.object.isRequired
+  },
+  componentWillMount () {
+    this.props.searchActions.search()
+  },
+  componentDidUpdate (prevProps) {
+    if (!shallowEqual(this.props.locationQuery, prevProps.locationQuery)) {
+      this.props.searchActions.search()
+    }
   },
   handlePageClick (data) {
     let page = String(data.selected + 1)
@@ -58,19 +69,40 @@ const Search = React.createClass({
     return (
       <div className='container'>
         <div className='row'>
-          <SearchFilters filters={this.props.filters}
-                         locationQuery={this.props.location.query}
-                         setFilter={this.props.searchFilterActions.setFilter}
-                         setFiltersVisibility={this.props.searchFilterActions.setFiltersVisibility}
-                         setAllFiltersVisibility={this.props.searchFilterActions.setAllFiltersVisibility}
-                         collapseFilter={this.props.searchFilterActions.collapseFilter}
-          />
-          <SearchResults
-            locationQuery={this.props.location.query}
-            searchActions={this.props.searchActions}
-            searchResults={this.props.searchResults}
-            totalHits={this.props.totalHits}
-            searchError={this.props.searchError} />
+          {this.props.locationQuery.query
+            ? (<div className='search-results-footer'>
+            <div className='search-results-number'>
+              <SearchResultsText totalHits={this.props.totalHits} locationQuery={this.props.locationQuery} />
+            </div>
+            {this.props.totalHits > 0
+              ? (<div className='search-sorting'>
+              <p>Sorter treff på</p>
+
+              <div className='search-sorting-select-box'>
+                <select>
+                  <option defaultValue>Årstall</option>
+                  <option>Nyeste</option>
+                  <option>Eldre</option>
+                </select>
+              </div>
+            </div>) : null}
+          </div>)
+            : null}
+          {this.props.totalHits > 0
+            ? [ <SearchFilters key='searchFilters'
+                               filters={this.props.filters}
+                               locationQuery={this.props.location.query}
+                               toggleFilter={this.props.searchFilterActions.toggleFilter}
+                               toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
+                               toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
+                               toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter} />,
+            <SearchResults key='searchResults'
+                           locationQuery={this.props.location.query}
+                           searchActions={this.props.searchActions}
+                           searchResults={this.props.searchResults}
+                           totalHits={this.props.totalHits}
+                           searchError={this.props.searchError} /> ]
+            : null}
           {this.renderPagination()}
         </div>
       </div>
@@ -86,7 +118,8 @@ function mapStateToProps (state) {
     totalHits: state.search.totalHits,
     isSearching: state.search.isSearching,
     searchError: state.search.searchError,
-    filters: state.search.filters
+    filters: state.search.filters,
+    locationQuery: state.routing.locationBeforeTransitions.query
   }
 }
 

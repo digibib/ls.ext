@@ -1,0 +1,9 @@
+.work-entry {
+  @include span(12 of 12);
+  margin-top: rhythm(2);
+
+  h1 {
+    color: $redColor;
+  }
+
+}

@@ -1,0 +1,8 @@
+.black-btn {
+  padding: rhythm(2);
+  background: $blackColor;
+  color: $white;
+  @include semiBoldFont;
+  font-size: 1em;
+  margin: rhythm(2);
+}

@@ -15,10 +15,10 @@ function setup (propOverrides) {
       { aggregation: 'work.publication.formats', bucket: 'filter_4', count: '20' }
     ],
     locationQuery: {},
-    setFilter: () => {},
-    setFiltersVisibility: () => {},
-    setAllFiltersVisibility: () => {},
-    collapseFilter: () => {},
+    toggleFilter: () => {},
+    toggleFilterVisibility: () => {},
+    toggleAllFiltersVisibility: () => {},
+    toggleCollapseFilter: () => {},
     ...propOverrides
   }
 

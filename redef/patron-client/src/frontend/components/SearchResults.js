@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import shallowEqual from 'fbjs/lib/shallowEqual'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchResult from './SearchResult'
 
@@ -10,14 +9,6 @@ export default React.createClass({
     searchError: PropTypes.any.isRequired,
     totalHits: PropTypes.number.isRequired,
     searchResults: PropTypes.array.isRequired
-  },
-  componentWillMount () {
-    this.props.searchActions.search()
-  },
-  componentDidUpdate (prevProps) {
-    if (!shallowEqual(this.props.locationQuery, prevProps.locationQuery)) {
-      this.props.searchActions.search()
-    }
   },
   render () {
     if (this.props.searchError) {
@@ -30,7 +21,7 @@ export default React.createClass({
     let entries = []
     if (this.props.locationQuery.query) {
       entries = this.props.searchResults.map(result => (
-          <SearchResult key={result.relativeUri} result={result} />
+          <SearchResult key={result.relativeUri} result={result} locationQuery={this.props.locationQuery} showMoreInfo={this.props.searchActions.showMoreInfo} />
         )
       )
     }
