@@ -110,7 +110,6 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg logger inn
     Så skal jeg se informasjonen min
 
-  @wip
   Scenario: Låner reserverer bok på verkssiden
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
@@ -122,5 +121,6 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg se innloggingsvinduet
     Når jeg logger inn
     Så skal jeg se reservasjonsvinduet
-    Når jeg trykker på bestill
+    Når jeg velger riktig avdeling
+    Og jeg trykker på bestill
     Så får låneren tilbakemelding om at boka er reservert

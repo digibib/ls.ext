@@ -174,3 +174,9 @@ end
 When(/^jeg trykker for å bytte språk$/) do
   @site.PatronClientCommon.click_change_language
 end
+
+When(/^jeg velger riktig avdeling$/) do
+  # Temporary hack to set the branch code to the test branch
+  # Will be fixed when Patron Client can retrieve a list of existing branches from Koha
+  @browser.execute_script("document.querySelector('[data-automation-id=\"reservation_modal\"]').getElementsByTagName('option')[0].setAttribute('value', \"#{@context[:random_migrate_branchcode]}\")")
+end
