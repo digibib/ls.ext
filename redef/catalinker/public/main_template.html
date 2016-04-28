@@ -220,9 +220,9 @@
             <div class="search-result pure-u-1" {{#if widgetOptions.enableCreateNewResource.showCreateInputs}}style="display: none;" {{/if}}>
                     <span class="pure-u-1-1">
                         <div class="add-new-btn-row">
-                            <div class="pure-u-2-3"> </div>
+                            <div class="pure-u-1-3"> </div>
                             <a on-click="showCreateNewResource:{{origin}}"
-                               class="pure-u-1-3 pure-button pure-button-primary">Legg til ny</a>
+                               class="pure-u-1-3 pure-button pure-button-primary">{{labelForCreateButton}}</a>
                         </div>
                     </span>
              </div>
@@ -240,7 +240,7 @@
                             <div class="add-new-btn-row">
                                 <div class="pure-u-2-3"> </div>
                                 <a class="pure-u-1-3 pure-button pure-button-primary"
-                                   on-click="createNewResource:{{origin}}">Legg til</a>
+                                   on-click="createNewResource:{{origin}}">Opprett</a>
                             </div>
                         </span>
         </div>

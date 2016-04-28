@@ -623,7 +623,8 @@
             })
             input.widgetOptions.enableCreateNewResource[ 'forms' ][ formRef.targetType ] = {
               inputs: createResourceForm.inputs,
-              rdfType: createResourceForm.rdfType
+              rdfType: createResourceForm.rdfType,
+              labelForCreateButton: createResourceForm.labelForCreateButton
             }
           })
         }
@@ -1372,6 +1373,7 @@
                     ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false))
                   })
                   ractive.set(event.keypath + '.showCreateInputs', false)
+                  ractive.set(grandParentOf(origin) + '.allowAddNewButton', true)
                 }
                 saveInputs(event.context.inputs, event.context.rdfType)
                   .then(setCreatedResourceUriInSearchInput)

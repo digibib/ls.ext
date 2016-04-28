@@ -78,6 +78,7 @@ app.get('/config', function (request, response) {
       {
         id: "create-person-form",
         rdfType: "Person",
+        labelForCreateButton: "Opprett ny person",
         inputs: [
           {
             rdfProperty: 'name',
@@ -103,6 +104,7 @@ app.get('/config', function (request, response) {
       },
       {
         id: "create-subject-form",
+        labelForCreateButton: "Opprett nytt emne",
         rdfType: "Subject",
         inputs: [
           {
@@ -116,6 +118,7 @@ app.get('/config', function (request, response) {
       },
       {
         id: "create-work-form",
+        labelForCreateButton: "Opprett nytt verk",
         rdfType: "Work",
         inputs: [
           {
@@ -267,7 +270,7 @@ app.get('/config', function (request, response) {
           }
         ],
         nextStep: {
-          buttonLabel: 'Neste steg: Utgaveopplysninger'
+          buttonLabel: 'Neste steg: Verksopplysninger'
         }
       }
       ,

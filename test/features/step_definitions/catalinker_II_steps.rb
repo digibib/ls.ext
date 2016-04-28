@@ -159,10 +159,15 @@ When(/^at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker 
   publication_place_field.send_keys :enter
 end
 
-When(/^at jeg skriver inn (.*) i feltet "([^"]*)" og trykker enter$/) do |concept, label|
+When(/^at jeg skriver inn (tilfeldig |)(.*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
-  field.set(@context[("#{@site.translate(concept)}_name").to_sym])
+  if (is_random == 'tilfeldig ')
+    @context[("random_#{@site.translate(concept)}_name").to_sym] = generateRandomString
+    field.set(@context[("random_#{@site.translate(concept)}_name").to_sym])
+  else
+    field.set(@context[("#{@site.translate(concept)}_name").to_sym])
+  end
   field.send_keys :enter
 end
 
@@ -212,7 +217,7 @@ When(/^trykker jeg på knappen for legge til mer$/) do
   @browser.as(:xpath => "//div[./div[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//a[text()='Legg til ny']")[0].click
 end
 
-When(/^sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |role, association|
+When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, role, association|
   data_automation_id_agent = "Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0"
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{@context[:person_name]}']")
   name.should exist
@@ -309,5 +314,52 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
 end
 
 When(/^får jeg ingen treff$/) do
-  "#{pending}"
+  @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/).should exist
+end
+
+When(/^jeg legger inn et nytt navn på startsida$/) do
+  @site.WorkFlow.visit
+  @context[:person_name] = generateRandomString
+  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
+  creator_name_field.set(@context[:person_name])
+  creator_name_field.send_keys :enter
+end
+
+When(/^trykker jeg på knappen for å legge til ny$/) do
+  @browser.a(:text => /Legg til ny/).click
+end
+
+When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalitet$/) do |nationality|
+  data_automation_id = "Person_http://#{ENV['HOST']}:8005/ontology#birthYear_0"
+  @context[:person_birthyear] = (1000 + rand(1015)).to_s
+  @browser.text_field(:data_automation_id => data_automation_id).set(@context[:person_birthyear])
+
+  data_automation_id = "Person_http://#{ENV['HOST']}:8005/ontology#deathYear_0"
+  @context[:person_deathyear] = (1000 + rand(1015)).to_s
+  @browser.text_field(:data_automation_id => data_automation_id).set(@context[:person_deathyear])
+
+  @browser.span(:data_automation_id => "Person_http://#{ENV['HOST']}:8005/ontology#nationality_0").text_field().set(nationality)
+  @browser.ul(:class => "select2-results__options").lis()[0].click
+
+end
+
+When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
+  @browser.a(:text => link_label).click
+end
+
+When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
+  @context[:work_maintitle] = generateRandomString
+  input = @browser.text_field(:xpath => '//span[preceding-sibling::div/@data-uri-escaped-label = "' + URI::escape('Søk etter eksisterende verk') + '"]//input')
+  input.set(@context[:work_maintitle])
+  input.send_keys :enter
+end
+
+
+When(/^så trykker jeg på på "([^"]*)"\-knappen$/) do |button_label|
+  @browser.button(:text => button_label).click
+end
+
+When(/^velger jeg emnetype "([^"]*)"$/) do |subject_type|
+  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+  @browser.span(:class => 'index-type-select').select().select(subject_type)
 end

@@ -77,3 +77,45 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg åpner verket for lesing
     Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
+
+  Scenario: Opprette autoriteter underveis i katalogisering
+    Gitt at jeg har en bok
+    Og jeg legger inn et nytt navn på startsida
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett ny person"-knappen
+    Så legger jeg inn fødselsår og dødsår og velger "Norsk" som nasjonalitet
+    Og jeg trykker på "Opprett"-knappen
+    Og jeg velger rollen "Forfatter"
+    Og jeg trykker på "Legg til"-knappen
+    Så legger jeg inn et verksnavn i søkefeltet for å søke etter det
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett nytt verk"-knappen
+    Og jeg trykker på "Opprett"-knappen
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
+    Og så trykker jeg på på "Neste steg: Beskrivelse"-knappen
+    Og så trykker jeg på på "Neste steg: Verksopplysninger"-knappen
+    Og så trykker jeg på på "Neste steg: Beskriv verket"-knappen
+    Så velger jeg emnetype "Generelt"
+    Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett nytt emne"-knappen
+    Og jeg trykker på "Opprett"-knappen
+    Så tar jeg en liten pause
+    Og jeg trykker på "Legg til ny"-knappen
+    Så tar jeg en liten pause
+    Så velger jeg emnetype "Person"
+    Og at jeg skriver inn tilfeldig person i feltet "Emne" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett ny person"-knappen
+    Og jeg trykker på "Opprett"-knappen
+    Så tar jeg en liten pause
+    Og jeg trykker på "Legg til ny"-knappen
+    Så velger jeg emnetype "Verk"
+    Og at jeg skriver inn tilfeldig person i feltet "Emne" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett nytt verk"-knappen
+    Og jeg trykker på "Opprett"-knappen
+
+
