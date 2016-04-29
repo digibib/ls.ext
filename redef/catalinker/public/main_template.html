@@ -293,7 +293,15 @@
 
 {{#partial input-string}}
 <input {{#disabled}} disabled="true" {{/}}
-class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
+class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
+data-automation-id="{{../../dataAutomationId}}"
+value="{{current.value}}" />
+{{/partial}}
+
+{{#partial input-string-large}}
+<textarea {{#disabled}} disabled="true" {{/}}
+class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{../../dataAutomationId}}"
 value="{{current.value}}" />
@@ -329,7 +337,7 @@ value="{{current.value}}" />
     </span>
 </div>
     {{else}}
-    <input {{#deletable}}readonly {{/deletable}} type="search"
+    <input {{#deletable}}readonly {{/deletable}} type="search" {{#if indexTypes.length > 0 && !selectedIndexType}}disabled{{/if}}
     on-click="{{#deletable}}unselectEntity{{/deletable}}"
     class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}}{{#if searchable}} searchable{{/if}}"
     data-automation-id="{{dataAutomationId}}"
@@ -345,7 +353,7 @@ value="{{current.value}}" />
 {{#partial input-lang-string}}
 <span data-automation-id="{{../../dataAutomationId}}_{{@index}}">
     <input {{#disabled}} disabled="true" {{/}}
-    class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
+    class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}"
     on-blur='patchResource:{{predicate}},{{rdfType}}'
     data-automation-id="{{../../dataAutomationId}}"
     value="{{current.value}}" />

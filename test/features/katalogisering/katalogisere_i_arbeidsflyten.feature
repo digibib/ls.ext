@@ -100,7 +100,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett nytt emne"-knappen
+    Og jeg trykker på "Opprett nytt generelt emne"-knappen
     Og jeg trykker på "Opprett"-knappen
     Så tar jeg en liten pause
     Og jeg trykker på "Legg til ny"-knappen
@@ -116,6 +116,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig person i feltet "Emne" og trykker enter
     Så får jeg ingen treff
     Og jeg trykker på "Opprett nytt verk"-knappen
+    Og jeg trykker på "Opprett"-knappen
+    Og at jeg skriver inn tilfeldig sjanger i feltet "Sjanger" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett ny sjanger"-knappen
     Og jeg trykker på "Opprett"-knappen
 
 

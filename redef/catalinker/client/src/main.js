@@ -503,7 +503,13 @@
       }
     }
 
-    var createInputGroups = function (applicationData) {
+  function assignUniqueValueIds (input) {
+      _.each(input.values, function (value) {
+        value.uniqueId = _.uniqueId()
+      })
+  }
+
+  var createInputGroups = function (applicationData) {
       var props = Ontology.allProps(applicationData.ontology)
       var inputs = []
       var inputMap = {}
@@ -577,6 +583,7 @@
         }
         _.each(prop.subInputs.inputs, function (subInput) {
           var inputFromOntology = deepClone(inputMap[ prop.subInputs.range + '.' + ontologyUri + subInput.rdfProperty ])
+          assignUniqueValueIds(inputFromOntology)
           var indexTypes = _.isArray(subInput.indexTypes) ? subInput.indexTypes : [ subInput.indexTypes ]
           var type = subInput.type || inputFromOntology.type
           var newSubInput = {
@@ -617,7 +624,7 @@
             _.each(createResourceForm.inputs, function (formInput) {
               var predicate = ontologyUri + formInput.rdfProperty
               var ontologyInput = inputMap[ createResourceForm.rdfType + '.' + predicate ]
-              _.extend(formInput, ontologyInput)
+              _.extend(formInput, _.omit(ontologyInput, formInput.type? 'type' : ''))
               formInput[ 'values' ] = emptyValues(false)
               formInput[ 'rdfType' ] = createResourceForm.rdfType
             })
@@ -652,6 +659,7 @@
           } else {
             if (input.rdfProperty) {
               ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
+              assignUniqueValueIds(ontologyInput)
               if (typeof ontologyInput === 'undefined') {
                 throw new Error("Group '" + inputGroup.id + "' specified unknown property '" + input.rdfProperty + "'")
               }
@@ -718,16 +726,19 @@
     }
 
     function positionSupportPanels () {
+      var dummyPanel = $('#right-dummy-panel')
+      var supportPanelLeftEdge = dummyPanel.position().left
+      var supportPanelWidth = dummyPanel.width()
       $('span.support-panel').each(function (index, panel) {
         var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
-        var dummyPanel = $('#right-dummy-panel')
-        var supportPanelLeftEdge = dummyPanel.position().left
-        var supportPanelWidth = dummyPanel.width()
-        $(panel).css({
-          top: $('#' + supportPanelBaseId + ' input').position().top - 15,
-          left: supportPanelLeftEdge,
-          width: supportPanelWidth
-        })
+        var supportPanelBase = $('#' + supportPanelBaseId + ' input')
+        if (supportPanelBase.length > 0) {
+          $(panel).css({
+            top: _.last(_.flatten([supportPanelBase])).position().top - 15,
+            left: supportPanelLeftEdge,
+            width: supportPanelWidth
+          })
+        }
       })
     }
 
@@ -1168,41 +1179,45 @@
                 })
               },
               searchResource: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
-                // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
-                var config = ractive.get('config')
-                var searchURI = config.resourceApiUri + 'search/' + indexType + '/_search'
-                var searchData = {
-                  params: {
-                    q: config.search[ indexType ].queryTerm + ':' + searchString + '*'
+                if (!searchString) {
+                  ractive.set(grandParentOf(event.keypath) + ".searchResult", null)
+                } else {
+                  // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
+                  var config = ractive.get('config')
+                  var searchURI = config.resourceApiUri + 'search/' + indexType + '/_search'
+                  var searchData = {
+                    params: {
+                      q: config.search[ indexType ].queryTerm + ':' + searchString + '*'
+                    }
                   }
-                }
-                axios.get(searchURI, searchData)
-                  .then(function (response) {
-                    var results = ensureJSON(response.data)
-                    results.hits.hits.forEach(function (hit) {
-                      var item = hit._source[ indexType ]
-                      item.isChecked = false
-                      if (loadWorksAsSubjectOfItem) {
-                        item.work = null
-                      }
-                      if (item.work) {
-                        if (!_.isArray(item.work)) {
-                          item.work = [ item.work ]
+                  axios.get(searchURI, searchData)
+                    .then(function (response) {
+                      var results = ensureJSON(response.data)
+                      results.hits.hits.forEach(function (hit) {
+                        var item = hit._source[ indexType ]
+                        item.isChecked = false
+                        if (loadWorksAsSubjectOfItem) {
+                          item.work = null
                         }
-                        _.each(item.work, function (work) {
-                          work.isChecked = false
-                        })
-                      }
+                        if (item.work) {
+                          if (!_.isArray(item.work)) {
+                            item.work = [ item.work ]
+                          }
+                          _.each(item.work, function (work) {
+                            work.isChecked = false
+                          })
+                        }
+                      })
+                      ractive.set(grandParentOf(event.keypath) + '.searchResult', {
+                        items: _.pluck(_.pluck(results.hits.hits, '_source'), indexType),
+                        origin: event.keypath
+                      })
+                      positionSupportPanels()
                     })
-                    ractive.set(grandParentOf(event.keypath) + '.searchResult', {
-                      items: _.pluck(_.pluck(results.hits.hits, '_source'), indexType),
-                      origin: event.keypath
-                    })
-                    positionSupportPanels()
-                  })
-                //    .catch(function (err) {
-                //    console.log(err)
-                // })
+                  //    .catch(function (err) {
+                  //    console.log(err)
+                  // })
+                }
               },
               toggleWork: function (event, findWorksAsSubjectOfType, origin) {
                 var keypath = event.keypath + '.toggleWork'

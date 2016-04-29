@@ -99,12 +99,16 @@ app.get('/config', function (request, response) {
           },
           {
             rdfProperty: 'gender'
+          },
+          {
+            rdfProperty: 'specification',
+            type: 'input-string-large'
           }
         ]
       },
       {
         id: "create-subject-form",
-        labelForCreateButton: "Opprett nytt emne",
+        labelForCreateButton: "Opprett nytt generelt emne",
         rdfType: "Subject",
         inputs: [
           {
@@ -113,6 +117,29 @@ app.get('/config', function (request, response) {
             // after resource is created, the value entered
             // in input marked with this is used to populate displayValue of the parent input
             preFillFromSearchField: true
+          },
+          {
+            rdfProperty: 'specification',
+            type: 'input-string-large'
+          }
+        ]
+      },
+      {
+        id: "create-genre-form",
+        labelForCreateButton: "Opprett ny sjanger",
+        rdfType: "Genre",
+        inputs: [
+          {
+            rdfProperty: 'name',
+            displayValueSource: true,
+            type: 'input-string',
+            // after resource is created, the value entered
+            // in input marked with this is used to populate displayValue of the parent input
+            preFillFromSearchField: true
+          },
+          {
+            rdfProperty: 'specification',
+            type: 'input-string-large'
           }
         ]
       },
@@ -330,10 +357,19 @@ app.get('/config', function (request, response) {
           {
             rdfProperty: 'genre',
             multiple: true,
+            type: 'searchable-with-result-in-side-panel',
             authority: true,
             nameProperties: [ 'name' ],
-            indexTypes: 'genre',
-            indexDocumentFields: [ 'name' ]
+            indexTypes: ['genre'],
+            indexDocumentFields: [ 'name' ],
+            widgetOptions: {
+              enableCreateNewResource: {
+                formRefs: [ {
+                  formId: 'create-genre-form',
+                  targetType: "genre"
+                }]
+              }
+            }
           }
         ],
         nextStep: {
@@ -393,18 +429,21 @@ app.get('/config', function (request, response) {
         selectIndexLabel: 'Person',
         queryTerm: 'person.name',
         resultItemLabelProperty: 'name'
-      }
-      ,
+      },
       subject: {
         selectIndexLabel: 'Generelt',
         queryTerm: 'subject.name',
         resultItemLabelProperty: 'name'
-      }
-      ,
+      },
       work: {
         selectIndexLabel: 'Verk',
         queryTerm: 'work.mainTitle',
         resultItemLabelProperty: 'mainTitle'
+      },
+      genre: {
+        selectIndexLabel: 'Sjanger',
+        queryTerm: 'genre.name',
+        resultItemLabelProperty: 'name'
       }
     }
   }

@@ -14,6 +14,7 @@ class Site
         'utgitt av' => 'publishedBy',
         'serie' => 'serial',
         'emne' => 'subject',
+        'sjanger' => 'genre',
         'hovedtittel' => "mainTitle",
         'undertittel' => "subtitle"
     }[concept.downcase]
