@@ -34,11 +34,11 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn serie i feltet for serie og trykker enter
     Så velger jeg den første serien i listen som dukker opp
     Så skriver jeg inn "12" som utgivelsens nummer i serien
-    Så trykker jeg på knappen for legge til serieinformasjon
+    Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
-    Så velger jeg første utgiver i listen som dukker opp
+    Så velger jeg en utgiver fra treffliste fra utgiverregisteret
     Og bekrefter for å gå videre til "Beskriv verk"
     Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
     Og bekrefter for å gå videre til "Emneopplysninger"
@@ -60,7 +60,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg en person fra treffliste fra personregisteret
     Og jeg velger rollen "Fotograf"
     Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
-    Så trykker jeg på knappen for legge til biinnførselen
+    Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
     Så sjekker jeg at det er "2" biinnførsler totalt
@@ -94,9 +94,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
-    Og så trykker jeg på på "Neste steg: Beskrivelse"-knappen
-    Og så trykker jeg på på "Neste steg: Verksopplysninger"-knappen
-    Og så trykker jeg på på "Neste steg: Beskriv verket"-knappen
+    Og så trykker jeg på "Neste steg: Beskrivelse"-knappen
+    Og så trykker jeg på "Neste steg: Verksopplysninger"-knappen
+    Og så trykker jeg på "Neste steg: Beskriv verket"-knappen
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff

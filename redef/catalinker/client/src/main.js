@@ -727,14 +727,14 @@
 
     function positionSupportPanels () {
       var dummyPanel = $('#right-dummy-panel')
-      var supportPanelLeftEdge = dummyPanel.position().left
+      var supportPanelLeftEdge = dummyPanel.offset().left
       var supportPanelWidth = dummyPanel.width()
       $('span.support-panel').each(function (index, panel) {
         var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
         var supportPanelBase = $('#' + supportPanelBaseId + ' input')
         if (supportPanelBase.length > 0) {
           $(panel).css({
-            top: _.last(_.flatten([supportPanelBase])).position().top - 15,
+            top: _.last(_.flatten([supportPanelBase])).offset().top - 15,
             left: supportPanelLeftEdge,
             width: supportPanelWidth
           })
@@ -942,7 +942,6 @@
 
           // decorators
           var repositionSupportPanel = function (node) {
-            // $(node).find(".support-panel").css({top: $(node).position().top})
             Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
@@ -1241,11 +1240,11 @@
                 _.each(input.dependentResourceTypes, function (resourceType) {
                   unloadResourceForDomain(resourceType)
                 })
-                if (ractive.get('targetUri.' + input.subjectType)) {
+                if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
                   ractive.fire('patchResource',
                     { keypath: origin, context: ractive.get(origin) },
                     ractive.get(grandParentOf(origin)).predicate,
-                    input.subjectType)
+                    unPrefix(input.domain))
                 }
                 ractive.set(inputKeyPath + '.searchResult', null)
               },
@@ -1575,7 +1574,7 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        var supportPanelLeftEdge = $('#right-dummy-panel').position().left
+        var supportPanelLeftEdge = $('#right-dummy-panel').offset().left
         var supportPanelWidth = $('#right-dummy-panel').width()
 
         $('.support-panel').each(function (index, panel) {

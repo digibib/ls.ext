@@ -144,6 +144,21 @@ app.get('/config', function (request, response) {
         ]
       },
       {
+        id: "create-publisher-form",
+        labelForCreateButton: "Opprett ny utgiver",
+        rdfType: "Publisher",
+        inputs: [
+          {
+            rdfProperty: 'name',
+            displayValueSource: true,
+            type: 'input-string',
+            // after resource is created, the value entered
+            // in input marked with this is used to populate displayValue of the parent input
+            preFillFromSearchField: true
+          }
+        ]
+      },
+      {
         id: "create-work-form",
         labelForCreateButton: "Opprett nytt verk",
         rdfType: "Work",
@@ -261,8 +276,17 @@ app.get('/config', function (request, response) {
             authority: true, // this indicates it is an authorized entity
             nameProperties: [ 'name' ], // these are proeprty names used to label already connected entities
             indexTypes: 'publisher', // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: [ 'name' ] // these are indexed document JSON properties from which the labels f
+            indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels f
             // or authoroty select list are concatenated
+            type: 'searchable-with-result-in-side-panel',
+            widgetOptions: {
+              enableCreateNewResource: {
+                formRefs: [ {
+                  formId: 'create-publisher-form',
+                  targetType: "publisher"
+                }]
+              }
+            }
           },
           {
             rdfProperty: 'placeOfPublication',
@@ -299,8 +323,7 @@ app.get('/config', function (request, response) {
         nextStep: {
           buttonLabel: 'Neste steg: Verksopplysninger'
         }
-      }
-      ,
+      },
       {
         id: 'describe-work',
         rdfType: 'Work',
@@ -320,8 +343,7 @@ app.get('/config', function (request, response) {
         nextStep: {
           buttonLabel: 'Neste steg: Beskriv verket'
         }
-      }
-      ,
+      },
       {
         id: 'subjects',
         rdfType: 'Work',
@@ -443,6 +465,11 @@ app.get('/config', function (request, response) {
       genre: {
         selectIndexLabel: 'Sjanger',
         queryTerm: 'genre.name',
+        resultItemLabelProperty: 'name'
+      },
+      publisher: {
+        selectIndexLabel: 'Utgiver',
+        queryTerm: 'publisher.name',
         resultItemLabelProperty: 'name'
       }
     }

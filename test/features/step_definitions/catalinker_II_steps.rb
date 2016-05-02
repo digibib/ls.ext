@@ -25,8 +25,9 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
   creator_name_field.send_keys :enter
 end
 
-When(/^velger jeg en person fra treffliste fra personregisteret$/) do
+When(/^velger jeg en (person|utgiver) fra treffliste fra (person|utgiver)registeret$/) do |type_1, type_2|
   @browser.inputs(:class => "select-result-item-radio")[0].click
+  sleep 1
 end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
@@ -355,7 +356,7 @@ When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
 end
 
 
-When(/^så trykker jeg på på "([^"]*)"\-knappen$/) do |button_label|
+When(/^så trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
   @browser.button(:text => button_label).click
 end
 
