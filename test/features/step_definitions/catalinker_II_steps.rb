@@ -25,7 +25,7 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
   creator_name_field.send_keys :enter
 end
 
-When(/^velger jeg en (person|utgiver) fra treffliste fra (person|utgiver)registeret$/) do |type_1, type_2|
+When(/^velger jeg (en|ett) (person|utgiver|utgivelsessted) fra treffliste fra (person|utgiver|utgivelsessted)registeret$/) do |art, type_1, type_2|
   @browser.inputs(:class => "select-result-item-radio")[0].click
   sleep 1
 end

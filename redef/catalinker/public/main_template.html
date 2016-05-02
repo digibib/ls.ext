@@ -177,11 +177,11 @@
                 <div class="pure-g">
                     <div class="pure-u-1-12">
                         <input class="select-result-item-radio" type="radio"
-                               on-click="selectSearchableItem:{{origin}},{{.[config.search[selectedIndexType].resultItemLabelProperty]}}"
+                               on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}"
                                checked="{{isChecked}}"/>
                     </div>
                     <div class="pure-u-5-6">
-                        <p class="subitem-label">{{.[config.search[selectedIndexType].resultItemLabelProperty]}}</p>
+                        <p class="subitem-label">{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}</p>
                     </div>
 
                     <div class="pure-u-1-12">

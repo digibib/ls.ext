@@ -176,6 +176,25 @@ app.get('/config', function (request, response) {
             rdfProperty: 'subtitle'
           }
         ]
+      },
+      {
+        id: "create-place-of-publication-form",
+        labelForCreateButton: "Opprett nytt utgivelsessted",
+        rdfType: "PlaceOfPublication",
+        inputs: [
+          {
+            label: 'Sted',
+            rdfProperty: 'place',
+            type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+            preFillFromSearchField: true // value of this field should be copied from the search field above
+          },
+          {
+            label: 'Land',
+            rdfProperty: 'country',
+            type: 'input-string'
+            // input type must be defined explicitly, otherwise it will inherit from the search field above
+          }
+        ]
       }
     ],
     tabs: [
@@ -293,8 +312,17 @@ app.get('/config', function (request, response) {
             authority: true, // this indicates it is an authorized entity
             nameProperties: [ 'place', 'country' ], // these are proeprty names used to label already connected entities
             indexTypes: 'placeOfPublication', // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: [ 'place', 'country' ] // these are indexed document JSON properties from which
+            indexDocumentFields: [ 'place', 'country' ], // these are indexed document JSON properties from which
             // the labels for authoroty select list are concatenated
+            type: 'searchable-with-result-in-side-panel',
+            widgetOptions: {
+              enableCreateNewResource: {
+                formRefs: [ {
+                  formId: 'create-place-of-publication-form',
+                  targetType: "placeOfPublication"
+                }]
+              }
+            }
           },
           {
             label: 'Serie',
@@ -450,27 +478,32 @@ app.get('/config', function (request, response) {
       person: {
         selectIndexLabel: 'Person',
         queryTerm: 'person.name',
-        resultItemLabelProperty: 'name'
+        resultItemLabelProperties: ['name']
       },
       subject: {
         selectIndexLabel: 'Generelt',
         queryTerm: 'subject.name',
-        resultItemLabelProperty: 'name'
+        resultItemLabelProperties: ['name']
       },
       work: {
         selectIndexLabel: 'Verk',
         queryTerm: 'work.mainTitle',
-        resultItemLabelProperty: 'mainTitle'
+        resultItemLabelProperties: ['mainTitle', 'subTitle']
       },
       genre: {
         selectIndexLabel: 'Sjanger',
         queryTerm: 'genre.name',
-        resultItemLabelProperty: 'name'
+        resultItemLabelProperties: ['name']
       },
       publisher: {
         selectIndexLabel: 'Utgiver',
         queryTerm: 'publisher.name',
-        resultItemLabelProperty: 'name'
+        resultItemLabelProperties: ['name']
+      },
+      placeOfPublication: {
+        selectIndexLabel: 'Utgivelsessted',
+        queryTerm: 'placeOfPublication.place',
+        resultItemLabelProperties: ['place', 'country']
       }
     }
   }

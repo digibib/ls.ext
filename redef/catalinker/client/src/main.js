@@ -149,15 +149,11 @@
       axios.get(uri).then(function (response) {
         var graphData = ensureJSON(response.data)
         var root = ldGraph.parse(graphData).byId(uri)
-        var displayValue = root.getAll('name')[ 0 ]
-        if (displayValue) {
-          input.values[ index ].current.displayValue = displayValue.value
-        } else {
-          input.values[ index ].current.displayValue = _.compact([
-            (root.getAll('mainTitle')[ 0 ] || {value: undefined}).value,
-            (root.getAll('subtitle')[ 0 ] || {value: undefined}).value
-          ]).join(' - ')
-        }
+        input.values[ index ].current.displayValue = _.compact(_.reduce(input.nameProperties || [ 'name' ],
+          function (values, nameProperty) {
+            values.push((root.getAll(nameProperty)[ 0 ] || { value: undefined }).value)
+            return values
+          }, [])).join(' - ');
       }).then(function () {
         ractive.update()
       })
@@ -253,7 +249,7 @@
       return axios.get(resourceUri)
         .then(function (response) {
             var graphData = ensureJSON(response.data)
-            var offsetCrossTypes = {"Work": "Publication", "Publication": "Work"}
+            var offsetCrossTypes = { "Work": "Publication", "Publication": "Work" }
 
             var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(resourceUri)[ 1 ])
             var root = ldGraph.parse(graphData).byId(resourceUri)
@@ -264,8 +260,8 @@
                 (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))) {
                 input.offset = input.offset || {}
                 var offset = 0;
-                if (input.offset[offsetCrossTypes[type]]) {
-                    offset = input.offset[offsetCrossTypes[type]]
+                if (input.offset[ offsetCrossTypes[ type ] ]) {
+                  offset = input.offset[ offsetCrossTypes[ type ] ]
                 }
                 var predicate = input.predicate
                 var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [ root ]
@@ -309,7 +305,7 @@
                 var mainInput = input.isSubInput ? input.parentInput : input
                 mainInput.subjectType = type
                 setAllowNewButtonForInput(mainInput)
-                input.offset[type] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+                input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
               }
             })
             Promise.all(promises).then(function () {
@@ -337,7 +333,7 @@
         })
       })
       var errors = []
-      return axios.post(ractive.get('config.resourceApiUri') + resourceType.toLowerCase(),
+      return axios.post(ractive.get('config.resourceApiUri') + resourceType.charAt(0).toLowerCase() + resourceType.slice(1),
         {}, { headers: { Accept: 'application/ld+json', 'Content-Type': 'application/ld+json' } })
         .then(function (response) {
           var resourceUri = response.headers.location
@@ -503,13 +499,13 @@
       }
     }
 
-  function assignUniqueValueIds (input) {
+    function assignUniqueValueIds (input) {
       _.each(input.values, function (value) {
         value.uniqueId = _.uniqueId()
       })
-  }
+    }
 
-  var createInputGroups = function (applicationData) {
+    var createInputGroups = function (applicationData) {
       var props = Ontology.allProps(applicationData.ontology)
       var inputs = []
       var inputMap = {}
@@ -624,7 +620,7 @@
             _.each(createResourceForm.inputs, function (formInput) {
               var predicate = ontologyUri + formInput.rdfProperty
               var ontologyInput = inputMap[ createResourceForm.rdfType + '.' + predicate ]
-              _.extend(formInput, _.omit(ontologyInput, formInput.type? 'type' : ''))
+              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
               formInput[ 'values' ] = emptyValues(false)
               formInput[ 'rdfType' ] = createResourceForm.rdfType
             })
@@ -734,7 +730,7 @@
         var supportPanelBase = $('#' + supportPanelBaseId + ' input')
         if (supportPanelBase.length > 0) {
           $(panel).css({
-            top: _.last(_.flatten([supportPanelBase])).offset().top - 15,
+            top: _.last(_.flatten([ supportPanelBase ])).offset().top - 15,
             left: supportPanelLeftEdge,
             width: supportPanelWidth
           })
@@ -1080,6 +1076,9 @@
               },
               resourceIsLoaded: function (type) {
                 return typeof ractive.get('targetUri.' + type) !== 'undefined'
+              },
+              getSearchResultItemLabel: function (item, itemLabelProperties) {
+                return _.compact(_.values(_.pick(item, itemLabelProperties))).join(" - ")
               },
               targetResources: {
                 Work: {
