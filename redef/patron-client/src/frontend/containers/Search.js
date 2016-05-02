@@ -41,7 +41,7 @@ const Search = React.createClass({
         ...this.props.location.query,
         page: page
       }
-      this.props.dispatch(push({ query: newQuery }))
+      this.props.dispatch(push({ pathname: '/search', query: newQuery }))
     }
   },
   renderPagination () {
@@ -52,7 +52,6 @@ const Search = React.createClass({
           <ReactPaginate previousLabel={'<'}
                          nextLabel={'>'}
                          breakLabel={<li className='break'><span>...</span></li>}
-                         initialSelected={this.props.location.query.page - 1 || 0}
                          forceSelected={this.props.location.query.page - 1 || 0}
                          marginPagesDisplayed={1}
                          pageRangeDisplayed={5}

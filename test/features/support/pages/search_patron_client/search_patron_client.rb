@@ -39,6 +39,9 @@ class SearchPatronClient < PageRoot
       pagination_element.click
     end
     wait_retry { @browser.element(class: 'pagination').a(text: page).parent.class_name.eql? 'active' }
-    wait_retry { CGI::parse(URI(@browser.url).query)['page'].include? page }
+    wait_retry {
+      (CGI::parse(URI(@browser.url).query)['page'].empty? && page.eql?("1")) ||
+          CGI::parse(URI(@browser.url).query)['page'].include?(page)
+    }
   end
 end
