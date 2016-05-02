@@ -53,7 +53,7 @@ describe('components', () => {
       let searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ '/search?query=testvalue' ])
+      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[0]).toEqual({ pathname: '/search', query: { query: 'testvalue' } })
     })
 
     it('should search with value set from input', () => {
@@ -63,7 +63,7 @@ describe('components', () => {
       let searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args).toEqual([ '/search?query=testvalue' ])
+      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[0]).toEqual({ pathname: '/search', query: { query: 'testvalue' } })
     })
   })
 })

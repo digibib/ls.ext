@@ -3,8 +3,8 @@
 require_relative '../page_root.rb'
 
 class SearchPatronClient < PageRoot
-  def visit()
-    @browser.goto patron_client_search_page()
+  def visit
+    @browser.goto patron_client_search_page
     self
   end
 
@@ -40,7 +40,7 @@ class SearchPatronClient < PageRoot
     end
     wait_retry { @browser.element(class: 'pagination').a(text: page).parent.class_name.eql? 'active' }
     wait_retry {
-      (CGI::parse(URI(@browser.url).query)['page'].empty? && page.eql?("1")) ||
+      (CGI::parse(URI(@browser.url).query)['page'].empty? && page.eql?('1')) ||
           CGI::parse(URI(@browser.url).query)['page'].include?(page)
     }
   end

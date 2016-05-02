@@ -116,6 +116,124 @@ app.get('/loginStatus', (request, response) => {
   })
 })
 
+app.get('/api/v1/profile/loans', (request, response) => {
+  response.send({
+    name: 'Keyzer Söse',
+    pickup: [
+      {
+        recordId: 'xx',
+        title: 'Hard-Boiled Wonderland and the End of the World',
+        author: 'Haruki Murakami',
+        publicationYear: '1987',
+        expiry: '2016-09-21',
+        pickupNumber: '40/20220'
+      },
+      {
+        recordId: 'yy',
+        title: 'Hard-Boiled Wonderland and the End of the World',
+        author: 'Haruki Murakami',
+        publicationYear: '1987',
+        expiry: '2016-09-21',
+        pickupNumber: '40/20220'
+      }
+    ],
+    reservations: [
+      {
+        recordId: 'xx',
+        title: 'Hard-Boiled Wonderland and the End of the World',
+        author: 'Lars- Saabye Christensen',
+        orderedDate: '2016-12-03',
+        waitingPeriod: 'xxx',
+        branchCode: 'dfb'
+      },
+      {
+        recordId: 'yy',
+        title: 'Hard-Boiled Wonderland and the End of the World',
+        author: 'Lars- Saabye Christensen',
+        orderedDate: '2016-12-03',
+        waitingPeriod: 'xxx',
+        branchCode: 'dfb'
+      }
+    ],
+    loans: [
+      {
+        recordId: 'xx',
+        title: 'Hard-Boiled Wonderland and the End of the World',
+        author: 'Lars- Saabye Christensen',
+        publicationYear: '1987',
+        dueDate: '2016-12-05'
+      },
+      {
+        recordId: 'yy',
+        title: 'Hard-Boiled Wonderland and the End of the World',
+        author: 'Lars- Saabye Christensen',
+        publicationYear: '1987',
+        dueDate: '2016-12-05'
+      }
+    ]
+  })
+})
+
+app.post('/api/v1/profile/info', jsonParser, (request, response) => {
+  request.session.profileInfo = request.body
+  response.sendStatus(200)
+})
+
+app.get('/api/v1/profile/info', (request, response) => {
+  const template = {
+    borrowerNumber: 'n1484848',
+    name: 'Ola finn Oddvar Nordmann',
+    address: 'Midtisvingen 78',
+    zipcode: '2478',
+    city: 'Oslo',
+    country: 'Norway',
+    mobile: '987 65 432',
+    telephone: '53 01 23 45',
+    email: 'ola.finn.oddvar@online.no',
+    birthdate: '1977-12-13',
+    loanerCardIssued: '2012-01-30',
+    loanerCategory: 'adult',
+    lastUpdated: '2016-02-01'
+  }
+  if (request.session.profileInfo) {
+    response.send(Object.assign(template, request.session.profileInfo))
+  } else {
+    response.send(template)
+  }
+})
+
+app.post('/api/v1/profile/settings', jsonParser, (request, response) => {
+  request.session.profileSettings = request.body
+  response.sendStatus(200)
+})
+
+app.get('/api/v1/profile/settings', (request, response) => {
+  if (request.session.profileSettings) {
+    response.send(request.session.profileSettings)
+  } else {
+    response.send({
+      alerts: {
+        reminderOfDueDate: {
+          sms: true,
+          email: false
+        },
+        reminderOfPickup: {
+          sms: false,
+          email: true
+        }
+      },
+      reciepts: {
+        loans: {
+          email: true
+        },
+        returns: {
+          email: true
+        }
+      }
+    })
+  }
+})
+
 app.get('/kohaLoginStatus', (request, response) => {
   fetch('http://koha:8081/cgi-bin/koha/svc/authentication',
     {

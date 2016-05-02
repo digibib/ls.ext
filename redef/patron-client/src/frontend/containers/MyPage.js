@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import { routerActions } from 'react-router-redux'
 
+import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
 import Tabs from '../components/Tabs'
 
@@ -13,7 +14,16 @@ const MyPage = React.createClass({
     loginActions: PropTypes.object.isRequired,
     borrowerNumber: PropTypes.string,
     isLoggedIn: PropTypes.bool.isRequired,
+    profileActions: PropTypes.object.isRequired,
+    currentPath: PropTypes.string.isRequired,
+    routerActions: PropTypes.object.isRequired,
+    children: PropTypes.node.isRequired,
     intl: intlShape.isRequired
+  },
+  componentWillMount () {
+    this.props.profileActions.fetchProfileInfo()
+    this.props.profileActions.fetchProfileSettings()
+    this.props.profileActions.fetchProfileLoans()
   },
   componentDidUpdate () {
     if (!this.props.isLoggedIn) {
@@ -35,6 +45,7 @@ const MyPage = React.createClass({
     return (
       <div data-automation-id='profile_page'>
         <Tabs tabList={tabList} currentPath={this.props.currentPath} push={this.props.routerActions.push} />
+        <hr />
         {this.props.children}
       </div>
     )
@@ -75,6 +86,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
+    profileActions: bindActionCreators(ProfileActions, dispatch),
     loginActions: bindActionCreators(LoginActions, dispatch),
     routerActions: bindActionCreators(routerActions, dispatch)
   }
