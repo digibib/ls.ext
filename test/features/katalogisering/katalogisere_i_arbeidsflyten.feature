@@ -113,7 +113,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så tar jeg en liten pause
     Og jeg trykker på "Legg til ny"-knappen
     Så velger jeg emnetype "Verk"
-    Og at jeg skriver inn tilfeldig person i feltet "Emne" og trykker enter
+    Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff
     Og jeg trykker på "Opprett nytt verk"-knappen
     Og jeg trykker på "Opprett"-knappen
