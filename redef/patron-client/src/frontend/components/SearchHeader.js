@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import createPath from '../utils/createPath'
 
 const SearchHeader = React.createClass({
   propTypes: {
@@ -17,8 +16,7 @@ const SearchHeader = React.createClass({
   },
   search (event) {
     event.preventDefault()
-    let url = createPath({ pathname: '/search', query: { query: this.searchFieldInput.value } })
-    this.props.dispatch(push(url))
+    this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
   },
   handleLoginClick (event) {
     event.preventDefault()

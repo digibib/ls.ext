@@ -3,7 +3,6 @@ import { push, replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import { parsePersonResponse, parseWorkResponse } from '../utils/graphParse'
-import createPath from '../utils/createPath'
 
 export function requestResource (uri) {
   return {
@@ -44,13 +43,13 @@ export function expandSubResource (id, replacePath) {
     } else {
       locationQuery.showMore = id
     }
-    let url = createPath({
+    let locationDescriptior = {
       pathname: getState().routing.locationBeforeTransitions.pathname,
       query: locationQuery
-    })
+    }
     return replacePath
-      ? dispatch(replace(url))
-      : dispatch(push(url))
+      ? dispatch(replace(locationDescriptior))
+      : dispatch(push(locationDescriptior))
   }
 }
 

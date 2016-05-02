@@ -1,5 +1,4 @@
 import { replace } from 'react-router-redux'
-import createPath from '../utils/createPath'
 
 export function toggleParameter (pathname, queryParamName) {
   return (dispatch, getState) => {
@@ -10,8 +9,7 @@ export function toggleParameter (pathname, queryParamName) {
     } else {
       locationQuery[ queryParamName ] = null // null enables the parameter
     }
-    const url = createPath({ pathname: pathname, query: locationQuery })
-    return dispatch(replace(url))
+    return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
 }
 
@@ -32,7 +30,6 @@ export function toggleParameterValue (pathname, queryParamName, value) {
     } else {
       locationQuery[ queryParamName ] = queryParam
     }
-    const url = createPath({ pathname: pathname, query: locationQuery })
-    return dispatch(replace(url))
+    return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
 }
