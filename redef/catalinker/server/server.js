@@ -195,6 +195,20 @@ app.get('/config', function (request, response) {
             // input type must be defined explicitly, otherwise it will inherit from the search field above
           }
         ]
+      },
+      {
+        id: 'create-serial-form',
+        labelForCreateButton: 'Opprett ny serie',
+        rdfType: 'Serial',
+        inputs: [
+          {
+            label: 'Navn',
+            rdfProperty: 'name',
+            type: 'input-string',
+            displayValueSource: true,
+            preFillFromSearchField: true
+          }
+        ]
       }
     ],
     tabs: [
@@ -338,7 +352,17 @@ app.get('/config', function (request, response) {
                   indexTypes: 'serial',
                   indexDocumentFields: [ 'name' ],
                   nameProperties: [ 'name' ],
-                  type: 'searchable-authority-dropdown'
+                  type: 'searchable-with-result-in-side-panel',
+                  widgetOptions: {
+                    showSelectWork: false, // show and enable select work radio button
+                    enableCreateNewResource: {
+                      formRefs: [ {
+                        formId: 'create-serial-form',
+                        targetType: "serial"
+                      } ],
+                      useAfterCreation: false
+                    }
+                  }
                 },
                 {
                   label: 'Nummer i serien',
@@ -504,6 +528,11 @@ app.get('/config', function (request, response) {
         selectIndexLabel: 'Utgivelsessted',
         queryTerm: 'placeOfPublication.place',
         resultItemLabelProperties: ['place', 'country']
+      },
+      serial: {
+        selectIndexLabel: 'Serie',
+        queryTerm: 'serial.name',
+        resultItemLabelProperties: ['name']
       }
     }
   }

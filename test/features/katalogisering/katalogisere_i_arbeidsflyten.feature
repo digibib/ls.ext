@@ -30,9 +30,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter
-    Så velger jeg en utgivelsessted fra treffliste fra utgivelsesstedregisteret
-    Og at jeg skriver inn serie i feltet for serie og trykker enter
-    Så velger jeg den første serien i listen som dukker opp
+    Så velger jeg et utgivelsessted fra treffliste fra utgivelsesstedregisteret
+    Og at jeg skriver inn serie i feltet "Serie" og trykker enter
+    Så velger jeg en serie fra treffliste fra serieregisteret
     Så skriver jeg inn "12" som utgivelsens nummer i serien
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
@@ -98,6 +98,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig utgivelsessted i feltet "Utgivelsessted" og trykker enter
     Så får jeg ingen treff
     Og jeg trykker på "Opprett nytt utgivelsessted"-knappen
+    Og jeg trykker på "Opprett"-knappen
+    Og at jeg skriver inn tilfeldig serie i feltet "Serie" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett ny serie"-knappen
     Og jeg trykker på "Opprett"-knappen
     Og så trykker jeg på "Neste steg: Verksopplysninger"-knappen
     Og så trykker jeg på "Neste steg: Beskriv verket"-knappen
