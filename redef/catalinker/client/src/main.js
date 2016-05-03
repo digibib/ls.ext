@@ -662,7 +662,7 @@
             } else if (input.subInputs) {
               ontologyInput = createInputForCompoundInput(input, inputGroup, ontologyUri, inputMap)
             } else {
-              throw new Error('Input #' + index + " of tab '" + inputGroup.label + "' must have rdfProperty, subInputs or searchMainResource")
+              throw new Error('Input #' + index + " of tab or form with id '" + inputGroup.id + "' must have rdfProperty, subInputs or searchMainResource")
             }
 
             if (inputGroup.rdfType === unPrefix(ontologyInput.domain)) {
