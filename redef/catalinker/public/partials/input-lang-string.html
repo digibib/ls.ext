@@ -1,0 +1,13 @@
+<span data-automation-id="{{dataAutomationId}}_{{@index}}">
+    <input {{#disabled}} disabled="true" {{/}}
+    class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}"
+    on-blur='patchResource:{{predicate}},{{rdfType}}'
+    data-automation-id="{{dataAutomationId}}"
+    value="{{current.value}}" />
+    <select value="{{current.lang}}" on-change='patchResource:{{predicate}},' class="select_lang">
+        <option value="">velg språk</option>
+        <option value="no">norsk</option>
+        <option value="en">engelsk</option>
+        <option value="fr">fransk</option>
+    </select>
+</span>

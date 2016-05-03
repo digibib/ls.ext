@@ -1,0 +1,5 @@
+<input {{#disabled}} disabled="true" {{/}}
+class="pure-u-1-2 {{#error}}invalid-input{{else}}valid{{/error}}"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
+data-automation-id="{{dataAutomationId}}"
+value="{{current.value}}" />

@@ -1,0 +1,13 @@
+<span data-automation-id="{{../../dataAutomationId}}">
+    {{#if nonEditable}}
+    <span>{{authorityLabels[urlEscape(current.value[0])]}}</span>
+    {{else}}
+            <select style="width: 100%;"
+                    decorator="multi:{select2:['authoritySelectSingle'], detectChange:[]}" id="sel_{{uniqueId}}"
+                    class="searchable-authority" multiple>
+        {{#if current.value[0]}}
+        <option value='{{current.value[0]}}' selected="selected">{{current.displayName}}</option>
+        {{/if}}
+    </select>
+    {{/if}}
+</span>

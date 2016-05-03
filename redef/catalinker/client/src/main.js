@@ -788,6 +788,19 @@
       },
       init: function () {
         var template = '/main_template.html'
+        var partials = [
+          'input',
+          'input-string',
+          'input-string-large',
+          'input-lang-string',
+          'input-gYear',
+          'input-nonNegativeInteger',
+          'searchable-with-result-in-side-panel',
+          'support-for-searchable-with-result-in-side-panel',
+          'searchable-authority-dropdown',
+          'select-predefined-value',
+          'work'
+        ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
         //    // TODO remove this when everything works perfectly (as if...)
@@ -808,6 +821,21 @@
               applicationData.template = response.data
               return applicationData
             })
+        }
+
+        var loadPartials = function (applicationData) {
+          return Promise.all(_.map(partials, function (partial) {
+            return axios.get('/partials/' + partial + '.html').then(
+              function (response) {
+                applicationData.partials = applicationData.partials || {}
+                applicationData.partials[partial] = response.data
+                return applicationData
+              }).catch(function (error) {
+              throw new Error(error)
+            })
+          })).then(function (applicationDataArray) {
+            return applicationDataArray[ 0 ]
+          })
         }
 
         var extractConfig = function (response) {
@@ -1101,7 +1129,8 @@
               detectChange: detectChange,
               handleAddNewBySelect2: handleAddNewBySelect2,
               clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector
-            }
+            },
+            partials: applicationData.partials
           })
           ractive.on({
               // addValue adds another input field for the predicate.
@@ -1562,6 +1591,7 @@
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
+          .then(loadPartials)
           .then(loadOntology)
           .then(createInputGroups)
           .then(initSelect2)
