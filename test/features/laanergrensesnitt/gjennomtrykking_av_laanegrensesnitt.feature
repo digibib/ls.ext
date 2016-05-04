@@ -103,6 +103,7 @@ Egenskap: Gå gjennom lånegrensesnittet
       | filial                    | antall | plassering | status               |
       | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
 
+  @wip
   Scenario: Logge inn
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
