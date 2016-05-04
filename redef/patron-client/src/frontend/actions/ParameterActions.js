@@ -26,7 +26,7 @@ export function toggleParameterValue (pathname, queryParamName, value) {
       queryParam.push(value)
     }
     if (queryParam.length === 0) {
-      delete locationQuery [ queryParamName ]
+      delete locationQuery[ queryParamName ]
     } else {
       locationQuery[ queryParamName ] = queryParam
     }

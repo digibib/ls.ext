@@ -4,7 +4,6 @@
     "standard-react"
   ],
   "rules": {
-    "arrow-parens": 0,
     "react/jsx-no-bind": 0,
     "react/jsx-indent-props": 0,
     "react/jsx-indent": 0,

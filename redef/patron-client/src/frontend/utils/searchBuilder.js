@@ -29,7 +29,7 @@ export function filteredSearchQuery (locationQuery) {
         let nestedMust = { terms: {} }
         nestedMust.terms[ filter.aggregation ] = [ filter.bucket ]
         musts[ path ].nested.query.bool.must.push(nestedMust)
-        nestedMusts [ filter.aggregation ] = nestedMust
+        nestedMusts[ filter.aggregation ] = nestedMust
       }
     } else {
       let must = createMust(path)
