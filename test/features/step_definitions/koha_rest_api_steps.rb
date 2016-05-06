@@ -1,6 +1,6 @@
 # encoding: UTF-8
 require_relative '../support/services/svc/user.rb'
-require_relative '../support/services/koha/reserve.rb'
+require_relative '../support/services/koha/hold.rb'
 require_relative '../support/services/koha/patron.rb'
 
 # Superlibrarian user should not be deleted after creation
@@ -34,12 +34,12 @@ When(/^låneren reserverer boka via API$/) do
 		branchcode: @active[:branch].code,
 		borrowernumber: @active[:patron].borrowernumber.to_i
 	}
-	res = KohaRESTAPI::Reserve.new(@browser,@context,@active).add(params)
+	res = KohaRESTAPI::Hold.new(@browser,@context,@active).add(params)
   @context[:reserve] = JSON.parse(res)
 
   @cleanup.push("reservering #{@context[:reserve]['reserve_id']} på bok #{@context[:reserve]['biblionumber']}" =>
     lambda do
-      KohaRESTAPI::Reserve.new(@browser,@context,@active).delete(@context[:reserve]["reserve_id"])
+      KohaRESTAPI::Hold.new(@browser,@context,@active).delete(@context[:reserve]["reserve_id"])
     end
   )
 end

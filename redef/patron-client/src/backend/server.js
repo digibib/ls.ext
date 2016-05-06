@@ -76,7 +76,7 @@ app.post('/login', jsonParser, (request, response) => {
 })
 
 app.post('/reserve', jsonParser, (request, response) => {
-  fetch('http://koha:8081/api/v1/reserves', {
+  fetch('http://koha:8081/api/v1/holds', {
     method: 'POST',
     headers: {
       'Cookie': request.session.kohaSession

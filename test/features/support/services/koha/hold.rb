@@ -7,7 +7,7 @@ require_relative '../service.rb'
 
 module KohaRESTAPI
 
-  class Reserve < Service
+  class Hold < Service
 
     def get(borrowernumber)
       return "Not implemented"
@@ -21,9 +21,9 @@ module KohaRESTAPI
       }
 
       http = Net::HTTP.new(host, 8081)
-      uri = URI(intranet(:koha_rest_api) + "reserves")
+      uri = URI(intranet(:koha_rest_api) + "holds")
       res = http.post(uri, params.to_json, headers)
-      expect(res.code).to eq("201"), "got unexpected #{res.code} when adding reserve.\nResponse body: #{res.body}"
+      expect(res.code).to eq("201"), "got unexpected #{res.code} when adding hold.\nResponse body: #{res.body}"
       res.body
     end
 
@@ -36,7 +36,7 @@ module KohaRESTAPI
         'Content-Type' => 'application/json'
       }
       http = Net::HTTP.new(host, 8081)
-      uri = URI("#{intranet(:koha_rest_api)}reserves/#{params[:reserve_id]}")
+      uri = URI("#{intranet(:koha_rest_api)}holds/#{params[:reserve_id]}")
       res = http.put(uri, params.to_json, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when updating reserve.\nResponse body: #{res.body}"
       res.body
@@ -48,7 +48,7 @@ module KohaRESTAPI
         'Content-Type' => 'application/json'
       }
       http = Net::HTTP.new(host, 8081)
-      uri = URI("#{intranet(:koha_rest_api)}reserves/#{reserve_id}")
+      uri = URI("#{intranet(:koha_rest_api)}holds/#{reserve_id}")
       res = http.delete(uri, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when deleting reserve.\nResponse body: #{res.body}"
       res
