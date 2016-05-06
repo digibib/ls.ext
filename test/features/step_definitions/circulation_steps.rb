@@ -231,7 +231,7 @@ When(/^boka sjekkes inn på låners henteavdeling$/) do
 end
 
 When(/^det bekreftes at boka skal holdes av$/) do
-  @browser.div(:id => "hold-found2").form(:class => "confirm").input(:class => "approve").click
+  @browser.div(:id => "hold-found2").form(:class => "confirm").button(:class => "approve").click
 end
 
 Then(/^viser systemet at boka ligger til avhenting$/) do
