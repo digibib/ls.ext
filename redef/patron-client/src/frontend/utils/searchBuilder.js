@@ -125,6 +125,17 @@ function initQuery (query) {
                     }
                   }
                 }
+              },
+              {
+                nested: {
+                  path: 'work.subjects',
+                  query: {
+                    multi_match: {
+                      query: query,
+                      fields: [ 'work.subjects.name' ]
+                    }
+                  }
+                }
               }
             ]
           }

@@ -74,6 +74,7 @@ export default {
   'SearchResult.authors': 'Forfattere',
   'SearchResult.originalTitle': 'Originaltittel:',
   'SearchResult.allPublications': 'alle utgivelser ►',
+  'SearchResult.subjects': 'Emner:',
   'SearchResult.availableAs': 'Finnes som:',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',

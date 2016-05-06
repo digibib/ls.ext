@@ -15,6 +15,11 @@ export function processSearchResponse (response, locationQuery) {
         contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
       })
 
+      work.subjects = work.subjects || []
+      work.subjects.forEach(subject => {
+        subject.searchQuery = `search?query=${subject.name}` // TODO: create expose specialiced query interface
+      })
+
       work.publications = work.publications || []
       work.publications.forEach(publication => {
         publication.formats = publication.formats || []

@@ -42,6 +42,22 @@ const SearchResult = React.createClass({
       )
     }
   },
+  renderSubjects (result) {
+    if (result.subjects) {
+      return (
+        <p data-automation-id='work_subjects'>
+          <strong>
+            <FormattedMessage {...messages.subjects} />
+            {result.subjects.map(subject => (
+              <span key={subject.searchQuery}>
+                <Link to={subject.searchQuery}> {subject.name} </Link>
+                </span>
+            ))}
+          </strong>
+        </p>
+      )
+    }
+  },
   handleShowMoreInfoClick (event) {
     event.stopPropagation()
     event.preventDefault()
@@ -100,6 +116,11 @@ const SearchResult = React.createClass({
           <div>
             {this.renderOriginalTitle(result)}
           </div>
+
+          <div>
+            {this.renderSubjects(result)}
+          </div>
+
         </article>
 
         {this.shouldShowMoreInfo()
@@ -142,6 +163,11 @@ const messages = defineMessages({
     id: 'SearchResult.availableAs',
     description: 'What formats the results is available as',
     defaultMessage: 'Available as:'
+  },
+  subjects: {
+    id: 'SearchResult.subjects',
+    description: 'The text displayed to identify subjects',
+    defaultMessage: 'Subjects:'
   }
 })
 
