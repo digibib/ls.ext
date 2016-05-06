@@ -2,6 +2,18 @@
   "properties": {
     "work": {
       "properties": {
+        "subjects": {
+          "type": "nested",
+          "properties": {
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
         "contributors": {
           "type": "nested",
           "properties": {
