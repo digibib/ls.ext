@@ -1,6 +1,7 @@
 # encoding: UTF-8
 require_relative '../support/services/svc/user.rb'
 require_relative '../support/services/koha/reserve.rb'
+require_relative '../support/services/koha/patron.rb'
 
 # Superlibrarian user should not be deleted after creation
 Given(/^at det finnes en superbruker$/) do
@@ -47,4 +48,36 @@ Then(/^gir APIet tilbakemelding om at boka er reservert$/) do
   @context[:reserve]["biblionumber"].should eq(@active[:book].biblionumber)
   @context[:reserve]["branchcode"].should eq(@active[:branch].code)
   @context[:reserve]["borrowernumber"].should eq(@active[:patron].borrowernumber)
+end
+
+Given(/^at jeg har mottatt opplysninger om en låner$/) do
+  step "at det finnes en avdeling"        unless @active[:branch]
+  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
+  @active[:patron] = Patron.new
+  @active[:patron].branch = @active[:branch]
+  @active[:patron].category = @active[:patroncategory]
+end
+
+When(/^jeg registrerer låneren via API$/) do
+  params = {
+    categorycode: @active[:patron].category.code,
+    branchcode: @active[:patron].branch.code,
+    surname: @active[:patron].surname,
+    cardnumber: @active[:patron].cardnumber,
+    userid: @active[:patron].userid
+  }
+  res = KohaRESTAPI::Patron.new(@browser,@context,@active).add(params)
+  @context[:patron] = JSON.parse(res)
+
+  @cleanup.push("låner #{@context[:patron]['surname']}" =>
+    lambda do
+      KohaRESTAPI::Patron.new(@browser,@context,@active).delete(@context[:patron]["borrowernumber"])
+    end
+  )
+end
+
+Then(/^gir APIet tilbakemelding om at låneren er registrert$/) do
+  @context[:patron]['borrowernumber'].should_not be(nil)
+  @context[:patron]['surname'].should eq(@active[:patron].surname)
+  @context[:patron]['userid'].should eq(@active[:patron].userid)
 end
