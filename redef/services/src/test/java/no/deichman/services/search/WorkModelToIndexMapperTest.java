@@ -149,7 +149,7 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:nationality <http://data.deichman.no/nationality#ita> .\n"
                 + "\n"
                 + "<http://deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
-                + "    ns2:name \"Trondheim\"";
+                + "    ns2:prefLabel \"Trondheim\"";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("work", BaseURI.local()).createIndexDocument(model, workXuri);

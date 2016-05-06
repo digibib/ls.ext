@@ -47,7 +47,7 @@ WHERE {
     {
       ?work deich:subject ?subject .
       ?subject a deich:Subject ;
-              deich:name ?subjectName  .
+              deich:prefLabel ?subjectName  .
     } UNION {
       ?work deich:subject ?subject .
       ?subject a deich:Work ;
