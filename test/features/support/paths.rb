@@ -63,7 +63,7 @@ module Paths
       :authorised_values => "/cgi-bin/koha/admin/authorised_values.pl",
       :branches => "/cgi-bin/koha/admin/branches.pl",
       :item_types => "/cgi-bin/koha/admin/itemtypes.pl",
-      :patron_categories => "/cgi-bin/koha/admin/categorie.pl",
+      :patron_categories => "/cgi-bin/koha/admin/categories.pl",
       :search_preferences => "/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=",
       :koha2marc_mapping => "/cgi-bin/koha/admin/koha2marclinks.pl?op=add_form&tablename=",
       :circulation_rules => "/cgi-bin/koha/admin/smart-rules.pl",

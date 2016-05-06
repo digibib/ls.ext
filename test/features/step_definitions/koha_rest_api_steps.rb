@@ -36,7 +36,7 @@ When(/^låneren reserverer boka via API$/) do
 	res = KohaRESTAPI::Reserve.new(@browser,@context,@active).add(params)
   @context[:reserve] = JSON.parse(res)
 
-  @cleanup.push("reservering #{@context[:reserve]["reserve_id"]} på bok #{@context[:reserve]["biblionumber"]}" =>
+  @cleanup.push("reservering #{@context[:reserve]['reserve_id']} på bok #{@context[:reserve]['biblionumber']}" =>
     lambda do
       KohaRESTAPI::Reserve.new(@browser,@context,@active).delete(@context[:reserve]["reserve_id"])
     end
