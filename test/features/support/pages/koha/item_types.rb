@@ -9,7 +9,7 @@ class ItemTypes < AdminPage
   end
 
   def show_all
-    @browser.select_list(:name => "table_item_type_length").select_value("-1")
+    @browser.select_list(:name => "table_item_type_length").select_value("-1") # Show all item types
     self
   end
 
@@ -40,13 +40,12 @@ class ItemTypes < AdminPage
   end
 
   def delete(code)
-    item_type_table.rows.each do |row|
-      if row.text.include?(code)
-        row.link(:href => /op=delete_confirm/).click
-        @browser.input(:value => "Delete this Item Type").click
-        break
-      end
+    @browser.link(:href => "/cgi-bin/koha/admin/itemtypes.pl?op=delete_confirm&itemtype=" + code).click
+    form = @browser.form(:action => "/cgi-bin/koha/admin/itemtypes.pl")
+    if form.text.include?(code)
+      form.submit
     end
+    self
   end
 
   def exists(code, desc)

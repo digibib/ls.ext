@@ -19,7 +19,7 @@ class Branches < IntraPage
   end
 
   def delete(branch_name, branch_code)
-    @browser.link(:href => "?branchcode=" + branch_code + "&branchname=" + branch_name + "&op=delete").click
+    @browser.link(:href => "/cgi-bin/koha/admin/branches.pl?op=delete_confirm&branchcode=" + branch_code).click
     form = @browser.form(:action => "/cgi-bin/koha/admin/branches.pl")
     if form.text.include?(branch_code)
       form.submit
