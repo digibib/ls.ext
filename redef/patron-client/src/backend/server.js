@@ -175,31 +175,76 @@ app.get('/api/v1/profile/loans', (request, response) => {
 })
 
 app.post('/api/v1/profile/info', jsonParser, (request, response) => {
-  request.session.profileInfo = request.body
-  response.sendStatus(200)
+  fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+    method: 'PUT',
+    headers: {
+      'Cookie': request.session.kohaSession
+    },
+    body: JSON.stringify(request.body)
+  }).then(res => {
+    if (res.status === 200) {
+      return res.json()
+    } else {
+      console.log("THERE!")
+      response.status(res.status).send(res.body)
+    }
+  }).then(json => {
+    const patron = {
+      borrowerNumber: json.borrowernumber,
+      name: `${json.firstname} ${json.surname}`,
+      address: json.address,
+      zipcode: json.zipcode,
+      city: json.city,
+      country: json.country,
+      mobile: json.smsalertnumber, // is this the only sms number?
+      telephone: json.phone,
+      email: json.email,
+      birthdate: json.dateofbirth,
+      loanerCardIssued: json.dateenrolled,
+      loanerCategory: json.categorycode,
+      lastUpdated: '2016-02-01'
+    }
+    response.status(200).send(patron)
+  }).catch(error => {
+    console.log(error)
+    response.sendStatus(500)
+  })
 })
 
 app.get('/api/v1/profile/info', (request, response) => {
-  const template = {
-    borrowerNumber: 'n1484848',
-    name: 'Ola finn Oddvar Nordmann',
-    address: 'Midtisvingen 78',
-    zipcode: '2478',
-    city: 'Oslo',
-    country: 'Norway',
-    mobile: '987 65 432',
-    telephone: '53 01 23 45',
-    email: 'ola.finn.oddvar@online.no',
-    birthdate: '1977-12-13',
-    loanerCardIssued: '2012-01-30',
-    loanerCategory: 'adult',
-    lastUpdated: '2016-02-01'
-  }
-  if (request.session.profileInfo) {
-    response.send(Object.assign(template, request.session.profileInfo))
-  } else {
-    response.send(template)
-  }
+  fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+    method: 'GET',
+    headers: {
+      'Cookie': request.session.kohaSession
+    }
+  }).then(res => {
+    if (res.status === 200) {
+      return res.json()
+    } else {
+      response.status(res.status).send()
+      throw Error()
+    }
+  }).then(json => {
+    const patron = {
+      borrowerNumber: json.borrowernumber,
+      name: `${json.firstname} ${json.surname}`,
+      address: json.address,
+      zipcode: json.zipcode,
+      city: json.city,
+      country: json.country,
+      mobile: json.smsalertnumber, // is this the only sms number?
+      telephone: json.phone,
+      email: json.email,
+      birthdate: json.dateofbirth,
+      loanerCardIssued: json.dateenrolled,
+      loanerCategory: json.categorycode,
+      lastUpdated: '2016-02-01'
+    }
+    response.status(200).send(patron)
+  }).catch(error => {
+    console.log(error)
+    response.sendStatus(500)
+  })
 })
 
 app.post('/api/v1/profile/settings', jsonParser, (request, response) => {
