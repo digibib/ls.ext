@@ -29,12 +29,11 @@ module.exports = (app) => {
               'searchtype': 'contain',
               'template_path': 'members/tables/members_results.tt'
             })
-          }).then(res => {
-            res.json()
-          }).then(json => {
-            request.session.borrowerNumber = json[ 'aaData' ][ 0 ][ 'borrowernumber' ]
-            response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
-          })
+          }).then(res => res.json())
+            .then(json => {
+              request.session.borrowerNumber = json[ 'aaData' ][ 0 ][ 'borrowernumber' ]
+              response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
+            })
             .catch(error => {
               console.log(error)
               response.sendStatus(500)

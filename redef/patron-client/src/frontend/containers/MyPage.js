@@ -21,13 +21,19 @@ const MyPage = React.createClass({
     intl: intlShape.isRequired
   },
   componentWillMount () {
-    this.props.profileActions.fetchProfileInfo()
-    this.props.profileActions.fetchProfileSettings()
-    this.props.profileActions.fetchProfileLoans()
+    if (this.props.isLoggedIn) {
+      this.props.profileActions.fetchProfileInfo()
+      this.props.profileActions.fetchProfileSettings()
+      this.props.profileActions.fetchProfileLoans()
+    } else {
+      // this.props.loginActions.showLoginDialog()
+    }
   },
-  componentDidUpdate () {
-    if (!this.props.isLoggedIn) {
-      this.props.loginActions.showLoginDialog()
+  componentDidUpdate (prevProps) {
+    if (prevProps.isLoggedIn === false && this.props.isLoggedIn === true) {
+      this.props.profileActions.fetchProfileInfo()
+      this.props.profileActions.fetchProfileSettings()
+      this.props.profileActions.fetchProfileLoans()
     }
   },
   renderNotLoggedIn () {
