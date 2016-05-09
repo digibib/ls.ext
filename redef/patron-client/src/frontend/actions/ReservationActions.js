@@ -36,7 +36,7 @@ export function reservePublicationFailure (error) {
 }
 
 export function reservePublication (recordId, branchCode) {
-  const url = '/reserve'
+  const url = '/holds'
   return dispatch => {
     dispatch(requestReservePublication())
     return fetch(url, {

@@ -75,7 +75,7 @@ app.post('/login', jsonParser, (request, response) => {
     })
 })
 
-app.post('/reserve', jsonParser, (request, response) => {
+app.post('/holds', jsonParser, (request, response) => {
   fetch('http://koha:8081/api/v1/holds', {
     method: 'POST',
     headers: {
