@@ -118,7 +118,7 @@ app.get('/loginStatus', (request, response) => {
 
 app.get('/api/v1/profile/loans', (request, response) => {
   response.send({
-    name: 'Keyzer Söse',
+    name: 'Ola finn Oddvar Nordmann',
     pickup: [
       {
         recordId: 'xx',
