@@ -2,7 +2,6 @@
 const express = require('express')
 const session = require('express-session')
 const uuid = require('node-uuid')
-const path = require('path')
 const port = process.env.PORT || 8000
 const app = express()
 

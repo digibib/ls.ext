@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
 module.exports = (app) => {
-
   app.post('/holds', jsonParser, (request, response) => {
     fetch('http://koha:8081/api/v1/holds', {
       method: 'POST',
