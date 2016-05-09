@@ -14,7 +14,7 @@ module.exports = (app) => {
 	    if (res.status === 200) {
 	      return res.json()
 	    } else {
-	      response.status(res.status).send()
+	      response.status(res.status).send(res.statusText)
 	      throw Error()
 	    }
 	  }).then(json => {
@@ -42,7 +42,6 @@ module.exports = (app) => {
 
 	app.post('/api/v1/profile/info', jsonParser, (request, response) => {
 		const patron = {
-		  borrowernumber: request.body.borrowerNumber,
 		  surname: request.body.name,
 		  address: request.body.address,
 		  zipcode: request.body.zipcode,
@@ -50,11 +49,7 @@ module.exports = (app) => {
 		  country: request.body.country,
 		  smsalertnumber: request.body.mobile,
 		  phone: request.body.telephone,
-		  email: request.body.email,
-		  dateofbirth: request.body.birthdate,
-		  dateenrolled: request.body.loanerCardIssued,
-		  categorycode: request.body.loanerCategory
-		}
+		  email: request.body.email		}
 
 	  fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
 	    method: 'PUT',
