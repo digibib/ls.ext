@@ -49,10 +49,10 @@ public class EntityResourceTest {
 
     private static final String SOME_WORK_IDENTIFIER = "SOME_WORK_IDENTIFIER";
     private static final String SOME_PERSON_IDENTIFIER = "SOME_PERSON_IDENTIFIER";
-    private static final String SOME_PLACE_OF_PUBLICATION_IDENTIFIER = "SOME_PLACE_OF_PUBLICATION";
+    private static final String SOME_PLACE_IDENTIFIER = "SOME_PLACE";
     private static final String WORK = "work";
     private static final String PERSON = "person";
-    private static final String PLACE_OF_PUBLICATION = "placeOfPublication";
+    private static final String PLACE = "place";
     private static final String PUBLICATION = "publication";
     private static final String A_BIBLIO_ID = "1234";
     private static final String LOCATION = "Location";
@@ -124,13 +124,13 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_duplicate_place_of_publication_returns_409() throws Exception {
+    public void create_duplicate_place_returns_409() throws Exception {
         String id = "g019283";
-        String placeOfPublication = createPlaceOfPublicationImportRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION, id);
-        Response result = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+        String place = createPlaceImportRDF(SOME_PLACE_IDENTIFIER, PLACE, id);
+        Response result = entityResource.createFromLDJSON(PLACE, place);
         assertNull(result.getEntity());
         assertEquals(CREATED.getStatusCode(), result.getStatus());
-        Response duplicate = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+        Response duplicate = entityResource.createFromLDJSON(PLACE, place);
         assertNotNull(duplicate.getEntity());
         assertEquals(CONFLICT.getStatusCode(), duplicate.getStatus());
     }
@@ -191,14 +191,14 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void create_should_index_the_new_place_of_publication() throws Exception {
-        String placeOfPublication = createTestRDF(SOME_PLACE_OF_PUBLICATION_IDENTIFIER, PLACE_OF_PUBLICATION);
+    public void create_should_index_the_new_place() throws Exception {
+        String place = createTestRDF(SOME_PLACE_IDENTIFIER, PLACE);
 
-        Response createResponse = entityResource.createFromLDJSON(PLACE_OF_PUBLICATION, placeOfPublication);
+        Response createResponse = entityResource.createFromLDJSON(PLACE, place);
 
-        String placeOfPublicationId = new XURI(createResponse.getHeaderString(LOCATION)).getId();
+        String placeId = new XURI(createResponse.getHeaderString(LOCATION)).getId();
 
-        Response result = entityResource.index(PLACE_OF_PUBLICATION, placeOfPublicationId);
+        Response result = entityResource.index(PLACE, placeId);
 
         assertNotNull(result);
         assertEquals(ACCEPTED.getStatusCode(), result.getStatus());
@@ -446,7 +446,7 @@ public class EntityResourceTest {
                 + "}";
     }
 
-    private String createPlaceOfPublicationImportRDF(String identifier, String type, String placeId) {
+    private String createPlaceImportRDF(String identifier, String type, String placeId) {
         String ontologyClass = WordUtils.capitalize(type);
         return "{\n"
                 + "    \"@context\": {\n"
@@ -456,7 +456,7 @@ public class EntityResourceTest {
                 + "    \"@graph\": {\n"
                 + "        \"@id\": \"http://deichman.no/" + type + "/" + identifier + "\",\n"
                 + "        \"@type\": \"deichman:" + ontologyClass + "\",\n"
-                + "        \"http://data.deichman.no/duo#bibliofilPlaceOfPublicationId\": \"" + placeId + "\"\n"
+                + "        \"http://data.deichman.no/duo#bibliofilPlaceId\": \"" + placeId + "\"\n"
                 + "    }\n"
                 + "}";
     }

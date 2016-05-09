@@ -23,7 +23,7 @@ public class BaseURITest {
             add("authorized_values/");
             add("ui#");
             add("exemplar/");
-            add("placeOfPublication/");
+            add("place/");
             add("publisher/");
         }};
 

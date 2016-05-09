@@ -270,10 +270,10 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public Query getBibliofilPlaceOfPublicationResource(String id) {
+    public Query getBibliofilPlaceResource(String id) {
         String q = "SELECT ?uri "
                 + "WHERE "
-                + "  { ?uri <http://data.deichman.no/duo#bibliofilPlaceOfPublicationId> \"" + id + "\" }";
+                + "  { ?uri <http://data.deichman.no/duo#bibliofilPlaceId> \"" + id + "\" }";
         return QueryFactory.create(q);
     }
 

@@ -120,8 +120,8 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createPlaceOfPublication(Model inputModel) throws Exception {
-        return createResource(inputModel, "PlaceOfPublication");
+    public final String createPlace(Model inputModel) throws Exception {
+        return createResource(inputModel, "Place");
     }
 
     @Override
@@ -238,8 +238,8 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
 
     @Override
-    public final Optional<String> getPlaceOfPublicationResourceURIByBibliofilId(String id) {
-        try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPlaceOfPublicationResource(id))) {
+    public final Optional<String> getPlaceResourceURIByBibliofilId(String id) {
+        try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPlaceResource(id))) {
             disableCompression(qexec);
             ResultSet resultSet = qexec.execSelect();
             boolean uri = resultSet.hasNext();

@@ -17,7 +17,7 @@ public interface RDFRepository {
     String createWork(Model model) throws Exception;
     String createPublication(Model model, String recordID) throws Exception;
     String createPerson(Model inputModel) throws Exception;
-    String createPlaceOfPublication(Model inputModel) throws Exception;
+    String createPlace(Model inputModel) throws Exception;
     String createPublisher(Model inputModel) throws Exception;
     String createSerial(Model inputModel)  throws Exception;
     String createSubject(Model inputModel) throws Exception;
@@ -43,7 +43,7 @@ public interface RDFRepository {
 
     Optional<String> getResourceURIByBibliofilId(String personId);
 
-    Optional<String> getPlaceOfPublicationResourceURIByBibliofilId(String id);
+    Optional<String> getPlaceResourceURIByBibliofilId(String id);
 
     Optional<String> getPublisherResourceURIByBibliofilId(String bibliofilId);
 

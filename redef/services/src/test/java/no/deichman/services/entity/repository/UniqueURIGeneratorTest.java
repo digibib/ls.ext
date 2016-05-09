@@ -12,7 +12,7 @@ public class UniqueURIGeneratorTest {
     public static final String PERSON_IDENTIFIER_REGEX = "h[0-9]+";
     public static final String PUBLICATION_IDENTIFIER_REGEX = "p[0-9]+";
     public static final String WORK_IDENTIFIER_REGEX = "w[0-9]+";
-    public static final String PLACE_OF_PUBLICATION_IDENTIFIER_REGEX = "g[0-9]+";
+    public static final String PLACE_IDENTIFIER_REGEX = "g[0-9]+";
     private UniqueURIGenerator uriGenerator;
 
     @Before
@@ -54,11 +54,11 @@ public class UniqueURIGeneratorTest {
     }
 
     @Test
-    public void should_get_new_place_of_publication_id() throws Exception {
-        String uri = uriGenerator.getNewURI("PlaceOfPublication", s -> false);
+    public void should_get_new_place_id() throws Exception {
+        String uri = uriGenerator.getNewURI("Place", s -> false);
         assertNotNull(uri);
-        assertTrue(uri.contains("/placeOfPublication"));
-        assertTrue(getLastElementOfURI(uri).matches(PLACE_OF_PUBLICATION_IDENTIFIER_REGEX));
+        assertTrue(uri.contains("/place"));
+        assertTrue(getLastElementOfURI(uri).matches(PLACE_IDENTIFIER_REGEX));
     }
 
     private String getLastElementOfURI(String uri) {

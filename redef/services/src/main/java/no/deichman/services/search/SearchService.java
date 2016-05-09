@@ -21,9 +21,7 @@ public interface SearchService {
 
     Response clearIndex();
 
-    Response searchPlaceOfPublicationWithJson(String json);
-
-    Response searchPlaceOfPublication(String query);
+    Response searchPlace(String query);
 
     Response searchPublisher(String query);
 

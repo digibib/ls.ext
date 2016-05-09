@@ -43,7 +43,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @GET
-    @Path("{type: work|person|placeOfPublication|publisher|serial|subject|genre}/_search")
+    @Path("{type: work|person|place|publisher|serial|subject|genre}/_search")
     @Produces(MediaType.APPLICATION_JSON)
     public final Response search(@PathParam("type") String type, @QueryParam("q") String query) {
         if (isBlank(query)) {
@@ -54,8 +54,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchWork(query);
             case "person":
                 return getSearchService().searchPerson(query);
-            case "placeOfPublication":
-                return getSearchService().searchPlaceOfPublication(query);
+            case "place":
+                return getSearchService().searchPlace(query);
             case "publisher":
                 return getSearchService().searchPublisher(query);
             case "serial":
@@ -70,7 +70,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @POST
-    @Path("{type: work|person|placeOfPublication|publisher|serial|subject|genre}/_search")
+    @Path("{type: work|person|place|publisher|serial|subject|genre}/_search")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public final Response searchJson(String body, @PathParam("type") String type, @Context UriInfo uriInfo) {
@@ -83,8 +83,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchWorkWithJson(body, queryParams);
             case "person":
                 return getSearchService().searchPersonWithJson(body);
-            case "placeOfPublication":
-                return getSearchService().searchPlaceOfPublication(body);
+            case "place":
+                return getSearchService().searchPlace(body);
             case "publisher":
                 return getSearchService().searchPublisher(body);
             case "serial":

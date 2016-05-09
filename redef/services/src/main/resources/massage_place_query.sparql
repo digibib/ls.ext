@@ -1,0 +1,14 @@
+PREFIX  :     <__ONTOLOGY__>
+
+CONSTRUCT {
+  ?placeUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Place ;
+            :prefLabel ?label ;
+            :specification ?specification .
+}
+
+WHERE {
+  BIND(uri("__PLACEURI__") AS ?placeUri)
+  ?placeUri a :Place .
+  OPTIONAL { ?placeUri :prefLabel ?label }
+  OPTIONAL { ?placeUri :specification ?specification }
+}

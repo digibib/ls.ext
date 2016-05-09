@@ -40,11 +40,6 @@
   rdfs:label "Concept"@en ;
   rdfs:label "Konsept"@no .
 
-# ToDo: Erstattes med :Place
-:PlaceOfPublication a rdfs:Class ;
-  rdfs:label "Place of publication"@en ;
-  rdfs:label "Utgivelsessted"@no .
-  
 :Place a rdfs:Class ;
   rdfs:label "Place"@en ;
   rdfs:label "Sted"@no .
@@ -86,7 +81,8 @@
 :prefLabel a rdfs:Property ;
   rdfs:label "Preferred label"@en ;
   rdfs:label "Foretrukket betegnelse"@no ;
-  rdfs:range xsd:string .
+  rdfs:range xsd:string ;
+  rdfs:domain :Place .
 
 :altLabel a rdfs:Property ;
   rdfs:label "Alternative label"@en ;
@@ -310,26 +306,11 @@
   rdfs:range duo:AdaptationOfWorkForParticularUserGroups ;
   duo:valuesFrom values:adaptationOfWorkForParticularUserGroups .
 
-# Erstattes med :prefLabel
-:place a rdfs:Property ;
-  rdfs:label "Place"@en ;
-  rdfs:label "Sted"@no ;
-  rdfs:domain :PlaceOfPublication ;
-  rdfs:range xsd:string .
-
-# Erstattes med :specification
-:country a rdfs:Property ;
-  rdfs:label "Country"@en ;
-  rdfs:label "Land"@no ;
-  rdfs:domain :PlaceOfPublication ;
-  rdfs:range xsd:string .
-
-# ToDo: Erstattes med :hasPlaceOfPublication
-:placeOfPublication a rdfs:Property ;
+:hasPlaceOfPublication a rdfs:Property ;
   rdfs:label "Place of publication"@en ;
   rdfs:label "Utgivelsessted"@no ;
   rdfs:domain :Publication ;
-  rdfs:range :PlaceOfPublication .
+  rdfs:range :Place .
 
 # ToDo: Erstattes med :hasPublisher
 :publishedBy a rdfs:Property ;

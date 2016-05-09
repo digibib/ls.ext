@@ -40,7 +40,7 @@ import java.nio.charset.StandardCharsets;
 
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.PERSON;
-import static no.deichman.services.entity.EntityType.PLACE_OF_PUBLICATION;
+import static no.deichman.services.entity.EntityType.PLACE;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
@@ -75,7 +75,7 @@ public class EntityServiceImplTest {
     private String workURI;
     private String publicationURI;
     private String personURI;
-    private String placeOfPublicationURI;
+    private String placeURI;
     private String publisherURI;
     private String serialURI;
     private String subjectURI;
@@ -109,7 +109,7 @@ public class EntityServiceImplTest {
         workURI = localBaseURI.work();
         publicationURI = localBaseURI.publication();
         personURI = localBaseURI.person();
-        placeOfPublicationURI = localBaseURI.placeOfPublication();
+        placeURI = localBaseURI.place();
         publisherURI = localBaseURI.publisher();
         serialURI = localBaseURI.serial();
         subjectURI = localBaseURI.subject();
@@ -299,12 +299,12 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_create_place_of_publication() throws Exception {
-        String testId = "SERVICE_PLACE_OF_PUBLICATION_SHOULD_EXIST";
-        String placeOfPublication = getTestJSON(testId, "placeOfPublication");
-        Model inputModel = modelFrom(placeOfPublication, JSONLD);
+    public void test_create_place() throws Exception {
+        String testId = "SERVICE_PLACE_SHOULD_EXIST";
+        String place = getTestJSON(testId, "place");
+        Model inputModel = modelFrom(place, JSONLD);
 
-        final String uri = service.create(PLACE_OF_PUBLICATION, inputModel);
+        final String uri = service.create(PLACE, inputModel);
 
         Statement s = createStatement(
                 createResource(uri),
@@ -499,9 +499,9 @@ public class EntityServiceImplTest {
                 resourceClass = "Person";
                 resourceURI = personURI;
                 break;
-            case "placeofpublication":
-                resourceClass = "PlaceOfPublication";
-                resourceURI = placeOfPublicationURI;
+            case "place":
+                resourceClass = "Place";
+                resourceURI = placeURI;
                 break;
             case "publisher":
                 resourceClass = "Publisher";

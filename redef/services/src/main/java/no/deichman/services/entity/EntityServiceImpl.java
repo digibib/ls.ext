@@ -226,8 +226,8 @@ public final class EntityServiceImpl implements EntityService {
             case PERSON:
                 uri = repository.createPerson(inputModel);
                 break;
-            case PLACE_OF_PUBLICATION:
-                uri = repository.createPlaceOfPublication(inputModel);
+            case PLACE:
+                uri = repository.createPlace(inputModel);
                 break;
             case PUBLISHER:
                 uri = repository.createPublisher(inputModel);

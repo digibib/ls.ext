@@ -31,7 +31,7 @@ class UniqueURIGenerator {
                 break;
             case "Person": result = baseURI.person() + "h" + uniquePart;
                 break;
-            case "PlaceOfPublication": result = baseURI.placeOfPublication() + "g" + uniquePart;
+            case "Place": result = baseURI.place() + "g" + uniquePart;
                 break;
             case "Publisher": result = baseURI.publisher() + "i" + uniquePart;
                 break;

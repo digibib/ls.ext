@@ -40,7 +40,7 @@ public class InMemoryRepositoryTest {
     private static final Property NAME = createProperty(BASE_URI.ontology("name"));
     private static final String UNRECOGNISED_TYPE_ERROR = "The type wasn't recognised";
     private static final String PERSON = "Person";
-    private static final String PLACE_OF_PUBLICATION = "PlaceOfPublication";
+    private static final String PLACE = "Place";
     private InMemoryRepository repository;
     private Statement workHasNameStmt;
     private Statement publHasANameStmt;
@@ -177,11 +177,11 @@ public class InMemoryRepositoryTest {
     }
 
     @Test
-    public void test_get_place_of_publication_resource_URI_by_bibliofil_id() throws Exception {
-        String placeOfPublicationId = "n12345";
-        String placeOfPublication = setUpBibliofilImportedTestNTriples(PERSON, placeOfPublicationId);
-        Optional personExists = queryBibliofilResource(PERSON, placeOfPublicationId);
-        assertEquals("Expected person ID to result in URI match", placeOfPublication, personExists.get());
+    public void test_get_place_resource_URI_by_bibliofil_id() throws Exception {
+        String placeId = "n12345";
+        String place = setUpBibliofilImportedTestNTriples(PERSON, placeId);
+        Optional personExists = queryBibliofilResource(PERSON, placeId);
+        assertEquals("Expected person ID to result in URI match", place, personExists.get());
     }
 
     private Optional queryBibliofilResource(String type, String identifier) {
@@ -189,7 +189,7 @@ public class InMemoryRepositoryTest {
         switch (type) {
             case "Person": exists = repository.getResourceURIByBibliofilId(identifier);
                 break;
-            case "PlaceOfPublication": exists = repository.getPlaceOfPublicationResourceURIByBibliofilId(identifier);
+            case "Place": exists = repository.getPlaceResourceURIByBibliofilId(identifier);
                 break;
             default: exists = Optional.of(UNRECOGNISED_TYPE_ERROR);
                 break;
@@ -211,7 +211,7 @@ public class InMemoryRepositoryTest {
         switch (type) {
             case PERSON: retVal = repository.createPerson(model);
                 break;
-            case PLACE_OF_PUBLICATION: retVal = repository.createPlaceOfPublication(model);
+            case PLACE: retVal = repository.createPlace(model);
                 break;
             default: retVal = UNRECOGNISED_TYPE_ERROR;
                 break;

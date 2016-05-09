@@ -13,7 +13,7 @@ public enum EntityType {
     WORK("work"),
     PUBLICATION("publication"),
     PERSON("person"),
-    PLACE_OF_PUBLICATION("placeOfPublication"),
+    PLACE("place"),
     PUBLISHER("publisher"),
     SERIAL("serial"),
     SUBJECT("subject"),
@@ -21,7 +21,7 @@ public enum EntityType {
 
     // must be handwritten because of stupid Java
     public static final String ALL_TYPES_PATTERN =
-            "(work|publication|person|placeOfPublication|publisher|serial|subject|genre)";
+            "(work|publication|person|place|publisher|serial|subject|genre)";
 
     private final String path;
 

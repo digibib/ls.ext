@@ -1,12 +1,12 @@
 {
   "properties": {
-    "placeOfPublication": {
+    "place": {
       "properties":
         {
-          "place": {
+          "prefLabel": {
             "type": "string"
           },
-          "country": {
+          "specification": {
             "type": "String"
           }
         }

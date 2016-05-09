@@ -73,7 +73,7 @@ public class SearchServiceImpl implements SearchService {
                 break;
             case PERSON: doIndexPerson(xuri, false);
                 break;
-            case PLACE_OF_PUBLICATION: doIndex(xuri);
+            case PLACE: doIndex(xuri);
                 break;
             case PUBLISHER: doIndex(xuri);
                 break;
@@ -124,7 +124,7 @@ public class SearchServiceImpl implements SearchService {
             putIndexMapping(httpclient, "person");
             putIndexMapping(httpclient, "serial");
             putIndexMapping(httpclient, "publisher");
-            putIndexMapping(httpclient, "placeOfPublication");
+            putIndexMapping(httpclient, "place");
             putIndexMapping(httpclient, "subject");
             putIndexMapping(httpclient, "genre");
 
@@ -146,11 +146,6 @@ public class SearchServiceImpl implements SearchService {
                 throw new ServerErrorException("Failed to create elasticsearch mapping for " + type, HTTP_INTERNAL_ERROR);
             }
         }
-    }
-
-    @Override
-    public final Response searchPlaceOfPublicationWithJson(String json) {
-        return searchWithJson(json, getPlaceOfPublicationUriBuilder());
     }
 
     private Response searchWithJson(String body, URIBuilder searchUriBuilder) {
@@ -192,8 +187,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final Response searchPlaceOfPublication(String query) {
-        return doSearch(query, getPlaceOfPublicationUriBuilder());
+    public final Response searchPlace(String query) {
+        return doSearch(query, getPlaceUriBuilder());
     }
 
     @Override
@@ -321,8 +316,8 @@ public class SearchServiceImpl implements SearchService {
         return getIndexUriBuilder().setPath("/search/person/_search");
     }
 
-    public final URIBuilder getPlaceOfPublicationUriBuilder() {
-        return getIndexUriBuilder().setPath("/search/placeOfPublication/_search");
+    public final URIBuilder getPlaceUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/place/_search");
     }
 
     public final URIBuilder getPublisherSearchUriBuilder() {

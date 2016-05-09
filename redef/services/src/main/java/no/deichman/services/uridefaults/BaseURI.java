@@ -57,8 +57,8 @@ public final class BaseURI {
         return baseUriRoot + "exemplar/";
     }
 
-    public String placeOfPublication() {
-        return baseUriRoot + "placeOfPublication/";
+    public String place() {
+        return baseUriRoot + "place/";
     }
 
     public String publisher() {
