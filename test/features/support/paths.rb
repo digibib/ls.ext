@@ -91,7 +91,7 @@ module Paths
         :publication => "/publication",
         :person => "/person",
         :workflow => "/workflow",
-        :placeofpublication => "/placeOfPublication",
+        :place => "/place",
         :serial => "/serial",
         :publisher => "/publisher",
         :subject => "/subject"

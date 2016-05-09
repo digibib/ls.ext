@@ -6,10 +6,10 @@
   },
   "@graph": [
     {
-      "@id": "http://192.168.50.12:7000/placeOfPublication/g123456",
-      "@type": "deichman:PlaceOfPublication",
-      "deichman:place": "Oslo",
-      "deichman:country": "Norge"
+      "@id": "http://192.168.50.12:7000/place/g123456",
+      "@type": "deichman:Place",
+      "deichman:prefLabel": "Oslo",
+      "deichman:specification": "Norge"
     }
   ]
 }

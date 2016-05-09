@@ -43,16 +43,16 @@
       ]
     },
     {
-      "@id": "deichman:PlaceOfPublication",
+      "@id": "deichman:Place",
       "@type": "rdfs:Class",
       "rdfs:label": [
         {
           "@language": "no",
-          "@value": "Utgivelsessted"
+          "@value": "Sted"
         },
         {
           "@language": "en",
-          "@value": "Place of publication"
+          "@value": "Place"
         }
       ]
     },
@@ -377,19 +377,19 @@
       }
     },
     {
-      "@id": "deichman:place",
+      "@id": "deichman:prefLabel",
       "@type": "rdfs:Property",
       "rdfs:domain": {
-        "@id": "deichman:PlaceOfPublication"
+        "@id": "deichman:Place"
       },
       "rdfs:label": [
         {
           "@language": "no",
-          "@value": "Sted"
+          "@value": "Foretrukket betegnelse"
         },
         {
           "@language": "en",
-          "@value": "Place"
+          "@value": "Preferred label"
         }
       ],
       "rdfs:range": {
@@ -397,19 +397,19 @@
       }
     },
     {
-      "@id": "deichman:country",
+      "@id": "deichman:specification",
       "@type": "rdfs:Property",
       "rdfs:domain": {
-        "@id": "deichman:PlaceOfPublication"
+        "@id": "deichman:Place"
       },
       "rdfs:label": [
         {
           "@language": "no",
-          "@value": "Land"
+          "@value": "Forklarende tilføyelse"
         },
         {
           "@language": "en",
-          "@value": "Country"
+          "@value": "Specification"
         }
       ],
       "rdfs:range": {

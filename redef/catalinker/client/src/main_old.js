@@ -113,10 +113,10 @@
                             resource = graph;
                         }
                         break;
-                    case "PlaceOfPublication":
+                    case "Place":
                         if (graph["@graph"]) {
                             graph["@graph"].forEach(function (g) {
-                                if (g["@type"] === "deichman:PlaceOfPublication") {
+                                if (g["@type"] === "deichman:Place") {
                                     resource = g;
                                     resource["@context"] = graph["@context"];
                                 }
@@ -255,7 +255,7 @@
                         break;
                     case "deichman:Work":
                     case "deichman:Person":
-                    case "deichman:PlaceOfPublication":
+                    case "deichman:Place":
                     case "deichman:Publisher":
                     case "deichman:Genre":
                         // TODO infer from ontology that this is an URI

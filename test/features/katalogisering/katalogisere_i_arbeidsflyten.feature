@@ -15,8 +15,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg vil lage et nytt emne
     Så leverer systemet en ny ID for det nye emnet
     Og jeg kan legge inn emnets navn
-    Og jeg vil lage et nytt utgivelsessted
-    Så leverer systemet en ny ID for det nye utgivelsesstedet
+    Og jeg vil lage et nytt sted
+    Så leverer systemet en ny ID for det nye stedet
     Og jeg kan legge inn stedsnavn og land
     Og grensesnittet viser at endringene er lagret
     Og jeg vil lage en ny utgiver
@@ -29,8 +29,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og legger inn opplysningene om utgivelsen
-    Og at jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter
-    Så velger jeg et utgivelsessted fra treffliste fra utgivelsesstedregisteret
+    Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
+    Så velger jeg et sted fra treffliste fra stedsregisteret
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
     Så skriver jeg inn "12" som utgivelsens nummer i serien
@@ -95,9 +95,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Og så trykker jeg på "Neste steg: Beskrivelse"-knappen
-    Og at jeg skriver inn tilfeldig utgivelsessted i feltet "Utgivelsessted" og trykker enter
+    Og at jeg skriver inn tilfeldig sted i feltet "Utgivelsessted" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett nytt utgivelsessted"-knappen
+    Og jeg trykker på "Opprett nytt sted"-knappen
     Og jeg trykker på "Opprett"-knappen
     Og at jeg skriver inn tilfeldig serie i feltet "Serie" og trykker enter
     Så får jeg ingen treff

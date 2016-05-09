@@ -2,9 +2,9 @@
 
 require_relative 'catalinker_page.rb'
 
-class RegPlaceOfPublication < CatalinkerPage
+class RegPlace < CatalinkerPage
   def visit
-    visit_sub_page(:placeofpublication)
+    visit_sub_page(:place)
   end
 
   def get_link
@@ -12,6 +12,6 @@ class RegPlaceOfPublication < CatalinkerPage
   end
 
   def open(resource)
-    super(resource, "placeOfPublication")
+    super(resource, "place")
   end
 end

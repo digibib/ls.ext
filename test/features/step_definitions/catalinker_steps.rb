@@ -545,8 +545,8 @@ When(/^jeg vil legge til en person$/) do
   true
 end
 
-When(/^jeg vil lage et nytt utgivelsessted$/) do
-  @site.RegPlaceOfPublication.visit
+When(/^jeg vil lage et nytt sted$/) do
+  @site.RegPlace.visit
 end
 
 When(/^jeg vil lage en ny serie/) do
@@ -566,8 +566,8 @@ When(/^leverer systemet en ny ID for den nye personen$/) do
   @context[:person_identifier].should_not be_empty
 end
 
-When(/^leverer systemet en ny ID for det nye utgivelsesstedet$/) do
-  @context[:placeofpublication_identifier] = @site.RegPlaceOfPublication.get_id()
+When(/^leverer systemet en ny ID for det nye stedet$/) do
+  @context[:placeofpublication_identifier] = @site.RegPlace.get_id()
   @context[:placeofpublication_identifier].should_not be_empty
 end
 
@@ -600,9 +600,9 @@ end
 
 When(/^jeg kan legge inn stedsnavn og land$/) do
   @context[:placeofpublication_place] = generateRandomString
-  @site.RegPlaceOfPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#place", @context[:placeofpublication_place])
+  @site.RegPlace.add_prop("http://#{ENV['HOST']}:8005/ontology#prefLabel", @context[:placeofpublication_place])
   @context[:placeofpublication_country] = generateRandomString
-  @site.RegPlaceOfPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#country", @context[:placeofpublication_country])
+  @site.RegPlace.add_prop("http://#{ENV['HOST']}:8005/ontology#specification", @context[:placeofpublication_country])
 end
 
 When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do

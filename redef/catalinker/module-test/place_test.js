@@ -8,7 +8,7 @@ var chai = require("chai"),
   fs = require("fs");
 
 describe("Catalinker", function () {
-  describe("/placeOfPublication", function () {
+  describe("/place", function () {
 
     require('./testdom')('<html><body><div id="container"/></body></html>');
     var testRactive, Main;
@@ -21,12 +21,12 @@ describe("Catalinker", function () {
       // STUBS
 
       sinon.stub(Main, "getResourceType", function () {
-        return "PlaceOfPublication"; // ID returned from window.location
+        return "Place"; // ID returned from window.location
       });
 
       // URL parameter
       sinon.stub(Main, "getURLParameter", function () {
-        return "http://192.168.50.12:7000/placeOfPublication/g123456";
+        return "http://192.168.50.12:7000/place/g123456";
       });
 
       // http requests from axios used in module, faking returned promises
@@ -46,7 +46,7 @@ describe("Catalinker", function () {
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
         case "http://192.168.50.12:7000/authorized_values/nationality":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_nationality.json", "UTF-8") });
-        case "http://192.168.50.12:7000/placeOfPublication/g123456":
+        case "http://192.168.50.12:7000/place/g123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/g123456.json", "UTF-8") });
       }
       });
@@ -84,25 +84,25 @@ describe("Catalinker", function () {
 
     describe("Registrere verk", function () {
       it('henter ressurstype fra siste ledd i pathname i url', function (done) {
-        expect(Main.getResourceType()).to.equal("PlaceOfPublication");
+        expect(Main.getResourceType()).to.equal("Place");
         done();
       });
 
       it("har riktig side-tittel", function (done) {
-        expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av utgivelsessted");
+        expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av sted");
         done();
       });
 
       it("gir riktig ressurs-URI", function (done) {
-        expect(document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value).to.equal("http://192.168.50.12:7000/placeOfPublication/g123456");
+        expect(document.querySelectorAll('[data-automation-id="resource_uri"]')[0].value).to.equal("http://192.168.50.12:7000/place/g123456");
         done();
       });
     });
 
     describe("Eksisterende utgivelsessted", function () {
       it("populerer felt riktig", function (done) {
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#country_0"]')[0].value).to.equal("Norge");
-        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#place_0"]')[0].value).to.equal("Oslo");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#specification_0"]')[0].value).to.equal("Norge");
+        expect(document.querySelectorAll('[data-automation-id="http://192.168.50.12:7000/ontology#prefLabel_0"]')[0].value).to.equal("Oslo");
         done();
       });
     });

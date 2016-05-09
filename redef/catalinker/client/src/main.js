@@ -479,7 +479,7 @@
         case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
           input.type = 'input-nonNegativeInteger'
           break
-        case 'deichman:PlaceOfPublication':
+        case 'deichman:Place':
         case 'deichman:Work':
         case 'deichman:Person':
         case 'deichman:Publisher':

@@ -9,7 +9,7 @@ class Site
         'verk' => 'work',
         'utgivelse' => 'publication',
         'person' => 'person',
-        'utgivelsessted' => 'placeOfPublication',
+        'sted' => 'place',
         'utgiver' => 'publisher',
         'utgitt av' => 'publishedBy',
         'serie' => 'serial',

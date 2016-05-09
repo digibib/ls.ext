@@ -5,21 +5,21 @@ Egenskap: Legge til utgivelsesautoriteter på utgivelse
   Som katalogisator
   For å gjøre det mulig for brukere å se utgivelsesinformasjon
   Ønsker jeg å legge til utgiver, utgivelsessted og serie med nummerering på utgivelser
-  
-  Scenario: Opprettelse av et utgivelsessted
-    Når jeg vil lage et nytt utgivelsessted
-    Så leverer systemet en ny ID for det nye utgivelsesstedet
+
+  Scenario: Opprettelse av et sted
+    Når jeg vil lage et nytt sted
+    Så leverer systemet en ny ID for det nye stedet
     Og jeg kan legge inn stedsnavn og land
     Og grensesnittet viser at endringene er lagret
 
   @wip
-  Scenario: Legge til utgivelsessted i arbeidsflyt
-    Gitt at jeg har opprettet et utgivelsessted
+  Scenario: Legge til sted i arbeidsflyt
+    Gitt at jeg har opprettet et sted
     Og at jeg har opprettet en utgivelse i arbeidsflyten
-    Når jeg skriver inn utgivelsessted i feltet for utgivelsessted og trykker enter
-    Så søker jeg opp utgivelsessteder og kan velge den jeg vil ha
-    Og utgivelsen er tilkoplet en utgivelsessted
-  
+    Når jeg skriver inn sted i feltet for utgivelsessted og trykker enter
+    Så søker jeg opp sted og kan velge den jeg vil ha
+    Og utgivelsen er tilkoplet en sted
+
   @wip
   Scenario: Opprettelse av utgiver
     Gitt at jeg er på utgiveropprettelsessida
@@ -48,4 +48,3 @@ Egenskap: Legge til utgivelsesautoriteter på utgivelse
     Så søker jeg opp serien og kan velge den jeg vil ha
     Og utgivelsen er tilkoplet en serie
 
-  

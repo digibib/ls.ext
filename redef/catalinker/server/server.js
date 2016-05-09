@@ -61,7 +61,7 @@ app.get('/workflow', function (req, res, next) {
   res.sendFile('main.html', { title: 'Katalogisering', root: path.join(__dirname, '/../public/') })
 })
 
-app.get('/:type(person|work|publication|placeOfPublication|serial|publisher|subject|genre)', function (req, res, next) {
+app.get('/:type(person|work|publication|place|serial|publisher|subject|genre)', function (req, res, next) {
   newResource(req.params.type).then(function (response) {
     res.redirect('/cataloguing/' + req.params.type + '?resource=' + response.headers.location)
   })
@@ -178,19 +178,19 @@ app.get('/config', function (request, response) {
         ]
       },
       {
-        id: "create-place-of-publication-form",
-        labelForCreateButton: "Opprett nytt utgivelsessted",
-        rdfType: "PlaceOfPublication",
+        id: "create-place-form",
+        labelForCreateButton: "Opprett nytt sted",
+        rdfType: "Place",
         inputs: [
           {
-            label: 'Sted',
-            rdfProperty: 'place',
+            label: 'Foretrukken betegnelse',
+            rdfProperty: 'prefLabel',
             type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
             preFillFromSearchField: true // value of this field should be copied from the search field above
           },
           {
-            label: 'Land',
-            rdfProperty: 'country',
+            label: 'Forklarende tilføyelse',
+            rdfProperty: 'specification',
             type: 'input-string'
             // input type must be defined explicitly, otherwise it will inherit from the search field above
           }
@@ -324,16 +324,16 @@ app.get('/config', function (request, response) {
           {
             rdfProperty: 'placeOfPublication',
             authority: true, // this indicates it is an authorized entity
-            nameProperties: [ 'place', 'country' ], // these are proeprty names used to label already connected entities
-            indexTypes: 'placeOfPublication', // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: [ 'place', 'country' ], // these are indexed document JSON properties from which
+            nameProperties: [ 'prefLabel', 'specification' ], // these are proeprty names used to label already connected entities
+            indexTypes: 'place', // this is the name of the elasticsearch index type from which authorities are searched within
+            indexDocumentFields: [ 'prefLabel', 'specification' ], // these are indexed document JSON properties from which
             // the labels for authoroty select list are concatenated
             type: 'searchable-with-result-in-side-panel',
             widgetOptions: {
               enableCreateNewResource: {
                 formRefs: [ {
-                  formId: 'create-place-of-publication-form',
-                  targetType: "placeOfPublication"
+                  formId: 'create-place-form',
+                  targetType: "place"
                 }]
               }
             }
@@ -524,10 +524,10 @@ app.get('/config', function (request, response) {
         queryTerm: 'publisher.name',
         resultItemLabelProperties: ['name']
       },
-      placeOfPublication: {
-        selectIndexLabel: 'Utgivelsessted',
-        queryTerm: 'placeOfPublication.place',
-        resultItemLabelProperties: ['place', 'country']
+      place: {
+        selectIndexLabel: 'Sted',
+        queryTerm: 'place.prefLabel',
+        resultItemLabelProperties: ['prefLabel', 'specification']
       },
       serial: {
         selectIndexLabel: 'Serie',
