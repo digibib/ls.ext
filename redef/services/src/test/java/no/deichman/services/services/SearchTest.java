@@ -11,8 +11,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -23,15 +21,12 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
  */
 @Ignore
 public class SearchTest {
-    public static final int ONE_SECOND = 1000;
-    public static final int ZERO = 0;
-    public static final int ONE = 1;
-    public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
-    public static final int TEN_TIMES = 10;
-    private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
+    private static final int ONE_SECOND = 1000;
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+    private static final int THREE = 3;
+    private static final int TEN_TIMES = 10;
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
     private static String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://localhost:9200");
 
@@ -85,7 +80,7 @@ public class SearchTest {
         indexDocument("work", generateWorkJson("Apocalypse Cow", "Michael Logan"));
     }
 
-    public com.google.gson.JsonArray searchDocument(String type, String query, int numberOfExpectedResults) throws UnirestException, InterruptedException {
+    private com.google.gson.JsonArray searchDocument(String type, String query, int numberOfExpectedResults) throws UnirestException, InterruptedException {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest.get(elasticSearchUrl + "/search/" + type + "/_search").queryString("q", "work.mainTitle=" + query);
@@ -105,24 +100,37 @@ public class SearchTest {
     }
 
     @Test
-    public void search_should_return_hits_with_single_character_in_title() throws UnirestException, InterruptedException {
+    public void search_should_return_hits_with_single_character_in_title() throws Exception {
         com.google.gson.JsonArray results = searchDocument("work", "i", THREE);
-        assertJsonSimilar(results.get(ZERO).toString(), generateWorkJson("I", null));
-        assertJsonSimilar(results.get(ONE).toString(), generateWorkJson("I, robot", null));
-        assertJsonSimilar(results.get(TWO).toString(), generateWorkJson("When I Found You", null));
+        if (results != null) {
+            assertJsonSimilar(results.get(ZERO).toString(), generateWorkJson("I", null));
+            assertJsonSimilar(results.get(ONE).toString(), generateWorkJson("I, robot", null));
+            assertJsonSimilar(results.get(TWO).toString(), generateWorkJson("When I Found You", null));
+        } else {
+            throw new Exception("You made a mess int the test");
+        }
+
     }
 
     @Test
-    public void search_should_return_hits_when_searching_for_multiple_words() throws InterruptedException, UnirestException {
+    public void search_should_return_hits_when_searching_for_multiple_words() throws Exception {
         com.google.gson.JsonArray results = searchDocument("work", "when found", THREE);
-        assertJsonSimilar(results.get(ZERO).toString(), generateWorkJson("When I Found You", null));
-        assertJsonSimilar(results.get(ONE).toString(), generateWorkJson("When the Last Acorn is Found", null));
-        assertJsonSimilar(results.get(TWO).toString(), generateWorkJson("Lost. Found.", null));
+        if (results != null) {
+            assertJsonSimilar(results.get(ZERO).toString(), generateWorkJson("When I Found You", null));
+            assertJsonSimilar(results.get(ONE).toString(), generateWorkJson("When the Last Acorn is Found", null));
+            assertJsonSimilar(results.get(TWO).toString(), generateWorkJson("Lost. Found.", null));
+        } else {
+            throw new Exception("You made a mess in the test");
+        }
 
         results = searchDocument("work", "found when", THREE);
-        assertJsonSimilar(results.get(ZERO).toString(), generateWorkJson("When I Found You", null));
-        assertJsonSimilar(results.get(ONE).toString(), generateWorkJson("When the Last Acorn is Found", null));
-        assertJsonSimilar(results.get(TWO).toString(), generateWorkJson("Lost. Found.", null));
+        if (results != null) {
+            assertJsonSimilar(results.get(ZERO).toString(), generateWorkJson("When I Found You", null));
+            assertJsonSimilar(results.get(ONE).toString(), generateWorkJson("When the Last Acorn is Found", null));
+            assertJsonSimilar(results.get(TWO).toString(), generateWorkJson("Lost. Found.", null));
+        } else {
+            throw new Exception("You made a mess in the test");
+        }
     }
 
     private void assertJsonSimilar(String actual, String expected) {
