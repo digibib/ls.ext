@@ -794,7 +794,7 @@ public class AppTest {
                 testData = "<http://data.deichman.no/literaryForm#nonfiction> <http://www.w3.org/2000/01/rdf-schema#label> \"Nonfiction\"@en .";
                 break;
             case MEDIA_TYPE:
-                testData = "<http://data.deichman.no/mediaType#Test> <http://www.w3.org/2000/01/rdf-schema#label> \"Test\"@en .";
+                testData = "<http://data.deichman.no/mediaType#Book> <http://www.w3.org/2000/01/rdf-schema#label> \"Book\"@en .";
                 break;
             case NATIONALITY:
                 testData = "<http://data.deichman.no/nationality#aborig> <http://www.w3.org/2000/01/rdf-schema#label> \"Aboriginal Australian\"@en .";

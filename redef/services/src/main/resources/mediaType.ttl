@@ -2,6 +2,30 @@
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-mediaType:Test a duo:MediaType ;
-  rdfs:label "Test"@no ;
-  rdfs:label "Test"@en .
+mediaType:Book a duo:MediaType ;
+  rdfs:label "Bok"@no ;
+  rdfs:label "Book"@en .
+
+mediaType:Audio a duo:MediaType ;
+  rdfs:label "Lydbok"@no ;
+  rdfs:label "Audiobook"@en .
+
+mediaType:LanguageCourse a duo:MediaType ;
+  rdfs:label "Språkkurs"@no ;
+  rdfs:label "Language course"@en .
+
+mediaType:MusicRecording a duo:MediaType ;
+  rdfs:label "Musikkopptak"@no ;
+  rdfs:label "Music record"@en .
+
+mediaType:SheetMusic a duo:MediaType ;
+  rdfs:label "Noter"@no ;
+  rdfs:label "Sheet music"@en .
+
+mediaType:Film a duo:MediaType ;
+  rdfs:label "Film"@no ;
+  rdfs:label "Movie"@en .
+
+mediaType:VideoGame a duo:MediaType ;
+  rdfs:label "Videospill"@no ;
+  rdfs:label "Video game"@en .
