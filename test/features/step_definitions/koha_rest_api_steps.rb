@@ -56,6 +56,8 @@ Given(/^at jeg har mottatt opplysninger om en låner$/) do
   @active[:patron] = Patron.new
   @active[:patron].branch = @active[:branch]
   @active[:patron].category = @active[:patroncategory]
+  @active[:patron].dateenrolled = (DateTime.now).strftime("%F").to_s
+  @active[:patron].dateexpiry = (DateTime.now + 360).strftime("%F").to_s
 end
 
 When(/^jeg registrerer låneren via API$/) do
@@ -64,7 +66,9 @@ When(/^jeg registrerer låneren via API$/) do
     branchcode: @active[:patron].branch.code,
     surname: @active[:patron].surname,
     cardnumber: @active[:patron].cardnumber,
-    userid: @active[:patron].userid
+    userid: @active[:patron].userid,
+    dateenrolled: @active[:patron].dateenrolled,
+    dateexpiry: @active[:patron].dateexpiry
   }
   res = KohaRESTAPI::Patron.new(@browser,@context,@active).add(params)
   @context[:patron] = JSON.parse(res)
@@ -80,4 +84,30 @@ Then(/^gir APIet tilbakemelding om at låneren er registrert$/) do
   @context[:patron]['borrowernumber'].should_not be(nil)
   @context[:patron]['surname'].should eq(@active[:patron].surname)
   @context[:patron]['userid'].should eq(@active[:patron].userid)
+end
+
+Given(/^at det er registrert en låner via API$/) do
+  step "at jeg har mottatt opplysninger om en låner"
+  step "jeg registrerer låneren via API"
+end
+
+Given(/^at låneren har lånt en bok$/) do
+  step "at låneren har materiale han ønsker å låne"
+  @site.Home.visit.find_patron_for_checkout("#{@active[:patron].surname}")
+  step "jeg registrerer utlån av boka"
+end
+
+When(/^jeg sjekker lånerens aktive lån via API$/) do
+  res = KohaRESTAPI::Checkouts.new(@browser,@context,@active).list(@active[:patron].borrowernumber)
+  @context[:checkouts] = JSON.parse(res)
+end
+
+Then(/^finnes boka i listen over aktive lån fra APIet$/) do
+  itemnumber   = @context[:checkouts][0]["itemnumber"]
+  biblionumber = @active[:book].biblionumber
+  issuestable = @site.IssueHistory.visit(biblionumber).issues
+  issue = issuestable.rows[0]
+  issue.tds[0].text.should eq(@active[:patron].surname)
+  issue.links[1].href.should include("itemnumber=#{itemnumber}")
+  Date.parse(issue.tds[5].text).should eq(Date.parse(@context[:checkouts][0]["date_due"]))
 end

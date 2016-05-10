@@ -54,6 +54,7 @@ module Paths
       :waitingreserves => "/cgi-bin/koha/circ/waitingreserves.pl?allbranches=1",
 
       :biblio_detail => "/cgi-bin/koha/catalogue/detail.pl?biblionumber=",
+      :issue_history => "/cgi-bin/koha/catalogue/issuehistory.pl?biblionumber=",
       :cataloguing => "/cgi-bin/koha/cataloguing/addbooks.pl",
       :add_item => "/cgi-bin/koha/cataloguing/additem.pl?biblionumber=",
       :mod_biblio => "/cgi-bin/koha/cataloguing/addbiblio.pl?biblionumber=",

@@ -9,7 +9,7 @@ Egenskap: Sjekke aktive lån via API
 
 Bakgrunn:
   Gitt at jeg er autentisert som superbruker via REST API
-  Og at det finnes en låner med passord
+  Og at det er registrert en låner via API
 
   @wip
   Scenario: List aktive lån via API
