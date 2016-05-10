@@ -433,8 +433,8 @@ app.get('/config', function (request, response) {
             type: 'searchable-with-result-in-side-panel',
             loadWorksAsSubjectOfItem: true,
             authority: true, // this indicates it is an authorized entity
-            nameProperties: [ 'name' ], // these are proeprty names used to label already connected entities
-            indexTypes: [ 'subject', 'person', 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
+            nameProperties: [ 'name', 'prefLabel' ], // these are proeprty names used to label already connected entities
+            indexTypes: [ 'subject', 'person', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
             widgetOptions: {
               selectIndexTypeLegend: 'Velg emnetype',
               enableCreateNewResource: {
@@ -540,8 +540,8 @@ app.get('/config', function (request, response) {
       },
       subject: {
         selectIndexLabel: 'Generelt',
-        queryTerm: 'subject.name',
-        resultItemLabelProperties: ['name']
+        queryTerm: 'subject.prefLabel',
+        resultItemLabelProperties: ['prefLabel']
       },
       work: {
         selectIndexLabel: 'Verk',

@@ -38,22 +38,12 @@ import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.json.Json.createObjectBuilder;
+import static javax.ws.rs.core.Response.Status.CREATED;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
-import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
-import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
-import static org.apache.jena.rdf.model.ResourceFactory.createResource;
-import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.apache.jena.rdf.model.ResourceFactory.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 public class AppTest {
     private static final int ONE_SECOND = 1000;
@@ -526,8 +516,8 @@ public class AppTest {
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#name";
-        String o1 = "Nitting";
+        String p1 = baseUri + "ontology#prefLabel";
+        String o1 = "Knitting";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
         JsonArray body = Json.createArrayBuilder()
@@ -536,7 +526,7 @@ public class AppTest {
 
         HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
-        doSearchForSubject("Nitting");
+        doSearchForSubject("Knitting");
     }
 
     @Test
@@ -915,7 +905,7 @@ public class AppTest {
         boolean foundSubject;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/subject/_search").queryString("q", "subject.name:" + name);
+            HttpRequest request = Unirest.get(baseUri + "search/subject/_search").queryString("q", "subject.prefLabel:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSubject = responseBody.contains(name);

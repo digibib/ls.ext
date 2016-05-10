@@ -2,7 +2,8 @@
   "type": "Subject",
   "@context": {
     "deichman": "__ONTOLOGY__",
-    "name": "deichman:name",
+    "specification": "deichman:specification",
+    "prefLabel": "deichman:prefLabel",
     "Subject": "deichman:Subject",
     "type": "@type",
     "uri": "@id",

@@ -20,31 +20,31 @@ public class SubjectModelToIndexMapperTest {
 
     @Test
     public void testModelToIndexDocument() throws Exception {
-        XURI placeXuri1 = new XURI(baseURI.getBaseUriRoot(), EntityType.PLACE.getPath(), "g000000001");
+        XURI subjetXuri1 = new XURI(baseURI.getBaseUriRoot(), EntityType.SUBJECT.getPath(), "e000000001");
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createResource(subjetXuri1.getUri()),
                 RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + "Place")));
+                ResourceFactory.createResource(baseURI.ontology() + "Subject")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createResource(subjetXuri1.getUri()),
                 ResourceFactory.createProperty(baseURI.ontology() + "specification"),
-                ResourceFactory.createPlainLiteral("Telemark")));
+                ResourceFactory.createPlainLiteral("Måte å lage klesplagg ved hjelp av to pinner og garn")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createResource(subjetXuri1.getUri()),
                 ResourceFactory.createProperty(baseURI.ontology() + "prefLabel"),
-                ResourceFactory.createPlainLiteral("Bø")));
+                ResourceFactory.createPlainLiteral("Strikking")));
 
-        String jsonDocument = new ModelToIndexMapper("place", BaseURI.local()).createIndexDocument(model, placeXuri1);
+        String jsonDocument = new ModelToIndexMapper("subject", BaseURI.local()).createIndexDocument(model, subjetXuri1);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"place\": {"
-                + "      \"uri\": \"" + placeXuri1.getUri() + "\","
-                + "      \"prefLabel\": \"Bø\","
-                + "      \"specification\": \"Telemark\","
+                + "  \"subject\": {"
+                + "      \"uri\": \"" + subjetXuri1.getUri() + "\","
+                + "      \"prefLabel\": \"Strikking\","
+                + "      \"specification\": \"Måte å lage klesplagg ved hjelp av to pinner og garn\","
                 + "  }\n"
                 + "}").allowingAnyArrayOrdering());
     }
