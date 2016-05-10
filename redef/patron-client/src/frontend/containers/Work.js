@@ -93,6 +93,7 @@ const Work = React.createClass({
               <Genres genres={work.genres} />
 
               <div>
+              {/*
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus porta. In
                   dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur nunc est vitae purus.
                   Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices, sapien in volutpat vehicula, lacus
@@ -100,12 +101,14 @@ const Work = React.createClass({
                   consequat. Morbi id nulla ac quam luctus posuere nec a risus. Aenean congue quam tortor, a volutpat
                   quam mollis nec. Nullam metus ex, efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel
                   accumsan odio, venenatis fringilla ex.</p>
+                */}
               </div>
 
               <button className='black-btn' type='button'>Bestill første ledige</button>
               <button className='white-btn-checkmark' type='button'>Min huskeliste</button>
 
             </section>
+{/*
 
             <aside className='work-subjects'>
               <h2>Emner:</h2>
@@ -119,18 +122,18 @@ const Work = React.createClass({
               <a href='#' alt='More subjects'>Se flere emner</a>
             </aside>
 
-            <aside className='work-subjects'>
+            <aside className='work-genres'>
               <h2>Sjanger:</h2>
 
               <ul>
-                <li><a href='#' alt='Emne #1'>Emne #1</a></li>
-                <li><a href='#' alt='Emne #2'>Emne #2</a></li>
-                <li><a href='#' alt='Emne #3'>Emne #3</a></li>
+                <li><a href='#' alt='Genre #1'>Genre #1</a></li>
+                <li><a href='#' alt='Genre #2'>Genre #2</a></li>
+                <li><a href='#' alt='Genre #3'>Genre #3</a></li>
               </ul>
 
-              <a href='#' alt='More subjects'>Se flere sjangre</a>
+              <a href='#' alt='More genres'>Se flere sjangre</a>
             </aside>
-
+*/}
           </article>
           <Publications locationQuery={this.props.locationQuery}
                         expandSubResource={this.props.resourceActions.expandSubResource}

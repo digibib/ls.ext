@@ -79,8 +79,10 @@ export default React.createClass({
 
         <div className='entry-content-icon'>
           <div className='entry-content-icon-single'>
+          {/*
             <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
             <p>Lydbok</p>
+          */}
           </div>
         </div>
 

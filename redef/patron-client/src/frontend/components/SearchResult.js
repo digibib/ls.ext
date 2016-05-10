@@ -89,8 +89,10 @@ const SearchResult = React.createClass({
 
           <div className='entry-content-icon'>
             <div className='entry-content-icon-single'>
+            {/*
               <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
               <p>Lydbok</p>
+              */}
             </div>
           </div>
 
@@ -103,7 +105,7 @@ const SearchResult = React.createClass({
           </div>
 
           <div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
+          {/*            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
               porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
               nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
               sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.
@@ -111,6 +113,7 @@ const SearchResult = React.createClass({
               nec a risus. Aenean congue quam tortor, a volutpat quam mollis nec. Nullam metus ex,
               efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel accumsan odio, venenatis
               fringilla ex.</p>
+          */}
           </div>
 
           <div>
