@@ -322,7 +322,7 @@ app.get('/config', function (request, response) {
             }
           },
           {
-            rdfProperty: 'placeOfPublication',
+            rdfProperty: 'hasPlaceOfPublication',
             authority: true, // this indicates it is an authorized entity
             nameProperties: [ 'prefLabel', 'specification' ], // these are proeprty names used to label already connected entities
             indexTypes: 'place', // this is the name of the elasticsearch index type from which authorities are searched within
