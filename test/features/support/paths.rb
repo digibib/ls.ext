@@ -87,11 +87,11 @@ module Paths
 
   def catalinker(path=nil)
     paths = {
-        :home => "/cataloguing",
+        :home => "/cataloguing_old",
         :work => "/work",
         :publication => "/publication",
         :person => "/person",
-        :workflow => "/workflow",
+        :workflow => "/cataloguing?template=workflow",
         :place => "/place",
         :serial => "/serial",
         :publisher => "/publisher",

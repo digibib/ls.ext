@@ -16,8 +16,15 @@ body {
     height: 41px;
     overflow: auto;
   }
-  background: no-repeat url('/images/logo.png') 15px 20px / 170px;
-  margin: 40px auto;
+  #home {
+    background: no-repeat url('/images/logo.png') 17px 20px / 170px;
+    height: 49px;
+    width: 329px;
+    display: block;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+  }
   max-width: 1050px;
   line-height: 1.6;
   padding: 1px 1px;
@@ -27,12 +34,50 @@ body {
   h1, h2, h3 {
     line-height: 1.2;
   }
+  a:hover {
+    cursor: pointer;
+  }
   h4 {
     font-size: 1.0em;
     font-weight: 500;
     margin-bottom: 5px;
   }
   ul.grid-tabs {
+    float: none;
+    list-style: none;
+    position: relative;
+    li {
+      float: left;
+      display: block;
+      label {
+        display: block;
+        position: relative;
+        top: 1px;
+        z-index: 2;
+      }
+      .tab-content {
+        display: none;
+        width: 100%;
+        position: absolute;
+        left: 0px;
+        overflow: hidden;
+      }
+      input[type="radio"][id^="tab"] {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      [id^="tab"]:checked + label {
+        background: $lightestgray;
+        border: 1px solid #ccc;
+        border-bottom-color: transparent;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+      }
+      [id^="tab"]:checked ~ [id^="tab-content"] {
+        display: block;
+      }
+    }
     z-index: 100;
     .grid-tab {
       .grid-tab-link-selected {
@@ -46,12 +91,21 @@ body {
   }
 
   .tab-content {
+    margin-top: -1px;
+    width: 712px;
     select {
       width: 100%;
     }
     min-height: 600px;
     background: $lightestgray;
     .inner-content {
+      .media-type-menu {
+        div {
+          a {
+            margin: 10px 10px 10px 30px;
+          }
+        }
+      }
       min-height: 550px;
       .next-step-button {
         horiz-align: center;
@@ -91,13 +145,15 @@ body {
           &:last-child:not(.last):after {
             display: block;
             height: 2px;
-//            width: 100%;
+            //            width: 100%;
             background: lightgrey;
             content: "";
             margin: 0px 12px 0px 12px;
           }
           &:last-child.last {
-            border-bottom: 1px solid lightgrey;          }
+            border-bottom: 1px solid lightgrey;
+            padding-bottom: 15px;
+          }
         }
         .index-type-select {
 
@@ -139,7 +195,6 @@ body {
         .search-result {
           background: white;
           padding: 0.5em;
-          margin-bottom: 0.1em;
           min-height: 65px;
           .search-result-subitem {
             background: $lightergray;
@@ -264,7 +319,7 @@ body {
           min-height: 60px;
           padding: 8px;
           .inputs {
-          border: 1px solid lightgrey;
+            border: 1px solid lightgrey;
             text-align: center;
             padding-right: 24px;
             .input {

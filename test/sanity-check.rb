@@ -12,7 +12,7 @@ Ports = {
   :patron_client_search => { :port => "8000", :path =>'/' },
   :patron_client_person => { :port => "8000", :path =>'/person/dummyid' },
   :patron_client_work => { :port => "8000", :path =>'/work/dummyid' },
-  :catalinker => { :port => "8010", :path =>'/' },
+  :catalinker => { :port => "8010", :path =>'/cataloguing' },
   :elasticsearch => { :port => "8200", :path =>'/' }
 }
 

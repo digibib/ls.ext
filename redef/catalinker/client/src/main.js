@@ -51,27 +51,42 @@
       return _.last(prefixed.split(':'))
     }
 
-    function clearSearchResults () {
+    function clearSupportPanels (options) {
+      var keepActions = (options || {}).keep || []
       _.each(allInputs(), function (input) {
         if (input.searchResult) {
           input.searchResult = null
         }
-        if (input.widgetOptions && input.widgetOptions.enableCreateNewResource) {
-          input.widgetOptions.enableCreateNewResource.showCreateInputs = null;
-
+      })
+      _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
+        if (!ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs')) {
+          if (input.widgetOptions) {
+            _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
+              if (input.widgetOptions[ action ]) {
+                input.widgetOptions[ action ].showInputs = null;
+                var domainType = input.widgetOptions[ action ].forms[ input.selectedIndexType ].rdfType
+                unloadResourceForDomain(domainType)
+              }
+            })
+          }
         }
       })
       ractive.update()
     }
 
+    function clearMaintenanceInputs () {
+      _.each(ractive.get('applicationData.maintenanceInputs'), function (input) {
+        input.values = emptyValues(false, true)
+      })
+    }
+
     var unloadResourceForDomain = function (domainType) {
-      _.each(ractive.get('inputs'), function (input, inputIndex) {
+      _.each(allInputs(), function (input) {
         if (domainType === unPrefix(input.domain)) {
-          var kp = 'inputs.' + inputIndex
-          ractive.set(kp + '.values.*.current.value', '')
-          ractive.set(kp + '.values.*.old.value', '')
+          input.values = emptyValues(false, false)
         }
       })
+      ractive.update()
       ractive.set('targetUri.' + domainType, null)
       updateBrowserLocationWithUri(domainType, null)
     }
@@ -242,16 +257,29 @@
           }
         })
       })
+
+      _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
+        _.each(['Edit', 'CreateNew'], function (action) {
+          var forms = (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enable'+ action +'Resource.forms'))
+          if (forms) {
+            _.each(forms, function (form) {
+              inputs = inputs.concat(form.inputs)
+            })
+          }
+
+        })
+      })
       return inputs
     }
 
     var loadExistingResource = function (resourceUri, options) {
+      options = options || {}
       return axios.get(resourceUri)
         .then(function (response) {
             var graphData = ensureJSON(response.data)
             var offsetCrossTypes = { "Work": "Publication", "Publication": "Work" }
 
-            var type = StringUtil.titelize(/^.*\/(work|person|publication)\/.*$/g.exec(resourceUri)[ 1 ])
+            var type = StringUtil.titelize(/^.*\/(work|person|publication|genre|subject)\/.*$/g.exec(resourceUri)[ 1 ])
             var root = ldGraph.parse(graphData).byId(resourceUri)
 
             var promises = []
@@ -312,7 +340,9 @@
               ractive.update()
               ractive.set('save_status', 'åpnet eksisterende ressurs')
               ractive.set('targetUri.' + type, resourceUri)
-              updateBrowserLocationWithUri(type, resourceUri)
+              if (!(options.keepDocumentUrl)) {
+                updateBrowserLocationWithUri(type, resourceUri)
+              }
             })
           }
         )
@@ -461,8 +491,11 @@
     }
 
     function markFirstAndLastInputsInGroup (group) {
-      _.findWhere(group.inputs, { visible: true }).firstInGroup = true
-      group.inputs[ _.findLastIndex(group.inputs, function (input) { return input.visible === true }) ].lastInGroup = true
+      (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true;
+      var lastFoundOrActualLast = function(lastIndexOfVisible, numberOfInputs) {
+        return lastIndexOfVisible == -1 ? numberOfInputs - 1 : lastIndexOfVisible
+      };
+      (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length)] || {}).lastInGroup = true
     }
 
     function assignInputTypeFromRange (input) {
@@ -600,7 +633,7 @@
             parentInput: currentInput
           }
 
-          copyCreateNewResourceForm(subInput)
+          copyResourceForms(subInput)
 
           if (type === 'searchable-with-result-in-side-panel') {
             newSubInput.input.values[ 0 ].searchable = true
@@ -610,24 +643,28 @@
         return currentInput
       }
 
-      function copyCreateNewResourceForm (input) {
-        if (input.widgetOptions && input.widgetOptions.enableCreateNewResource) {
-          input.widgetOptions.enableCreateNewResource[ 'forms' ] = {}
-          _.each(input.widgetOptions.enableCreateNewResource.formRefs, function (formRef) {
-            var createResourceForm = deepClone(_.find(applicationData.config.inputForms, function (formSpec) {
-              return formSpec.id === formRef.formId
-            }))
-            _.each(createResourceForm.inputs, function (formInput) {
-              var predicate = ontologyUri + formInput.rdfProperty
-              var ontologyInput = inputMap[ createResourceForm.rdfType + '.' + predicate ]
-              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
-              formInput[ 'values' ] = emptyValues(false)
-              formInput[ 'rdfType' ] = createResourceForm.rdfType
-            })
-            input.widgetOptions.enableCreateNewResource[ 'forms' ][ formRef.targetType ] = {
-              inputs: createResourceForm.inputs,
-              rdfType: createResourceForm.rdfType,
-              labelForCreateButton: createResourceForm.labelForCreateButton
+      function copyResourceForms (input) {
+        if (input.widgetOptions) {
+          _.each([ 'enableCreateNewResource', 'enableEditResource' ], function (enableAction) {
+            if (input.widgetOptions[ enableAction ]) {
+              input.widgetOptions[ enableAction ][ 'forms' ] = {}
+              _.each(input.widgetOptions[ enableAction ].formRefs, function (formRef) {
+                var resourceForm = deepClone(_.find(applicationData.config.inputForms, function (formSpec) {
+                  return formSpec.id === formRef.formId
+                }))
+                _.each(resourceForm.inputs, function (formInput) {
+                  var predicate = ontologyUri + formInput.rdfProperty
+                  var ontologyInput = inputMap[ resourceForm.rdfType + '.' + predicate ]
+                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
+                  formInput[ 'values' ] = emptyValues(false)
+                  formInput[ 'rdfType' ] = resourceForm.rdfType
+                })
+                input.widgetOptions[ enableAction ][ 'forms' ][ formRef.targetType ] = {
+                  inputs: resourceForm.inputs,
+                  rdfType: resourceForm.rdfType,
+                  labelForCreateButton: resourceForm.labelForCreateButton
+                }
+              })
             }
           })
         }
@@ -672,7 +709,7 @@
             transferInputGroupOptions(input, ontologyInput)
             transferWidgetOptions(input, ontologyInput, inputMap, ontologyUri)
           }
-          copyCreateNewResourceForm(input)
+          copyResourceForms(input)
         })
         return groupInputs
       }
@@ -698,6 +735,8 @@
       _.each(applicationData.config.tabs, configInputsForVisibleGroup)
       applicationData.inputGroups = inputGroups
       applicationData.inputs = inputs
+      applicationData.maintenanceInputs = createInputsForGroup(applicationData.config.authorityMaintenance[ 0 ])
+      markFirstAndLastInputsInGroup({inputs: applicationData.maintenanceInputs})
       return axios.all(predefinedValues).then(function (values) {
         _.each(values, function (predefinedValue) {
           if (predefinedValue) {
@@ -723,14 +762,14 @@
 
     function positionSupportPanels () {
       var dummyPanel = $('#right-dummy-panel')
-      var supportPanelLeftEdge = dummyPanel.offset().left
+      var supportPanelLeftEdge = dummyPanel.position().left
       var supportPanelWidth = dummyPanel.width()
       $('span.support-panel').each(function (index, panel) {
         var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
         var supportPanelBase = $('#' + supportPanelBaseId + ' input')
         if (supportPanelBase.length > 0) {
           $(panel).css({
-            top: _.last(_.flatten([ supportPanelBase ])).offset().top - 15,
+            top: _.last(_.flatten([ supportPanelBase ])).position().top - 15,
             left: supportPanelLeftEdge,
             width: supportPanelWidth
           })
@@ -755,6 +794,9 @@
         return results === null ? null : results[ 1 ]
       },
       patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
+        if (!subject) {
+          debugger
+        }
         var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype)
         if (patch && patch.trim() !== '' && patch.trim() !== '[]') {
           ractive.set('save_status', 'arbeider...')
@@ -786,8 +828,9 @@
           // })
         }
       },
-      init: function () {
-        var template = '/main_template.html'
+      init: function (template) {
+        var query = URI.parseQuery(URI.parse(document.location.href).query)
+        var template = '/templates/' + (query.template || template || 'menu') +'.html'
         var partials = [
           'input',
           'input-string',
@@ -828,7 +871,7 @@
             return axios.get('/partials/' + partial + '.html').then(
               function (response) {
                 applicationData.partials = applicationData.partials || {}
-                applicationData.partials[partial] = response.data
+                applicationData.partials[ partial ] = response.data
                 return applicationData
               }).catch(function (error) {
               throw new Error(error)
@@ -1009,8 +1052,13 @@
           }
           var clickOutsideSupportPanelDetector = function (node) {
             $(document).click(function (event) {
-              if (!$(event.target).closest('span.support-panel').length && !$(event.target).is('span.support-panel')) {
-                clearSearchResults()
+              if (!$(event.target).closest('span.support-panel').length &&
+                !($(event.target).is("input[type='radio'][value='on']")) &&
+                !$(event.target).is('span.support-panel') &&
+                !$(event.target).is('.support-panel-button') &&
+                !$(event.target).is('span.select2-selection__choice__remove')) {
+                clearSupportPanels({keep: ['enableCreateNewResource']})
+                clearMaintenanceInputs()
               }
             })
             return {
@@ -1254,27 +1302,35 @@
                 }
               },
               selectSearchableItem: function (event, origin, displayValue) {
+                ractive.set(grandParentOf(origin) + ".searchResult", null)
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
                 var uri = event.context.uri
-                if (input.isMainEntry) {
+                if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
+                  var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
+                  var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType)
+                  unloadResourceForDomain(rdfType)
+                  loadExistingResource(uri, {keepDocumentUrl: true})
+                  ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', true)
+                } else if (input.isMainEntry) {
                   loadExistingResource(uri)
+                } else  {
+                  ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
+                  ractive.set(origin + '.current.value', uri)
+                  ractive.set(origin + '.current.displayValue', displayValue)
+                  ractive.set(origin + '.deletable', true)
+                  ractive.set(origin + '.searchable', false)
+                  _.each(input.dependentResourceTypes, function (resourceType) {
+                    unloadResourceForDomain(resourceType)
+                  })
+                  if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
+                    ractive.fire('patchResource',
+                      { keypath: origin, context: ractive.get(origin) },
+                      ractive.get(grandParentOf(origin)).predicate,
+                      unPrefix(input.domain))
+                  }
+                  ractive.set(inputKeyPath + '.searchResult', null)
                 }
-                ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
-                ractive.set(origin + '.current.value', uri)
-                ractive.set(origin + '.current.displayValue', displayValue)
-                ractive.set(origin + '.deletable', true)
-                ractive.set(origin + '.searchable', false)
-                _.each(input.dependentResourceTypes, function (resourceType) {
-                  unloadResourceForDomain(resourceType)
-                })
-                if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
-                  ractive.fire('patchResource',
-                    { keypath: origin, context: ractive.get(origin) },
-                    ractive.get(grandParentOf(origin)).predicate,
-                    unPrefix(input.domain))
-                }
-                ractive.set(inputKeyPath + '.searchResult', null)
               },
               selectWorkResource: function (event) {
                 var uri = event.context.uri
@@ -1354,6 +1410,7 @@
                 })
               },
               showCreateNewResource: function (event, origin) {
+                ractive.set(grandParentOf(origin) + ".searchResult.hidden", true)
                 var searchTerm = ractive.get(origin + '.current')
                 if (searchTerm && searchTerm.displayValue) {
                   _.each(event.context.inputs, function (input) {
@@ -1363,23 +1420,31 @@
                     }
                   })
                 }
-                ractive.set(grandParentOf(event.keypath) + '.showCreateInputs', true)
+                ractive.set(grandParentOf(event.keypath) + '.showInputs', true)
               },
               createNewResource: function (event, origin) {
+                var maintenance = origin.indexOf("maintenanceInputs") != -1
                 var displayValueInput = _.find(event.context.inputs, function (input) {
                   return input.displayValueSource === true
                 })
                 var useAfterCreation = ractive.get(grandParentOf(event.keypath)).useAfterCreation
 
                 var setCreatedResourceUriInSearchInput = function (resourceUri) {
-                  ractive.set(origin + '.current.value', resourceUri)
-                  if (displayValueInput) {
-                    ractive.set(origin + '.current.displayValue', displayValueInput.values[ 0 ].current.value)
+                  if (!maintenance) {
+                    ractive.set(origin + '.current.value', resourceUri)
+                    if (displayValueInput) {
+                      ractive.set(origin + '.current.displayValue', displayValueInput.values[ 0 ].current.value)
+                    }
+                    ractive.set(origin + '.deletable', true)
+                    ractive.set(origin + '.searchable', false)
+                    ractive.set(event.keypath + '.visible', null)
+                  } else {
+                    ractive.set(origin + '.current.value', null)
+                    if (displayValueInput) {
+                      ractive.set(origin + '.current.displayValue', null)
+                    }
                   }
-                  ractive.set(origin + '.deletable', true)
-                  ractive.set(origin + '.searchable', false)
-                  ractive.set(event.keypath + '.visible', null)
-                  ractive.set(grandParentOf(event.keypath) + '.showCreateInputs', null)
+                  ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
                   return resourceUri
                 }
                 var patchMotherResource = function (resourceUri) {
@@ -1414,14 +1479,21 @@
                   _.each(event.context.inputs, function (input, index) {
                     ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false))
                   })
-                  ractive.set(event.keypath + '.showCreateInputs', false)
+                  ractive.set(event.keypath + '.showInputs', false)
                   ractive.set(grandParentOf(origin) + '.allowAddNewButton', true)
+                }
+                var nop = function (uri) {
+                  return uri
                 }
                 saveInputs(event.context.inputs, event.context.rdfType)
                   .then(setCreatedResourceUriInSearchInput)
-                  .then(patchMotherResource)
-                  .then(setCreatedResourceValuesInInputs)
+                  .then(!maintenance ? patchMotherResource : nop)
+                  .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
                   .then(clearInputsAndSearchResult)
+              },
+              cancelEdit: function (event) {
+                clearSupportPanels();
+                ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
               }
             }
           )
@@ -1603,7 +1675,7 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        var supportPanelLeftEdge = $('#right-dummy-panel').offset().left
+        var supportPanelLeftEdge = $('#right-dummy-panel').position().left
         var supportPanelWidth = $('#right-dummy-panel').width()
 
         $('.support-panel').each(function (index, panel) {

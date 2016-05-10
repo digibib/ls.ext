@@ -49,25 +49,53 @@ function newResource (type) {
     })
 }
 
-app.get('/', function (res) {
-  res.redirect('index.html')
+app.get('/', function (req, res) {
+  res.redirect('/cataloguing')
 })
 
-app.get('/cataloguing/*', function (req, res, next) {
+app.get('/cataloguing_old/*', function (req, res, next) {
   res.sendFile('main_old.html', { title: 'Katalogisering', root: path.join(__dirname, '/../public/') })
 })
 
-app.get('/workflow', function (req, res, next) {
+app.get('/cataloguing', function (req, res, next) {
   res.sendFile('main.html', { title: 'Katalogisering', root: path.join(__dirname, '/../public/') })
 })
 
 app.get('/:type(person|work|publication|place|serial|publisher|subject|genre)', function (req, res, next) {
   newResource(req.params.type).then(function (response) {
-    res.redirect('/cataloguing/' + req.params.type + '?resource=' + response.headers.location)
+    res.redirect('/cataloguing_old/' + req.params.type + '?resource=' + response.headers.location)
   })
 })
 
 app.get('/config', function (request, response) {
+  function manintenanceInputs(label, type){
+    return {
+      // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+      // will not be tied to a particular subject and predicate
+      searchMainResource: {
+        label: label,
+        indexType: type
+      },
+      // this is used to control how the search result in the support panel behaves
+      widgetOptions: {
+        // make it possible to create a work resource if necessary,
+        enableCreateNewResource: {
+          formRefs: [ {
+            formId: 'create-' + type + '-form',
+            targetType: type
+          } ]
+        },
+        enableEditResource: {
+          formRefs: [ {
+            formId: 'create-' + type + '-form',
+            targetType: type
+          } ]
+        },
+        enableInPlaceEditing: true
+      }
+    }
+  }
+
   var config =
   {
     kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
@@ -326,7 +354,6 @@ app.get('/config', function (request, response) {
             authority: true, // this indicates it is an authorized entity
             nameProperties: [ 'prefLabel', 'specification' ], // these are proeprty names used to label already connected entities
             indexTypes: 'place', // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: [ 'prefLabel', 'specification' ], // these are indexed document JSON properties from which
             // the labels for authoroty select list are concatenated
             type: 'searchable-with-result-in-side-panel',
             widgetOptions: {
@@ -350,7 +377,6 @@ app.get('/config', function (request, response) {
                   label: 'Serie',
                   rdfProperty: 'serial',
                   indexTypes: 'serial',
-                  indexDocumentFields: [ 'name' ],
                   nameProperties: [ 'name' ],
                   type: 'searchable-with-result-in-side-panel',
                   widgetOptions: {
@@ -409,7 +435,6 @@ app.get('/config', function (request, response) {
             authority: true, // this indicates it is an authorized entity
             nameProperties: [ 'name' ], // these are proeprty names used to label already connected entities
             indexTypes: [ 'subject', 'person', 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
-            indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels for authority select list are concatenated
             widgetOptions: {
               selectIndexTypeLegend: 'Velg emnetype',
               enableCreateNewResource: {
@@ -497,6 +522,15 @@ app.get('/config', function (request, response) {
         }
       }
 
+    ],
+    authorityMaintenance: [
+      {
+        inputs: [
+          manintenanceInputs('Personer', 'person'),
+          manintenanceInputs('Emner', 'subject'),
+          manintenanceInputs('Sjangre', 'genre')
+        ]
+      }
     ],
     search: {
       person: {

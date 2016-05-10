@@ -46,7 +46,18 @@ describe("Catalinker", function () {
                   createNewResource: "Work"
                 }
               }
+            ],
+            authorityMaintenance:[
+              {
+                inputs: [{
+                  searchMainResource: {
+                    label: 'label',
+                    indexType: 'type'
+                  }
+                }]
+              }
             ]
+            
           }});
         case "/main_template.html":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template.html", "UTF-8") });
@@ -67,7 +78,7 @@ describe("Catalinker", function () {
         case "http://192.168.50.12:7000/genre/m123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/m123456.json", "UTF-8") });
         default:
-          if (path.substr(0, 10) === "/partials/") {
+          if (/^\/(partials|templates)\//.test(path)) {
             return Promise.resolve({data: fs.readFileSync(__dirname + "/../public" + path, "UTF-8") });
           } else {
             return Promise.reject({error: "not found: " + path})
@@ -85,7 +96,7 @@ describe("Catalinker", function () {
       });
 
       // load module
-      Main.init().then(function (m) {
+      Main.init('workflow').then(function (m) {
         testRactive = Main.getRactive();
       }).then(function () {
         done();

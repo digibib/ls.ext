@@ -150,6 +150,10 @@
             <a href="http://${HOST}:${ELASTICSEARCH_PORT}/?pretty">Elasticsearch</a><br/>
             Indekseringsmotor
         </li>
+        <li>
+            <a href="http://${HOST}:${CATALINKER_PORT}/index_old.html">Katalogisering</a><br/>
+            For avanserte brukere
+        </li>
     </ul>
     <h2>Kohas OPAC</h2>
     <p><a href="http://${HOST}:${KOHA_OPAC_PORT}">Kohas OPAC</a> er standardgrensesnittet for brukeren for andre som bruker Koha som biblioteksystem.</p>
