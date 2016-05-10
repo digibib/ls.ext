@@ -82,7 +82,7 @@
   rdfs:label "Preferred label"@en ;
   rdfs:label "Foretrukket betegnelse"@no ;
   rdfs:range xsd:string ;
-  rdfs:domain :Place .
+  rdfs:domain :Place, :Subject .
 
 :altLabel a rdfs:Property ;
   rdfs:label "Alternative label"@en ;

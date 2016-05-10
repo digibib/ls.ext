@@ -112,7 +112,7 @@ app.get('/config', function (request, response) {
         rdfType: "Subject",
         inputs: [
           {
-            rdfProperty: 'name',
+            rdfProperty: 'prefLabel',
             displayValueSource: true,
             // after resource is created, the value entered
             // in input marked with this is used to populate displayValue of the parent input
