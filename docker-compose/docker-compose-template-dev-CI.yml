@@ -197,8 +197,6 @@ services:
     build:
       context: /vagrant/redef/services
       dockerfile: Dockerfile.build
-    volumes:
-      - /vagrant/redef/services/build:/services/build
 
   services:
     container_name: redef_services_container
