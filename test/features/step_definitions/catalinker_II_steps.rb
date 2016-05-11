@@ -153,7 +153,7 @@ end
 
 
 When(/^at jeg skriver inn sted i feltet for utgivelsessted og trykker enter$/) do
-  data_automation_id = "Publication_http://#{ENV['HOST']}:8005/ontology#placeOfPublication_0"
+  data_automation_id = "Publication_http://#{ENV['HOST']}:8005/ontology#hasPlaceOfPublication_0"
   publication_place_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
   publication_place_field.click
   publication_place_field.set(@context[:placeofpublication_place])
