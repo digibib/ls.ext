@@ -26,7 +26,7 @@ const MyPage = React.createClass({
       this.props.profileActions.fetchProfileSettings()
       this.props.profileActions.fetchProfileLoans()
     } else {
-      // this.props.loginActions.showLoginDialog()
+      this.props.loginActions.showLoginDialog()
     }
   },
   componentDidUpdate (prevProps) {
