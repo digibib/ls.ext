@@ -12,8 +12,6 @@ app.use(session({
   saveUninitialized: false
 }))
 
-app.use(express.static(`${__dirname}/../../public`))
-
 if (process.env.NODE_ENV !== 'production') {
   const webpack = require('webpack')
   const webpackConfig = require('../../webpack.config')
@@ -28,6 +26,8 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(require('webpack-hot-middleware')(compiler))
   console.log('HMR activated')
 }
+
+app.use(express.static(`${__dirname}/../../public`))
 
 require('./routes')(app)
 
