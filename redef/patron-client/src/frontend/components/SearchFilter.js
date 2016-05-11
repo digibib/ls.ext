@@ -37,15 +37,15 @@ const SearchFilter = React.createClass({
         if (!this.shouldShowMore() && index >= Constants.maxVisibleFilterItems) {
           return ''
         }
+        // TODO Fix and uncomment display of filter count
         return (
           <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
               data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
             <input type='checkbox' readOnly checked={filter.active} />
             <label htmlFor='checkbox'>Checkbox</label>
             <h2 className='filter_label'
-                data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2>
-            (
-            <span data-automation-id='filter_count'>{filter.count}</span>)
+                data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2>{/* (
+            <span data-automation-id='filter_count'>{filter.count}</span>) */}
           </li>
         )
       })
