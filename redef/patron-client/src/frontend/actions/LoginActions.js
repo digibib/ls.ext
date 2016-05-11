@@ -36,17 +36,13 @@ export function loginFailure (username, error) {
 }
 
 export function showLoginDialog (successAction) {
-  return (dispatch, getState) => {
-    if (getState().application.isLoggedIn) {
-      dispatch(successAction)
-    } else {
-      dispatch({ type: types.SHOW_LOGIN_DIALOG })
-      dispatch(showModal(ModalComponents.LOGIN, { successAction: successAction }))
-    }
+  return dispatch => {
+    dispatch({ type: types.SHOW_LOGIN_DIALOG })
+    dispatch(showModal(ModalComponents.LOGIN, { successAction: successAction }))
   }
 }
 
-export function login (username, password, successActions = []) {
+export function login (username, password, successAction) {
   const url = '/login'
   return dispatch => {
     dispatch(requestLogin(username))
@@ -68,7 +64,9 @@ export function login (username, password, successActions = []) {
       })
       .then(json => {
         dispatch(loginSuccess(username, json.borrowerNumber))
-        successActions.forEach(successAction => dispatch(successAction))
+        if (successAction) {
+          dispatch(successAction)
+        }
       })
       .catch(error => dispatch(loginFailure(username, error)))
   }

@@ -13,11 +13,7 @@ import {
 const initialState = {
   isRequestingLoansAndReservations: false,
   loansAndReservationsError: null,
-  loansAndReservations: {
-    pickup: [],
-    loans: [],
-    reservations: []
-  },
+  loansAndReservations: {},
   isRequestingPersonalInformation: false,
   personalInformationError: null,
   personalInformation: {},

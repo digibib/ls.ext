@@ -6,7 +6,6 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 const SearchHeader = React.createClass({
   propTypes: {
     locationQuery: PropTypes.object.isRequired,
-    requireLoginBeforeAction: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
     locale: PropTypes.string.isRequired,
     totalHits: PropTypes.number.isRequired,
@@ -22,10 +21,6 @@ const SearchHeader = React.createClass({
   handleLoginClick (event) {
     event.preventDefault()
     this.props.showLoginDialog()
-  },
-  handleMyPageClick (event) {
-    event.preventDefault()
-    this.props.requireLoginBeforeAction(push({pathname: '/profile'}))
   },
   render () {
     return (
@@ -44,7 +39,7 @@ const SearchHeader = React.createClass({
             </button>
             <div className='primary-menu'>
               <ul>
-                <li><a onClick={this.handleMyPageClick}><FormattedMessage {...messages.myProfile} /></a></li>
+                <li><Link to='/profile'><FormattedMessage {...messages.myProfile} /></Link></li>
                 <li><FormattedMessage {...messages.myLoans} /></li>
                 <li><FormattedMessage {...messages.more} /></li>
                 <li><FormattedMessage {...messages.contactUs} /></li>

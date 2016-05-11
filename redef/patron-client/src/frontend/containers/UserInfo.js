@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ParameterActions from '../actions/ParameterActions'
 import * as ProfileActions from '../actions/ProfileActions'
-import * as LoginActions from '../actions/LoginActions'
 import EditableField from '../components/EditableField'
 
 const UserInfo = React.createClass({
@@ -15,11 +14,11 @@ const UserInfo = React.createClass({
     personalInformation: PropTypes.object.isRequired,
     parameterActions: PropTypes.object.isRequired,
     isRequestingPersonalInformation: PropTypes.bool.isRequired,
-    loginActions: PropTypes.object.isRequired,
     personalInformationError: PropTypes.object
   },
   handleSaveClick (event) {
     event.preventDefault()
+
     const profileInfo = {
       address: this.addressField.getValue(),
       zipcode: this.zipcodeField.getValue(),
@@ -29,13 +28,11 @@ const UserInfo = React.createClass({
       telephone: this.telephoneField.getValue(),
       email: this.emailField.getValue()
     }
-    this.props.loginActions.requireLoginBeforeAction(
-      ProfileActions.postProfileInfo(profileInfo, ParameterActions.toggleParameter('/profile/info', 'edit'))
-    )
+    this.props.profileActions.postProfileInfo(profileInfo, ParameterActions.toggleParameter('/profile/info', 'edit'))
   },
   handleChangeClick (event) {
     event.preventDefault()
-    this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('/profile/info', 'edit'))
+    this.props.parameterActions.toggleParameter('/profile/info', 'edit')
   },
   render () {
     if (this.props.isRequestingPersonalInformation) {
@@ -215,8 +212,7 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     profileActions: bindActionCreators(ProfileActions, dispatch),
-    parameterActions: bindActionCreators(ParameterActions, dispatch),
-    loginActions: bindActionCreators(LoginActions, dispatch)
+    parameterActions: bindActionCreators(ParameterActions, dispatch)
   }
 }
 
