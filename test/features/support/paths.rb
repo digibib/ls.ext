@@ -95,7 +95,8 @@ module Paths
         :place => "/place",
         :serial => "/serial",
         :publisher => "/publisher",
-        :subject => "/subject"
+        :subject => "/subject",
+        :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"

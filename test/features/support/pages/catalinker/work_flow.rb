@@ -15,6 +15,18 @@ class WorkFlow < CatalinkerPage
     self
   end
 
+  def visit_landing_page_auth_maintenance
+    retry_wait do
+      @browser.goto catalinker(:landing_page_auth_maintenance)
+      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+        @browser.refresh
+        sleep 5
+        @browser.divs(:class => 'prop-input').size > 1
+      end # wait until dom-tree has been populated
+    end
+    self
+  end
+
   def next_step
     @browser.div(:class => 'grid-panel-selected').button(:class => 'next-step-button').click
   end

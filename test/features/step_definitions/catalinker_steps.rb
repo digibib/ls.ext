@@ -567,8 +567,8 @@ When(/^leverer systemet en ny ID for den nye personen$/) do
 end
 
 When(/^leverer systemet en ny ID for det nye stedet$/) do
-  @context[:placeofpublication_identifier] = @site.RegPlace.get_id()
-  @context[:placeofpublication_identifier].should_not be_empty
+  @context[:hasplaceofpublication_identifier] = @site.RegPlace.get_id()
+  @context[:hasplaceofpublication_identifier].should_not be_empty
 end
 
 When(/^leverer systemet en ny ID for den nye serien/) do

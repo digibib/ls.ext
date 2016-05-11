@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@redef @arbeidsflyt @check-for-errors @xvfb @wip
+@redef @arbeidsflyt @check-for-errors @xvfb
 Egenskap: Katalogisere i arbeidsflyt
   Som katalogisator
   Ønsker jeg å kunne katalogisere en bok
@@ -30,7 +30,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
-    Så velger jeg et sted fra treffliste fra stedsregisteret
+    Så velger jeg et sted fra treffliste fra stedregisteret
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
     Så skriver jeg inn "12" som utgivelsens nummer i serien
@@ -44,7 +44,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og bekrefter for å gå videre til "Emneopplysninger"
     Og jeg velger emnetype "Generelt" emne
     Og jeg legger inn emnet i søkefelt for emne og trykker enter
-    Og velger første emne i trefflisten
+    Så velger jeg et emne fra treffliste fra emneregisteret
     Så sjekker jeg at emnet er listet opp på verket
     Og bekrefter for å gå videre til "Biinnførsler"
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
@@ -70,7 +70,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på knappen for å avslutte
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om utgivelsen
-    Og at utgivelsen er tilkoplet riktig utgivelsessted
+    Og at utgivelsen er tilkoplet riktig sted
     Og at utgivelsen er tilkoplet riktig utgitt av
     Og at utgivelsen har samme hovedtittel som verket
     Og at utgivelsen har samme undertittel som verket
@@ -130,4 +130,37 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Opprett ny sjanger"-knappen
     Og jeg trykker på "Opprett"-knappen
 
+  Scenario: Redigere person i katalogisering
+    Gitt at jeg vil opprette en person
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig person i feltet "Personer" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett ny person"-knappen
+    Så legger jeg inn fødselsår og dødsår og velger "Norsk" som nasjonalitet
+    Og jeg trykker på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige person i feltet "Personer" og trykker enter
+    Så velger jeg en person fra treffliste fra personregisteret
+
+  Scenario: Redigere emne i katalogisering
+    Gitt at jeg vil opprette et emne
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig emne i feltet "Emner" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett nytt generelt emne"-knappen
+    Og jeg trykker på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
+    Så velger jeg et emne fra treffliste fra emneregisteret
+
+  Scenario: Redigere sjanger i katalogisering
+    Gitt at jeg vil opprette en sjanger
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig sjanger i feltet "Sjangre" og trykker enter
+    Så får jeg ingen treff
+    Og jeg trykker på "Opprett ny sjanger"-knappen
+    Og jeg trykker på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige sjanger i feltet "Sjangre" og trykker enter
+    Så velger jeg en sjanger fra treffliste fra emneregisteret
 

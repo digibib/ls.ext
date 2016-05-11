@@ -25,7 +25,7 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
   creator_name_field.send_keys :enter
 end
 
-When(/^velger jeg (en|et) (person|utgiver|sted|serie) fra treffliste fra (person|utgiver|sted|serie)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
   @browser.inputs(:class => "select-result-item-radio")[0].click
   sleep 1
 end
@@ -172,6 +172,17 @@ When(/^at jeg skriver inn (tilfeldig |)(.*) i feltet "([^"]*)" og trykker enter$
   field.send_keys :enter
 end
 
+When(/^skriver jeg inn samme (tilfeldige |)(.*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
+  field = @site.WorkFlow.get_text_field_from_label(label)
+  field.click
+  if (is_random == 'tilfeldige ')
+    field.set(@context[("random_#{@site.translate(concept)}_name").to_sym])
+  else
+    field.set(@context[("#{@site.translate(concept)}_name").to_sym])
+  end
+  field.send_keys :enter
+end
+
 def select_first_in_open_dropdown
   @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
 end
@@ -253,7 +264,7 @@ end
 
 When(/^jeg kan legge inn emnets navn$/) do
   @context[:subject_name] = generateRandomString
-  @site.RegSubject.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:subject_name])
+  @site.RegSubject.add_prop("http://#{ENV['HOST']}:8005/ontology#prefLabel", @context[:subject_name])
 end
 
 When(/^jeg kan legge inn utgiverens navn$/) do
@@ -292,8 +303,8 @@ When(/^jeg legger inn emnet i søkefelt for emne og trykker enter$/) do
   data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
   subject_search_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search'][not(@disabled)]")
   subject_search_field.set(@context[:subject_name])
-  sleep 1
   subject_search_field.send_keys :enter
+  sleep 1
 end
 
 When(/^velger første emne i trefflisten$/) do
@@ -315,6 +326,7 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
 end
 
 When(/^får jeg ingen treff$/) do
+  sleep 1
   @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/).should exist
 end
 
@@ -363,4 +375,12 @@ end
 When(/^velger jeg emnetype "([^"]*)"$/) do |subject_type|
   data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
   @browser.span(:class => 'index-type-select').select().select(subject_type)
+end
+
+When(/^at jeg vil opprette (en|et) (.*)$/) do |article, concept|
+  #
+end
+
+When(/^åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter$/) do
+  @site.WorkFlow.visit_landing_page_auth_maintenance
 end
