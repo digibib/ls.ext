@@ -6,6 +6,8 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
+COPY .jscsrc /usr/src/app/
+COPY .jshintrc /usr/src/app/
 
 RUN npm set progress=false
 RUN npm set color=false
