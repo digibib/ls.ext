@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 
+import static no.deichman.services.entity.EntityType.ALL_TYPES_PATTERN;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -43,7 +44,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @GET
-    @Path("{type: work|person|place|publisher|serial|subject|genre}/_search")
+    @Path("{type: "+ ALL_TYPES_PATTERN + "}/_search")
     @Produces(MediaType.APPLICATION_JSON)
     public final Response search(@PathParam("type") String type, @QueryParam("q") String query) {
         if (isBlank(query)) {
@@ -70,7 +71,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @POST
-    @Path("{type: work|person|place|publisher|serial|subject|genre}/_search")
+    @Path("{type: " + ALL_TYPES_PATTERN + "}/_search")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public final Response searchJson(String body, @PathParam("type") String type, @Context UriInfo uriInfo) {
@@ -105,7 +106,7 @@ public class SearchResource extends ResourceBase {
     }
 
     @POST
-    @Path("{type: work|person}/reindex_all")
+    @Path("{type: "+ ALL_TYPES_PATTERN + "}/reindex_all")
     public final Response reIndex(@PathParam("type") final String type) {
         ForkJoinPool.commonPool().execute(new Runnable() {
             @Override

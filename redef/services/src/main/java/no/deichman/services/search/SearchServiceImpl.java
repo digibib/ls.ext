@@ -58,7 +58,6 @@ public class SearchServiceImpl implements SearchService {
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
-    private ModelToIndexMapper serialModelToIndexMapper = new ModelToIndexMapper("serial");
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -73,17 +72,7 @@ public class SearchServiceImpl implements SearchService {
                 break;
             case PERSON: doIndexPerson(xuri, false);
                 break;
-            case PLACE: doIndex(xuri);
-                break;
-            case PUBLISHER: doIndex(xuri);
-                break;
-            case SUBJECT: doIndex(xuri);
-                break;
-            case SERIAL: doIndexSerial(xuri);
-                break;
-            case GENRE: doIndex(xuri);
-                break;
-            default: break;
+            default: doIndex(xuri);
         }
     }
 
@@ -252,11 +241,6 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {
         doIndexWork(xuri, true);
-    }
-
-    private void doIndexSerial(XURI xuri) {
-        Model serialModel = entityService.retrieveById(xuri);
-        indexDocument(xuri, serialModelToIndexMapper.createIndexDocument(serialModel, xuri));
     }
 
     private void indexDocument(XURI xuri, String document) {

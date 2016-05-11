@@ -25,7 +25,6 @@ import org.apache.jena.vocabulary.RDFS;
 import org.elasticsearch.client.Client;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -829,7 +828,6 @@ public class AppTest {
     }
 
     @Test
-    @Ignore
     public void when_get_elasticsearch_work_should_return_something() throws Exception {
         indexWork("1", "Sult");
         doSearchForWorks("Sult");
@@ -1038,6 +1036,14 @@ public class AppTest {
         return getLocation(createPersonResponse);
     }
 
+    private String createSubjectInRdfStore(String subject, String ontologyURI) throws UnirestException {
+        String subjectTriples = ""
+                + "<subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Subject> .\n"
+                + "<subject> <" + ontologyURI + "prefLabel> \"" + subject + "\" .";
+        HttpResponse<JsonNode> createSubjectResponse = buildCreateRequestNtriples(baseUri + "subject", subjectTriples).asJson();
+        return getLocation(createSubjectResponse);
+    }
+
     private void setupExpectationForMarcXmlSentToKoha(String creator, String publicationTitle, String partTitle, String partNumber, String isbn, String publicationYear) {
         // TODO MARC XML can end up in any order, need a better comparison method for expected MARC XML
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -1118,5 +1124,14 @@ public class AppTest {
         createWorkInRdfStore("Lucky Luke", ontologyURI, personUri);
         Unirest.post(baseUri + "search/work/reindex_all").asString();
         doSearchForWorks("Lucky");
+    }
+
+    @Test
+    public void when_index_is_cleared_and_reindexed_subjects_are_found() throws Exception {
+        createSubjectInRdfStore("Hekling", baseUri + "ontology#");
+        HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
+        assertEquals(HTTP_OK, response.getStatus());
+        Unirest.post(baseUri + "search/subject/reindex_all").asString();
+        doSearchForSubject("Hekling");
     }
 }
