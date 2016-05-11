@@ -41,9 +41,19 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.json.Json.createObjectBuilder;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
-import static org.apache.jena.rdf.model.ResourceFactory.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
+import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class AppTest {
     private static final int ONE_SECOND = 1000;
