@@ -5,9 +5,9 @@
     <div class="grid-input">
         <ul class="grid-tabs">
             <li class="grid-tab pure-u">
-                <input type="radio" name="tabs" id="tab1" checked/>
-                <label for="tab1" class="grid-tab-link">Nytt materiale</label>
-                <div id="tab-content1" class="tab-content grid-content">
+                <input on-click="updateBrowserLocationWithTab:0" type="radio" name="tabs" id="tab0" {{#if tabIdFromDocumentUrl() !== '1'}}checked{{/if}} />
+                <label  for="tab0" class="grid-tab-link">Nytt materiale</label>
+                <div id="tab-content0" class="tab-content grid-content">
                     <div class="inner-content">
                         <div class="grid-panel grid-panel-selected pure-g media-type-menu">
                             <div class="pure-u-1-1">
@@ -26,9 +26,9 @@
                     </div>
             </li>
             <li class="grid-tab pure-u">
-                <input type="radio" name="tabs" id="tab2"/>
-                <label for="tab2" class="grid-tab-link">Vedlikehold av autoriteter</label>
-                <div id="tab-content2" class="tab-content grid-content">
+                <input type="radio" name="tabs" id="tab1" {{#if tabIdFromDocumentUrl() === '1'}}checked{{/if}} />
+                <label on-click="updateBrowserLocationWithTab:1" for="tab1" class="grid-tab-link">Vedlikehold av autoriteter</label>
+                <div id="tab-content1" class="tab-content grid-content">
                     <div class="pure-g" style="height: 0px;">
                         <div class="pure-u-1-2" id="left-dummy-panel"/>
                         <div class="pure-u-1-2" id="right-dummy-panel"/>

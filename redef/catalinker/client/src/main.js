@@ -259,8 +259,8 @@
       })
 
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
-        _.each(['Edit', 'CreateNew'], function (action) {
-          var forms = (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enable'+ action +'Resource.forms'))
+        _.each([ 'Edit', 'CreateNew' ], function (action) {
+          var forms = (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enable' + action + 'Resource.forms'))
           if (forms) {
             _.each(forms, function (form) {
               inputs = inputs.concat(form.inputs)
@@ -492,10 +492,10 @@
 
     function markFirstAndLastInputsInGroup (group) {
       (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true;
-      var lastFoundOrActualLast = function(lastIndexOfVisible, numberOfInputs) {
+      var lastFoundOrActualLast = function (lastIndexOfVisible, numberOfInputs) {
         return lastIndexOfVisible == -1 ? numberOfInputs - 1 : lastIndexOfVisible
       };
-      (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length)] || {}).lastInGroup = true
+      (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
     function assignInputTypeFromRange (input) {
@@ -736,7 +736,7 @@
       applicationData.inputGroups = inputGroups
       applicationData.inputs = inputs
       applicationData.maintenanceInputs = createInputsForGroup(applicationData.config.authorityMaintenance[ 0 ])
-      markFirstAndLastInputsInGroup({inputs: applicationData.maintenanceInputs})
+      markFirstAndLastInputsInGroup({ inputs: applicationData.maintenanceInputs })
       return axios.all(predefinedValues).then(function (values) {
         _.each(values, function (predefinedValue) {
           if (predefinedValue) {
@@ -830,7 +830,7 @@
       },
       init: function (template) {
         var query = URI.parseQuery(URI.parse(document.location.href).query)
-        var template = '/templates/' + (query.template || template || 'menu') +'.html'
+        var template = '/templates/' + (query.template || template || 'menu') + '.html'
         var partials = [
           'input',
           'input-string',
@@ -1052,12 +1052,8 @@
           }
           var clickOutsideSupportPanelDetector = function (node) {
             $(document).click(function (event) {
-              if (!$(event.target).closest('span.support-panel').length &&
-                !($(event.target).is("input[type='radio'][value='on']")) &&
-                !$(event.target).is('span.support-panel') &&
-                !$(event.target).is('.support-panel-button') &&
-                !$(event.target).is('span.select2-selection__choice__remove')) {
-                clearSupportPanels({keep: ['enableCreateNewResource']})
+              if (!$(event.target).closest('span.support-panel').length && !($(event.target).is("input[type='radio'][value='on']")) && !$(event.target).is('span.support-panel') && !$(event.target).is('.support-panel-button') && !$(event.target).is('span.select2-selection__choice__remove')) {
+                clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
                 clearMaintenanceInputs()
               }
             })
@@ -1156,6 +1152,11 @@
               getSearchResultItemLabel: function (item, itemLabelProperties) {
                 return _.compact(_.values(_.pick(item, itemLabelProperties))).join(" - ")
               },
+              tabIdFromDocumentUrl: function () {
+                var uri = URI.parse(document.location.href)
+                var queryParameters = URI.parseQuery(uri.query)
+                return queryParameters.openTab || 0
+              },
               targetResources: {
                 Work: {
                   uri: '',
@@ -1181,6 +1182,9 @@
             partials: applicationData.partials
           })
           ractive.on({
+              updateBrowserLocationWithTab: function (event, tabId) {
+                updateBrowserLocationWithTab(tabId)
+              },
               // addValue adds another input field for the predicate.
               addValue: function (event) {
                 var mainInput = ractive.get(event.keypath)
@@ -1310,11 +1314,11 @@
                   var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
                   var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType)
                   unloadResourceForDomain(rdfType)
-                  loadExistingResource(uri, {keepDocumentUrl: true})
+                  loadExistingResource(uri, { keepDocumentUrl: true })
                   ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', true)
                 } else if (input.isMainEntry) {
                   loadExistingResource(uri)
-                } else  {
+                } else {
                   ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
                   ractive.set(origin + '.current.value', uri)
                   ractive.set(origin + '.current.displayValue', displayValue)
@@ -1655,7 +1659,7 @@
                 ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '2') })
               })
           } else {
-            ractive.fire('activateTab', { keypath: 'inputGroups.0' })
+            ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '0') })
           }
           return applicationData
         }
