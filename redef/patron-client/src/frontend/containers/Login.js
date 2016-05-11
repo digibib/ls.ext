@@ -17,17 +17,12 @@ const Login = React.createClass({
     loginError: PropTypes.string,
     intl: intlShape.isRequired
   },
-  componentWillMount () {
-    if (this.props.isLoggedIn) {
-      this.props.dispatch(this.props.successAction || ModalActions.hideModal())
-    }
-  },
   handleLogin (event) {
     event.preventDefault()
     this.props.loginActions.login(
       this.usernameInput.value,
       this.passwordInput.value,
-      this.props.successAction || ModalActions.hideModal()
+      this.props.successAction ? [ ModalActions.hideModal(), this.props.successAction ] : [ ModalActions.hideModal() ]
     )
   },
   handleCancel (event) {

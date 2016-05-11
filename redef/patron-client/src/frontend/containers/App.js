@@ -35,6 +35,7 @@ const App = React.createClass({
                         isLoggedIn={this.props.isLoggedIn}
                         logout={this.props.loginActions.logout}
                         showLoginDialog={this.props.loginActions.showLoginDialog}
+                        requireLoginBeforeAction={this.props.loginActions.requireLoginBeforeAction}
           />
           {this.props.children}
         </div>
