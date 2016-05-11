@@ -26,7 +26,8 @@ const MyPage = React.createClass({
       this.props.profileActions.fetchProfileSettings()
       this.props.profileActions.fetchProfileLoans()
     } else {
-      this.props.loginActions.showLoginDialog()
+      // TODO Find a solution for showing login dialog when refreshing / accessing a privileged page directly
+      // this.props.loginActions.showLoginDialog()
     }
   },
   componentDidUpdate (prevProps) {
