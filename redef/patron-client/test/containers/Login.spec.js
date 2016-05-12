@@ -4,7 +4,6 @@ import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import { Login } from '../../src/frontend/containers/Login'
-import * as types from '../../src/frontend/constants/ActionTypes'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
