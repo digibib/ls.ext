@@ -279,7 +279,7 @@
             var graphData = ensureJSON(response.data)
             var offsetCrossTypes = { "Work": "Publication", "Publication": "Work" }
 
-            var type = StringUtil.titelize(/^.*\/(work|person|publication|genre|subject)\/.*$/g.exec(resourceUri)[ 1 ])
+            var type = StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial)\/.*$/g.exec(resourceUri)[ 1 ])
             var root = ldGraph.parse(graphData).byId(resourceUri)
 
             var promises = []
