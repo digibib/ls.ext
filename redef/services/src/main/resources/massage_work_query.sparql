@@ -20,6 +20,7 @@ CONSTRUCT {
                deich:contributor ?pubContrib .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
+               deich:mainEntry ?mainEntry ;
                deich:agent ?agent .
  ?pubContrib a deich:Contribution ;
                deich:role ?pubRole ;
@@ -64,6 +65,10 @@ WHERE {
     ?workContrib a deich:Contribution ;
              deich:agent ?agent ;
              deich:role ?roleURI .
+             OPTIONAL {
+                 ?workContrib a deich:MainEntry.
+                 BIND(true as ?mainEntry) .
+             }
     ?agent deich:name ?name .
     BIND(str(?roleURI) AS ?role)
   }

@@ -23,6 +23,7 @@ public class WorkModelToIndexMapperTest {
             + "                \"birthYear\": \"1957\",\n"
             + "                \"name\": \"Ragde, Anne B.\"\n"
             + "            },\n"
+            + "            \"mainEntry\": true,\n"
             + "            \"role\": \"http://data.deichman.no/role#author\"\n"
             + "        }],\n"
             + "        \"mainTitle\": \"Berlinerpoplene\",\n"
