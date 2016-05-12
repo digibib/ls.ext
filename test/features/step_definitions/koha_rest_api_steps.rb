@@ -111,3 +111,15 @@ Then(/^finnes boka i listen over aktive lån fra APIet$/) do
   issue.links[1].href.should include("itemnumber=#{itemnumber}")
   Date.parse(issue.tds[5].text).should eq(Date.parse(@context[:checkouts][0]["date_due"]))
 end
+
+When(/^jeg lister alle avdelinger via API$/) do
+  res = KohaRESTAPI::Libraries.new(@browser,@context,@active).list
+  @context[:api_libraries_list] = JSON.parse(res)
+end
+
+Then(/^forventer jeg å finne avdelingen i listen$/) do
+  @context[:api_libraries_list].find do |library|
+    library["branchcode"] == @context[:branches][0].code &&
+    library["branchname"] == @context[:branches][0].name
+  end.should_not be(nil)
+end
