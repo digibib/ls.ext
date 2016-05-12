@@ -541,7 +541,9 @@ app.get('/config', function (request, response) {
       person: {
         selectIndexLabel: 'Person',
         queryTerm: 'person.name',
-        resultItemLabelProperties: ['name']
+        resultItemLabelProperties: ['name'],
+        resultItemDetailsLabelProperties: ['lifeSpan', 'nationality'],
+        itemHandler: 'personItemHandler'
       },
       subject: {
         selectIndexLabel: 'Generelt',
@@ -551,7 +553,9 @@ app.get('/config', function (request, response) {
       work: {
         selectIndexLabel: 'Verk',
         queryTerm: 'work.mainTitle',
-        resultItemLabelProperties: ['mainTitle', 'subTitle']
+        resultItemLabelProperties: ['mainTitle', 'subTitle'],
+        resultItemDetailsLabelProperties: ['creator'],
+        itemHandler: 'workItemHandler'
       },
       genre: {
         selectIndexLabel: 'Sjanger',

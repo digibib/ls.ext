@@ -789,6 +789,39 @@
     }
 
     var Main = {
+      searchResultItemHandlers: {
+        defaultItemHandler: function (item) {
+          return item
+        },
+        personItemHandler: function (personItem) {
+          personItem.lifeSpan = ''
+          if (personItem.birthYear) {
+            personItem.lifeSpan += '(' + personItem.birthYear + '–'
+            if (personItem.deathYear) {
+              personItem.lifeSpan += personItem.deathYear
+            }
+            personItem.lifeSpan += ')'
+          }
+          return personItem
+        },
+        workItemHandler: function (workItem) {
+          var author = _.find(workItem.contributors, function (contributor) {
+            return contributor.mainEntry
+          })
+          if (author) {
+            var creatorAgent = author.agent
+            workItem.creator = creatorAgent.name
+            if (creatorAgent.birthYear) {
+              workItem.creator += ' (' + creatorAgent.birthYear + '–'
+              if (creatorAgent.deathYear) {
+                workItem.creator += creatorAgent.deathYear
+              }
+              workItem.creator += ')'
+            }
+          }
+          return workItem
+        }
+      },
       getURLParameter: function (name) {
         // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
         name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]')
@@ -1290,7 +1323,8 @@
                         }
                       })
                       ractive.set(grandParentOf(event.keypath) + '.searchResult', {
-                        items: _.pluck(_.pluck(results.hits.hits, '_source'), indexType),
+                        items: _.map(_.pluck(_.pluck(results.hits.hits, '_source'), indexType),
+                          Main.searchResultItemHandlers[config.search[ indexType ].itemHandler || 'defaultItemHandler']),
                         origin: event.keypath
                       })
                       positionSupportPanels()

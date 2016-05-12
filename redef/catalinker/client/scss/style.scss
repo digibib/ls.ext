@@ -211,8 +211,13 @@ body {
           .search-result-subitem:last-child {
             margin-bottom: 0;
           }
-          .subitem-label, .creator-years {
+          .search-result-item-label, .creator-years {
             margin: 0;
+          }
+          .search-result-item-detail-label {
+            margin: 0;
+            font-size:90%;
+            font-style: italic;
           }
         }
         .subject-type-select {
