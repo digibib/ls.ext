@@ -3,11 +3,11 @@ import graph from 'ld-graph'
 import { relativeUri, getId } from './uriParser'
 
 export function parsePersonResponse (personResponse, worksResponse) {
-  let personGraph = worksResponse
+  const personGraph = worksResponse
     ? graph.parse(worksResponse, personResponse)
     : graph.parse(personResponse)
-  let personResource = personGraph.byType('Person')[ 0 ]
-  let person = {}
+  const personResource = personGraph.byType('Person')[ 0 ]
+  const person = {}
 
   populateLiteral(person, 'personTitle', personResource)
   populateLiteral(person, 'name', personResource)
@@ -30,15 +30,16 @@ export function parsePersonResponse (personResponse, worksResponse) {
 }
 
 export function parseWorkResponse (workResponse, itemsResponse) {
-  let workGraph = itemsResponse
+  const workGraph = itemsResponse
     ? graph.parse(workResponse, itemsResponse)
     : graph.parse(workResponse)
 
-  let workResource = workGraph.byType('Work')[ 0 ]
-  let work = {}
+  const workResource = workGraph.byType('Work')[ 0 ]
+  const work = {}
   populateLiteral(work, 'mainTitle', workResource)
   populateLiteral(work, 'partTitle', workResource)
   populateLiteral(work, 'publicationYear', workResource)
+  populateItems(work, 'items', workGraph.byType('Item'))
 
   work.contributors = {}
   workResource.outAll('contributor').forEach(contribution => {
@@ -51,7 +52,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
 
   work.genres = []
   workResource.outAll('genre').forEach(genreResource => {
-    let genre = {}
+    const genre = {}
     populateLiteral(genre, 'prefLabel', genreResource)
     populateLiteral(genre, 'genreSubdivision', genreResource)
     work.genres.push(genre)
@@ -59,7 +60,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
 
   work.subjects = []
   workResource.outAll('subject').forEach(subjectResource => {
-    let subject = {}
+    const subject = {}
     populateLiteral(subject, 'prefLabel', subjectResource)
     populateLiteral(subject, 'specification', subjectResource)
     work.subjects.push(subject)
@@ -67,7 +68,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
 
   work.publications = []
   workGraph.byType('Publication').forEach(publicationResource => {
-    let publication = { items: [] }
+    const publication = {}
     populateLiteral(publication, 'mainTitle', publicationResource)
     populateLiteral(publication, 'partTitle', publicationResource)
     populateLiteral(publication, 'publicationYear', publicationResource)
@@ -76,33 +77,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateUris(publication, 'format', publicationResource, 'formats')
     publication.uri = publicationResource.id
     publication.id = getId(publicationResource.id)
-    let items = {}
-    publicationResource.inAll('editionOf').map(itemResource => {
-      let item = {}
-      populateLiteral(item, 'shelfmark', itemResource)
-      populateLiteral(item, 'status', itemResource)
-      populateLiteral(item, 'location', itemResource)
-      let key = `${item.location}_${item.shelfmark}`
-      if (items[ key ]) {
-        items[ key ].count++
-        if (item.status === 'AVAIL') {
-          items[ key ].status = 'AVAIL'
-        } else {
-          let date = new Date(item.status)
-          if (items[ key ].status !== 'AVAIL' && !isNaN(date.getTime()) && date < items[ key ].status) {
-            items[ key ].status = date
-          }
-        }
-      } else {
-        populateLiteral(item, 'branch', itemResource)
-        populateLiteral(item, 'barcode', itemResource)
-        item.count = 1
-        items[ key ] = item
-      }
-    })
-    Object.keys(items).forEach(key => {
-      publication.items.push(items[ key ])
-    })
+    populateItems(publication, 'items', publicationResource.inAll('editionOf'))
     publication.available = publication.items.filter(item => item.status === 'AVAIL').length > 0
 
     work.publications.push(publication)
@@ -111,6 +86,37 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   work.uri = workResource.id
 
   return work
+}
+
+function populateItems (target, field, itemResources) {
+  const items = {}
+  itemResources.forEach(itemResource => {
+    const item = {}
+    populateLiteral(item, 'shelfmark', itemResource)
+    populateLiteral(item, 'status', itemResource)
+    populateLiteral(item, 'location', itemResource)
+    const key = `${item.location}_${item.shelfmark}`
+    if (items[ key ]) {
+      items[ key ].count++
+      if (item.status === 'AVAIL') {
+        items[ key ].status = 'AVAIL'
+      } else {
+        const date = new Date(item.status)
+        if (items[ key ].status !== 'AVAIL' && !isNaN(date.getTime()) && date < items[ key ].status) {
+          items[ key ].status = date
+        }
+      }
+    } else {
+      populateLiteral(item, 'branch', itemResource)
+      populateLiteral(item, 'barcode', itemResource)
+      item.count = 1
+      items[ key ] = item
+    }
+  })
+  const targetField = target[field] = []
+  Object.keys(items).forEach(key => {
+    targetField.push(items[ key ])
+  })
 }
 
 function populateLiteral (target, field, sourceResource, targetFieldOverride) {

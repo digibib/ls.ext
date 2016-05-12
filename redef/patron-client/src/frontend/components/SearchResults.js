@@ -8,7 +8,9 @@ export default React.createClass({
     searchActions: PropTypes.object.isRequired,
     searchError: PropTypes.any.isRequired,
     totalHits: PropTypes.number.isRequired,
-    searchResults: PropTypes.array.isRequired
+    searchResults: PropTypes.array.isRequired,
+    resources: PropTypes.object.isRequired,
+    getWorkResource: PropTypes.func.isRequired
   },
   render () {
     if (this.props.searchError) {
@@ -21,7 +23,13 @@ export default React.createClass({
     let entries = []
     if (this.props.locationQuery.query) {
       entries = this.props.searchResults.map(result => (
-          <SearchResult key={result.relativeUri} result={result} locationQuery={this.props.locationQuery} showMoreInfo={this.props.searchActions.showMoreInfo} />
+          <SearchResult key={result.relativeUri}
+                        result={result}
+                        locationQuery={this.props.locationQuery}
+                        showStatus={this.props.searchActions.showStatus}
+                        getWorkResource={this.props.getWorkResource}
+                        resources={this.props.resources}
+          />
         )
       )
     }

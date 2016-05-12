@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-import Constants from '../constants/Constants'
 import Contributors from '../components/Contributors'
 import Publications from '../components/Publications'
 import Genres from '../components/Genres'
@@ -22,7 +21,7 @@ const Work = React.createClass({
     reservationActions: PropTypes.object.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getWorkResource(`${Constants.backendUri}/work/${this.props.params.workId}`)
+    this.props.resourceActions.getWorkResource(`/work/${this.props.params.workId}`)
   },
   renderNoWork () {
     return (
@@ -57,7 +56,7 @@ const Work = React.createClass({
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let work = this.props.resources[ `${Constants.backendUri}/work/${this.props.params.workId}` ]
+    let work = this.props.resources[ `/work/${this.props.params.workId}` ]
     if (!work) {
       return this.renderNoWork()
     } else {

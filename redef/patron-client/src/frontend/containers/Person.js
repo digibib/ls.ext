@@ -5,8 +5,6 @@ import * as ResourceActions from '../actions/ResourceActions'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-import Constants from '../constants/Constants'
-
 const Person = React.createClass({
   propTypes: {
     resources: PropTypes.object.isRequired,
@@ -17,7 +15,7 @@ const Person = React.createClass({
     intl: intlShape.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getPersonResource(`${Constants.backendUri}/person/${this.props.params.personId}`)
+    this.props.resourceActions.getPersonResource(`/person/${this.props.params.personId}`)
   },
   renderNoPerson () {
     return (
@@ -67,7 +65,7 @@ const Person = React.createClass({
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let person = this.props.resources[ `${Constants.backendUri}/person/${this.props.params.personId}` ]
+    let person = this.props.resources[ `/person/${this.props.params.personId}` ]
     if (!person) {
       return this.renderNoPerson()
     }

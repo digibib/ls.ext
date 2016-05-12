@@ -30,7 +30,7 @@ export function processSearchResponse (response, locationQuery) {
       if (chosenPublication && chosenPublication.mainTitle) {
         work.mainTitle = chosenPublication.mainTitle
         work.partTitle = chosenPublication.partTitle
-        work.relativeUri = `${work.relativeUri}${relativeUri(chosenPublication.uri)}`
+        work.relativePublicationUri = `${work.relativeUri}${relativeUri(chosenPublication.uri)}`
       }
 
       return work

@@ -24,6 +24,10 @@ function setup (propOverrides) {
       toggleAllFiltersVisibility: () => {},
       toggleCollapseFilter: () => {}
     },
+    resourceActions: {
+      getWorkResource: () => {}
+    },
+    resources: {},
     ...propOverrides
   }
 
@@ -41,16 +45,17 @@ function setup (propOverrides) {
 }
 
 describe('containers', () => {
-  it('should search on mount when query is provided', () => {
-    const { props } = setup({ locationQuery: { query: 'test_query' } })
-    expect(props.searchActions.search).toHaveBeenCalled()
-  })
-
   describe('Search', () => {
+    it('should search on mount when query is provided', () => {
+      const { props } = setup({ locationQuery: { query: 'test_query' } })
+      expect(props.searchActions.search).toHaveBeenCalled()
+    })
+
     it('should not render pagination when few results', () => {
       const { node } = setup({ location: { query: { query: 'test' } }, totalHits: Constants.searchQuerySize })
       expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(0)
     })
+
     it('should render pagination when many results', () => {
       const { node } = setup({
         location: { query: { query: 'test' } },
@@ -58,6 +63,7 @@ describe('containers', () => {
       })
       expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(1)
     })
+
     it('should render links to pages', () => {
       const { node } = setup({
         location: { query: { query: 'test' } },

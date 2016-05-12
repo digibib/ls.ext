@@ -3,6 +3,7 @@ import { push, replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
 import { parsePersonResponse, parseWorkResponse } from '../utils/graphParse'
+import Constants from '../constants/Constants'
 
 export function requestResource (uri) {
   return {
@@ -13,11 +14,11 @@ export function requestResource (uri) {
   }
 }
 
-export function receiveResource (uri, resource) {
+export function receiveResource (relativeUri, resource) {
   return {
     type: types.RECEIVE_RESOURCE,
     payload: {
-      uri: uri,
+      relativeUri: relativeUri,
       resource: resource
     }
   }
@@ -53,9 +54,10 @@ export function expandSubResource (id, replacePath) {
   }
 }
 
-export function getPersonResource (url) {
+export function getPersonResource (relativeUri) {
   let personResponse
   let worksResponse
+  const url = `${Constants.backendUri}${relativeUri}`
   return dispatch => {
     dispatch(requestResource(url))
     return fetch(url)
@@ -73,14 +75,15 @@ export function getPersonResource (url) {
         worksResponse = json
       })
       .then(() => parsePersonResponse(personResponse, worksResponse))
-      .then(person => dispatch(receiveResource(url, person)))
+      .then(person => dispatch(receiveResource(relativeUri, person)))
       .catch(error => dispatch(resourceFailure(error)))
   }
 }
 
-export function getWorkResource (url) {
+export function getWorkResource (relativeUri) {
   let workResponse
   let itemsResponse
+  const url = `${Constants.backendUri}${relativeUri}`
   return dispatch => {
     dispatch(requestResource(url))
     return fetch(url)
@@ -98,7 +101,7 @@ export function getWorkResource (url) {
         itemsResponse = json
       })
       .then(() => parseWorkResponse(workResponse, itemsResponse))
-      .then(work => dispatch(receiveResource(url, work)))
+      .then(work => dispatch(receiveResource(relativeUri, work)))
       .catch(error => dispatch(resourceFailure(error)))
   }
 }

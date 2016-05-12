@@ -70,7 +70,7 @@ export function search () {
   }
 }
 
-export function showMoreInfo (relativeUri) {
-  const queryParamName = 'showMore'
+export function showStatus (relativeUri) {
+  const queryParamName = 'showStatus'
   return toggleParameterValue('/search', queryParamName, relativeUri)
 }

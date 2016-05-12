@@ -7,6 +7,7 @@ import shallowEqual from 'fbjs/lib/shallowEqual'
 
 import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
+import * as ResourceActions from '../actions/ResourceActions'
 import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
@@ -24,15 +25,24 @@ const Search = React.createClass({
     location: PropTypes.object.isRequired,
     searchFieldInput: PropTypes.string,
     totalHits: PropTypes.number.isRequired,
-    locationQuery: PropTypes.object.isRequired
+    locationQuery: PropTypes.object.isRequired,
+    resources: PropTypes.object.isRequired,
+    resourceActions: PropTypes.object.isRequired
   },
   componentWillMount () {
     this.props.searchActions.search()
   },
   componentDidUpdate (prevProps) {
-    if (!shallowEqual(this.props.locationQuery, prevProps.locationQuery)) {
+    if (!shallowEqual(this.filterLocationQuery(this.props.locationQuery), this.filterLocationQuery(prevProps.locationQuery))) {
       this.props.searchActions.search()
     }
+  },
+  filterLocationQuery (locationQuery) {
+    const filteredLocationQuery = {}
+    Object.keys(locationQuery).filter(key => key.startsWith('filter_') || key === 'query').forEach(key => {
+      filteredLocationQuery[ key ] = locationQuery[ key ]
+    })
+    return filteredLocationQuery
   },
   handlePageClick (data) {
     let page = String(data.selected + 1)
@@ -100,7 +110,10 @@ const Search = React.createClass({
                            searchActions={this.props.searchActions}
                            searchResults={this.props.searchResults}
                            totalHits={this.props.totalHits}
-                           searchError={this.props.searchError} /> ]
+                           searchError={this.props.searchError}
+                           getWorkResource={this.props.resourceActions.getWorkResource}
+                           resources={this.props.resources}
+            /> ]
             : null}
           {this.renderPagination()}
         </div>
@@ -118,7 +131,8 @@ function mapStateToProps (state) {
     isSearching: state.search.isSearching,
     searchError: state.search.searchError,
     filters: state.search.filters,
-    locationQuery: state.routing.locationBeforeTransitions.query
+    locationQuery: state.routing.locationBeforeTransitions.query,
+    resources: state.resources.resources
   }
 }
 
@@ -126,6 +140,7 @@ function mapDispatchToProps (dispatch) {
   return {
     searchActions: bindActionCreators(SearchActions, dispatch),
     searchFilterActions: bindActionCreators(SearchFilterActions, dispatch),
+    resourceActions: bindActionCreators(ResourceActions, dispatch),
     dispatch: dispatch
   }
 }

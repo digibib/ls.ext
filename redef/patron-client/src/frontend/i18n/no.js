@@ -76,6 +76,8 @@ export default {
   'SearchResult.allPublications': 'alle utgivelser ►',
   'SearchResult.subjects': 'Emner:',
   'SearchResult.availableAs': 'Finnes som:',
+  'SearchResult.showStatus': 'Vis status',
+  'SearchResult.hideStatus': 'Skjul status',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',
   'SearchResultsText.totalHitsMobile': '<span data-automation-id="hits-total">{totalHits}</span> treff',

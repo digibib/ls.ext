@@ -8,8 +8,8 @@ import SearchResult, { __RewireAPI__ as DefaultExportSearchResultRewireApi } fro
 
 function setup (resultPropOverrides) {
   const props = {
-    showMoreInfo: () => {},
-    locationQuery: {showMore: 'test_relativeUri'},
+    showStatus: () => {},
+    locationQuery: {showStatus: 'test_relativeUri'},
     result: {
       originalTitle: 'test_originalTitle',
       mainTitle: 'test_mainTitle',
@@ -23,7 +23,9 @@ function setup (resultPropOverrides) {
       } ],
       relativeUri: 'test_relativeUri',
       ...resultPropOverrides
-    }
+    },
+    resources: {},
+    getWorkResource: () => {}
   }
 
   const messages = {
@@ -68,7 +70,6 @@ describe('components', () => {
   describe('SearchResult', () => {
     it('should render the result', () => {
       const { node, props } = setup()
-
       expect(node.querySelector("[data-automation-id='work-title']").textContent).toBe(props.result.mainTitle)
       expect(node.querySelector("[data-automation-id='work_originaltitle']").textContent.endsWith(props.result.originalTitle)).toBe(true)
       expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 0 ].agent.name)
@@ -109,7 +110,10 @@ describe('components', () => {
       const { node, props } = setup({
         publications: [ { formats: [ 'format_1' ] }, { formats: [ 'format_2' ] }, { formats: [ 'format_3' ] } ]
       })
-      expect(node.querySelector("[data-automation-id='work_formats']").innerHTML)
+
+      // TODO: Change back when search results render formats again
+      /* expect(node.querySelector("[data-automation-id='work_formats']").innerHTML) */
+      expect(node.getAttribute('data-formats'))
         .toContain(props.result.publications[ 0 ].formats[ 0 ] + ', ' + props.result.publications[ 1 ].formats[ 0 ] + ', ' + props.result.publications[ 2 ].formats[ 0 ])
     })
   })
