@@ -23,10 +23,6 @@ const SearchHeader = React.createClass({
     event.preventDefault()
     this.props.showLoginDialog()
   },
-  handleMyPageClick (event) {
-    event.preventDefault()
-    this.props.requireLoginBeforeAction(push({pathname: '/profile'}))
-  },
   render () {
     return (
       <div>
@@ -44,7 +40,7 @@ const SearchHeader = React.createClass({
             </button>
             <div className='primary-menu'>
               <ul>
-                <li><a onClick={this.handleMyPageClick}><FormattedMessage {...messages.myProfile} /></a></li>
+                <li><Link to='/profile'><FormattedMessage {...messages.myProfile} /></Link></li>
                 <li><FormattedMessage {...messages.myLoans} /></li>
                 <li><FormattedMessage {...messages.more} /></li>
                 <li><FormattedMessage {...messages.contactUs} /></li>
