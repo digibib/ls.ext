@@ -96,6 +96,8 @@ export default {
   'UserInfo.lastUpdated': 'Sist oppdatert',
   'UserInfo.borrowerNumber': 'Lånernummer',
   'UserInfo.personalInformationError': 'Noe gikk galt ved henting av personopplysninger.',
+  'UserInfo.required': 'Feltet må fylles ut',
+  'UserInfo.invalidEmail': 'Ugyldig epostadresse',
   'UserLoans.title': 'Tittel',
   'UserLoans.publicationYear': 'Utgivelsesår',
   'UserLoans.author': 'Forfatter',

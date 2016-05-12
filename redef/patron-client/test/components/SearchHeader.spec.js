@@ -16,6 +16,7 @@ function setup (propOverrides) {
     isLoggedIn: false,
     logout: () => {},
     showLoginDialog: () => {},
+    requireLoginBeforeAction: () => {},
     ...propOverrides
   }
 

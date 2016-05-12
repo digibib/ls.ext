@@ -22,9 +22,7 @@ const MyPage = React.createClass({
   },
   componentWillMount () {
     if (this.props.isLoggedIn) {
-      this.props.profileActions.fetchProfileInfo()
-      this.props.profileActions.fetchProfileSettings()
-      this.props.profileActions.fetchProfileLoans()
+      this.props.profileActions.fetchAllProfileData()
     } else {
       // TODO Find a solution for showing login dialog when refreshing / accessing a privileged page directly
       // this.props.loginActions.showLoginDialog()
@@ -32,9 +30,7 @@ const MyPage = React.createClass({
   },
   componentDidUpdate (prevProps) {
     if (prevProps.isLoggedIn === false && this.props.isLoggedIn === true) {
-      this.props.profileActions.fetchProfileInfo()
-      this.props.profileActions.fetchProfileSettings()
-      this.props.profileActions.fetchProfileLoans()
+      this.props.profileActions.fetchAllProfileData()
     }
   },
   renderNotLoggedIn () {

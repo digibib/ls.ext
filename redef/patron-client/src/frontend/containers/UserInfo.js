@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
+import { reduxForm } from 'redux-form'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import * as ParameterActions from '../actions/ParameterActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
@@ -13,29 +13,34 @@ const UserInfo = React.createClass({
     location: PropTypes.object.isRequired,
     profileActions: PropTypes.object.isRequired,
     personalInformation: PropTypes.object.isRequired,
+    fields: PropTypes.object.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     parameterActions: PropTypes.object.isRequired,
     isRequestingPersonalInformation: PropTypes.bool.isRequired,
     loginActions: PropTypes.object.isRequired,
-    personalInformationError: PropTypes.object
+    personalInformationError: PropTypes.object,
+    intl: intlShape.isRequired
   },
-  handleSaveClick (event) {
-    event.preventDefault()
-    const profileInfo = {
-      address: this.addressField.getValue(),
-      zipcode: this.zipcodeField.getValue(),
-      city: this.cityField.getValue(),
-      country: this.countryField.getValue(),
-      mobile: this.mobileField.getValue(),
-      telephone: this.telephoneField.getValue(),
-      email: this.emailField.getValue()
-    }
+  handleSubmit () {
     this.props.loginActions.requireLoginBeforeAction(
-      ProfileActions.postProfileInfo(profileInfo, ParameterActions.toggleParameter('/profile/info', 'edit'))
+      ProfileActions.postProfileInfo(ParameterActions.toggleParameter('/profile/info', 'edit'))
     )
   },
   handleChangeClick (event) {
     event.preventDefault()
     this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('/profile/info', 'edit'))
+  },
+  generateField (fieldName, editable) {
+    const field = this.props.fields[ fieldName ]
+    return (
+      <div key={fieldName}>
+        <FormattedMessage {...messages[ fieldName ]} /><br />
+        <EditableField editable={editable}
+                       value={this.props.personalInformation[fieldName]}
+                       inputProps={{placeholder: this.props.intl.formatMessage({...messages[fieldName]}), ...field}} />
+        {field.touched && field.error && <div style={{color: 'red'}}>{this.props.intl.formatMessage(field.error)}</div>}
+      </div>
+    )
   },
   render () {
     if (this.props.isRequestingPersonalInformation) {
@@ -46,80 +51,41 @@ const UserInfo = React.createClass({
     const editable = this.props.location.query.edit === null
     return (
       <div><h2>{this.props.personalInformation.name}</h2>
-        <p><FormattedMessage {...messages.borrowerNumber} />< br /><span
-          data-automation-id='borrowernumber'>{this.props.personalInformation.borrowerNumber}</span></p>
-        <hr />
-        <div style={{display: 'inline-block', width: '33%'}}>
-          <div>
-            <FormattedMessage {...messages.address} /><br />
-            <EditableField editable={editable}
-                           value={this.props.personalInformation.address}
-                           ref={e => this.addressField = e} />
+        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+          <p><FormattedMessage {...messages.borrowerNumber} />< br /><span
+            data-automation-id='borrowernumber'>{this.props.personalInformation.borrowerNumber}</span></p>
+          <hr />
+          <div style={{display: 'inline-block', width: '33%'}}>
+            {Object.keys(this.props.fields).map(fieldName => this.generateField(fieldName, editable))}
           </div>
-          <div>
-            <FormattedMessage {...messages.zipcode} /><br />
-            <EditableField editable={editable}
-                           value={this.props.personalInformation.zipcode}
-                           ref={e => this.zipcodeField = e} />
-          </div>
-          <div>
-            <FormattedMessage {...messages.city} /><br />
-            <EditableField editable={editable}
-                           value={this.props.personalInformation.city}
-                           ref={e => this.cityField = e} />
-          </div>
-          <div>
-            <FormattedMessage {...messages.country} /><br />
-            <EditableField editable={editable}
-                           value={this.props.personalInformation.country}
-                           ref={e => this.countryField = e} />
-          </div>
-          <div>
-            <FormattedMessage {...messages.mobile} /><br />
-            <EditableField editable={editable}
-                           value={this.props.personalInformation.mobile}
-                           ref={e => this.mobileField = e} />
-          </div>
-          <div>
-            <FormattedMessage {...messages.telephone} /><br />
-            <EditableField editable={editable}
-                           value={this.props.personalInformation.telephone}
-                           ref={e => this.telephoneField = e} />
-          </div>
-          <div>
-            <FormattedMessage {...messages.email} /><br />
-            <EditableField editable={editable}
-                           value={this.props.personalInformation.email}
-                           ref={e => this.emailField = e} />
-          </div>
-        </div>
 
-        <div style={{display: 'inline-block', width: '33%'}}>
-          <div>
-            <FormattedMessage {...messages.birthdate} /><br />
-            <span>{this.props.personalInformation.birthdate}</span>
+          <div style={{display: 'inline-block', width: '33%'}}>
+            <div>
+              <FormattedMessage {...messages.birthdate} /><br />
+              <span>{this.props.personalInformation.birthdate}</span>
+            </div>
+            <div>
+              <FormattedMessage {...messages.loanerCardIssued} /><br />
+              <span>{this.props.personalInformation.loanerCardIssued}</span>
+            </div>
+            <div>
+              <FormattedMessage {...messages.loanerCategory} /><br />
+              <span>{this.props.personalInformation.loanerCategory}</span>
+            </div>
           </div>
-          <div>
-            <FormattedMessage {...messages.loanerCardIssued} /><br />
-            <span>{this.props.personalInformation.loanerCardIssued}</span>
-          </div>
-          <div>
-            <FormattedMessage {...messages.loanerCategory} /><br />
-            <span>{this.props.personalInformation.loanerCategory}</span>
-          </div>
-        </div>
 
-        <div style={{display: 'inline-block', width: '33%'}}>
-          <div>
-            {editable
-              ? <button onClick={this.handleSaveClick}><FormattedMessage {...messages.saveChanges} /></button>
-              : <button onClick={this.handleChangeClick}><FormattedMessage {...messages.editPersonalInfo} /></button>}
+          <div style={{display: 'inline-block', width: '33%'}}>
+            <div>
+              {editable
+                ? <button><FormattedMessage {...messages.saveChanges} /></button>
+                : <button onClick={this.handleChangeClick}><FormattedMessage {...messages.editPersonalInfo} /></button>}
+            </div>
+            <div>
+              <FormattedMessage {...messages.lastUpdated} /><br />
+              <span>{this.props.personalInformation.lastUpdated}</span>
+            </div>
           </div>
-          <div>
-            <FormattedMessage {...messages.lastUpdated} /><br />
-            <span>{this.props.personalInformation.lastUpdated}</span>
-          </div>
-        </div>
+        </form>
       </div>
     )
   }
@@ -200,6 +166,16 @@ const messages = defineMessages({
     id: 'UserInfo.personalInformationError',
     description: 'The text shown when retrieving personal information has failed.',
     defaultMessage: 'Something went wrong when retrieving personal information.'
+  },
+  required: {
+    id: 'UserInfo.required',
+    description: 'Displayed below a field when not filled out',
+    defaultMessage: 'Required'
+  },
+  invalidEmail: {
+    id: 'UserInfo.invalidEmail',
+    description: 'Displayed when the email is not valid',
+    defaultMessage: 'Invalid email address'
   }
 })
 
@@ -207,7 +183,8 @@ function mapStateToProps (state) {
   return {
     personalInformationError: state.profile.personalInformationError,
     isRequestingPersonalInformation: state.profile.isRequestingPersonalInformation,
-    personalInformation: state.profile.personalInformation
+    personalInformation: state.profile.personalInformation,
+    initialValues: state.profile.personalInformation
   }
 }
 
@@ -220,7 +197,22 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-export default connect(
+const validate = values => {
+  const errors = {}
+  if (!values.email) {
+    errors.email = messages.required
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = messages.invalidEmail
+  }
+  return errors
+}
+
+export default reduxForm(
+  {
+    form: 'userInfo',
+    fields: [ 'address', 'zipcode', 'city', 'country', 'mobile', 'telephone', 'email' ],
+    validate
+  },
   mapStateToProps,
   mapDispatchToProps
 )(injectIntl(UserInfo))

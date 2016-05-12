@@ -142,9 +142,19 @@ export function postProfileInfoSuccess () {
   }
 }
 
-export function postProfileInfo (profileInfo, successAction) {
+export function postProfileInfo (successAction) {
   const url = '/api/v1/profile/info'
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { userInfo: { address, zipcode, city, country, mobile, telephone, email } } = getState().form
+    const profileInfo = {
+      address: address.value,
+      zipcode: zipcode.value,
+      city: city.value,
+      country: country.value,
+      mobile: mobile.value,
+      telephone: telephone.value,
+      email: email.value
+    }
     dispatch(requestPostProfileInfo())
     return fetch(url, {
       method: 'POST',
@@ -213,5 +223,13 @@ export function postProfileSettings (profileSettings, successAction) {
         }
       })
       .catch(error => dispatch(postProfileSettingsFailure(error)))
+  }
+}
+
+export function fetchAllProfileData () {
+  return dispatch => {
+    dispatch(fetchProfileInfo())
+    dispatch(fetchProfileLoans())
+    dispatch(fetchProfileSettings())
   }
 }

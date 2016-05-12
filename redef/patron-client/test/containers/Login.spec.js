@@ -33,18 +33,6 @@ function setup (propOverrides) {
 
 describe('containers', () => {
   describe('Login', () => {
-    it('should hide if already logged in', () => {
-      const { props } = setup({ isLoggedIn: true })
-      expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].type).toEqual(types.HIDE_MODAL)
-    })
-
-    it('should trigger supplied success action if already logged in', () => {
-      const { props } = setup({ isLoggedIn: true, successAction: { type: 'TEST_ACTION' } })
-      expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].type).toEqual('TEST_ACTION')
-    })
-
     it('should render error message', () => {
       const { node } = setup({ loginError: 'error_message' })
       expect(node.querySelectorAll("[data-automation-id='login_error_message']").length).toBe(1)
@@ -58,7 +46,7 @@ describe('containers', () => {
       const loginButton = findElementByDataAutomationId(output, 'login_button')
       TestUtils.Simulate.click(loginButton)
       expect(props.loginActions.login).toHaveBeenCalled()
-      expect(props.loginActions.login.calls[ 0 ].arguments).toEqual([ 'testuser', 'testpassword', { type: 'HIDE_MODAL' } ])
+      expect(props.loginActions.login.calls[ 0 ].arguments).toEqual([ 'testuser', 'testpassword', [ { type: 'HIDE_MODAL' } ] ])
     })
 
     it('should pass supplied success action to login action when login button is clicked', () => {
@@ -69,7 +57,7 @@ describe('containers', () => {
       const loginButton = findElementByDataAutomationId(output, 'login_button')
       TestUtils.Simulate.click(loginButton)
       expect(props.loginActions.login).toHaveBeenCalled()
-      expect(props.loginActions.login.calls[ 0 ].arguments).toEqual([ 'testuser', 'testpassword', { type: 'TEST_ACTION' } ])
+      expect(props.loginActions.login.calls[ 0 ].arguments).toEqual([ 'testuser', 'testpassword', [ { type: 'HIDE_MODAL' }, { type: 'TEST_ACTION' } ] ])
     })
   })
 })

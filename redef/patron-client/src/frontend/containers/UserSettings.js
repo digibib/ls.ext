@@ -9,8 +9,8 @@ const UserSettings = React.createClass({
     dispatch: PropTypes.func.isRequired,
     profileActions: PropTypes.object.isRequired,
     isRequestingSettings: PropTypes.bool.isRequired,
-    settingsError: PropTypes.object.isRequired,
-    settings: PropTypes.object
+    settings: PropTypes.object.isRequired,
+    settingsError: PropTypes.object
   },
   handleSaveClick (event) {
     event.preventDefault()
