@@ -532,7 +532,8 @@ app.get('/config', function (request, response) {
         inputs: [
           manintenanceInputs('Personer', 'person'),
           manintenanceInputs('Emner', 'subject'),
-          manintenanceInputs('Sjangre', 'genre')
+          manintenanceInputs('Sjangre', 'genre'),
+          manintenanceInputs('Serier', 'serial')
         ]
       }
     ],
