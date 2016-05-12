@@ -39,7 +39,7 @@ const Search = React.createClass({
   },
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => key.startsWith('filter_') || key === 'query').forEach(key => {
+    Object.keys(locationQuery).filter(key => key.startsWith('filter_') || key === 'query' || key === 'page').forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
