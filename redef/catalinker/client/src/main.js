@@ -272,78 +272,82 @@
       return inputs
     }
 
-    var loadExistingResource = function (resourceUri, options) {
+    function updateInputsForResource (response, resourceUri, options) {
+      options = options || {}
+      var graphData = ensureJSON(response.data)
+      var offsetCrossTypes = { "Work": "Publication", "Publication": "Work" }
+
+      var type = StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial)\/.*$/g.exec(resourceUri)[ 1 ])
+      var root = ldGraph.parse(graphData).byId(resourceUri)
+
+      var promises = []
+      _.each(allInputs(), function (input, inputIndex) {
+        if ((type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
+          (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))) {
+          input.offset = input.offset || {}
+          var offset = 0;
+          if (input.offset[ offsetCrossTypes[ type ] ]) {
+            offset = input.offset[ offsetCrossTypes[ type ] ]
+          }
+          var predicate = input.predicate
+          var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [ root ]
+          var rootIndex = 0;
+          _.each(actualRoots, function (root) {
+            var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || false
+            var mainEntryNode = (root.isA('deichman:MainEntry') === true) || false
+            if (mainEntryInput === mainEntryNode) {
+              if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
+                var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
+                promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, 0))
+                if (input.isSubInput) {
+                  input.values[ rootIndex ].nonEditable = true
+                  input.values[ rootIndex ].subjectType = type
+                  input.parentInput.allowAddNewButton = true
+                }
+              } else if (input.type === 'searchable-with-result-in-side-panel') {
+                _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
+                  var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
+                  setIdValue(node.id, input, index)
+                  setDisplayValue(input, index)
+                  input.values[ index ].deletable = true
+                  input.values[ index ].searchable = true
+                  if (input.isSubInput) {
+                    input.values[ index ].nonEditable = true
+                    input.values[ index ].subjectType = type
+                    input.parentInput.allowAddNewButton = true
+                  }
+                  setAllowNewButtonForInput(input)
+                })
+              } else if (input.type === 'select-predefined-value') {
+                setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset))
+              } else {
+                _.each(root.getAll(propertyName(predicate)), function (value, index) {
+                  setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
+                })
+              }
+              rootIndex++
+            }
+          })
+          var mainInput = input.isSubInput ? input.parentInput : input
+          mainInput.subjectType = type
+          input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+        }
+      })
+      Promise.all(promises).then(function () {
+        ractive.update()
+        ractive.set('save_status', 'åpnet eksisterende ressurs')
+        ractive.set('targetUri.' + type, resourceUri)
+        if (!(options.keepDocumentUrl)) {
+          updateBrowserLocationWithUri(type, resourceUri)
+        }
+      })
+    }
+
+    var fetchExistingResource = function (resourceUri, options) {
       options = options || {}
       return axios.get(resourceUri)
         .then(function (response) {
-            var graphData = ensureJSON(response.data)
-            var offsetCrossTypes = { "Work": "Publication", "Publication": "Work" }
-
-            var type = StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial)\/.*$/g.exec(resourceUri)[ 1 ])
-            var root = ldGraph.parse(graphData).byId(resourceUri)
-
-            var promises = []
-            _.each(allInputs(), function (input, inputIndex) {
-              if ((type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
-                (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))) {
-                input.offset = input.offset || {}
-                var offset = 0;
-                if (input.offset[ offsetCrossTypes[ type ] ]) {
-                  offset = input.offset[ offsetCrossTypes[ type ] ]
-                }
-                var predicate = input.predicate
-                var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [ root ]
-                var rootIndex = 0;
-                _.each(actualRoots, function (root) {
-                  var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || false
-                  var mainEntryNode = (root.isA('deichman:MainEntry') === true) || false
-                  if (mainEntryInput === mainEntryNode) {
-                    if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
-                      var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
-                      promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, 0))
-                      if (input.isSubInput) {
-                        input.values[ rootIndex ].nonEditable = true
-                        input.values[ rootIndex ].subjectType = type
-                        input.parentInput.allowAddNewButton = true
-                      }
-                    } else if (input.type === 'searchable-with-result-in-side-panel') {
-                      _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
-                        var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                        setIdValue(node.id, input, index)
-                        setDisplayValue(input, index)
-                        input.values[ index ].deletable = true
-                        input.values[ index ].searchable = true
-                        if (input.isSubInput) {
-                          input.values[ index ].nonEditable = true
-                          input.values[ index ].subjectType = type
-                          input.parentInput.allowAddNewButton = true
-                        }
-                        setAllowNewButtonForInput(input)
-                      })
-                    } else if (input.type === 'select-predefined-value') {
-                      setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset))
-                    } else {
-                      _.each(root.getAll(propertyName(predicate)), function (value, index) {
-                        setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
-                      })
-                    }
-                    rootIndex++
-                  }
-                })
-                var mainInput = input.isSubInput ? input.parentInput : input
-                mainInput.subjectType = type
-                setAllowNewButtonForInput(mainInput)
-                input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
-              }
-            })
-            Promise.all(promises).then(function () {
-              ractive.update()
-              ractive.set('save_status', 'åpnet eksisterende ressurs')
-              ractive.set('targetUri.' + type, resourceUri)
-              if (!(options.keepDocumentUrl)) {
-                updateBrowserLocationWithUri(type, resourceUri)
-              }
-            })
+            updateInputsForResource(response, resourceUri, options)
           }
         )
       // .catch(function (err) {
@@ -794,9 +798,6 @@
         return results === null ? null : results[ 1 ]
       },
       patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
-        if (!subject) {
-          debugger
-        }
         var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype)
         if (patch && patch.trim() !== '' && patch.trim() !== '[]') {
           ractive.set('save_status', 'arbeider...')
@@ -808,6 +809,7 @@
             })
             .then(function (response) {
               // successfully patched resource
+              updateInputsForResource(response, subject)
 
               // keep the value in current.old - so we can do create delete triple patches later
               if (keypath) {
@@ -1314,10 +1316,10 @@
                   var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
                   var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType)
                   unloadResourceForDomain(rdfType)
-                  loadExistingResource(uri, { keepDocumentUrl: true })
+                  fetchExistingResource(uri, { keepDocumentUrl: true })
                   ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', true)
                 } else if (input.isMainEntry) {
-                  loadExistingResource(uri)
+                  fetchExistingResource(uri)
                 } else {
                   ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
                   ractive.set(origin + '.current.value', uri)
@@ -1339,7 +1341,7 @@
               selectWorkResource: function (event) {
                 var uri = event.context.uri
                 unloadResourceForDomain('Publication')
-                loadExistingResource(uri)
+                fetchExistingResource(uri)
               },
               setResourceAndWorkResource: function (event, mainItem, origin, domainType) {
                 ractive.fire('selectSearchableItem', {
@@ -1512,7 +1514,7 @@
               if (typeof newValue.current.value[ 0 ] === 'string') {
                 var predicate = ractive.get(parent + '.predicate')
                 if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== newValue.current.value[ 0 ]) {
-                  loadExistingResource(newValue.current.value[ 0 ])
+                  fetchExistingResource(newValue.current.value[ 0 ])
                 }
               }
               var valid = false
@@ -1635,7 +1637,7 @@
           if (publicationOfInput) {
             var workUri = publicationOfInput.values[ 0 ].current.value
             if (workUri) {
-              return loadExistingResource(workUri).then(function () {
+              return fetchExistingResource(workUri).then(function () {
                 ractive.set('targetUri.Work', workUri)
               })
             }
@@ -1646,14 +1648,14 @@
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           var tab = query.openTab
           if (query.Publication) {
-            loadExistingResource(query.Publication)
+            fetchExistingResource(query.Publication)
               .then(loadWorkOfPublication)
               .then(function () {
                 ractive.set('targetUri.Publication', query.Publication)
                 ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
               })
           } else if (query.Work) {
-            loadExistingResource(query.Work)
+            fetchExistingResource(query.Work)
               .then(function () {
                 ractive.set('targetUri.Work', query.Work)
                 ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '2') })
