@@ -335,7 +335,7 @@ app.get('/config', function (request, response) {
           {
             rdfProperty: 'publishedBy',
             authority: true, // this indicates it is an authorized entity
-            nameProperties: [ 'name' ], // these are proeprty names used to label already connected entities
+            nameProperties: [ 'name' ], // these are property names used to label already connected entities
             indexTypes: 'publisher', // this is the name of the elasticsearch index type from which authorities are searched within
             indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels f
             // or authoroty select list are concatenated
@@ -352,7 +352,7 @@ app.get('/config', function (request, response) {
           {
             rdfProperty: 'hasPlaceOfPublication',
             authority: true, // this indicates it is an authorized entity
-            nameProperties: [ 'prefLabel', 'specification' ], // these are proeprty names used to label already connected entities
+            nameProperties: [ 'prefLabel', 'specification' ], // these are property names used to label already connected entities
             indexTypes: 'place', // this is the name of the elasticsearch index type from which authorities are searched within
             // the labels for authoroty select list are concatenated
             type: 'searchable-with-result-in-side-panel',
@@ -433,14 +433,14 @@ app.get('/config', function (request, response) {
             type: 'searchable-with-result-in-side-panel',
             loadWorksAsSubjectOfItem: true,
             authority: true, // this indicates it is an authorized entity
-            nameProperties: [ 'name', 'prefLabel' ], // these are proeprty names used to label already connected entities
+            nameProperties: [ 'name', 'prefLabel' ], // these are property names used to label already connected entities
             indexTypes: [ 'subject', 'person', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
             widgetOptions: {
               selectIndexTypeLegend: 'Velg emnetype',
               enableCreateNewResource: {
                 formRefs: [ {
                   formId: 'create-subject-form',
-                  targetType: "subject"
+                  targetType: "subject" // these are matched against index types, hence lower case
                 },
                 {
                   formId: 'create-work-form',
@@ -449,6 +449,10 @@ app.get('/config', function (request, response) {
                 {
                   formId: 'create-person-form',
                   targetType: "person"
+                },
+                {
+                  formId: 'create-place-form',
+                  targetType: "place"
                 } ]
               }
             }
