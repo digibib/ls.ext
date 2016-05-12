@@ -287,6 +287,7 @@ app.get('/config', function (request, response) {
               label: 'Søk etter eksisterende verk',
               indexType: 'work',
               isRoot: true,
+              automationId: 'searchWorkAsMainResource',
               showOnlyWhenMissingTargetUri: 'Work' // only show this search field if a work has not been loaded or created
             },
             // this is used to control how the search result in the support panel behaves

@@ -25,6 +25,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og grensesnittet viser at endringene er lagret
     Når jeg legger inn forfatternavnet på startsida
     Og jeg venter litt
+    Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
     Og velger verket fra lista tilkoplet forfatteren
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
@@ -175,3 +176,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så skriver jeg inn samme tilfeldige serie i feltet "Serier" og trykker enter
     Så velger jeg en serie fra treffliste fra emneregisteret
 
+  Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
+    Gitt at det finnes et verk med forfatter
+    Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Så ser jeg at det står forfatter med navn og levetid i resultatlisten

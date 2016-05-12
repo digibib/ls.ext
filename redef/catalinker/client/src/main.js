@@ -691,7 +691,8 @@
               isRoot: input.searchMainResource.isRoot,
               widgetOptions: input.widgetOptions,
               datatype: input.datatype,
-              showOnlyWhenEmpty: input.searchMainResource.showOnlyWhenMissingTargetUri
+              showOnlyWhenEmpty: input.searchMainResource.showOnlyWhenMissingTargetUri,
+              dataAutomationId: input.searchMainResource.automationId
             })
           } else {
             if (input.rdfProperty) {

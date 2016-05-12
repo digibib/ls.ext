@@ -384,3 +384,19 @@ end
 When(/^åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter$/) do
   @site.WorkFlow.visit_landing_page_auth_maintenance
 end
+
+
+When(/^sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid$/) do
+  @browser.element(:text => "(#{@context[:person_birthyear]}–#{@context[:person_deathyear]}) - #{@context[:person_nationality]}").should exist
+end
+
+When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do
+  @site.WorkFlow.visit
+  search_work_as_main_resource = @browser.text_field(:data_automation_id => 'searchWorkAsMainResource')
+  search_work_as_main_resource.set(@context[:work_maintitle])
+  search_work_as_main_resource.send_keys :enter
+end
+
+When(/^ser jeg at det står forfatter med navn og levetid i resultatlisten$/) do
+  @browser.element(:text => "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]})").should exist
+end
