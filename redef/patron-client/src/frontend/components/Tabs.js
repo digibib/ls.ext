@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { matchPattern } from 'react-router/lib/PatternUtils'
 
 export default React.createClass({
   propTypes: {
@@ -23,7 +24,7 @@ export default React.createClass({
         <ul className='tab-bar'>
           {this.props.tabList.map(tab => (
             <li key={tab.label}
-                className={this.props.currentPath === tab.path ? `${this.props.tabClass} ${this.props.tabActiveClass}` : this.props.tabClass}
+                className={matchPattern(tab.path, this.props.currentPath) ? `${this.props.tabClass} ${this.props.tabActiveClass}` : this.props.tabClass}
                 onClick={this.handleClick.bind(this, tab)}>{tab.label}</li>
           ))}
         </ul>
