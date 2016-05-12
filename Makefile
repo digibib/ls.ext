@@ -126,6 +126,9 @@ stop_koha:
 delete_koha: stop_koha
 	vagrant ssh $(SHIP) -c 'sudo docker rm koha_container'
 
+rebuild_zebra:
+	vagrant ssh $(SHIP) -c 'sudo docker exec koha_container koha-rebuild-zebra -full -v -b name'
+
 stop_ship:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
 	vagrant ssh $(SHIP) -c '(sudo docker stop koha_container || true) && sudo docker stop koha_mysql_container'
