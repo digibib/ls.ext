@@ -122,6 +122,11 @@ const messages = defineMessages({
     id: 'SearchFilter.filter[work.publications.audiences]',
     description: 'Label of the audience filter',
     defaultMessage: 'Audience'
+  },
+  'work.publications.branches': {
+    id: 'SearchFilter.filter[work.publications.branches]',
+    description: 'Label of the branches filter',
+    defaultMessage: 'Department'
   }
 })
 
