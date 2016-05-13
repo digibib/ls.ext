@@ -99,6 +99,10 @@
             "audiences": {
               "type": "string",
               "index": "not_analyzed"
+            },
+            "holdingBranches": {
+              "type": "string",
+              "index": "not_analyzed"
             }
           }
         },

@@ -17,6 +17,7 @@ CONSTRUCT {
                deich:format ?format ;
                deich:issued ?pubPublicationYear ;
                deich:audience ?audience ;
+               deich:hasHoldingBranch ?branch ;
                deich:contributor ?pubContrib .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -80,6 +81,7 @@ WHERE {
          deich:publicationOf ?work .
     OPTIONAL { ?pub deich:mainTitle ?pubMainTitle }
     OPTIONAL { ?pub deich:partTitle ?pubPartTitle }
+    OPTIONAL { ?pub deich:hasHoldingBranch ?branch }
     OPTIONAL { ?pub deich:contributor ?pubContrib .
                ?pubContrib a deich:Contribution ;
                             deich:agent ?pubAgent ;

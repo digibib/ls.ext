@@ -24,6 +24,10 @@
       "@id": "deichman:format",
       "@container": "@set"
     },
+    "branches": {
+      "@id": "deichman:hasHoldingBranch",
+      "@container": "@set"
+    },
     "Publication": "deichman:Publication",
     "partTitle": "deichman:partTitle",
     "languages": {
