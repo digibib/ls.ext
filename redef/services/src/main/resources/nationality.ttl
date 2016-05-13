@@ -3,7 +3,7 @@
 @prefix duo: <http://data.deichman.no/utility#> .
 
 nationality:aborig a duo:Nationality ;
-	rdfs:label	"Aborigi"@no ;
+	rdfs:label	"Aboriginsk"@no ;
 	rdfs:label	"Aboriginal Australian"@en .
 
 nationality:afg a duo:Nationality ;
