@@ -26,7 +26,7 @@ import java.util.Map;
 @Singleton
 @Path("translations")
 public class TranslationResource {
-    private String[] inputFiles = {"format.ttl", "language.ttl", "audience.ttl", "nationality.ttl", "role.ttl"};
+    private String[] inputFiles = {"format.ttl", "language.ttl", "audience.ttl", "nationality.ttl", "role.ttl", "branches.ttl"};
     private String[] locales = {"no", "en"};
     private Map<String, String> cachedTranslations = new HashMap<>();
     private String query = ""
@@ -45,7 +45,8 @@ public class TranslationResource {
             QueryExecution qe = QueryExecutionFactory.create(query.replace("__LOCALE__", locale), model);
             ResultSet resultSet = qe.execSelect();
             resultSet.forEachRemaining((result) -> {
-                translations.put(result.getResource("a").toString(), result.getLiteral("b").getString());
+                // we are trimming the prefix 'file:///' from URIs, since Jena automaically adds it when URI schema is missing.
+                translations.put(result.getResource("a").toString().replaceFirst("file:///", ""), result.getLiteral("b").getString());
             });
             cachedTranslations.put(locale, new Gson().toJson(translations));
         }
