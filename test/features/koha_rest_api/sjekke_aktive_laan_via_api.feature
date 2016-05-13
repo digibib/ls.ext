@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Sjekke aktive lån via API
   Som låner
   Siden jeg ønsker å ha oversikt
@@ -11,7 +10,6 @@ Bakgrunn:
   Gitt at jeg er autentisert som superbruker via REST API
   Og at det er registrert en låner via API
 
-  @wip
   Scenario: List aktive lån via API
     Gitt at låneren har lånt en bok
     Når jeg sjekker lånerens aktive lån via API

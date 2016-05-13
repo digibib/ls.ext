@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Avdelinger via API
   Som superbruker
   For å finne en avdeling
@@ -10,7 +9,6 @@ Egenskap: Avdelinger via API
   Bakgrunn:
     Gitt at jeg er autentisert som superbruker via REST API
 
-  @wip
   Scenario: Liste alle avdelinger via API
     Gitt at det finnes en avdeling
     Når jeg lister alle avdelinger via API
