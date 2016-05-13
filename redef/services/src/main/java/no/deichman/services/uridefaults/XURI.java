@@ -52,7 +52,7 @@ public class XURI {
                 this.id = aPath[2];
                 ret = true;
             } else {
-                throw new Exception("URI passed was not structured according to http://{host}/{entity}/{id} pattern");
+                throw new Exception("URI not structured according to http://{host}/{entity}/{id} pattern: " + uri);
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
