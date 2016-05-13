@@ -219,7 +219,7 @@ public class EntityServiceImplTest {
                         createStatement(
                                 createResource("http://data.deichman.no/nationality#eng"),
                                 createProperty(RDFS.label.getURI()),
-                                createLangLiteral("Engelsk", "no")
+                                createLangLiteral("England", "no")
                         )
                 )
         );
