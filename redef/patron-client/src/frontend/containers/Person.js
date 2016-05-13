@@ -15,7 +15,7 @@ const Person = React.createClass({
     intl: intlShape.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getPersonResource(`/person/${this.props.params.personId}`)
+    this.props.resourceActions.fetchPersonResource(`/person/${this.props.params.personId}`)
   },
   renderNoPerson () {
     return (

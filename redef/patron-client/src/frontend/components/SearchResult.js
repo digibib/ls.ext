@@ -10,13 +10,13 @@ const SearchResult = React.createClass({
     locationQuery: PropTypes.object.isRequired,
     showStatus: PropTypes.func.isRequired,
     resources: PropTypes.object.isRequired,
-    getWorkResource: PropTypes.func.isRequired,
+    fetchWorkResource: PropTypes.func.isRequired,
     intl: intlShape.isRequired
   },
   componentWillMount () {
     const { relativeUri } = this.props.result
     if (this.shouldShowStatus() && !this.props.resources[ relativeUri ]) {
-      this.props.getWorkResource(relativeUri)
+      this.props.fetchWorkResource(relativeUri)
     }
   },
   renderContributors (contributors) {
@@ -76,7 +76,7 @@ const SearchResult = React.createClass({
   handleShowStatusClick (event) {
     event.stopPropagation()
     event.preventDefault()
-    this.props.getWorkResource(this.props.result.relativeUri)
+    this.props.fetchWorkResource(this.props.result.relativeUri)
     this.props.showStatus(this.props.result.relativeUri)
   },
   shouldShowStatus () {

@@ -111,7 +111,7 @@ const Search = React.createClass({
                            searchResults={this.props.searchResults}
                            totalHits={this.props.totalHits}
                            searchError={this.props.searchError}
-                           getWorkResource={this.props.resourceActions.getWorkResource}
+                           fetchWorkResource={this.props.resourceActions.fetchWorkResource}
                            resources={this.props.resources}
             /> ]
             : null}

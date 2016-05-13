@@ -21,7 +21,7 @@ const Work = React.createClass({
     reservationActions: PropTypes.object.isRequired
   },
   componentWillMount () {
-    this.props.resourceActions.getWorkResource(`/work/${this.props.params.workId}`)
+    this.props.resourceActions.fetchWorkResource(`/work/${this.props.params.workId}`)
   },
   renderNoWork () {
     return (

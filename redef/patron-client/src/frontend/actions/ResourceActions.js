@@ -54,7 +54,7 @@ export function expandSubResource (id, replacePath) {
   }
 }
 
-export function getPersonResource (relativeUri) {
+export function fetchPersonResource (relativeUri) {
   let personResponse
   let worksResponse
   const url = `${Constants.backendUri}${relativeUri}`
@@ -80,7 +80,7 @@ export function getPersonResource (relativeUri) {
   }
 }
 
-export function getWorkResource (relativeUri) {
+export function fetchWorkResource (relativeUri) {
   let workResponse
   let itemsResponse
   const url = `${Constants.backendUri}${relativeUri}`

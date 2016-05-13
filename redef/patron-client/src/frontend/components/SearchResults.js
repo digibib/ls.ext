@@ -10,7 +10,7 @@ export default React.createClass({
     totalHits: PropTypes.number.isRequired,
     searchResults: PropTypes.array.isRequired,
     resources: PropTypes.object.isRequired,
-    getWorkResource: PropTypes.func.isRequired
+    fetchWorkResource: PropTypes.func.isRequired
   },
   render () {
     if (this.props.searchError) {
@@ -27,7 +27,7 @@ export default React.createClass({
                         result={result}
                         locationQuery={this.props.locationQuery}
                         showStatus={this.props.searchActions.showStatus}
-                        getWorkResource={this.props.getWorkResource}
+                        fetchWorkResource={this.props.fetchWorkResource}
                         resources={this.props.resources}
           />
         )
