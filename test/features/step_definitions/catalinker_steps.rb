@@ -609,7 +609,7 @@ When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do
   @context[:person_title] = generateRandomString
   @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#personTitle", @context[:person_title])
 
-  @context[:person_nationality] = ['Norsk', 'Engelsk', 'Færøyisk'].sample
+  @context[:person_nationality] = ['Norge', 'England', 'Færøyene'].sample
   @site.RegPerson.select_prop("http://#{ENV['HOST']}:8005/ontology#nationality", @context[:person_nationality])
 end
 
