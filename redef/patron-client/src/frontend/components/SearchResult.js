@@ -101,7 +101,7 @@ class SearchResult extends React.Component {
     const formats = [ ...pubFormats ]
 
     return (
-      <section className='single-entry' data-formats={formats.join(', ')}>
+      <div className='single-entry' data-formats={formats.join(', ')}>
         <aside className='book-cover'>
           <Link to={result.relativeUri} className='book-cover-item' />
         </aside>
@@ -110,10 +110,10 @@ class SearchResult extends React.Component {
 
           <div className='entry-content-icon'>
             <div className='entry-content-icon-single'>
-              {/*
+
                <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
                <p>Lydbok</p>
-               */}
+
             </div>
           </div>
 
@@ -126,41 +126,40 @@ class SearchResult extends React.Component {
           </div>
 
           <div>
-            {/*            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
-             porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
-             nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
-             sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.
-             Aliquam sit amet nisl non tortor elementum consequat. Morbi id nulla ac quam luctus posuere
-             nec a risus. Aenean congue quam tortor, a volutpat quam mollis nec. Nullam metus ex,
-             efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel accumsan odio, venenatis
-             fringilla ex.</p>
-             */}
-          </div>
-
-          <div>
             {this.renderOriginalTitle(result)}
           </div>
 
           <div>
             {this.renderSubjects(result)}
           </div>
+
+          <div>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
+              porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
+              nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
+              sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.
+              Aliquam sit amet nisl non tortor elementum consequat. Morbi id nulla ac quam luctus posuere
+              nec a risus. Aenean congue quam tortor, a volutpat quam mollis nec. Nullam metus ex,
+              efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel accumsan odio, venenatis
+              fringilla ex.</p>
+          </div>
         </article>
 
         {this.shouldShowStatus()
           ? [ (<div key='show-more-content' className='show-more-content' onClick={this.handleShowStatusClick}>
           <p><FormattedMessage {...messages.hideStatus} /></p>
-          <img src='/images/btn-search-sorting.svg' alt='Black arrow pointing down' />
+          <img src='/images/btn-red-arrow-close.svg' alt='Red arrow pointing up' />
         </div>),
           (<div key='entry-more-content' className='entry-content-more'>
             {this.renderItems(result)}
           </div>) ]
           : (<div className='show-more-content' onClick={this.handleShowStatusClick}>
           <p><FormattedMessage {...messages.showStatus} /></p>
-          <img src='/images/btn-search-sorting.svg' alt='Black arrow pointing down' />
+          <img src='/images/btn-red-arrow-open.svg' alt='Red arrow pointing down' />
         </div>)
         }
 
-      </section>
+      </div>
     )
   }
 }

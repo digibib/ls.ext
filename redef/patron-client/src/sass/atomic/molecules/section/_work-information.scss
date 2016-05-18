@@ -6,3 +6,13 @@
   }
 
 }
+
+.work-excerpt {
+  @include span(12 of 12);
+  
+  @include breakpoint($small){
+     @include span(7 of 12);
+     @include push(2 of 12);
+  }
+  
+}

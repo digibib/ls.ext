@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
+import MediaQuery from 'react-responsive'
 
 import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
@@ -19,50 +20,52 @@ class Publications extends React.Component {
       </h2>
     )
   }
-
-  getArrow (column) {
-    return [ 0, 1, 2 ].map(number =>
-      <div key={`column-${number}`} className='col col-1-3'>
-        {number === column ? <div className='triangle-up' /> : ''}&nbsp;</div>
-    )
-  }
-
-  renderPublications () {
-    let publications = [ ...this.props.publications ]
-    let threeAndThreePublications = []
+  
+  renderPublications (publicationsPerRow) {
+    const publications = [ ...this.props.publications ]
+    const publicationRows = []
     while (publications.length > 0) {
-      threeAndThreePublications.push(publications.splice(0, 3))
+      publicationRows.push(publications.splice(0, publicationsPerRow))
     }
-    let showMore
     return (
-      <div data-automation-id='work_publications'>
-        {threeAndThreePublications.map((publications, row) => {
-          let output = [ <div key={`row-${row}`} className='row'>{publications.map(publication => <Publication
-            startReservation={this.props.startReservation}
-            key={publication.id}
-            expandSubResource={this.props.expandSubResource}
-            publication={publication} />)}</div> ]
-          let showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
+      <section className='work-publications' data-automation-id='work_publications'>
+        {publicationRows.map((publications, row) => {
+          const showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
+          const output = [ <div key={`row-${row}`} className='row'>{publications.map(publication => (
+            <Publication
+              startReservation={this.props.startReservation}
+              key={publication.id}
+              expandSubResource={this.props.expandSubResource}
+              publication={publication}
+              open={publication === showMorePublication}
+            />
+          ))}</div> ]
           if (showMorePublication) {
-            showMore = {
-              publication: showMorePublication,
-              row: row,
-              column: publications.indexOf(showMorePublication)
-            }
-          }
-          if (showMore && row === showMore.row) {
-            output.push(<div className='row' key={showMore.publication.id}>
-                {this.getArrow(showMore.column)}
-                <div className='col'>
-                  <PublicationInfo expandSubResource={this.props.expandSubResource}
-                                   publication={showMore.publication} />
-                </div>
+            output.push(<div className='row' key={showMorePublication.id}>
+                <PublicationInfo expandSubResource={this.props.expandSubResource}
+                                 publication={showMorePublication} />
               </div>
             )
           }
           return output
         })
         }
+      </section>
+    )
+  }
+  
+  renderPublicationsMediaQueries () {
+    return (
+      <div>
+        <MediaQuery query='(min-width: 992px)' values={{...this.props.mediaQueryValues}}>
+          {this.renderPublications(3)}
+        </MediaQuery>
+        <MediaQuery query='(min-width: 668px) and (max-width: 992px)' values={{...this.props.mediaQueryValues}}>
+          {this.renderPublications(2)}
+        </MediaQuery>
+        <MediaQuery query='(max-width: 667px)' values={{...this.props.mediaQueryValues}}>
+          {this.renderPublications(1)}
+        </MediaQuery>
       </div>
     )
   }
@@ -77,17 +80,20 @@ class Publications extends React.Component {
 
         <div className='entry-content-icon'>
           <div className='entry-content-icon-single'>
-            {/*
-             <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
-             <p>Lydbok</p>
-             */}
+            <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
+            <p>Lydbok </p>
           </div>
         </div>
 
-        <div className='entry-content'>
-          {this.props.publications.length > 0 ? this.renderPublications() : this.renderEmpty()}
+        <div className="arrow-close">
+          <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up"/>
+        </div>
+
+        <div className='other-publications-entry-content'>
+          {this.props.publications.length > 0 ? this.renderPublicationsMediaQueries() : this.renderEmpty()}
         </div>
       </footer>
+
     )
   }
 }
@@ -96,7 +102,8 @@ Publications.propTypes = {
   publications: PropTypes.array.isRequired,
   expandSubResource: PropTypes.func.isRequired,
   locationQuery: PropTypes.object.isRequired,
-  startReservation: PropTypes.func.isRequired
+  startReservation: PropTypes.func.isRequired,
+  mediaQueryValues: PropTypes.object
 }
 
 const messages = defineMessages({

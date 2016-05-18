@@ -1,0 +1,31 @@
+table {
+  @include span(12 of 12);
+  border-collapse: collapse;
+
+  th, tr {
+    padding: rhythm(1);
+  }
+
+  th, td {
+    padding: 0.5rem;
+
+    @include breakpoint($small){
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  th {
+    @include semiBoldFont;
+    text-align: left;
+    text-transform: capitalize;
+  }
+
+  tr:nth-child(odd) {
+    background: $white;
+  }
+
+  tr:nth-child(even) {
+    background: $greyColor;
+  }
+
+}

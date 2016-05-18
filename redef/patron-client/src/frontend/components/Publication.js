@@ -31,43 +31,46 @@ class Publication extends React.Component {
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
     return (
-      <div onClick={this.handleClick} className='col col-1-3 publication-small'
+      <article onClick={this.handleClick} className={this.props.open ? 'single-publication open' : 'single-publication'}
            data-automation-id={`publication_${publication.uri}`}>
         <div className='book-cover' />
-        <div className='publication-text'>
-          <p>
+        <div className='publication-text-container'>
+              <span data-automation-id='publication_available'>
+                <p className="free"><FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} /></p>
+              </span>
+          <h2>
               <span data-automation-id='publication_title'>
                 {this.renderTitle(publication)}
               </span>
-          </p>
+          </h2>
           <p>
-              <span data-automation-id='publication_year'>
-                {publication.publicationYear}
+              <span data-automation-id='publication_year' data-automation-id='publication_languages'>
+                {publication.publicationYear},
               </span>
-          </p>
-          <p>
+
+
               <span data-automation-id='publication_languages'>
                 {languages.join(', ')}
               </span>
           </p>
-          <p>
-              <span data-automation-id='publication_formats'>
-                {formats.join(', ')}
-              </span>
-          </p>
-          <p>
-              <span data-automation-id='publication_available'>
-                <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
-              </span>
-          </p>
+
+
           {publication.items.length > 0
-            ? (<p>
+            ? (<button className="grey-btn" type="button">
               <span data-automation-id='publication_reserve'>
                 <a onClick={this.handleReservationClick}><FormattedMessage {...messages.reserve} /></a>
               </span>
-          </p>) : null}
+          </button>) : null}
         </div>
-      </div>
+        <div className="show-status">
+          <strong>Vis status</strong>
+
+          <button className="show-status-arrow" type="button">
+            <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down"/>
+          </button>
+
+        </div>
+      </article>
     )
   }
 }
@@ -76,6 +79,7 @@ Publication.propTypes = {
   publication: PropTypes.object.isRequired,
   expandSubResource: PropTypes.func.isRequired,
   startReservation: PropTypes.func.isRequired,
+  open: PropTypes.bool,
   intl: intlShape.isRequired
 }
 

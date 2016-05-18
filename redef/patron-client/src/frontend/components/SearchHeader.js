@@ -53,6 +53,7 @@ class SearchHeader extends React.Component {
         <section className='search-container'>
           <div className='search-box'>
             <form onSubmit={this.handleSearch}>
+              <label for="search"><img src="/images/icon-searchbar-search.svg" alt="Black Magnifying glass"/></label>
               <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                      type='search'
                      defaultValue={this.props.locationQuery.query || ''}

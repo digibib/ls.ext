@@ -12,12 +12,10 @@ class Items extends React.Component {
     return (
       <table>
         <thead>
-        <tr>
           <th><FormattedMessage {...messages.branch} /></th>
           <th><FormattedMessage {...messages.count} /></th>
           <th><FormattedMessage {...messages.placement} /></th>
           <th><FormattedMessage {...messages.status} /></th>
-        </tr>
         </thead>
         <tbody data-automation-id='work_items'>
         {this.props.items.map(item => <Item key={item.barcode} item={item} />)}

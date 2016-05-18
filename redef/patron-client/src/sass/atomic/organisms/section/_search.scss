@@ -1,6 +1,16 @@
 .search-container {
   @extend %container;
   margin: rhythm(2) 0;
+
+  label {
+    margin-top: 18px;
+    margin-left: 10px;
+    float: left;
+    width: auto;
+    height: auto;
+    clip: auto;
+  }
+
 }
 
 .search-box {
@@ -14,9 +24,10 @@
     -webkit-appearance: textfield;
     box-sizing: content-box;
     font-size: 1.3em;
+    padding-left: 1em;
 
     &[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
-      -webkit-appearance: none
+      -webkit-appearance: none;
     }
 
     @include breakpoint($medium){

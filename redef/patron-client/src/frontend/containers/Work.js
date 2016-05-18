@@ -87,48 +87,78 @@ class Work extends React.Component {
               <Subjects subjects={work.subjects} />
               <Genres genres={work.genres} />
 
-              <div>
-                {/*
-                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus porta. In
-                 dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur nunc est vitae purus.
-                 Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices, sapien in volutpat vehicula, lacus
-                 nunc pretium leo, quis dignissim arcu nisl vitae velit. Aliquam sit amet nisl non tortor elementum
-                 consequat. Morbi id nulla ac quam luctus posuere nec a risus. Aenean congue quam tortor, a volutpat
-                 quam mollis nec. Nullam metus ex, efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel
-                 accumsan odio, venenatis fringilla ex.</p>
-                 */}
-              </div>
-
-              <button className='black-btn' type='button'>Bestill første ledige</button>
-              <button className='white-btn-checkmark' type='button'>Min huskeliste</button>
-
             </section>
-            {/*
+            {
+              <aside className='work-subjects show-mobile hidden-tablet hidden-desktop'>
+                <h2>Emner:</h2>
 
-             <aside className='work-subjects'>
-             <h2>Emner:</h2>
+                <ul>
+                  <li><a href='#' alt='Emne #1'>Emne #1</a></li>
+                  <li><a href='#' alt='Emne #2'>Emne #2</a></li>
+                  <li><a href='#' alt='Emne #3'>Emne #3</a></li>
+                </ul>
 
-             <ul>
-             <li><a href='#' alt='Emne #1'>Emne #1</a></li>
-             <li><a href='#' alt='Emne #2'>Emne #2</a></li>
-             <li><a href='#' alt='Emne #3'>Emne #3</a></li>
-             </ul>
+                <a href='#' alt='More subjects'>Se flere emner</a>
+              </aside>
+            }
+            {
 
-             <a href='#' alt='More subjects'>Se flere emner</a>
-             </aside>
+              <aside className='work-genres show-mobile hidden-tablet hidden-desktop'>
+                <h2>Sjanger:</h2>
 
-             <aside className='work-genres'>
-             <h2>Sjanger:</h2>
+                <ul>
+                  <li><a href='#' alt='Genre #1'>Genre #1</a></li>
+                  <li><a href='#' alt='Genre #2'>Genre #2</a></li>
+                  <li><a href='#' alt='Genre #3'>Genre #3</a></li>
+                </ul>
 
-             <ul>
-             <li><a href='#' alt='Genre #1'>Genre #1</a></li>
-             <li><a href='#' alt='Genre #2'>Genre #2</a></li>
-             <li><a href='#' alt='Genre #3'>Genre #3</a></li>
-             </ul>
+                <a href='#' alt='More genres'>Se flere sjangre</a>
+              </aside>
+            }{
 
-             <a href='#' alt='More genres'>Se flere sjangre</a>
-             </aside>
-             */}
+              <div className="work-excerpt">
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus porta. In
+                  dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur nunc est vitae purus.
+                  Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices, sapien in volutpat vehicula, lacus
+                  nunc pretium leo, quis dignissim arcu nisl vitae velit. Aliquam sit amet nisl non tortor elementum
+                  consequat. Morbi id nulla ac quam luctus posuere nec a risus. Aenean congue quam tortor, a volutpat
+                  quam mollis nec. Nullam metus ex, efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel
+                  accumsan odio, venenatis fringilla ex.</p>
+
+
+                <button className='black-btn' type='button'>Bestill første ledige</button>
+                <button className='white-btn-checkmark' type='button'>Min huskeliste</button>
+              </div>
+            }{
+
+            <aside className='work-subjects hidden-mobile show-desktop'>
+              <h2>Emner:</h2>
+
+              <ul>
+                <li><a href='#' alt='Emne #1'>Emne #1</a></li>
+                <li><a href='#' alt='Emne #2'>Emne #2</a></li>
+                <li><a href='#' alt='Emne #3'>Emne #3</a></li>
+              </ul>
+
+              <a href='#' alt='More subjects'>Se flere emner</a>
+            </aside>
+            }
+            {
+
+              <aside className='work-genres hidden-mobile show-desktop'>
+                <h2>Sjanger:</h2>
+
+                <ul>
+                  <li><a href='#' alt='Genre #1'>Genre #1</a></li>
+                  <li><a href='#' alt='Genre #2'>Genre #2</a></li>
+                  <li><a href='#' alt='Genre #3'>Genre #3</a></li>
+                </ul>
+
+                <a href='#' alt='More genres'>Se flere sjangre</a>
+              </aside>
+            }
+
           </article>
           <Publications locationQuery={this.props.locationQuery}
                         expandSubResource={this.props.resourceActions.expandSubResource}

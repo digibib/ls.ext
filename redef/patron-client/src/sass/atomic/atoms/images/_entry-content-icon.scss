@@ -1,5 +1,5 @@
 .entry-content-icon {
-  @include span(12 of 12);
+  @include span(10 of 12);
 
   .entry-content-icon-single {
     img {
@@ -9,8 +9,14 @@
     }
 
     p {
-      float: left;
+      float: left !important;
       text-transform: uppercase;
+      @include semiBoldFont;
     }
+    
+    span {
+      float: left;
+    }
+    
   }
 }

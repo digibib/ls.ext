@@ -1,0 +1,17 @@
+.show-mobile {
+  @include breakpoint($lt-small){
+    display: block;
+  }
+}
+
+.show-tablet {
+  @include breakpoint($small){
+    display: block;
+  }
+}
+
+.show-desktop {
+  @include breakpoint($medium){
+    display: block;
+  }
+}

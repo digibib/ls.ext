@@ -1,4 +1,4 @@
-.work-subjects {
+.work-subjects, .work-genres {
   @include span(12 of 12);
   margin-bottom: rhythm(2);
   @include border-top;
@@ -23,5 +23,15 @@
     padding: rhythm(3);
     padding-left: 0;
   }
+  
+  @include breakpoint($small){
+     float: right;
+  }
 
+}
+
+.work-subjects {
+  @include breakpoint($small){
+    margin-top: -190px;
+  }
 }

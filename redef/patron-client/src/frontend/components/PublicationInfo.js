@@ -15,15 +15,40 @@ class PublicationInfo extends React.Component {
   render () {
     return (
       <div>
-        <div className='col publication-info' data-automation-id={`publication_info_${this.props.publication.uri}`}>
-          <div className='col col-5-6'><h3><FormattedMessage {...messages.items} /></h3></div>
-          <div className='col col-1-6 col-right'><h3>
-            <span className='close-publication-info'
-                  data-automation-id={`close_publication_info_${this.props.publication.uri}`}
-                  onClick={this.handleClick}>X</span>
-          </h3></div>
-          <div className='col'><Items items={this.props.publication.items} /></div>
-        </div>
+        <section className='publication-info' data-automation-id={`publication_info_${this.props.publication.uri}`}>
+
+          <div className='close-publication-info'data-automation-id={`close_publication_info_${this.props.publication.uri}`}
+               onClick={this.handleClick}>
+            <button className="close" type="button">
+              <img src="/images/btn-x.svg" alt="Large X"/>
+            </button>
+          </div>
+
+          <div className='title'><h2>Om denne utgivelsen</h2></div>
+          <div className='entry-content'>
+            <div className="col">
+              <ul>
+              <li><strong>Sidetall:</strong> 322</li>
+              <li><strong>Format:</strong> Bok</li>
+              <li><strong>ISBN:</strong> Norsk</li>
+                <li><strong>Språk:</strong> Norsk</li>
+                </ul>
+            </div>
+
+            <div className="col">
+              <ul>
+                <li><strong>Undertittel:</strong> Snømannen</li>
+                <li><strong>Format:</strong> Bok</li>
+                <li><strong>ISBN:</strong> Norsk</li>
+                <li><strong>Språk:</strong> Norsk</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div className='title'><h2><FormattedMessage {...messages.items} /></h2></div>
+          <div className='entry-content'><Items items={this.props.publication.items} /></div>
+        </section>
       </div>
     )
   }

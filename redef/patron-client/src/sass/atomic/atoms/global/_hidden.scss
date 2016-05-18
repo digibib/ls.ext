@@ -1,0 +1,17 @@
+.hidden-mobile {
+  @include breakpoint($lt-small){
+    display: none;
+  }
+}
+
+.hidden-tablet {
+  @include breakpoint($small){
+    display: none;
+  }
+}
+
+.hidden-desktop {
+  @include breakpoint($medium){
+    display: none;
+  }
+}

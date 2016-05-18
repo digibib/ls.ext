@@ -1,5 +1,8 @@
 @import "global/body";
 @import "global/html";
+@import "global/hidden";
+@import "global/show";
+@import "global/table";
 
 @import "images/img";
 @import "images/entry-content-icon";
@@ -7,6 +10,7 @@
 @import "buttons/button";
 @import "buttons/white-btn-checkmark";
 @import "buttons/black-btn";
+@import "buttons/grey-btn";
 
 @import "fonts/fonts";
 
@@ -16,3 +20,4 @@
 @import "text/headings";
 @import "text/paragraph";
 @import "text/tags";
+@import "text/strong";
