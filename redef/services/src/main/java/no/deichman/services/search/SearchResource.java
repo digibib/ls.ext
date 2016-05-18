@@ -32,7 +32,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Singleton
 @Path("search")
 public class SearchResource extends ResourceBase {
-    public static final String ALL_EXCEPT_LAST_PATH_ELEMENT = "^.+/";
     private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
     @Context
     private ServletConfig servletConfig;
