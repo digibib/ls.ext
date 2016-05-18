@@ -2,14 +2,16 @@ import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import Items from './Items'
 
-export default React.createClass({
-  propTypes: {
-    publication: PropTypes.object.isRequired,
-    expandSubResource: PropTypes.func.isRequired
-  },
+class PublicationInfo extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
+
   handleClick () {
     this.props.expandSubResource(null)
-  },
+  }
+
   render () {
     return (
       <div>
@@ -25,10 +27,17 @@ export default React.createClass({
       </div>
     )
   }
-})
+}
+
+PublicationInfo.propTypes = {
+  publication: PropTypes.object.isRequired,
+  expandSubResource: PropTypes.func.isRequired
+}
 
 const messages = defineMessages({
   items: {
     id: 'PublicationInfo.items', description: 'Heading for items', defaultMessage: 'Items:'
   }
 })
+
+export default PublicationInfo

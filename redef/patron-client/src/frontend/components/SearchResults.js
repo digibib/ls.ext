@@ -2,16 +2,7 @@ import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchResult from './SearchResult'
 
-export default React.createClass({
-  propTypes: {
-    locationQuery: PropTypes.object,
-    searchActions: PropTypes.object.isRequired,
-    searchError: PropTypes.any.isRequired,
-    totalHits: PropTypes.number.isRequired,
-    searchResults: PropTypes.array.isRequired,
-    resources: PropTypes.object.isRequired,
-    fetchWorkResource: PropTypes.func.isRequired
-  },
+class SearchResults extends React.Component {
   render () {
     if (this.props.searchError) {
       return (
@@ -41,7 +32,17 @@ export default React.createClass({
       </section>
     )
   }
-})
+}
+
+SearchResults.propTypes = {
+  locationQuery: PropTypes.object,
+  searchActions: PropTypes.object.isRequired,
+  searchError: PropTypes.any.isRequired,
+  totalHits: PropTypes.number.isRequired,
+  searchResults: PropTypes.array.isRequired,
+  resources: PropTypes.object.isRequired,
+  fetchWorkResource: PropTypes.func.isRequired
+}
 
 const messages = defineMessages({
   searchError: {
@@ -50,3 +51,5 @@ const messages = defineMessages({
     defaultMessage: 'Something went wrong with the search #sadpanda'
   }
 })
+
+export default SearchResults

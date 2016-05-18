@@ -8,22 +8,12 @@ import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
 import Footer from '../components/Footer'
 
-const App = React.createClass({
-  propTypes: {
-    dispatch: PropTypes.func.isRequired,
-    routing: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    children: PropTypes.node.isRequired,
-    languageActions: PropTypes.object.isRequired,
-    loginActions: PropTypes.object.isRequired,
-    locale: PropTypes.string.isRequired,
-    totalHits: PropTypes.number.isRequired,
-    isLoggedIn: PropTypes.bool.isRequired
-  },
+class App extends React.Component {
   componentWillMount () {
     this.props.loginActions.updateLoginStatus()
     this.props.languageActions.loadLanguage()
-  },
+  }
+
   render () {
     return (
       <div>
@@ -43,7 +33,19 @@ const App = React.createClass({
       </div>
     )
   }
-})
+}
+
+App.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  routing: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  children: PropTypes.node.isRequired,
+  languageActions: PropTypes.object.isRequired,
+  loginActions: PropTypes.object.isRequired,
+  locale: PropTypes.string.isRequired,
+  totalHits: PropTypes.number.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired
+}
 
 function mapStateToProps (state) {
   return {

@@ -11,12 +11,7 @@ const MODAL_COMPONENTS = {
   'RESERVATION': Reservation
 }
 
-const ModalRoot = React.createClass({
-  propTypes: {
-    modalType: PropTypes.string,
-    modalProps: PropTypes.object.isRequired,
-    modalActions: PropTypes.object.isRequired
-  },
+class ModalRoot extends React.Component {
   render () {
     if (!this.props.modalType) {
       return null
@@ -28,7 +23,13 @@ const ModalRoot = React.createClass({
       </Modal>
     )
   }
-})
+}
+
+ModalRoot.propTypes = {
+  modalType: PropTypes.string,
+  modalProps: PropTypes.object.isRequired,
+  modalActions: PropTypes.object.isRequired
+}
 
 const customStyle = {
   overlay: {

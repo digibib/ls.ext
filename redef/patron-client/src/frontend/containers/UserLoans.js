@@ -8,17 +8,7 @@ import Branches from '../constants/Branches'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
 
-const UserLoans = React.createClass({
-  propTypes: {
-    dispatch: PropTypes.func.isRequired,
-    profileActions: PropTypes.object.isRequired,
-    loansAndReservations: PropTypes.object.isRequired,
-    routerActions: PropTypes.object.isRequired,
-    currentPath: PropTypes.string.isRequired,
-    isRequestingLoansAndReservations: PropTypes.bool.isRequired,
-    loansAndReservationError: PropTypes.object,
-    intl: intlShape.isRequired
-  },
+class UserLoans extends React.Component {
   renderPickups () {
     return this.props.loansAndReservations.pickup.map(item => (
       <section key={item.recordId} className='single-entry' style={{backgroundColor: '#eee'}}>
@@ -45,7 +35,8 @@ const UserLoans = React.createClass({
         </article>
       </section>
     ))
-  },
+  }
+
   renderReservations () {
     return (
       <table>
@@ -72,7 +63,8 @@ const UserLoans = React.createClass({
         ))}</tbody>
       </table>
     )
-  },
+  }
+
   renderLoans () {
     return this.props.loansAndReservations.loans.map(item => (
       <section key={item.recordId} className='single-entry' style={{backgroundColor: '#eee'}}>
@@ -98,7 +90,8 @@ const UserLoans = React.createClass({
         </article>
       </section>
     ))
-  },
+  }
+
   renderTabs () {
     const tabList = [
       { label: 'Oversikt', path: '/profile/loans/overview' },
@@ -107,7 +100,8 @@ const UserLoans = React.createClass({
     return <Tabs push={this.props.routerActions.push} tabList={tabList} tabClass='tab-bar-tab-small'
                  tabActiveClass='tab-bar-tab-small-active'
                  currentPath={this.props.currentPath} />
-  },
+  }
+
   render () {
     if (this.props.isRequestingLoansAndReservations) {
       return <div />
@@ -143,7 +137,18 @@ const UserLoans = React.createClass({
       </div>
     )
   }
-})
+}
+
+UserLoans.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  profileActions: PropTypes.object.isRequired,
+  loansAndReservations: PropTypes.object.isRequired,
+  routerActions: PropTypes.object.isRequired,
+  currentPath: PropTypes.string.isRequired,
+  isRequestingLoansAndReservations: PropTypes.bool.isRequired,
+  loansAndReservationError: PropTypes.object,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   title: {

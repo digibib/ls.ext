@@ -3,26 +3,23 @@ import { Link } from 'react-router'
 import { push } from 'react-router-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-const SearchHeader = React.createClass({
-  propTypes: {
-    locationQuery: PropTypes.object.isRequired,
-    requireLoginBeforeAction: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    locale: PropTypes.string.isRequired,
-    totalHits: PropTypes.number.isRequired,
-    showLoginDialog: PropTypes.func.isRequired,
-    isLoggedIn: PropTypes.bool.isRequired,
-    logout: PropTypes.func.isRequired,
-    intl: intlShape.isRequired
-  },
-  search (event) {
+class SearchHeader extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.handleLoginClick = this.handleLoginClick.bind(this)
+  }
+
+  handleSearch (event) {
     event.preventDefault()
     this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
-  },
+  }
+
   handleLoginClick (event) {
     event.preventDefault()
     this.props.showLoginDialog()
-  },
+  }
+
   render () {
     return (
       <div>
@@ -55,14 +52,14 @@ const SearchHeader = React.createClass({
         </header>
         <section className='search-container'>
           <div className='search-box'>
-            <form onSubmit={this.search}>
+            <form onSubmit={this.handleSearch}>
               <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                      type='search'
                      defaultValue={this.props.locationQuery.query || ''}
                      ref={e => this.searchFieldInput = e}
                      data-automation-id='search_input_field'
               />
-              <button onClick={this.search} type='button' className='search-submit' data-automation-id='search_button'>
+              <button onClick={this.handleSearch} type='button' className='search-submit' data-automation-id='search_button'>
                 <FormattedMessage {...messages.search} />
               </button>
             </form>
@@ -71,7 +68,19 @@ const SearchHeader = React.createClass({
       </div>
     )
   }
-})
+}
+
+SearchHeader.propTypes = {
+  locationQuery: PropTypes.object.isRequired,
+  requireLoginBeforeAction: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  locale: PropTypes.string.isRequired,
+  totalHits: PropTypes.number.isRequired,
+  showLoginDialog: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  logout: PropTypes.func.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   logoAlt: {

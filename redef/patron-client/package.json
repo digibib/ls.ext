@@ -86,7 +86,7 @@
     "redux-thunk": "2.1.0",
     "rimraf": "2.5.2",
     "sass-loader": "3.2.0",
-    "standard": "7.0.1",
+    "standard": "7.1.0",
     "style-loader": "0.13.1",
     "susy": "2.2.12",
     "urijs": "1.18.0",

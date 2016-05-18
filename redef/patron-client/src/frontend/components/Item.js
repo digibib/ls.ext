@@ -1,16 +1,13 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-const Item = React.createClass({
-  propTypes: {
-    item: PropTypes.object.isRequired,
-    intl: intlShape.isRequired
-  },
+class Item extends React.Component {
   renderStatus (status) {
     return status === 'AVAIL'
       ? <span><FormattedMessage {...messages.available} /></span>
       : <span><FormattedMessage {...messages.expectedAvailable} values={{status: status}} /></span>
-  },
+  }
+
   render () {
     let item = this.props.item
     return (
@@ -22,7 +19,12 @@ const Item = React.createClass({
       </tr>
     )
   }
-})
+}
+
+Item.propTypes = {
+  item: PropTypes.object.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   available: {

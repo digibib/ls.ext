@@ -2,11 +2,7 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { injectIntl, intlShape } from 'react-intl'
 
-const Contributors = React.createClass({
-  propTypes: {
-    contributors: PropTypes.object.isRequired,
-    intl: intlShape.isRequired
-  },
+class Contributors extends React.Component {
   render () {
     return (
       <div>
@@ -22,6 +18,11 @@ const Contributors = React.createClass({
       </div>
     )
   }
-})
+}
+
+Contributors.propTypes = {
+  contributors: PropTypes.object.isRequired,
+  intl: intlShape.isRequired
+}
 
 export default injectIntl(Contributors)

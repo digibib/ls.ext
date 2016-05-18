@@ -3,18 +3,19 @@ import { connect } from 'react-redux'
 import routes from '../routes'
 import { IntlProvider } from 'react-intl'
 
-const Root = React.createClass({
-  propTypes: {
-    locale: PropTypes.string.isRequired,
-    messages: PropTypes.object.isRequired
-  },
+class Root extends React.Component {
   render () {
     return (
       <IntlProvider key='intl' locale={this.props.locale}
                     messages={this.props.messages[this.props.locale]}>{routes}</IntlProvider>
     )
   }
-})
+}
+
+Root.propTypes = {
+  locale: PropTypes.string.isRequired,
+  messages: PropTypes.object.isRequired
+}
 
 function mapStateToProps (state) {
   return {

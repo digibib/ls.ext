@@ -5,33 +5,29 @@ import * as ResourceActions from '../actions/ResourceActions'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-const Person = React.createClass({
-  propTypes: {
-    resources: PropTypes.object.isRequired,
-    isRequesting: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    resourceActions: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
-    intl: intlShape.isRequired
-  },
+class Person extends React.Component {
   componentWillMount () {
     this.props.resourceActions.fetchPersonResource(`/person/${this.props.params.personId}`)
-  },
+  }
+
   renderNoPerson () {
     return (
       <div>
         <FormattedMessage {...messages.noPerson} />
       </div>
     )
-  },
+  }
+
   renderEmpty () {
     return <div></div>
-  },
+  }
+
   renderLifeSpan (person) {
     if (person.birthYear) {
       return `(${person.birthYear}-${person.deathYear || ''})`
     }
-  },
+  }
+
   renderWorks (person) {
     let workTitle = work => {
       let title = work.mainTitle
@@ -49,7 +45,8 @@ const Person = React.createClass({
         </p>
       )
     })
-  },
+  }
+
   renderNationality (person) {
     if (person.nationality) {
       return (
@@ -59,7 +56,8 @@ const Person = React.createClass({
         </p>
       )
     }
-  },
+  }
+
   render () {
     // TODO Better renderEmpty and showing something while it loads the resource.
     if (this.props.isRequesting) {
@@ -94,7 +92,16 @@ const Person = React.createClass({
       </div>
     )
   }
-})
+}
+
+Person.propTypes = {
+  resources: PropTypes.object.isRequired,
+  isRequesting: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  resourceActions: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   noPerson: {

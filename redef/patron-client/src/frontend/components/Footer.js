@@ -1,15 +1,16 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 
-const Footer = React.createClass({
-  propTypes: {
-    loadLanguage: PropTypes.func.isRequired,
-    locale: PropTypes.string.isRequired,
-    intl: intlShape.isRequired
-  },
+class Footer extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleChangeLanguage = this.handleChangeLanguage.bind(this)
+  }
+
   handleChangeLanguage () {
     this.props.loadLanguage(this.props.locale === 'no' ? 'en' : 'no')
-  },
+  }
+
   render () {
     return (
       <footer className='main-footer'>
@@ -32,7 +33,13 @@ const Footer = React.createClass({
       </footer>
     )
   }
-})
+}
+
+Footer.propTypes = {
+  loadLanguage: PropTypes.func.isRequired,
+  locale: PropTypes.string.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   contactUs: {

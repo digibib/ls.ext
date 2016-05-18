@@ -145,18 +145,18 @@ module.exports = (app) => {
 
   function parsePatron (patron) {
     return {
-      borrowerNumber: patron.borrowernumber,
+      borrowerNumber: patron.borrowernumber || '',
       name: `${patron.firstname} ${patron.surname}`,
-      address: patron.address,
-      zipcode: patron.zipcode,
-      city: patron.city,
-      country: patron.country,
-      mobile: patron.smsalertnumber, // is this the only sms number?
-      telephone: patron.phone,
-      email: patron.email,
-      birthdate: patron.dateofbirth,
-      loanerCardIssued: patron.dateenrolled,
-      loanerCategory: patron.categorycode,
+      address: patron.address || '',
+      zipcode: patron.zipcode || '',
+      city: patron.city || '',
+      country: patron.country || '',
+      mobile: patron.smsalertnumber || '', // is this the only sms number?
+      telephone: patron.phone || '',
+      email: patron.email || '',
+      birthdate: patron.dateofbirth || '',
+      loanerCardIssued: patron.dateenrolled || '',
+      loanerCategory: patron.categorycode || '',
       lastUpdated: '2016-02-01'
     }
   }

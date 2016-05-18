@@ -5,31 +5,28 @@ import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
 import { getId } from '../utils/uriParser'
 
-export default React.createClass({
-  propTypes: {
-    publications: PropTypes.array.isRequired,
-    expandSubResource: PropTypes.func.isRequired,
-    locationQuery: PropTypes.object.isRequired,
-    startReservation: PropTypes.func.isRequired
-  },
+class Publications extends React.Component {
   componentWillMount () {
     if (this.props.publications.length === 1) {
       this.props.expandSubResource(this.props.publications[ 0 ].id, true)
     }
-  },
+  }
+
   renderEmpty () {
     return (
       <h2 data-automation-id='no_publications'>
         <FormattedMessage {...messages.noPublications} />
       </h2>
     )
-  },
+  }
+
   getArrow (column) {
     return [ 0, 1, 2 ].map(number =>
       <div key={`column-${number}`} className='col col-1-3'>
         {number === column ? <div className='triangle-up' /> : ''}&nbsp;</div>
     )
-  },
+  }
+
   renderPublications () {
     let publications = [ ...this.props.publications ]
     let threeAndThreePublications = []
@@ -68,7 +65,8 @@ export default React.createClass({
         }
       </div>
     )
-  },
+  }
+
   render () {
     return (
       <footer className='other-publications'>
@@ -79,10 +77,10 @@ export default React.createClass({
 
         <div className='entry-content-icon'>
           <div className='entry-content-icon-single'>
-          {/*
-            <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
-            <p>Lydbok</p>
-          */}
+            {/*
+             <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
+             <p>Lydbok</p>
+             */}
           </div>
         </div>
 
@@ -92,7 +90,14 @@ export default React.createClass({
       </footer>
     )
   }
-})
+}
+
+Publications.propTypes = {
+  publications: PropTypes.array.isRequired,
+  expandSubResource: PropTypes.func.isRequired,
+  locationQuery: PropTypes.object.isRequired,
+  startReservation: PropTypes.func.isRequired
+}
 
 const messages = defineMessages({
   title: {
@@ -123,3 +128,5 @@ const messages = defineMessages({
     defaultMessage: 'Publications ({numberOfPublications})'
   }
 })
+
+export default Publications

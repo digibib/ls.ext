@@ -2,32 +2,35 @@ import React, { PropTypes } from 'react'
 import Constants from '../constants/Constants'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-const SearchFilter = React.createClass({
-  propTypes: {
-    aggregation: PropTypes.string.isRequired,
-    filters: PropTypes.array,
-    toggleFilter: PropTypes.func.isRequired,
-    toggleFilterVisibility: PropTypes.func.isRequired,
-    toggleCollapseFilter: PropTypes.func.isRequired,
-    locationQuery: PropTypes.object.isRequired,
-    intl: intlShape.isRequired
-  },
+import SearchFilterItem from './SearchFilterItem'
+
+class SearchFilter extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleCollapse = this.handleCollapse.bind(this)
+    this.handleShowAllClick = this.handleShowAllClick.bind(this)
+  }
+
   handleShowAllClick () {
     this.props.toggleFilterVisibility(this.props.aggregation)
-  },
+  }
+
   renderEmpty () {
     return <div data-automation-id='empty'></div>
-  },
+  }
+
   shouldShowMore () {
     let { showMore } = this.props.locationQuery
     let { aggregation } = this.props
     return (showMore && showMore === aggregation || (Array.isArray(showMore) && showMore.includes(aggregation)))
-  },
+  }
+
   isCollapsed () {
     let { collapse } = this.props.locationQuery
     let { aggregation } = this.props
     return (collapse && collapse === aggregation || (Array.isArray(collapse) && collapse.includes(aggregation)))
-  },
+  }
+
   renderFilters () {
     if (this.isCollapsed()) {
       return
@@ -37,30 +40,24 @@ const SearchFilter = React.createClass({
         if (!this.shouldShowMore() && index >= Constants.maxVisibleFilterItems) {
           return ''
         }
-        // TODO Fix and uncomment display of filter count
         return (
-          <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick.bind(this, filter)}
-              data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
-            <input type='checkbox' readOnly checked={filter.active} />
-            <label htmlFor='checkbox'>Checkbox</label>
-            <h2 className='filter_label'
-                data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2>{/* (
-            <span data-automation-id='filter_count'>{filter.count}</span>) */}
-          </li>
+          <SearchFilterItem key={filter.aggregation + '_' + filter.bucket}
+                            filter={filter}
+                            toggleFilter={this.props.toggleFilter} />
         )
       })
-  },
+  }
+
   handleCollapse () {
     this.props.toggleCollapseFilter(this.props.aggregation)
-  },
+  }
+
   renderTitle () {
     return messages[ this.props.aggregation ]
       ? this.props.intl.formatMessage(messages[ this.props.aggregation ])
       : this.props.aggregation
-  },
-  handleClick (filter) {
-    this.props.toggleFilter(filter.aggregation, filter.bucket)
-  },
+  }
+
   renderShowMore () {
     if (this.props.filters.length <= Constants.maxVisibleFilterItems) {
       return
@@ -72,7 +69,8 @@ const SearchFilter = React.createClass({
           : <FormattedMessage {...messages.showMore} />}</h3>
       </div>
     )
-  },
+  }
+
   render () {
     if (!this.props.filters || this.props.filters.size === 0) {
       return this.renderEmpty()
@@ -95,7 +93,17 @@ const SearchFilter = React.createClass({
       </div>
     )
   }
-})
+}
+
+SearchFilter.propTypes = {
+  aggregation: PropTypes.string.isRequired,
+  filters: PropTypes.array,
+  toggleFilter: PropTypes.func.isRequired,
+  toggleFilterVisibility: PropTypes.func.isRequired,
+  toggleCollapseFilter: PropTypes.func.isRequired,
+  locationQuery: PropTypes.object.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   showMore: {

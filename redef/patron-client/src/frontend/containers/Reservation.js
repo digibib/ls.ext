@@ -7,17 +7,13 @@ import Branches from '../constants/Branches'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ModalActions from '../actions/ModalActions'
 
-const Reservation = React.createClass({
-  propTypes: {
-    isLoggedIn: PropTypes.bool.isRequired,
-    isRequestingReservation: PropTypes.bool.isRequired,
-    reservationActions: PropTypes.object.isRequired,
-    modalActions: PropTypes.object.isRequired,
-    isSuccess: PropTypes.bool,
-    isError: PropTypes.bool,
-    message: PropTypes.string,
-    recordId: PropTypes.string
-  },
+class Reservation extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleReserve = this.handleReserve.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
+  }
+
   renderBranches () {
     const branchOptions = []
     Object.keys(Branches).forEach(branchCode => {
@@ -25,15 +21,18 @@ const Reservation = React.createClass({
       branchOptions.push(<option key={branchCode} value={branchCode}>{branchName}</option>)
     })
     return branchOptions
-  },
+  }
+
   handleReserve (event) {
     event.preventDefault()
     this.props.reservationActions.reservePublication(this.props.recordId, this.branchSelect.value)
-  },
+  }
+
   handleCancel (event) {
     event.preventDefault()
     this.props.modalActions.hideModal()
-  },
+  }
+
   renderSuccess () {
     return (
       <div data-automation-id='reservation_success_modal'>
@@ -42,7 +41,8 @@ const Reservation = React.createClass({
         <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button} /></button>
       </div>
     )
-  },
+  }
+
   renderError () {
     return (
       <div data-automation-id='reservation_error_modal'>
@@ -54,7 +54,8 @@ const Reservation = React.createClass({
         <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button} /></button>
       </div>
     )
-  },
+  }
+
   render () {
     if (this.props.isError) {
       return this.renderError()
@@ -70,7 +71,8 @@ const Reservation = React.createClass({
           </select>
           <br />
           <br />
-          <button data-automation-id='reserve_button' disabled={this.props.isRequestingReservation} onClick={this.handleReserve}>
+          <button data-automation-id='reserve_button' disabled={this.props.isRequestingReservation}
+                  onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>
           <button disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
@@ -80,7 +82,18 @@ const Reservation = React.createClass({
       </div>
     )
   }
-})
+}
+
+Reservation.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  isRequestingReservation: PropTypes.bool.isRequired,
+  reservationActions: PropTypes.object.isRequired,
+  modalActions: PropTypes.object.isRequired,
+  isSuccess: PropTypes.bool,
+  isError: PropTypes.bool,
+  message: PropTypes.string,
+  recordId: PropTypes.string
+}
 
 const messages = defineMessages({
   choosePickupLocation: {

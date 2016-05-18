@@ -1,28 +1,31 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-const Publication = React.createClass({
-  propTypes: {
-    publication: PropTypes.object.isRequired,
-    expandSubResource: PropTypes.func.isRequired,
-    startReservation: PropTypes.func.isRequired,
-    intl: intlShape.isRequired
-  },
+class Publication extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+    this.handleReservationClick = this.handleReservationClick.bind(this)
+  }
+
   renderTitle (publication) {
     let title = publication.mainTitle
     if (publication.partTitle) {
       title += ` — ${publication.partTitle}`
     }
     return title
-  },
+  }
+
   handleClick () {
     this.props.expandSubResource(this.props.publication.id)
-  },
+  }
+
   handleReservationClick (event) {
     event.preventDefault()
     event.stopPropagation()
     this.props.startReservation(this.props.publication.recordId)
-  },
+  }
+
   render () {
     const publication = this.props.publication
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
@@ -67,7 +70,14 @@ const Publication = React.createClass({
       </div>
     )
   }
-})
+}
+
+Publication.propTypes = {
+  publication: PropTypes.object.isRequired,
+  expandSubResource: PropTypes.func.isRequired,
+  startReservation: PropTypes.func.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   available: {

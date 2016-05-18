@@ -4,14 +4,12 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
 
-const UserSettings = React.createClass({
-  propTypes: {
-    dispatch: PropTypes.func.isRequired,
-    profileActions: PropTypes.object.isRequired,
-    isRequestingSettings: PropTypes.bool.isRequired,
-    settings: PropTypes.object.isRequired,
-    settingsError: PropTypes.object
-  },
+class UserSettings extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleSaveClick = this.handleSaveClick.bind(this)
+  }
+
   handleSaveClick (event) {
     event.preventDefault()
     const profileSettings = {
@@ -35,7 +33,8 @@ const UserSettings = React.createClass({
       }
     }
     this.props.profileActions.postProfileSettings(profileSettings)
-  },
+  }
+
   render () {
     if (this.props.isRequestingSettings) {
       return <div />
@@ -88,7 +87,15 @@ const UserSettings = React.createClass({
       </div>
     )
   }
-})
+}
+
+UserSettings.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  profileActions: PropTypes.object.isRequired,
+  isRequestingSettings: PropTypes.bool.isRequired,
+  settings: PropTypes.object.isRequired,
+  settingsError: PropTypes.object
+}
 
 const messages = defineMessages({
   alerts: {

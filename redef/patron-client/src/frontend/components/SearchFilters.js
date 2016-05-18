@@ -2,26 +2,20 @@ import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchFilter from './SearchFilter'
 
-export default React.createClass({
-  propTypes: {
-    filters: PropTypes.array.isRequired,
-    locationQuery: PropTypes.object.isRequired,
-    toggleFilter: PropTypes.func.isRequired,
-    toggleFilterVisibility: PropTypes.func.isRequired,
-    toggleAllFiltersVisibility: PropTypes.func.isRequired,
-    toggleCollapseFilter: PropTypes.func.isRequired
-  },
-  getDefaultProps () {
-    return {
-      filters: []
-    }
-  },
+class SearchFilters extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleFiltersOpenClick = this.handleFiltersOpenClick.bind(this)
+  }
+
   renderEmpty () {
     return <div data-automation-id='empty'></div>
-  },
+  }
+
   handleFiltersOpenClick () {
     this.props.toggleAllFiltersVisibility()
-  },
+  }
+
   render () {
     let groupedFilters = {}
     if (this.props.locationQuery.query && this.props.filters) {
@@ -71,7 +65,18 @@ export default React.createClass({
       return this.renderEmpty()
     }
   }
-})
+}
+
+SearchFilters.propTypes = {
+  filters: PropTypes.array.isRequired,
+  locationQuery: PropTypes.object.isRequired,
+  toggleFilter: PropTypes.func.isRequired,
+  toggleFilterVisibility: PropTypes.func.isRequired,
+  toggleAllFiltersVisibility: PropTypes.func.isRequired,
+  toggleCollapseFilter: PropTypes.func.isRequired
+}
+
+SearchFilters.defaultProps = { filters: [] }
 
 const messages = defineMessages({
   limit: {
@@ -80,3 +85,5 @@ const messages = defineMessages({
     defaultMessage: 'Limit your search'
   }
 })
+
+export default SearchFilters

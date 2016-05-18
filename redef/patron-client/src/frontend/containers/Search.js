@@ -13,37 +13,30 @@ import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
 import SearchResultsText from '../components/SearchResultsText'
 
-const Search = React.createClass({
-  propTypes: {
-    searchActions: PropTypes.object.isRequired,
-    searchFilterActions: PropTypes.object.isRequired,
-    searchResults: PropTypes.array.isRequired,
-    isSearching: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    searchError: PropTypes.any.isRequired,
-    filters: PropTypes.array.isRequired,
-    location: PropTypes.object.isRequired,
-    searchFieldInput: PropTypes.string,
-    totalHits: PropTypes.number.isRequired,
-    locationQuery: PropTypes.object.isRequired,
-    resources: PropTypes.object.isRequired,
-    resourceActions: PropTypes.object.isRequired
-  },
+class Search extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handlePageClick = this.handlePageClick.bind(this)
+  }
+
   componentWillMount () {
     this.props.searchActions.search()
-  },
+  }
+
   componentDidUpdate (prevProps) {
     if (!shallowEqual(this.filterLocationQuery(this.props.locationQuery), this.filterLocationQuery(prevProps.locationQuery))) {
       this.props.searchActions.search()
     }
-  },
+  }
+
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
     Object.keys(locationQuery).filter(key => key.startsWith('filter_') || key === 'query' || key === 'page').forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
-  },
+  }
+
   handlePageClick (data) {
     let page = String(data.selected + 1)
     if (page !== this.props.location.query.page) {
@@ -53,7 +46,8 @@ const Search = React.createClass({
       }
       this.props.dispatch(push({ pathname: '/search', query: newQuery }))
     }
-  },
+  }
+
   renderPagination () {
     if ((this.props.totalHits > Constants.searchQuerySize) && this.props.location.query.query) {
       return (
@@ -73,7 +67,8 @@ const Search = React.createClass({
         </section>
       )
     }
-  },
+  }
+
   render () {
     return (
       <div className='container'>
@@ -120,7 +115,23 @@ const Search = React.createClass({
       </div>
     )
   }
-})
+}
+
+Search.propTypes = {
+  searchActions: PropTypes.object.isRequired,
+  searchFilterActions: PropTypes.object.isRequired,
+  searchResults: PropTypes.array.isRequired,
+  isSearching: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  searchError: PropTypes.any.isRequired,
+  filters: PropTypes.array.isRequired,
+  location: PropTypes.object.isRequired,
+  searchFieldInput: PropTypes.string,
+  totalHits: PropTypes.number.isRequired,
+  locationQuery: PropTypes.object.isRequired,
+  resources: PropTypes.object.isRequired,
+  resourceActions: PropTypes.object.isRequired
+}
 
 export { Search as Search }
 

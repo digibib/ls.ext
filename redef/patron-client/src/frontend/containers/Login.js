@@ -6,17 +6,13 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import * as LoginActions from '../actions/LoginActions'
 import * as ModalActions from '../actions/ModalActions'
 
-const Login = React.createClass({
-  propTypes: {
-    dispatch: PropTypes.func.isRequired,
-    isLoggedIn: PropTypes.bool.isRequired,
-    loginActions: PropTypes.object.isRequired,
-    modalActions: PropTypes.object.isRequired,
-    isRequestingLogin: PropTypes.bool.isRequired,
-    successAction: PropTypes.object,
-    loginError: PropTypes.string,
-    intl: intlShape.isRequired
-  },
+class Login extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleLogin = this.handleLogin.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
+  }
+
   handleLogin (event) {
     event.preventDefault()
     this.props.loginActions.login(
@@ -24,11 +20,13 @@ const Login = React.createClass({
       this.passwordInput.value,
       this.props.successAction ? [ ModalActions.hideModal(), this.props.successAction ] : [ ModalActions.hideModal() ]
     )
-  },
+  }
+
   handleCancel (event) {
     event.preventDefault()
     this.props.modalActions.hideModal()
-  },
+  }
+
   renderError () {
     if (this.props.loginError) {
       return (
@@ -39,7 +37,8 @@ const Login = React.createClass({
         </p>
       )
     }
-  },
+  }
+
   render () {
     return (
       <div data-automation-id='login_modal'>
@@ -64,7 +63,7 @@ const Login = React.createClass({
       </div>
     )
   }
-})
+}
 
 const messages = defineMessages({
   username: {
@@ -98,6 +97,17 @@ const messages = defineMessages({
     defaultMessage: 'Something went wrong when attempting to log in!'
   }
 })
+
+Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  loginActions: PropTypes.object.isRequired,
+  modalActions: PropTypes.object.isRequired,
+  isRequestingLogin: PropTypes.bool.isRequired,
+  successAction: PropTypes.object,
+  loginError: PropTypes.string,
+  intl: intlShape.isRequired
+}
 
 function mapStateToProps (state) {
   return {

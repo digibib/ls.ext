@@ -8,18 +8,7 @@ import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
 import Tabs from '../components/Tabs'
 
-const MyPage = React.createClass({
-  propTypes: {
-    dispatch: PropTypes.func.isRequired,
-    loginActions: PropTypes.object.isRequired,
-    borrowerNumber: PropTypes.string,
-    isLoggedIn: PropTypes.bool.isRequired,
-    profileActions: PropTypes.object.isRequired,
-    currentPath: PropTypes.string.isRequired,
-    routerActions: PropTypes.object.isRequired,
-    children: PropTypes.node.isRequired,
-    intl: intlShape.isRequired
-  },
+class MyPage extends React.Component {
   componentWillMount () {
     if (this.props.isLoggedIn) {
       this.props.profileActions.fetchAllProfileData()
@@ -27,15 +16,18 @@ const MyPage = React.createClass({
       // TODO Find a solution for showing login dialog when refreshing / accessing a privileged page directly
       // this.props.loginActions.showLoginDialog()
     }
-  },
+  }
+
   componentDidUpdate (prevProps) {
     if (prevProps.isLoggedIn === false && this.props.isLoggedIn === true) {
       this.props.profileActions.fetchAllProfileData()
     }
-  },
+  }
+
   renderNotLoggedIn () {
     return <div data-automation-id='profile_not_logged_in'><FormattedMessage {...messages.mustBeLoggedIn} /></div>
-  },
+  }
+
   render () {
     if (!this.props.isLoggedIn) {
       return this.renderNotLoggedIn()
@@ -53,7 +45,19 @@ const MyPage = React.createClass({
       </div>
     )
   }
-})
+}
+
+MyPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  loginActions: PropTypes.object.isRequired,
+  borrowerNumber: PropTypes.string,
+  isLoggedIn: PropTypes.bool.isRequired,
+  profileActions: PropTypes.object.isRequired,
+  currentPath: PropTypes.string.isRequired,
+  routerActions: PropTypes.object.isRequired,
+  children: PropTypes.node.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   loansAndReservations: {

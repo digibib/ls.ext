@@ -4,7 +4,12 @@
     "standard-react"
   ],
   "rules": {
-    "react/jsx-no-bind": 0,
+    "react/jsx-no-bind": [
+      2,
+      {
+        "ignoreRefs": true
+      }
+    ],
     "react/jsx-indent-props": 0,
     "react/jsx-indent": 0,
     "no-return-assign": 0

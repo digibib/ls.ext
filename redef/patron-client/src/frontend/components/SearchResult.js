@@ -4,21 +4,19 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 
 import Items from '../components/Items'
 
-const SearchResult = React.createClass({
-  propTypes: {
-    result: PropTypes.object.isRequired,
-    locationQuery: PropTypes.object.isRequired,
-    showStatus: PropTypes.func.isRequired,
-    resources: PropTypes.object.isRequired,
-    fetchWorkResource: PropTypes.func.isRequired,
-    intl: intlShape.isRequired
-  },
+class SearchResult extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleShowStatusClick = this.handleShowStatusClick.bind(this)
+  }
+
   componentWillMount () {
     const { relativeUri } = this.props.result
     if (this.shouldShowStatus() && !this.props.resources[ relativeUri ]) {
       this.props.fetchWorkResource(relativeUri)
     }
-  },
+  }
+
   renderContributors (contributors) {
     if (contributors.length > 0) {
       return (
@@ -30,7 +28,8 @@ const SearchResult = React.createClass({
         </p>
       )
     }
-  },
+  }
+
   renderDisplayTitle (result) {
     let displayTitle = result.mainTitle
     if (result.partTitle) {
@@ -41,7 +40,8 @@ const SearchResult = React.createClass({
         <span className='workTitle' data-automation-id='work-title'>{displayTitle}</span>
       </Link>
     )
-  },
+  }
+
   renderOriginalTitle (result) {
     if (result.originalTitle) {
       return (
@@ -50,7 +50,8 @@ const SearchResult = React.createClass({
         </p>
       )
     }
-  },
+  }
+
   renderSubjects (result) {
     if (result.subjects) {
       return (
@@ -66,24 +67,28 @@ const SearchResult = React.createClass({
         </p>
       )
     }
-  },
+  }
+
   renderItems (result) {
     const resource = this.props.resources[ result.relativeUri ]
     if (resource) {
       return <Items items={resource.items} />
     }
-  },
+  }
+
   handleShowStatusClick (event) {
     event.stopPropagation()
     event.preventDefault()
     this.props.fetchWorkResource(this.props.result.relativeUri)
     this.props.showStatus(this.props.result.relativeUri)
-  },
+  }
+
   shouldShowStatus () {
     const { showStatus } = this.props.locationQuery
     const { relativeUri } = this.props.result
     return (showStatus && showStatus === relativeUri || (Array.isArray(showStatus) && showStatus.includes(relativeUri)))
-  },
+  }
+
   render () {
     const result = this.props.result
 
@@ -158,7 +163,16 @@ const SearchResult = React.createClass({
       </section>
     )
   }
-})
+}
+
+SearchResult.propTypes = {
+  result: PropTypes.object.isRequired,
+  locationQuery: PropTypes.object.isRequired,
+  showStatus: PropTypes.func.isRequired,
+  resources: PropTypes.object.isRequired,
+  fetchWorkResource: PropTypes.func.isRequired,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   originalTitle: {

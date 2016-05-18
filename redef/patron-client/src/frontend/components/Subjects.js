@@ -1,17 +1,15 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-export default React.createClass({
-  propTypes: {
-    subjects: PropTypes.array.isRequired
-  },
+class Subjects extends React.Component {
   renderLabel (subject) {
     let label = subject.prefLabel
     if (subject.specification) {
       label += ` (${subject.specification})`
     }
     return label
-  },
+  }
+
   render () {
     let subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
     return (
@@ -21,7 +19,11 @@ export default React.createClass({
       </p>
     )
   }
-})
+}
+
+Subjects.propTypes = {
+  subjects: PropTypes.array.isRequired
+}
 
 const messages = defineMessages({
   subject: {
@@ -30,3 +32,5 @@ const messages = defineMessages({
     defaultMessage: 'Subject:'
   }
 })
+
+export default Subjects

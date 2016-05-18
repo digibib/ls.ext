@@ -1,17 +1,15 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-export default React.createClass({
-  propTypes: {
-    genres: PropTypes.array.isRequired
-  },
+class Genres extends React.Component {
   renderLabel (genre) {
     let label = genre.prefLabel
     if (genre.genreSubdivision) {
       label += ` (${genre.genreSubdivision})`
     }
     return label
-  },
+  }
+
   render () {
     let genres = this.props.genres.map(genre => this.renderLabel(genre))
     return (
@@ -21,7 +19,11 @@ export default React.createClass({
       </p>
     )
   }
-})
+}
+
+Genres.propTypes = {
+  genres: PropTypes.array.isRequired
+}
 
 const messages = defineMessages({
   genre: {
@@ -30,3 +32,5 @@ const messages = defineMessages({
     defaultMessage: 'Genre:'
   }
 })
+
+export default Genres

@@ -3,13 +3,11 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Item from './Item'
 
-export default React.createClass({
-  propTypes: {
-    items: PropTypes.array.isRequired
-  },
+class Items extends React.Component {
   renderEmpty () {
     return <p><span data-automation-id='no_items'><FormattedMessage {...messages.noItems} /></span></p>
-  },
+  }
+
   renderItems () {
     return (
       <table>
@@ -26,13 +24,18 @@ export default React.createClass({
         </tbody>
       </table>
     )
-  },
+  }
+
   render () {
     return this.props.items.length > 0
       ? this.renderItems()
       : this.renderEmpty()
   }
-})
+}
+
+Items.propTypes = {
+  items: PropTypes.array.isRequired
+}
 
 const messages = defineMessages({
   branch: {
@@ -69,3 +72,5 @@ const messages = defineMessages({
     id: 'Items.numberOfCopies', description: 'The number of copies', defaultMessage: 'Copies ({numberOfCopies})'
   }
 })
+
+export default Items

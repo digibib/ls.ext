@@ -2,12 +2,7 @@ import React, { PropTypes } from 'react'
 import { defineMessages, FormattedHTMLMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 
-export default React.createClass({
-  propTypes: {
-    locationQuery: PropTypes.object,
-    totalHits: PropTypes.number.isRequired,
-    mediaQueryValues: PropTypes.object
-  },
+class SearchResultsText extends React.Component {
   render () {
     if (!this.props.locationQuery.query) {
       return null
@@ -26,7 +21,13 @@ export default React.createClass({
       )
     }
   }
-})
+}
+
+SearchResultsText.propTypes = {
+  locationQuery: PropTypes.object,
+  totalHits: PropTypes.number.isRequired,
+  mediaQueryValues: PropTypes.object
+}
 
 const messages = defineMessages({
   totalHits: {
@@ -45,3 +46,5 @@ const messages = defineMessages({
     defaultMessage: 'Search for works'
   }
 })
+
+export default SearchResultsText

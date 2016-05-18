@@ -7,41 +7,36 @@ import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
 import EditableField from '../components/EditableField'
 
-const UserInfo = React.createClass({
-  propTypes: {
-    dispatch: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired,
-    profileActions: PropTypes.object.isRequired,
-    personalInformation: PropTypes.object.isRequired,
-    fields: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    parameterActions: PropTypes.object.isRequired,
-    isRequestingPersonalInformation: PropTypes.bool.isRequired,
-    loginActions: PropTypes.object.isRequired,
-    personalInformationError: PropTypes.object,
-    intl: intlShape.isRequired
-  },
+class UserInfo extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChangeClick = this.handleChangeClick.bind(this)
+  }
+
   handleSubmit () {
     this.props.loginActions.requireLoginBeforeAction(
       ProfileActions.postProfileInfo(ParameterActions.toggleParameter('/profile/info', 'edit'))
     )
-  },
+  }
+
   handleChangeClick (event) {
     event.preventDefault()
     this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('/profile/info', 'edit'))
-  },
+  }
+
   generateField (fieldName, editable) {
     const field = this.props.fields[ fieldName ]
     return (
       <div key={fieldName}>
         <FormattedMessage {...messages[ fieldName ]} /><br />
         <EditableField editable={editable}
-                       value={this.props.personalInformation[fieldName]}
                        inputProps={{placeholder: this.props.intl.formatMessage({...messages[fieldName]}), ...field}} />
         {field.touched && field.error && <div style={{color: 'red'}}>{this.props.intl.formatMessage(field.error)}</div>}
       </div>
     )
-  },
+  }
+
   render () {
     if (this.props.isRequestingPersonalInformation) {
       return <div />
@@ -89,7 +84,21 @@ const UserInfo = React.createClass({
       </div>
     )
   }
-})
+}
+
+UserInfo.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
+  profileActions: PropTypes.object.isRequired,
+  personalInformation: PropTypes.object.isRequired,
+  fields: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  parameterActions: PropTypes.object.isRequired,
+  isRequestingPersonalInformation: PropTypes.bool.isRequired,
+  loginActions: PropTypes.object.isRequired,
+  personalInformationError: PropTypes.object,
+  intl: intlShape.isRequired
+}
 
 const messages = defineMessages({
   address: {
