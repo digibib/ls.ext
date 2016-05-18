@@ -10,6 +10,7 @@ Bakgrunn:
   Gitt at jeg er pålogget som adminbruker
   Og at boka finnes i biblioteket
   Og at det finnes en låner med passord
+  Og at jeg er logget på som superbruker via REST API
 
   Scenario: Eksisterende låner reserverer bok
     Gitt at låner er pålogget som låner (Opac)

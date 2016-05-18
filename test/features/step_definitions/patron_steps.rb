@@ -30,6 +30,7 @@ end
 Given(/^at det finnes en låner med lånekort$/) do |table|
   step "at det finnes en avdeling"        unless @active[:branch]
   step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
+  step "at jeg er logget på som superbruker via REST API" unless @context[:koha_rest_api_cookie]
 
   patrons = table.hashes
 

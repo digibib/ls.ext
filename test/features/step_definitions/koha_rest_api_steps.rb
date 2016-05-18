@@ -26,7 +26,11 @@ end
 
 Given(/^at jeg er autentisert som superbruker via REST API$/) do
 	step "at det finnes en superbruker"
-	KohaRESTAPI::Auth.new(@browser,@context,@active).login("super", "secret")
+  step "at jeg er logget på som superbruker via REST API"
+end
+
+Given(/^at jeg er logget på som superbruker via REST API$/) do
+  KohaRESTAPI::Auth.new(@browser,@context,@active).login("super", "secret")
 end
 
 When(/^låneren reserverer boka via API$/) do
