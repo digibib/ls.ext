@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-import Branches from '../constants/Branches'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ModalActions from '../actions/ModalActions'
 
@@ -16,9 +15,12 @@ class Reservation extends React.Component {
 
   renderBranches () {
     const branchOptions = []
-    Object.keys(Branches).forEach(branchCode => {
-      const branchName = Branches[ branchCode ]
-      branchOptions.push(<option key={branchCode} value={branchCode}>{branchName}</option>)
+    const libraries = this.props.libraries
+    Object.keys(libraries).forEach(branchCode => {
+      const branchName = libraries[branchCode]
+      branchOptions.push(<option key={branchCode} value={branchCode}>
+                           {branchName}
+                         </option>)
     })
     return branchOptions
   }
@@ -37,8 +39,12 @@ class Reservation extends React.Component {
     return (
       <div data-automation-id='reservation_success_modal'>
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
-        <p><FormattedMessage {...messages.messageSuccess} /></p>
-        <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button} /></button>
+        <p>
+          <FormattedMessage {...messages.messageSuccess} />
+        </p>
+        <button onClick={this.props.modalActions.hideModal}>
+          <FormattedMessage {...messages.button} />
+        </button>
       </div>
     )
   }
@@ -47,11 +53,14 @@ class Reservation extends React.Component {
     return (
       <div data-automation-id='reservation_error_modal'>
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
-        <p>{messages[ this.props.message ]
-          ? <FormattedMessage {...messages[ this.props.message ]} />
-          : <FormattedMessage {...messages.genericReservationError} />}
+        <p>
+          {messages[ this.props.message ]
+             ? <FormattedMessage {...messages[ this.props.message ]} />
+             : <FormattedMessage {...messages.genericReservationError} />}
         </p>
-        <button onClick={this.props.modalActions.hideModal}><FormattedMessage {...messages.button} /></button>
+        <button onClick={this.props.modalActions.hideModal}>
+          <FormattedMessage {...messages.button} />
+        </button>
       </div>
     )
   }
@@ -65,7 +74,9 @@ class Reservation extends React.Component {
     return (
       <div data-automation-id='reservation_modal'>
         <form>
-          <p><FormattedMessage {...messages.choosePickupLocation} /></p>
+          <p>
+            <FormattedMessage {...messages.choosePickupLocation} />
+          </p>
           <select ref={e => this.branchSelect = e}>
             {this.renderBranches()}
           </select>
@@ -89,6 +100,7 @@ Reservation.propTypes = {
   isRequestingReservation: PropTypes.bool.isRequired,
   reservationActions: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
+  libraries: PropTypes.array.isRequired,
   isSuccess: PropTypes.bool,
   isError: PropTypes.bool,
   message: PropTypes.string,
@@ -146,7 +158,8 @@ const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
-    isRequestingReservation: state.reservation.isRequestingReservation
+    isRequestingReservation: state.reservation.isRequestingReservation,
+    libraries: state.application.libraries
   }
 }
 

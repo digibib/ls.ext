@@ -10,7 +10,10 @@ import {
   LOGOUT_SUCCESS,
   REQUEST_LOGIN_STATUS,
   LOGIN_STATUS_FAILURE,
-  RECEIVE_LOGIN_STATUS
+  RECEIVE_LOGIN_STATUS,
+  REQUEST_LIBRARIES,
+  RECEIVE_LIBRARIES,
+  LIBRARIES_FAILURE
 } from '../constants/ActionTypes'
 import * as i18n from '../i18n'
 
@@ -26,7 +29,10 @@ const initialState = {
   isRequestingLogout: false,
   logoutError: null,
   isRequestingLoginStatus: false,
-  loginStatusError: null
+  loginStatusError: null,
+  libraries: [],
+  isRequestingLibraries: false,
+  librariesError: false
 }
 
 export default function application (state = initialState, action) {
@@ -83,6 +89,12 @@ export default function application (state = initialState, action) {
         loginStatusError: false,
         borrowerNumber: action.payload.borrowerNumber
       }
+    case REQUEST_LIBRARIES:
+      return { ...state, isRequestingLibraries: true }
+    case RECEIVE_LIBRARIES:
+      return { ...state, isRequestingLibraries: false, libraries: action.payload.libraries }
+    case LIBRARIES_FAILURE:
+      return { ...state, isRequestingLibraries: false, libraryError: action.payload.message }
     default:
       return state
   }

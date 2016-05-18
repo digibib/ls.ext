@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import SearchHeader from '../components/SearchHeader'
 import * as LanguageActions from '../actions/LanguageActions'
+import * as LibraryActions from '../actions/LibraryActions'
 
 import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
@@ -12,6 +13,7 @@ class App extends React.Component {
   componentWillMount () {
     this.props.loginActions.updateLoginStatus()
     this.props.languageActions.loadLanguage()
+    this.props.libraryActions.fetchLibraries()
   }
 
   render () {
@@ -19,7 +21,8 @@ class App extends React.Component {
       <div>
         <ModalRoot />
         <div className='outer-container'>
-          <SearchHeader locationQuery={this.props.location.query} dispatch={this.props.dispatch}
+          <SearchHeader locationQuery={this.props.location.query} 
+                        dispatch={this.props.dispatch}
                         locale={this.props.locale}
                         totalHits={this.props.totalHits}
                         isLoggedIn={this.props.isLoggedIn}
@@ -41,6 +44,7 @@ App.propTypes = {
   location: PropTypes.object.isRequired,
   children: PropTypes.node.isRequired,
   languageActions: PropTypes.object.isRequired,
+  libraryActions: PropTypes.object.isRequired,
   loginActions: PropTypes.object.isRequired,
   locale: PropTypes.string.isRequired,
   totalHits: PropTypes.number.isRequired,
@@ -60,7 +64,8 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     languageActions: bindActionCreators(LanguageActions, dispatch),
-    loginActions: bindActionCreators(LoginActions, dispatch)
+    loginActions: bindActionCreators(LoginActions, dispatch),
+    libraryActions: bindActionCreators(LibraryActions, dispatch)
   }
 }
 
