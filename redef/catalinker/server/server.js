@@ -325,7 +325,7 @@ app.get('/config', function (request, response) {
           { rdfProperty: 'partNumber' },
           { rdfProperty: 'edition' },
           { rdfProperty: 'publicationYear' },
-          { rdfProperty: 'numberOfPages' },
+          { rdfProperty: 'numberOfPages', multiple: true },
           { rdfProperty: 'illustrativeMatter' },
           { rdfProperty: 'isbn', multiple: true },
           { rdfProperty: 'binding' },
