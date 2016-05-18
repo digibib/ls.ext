@@ -26,7 +26,8 @@ import static no.deichman.services.entity.EntityType.ALL_TYPES_PATTERN;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * Responsibility: Expose a subset of Elasticsearch REST API limited to searching for works.
+ * Responsibility: Expose a subset of Elasticsearch REST API limited to searching for works, as well as providing
+ * routes to trigger reindexing of resources.
  */
 @Singleton
 @Path("search")
