@@ -67,7 +67,7 @@
 		<marc:subfield code="0">(NO-TrBIB)x90172154</marc:subfield>
 	</marc:datafield>
 	<marc:datafield tag="245" ind1="1" ind2="0">
-		<marc:subfield code="a">{{ book_title }} :</marc:subfield>
+		<marc:subfield code="a">{{ book_title }}</marc:subfield>
 		<marc:subfield code="c">Gunnar Sørensen</marc:subfield>
 	</marc:datafield>
 	<marc:datafield tag="260" ind1=" " ind2=" ">
