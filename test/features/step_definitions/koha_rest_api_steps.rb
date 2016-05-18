@@ -2,6 +2,7 @@
 require_relative '../support/services/svc/user.rb'
 require_relative '../support/services/koha/hold.rb'
 require_relative '../support/services/koha/patron.rb'
+require_relative '../support/services/koha/item.rb'
 
 # Superlibrarian user should not be deleted after creation
 Given(/^at det finnes en superbruker$/) do
@@ -70,6 +71,7 @@ When(/^jeg registrerer låneren via API$/) do
     dateenrolled: @active[:patron].dateenrolled,
     dateexpiry: @active[:patron].dateexpiry
   }
+
   res = KohaRESTAPI::Patron.new(@browser,@context,@active).add(params)
   @context[:patron] = JSON.parse(res)
 
@@ -122,4 +124,15 @@ Then(/^forventer jeg å finne avdelingen i listen$/) do
     library["branchcode"] == @context[:branches][0].code &&
     library["branchname"] == @context[:branches][0].name
   end.should_not be(nil)
+end
+
+When(/^jeg slår opp eksemplaret via API$/) do
+  itemnumber = @context[:checkouts][0]["itemnumber"]
+  res = KohaRESTAPI::Items.new(@browser,@context,@active).get_extended_biblio(itemnumber)
+  @context[:extended_item_biblio] = JSON.parse(res)
+end
+
+Then(/^vil systemet vise detaljert eksemplarinformasjon$/) do
+  @context[:extended_item_biblio]["biblionumber"].should eq(@context[:books][0].biblionumber)
+  @context[:extended_item_biblio]["title"].should eq(@context[:books][0].title)
 end
