@@ -82,7 +82,7 @@
 
     var unloadResourceForDomain = function (domainType) {
       _.each(allInputs(), function (input) {
-        if (domainType === unPrefix(input.domain)) {
+        if (input.domain && domainType === unPrefix(input.domain)) {
           input.values = emptyValues(false, false)
         }
       })
@@ -251,9 +251,7 @@
               inputs.push(subInput.input)
             })
           } else {
-            if (!input.isRoot) {
-              inputs.push(input)
-            }
+            inputs.push(input)
           }
         })
       })
@@ -282,7 +280,7 @@
 
       var promises = []
       _.each(allInputs(), function (input, inputIndex) {
-        if ((type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
+        if ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
           (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))) {
           input.offset = input.offset || {}
           var offset = 0;
@@ -630,7 +628,8 @@
               indexDocumentFields: subInput.indexDocumentFields,
               nameProperties: subInput.nameProperties,
               dataAutomationId: inputFromOntology.dataAutomationId,
-              widgetOptions: subInput.widgetOptions
+              widgetOptions: subInput.widgetOptions,
+              id: subInput.id
               // ,
               // values: emptyValues(false, type === "searchable-with-result-in-side-panel")
             }),
@@ -843,7 +842,7 @@
             })
             .then(function (response) {
               // successfully patched resource
-              updateInputsForResource(response, subject)
+              updateInputsForResource(response, subject, {keepDocumentUrl: true})
 
               // keep the value in current.old - so we can do create delete triple patches later
               if (keypath) {
@@ -1088,7 +1087,14 @@
           }
           var clickOutsideSupportPanelDetector = function (node) {
             $(document).click(function (event) {
-              if (!$(event.target).closest('span.support-panel').length && !($(event.target).is("input[type='radio'][value='on']")) && !$(event.target).is('span.support-panel') && !$(event.target).is('.support-panel-button') && !$(event.target).is('span.select2-selection__choice__remove')) {
+              var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath))
+              var targetIsInsideSupportPanel = $(event.target).closest('span.support-panel').length
+              var targetIsSupportPanel = $(event.target).is('span.support-panel')
+              var targetIsASupportPanelButton = $(event.target).is('.support-panel-button')
+
+              var targetIsARadioButtonThatWasOffButIsOnNow = $(event.target).is("input[type='radio'][value='on']")
+              var targetIsASelect2RemoveSelectionCross = $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
+              if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross)) {
                 clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
                 clearMaintenanceInputs()
               }
@@ -1297,15 +1303,82 @@
                 if (!searchString) {
                   ractive.set(grandParentOf(event.keypath) + ".searchResult", null)
                 } else {
-                  // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
+                  var searchBody
                   var config = ractive.get('config')
-                  var searchURI = config.resourceApiUri + 'search/' + indexType + '/_search'
-                  var searchData = {
-                    params: {
-                      q: config.search[ indexType ].queryTerm + ':' + searchString + '*'
+                  var axiosMethod
+                  if (config.search[ indexType ].structuredQuery) {
+                    axiosMethod = axios.post
+                    var filters = {
+                      personAsMainEntryFilter: function (filterArg) {
+                        return {
+                          nested: {
+                            path: "work.contributors",
+                            query: {
+                              bool: {
+                                filter: [
+                                  {
+                                    term: {
+                                      "work.contributors.mainEntry": true
+                                    }
+                                  },
+                                  {
+                                    nested: {
+                                      path: "work.contributors.agent",
+                                      query: {
+                                        term: {
+                                          "work.contributors.agent.uri": filterArg
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      default: function () {
+                        return {}
+                      }
+                    }
+                    var filterArg = null
+                    var filterArgInputRef = ractive.get(grandParentOf(event.keypath) + '.widgetOptions.filter.inputRef')
+                    if (filterArgInputRef) {
+                      filterArg = _.find(allInputs(), function (input) {
+                        return filterArgInputRef === input.id
+                      }).values[ 0 ].current.value
+                    }
+
+                    var matchBody = {}
+                    matchBody[ config.search[ indexType ].queryTerm ] = {
+                      query: searchString,
+                      operator: 'and'
+                    }
+
+                    var filterName = filterArg ? ractive.get(grandParentOf(event.keypath) + '.widgetOptions.filter.name') || 'default' : 'default'
+
+                    searchBody = {
+                      "query": {
+                        "bool": {
+                          "filter": [
+                            {
+                              "match": matchBody
+                            }, filters[ filterName ](filterArg)
+                          ]
+                        }
+                      }
+                    }
+                  } else {
+                    axiosMethod = axios.get
+                    searchBody = {
+                      params: {
+                        q: config.search[ indexType ].queryTerm + ':' + searchString + '*'
+                      }
                     }
                   }
-                  axios.get(searchURI, searchData)
+                  var searchURI = config.resourceApiUri + 'search/' + indexType + '/_search'
+
+                  axiosMethod(searchURI, searchBody)
                     .then(function (response) {
                       var results = ensureJSON(response.data)
                       results.hits.hits.forEach(function (hit) {
@@ -1325,7 +1398,7 @@
                       })
                       ractive.set(grandParentOf(event.keypath) + '.searchResult', {
                         items: _.map(_.pluck(_.pluck(results.hits.hits, '_source'), indexType),
-                          Main.searchResultItemHandlers[config.search[ indexType ].itemHandler || 'defaultItemHandler']),
+                          Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]),
                         origin: event.keypath
                       })
                       positionSupportPanels()

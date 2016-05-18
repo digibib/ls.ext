@@ -3,6 +3,7 @@
 <div class="prop-search-results support-panel-content">
         {{#if items}}
         <div class="search-result-box">
+            <div class="search-result-inner">
             {{#each items:itemIndex}}
             <div class="search-result pure-g" data-automation-id="{{uri}}">
                 <div class="pure-u-1">
@@ -40,6 +41,7 @@
                     </div>
                 </div>
                 {{/each}}
+            </div>
             </div>
             {{else}}
             <div class="search-result pure-g">

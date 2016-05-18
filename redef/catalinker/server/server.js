@@ -257,6 +257,7 @@ app.get('/config', function (request, response) {
                   indexTypes: 'person',
                   type: 'searchable-with-result-in-side-panel',
                   dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
+                  id: 'mainEntryPersonInput',
                   widgetOptions: {
                     showSelectWork: true, // show and enable select work radio button
                     enableCreateNewResource: {
@@ -299,6 +300,10 @@ app.get('/config', function (request, response) {
                   targetType: "work"
                 } ],
                 useAfterCreation: true
+              },
+              filter: {
+                inputRef: 'mainEntryPersonInput',
+                name: 'personAsMainEntryFilter'
               }
             }
           }
@@ -434,7 +439,7 @@ app.get('/config', function (request, response) {
             type: 'searchable-with-result-in-side-panel',
             loadWorksAsSubjectOfItem: true,
             authority: true, // this indicates it is an authorized entity
-            nameProperties: [ 'name', 'prefLabel' ], // these are property names used to label already connected entities
+            nameProperties: [ 'name', 'prefLabel', 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
             indexTypes: [ 'subject', 'person', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
             widgetOptions: {
               selectIndexTypeLegend: 'Velg emnetype',
@@ -552,6 +557,7 @@ app.get('/config', function (request, response) {
         resultItemLabelProperties: ['prefLabel']
       },
       work: {
+        structuredQuery: true,
         selectIndexLabel: 'Verk',
         queryTerm: 'work.mainTitle',
         resultItemLabelProperties: ['mainTitle', 'subTitle'],

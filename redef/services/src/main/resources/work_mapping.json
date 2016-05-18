@@ -26,7 +26,7 @@
               "properties": {
                 "uri": {
                   "type": "string",
-                  "index": "no"
+                  "index": "not_analyzed"
                 },
                 "name": {
                   "type": "string"
@@ -40,6 +40,9 @@
                   "index": "no"
                 }
               }
+            },
+            "mainEntry": {
+              "type": "boolean"
             }
           }
         },
