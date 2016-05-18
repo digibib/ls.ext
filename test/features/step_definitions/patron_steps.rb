@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require 'csv'
-require_relative '../support/services/csvimport/migration.rb'
 require_relative '../support/services/koha/patron.rb'
 
 Given(/^at en låner ikke finnes som låner hos biblioteket fra før$/) do
@@ -71,21 +70,6 @@ Given(/^at det finnes en låner med lånekort$/) do |table|
   end
 end
 
-Given(/^at det finnes data som beskriver en låner$/) do
-  @import = File.join(File.dirname(__FILE__), '..', 'upload-files', 'patrons.csv')
-end
-
-Given(/^at det finnes en mapping for konvertering$/) do
-  @map = File.join(File.dirname(__FILE__), '..', 'upload-files', 'mapping_patrons.csv')
-end
-
-Given(/^at det finnes konverterte lånerdata$/) do
-  steps %Q{
-    Gitt at det finnes en mapping for konvertering
-    Når lånerdata migreres
-  }
-end
-
 Given(/^at jeg har en liste over lånerkategorier$/) do
   @borrower_categories = File.join(File.dirname(__FILE__), '..', 'upload-files', 'borrower_categories.csv')
 end
@@ -133,39 +117,6 @@ Then(/^samsvarer listen i grensesnittet med liste over lånerkategorier$/) do
   a.should == true
   b.should == true
 
-end
-
-## TODO: Remove, deprecated by Koha REST API
-When(/^lånerdata migreres$/) do
-  @migration = Migration.new(@map, @import)
-  step "at det finnes en avdeling"        unless @active[:branch]
-  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
-
-  patron = Patron.new
-  patron.branch   = @active[:branch]
-  patron.category = @active[:patroncategory]
-
-  # map the first borrower for testing
-  patron.cardnumber = @migration.import.keys.first
-  id = patron.cardnumber
-  @migration.import[id][:cardnumber]   = patron.cardnumber
-  @migration.import[id][:surname]      = patron.surname
-  @migration.import[id][:categorycode] = patron.category.code
-  @migration.import[id][:branchcode]   = patron.branch.code
-  @active[:patron] = patron
-  (@context[:patrons] ||= []) << patron
-end
-
-## TODO: Remove, deprecated by Koha REST API
-When(/^lånerdata importeres i admingrensesnittet$/) do
-  # import_user_via_csv takes @patron Struct
-  CSVImport::User.new(@browser,@context,@active).import(@migration.import[@active[:patron].cardnumber])
-  patron = @active[:patron]
-  @cleanup.push( "låner #{patron.firstname} #{patron.surname}" =>
-    lambda do
-      @site.Patrons.visit.delete(patron.firstname, patron.surname)
-    end
-  )
 end
 
 When(/^jeg legger til en lånerkategori$/) do
@@ -222,14 +173,6 @@ Then(/^viser systemet at "(.*?)" er låner$/) do |name|
   patron_details = @site.Patrons.visit.search fullname
   patron_details.header.should include fullname
   @active[:patron].cardnumber = patron_details.card_number
-end
-
-Then(/^samsvarer de migrerte lånerdata med mapping$/) do
-  @migration.map.each do |field,map|
-    if map[:teststatus] && map[:teststatus].downcase == 'ok'
-      @migration.import[@active[:patron].cardnumber].keys.to_s.should include(map[:plassering_i_koha])
-    end
-  end
 end
 
 Then(/^viser systemet at låneren er importert$/) do
