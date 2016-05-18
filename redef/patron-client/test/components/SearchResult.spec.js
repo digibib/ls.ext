@@ -25,7 +25,7 @@ function setup (resultPropOverrides) {
       ...resultPropOverrides
     },
     resources: {},
-    getWorkResource: () => {}
+    fetchWorkResource: () => {}
   }
 
   const messages = {

@@ -25,7 +25,7 @@ function setup (propOverrides) {
       toggleCollapseFilter: () => {}
     },
     resourceActions: {
-      getWorkResource: () => {}
+      fetchWorkResource: () => {}
     },
     resources: {},
     ...propOverrides

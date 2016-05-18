@@ -13,7 +13,7 @@ function setup (propOverrides) {
     totalHits: 0,
     searchResults: [],
     searchActions: { search: () => {} },
-    getWorkResource: () => {},
+    fetchWorkResource: () => {},
     resources: {},
     ...propOverrides
   }
