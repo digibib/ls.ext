@@ -184,7 +184,7 @@ nationality:etiop a duo:Nationality ;
 
 nationality:fi a duo:Nationality ;
 	rdfs:label	"Finland"@no ;
-	rdfs:label	"Finsk"@en .
+	rdfs:label	"Finland"@en .
 
 nationality:filip a duo:Nationality ;
 	rdfs:label	"Filippinene"@no ;
