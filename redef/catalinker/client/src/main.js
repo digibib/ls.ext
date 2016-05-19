@@ -64,6 +64,7 @@
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
                 input.widgetOptions[ action ].showInputs = null;
+                input.searchResult = null
                 var domainType = input.widgetOptions[ action ].forms[ input.selectedIndexType ].rdfType
                 unloadResourceForDomain(domainType)
               }
@@ -845,7 +846,7 @@
             })
             .then(function (response) {
               // successfully patched resource
-              updateInputsForResource(response, subject, {keepDocumentUrl: true})
+              updateInputsForResource(response, subject, { keepDocumentUrl: true })
 
               // keep the value in current.old - so we can do create delete triple patches later
               if (keypath) {
@@ -1776,7 +1777,6 @@
           }
           return applicationData
         }
-
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
@@ -1787,9 +1787,9 @@
           .then(initRactive)
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
-        // .catch(function (err) {
-        //    console.log("Error initiating Main: " + err)
-        // })
+          .catch(function (err) {
+            console.log("Error initiating Main: " + err)
+          })
       },
       repositionSupportPanelsHorizontally: function () {
         var supportPanelLeftEdge = $('#right-dummy-panel').position().left
