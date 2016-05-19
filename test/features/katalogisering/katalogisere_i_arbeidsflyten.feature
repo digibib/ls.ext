@@ -56,7 +56,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på knappen for legge til biinnførselen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "verket"
-    Så trykker jeg på knappen for legge til mer
+    Så så trykker jeg på Legg til ny biinnførsel-knappen
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Så velger jeg en person fra treffliste fra personregisteret
     Og jeg velger rollen "Fotograf"
@@ -84,7 +84,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg legger inn et nytt navn på startsida
     Så får jeg ingen treff
     Og jeg trykker på "Opprett ny person"-knappen
-    Så legger jeg inn fødselsår og dødsår og velger "Norsk" som nasjonalitet
+    Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Og jeg trykker på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
     Og jeg trykker på "Legg til"-knappen
@@ -112,7 +112,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Opprett nytt generelt emne"-knappen
     Og jeg trykker på "Opprett"-knappen
     Så tar jeg en liten pause
-    Og jeg trykker på "Legg til ny"-knappen
+    Og jeg trykker på "Legg til et emne til"-knappen
     Så tar jeg en liten pause
     Så velger jeg emnetype "Person"
     Og at jeg skriver inn tilfeldig person i feltet "Emne" og trykker enter
@@ -120,7 +120,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Opprett ny person"-knappen
     Og jeg trykker på "Opprett"-knappen
     Så tar jeg en liten pause
-    Og jeg trykker på "Legg til ny"-knappen
+    Og jeg trykker på "Legg til et emne til"-knappen
     Så velger jeg emnetype "Verk"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff

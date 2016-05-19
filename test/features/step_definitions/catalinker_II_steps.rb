@@ -400,3 +400,7 @@ end
 When(/^ser jeg at det står forfatter med navn og levetid i resultatlisten$/) do
   @browser.element(:text => "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]})").should exist
 end
+
+When(/^så trykker jeg på Legg til ny biinnførsel\-knappen$/) do
+  @browser.a(:text, /Legg til ny biinn.*/).click
+end

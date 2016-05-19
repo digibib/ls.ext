@@ -332,7 +332,7 @@ app.get('/config', function (request, response) {
           { rdfProperty: 'publicationYear' },
           { rdfProperty: 'numberOfPages', multiple: true },
           { rdfProperty: 'illustrativeMatter' },
-          { rdfProperty: 'isbn', multiple: true },
+          { rdfProperty: 'isbn', multiple: true, addAnotherLabel: 'Legg til et ISBN-nummer til' },
           { rdfProperty: 'binding' },
           { rdfProperty: 'language' },
           { rdfProperty: 'format', multiple: true },
@@ -374,6 +374,7 @@ app.get('/config', function (request, response) {
           {
             label: 'Serie',
             multiple: true,
+            addAnotherLabel: 'Legg til en serie til',
             subjects: ['Publication'],
             subInputs: {
               rdfProperty: 'inSerial',
@@ -436,6 +437,7 @@ app.get('/config', function (request, response) {
           {
             rdfProperty: 'subject',
             multiple: true,
+            addAnotherLabel: 'Legg til et emne til',
             type: 'searchable-with-result-in-side-panel',
             loadWorksAsSubjectOfItem: true,
             authority: true, // this indicates it is an authorized entity
@@ -466,6 +468,7 @@ app.get('/config', function (request, response) {
           {
             rdfProperty: 'genre',
             multiple: true,
+            addAnotherLabel: 'Legg til en sjanger til',
             type: 'searchable-with-result-in-side-panel',
             authority: true,
             nameProperties: [ 'name' ],
@@ -495,6 +498,7 @@ app.get('/config', function (request, response) {
           {
             label: 'Biinnførsel',
             multiple: true, // can have many of these
+            addAnotherLabel: 'Legg til ny biinnførsel',
             subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
               rdfProperty: 'contributor', // the rdf property of the resource
               range: 'Contribution', // this is the shorthand name of the type of the blank node

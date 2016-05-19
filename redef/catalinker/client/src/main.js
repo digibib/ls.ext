@@ -451,6 +451,9 @@
       if (prop.multiple) {
         input.multiple = true
       }
+      if (prop.addAnotherLabel) {
+        input.addAnotherLabel = prop.addAnotherLabel
+      }
       if (prop.authority) {
         input.type = 'searchable-authority-dropdown'
       }
