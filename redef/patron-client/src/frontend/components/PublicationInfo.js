@@ -9,7 +9,7 @@ class PublicationInfo extends React.Component {
   }
 
   handleClick () {
-    this.props.expandSubResource(null)
+    this.props.expandSubResource(null, true)
   }
 
   render () {

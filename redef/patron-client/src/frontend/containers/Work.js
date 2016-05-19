@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { defineMessages, FormattedMessage } from 'react-intl'
+import { routerActions } from 'react-router-redux'
 
 import Contributors from '../components/Contributors'
 import Publications from '../components/Publications'
@@ -11,6 +12,11 @@ import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
 
 class Work extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleBackClick = this.handleBackClick.bind(this)
+  }
+
   componentWillMount () {
     this.props.resourceActions.fetchWorkResource(`/work/${this.props.params.workId}`)
   }
@@ -47,6 +53,11 @@ class Work extends React.Component {
     return <span data-automation-id='work_date' />
   }
 
+  handleBackClick (event) {
+    event.preventDefault()
+    this.props.routerActions.goBack()
+  }
+
   render () {
     // TODO Better renderEmpty and showing something while it loads the resource.
     if (this.props.isRequesting) {
@@ -72,7 +83,7 @@ class Work extends React.Component {
         <div className='row'>
 
           <header className='back-to-results'>
-            <a href='#' alt='Back to search page'>Tilbake til søkeresultat</a>
+            <a onClick={this.handleBackClick} alt='Back to search page'>Tilbake til søkeresultat</a>
           </header>
 
           <article className='work-entry'>
@@ -177,7 +188,8 @@ Work.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.object.isRequired,
   locationQuery: PropTypes.object.isRequired,
-  reservationActions: PropTypes.object.isRequired
+  reservationActions: PropTypes.object.isRequired,
+  routerActions: PropTypes.object.isRequired
 }
 
 const messages = defineMessages({
@@ -208,9 +220,10 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
+    dispatch: dispatch,
     resourceActions: bindActionCreators(ResourceActions, dispatch),
     reservationActions: bindActionCreators(ReservationActions, dispatch),
-    dispatch: dispatch
+    routerActions: bindActionCreators(routerActions, dispatch)
   }
 }
 

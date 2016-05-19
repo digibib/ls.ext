@@ -17,7 +17,7 @@ class Publication extends React.Component {
   }
 
   handleClick () {
-    this.props.expandSubResource(this.props.publication.id)
+    this.props.expandSubResource(this.props.publication.id, true)
   }
 
   handleReservationClick (event) {
