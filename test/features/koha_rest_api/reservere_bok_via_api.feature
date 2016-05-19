@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Reservering av bok via API
   Som låner
   For å få tak i en bestemt bok

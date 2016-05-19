@@ -23,7 +23,7 @@ class PatronClientCommon < PageRoot
       end
       @browser.element(data_automation_id: 'login_element').click
     end
-    wait_retry { @browser.element(data_automation_id: 'login_modal').exists? }
+    wait_for { @browser.element(data_automation_id: 'login_modal').exists? }
     @browser.element(data_automation_id: 'login_modal').text_fields.first.set(username)
     @browser.element(data_automation_id: 'login_modal').text_fields.last.set(password)
     @browser.element(data_automation_id: 'login_button').click

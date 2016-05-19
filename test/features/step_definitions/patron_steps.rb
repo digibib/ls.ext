@@ -30,7 +30,7 @@ end
 Given(/^at det finnes en låner med lånekort$/) do |table|
   step "at det finnes en avdeling"        unless @active[:branch]
   step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
-  step "at jeg er logget på som superbruker via REST API" unless @context[:koha_rest_api_cookie]
+  step "at jeg er autentisert som superbruker via REST API" unless @context[:koha_rest_api_cookie]
 
   patrons = table.hashes
 
@@ -52,7 +52,8 @@ Given(/^at det finnes en låner med lånekort$/) do |table|
       cardnumber: user.cardnumber,
       userid: user.userid,
       dateenrolled: user.dateenrolled,
-      dateexpiry: user.dateexpiry
+      dateexpiry: user.dateexpiry,
+      password: user.password
     }
 
     res = KohaRESTAPI::Patron.new(@browser,@context,@active).add(params)
