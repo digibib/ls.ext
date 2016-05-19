@@ -11,10 +11,17 @@ body {
   [class^='select2'] {
     border-radius: 2px !important;
   }
-  .select2-container .select2-choice, .select2-result-label {
-    font-size: 1.5em;
-    height: 41px;
-    overflow: auto;
+  .select2-container {
+    .select2-selection {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▼</text></svg>");
+      background-repeat: no-repeat;
+      background-position: 291px 10px;
+    }
+  }
+  .input-wrapper .select2-container {
+    .select2-selection {
+      background-position: 267px 10px;
+    }
   }
   #home {
     background: no-repeat url('/images/logo.png') 17px 20px / 170px;
@@ -169,14 +176,25 @@ body {
           }
           margin-bottom: 12px;
         }
-        span.support-panel-expander {
-          min-width: 22px;
+        .support-panel-expander {
+          width: 22px;
           position: relative;
-          left: 270px;
           top: -26px;
-          display: inline;
           min-height: 22px;
-          top: 6px;
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▶</text></svg>");
+          background-repeat: no-repeat;
+          display: block;
+          //top: 6px;
+        }
+        span:not(.input-wrapper) {
+          .support-panel-expander {
+            left: 293px;
+          }
+        }
+        span.input-wrapper {
+          .support-panel-expander {
+            left: 252px;
+          }
         }
         .deletable {
           background-image: url('/images/delete_cross.svg');
@@ -187,7 +205,7 @@ body {
           cursor: pointer;
         }
         .searchable:not(.deletable) {
-          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='22' font-size='20'>▶</text></svg>");
+          //background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='22' font-size='20'>▶</text></svg>");
           background-repeat: no-repeat;
           background-position: right top;
           padding-right: 1.5em;
