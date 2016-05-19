@@ -1,7 +1,8 @@
 import { replace } from 'react-router-redux'
 
-export function toggleParameter (pathname, queryParamName) {
+export function toggleParameter (queryParamName) {
   return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     const queryParam = locationQuery[ queryParamName ]
     if (queryParam !== undefined) {
@@ -13,8 +14,9 @@ export function toggleParameter (pathname, queryParamName) {
   }
 }
 
-export function toggleParameterValue (pathname, queryParamName, value) {
+export function toggleParameterValue (queryParamName, value) {
   return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     let queryParam = locationQuery[ queryParamName ] || []
     if (!Array.isArray(queryParam)) {

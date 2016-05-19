@@ -16,13 +16,13 @@ class UserInfo extends React.Component {
 
   handleSubmit () {
     this.props.loginActions.requireLoginBeforeAction(
-      ProfileActions.postProfileInfo(ParameterActions.toggleParameter('/profile/info', 'edit'))
+      ProfileActions.postProfileInfo(ParameterActions.toggleParameter('edit'))
     )
   }
 
   handleChangeClick (event) {
     event.preventDefault()
-    this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('/profile/info', 'edit'))
+    this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('edit'))
   }
 
   generateField (fieldName, editable) {

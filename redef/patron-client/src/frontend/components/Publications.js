@@ -7,6 +7,11 @@ import PublicationInfo from './PublicationInfo'
 import { getId } from '../utils/uriParser'
 
 class Publications extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleCollapsePublications = this.handleCollapsePublications.bind(this)
+  }
+
   componentWillMount () {
     if (this.props.publications.length === 1) {
       this.props.expandSubResource(this.props.publications[ 0 ].id, true)
@@ -20,7 +25,7 @@ class Publications extends React.Component {
       </h2>
     )
   }
-  
+
   renderPublications (publicationsPerRow) {
     const publications = [ ...this.props.publications ]
     const publicationRows = []
@@ -53,7 +58,7 @@ class Publications extends React.Component {
       </section>
     )
   }
-  
+
   renderPublicationsMediaQueries () {
     return (
       <div>
@@ -68,6 +73,10 @@ class Publications extends React.Component {
         </MediaQuery>
       </div>
     )
+  }
+
+  handleCollapsePublications () {
+    this.props.toggleParameter('collapsePublications')
   }
 
   render () {
@@ -85,12 +94,16 @@ class Publications extends React.Component {
           </div>
         </div>
 
-        <div className="arrow-close">
-          <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up"/>
+        <div className="arrow-close" onClick={this.handleCollapsePublications}>
+          {this.props.locationQuery.collapsePublications === null
+            ? <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up" />
+            : <img src="/images/btn-arrow-open.svg" alt="Black arrow pointing down" />}
         </div>
 
         <div className='other-publications-entry-content'>
-          {this.props.publications.length > 0 ? this.renderPublicationsMediaQueries() : this.renderEmpty()}
+          {this.props.locationQuery.collapsePublications === null
+            ? null
+            : (this.props.publications.length > 0 ? this.renderPublicationsMediaQueries() : this.renderEmpty())}
         </div>
       </footer>
 

@@ -71,6 +71,5 @@ export function search () {
 }
 
 export function showStatus (relativeUri) {
-  const queryParamName = 'showStatus'
-  return toggleParameterValue('/search', queryParamName, relativeUri)
+  return toggleParameterValue('showStatus', relativeUri)
 }

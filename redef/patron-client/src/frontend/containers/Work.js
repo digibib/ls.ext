@@ -10,6 +10,7 @@ import Genres from '../components/Genres'
 import Subjects from '../components/Subjects'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
+import * as ParameterActions from '../actions/ParameterActions'
 
 class Work extends React.Component {
   constructor (props) {
@@ -174,7 +175,10 @@ class Work extends React.Component {
           <Publications locationQuery={this.props.locationQuery}
                         expandSubResource={this.props.resourceActions.expandSubResource}
                         publications={work.publications}
-                        startReservation={this.props.reservationActions.startReservation} />
+                        startReservation={this.props.reservationActions.startReservation}
+                        toggleParameter={this.props.parameterActions.toggleParameter}
+                        locationQuery={this.props.locationQuery}
+          />
         </div>
       </div>
     )
@@ -189,6 +193,7 @@ Work.propTypes = {
   params: PropTypes.object.isRequired,
   locationQuery: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
+  parameterActions: PropTypes.object.isRequired,
   routerActions: PropTypes.object.isRequired
 }
 
@@ -223,7 +228,8 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     resourceActions: bindActionCreators(ResourceActions, dispatch),
     reservationActions: bindActionCreators(ReservationActions, dispatch),
-    routerActions: bindActionCreators(routerActions, dispatch)
+    routerActions: bindActionCreators(routerActions, dispatch),
+    parameterActions: bindActionCreators(ParameterActions, dispatch)
   }
 }
 

@@ -1,21 +1,17 @@
 import { toggleParameter, toggleParameterValue } from './ParameterActions'
 
 export function toggleFilter (aggregation, bucket) {
-  const queryParamName = `filter_${aggregation}`
-  return toggleParameterValue('/search', queryParamName, bucket)
+  return toggleParameterValue(`filter_${aggregation}`, bucket)
 }
 
 export function toggleFilterVisibility (aggregation) {
-  const queryParamName = 'showMore'
-  return toggleParameterValue('/search', queryParamName, aggregation)
+  return toggleParameterValue('showMore', aggregation)
 }
 
 export function toggleAllFiltersVisibility () {
-  const queryParamName = 'hideFilters'
-  return toggleParameter('/search', queryParamName)
+  return toggleParameter('hideFilters')
 }
 
 export function toggleCollapseFilter (aggregation) {
-  const queryParamName = 'collapse'
-  return toggleParameterValue('/search', queryParamName, aggregation)
+  return toggleParameterValue('collapse', aggregation)
 }
