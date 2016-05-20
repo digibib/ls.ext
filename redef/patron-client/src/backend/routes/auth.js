@@ -23,6 +23,7 @@ module.exports = (app) => {
           }).then(res => res.json())
             .then(json => {
               request.session.borrowerNumber = json[0].borrowernumber
+              request.session.borrowerName   = `${json[0].firstname} ${json[0].surname}`
               response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
             })
             .catch(error => {
