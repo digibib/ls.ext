@@ -104,7 +104,7 @@ task oneJar(type: OneJar) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.6'
+    gradleVersion = '2.13'
 }
 
 check.dependsOn test
@@ -129,9 +129,7 @@ test .dependsOn allTestsExceptAppTest, testAppTest
 
 checkstyle {
     configProperties = [samedir: "${rootDir}"]
-    // Cannot go higher as 6.8 breaks compatibility with the current Gradle checkstyle plugin
-    // See change to CheckStyleTask here: http://checkstyle.sourceforge.net/releasenotes.html#Release_6.8
-    toolVersion = 6.7
+    toolVersion = 6.18
 }
 
 pmd {
