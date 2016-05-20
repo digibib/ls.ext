@@ -118,8 +118,8 @@ end
 When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
   table = table.hashes.sort_by { |r| r.to_s }
   table.each do |row|
-    if row['filial'].eql? 'random_migrate_branchcode'
-      row['filial'] = @context[:random_migrate_branchcode]
+    if row['Filial'].eql? 'random_migrate_branchcode'
+      row['Filial'] = @context[:random_migrate_branchcode]
     end
   end
   wait_retry { @browser.element(data_automation_id: /^publication_info_/).present? }
