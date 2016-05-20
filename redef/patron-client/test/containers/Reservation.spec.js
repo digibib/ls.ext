@@ -12,6 +12,7 @@ function setup (propOverrides) {
     isLoggedIn: true,
     isRequestingReservation: false,
     reservationActions: { reservePublication: expect.createSpy() },
+    libraries: {'L1': 'Library One', 'L2': 'Library Two'},
     modalActions: {},
     ...propOverrides
   }
@@ -46,7 +47,7 @@ describe('containers', () => {
       const reserveButton = findElementByDataAutomationId(output, 'reserve_button')
       TestUtils.Simulate.click(reserveButton)
       expect(props.reservationActions.reservePublication).toHaveBeenCalled()
-      expect(props.reservationActions.reservePublication.calls[ 0 ].arguments).toEqual([ '123', 'dfb' ]) // dfb is currently the first selectable branch
+      expect(props.reservationActions.reservePublication.calls[ 0 ].arguments).toEqual([ '123', 'L1' ])
     })
   })
 })

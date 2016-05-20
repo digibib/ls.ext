@@ -15,10 +15,13 @@ describe('reducers', () => {
           no: { ...i18n.no }
         },
         isLoggedIn: false,
+        isRequestingLibraries: false,
         borrowerNumber: null,
         isRequestingLogin: false,
         loginError: null,
         isRequestingLogout: false,
+        libraries: [],
+        librariesError: false,
         logoutError: null,
         isRequestingLoginStatus: false,
         loginStatusError: null
@@ -42,10 +45,13 @@ describe('reducers', () => {
           en: messages
         },
         isLoggedIn: false,
+        isRequestingLibraries: false,
         borrowerNumber: null,
         isRequestingLogin: false,
         loginError: null,
         isRequestingLogout: false,
+        libraries: [],
+        librariesError: false,
         logoutError: null,
         isRequestingLoginStatus: false,
         loginStatusError: null

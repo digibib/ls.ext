@@ -57,8 +57,8 @@ module.exports = (app) => {
     Promise.all([fetchAllCheckouts(request), fetchAllHoldsAndPickups(request)])
     .then(data => {
       const [checkouts, holdsAndPickups] = data
-      const holds   = holdsAndPickups.filter(item => { return item.status !== "W" })
-      const pickups = holdsAndPickups.filter(item => { return item.status === "W" })
+      const holds = holdsAndPickups.filter(item => { return item.status !== 'W' })
+      const pickups = holdsAndPickups.filter(item => { return item.status === 'W' })
       response.send({
         name: `${request.session.borrowerName}`,
         loans: checkouts,
@@ -79,8 +79,8 @@ module.exports = (app) => {
     })
   })
 
-  app.get('/api/v1/profile/holds', (request, response) => {
-    fetchAllHolds(request)
+  app.get('/api/v1/profile/holdsandpickups', (request, response) => {
+    fetchAllHoldsAndPickups(request)
     .then(res => {
       console.log(res)
       response.status(200).send(res)
@@ -89,40 +89,6 @@ module.exports = (app) => {
       response.sendStatus(500)
     })
   })
-
-  app.get('/api/v1/profile/pickups', (request, response) => {
-    fetchAllPickups(request)
-    .then(res => {
-      console.log(res)
-      response.status(200).send(res)
-    }).catch(error => {
-      console.log(error)
-      response.sendStatus(500)
-    })
-  })
-
-  function fetchAllPickups (request) {
-    return new Promise((resolve) => {
-      resolve([
-        {
-          recordId: 'xx',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Haruki Murakami',
-          publicationYear: '1987',
-          expiry: '2016-09-21',
-          pickupNumber: '40/20220'
-        },
-        {
-          recordId: 'yy',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Haruki Murakami',
-          publicationYear: '1987',
-          expiry: '2016-09-21',
-          pickupNumber: '40/20220'
-        }
-      ])
-    })
-  }
 
   function fetchAllHoldsAndPickups (request) {
     return fetch(`http://koha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`, {
@@ -157,9 +123,9 @@ module.exports = (app) => {
         throw Error(res.statusText)
       }
     }).then(json => {
-      const pickupNumber  = hold.waitingdate ? `${hold.waitingdate.split('-')[2]}/${hold.reserve_id}` : 'unknown'
-      const waitingPeriod = hold.found === "T" ? '1-2 dager' : 'cirka 2-4 uker'
-      const expiry        = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7) ).toISOString(1).split('T')[0] : 'unknown'
+      const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[2]}/${hold.reserve_id}` : 'unknown'
+      const waitingPeriod = hold.found === 'T' ? '1-2 dager' : 'cirka 2-4 uker'
+      const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[0] : 'unknown'
       return {
         recordId: hold.biblionumber,
         reserveId: hold.reserve_id,

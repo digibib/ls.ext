@@ -100,12 +100,14 @@ Reservation.propTypes = {
   isRequestingReservation: PropTypes.bool.isRequired,
   reservationActions: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
-  libraries: PropTypes.array.isRequired,
+  libraries: PropTypes.object.isRequired,
   isSuccess: PropTypes.bool,
   isError: PropTypes.bool,
   message: PropTypes.string,
   recordId: PropTypes.string
 }
+
+Reservation.defaultProps = { libraries: {} }
 
 const messages = defineMessages({
   choosePickupLocation: {
