@@ -32,11 +32,12 @@ class Publication extends React.Component {
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
     return (
       <article onClick={this.handleClick} className={this.props.open ? 'single-publication open' : 'single-publication'}
-           data-automation-id={`publication_${publication.uri}`}>
+               data-automation-id={`publication_${publication.uri}`} data-formats={formats}>
         <div className='book-cover' />
         <div className='publication-text-container'>
               <span data-automation-id='publication_available'>
-                <p className="free"><FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} /></p>
+                <p
+                  className='free'><FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} /></p>
               </span>
           <h2>
               <span data-automation-id='publication_title'>
@@ -44,31 +45,25 @@ class Publication extends React.Component {
               </span>
           </h2>
           <p>
-              <span data-automation-id='publication_year' data-automation-id='publication_languages'>
-                {publication.publicationYear},
-              </span>
-
-
+              <span data-automation-id='publication_year'>
+                {publication.publicationYear}
+              </span>,
               <span data-automation-id='publication_languages'>
                 {languages.join(', ')}
               </span>
           </p>
-
-
           {publication.items.length > 0
-            ? (<button className="grey-btn" type="button">
+            ? (<button className='grey-btn' type='button'>
               <span data-automation-id='publication_reserve'>
                 <a onClick={this.handleReservationClick}><FormattedMessage {...messages.reserve} /></a>
               </span>
           </button>) : null}
         </div>
-        <div className="show-status">
+        <div className='show-status'>
           <strong>Vis status</strong>
-
-          <button className="show-status-arrow" type="button">
-            <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down"/>
+          <button className='show-status-arrow' type='button'>
+            <img src='/images/btn-red-arrow-open.svg' alt='Red arrow pointing down' />
           </button>
-
         </div>
       </article>
     )

@@ -45,8 +45,8 @@ describe('components', () => {
       expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle)
       expect(node.querySelector("[data-automation-id='publication_year']").textContent).toBe(props.publication.publicationYear)
       expect(node.querySelector("[data-automation-id='publication_languages']").textContent).toBe(`${props.publication.languages[ 0 ]}_english`)
-      expect(node.querySelector("[data-automation-id='publication_formats']").textContent).toBe(`${props.publication.formats[ 0 ]}_english`)
       expect(node.querySelector("[data-automation-id='publication_available']").textContent).toBe('Available')
+      expect(node.getAttribute('data-formats')).toBe(`${props.publication.formats[ 0 ]}_english`)
     })
 
     it('should combine main title and part title as title', () => {

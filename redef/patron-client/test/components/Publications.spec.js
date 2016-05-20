@@ -10,12 +10,15 @@ function setup (propOverrides) {
   const props = {
     expandSubResource: () => {},
     startReservation: () => {},
+    toggleParameter: () => {},
     locationQuery: {},
     publications: [
       { uri: '/publication_id1', id: 'publication_id1' },
       { uri: '/publication_id2', id: 'publication_id2' },
       { uri: '/publication_id3', id: 'publication_id3' },
-      { uri: '/publication_id4', id: 'publication_id4' }
+      { uri: '/publication_id4', id: 'publication_id4' },
+      { uri: '/publication_id5', id: 'publication_id5' },
+      { uri: '/publication_id6', id: 'publication_id6' }
     ], ...propOverrides
   }
 
@@ -37,7 +40,7 @@ describe('components', () => {
     DefaultExportPublicationsRewireApi.__Rewire__('Publication', React.createClass({
       render () {
         return (
-          <div className='publication' />
+          <div data-automation-id='publication_mock' />
         )
       }
     }))
@@ -54,13 +57,23 @@ describe('components', () => {
     })
 
     it('should render publications', () => {
-      const { node } = setup()
-      expect(node.getElementsByClassName('publication').length).toBe(4)
+      const { node, props } = setup({mediaQueryValues: { width: 992 }})
+      expect(node.querySelectorAll("[data-automation-id='publication_mock']").length).toBe(props.publications.length)
     })
 
-    it('should render row for every three publications', () => {
-      const { node } = setup()
+    it('should render row for every three publications on desktop screens', () => {
+      const { node } = setup({mediaQueryValues: { width: 992 }})
       expect(node.getElementsByClassName('row').length).toBe(2)
+    })
+
+    it('should render row for every two publications on tablets', () => {
+      const { node } = setup({mediaQueryValues: { width: 668 }})
+      expect(node.getElementsByClassName('row').length).toBe(3)
+    })
+
+    it('should render row for every single publications on mobile', () => {
+      const { node } = setup({mediaQueryValues: { width: 667 }})
+      expect(node.getElementsByClassName('row').length).toBe(6)
     })
   })
 })

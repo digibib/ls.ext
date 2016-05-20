@@ -53,14 +53,16 @@ class SearchHeader extends React.Component {
         <section className='search-container'>
           <div className='search-box'>
             <form onSubmit={this.handleSearch}>
-              <label for="search"><img src="/images/icon-searchbar-search.svg" alt="Black Magnifying glass"/></label>
+              <label htmlFor='search'><img src='/images/icon-searchbar-search.svg'
+                                           alt='Black Magnifying glass' /></label>
               <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                      type='search'
                      defaultValue={this.props.locationQuery.query || ''}
                      ref={e => this.searchFieldInput = e}
                      data-automation-id='search_input_field'
               />
-              <button onClick={this.handleSearch} type='button' className='search-submit' data-automation-id='search_button'>
+              <button onClick={this.handleSearch} type='button' className='search-submit'
+                      data-automation-id='search_button'>
                 <FormattedMessage {...messages.search} />
               </button>
             </form>
@@ -80,6 +82,7 @@ SearchHeader.propTypes = {
   showLoginDialog: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   logout: PropTypes.func.isRequired,
+  mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired
 }
 

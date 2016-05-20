@@ -108,7 +108,7 @@ class SearchResult extends React.Component {
 
         <article className='entry-content'>
 
-          <div className='entry-content-icon'>
+          <div className='entry-content-icon patron-placeholder'>
             <div className='entry-content-icon-single'>
 
                <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
@@ -134,7 +134,7 @@ class SearchResult extends React.Component {
           </div>
 
           <div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
+            <p className='patron-placeholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
               porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
               nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
               sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.

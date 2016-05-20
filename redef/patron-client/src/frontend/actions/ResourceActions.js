@@ -55,10 +55,13 @@ export function expandSubResource (id, replacePath) {
 }
 
 export function fetchPersonResource (relativeUri) {
-  let personResponse
-  let worksResponse
-  const url = `${Constants.backendUri}${relativeUri}`
-  return dispatch => {
+  return (dispatch, getState) => {
+    if (getState().resources.resources[ relativeUri ]) {
+      return
+    }
+    let personResponse
+    let worksResponse
+    const url = `${Constants.backendUri}${relativeUri}`
     dispatch(requestResource(url))
     return fetch(url)
       .then(response => response.json())
@@ -81,10 +84,13 @@ export function fetchPersonResource (relativeUri) {
 }
 
 export function fetchWorkResource (relativeUri) {
-  let workResponse
-  let itemsResponse
-  const url = `${Constants.backendUri}${relativeUri}`
-  return dispatch => {
+  return (dispatch, getState) => {
+    if (getState().resources.resources[ relativeUri ]) {
+      return
+    }
+    let workResponse
+    let itemsResponse
+    const url = `${Constants.backendUri}${relativeUri}`
     dispatch(requestResource(url))
     return fetch(url)
       .then(response => response.json())

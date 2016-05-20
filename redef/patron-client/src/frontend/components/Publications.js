@@ -65,7 +65,7 @@ class Publications extends React.Component {
         <MediaQuery query='(min-width: 992px)' values={{...this.props.mediaQueryValues}}>
           {this.renderPublications(3)}
         </MediaQuery>
-        <MediaQuery query='(min-width: 668px) and (max-width: 992px)' values={{...this.props.mediaQueryValues}}>
+        <MediaQuery query='(min-width: 668px) and (max-width: 991px)' values={{...this.props.mediaQueryValues}}>
           {this.renderPublications(2)}
         </MediaQuery>
         <MediaQuery query='(max-width: 667px)' values={{...this.props.mediaQueryValues}}>
@@ -87,17 +87,17 @@ class Publications extends React.Component {
             values={{numberOfPublications: this.props.publications.length}} /></h2>
         </header>
 
-        <div className='entry-content-icon'>
+        <div className='entry-content-icon patron-placeholder'>
           <div className='entry-content-icon-single'>
             <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
             <p>Lydbok </p>
           </div>
         </div>
 
-        <div className="arrow-close" onClick={this.handleCollapsePublications}>
+        <div className='arrow-close' onClick={this.handleCollapsePublications}>
           {this.props.locationQuery.collapsePublications === null
-            ? <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up" />
-            : <img src="/images/btn-arrow-open.svg" alt="Black arrow pointing down" />}
+            ? <img src='/images/btn-arrow-close.svg' alt='Black arrow pointing up' />
+            : <img src='/images/btn-arrow-open.svg' alt='Black arrow pointing down' />}
         </div>
 
         <div className='other-publications-entry-content'>
@@ -116,6 +116,7 @@ Publications.propTypes = {
   expandSubResource: PropTypes.func.isRequired,
   locationQuery: PropTypes.object.isRequired,
   startReservation: PropTypes.func.isRequired,
+  toggleParameter: PropTypes.func.isRequired,
   mediaQueryValues: PropTypes.object
 }
 
