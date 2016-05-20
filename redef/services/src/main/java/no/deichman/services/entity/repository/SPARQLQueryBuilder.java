@@ -5,6 +5,7 @@ import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
@@ -316,6 +317,26 @@ public final class SPARQLQueryBuilder {
         String q = "SELECT ?uri "
                 + "WHERE "
                 + "  { ?uri <http://data.deichman.no/duo#bibliofilPublisherId> \"" + id + "\" }";
+        return QueryFactory.create(q);
+    }
+
+    public String updateHoldingBranches(String recordId, String branches) {
+        String q = String.format(""
+                + "PREFIX : <%s>\n"
+                + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
+                + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
+                + "WHERE { ?pub :recordID \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
+                baseURI.ontology(), StringUtils.join(branches.split(","),"\",\""), recordId);
+        return q;
+    }
+
+    public Query getWorkByRecordId(String recordId) {
+        String q = String.format(""
+                        + "PREFIX : <%s>\n"
+                        + "SELECT ?work\n"
+                        + "WHERE { ?pub :recordID \"%s\" .\n"
+                        + "        ?pub :publicationOf ?work }\n",
+                baseURI.ontology(), recordId);
         return QueryFactory.create(q);
     }
 }

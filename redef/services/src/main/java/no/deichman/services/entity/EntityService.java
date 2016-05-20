@@ -15,6 +15,7 @@ public interface EntityService {
     Model retrieveById(XURI xuri);
     Model retrieveWorkWithLinkedResources(XURI xuri);
     Model retrievePersonWithLinkedResources(XURI xuri);
+    XURI updateHoldingBranches(String recordId, String branches) throws Exception;
 
     Model retrieveWorkItemsByURI(XURI xuri);
     String create(EntityType type, Model inputModel) throws Exception;

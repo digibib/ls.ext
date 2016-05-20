@@ -22,6 +22,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.NotFoundException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -87,6 +88,25 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getUpdateWorkQueryString(model));
         executeUpdate(updateRequest);
+    }
+
+    @Override
+    public final void updateResource(String query) {
+        UpdateRequest updateRequest = UpdateFactory.create(query);
+        executeUpdate(updateRequest);
+    }
+
+    @Override
+    public final XURI retrieveWorkByRecordId(String recordId) throws Exception {
+        try (QueryExecution qexec = getQueryExecution(sqb.getWorkByRecordId(recordId))) {
+            disableCompression(qexec);
+            ResultSet resultSet = qexec.execSelect();
+            boolean found = resultSet.hasNext();
+            if (!found) {
+                throw new NotFoundException();
+            }
+            return new XURI(resultSet.next().getResource("work").toString());
+        }
     }
 
     @Override

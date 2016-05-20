@@ -4,6 +4,7 @@ import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
+import org.apache.commons.lang.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
@@ -380,5 +381,19 @@ public class SPARQLQueryBuilderTest {
         Query query = sqb.describeLinkedPublications(xuri);
         Query expected = QueryFactory.create(test);
         assertEquals(expected,query);
+    }
+
+    @Test
+    public void test_update_branches_query() throws Exception {
+        String recordId = "378";
+        String branches = "hutl,fmaj,fgry";
+        String quotedBranches = StringUtils.join(branches.split(","),"\",\"");
+        String expected = "PREFIX : <" + baseURI.ontology() + ">\n"
+                + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
+                + "INSERT { ?pub :hasHoldingBranch \"" + quotedBranches + "\" . }\n"
+                + "WHERE { ?pub :recordID \"" + recordId + "\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n";
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        String query = sqb.updateHoldingBranches(recordId, branches);
+        assertEquals(expected, query);
     }
 }

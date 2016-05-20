@@ -181,6 +181,15 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
+    public XURI updateHoldingBranches(String recordId, String branches) throws Exception {
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.remote());
+        String query = sqb.updateHoldingBranches(recordId, branches);
+        repository.updateResource(query);
+
+        return repository.retrieveWorkByRecordId(recordId);
+    }
+
+    @Override
     public void updateWork(String work) {
         repository.updateWork(work);
     }

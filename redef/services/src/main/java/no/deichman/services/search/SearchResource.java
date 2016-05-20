@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -125,6 +126,28 @@ public class SearchResource extends ResourceBase {
         });
         return Response.accepted().build();
     }
+
+
+    @POST
+    @Path("work/reindex")
+    public final Response reIndexWorkByRecordId(
+            @QueryParam("recordId") final String recordId,
+            @QueryParam("branches") final String branches) throws Exception {
+
+        if (recordId == null || branches == null) {
+            throw new BadRequestException("missing one or more of required queryparameters: recordId, branches");
+        }
+
+        XURI workUri = getEntityService().updateHoldingBranches(recordId, branches);
+
+        try {
+            getSearchService().index(workUri);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Response.accepted().build();
+    }
+
 
     @Override
     protected final ServletConfig getConfig() {

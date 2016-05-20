@@ -92,7 +92,7 @@ public class AppTest {
 
     private static void setupElasticSearch() throws Exception {
         embeddedElasticsearchServer = EmbeddedElasticsearchServer.getInstance();
-        Unirest.post("http://localhost:" + appPort + "/search/clear_index");
+        Unirest.post(baseUri + "/search/clear_index");
     }
 
     @AfterClass
@@ -221,6 +221,32 @@ public class AppTest {
             assertTrue("Work with given format found in index", true);
         } else if (foundWorkInIndex) {
             fail("Work found in index, but not with the correct format.");
+        } else {
+            fail("Work not found in index.");
+        }
+    }
+
+    private void doSearchForWorksWithHoldingbranch(String name, String branch) throws UnirestException, InterruptedException {
+        boolean foundWorkInIndex;
+        boolean foundBranchInIndex;
+        int attempts = FIFTY_TIMES;
+        do {
+            HttpRequest request = Unirest
+                    .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle=" + name);
+            HttpResponse<?> response = request.asJson();
+            assertResponse(Status.OK, response);
+            String responseBody = response.getBody().toString();
+            foundWorkInIndex = responseBody.contains(name);
+            foundBranchInIndex = responseBody.contains(branch);
+            if (!foundWorkInIndex || !foundBranchInIndex) {
+                LOG.info("Work with given branch not found in index yet, waiting one second.");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while ((!foundWorkInIndex || !foundBranchInIndex) && attempts-- > 0);
+        if (foundWorkInIndex && foundBranchInIndex) {
+            assertTrue("Work with given branch found in index", true);
+        } else if (foundWorkInIndex) {
+            fail("Work found in index, but not with the correct branch.");
         } else {
             fail("Work not found in index.");
         }
@@ -1134,4 +1160,47 @@ public class AppTest {
         Unirest.post(baseUri + "search/subject/reindex_all").asString();
         doSearchForSubject("Hekling");
     }
+
+    @Test
+    public void work_is_reindexed_by_publication_recordid() throws Exception {
+        String creator = "Knut Hamsun";
+        String workTitle = "Hunger";
+        String publicationTitle = "Sult";
+        String partTitle = "Svolten";
+        String partNumber = "Part 1";
+        String isbn = "978-3-16-148410-0";
+        String publicationYear = "2016";
+        String ontologyURI = baseUri + "ontology#";
+
+        kohaSvcMock.addLoginExpectation();
+        setupExpectationForMarcXmlSentToKoha(creator, publicationTitle, partTitle, partNumber, isbn, publicationYear);
+
+        String personUri = createPersonInRdfStore(creator, ontologyURI);
+        String workUri = createWorkInRdfStore(workTitle, ontologyURI, personUri);
+        String publicationTriples = ""
+                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<publication> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
+                + "<publication> <" + ontologyURI + "publicationOf> <" + workUri + "> .\n"
+                + "<publication> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
+                + "<publication> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
+                + "<publication> <" + ontologyURI + "hasHoldingBranch> \"hutl\" .\n"
+                + "<publication> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
+
+        HttpResponse<JsonNode> createPublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples).asJson();
+        assertResponse(CREATED, createPublicationResponse);
+
+        HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
+        assertNotNull(stringHttpResponse);
+
+        doSearchForWorksWithHoldingbranch("Hunger", "hutl");
+
+        stringHttpResponse = Unirest.post(baseUri + "search/work/reindex")
+                .queryString("recordId", FIRST_BIBLIO_ID)
+                .queryString("branches", "fgry").asString();
+        assertNotNull(stringHttpResponse);
+
+        doSearchForWorksWithHoldingbranch("Hunger", "fgry");
+    }
+
 }
