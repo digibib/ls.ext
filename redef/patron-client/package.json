@@ -46,6 +46,8 @@
     "babel-plugin-react-intl": "2.1.3",
     "babel-plugin-react-transform": "2.0.2",
     "babel-plugin-rewire": "1.0.0-rc-3",
+    "babel-plugin-transform-react-constant-elements": "^6.8.0",
+    "babel-plugin-transform-react-inline-elements": "^6.8.0",
     "babel-polyfill": "6.9.0",
     "babel-preset-es2015": "6.9.0",
     "babel-preset-react": "6.5.0",
