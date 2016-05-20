@@ -455,6 +455,14 @@ Then(/^jeg kan legge til tittel for det nye verket$/) do
   @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
 end
 
+Then(/^jeg kan dikte opp en verkstittel$/) do
+  @context[:work_maintitle] = generateRandomString
+end
+
+Then(/^jeg kan legge til tittelen for det nye verket$/) do
+  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
+end
+
 Then(/^jeg kan legge til undertittel for det nye verket$/) do
   @context[:work_subtitle] = generateRandomString
   @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#subtitle", @context[:work_subtitle])
@@ -785,3 +793,6 @@ When(/^at utgivelsen har samme (.*) som verket$/) do |field|
   batch_verify_props @site.RegPublication, 'Work', data, :locate_by_fragment
 end
 
+When(/^at jeg vil lage en person til$/) do
+  # nop
+end

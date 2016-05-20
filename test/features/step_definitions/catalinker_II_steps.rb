@@ -392,6 +392,10 @@ end
 
 When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do
   @site.WorkFlow.visit
+  step "at jeg legger navnet på verket og trykker enter"
+end
+
+When(/^at jeg legger navnet på verket og trykker enter$/) do
   search_work_as_main_resource = @browser.text_field(:data_automation_id => 'searchWorkAsMainResource')
   search_work_as_main_resource.set(@context[:work_maintitle])
   search_work_as_main_resource.send_keys :enter
@@ -403,4 +407,9 @@ end
 
 When(/^så trykker jeg på Legg til ny biinnførsel\-knappen$/) do
   @browser.a(:text, /Legg til ny biinn.*/).click
+end
+
+When(/^ser jeg at det er (ett|to) treff i resultatlisten$/) do |one_or_two|
+  @browser.divs(:xpath => "//span[@class='support-panel']//div[@class='search-result-box']/div[@class='search-result-inner']/div[starts-with(@class, 'search-result')]").length.should eq one_or_two == 'ett' ? 1 : 2
+  @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/).should_not exist
 end
