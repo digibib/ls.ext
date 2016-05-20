@@ -54,62 +54,161 @@ module.exports = (app) => {
   })
 
   app.get('/api/v1/profile/loans', (request, response) => {
-    response.send({
-      name: 'Ola finn Oddvar Nordmann',
-      pickup: [
-        {
-          recordId: 'xx',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Haruki Murakami',
-          publicationYear: '1987',
-          expiry: '2016-09-21',
-          pickupNumber: '40/20220'
-        },
-        {
-          recordId: 'yy',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Haruki Murakami',
-          publicationYear: '1987',
-          expiry: '2016-09-21',
-          pickupNumber: '40/20220'
-        }
-      ],
-      reservations: [
-        {
-          recordId: 'xx',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Lars- Saabye Christensen',
-          orderedDate: '2016-12-03',
-          waitingPeriod: 'xxx',
-          branchCode: 'dfb'
-        },
-        {
-          recordId: 'yy',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Lars- Saabye Christensen',
-          orderedDate: '2016-12-03',
-          waitingPeriod: 'xxx',
-          branchCode: 'dfb'
-        }
-      ],
-      loans: [
-        {
-          recordId: 'xx',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Lars- Saabye Christensen',
-          publicationYear: '1987',
-          dueDate: '2016-12-05'
-        },
-        {
-          recordId: 'yy',
-          title: 'Hard-Boiled Wonderland and the End of the World',
-          author: 'Lars- Saabye Christensen',
-          publicationYear: '1987',
-          dueDate: '2016-12-05'
-        }
-      ]
+    Promise.all([fetchAllCheckouts(request), fetchAllHolds(request), fetchAllPickups(request)])
+    .then(data => {
+      const [checkouts, holds, pickups] = data
+      response.send({
+        name: 'Ola finn Oddvar Nordmann',
+        loans: checkouts,
+        reservations: holds,
+        pickup: pickups
+      })
     })
   })
+
+  app.get('/api/v1/profile/checkouts', (request, response) => {
+    fetchAllCheckouts(request)
+    .then(res => {
+      console.log(res)
+      response.status(200).send(res)
+    }).catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
+
+  app.get('/api/v1/profile/holds', (request, response) => {
+    fetchAllHolds(request)
+    .then(res => {
+      console.log(res)
+      response.status(200).send(res)
+    }).catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
+
+  app.get('/api/v1/profile/pickups', (request, response) => {
+    fetchAllPickups(request)
+    .then(res => {
+      console.log(res)
+      response.status(200).send(res)
+    }).catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
+
+  function fetchAllPickups (request) {
+    return new Promise((resolve) => {
+      resolve([
+        {
+          recordId: 'xx',
+          title: 'Hard-Boiled Wonderland and the End of the World',
+          author: 'Haruki Murakami',
+          publicationYear: '1987',
+          expiry: '2016-09-21',
+          pickupNumber: '40/20220'
+        },
+        {
+          recordId: 'yy',
+          title: 'Hard-Boiled Wonderland and the End of the World',
+          author: 'Haruki Murakami',
+          publicationYear: '1987',
+          expiry: '2016-09-21',
+          pickupNumber: '40/20220'
+        }
+      ])
+    })
+  }
+
+  function fetchAllHolds (request) {
+    return fetch(`http://koha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`, {
+      method: 'GET',
+      headers: {
+        'Cookie': request.session.kohaSession
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        throw Error(res.statusText)
+      }
+    }).then(json => {
+      const promises = json.map(hold => fetchHoldFromBiblioNumber(hold, request))
+      return Promise.all(promises)
+    }).then(holds => {
+      return holds
+    })
+  }
+
+  function fetchHoldFromBiblioNumber (hold, request) {
+    return fetch(`http://koha:8081/api/v1/biblios/${hold.biblionumber}`, {
+      method: 'GET',
+      headers: {
+        'Cookie': request.session.kohaSession
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        throw Error(res.statusText)
+      }
+    }).then(json => {
+      return {
+        recordId: hold.biblionumber,
+        title: json.title,
+        author: json.author,
+        orderedDate: hold.reservedate,
+        waitingPeriod: 'cirka 2-4 uker',
+        branchCode: hold.branchcode
+      }
+    })
+  }
+
+  function fetchAllCheckouts (request) {
+    return fetch(`http://koha:8081/api/v1/checkouts?borrowernumber=${request.session.borrowerNumber}`, {
+      method: 'GET',
+      headers: {
+        'Cookie': request.session.kohaSession
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        throw Error(res.statusText)
+      }
+    }).then(json => {
+      const promises = json.map(loan => fetchLoanFromItemNumber(loan, request))
+      return Promise.all(promises)
+    }).then(loans => {
+      return loans
+    })
+  }
+
+  function fetchLoanFromItemNumber (loan, request) {
+    return fetch(`http://koha:8081/api/v1/items/${loan.itemnumber}/biblio`, {
+      method: 'GET',
+      headers: {
+        'Cookie': request.session.kohaSession
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        throw Error(res.statusText)
+      }
+    }).then(json => {
+      return {
+        itemNumber: loan.itemnumber,
+        recordId: json.biblionumber,
+        dueDate: loan.date_due,
+        title: json.title,
+        author: json.author,
+        publicationYear: json.publicationyear
+      }
+    })
+  }
 
   app.post('/api/v1/profile/settings', jsonParser, (request, response) => {
     request.session.profileSettings = request.body
