@@ -35,6 +35,6 @@ on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},
 on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
 value="{{./current.displayValue}}" />
 {{/if}}
-<a class="support-panel-expander" on-click='searchResource:{{current.displayValue}}'> </a>
+<a class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
 {{/if}}
 </span>
