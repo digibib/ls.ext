@@ -1,29 +1,3 @@
-.tab-bar {
-  list-style-type: none;
-  margin: 0;
-  padding: 0
-}
-
-.tab-bar-tab {
-  float: left;
-  padding: 1.5em;
-  background-color: #eee;
-}
-
-.tab-bar-tab-active {
-  background-color: #ddd;
-}
-
-.tab-bar-tab-small {
-  float: left;
-  padding: 0.5em;
-}
-
-.tab-bar-tab-small-active {
-  font-weight: 900;
-  color: red
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;

@@ -1,0 +1,65 @@
+.pickup, .reserve, .registered {
+  @include span(12 of 12);
+
+  .title {
+    @include border-bottom;
+    margin-bottom: rhythm(2);
+    @include span(12 of 12);
+    margin-top: rhythm(5);
+  }
+}
+
+.registered {
+  .title {
+    span {
+      float: left;
+      margin-top: rhythm(4);
+    }
+    .black-btn {
+      float: right;
+      margin-right: rhythm(2);
+      margin-bottom: rhythm(2);
+
+      span {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.contributors {
+  span {
+    display: inline-block !important;
+  }
+
+  p {
+    margin-bottom: rhythm(1);
+  }
+
+  p.published {
+    @include smallText;
+  }
+}
+
+.loan-expire, .loan-pickup-number, .due-date {
+  @include span(12 of 12);
+  
+  @include breakpoint($small){
+     @include span(4 of 12);
+  }
+
+  p {
+    margin-bottom: rhythm(1);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.due-date {
+  button {
+    margin-bottom: rhythm(2);
+  }
+}

@@ -11,36 +11,3 @@
   }
 
 }
-
-.primary-menu {
-  display: none;
-
-  @include span(8 of 12);
-  float: right;
-  text-align: right;
-
-  li {
-    display: inline-block;
-    padding: rhythm(2);
-  }
-
-  @include breakpoint($medium){
-    display: block;
-  }
-}
-
-
-.btn-mobile {
-
-  float: right;
-  width: 45px;
-  margin-top: rhythm(3);
-
-  button {
-    border: none;
-  }
-
-  @include breakpoint($medium){
-    display: none;
-  }
-}

@@ -11,9 +11,6 @@
 
 .book-cover {
   @include span(4 of 12);
-  background: #eee;
-  width: 8em;
-  height: 10em;
 
   @include breakpoint($small) {
     @include span(2 of 12);

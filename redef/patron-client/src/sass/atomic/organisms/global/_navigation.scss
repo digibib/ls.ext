@@ -1,0 +1,70 @@
+.primary-menu {
+  display: none;
+
+  @include span(8 of 12);
+  float: right;
+  text-align: right;
+
+  li {
+    display: inline-block;
+    padding: rhythm(2);
+  }
+
+  @include breakpoint($medium){
+    display: block;
+  }
+}
+
+
+.btn-mobile {
+
+  float: right;
+  width: 45px;
+  margin-top: rhythm(3);
+
+  button {
+    border: none;
+  }
+
+  @include breakpoint($medium){
+    display: none;
+  }
+}
+
+.tab-bar, .tab-bar-secondary {
+  list-style-type: none;
+  @include span(12 of 12);
+}
+
+.tab-bar-tab-active, .tab-bar-tab-secondary-active {
+  color: $redColor;
+}
+
+
+.tab-bar {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.tab-bar-tab {
+  float: left;
+  margin-right: rhythm(6);
+  padding-bottom: rhythm(1);
+}
+
+.tab-bar-tab-active {
+  @include border-bottom;
+}
+
+.tab-bar-secondary {
+  margin: 0;
+  padding: 0;
+}
+
+.tab-bar-tab-small {
+  float: left;
+  padding: rhythm(2);
+  padding-left: 0;
+  padding-top: 0;
+
+}

@@ -7,28 +7,29 @@ import { routerActions } from 'react-router-redux'
 import Branches from '../constants/Branches'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
+import MediaQuery from 'react-responsive'
 
 class UserLoans extends React.Component {
   renderPickups () {
     return this.props.loansAndReservations.pickup.map(item => (
-      <section key={item.recordId} className='single-entry' style={{backgroundColor: '#eee'}}>
+      <section key={item.recordId} className='single-entry'>
         <aside className='book-cover'><a className='book-cover-item' href=''></a>
         </aside>
         <article className='entry-content'>
           <h1>{item.title}</h1>
           <div>
-            <div style={{width: '80%', display: 'inline-block'}}>
-              <p><FormattedMessage {...messages.author} />: <strong>{item.author}</strong></p>
-              <p><FormattedMessage {...messages.publicationYear} />: {item.publicationYear}</p>
+            <div className="contributors">
+              <p><FormattedMessage {...messages.author} />: <a href="#">{item.author}</a></p>
+              <p className="published"><FormattedMessage {...messages.publicationYear} />: {item.publicationYear}</p>
             </div>
-            <div style={{width: '20%', display: 'inline-block'}}>
-              <div>
-                <FormattedMessage {...messages.expiry} /><br />
-                <span>{item.expiry}</span>
+            <div>
+              <div className="loan-expire">
+                <p><FormattedMessage {...messages.expiry} /></p>
+                <h2>{item.expiry}</h2>
               </div>
-              <div>
-                <FormattedMessage {...messages.pickupNumber} /><br />
-                <span>{item.pickupNumber}</span>
+              <div className="loan-pickup-number">
+                <p><FormattedMessage {...messages.pickupNumber} /></p>
+                <h2>{item.pickupNumber}</h2>
               </div>
             </div>
           </div>
@@ -37,53 +38,78 @@ class UserLoans extends React.Component {
     ))
   }
 
-  renderReservations () {
+  renderReservations() {
     return (
-      <table>
-        <thead>
-        <tr>
-          <th><FormattedMessage {...messages.title} /></th>
-          <th><FormattedMessage {...messages.author} /></th>
-          <th><FormattedMessage {...messages.orderedDate} /></th>
-          <th><FormattedMessage {...messages.waitingPeriod} /></th>
-          <th><FormattedMessage {...messages.pickupLocation} /></th>
-        </tr>
-        </thead>
-        <tbody>{this.props.loansAndReservations.reservations.map(item => (
-          <tr key={item.recordId}>
-            <td>{item.title}</td>
-            <td>{item.author}</td>
-            <td>{item.orderedDate}</td>
-            <td>{item.waitingPeriod}</td>
-            <td>{Branches[ item.branchCode ]}</td>
-            <td>
-              <button><FormattedMessage {...messages.cancelReservation} /></button>
-            </td>
-          </tr>
-        ))}</tbody>
-      </table>
+        <div>
+          <MediaQuery query='(min-width: 992px)' values={{...this.props.mediaQueryValues}}>
+
+            <table>
+              <thead>
+              <th><FormattedMessage {...messages.title} /></th>
+              <th><FormattedMessage {...messages.author} /></th>
+              <th><FormattedMessage {...messages.orderedDate} /></th>
+              <th><FormattedMessage {...messages.waitingPeriod} /></th>
+              <th><FormattedMessage {...messages.pickupLocation} /></th>
+              </thead>
+              <tbody>{this.props.loansAndReservations.reservations.map(item => (
+                  <tr key={item.recordId}>
+                    <td>{item.title}</td>
+                    <td>{item.author}</td>
+                    <td>{item.orderedDate}</td>
+                    <td>{item.waitingPeriod}</td>
+                    <td>{Branches[item.branchCode]}</td>
+                    <td>
+                      <button className="black-btn"><FormattedMessage {...messages.cancelReservation} /></button>
+                    </td>
+                  </tr>
+              ))}</tbody>
+            </table>
+          </MediaQuery>
+
+          <MediaQuery query='(max-width: 992px)' values={{...this.props.mediaQueryValues}}>
+            {this.props.loansAndReservations.reservations.map(item => (
+            <div className='reserved-entry-content'>
+              <div className='title'><FormattedMessage {...messages.title} /></div>
+              <div className='content'>{item.title}</div>
+
+              <div className='title'><FormattedMessage {...messages.author} /></div>
+              <div className='content'>{item.title}</div>
+
+              <div className='title'><FormattedMessage {...messages.orderedDate} /></div>
+              <div className='content'>{item.author}</div>
+
+              <div className='title'><FormattedMessage {...messages.waitingPeriod} /></div>
+              <div className='content'>{item.orderedDate}</div>
+
+              <div className='title'><FormattedMessage {...messages.pickupLocation} /></div>
+              <div className='content'>{item.waitingPeriod}</div>
+
+            </div>
+            ))}
+          </MediaQuery>
+        </div>
     )
   }
 
   renderLoans () {
     return this.props.loansAndReservations.loans.map(item => (
-      <section key={item.recordId} className='single-entry' style={{backgroundColor: '#eee'}}>
+      <section key={item.recordId} className='single-entry'>
         <aside className='book-cover'><a className='book-cover-item' href=''></a>
         </aside>
         <article className='entry-content'>
           <h1>{item.title}</h1>
           <div>
-            <div style={{width: '80%', display: 'inline-block'}}>
-              <p><FormattedMessage {...messages.author} />: <strong>{item.author}</strong></p>
-              <p><FormattedMessage {...messages.publicationYear} />: {item.publicationYear}</p>
+            <div className="contributors">
+              <p><FormattedMessage {...messages.author} />: <a href="#">{item.author}</a></p>
+              <p className="published"><FormattedMessage {...messages.publicationYear} />: {item.publicationYear}</p>
             </div>
-            <div style={{width: '20%', display: 'inline-block'}}>
+            <div className="due-date">
               <div>
-                <FormattedMessage {...messages.dueDate} /><br />
-                <span>{item.dueDate}</span>
+                <p><FormattedMessage {...messages.dueDate} /></p>
+                <h2>{item.dueDate}</h2>
               </div>
               <div>
-                <button><FormattedMessage {...messages.extendLoan} /></button>
+                <button className="black-btn"><FormattedMessage {...messages.extendLoan} /></button>
               </div>
             </div>
           </div>
@@ -120,21 +146,22 @@ class UserLoans extends React.Component {
     return (
       <div>
         {this.renderTabs()}
-        <hr />
-        <div>
-          <h3><FormattedMessage {...messages.canBePickedUp} /></h3>
+
+        <div className="pickup">
+          <div className="title"><FormattedMessage {...messages.canBePickedUp} /></div>
           {this.renderPickups()}
         </div>
-        <hr />
-        <div>
-          <h3><FormattedMessage {...messages.reservations} /></h3>
+
+        <div className="reserve">
+          <div className="title"><FormattedMessage {...messages.reservations} /></div>
           {this.renderReservations()}
         </div>
-        <hr />
-        <div>
-          <h3><FormattedMessage {...messages.nameAndDate}
-            values={{name: this.props.loansAndReservations.name, date: date, time: time}} /></h3>
-          <button><FormattedMessage {...messages.renewAllLoans} /></button>
+
+        <div className="registered">
+          <div className="title"><FormattedMessage {...messages.nameAndDate}
+            values={{name: this.props.loansAndReservations.name, date: date, time: time}} />
+            <button className="black-btn"><FormattedMessage {...messages.renewAllLoans} /></button>
+          </div>
           {this.renderLoans()}
         </div>
       </div>

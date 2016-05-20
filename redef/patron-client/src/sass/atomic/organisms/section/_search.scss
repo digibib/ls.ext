@@ -50,7 +50,7 @@
     }
 
     @include breakpoint($lt-small){
-      @include span(3 of 12);
+      @include span(2.8 of 12);
       margin-right: 0;
 
       span {

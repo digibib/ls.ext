@@ -23,12 +23,6 @@
     }
   }
 
-
-  .book-cover {
-    width: 8em;
-    height: 10em;
-  }
-
   &.open {
 
       @include breakpoint($small){
