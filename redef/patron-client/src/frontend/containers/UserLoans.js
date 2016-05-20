@@ -97,7 +97,10 @@ class UserLoans extends React.Component {
       { label: 'Oversikt', path: '/profile/loans/overview' },
       { label: 'Historikk', path: '/profile/loans/history' }
     ]
-    return <Tabs push={this.props.routerActions.push} tabList={tabList} tabClass='tab-bar-tab-small'
+    return <Tabs push={this.props.routerActions.push}
+                 tabList={tabList}
+                 tabBarClass='tab-bar-secondary'
+                 tabClass='tab-bar-tab-small'
                  tabActiveClass='tab-bar-tab-small-active'
                  currentPath={this.props.currentPath} />
   }

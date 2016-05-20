@@ -7,7 +7,7 @@ class Tabs extends React.Component {
   render () {
     return (
       <div className='row'>
-        <ul className='tab-bar'>
+        <ul className={this.props.tabBarClass}>
           {this.props.tabList.map(tab => (
             <Tab key={tab.label}
                  tab={tab}
@@ -24,11 +24,13 @@ Tabs.propTypes = {
   tabList: PropTypes.array.isRequired,
   push: PropTypes.func.isRequired,
   currentPath: PropTypes.string.isRequired,
+  tabBarClass: PropTypes.string.isRequired,
   tabClass: PropTypes.string.isRequired,
   tabActiveClass: PropTypes.string.isRequired
 }
 
 Tabs.defaultProps = {
+  tabBarClass: 'tab-bar',
   tabClass: 'tab-bar-tab',
   tabActiveClass: 'tab-bar-tab-active'
 }
