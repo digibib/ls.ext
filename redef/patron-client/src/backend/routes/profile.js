@@ -54,11 +54,13 @@ module.exports = (app) => {
   })
 
   app.get('/api/v1/profile/loans', (request, response) => {
-    Promise.all([fetchAllCheckouts(request), fetchAllHolds(request), fetchAllPickups(request)])
+    Promise.all([fetchAllCheckouts(request), fetchAllHoldsAndPickups(request)])
     .then(data => {
-      const [checkouts, holds, pickups] = data
+      const [checkouts, holdsAndPickups] = data
+      const holds   = holdsAndPickups.filter(item => { return item.status !== "W" })
+      const pickups = holdsAndPickups.filter(item => { return item.status === "W" })
       response.send({
-        name: 'Ola finn Oddvar Nordmann',
+        name: `${request.session.borrowerName}`,
         loans: checkouts,
         reservations: holds,
         pickup: pickups
@@ -122,7 +124,7 @@ module.exports = (app) => {
     })
   }
 
-  function fetchAllHolds (request) {
+  function fetchAllHoldsAndPickups (request) {
     return fetch(`http://koha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`, {
       method: 'GET',
       headers: {
@@ -155,13 +157,22 @@ module.exports = (app) => {
         throw Error(res.statusText)
       }
     }).then(json => {
+      const pickupNumber  = hold.waitingdate ? `${hold.waitingdate.split('-')[2]}/${hold.reserve_id}` : 'unknown'
+      const waitingPeriod = hold.found === "T" ? '1-2 dager' : 'cirka 2-4 uker'
+      const expiry        = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7) ).toISOString(1).split('T')[0] : 'unknown'
       return {
         recordId: hold.biblionumber,
+        reserveId: hold.reserve_id,
         title: json.title,
         author: json.author,
+        publicationYear: json.publicationYear,
         orderedDate: hold.reservedate,
-        waitingPeriod: 'cirka 2-4 uker',
-        branchCode: hold.branchcode
+        branchCode: hold.branchcode,
+        status: hold.found,
+        waitingDate: hold.waitingDate,
+        expiry: expiry,
+        waitingPeriod: waitingPeriod,
+        pickupNumber: pickupNumber
       }
     })
   }
