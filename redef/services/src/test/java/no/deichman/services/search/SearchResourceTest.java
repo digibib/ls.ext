@@ -78,7 +78,7 @@ public class SearchResourceTest {
 
     @Test
     public void when_search_with_empty_query_bad_request_is_returned() {
-        assertEquals(SC_BAD_REQUEST , searchResource.search("person", "").getStatus());
+        assertEquals(SC_BAD_REQUEST, searchResource.search("person", "").getStatus());
         assertEquals(SC_BAD_REQUEST, searchResource.search("work", "").getStatus());
     }
 
