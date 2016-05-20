@@ -15,23 +15,14 @@ module.exports = (app) => {
           request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
           request.session.username = request.body.username
 
-          fetch('http://koha:8081/cgi-bin/koha/svc/members/search', {
-            method: 'POST',
+          fetch(`http://koha:8081/api/v1/patrons?userid=${request.body.username}`, {
+            method: 'GET',
             headers: {
-              'Cookie': request.session.kohaSession,
-              'Accept': 'application/json',
-              'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-            },
-            body: toParamString({
-              'sEcho': 2,
-              'searchmember': request.body.username,
-              'searchfieldstype': 'standard',
-              'searchtype': 'contain',
-              'template_path': 'members/tables/members_results.tt'
-            })
+              'Cookie': request.session.kohaSession
+            }
           }).then(res => res.json())
             .then(json => {
-              request.session.borrowerNumber = json[ 'aaData' ][ 0 ][ 'borrowernumber' ]
+              request.session.borrowerNumber = json[0].borrowernumber
               response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
             })
             .catch(error => {
@@ -86,8 +77,4 @@ module.exports = (app) => {
         response.sendStatus(500)
       })
   })
-
-  function toParamString (object) {
-    return Object.keys(object).map(key => `${key}=${encodeURIComponent(object[ key ])}`).join('&')
-  }
 }
