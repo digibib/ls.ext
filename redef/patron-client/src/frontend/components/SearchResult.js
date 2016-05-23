@@ -70,7 +70,7 @@ class SearchResult extends React.Component {
   }
 
   renderItems (result) {
-    const resource = this.props.resources[ result.relativeUri ]
+    const resource = this.props.resources[ result.id ]
     if (resource) {
       return <Items items={resource.items} />
     }
@@ -78,20 +78,17 @@ class SearchResult extends React.Component {
 
   handleShowStatusClick (event) {
     event.stopPropagation()
-    event.preventDefault()
-    this.props.fetchWorkResource(this.props.result.relativeUri)
-    this.props.showStatus(this.props.result.relativeUri)
+    this.props.fetchWorkResource(this.props.result.id)
+    this.props.showStatus(this.props.result.id)
   }
 
   shouldShowStatus () {
-    const { showStatus } = this.props.locationQuery
-    const { relativeUri } = this.props.result
-    return (showStatus && showStatus === relativeUri || (Array.isArray(showStatus) && showStatus.includes(relativeUri)))
+    const { locationQuery: { showStatus }, result: { id } } = this.props
+    return (showStatus && showStatus === id || (Array.isArray(showStatus) && showStatus.includes(id)))
   }
 
   render () {
-    const result = this.props.result
-
+    const { result } = this.props
     const pubFormats = new Set()
     result.publications.forEach(publication => {
       publication.formats.forEach(format => {
@@ -111,8 +108,8 @@ class SearchResult extends React.Component {
           <div className='entry-content-icon patron-placeholder'>
             <div className='entry-content-icon-single'>
 
-               <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
-               <p>Lydbok</p>
+              <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
+              <p>Lydbok</p>
 
             </div>
           </div>
@@ -134,7 +131,8 @@ class SearchResult extends React.Component {
           </div>
 
           <div>
-            <p className='patron-placeholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa id mauris maximus
+            <p className='patron-placeholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
+              id mauris maximus
               porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
               nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
               sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.

@@ -5,20 +5,20 @@ import * as types from '../constants/ActionTypes'
 import { parsePersonResponse, parseWorkResponse } from '../utils/graphParse'
 import Constants from '../constants/Constants'
 
-export function requestResource (uri) {
+export function requestResource (id) {
   return {
     type: types.REQUEST_RESOURCE,
     payload: {
-      uri: uri
+      id: id
     }
   }
 }
 
-export function receiveResource (relativeUri, resource) {
+export function receiveResource (id, resource) {
   return {
     type: types.RECEIVE_RESOURCE,
     payload: {
-      relativeUri: relativeUri,
+      id: id,
       resource: resource
     }
   }
@@ -54,15 +54,15 @@ export function expandSubResource (id, replacePath) {
   }
 }
 
-export function fetchPersonResource (relativeUri) {
+export function fetchPersonResource (personId) {
   return (dispatch, getState) => {
-    if (getState().resources.resources[ relativeUri ]) {
+    if (getState().resources.resources[ personId ]) {
       return
     }
     let personResponse
     let worksResponse
-    const url = `${Constants.backendUri}${relativeUri}`
-    dispatch(requestResource(url))
+    const url = `${Constants.backendUri}/person/${personId}`
+    dispatch(requestResource(personId))
     return fetch(url)
       .then(response => response.json())
       .then(json => {
@@ -78,20 +78,20 @@ export function fetchPersonResource (relativeUri) {
         worksResponse = json
       })
       .then(() => parsePersonResponse(personResponse, worksResponse))
-      .then(person => dispatch(receiveResource(relativeUri, person)))
+      .then(person => dispatch(receiveResource(personId, person)))
       .catch(error => dispatch(resourceFailure(error)))
   }
 }
 
-export function fetchWorkResource (relativeUri) {
+export function fetchWorkResource (workId) {
   return (dispatch, getState) => {
-    if (getState().resources.resources[ relativeUri ]) {
+    if (getState().resources.resources[ workId ]) {
       return
     }
     let workResponse
     let itemsResponse
-    const url = `${Constants.backendUri}${relativeUri}`
-    dispatch(requestResource(url))
+    const url = `${Constants.backendUri}/work/${workId}`
+    dispatch(requestResource(workId))
     return fetch(url)
       .then(response => response.json())
       .then(json => {
@@ -107,7 +107,7 @@ export function fetchWorkResource (relativeUri) {
         itemsResponse = json
       })
       .then(() => parseWorkResponse(workResponse, itemsResponse))
-      .then(work => dispatch(receiveResource(relativeUri, work)))
+      .then(work => dispatch(receiveResource(workId, work)))
       .catch(error => dispatch(resourceFailure(error)))
   }
 }

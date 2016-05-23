@@ -9,7 +9,7 @@ export default function resources (state = initialState, action) {
         ...state,
         resources: {
           ...state.resources,
-          [action.payload.relativeUri]: action.payload.resource
+          [action.payload.id]: action.payload.resource
         },
         isRequesting: false,
         error: false

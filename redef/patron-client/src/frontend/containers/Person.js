@@ -7,7 +7,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 
 class Person extends React.Component {
   componentWillMount () {
-    this.props.resourceActions.fetchPersonResource(`/person/${this.props.params.personId}`)
+    this.props.resourceActions.fetchPersonResource(this.props.params.personId)
   }
 
   renderNoPerson () {
@@ -63,7 +63,7 @@ class Person extends React.Component {
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let person = this.props.resources[ `/person/${this.props.params.personId}` ]
+    let person = this.props.resources[ this.props.params.personId ]
     if (!person) {
       return this.renderNoPerson()
     }

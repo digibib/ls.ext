@@ -19,7 +19,7 @@ class Work extends React.Component {
   }
 
   componentWillMount () {
-    this.props.resourceActions.fetchWorkResource(`/work/${this.props.params.workId}`)
+    this.props.resourceActions.fetchWorkResource(this.props.params.workId)
   }
 
   renderNoWork () {
@@ -64,7 +64,7 @@ class Work extends React.Component {
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let work = this.props.resources[ `/work/${this.props.params.workId}` ]
+    let work = this.props.resources[ this.props.params.workId ]
     if (!work) {
       return this.renderNoWork()
     } else {
