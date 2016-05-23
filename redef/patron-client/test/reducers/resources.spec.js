@@ -41,7 +41,7 @@ describe('reducers', () => {
         resources(undefined, {
           type: types.RECEIVE_RESOURCE,
           payload: {
-            relativeUri: 'test uri',
+            id: 'test uri',
             resource: 'test resource'
           }
         })
@@ -57,7 +57,7 @@ describe('reducers', () => {
         }, {
           type: types.RECEIVE_RESOURCE,
           payload: {
-            relativeUri: 'toBeAdded',
+            id: 'toBeAdded',
             resource: 'value to be added'
           }
         })
@@ -73,7 +73,7 @@ describe('reducers', () => {
         }, {
           type: types.RECEIVE_RESOURCE,
           payload: {
-            relativeUri: 'toBeOverwritten',
+            id: 'toBeOverwritten',
             resource: 'overwritten'
           }
         })

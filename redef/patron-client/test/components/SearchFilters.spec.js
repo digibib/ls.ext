@@ -2,17 +2,17 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import SearchFilters from '../../src/frontend/components/SearchFilters'
+import SearchFilters, { __RewireAPI__ as DefaultExportSearchFiltersRewireApi } from '../../src/frontend/components/SearchFilters'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
     filters: [
-      { aggregation: 'work.publication.languages', bucket: 'filter_1', count: '10' },
-      { aggregation: 'work.publication.languages', bucket: 'filter_2', count: '40' },
-      { aggregation: 'work.publication.formats', bucket: 'filter_3', count: '30' },
-      { aggregation: 'work.publication.formats', bucket: 'filter_4', count: '20' }
+      { id: 'prefix1_postfix1' },
+      { id: 'prefix1_postfix2' },
+      { id: 'prefix2_postfix1' },
+      { id: 'prefix2_postfix1' }
     ],
     locationQuery: {},
     toggleFilter: () => {},
@@ -22,14 +22,8 @@ function setup (propOverrides) {
     ...propOverrides
   }
 
-  const messages = {
-    filter_1: 'filter_1',
-    filter_2: 'filter_2',
-    filter_3: 'filter_3',
-    filter_4: 'filter_4'
-  }
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en' messages={messages}>
+    <IntlProvider locale='en'>
       <SearchFilters {...props} />
     </IntlProvider>
   )
@@ -42,6 +36,20 @@ function setup (propOverrides) {
 }
 
 describe('components', () => {
+  before(() => {
+    DefaultExportSearchFiltersRewireApi.__Rewire__('SearchFilter', React.createClass({
+      render () {
+        return (
+          <div />
+        )
+      }
+    }))
+  })
+
+  after(() => {
+    DefaultExportSearchFiltersRewireApi.__ResetDependency__
+  })
+
   describe('SearchFilters', () => {
     it('should render empty if no query in locationQuery', () => {
       const { node } = setup()
@@ -51,8 +59,8 @@ describe('components', () => {
     it('should render only one group if just one type of aggregation', () => {
       const { node } = setup({
         filters: [
-          { aggregation: 'work.publication.languages', bucket: 'filter_1', count: '10' },
-          { aggregation: 'work.publication.languages', bucket: 'filter_2', count: '40' }
+          { id: 'prefix1_postfix1' },
+          { id: 'prefix1_postfix2' }
         ],
         locationQuery: { query: 'test_query' },
         setFilter: () => {}

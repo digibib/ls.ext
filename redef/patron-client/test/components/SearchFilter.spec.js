@@ -10,10 +10,10 @@ function setup (propOverrides) {
   const props = {
     aggregation: 'aggregation',
     filters: [
-      { aggregation: 'test_aggregation', bucket: 'filter_1', count: '10', active: true },
-      { aggregation: 'test_aggregation', bucket: 'filter_2', count: '40', active: false },
-      { aggregation: 'test_aggregation', bucket: 'filter_3', count: '30', active: false },
-      { aggregation: 'test_aggregation', bucket: 'filter_4', count: '20', active: true }
+      { id: 'language_nob', bucket: 'http://lexvo.org/id/iso639-3/nob', count: '10', active: true },
+      { id: 'language_eng', bucket: 'http://lexvo.org/id/iso639-3/eng', count: '40', active: false },
+      { id: 'language_fin', bucket: 'http://lexvo.org/id/iso639-3/fin', count: '30', active: false },
+      { id: 'language_swe', bucket: 'http://lexvo.org/id/iso639-3/swe', count: '20', active: true }
     ],
     locationQuery: {},
     toggleFilter: () => {},
@@ -23,10 +23,10 @@ function setup (propOverrides) {
   }
 
   const messages = {
-    filter_1: 'filter_1',
-    filter_2: 'filter_2',
-    filter_3: 'filter_3',
-    filter_4: 'filter_4'
+    'http://lexvo.org/id/iso639-3/nob': 'Norwegian',
+    'http://lexvo.org/id/iso639-3/eng': 'English',
+    'http://lexvo.org/id/iso639-3/fin': 'Finnish',
+    'http://lexvo.org/id/iso639-3/swe': 'Swedish'
   }
 
   const output = TestUtils.renderIntoDocument(
@@ -49,33 +49,29 @@ describe('components', () => {
     })
 
     it('should render filters', () => {
-      const { node } = setup()
+      const { node, props } = setup()
       // TODO Uncomment count checks when the count received from elastic search is correct
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").innerHTML).toContain('filter_1')
-      // expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").innerHTML).toContain('10')
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_2']").innerHTML).toContain('filter_2')
-      // expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_2']").innerHTML).toContain('40')
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_3']").innerHTML).toContain('filter_3')
-      // expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_3']").innerHTML).toContain('30')
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_4']").innerHTML).toContain('filter_4')
-      // expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_4']").innerHTML).toContain('20')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[0].id}']`).innerHTML).toContain('Norwegian')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[1].id}']`).innerHTML).toContain('English')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[2].id}']`).innerHTML).toContain('Finnish')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[3].id}']`).innerHTML).toContain('Swedish')
     })
 
     it('should render checked filters', () => {
-      const { node } = setup()
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_1']").getElementsByTagName('input')[ 0 ].checked).toBe(true)
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_2']").getElementsByTagName('input')[ 0 ].checked).toBe(false)
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_3']").getElementsByTagName('input')[ 0 ].checked).toBe(false)
-      expect(node.querySelector("[data-automation-id='filter_test_aggregation_filter_4']").getElementsByTagName('input')[ 0 ].checked).toBe(true)
+      const { node, props } = setup()
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[0].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[1].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[2].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[3].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
     })
 
     it('should order by count', () => {
-      const { node } = setup()
-      let nodes = node.querySelectorAll("[data-automation-id^='filter_test_aggregation_']")
-      expect(nodes[ 0 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_2')
-      expect(nodes[ 1 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_3')
-      expect(nodes[ 2 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_4')
-      expect(nodes[ 3 ].getAttribute('data-automation-id')).toBe('filter_test_aggregation_filter_1')
+      const { node, props } = setup()
+      const nodes = node.querySelectorAll("[data-automation-id^='filter_language_']")
+      expect(nodes[ 0 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[1].id}`)
+      expect(nodes[ 1 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[2].id}`)
+      expect(nodes[ 2 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[3].id}`)
+      expect(nodes[ 3 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[0].id}`)
     })
   })
 })
