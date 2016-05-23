@@ -134,8 +134,7 @@ checkstyle {
 
 pmd {
     consoleOutput = true
-    targetJdk = 1.7 // 1.8 is yet unsupported
-    toolVersion = '5.3.3'
+    toolVersion = '5.4.1'
 }
 
 cpd {
