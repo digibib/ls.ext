@@ -12,9 +12,6 @@ class MyPage extends React.Component {
   componentWillMount () {
     if (this.props.isLoggedIn) {
       this.props.profileActions.fetchAllProfileData()
-    } else {
-      // TODO Find a solution for showing login dialog when refreshing / accessing a privileged page directly
-      // this.props.loginActions.showLoginDialog()
     }
   }
 
