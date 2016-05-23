@@ -30,7 +30,8 @@ class UserInfo extends React.Component {
     return (
       <div key={fieldName}>
         <FormattedMessage {...messages[ fieldName ]} /><br />
-        <EditableField editable={editable}
+        <EditableField data-automation-id={`UserInfo_${fieldName}`}
+                       editable={editable}
                        inputProps={{placeholder: this.props.intl.formatMessage({...messages[fieldName]}), ...field}} />
         {field.touched && field.error && <div style={{color: 'red'}}>{this.props.intl.formatMessage(field.error)}</div>}
       </div>
@@ -45,10 +46,10 @@ class UserInfo extends React.Component {
     }
     const editable = this.props.location.query.edit === null
     return (
-      <div><h2>{this.props.personalInformation.name}</h2>
+      <div><h2 data-automation-id='UserInfo_name'>{this.props.personalInformation.name}</h2>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <p><FormattedMessage {...messages.borrowerNumber} />< br /><span
-            data-automation-id='borrowernumber'>{this.props.personalInformation.borrowerNumber}</span></p>
+            data-automation-id='UserInfo_borrowerNumber'>{this.props.personalInformation.borrowerNumber}</span></p>
           <hr />
           <div style={{display: 'inline-block', width: '33%'}}>
             {Object.keys(this.props.fields).map(fieldName => this.generateField(fieldName, editable))}
@@ -57,15 +58,16 @@ class UserInfo extends React.Component {
           <div style={{display: 'inline-block', width: '33%'}}>
             <div>
               <FormattedMessage {...messages.birthdate} /><br />
-              <span>{this.props.personalInformation.birthdate}</span>
+              <span data-automation-id='UserInfo_birthdate'>{this.props.personalInformation.birthdate}</span>
             </div>
             <div>
               <FormattedMessage {...messages.loanerCardIssued} /><br />
-              <span>{this.props.personalInformation.loanerCardIssued}</span>
+              <span
+                data-automation-id='UserInfo_loanerCardIssued'>{this.props.personalInformation.loanerCardIssued}</span>
             </div>
             <div>
               <FormattedMessage {...messages.loanerCategory} /><br />
-              <span>{this.props.personalInformation.loanerCategory}</span>
+              <span data-automation-id='UserInfo_loanerCategory'>{this.props.personalInformation.loanerCategory}</span>
             </div>
           </div>
 
@@ -77,7 +79,7 @@ class UserInfo extends React.Component {
             </div>
             <div>
               <FormattedMessage {...messages.lastUpdated} /><br />
-              <span>{this.props.personalInformation.lastUpdated}</span>
+              <span data-automation-id='UserInfo_lastUpdated'>{this.props.personalInformation.lastUpdated}</span>
             </div>
           </div>
         </form>
@@ -215,6 +217,8 @@ const validate = values => {
   }
   return errors
 }
+
+export { UserInfo as UserInfo }
 
 export default reduxForm(
   {

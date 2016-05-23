@@ -54,6 +54,7 @@
     "babel-preset-stage-2": "6.5.0",
     "breakpoint-sass": "2.7.0",
     "css-loader": "0.23.1",
+    "enzyme": "^2.3.0",
     "es5-shim": "4.5.8",
     "eslint-config-standard-react": "2.4.0",
     "expect": "1.20.1",
