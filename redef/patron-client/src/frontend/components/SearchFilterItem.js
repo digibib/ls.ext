@@ -8,16 +8,16 @@ class SearchFilterItem extends React.Component {
   }
 
   handleClick () {
-    const { filter } = this.props
-    this.props.toggleFilter(filter.aggregation, filter.bucket)
+    const { filter: { id } } = this.props
+    this.props.toggleFilter(id)
   }
 
   render () {
     const { filter } = this.props
     // TODO: Put back count when number is fixed
     return (
-      <li key={filter.aggregation + '_' + filter.bucket} onClick={this.handleClick}
-          data-automation-id={'filter_' + filter.aggregation + '_' + filter.bucket}>
+      <li onClick={this.handleClick}
+          data-automation-id={`filter_${filter.id}`}>
         <input type='checkbox' readOnly checked={filter.active} />
         <label htmlFor='checkbox'>Checkbox</label>
         <h2 className='filter_label'

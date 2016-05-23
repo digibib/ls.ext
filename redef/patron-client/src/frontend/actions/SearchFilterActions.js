@@ -1,7 +1,7 @@
 import { toggleParameter, toggleParameterValue } from './ParameterActions'
 
-export function toggleFilter (aggregation, bucket) {
-  return toggleParameterValue(`filter_${aggregation}`, bucket)
+export function toggleFilter (filterId) {
+  return toggleParameterValue('filter', filterId)
 }
 
 export function toggleFilterVisibility (aggregation) {

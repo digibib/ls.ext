@@ -31,7 +31,7 @@ class Search extends React.Component {
 
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => key.startsWith('filter_') || key === 'query' || key === 'page').forEach(key => {
+    Object.keys(locationQuery).filter(key => ['query', 'filter', 'page'].includes(key)).forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery

@@ -20,8 +20,9 @@ class SearchFilters extends React.Component {
     let groupedFilters = {}
     if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
-        groupedFilters[ filter.aggregation ] = groupedFilters[ filter.aggregation ] || []
-        groupedFilters[ filter.aggregation ].push(filter)
+        const aggregation = filter.id.split('_')[0]
+        groupedFilters[ aggregation ] = groupedFilters[ aggregation ] || []
+        groupedFilters[ aggregation ].push(filter)
       })
 
       return (

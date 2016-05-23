@@ -1,4 +1,4 @@
-import { relativeUri } from './uriParser'
+import { relativeUri, getId } from './uriParser'
 import Constants from '../constants/Constants'
 
 export function processSearchResponse (response, locationQuery) {
@@ -8,6 +8,7 @@ export function processSearchResponse (response, locationQuery) {
   } else {
     let searchResults = response.hits.hits.map(element => {
       let work = element._source.work
+      work.id = getId(work.uri)
       work.relativeUri = relativeUri(work.uri)
 
       work.contributors = work.contributors || []
@@ -44,17 +45,19 @@ export function processSearchResponse (response, locationQuery) {
 
 export function processAggregationsToFilters (response, locationQuery) {
   let filters = []
+  const filterParameters = locationQuery[ 'filter' ] instanceof Array ? locationQuery[ 'filter' ] : [ locationQuery[ 'filter' ] ]
   if (response.aggregations && response.aggregations.all) {
     let all = response.aggregations.all
-    Constants.filterableFields.forEach(field => {
-      let aggregation = all[ field ][ field ][ field ]
+    Object.keys(Constants.filterableFields).forEach(fieldShortName => {
+      const field = Constants.filterableFields[ fieldShortName ]
+      const fieldName = field.name
+      let aggregation = all[ fieldName ][ fieldName ][ fieldName ]
       if (aggregation) {
         aggregation.buckets.forEach(bucket => {
-          let aggregationFilter = locationQuery[ 'filter_' + field ]
-          let active = aggregationFilter instanceof Array
-            ? aggregationFilter.includes(bucket.key)
-            : aggregationFilter === bucket.key
-          filters.push({ aggregation: field, bucket: bucket.key, count: bucket.doc_count, active: active })
+          const filterId = `${fieldShortName}_${bucket.key.substring(field.prefix.length)}`
+          const filterParameter = filterParameters.find(filterParameter => filterParameter === filterId)
+          const active = filterParameter !== undefined
+          filters.push({ id: filterId, bucket: bucket.key, count: bucket.doc_count, active: active })
         })
       }
     })

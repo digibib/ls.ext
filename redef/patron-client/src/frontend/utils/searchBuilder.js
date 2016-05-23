@@ -1,12 +1,18 @@
 import Constants from '../constants/Constants'
 
 export function parseFilters (locationQuery) {
-  let filters = []
-  Object.keys(locationQuery).forEach(key => {
-    if (key.startsWith('filter_')) {
-      let aggregation = key.split('_')[ 1 ]
-      let bucket = locationQuery[ key ]
-      filters.push({ aggregation: aggregation, bucket: bucket })
+  const filters = []
+  const filterableFields = Constants.filterableFields
+  Object.keys(locationQuery).forEach(parameter => {
+    if (parameter === 'filter') {
+      const values = locationQuery[ parameter ] instanceof Array ? locationQuery[ parameter ] : [ locationQuery[ parameter ] ]
+      values.forEach(value => {
+        const split = value.split('_')
+        const filterableField = filterableFields[ split[ 0 ] ]
+        const aggregation = filterableField.name
+        const bucket = filterableField.prefix + value.substring(`${split[ 0 ]}_`.length)
+        filters.push({ aggregation: aggregation, bucket: bucket })
+      })
     }
   })
   return filters
@@ -46,20 +52,22 @@ export function filteredSearchQuery (locationQuery) {
   elasticSearchQuery.size = Constants.searchQuerySize
   elasticSearchQuery.aggregations = { all: { global: {}, aggregations: {} } }
 
-  Constants.filterableFields.forEach(field => {
+  Object.keys(Constants.filterableFields).forEach(key => {
+    const field = Constants.filterableFields[ key ]
+    const fieldName = field.name
     let aggregations = {
       filter: {
         and: [ elasticSearchQuery.query.filtered.query ]
       },
       aggregations: {
-        [ field ]: {
+        [ fieldName ]: {
           nested: {
-            path: getPath(field)
+            path: getPath(fieldName)
           },
           aggregations: {
-            [ field ]: {
+            [ fieldName ]: {
               terms: {
-                field: field
+                field: fieldName
               }
             }
           }
@@ -70,11 +78,11 @@ export function filteredSearchQuery (locationQuery) {
     Object.keys(musts).forEach(path => {
       let must = createMust(path)
       let nestedMusts = musts[ path ].nested.query.bool.must
-      must.nested.query.bool.must = nestedMusts.filter(nestedMust => { return !nestedMust.terms[ field ] })
+      must.nested.query.bool.must = nestedMusts.filter(nestedMust => { return !nestedMust.terms[ fieldName ] })
       aggregations.filter.and.push({ bool: { must: must } })
     })
 
-    elasticSearchQuery.aggregations.all.aggregations[ field ] = aggregations
+    elasticSearchQuery.aggregations.all.aggregations[ fieldName ] = aggregations
   })
 
   return elasticSearchQuery

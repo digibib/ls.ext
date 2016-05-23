@@ -20,14 +20,12 @@ class SearchFilter extends React.Component {
   }
 
   shouldShowMore () {
-    let { showMore } = this.props.locationQuery
-    let { aggregation } = this.props
+    const { aggregation, locationQuery: { showMore } } = this.props
     return (showMore && showMore === aggregation || (Array.isArray(showMore) && showMore.includes(aggregation)))
   }
 
   isCollapsed () {
-    let { collapse } = this.props.locationQuery
-    let { aggregation } = this.props
+    const { aggregation, locationQuery: { collapse } } = this.props
     return (collapse && collapse === aggregation || (Array.isArray(collapse) && collapse.includes(aggregation)))
   }
 
@@ -38,10 +36,10 @@ class SearchFilter extends React.Component {
     return [ ...this.props.filters ].sort((a, b) => (a.count < b.count) ? 1 : ((b.count < a.count) ? -1 : 0))
       .map((filter, index) => {
         if (!this.shouldShowMore() && index >= Constants.maxVisibleFilterItems) {
-          return ''
+          return
         }
         return (
-          <SearchFilterItem key={filter.aggregation + '_' + filter.bucket}
+          <SearchFilterItem key={filter.id}
                             filter={filter}
                             toggleFilter={this.props.toggleFilter} />
         )
@@ -116,22 +114,22 @@ const messages = defineMessages({
     description: 'Shown when possible to display fewer filters',
     defaultMessage: 'Show less -'
   },
-  'work.publications.formats': {
+  format: {
     id: 'SearchFilter.filter[work.publications.formats]',
     description: 'Label of the format filter',
     defaultMessage: 'Format'
   },
-  'work.publications.languages': {
+  language: {
     id: 'SearchFilter.filter[work.publications.languages]',
     description: 'Label of the language filter',
     defaultMessage: 'Language'
   },
-  'work.publications.audiences': {
+  audience: {
     id: 'SearchFilter.filter[work.publications.audiences]',
     description: 'Label of the audience filter',
     defaultMessage: 'Audience'
   },
-  'work.publications.branches': {
+  branch: {
     id: 'SearchFilter.filter[work.publications.branches]',
     description: 'Label of the branches filter',
     defaultMessage: 'Department'
