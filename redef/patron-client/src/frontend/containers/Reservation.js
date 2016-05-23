@@ -107,8 +107,6 @@ Reservation.propTypes = {
   recordId: PropTypes.string
 }
 
-Reservation.defaultProps = { libraries: {} }
-
 const messages = defineMessages({
   choosePickupLocation: {
     id: 'Reservation.choosePickupLocation',
