@@ -63,7 +63,7 @@ describe('containers', () => {
     })
 
     it('should display Reservation modal', () => {
-      const { node } = setup({ modalType: 'RESERVATION', modalProps: { libraries: 'aasf' } })
+      const { node } = setup({ modalType: 'RESERVATION' })
       expect(node.querySelectorAll("[data-automation-id='reservation_modal']").length).toBe(1)
     })
   })

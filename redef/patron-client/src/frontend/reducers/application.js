@@ -30,7 +30,7 @@ const initialState = {
   logoutError: null,
   isRequestingLoginStatus: false,
   loginStatusError: null,
-  libraries: [],
+  libraries: {},
   isRequestingLibraries: false,
   librariesError: false
 }
