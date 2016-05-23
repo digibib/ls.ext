@@ -39,6 +39,11 @@ services:
     volumes_from:
       - koha_index
       - koha_state
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   koha_mysql:
     container_name: koha_mysql
@@ -63,6 +68,11 @@ services:
       - "3306:3306"
     volumes_from:
       - koha_mysql_data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   koha_mysql_data:
     container_name: koha_mysql_data
@@ -101,6 +111,11 @@ services:
     environment:
       SIP_SERVER: sip:9999
       SIP_CONNS: 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   smtp:
     container_name: mailrelay
@@ -109,6 +124,11 @@ services:
       - backend
     ports:
       - "8100:8000"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   sms:
     container_name: smsproxy
@@ -122,6 +142,11 @@ services:
       - "-vv"
       - "-r"
       - "${SMS_FORWARD_URL}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   tcpsink: # Fake webserver response, for testing
     container_name: tcpsink
@@ -134,6 +159,11 @@ services:
       - "/bin/sh"
       - "-c"
       - "mkfifo pipe; while true ; do { read line<pipe;echo -e 'HTTP/1.1 200 OK\\r\\n' ; } | nc -l -p 9999 > pipe; done"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   elasticsearch_data:
     container_name: elasticsearch_data
@@ -151,6 +181,11 @@ services:
       - "8300:9300"
     volumes_from:
       - elasticsearch_data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   fuseki_data:
     container_name: fuseki_data
@@ -167,6 +202,11 @@ services:
       - "3030:3030"
     volumes_from:
       - fuseki_data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   sip:
     container_name: sip_proxy_container
@@ -181,6 +221,11 @@ services:
       - "-r"
       - "${HOST}:${SIP_PORT}"
       - "-replace=(|AB)10([0-9]{14})~$$1$$2"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   catalinker:
     container_name: redef_catalinker_container
@@ -204,6 +249,11 @@ services:
       SERVICES_PORT: "http://services:8005"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   build_services:
     container_name: build_services
@@ -239,6 +289,11 @@ services:
       DATA_BASEURI: "${DATA_BASEURI}"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   patron-client:
     container_name: redef_patron_client_container
@@ -259,6 +314,11 @@ services:
       SERVICES_PORT: "http://services:${SERVICES_PORT}"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   overview:
     container_name: overview_container
@@ -281,6 +341,11 @@ services:
       KOHA_VERSION: "${KOHA_IMAGE_TAG}"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   cuke_tests:
     container_name: cuke_tests
@@ -314,3 +379,8 @@ services:
       BS_DB: "${BS_DB}"
       BS_USER: "${BS_USER}"
       BS_PASS: "${BS_PASS}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
