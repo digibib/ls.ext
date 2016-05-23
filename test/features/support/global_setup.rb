@@ -19,6 +19,9 @@ class GlobalSetup
 
     # Disable item type icons due to slow loading
     SVC::Preference.new(@growser).set("pref_noItemTypeImages", "1")
+
+    # Disable session restriction which breaks API usage
+    SVC::Preference.new(@growser).set("pref_SessionRestrictionByIP", "0")
   end
 
   def teardown
