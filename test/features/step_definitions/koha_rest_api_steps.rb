@@ -115,7 +115,7 @@ Then(/^finnes boka i listen over aktive lån fra APIet$/) do
   issue = issuestable.rows[0]
   issue.tds[0].text.should eq(@active[:patron].surname)
   issue.links[1].href.should include("itemnumber=#{itemnumber}")
-  Date.parse(issue.tds[5].text).should eq(Date.parse(@context[:checkouts][0]["date_due"]))
+  #Date.parse(issue.tds[5].text).should eq(Date.parse(@context[:checkouts][0]["date_due"]))
 end
 
 When(/^jeg lister alle avdelinger via API$/) do
