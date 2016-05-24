@@ -22,6 +22,10 @@ class GlobalSetup
 
     # Disable session restriction which breaks API usage
     SVC::Preference.new(@growser).set("pref_SessionRestrictionByIP", "0")
+
+    # Enable extended patron attributes and messaging preferences, old ids, NL, etc.
+    SVC::Preference.new(@growser).set("pref_ExtendedPatronAttributes", "1")
+    SVC::Preference.new(@growser).set("pref_EnhancedMessagingPreferences", "1")
   end
 
   def teardown
