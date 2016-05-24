@@ -61,9 +61,9 @@ export function search () {
       .then(json => processSearchResponse(json, locationQuery))
       .then(processedResponse => {
         if (processedResponse.error) {
-          return dispatch(searchFailure(Error(processedResponse)))
+          throw Error(processedResponse)
         } else {
-          return dispatch(receiveSearch(processedResponse))
+          dispatch(receiveSearch(processedResponse))
         }
       })
       .catch(error => dispatch(searchFailure(error)))

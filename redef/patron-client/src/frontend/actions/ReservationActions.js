@@ -49,7 +49,7 @@ export function reservePublication (recordId, branchCode) {
     })
       .then(response => {
         if (response.status === 201) {
-          return dispatch(reservePublicationSuccess())
+          dispatch(reservePublicationSuccess())
         } else if (response.status === 403) {
           throw Error(Errors.reservation.TOO_MANY_RESERVES)
         } else {

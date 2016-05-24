@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
-import Errors from '../constants/Errors'
 import { sortByField } from '../utils/sorting'
 
 export function requestLibraries () {
@@ -41,10 +40,9 @@ export function fetchLibraries () {
     })
       .then(response => {
         if (response.status === 200) {
-          console.log(response)
           return response.json()
         } else {
-          throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
+          throw Error('Error fetching libraries')
         }
       })
       .then(json => dispatch(receiveLibraries(json)))
