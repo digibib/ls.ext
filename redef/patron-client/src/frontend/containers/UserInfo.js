@@ -218,8 +218,6 @@ const validate = values => {
   return errors
 }
 
-export { UserInfo as UserInfo }
-
 export default reduxForm(
   {
     form: 'userInfo',

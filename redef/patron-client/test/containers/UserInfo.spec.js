@@ -8,8 +8,7 @@ import { IntlProvider } from 'react-intl'
 import { createStore } from 'redux'
 import rootReducer from '../../src/frontend/reducers'
 import { Provider } from 'react-redux'
-
-import * as types from '../../src/frontend/constants/ActionTypes'
+import * as ProfileActions from '../../src/frontend/actions/ProfileActions'
 
 function setup (propOverrides) {
   const props = {
@@ -34,10 +33,7 @@ function setup (propOverrides) {
   }
 
   const store = createStore(rootReducer)
-
-  store.dispatch({
-    type: types.RECEIVE_PROFILE_INFO, payload: { info: profileInformation }
-  })
+  store.dispatch(ProfileActions.receiveProfileInfo(profileInformation))
 
   const output = TestUtils.renderIntoDocument(
     <Provider store={store}>

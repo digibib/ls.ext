@@ -14,7 +14,7 @@ const initialState = {
   isRequestingLoansAndReservations: false,
   loansAndReservationsError: null,
   loansAndReservations: {
-    pickup: [],
+    pickups: [],
     loans: [],
     reservations: []
   },

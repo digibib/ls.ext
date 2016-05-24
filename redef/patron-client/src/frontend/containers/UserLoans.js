@@ -4,32 +4,35 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage, intlShape } from 'react-intl'
 import { routerActions } from 'react-router-redux'
 
-import Branches from '../constants/Branches'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
 import MediaQuery from 'react-responsive'
 
 class UserLoans extends React.Component {
   renderPickups () {
-    return this.props.loansAndReservations.pickup.map(item => (
-      <section key={item.recordId} className='single-entry'>
+    return this.props.loansAndReservations.pickups.map(item => (
+      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_pickup'>
         <aside className='book-cover'><a className='book-cover-item' href=''></a>
         </aside>
         <article className='entry-content'>
-          <h1>{item.title}</h1>
+          <h1 data-automation-id='UserLoans_pickup_title'>{item.title}</h1>
           <div>
             <div className='contributors'>
-              <p><FormattedMessage {...messages.author} />: <a href='#'>{item.author}</a></p>
-              <p className='published'><FormattedMessage {...messages.publicationYear} />: {item.publicationYear}</p>
+              <p>
+                <FormattedMessage {...messages.author} />: <a href='#'
+                                                              data-automation-id='UserLoans_pickup_author'>{item.author}</a>
+              </p>
+              <p className='published'><FormattedMessage {...messages.publicationYear} />: <span
+                data-automation-id='UserLoans_pickup_publicationYear'>{item.publicationYear}</span></p>
             </div>
             <div>
               <div className='loan-expire'>
                 <p><FormattedMessage {...messages.expiry} /></p>
-                <h2>{item.expiry}</h2>
+                <h2 data-automation-id='UserLoans_pickup_expiry'>{item.expiry}</h2>
               </div>
               <div className='loan-pickup-number'>
                 <p><FormattedMessage {...messages.pickupNumber} /></p>
-                <h2>{item.pickupNumber}</h2>
+                <h2 data-automation-id='UserLoans_pickup_pickupNumber'>{item.pickupNumber}</h2>
               </div>
             </div>
           </div>
@@ -45,19 +48,21 @@ class UserLoans extends React.Component {
 
           <table>
             <thead>
-            <th><FormattedMessage {...messages.title} /></th>
-            <th><FormattedMessage {...messages.author} /></th>
-            <th><FormattedMessage {...messages.orderedDate} /></th>
-            <th><FormattedMessage {...messages.waitingPeriod} /></th>
-            <th><FormattedMessage {...messages.pickupLocation} /></th>
+            <tr>
+              <th><FormattedMessage {...messages.title} /></th>
+              <th><FormattedMessage {...messages.author} /></th>
+              <th><FormattedMessage {...messages.orderedDate} /></th>
+              <th><FormattedMessage {...messages.waitingPeriod} /></th>
+              <th><FormattedMessage {...messages.pickupLocation} /></th>
+            </tr>
             </thead>
             <tbody>{this.props.loansAndReservations.reservations.map(item => (
-              <tr key={item.recordId}>
-                <td>{item.title}</td>
-                <td>{item.author}</td>
-                <td>{item.orderedDate}</td>
-                <td>{item.waitingPeriod}</td>
-                <td>{Branches[ item.branchCode ]}</td>
+              <tr key={item.recordId} data-automation-id='UserLoans_reservation'>
+                <td data-automation-id='UserLoans_reservation_title'>{item.title}</td>
+                <td data-automation-id='UserLoans_reservation_author'>{item.author}</td>
+                <td data-automation-id='UserLoans_reservation_orderedDate'>{item.orderedDate}</td>
+                <td data-automation-id='UserLoans_reservation_waitingPeriod'>{item.waitingPeriod}</td>
+                <td data-automation-id='UserLoans_reservation_library'>{this.props.libraries[ item.branchCode ]}</td>
                 <td>
                   <button className='black-btn'><FormattedMessage {...messages.cancelReservation} /></button>
                 </td>
@@ -66,23 +71,25 @@ class UserLoans extends React.Component {
           </table>
         </MediaQuery>
 
-        <MediaQuery query='(max-width: 992px)' values={{...this.props.mediaQueryValues}}>
+        <MediaQuery query='(max-width: 991px)' values={{...this.props.mediaQueryValues}}>
           {this.props.loansAndReservations.reservations.map(item => (
-            <div className='reserved-entry-content'>
+            <div className='reserved-entry-content' key={item.recordId} data-automation-id='UserLoans_reservation'>
               <div className='title'><FormattedMessage {...messages.title} /></div>
-              <div className='content'>{item.title}</div>
+              <div className='content' data-automation-id='UserLoans_reservation_title'>{item.title}</div>
 
               <div className='title'><FormattedMessage {...messages.author} /></div>
-              <div className='content'>{item.title}</div>
+              <div className='content' data-automation-id='UserLoans_reservation_author'>{item.author}</div>
 
               <div className='title'><FormattedMessage {...messages.orderedDate} /></div>
-              <div className='content'>{item.author}</div>
+              <div className='content' data-automation-id='UserLoans_reservation_orderedDate'>{item.orderedDate}</div>
 
               <div className='title'><FormattedMessage {...messages.waitingPeriod} /></div>
-              <div className='content'>{item.orderedDate}</div>
+              <div className='content'
+                   data-automation-id='UserLoans_reservation_waitingPeriod'>{item.waitingPeriod}</div>
 
               <div className='title'><FormattedMessage {...messages.pickupLocation} /></div>
-              <div className='content'>{item.waitingPeriod}</div>
+              <div className='content'
+                   data-automation-id='UserLoans_reservation_library'>{this.props.libraries[ item.branchCode ]}</div>
 
             </div>
           ))}
@@ -93,20 +100,23 @@ class UserLoans extends React.Component {
 
   renderLoans () {
     return this.props.loansAndReservations.loans.map(item => (
-      <section key={item.recordId} className='single-entry'>
+      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_loan'>
         <aside className='book-cover'><a className='book-cover-item' href=''></a>
         </aside>
         <article className='entry-content'>
-          <h1>{item.title}</h1>
+          <h1 data-automation-id='UserLoans_loan_title'>{item.title}</h1>
           <div>
             <div className='contributors'>
-              <p><FormattedMessage {...messages.author} />: <a href='#'>{item.author}</a></p>
-              <p className='published'><FormattedMessage {...messages.publicationYear} />: {item.publicationYear}</p>
+              <p><FormattedMessage {...messages.author} />: <a href='#'
+                                                               data-automation-id='UserLoans_loan_author'>{item.author}</a>
+              </p>
+              <p className='published'><FormattedMessage {...messages.publicationYear} />: <span
+                data-automation-id='UserLoans_loan_publicationYear'>{item.publicationYear}</span></p>
             </div>
             <div className='due-date'>
               <div>
                 <p><FormattedMessage {...messages.dueDate} /></p>
-                <h2>{item.dueDate}</h2>
+                <h2 data-automation-id='UserLoans_loan_dueDate'>{item.dueDate}</h2>
               </div>
               <div>
                 <button className='black-btn'><FormattedMessage {...messages.extendLoan} /></button>
@@ -176,6 +186,7 @@ UserLoans.propTypes = {
   routerActions: PropTypes.object.isRequired,
   currentPath: PropTypes.string.isRequired,
   isRequestingLoansAndReservations: PropTypes.bool.isRequired,
+  libraries: PropTypes.object.isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired
@@ -269,7 +280,8 @@ function mapStateToProps (state) {
     loansAndReservationError: state.profile.loansAndReservationError,
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations,
     loansAndReservations: state.profile.loansAndReservations,
-    currentPath: state.routing.locationBeforeTransitions.pathname
+    currentPath: state.routing.locationBeforeTransitions.pathname,
+    libraries: state.application.libraries
   }
 }
 
