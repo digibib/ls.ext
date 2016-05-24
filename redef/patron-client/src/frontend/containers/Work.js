@@ -92,26 +92,12 @@ class Work extends React.Component {
               <h1 data-automation-id='work_title'>{this.renderTitle(work)}</h1>
               <Contributors contributors={work.contributors} />
               {this.renderYear(work)}
-              <Subjects subjects={work.subjects} />
-              <Genres genres={work.genres} />
             </section>
             <aside className='work-subjects show-mobile hidden-tablet hidden-desktop'>
-              <h2>Emner:</h2>
-              <ul>
-                <li><a href='#' alt='Emne #1'>Emne #1</a></li>
-                <li><a href='#' alt='Emne #2'>Emne #2</a></li>
-                <li><a href='#' alt='Emne #3'>Emne #3</a></li>
-              </ul>
-              <a href='#' alt='More subjects'>Se flere emner</a>
+              <Subjects subjects={work.subjects} />
             </aside>
             <aside className='work-genres show-mobile hidden-tablet hidden-desktop'>
-              <h2>Sjanger:</h2>
-              <ul>
-                <li><a href='#' alt='Genre #1'>Genre #1</a></li>
-                <li><a href='#' alt='Genre #2'>Genre #2</a></li>
-                <li><a href='#' alt='Genre #3'>Genre #3</a></li>
-              </ul>
-              <a href='#' alt='More genres'>Se flere sjangre</a>
+              <Genres genres={work.genres} />
             </aside>
             <div className='work-excerpt'>
               <p className='patron-placeholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
@@ -126,22 +112,10 @@ class Work extends React.Component {
               <button className='white-btn-checkmark' type='button'>Min huskeliste</button>
             </div>
             <aside className='work-subjects hidden-mobile show-desktop'>
-              <h2>Emner:</h2>
-              <ul>
-                <li><a href='#' alt='Emne #1'>Emne #1</a></li>
-                <li><a href='#' alt='Emne #2'>Emne #2</a></li>
-                <li><a href='#' alt='Emne #3'>Emne #3</a></li>
-              </ul>
-              <a href='#' alt='More subjects'>Se flere emner</a>
+              <Subjects subjects={work.subjects} />
             </aside>
             <aside className='work-genres hidden-mobile show-desktop'>
-              <h2>Sjanger:</h2>
-              <ul>
-                <li><a href='#' alt='Genre #1'>Genre #1</a></li>
-                <li><a href='#' alt='Genre #2'>Genre #2</a></li>
-                <li><a href='#' alt='Genre #3'>Genre #3</a></li>
-              </ul>
-              <a href='#' alt='More genres'>Se flere sjangre</a>
+              <Genres genres={work.genres} />
             </aside>
           </article>
           <Publications locationQuery={this.props.locationQuery}

@@ -46,31 +46,38 @@ class UserSettings extends React.Component {
         <div style={{display: 'inline-block', width: '50%'}}>
           <h3><FormattedMessage {...messages.alerts} /></h3>
           <h4><FormattedMessage {...messages.reminderOfDueDate} /></h4>
-          <input type='checkbox' ref={e => this.reminderOfDueDateSmsCheckbox = e}
+          <input data-automation-id='UserSettings_reminderOfDueDateSms'
+                 type='checkbox' ref={e => this.reminderOfDueDateSmsCheckbox = e}
                  defaultChecked={this.props.settings.alerts.reminderOfDueDate.sms} />
           <FormattedMessage {...messages.bySms} /><br />
-          <input type='checkbox' ref={e => this.reminderOfDueDateEmailCheckbox = e}
+          <input data-automation-id='UserSettings_reminderOfDueDateEmail'
+                 type='checkbox' ref={e => this.reminderOfDueDateEmailCheckbox = e}
                  defaultChecked={this.props.settings.alerts.reminderOfDueDate.email} />
           <FormattedMessage {...messages.byEmail} />
           <h4><FormattedMessage {...messages.reminderOfPickup} /></h4>
-          <input type='checkbox' ref={e => this.reminderOfPickupSmsCheckbox = e}
+          <input data-automation-id='UserSettings_reminderOfPickupSms'
+                 type='checkbox' ref={e => this.reminderOfPickupSmsCheckbox = e}
                  defaultChecked={this.props.settings.alerts.reminderOfPickup.sms} />
           <FormattedMessage {...messages.bySms} /><br />
-          <input type='checkbox' ref={e => this.reminderOfPickupEmailCheckbox = e}
+          <input data-automation-id='UserSettings_reminderOfPickupEmail'
+                 type='checkbox' ref={e => this.reminderOfPickupEmailCheckbox = e}
                  defaultChecked={this.props.settings.alerts.reminderOfPickup.email} />
           <FormattedMessage {...messages.byEmail} />
         </div>
         <div style={{display: 'inline-block', width: '50%'}}>
           <h3><FormattedMessage {...messages.reciepts} /></h3>
-          <input type='checkbox' ref={e => this.recieptOnLoansEmailCheckbox = e}
+          <input data-automation-id='UserSettings_recieptOnLoansEmail'
+                 type='checkbox' ref={e => this.recieptOnLoansEmailCheckbox = e}
                  defaultChecked={this.props.settings.reciepts.loans.email} />
           <FormattedMessage {...messages.loanReciept} /><br />
-          <input type='checkbox' ref={e => this.recieptOnReturnsEmailCheckbox = e}
+          <input data-automation-id='UserSettings_recieptOnReturnsEmail'
+                 type='checkbox' ref={e => this.recieptOnReturnsEmailCheckbox = e}
                  defaultChecked={this.props.settings.reciepts.returns.email} />
           <FormattedMessage {...messages.returnReciept} />
         </div>
         <div style={{display: 'inline-block', width: '100%'}}>
-          <button onClick={this.handleSaveClick}><FormattedMessage {...messages.save} /></button>
+          <button data-automation-id='UserSettings_saveButton'
+            onClick={this.handleSaveClick}><FormattedMessage {...messages.save} /></button>
         </div>
         <hr />
         <div>

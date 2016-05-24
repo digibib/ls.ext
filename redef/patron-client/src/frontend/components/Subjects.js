@@ -11,12 +11,15 @@ class Subjects extends React.Component {
   }
 
   render () {
-    let subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
+    const subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
     return (
-      <p>
-        <strong><FormattedMessage {...messages.subject} /> </strong>
-        <span data-automation-id='work_subjects'>{subjects.join(', ')}</span>
-      </p>
+      <div>
+        <h2><FormattedMessage {...messages.subjects} /></h2>
+        <ul data-automation-id='work_subjects'>
+          {subjects.map(subject => <li key={subject}><a href='#' alt={subject}>{subject}</a></li>)}
+        </ul>
+        <a className='patron-placeholder' href='#' alt='More subjects'>Se flere emner</a>
+      </div>
     )
   }
 }
@@ -26,10 +29,10 @@ Subjects.propTypes = {
 }
 
 const messages = defineMessages({
-  subject: {
-    id: 'Subjects.subject',
+  subjects: {
+    id: 'Subjects.subjects',
     description: 'The text displayed to identify subjects',
-    defaultMessage: 'Subject:'
+    defaultMessage: 'Subjects:'
   }
 })
 

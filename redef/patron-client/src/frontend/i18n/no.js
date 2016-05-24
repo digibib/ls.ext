@@ -83,7 +83,7 @@ export default {
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',
   'SearchResultsText.totalHitsMobile': '<span data-automation-id="hits-total">{totalHits}</span> treff',
   'SearchResultsText.searchForWork': 'Søk etter verk',
-  'Subjects.subject': 'Emne:',
+  'Subjects.subjects': 'Emner:',
   'UserInfo.address': 'Adresse',
   'UserInfo.zipcode': 'Postnr.',
   'UserInfo.city': 'Poststed',

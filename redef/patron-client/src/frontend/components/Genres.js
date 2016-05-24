@@ -11,12 +11,15 @@ class Genres extends React.Component {
   }
 
   render () {
-    let genres = this.props.genres.map(genre => this.renderLabel(genre))
+    const genres = this.props.genres.map(genre => this.renderLabel(genre))
     return (
-      <p>
-        <strong><FormattedMessage {...messages.genre} /> </strong>
-        <span data-automation-id='work_genres'>{genres.join(', ')}</span>
-      </p>
+      <div>
+        <h2><FormattedMessage {...messages.genre} /></h2>
+        <ul data-automation-id='work_genres'>
+          {genres.map(genre => <li key={genre}><a href='#' alt={genre}>{genre}</a></li>)}
+        </ul>
+        <a className='patron-placeholder' href='#' alt='More genres'>Se flere sjangre</a>
+      </div>
     )
   }
 }
