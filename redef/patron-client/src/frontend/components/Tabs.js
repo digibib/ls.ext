@@ -7,7 +7,7 @@ class Tabs extends React.Component {
   render () {
     return (
       <div className='row'>
-        <ul className={this.props.tabBarClass}>
+        <ul className={this.props.tabBarClass} data-automation-id='tabs'>
           {this.props.tabList.map(tab => (
             <Tab key={tab.label}
                  tab={tab}
