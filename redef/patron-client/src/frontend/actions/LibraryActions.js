@@ -23,6 +23,7 @@ export function receiveLibraries (libraries) {
 }
 
 export function librariesFailure (error) {
+  console.log(error)
   return {
     type: types.LIBRARIES_FAILURE,
     payload: {

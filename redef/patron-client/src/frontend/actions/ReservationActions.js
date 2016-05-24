@@ -25,6 +25,7 @@ export function reservePublicationSuccess () {
 }
 
 export function reservePublicationFailure (error) {
+  console.log(error)
   return dispatch => {
     dispatch(showModal(ModalComponents.RESERVATION, { isError: true, message: error.message }))
     dispatch({

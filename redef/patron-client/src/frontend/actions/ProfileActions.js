@@ -9,6 +9,7 @@ export function requestProfileSettings () {
 }
 
 export function profileSettingsFailure (error) {
+  console.log(error)
   return {
     type: types.PROFILE_SETTINGS_FAILURE,
     payload: error,
@@ -49,6 +50,7 @@ export function requestProfileLoans () {
 }
 
 export function profileLoansFailure (error) {
+  console.log(error)
   return {
     type: types.PROFILE_LOANS_FAILURE,
     payload: error,
@@ -89,6 +91,7 @@ export function requestProfileInfo () {
 }
 
 export function profileInfoFailure (error) {
+  console.log(error)
   return {
     type: types.PROFILE_INFO_FAILURE,
     payload: error,
@@ -129,6 +132,7 @@ export function requestPostProfileInfo () {
 }
 
 export function postProfileInfoFailure (error) {
+  console.log(error)
   return {
     type: types.POST_PROFILE_INFO_FAILURE,
     payload: error,
@@ -186,6 +190,7 @@ export function requestPostProfileSettings () {
 }
 
 export function postProfileSettingsFailure (error) {
+  console.log(error)
   return {
     type: types.POST_PROFILE_SETTINGS_FAILURE,
     payload: error,

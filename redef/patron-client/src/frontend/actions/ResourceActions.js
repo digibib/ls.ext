@@ -25,6 +25,7 @@ export function receiveResource (id, resource) {
 }
 
 export function resourceFailure (error) {
+  console.log(error)
   return {
     type: types.RESOURCE_FAILURE,
     payload: error,

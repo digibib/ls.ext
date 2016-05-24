@@ -12,6 +12,7 @@ export function requestTranslation (locale) {
 }
 
 export function translationFailure (error) {
+  console.log(error)
   return {
     type: types.TRANSLATION_FAILURE,
     payload: error,

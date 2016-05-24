@@ -28,6 +28,7 @@ export function receiveSearch (processedResponse) {
 }
 
 export function searchFailure (error) {
+  console.log(error)
   return {
     type: types.SEARCH_FAILURE,
     payload: error,

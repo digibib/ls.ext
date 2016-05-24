@@ -25,6 +25,7 @@ export function loginSuccess (username, borrowerNumber) {
 }
 
 export function loginFailure (username, error) {
+  console.log(error)
   return {
     type: types.LOGIN_FAILURE,
     payload: {
@@ -87,6 +88,7 @@ export function logoutSuccess () {
 }
 
 export function logoutFailure (error) {
+  console.log(error)
   return {
     type: types.LOGOUT_FAILURE,
     payload: error,
@@ -129,6 +131,7 @@ export function receiveLoginStatus (isLoggedIn, borrowerNumber) {
 }
 
 export function loginStatusFailure (error) {
+  console.log(error)
   return {
     type: types.LOGIN_STATUS_FAILURE,
     payload: error,
