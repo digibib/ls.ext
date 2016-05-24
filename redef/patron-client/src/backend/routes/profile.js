@@ -55,8 +55,7 @@ module.exports = (app) => {
 
   app.get('/api/v1/profile/loans', (request, response) => {
     Promise.all([fetchAllCheckouts(request), fetchAllHoldsAndPickups(request)])
-    .then(data => {
-      const [checkouts, holdsAndPickups] = data
+    .then(([checkouts, holdsAndPickups]) => {
       const holds = holdsAndPickups.filter(item => item.status !== 'W')
       const pickups = holdsAndPickups.filter(item => item.status === 'W')
       response.send({
