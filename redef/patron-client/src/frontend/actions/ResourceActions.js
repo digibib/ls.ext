@@ -58,24 +58,25 @@ export function fetchPersonResource (personId) {
     if (getState().resources.resources[ personId ]) {
       return
     }
+    let personResponse
+    let worksResponse
     const url = `${Constants.backendUri}/person/${personId}`
     dispatch(requestResource(personId))
-    return Promise.all([
-      fetch(url).then(response => {
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        personResponse = json
+        return fetch(`${url}/works`)
+      })
+      .then(response => {
         if (response.status === 200) {
           return response.json()
-        } else {
-          throw Error('Error fetching person resource')
         }
-      }),
-      fetch(`${url}/works`).then(response => {
-        if (response.status === 200) {
-          return response.json()
-        } else {
-          throw Error('Error fetching works for person')
-        }
-      }) ]
-    ).then(([personResponse, worksResponse]) => parsePersonResponse(personResponse, worksResponse))
+      })
+      .then(json => {
+        worksResponse = json
+      })
+      .then(() => parsePersonResponse(personResponse, worksResponse))
       .then(person => dispatch(receiveResource(personId, person)))
       .catch(error => dispatch(resourceFailure(error)))
   }
@@ -86,24 +87,25 @@ export function fetchWorkResource (workId) {
     if (getState().resources.resources[ workId ]) {
       return
     }
+    let workResponse
+    let itemsResponse
     const url = `${Constants.backendUri}/work/${workId}`
     dispatch(requestResource(workId))
-    return Promise.all([
-      fetch(url).then(response => {
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        workResponse = json
+        return fetch(`${url}/items`)
+      })
+      .then(response => {
         if (response.status === 200) {
           return response.json()
-        } else {
-          throw Error('Error fetching work resource')
         }
-      }),
-      fetch(`${url}/items`).then(response => {
-        if (response.status === 200) {
-          return response.json()
-        } else {
-          throw Error('Error fetching items for work')
-        }
-      }) ]
-    ).then(([worksResponse, itemsResponse]) => parseWorkResponse(worksResponse, itemsResponse))
+      })
+      .then(json => {
+        itemsResponse = json
+      })
+      .then(() => parseWorkResponse(workResponse, itemsResponse))
       .then(work => dispatch(receiveResource(workId, work)))
       .catch(error => dispatch(resourceFailure(error)))
   }
