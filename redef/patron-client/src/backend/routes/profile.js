@@ -57,13 +57,13 @@ module.exports = (app) => {
     Promise.all([fetchAllCheckouts(request), fetchAllHoldsAndPickups(request)])
     .then(data => {
       const [checkouts, holdsAndPickups] = data
-      const holds = holdsAndPickups.filter(item => { return item.status !== 'W' })
-      const pickups = holdsAndPickups.filter(item => { return item.status === 'W' })
+      const holds = holdsAndPickups.filter(item => item.status !== 'W')
+      const pickups = holdsAndPickups.filter(item => item.status === 'W')
       response.send({
         name: `${request.session.borrowerName}`,
         loans: checkouts,
         reservations: holds,
-        pickup: pickups
+        pickups: pickups
       })
     })
   })
