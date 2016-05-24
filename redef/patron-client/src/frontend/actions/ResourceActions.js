@@ -35,7 +35,7 @@ export function resourceFailure (error) {
 
 export function expandSubResource (id, replacePath) {
   return (dispatch, getState) => {
-    let locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     if (!id) {
       delete locationQuery.showMore
     } else if (locationQuery.showMore === id) {
@@ -43,13 +43,13 @@ export function expandSubResource (id, replacePath) {
     } else {
       locationQuery.showMore = id
     }
-    let locationDescriptior = {
+    const locationDescriptor = {
       pathname: getState().routing.locationBeforeTransitions.pathname,
       query: locationQuery
     }
     return replacePath
-      ? dispatch(replace(locationDescriptior))
-      : dispatch(push(locationDescriptior))
+      ? dispatch(replace(locationDescriptor))
+      : dispatch(push(locationDescriptor))
   }
 }
 
