@@ -8,6 +8,11 @@ class PatronCategories < AdminPage
     self
   end
 
+  def filter(name)
+    @browser.div(:id => "table_categorie_filter").text_field().set name
+    self
+  end
+
   def create(code, desc, type="Adult", enrollment_months=1)
     @browser.link(:id => "newcategory").click
     form = @browser.form(:name => "Aform")
@@ -21,14 +26,13 @@ class PatronCategories < AdminPage
     self
   end
 
-  def delete(desc)
-    table = @browser.table(:id => "table_categorie")
-    table.rows.each do |row|
-      if row.text.include?(desc)
-        row.link(:href => /op=delete_confirm/).click
-        @browser.input(:value => "Delete this category").click
-        break
-      end
+  def delete(categorycode)
+    @browser.link(:href => "/cgi-bin/koha/admin/categories.pl?op=delete_confirm&categorycode=" + categorycode).click
+    form = @browser.form(:action => "/cgi-bin/koha/admin/categories.pl")
+    if form.hidden(:name, "categorycode").value == categorycode
+      form.submit
     end
+    @browser.div(:class => "dialog message").text.should eq("Patron category deleted successfully.")
+    self
   end
 end

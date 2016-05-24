@@ -18,12 +18,13 @@ class Branches < IntraPage
     self
   end
 
-  def delete(branch_name, branch_code)
+  def delete(branch_code)
     @browser.link(:href => "/cgi-bin/koha/admin/branches.pl?op=delete_confirm&branchcode=" + branch_code).click
     form = @browser.form(:action => "/cgi-bin/koha/admin/branches.pl")
     if form.text.include?(branch_code)
       form.submit
     end
+    @browser.div(:class => "dialog message").text.should eq("Library deleted successfully.")
     self
   end
 

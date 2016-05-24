@@ -31,7 +31,7 @@ When(/^jeg legger inn en ny avdeling med ny avdelingskode$/) do
 
   @cleanup.push( "avdeling #{branch.code}" =>
     lambda do
-      @site.Branches.visit.filter(branch.name).delete(branch.name, branch.code)
+      @site.Branches.visit.filter(branch.name).delete(branch.code)
     end
   )
 end

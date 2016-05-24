@@ -131,7 +131,7 @@ When(/^jeg legger til en lånerkategori$/) do
 
   @cleanup.push( "lånerkategori #{patroncategory.description}" =>
     lambda do
-      @site.PatronCategories.visit.delete(patroncategory.description)
+      @site.PatronCategories.visit.filter(patroncategory.description).delete(patroncategory.code)
     end
   )
 end
