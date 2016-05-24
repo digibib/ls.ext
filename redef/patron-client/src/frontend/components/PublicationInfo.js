@@ -26,7 +26,7 @@ class PublicationInfo extends React.Component {
           </div>
 
           <div className='title'><h2>Om denne utgivelsen</h2></div>
-          <div className='entry-content'>
+          <div className='entry-content patron-placeholder'>
             <div className='col'>
               <ul>
                 <li><strong>Sidetall:</strong> 322</li>
@@ -36,7 +36,7 @@ class PublicationInfo extends React.Component {
               </ul>
             </div>
 
-            <div className='col'>
+            <div className='col patron-placeholder'>
               <ul>
                 <li><strong>Undertittel:</strong> Snømannen</li>
                 <li><strong>Format:</strong> Bok</li>
