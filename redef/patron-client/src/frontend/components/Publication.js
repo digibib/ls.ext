@@ -26,8 +26,25 @@ class Publication extends React.Component {
     this.props.startReservation(this.props.publication.recordId)
   }
 
+  renderButton () {
+    const { publication, publication: { available } } = this.props
+    if (publication.items.length > 0) {
+      return (
+        <button className={available ? 'black-btn' : 'grey-btn'} type='button'>
+              <span data-automation-id={available ? 'publication_reserve' : 'publication_order'}>
+                <a onClick={this.handleReservationClick}>
+                  {available
+                    ? <FormattedMessage {...messages.reserve} />
+                    : <FormattedMessage {...messages.order} />}
+                </a>
+              </span>
+        </button>
+      )
+    }
+  }
+
   render () {
-    const publication = this.props.publication
+    const { publication } = this.props
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
     return (
@@ -52,12 +69,7 @@ class Publication extends React.Component {
                 {languages.join(', ')}
               </span>
           </p>
-          {publication.items.length > 0
-            ? (<button className='grey-btn' type='button'>
-              <span data-automation-id='publication_reserve'>
-                <a onClick={this.handleReservationClick}><FormattedMessage {...messages.reserve} /></a>
-              </span>
-          </button>) : null}
+          {this.renderButton()}
         </div>
         <div className='show-status'>
           <strong>Vis status</strong>
@@ -93,6 +105,11 @@ const messages = defineMessages({
     id: 'Publication.reserve',
     description: 'The button that allows users to reserve a publication',
     defaultMessage: 'Reserve'
+  },
+  order: {
+    id: 'Publication.order',
+    description: 'The button that allows users to order a publication when it is not available for immediate reservation',
+    defaultMessage: 'Order'
   }
 })
 
