@@ -28,8 +28,20 @@ Given(/^at det finnes en låner$/) do
 end
 
 Given(/^at det finnes en låner med lånekort$/) do |table|
-  step "at det finnes en avdeling"        unless @active[:branch]
-  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
+  unless @active[:branch] || @context[:branches]
+    step "at det finnes en avdeling"
+    branch = @active[:branch]
+  else
+    branch = @active[:branch] ? @active[:branch] : @context[:branches][0]
+  end
+
+  unless @active[:patroncategory] || @context[:patroncategories]
+    step "at det finnes en lånerkategori"
+    patroncategory = @active[:patroncategory]
+  else
+    patroncategory = @active[:patroncategory] ? @active[:patroncategory] : @context[:patroncategories][0]
+  end
+
   step "at jeg er autentisert som superbruker via REST API" unless @context[:koha_rest_api_cookie]
 
   patrons = table.hashes
@@ -37,8 +49,8 @@ Given(/^at det finnes en låner med lånekort$/) do |table|
   patrons.each do |patron|
     user = Patron.new
     # overwrite with active branch and category
-    user.branch     = @active[:branch]         if @active[:branch]
-    user.category   = @active[:patroncategory] if @active[:patroncategory]
+    user.branch     = branch
+    user.category   = patroncategory
 
     # merge user into Patron struct
     user.members.each do |key|
