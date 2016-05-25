@@ -72,6 +72,10 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateLiteral(publication, 'mainTitle', publicationResource)
     populateLiteral(publication, 'partTitle', publicationResource)
     populateLiteral(publication, 'publicationYear', publicationResource)
+    populateLiteral(publication, 'isbn', publicationResource)
+    populateLiteral(publication, 'numberOfPages', publicationResource)
+    populateLiteral(publication, 'edition', publicationResource)
+    populateUri(publication, 'binding', publicationResource)
     populateLiteral(publication, 'recordID', publicationResource, 'recordId')
     populateUris(publication, 'language', publicationResource, 'languages')
     populateUris(publication, 'format', publicationResource, 'formats')
@@ -136,6 +140,6 @@ function populateUri (target, field, sourceResource, targetFieldOverride) {
 function populateUris (target, field, sourceResource, targetFieldOverride) {
   target[ targetFieldOverride || target ] = []
   sourceResource.outAll(field).forEach(resource => {
-    target[ targetFieldOverride || target ].push(resource.id)
+    target[ targetFieldOverride || field ].push(resource.id)
   })
 }
