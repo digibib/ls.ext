@@ -44,8 +44,8 @@ module SVC
       return book
     end
 
-    def delete(book)
-      @browser.goto intranet(:biblio_detail)+book.biblionumber
+    def delete(biblionumber)
+      @browser.goto intranet(:biblio_detail)+biblionumber
 
       #delete book items
       @browser.execute_script("window.confirm = function(msg){return true;}")

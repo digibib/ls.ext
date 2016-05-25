@@ -1,5 +1,6 @@
 require 'securerandom'
 require 'rest-client'
+require 'json'
 require 'pry'
 
 module RandomMigrate
@@ -185,6 +186,17 @@ module RandomMigrate
       index('work', work_uri)
 
       work_uri
+    end
+
+    def get_record_data(work_uri, publication_uri)
+      res = RestClient.get "#{work_uri}/items"
+      items = JSON.parse(res)
+      res = RestClient.get "#{publication_uri}"
+      publication = JSON.parse(res)
+      return {
+        :publication_recordid => publication["deichman:recordID"],
+        :item_barcode => items["deichman:barcode"]
+      }
     end
   end
 end

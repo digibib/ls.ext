@@ -78,7 +78,7 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
 
   @cleanup.push("bok #{book.biblionumber}" =>
                     lambda do
-                      SVC::Biblio.new(@browser).delete(book)
+                      SVC::Biblio.new(@browser).delete(book.biblionumber)
                     end
   )
 end
