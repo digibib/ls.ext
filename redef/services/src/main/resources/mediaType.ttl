@@ -26,6 +26,6 @@ mediaType:Film a duo:MediaType ;
   rdfs:label "Film"@no ;
   rdfs:label "Movie"@en .
 
-mediaType:VideoGame a duo:MediaType ;
-  rdfs:label "Videospill"@no ;
-  rdfs:label "Video game"@en .
+mediaType:Game a duo:MediaType ;
+  rdfs:label "Spill"@no ;
+  rdfs:label "Game"@en .
