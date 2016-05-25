@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo -e "\n Provisioning for $1 env\n"
 echo -e "\n1) Installing Docker\n"
-VERSION="1.11.1-0~$(lsb_release -c -s)"
+VERSION="1.10.3-0~$(lsb_release -c -s)"
 INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
 if [ $VERSION = "$INSTALLED" ] ; then
   echo "docker version $VERSION already installed";
@@ -19,7 +19,7 @@ else
 fi
 
 echo -e "\n2) Installing PIP\n"
-PIP_VERSION=8.1.2
+PIP_VERSION=7.1.2
 dpkg -l python-pip >/dev/null 2>&1
 if [ $? -eq 0 ] ; then
 	echo "python-pip installed, removing ...";
@@ -30,7 +30,7 @@ sudo apt-get install --assume-yes --quiet libffi-dev libssl-dev python-setuptool
 sudo easy_install --script-dir=/usr/bin --upgrade pip==$PIP_VERSION
 
 echo -e "\n3) Installing Docker-compose\n"
-sudo pip install pyopenssl ndg-httpsclient pyasn1 docker-compose==1.7.1
+sudo pip install pyopenssl ndg-httpsclient pyasn1 docker-compose==1.6.2
 
 echo -e "\n4) Installing Graphviz\n"
 which dot > /dev/null || sudo apt-get install -y graphviz
