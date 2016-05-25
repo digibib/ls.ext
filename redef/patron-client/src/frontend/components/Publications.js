@@ -96,8 +96,8 @@ class Publications extends React.Component {
 
         <div className='arrow-close' onClick={this.handleCollapsePublications}>
           {this.props.locationQuery.collapsePublications === null
-            ? <img src='/images/btn-arrow-close.svg' alt='Black arrow pointing up' />
-            : <img src='/images/btn-arrow-open.svg' alt='Black arrow pointing down' />}
+            ? <img src='/images/btn-arrow-open.svg' alt='Black arrow pointing down' />
+            : <img src='/images/btn-arrow-close.svg' alt='Black arrow pointing up' />}
         </div>
 
         <div className='other-publications-entry-content'>
