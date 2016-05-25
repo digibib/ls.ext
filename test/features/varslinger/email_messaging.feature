@@ -6,9 +6,6 @@ Egenskap: Varsling på epost
   Siden jeg liker å holde meg oppdatert
   Ønsker jeg å kunne motta varsler fra biblioteket
 
-  Bakgrunn:
-    Gitt at jeg er pålogget som adminbruker
-
   Scenario: Epost ved registrering av låner
     Gitt at epost er aktivert ved brukerregistrering
     Når jeg registrerer en ny låner med gyldig epostadresse
@@ -19,7 +16,7 @@ Egenskap: Varsling på epost
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
       | Knut      | 01/08/2015   | 01/01/2020 | 0             | 0     | false    | 1234     | 0     |
     Og at meldingstyper er aktivert for låneren
-    Og et verk med en utgivelse og et eksemplar
+    Og at det finnes et verk med en publikasjon og et eksemplar
     Og at bok er reservert av låner
     Og boka sjekkes inn på låners henteavdeling
     Og det bekreftes at boka skal holdes av

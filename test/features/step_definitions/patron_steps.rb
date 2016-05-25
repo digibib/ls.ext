@@ -65,7 +65,8 @@ Given(/^at det finnes en låner med lånekort$/) do |table|
       userid: user.userid,
       dateenrolled: user.dateenrolled,
       dateexpiry: user.dateexpiry,
-      password: user.password
+      password: user.password,
+      email: user.email
     }
 
     res = KohaRESTAPI::Patron.new(@browser,@context,@active).add(params)
