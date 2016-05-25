@@ -6,6 +6,9 @@ Egenskap: Varsling på epost
   Siden jeg liker å holde meg oppdatert
   Ønsker jeg å kunne motta varsler fra biblioteket
 
+  Bakgrunn:
+    Gitt at jeg er logget inn som adminbruker
+
   Scenario: Epost ved registrering av låner
     Gitt at epost er aktivert ved brukerregistrering
     Når jeg registrerer en ny låner med gyldig epostadresse

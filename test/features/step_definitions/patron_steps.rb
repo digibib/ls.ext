@@ -28,19 +28,11 @@ Given(/^at det finnes en låner$/) do
 end
 
 Given(/^at det finnes en låner med lånekort$/) do |table|
-  unless @active[:branch] || @context[:branches]
-    step "at det finnes en avdeling"
-    branch = @active[:branch]
-  else
-    branch = @active[:branch] ? @active[:branch] : @context[:branches][0]
-  end
+  step "at det finnes en avdeling" unless (@active[:branch] || @context[:branches])
+  branch = @active[:branch] ? @active[:branch] : @context[:branches][0]
 
-  unless @active[:patroncategory] || @context[:patroncategories]
-    step "at det finnes en lånerkategori"
-    patroncategory = @active[:patroncategory]
-  else
-    patroncategory = @active[:patroncategory] ? @active[:patroncategory] : @context[:patroncategories][0]
-  end
+  step "at det finnes en lånerkategori" unless (@active[:patroncategory] || @context[:patroncategories])
+  patroncategory = @active[:patroncategory] ? @active[:patroncategory] : @context[:patroncategories][0]
 
   step "at jeg er autentisert som superbruker via REST API" unless @context[:koha_rest_api_cookie]
 
