@@ -50,7 +50,8 @@ Before do |scenario|
     step "at jeg er logget inn som adminbruker"
     step "at det finnes en avdeling"
     @context[:random_migrate_branchcode] = @active[:branch].code
-    @context[:random_migrate_id] = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}").generate_quick_test_set($random_migrate_branchcode)
+    migrator = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}")
+    @context[:random_migrate_id] = migrator.generate_quick_test_set(@context[:random_migrate_branchcode])
   end
 end
 
