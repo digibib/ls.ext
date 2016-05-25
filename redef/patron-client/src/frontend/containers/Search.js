@@ -79,7 +79,7 @@ class Search extends React.Component {
               <SearchResultsText totalHits={this.props.totalHits} locationQuery={this.props.locationQuery} />
             </div>
             {this.props.totalHits > 0
-              ? (<div className='search-sorting'>
+              ? (<div className='search-sorting patron-placeholder'>
               <p>Sorter treff på</p>
 
               <div className='search-sorting-select-box'>
