@@ -57,10 +57,7 @@ Before do |scenario|
 
       migrator = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}")
       $random_migrate = migrator.generate_quick_test_set($random_migrate_branchcode)
-
-      @context[:random_migrate_branchcode] = $random_migrate_branchcode
-      @context[:random_migrate_id] = $random_migrate
-      @context[:record_ids] = migrator.get_record_ids
+      $random_migrate_record_ids = migrator.get_record_ids
       # TODO: Randommigrated data should be properly cleaned up after tests are done
       #      @cleanup.push("removing randomigrated publications for migration #{@context[:random_migrate_id]}" =>
       #                    lambda do
@@ -68,6 +65,9 @@ Before do |scenario|
       #                    end
       #      )
     end
+    @context[:random_migrate_branchcode] = $random_migrate_branchcode
+    @context[:random_migrate_id] = $random_migrate
+    @context[:record_ids] = $random_migrate_record_ids
   end
 end
 
