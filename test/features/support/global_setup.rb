@@ -7,8 +7,6 @@ require_relative './services/svc/preference.rb'
 class GlobalSetup
 
   def initialize
-    STDOUT.puts "Flushing memcached"
-
     STDOUT.puts "SETUP: Populating global test settings"
     @growser = (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
     Site.new(@growser).Login.visit.login(ENV['KOHA_ADMINUSER'], ENV['KOHA_ADMINPASS'])
