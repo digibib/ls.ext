@@ -138,7 +138,7 @@ class UserLoans extends React.Component {
                  tabBarClass='tab-bar-secondary'
                  tabClass='tab-bar-tab-small'
                  tabActiveClass='tab-bar-tab-small-active'
-                 currentPath={this.props.currentPath} />
+                 currentPath={this.props.location.pathname} />
   }
 
   render () {
@@ -184,7 +184,7 @@ UserLoans.propTypes = {
   profileActions: PropTypes.object.isRequired,
   loansAndReservations: PropTypes.object.isRequired,
   routerActions: PropTypes.object.isRequired,
-  currentPath: PropTypes.string.isRequired,
+  location: PropTypes.object.isRequired,
   isRequestingLoansAndReservations: PropTypes.bool.isRequired,
   libraries: PropTypes.object.isRequired,
   loansAndReservationError: PropTypes.object,
@@ -280,7 +280,6 @@ function mapStateToProps (state) {
     loansAndReservationError: state.profile.loansAndReservationError,
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations,
     loansAndReservations: state.profile.loansAndReservations,
-    currentPath: state.routing.locationBeforeTransitions.pathname,
     libraries: state.application.libraries
   }
 }

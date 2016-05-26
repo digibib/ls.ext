@@ -36,7 +36,7 @@ class MyPage extends React.Component {
     ]
     return (
       <div data-automation-id='profile_page'>
-        <Tabs tabList={tabList} currentPath={this.props.currentPath} push={this.props.routerActions.push} />
+        <Tabs tabList={tabList} currentPath={this.props.location.pathname} push={this.props.routerActions.push} />
         <hr />
         {this.props.children}
       </div>
@@ -50,7 +50,7 @@ MyPage.propTypes = {
   borrowerNumber: PropTypes.string,
   isLoggedIn: PropTypes.bool.isRequired,
   profileActions: PropTypes.object.isRequired,
-  currentPath: PropTypes.string.isRequired,
+  location: PropTypes.object.isRequired,
   routerActions: PropTypes.object.isRequired,
   children: PropTypes.node.isRequired,
   intl: intlShape.isRequired
@@ -82,8 +82,7 @@ const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
-    loginError: state.application.loginError,
-    currentPath: state.routing.locationBeforeTransitions.pathname
+    loginError: state.application.loginError
   }
 }
 

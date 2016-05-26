@@ -13,14 +13,12 @@ import * as ProfileActions from '../../src/frontend/actions/ProfileActions'
 
 function setup (propOverrides) {
   const props = {
-    location: { query: {} },
+    location: { pathname: '', query: {} },
     mediaQueryValues: { width: 992 },
     ...propOverrides
   }
 
-  const store = createStore(rootReducer, {
-    routing: { locationBeforeTransitions: { pathname: '' } }
-  })
+  const store = createStore(rootReducer)
   const libraries = [
     { branchcode: 'branchCode_1', branchname: 'library_1' },
     { branchcode: 'branchCode_2', branchname: 'library_2' }
