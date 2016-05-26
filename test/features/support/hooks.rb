@@ -46,12 +46,28 @@ Before do |scenario|
 end
 
 Before do |scenario|
+  $random_migrate ||= false
+  $random_migrate_branchcode ||= false
+
   if scenario.source_tag_names.include?('@random_migrate')
     step "at jeg er logget inn som adminbruker"
-    step "at det finnes en avdeling"
-    @context[:random_migrate_branchcode] = @active[:branch].code
-    migrator = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}")
-    @context[:random_migrate_id] = migrator.generate_quick_test_set(@context[:random_migrate_branchcode])
+    unless $random_migrate
+      $random_migrate_branchcode = generateRandomString
+      @site.Branches.visit.create(generateRandomString, $random_migrate_branchcode)
+
+      migrator = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}")
+      $random_migrate = migrator.generate_quick_test_set($random_migrate_branchcode)
+
+      @context[:random_migrate_branchcode] = $random_migrate_branchcode
+      @context[:random_migrate_id] = $random_migrate
+      @context[:record_ids] = migrator.get_record_ids
+      # TODO: Randommigrated data should be properly cleaned up after tests are done
+      #      @cleanup.push("removing randomigrated publications for migration #{@context[:random_migrate_id]}" =>
+      #                    lambda do
+      #                      @context[:record_ids].each {|id| SVC::Biblio.new(@browser).delete(id)}
+      #                    end
+      #      )
+    end
   end
 end
 
