@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import { routerActions } from 'react-router-redux'
+import { Link } from 'react-router'
 
 import Contributors from '../components/Contributors'
 import Publications from '../components/Publications'
@@ -79,12 +80,16 @@ class Work extends React.Component {
       }
     }
 
+    const { back } = this.props.location.query
     return (
       <div className='container'>
         <div className='row'>
-          <header className='back-to-results'>
-            <a onClick={this.handleBackClick} alt='Back to search page'>Tilbake til søkeresultat</a>
-          </header>
+          {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
+            ? (
+            <header className='back-to-results'>
+              <Link to={this.props.location.query.back} alt='Back to search page'>Tilbake til søkeresultat</Link>
+            </header>
+          ) : ''}
           <article className='work-entry'>
             <div className='book-cover'>
             </div>
@@ -118,7 +123,7 @@ class Work extends React.Component {
               <Genres genres={work.genres} />
             </aside>
           </article>
-          <Publications locationQuery={this.props.locationQuery}
+          <Publications locationQuery={this.props.location.query}
                         expandSubResource={this.props.resourceActions.expandSubResource}
                         publications={work.publications}
                         startReservation={this.props.reservationActions.startReservation}
@@ -136,7 +141,7 @@ Work.propTypes = {
   isRequesting: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.object.isRequired,
-  locationQuery: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
   parameterActions: PropTypes.object.isRequired,
   routerActions: PropTypes.object.isRequired
@@ -163,7 +168,6 @@ const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     resources: state.resources.resources,
-    locationQuery: state.routing.locationBeforeTransitions.query,
     isRequesting: state.resources.isRequesting
   }
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
 import Items from '../components/Items'
+import createPath from '../utils/createPath'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -36,7 +37,7 @@ class SearchResult extends React.Component {
       displayTitle += ` — ${result.partTitle}`
     }
     return (
-      <Link data-automation-id='work-link' to={result.relativePublicationUri || result.relativeUri}>
+      <Link data-automation-id='work-link' to={this.getResultUrl(result)}>
         <span className='workTitle' data-automation-id='work-title'>{displayTitle}</span>
       </Link>
     )
@@ -67,6 +68,14 @@ class SearchResult extends React.Component {
         </p>
       )
     }
+  }
+
+  getResultUrl (result) {
+    const { pathname, search, hash } = window.location
+    return createPath({
+      pathname: result.relativePublicationUri || result.relativeUri,
+      query: { back: `${pathname}${search}${hash}` }
+    })
   }
 
   renderItems (result) {
@@ -100,7 +109,7 @@ class SearchResult extends React.Component {
     return (
       <div className='single-entry' data-formats={formats.join(', ')}>
         <aside className='book-cover'>
-          <Link to={result.relativeUri} className='book-cover-item' />
+          <Link to={this.getResultUrl(result)} className='book-cover-item' />
         </aside>
 
         <article className='entry-content'>
