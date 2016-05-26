@@ -105,6 +105,8 @@ class SearchResult extends React.Component {
       })
     })
     const formats = [ ...pubFormats ]
+    const issuedYears = result.publications.filter(publication => publication.issued && !isNaN(publication.issued)).map(publication => publication.issued)
+    const firstPublishedYear = issuedYears.length > 0 ? issuedYears.reduce((a, b) => Math.min(a, b)) : ''
 
     return (
       <div className='single-entry' data-formats={formats.join(', ')}>
@@ -137,6 +139,10 @@ class SearchResult extends React.Component {
 
           <div>
             {this.renderSubjects(result)}
+          </div>
+
+          <div>
+            <FormattedMessage {...messages.firstPublished} /> <span>{firstPublishedYear}</span>
           </div>
 
           <div>
@@ -210,6 +216,11 @@ const messages = defineMessages({
     id: 'SearchResult.hideStatus',
     description: 'Shown when the status is shown',
     defaultMessage: 'Hide status'
+  },
+  firstPublished: {
+    id: 'SearchResult.firstPublished',
+    description: 'Label for when the work was first published',
+    defaultMessage: 'First published: '
   }
 })
 
