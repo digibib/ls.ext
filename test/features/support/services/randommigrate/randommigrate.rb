@@ -21,10 +21,6 @@ module RandomMigrate
       @authorized_values[predicate] = value
     end
 
-    def add_triple(subject, predicate, value)
-      @triples << [subject, predicate, value]
-    end
-
     def add_raw(raw)
       @raw << raw
     end
@@ -66,6 +62,7 @@ module RandomMigrate
       @formats = %w(Audiobook Book DVD Microfiche Compact_Disc Blu-ray_Audio E-book)
       @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/jpn http://lexvo.org/id/iso639-3/swe)
       @audiences = %w(juvenile ages11To12 ages13To15 ages13To15)
+      @publication_uris = []
     end
 
     def generate_random_string()
@@ -143,7 +140,7 @@ module RandomMigrate
         number_of_works_per_person.times do
           work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
           number_of_publications_per_work.times do
-            post_ntriples('publication', generate_publication(work_uri, nil, prefix)[1])
+            @publication_uris << post_ntriples('publication', generate_publication(work_uri, nil, prefix)[1])
           end
           index('work', work_uri)
         end
@@ -162,26 +159,26 @@ module RandomMigrate
       publication_1.add_item(true, 'placement1', branchcode)
       publication_1.add_item(false, 'placement2', branchcode)
       publication_1.add_item(false, 'placement1', branchcode)
-      post_ntriples('publication', publication_1.to_ntriples)
+      @publication_uris << post_ntriples('publication', publication_1.to_ntriples)
 
       publication_2 = Entity.new('publication', @services)
       publication_2.add_authorized('publicationOf', work_uri)
       publication_2.add_literal('mainTitle', "pubprefix0#{@id} #{@id}eng")
       publication_2.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
-      post_ntriples('publication', publication_2.to_ntriples)
+      @publication_uris << post_ntriples('publication', publication_2.to_ntriples)
 
       publication_3 = Entity.new('publication', @services)
       publication_3.add_authorized('publicationOf', work_uri)
       publication_3.add_literal('mainTitle', "pubprefix1#{@id} #{@id}eng")
       publication_3.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
-      post_ntriples('publication', publication_3.to_ntriples)
+      @publication_uris << post_ntriples('publication', publication_3.to_ntriples)
 
       publication_4 = Entity.new('publication', @services)
       publication_4.add_authorized('publicationOf', work_uri)
       publication_4.add_literal('mainTitle', "pubprefix1#{@id} #{@id}dan")
       publication_4.add_authorized('language', 'http://lexvo.org/id/iso639-3/dan')
       publication_4.add_item(false, 'placement1', branchcode)
-      post_ntriples('publication', publication_4.to_ntriples)
+      @publication_uris << post_ntriples('publication', publication_4.to_ntriples)
 
       index('work', work_uri)
 
@@ -197,6 +194,15 @@ module RandomMigrate
         :publication_recordid => publication["deichman:recordID"],
         :item_barcode => items["deichman:barcode"]
       }
+    end
+
+    def get_record_ids
+      record_ids = []
+      @publication_uris.each do | uri |
+        res = RestClient.get "#{uri}"
+        record_ids << JSON.parse(res)["deichman:recordID"]
+      end
+      record_ids
     end
   end
 end
