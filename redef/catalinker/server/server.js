@@ -29,11 +29,11 @@ app.get('/css/vendor/:cssFile', function (request, response) {
 
 function newResource (type) {
   return axios.post(process.env.SERVICES_PORT + '/' + type, {}, {
-      headers: {
-        Accept: 'application/ld+json',
-        'Content-Type': 'application/ld+json'
-      }
-    })
+    headers: {
+      Accept: 'application/ld+json',
+      'Content-Type': 'application/ld+json'
+    }
+  })
     .catch(function (response) {
       if (response instanceof Error) {
         // Something happened in setting up the request that triggered an Error
@@ -68,7 +68,7 @@ app.get('/:type(person|work|publication|place|serial|publisher|subject|genre)', 
 })
 
 app.get('/config', function (request, response) {
-  function manintenanceInputs(label, type){
+  function manintenanceInputs (label, type) {
     return {
       // this is an input type used to search for a main resource, e.g. Work. The rendered input field
       // will not be tied to a particular subject and predicate
@@ -246,6 +246,22 @@ app.get('/config', function (request, response) {
         label: 'Hovedinnførsel',
         inputs: [
           {
+            // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+            // will not be tied to a particular subject and predicate
+            searchForValueSuggestions: {
+              label: 'ISBN',
+              parameterName: 'isbn',
+              automationId: 'searchValueSuggestions',
+              showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+              //sources: ['bs', 'bb'],
+              sources: [ 'bs', 'bb' ],
+              preferredSource: {
+                id: 'bs',
+                name: "Biblioteksentralen"
+              }
+            }
+          },
+          {
             label: 'Person (hovedinnførsel)',
             subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
               rdfProperty: 'contributor', // the rdf property of the resource
@@ -253,6 +269,7 @@ app.get('/config', function (request, response) {
               inputs: [ // these are the actual sub inputs
                 {
                   label: 'Person',
+                  required: true,
                   rdfProperty: 'agent',
                   indexTypes: 'person',
                   type: 'searchable-with-result-in-side-panel',
@@ -271,7 +288,8 @@ app.get('/config', function (request, response) {
                 },
                 {
                   label: 'Rolle',
-                  rdfProperty: 'role'
+                  rdfProperty: 'role',
+                  required: true
                 }
               ]
             },
@@ -289,7 +307,11 @@ app.get('/config', function (request, response) {
               indexType: 'work',
               isRoot: true,
               automationId: 'searchWorkAsMainResource',
-              showOnlyWhenMissingTargetUri: 'Work' // only show this search field if a work has not been loaded or created
+              showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+            },
+            suggestValueFrom: {
+              domain: 'Work',
+              predicate: "#mainTitle"
             },
             // this is used to control how the search result in the support panel behaves
             widgetOptions: {
@@ -332,7 +354,11 @@ app.get('/config', function (request, response) {
           { rdfProperty: 'publicationYear' },
           { rdfProperty: 'numberOfPages', multiple: true },
           { rdfProperty: 'illustrativeMatter' },
-          { rdfProperty: 'isbn', multiple: true, addAnotherLabel: 'Legg til et ISBN-nummer til' },
+          {
+            rdfProperty: 'isbn',
+            multiple: true,
+            addAnotherLabel: 'Legg til et ISBN-nummer til'
+          },
           { rdfProperty: 'binding' },
           { rdfProperty: 'language' },
           { rdfProperty: 'format', multiple: true },
@@ -351,7 +377,7 @@ app.get('/config', function (request, response) {
                 formRefs: [ {
                   formId: 'create-publisher-form',
                   targetType: "publisher"
-                }]
+                } ]
               }
             }
           },
@@ -367,7 +393,7 @@ app.get('/config', function (request, response) {
                 formRefs: [ {
                   formId: 'create-place-form',
                   targetType: "place"
-                }]
+                } ]
               }
             }
           },
@@ -375,13 +401,14 @@ app.get('/config', function (request, response) {
             label: 'Serie',
             multiple: true,
             addAnotherLabel: 'Legg til en serie til',
-            subjects: ['Publication'],
+            subjects: [ 'Publication' ],
             subInputs: {
               rdfProperty: 'inSerial',
               range: 'SerialIssue',
               inputs: [
                 {
                   label: 'Serie',
+                  required: true,
                   rdfProperty: 'serial',
                   indexTypes: 'serial',
                   nameProperties: [ 'name' ],
@@ -450,18 +477,18 @@ app.get('/config', function (request, response) {
                   formId: 'create-subject-form',
                   targetType: "subject" // these are matched against index types, hence lower case
                 },
-                {
-                  formId: 'create-work-form',
-                  targetType: "work"
-                },
-                {
-                  formId: 'create-person-form',
-                  targetType: "person"
-                },
-                {
-                  formId: 'create-place-form',
-                  targetType: "place"
-                } ]
+                  {
+                    formId: 'create-work-form',
+                    targetType: "work"
+                  },
+                  {
+                    formId: 'create-person-form',
+                    targetType: "person"
+                  },
+                  {
+                    formId: 'create-place-form',
+                    targetType: "place"
+                  } ]
               }
             }
           },
@@ -472,14 +499,14 @@ app.get('/config', function (request, response) {
             type: 'searchable-with-result-in-side-panel',
             authority: true,
             nameProperties: [ 'name' ],
-            indexTypes: ['genre'],
+            indexTypes: [ 'genre' ],
             indexDocumentFields: [ 'name' ],
             widgetOptions: {
               enableCreateNewResource: {
                 formRefs: [ {
                   formId: 'create-genre-form',
                   targetType: "genre"
-                }]
+                } ]
               }
             }
           }
@@ -505,6 +532,7 @@ app.get('/config', function (request, response) {
               inputs: [ // these are the actual sub inputs
                 {
                   label: 'Person',
+                  required: true,
                   rdfProperty: 'agent',
                   indexTypes: 'person',
                   type: 'searchable-with-result-in-side-panel',
@@ -521,6 +549,7 @@ app.get('/config', function (request, response) {
                 },
                 {
                   label: 'Rolle',
+                  required: true,
                   rdfProperty: 'role'
                 }
               ]
@@ -551,42 +580,42 @@ app.get('/config', function (request, response) {
       person: {
         selectIndexLabel: 'Person',
         queryTerm: 'person.name',
-        resultItemLabelProperties: ['name'],
-        resultItemDetailsLabelProperties: ['lifeSpan', 'nationality'],
+        resultItemLabelProperties: [ 'name' ],
+        resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
         itemHandler: 'personItemHandler'
       },
       subject: {
         selectIndexLabel: 'Generelt',
         queryTerm: 'subject.prefLabel',
-        resultItemLabelProperties: ['prefLabel']
+        resultItemLabelProperties: [ 'prefLabel' ]
       },
       work: {
         structuredQuery: true,
         selectIndexLabel: 'Verk',
         queryTerm: 'work.mainTitle',
-        resultItemLabelProperties: ['mainTitle', 'subTitle'],
-        resultItemDetailsLabelProperties: ['creator'],
+        resultItemLabelProperties: [ 'mainTitle', 'subTitle' ],
+        resultItemDetailsLabelProperties: [ 'creator' ],
         itemHandler: 'workItemHandler'
       },
       genre: {
         selectIndexLabel: 'Sjanger',
         queryTerm: 'genre.name',
-        resultItemLabelProperties: ['name']
+        resultItemLabelProperties: [ 'name' ]
       },
       publisher: {
         selectIndexLabel: 'Utgiver',
         queryTerm: 'publisher.name',
-        resultItemLabelProperties: ['name']
+        resultItemLabelProperties: [ 'name' ]
       },
       place: {
         selectIndexLabel: 'Sted',
         queryTerm: 'place.prefLabel',
-        resultItemLabelProperties: ['prefLabel', 'specification']
+        resultItemLabelProperties: [ 'prefLabel', 'specification' ]
       },
       serial: {
         selectIndexLabel: 'Serie',
         queryTerm: 'serial.name',
-        resultItemLabelProperties: ['name']
+        resultItemLabelProperties: [ 'name' ]
       }
     }
   }
@@ -596,6 +625,304 @@ app.get('/config', function (request, response) {
 app.get('/version', function (request, response) {
   response.json({ 'buildTag': process.env.BUILD_TAG, 'gitref': process.env.GITREF })
 })
+
+app.get('/valueSuggestions/bs/:isbn', function (request, response) {
+    response.json(
+      {
+        source: 'bs',
+        hits: [
+          {
+            "@context": {
+              "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+              "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+              "deichman": "http://192.168.50.12:8005/ontology#",
+              "xsd": "http://www.w3.org/2001/XMLSchema#"
+            },
+            "@graph": [
+              {
+                "@id": "http://lexvo.org/id/iso639-3/nob",
+                "@type": "http://lexvo.org/ontology#Language",
+                "rdfs:label": [
+                  {
+                    "@language": "en",
+                    "@value": "Norwegian Bokmål"
+                  },
+                  {
+                    "@language": "no",
+                    "@value": "Norsk (bokmål)"
+                  }
+                ]
+              },
+              {
+                "@id": "http://lexvo.org/id/iso639-3/hrv",
+                "@type": "http://lexvo.org/ontology#Language",
+                "rdfs:label": [
+                  {
+                    "@language": "en",
+                    "@value": "Croatian"
+                  },
+                  {
+                    "@language": "no",
+                    "@value": "Kroatisk"
+                  }
+                ]
+              },
+              {
+                "@id": "_:N62bb7e44e5414c30905dacfa3f3ad263",
+                "@type": "deichman:Publication",
+                "deichman:audience": {
+                  "@id": "http://data.deichman.no/audience#adult"
+                },
+                "deichman:bibliofilPublicationID": "0502300",
+                "deichman:contributor": [
+                  {
+                    "@id": "_:Nfa97dd73eff64195a220cdea3a16afde"
+                  },
+                  {
+                    "@id": "_:N0d3f253e2e624cf49c45d545fbf5a41f"
+                  }
+                ],
+                "deichman:format": {
+                  "@id": "http://data.deichman.no/format#Book"
+                },
+                "deichman:isbn": "82-05-25448-6",
+                "deichman:language": {
+                  "@id": "http://lexvo.org/id/iso639-3/nob"
+                },
+                "deichman:literaryForm": [
+                  {
+                    "@id": "http://data.deichman.no/literaryForm#novel"
+                  },
+                  {
+                    "@id": "http://data.deichman.no/literaryForm#fiction"
+                  }
+                ],
+                "deichman:mainTitle": "Guddommelig sult",
+                "deichman:publicationOf": {
+                  "@id": "_:N788edbeea7104c42adda64d78d844440"
+                },
+                "deichman:publicationYear": {
+                  "@type": "xsd:gYear",
+                  "@value": "1998"
+                },
+                "deichman:recordID": "202417",
+                "http://koha1.deichman.no:8005/raw#locationSignature": "Dra",
+                "http://koha1.deichman.no:8005/raw#statementOfResponsibility": "Slavenka Drakulić ; oversatt av Kirsten Korssjøen",
+                "http://migration.deichman.no/binding": "ib.",
+                "http://migration.deichman.no/creator": {
+                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                },
+                "http://migration.deichman.no/numberOfPages": "207 s.",
+                "http://migration.deichman.no/originalLanguage": {
+                  "@id": "http://lexvo.org/id/iso639-3/hrv"
+                },
+                "http://migration.deichman.no/originalTitle": "Božanska glad",
+                "http://migration.deichman.no/publicationPlace": "[Oslo]",
+                "http://migration.deichman.no/publisher": "Gyldendal",
+                "http://migration.deichman.no/subjectAuthority": {
+                  "@id": "http://koha1.deichman.no:8005/bsSubjectAuthority/kjaerlighet_fortellinger"
+                }
+              },
+              {
+                "@id": "_:Nfa97dd73eff64195a220cdea3a16afde",
+                "@type": "deichman:Contribution",
+                "deichman:agent": {
+                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                },
+                "deichman:role": {
+                  "@id": "http://data.deichman.no/role#author"
+                }
+              },
+              {
+                "@id": "http://data.deichman.no/audience#adult",
+                "@type": "http://data.deichman.no/utility#Audience",
+                "http://data.deichman.no/utility#code": "ad",
+                "rdfs:label": [
+                  {
+                    "@language": "en",
+                    "@value": "Adults"
+                  },
+                  {
+                    "@language": "no",
+                    "@value": "Voksne"
+                  }
+                ]
+              },
+              {
+                "@id": "_:N5c9b2fcaef3246c295aa6fc121e7b155",
+                "@type": "deichman:Person",
+                "http://data.deichman.no/duo#bibliofilPersonId": "19887600",
+                "deichman:birthYear": "1949",
+                "deichman:name": "Korssjøen, Kirsten Johanne",
+                "deichman:nationality": {
+                  "@id": "http://data.deichman.no/nationality#n"
+                },
+                "http://koha1.deichman.no:8005/raw#lifeSpan": "1949-"
+              },
+              {
+                "@id": "_:N788edbeea7104c42adda64d78d844440",
+                "@type": "deichman:Work",
+                "deichman:audience": {
+                  "@id": "http://data.deichman.no/audience#adult"
+                },
+                "deichman:contributor": {
+                  "@id": "_:N61c1076a2d094a67995a293daec3b879"
+                },
+                "deichman:creator": {
+                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                },
+                "deichman:language": {
+                  "@id": "http://lexvo.org/id/iso639-3/hrv"
+                },
+                "deichman:literaryForm": [
+                  {
+                    "@id": "http://data.deichman.no/literaryForm#fiction"
+                  },
+                  {
+                    "@id": "http://data.deichman.no/literaryForm#novel"
+                  }
+                ],
+                "deichman:mainTitle": "Božanska glad"
+              },
+              {
+                "@id": "http://data.deichman.no/format#Book",
+                "@type": "http://data.deichman.no/utility#Format",
+                "http://data.deichman.no/utility#code": "l",
+                "rdfs:label": [
+                  {
+                    "@language": "no",
+                    "@value": "Bok"
+                  },
+                  {
+                    "@language": "en",
+                    "@value": "Book"
+                  }
+                ]
+              },
+              {
+                "@id": "_:N9fdb7e0d043e44708df915d456bbb132",
+                "@type": "deichman:Person",
+                "http://data.deichman.no/duo#bibliofilPersonId": "29406800",
+                "deichman:birthYear": "1949",
+                "deichman:name": "Drakulić, Slavenka",
+                "deichman:nationality": {
+                  "@id": "http://data.deichman.no/nationality#kroat"
+                },
+                "http://koha1.deichman.no:8005/raw#lifeSpan": "1949-"
+              },
+              {
+                "@id": "_:N61c1076a2d094a67995a293daec3b879",
+                "@type": [
+                  "deichman:Contribution",
+                  "deichman:MainEntry"
+                ],
+                "deichman:agent": {
+                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                },
+                "deichman:role": {
+                  "@id": "http://data.deichman.no/role#author"
+                }
+              },
+              {
+                "@id": "_:N0d3f253e2e624cf49c45d545fbf5a41f",
+                "@type": "deichman:Contribution",
+                "deichman:agent": {
+                  "@id": "_:N5c9b2fcaef3246c295aa6fc121e7b155"
+                },
+                "deichman:role": {
+                  "@id": "http://data.deichman.no/role#translator"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    )
+  }
+)
+
+app.get('/valueSuggestions/bb/:isbn', function (request, response) {
+    response.json(
+      {
+        source: 'bb',
+        hits: [
+          {
+            "@graph": [
+              {
+                "@id": "_:b0",
+                "@type": [
+                  "deichman:MainEntry",
+                  "deichman:Contribution"
+                ],
+                "deichman:agent": {
+                  "@id": "_:b1"
+                },
+                "deichman:role": {
+                  "@id": "http://data.deichman.no/role#composer"
+                }
+              },
+              {
+                "@id": "_:b1",
+                "@type": "deichman:Person",
+                "deichman:birthYear": "1922",
+                "deichman:deathYear": "2012",
+                "deichman:name": "Hans Olsen",
+                "deichman:nationality": {
+                  "@id": "http://data.deichman.no/nationality#n"
+                }
+              },
+              {
+                "@id": "_:b3",
+                "@type": "deichman:Work",
+                "deichman:contributor": {
+                  "@id": "_:b0"
+                },
+                "deichman:mainTitle": "Hans Olsens Liv"
+              },
+              {
+                "@id": "_:b4",
+                "@type": "deichman:Publication",
+                "deichman:publicationOf": {
+                  "@id": "_:b3"
+                },
+                "deichman:publicationYear": "2015",
+                "deichman:mainTitle": "Hans Olsens Liv"
+              }
+            ],
+            "@context": {
+              "deichman": "http://192.168.50.12:8005/ontology#",
+              "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+            }
+          }
+        ]
+      }
+    )
+  }
+)
+
+app.get('/valueSuggestions/bb/:isbn', function (request, response) {
+    response.json(
+      {
+        source: 'bb',
+        hits: [ {
+          "Publication_http://192.168.50.12:8005/ontology#publicationYear": "cop. 2010",
+          "Publication_http://192.168.50.12:8005/ontology#edition": "2. Aufl.",
+          "Publication_http://192.168.50.12:8005/ontology#agent": "Hamsun, Knut",
+          "Publication_http://192.168.50.12:8005/ontology#isbn": "978-3-630-87351-0",
+          "Publication_http://192.168.50.12:8005/ontology#numberOfPages": "574 s.",
+          "Publication_http://192.168.50.12:8005/ontology#binding": "ib.",
+          "Publication_http://192.168.50.12:8005/ontology#publisher": "Luchterhand",
+          "Publication_http://192.168.50.12:8005/ontology#mainTitle": "Sterben",
+          "Work_http://192.168.50.12:8005/ontology#mainTitle": "Min kamp. Første bok",
+          "Publication_http://192.168.50.12:8005/ontology#language": "Tysk tekst",
+          "Publication_http://192.168.50.12:8005/ontology#placeOfPublication": "München",
+          "Work_http://192.168.50.12:8005/ontology#mainEntry": "Hamsun, Knut",
+          "Publication_http://192.168.50.12:8005/ontology#subtitle": "Roman"
+        } ]
+      }
+    )
+  }
+)
 
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
 app.all('/services/*', requestProxy({

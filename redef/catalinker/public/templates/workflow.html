@@ -12,7 +12,7 @@
             <div class="pure-u-1-2" id="right-dummy-panel"/>
         </div>
         <ul class="grid-tabs pure-g" id="workflow-tabs">
-            {{#each inputGroups}}
+            {{#each inputGroups:groupIndex}}
             <li class="grid-tab pure-u">
                 <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link {{#tabEnabled(tabSelected,domain)}}{{else}}disabled{{/}}"
                    id="{{tabId}}-tab"

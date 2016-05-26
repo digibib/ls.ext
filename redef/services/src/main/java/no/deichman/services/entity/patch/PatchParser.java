@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public final class PatchParser {
         Map<String, RDFNode> blankNodes = newHashMap();
         for (PatchObject patchObject : patch) {
             if (PatchObject.isBlankNodeUri(patchObject.getSubject())) {
+                if (PatchObject.isBlankNodeUri(patchObject.getObjectValue()) && patchObject.getObjectDatatype().equals(XSD.anyURI)) {
+                    throw new PatchParserException("Patch contained blank node as subject and object: "
+                            + patchObject.getSubject() + " " + patchObject.getPredicate() + " " + patchObject.getObjectValue());
+                }
                 Resource anonymousResource = createResource();
                 blankNodes.put(patchObject.getSubject(), anonymousResource);
             }

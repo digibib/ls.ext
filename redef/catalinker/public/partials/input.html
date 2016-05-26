@@ -43,7 +43,7 @@
                                 <span class="value sub-field" id="support_panel_base_{{uniqueId}}">
                                     {{>../../../input.type}}
                                 </span>
-                                {{#if ! nonEditable }}
+                                {{#if ! nonEditable}}
                                     <span class="support-panel"
                                           data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
                                         {{#with ../../../input}}
@@ -57,23 +57,26 @@
                     {{/each}}
                 </span>
                 <span class="subject-type-association">
+                    <form>
                     <span class="{{#if !nonEditable}}pure-u-1-1{{/if}}">
                         {{#with ../../../parentInput}}
                             {{#if ! nonEditable }}
-                                {{#subjectTypes}}
+                                {{#each subjectTypes:index}}
+                                {{#with ./subInputs[0].input.values[inputValueIndex]}}
                                     <span class="subject-type-select" {{#if (subjectTypes.length== 1) }}
                                           style="display:none" {{/if}}>
-                                        <input type="radio" name={{subjectType}} value="{{.}}"
-                                               {{# !
+                                        <input type="radio" name="{{~/inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
+                                               {{# false && !
                                                targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
                                                disabled='disabled' {{/}}/>
-                                        <label>{{subjectTypeLabel(.)}}</label>
+                                        <label>{{subjectTypeLabel(subjectTypes[index])}}</label>
                                     </span>
-                                {{/subjectTypes}}
+                                {{/with}}
+                                {{/each}}
                                 <div>
                                     <a class="pure-button pure-button-primary add-item-button"
-                                       {{#if typeof subjectType=== 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType))}}disabled{{/if}}
-                                    {{#if !resourceIsLoaded(subjectType)}}title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er lastet"{{/if}}
+                                       {{#if typeof subjectType=== 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType)) || ../../../inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
+                                      title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
                                        on-click="saveObject:{{inputValueIndex}}">Legg til</a>
                                 </div>
                             {{/if}}
@@ -83,6 +86,7 @@
                             {{subjectTypeLabelDet(subjectType)}}
                         {{/if}}
                     </span>
+                </form>
                 </span>
             </span>
 </span>

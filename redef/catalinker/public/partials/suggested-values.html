@@ -1,0 +1,14 @@
+{{#../../suggestedValues}}
+<div class="external-sources">
+    <input type="checkbox" id="suggVal_{{uniqueId}}"/>
+    <label class="unchecked" for="suggVal_{{uniqueId}}">Se forslag fra andre eksterne kilder</label>
+    <label class="checked" for="suggVal_{{uniqueId}}">Skjul forslag fra andre eksterne kilder</label>
+    <div class="suggested-values pure-u-1-1">
+        {{#each ../../suggestedValues}}
+        {{>'suggestor-for-' + input.type}}
+        {{>'suggestor-for-' + type}}
+        {{/each}}
+    </div>
+</div>
+{{/}}
+

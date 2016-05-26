@@ -3,6 +3,13 @@ $lightergray: #e8e8e8;
 $input-background: white;
 $mintgreen: #DCFC9F;
 
+@mixin use-this {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>&#x1f44d;</text></svg>");
+  display: block;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+}
+
 .label-font {
   font-weight: bold;
 }
@@ -161,6 +168,73 @@ body {
             border-bottom: 1px solid lightgrey;
             padding-bottom: 15px;
           }
+          div.external-source-results {
+            margin-top: 7px;
+            ul {
+              margin-top: 3px;
+              list-style: none;
+              padding: 0px;
+              li {
+                width: 100%;
+                background-color: $lightergray;
+                display: inline-block;
+                padding: 5px;
+                a {
+                  float: right;
+                  margin-top: 14px;
+                  @include use-this
+                }
+                span {
+                  float: left;
+                }
+              }
+            }
+          }
+          div.external-sources {
+            margin-top: 10px;
+            input[type="checkbox"][id^="suggVal_"] {
+              position: absolute;
+              top: -9999px;
+              left: -9999px;
+            }
+            label {
+              background-repeat: no-repeat;
+              background-position: right center;
+              border-bottom: 1px solid black;
+              &.unchecked {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▽</text></svg>");
+              }
+              &.checked {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>△</text></svg>");
+              }
+            }
+            [id^="suggVal_"]:checked + label.unchecked {
+              display: none;
+            }
+            [id^="suggVal_"]:checked + label.unchecked + label.checked {
+              display: block;
+            }
+            [id^="suggVal_"]:checked + label.unchecked + label.checked + * {
+              display: block;
+            }
+            [id^="suggVal_"]:not(:checked) + label.unchecked {
+              display: block;
+            }
+            [id^="suggVal_"]:not(:checked) + label.unchecked + label.checked {
+              display: none;
+            }
+            [id^="suggVal_"]:not(:checked) + label.unchecked + label.checked + * {
+              display: none;
+            }
+          }
+          div.suggested-values {
+            margin-top: 10px;
+            a:not(.support-panel-expander) {
+              display: inline-block;
+              float: right;
+            }
+          }
+
         }
         .index-type-select {
 
@@ -179,20 +253,25 @@ body {
         .support-panel-expander {
           width: 22px;
           position: relative;
-          top: -26px;
           min-height: 22px;
           background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▶</text></svg>");
           background-repeat: no-repeat;
           display: block;
+          &.suggested-value {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>&#x1f44d;</text></svg>");
+            title: "Bruk denne verdien";
+          }
         }
         span:not(.input-wrapper) {
           .support-panel-expander {
             left: 293px;
+            top: -24px;
           }
         }
         span.input-wrapper {
           .support-panel-expander {
-            left: 274px;
+            left: 270px;
+            top: -24px;
           }
         }
         .deletable {
