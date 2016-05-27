@@ -38,9 +38,6 @@ class SearchHeader extends React.Component {
             <div className='primary-menu'>
               <ul>
                 <li><Link to='/profile'><FormattedMessage {...messages.myProfile} /></Link></li>
-                <li><FormattedMessage {...messages.myLoans} /></li>
-                <li><FormattedMessage {...messages.more} /></li>
-                <li><FormattedMessage {...messages.contactUs} /></li>
                 {this.props.isLoggedIn
                   ? <li data-automation-id='logout_element' onClick={this.props.logout}>
                   <FormattedMessage { ...messages.logout } /></li>

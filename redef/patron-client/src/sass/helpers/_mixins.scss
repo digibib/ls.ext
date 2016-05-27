@@ -70,6 +70,10 @@
   font-family: 'poppins-regular', Arial, sans-serif;
 }
 
+@mixin regularFontSize {
+  font-size: 16px;
+}
+
 @mixin smallText {
   color: #767676;
   text-transform: uppercase;

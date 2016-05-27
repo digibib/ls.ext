@@ -20,9 +20,11 @@
 
   li {
     display: inline-block;
-    padding: rhythm(3);
+    padding: rhythm(0.5);
+    padding-bottom: 0;
     padding-left: 0;
   }
+
   
   @include breakpoint($small){
      float: right;

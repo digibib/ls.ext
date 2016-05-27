@@ -18,11 +18,10 @@ class SearchFilterItem extends React.Component {
     return (
       <li onClick={this.handleClick}
           data-automation-id={`filter_${filter.id}`}>
-        <input type='checkbox' readOnly checked={filter.active} />
-        <label htmlFor='checkbox'>Checkbox</label>
-        <h2 className='filter_label'
-            data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2>{/* (
-       <span data-automation-id='filter_count'>{filter.count}</span>) */}
+        <input type='checkbox'  id='filter' name='filter' readOnly checked={filter.active} />
+        <label for='filter'><span></span><h2 className='filter_label'
+                                             data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2></label>
+
       </li>
     )
   }

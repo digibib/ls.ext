@@ -47,9 +47,17 @@
 }
 
 .tab-bar-tab {
-  float: left;
-  margin-right: rhythm(6);
+  width: 100%;
   padding-bottom: rhythm(1);
+  margin-bottom: rhythm(1);
+
+  @include breakpoint($small){
+    float: left;
+    margin-right: rhythm(6);
+    margin-bottom: 0;
+    width: auto;
+  }
+
 }
 
 .tab-bar-tab-active {
