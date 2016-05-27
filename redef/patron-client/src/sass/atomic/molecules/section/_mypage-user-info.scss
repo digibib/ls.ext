@@ -1,0 +1,73 @@
+.borrow-number {
+  @include span(12 of 12);
+}
+
+.user-details {
+  @include span(12 of 12);
+  margin-bottom: rhythm(2);
+  @include border-top;
+  @include border-bottom;
+  
+  .col {
+
+    @include breakpoint($small){
+      @include span(5 of 12);
+    }
+
+    
+    h2 {
+      @include regularFont;
+      margin-bottom: rhythm(1);
+    }
+
+    p, address {
+      @include semiBoldFont;
+      font-style: normal;
+    }
+
+  }
+
+  input {
+    margin: rhythm(1);
+    margin-left: 0;
+  }
+
+}
+
+
+
+
+.change-information {
+  @include span(12 of 12);
+  
+  @include breakpoint($small){
+    margin-top: rhythm(6);
+  }
+  
+  button {
+    width: 100%;
+    
+    @include breakpoint($small){
+       width: auto;
+    }
+  }
+
+}
+
+.last-updated {
+  @include span(12 of 12);
+  margin-top: rhythm(2);
+  margin-bottom: rhythm(2);
+  text-align: center;
+  
+  @include breakpoint($small){
+     text-align: left;
+  }
+
+  
+  .green-text {
+    color: $green;
+    @include semiBoldFont;
+  }
+
+}

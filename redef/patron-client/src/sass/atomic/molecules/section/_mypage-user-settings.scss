@@ -1,0 +1,57 @@
+.user-settings {
+  h1 {
+    @include regularFont;
+    margin-bottom: rhythm(1);
+    font-size: 1em;
+  }
+}
+
+.change-pin-container {
+  margin-top: rhythm(4);
+  margin-bottom: rhythm(4);
+}
+
+.user-reminders, .change-pin {
+  @include span(12 of 12);
+  margin-bottom: rhythm(2);
+  @include border-top;
+  
+  .important {
+    @include breakpoint($small){
+      @include span(6 of 12);
+      margin-top: rhythm(2);
+    }
+  }
+  
+  .change-pin-fields {
+    @include span(12 of 12);
+    
+    h2 {
+      @include regularFont;
+      @include regularFontSize;
+      margin-bottom: rhythm(1);
+    }
+  }
+
+  .col {
+    @include breakpoint($small){
+      @include span(4 of 12);
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    p {
+      @include semiBoldFont;
+      font-style: normal;
+    }
+
+    ul, li {
+      list-style-type: none;
+      margin-left: 0;
+      padding-left: 0;
+    }
+  }
+
+}

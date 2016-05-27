@@ -8,6 +8,11 @@
   @include breakpoint($small){
     display: none;
   }
+  
+  @include breakpoint($medium){
+     display: block;
+  }
+  
 }
 
 .hidden-desktop {

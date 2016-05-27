@@ -1,5 +1,7 @@
 input {
   padding: rhythm(2);
+  border: 1px solid $blackColor;
+  border-radius: 2px;
 }
 
 input:focus::-webkit-input-placeholder { color:transparent; }

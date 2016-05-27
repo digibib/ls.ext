@@ -3,6 +3,7 @@
   @include span(12 of 12);
   margin-top: -10px;
   margin-bottom: rhythm(2);
+  @include border-bottom;
   
   @include breakpoint($small){
   }

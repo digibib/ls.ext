@@ -31,20 +31,6 @@ ModalRoot.propTypes = {
   modalActions: PropTypes.object.isRequired
 }
 
-/*
-const customStyle = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)'
-  },
-  content: {
-    top: '100px',
-    bottom: '100px',
-    left: '100px',
-    right: '100px',
-    borderRadius: '0px'
-  }
-}
-*/
 
 function mapStateToProps (state) {
   return {
