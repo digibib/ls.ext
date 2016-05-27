@@ -1,5 +1,5 @@
-<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable}}class="pure-u-1-1" {{/if}}>
-{{#if nonEditable}}{{current.displayValue}}{{else}}
+<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
+{{#if nonEditable || suggested}}{{current.displayValue}}{{else}}
 {{#if ../../indexTypes.length > 1 && !deletable}}
 <span class="index-type-select pure-u-1-2">
         <select value="{{../../selectedIndexType}}">

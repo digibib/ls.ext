@@ -133,15 +133,23 @@ body {
           margin-bottom: 12px;
         }
         .label {
+          padding: 12px 12px 4px 12px;
           display: block;
           background: $input-background;
-          padding: 12px 12px 4px 12px;
           font-weight: bold;
           &:after {
             content: ":";
           }
         }
+        .input-wrapper .label {
+          padding: 12px 12px 4px 0px;
+        }
         .panel-part {
+          display: flex;
+          flex-direction: column;
+          &.label {
+            flex-direction: row;
+          }
           .field {
             padding: 0px 12px 15px 12px;
             background: $input-background;
@@ -182,7 +190,6 @@ body {
                 a {
                   float: right;
                   margin-top: 14px;
-                  @include use-this
                 }
                 span {
                   float: left;
@@ -259,7 +266,6 @@ body {
           display: block;
           &.suggested-value {
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>&#x1f44d;</text></svg>");
-            title: "Bruk denne verdien";
           }
         }
         span:not(.input-wrapper) {
@@ -332,38 +338,8 @@ body {
           cursor: pointer;
           min-width: 20px;
         }
-        .default-editable {
-          min-height: 60px;
-          padding: 0 0 12px 0;
-          height: 100%;
-          .inputs {
-            background: $mintgreen;
-            display: block;
-            border: 1px solid lightgrey;
-            padding: 5px 22px;
-            .input {
-              display: block;
-              .label {
-                background: inherit;
-                padding: 0;
-                @extend .label-font;
-                display: inline;
-                &:after {
-                  content: ":";
-                }
-              }
-              .field {
-                background: inherit;
-                padding: 0;
-              }
-            }
-          }
-          .subject-type-association {
-            margin: -10px;
-          }
-
-        }
         .default-non-editable {
+          min-height: 60px;
           margin-bottom: 44px;
           padding: 8px;
           .inputs {
@@ -389,6 +365,7 @@ body {
             display: none;
           }
         }
+        .default-editable,
         .additional-entries-editable {
           min-height: 60px;
           padding: 8px;
@@ -416,33 +393,38 @@ body {
             }
           }
         }
-        .additional-entries-non-editable {
+        .additional-entries-non-editable, .additional-entries-suggested {
           min-height: 60px;
           padding: 8px;
-          .inputs {
-            border: 1px solid lightgrey;
-            text-align: center;
-            padding-right: 24px;
-            .input {
-              &.input:last-child:before {
-                content: " — ";
-              }
-              display: inline;
-              .label {
-                display: none;
-              }
-              .field {
-                padding: 0;
+          .input-wrapper {
+            padding-left: 10px;
+            .inputs {
+              text-align: center;
+              padding-right: 24px;
+              .input {
+                &.input:last-child:before {
+                  content: " — ";
+                }
+                display: inline;
+                .label {
+                  display: none;
+                }
+                .field {
+                  padding: 0;
+                }
               }
             }
-          }
 
-          .subject-type-association {
-            display: inline-block;
-            text-align: center;
-            padding: 10px;
-            &:before {
-              content: "Rollen er knyttet til ";
+            .subject-type-association {
+              display: block;
+              text-align: left;
+              padding: 10px;
+              &:before {
+                content: "Rollen er knyttet til ";
+              }
+            }
+            .use-suggestion-button {
+              float: right;
             }
           }
         }
@@ -474,7 +456,7 @@ body {
         &:before {
           content: "";
           position: absolute;
-          left: -1px;
+          left: 0px;
           right: 100%;
           width: 0;
           height: 0;

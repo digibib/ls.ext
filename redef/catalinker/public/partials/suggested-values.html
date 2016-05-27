@@ -1,3 +1,4 @@
+{{#if !input.isSubInput || !multiple}}
 {{#../../suggestedValues}}
 <div class="external-sources">
     <input type="checkbox" id="suggVal_{{uniqueId}}"/>
@@ -11,4 +12,5 @@
     </div>
 </div>
 {{/}}
+{{/if}}
 

@@ -65,7 +65,7 @@
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
                 input.widgetOptions[ action ].showInputs = null;
-                input.searchResult = null
+                input.values[ 0 ].searchResult = null
                 var domainType = input.widgetOptions[ action ].forms[ input.selectedIndexType ].rdfType
                 unloadResourceForDomain(domainType)
               }
@@ -173,13 +173,19 @@
             return values
           }, [])).join(' - ');
         if (options.onlyValueSuggestions) {
+          console.log("Suggesting value " + values + " for input value " + index)
           input.suggestedValues = input.suggestedValues || []
           input.suggestedValues[ index ] = {
             value: values,
             source: options.source
           }
         } else {
-          input.values[ index ].current.displayValue = values
+        }
+        input.values[ index ].current.displayValue = values
+        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
+        if (options.onlyValueSuggestions && multiple) {
+          input.values[ index ].suggested = true;
+//          input.values[ index ].nonEditable = true;
         }
       }
 
@@ -349,10 +355,10 @@
                         input.values[ index ].deletable = true
                         if (input.isSubInput) {
                           input.values[ index ].nonEditable = true
-                          input.values[ index ].subjectType = type
                           input.parentInput.allowAddNewButton = true
                         }
                       }
+                      input.values[ index ].subjectType = type
                       input.values[ index ].searchable = true
                       setAllowNewButtonForInput(input)
                     } else {
@@ -808,7 +814,7 @@
       }
 
       var configInputsForVisibleGroup = function (inputGroup, index) {
-        var group = {groupIndex: index}
+        var group = { groupIndex: index }
         var groupInputs = createInputsForGroup(inputGroup)
         group.inputs = groupInputs
         group.tabLabel = inputGroup.label
@@ -1351,13 +1357,17 @@
               // addValue adds another input field for the predicate.
               addValue: function (event) {
                 var mainInput = ractive.get(event.keypath)
-                visitInputs(mainInput, function (input) {
-                  input.values[ input.values.length ] = {
+                visitInputs(mainInput, function (input, index) {
+                  var length = input.values.length
+                  input.values[ length ] = {
                     old: { value: '', lang: '' },
                     current: { value: '', lang: '' },
                     uniqueId: _.uniqueId(),
-                    searchable: mainInput.type === 'searchable-with-result-in-side-panel',
+                    searchable: input.type === 'searchable-with-result-in-side-panel',
                     searchResult: null
+                  }
+                  if (index === 0) {
+                    input.values[ length ].subjectType = null
                   }
                 })
                 ractive.update()
@@ -1758,11 +1768,13 @@
                       if (fromPreferredSource) {
                         hitsFromPreferredSource.items.push(externalSourceHitDescription(graph))
                       } else {
-                        updateInputsForResource({ data: {} }, null, {
-                          keepDocumentUrl: true,
-                          onlyValueSuggestions: true,
-                          source: response.data.source
-                        }, graph.byType('Work')[ 0 ], 'Work')
+                        _.each([ 'Work', 'Publication' ], function (domain) {
+                          updateInputsForResource({ data: {} }, null, {
+                            keepDocumentUrl: true,
+                            onlyValueSuggestions: true,
+                            source: response.data.source
+                          }, graph.byType(domain)[ 0 ], domain)
+                        })
                       }
                     })
                     if (fromPreferredSource) {
@@ -1797,31 +1809,58 @@
                     }
                   })
                 })
-
+                ractive.update()
+              },
+              useSuggestion: function (event) {
+                event.context.suggested = null;
+                event.context.keepOrder = true
                 ractive.update()
               }
             }
           )
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+          function castVetoForRequiredSubInput (inputGroupKeypath, valueIndex, voter, veto) {
+            var vetoesKeyPath = inputGroupKeypath + '.inputGroupRequiredVetoes.' + valueIndex
+            var inputGroupRequiredVetoes = (ractive.get(vetoesKeyPath) || '').split('')
+            if (veto) {
+              inputGroupRequiredVetoes = _.union(inputGroupRequiredVetoes, [ voter ])
+            } else {
+              inputGroupRequiredVetoes = _.difference(inputGroupRequiredVetoes, [ voter ])
+            }
+            ractive.set(vetoesKeyPath, inputGroupRequiredVetoes.join(''))
+          }
+
+          function checkRequiredSubjectTypeSelection (keypath, newValue) {
+            var valueIndex = _.last(parentOf(keypath).split('.'))
+            var inputKeypath = parentOf(grandParentOf(keypath))
+            var inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
+            var input = ractive.get(inputKeypath)
+            if (input.required && _.isArray(input.subjectTypes) && input.subjectTypes.length < 2) {
+              var veto = newValue === undefined || newValue === null
+              castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, '*', veto)
+            }
+          }
+
+          function checkRequiredSubInput (newValue, keypath) {
             newValue = _.flatten([ newValue ]).join('')
             var valueIndex = _.last(grandParentOf(keypath).split('.'))
             var inputKeypath = grandParentOf(grandParentOf(keypath))
             var inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
             var input = ractive.get(inputKeypath)
             if (input.required) {
-              var vetoesKeyPath = inputGroupKeypath + '.inputGroupRequiredVetoes.' + valueIndex
-              var inputGroupRequiredVetoes = (ractive.get(vetoesKeyPath) || '').split('')
+              var voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
               var veto = !(typeof newValue === 'string' && newValue.length > 0)
                 || (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && newValue.startsWith('_:'))
-              var voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
-              if (veto) {
-                inputGroupRequiredVetoes = _.union(inputGroupRequiredVetoes, [ voter ])
-              } else {
-                inputGroupRequiredVetoes = _.difference(inputGroupRequiredVetoes, [ voter ])
-              }
-              ractive.set(vetoesKeyPath, inputGroupRequiredVetoes.join(''))
+              castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
             }
+          }
+
+          ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
+            checkRequiredSubjectTypeSelection(keypath, newValue)
+          })
+
+          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+            checkRequiredSubInput(newValue, keypath)
           })
 
           ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
@@ -1852,22 +1891,6 @@
               }
             }
           })
-          ractive.observe('searchResult.results.hits.hits.*._source.person.isChecked', function (newValue, oldValue, keypath) {
-            debugger
-            if (newValue === true) {
-              var workPath = getParentFromKeypath(keypath)
-              checkSelectedSearchResults([ workPath ])
-            }
-          })
-
-          ractive.observe('searchResult.results.hits.hits.*._source.person.work.*.isChecked', function (newValue, oldValue, keypath) {
-            debugger
-            if (newValue === true) {
-              var workPath = getParentFromKeypath(keypath)
-              var personPath = getParentFromKeypath(keypath, 3)
-              checkSelectedSearchResults([ personPath, workPath ])
-            }
-          })
 
           ractive.observe('targetUri.Work', function (newValue, oldValue, keypath) {
             _.each(allInputs(), function (input, inputIndex) {
@@ -1875,7 +1898,7 @@
                 input.values = [
                   {
                     current: {
-                      value: [newValue]
+                      value: [ newValue ]
                     }
                   }
                 ]
@@ -1896,14 +1919,6 @@
             parentLevels = parentLevels || 1
             var split = keypath.split('.')
             return split.splice(0, split.length - parentLevels).join('.')
-          }
-
-          function checkSelectedSearchResults (pathsToCheck) {
-            ractive.set('searchResult.results.hits.hits.*._source.person.isChecked', false)
-            ractive.set('searchResult.results.hits.hits.*._source.person.work.*.isChecked', false)
-            pathsToCheck.forEach(function (path) {
-              ractive.set(path + '.isChecked', true)
-            })
           }
 
           ractive.set('inputGroups', applicationData.inputGroups)

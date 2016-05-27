@@ -849,6 +849,24 @@ app.get('/valueSuggestions/bb/:isbn', function (request, response) {
           {
             "@graph": [
               {
+                "@id": "_:b5",
+                "@type": "deichman:Contribution",
+                "deichman:agent": {
+                  "@id": "_:b6"
+                },
+                "deichman:role": {
+                  "@id": "http://data.deichman.no/role#illustrator"
+                }
+              },{
+                "@id": "_:b7",
+                "@type": "deichman:Contribution",
+                "deichman:agent": {
+                  "@id": "_:b8"
+                },
+                "deichman:role": {
+                  "@id": "http://data.deichman.no/role#editor"
+                }
+              },{
                 "@id": "_:b0",
                 "@type": [
                   "deichman:MainEntry",
@@ -872,6 +890,26 @@ app.get('/valueSuggestions/bb/:isbn', function (request, response) {
                 }
               },
               {
+                "@id": "_:b6",
+                "@type": "deichman:Person",
+                "deichman:birthYear": "1922",
+                "deichman:deathYear": "2012",
+                "deichman:name": "Kåre Olsen",
+                "deichman:nationality": {
+                  "@id": "http://data.deichman.no/nationality#n"
+                }
+              },
+              {
+                "@id": "_:b8",
+                "@type": "deichman:Person",
+                "deichman:birthYear": "1922",
+                "deichman:deathYear": "2012",
+                "deichman:name": "Odny Olderbolle",
+                "deichman:nationality": {
+                  "@id": "http://data.deichman.no/nationality#n"
+                }
+              },
+              {
                 "@id": "_:b3",
                 "@type": "deichman:Work",
                 "deichman:contributor": {
@@ -882,6 +920,10 @@ app.get('/valueSuggestions/bb/:isbn', function (request, response) {
               {
                 "@id": "_:b4",
                 "@type": "deichman:Publication",
+                "deichman:contributor": [
+                  {"@id": "_:b5"},
+                  {"@id": "_:b7"}
+                ],
                 "deichman:publicationOf": {
                   "@id": "_:b3"
                 },
