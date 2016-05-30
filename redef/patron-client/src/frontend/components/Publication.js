@@ -50,7 +50,9 @@ class Publication extends React.Component {
     return (
       <article onClick={this.handleClick} className={this.props.open ? 'single-publication open' : 'single-publication'}
                data-automation-id={`publication_${publication.uri}`} data-formats={formats}>
-        <div className='book-cover' />
+        <div className='book-cover'>
+          {publication.image ? <img src={publication.image} /> : null}
+        </div>
         <div className='publication-text-container'>
               <span data-automation-id='publication_available'>
                 <p

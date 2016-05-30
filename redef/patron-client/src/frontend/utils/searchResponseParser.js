@@ -25,6 +25,10 @@ export function processSearchResponse (response, locationQuery) {
       work.publications.forEach(publication => {
         publication.formats = publication.formats || []
         publication.languages = publication.languages || []
+        if (publication.image) {
+          // choose any random image from publication
+          work.image = work.image || publication.image
+        }
       })
 
       let chosenPublication = approximateBestTitle(work.publications, element.highlight)
@@ -32,6 +36,10 @@ export function processSearchResponse (response, locationQuery) {
         work.mainTitle = chosenPublication.mainTitle
         work.partTitle = chosenPublication.partTitle
         work.relativePublicationUri = `${work.relativeUri}${relativeUri(chosenPublication.uri)}`
+        if (chosenPublication.image) {
+          // choose the image from pf present
+          work.image = chosenPublication.image
+        }
       }
 
       return work
