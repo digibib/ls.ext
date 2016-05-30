@@ -111,7 +111,9 @@ class SearchResult extends React.Component {
     return (
       <div className='single-entry' data-formats={formats.join(', ')}>
         <aside className='book-cover'>
-          <Link to={this.getResultUrl(result)} className='book-cover-item' />
+          <Link to={this.getResultUrl(result)} className='book-cover-item'>
+            {result.image ? <img src={result.image} /> : null}
+          </Link>
         </aside>
 
         <article className='entry-content'>

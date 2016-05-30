@@ -83,6 +83,12 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     publication.id = getId(publicationResource.id)
     populateItems(publication, 'items', publicationResource.inAll('editionOf'))
     publication.available = publication.items.filter(item => item.status === 'AVAIL').length > 0
+    populateLiteral(publication, 'hasImage', publicationResource, 'image')
+
+    if (publication.image) {
+      // choose any available image
+      work.image = work.image || publication.image
+    }
 
     work.publications.push(publication)
   })
