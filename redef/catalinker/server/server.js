@@ -441,7 +441,7 @@ app.get('/config', function (request, response) {
         rdfType: 'Work',
         label: 'Beskriv verk',
         inputs: [
-          { rdfProperty: 'mainTitle' },
+          { rdfProperty: 'mainTitle', multiple:true },
           { rdfProperty: 'subtitle' },
           { rdfProperty: 'partTitle' },
           { rdfProperty: 'partNumber' },
@@ -915,7 +915,7 @@ app.get('/valueSuggestions/bb/:isbn', function (request, response) {
                 "deichman:contributor": {
                   "@id": "_:b0"
                 },
-                "deichman:mainTitle": "Hans Olsens Liv",
+                "deichman:mainTitle": ["Hans Olsens Liv", "Guddommelig sult"],
                 "deichman:language": [
                   {
                     "@id": "http://lexvo.org/id/iso639-3/dan"

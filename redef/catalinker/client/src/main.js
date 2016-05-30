@@ -401,7 +401,15 @@
                 }
               } else {
                 _.each(root.getAll(propertyName(predicate)), function (value, index) {
-                  setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
+                  if (!options.onlyValueSuggestions) {
+                    setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
+                  } else {
+                    input.suggestedValues = input.suggestedValues || []
+                    input.suggestedValues.push({
+                      value: value.value,
+                      source: options.source
+                    })
+                  }
                 })
               }
               rootIndex++
@@ -1806,7 +1814,7 @@
                   })
                 })
               },
-              acceptSuggestedValue: function (event, value) {
+              acceptSuggestedPredefinedValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
                 if (!input.multiple) {
                   setSingleValue(value, input, 0, { isNew: true })
@@ -1820,6 +1828,20 @@
                 ractive.update()
                 ractive.fire('patchResource',
                   { keypath: grandParentOf(event.keypath) + '.values.0', context: input.values[ 0 ] },
+                  input.predicate,
+                  unPrefix(input.domain))
+              },
+              acceptSuggestedLiteralValue: function (event, value) {
+                var input = ractive.get(grandParentOf(event.keypath))
+                if (!input.multiple) {
+                  setSingleValue(value, input, 0, { isNew: true })
+                } else {
+                  var oldValues = input.values
+                  setSingleValue(value, input, oldValues.length, { isNew: true })
+                }
+                ractive.update()
+                ractive.fire('patchResource',
+                  { keypath: grandParentOf(event.keypath) + '.values.' + (oldValues.length - 1), context: input.values[ oldValues.length - 1 ] },
                   input.predicate,
                   unPrefix(input.domain))
               },
