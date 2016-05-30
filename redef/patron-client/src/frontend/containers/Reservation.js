@@ -37,7 +37,7 @@ class Reservation extends React.Component {
 
   renderSuccess () {
     return (
-      <div data-automation-id='reservation_success_modal'>
+      <div data-automation-id='reservation_success_modal' className='reservation-modal'>
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
           <FormattedMessage {...messages.messageSuccess} />
@@ -51,7 +51,7 @@ class Reservation extends React.Component {
 
   renderError () {
     return (
-      <div data-automation-id='reservation_error_modal'>
+      <div data-automation-id='reservation_error_modal' className='reservation-modal'>
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>
           {messages[ this.props.message ]
@@ -72,7 +72,7 @@ class Reservation extends React.Component {
       return this.renderSuccess()
     }
     return (
-      <div data-automation-id='reservation_modal'>
+      <div data-automation-id='reservation_modal' className='reservation-modal'>
         <form>
           <p>
             <FormattedMessage {...messages.choosePickupLocation} />

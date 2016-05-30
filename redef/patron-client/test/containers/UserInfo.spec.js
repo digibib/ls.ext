@@ -28,7 +28,6 @@ function setup (propOverrides) {
     loanerCategory: 'loanerCategory',
     mobile: 'mobile',
     name: 'name',
-    telephone: 'telephone',
     zipcode: 'zipcode'
   }
 

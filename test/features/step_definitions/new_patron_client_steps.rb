@@ -43,12 +43,15 @@ When(/^skal jeg se filtre på format, språk og målgruppe$/) do
 end
 
 When(/^jeg slår på et filter for et vilkårlig format$/) do
-  @browser.element(data_automation_id: 'filter_format').checkboxes.to_a.select { |checkbox| not checkbox.set? }.sample.set
+  # To get nice styling for checkboxes, they are effectively set to invisible while images are displayed in their place.
+  # Watir does not allow interaction with invisible items, therefore clicking the parent (which has the click handler)
+  @browser.element(data_automation_id: 'filter_format').checkboxes.to_a.select { |checkbox| not checkbox.set? }.sample.parent.click
 end
 
 When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do
+  wait_for { @browser.element(data_automation_id: 'filter_format').present? }
   filter_values = @browser.element(data_automation_id: 'filter_format').lis
-                      .select { |li| li.checkbox.present? && li.checkbox.set? }
+                      .select { |li| li.checkbox.set? }
                       .map { |li| li.element(data_automation_id: 'filter_label').text }
   wait_retry {
     match = false
@@ -179,4 +182,8 @@ When(/^jeg velger riktig avdeling$/) do
   # Temporary hack to set the branch code to the test branch
   # Will be fixed when Patron Client can retrieve a list of existing branches from Koha
   @browser.execute_script("document.querySelector('[data-automation-id=\"reservation_modal\"]').getElementsByTagName('option')[0].setAttribute('value', \"#{@context[:random_migrate_branchcode]}\")")
+end
+
+When(/^jeg trykker på personopplysninger$/) do
+  @browser.element(data_automation_id: 'tabs').element(:text, 'Personopplysninger').click
 end

@@ -10,6 +10,7 @@ function setup (propOverrides) {
   const props = {
     locationQuery: {},
     totalHits: 0,
+    isSearching: false,
     ...propOverrides
   }
 
@@ -31,6 +32,14 @@ describe('components', () => {
     it('should render nothing if no search', () => {
       const { node } = setup()
       expect(node).toBe(null)
+    })
+
+    it('should render message when searching', () => {
+      const { node } = setup({
+        locationQuery: { query: 'test_query' },
+        isSearching: true
+      })
+      expect(node.getAttribute('data-automation-id')).toEqual('is_searching')
     })
 
     it('should render search term and total hits when display is large enough', () => {

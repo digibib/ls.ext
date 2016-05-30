@@ -36,7 +36,8 @@ class UserSettings extends React.Component {
   }
 
   render () {
-    if (this.props.isRequestingSettings) {
+    const {settings} = this.props
+    if (this.props.isRequestingSettings || Object.keys(settings).length === 0) {
       return <div />
     } else if (this.props.settingsError) {
       return <FormattedMessage {...messages.settingsError} />
@@ -49,7 +50,7 @@ class UserSettings extends React.Component {
         </header>
 
         <section className='user-reminders'>
-          <div className='reminders col patron-placeholder'>
+          <div className='reminders col'>
             <h2><FormattedMessage {...messages.reminderOfDueDate} /></h2>
 
             <ul>
@@ -57,7 +58,8 @@ class UserSettings extends React.Component {
 
                 <input data-automation-id='UserSettings_reminderOfDueDateSms'
                        type='checkbox' name='user-settings-sms-reminder' id='user-settings-sms-reminder'
-                       ref={e => this.reminderOfDueDateSmsCheckbox = e} />
+                       ref={e => this.reminderOfDueDateSmsCheckbox = e}
+                       defaultChecked={settings.alerts.reminderOfDueDate.sms} />
                 <label htmlFor='user-settings-sms-reminder'><span></span>
                   <FormattedMessage {...messages.bySms} /></label>
 
@@ -68,28 +70,28 @@ class UserSettings extends React.Component {
                        type='checkbox' name='user-settings-reminder-email'
                        id='user-settings-reminder-email'
                        ref={e => this.reminderOfDueDateEmailCheckbox = e}
-                       defaultChecked={this.props.settings.alerts.reminderOfDueDate.email} />
+                       defaultChecked={settings.alerts.reminderOfDueDate.email} />
                 <label
                   htmlFor='user-settings-reminder-email'><span></span>
                   <FormattedMessage {...messages.byEmail} /></label>
 
               </li>
-              <li>
+              {/* <li className='patron-placeholder'>
 
                 <input data-automation-id='??'
                        type='checkbox' name='user-settings-reminder-dont-send'
                        id='user-settings-reminder-dont-send'
                        ref={e => this.reminderOfDueDateEmailCheckbox = e}
-                       defaultChecked={this.props.settings.alerts.reminderOfDueDate.email} />
+                       defaultChecked={settings.alerts.reminderOfDueDate.email} />
                 <label
                   htmlFor='user-settings-reminder-email'><span></span>
                   <span>Nei, ikke send</span></label>
 
-              </li>
+              </li> */}
             </ul>
           </div>
 
-          <div className='reminders col patron-placeholder'>
+          <div className='reminders col'>
             <h2><FormattedMessage {...messages.reminderOfPickup} /></h2>
             <ul>
               <li>
@@ -98,7 +100,7 @@ class UserSettings extends React.Component {
                        type='checkbox' name='user-settings-delivery-reminder-sms'
                        id='user-settings-delivery-reminder-sms'
                        ref={e => this.reminderOfPickupSmsCheckbox = e}
-                       defaultChecked={this.props.settings.alerts.reminderOfPickup.sms} />
+                       defaultChecked={settings.alerts.reminderOfPickup.sms} />
                 <label htmlFor='user-settings-delivery-reminder-sms'><span></span>
                   <FormattedMessage {...messages.bySms} /></label>
               </li>
@@ -107,21 +109,21 @@ class UserSettings extends React.Component {
                        type='checkbox' name='user-settings-delivery-reminder-email'
                        id='user-settings-delivery-reminder-email'
                        ref={e => this.reminderOfPickupEmailCheckbox = e}
-                       defaultChecked={this.props.settings.alerts.reminderOfPickup.email} />
+                       defaultChecked={settings.alerts.reminderOfPickup.email} />
                 <label htmlFor='user-settings-delivery-reminder-email'><span></span>
                   <FormattedMessage {...messages.byEmail} /></label>
               </li>
             </ul>
           </div>
 
-          <div className='reciept col patron-placeholder'>
+          <div className='reciept col'>
             <h2><FormattedMessage {...messages.reciepts} /></h2>
             <ul>
               <li>
                 <input data-automation-id='UserSettings_recieptOnLoansEmail'
                        type='checkbox' name='reciept-loans-email' id='reciept-loans-email'
                        ref={e => this.recieptOnLoansEmailCheckbox = e}
-                       defaultChecked={this.props.settings.reciepts.loans.email} />
+                       defaultChecked={settings.reciepts.loans.email} />
                 <label htmlFor='reciept-loans-email'><span></span>
                   <FormattedMessage {...messages.loanReciept} /></label>
               </li>
@@ -129,7 +131,7 @@ class UserSettings extends React.Component {
                 <input data-automation-id='UserSettings_recieptOnReturnsEmail'
                        type='checkbox' name='reciept-returns-email' id='reciept-returns-email'
                        ref={e => this.recieptOnReturnsEmailCheckbox = e}
-                       defaultChecked={this.props.settings.reciepts.returns.email} />
+                       defaultChecked={settings.reciepts.returns.email} />
                 <label htmlFor='reciept-returns-email'><span></span>
                   <FormattedMessage {...messages.returnReciept} /></label>
               </li>

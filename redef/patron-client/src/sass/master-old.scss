@@ -7,22 +7,22 @@
   background-color: rgba(0, 0, 0, 0.75)
 }
 
-/*.modal-content {
+.reservation-modal {
   position: absolute;
   top: 100px;
   bottom: 100px;
   left: 100px;
   right: 100px;
-  border-radius: 0px;
+  border-radius: 0;
   background: #fff;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   outline: none;
   padding: 20px;
-}*/
+}
 
 .patron-placeholder {
-  //display: none !important
+  display: none !important
 }
 
 .single-publication {

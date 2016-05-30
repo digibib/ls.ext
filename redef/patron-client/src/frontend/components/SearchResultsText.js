@@ -1,11 +1,13 @@
 import React, { PropTypes } from 'react'
-import { defineMessages, FormattedHTMLMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 
 class SearchResultsText extends React.Component {
   render () {
     if (!this.props.locationQuery.query) {
       return null
+    } else if (this.props.isSearching) {
+      return <p data-automation-id='is_searching'><FormattedMessage {...messages.searching} /></p>
     } else {
       return (
         <p>
@@ -24,12 +26,18 @@ class SearchResultsText extends React.Component {
 }
 
 SearchResultsText.propTypes = {
+  isSearching: PropTypes.bool.isRequired,
   locationQuery: PropTypes.object,
   totalHits: PropTypes.number.isRequired,
   mediaQueryValues: PropTypes.object
 }
 
 const messages = defineMessages({
+  searching: {
+    id: 'SearchResultsText.searching',
+    description: 'Shown while a search is performed',
+    defaultMessage: 'Searching...'
+  },
   totalHits: {
     id: 'SearchResultsText.totalHits',
     description: 'The number of total hits spelled out',
