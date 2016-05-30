@@ -106,6 +106,10 @@
             "holdingBranches": {
               "type": "string",
               "index": "not_analyzed"
+            },
+            "image": {
+              "type": "string",
+              "index": "no"
             }
           }
         },
