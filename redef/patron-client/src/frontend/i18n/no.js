@@ -87,6 +87,7 @@ export default {
   'SearchResult.hideStatus': 'Skjul status',
   'SearchResult.firstPublished': 'Utgitt første gang:',
   'SearchResults.searchError': 'Noe gikk galt med søket',
+  'SearchResultsText.searching': 'Søker...',
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',
   'SearchResultsText.totalHitsMobile': '<span data-automation-id="hits-total">{totalHits}</span> treff',
   'SearchResultsText.searchForWork': 'Søk etter verk',

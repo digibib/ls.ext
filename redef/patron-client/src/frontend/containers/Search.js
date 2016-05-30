@@ -31,7 +31,7 @@ class Search extends React.Component {
 
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => ['query', 'filter', 'page'].includes(key)).forEach(key => {
+    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'page' ].includes(key)).forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
@@ -76,7 +76,9 @@ class Search extends React.Component {
           {this.props.locationQuery.query
             ? (<div className='search-results-footer'>
             <div className='search-results-number'>
-              <SearchResultsText totalHits={this.props.totalHits} locationQuery={this.props.locationQuery} />
+              <SearchResultsText totalHits={this.props.totalHits}
+                                 locationQuery={this.props.locationQuery}
+                                 isSearching={this.props.isSearching} />
             </div>
             {this.props.totalHits > 0
               ? (<div className='search-sorting patron-placeholder'>

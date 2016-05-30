@@ -38,6 +38,139 @@ class UserInfo extends React.Component {
     )
   }
 
+  renderStaticInfo () {
+    const { personalInformation } = this.props
+    return (
+      <div>
+        <div className='col patron-placeholder'>
+          <div className='birth'>
+            <h2><FormattedMessage {...messages.birthdate} /></h2>
+            <p data-automation-id='UserInfo_birthdate'>{personalInformation.birthdate}</p>
+          </div>
+
+          <div className='sex patron-placeholder'>
+            <h2>Kjønn</h2>
+            <p>Mann</p>
+          </div>
+
+          <div className='loan-card'>
+            <h2><FormattedMessage {...messages.loanerCardIssued} /></h2>
+            <p data-automation-id='UserInfo_loanerCardIssued'>{this.props.personalInformation.loanerCardIssued}</p>
+          </div>
+
+          <div className='category'>
+            <h2><FormattedMessage {...messages.loanerCategory} /></h2>
+            <p data-automation-id='UserInfo_loanerCategory'>{this.props.personalInformation.loanerCategory}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderEditInfo (editable) {
+    const { fields: { address, zipcode, city, country, mobile, email } } = this.props
+    return (
+      <section className='user-details'>
+        <form name='change-user-details' id='change-user-details'>
+          <div className='address col'>
+
+            <h2><FormattedMessage {...messages.address} /></h2>
+            <address typeof='schema:PostalAddress'>
+              <span property='schema:streetAddress'>
+                <input data-automation-id='UserInfo_address' type='text'
+                       placeholder={this.props.intl.formatMessage(messages.address)} {...address} />
+              </span><br />
+              <span property='schema:postalCode'>
+                <input data-automation-id='UserInfo_zipcode' type='number'
+                       placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
+              </span>
+              <span property='schema:addressLocality'>
+                <input data-automation-id='UserInfo_city' type='text'
+                       placeholder={this.props.intl.formatMessage(messages.city)} {...city} />
+              </span><br />
+              <span property='schema:addressCountry'>
+                <input data-automation-id='UserInfo_country' type='text'
+                       placeholder={this.props.intl.formatMessage(messages.country)} {...country} />
+              </span><br />
+            </address>
+          </div>
+
+          <div className='col'>
+            <div className='cell-phone'>
+              <h2><FormattedMessage {...messages.mobile} /></h2>
+              <input data-automation-id='UserInfo_mobile' type='number'
+                     placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
+
+            <div className='email'>
+              <h2><FormattedMessage {...messages.email} /></h2>
+              <input data-automation-id='UserInfo_email' type='email'
+                     placeholder={this.props.intl.formatMessage(messages.email)} {...email} />
+            </div>
+          </div>
+        </form>
+
+        {this.renderButtonAndLastUpdated(editable, [ 'hidden-desktop' ])}
+
+        {this.renderStaticInfo()}
+      </section>
+    )
+  }
+
+  renderInfo (editable) {
+    const { personalInformation } = this.props
+    return (
+      <section className='user-details'>
+        <div className='address col'>
+
+          <h2><FormattedMessage {...messages.address} /></h2>
+          <address typeof='schema:PostalAddress'>
+            <span data-automation-id='UserInfo_address'
+                  property='schema:streetAddress'>{personalInformation.address}</span><br />
+            <span data-automation-id='UserInfo_zipcode'
+                  property='schema:postalCode'>{personalInformation.zipcode}</span>
+            <span data-automation-id='UserInfo_city' property='schema:addressLocality'>{personalInformation.city}</span><br />
+            <span data-automation-id='UserInfo_country'
+                  property='schema:addressCountry'>{personalInformation.country}</span><br />
+          </address>
+
+          <div className='cell-phone'>
+            <h2><FormattedMessage {...messages.mobile} /></h2>
+            <p data-automation-id='UserInfo_mobile'>{personalInformation.mobile}</p>
+          </div>
+
+          <div className='email'>
+            <h2><FormattedMessage {...messages.email} /></h2>
+            <p data-automation-id='UserInfo_email'>{personalInformation.email}</p>
+          </div>
+        </div>
+
+        {this.renderButtonAndLastUpdated(editable, [ 'hidden-desktop' ])}
+
+        {this.renderStaticInfo()}
+      </section>
+    )
+  }
+
+  renderButtonAndLastUpdated (editable, classNames) {
+    return (
+      <footer className={classNames.join(' ')}>
+        <div className='change-information'>
+          {editable
+            ? <button className='black-btn' type='button' onClick={this.handleSubmit}>
+            <FormattedMessage {...messages.saveChanges} /></button>
+            : <button className='black-btn' type='button' onClick={this.handleChangeClick}>
+            <FormattedMessage {...messages.editPersonalInfo} /></button>}
+        </div>
+
+        <div className='last-updated'>
+          <FormattedMessage {...messages.lastUpdated} />:&nbsp;
+            <span data-automation-id='UserInfo_lastUpdated'
+                  className='green-text'>{this.props.personalInformation.lastUpdated}</span>
+        </div>
+      </footer>
+    )
+  }
+
   render () {
     if (this.props.isRequestingPersonalInformation) {
       return <div />
@@ -45,136 +178,20 @@ class UserInfo extends React.Component {
       return <FormattedMessage {...messages.personalInformationError} />
     }
     const editable = this.props.location.query.edit === null
+    const { personalInformation } = this.props
+
     return (
       <div>
         <header>
-          <h1 data-automation-id='UserInfo_name'>{this.props.personalInformation.name}</h1>
+          <h1 data-automation-id='UserInfo_name'>{personalInformation.name}</h1>
 
           <div className='borrow-number'><FormattedMessage {...messages.borrowerNumber} />: <span
-            data-automation-id='UserInfo_borrowerNumber'>{this.props.personalInformation.borrowerNumber}</span></div>
+            data-automation-id='UserInfo_borrowerNumber'>{personalInformation.borrowerNumber}</span></div>
         </header>
 
-        <section className='user-details'>
-          <form name='user-details'>
-            <div className='address col patron-placeholder'>
+        {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}
 
-              <h2>Adresse </h2>
-              <address typeof='schema:PostalAddress'>
-                <span property='schema:name'>Midtisvingen 78</span><br />
-                <span property='schema:postalCode'>2478</span>
-                <span property='schema:streetAddress'> Langtnordiskogen</span><br />
-                <span property='schema:addressCountry'>Norge</span><br />
-              </address>
-
-              <div className='cell-phone'>
-                <h2>Mobil</h2>
-                <p>985 92 239</p>
-              </div>
-
-              <div className='email'>
-                <h2>E-post</h2>
-                <p>ola.finn.oddvar@nordmann.no</p>
-              </div>
-            </div>
-
-            <footer className='hidden-desktop'>
-              <div className='change-information'>
-                {editable
-                  ? <button className='black-btn' type='button'><FormattedMessage {...messages.saveChanges} /></button>
-                  : <button className='black-btn' type='button' onClick={this.handleChangeClick}>
-                  <FormattedMessage {...messages.editPersonalInfo} /></button>}
-              </div>
-
-              <div className='last-updated'>
-                <FormattedMessage {...messages.lastUpdated} />:
-                <span data-automation-id='UserInfo_lastUpdated'
-                      className='green-text'> {this.props.personalInformation.lastUpdated}</span>
-              </div>
-            </footer>
-
-            <div>
-              <div className='col patron-placeholder'>
-                <div className='birth'>
-                  <h2><FormattedMessage {...messages.birthdate} /></h2>
-                  <p>09/09/1981</p>
-                </div>
-
-                <div className='sex'>
-                  <h2>Kjønn</h2>
-                  <p>Mann</p>
-                </div>
-
-                <div className='loan-card'>
-                  <h2><FormattedMessage {...messages.loanerCardIssued} /></h2>
-              <span
-                data-automation-id='UserInfo_loanerCardIssued'><p>{this.props.personalInformation.loanerCardIssued}</p></span>
-                </div>
-
-                <div className='category'>
-                  <h2><FormattedMessage {...messages.loanerCategory} /></h2>
-                  <span
-                    data-automation-id='UserInfo_loanerCategory'><p>{this.props.personalInformation.loanerCategory}</p></span>
-                </div>
-              </div>
-            </div>
-          </form>
-        </section>
-
-        <footer className='hidden-mobile hidden-tablet'>
-          <div className='change-information'>
-            {editable
-              ? <button className='black-btn' type='button'><FormattedMessage {...messages.saveChanges} /></button>
-              : <button className='black-btn' type='button' onClick={this.handleChangeClick}>
-              <FormattedMessage {...messages.editPersonalInfo} /></button>}
-          </div>
-
-          <div className='last-updated'>
-            <FormattedMessage {...messages.lastUpdated} />:
-            <span data-automation-id='UserInfo_lastUpdated'
-                  className='green-text'> {this.props.personalInformation.lastUpdated}</span>
-          </div>
-        </footer>
-        <section className='user-details'>
-          <form name='change-user-details' id='change-user-details'>
-            <div className='address col patron-placeholder'>
-
-              <h2>Adresse </h2>
-              <address typeof='schema:PostalAddress'>
-                <span property='schema:name'><input type='text' placeholder='Gatenavn' /></span><br />
-                <span property='schema:postalCode'><input type='number' placeholder='Postnummer' /></span>
-                <span property='schema:streetAddress'><input type='text' placeholder='By' /></span><br />
-                <span property='schema:addressCountry'><input type='text' placeholder='Land' /></span><br />
-              </address>
-            </div>
-
-            <div className='col'>
-              <div className='cell-phone'>
-                <h2>Mobil</h2>
-                <input type='number' placeholder='Mobilnummer' />
-              </div>
-
-              <div className='email'>
-                <h2>E-post</h2>
-                <input type='email' placeholder='E-post' />
-              </div>
-            </div>
-          </form>
-        </section>
-
-        <footer className='hidden-mobile hidden-tablet'>
-          <div className='change-information'>
-            {editable
-              ? <button className='black-btn' type='button'><FormattedMessage {...messages.saveChanges} /></button>
-              : <button className='black-btn' type='button' onClick={this.handleChangeClick}>
-              <FormattedMessage {...messages.editPersonalInfo} /></button>}
-          </div>
-
-          <div className='last-updated'>
-            <FormattedMessage {...messages.lastUpdated} />:
-            <span data-automation-id='UserInfo_lastUpdated'
-                  className='green-text'> {this.props.personalInformation.lastUpdated}</span>
-          </div>
-        </footer>
+        {this.renderButtonAndLastUpdated(editable, [ 'hidden-mobile', 'hidden-tablet' ])}
 
       </div>
     )
@@ -314,7 +331,7 @@ const validate = values => {
 export default reduxForm(
   {
     form: 'userInfo',
-    fields: [ 'address', 'zipcode', 'city', 'country', 'mobile', 'telephone', 'email' ],
+    fields: [ 'address', 'zipcode', 'city', 'country', 'mobile', 'email' ],
     validate
   },
   mapStateToProps,

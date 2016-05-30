@@ -103,8 +103,7 @@ Egenskap: Gå gjennom lånegrensesnittet
       | Filial                    | Antall | Plassering | Status               |
       | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
 
-  @wip
-  Scenario: Logge inn
+  Scenario: Logge inn på Min Side
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
     Og brukeren har rettigheten "superlibrarian"
@@ -112,6 +111,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
     Når jeg logger inn
+    Og jeg trykker på personopplysninger
     Så skal jeg se informasjonen min
 
   Scenario: Låner reserverer bok på verkssiden
