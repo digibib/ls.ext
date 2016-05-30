@@ -1,5 +1,5 @@
 {{#if primarySuggestionAccepted && (!input.isSubInput || !multiple)}}
-{{#../../suggestedValues}}
+{{#if../../suggestedValues}}
 <div class="external-sources">
     <input type="checkbox" id="suggVal_{{uniqueId}}"/>
     <label class="unchecked" for="suggVal_{{uniqueId}}">Se forslag fra andre eksterne kilder</label>
@@ -11,6 +11,6 @@
         {{/each}}
     </div>
 </div>
-{{/}}
+{{/if}}
 {{/if}}
 

@@ -78,7 +78,6 @@ body {
       }
       input[type="radio"][id^="tab"] {
         position: absolute;
-        top: -9999px;
         left: -9999px;
       }
       [id^="tab"]:checked + label {
@@ -201,7 +200,6 @@ body {
             margin-top: 10px;
             input[type="checkbox"][id^="suggVal_"] {
               position: absolute;
-              top: -9999px;
               left: -9999px;
             }
             label {
@@ -236,14 +234,15 @@ body {
           }
           div.suggested-values {
             margin-top: 10px;
-            a:not(.support-panel-expander) {
-              display: inline-block;
-              float: right;
+            div.suggested-value {
+              clear: both;
+              margin-bottom: 15px;
+              a:not(.support-panel-expander) {
+                display: inline-block;
+                float: right;
+              }
             }
           }
-
-        }
-        .index-type-select {
 
         }
         input {

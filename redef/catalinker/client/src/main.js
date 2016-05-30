@@ -125,7 +125,7 @@
         }
         input.values[ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
-          input.values[ index ].suggested = true
+          input.values[ index ].suggested = {source: options.source}
         }
         return valuesAsArray
       }
@@ -180,7 +180,7 @@
         var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
         if (options.onlyValueSuggestions) {
           if (multiple) {
-            input.values[ index ].suggested = true;
+            input.values[ index ].suggested = {source: options.source};
             input.values[ index ].current.displayValue = values
           } else {
             input.suggestedValues = input.suggestedValues || []
@@ -1342,7 +1342,7 @@
               },
               unacceptedSuggestions: function(input) {
                 return _.find(input.subInputs[0].input.values, function (value) {
-                  return value.suggested === true
+                  return value.suggested  && value.suggested !== null
                 })
               },
               targetResources: {
@@ -1808,7 +1808,15 @@
               },
               acceptSuggestedValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
-                setSingleValue(value, input, 0, { isNew: true })
+                if (!input.multiple) {
+                  setSingleValue(value, input, 0, { isNew: true })
+                } else {
+                  var oldValues = _.map(input.values[0].current.value, function (value) {
+                    return {id: value}
+                  })
+                  oldValues.push({id: value.value})
+                  setMultiValues(oldValues, input, 0)
+                }
                 ractive.update()
                 ractive.fire('patchResource',
                   { keypath: grandParentOf(event.keypath) + '.values.0', context: input.values[ 0 ] },

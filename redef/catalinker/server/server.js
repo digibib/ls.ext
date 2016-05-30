@@ -915,7 +915,15 @@ app.get('/valueSuggestions/bb/:isbn', function (request, response) {
                 "deichman:contributor": {
                   "@id": "_:b0"
                 },
-                "deichman:mainTitle": "Hans Olsens Liv"
+                "deichman:mainTitle": "Hans Olsens Liv",
+                "deichman:language": [
+                  {
+                    "@id": "http://lexvo.org/id/iso639-3/dan"
+                  },
+                  {
+                    "@id": "http://lexvo.org/id/iso639-3/swe"
+                  }
+                ]
               },
               {
                 "@id": "_:b4",
