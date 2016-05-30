@@ -393,7 +393,7 @@ body {
             }
           }
         }
-        .additional-entries-non-editable, .additional-entries-suggested {
+        .additional-entries-non-editable {
           min-height: 60px;
           padding: 8px;
           .input-wrapper {
@@ -419,6 +419,39 @@ body {
               display: block;
               text-align: left;
               padding: 10px;
+              &:before {
+                content: "Rollen er knyttet til ";
+              }
+            }
+          }
+        }
+        .additional-entries-suggested {
+          min-height: 60px;
+          padding: 8px;
+          .input-wrapper {
+            background-color: $lightergray;
+            display: block;
+            padding: 10px;
+            .inputs {
+              text-align: center;
+              padding-right: 24px;
+              .input {
+                &.input:last-child:before {
+                  content: " — ";
+                }
+                display: inline;
+                .label {
+                  display: none;
+                }
+                .field {
+                  padding: 0;
+                }
+              }
+            }
+
+            .subject-type-association {
+              display: block;
+              text-align: left;
               &:before {
                 content: "Rollen er knyttet til ";
               }

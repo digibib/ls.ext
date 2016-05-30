@@ -107,7 +107,8 @@
       return _.last(predicate.split('#'))
     }
 
-    function setMultiValues (values, input, index) {
+    function setMultiValues (values, input, index, options) {
+      options = options || {}
       if (values && values.length > 0) {
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
           return value.id
@@ -123,6 +124,9 @@
           uniqueId: _.uniqueId()
         }
         input.values[ index ].uniqueId = _.uniqueId()
+        if (options.onlyValueSuggestions) {
+          input.values[ index ].suggested = true
+        }
         return valuesAsArray
       }
     }
@@ -172,24 +176,25 @@
             values.push((root.getAll(nameProperty)[ 0 ] || { value: undefined }).value)
             return values
           }, [])).join(' - ');
+
+        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
         if (options.onlyValueSuggestions) {
-          console.log("Suggesting value " + values + " for input value " + index)
-          input.suggestedValues = input.suggestedValues || []
-          input.suggestedValues[ index ] = {
-            value: values,
-            source: options.source
+          if (multiple) {
+            input.values[ index ].suggested = true;
+            input.values[ index ].current.displayValue = values
+          } else {
+            input.suggestedValues = input.suggestedValues || []
+            input.suggestedValues[ index ] = {
+              value: values,
+              source: options.source
+            }
           }
         } else {
-        }
-        input.values[ index ].current.displayValue = values
-        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-        if (options.onlyValueSuggestions && multiple) {
-          input.values[ index ].suggested = true;
-//          input.values[ index ].nonEditable = true;
+          input.values[ index ].current.displayValue = values
         }
       }
 
-      if (uri.startsWith('_:')) {
+      if (isBlankNodeUri(uri)) {
         if (root) {
           fromRoot(root)
           ractive.update()
@@ -256,7 +261,7 @@
             })
           }
 
-          if (uri.startsWith('_:')) {
+          if (isBlankNodeUri(uri)) {
             if (root) {
               fromRoot(root)
             }
@@ -351,19 +356,19 @@
                     setIdValue(node.id, input, index)
                     if (!options.onlyValueSuggestions) {
                       setDisplayValue(input, index, node)
-                      if (!node.id.startsWith('_:')) {
+                      if (!isBlankNodeUri(node.id)) {
                         input.values[ index ].deletable = true
                         if (input.isSubInput) {
                           input.values[ index ].nonEditable = true
                           input.parentInput.allowAddNewButton = true
                         }
                       }
-                      input.values[ index ].subjectType = type
                       input.values[ index ].searchable = true
                       setAllowNewButtonForInput(input)
                     } else {
                       setDisplayValue(input, index, node, options)
                     }
+                    input.values[ index ].subjectType = type
                   })
                 } else {
                   _.each(root.getAll(propertyName(predicate)), function (node, multiValueIndex) {
@@ -378,15 +383,20 @@
                 if (!options.onlyValueSuggestions) {
                   setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset))
                 } else {
+                  var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
                   _.each(root.outAll(propertyName(predicate)), function (value) {
-                    input.suggestedValues = input.suggestedValues || []
-                    input.suggestedValues.push({
-                      value: {
-                        value: value.id,
-                        label: Main.predefinedLabelValue(input.fragment, value.id)
-                      },
-                      source: options.source
-                    })
+                    if (input.isSubInput && multiple) {
+                      setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                    } else {
+                      input.suggestedValues = input.suggestedValues || []
+                      input.suggestedValues.push({
+                        value: {
+                          value: value.id,
+                          label: Main.predefinedLabelValue(input.fragment, value.id)
+                        },
+                        source: options.source
+                      })
+                    }
                   })
                 }
               } else {
@@ -909,7 +919,11 @@
       }
     }
 
-    var Main = {
+  function isBlankNodeUri (uri){
+      return uri.startsWith('_:')
+      }
+
+  var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -1326,6 +1340,11 @@
                 var queryParameters = URI.parseQuery(uri.query)
                 return queryParameters.openTab || 0
               },
+              unacceptedSuggestions: function(input) {
+                return _.find(input.subInputs[0].input.values, function (value) {
+                  return value.suggested === true
+                })
+              },
               targetResources: {
                 Work: {
                   uri: '',
@@ -1483,6 +1502,9 @@
                       filterArg = _.find(allInputs(), function (input) {
                         return filterArgInputRef === input.id
                       }).values[ 0 ].current.value
+                    }
+                    if (isBlankNodeUri(filterArg)) {
+                      filterArg = undefined
                     }
 
                     var matchBody = {}
@@ -1809,6 +1831,7 @@
                     }
                   })
                 })
+                ractive.set("primarySuggestionAccepted", true)
                 ractive.update()
               },
               useSuggestion: function (event) {
@@ -1850,7 +1873,7 @@
             if (input.required) {
               var voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
               var veto = !(typeof newValue === 'string' && newValue.length > 0)
-                || (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && newValue.startsWith('_:'))
+                || (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
               castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
             }
           }
@@ -1873,7 +1896,7 @@
               let uri = newValue.current.value[ 0 ]
               if (typeof uri === 'string') {
                 var predicate = ractive.get(parent + '.predicate')
-                if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== uri && !uri.startsWith('_:')) {
+                if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== uri && !isBlankNodeUri(uri)) {
                   fetchExistingResource(uri)
                 }
               }

@@ -1,4 +1,4 @@
-{{#if !input.isSubInput || !multiple}}
+{{#if primarySuggestionAccepted && (!input.isSubInput || !multiple)}}
 {{#../../suggestedValues}}
 <div class="external-sources">
     <input type="checkbox" id="suggVal_{{uniqueId}}"/>

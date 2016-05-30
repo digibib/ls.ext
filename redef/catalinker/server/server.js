@@ -942,30 +942,6 @@ app.get('/valueSuggestions/bb/:isbn', function (request, response) {
   }
 )
 
-app.get('/valueSuggestions/bb/:isbn', function (request, response) {
-    response.json(
-      {
-        source: 'bb',
-        hits: [ {
-          "Publication_http://192.168.50.12:8005/ontology#publicationYear": "cop. 2010",
-          "Publication_http://192.168.50.12:8005/ontology#edition": "2. Aufl.",
-          "Publication_http://192.168.50.12:8005/ontology#agent": "Hamsun, Knut",
-          "Publication_http://192.168.50.12:8005/ontology#isbn": "978-3-630-87351-0",
-          "Publication_http://192.168.50.12:8005/ontology#numberOfPages": "574 s.",
-          "Publication_http://192.168.50.12:8005/ontology#binding": "ib.",
-          "Publication_http://192.168.50.12:8005/ontology#publisher": "Luchterhand",
-          "Publication_http://192.168.50.12:8005/ontology#mainTitle": "Sterben",
-          "Work_http://192.168.50.12:8005/ontology#mainTitle": "Min kamp. Første bok",
-          "Publication_http://192.168.50.12:8005/ontology#language": "Tysk tekst",
-          "Publication_http://192.168.50.12:8005/ontology#placeOfPublication": "München",
-          "Work_http://192.168.50.12:8005/ontology#mainEntry": "Hamsun, Knut",
-          "Publication_http://192.168.50.12:8005/ontology#subtitle": "Roman"
-        } ]
-      }
-    )
-  }
-)
-
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
 app.all('/services/*', requestProxy({
   url: services + '/*'

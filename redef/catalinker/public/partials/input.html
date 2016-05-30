@@ -25,6 +25,9 @@
         {{/}}
         {{/each}}
     {{#if subInputs}}
+    <div class="pure-u-1-1 label" style="order: 99; {{#if !unacceptedSuggestions(.)}}display:none;{{/if}}">
+        Forslag fra andre eksterne kilder
+    </div>
     {{#each subInputs[0].input.values:inputValueIndex}}
         <div style="order: {{inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" class="pure-u-1-1 field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
               {{#if
