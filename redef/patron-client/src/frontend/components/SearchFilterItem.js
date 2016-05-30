@@ -7,20 +7,24 @@ class SearchFilterItem extends React.Component {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick () {
+  handleClick (event) {
+    event.preventDefault()
     const { filter: { id } } = this.props
     this.props.toggleFilter(id)
   }
 
   render () {
     const { filter } = this.props
+    const id = `filter_${filter.id}`
     // TODO: Put back count when number is fixed
     return (
       <li onClick={this.handleClick}
-          data-automation-id={`filter_${filter.id}`}>
-        <input type='checkbox' id='filter' name='filter' readOnly checked={filter.active} />
-        <label htmlFor='filter'><span></span><h2 className='filter_label'
-                                             data-automation-id='filter_label'>{this.props.intl.formatMessage({ id: filter.bucket })}</h2>
+          data-automation-id={id}>
+        <input type='checkbox' id={id} name='filter' readOnly checked={filter.active} />
+        <label htmlFor={id}><span>{/* Helper for checkbox styling */}</span>
+          <h2 className='filter_label' data-automation-id='filter_label'>
+            {this.props.intl.formatMessage({ id: filter.bucket })}
+          </h2>
         </label>
 
       </li>
