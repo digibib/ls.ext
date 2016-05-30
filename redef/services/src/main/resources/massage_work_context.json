@@ -65,6 +65,7 @@
     "translator": "http://data.deichman.no/role#translator",
     "agent": "deichman:agent",
     "Contribution": "deichman:Contribution",
-    "Agent": "deichman:Agent"
+    "Agent": "deichman:Agent",
+    "image": "deichman:hasImage"
   }
 }
