@@ -31,7 +31,6 @@ ModalRoot.propTypes = {
   modalActions: PropTypes.object.isRequired
 }
 
-
 function mapStateToProps (state) {
   return {
     modalType: state.modal.modalType,
