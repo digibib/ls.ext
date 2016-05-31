@@ -1030,6 +1030,9 @@
           'suggestor-for-searchable-with-result-in-side-panel',
           'suggestor-for-select-predefined-value',
           'suggestor-for-input-string',
+          'suggestor-for-input-gYear',
+          'suggestor-for-input-nonNegativeInteger',
+          'suggestor-for-input-literal',
           'select-predefined-value',
           'work'
         ]

@@ -922,6 +922,9 @@ app.get('/valueSuggestions/bb/:isbn', function (request, response) {
                   },
                   {
                     "@id": "http://lexvo.org/id/iso639-3/swe"
+                  },
+                  {
+                    "@id": "http://lexvo.org/id/iso639-3/ger"
                   }
                 ]
               },
