@@ -140,3 +140,28 @@ Then(/^vil systemet vise detaljert eksemplarinformasjon$/) do
   @context[:extended_item_biblio]["biblionumber"].should eq(@context[:books][0].biblionumber)
   @context[:extended_item_biblio]["title"].should eq(@context[:books][0].title)
 end
+
+Given(/^låner vil endre meldingspreferanser$/) do
+  @context[:messagepreferences] = KohaRESTAPI::MessagePreferences.new(@browser,@context,@active).get(@context[:patron]['borrowernumber'])
+end
+
+When(/^nye meldingspreferanser sendes til Kohas API$/) do
+  new_prefs = {
+    item_due: { transports: ["sms","email"], wants_digest: true},
+    advance_notice: { transports: ["email"], wants_digest: false, days_in_advance: 5},
+    hold_filled: { transports: ["sms"], wants_digest: false },
+    item_check_in: { transports: ["email"], wants_digest: true}, # Yes, it is check_in, not checkin
+    item_checkout: { transports: ["email"], wants_digest: true}
+  }
+  res = KohaRESTAPI::MessagePreferences.new(@browser,@context,@active).update(@context[:patron]['borrowernumber'], new_prefs)
+  @context[:new_messagepreferences] = JSON.parse(res)
+end
+
+Then(/^gir APIet tilbakemelding om at de nye meldingspreferansene er registrert$/) do
+  new_prefs = @context[:new_messagepreferences]
+  new_prefs.should_not eq(@context[:messagepreferences])
+  [:item_due, :advance_notice, :hold_filled, :item_check_in, :item_checkout].all? {|k| new_prefs.key? k}
+  new_prefs["item_due"]["wants_digest"].should == "1"
+  new_prefs["item_due"]["transports"].should include("email", "sms")
+  new_prefs["advance_notice"]["days_in_advance"].should == "5"
+end
