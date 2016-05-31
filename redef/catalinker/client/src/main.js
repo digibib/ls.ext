@@ -1460,7 +1460,7 @@
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, clearProperty) {
                 var input = ractive.get(grandParentOf(event.keypath))
-                if (!input.isSubInput) {
+                if (!input.isSubInput && (event.keypath.indexOf('maintenanceInputs') == -1)) {
                   var inputValue = event.context
                   if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
                     return
@@ -1757,7 +1757,6 @@
                   _.each(event.context.inputs, function (input) {
                     if (input.preFillFromSearchField) {
                       input.values[ 0 ].current.value = searchTerm
-                      ractive.update()
                     }
                   })
                 }
