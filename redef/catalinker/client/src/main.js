@@ -50,6 +50,36 @@
       return _.last(prefixed.split(':'))
     }
 
+    function saveSuggestionData () {
+      var suggestionData = []
+      var acceptedData = []
+      _.each(ractive.get("inputGroups"), function (group, groupIndex) {
+        _.each(group.inputs, function (input, inputIndex) {
+          var realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
+            return subInput.input
+          }) : [ input ]
+
+          _.each(realInputs, function (input, subInputIndex) {
+            var subInputFragment = input.isSubInput ? `subInputs.${subInputIndex}.input.` : ''
+            suggestionData.push({
+              keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.${subInputFragment}suggestedValues`,
+              suggestedValues: input.suggestedValues
+            })
+            _.each(input.values, function (value, index) {
+              acceptedData.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.${subInputFragment}values.${index}`,
+                value: value
+              })
+            })
+          })
+        })
+      })
+      sessionStorage.setItem('suggestionData', JSON.stringify(suggestionData))
+      sessionStorage.setItem('acceptedData', JSON.stringify(acceptedData))
+      var suggestedValueSearchInput = getSuggestedValuesSearchInput()
+      sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
+    }
+
     function clearSupportPanels (options) {
       var keepActions = (options || {}).keep || []
       _.each(allInputs(), function (input) {
@@ -125,7 +155,7 @@
         }
         input.values[ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
-          input.values[ index ].suggested = {source: options.source}
+          input.values[ index ].suggested = { source: options.source }
         }
         return valuesAsArray
       }
@@ -180,7 +210,7 @@
         var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
         if (options.onlyValueSuggestions) {
           if (multiple) {
-            input.values[ index ].suggested = {source: options.source};
+            input.values[ index ].suggested = { source: options.source };
             input.values[ index ].current.displayValue = values
           } else {
             input.suggestedValues = input.suggestedValues || []
@@ -232,6 +262,14 @@
       var oldUri = URI.parse(document.location.href)
       var queryParameters = URI.parseQuery(oldUri.query)
       queryParameters[ 'openTab' ] = tabNumber
+      oldUri.query = URI.buildQuery(queryParameters)
+      history.replaceState('', '', URI.build(oldUri))
+    }
+
+    function updateBrowserLocationWithSuggestionParameter (parameter, value) {
+      var oldUri = URI.parse(document.location.href)
+      var queryParameters = URI.parseQuery(oldUri.query)
+      queryParameters.acceptedSuggestionsFrom = `${parameter}:${value}`
       oldUri.query = URI.buildQuery(queryParameters)
       history.replaceState('', '', URI.build(oldUri))
     }
@@ -927,11 +965,18 @@
       }
     }
 
-  function isBlankNodeUri (uri){
+    function isBlankNodeUri (uri) {
       return uri.startsWith('_:')
-      }
+    }
 
-  var Main = {
+    function getSuggestedValuesSearchInput () {
+      var suggestValueInput = _.find(_.flatten(_.pluck(ractive.get('inputGroups'), "inputs")), function (input) {
+        return input.searchForValueSuggestions
+      })
+      return suggestValueInput
+    }
+
+    var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -1260,6 +1305,12 @@
               teardown: function () {}
             }
           }
+          var unload = function (node) {
+            $(window).unload(saveSuggestionData)
+            return {
+              teardown: function () {}
+            }
+          }
 
           // Initialize ractive component from template
           ractive = new Ractive({
@@ -1351,9 +1402,9 @@
                 var queryParameters = URI.parseQuery(uri.query)
                 return queryParameters.openTab || 0
               },
-              unacceptedSuggestions: function(input) {
-                return _.find(input.subInputs[0].input.values, function (value) {
-                  return value.suggested  && value.suggested !== null
+              unacceptedSuggestions: function (input) {
+                return _.find(input.subInputs[ 0 ].input.values, function (value) {
+                  return value.suggested && value.suggested !== null
                 })
               },
               targetResources: {
@@ -1376,7 +1427,8 @@
               repositionSupportPanel: repositionSupportPanel,
               detectChange: detectChange,
               handleAddNewBySelect2: handleAddNewBySelect2,
-              clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector
+              clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
+              unload: unload
             },
             partials: applicationData.partials
           })
@@ -1792,8 +1844,9 @@
                   input.suggestedValues = null;
                 })
                 ractive.update()
+                var searchValue = event.context.current.value
                 _.each(searchExternalSourceInput.searchForValueSuggestions.sources, function (source) {
-                  axios.get('/valueSuggestions/' + source + '/' + event.context.current.value).then(function (response) {
+                  axios.get('/valueSuggestions/' + source + '/' + searchValue).then(function (response) {
                     var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
                     var hitsFromPreferredSource = { source: response.data.source, items: [] }
                     _.each(response.data.hits, function (hit) {
@@ -1816,16 +1869,17 @@
                     ractive.update();
                   })
                 })
+                updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
               },
               acceptSuggestedPredefinedValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
                 if (!input.multiple) {
                   setSingleValue(value, input, 0, { isNew: true })
                 } else {
-                  var oldValues = _.map(input.values[0].current.value, function (value) {
-                    return {id: value}
+                  var oldValues = _.map(input.values[ 0 ].current.value, function (value) {
+                    return { id: value }
                   })
-                  oldValues.push({id: value.value})
+                  oldValues.push({ id: value.value })
                   setMultiValues(oldValues, input, 0)
                 }
                 ractive.update()
@@ -1844,7 +1898,10 @@
                 }
                 ractive.update()
                 ractive.fire('patchResource',
-                  { keypath: grandParentOf(event.keypath) + '.values.' + (oldValues.length - 1), context: input.values[ oldValues.length - 1 ] },
+                  {
+                    keypath: grandParentOf(event.keypath) + '.values.' + (oldValues.length - 1),
+                    context: input.values[ oldValues.length - 1 ]
+                  },
                   input.predicate,
                   unPrefix(input.domain))
               },
@@ -2048,6 +2105,33 @@
         var loadResourceOfQuery = function (applicationData) {
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           var tab = query.openTab
+          var suggestionsAccepted = query.acceptedSuggestionsFrom
+          if (suggestionsAccepted) {
+            var suggestionParts = suggestionsAccepted.split(':')
+            var property = suggestionParts[ 0 ]
+            var value = suggestionParts[ 1 ]
+            var suggestValueInput = getSuggestedValuesSearchInput()
+            if (suggestValueInput) {
+              if (sessionStorage[ property ]) {
+                var suggestionData = JSON.parse(sessionStorage.suggestionData)
+                _.each(suggestionData, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.suggestedValues)
+                })
+                var acceptedData = JSON.parse(sessionStorage.acceptedData)
+                _.each(acceptedData, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.value)
+                })
+              }
+              suggestValueInput.values = [ {
+                current: {
+                  value: value
+                }
+              } ]
+              ractive.update()
+              ractive.set("primarySuggestionAccepted", true)
+              sessionStorage.clear()
+            }
+          }
           if (query.Publication) {
             fetchExistingResource(query.Publication)
               .then(loadWorkOfPublication)
@@ -2091,7 +2175,8 @@
       },
       getRactive: function () {
         return ractive
-      }
+      },
+      saveSuggestionData: saveSuggestionData
     }
     return Main
   }
