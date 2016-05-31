@@ -121,7 +121,7 @@ When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label
 end
 
 def do_select_value(selectable_parameter_label, value)
-  select = @browser.selects(:xpath => "//span[preceding-sibling::label/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']/select")[0]
+  select = @browser.selects(:xpath => "//div[preceding-sibling::label/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']/select")[0]
   select_id = select.attribute_value('data-automation-id')
   predicate = select_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
   domain = select_id.match(/^(Work|Publication|Person)_.*/).captures[0]
@@ -362,7 +362,7 @@ end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
   @context[:work_maintitle] = generateRandomString
-  input = @browser.text_field(:xpath => '//span[preceding-sibling::div/@data-uri-escaped-label = "' + URI::escape('Søk etter eksisterende verk') + '"]//input')
+  input = @browser.text_field(:xpath => '//div[preceding-sibling::div/@data-uri-escaped-label = "' + URI::escape('Søk etter eksisterende verk') + '"]//input')
   input.set(@context[:work_maintitle])
   input.send_keys :enter
 end

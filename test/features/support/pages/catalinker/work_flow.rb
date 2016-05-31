@@ -80,7 +80,7 @@ class WorkFlow < CatalinkerPage
   end
 
   def get_text_field_from_label(label)
-    @browser.text_field(:xpath => "//span[./preceding-sibling::div[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input[@type='search']")
+    @browser.text_field(:xpath => "//div[./preceding-sibling::div[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input[@type='search']")
   end
 
   def finish
