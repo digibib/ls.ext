@@ -42,7 +42,7 @@ class Reservation extends React.Component {
         <p>
           <FormattedMessage {...messages.messageSuccess} />
         </p>
-        <button onClick={this.props.modalActions.hideModal}>
+        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -58,7 +58,7 @@ class Reservation extends React.Component {
              ? <FormattedMessage {...messages[ this.props.message ]} />
              : <FormattedMessage {...messages.genericReservationError} />}
         </p>
-        <button onClick={this.props.modalActions.hideModal}>
+        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -82,11 +82,11 @@ class Reservation extends React.Component {
           </select>
           <br />
           <br />
-          <button data-automation-id='reserve_button' disabled={this.props.isRequestingReservation}
+          <button className='black-btn'  data-automation-id='reserve_button' disabled={this.props.isRequestingReservation}
                   onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>
-          <button disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
+          <button className='grey-btn'  disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
             <FormattedMessage {...messages.cancel} />
           </button>
         </form>

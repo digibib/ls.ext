@@ -30,7 +30,7 @@ class ExtendLoan extends React.Component {
         <p>
           <FormattedMessage {...messages.messageSuccess} />
         </p>
-        <button onClick={this.props.modalActions.hideModal}>
+        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -46,7 +46,7 @@ class ExtendLoan extends React.Component {
             ? <FormattedMessage {...messages[ this.props.message ]} />
             : <FormattedMessage {...messages.genericExtendLoanError} />}
         </p>
-        <button onClick={this.props.modalActions.hideModal}>
+        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -62,11 +62,11 @@ class ExtendLoan extends React.Component {
     return (
       <div data-automation-id='extend_loan_modal' className='default-modal'>
         <h2>{this.props.message}</h2>
-        <button disabled={this.props.isRequestingExtendLoan} onClick={this.handleExtendLoan}
+        <button className='black-btn' disabled={this.props.isRequestingExtendLoan} onClick={this.handleExtendLoan}
                 data-automation-id='confirm_button'>
           <FormattedMessage {...messages.extendLoan} />
         </button>
-        <button disabled={this.props.isRequestingExtendLoan} onClick={this.handleCancel}
+        <button className='grey-btn' disabled={this.props.isRequestingExtendLoan} onClick={this.handleCancel}
                 data-automation-id='cancel_button'>
           <FormattedMessage {...messages.cancel} />
         </button>
