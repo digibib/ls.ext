@@ -4,7 +4,7 @@
 {{else}}
 <select
         class="authorized" style="width: 100%;"
-        decorator="multi:{select2:[{{#!multiple}}'singleSelect'{{/multiple}}], detectChange:[], handleAddNewBySelect2:[]}"
+        decorator="multi:{select2:[{{#if !multiple || input.isSubInput}}'singleSelect'{{/if}}], detectChange:[], handleAddNewBySelect2:[]}"
         value="{{./current.value}}"
         data-automation-id="{{dataAutomationId}}"
         multiple {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
