@@ -1896,10 +1896,11 @@
                   setSingleValue(value, input, oldValues.length, { isNew: true })
                 }
                 ractive.update()
+                var valueIndex = oldValues ? oldValues.length - 1 : 0
                 ractive.fire('patchResource',
                   {
-                    keypath: grandParentOf(event.keypath) + '.values.' + (oldValues.length - 1),
-                    context: input.values[ oldValues.length - 1 ]
+                    keypath: grandParentOf(event.keypath) + '.values.' + (valueIndex),
+                    context: input.values[ valueIndex ]
                   },
                   input.predicate,
                   unPrefix(input.domain))
