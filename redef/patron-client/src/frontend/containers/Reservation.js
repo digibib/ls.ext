@@ -82,11 +82,11 @@ class Reservation extends React.Component {
           </select>
           <br />
           <br />
-          <button className='black-btn'  data-automation-id='reserve_button' disabled={this.props.isRequestingReservation}
+          <button className='black-btn' data-automation-id='reserve_button' disabled={this.props.isRequestingReservation}
                   onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>
-          <button className='grey-btn'  disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
+          <button className='grey-btn' disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
             <FormattedMessage {...messages.cancel} />
           </button>
         </form>
