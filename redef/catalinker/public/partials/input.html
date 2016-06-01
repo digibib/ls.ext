@@ -51,6 +51,9 @@
                             {{#with input.values[inputValueIndex]}}
                                 <span class="value sub-field" id="support_panel_base_{{uniqueId}}">
                                     {{>../../../input.type}}
+                                    {{#if ! nonEditable }}
+                                        {{>suggested-values}}
+                                    {{/if}}
                                 </span>
                                 {{#if ! nonEditable && !suggested}}
                                     <span class="support-panel"
@@ -95,8 +98,8 @@
                     </span>
                 </span>
                 {{#if suggested}}
-                <div class="pure-u-1-1">
-                   <span class="pure-u-4-6">({{suggested.source}})</span>
+                <div class="pure-u-1-1 suggestion-source-{{suggested.source}}">
+                   <span class="pure-u-4-6"></span>
                     <span class="pure-u-2-6 use-suggestion-button">
                         <a on-click="useSuggestion" class="pure-button pure-button-primary">Bruk forslag</a>
                     </span>

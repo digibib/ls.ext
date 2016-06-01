@@ -71,6 +71,12 @@
                 value: value
               })
             })
+            if (input.searchForValueSuggestions && input.searchForValueSuggestions.hitsFromPreferredSource) {
+              acceptedData.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.searchForValueSuggestions.hitsFromPreferredSource`,
+                value: input.searchForValueSuggestions.hitsFromPreferredSource
+              })
+            }
           })
         })
       })
@@ -156,7 +162,10 @@
         input.values[ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
           input.values[ index ].suggested = { source: options.source }
+        } else if (options.source) {
+          input.values[ index ].current.accepted = {source: options.source}
         }
+
         return valuesAsArray
       }
     }
@@ -221,6 +230,9 @@
           }
         } else {
           input.values[ index ].current.displayValue = values
+          if (options.source) {
+            input.values[ index ].current.accepted = {source: options.source}
+          }
         }
       }
 
@@ -393,7 +405,7 @@
                     var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
                     setIdValue(node.id, input, index)
                     if (!options.onlyValueSuggestions) {
-                      setDisplayValue(input, index, node)
+                      setDisplayValue(input, index, node, options)
                       if (!isBlankNodeUri(node.id)) {
                         input.values[ index ].deletable = true
                         if (input.isSubInput) {
@@ -419,7 +431,7 @@
                 }
               } else if (input.type === 'select-predefined-value') {
                 if (!options.onlyValueSuggestions) {
-                  setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset))
+                  setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                 } else {
                   var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
                   _.each(root.outAll(propertyName(predicate)), function (value) {
@@ -940,7 +952,7 @@
       })
     }
 
-    function externalSourceHitDescription (graph) {
+    function externalSourceHitDescription (graph, source) {
       var workGraph = graph.byType('Work')[ 0 ]
       var mainHitLine = []
       var detailsHitLine = []
@@ -961,7 +973,8 @@
       return {
         main: mainHitLine.join(' - '),
         details: detailsHitLine.join(' - '),
-        graph: graph
+        graph: graph,
+        source: source
       }
     }
 
@@ -1851,7 +1864,7 @@
                     _.each(response.data.hits, function (hit) {
                       var graph = ldGraph.parse(hit)
                       if (fromPreferredSource) {
-                        hitsFromPreferredSource.items.push(externalSourceHitDescription(graph))
+                        hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, source))
                       } else {
                         _.each([ 'Work', 'Publication' ], function (domain) {
                           updateInputsForResource({ data: {} }, null, {
@@ -1913,7 +1926,7 @@
 
                 _.each([ 'Work', 'Publication' ], function (domain) {
                   var node = event.context.graph.byType(domain)[ 0 ]
-                  updateInputsForResource({ data: {} }, null, { keepDocumentUrl: true }, node, domain)
+                  updateInputsForResource({ data: {} }, null, { keepDocumentUrl: true, source: event.context.source }, node, domain)
                   _.each(inputsWithValueSuggestionEnabled, function (input) {
                     if (input.suggestValueFrom.domain === domain) {
                       input.values = input.values || [ { current: {} } ]
@@ -1970,7 +1983,7 @@
 
           ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
             checkRequiredSubjectTypeSelection(keypath, newValue)
-          })
+          }, {init: false})
 
           ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
             checkRequiredSubInput(newValue, keypath)
@@ -2003,7 +2016,7 @@
                 ractive.set(keypath + '.error', 'ugyldig input')
               }
             }
-          })
+          }, {init: false})
 
           ractive.observe('targetUri.Work', function (newValue, oldValue, keypath) {
             _.each(allInputs(), function (input, inputIndex) {
@@ -2020,13 +2033,13 @@
               }
             })
             ractive.update()
-          })
+          }, {init: false})
 
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
             if (newValue === true) {
               updateBrowserLocationWithTab(keypath.split('.')[ 1 ])
             }
-          })
+          }, {init: false})
 
           function getParentFromKeypath (keypath, parentLevels) {
             parentLevels = parentLevels || 1

@@ -10,6 +10,21 @@ $mintgreen: #DCFC9F;
   padding-left: 24px;
 }
 
+@mixin source-logo-bb {
+  background-image: url('/images/logos/bb_large.jpg');
+  background-repeat: no-repeat;
+  background-size: auto 20px;
+  background-position-y: 0px;
+}
+
+@mixin source-logo-bs {
+  background-image: url('/images/logos/bs.png');
+  background-repeat: no-repeat;
+  background-size: auto 20px;
+  background-position-y: 0px;
+
+}
+
 .label-font {
   font-weight: bold;
 }
@@ -234,9 +249,23 @@ body {
           }
           div.suggested-values {
             margin-top: 10px;
-            div.suggested-value {
+            .suggested-value {
               clear: both;
-              margin-bottom: 15px;
+              margin-bottom: 12px;
+              &.suggestion-source-bs {
+                @include source-logo-bs;
+                background-position-x: 58%;
+                &.searchable {
+                  background-position-x: 87%;
+                }
+              }
+              &.suggestion-source-bb {
+                @include source-logo-bb;
+                background-position-x: 51%;
+                &.searchable {
+                  background-position-x: 86%;
+                }
+              }
               a:not(.support-panel-expander) {
                 display: inline-block;
                 float: right;
@@ -287,12 +316,25 @@ body {
           padding-left: 2em;
           cursor: pointer;
         }
-        .searchable:not(.deletable) {
-          //background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='22' font-size='20'>▶</text></svg>");
-          background-repeat: no-repeat;
-          background-position: right top;
+        //.searchable:not(.deletable) {
+        //  background-repeat: no-repeat;
+        //  background-position: right top;
+        //  padding-right: 1.5em;
+        //}
+        .searchable {
           padding-right: 1.5em;
         }
+        .suggestion-source-bs {
+          @include source-logo-bs;
+          background-position-x: 85%;
+          background-position-y: 5px;
+        }
+        .suggestion-source-bb {
+          @include source-logo-bb;
+          background-position-x: 85%;
+          background-position-y: 5px;
+        }
+
         .search-result {
           background: white;
           padding: 0.5em;
@@ -454,6 +496,14 @@ body {
               &:before {
                 content: "Rollen er knyttet til ";
               }
+            }
+            .suggestion-source-bs {
+              @include source-logo-bs;
+              background-position: left;
+            }
+            .suggestion-source-bb {
+              @include source-logo-bb;
+              background-position: left;
             }
             .use-suggestion-button {
               float: right;

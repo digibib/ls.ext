@@ -15,7 +15,7 @@ value="{{current.value}}" />
                 <div class="main-line">{{main}}</div>
                 <div class="details-line">{{details}}</div>
             </span>
-            <a  {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk denne</a>
+            <a  {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</a>
         </li>
         {{/each}}
     </ul>
