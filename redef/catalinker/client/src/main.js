@@ -980,7 +980,7 @@
     }
 
     function isBlankNodeUri (uri) {
-      return uri.startsWith('_:')
+      return uri && uri.startsWith('_:')
     }
 
     function getSuggestedValuesSearchInput () {
@@ -1863,7 +1863,8 @@
                 })
                 ractive.update()
                 var searchValue = event.context.current.value
-                _.each(searchExternalSourceInput.searchForValueSuggestions.sources, function (source) {
+                var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
+                _.each(sources, function (source) {
                   axios.get('/valueSuggestions/' + source + '/' + searchValue).then(function (response) {
                     var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
                     var hitsFromPreferredSource = { source: response.data.source, items: [] }
@@ -2125,6 +2126,10 @@
         var loadResourceOfQuery = function (applicationData) {
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           var tab = query.openTab
+          var externalSources = _.flatten([query.externalSource])
+          if (externalSources && externalSources.length > 0) {
+            applicationData.externalSources = externalSources
+          }
           var suggestionsAccepted = query.acceptedSuggestionsFrom
           if (suggestionsAccepted) {
             var suggestionParts = suggestionsAccepted.split(':')
@@ -2132,7 +2137,7 @@
             var value = suggestionParts[ 1 ]
             var suggestValueInput = getSuggestedValuesSearchInput()
             if (suggestValueInput) {
-              if (sessionStorage[ property ]) {
+              if (sessionStorage[ property ] && sessionStorage[ property ] === value) {
                 var suggestionData = JSON.parse(sessionStorage.suggestionData)
                 _.each(suggestionData, function (ractiveData) {
                   ractive.set(ractiveData.keypath, ractiveData.suggestedValues)
@@ -2141,6 +2146,7 @@
                 _.each(acceptedData, function (ractiveData) {
                   ractive.set(ractiveData.keypath, ractiveData.value)
                 })
+                ractive.set("primarySuggestionAccepted", true)
               }
               suggestValueInput.values = [ {
                 current: {
@@ -2148,7 +2154,6 @@
                 }
               } ]
               ractive.update()
-              ractive.set("primarySuggestionAccepted", true)
               sessionStorage.clear()
             }
           }
