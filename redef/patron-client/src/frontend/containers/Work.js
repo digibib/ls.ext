@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import { routerActions } from 'react-router-redux'
 import { Link } from 'react-router'
 
 import Contributors from '../components/Contributors'
@@ -14,11 +13,6 @@ import * as ReservationActions from '../actions/ReservationActions'
 import * as ParameterActions from '../actions/ParameterActions'
 
 class Work extends React.Component {
-  constructor (props) {
-    super(props)
-    this.handleBackClick = this.handleBackClick.bind(this)
-  }
-
   componentWillMount () {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
   }
@@ -53,11 +47,6 @@ class Work extends React.Component {
       )
     }
     return <span data-automation-id='work_date' />
-  }
-
-  handleBackClick (event) {
-    event.preventDefault()
-    this.props.routerActions.goBack()
   }
 
   render () {
@@ -147,8 +136,7 @@ Work.propTypes = {
   params: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
-  parameterActions: PropTypes.object.isRequired,
-  routerActions: PropTypes.object.isRequired
+  parameterActions: PropTypes.object.isRequired
 }
 
 const messages = defineMessages({
@@ -181,7 +169,6 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     resourceActions: bindActionCreators(ResourceActions, dispatch),
     reservationActions: bindActionCreators(ReservationActions, dispatch),
-    routerActions: bindActionCreators(routerActions, dispatch),
     parameterActions: bindActionCreators(ParameterActions, dispatch)
   }
 }

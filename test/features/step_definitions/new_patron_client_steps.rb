@@ -159,7 +159,8 @@ When(/^skal jeg se informasjonen min$/) do
 end
 
 When(/^låneren trykker bestill på en utgivelse$/) do
-  @site.PatronClientWorkPage.click_first_reserve
+  record_id = @site.PatronClientWorkPage.click_first_reserve
+  @context[:reserve_record_id] = record_id
 end
 
 When(/^skal jeg se reservasjonsvinduet$/) do
@@ -184,6 +185,48 @@ When(/^jeg velger riktig avdeling$/) do
   @browser.execute_script("document.querySelector('[data-automation-id=\"reservation_modal\"]').getElementsByTagName('option')[0].setAttribute('value', \"#{@context[:random_migrate_branchcode]}\")")
 end
 
+When(/^jeg går til Lån og reservasjoner på Min Side$/) do
+  @browser.goto(patron_client(:loansAndReservations))
+end
+
+When(/^skal jeg se reservasjonen$/) do
+  reservations = @site.PatronClientLoansAndReservationsPage.reservations
+  reservations.size.should eq 1
+  reservations.first.attribute_value('data-recordid').should eq @context[:reserve_record_id]
+end
+
 When(/^jeg trykker på personopplysninger$/) do
   @browser.element(data_automation_id: 'tabs').element(:text, 'Personopplysninger').click
+end
+
+When(/^skal jeg se at boka er klar til å hentes$/) do
+  pickups = @site.PatronClientLoansAndReservationsPage.pickups
+  pickups.size.should eq 1
+  pickups.first.attribute_value('data-recordid').should eq @context[:reserve_record_id]
+end
+
+When(/^det skal ikke være bøker klare til avhenging eller i historikk$/) do
+  @site.PatronClientLoansAndReservationsPage.loans.size.should eq 0
+  @site.PatronClientLoansAndReservationsPage.pickups.size.should eq 0
+end
+
+When(/^skal jeg se at boka er utlånt$/) do
+  loans = @site.PatronClientLoansAndReservationsPage.loans
+  loans.size.should eq 1
+  loans.first.attribute_value('data-recordid').should eq @context[:reserve_record_id]
+end
+
+When(/^jeg trykker på forleng lånet$/) do
+  @context[:reserve_due_date] = @browser.element(data_automation_id: 'UserLoans_loan_dueDate').text
+  @site.PatronClientLoansAndReservationsPage.loans.first.button.click
+  wait_for { @browser.element(data_automation_id: 'extend_loan_modal').present? }
+end
+
+When(/^jeg bekrefter at jeg skal forlenge lånet$/) do
+  @browser.element(data_automation_id: 'confirm_button').click
+  wait_for { not @browser.element(data_automation_id: 'extend_loan_modal').present? }
+end
+
+When(/^skal jeg se en dato lenger frem i tid$/) do
+  @browser.element(data_automation_id: 'UserLoans_loan_dueDate').text.eql?(@context[:reserve_due_date]).should eq true
 end

@@ -89,19 +89,25 @@ When(/^jeg registrerer utlån av boka$/) do
 end
 
 When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
-  book = @context[:books].find { |b| b.items.find { |i| i.barcode == "#{barcode}" } }
-  item = book[:items].find { |i| i.barcode == "#{barcode}" }
+  if @context[:books]
+    book = @context[:books].find { |b| b.items.find { |i| i.barcode == "#{barcode}" } }
+    item = book[:items].find { |i| i.barcode == "#{barcode}" }
+  end
 
   @site.Checkout.checkout(barcode)
 
-  @active[:book] = book
-  @active[:item] = item
+  if @context[:books]
+    @active[:book] = book
+    @active[:item] = item
+  end
   @cleanup.push("utlån #{barcode}" =>
                     lambda do
-                      @site.Home.visit.select_branch().checkin(book.items.first.barcode)
+                      @site.Home.visit.select_branch().checkin(@context[:first_available_exemplar_barcode] || book.items.first.barcode)
                     end
   )
 end
+
+
 
 When(/^boka blir registrert innlevert$/) do
   @site.Home.visit.select_branch().checkin(@active[:book].items.first.barcode)
@@ -613,4 +619,22 @@ end
 
 Then(/^vil låneren få epost om at boka skulle vært levert på forfallsdato$/) do
   pending # Write code here that turns the phrase above into concrete actions
+end
+
+
+When(/^jeg finner strekkoden for et ledig eksemplar$/) do
+  @context[:first_available_exemplar_barcode] = @site.BiblioDetail.visit(@context[:reserve_record_id]).find_first_available_exemplar
+end
+
+When(/^jeg er på den opprettede filialen$/) do
+  @site.SelectBranch.visit.select_branch(@context[:random_migrate_branchcode])
+end
+
+When(/^jeg leverer inn eksemplaret$/) do
+  @site.IntraPage.checkin(@context[:first_available_exemplar_barcode])
+  @site.IntraPage.confirm_checkin
+end
+
+When(/^jeg låner ut boka$/) do
+  step "materiale med strekkode \"#{@context[:first_available_exemplar_barcode]}\" lånes ut til \"#{@active[:patron].cardnumber}\""
 end

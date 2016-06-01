@@ -33,12 +33,12 @@ function setup (propOverrides) {
 describe('containers', () => {
   describe('Reservation', () => {
     it('should display success dialog', () => {
-      const { node } = setup({ isSuccess: true, message: 'test' })
+      const { node } = setup({ isSuccess: true, message: 'test', recordId: 'test_recordId' })
       expect(node.getAttribute('data-automation-id')).toEqual('reservation_success_modal')
     })
 
     it('should display error dialog', () => {
-      const { node } = setup({ isError: true, message: 'test' })
+      const { node } = setup({ isError: true, message: 'test', recordId: 'test_recordId' })
       expect(node.getAttribute('data-automation-id')).toEqual('reservation_error_modal')
     })
 

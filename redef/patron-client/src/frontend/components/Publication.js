@@ -32,7 +32,7 @@ class Publication extends React.Component {
       return (
         <button className={available ? 'black-btn' : 'grey-btn'} type='button'>
               <span data-automation-id={available ? 'publication_reserve' : 'publication_order'}>
-                <a onClick={this.handleReservationClick}>
+                <a onClick={this.handleReservationClick} data-automation-id={`recordId_${publication.recordId}`}>
                   {available
                     ? <FormattedMessage {...messages.reserve} />
                     : <FormattedMessage {...messages.order} />}

@@ -27,4 +27,22 @@ module.exports = (app) => {
       response.sendStatus(500)
     })
   })
+
+  app.put('/api/v1/holds', jsonParser, (request, response) => {
+    fetch(`http://koha:8081/api/v1/checkouts/${request.body.checkoutId}`, {
+      method: 'PUT',
+      headers: {
+        'Cookie': request.session.kohaSession
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        response.sendStatus(200)
+      } else {
+        throw Error('Could not extend reservation')
+      }
+    }).catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
 }

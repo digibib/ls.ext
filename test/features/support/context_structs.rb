@@ -101,6 +101,8 @@ Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch,
     self.branch     = Branch.new
     self.category   = PatronCategory.new
     self.debarred   = false
+    self.dateenrolled = Time.now.strftime('%F')
+    self.dateexpiry = (Time.now + (4*7*24*60*60)).strftime('%F')
   end
 end unless defined?(Patron)
 

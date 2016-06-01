@@ -10,7 +10,9 @@ describe('reducers', () => {
         reservation(undefined, {})
       ).toEqual({
         isRequestingReservation: false,
-        reservationError: false
+        reservationError: false,
+        isRequestingExtendLoan: false,
+        extendLoanError: false
       })
     })
 
@@ -19,7 +21,10 @@ describe('reducers', () => {
         reservation({}, {
           type: types.REQUEST_RESERVE_PUBLICATION
         })
-      ).toEqual({ isRequestingReservation: true, reservationError: false })
+      ).toEqual({
+        isRequestingReservation: true,
+        reservationError: false
+      })
     })
 
     it('should handle ' + types.RESERVE_PUBLICATION_SUCCESS, () => {
@@ -42,7 +47,47 @@ describe('reducers', () => {
           },
           error: true
         })
-      ).toEqual({ isRequestingReservation: false, reservationError: 'message' })
+      ).toEqual({
+        isRequestingReservation: false,
+        reservationError: 'message'
+      })
+    })
+
+    it('should handle ' + types.REQUEST_EXTEND_LOAN, () => {
+      expect(
+        reservation({}, {
+          type: types.REQUEST_EXTEND_LOAN
+        })
+      ).toEqual({
+        isRequestingExtendLoan: true,
+        extendLoanError: false
+      })
+    })
+
+    it('should handle ' + types.EXTEND_LOAN_SUCCESS, () => {
+      expect(
+        reservation({}, {
+          type: types.EXTEND_LOAN_SUCCESS
+        })
+      ).toEqual({
+        isRequestingExtendLoan: false,
+        extendLoanError: false
+      })
+    })
+
+    it('should handle ' + types.EXTEND_LOAN_FAILURE, () => {
+      expect(
+        reservation({}, {
+          type: types.EXTEND_LOAN_FAILURE,
+          payload: {
+            error: 'message'
+          },
+          error: true
+        })
+      ).toEqual({
+        isRequestingExtendLoan: false,
+        extendLoanError: 'message'
+      })
     })
   })
 })

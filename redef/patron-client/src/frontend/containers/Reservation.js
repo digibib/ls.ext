@@ -37,7 +37,7 @@ class Reservation extends React.Component {
 
   renderSuccess () {
     return (
-      <div data-automation-id='reservation_success_modal' className='reservation-modal'>
+      <div data-automation-id='reservation_success_modal' className='default-modal'>
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
           <FormattedMessage {...messages.messageSuccess} />
@@ -51,7 +51,7 @@ class Reservation extends React.Component {
 
   renderError () {
     return (
-      <div data-automation-id='reservation_error_modal' className='reservation-modal'>
+      <div data-automation-id='reservation_error_modal' className='default-modal'>
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>
           {messages[ this.props.message ]
@@ -72,7 +72,7 @@ class Reservation extends React.Component {
       return this.renderSuccess()
     }
     return (
-      <div data-automation-id='reservation_modal' className='reservation-modal'>
+      <div data-automation-id='reservation_modal' className='default-modal'>
         <form>
           <p>
             <FormattedMessage {...messages.choosePickupLocation} />
@@ -101,10 +101,10 @@ Reservation.propTypes = {
   reservationActions: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
   libraries: PropTypes.object.isRequired,
+  recordId: PropTypes.string.isRequired,
   isSuccess: PropTypes.bool,
   isError: PropTypes.bool,
-  message: PropTypes.string,
-  recordId: PropTypes.string
+  message: PropTypes.string
 }
 
 const messages = defineMessages({

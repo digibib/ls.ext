@@ -128,3 +128,18 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg velger riktig avdeling
     Og jeg trykker på bestill
     Så får låneren tilbakemelding om at boka er reservert
+    Når jeg går til Lån og reservasjoner på Min Side
+    Så skal jeg se reservasjonen
+    Og det skal ikke være bøker klare til avhenging eller i historikk
+    Når jeg finner strekkoden for et ledig eksemplar
+    Og jeg er på den opprettede filialen
+    Og jeg leverer inn eksemplaret
+    Når jeg går til Min Side
+    Så skal jeg se at boka er klar til å hentes
+    Når at jeg er på Kohas interne forside
+    Og jeg låner ut boka
+    Når jeg går til Min Side
+    Så skal jeg se at boka er utlånt
+    Når jeg trykker på forleng lånet
+    Og jeg bekrefter at jeg skal forlenge lånet
+    Så skal jeg se en dato lenger frem i tid

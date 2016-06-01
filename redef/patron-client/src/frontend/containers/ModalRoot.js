@@ -5,8 +5,10 @@ import Reservation from './Reservation'
 import Login from './Login'
 import Modal from 'react-modal'
 import * as ModalActions from '../actions/ModalActions'
+import ExtendLoan from './ExtendLoan'
 
 const MODAL_COMPONENTS = {
+  'EXTEND_LOAN': ExtendLoan,
   'LOGIN': Login,
   'RESERVATION': Reservation
 }
@@ -18,7 +20,8 @@ class ModalRoot extends React.Component {
     }
     const SpecificModal = MODAL_COMPONENTS[ this.props.modalType ]
     return (
-      <Modal isOpen onRequestClose={this.props.modalActions.hideModal} className='modal-content' overlayClassName='modal-overlay'>
+      <Modal isOpen onRequestClose={this.props.modalActions.hideModal} className='modal-content'
+             overlayClassName='modal-overlay'>
         <SpecificModal {...this.props.modalProps} />
       </Modal>
     )

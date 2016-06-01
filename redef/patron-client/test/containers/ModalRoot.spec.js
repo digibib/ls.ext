@@ -63,8 +63,13 @@ describe('containers', () => {
     })
 
     it('should display Reservation modal', () => {
-      const { node } = setup({ modalType: 'RESERVATION' })
+      const { node } = setup({ modalType: 'RESERVATION', modalProps: {recordId: 'test_recordId'} })
       expect(node.querySelectorAll("[data-automation-id='reservation_modal']").length).toBe(1)
+    })
+
+    it('should display ExtendLoan modal', () => {
+      const { node } = setup({ modalType: 'EXTEND_LOAN', modalProps: {checkoutId: 'test_checkoutId'} })
+      expect(node.querySelectorAll("[data-automation-id='extend_loan_modal']").length).toBe(1)
     })
   })
 })
