@@ -3,15 +3,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage, intlShape } from 'react-intl'
 import { routerActions } from 'react-router-redux'
+import MediaQuery from 'react-responsive'
 
+import * as ReservationActions from '../actions/ReservationActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
-import MediaQuery from 'react-responsive'
+import ExtendLoanButton from '../components/ExtendLoanButton'
 
 class UserLoans extends React.Component {
   renderPickups () {
     return this.props.loansAndReservations.pickups.map(item => (
-      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_pickup'>
+      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_pickup'
+               data-recordid={item.recordId}>
         <aside className='book-cover'><a className='book-cover-item' href=''></a>
         </aside>
         <article className='entry-content'>
@@ -57,7 +60,7 @@ class UserLoans extends React.Component {
             </tr>
             </thead>
             <tbody>{this.props.loansAndReservations.reservations.map(item => (
-              <tr key={item.recordId} data-automation-id='UserLoans_reservation'>
+              <tr key={item.recordId} data-automation-id='UserLoans_reservation' data-recordid={item.recordId}>
                 <td data-automation-id='UserLoans_reservation_title'>{item.title}</td>
                 <td data-automation-id='UserLoans_reservation_author'>{item.author}</td>
                 <td data-automation-id='UserLoans_reservation_orderedDate'>{item.orderedDate}</td>
@@ -73,7 +76,8 @@ class UserLoans extends React.Component {
 
         <MediaQuery query='(max-width: 991px)' values={{...this.props.mediaQueryValues}}>
           {this.props.loansAndReservations.reservations.map(item => (
-            <div className='reserved-entry-content' key={item.recordId} data-automation-id='UserLoans_reservation'>
+            <div className='reserved-entry-content' key={item.recordId} data-automation-id='UserLoans_reservation'
+                 data-recordid={item.recordId}>
               <div className='title'><FormattedMessage {...messages.title} /></div>
               <div className='content' data-automation-id='UserLoans_reservation_title'>{item.title}</div>
 
@@ -100,7 +104,8 @@ class UserLoans extends React.Component {
 
   renderLoans () {
     return this.props.loansAndReservations.loans.map(item => (
-      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_loan'>
+      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_loan'
+               data-recordid={item.recordId}>
         <aside className='book-cover'><a className='book-cover-item' href=''></a>
         </aside>
         <article className='entry-content'>
@@ -119,7 +124,7 @@ class UserLoans extends React.Component {
                 <h2 data-automation-id='UserLoans_loan_dueDate'>{item.dueDate}</h2>
               </div>
               <div>
-                <button className='black-btn'><FormattedMessage {...messages.extendLoan} /></button>
+                <ExtendLoanButton startExtendLoan={this.props.reservationActions.startExtendLoan} checkoutId={item.checkoutId} />
               </div>
             </div>
           </div>
@@ -187,6 +192,7 @@ UserLoans.propTypes = {
   location: PropTypes.object.isRequired,
   isRequestingLoansAndReservations: PropTypes.bool.isRequired,
   libraries: PropTypes.object.isRequired,
+  reservationActions: PropTypes.object.isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired
@@ -248,11 +254,6 @@ const messages = defineMessages({
     description: 'The label on the button to cancel a reservation',
     defaultMessage: 'Cancel reservation'
   },
-  extendLoan: {
-    id: 'UserLoans.extendLoan',
-    description: 'The label on the button to extend a loan',
-    defaultMessage: 'Extend loan'
-  },
   nameAndDate: {
     id: 'UserLoans.nameAndDate',
     description: 'The header over the current loans',
@@ -288,6 +289,7 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     profileActions: bindActionCreators(ProfileActions, dispatch),
+    reservationActions: bindActionCreators(ReservationActions, dispatch),
     routerActions: bindActionCreators(routerActions, dispatch)
   }
 }

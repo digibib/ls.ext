@@ -67,14 +67,16 @@ function setup (propOverrides) {
         title: 'title_1',
         author: 'author_1',
         publicationYear: 'publicationYear_1',
-        dueDate: 'dueDate_1'
+        dueDate: 'dueDate_1',
+        checkoutId: 'checkoutId_1'
       },
       {
         recordId: 'recordId_2',
         title: 'title_2',
         author: 'author_2',
         publicationYear: 'publicationYear_2',
-        dueDate: 'dueDate_2'
+        dueDate: 'dueDate_2',
+        checkoutId: 'checkoutId_2'
       }
     ]
   }

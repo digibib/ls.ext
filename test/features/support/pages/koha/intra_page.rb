@@ -32,6 +32,10 @@ class IntraPage < PageRoot
     # todo -- where do we end up?
   end
 
+  def confirm_checkin
+    @browser.button(class: 'approve').click
+  end
+
   def search_patrons(patron_query)
     @browser.a(:href => "#patron_search").click
     @browser.text_field(:id => "searchmember").set patron_query

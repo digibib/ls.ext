@@ -181,7 +181,8 @@ module.exports = (app) => {
         dueDate: loan.date_due,
         title: json.title,
         author: json.author,
-        publicationYear: json.publicationyear
+        publicationYear: json.publicationyear,
+        checkoutId: loan.issue_id
       }
     })
   }

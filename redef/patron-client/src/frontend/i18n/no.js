@@ -1,5 +1,13 @@
 /*eslint-disable max-len,quotes*/
 export default {
+  'ExtendLoan.button': 'Lukk',
+  'ExtendLoan.extendLoan': 'Forny lån',
+  'ExtendLoan.cancel': 'Avbryt',
+  'ExtendLoan.headerTextSuccess': 'Suksess!',
+  'ExtendLoan.messageSuccess': 'Lånetiden er nå forlenget.',
+  'ExtendLoan.headerTextError': 'Feilmelding',
+  'ExtendLoan.genericExtendLoanError': 'Noe gikk galt ved fornying av lån!',
+  'ExtendLoanButton.extendLoan': 'Forleng lånet',
   'Footer.contactUs': 'Kontakt oss',
   'Footer.openingHours': 'Åpningstider',
   'Footer.languageChoice': 'In English',
@@ -120,7 +128,6 @@ export default {
   'UserLoans.pickupNumber': 'Hentenummer',
   'UserLoans.dueDate': 'Lånefrist',
   'UserLoans.cancelReservation': 'Avbestill',
-  'UserLoans.extendLoan': 'Forleng lånet',
   'UserLoans.nameAndDate': 'Lån registrert på {name} - {date} - {time}',
   'UserLoans.reservations': 'Reserveringer',
   'UserLoans.renewAllLoans': 'Forny alle lån',

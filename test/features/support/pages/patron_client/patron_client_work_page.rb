@@ -42,6 +42,8 @@ class PatronClientWorkPage < PageRoot
 
   def click_first_reserve
     wait_retry { @browser.element(data_automation_id: 'publication_reserve').exists? }
-    @browser.element(data_automation_id: 'publication_reserve').a.click
+    link = @browser.element(data_automation_id: 'publication_reserve').a
+    link.click
+    link.attribute_value('data-automation-id').split('_').last #recordId
   end
 end
