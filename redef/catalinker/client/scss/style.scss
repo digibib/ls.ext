@@ -38,7 +38,24 @@ body {
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▼</text></svg>");
       background-repeat: no-repeat;
       background-position: 291px 10px;
+      ul {
+        li {
+          span.suggestion-source {
+            &.suggestion-source-bs {
+              padding: 0px 24px 2px 0;
+              @include source-logo-bs
+              background-size: auto 18px;
+            }
+            &.suggestion-source-bb {
+              padding: 0px 65px 2px 0;
+              @include source-logo-bb
+              background-size: auto 18px;
+            }
+          }
+        }
+      }
     }
+
   }
   .input-wrapper .select2-container {
     .select2-selection {

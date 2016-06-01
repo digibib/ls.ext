@@ -182,7 +182,8 @@
         }
         input.values[ index ].current = {
           value: value.value,
-          lang: value.lang
+          lang: value.lang,
+          accepted: options.source ?  {source: options.source} : undefined
         }
         input.values[ index ].uniqueId = _.uniqueId()
       }
@@ -1204,7 +1205,12 @@
         var initRactive = function (applicationData) {
           Ractive.decorators.select2.type.singleSelect = function (node) {
             return {
-              maximumSelectionLength: 1
+              maximumSelectionLength: 1,
+              templateSelection: function (selection) {
+                var source = $(selection.element.parentElement).attr("data-accepted-source")
+                var sourceSpan = source ? `<span class="suggestion-source suggestion-source-${source}"/>` : ''
+                return $(`<span>${selection.text}${sourceSpan}</span>`)
+              }
             }
           }
 
@@ -1885,8 +1891,9 @@
               },
               acceptSuggestedPredefinedValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
+                var source = $(event.node).attr('data-accepted-source')
                 if (!input.multiple) {
-                  setSingleValue(value, input, 0, { isNew: true })
+                  setSingleValue(value, input, 0, { isNew: true, source: source })
                 } else {
                   var oldValues = _.map(input.values[ 0 ].current.value, function (value) {
                     return { id: value }

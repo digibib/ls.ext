@@ -1,4 +1,7 @@
 <div class="suggested-value suggestion-source-{{source}}">
     <span class="pure-u-4-6">{{value.label}}</span>
-    <span class="pure-u-2-6"><a class="pure-button pure-button-primary suggested-value" on-click='acceptSuggestedPredefinedValue:{{this.value}}'>Bruk forslag</a></span>
+    <span class="pure-u-2-6">
+        <a class="pure-button pure-button-primary suggested-value"
+           on-click='acceptSuggestedPredefinedValue:{{this.value}}'
+           {{#if source}}data-accepted-source="{{source}}"{{/if}}>Bruk forslag</a></span>
 </div>
