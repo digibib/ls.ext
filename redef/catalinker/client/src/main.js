@@ -1317,7 +1317,6 @@
               var targetIsASelect2RemoveSelectionCross = $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
               if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross)) {
                 clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
-                clearMaintenanceInputs()
               }
             })
             return {
@@ -1479,7 +1478,7 @@
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, clearProperty) {
                 var input = ractive.get(grandParentOf(event.keypath))
-                if (!input.isSubInput && (event.keypath.indexOf('maintenanceInputs') == -1)) {
+                if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') == -1)) {
                   var inputValue = event.context
                   if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
                     return
@@ -2047,6 +2046,16 @@
             if (newValue === true) {
               updateBrowserLocationWithTab(keypath.split('.')[ 1 ])
             }
+          }, {init: false})
+
+          ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
+            var openInputForms = ractive.get('openInputForms') || []
+            if (newValue === true) {
+              openInputForms = _.union(openInputForms, [keypath])
+            } else {
+              openInputForms = _.without(openInputForms, keypath)
+            }
+            ractive.set("openInputForms", openInputForms)
           }, {init: false})
 
           function getParentFromKeypath (keypath, parentLevels) {
