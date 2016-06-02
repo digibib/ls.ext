@@ -224,9 +224,27 @@ end
 
 When(/^jeg bekrefter at jeg skal forlenge lånet$/) do
   @browser.element(data_automation_id: 'confirm_button').click
-  wait_for { not @browser.element(data_automation_id: 'extend_loan_modal').present? }
+  wait_for { @browser.element(data_automation_id: 'extend_loan_success_modal').present? }
+  @browser.element(data_automation_id: 'extend_loan_success_modal').button.click
+  wait_for { not @browser.element(data_automation_id: 'extend_loan_success_modal').present? }
 end
 
 When(/^skal jeg se en dato lenger frem i tid$/) do
-  @browser.element(data_automation_id: 'UserLoans_loan_dueDate').text.eql?(@context[:reserve_due_date]).should eq true
+  wait_for { Date.parse(@browser.element(data_automation_id: 'UserLoans_loan_dueDate').text) > Date.parse(@context[:reserve_due_date]) }
+end
+
+When(/^jeg trykker på avbestill reservasjon$/) do
+  @site.PatronClientLoansAndReservationsPage.reservations.first.button.click
+  wait_for { @browser.element(data_automation_id: 'cancel_reservation_modal').present? }
+end
+
+When(/^jeg bekrefter at jeg skal avbestille reservasjonen$/) do
+  @browser.element(data_automation_id: 'confirm_button').click
+  wait_for { @browser.element(data_automation_id: 'cancel_reservation_success_modal').present? }
+  @browser.element(data_automation_id: 'cancel_reservation_success_modal').button.click
+  wait_for { not @browser.element(data_automation_id: 'cancel_reservation_success_modal').present? }
+end
+
+When(/^skal jeg ikke ha noen reservasjoner$/) do
+  wait_for { @site.PatronClientLoansAndReservationsPage.reservations.size.eql? 0 }
 end

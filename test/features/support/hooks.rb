@@ -53,6 +53,7 @@ Before do |scenario|
     step "at jeg er logget inn som adminbruker"
     unless $random_migrate
       $random_migrate_branchcode = generateRandomString
+      step "at det er aktivert en standard sirkulasjonsregel"
       @site.Branches.visit.create(generateRandomString, $random_migrate_branchcode)
 
       migrator = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}")

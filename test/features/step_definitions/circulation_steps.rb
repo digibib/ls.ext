@@ -259,8 +259,8 @@ end
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
   steps %Q{
     Og at det finnes følgende sirkulasjonsregler
-      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds |
-      | *            | *        | 10          | 10          | 10              | 1            |
+      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds | renewalsallowed | renewalperiod |
+      | *            | *        | 10          | 10          | 10              | 1            | 2               | 10            |
     }
 end
 
@@ -323,6 +323,8 @@ Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
     row.text_field(:name => "maxissueqty").set "#{rule[:maxissueqty]}"
     row.text_field(:name => "issuelength").set "#{rule[:issuelength]}"
     row.text_field(:name => "reservesallowed").set "#{rule[:reservesallowed]}"
+    row.text_field(:name => "renewalsallowed").set "#{rule[:renewalsallowed]}"
+    row.text_field(:name => "renewalperiod").set "#{rule[:renewalperiod]}"
     row.select_list(:name => "onshelfholds").select_value "#{rule[:onshelfholds]}"
     row.button(:type => "submit").click
   end

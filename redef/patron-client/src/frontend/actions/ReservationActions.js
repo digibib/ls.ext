@@ -4,22 +4,32 @@ import { requireLoginBeforeAction } from './LoginActions'
 import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
+import * as ProfileActions from './ProfileActions'
 
 export function startReservation (recordId) {
   return requireLoginBeforeAction(showModal(ModalComponents.RESERVATION, { recordId: recordId }))
 }
 
-export function requestReservePublication () {
+export function requestReservePublication (recordId, branchCode) {
   return {
-    type: types.REQUEST_RESERVE_PUBLICATION
+    type: types.REQUEST_RESERVE_PUBLICATION,
+    payload: {
+      recordId: recordId,
+      branchCode: branchCode
+    }
   }
 }
 
 export function reservePublicationSuccess (recordId, branchCode) {
   return dispatch => {
     dispatch(showModal(ModalComponents.RESERVATION, { isSuccess: true, recordId: recordId, branchCode: branchCode }))
+    dispatch(ProfileActions.fetchProfileLoans())
     dispatch({
-      type: types.RESERVE_PUBLICATION_SUCCESS
+      type: types.RESERVE_PUBLICATION_SUCCESS,
+      payload: {
+        recordId: recordId,
+        branchCode: branchCode
+      }
     })
   }
 }
@@ -27,7 +37,13 @@ export function reservePublicationSuccess (recordId, branchCode) {
 export function reservePublicationFailure (error, recordId, branchCode) {
   console.log(error)
   return dispatch => {
-    dispatch(showModal(ModalComponents.RESERVATION, { isError: true, message: error.message, recordId: recordId, branchCode: branchCode }))
+    dispatch(showModal(ModalComponents.RESERVATION, {
+      isError: true,
+      message: error.message,
+      recordId: recordId,
+      branchCode: branchCode
+    }))
+    dispatch(ProfileActions.fetchProfileLoans())
     dispatch({
       type: types.RESERVE_PUBLICATION_FAILURE,
       payload: error,
@@ -39,7 +55,7 @@ export function reservePublicationFailure (error, recordId, branchCode) {
 export function reservePublication (recordId, branchCode) {
   const url = '/api/v1/holds'
   return dispatch => {
-    dispatch(requestReservePublication())
+    dispatch(requestReservePublication(recordId, branchCode))
     return fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
@@ -61,56 +77,68 @@ export function reservePublication (recordId, branchCode) {
   }
 }
 
-export function startExtendLoan (checkoutId) {
-  return requireLoginBeforeAction(showModal(ModalComponents.EXTEND_LOAN, { checkoutId: checkoutId }))
+export function startCancelReservation (reserveId) {
+  return requireLoginBeforeAction(showModal(ModalComponents.CANCEL_RESERVATION, { reserveId: reserveId }))
 }
 
-export function requestExtendLoan () {
+export function requestCancelReservation (reserveId) {
   return {
-    type: types.REQUEST_EXTEND_LOAN
+    type: types.REQUEST_CANCEL_RESERVATION,
+    payload: {
+      reserveId: reserveId
+    }
   }
 }
 
-export function extendLoanSuccess (checkoutId) {
+export function cancelReservationSuccess (reserveId) {
   return dispatch => {
-    dispatch(showModal(ModalComponents.EXTEND_LOAN, { isSuccess: true, checkoutId: checkoutId }))
+    dispatch(showModal(ModalComponents.CANCEL_RESERVATION, { isSuccess: true, reserveId: reserveId }))
+    dispatch(ProfileActions.fetchProfileLoans())
     dispatch({
-      type: types.EXTEND_LOAN_SUCCESS
+      type: types.CANCEL_RESERVATION_SUCCESS,
+      payload: {
+        reserveId: reserveId
+      }
     })
   }
 }
 
-export function extendLoanFailure (error, checkoutId) {
+export function cancelReservationFailure (error, reserveId) {
   console.log(error)
   return dispatch => {
-    dispatch(showModal(ModalComponents.EXTEND_LOAN, { isError: true, message: error.message, checkoutId: checkoutId }))
+    dispatch(showModal(ModalComponents.CANCEL_RESERVATION, {
+      isError: true,
+      message: error.message,
+      reserveId: reserveId
+    }))
+    dispatch(ProfileActions.fetchProfileLoans())
     dispatch({
-      type: types.EXTEND_LOAN_FAILURE,
+      type: types.CANCEL_RESERVATION_FAILURE,
       payload: error,
       error: true
     })
   }
 }
 
-export function extendLoan (checkoutId) {
+export function cancelReservation (reserveId) {
   const url = '/api/v1/holds'
   return dispatch => {
-    dispatch(requestExtendLoan())
+    dispatch(requestCancelReservation(reserveId))
     return fetch(url, {
-      method: 'PUT',
+      method: 'DELETE',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ checkoutId: checkoutId })
+      body: JSON.stringify({ reserveId: reserveId })
     })
       .then(response => {
         if (response.status === 200) {
-          dispatch(extendLoanSuccess(checkoutId))
+          dispatch(cancelReservationSuccess(reserveId))
         } else {
-          throw Error(Errors.reservation.GENERIC_EXTEND_LOAN_ERROR)
+          throw Error(Errors.reservation.GENERIC_CANCEL_RESERVATION_ERROR)
         }
       })
-      .catch(error => dispatch(extendLoanFailure(error, checkoutId)))
+      .catch(error => dispatch(cancelReservationFailure(error, reserveId)))
   }
 }

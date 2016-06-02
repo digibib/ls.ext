@@ -3,19 +3,19 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-import * as LoanActions from '../actions/LoanActions'
+import * as ReservationActions from '../actions/ReservationActions'
 import * as ModalActions from '../actions/ModalActions'
 
-class ExtendLoan extends React.Component {
+class CancelReservation extends React.Component {
   constructor (props) {
     super(props)
-    this.handleExtendLoan = this.handleExtendLoan.bind(this)
+    this.handleCancelReservation = this.handleCancelReservation.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
   }
 
-  handleExtendLoan (event) {
+  handleCancelReservation (event) {
     event.preventDefault()
-    this.props.loanActions.extendLoan(this.props.checkoutId)
+    this.props.reservationActions.cancelReservation(this.props.reserveId)
   }
 
   handleCancel (event) {
@@ -25,7 +25,7 @@ class ExtendLoan extends React.Component {
 
   renderSuccess () {
     return (
-      <div data-automation-id='extend_loan_success_modal' className='default-modal'>
+      <div data-automation-id='cancel_reservation_success_modal' className='default-modal'>
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
           <FormattedMessage {...messages.messageSuccess} />
@@ -39,12 +39,12 @@ class ExtendLoan extends React.Component {
 
   renderError () {
     return (
-      <div data-automation-id='extend_loan_error_modal' className='default-modal'>
+      <div data-automation-id='cancel_reservation_error_modal' className='default-modal'>
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>
           {messages[ this.props.message ]
             ? <FormattedMessage {...messages[ this.props.message ]} />
-            : <FormattedMessage {...messages.genericExtendLoanError} />}
+            : <FormattedMessage {...messages.genericCancelReservationError} />}
         </p>
         <button className='black-btn' onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
@@ -60,13 +60,13 @@ class ExtendLoan extends React.Component {
       return this.renderSuccess()
     }
     return (
-      <div data-automation-id='extend_loan_modal' className='default-modal'>
+      <div data-automation-id='cancel_reservation_modal' className='default-modal'>
         <h2>{this.props.message}</h2>
-        <button className='black-btn' disabled={this.props.isRequestingExtendLoan} onClick={this.handleExtendLoan}
+        <button className='black-btn' disabled={this.props.isRequestingCancelReservation} onClick={this.handleCancelReservation}
                 data-automation-id='confirm_button'>
-          <FormattedMessage {...messages.extendLoan} />
+          <FormattedMessage {...messages.cancelReservation} />
         </button>
-        <button className='grey-btn' disabled={this.props.isRequestingExtendLoan} onClick={this.handleCancel}
+        <button className='grey-btn' disabled={this.props.isRequestingCancelReservation} onClick={this.handleCancel}
                 data-automation-id='cancel_button'>
           <FormattedMessage {...messages.cancel} />
         </button>
@@ -77,48 +77,48 @@ class ExtendLoan extends React.Component {
 
 const messages = defineMessages({
   button: {
-    id: 'ExtendLoan.button',
+    id: 'CancelReservation.button',
     description: 'The button to exit the modal dialog',
     defaultMessage: 'Close'
   },
-  extendLoan: {
-    id: 'ExtendLoan.extendLoan',
-    description: 'The extend loan button text',
-    defaultMessage: 'Extend loan'
+  cancelReservation: {
+    id: 'CancelReservation.cancelReservation',
+    description: 'The cancel loan button text',
+    defaultMessage: 'Cancel loan'
   },
   cancel: {
-    id: 'ExtendLoan.cancel',
+    id: 'CancelReservation.cancel',
     description: 'The cancel button text',
     defaultMessage: 'Cancel'
   },
   headerTextSuccess: {
-    id: 'ExtendLoan.headerTextSuccess',
-    description: 'The header text for the extend loan success dialog',
+    id: 'CancelReservation.headerTextSuccess',
+    description: 'The header text for the cancel reservation success dialog',
     defaultMessage: 'Success!'
   },
   messageSuccess: {
-    id: 'ExtendLoan.messageSuccess',
-    description: 'The extend loan success message',
-    defaultMessage: 'The loan is now extended.'
+    id: 'CancelReservation.messageSuccess',
+    description: 'The cancel reservation success message',
+    defaultMessage: 'The reservation is now cancelled.'
   },
   headerTextError: {
-    id: 'ExtendLoan.headerTextError',
-    description: 'The header text for the extend loan error dialog',
+    id: 'CancelReservation.headerTextError',
+    description: 'The header text for the cancel reservation error dialog',
     defaultMessage: 'Failure'
   },
-  genericExtendLoanError: {
-    id: 'ExtendLoan.genericExtendLoanError',
-    description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
-    defaultMessage: 'Something went wrong when attempting to extend loan!'
+  genericCancelReservationError: {
+    id: 'CancelReservation.genericCancelReservationError',
+    description: 'A generic message when cancelling the reservation goes wrong, which can be caused by server errors, network problems etc.',
+    defaultMessage: 'Something went wrong when attempting to cancel the reservation!'
   }
 })
 
-ExtendLoan.propTypes = {
+CancelReservation.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
-  loanActions: PropTypes.object.isRequired,
-  checkoutId: PropTypes.string.isRequired,
-  isRequestingExtendLoan: PropTypes.bool.isRequired,
+  reservationActions: PropTypes.object.isRequired,
+  reserveId: PropTypes.string.isRequired,
+  isRequestingCancelReservation: PropTypes.bool.isRequired,
   message: PropTypes.string,
   isError: PropTypes.bool,
   isSuccess: PropTypes.bool,
@@ -128,7 +128,7 @@ ExtendLoan.propTypes = {
 function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
-    isRequestingExtendLoan: state.reservation.isRequestingExtendLoan,
+    isRequestingCancelReservation: state.reservation.isRequestingCancelReservation,
     loginError: state.application.loginError
   }
 }
@@ -136,15 +136,15 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    loanActions: bindActionCreators(LoanActions, dispatch),
+    reservationActions: bindActionCreators(ReservationActions, dispatch),
     modalActions: bindActionCreators(ModalActions, dispatch)
   }
 }
 
-const intlExtendLoan = injectIntl(ExtendLoan)
-export { intlExtendLoan as ExtendLoan }
+const intlCancelReservation = injectIntl(CancelReservation)
+export { intlCancelReservation as CancelReservation }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(intlExtendLoan)
+)(intlCancelReservation)
