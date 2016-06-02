@@ -30,6 +30,7 @@
   input {
     margin: rhythm(1);
     margin-left: 0;
+    width: 260px;
   }
 
 }
@@ -70,4 +71,36 @@
     @include semiBoldFont;
   }
 
+}
+
+#change-user-details {
+  margin-bottom: rhythm(2);
+
+  @include breakpoint($small){
+    @include span(3.5 of 12);
+
+    .address {
+      float: none;
+      width: 100%;
+
+      span {
+        display: block;
+
+        input {
+          width: 260px;
+          margin-right: 20px;
+        }
+
+      }
+
+      .display-inline {
+        display: inline-block;
+        margin-top: -20px;
+
+        input {
+          width: 120px;
+        }
+      }
+    }
+  }
 }

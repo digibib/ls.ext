@@ -47,10 +47,8 @@ class Login extends React.Component {
         <header>
           {this.renderError()}
         </header>
-
         <section className='login-modal'>
           <div data-automation-id='login_modal'>
-
             <form onSubmit={this.handleLogin}>
               <h1>Logg inn for å reservere</h1>
               <h2><FormattedMessage {...messages.username} /></h2>
@@ -63,12 +61,9 @@ class Login extends React.Component {
                       data-automation-id='login_button'>
                 <FormattedMessage {...messages.logIn} />
               </button>
-
               <h3>Er du ikke registrert? <a href='#' title='register'>Registrer deg</a></h3>
             </form>
-
           </div>
-
         </section>
       </div>
 

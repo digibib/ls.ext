@@ -77,19 +77,29 @@ class UserInfo extends React.Component {
             <h2><FormattedMessage {...messages.address} /></h2>
             <address typeof='schema:PostalAddress'>
               <span property='schema:streetAddress'>
-                <input data-automation-id='UserInfo_address' type='text'
+                <label htmlFor='streetaddress'>Adresse</label>
+                <input data-automation-id='UserInfo_address' id='streetaddress' type='text'
                        placeholder={this.props.intl.formatMessage(messages.address)} {...address} />
               </span><br />
-              <span property='schema:postalCode'>
-                <input data-automation-id='UserInfo_zipcode' type='number'
+
+              <span property='schema:postalCode' className='display-inline'>
+                <h2>Postnr.</h2>
+                <label htmlFor='postal'>Postnr.</label>
+                <input data-automation-id='UserInfo_zipcode' id='postal' type='number'
                        placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
               </span>
-              <span property='schema:addressLocality'>
-                <input data-automation-id='UserInfo_city' type='text'
+
+              <span property='schema:addressLocality' className='display-inline'>
+                <h2>Poststed</h2>
+                <label htmlFor='city'>Poststed</label>
+                <input data-automation-id='UserInfo_city' id='city' type='text'
                        placeholder={this.props.intl.formatMessage(messages.city)} {...city} />
               </span><br />
+
               <span property='schema:addressCountry'>
-                <input data-automation-id='UserInfo_country' type='text'
+                <h2>Land</h2>
+                <label htmlFor='country'>Land</label>
+                <input data-automation-id='UserInfo_country' id='country' type='text'
                        placeholder={this.props.intl.formatMessage(messages.country)} {...country} />
               </span><br />
             </address>
@@ -98,12 +108,20 @@ class UserInfo extends React.Component {
           <div className='col'>
             <div className='cell-phone'>
               <h2><FormattedMessage {...messages.mobile} /></h2>
-              <input data-automation-id='UserInfo_mobile' type='number'
+              <label htmlFor='cellphone'>Mobil</label>
+              <input data-automation-id='UserInfo_mobile' id='cellphone' type='number'
+                     placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
+
+            <div className='phone'>
+              <h2>Telefon</h2>
+              <label htmlFor='phone'>Land</label>
+              <input data-automation-id='UserInfo_mobile' id='phone' type='number'
                      placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
 
             <div className='email'>
               <h2><FormattedMessage {...messages.email} /></h2>
-              <input data-automation-id='UserInfo_email' type='email'
+              <label htmlFor='email'>E-post</label>
+              <input data-automation-id='UserInfo_email' id='email' type='email'
                      placeholder={this.props.intl.formatMessage(messages.email)} {...email} />
             </div>
           </div>

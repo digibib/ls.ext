@@ -27,5 +27,6 @@
 @import "atomic/molecules/molecules";
 @import "atomic/organisms/organisms";
 @import "atomic/pages/pages";
+@import "ie";
 
 @media print {@import "print";}
