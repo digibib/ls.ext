@@ -2,6 +2,10 @@ table {
   @include span(12 of 12);
   border-collapse: collapse;
 
+  thead {
+    @include border-bottom;
+  }
+
   th, tr {
     padding: rhythm(1);
   }

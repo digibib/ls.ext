@@ -144,7 +144,7 @@ class SearchResult extends React.Component {
           </div>
 
           <div>
-            <FormattedMessage {...messages.firstPublished} /> <span>{firstPublishedYear}</span>
+            <strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span>
           </div>
 
           <div>
