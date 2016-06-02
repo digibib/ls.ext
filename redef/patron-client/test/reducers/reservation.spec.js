@@ -12,7 +12,9 @@ describe('reducers', () => {
         isRequestingReservation: false,
         reservationError: false,
         isRequestingExtendLoan: false,
-        extendLoanError: false
+        extendLoanError: false,
+        isRequestingCancelReservation: false,
+        cancelReservationError: false
       })
     })
 

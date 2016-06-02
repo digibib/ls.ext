@@ -1,5 +1,12 @@
 /*eslint-disable max-len,quotes*/
 export default {
+  'CancelReservation.button': 'Lukk',
+  'CancelReservation.cancelReservation': 'Slett reservasjon',
+  'CancelReservation.cancel': 'Avbryt',
+  'CancelReservation.headerTextSuccess': 'Suksess!',
+  'CancelReservation.messageSuccess': 'Reservasjonen er nå slettet.',
+  'CancelReservation.headerTextError': 'Feilmelding',
+  'CancelReservation.genericCancelReservationError': 'Noe gikk galt ved sletting av reservasjon!',
   'ExtendLoan.button': 'Lukk',
   'ExtendLoan.extendLoan': 'Forny lån',
   'ExtendLoan.cancel': 'Avbryt',
@@ -7,7 +14,6 @@ export default {
   'ExtendLoan.messageSuccess': 'Lånetiden er nå forlenget.',
   'ExtendLoan.headerTextError': 'Feilmelding',
   'ExtendLoan.genericExtendLoanError': 'Noe gikk galt ved fornying av lån!',
-  'ExtendLoanButton.extendLoan': 'Forleng lånet',
   'Footer.contactUs': 'Kontakt oss',
   'Footer.openingHours': 'Åpningstider',
   'Footer.languageChoice': 'In English',
@@ -127,6 +133,7 @@ export default {
   'UserLoans.expiry': 'Hentefrist',
   'UserLoans.pickupNumber': 'Hentenummer',
   'UserLoans.dueDate': 'Lånefrist',
+  'UserLoans.extendLoan': 'Forleng lånet',
   'UserLoans.cancelReservation': 'Avbestill',
   'UserLoans.nameAndDate': 'Lån registrert på {name} - {date} - {time}',
   'UserLoans.reservations': 'Reserveringer',

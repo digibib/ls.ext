@@ -5,10 +5,11 @@ import { injectIntl, defineMessages, FormattedMessage, intlShape } from 'react-i
 import { routerActions } from 'react-router-redux'
 import MediaQuery from 'react-responsive'
 
+import * as LoanActions from '../actions/LoanActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
-import ExtendLoanButton from '../components/ExtendLoanButton'
+import ClickableButton from '../components/ClickableButton'
 
 class UserLoans extends React.Component {
   renderPickups () {
@@ -67,7 +68,10 @@ class UserLoans extends React.Component {
                 <td data-automation-id='UserLoans_reservation_waitingPeriod'>{item.waitingPeriod}</td>
                 <td data-automation-id='UserLoans_reservation_library'>{this.props.libraries[ item.branchCode ]}</td>
                 <td>
-                  <button className='black-btn'><FormattedMessage {...messages.cancelReservation} /></button>
+                  <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}
+                                   onClickArguments={[item.reserveId]}>
+                    <FormattedMessage {...messages.cancelReservation} />
+                  </ClickableButton>
                 </td>
               </tr>
             ))}</tbody>
@@ -124,7 +128,10 @@ class UserLoans extends React.Component {
                 <h2 data-automation-id='UserLoans_loan_dueDate'>{item.dueDate}</h2>
               </div>
               <div>
-                <ExtendLoanButton startExtendLoan={this.props.reservationActions.startExtendLoan} checkoutId={item.checkoutId} />
+                <ClickableButton onClickAction={this.props.loanActions.startExtendLoan}
+                                 onClickArguments={[item.checkoutId]}>
+                  <FormattedMessage {...messages.extendLoan} />
+                </ClickableButton>
               </div>
             </div>
           </div>
@@ -175,7 +182,7 @@ class UserLoans extends React.Component {
         <div className='registered'>
           <div className='title'><FormattedMessage {...messages.nameAndDate}
             values={{name: this.props.loansAndReservations.name, date: date, time: time}} />
-            <button className='black-btn'><FormattedMessage {...messages.renewAllLoans} /></button>
+            <button className='black-btn patron-placeholder'><FormattedMessage {...messages.renewAllLoans} /></button>
           </div>
           {this.renderLoans()}
         </div>
@@ -192,6 +199,7 @@ UserLoans.propTypes = {
   location: PropTypes.object.isRequired,
   isRequestingLoansAndReservations: PropTypes.bool.isRequired,
   libraries: PropTypes.object.isRequired,
+  loanActions: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
@@ -249,6 +257,11 @@ const messages = defineMessages({
     description: 'The due date of a reservation',
     defaultMessage: 'Due date'
   },
+  extendLoan: {
+    id: 'UserLoans.extendLoan',
+    description: 'The label on the button to extend a loan',
+    defaultMessage: 'Extend loan'
+  },
   cancelReservation: {
     id: 'UserLoans.cancelReservation',
     description: 'The label on the button to cancel a reservation',
@@ -289,6 +302,7 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     profileActions: bindActionCreators(ProfileActions, dispatch),
+    loanActions: bindActionCreators(LoanActions, dispatch),
     reservationActions: bindActionCreators(ReservationActions, dispatch),
     routerActions: bindActionCreators(routerActions, dispatch)
   }

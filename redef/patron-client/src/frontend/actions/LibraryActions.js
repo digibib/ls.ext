@@ -11,7 +11,7 @@ export function requestLibraries () {
 export function receiveLibraries (libraries) {
   const mappedLibraries = {}
   sortByField(libraries, 'branchname').forEach(library => {
-    mappedLibraries[library.branchcode] = library.branchname
+    mappedLibraries[ library.branchcode ] = library.branchname
   })
 
   return {

@@ -3,6 +3,7 @@ const path = require('path')
 
 module.exports = (app) => {
   require('./auth')(app)
+  require('./checkouts')(app)
   require('./holds')(app)
   require('./profile')(app)
   require('./libraries')(app)

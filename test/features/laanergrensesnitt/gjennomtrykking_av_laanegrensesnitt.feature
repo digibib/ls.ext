@@ -143,3 +143,23 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker på forleng lånet
     Og jeg bekrefter at jeg skal forlenge lånet
     Så skal jeg se en dato lenger frem i tid
+
+  Scenario: Låner reserverer og avbestiller reservasjon
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en låner med passord
+    Og brukeren har rettigheten "superlibrarian"
+    Og at jeg er i søkegrensesnittet
+    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
+    Og jeg trykker på første treff
+    Og låneren trykker bestill på en utgivelse
+    Så skal jeg se innloggingsvinduet
+    Når jeg logger inn
+    Så skal jeg se reservasjonsvinduet
+    Når jeg velger riktig avdeling
+    Og jeg trykker på bestill
+    Så får låneren tilbakemelding om at boka er reservert
+    Når jeg går til Lån og reservasjoner på Min Side
+    Så skal jeg se reservasjonen
+    Når jeg trykker på avbestill reservasjon
+    Og jeg bekrefter at jeg skal avbestille reservasjonen
+    Så skal jeg ikke ha noen reservasjoner

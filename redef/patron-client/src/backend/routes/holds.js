@@ -28,9 +28,9 @@ module.exports = (app) => {
     })
   })
 
-  app.put('/api/v1/holds', jsonParser, (request, response) => {
-    fetch(`http://koha:8081/api/v1/checkouts/${request.body.checkoutId}`, {
-      method: 'PUT',
+  app.delete('/api/v1/holds', jsonParser, (request, response) => {
+    fetch(`http://koha:8081/api/v1/holds/${request.body.reserveId}`, {
+      method: 'DELETE',
       headers: {
         'Cookie': request.session.kohaSession
       }
@@ -38,7 +38,7 @@ module.exports = (app) => {
       if (res.status === 200) {
         response.sendStatus(200)
       } else {
-        throw Error('Could not extend reservation')
+        throw Error('Could not delete reservation')
       }
     }).catch(error => {
       console.log(error)
