@@ -1,3 +1,7 @@
+When(/^debugger jeg$/) do
+  sleep(1)
+end
+
 When(/^at jeg har en bok$/) do
   #
 end
@@ -229,13 +233,13 @@ When(/^trykker jeg på knappen for legge til mer$/) do
   @browser.as(:xpath => "//div[./div[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//a[text()='Legg til ny']")[0].click
 end
 
-When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, role, association|
+When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, role_name, association|
   data_automation_id_agent = "Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0"
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{@context[:person_name]}']")
   name.should exist
   data_automation_id_role = "Contribution_http://#{ENV['HOST']}:8005/ontology#role_0"
-  role = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_role}']//span[normalize-space()='#{@context[:person_role]}']")
-  role.should exist
+  role_span = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_role}']//span[normalize-space()='#{@site.translate(role_name)}']")
+  role_span.should exist
 
   @browser.span(:xpath => "//span[@class='subject-type-association'][./span[text()='#{association}']]").should exist
 end
@@ -326,8 +330,11 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
 end
 
 When(/^får jeg ingen treff$/) do
-  sleep 1
-  @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/).should exist
+  empty_result_set_div = @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/)
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    empty_result_set_div.exists?
+  }
+  empty_result_set_div.should exist
 end
 
 When(/^jeg legger inn et nytt navn på startsida$/) do
@@ -412,4 +419,59 @@ end
 When(/^ser jeg at det er (ett|to) treff i resultatlisten$/) do |one_or_two|
   @browser.divs(:xpath => "//span[@class='support-panel']//div[@class='search-result-box']/div[@class='search-result-inner']/div[starts-with(@class, 'search-result')]").length.should eq one_or_two == 'ett' ? 1 : 2
   @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/).should_not exist
+end
+
+When(/^jeg legger inn et ISBN\-nummer på startsida og trykker tab$/) do
+  @site.WorkFlow.visit
+  isbn = rand(999).to_s + rand(999).to_s + rand(999).to_s
+  @context['isbn'] = isbn
+  isbn_text_field = @browser.text_field(:data_automation_id => 'searchValueSuggestions')
+  isbn_text_field.set isbn
+  isbn_text_field.send_keys :tab
+end
+
+When(/^Sjekker jeg at det vises treff fra preferert ekstern kilde$/) do
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    @browser.li(:xpath => '//div[@class="external-source-results"]//ul/li[@class="external-hit"]').present?
+  }
+end
+
+When(/^setter jeg markøren i forfatterfeltet og trykker enter$/) do
+  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
+  creator_name_field.send_keys :enter
+end
+
+When(/^setter jeg markøren i søkefelt for verk og trykker enter$/) do
+  search_work_as_main_resource = @browser.text_field(:data_automation_id => 'searchWorkAsMainResource')
+  search_work_as_main_resource.send_keys :enter
+end
+
+
+When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal knyttes til (.*) og velger det første forslaget$/) do |predicate, domain|
+  data_automation_id = "#{@site.translate(domain)}_http://#{ENV['HOST']}:8005/ontology##{@site.translate(predicate)}_0"
+  element_type = @browser.element(:data_automation_id => data_automation_id).tag_name
+  if element_type === 'span'
+    suggestion_list = @browser.div(:xpath => "//div[preceding-sibling::span/@data-automation-id='#{data_automation_id}'][@class='external-sources']")
+  else
+    suggestion_list = @browser.div(:xpath => "//div[descendant::span/input[@data-automation-id='#{data_automation_id}']]/span/div[@class='external-sources']")
+  end
+
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    suggestion_list.label(:class => 'unchecked').present?
+  }
+  suggestion_list_expander = suggestion_list.label(:class => 'unchecked')
+  suggestion_list_expander.click
+  support_panel_expander_link = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").a(:class => 'support-panel-expander')
+  use_suggestion_button = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").a(:class => 'suggested-value')
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    support_panel_expander_link.present? || use_suggestion_button.present?
+  }
+  support_panel_expander_link.click if support_panel_expander_link.exists?
+  use_suggestion_button.click if use_suggestion_button.exists?
+end
+
+
+When(/^sjekker jeg at verdien for "([^"]*)" (nå er|er) "([^"]*)"$/) do |parameter_label, nowness, expected_value|
+  input = @browser.inputs(:xpath => '//div[preceding-sibling::div/@data-uri-escaped-label = "' + URI::escape(parameter_label) + '"]//input')[0]
+  input.value.should eq expected_value
 end

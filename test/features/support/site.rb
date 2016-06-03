@@ -16,8 +16,12 @@ class Site
         'emne' => 'subject',
         'sjanger' => 'genre',
         'hovedtittel' => "mainTitle",
-        'undertittel' => "subtitle"
-    }[concept.downcase]
+        'undertittel' => "subtitle",
+        'bidrag' => 'Contribution',
+        'rolle' => 'role',
+        'utgivelsen' => 'Publication',
+        'utgivelsesår' => 'publicationYear'
+    }[concept.downcase] || concept
   end
 
   def initialize(browser)
