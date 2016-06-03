@@ -324,7 +324,7 @@ Given(/^at det finnes følgende sirkulasjonsregler$/) do |ruletable|
     row.text_field(:name => "issuelength").set "#{rule[:issuelength]}"
     row.text_field(:name => "reservesallowed").set "#{rule[:reservesallowed]}"
     row.select_list(:name => "onshelfholds").select_value "#{rule[:onshelfholds]}"
-    row.input(:class => "submit").click
+    row.button(:type => "submit").click
   end
 end
 
