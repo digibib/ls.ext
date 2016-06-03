@@ -7,6 +7,15 @@ var compileSass = require('express-compile-sass')
 var app = express()
 var requestProxy = require('express-request-proxy')
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function randomName () {
+  var name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+  return capitalizeFirstLetter(name)
+}
+
 if (app.get('env') === 'development') {
   var livereload = require('express-livereload')
   livereload(app, {})
@@ -626,10 +635,14 @@ app.get('/version', function (request, response) {
   response.json({ 'buildTag': process.env.BUILD_TAG, 'gitref': process.env.GITREF })
 })
 
-app.get('/valueSuggestions/bs/:isbn', function (request, response) {
+app.get('/valueSuggestions/demo_:source/:isbn', function (req, res, next) {
+  res.sendFile(req.params.source + '.json', { root: path.join(__dirname, '/../public/example_data') })
+})
+
+app.get('/valueSuggestions/random_:source/:isbn', function (request, response) {
     response.json(
       {
-        source: 'bs',
+        source: request.params.source,
         hits: [
           {
             "@context": {
@@ -685,7 +698,7 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                 "deichman:format": {
                   "@id": "http://data.deichman.no/format#Book"
                 },
-                "deichman:isbn": "82-05-25448-6",
+                "deichman:isbn": request.params.isbn,
                 "deichman:language": {
                   "@id": "http://lexvo.org/id/iso639-3/nob"
                 },
@@ -697,13 +710,13 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                     "@id": "http://data.deichman.no/literaryForm#fiction"
                   }
                 ],
-                "deichman:mainTitle": "Guddommelig sult",
+                "deichman:mainTitle": randomName(),
                 "deichman:publicationOf": {
                   "@id": "_:N788edbeea7104c42adda64d78d844440"
                 },
                 "deichman:publicationYear": {
                   "@type": "xsd:gYear",
-                  "@value": "1998"
+                  "@value": request.params.source === 'bs' ? "1998" : "2000"
                 },
                 "deichman:recordID": "202417",
                 "http://koha1.deichman.no:8005/raw#locationSignature": "Dra",
@@ -716,7 +729,7 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                 "http://migration.deichman.no/originalLanguage": {
                   "@id": "http://lexvo.org/id/iso639-3/hrv"
                 },
-                "http://migration.deichman.no/originalTitle": "Božanska glad",
+                "http://migration.deichman.no/originalTitle": randomName(),
                 "http://migration.deichman.no/publicationPlace": "[Oslo]",
                 "http://migration.deichman.no/publisher": "Gyldendal",
                 "http://migration.deichman.no/subjectAuthority": {
@@ -730,7 +743,7 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                   "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
                 },
                 "deichman:role": {
-                  "@id": "http://data.deichman.no/role#author"
+                  "@id": request.params.source === 'bs' ? "http://data.deichman.no/role#author" : "http://data.deichman.no/role#composer"
                 }
               },
               {
@@ -753,7 +766,7 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                 "@type": "deichman:Person",
                 "http://data.deichman.no/duo#bibliofilPersonId": "19887600",
                 "deichman:birthYear": "1949",
-                "deichman:name": "Korssjøen, Kirsten Johanne",
+                "deichman:name": randomName() + ', ' + randomName(),
                 "deichman:nationality": {
                   "@id": "http://data.deichman.no/nationality#n"
                 },
@@ -782,7 +795,7 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                     "@id": "http://data.deichman.no/literaryForm#novel"
                   }
                 ],
-                "deichman:mainTitle": "Božanska glad"
+                "deichman:mainTitle": randomName()
               },
               {
                 "@id": "http://data.deichman.no/format#Book",
@@ -804,7 +817,7 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                 "@type": "deichman:Person",
                 "http://data.deichman.no/duo#bibliofilPersonId": "29406800",
                 "deichman:birthYear": "1949",
-                "deichman:name": "Drakulić, Slavenka",
+                "deichman:name": randomName() + ', ' + randomName(),
                 "deichman:nationality": {
                   "@id": "http://data.deichman.no/nationality#kroat"
                 },
@@ -820,7 +833,7 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                   "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
                 },
                 "deichman:role": {
-                  "@id": "http://data.deichman.no/role#author"
+                  "@id": request.params.source === 'bs' ? "http://data.deichman.no/role#author" : "http://data.deichman.no/role#conductor"
                 }
               },
               {
@@ -834,118 +847,6 @@ app.get('/valueSuggestions/bs/:isbn', function (request, response) {
                 }
               }
             ]
-          }
-        ]
-      }
-    )
-  }
-)
-
-app.get('/valueSuggestions/bb/:isbn', function (request, response) {
-    response.json(
-      {
-        source: 'bb',
-        hits: [
-          {
-            "@graph": [
-              {
-                "@id": "_:b5",
-                "@type": "deichman:Contribution",
-                "deichman:agent": {
-                  "@id": "_:b6"
-                },
-                "deichman:role": {
-                  "@id": "http://data.deichman.no/role#illustrator"
-                }
-              },{
-                "@id": "_:b7",
-                "@type": "deichman:Contribution",
-                "deichman:agent": {
-                  "@id": "_:b8"
-                },
-                "deichman:role": {
-                  "@id": "http://data.deichman.no/role#editor"
-                }
-              },{
-                "@id": "_:b0",
-                "@type": [
-                  "deichman:MainEntry",
-                  "deichman:Contribution"
-                ],
-                "deichman:agent": {
-                  "@id": "_:b1"
-                },
-                "deichman:role": {
-                  "@id": "http://data.deichman.no/role#composer"
-                }
-              },
-              {
-                "@id": "_:b1",
-                "@type": "deichman:Person",
-                "deichman:birthYear": "1922",
-                "deichman:deathYear": "2012",
-                "deichman:name": "Hans Olsen",
-                "deichman:nationality": {
-                  "@id": "http://data.deichman.no/nationality#n"
-                }
-              },
-              {
-                "@id": "_:b6",
-                "@type": "deichman:Person",
-                "deichman:birthYear": "1922",
-                "deichman:deathYear": "2012",
-                "deichman:name": "Kåre Olsen",
-                "deichman:nationality": {
-                  "@id": "http://data.deichman.no/nationality#n"
-                }
-              },
-              {
-                "@id": "_:b8",
-                "@type": "deichman:Person",
-                "deichman:birthYear": "1922",
-                "deichman:deathYear": "2012",
-                "deichman:name": "Odny Olderbolle",
-                "deichman:nationality": {
-                  "@id": "http://data.deichman.no/nationality#n"
-                }
-              },
-              {
-                "@id": "_:b3",
-                "@type": "deichman:Work",
-                "deichman:contributor": {
-                  "@id": "_:b0"
-                },
-                "deichman:mainTitle": ["Hans Olsens Liv", "Guddommelig sult"],
-                "deichman:language": [
-                  {
-                    "@id": "http://lexvo.org/id/iso639-3/dan"
-                  },
-                  {
-                    "@id": "http://lexvo.org/id/iso639-3/swe"
-                  },
-                  {
-                    "@id": "http://lexvo.org/id/iso639-3/ger"
-                  }
-                ]
-              },
-              {
-                "@id": "_:b4",
-                "@type": "deichman:Publication",
-                "deichman:contributor": [
-                  {"@id": "_:b5"},
-                  {"@id": "_:b7"}
-                ],
-                "deichman:publicationOf": {
-                  "@id": "_:b3"
-                },
-                "deichman:publicationYear": "2015",
-                "deichman:mainTitle": "Hans Olsens Liv"
-              }
-            ],
-            "@context": {
-              "deichman": "http://192.168.50.12:8005/ontology#",
-              "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
-            }
           }
         ]
       }
