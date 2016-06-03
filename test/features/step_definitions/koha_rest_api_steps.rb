@@ -104,7 +104,7 @@ Given(/^at låneren har lånt en bok$/) do
 end
 
 When(/^jeg sjekker lånerens aktive lån via API$/) do
-  res = KohaRESTAPI::Checkouts.new(@browser,@context,@active).list(@active[:patron].borrowernumber)
+  res = KohaRESTAPI::Checkouts.new(@browser,@context,@active).list(@context[:patron]["borrowernumber"])
   @context[:checkouts] = JSON.parse(res)
 end
 
