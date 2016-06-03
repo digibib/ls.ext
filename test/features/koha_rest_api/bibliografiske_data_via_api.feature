@@ -15,3 +15,8 @@ Egenskap: Bibliografiske poster via API
     Når jeg sjekker lånerens aktive lån via API
     Og jeg slår opp eksemplaret via API
     Så vil systemet vise detaljert eksemplarinformasjon
+
+  Scenario: Legg til utgivelse via Kohas API
+    Gitt at det finnes informasjon om en bok med eksemplarer
+    Når jeg legger inn boka via Kohas API
+    Så kan jeg følge lenken og finne den bibliografiske posten
