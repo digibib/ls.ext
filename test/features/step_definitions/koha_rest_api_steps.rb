@@ -165,3 +165,50 @@ Then(/^gir APIet tilbakemelding om at de nye meldingspreferansene er registrert$
   new_prefs["item_due"]["transports"].should include("email", "sms")
   new_prefs["advance_notice"]["days_in_advance"].should == "5"
 end
+
+Given(/^at det finnes informasjon om en bok med eksemplarer$/) do
+  step "at det finnes en avdeling"       unless @active[:branch]
+  step "jeg legger til en materialtype"  unless @active[:itemtype]
+
+  book = Book.new
+  book.addItem # generates unique item with barcode
+  book.items.first.branch   = @active[:branch]
+  book.items.first.itemtype = @active[:itemtype]
+  @active[:book] = book
+end
+
+When(/^jeg legger inn boka via Kohas API$/) do
+  marcxml = File.read("features/upload-files/Fargelegg byen!.marc21", :encoding => 'UTF-8')
+  marcxml = marcxml.gsub(/\{\{ book_title \}\}/, @active[:book].title)
+  marcxml = marcxml.gsub(/\{\{ branchcode \}\}/, @active[:branch].code)                 # must be existing branchcode
+  marcxml = marcxml.gsub(/\{\{ item_type_code \}\}/, @active[:itemtype].code)           # must be existing item type
+  marcxml = marcxml.gsub(/\{\{ item_barcode \}\}/, @active[:book].items.first.barcode)  # must be unique barcode
+
+  res = KohaRESTAPI::Biblios.new(@browser,@context,@active).add(marcxml)
+  json = JSON.parse(res.body)
+  @context[:biblio_api_response] = {
+    url: res["Location"],
+    biblionumber: json["biblionumber"],
+    items: json["items"]
+  }
+
+  @active[:book].biblionumber = json["biblionumber"]
+  @cleanup.push( "biblio #{@context[:biblio_api_response][:biblionumber]}" =>
+    lambda do
+      KohaRESTAPI::Biblios.new(@browser,@context,@active).delete(@context[:biblio_api_response][:biblionumber])
+    end
+  )
+end
+
+Then(/^kan jeg følge lenken og finne den bibliografiske posten$/) do
+  headers = {
+    'Cookie' => @context[:koha_rest_api_cookie],
+    'Content-Type' => 'application/json'
+  }
+  http = Net::HTTP.new(host, 8081)
+  uri = URI(@context[:biblio_api_response][:url])
+  res = http.get(uri, headers)
+  expect(res.code).to eq("200"), "got unexpected #{res.code} when fetching biblio.\nResponse body: #{res.body}"
+  json = JSON.parse(res.body)
+  json["biblionumber"].should eq(@context[:biblio_api_response][:biblionumber])
+end
