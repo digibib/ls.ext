@@ -14,14 +14,12 @@ $mintgreen: #DCFC9F;
   background-image: url('/images/logos/bb_large.jpg');
   background-repeat: no-repeat;
   background-size: auto 20px;
-  background-position-y: 0px;
 }
 
 @mixin source-logo-bs {
   background-image: url('/images/logos/bs.png');
   background-repeat: no-repeat;
   background-size: auto 20px;
-  background-position-y: 0px;
 
 }
 
@@ -43,13 +41,15 @@ body {
           span.suggestion-source {
             &.suggestion-source-bs {
               padding: 0px 24px 2px 0;
-              @include source-logo-bs
-              background-size: auto 18px;
+              @include source-logo-bs;
+              background-size: auto 16px;
+              background-position: 6px 0;
             }
             &.suggestion-source-bb {
               padding: 0px 65px 2px 0;
-              @include source-logo-bb
-              background-size: auto 18px;
+              @include source-logo-bb;
+              background-size: auto 16px;
+              background-position: 6px 0;
             }
           }
         }
@@ -271,16 +271,16 @@ body {
               margin-bottom: 12px;
               &.suggestion-source-bs {
                 @include source-logo-bs;
-                background-position-x: 58%;
+                background-position: 58%;
                 &.searchable {
-                  background-position-x: 87%;
+                  background-position: 87%;
                 }
               }
               &.suggestion-source-bb {
                 @include source-logo-bb;
-                background-position-x: 51%;
+                background-position: 51%;
                 &.searchable {
-                  background-position-x: 86%;
+                  background-position: 86%;
                 }
               }
               a:not(.support-panel-expander) {
@@ -343,13 +343,11 @@ body {
         }
         .suggestion-source-bs {
           @include source-logo-bs;
-          background-position-x: 85%;
-          background-position-y: 5px;
+          background-position: 85% 5px;
         }
         .suggestion-source-bb {
           @include source-logo-bb;
-          background-position-x: 85%;
-          background-position-y: 5px;
+          background-position: 85% 5px;
         }
 
         .search-result {
