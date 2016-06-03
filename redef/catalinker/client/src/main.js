@@ -96,7 +96,7 @@
         })
       })
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
-        if (!ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs')) {
+        if (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs')) {
           if (input.widgetOptions) {
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
@@ -163,9 +163,8 @@
         if (options.onlyValueSuggestions) {
           input.values[ index ].suggested = { source: options.source }
         } else if (options.source) {
-          input.values[ index ].current.accepted = {source: options.source}
+          input.values[ index ].current.accepted = { source: options.source }
         }
-
         return valuesAsArray
       }
     }
@@ -173,19 +172,18 @@
     function setSingleValue (value, input, index, options) {
       options = options || {}
       if (value) {
-        if (!input.values[ index ]) {
-          input.values[ index ] = {}
+        input.values[ index ] = {
+          old: {
+            value: options.isNew ? null : value.value,
+            lang: options.isNew ? null : value.lang
+          },
+          current: {
+            value: value.value,
+            lang: value.lang,
+            accepted: options.source ? { source: options.source } : undefined
+          },
+          uniqueId: _.uniqueId()
         }
-        input.values[ index ].old = {
-          value: options.isNew ? null : value.value,
-          lang: options.isNew ? null : value.lang
-        }
-        input.values[ index ].current = {
-          value: value.value,
-          lang: value.lang,
-          accepted: options.source ?  {source: options.source} : undefined
-        }
-        input.values[ index ].uniqueId = _.uniqueId()
       }
     }
 
@@ -232,7 +230,7 @@
         } else {
           input.values[ index ].current.displayValue = values
           if (options.source) {
-            input.values[ index ].current.accepted = {source: options.source}
+            input.values[ index ].current.accepted = { source: options.source }
           }
         }
       }
@@ -958,7 +956,7 @@
       var mainHitLine = []
       var detailsHitLine = []
       var publicationGraph = graph.byType('Publication')[ 0 ]
-      mainHitLine = _.map(workGraph.getAll('mainTitle'), function (prop) {
+      mainHitLine = _.map(publicationGraph.getAll('mainTitle'), function (prop) {
         return prop.value
       })
       detailsHitLine = _.map(publicationGraph.getAll('publicationYear'), function (prop) {
@@ -1366,7 +1364,7 @@
               readyToAddRole: function (node) {
                 return true
               },
-              spy: function (node) {
+              spy: function (node, nmode2) {
                 console.log('spy: ' + node.keypath)
               },
               predefinedLabelValue: Main.predefinedLabelValue,
@@ -1870,7 +1868,7 @@
                     _.each(response.data.hits, function (hit) {
                       var graph = ldGraph.parse(hit)
                       if (fromPreferredSource) {
-                        hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, source))
+                        hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
                       } else {
                         _.each([ 'Work', 'Publication' ], function (domain) {
                           updateInputsForResource({ data: {} }, null, {
@@ -1893,13 +1891,13 @@
                 var input = ractive.get(grandParentOf(event.keypath))
                 var source = $(event.node).attr('data-accepted-source')
                 if (!input.multiple) {
-                  setSingleValue(value, input, 0, { isNew: true, source: source })
+                  setMultiValues([{ id: value.value }], input, 0, {source: source})
                 } else {
                   var oldValues = _.map(input.values[ 0 ].current.value, function (value) {
                     return { id: value }
                   })
                   oldValues.push({ id: value.value })
-                  setMultiValues(oldValues, input, 0)
+                  setMultiValues(oldValues, input, 0, {source: source})
                 }
                 ractive.update()
                 ractive.fire('patchResource',
@@ -1933,7 +1931,10 @@
 
                 _.each([ 'Work', 'Publication' ], function (domain) {
                   var node = event.context.graph.byType(domain)[ 0 ]
-                  updateInputsForResource({ data: {} }, null, { keepDocumentUrl: true, source: event.context.source }, node, domain)
+                  updateInputsForResource({ data: {} }, null, {
+                    keepDocumentUrl: true,
+                    source: event.context.source
+                  }, node, domain)
                   _.each(inputsWithValueSuggestionEnabled, function (input) {
                     if (input.suggestValueFrom.domain === domain) {
                       input.values = input.values || [ { current: {} } ]
@@ -1990,7 +1991,7 @@
 
           ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
             checkRequiredSubjectTypeSelection(keypath, newValue)
-          }, {init: false})
+          }, { init: false })
 
           ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
             checkRequiredSubInput(newValue, keypath)
@@ -2023,7 +2024,7 @@
                 ractive.set(keypath + '.error', 'ugyldig input')
               }
             }
-          }, {init: false})
+          }, { init: false })
 
           ractive.observe('targetUri.Work', function (newValue, oldValue, keypath) {
             _.each(allInputs(), function (input, inputIndex) {
@@ -2040,23 +2041,23 @@
               }
             })
             ractive.update()
-          }, {init: false})
+          }, { init: false })
 
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
             if (newValue === true) {
               updateBrowserLocationWithTab(keypath.split('.')[ 1 ])
             }
-          }, {init: false})
+          }, { init: false })
 
           ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
             var openInputForms = ractive.get('openInputForms') || []
             if (newValue === true) {
-              openInputForms = _.union(openInputForms, [keypath])
+              openInputForms = _.union(openInputForms, [ keypath ])
             } else {
               openInputForms = _.without(openInputForms, keypath)
             }
             ractive.set("openInputForms", openInputForms)
-          }, {init: false})
+          }, { init: false })
 
           function getParentFromKeypath (keypath, parentLevels) {
             parentLevels = parentLevels || 1
@@ -2135,7 +2136,7 @@
         var loadResourceOfQuery = function (applicationData) {
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           var tab = query.openTab
-          var externalSources = _.flatten([query.externalSource])
+          var externalSources = _.compact(_.flatten([ query.externalSource ]))
           if (externalSources && externalSources.length > 0) {
             applicationData.externalSources = externalSources
           }
