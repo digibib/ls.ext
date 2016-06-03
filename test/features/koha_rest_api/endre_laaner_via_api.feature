@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Endre låner via API
   Som flyktig bruker
   For å kunne fortsette å bruke bibliotekets tjenester
