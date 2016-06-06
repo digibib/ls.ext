@@ -170,8 +170,8 @@
       if (value) {
         input.values[ index ] = {
           old: {
-            value: options.isNew ? null : value.value,
-            lang: options.isNew ? null : value.lang
+            value: options.isNew ? null : (input.values[index] || {current: {value: undefined}}).current.value,
+            lang: options.isNew ? null : (input.values[index] || {current: {value: undefined}}).current.lang
           },
           current: {
             value: value.value,
@@ -1881,7 +1881,7 @@
               acceptSuggestedLiteralValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
                 if (!input.multiple) {
-                  setSingleValue(value, input, 0, { isNew: true })
+                  setSingleValue(value, input, 0)
                 } else {
                   var oldValues = input.values
                   setSingleValue(value, input, oldValues.length, { isNew: true })

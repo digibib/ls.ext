@@ -94,7 +94,7 @@ module.exports = (app) => {
                   'http://migration.deichman.no/creator': {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
-                  'http://migration.deichman.no/numberOfPages': '207 s.',
+                  'http://migration.deichman.no/numberOfPages': request.params.source === 'bs' ? '207 s.' : '208',
                   'http://migration.deichman.no/originalLanguage': {
                     '@id': 'http://lexvo.org/id/iso639-3/hrv'
                   },

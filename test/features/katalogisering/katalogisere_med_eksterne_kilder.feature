@@ -29,4 +29,6 @@ Egenskap: katalogisere med eksterne kilder
     Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
     Så åpner jeg listen med eksterne forslag fra andre kilder for utgivelsesår som skal knyttes til utgivelsen og velger det første forslaget
     Så sjekker jeg at verdien for "Utgivelsesår" nå er "2000"
-    Så debugger jeg
+    Så sjekker jeg at verdien for "Sidetall" er "207 s."
+    Så åpner jeg listen med eksterne forslag fra andre kilder for sidetall som skal knyttes til utgivelsen og velger det første forslaget
+    Så sjekker jeg at verdien for "Sidetall" nå er "208"

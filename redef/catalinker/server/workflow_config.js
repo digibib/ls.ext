@@ -283,7 +283,7 @@ module.exports = (app) => {
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'edition' },
             { rdfProperty: 'publicationYear' },
-            { rdfProperty: 'numberOfPages', multiple: true },
+            { rdfProperty: 'numberOfPages'},
             { rdfProperty: 'illustrativeMatter' },
             {
               rdfProperty: 'isbn',

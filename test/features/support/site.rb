@@ -20,7 +20,8 @@ class Site
         'bidrag' => 'Contribution',
         'rolle' => 'role',
         'utgivelsen' => 'Publication',
-        'utgivelsesår' => 'publicationYear'
+        'utgivelsesår' => 'publicationYear',
+        'sidetall' => 'numberOfPages'
     }[concept.downcase] || concept
   end
 
