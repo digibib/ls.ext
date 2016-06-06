@@ -32,7 +32,7 @@ public class KohaAdapterImplTest {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addPostNewBiblioExpectation("26");
 
-        String biblioId = kohaAdapter.getNewBiblio();
+        String biblioId = kohaAdapter.createNewBiblio();
         assertEquals("26", biblioId);
     }
 

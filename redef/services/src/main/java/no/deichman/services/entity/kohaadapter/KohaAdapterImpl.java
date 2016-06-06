@@ -123,12 +123,12 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     @Override
-    public String getNewBiblio() {
-        return getNewBiblioWithMarcRecord(new MarcRecord()); // empty argument list
+    public String createNewBiblio() {
+        return createNewBiblioWithMarcRecord(new MarcRecord()); // empty argument list
     }
 
     @Override
-    public String getNewBiblioWithMarcRecord(MarcRecord marcRecord) {
+    public String createNewBiblioWithMarcRecord(MarcRecord marcRecord) {
         // TODO Handle login in a filter / using template pattern
         if (sessionCookie == null) {
             login();

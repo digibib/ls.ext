@@ -11,9 +11,9 @@ import javax.ws.rs.core.Response;
 public interface KohaAdapter {
     Model getBiblio(String biblioNo);
 
-    String getNewBiblio();
+    String createNewBiblio();
 
-    String getNewBiblioWithMarcRecord(MarcRecord marcRecord);
+    String createNewBiblioWithMarcRecord(MarcRecord marcRecord);
 
     String retrieveMarcXml(String recordId);
 
