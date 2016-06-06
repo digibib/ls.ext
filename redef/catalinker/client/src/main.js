@@ -23,6 +23,8 @@
 
     Ractive.DEBUG = false
     var ractive
+    var supportPanelLeftEdge
+    var supportPanelWidth
 
     var deepClone = function (object) {
       var clone = _.clone(object)
@@ -1292,12 +1294,13 @@
           }
           var clickOutsideSupportPanelDetector = function (node) {
             $(document).click(function (event) {
-              var targetIsInsideSupportPanel = $(event.target).closest('span.support-panel').length
-              var targetIsSupportPanel = $(event.target).is('span.support-panel')
-              var targetIsASupportPanelButton = $(event.target).is('.support-panel-button')
+              var outsideX = event.pageX < supportPanelLeftEdge || event.pageX > (supportPanelLeftEdge + supportPanelWidth)
+              var targetIsInsideSupportPanel = !outsideX && $(event.target).closest('span.support-panel').length
+              var targetIsSupportPanel = !outsideX && $(event.target).is('span.support-panel')
+              var targetIsASupportPanelButton = !outsideX && $(event.target).is('.support-panel-button')
 
-              var targetIsARadioButtonThatWasOffButIsOnNow = $(event.target).is('input[type=\'radio\'][value=\'on\']')
-              var targetIsASelect2RemoveSelectionCross = $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
+              var targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.target).is('input[type=\'radio\'][value=\'on\']')
+              var targetIsASelect2RemoveSelectionCross = !outsideX && $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
               if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross)) {
                 clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
               }
@@ -1407,20 +1410,6 @@
                 return _.find(input.subInputs[ 0 ].input.values, function (value) {
                   return value.suggested && value.suggested !== null
                 })
-              },
-              targetResources: {
-                Work: {
-                  uri: '',
-                  pendingProperties: []
-                },
-                Person: {
-                  uri: '',
-                  pendingProperties: []
-                },
-                Publication: {
-                  uri: '',
-                  pendingProperties: []
-                }
               }
             },
             decorators: {
@@ -2181,8 +2170,8 @@
           })
       },
       repositionSupportPanelsHorizontally: function () {
-        var supportPanelLeftEdge = $('#right-dummy-panel').position().left
-        var supportPanelWidth = $('#right-dummy-panel').width()
+        supportPanelLeftEdge = $('#right-dummy-panel').position().left
+        supportPanelWidth = $('#right-dummy-panel').width()
 
         $('.support-panel').each(function (index, panel) {
           $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
