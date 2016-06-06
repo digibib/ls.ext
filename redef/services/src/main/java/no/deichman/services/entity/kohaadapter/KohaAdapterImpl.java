@@ -141,7 +141,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
             response = requestNewRecord(marcRecord);
         }
         if (OK.getStatusCode() != response.getStatus()) {
-            throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
+            throw new RuntimeException("Request new bibilo failed with HTTP status: " + response.getStatusInfo());
         }
 
         String body = response.readEntity(String.class);
