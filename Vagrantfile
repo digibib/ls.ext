@@ -19,6 +19,7 @@ Vagrant.configure(2) do |config|
     config.vm.provider "virtualbox" do |vb|
       vb.memory = 5120
       vb.cpus = (ENV['LSCPUS'] || "4").to_i
+      vb.customize ["modifyvm", :id, "--paravirtprovider", "kvm"]
     end
 
     config.vm.provision "shell" do |s|
