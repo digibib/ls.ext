@@ -298,7 +298,7 @@ public final class EntityServiceImpl implements EntityService {
 
         return repository.createPublication(
                 modelWithoutItems,
-                kohaAdapter.getNewBiblioWithMarcRecord(marcRecord)
+                kohaAdapter.createNewBiblioWithMarcRecord(marcRecord)
         );
     }
 

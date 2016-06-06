@@ -94,7 +94,7 @@ public class EntityResourceTest {
 
     @Test
     public void get_should_return_201_and_location_when_resource_created() throws Exception {
-        when(mockKohaAdapter.getNewBiblioWithMarcRecord(any())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(any())).thenReturn(A_BIBLIO_ID);
         for (EntityType entityType : EntityType.values()) {
             String entity = entityType.getPath();
             Response result = entityResource.createFromLDJSON(entity, "{}");
@@ -287,7 +287,7 @@ public class EntityResourceTest {
 
     @Test
     public void location_returned_from_create_should_return_the_new_publication() throws Exception{
-        when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         Response createResponse = entityResource.createFromLDJSON(PUBLICATION, createTestRDF("publication_SHOULD_EXIST", PUBLICATION));
 
         String publicationId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/publication/", "");
@@ -303,7 +303,7 @@ public class EntityResourceTest {
 
     @Test
     public void delete_publication_should_return_no_content() throws Exception{
-        when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         Response createResponse = entityResource.createFromLDJSON(PUBLICATION, createTestRDF("publication_SHOULD_BE_PATCHABLE", PUBLICATION));
         String publicationId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/publication/", "");
         Response response = entityResource.delete(PUBLICATION, publicationId);
@@ -312,7 +312,7 @@ public class EntityResourceTest {
 
     @Test
     public void patch_should_actually_persist_changes() throws Exception {
-        when(mockKohaAdapter.getNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         String publication = createTestRDF("p00001", PUBLICATION);
         Response result = entityResource.createFromLDJSON(PUBLICATION, publication);
         String publicationId = result.getLocation().getPath().substring("/publication/".length());
