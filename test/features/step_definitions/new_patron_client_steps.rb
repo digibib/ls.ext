@@ -190,9 +190,10 @@ When(/^jeg går til Lån og reservasjoner på Min Side$/) do
 end
 
 When(/^skal jeg se reservasjonen$/) do
-  reservations = @site.PatronClientLoansAndReservationsPage.reservations
-  reservations.size.should eq 1
-  reservations.first.attribute_value('data-recordid').should eq @context[:reserve_record_id]
+  wait_retry {
+    reservations = @site.PatronClientLoansAndReservationsPage.reservations
+    reservations.size.eql?(1) && reservations.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
+  }
 end
 
 When(/^jeg trykker på personopplysninger$/) do
@@ -200,9 +201,10 @@ When(/^jeg trykker på personopplysninger$/) do
 end
 
 When(/^skal jeg se at boka er klar til å hentes$/) do
-  pickups = @site.PatronClientLoansAndReservationsPage.pickups
-  pickups.size.should eq 1
-  pickups.first.attribute_value('data-recordid').should eq @context[:reserve_record_id]
+  wait_retry {
+    pickups = @site.PatronClientLoansAndReservationsPage.pickups
+    pickups.size.eql?(1) && pickups.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
+  }
 end
 
 When(/^det skal ikke være bøker klare til avhenging eller i historikk$/) do
@@ -211,9 +213,10 @@ When(/^det skal ikke være bøker klare til avhenging eller i historikk$/) do
 end
 
 When(/^skal jeg se at boka er utlånt$/) do
-  loans = @site.PatronClientLoansAndReservationsPage.loans
-  loans.size.should eq 1
-  loans.first.attribute_value('data-recordid').should eq @context[:reserve_record_id]
+  wait_retry {
+    loans = @site.PatronClientLoansAndReservationsPage.loans
+    loans.size.eql?(1) && loans.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
+  }
 end
 
 When(/^jeg trykker på forleng lånet$/) do
