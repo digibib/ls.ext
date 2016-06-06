@@ -135,8 +135,8 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
 
         Response response = requestNewRecord(marcRecord);
-        // TODO Hack if we have timed out
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            // Session has expired; try login again
             login();
             response = requestNewRecord(marcRecord);
         }
@@ -173,8 +173,9 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
         log.info("Attempting to retrieve " + recordId + " from Koha SVC");
         Response response = requestItems(recordId);
-        // TODO Hack if we have timed out
+
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            // Session has expired; try login again
             login();
             response = requestItems(recordId);
         }
