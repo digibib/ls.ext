@@ -7,11 +7,13 @@ import Modal from 'react-modal'
 import * as ModalActions from '../actions/ModalActions'
 import CancelReservation from './CancelReservation'
 import ExtendLoan from './ExtendLoan'
+import Registration from './Registration'
 
 const MODAL_COMPONENTS = {
   'CANCEL_RESERVATION': CancelReservation,
   'EXTEND_LOAN': ExtendLoan,
   'LOGIN': Login,
+  'REGISTRATION': Registration,
   'RESERVATION': Reservation
 }
 

@@ -5,12 +5,14 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 
 import * as LoginActions from '../actions/LoginActions'
 import * as ModalActions from '../actions/ModalActions'
+import * as RegistrationActions from '../actions/RegistrationActions'
 
 class Login extends React.Component {
   constructor (props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
   }
 
   handleLogin (event) {
@@ -25,6 +27,11 @@ class Login extends React.Component {
   handleCancel (event) {
     event.preventDefault()
     this.props.modalActions.hideModal()
+  }
+
+  handleRegistrationClick (event) {
+    event.preventDefault()
+    this.props.registrationActions.startRegistration()
   }
 
   renderError () {
@@ -61,7 +68,7 @@ class Login extends React.Component {
                       data-automation-id='login_button'>
                 <FormattedMessage {...messages.logIn} />
               </button>
-              <h3>Er du ikke registrert? <a href='#' title='register'>Registrer deg</a></h3>
+              <h3>Er du ikke registrert? <a onClick={this.handleRegistrationClick} title='register'>Registrer deg</a></h3>
             </form>
           </div>
         </section>
@@ -127,6 +134,7 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     loginActions: bindActionCreators(LoginActions, dispatch),
+    registrationActions: bindActionCreators(RegistrationActions, dispatch),
     modalActions: bindActionCreators(ModalActions, dispatch)
   }
 }
