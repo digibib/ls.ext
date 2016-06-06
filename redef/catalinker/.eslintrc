@@ -2,6 +2,7 @@
   "extends": [
     "standard"
   ],
+  "parser": "babel-eslint",
   "rules": {
     "indent": 0
   }

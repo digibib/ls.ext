@@ -7,12 +7,12 @@ var compileSass = require('express-compile-sass')
 var app = express()
 var requestProxy = require('express-request-proxy')
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+function capitalizeFirstLetter (string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 function randomName () {
-  var name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+  var name = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8)
   return capitalizeFirstLetter(name)
 }
 
@@ -113,9 +113,9 @@ app.get('/config', function (request, response) {
     resourceApiUri: '/services/',
     inputForms: [
       {
-        id: "create-person-form",
-        rdfType: "Person",
-        labelForCreateButton: "Opprett ny person",
+        id: 'create-person-form',
+        rdfType: 'Person',
+        labelForCreateButton: 'Opprett ny person',
         inputs: [
           {
             rdfProperty: 'name',
@@ -123,7 +123,7 @@ app.get('/config', function (request, response) {
             // after resource is created, the value entered
             // in input marked with this is used to populate displayValue of the parent input
             preFillFromSearchField: true,
-            type: "input-string"
+            type: 'input-string'
           },
           {
             rdfProperty: 'birthYear'
@@ -144,9 +144,9 @@ app.get('/config', function (request, response) {
         ]
       },
       {
-        id: "create-subject-form",
-        labelForCreateButton: "Opprett nytt generelt emne",
-        rdfType: "Subject",
+        id: 'create-subject-form',
+        labelForCreateButton: 'Opprett nytt generelt emne',
+        rdfType: 'Subject',
         inputs: [
           {
             rdfProperty: 'prefLabel',
@@ -162,9 +162,9 @@ app.get('/config', function (request, response) {
         ]
       },
       {
-        id: "create-genre-form",
-        labelForCreateButton: "Opprett ny sjanger",
-        rdfType: "Genre",
+        id: 'create-genre-form',
+        labelForCreateButton: 'Opprett ny sjanger',
+        rdfType: 'Genre',
         inputs: [
           {
             rdfProperty: 'name',
@@ -181,9 +181,9 @@ app.get('/config', function (request, response) {
         ]
       },
       {
-        id: "create-publisher-form",
-        labelForCreateButton: "Opprett ny utgiver",
-        rdfType: "Publisher",
+        id: 'create-publisher-form',
+        labelForCreateButton: 'Opprett ny utgiver',
+        rdfType: 'Publisher',
         inputs: [
           {
             rdfProperty: 'name',
@@ -196,9 +196,9 @@ app.get('/config', function (request, response) {
         ]
       },
       {
-        id: "create-work-form",
-        labelForCreateButton: "Opprett nytt verk",
-        rdfType: "Work",
+        id: 'create-work-form',
+        labelForCreateButton: 'Opprett nytt verk',
+        rdfType: 'Work',
         inputs: [
           {
             label: 'Hovedtittel',
@@ -215,9 +215,9 @@ app.get('/config', function (request, response) {
         ]
       },
       {
-        id: "create-place-form",
-        labelForCreateButton: "Opprett nytt sted",
-        rdfType: "Place",
+        id: 'create-place-form',
+        labelForCreateButton: 'Opprett nytt sted',
+        rdfType: 'Place',
         inputs: [
           {
             label: 'Foretrukken betegnelse',
@@ -262,11 +262,10 @@ app.get('/config', function (request, response) {
               parameterName: 'isbn',
               automationId: 'searchValueSuggestions',
               showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-              //sources: ['bs', 'bb'],
               sources: [ 'bs', 'bb' ],
               preferredSource: {
                 id: 'bs',
-                name: "Biblioteksentralen"
+                name: 'Biblioteksentralen'
               }
             }
           },
@@ -289,7 +288,7 @@ app.get('/config', function (request, response) {
                     enableCreateNewResource: {
                       formRefs: [ {
                         formId: 'create-person-form',
-                        targetType: "person"
+                        targetType: 'person'
                       } ],
                       useAfterCreation: false
                     }
@@ -316,11 +315,11 @@ app.get('/config', function (request, response) {
               indexType: 'work',
               isRoot: true,
               automationId: 'searchWorkAsMainResource',
-              showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+              showOnlyWhenMissingTargetUri: 'Work' // only show this search field if a work has not been loaded or created
             },
             suggestValueFrom: {
               domain: 'Work',
-              predicate: "#mainTitle"
+              predicate: '#mainTitle'
             },
             // this is used to control how the search result in the support panel behaves
             widgetOptions: {
@@ -328,7 +327,7 @@ app.get('/config', function (request, response) {
               enableCreateNewResource: {
                 formRefs: [ {
                   formId: 'create-work-form',
-                  targetType: "work"
+                  targetType: 'work'
                 } ],
                 useAfterCreation: true
               },
@@ -344,7 +343,7 @@ app.get('/config', function (request, response) {
           createNewResource: {
             type: 'Publication',
             prefillValuesFromResource: {
-              "Work": [ "mainTitle", "subtitle", "partTitle", "partNumber", "language" ]
+              'Work': [ 'mainTitle', 'subtitle', 'partTitle', 'partNumber', 'language' ]
             }
           }
         }
@@ -385,7 +384,7 @@ app.get('/config', function (request, response) {
               enableCreateNewResource: {
                 formRefs: [ {
                   formId: 'create-publisher-form',
-                  targetType: "publisher"
+                  targetType: 'publisher'
                 } ]
               }
             }
@@ -401,7 +400,7 @@ app.get('/config', function (request, response) {
               enableCreateNewResource: {
                 formRefs: [ {
                   formId: 'create-place-form',
-                  targetType: "place"
+                  targetType: 'place'
                 } ]
               }
             }
@@ -427,7 +426,7 @@ app.get('/config', function (request, response) {
                     enableCreateNewResource: {
                       formRefs: [ {
                         formId: 'create-serial-form',
-                        targetType: "serial"
+                        targetType: 'serial'
                       } ],
                       useAfterCreation: false
                     }
@@ -450,7 +449,7 @@ app.get('/config', function (request, response) {
         rdfType: 'Work',
         label: 'Beskriv verk',
         inputs: [
-          { rdfProperty: 'mainTitle', multiple:true },
+          { rdfProperty: 'mainTitle', multiple: true },
           { rdfProperty: 'subtitle' },
           { rdfProperty: 'partTitle' },
           { rdfProperty: 'partNumber' },
@@ -484,19 +483,19 @@ app.get('/config', function (request, response) {
               enableCreateNewResource: {
                 formRefs: [ {
                   formId: 'create-subject-form',
-                  targetType: "subject" // these are matched against index types, hence lower case
+                  targetType: 'subject' // these are matched against index types, hence lower case
                 },
                   {
                     formId: 'create-work-form',
-                    targetType: "work"
+                    targetType: 'work'
                   },
                   {
                     formId: 'create-person-form',
-                    targetType: "person"
+                    targetType: 'person'
                   },
                   {
                     formId: 'create-place-form',
-                    targetType: "place"
+                    targetType: 'place'
                   } ]
               }
             }
@@ -514,7 +513,7 @@ app.get('/config', function (request, response) {
               enableCreateNewResource: {
                 formRefs: [ {
                   formId: 'create-genre-form',
-                  targetType: "genre"
+                  targetType: 'genre'
                 } ]
               }
             }
@@ -523,8 +522,7 @@ app.get('/config', function (request, response) {
         nextStep: {
           buttonLabel: 'Neste steg: Biinnførsler'
         }
-      }
-      ,
+      },
       {
         // additional entries, such as translator, illustrator, composer etc
         id: 'confirm-addedentry',
@@ -550,7 +548,7 @@ app.get('/config', function (request, response) {
                     enableCreateNewResource: {
                       formRefs: [ {
                         formId: 'create-person-form',
-                        targetType: "person"
+                        targetType: 'person'
                       } ],
                       useAfterCreation: false
                     }
@@ -645,205 +643,205 @@ app.get('/valueSuggestions/random_:source/:isbn', function (request, response) {
         source: request.params.source,
         hits: [
           {
-            "@context": {
-              "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-              "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-              "deichman": "http://192.168.50.12:8005/ontology#",
-              "xsd": "http://www.w3.org/2001/XMLSchema#"
+            '@context': {
+              'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+              'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+              'deichman': 'http://192.168.50.12:8005/ontology#',
+              'xsd': 'http://www.w3.org/2001/XMLSchema#'
             },
-            "@graph": [
+            '@graph': [
               {
-                "@id": "http://lexvo.org/id/iso639-3/nob",
-                "@type": "http://lexvo.org/ontology#Language",
-                "rdfs:label": [
+                '@id': 'http://lexvo.org/id/iso639-3/nob',
+                '@type': 'http://lexvo.org/ontology#Language',
+                'rdfs:label': [
                   {
-                    "@language": "en",
-                    "@value": "Norwegian Bokmål"
+                    '@language': 'en',
+                    '@value': 'Norwegian Bokmål'
                   },
                   {
-                    "@language": "no",
-                    "@value": "Norsk (bokmål)"
+                    '@language': 'no',
+                    '@value': 'Norsk (bokmål)'
                   }
                 ]
               },
               {
-                "@id": "http://lexvo.org/id/iso639-3/hrv",
-                "@type": "http://lexvo.org/ontology#Language",
-                "rdfs:label": [
+                '@id': 'http://lexvo.org/id/iso639-3/hrv',
+                '@type': 'http://lexvo.org/ontology#Language',
+                'rdfs:label': [
                   {
-                    "@language": "en",
-                    "@value": "Croatian"
+                    '@language': 'en',
+                    '@value': 'Croatian'
                   },
                   {
-                    "@language": "no",
-                    "@value": "Kroatisk"
+                    '@language': 'no',
+                    '@value': 'Kroatisk'
                   }
                 ]
               },
               {
-                "@id": "_:N62bb7e44e5414c30905dacfa3f3ad263",
-                "@type": "deichman:Publication",
-                "deichman:audience": {
-                  "@id": "http://data.deichman.no/audience#adult"
+                '@id': '_:N62bb7e44e5414c30905dacfa3f3ad263',
+                '@type': 'deichman:Publication',
+                'deichman:audience': {
+                  '@id': 'http://data.deichman.no/audience#adult'
                 },
-                "deichman:bibliofilPublicationID": "0502300",
-                "deichman:contributor": [
+                'deichman:bibliofilPublicationID': '0502300',
+                'deichman:contributor': [
                   {
-                    "@id": "_:Nfa97dd73eff64195a220cdea3a16afde"
+                    '@id': '_:Nfa97dd73eff64195a220cdea3a16afde'
                   },
                   {
-                    "@id": "_:N0d3f253e2e624cf49c45d545fbf5a41f"
+                    '@id': '_:N0d3f253e2e624cf49c45d545fbf5a41f'
                   }
                 ],
-                "deichman:format": {
-                  "@id": "http://data.deichman.no/format#Book"
+                'deichman:format': {
+                  '@id': 'http://data.deichman.no/format#Book'
                 },
-                "deichman:isbn": request.params.isbn,
-                "deichman:language": {
-                  "@id": "http://lexvo.org/id/iso639-3/nob"
+                'deichman:isbn': request.params.isbn,
+                'deichman:language': {
+                  '@id': 'http://lexvo.org/id/iso639-3/nob'
                 },
-                "deichman:literaryForm": [
+                'deichman:literaryForm': [
                   {
-                    "@id": "http://data.deichman.no/literaryForm#novel"
+                    '@id': 'http://data.deichman.no/literaryForm#novel'
                   },
                   {
-                    "@id": "http://data.deichman.no/literaryForm#fiction"
+                    '@id': 'http://data.deichman.no/literaryForm#fiction'
                   }
                 ],
-                "deichman:mainTitle": randomName(),
-                "deichman:publicationOf": {
-                  "@id": "_:N788edbeea7104c42adda64d78d844440"
+                'deichman:mainTitle': randomName(),
+                'deichman:publicationOf': {
+                  '@id': '_:N788edbeea7104c42adda64d78d844440'
                 },
-                "deichman:publicationYear": {
-                  "@type": "xsd:gYear",
-                  "@value": request.params.source === 'bs' ? "1998" : "2000"
+                'deichman:publicationYear': {
+                  '@type': 'xsd:gYear',
+                  '@value': request.params.source === 'bs' ? '1998' : '2000'
                 },
-                "deichman:recordID": "202417",
-                "http://koha1.deichman.no:8005/raw#locationSignature": "Dra",
-                "http://koha1.deichman.no:8005/raw#statementOfResponsibility": "Slavenka Drakulić ; oversatt av Kirsten Korssjøen",
-                "http://migration.deichman.no/binding": "ib.",
-                "http://migration.deichman.no/creator": {
-                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                'deichman:recordID': '202417',
+                'http://koha1.deichman.no:8005/raw#locationSignature': 'Dra',
+                'http://koha1.deichman.no:8005/raw#statementOfResponsibility': 'Slavenka Drakulić ; oversatt av Kirsten Korssjøen',
+                'http://migration.deichman.no/binding': 'ib.',
+                'http://migration.deichman.no/creator': {
+                  '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                 },
-                "http://migration.deichman.no/numberOfPages": "207 s.",
-                "http://migration.deichman.no/originalLanguage": {
-                  "@id": "http://lexvo.org/id/iso639-3/hrv"
+                'http://migration.deichman.no/numberOfPages': '207 s.',
+                'http://migration.deichman.no/originalLanguage': {
+                  '@id': 'http://lexvo.org/id/iso639-3/hrv'
                 },
-                "http://migration.deichman.no/originalTitle": randomName(),
-                "http://migration.deichman.no/publicationPlace": "[Oslo]",
-                "http://migration.deichman.no/publisher": "Gyldendal",
-                "http://migration.deichman.no/subjectAuthority": {
-                  "@id": "http://koha1.deichman.no:8005/bsSubjectAuthority/kjaerlighet_fortellinger"
+                'http://migration.deichman.no/originalTitle': randomName(),
+                'http://migration.deichman.no/publicationPlace': '[Oslo]',
+                'http://migration.deichman.no/publisher': 'Gyldendal',
+                'http://migration.deichman.no/subjectAuthority': {
+                  '@id': 'http://koha1.deichman.no:8005/bsSubjectAuthority/kjaerlighet_fortellinger'
                 }
               },
               {
-                "@id": "_:Nfa97dd73eff64195a220cdea3a16afde",
-                "@type": "deichman:Contribution",
-                "deichman:agent": {
-                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                '@id': '_:Nfa97dd73eff64195a220cdea3a16afde',
+                '@type': 'deichman:Contribution',
+                'deichman:agent': {
+                  '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                 },
-                "deichman:role": {
-                  "@id": request.params.source === 'bs' ? "http://data.deichman.no/role#author" : "http://data.deichman.no/role#composer"
+                'deichman:role': {
+                  '@id': request.params.source === 'bs' ? 'http://data.deichman.no/role#author' : 'http://data.deichman.no/role#composer'
                 }
               },
               {
-                "@id": "http://data.deichman.no/audience#adult",
-                "@type": "http://data.deichman.no/utility#Audience",
-                "http://data.deichman.no/utility#code": "ad",
-                "rdfs:label": [
+                '@id': 'http://data.deichman.no/audience#adult',
+                '@type': 'http://data.deichman.no/utility#Audience',
+                'http://data.deichman.no/utility#code': 'ad',
+                'rdfs:label': [
                   {
-                    "@language": "en",
-                    "@value": "Adults"
+                    '@language': 'en',
+                    '@value': 'Adults'
                   },
                   {
-                    "@language": "no",
-                    "@value": "Voksne"
+                    '@language': 'no',
+                    '@value': 'Voksne'
                   }
                 ]
               },
               {
-                "@id": "_:N5c9b2fcaef3246c295aa6fc121e7b155",
-                "@type": "deichman:Person",
-                "http://data.deichman.no/duo#bibliofilPersonId": "19887600",
-                "deichman:birthYear": "1949",
-                "deichman:name": randomName() + ', ' + randomName(),
-                "deichman:nationality": {
-                  "@id": "http://data.deichman.no/nationality#n"
+                '@id': '_:N5c9b2fcaef3246c295aa6fc121e7b155',
+                '@type': 'deichman:Person',
+                'http://data.deichman.no/duo#bibliofilPersonId': '19887600',
+                'deichman:birthYear': '1949',
+                'deichman:name': randomName() + ', ' + randomName(),
+                'deichman:nationality': {
+                  '@id': 'http://data.deichman.no/nationality#n'
                 },
-                "http://koha1.deichman.no:8005/raw#lifeSpan": "1949-"
+                'http://koha1.deichman.no:8005/raw#lifeSpan': '1949-'
               },
               {
-                "@id": "_:N788edbeea7104c42adda64d78d844440",
-                "@type": "deichman:Work",
-                "deichman:audience": {
-                  "@id": "http://data.deichman.no/audience#adult"
+                '@id': '_:N788edbeea7104c42adda64d78d844440',
+                '@type': 'deichman:Work',
+                'deichman:audience': {
+                  '@id': 'http://data.deichman.no/audience#adult'
                 },
-                "deichman:contributor": {
-                  "@id": "_:N61c1076a2d094a67995a293daec3b879"
+                'deichman:contributor': {
+                  '@id': '_:N61c1076a2d094a67995a293daec3b879'
                 },
-                "deichman:creator": {
-                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                'deichman:creator': {
+                  '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                 },
-                "deichman:language": {
-                  "@id": "http://lexvo.org/id/iso639-3/hrv"
+                'deichman:language': {
+                  '@id': 'http://lexvo.org/id/iso639-3/hrv'
                 },
-                "deichman:literaryForm": [
+                'deichman:literaryForm': [
                   {
-                    "@id": "http://data.deichman.no/literaryForm#fiction"
+                    '@id': 'http://data.deichman.no/literaryForm#fiction'
                   },
                   {
-                    "@id": "http://data.deichman.no/literaryForm#novel"
+                    '@id': 'http://data.deichman.no/literaryForm#novel'
                   }
                 ],
-                "deichman:mainTitle": randomName()
+                'deichman:mainTitle': randomName()
               },
               {
-                "@id": "http://data.deichman.no/format#Book",
-                "@type": "http://data.deichman.no/utility#Format",
-                "http://data.deichman.no/utility#code": "l",
-                "rdfs:label": [
+                '@id': 'http://data.deichman.no/format#Book',
+                '@type': 'http://data.deichman.no/utility#Format',
+                'http://data.deichman.no/utility#code': 'l',
+                'rdfs:label': [
                   {
-                    "@language": "no",
-                    "@value": "Bok"
+                    '@language': 'no',
+                    '@value': 'Bok'
                   },
                   {
-                    "@language": "en",
-                    "@value": "Book"
+                    '@language': 'en',
+                    '@value': 'Book'
                   }
                 ]
               },
               {
-                "@id": "_:N9fdb7e0d043e44708df915d456bbb132",
-                "@type": "deichman:Person",
-                "http://data.deichman.no/duo#bibliofilPersonId": "29406800",
-                "deichman:birthYear": "1949",
-                "deichman:name": randomName() + ', ' + randomName(),
-                "deichman:nationality": {
-                  "@id": "http://data.deichman.no/nationality#kroat"
+                '@id': '_:N9fdb7e0d043e44708df915d456bbb132',
+                '@type': 'deichman:Person',
+                'http://data.deichman.no/duo#bibliofilPersonId': '29406800',
+                'deichman:birthYear': '1949',
+                'deichman:name': randomName() + ', ' + randomName(),
+                'deichman:nationality': {
+                  '@id': 'http://data.deichman.no/nationality#kroat'
                 },
-                "http://koha1.deichman.no:8005/raw#lifeSpan": "1949-"
+                'http://koha1.deichman.no:8005/raw#lifeSpan': '1949-'
               },
               {
-                "@id": "_:N61c1076a2d094a67995a293daec3b879",
-                "@type": [
-                  "deichman:Contribution",
-                  "deichman:MainEntry"
+                '@id': '_:N61c1076a2d094a67995a293daec3b879',
+                '@type': [
+                  'deichman:Contribution',
+                  'deichman:MainEntry'
                 ],
-                "deichman:agent": {
-                  "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
+                'deichman:agent': {
+                  '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                 },
-                "deichman:role": {
-                  "@id": request.params.source === 'bs' ? "http://data.deichman.no/role#author" : "http://data.deichman.no/role#conductor"
+                'deichman:role': {
+                  '@id': request.params.source === 'bs' ? 'http://data.deichman.no/role#author' : 'http://data.deichman.no/role#conductor'
                 }
               },
               {
-                "@id": "_:N0d3f253e2e624cf49c45d545fbf5a41f",
-                "@type": "deichman:Contribution",
-                "deichman:agent": {
-                  "@id": "_:N5c9b2fcaef3246c295aa6fc121e7b155"
+                '@id': '_:N0d3f253e2e624cf49c45d545fbf5a41f',
+                '@type': 'deichman:Contribution',
+                'deichman:agent': {
+                  '@id': '_:N5c9b2fcaef3246c295aa6fc121e7b155'
                 },
-                "deichman:role": {
-                  "@id": "http://data.deichman.no/role#translator"
+                'deichman:role': {
+                  '@id': 'http://data.deichman.no/role#translator'
                 }
               }
             ]
