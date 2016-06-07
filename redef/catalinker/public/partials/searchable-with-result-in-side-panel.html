@@ -1,5 +1,5 @@
-<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable}}class="pure-u-1-1" {{/if}}>
-{{#if nonEditable}}{{current.displayValue}}{{else}}
+<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
+{{#if nonEditable || suggested}}{{current.displayValue}}{{else}}
 {{#if ../../indexTypes.length > 1 && !deletable}}
 <span class="index-type-select pure-u-1-2">
         <select value="{{../../selectedIndexType}}">
@@ -27,9 +27,9 @@
     </span>
 </div>
 {{else}}
-<input {{#deletable}}readonly {{/deletable}} type="search" {{#if indexTypes.length > 0 && !selectedIndexType}}disabled{{/if}}
+<input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#deletable}}readonly {{/deletable}} type="search" {{#if indexTypes.length > 0 && !selectedIndexType}}disabled{{/if}}
 on-click="{{#deletable}}unselectEntity{{/deletable}}"
-class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}}{{#if searchable}} searchable{{/if}}"
+class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if searchable}}searchable{{/if}} {{#if ./current.accepted}}suggestion-source-{{./current.accepted.source}}{{/if}}"
 data-automation-id="{{dataAutomationId}}"
 on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
 on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'

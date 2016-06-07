@@ -3,6 +3,26 @@ $lightergray: #e8e8e8;
 $input-background: white;
 $mintgreen: #DCFC9F;
 
+@mixin use-this {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>&#x1f44d;</text></svg>");
+  display: block;
+  background-repeat: no-repeat;
+  padding-left: 24px;
+}
+
+@mixin source-logo-bb {
+  background-image: url('/images/logos/bb_large.jpg');
+  background-repeat: no-repeat;
+  background-size: auto 20px;
+}
+
+@mixin source-logo-bs {
+  background-image: url('/images/logos/bs.png');
+  background-repeat: no-repeat;
+  background-size: auto 20px;
+
+}
+
 .label-font {
   font-weight: bold;
 }
@@ -16,7 +36,26 @@ body {
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▼</text></svg>");
       background-repeat: no-repeat;
       background-position: 291px 10px;
+      ul {
+        li {
+          span.suggestion-source {
+            &.suggestion-source-bs {
+              padding: 0px 24px 2px 0;
+              @include source-logo-bs;
+              background-size: auto 16px;
+              background-position: 6px 0;
+            }
+            &.suggestion-source-bb {
+              padding: 0px 65px 2px 0;
+              @include source-logo-bb;
+              background-size: auto 16px;
+              background-position: 6px 0;
+            }
+          }
+        }
+      }
     }
+
   }
   .input-wrapper .select2-container {
     .select2-selection {
@@ -71,7 +110,6 @@ body {
       }
       input[type="radio"][id^="tab"] {
         position: absolute;
-        top: -9999px;
         left: -9999px;
       }
       [id^="tab"]:checked + label {
@@ -126,15 +164,23 @@ body {
           margin-bottom: 12px;
         }
         .label {
+          padding: 12px 12px 4px 12px;
           display: block;
           background: $input-background;
-          padding: 12px 12px 4px 12px;
           font-weight: bold;
           &:after {
             content: ":";
           }
         }
+        .input-wrapper .label {
+          padding: 12px 12px 4px 0px;
+        }
         .panel-part {
+          display: flex;
+          flex-direction: column;
+          &.label {
+            flex-direction: row;
+          }
           .field {
             padding: 0px 12px 15px 12px;
             background: $input-background;
@@ -161,8 +207,88 @@ body {
             border-bottom: 1px solid lightgrey;
             padding-bottom: 15px;
           }
-        }
-        .index-type-select {
+          div.external-source-results {
+            margin-top: 7px;
+            ul {
+              margin-top: 3px;
+              list-style: none;
+              padding: 0px;
+              li {
+                width: 100%;
+                background-color: $lightergray;
+                display: inline-block;
+                padding: 5px;
+                a {
+                  float: right;
+                  margin-top: 14px;
+                }
+                span {
+                  float: left;
+                }
+              }
+            }
+          }
+          div.external-sources {
+            margin-top: 10px;
+            input[type="checkbox"][id^="suggVal_"] {
+              position: absolute;
+              left: -9999px;
+            }
+            label {
+              background-repeat: no-repeat;
+              background-position: right center;
+              border-bottom: 1px solid black;
+              &.unchecked {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▽</text></svg>");
+              }
+              &.checked {
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>△</text></svg>");
+              }
+            }
+            [id^="suggVal_"]:checked + label.unchecked {
+              display: none;
+            }
+            [id^="suggVal_"]:checked + label.unchecked + label.checked {
+              display: block;
+            }
+            [id^="suggVal_"]:checked + label.unchecked + label.checked + * {
+              display: block;
+            }
+            [id^="suggVal_"]:not(:checked) + label.unchecked {
+              display: block;
+            }
+            [id^="suggVal_"]:not(:checked) + label.unchecked + label.checked {
+              display: none;
+            }
+            [id^="suggVal_"]:not(:checked) + label.unchecked + label.checked + * {
+              display: none;
+            }
+          }
+          div.suggested-values {
+            margin-top: 10px;
+            .suggested-value {
+              clear: both;
+              margin-bottom: 12px;
+              &.suggestion-source-bs {
+                @include source-logo-bs;
+                background-position: 58%;
+                &.searchable {
+                  background-position: 87%;
+                }
+              }
+              &.suggestion-source-bb {
+                @include source-logo-bb;
+                background-position: 51%;
+                &.searchable {
+                  background-position: 86%;
+                }
+              }
+              a:not(.support-panel-expander) {
+                display: inline-block;
+                float: right;
+              }
+            }
+          }
 
         }
         input {
@@ -179,20 +305,24 @@ body {
         .support-panel-expander {
           width: 22px;
           position: relative;
-          top: -26px;
           min-height: 22px;
           background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▶</text></svg>");
           background-repeat: no-repeat;
           display: block;
+          &.suggested-value {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>&#x1f44d;</text></svg>");
+          }
         }
         span:not(.input-wrapper) {
           .support-panel-expander {
             left: 293px;
+            top: -24px;
           }
         }
         span.input-wrapper {
           .support-panel-expander {
-            left: 274px;
+            left: 270px;
+            top: -24px;
           }
         }
         .deletable {
@@ -203,12 +333,23 @@ body {
           padding-left: 2em;
           cursor: pointer;
         }
-        .searchable:not(.deletable) {
-          //background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100%' width='20px'><text x='0' y='22' font-size='20'>▶</text></svg>");
-          background-repeat: no-repeat;
-          background-position: right top;
+        //.searchable:not(.deletable) {
+        //  background-repeat: no-repeat;
+        //  background-position: right top;
+        //  padding-right: 1.5em;
+        //}
+        .searchable {
           padding-right: 1.5em;
         }
+        .suggestion-source-bs {
+          @include source-logo-bs;
+          background-position: 85% 5px;
+        }
+        .suggestion-source-bb {
+          @include source-logo-bb;
+          background-position: 85% 5px;
+        }
+
         .search-result {
           background: white;
           padding: 0.5em;
@@ -253,38 +394,8 @@ body {
           cursor: pointer;
           min-width: 20px;
         }
-        .default-editable {
-          min-height: 60px;
-          padding: 0 0 12px 0;
-          height: 100%;
-          .inputs {
-            background: $mintgreen;
-            display: block;
-            border: 1px solid lightgrey;
-            padding: 5px 22px;
-            .input {
-              display: block;
-              .label {
-                background: inherit;
-                padding: 0;
-                @extend .label-font;
-                display: inline;
-                &:after {
-                  content: ":";
-                }
-              }
-              .field {
-                background: inherit;
-                padding: 0;
-              }
-            }
-          }
-          .subject-type-association {
-            margin: -10px;
-          }
-
-        }
         .default-non-editable {
+          min-height: 60px;
           margin-bottom: 44px;
           padding: 8px;
           .inputs {
@@ -310,6 +421,7 @@ body {
             display: none;
           }
         }
+        .default-editable,
         .additional-entries-editable {
           min-height: 60px;
           padding: 8px;
@@ -340,30 +452,76 @@ body {
         .additional-entries-non-editable {
           min-height: 60px;
           padding: 8px;
-          .inputs {
-            border: 1px solid lightgrey;
-            text-align: center;
-            padding-right: 24px;
-            .input {
-              &.input:last-child:before {
-                content: " — ";
+          .input-wrapper {
+            padding-left: 10px;
+            .inputs {
+              text-align: center;
+              padding-right: 24px;
+              .input {
+                &.input:last-child:before {
+                  content: " — ";
+                }
+                display: inline;
+                .label {
+                  display: none;
+                }
+                .field {
+                  padding: 0;
+                }
               }
-              display: inline;
-              .label {
-                display: none;
-              }
-              .field {
-                padding: 0;
+            }
+
+            .subject-type-association {
+              display: block;
+              text-align: left;
+              padding: 10px;
+              &:before {
+                content: "Rollen er knyttet til ";
               }
             }
           }
-
-          .subject-type-association {
-            display: inline-block;
-            text-align: center;
+        }
+        .additional-entries-suggested {
+          min-height: 60px;
+          padding: 8px;
+          .input-wrapper {
+            background-color: $lightergray;
+            display: block;
             padding: 10px;
-            &:before {
-              content: "Rollen er knyttet til ";
+            .inputs {
+              text-align: center;
+              padding-right: 24px;
+              .input {
+                &.input:last-child:before {
+                  content: " — ";
+                }
+                display: inline;
+                .label {
+                  display: none;
+                }
+                .field {
+                  padding: 0;
+                }
+              }
+            }
+
+            .subject-type-association {
+              display: block;
+              text-align: left;
+              &:before {
+                content: "Rollen er knyttet til ";
+              }
+            }
+            .suggestion-source-bs {
+              @include source-logo-bs;
+              background-position: left;
+            }
+            .suggestion-source-bb {
+              @include source-logo-bb;
+              background-position: left;
+            }
+            .use-suggestion-button {
+              float: right;
             }
           }
         }
@@ -395,7 +553,7 @@ body {
         &:before {
           content: "";
           position: absolute;
-          left: -1px;
+          left: 0px;
           right: 100%;
           width: 0;
           height: 0;

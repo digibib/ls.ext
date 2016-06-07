@@ -1,0 +1,23 @@
+<input {{#disabled}} disabled="true" {{/}}
+class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
+on-blur='fetchValueSuggestions'
+data-automation-id="{{dataAutomationId}}"
+value="{{current.value}}" />
+<div class="external-source-results">
+    {{#each searchForValueSuggestions.hitsFromPreferredSource}}
+    <div class="external-source">
+        Treff i ekstern kilde - {{../../preferredSource.name}}
+    </div>
+    <ul>
+        {{#each items}}
+        <li class="external-hit">
+            <span>
+                <div class="main-line">{{main}}</div>
+                <div class="details-line">{{details}}</div>
+            </span>
+            <a  {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</a>
+        </li>
+        {{/each}}
+    </ul>
+    {{/each}}
+</div>

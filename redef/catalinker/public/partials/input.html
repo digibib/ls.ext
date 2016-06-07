@@ -3,7 +3,7 @@
 <div class="pure-u-1-2 label {{firstInGroup ? 'first':''}} panel-part"
      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
 </div>
-<span class="panel-part pure-u-1-2 {{lastInGroup ? 'last':''}}">
+<div class="panel-part pure-u-1-2 {{lastInGroup ? 'last':''}}">
         {{#each values:index}}
         <span class="field pure-u-1-1" id="support_panel_base_{{uniqueId}}">
             {{>type}}
@@ -24,26 +24,38 @@
         </span>
         {{/}}
         {{/each}}
+        {{#with values[0]}}
+            <span class="pure-u-1-1 field">
+                {{>suggested-values}}
+            </span>
+        {{/with}}
+
     {{#if subInputs}}
+    <div class="pure-u-1-1 label" style="order: 99; {{#if !unacceptedSuggestions(.)}}display:none;{{/if}}">
+        Forslag fra andre eksterne kilder
+    </div>
     {{#each subInputs[0].input.values:inputValueIndex}}
-        <span class="pure-u-1-1 field {{#if cssClassPrefix}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}}"
+        <div style="order: {{inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" class="pure-u-1-1 field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
               {{#if
               nonEditable}}disabled="disabled" {{/if}}>
-            {{#if nonEditable}}
+            {{#if nonEditable && !suggested}}
             <a class="delete" title="Slett oppføring"
                on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
             {{/if}}
             <span class="input-wrapper">
                 <span class="inputs">
                     {{#each ../../../../../subInputs}}
-                        <span class="input {{#if !nonEditable}}pure-u-1-1{{/if}}">
-                            <span class="label {{#if !nonEditable}}pure-u-1-1{{/if}}"
+                        <span class="input {{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">
+                            <span class="label {{#if !nonEditable && !suggested}}pure-u-1-1{{/if}}"
                                   data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
                             {{#with input.values[inputValueIndex]}}
                                 <span class="value sub-field" id="support_panel_base_{{uniqueId}}">
                                     {{>../../../input.type}}
+                                    {{#if ! nonEditable }}
+                                        {{>suggested-values}}
+                                    {{/if}}
                                 </span>
-                                {{#if ! nonEditable }}
+                                {{#if ! nonEditable && !suggested}}
                                     <span class="support-panel"
                                           data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
                                         {{#with ../../../input}}
@@ -52,44 +64,52 @@
                                     </span>
                                 {{/if}}
                             {{/with}}
-                            <span class="invalid-msg {{#if !nonEditable}}pure-u-1-1{{/if}}">{{#error}}{{error}}{{/error}}</span>
+                            <span class="invalid-msg {{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">{{#error}}{{error}}{{/error}}</span>
                         </span>
                     {{/each}}
                 </span>
                 <span class="subject-type-association">
-                    <span class="{{#if !nonEditable}}pure-u-1-1{{/if}}">
+                    <span class="{{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">
                         {{#with ../../../parentInput}}
-                            {{#if ! nonEditable }}
-                                {{#subjectTypes}}
+                            {{#if ! nonEditable && ! (suggested && multiple)}}
+                                {{#each subjectTypes:index}}
+                                {{#with ./subInputs[0].input.values[inputValueIndex]}}
                                     <span class="subject-type-select" {{#if (subjectTypes.length== 1) }}
                                           style="display:none" {{/if}}>
-                                        <input type="radio" name={{subjectType}} value="{{.}}"
-                                               {{# !
-                                               targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
+                                        <input type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
+                                               {{# false && !targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
                                                disabled='disabled' {{/}}/>
-                                        <label>{{subjectTypeLabel(.)}}</label>
+                                        <label>{{subjectTypeLabel(subjectTypes[index])}}</label>
                                     </span>
-                                {{/subjectTypes}}
-                                <div>
+                                {{/with}}
+                                {{/each}}
+                                <span>
                                     <a class="pure-button pure-button-primary add-item-button"
-                                       {{#if typeof subjectType=== 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType))}}disabled{{/if}}
-                                    {{#if !resourceIsLoaded(subjectType)}}title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er lastet"{{/if}}
+                                       {{#if typeof subjectType=== 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType)) || ../../../inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
+                                      title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
                                        on-click="saveObject:{{inputValueIndex}}">Legg til</a>
-                                </div>
+                                </span>
                             {{/if}}
                         {{/with}}
 
-                        {{#if nonEditable}}
+                        {{#if nonEditable || suggested}}
                             {{subjectTypeLabelDet(subjectType)}}
                         {{/if}}
                     </span>
                 </span>
-            </span>
-</span>
+                {{#if suggested}}
+                <div class="pure-u-1-1 suggestion-source-{{suggested.source}}">
+                   <span class="pure-u-4-6"></span>
+                    <span class="pure-u-2-6 use-suggestion-button">
+                        <a on-click="useSuggestion" class="pure-button pure-button-primary">Bruk forslag</a>
+                    </span>
+                </div>
+                {{/if}}
+            </div>
 {{/each}}
 {{/if}}
 {{#multiple && allowAddNewButton}}
-<span class="pure-u-1-1">
+<span class="pure-u-1-1" style="order: 1000;">
         <div class="add-new-btn-row">
             <div class="pure-u-1-12"> </div>
             <a class="pure-button pure-button-primary" on-click="addValue">{{addAnotherLabel || 'Legg til ny'}}</a>

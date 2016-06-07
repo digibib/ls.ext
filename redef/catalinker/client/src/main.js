@@ -1,4 +1,4 @@
-/*global window,location,history*/
+/*global window,history*/
 ;(function (root, factory) {
   'use strict'
 
@@ -23,6 +23,8 @@
 
     Ractive.DEBUG = false
     var ractive
+    var supportPanelLeftEdge
+    var supportPanelWidth
 
     var deepClone = function (object) {
       var clone = _.clone(object)
@@ -46,25 +48,62 @@
       return url.replace(url.match(r), '/services/')
     }
 
-    /* Private functions */
     function unPrefix (prefixed) {
       return _.last(prefixed.split(':'))
+    }
+
+    function saveSuggestionData () {
+      var suggestionData = []
+      var acceptedData = []
+      _.each(ractive.get('inputGroups'), function (group, groupIndex) {
+        _.each(group.inputs, function (input, inputIndex) {
+          var realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
+            return subInput.input
+          }) : [ input ]
+
+          _.each(realInputs, function (input, subInputIndex) {
+            var subInputFragment = input.isSubInput ? `subInputs.${subInputIndex}.input.` : ''
+            suggestionData.push({
+              keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.${subInputFragment}suggestedValues`,
+              suggestedValues: input.suggestedValues
+            })
+            _.each(input.values, function (value, index) {
+              acceptedData.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.${subInputFragment}values.${index}`,
+                value: value
+              })
+            })
+            if (input.searchForValueSuggestions && input.searchForValueSuggestions.hitsFromPreferredSource) {
+              acceptedData.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.searchForValueSuggestions.hitsFromPreferredSource`,
+                value: input.searchForValueSuggestions.hitsFromPreferredSource
+              })
+            }
+          })
+        })
+      })
+      window.sessionStorage.setItem('suggestionData', JSON.stringify(suggestionData))
+      window.sessionStorage.setItem('acceptedData', JSON.stringify(acceptedData))
+      var suggestedValueSearchInput = getSuggestedValuesSearchInput()
+      window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
     }
 
     function clearSupportPanels (options) {
       var keepActions = (options || {}).keep || []
       _.each(allInputs(), function (input) {
-        if (input.searchResult) {
-          input.searchResult = null
-        }
+        _.each(input.values, function (value) {
+          if (value.searchResult) {
+            value.searchResult = null
+          }
+        })
       })
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
-        if (!ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs')) {
+        if (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs')) {
           if (input.widgetOptions) {
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
-                input.widgetOptions[ action ].showInputs = null;
-                input.searchResult = null
+                input.widgetOptions[ action ].showInputs = null
+                input.values[ 0 ].searchResult = null
                 var domainType = input.widgetOptions[ action ].forms[ input.selectedIndexType ].rdfType
                 unloadResourceForDomain(domainType)
               }
@@ -73,12 +112,6 @@
         }
       })
       ractive.update()
-    }
-
-    function clearMaintenanceInputs () {
-      _.each(ractive.get('applicationData.maintenanceInputs'), function (input) {
-        input.values = emptyValues(false, true)
-      })
     }
 
     var unloadResourceForDomain = function (domainType) {
@@ -106,13 +139,14 @@
       return _.last(predicate.split('#'))
     }
 
-    function setMultiValues (values, input, index) {
+    function setMultiValues (values, input, index, options) {
+      options = options || {}
       if (values && values.length > 0) {
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
           return value.id
         })
-        if (input.values.length < index + 1) {
-          input.values[ input.values.length ] = {}
+        if (!input.values[ index ]) {
+          input.values[ index ] = {}
         }
         input.values[ index ].old = {
           value: valuesAsArray
@@ -122,24 +156,31 @@
           uniqueId: _.uniqueId()
         }
         input.values[ index ].uniqueId = _.uniqueId()
+        if (options.onlyValueSuggestions) {
+          input.values[ index ].suggested = { source: options.source }
+          input.suggestedValues = valuesAsArray
+        } else if (options.source) {
+          input.values[ index ].current.accepted = { source: options.source }
+        }
         return valuesAsArray
       }
     }
 
-    function setSingleValue (value, input, index) {
+    function setSingleValue (value, input, index, options) {
+      options = options || {}
       if (value) {
-        if (!input.values[ index ]) {
-          input.values[ index ] = {}
+        input.values[ index ] = {
+          old: {
+            value: options.isNew ? null : (input.values[ index ] || { current: { value: undefined } }).current.value,
+            lang: options.isNew ? null : (input.values[ index ] || { current: { value: undefined } }).current.lang
+          },
+          current: {
+            value: value.value,
+            lang: value.lang,
+            accepted: options.source ? { source: options.source } : undefined
+          },
+          uniqueId: _.uniqueId()
         }
-        input.values[ index ].old = {
-          value: value.value,
-          lang: value.lang
-        }
-        input.values[ index ].current = {
-          value: value.value,
-          lang: value.lang
-        }
-        input.values[ index ].uniqueId = _.uniqueId()
       }
     }
 
@@ -160,19 +201,51 @@
       input.values[ index ].uniqueId = _.uniqueId()
     }
 
-    function setDisplayValue (input, index, property) {
+    function setDisplayValue (input, index, root, options) {
+      options = options || {}
       var uri = input.values[ index ].current.value
-      axios.get(uri).then(function (response) {
-        var graphData = ensureJSON(response.data)
-        var root = ldGraph.parse(graphData).byId(uri)
-        input.values[ index ].current.displayValue = _.compact(_.reduce(input.nameProperties || [ 'name' ],
+
+      function fromRoot (root) {
+        var values = _.compact(_.reduce(input.nameProperties || [ 'name' ],
           function (values, nameProperty) {
             values.push((root.getAll(nameProperty)[ 0 ] || { value: undefined }).value)
             return values
-          }, [])).join(' - ');
-      }).then(function () {
-        ractive.update()
-      })
+          }, [])).join(' - ')
+
+        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
+        if (options.onlyValueSuggestions) {
+          if (multiple) {
+            input.values[ index ].suggested = { source: options.source }
+            input.values[ index ].current.displayValue = values
+          } else {
+            input.suggestedValues = input.suggestedValues || []
+            input.suggestedValues[ index ] = {
+              value: values,
+              source: options.source
+            }
+          }
+        } else {
+          input.values[ index ].current.displayValue = values
+          if (options.source) {
+            input.values[ index ].current.accepted = { source: options.source }
+          }
+        }
+      }
+
+      if (isBlankNodeUri(uri)) {
+        if (root) {
+          fromRoot(root)
+          ractive.update()
+        }
+      } else {
+        axios.get(uri).then(function (response) {
+          var graphData = ensureJSON(response.data)
+          var root = ldGraph.parse(graphData).byId(uri)
+          fromRoot(root)
+        }).then(function () {
+          ractive.update()
+        })
+      }
     }
 
     function updateBrowserLocationWithUri (type, resourceUri) {
@@ -201,13 +274,19 @@
       history.replaceState('', '', URI.build(oldUri))
     }
 
-    function loadLabelsForAuthorizedValues (values, input, index) {
+    function updateBrowserLocationWithSuggestionParameter (parameter, value) {
+      var oldUri = URI.parse(document.location.href)
+      var queryParameters = URI.parseQuery(oldUri.query)
+      queryParameters.acceptedSuggestionsFrom = `${parameter}:${value}`
+      oldUri.query = URI.buildQuery(queryParameters)
+      history.replaceState('', '', URI.build(oldUri))
+    }
+
+    function loadLabelsForAuthorizedValues (values, input, index, root) {
       var promises = []
       if (input.nameProperties) {
         _.each(values, function (uri) {
-          promises.push(axios.get(proxyToServices(uri)).then(function (response) {
-            var graphData = ensureJSON(response.data)
-            var root = ldGraph.parse(graphData).byId(uri)
+          function fromRoot (root) {
             var names = _.reduce(input.nameProperties, function (parts, propertyName) {
               var all = root.getAll(propertyName)
               _.each(all, function (value, index) {
@@ -226,7 +305,19 @@
               ractive.update()
               $('#sel_' + input.values[ index ].uniqueId).trigger('change')
             })
-          }))
+          }
+
+          if (isBlankNodeUri(uri)) {
+            if (root) {
+              fromRoot(root)
+            }
+          } else {
+            promises.push(axios.get(proxyToServices(uri)).then(function (response) {
+              var graphData = ensureJSON(response.data)
+              var root = ldGraph.parse(graphData).byId(uri)
+              fromRoot(root)
+            }))
+          }
         })
       }
       return promises
@@ -265,63 +356,105 @@
               inputs = inputs.concat(form.inputs)
             })
           }
-
         })
       })
       return inputs
     }
 
-    function updateInputsForResource (response, resourceUri, options) {
+    function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
       var graphData = ensureJSON(response.data)
-      var offsetCrossTypes = { "Work": "Publication", "Publication": "Work" }
+      var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
 
-      var type = StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial)\/.*$/g.exec(resourceUri)[ 1 ])
-      var root = ldGraph.parse(graphData).byId(resourceUri)
+      type = type || StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial)\/.*$/g.exec(resourceUri)[ 1 ])
+      root = root || ldGraph.parse(graphData).byId(resourceUri)
 
       var promises = []
-      _.each(allInputs(), function (input, inputIndex) {
+      _.each(allInputs(), function (input) {
         if ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
-          (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type)))) {
+          (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
+          (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain))) {
           input.offset = input.offset || {}
-          var offset = 0;
+          var offset = 0
           if (input.offset[ offsetCrossTypes[ type ] ]) {
             offset = input.offset[ offsetCrossTypes[ type ] ]
           }
-          var predicate = input.predicate
+          var predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
           var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [ root ]
-          var rootIndex = 0;
+          var rootIndex = 0
           _.each(actualRoots, function (root) {
             var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || false
             var mainEntryNode = (root.isA('deichman:MainEntry') === true) || false
             if (mainEntryInput === mainEntryNode) {
               if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
                 var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
-                promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, 0))
+                promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, 0, root))
                 if (input.isSubInput) {
                   input.values[ rootIndex ].nonEditable = true
                   input.values[ rootIndex ].subjectType = type
                   input.parentInput.allowAddNewButton = true
                 }
               } else if (input.type === 'searchable-with-result-in-side-panel') {
-                _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
-                  var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                  setIdValue(node.id, input, index)
-                  setDisplayValue(input, index)
-                  input.values[ index ].deletable = true
-                  input.values[ index ].searchable = true
-                  if (input.isSubInput) {
-                    input.values[ index ].nonEditable = true
+                if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
+                  _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
+                    var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
+                    setIdValue(node.id, input, index)
+                    if (!options.onlyValueSuggestions) {
+                      setDisplayValue(input, index, node, options)
+                      if (!isBlankNodeUri(node.id)) {
+                        input.values[ index ].deletable = true
+                        if (input.isSubInput) {
+                          input.values[ index ].nonEditable = true
+                          input.parentInput.allowAddNewButton = true
+                        }
+                      }
+                      input.values[ index ].searchable = true
+                      setAllowNewButtonForInput(input)
+                    } else {
+                      setDisplayValue(input, index, node, options)
+                    }
                     input.values[ index ].subjectType = type
-                    input.parentInput.allowAddNewButton = true
-                  }
-                  setAllowNewButtonForInput(input)
-                })
+                  })
+                } else {
+                  _.each(root.getAll(propertyName(predicate)), function (node, multiValueIndex) {
+                    input.suggestedValues = input.suggestedValues || []
+                    input.suggestedValues.push({
+                      value: node.value,
+                      source: options.source
+                    })
+                  })
+                }
               } else if (input.type === 'select-predefined-value') {
-                setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset))
+                if (!options.onlyValueSuggestions) {
+                  setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                } else {
+                  var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
+                  _.each(root.outAll(propertyName(predicate)), function (value) {
+                    if (input.isSubInput && multiple) {
+                      setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                    } else {
+                      input.suggestedValues = input.suggestedValues || []
+                      input.suggestedValues.push({
+                        value: {
+                          value: value.id,
+                          label: Main.predefinedLabelValue(input.fragment, value.id)
+                        },
+                        source: options.source
+                      })
+                    }
+                  })
+                }
               } else {
                 _.each(root.getAll(propertyName(predicate)), function (value, index) {
-                  setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
+                  if (!options.onlyValueSuggestions) {
+                    setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
+                  } else {
+                    input.suggestedValues = input.suggestedValues || []
+                    input.suggestedValues.push({
+                      value: value.value,
+                      source: options.source
+                    })
+                  }
                 })
               }
               rootIndex++
@@ -335,7 +468,9 @@
       Promise.all(promises).then(function () {
         ractive.update()
         ractive.set('save_status', 'åpnet eksisterende ressurs')
-        ractive.set('targetUri.' + type, resourceUri)
+        if (resourceUri) {
+          ractive.set('targetUri.' + type, resourceUri)
+        }
         if (!(options.keepDocumentUrl)) {
           updateBrowserLocationWithUri(type, resourceUri)
         }
@@ -350,7 +485,7 @@
           }
         )
       // .catch(function (err) {
-      //    console.log("HTTP GET existing resource failed with:")
+      //    console.log('HTTP GET existing resource failed with:')
       //    console.log(err)
       // })
     }
@@ -380,9 +515,9 @@
           return resourceUri
         })
       // .catch(function (err) {
-      //    console.log("POST to " + resourceType.toLowerCase() + " fails: " + err)
+      //    console.log('POST to ' + resourceType.toLowerCase() + ' fails: ' + err)
       //    errors.push(err)
-      //    ractive.set("errors", errors)
+      //    ractive.set('errors', errors)
       // })
     }
 
@@ -442,12 +577,6 @@
       } ]
     }
 
-    function transferWidgetOptions (prop, input, inputMap, ontologyUri) {
-      if (prop.widgetOptions) {
-        input.widgetOptions = prop.widgetOptions
-      }
-    }
-
     function transferInputGroupOptions (prop, input) {
       if (prop.multiple) {
         input.multiple = true
@@ -494,13 +623,17 @@
       if (prop.type === 'searchable-with-result-in-side-panel') {
         input.values[ 0 ].searchable = true
       }
+      if (prop.required) {
+        input.required = prop.required
+      }
+    }
+
+    var lastFoundOrActualLast = function (lastIndexOfVisible, numberOfInputs) {
+      return lastIndexOfVisible === -1 ? numberOfInputs - 1 : lastIndexOfVisible
     }
 
     function markFirstAndLastInputsInGroup (group) {
       (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true;
-      var lastFoundOrActualLast = function (lastIndexOfVisible, numberOfInputs) {
-        return lastIndexOfVisible == -1 ? numberOfInputs - 1 : lastIndexOfVisible
-      };
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
@@ -534,7 +667,7 @@
           input.type = 'input-string' // temporarily
           break
         default:
-          throw new Error("Don't know which input-type to assign to range: " + input.range)
+          throw new Error('Don\'t know which input-type to assign to range: ' + input.range)
       }
     }
 
@@ -581,7 +714,6 @@
             datatypes: datatypes,
             label: i18nLabelValue(props[ i ][ 'rdfs:label' ]),
             domain: domain,
-            searchResult: null,
             allowAddNewButton: false,
             values: emptyValues(predefined),
             dataAutomationId: unPrefix(domain) + '_' + predicate + '_0'
@@ -611,7 +743,8 @@
           subInputs: [],
           predicate: ontologyUri + prop.subInputs.rdfProperty,
           ranges: prop.subInputs.ranges,
-          range: prop.subInputs.range
+          range: prop.subInputs.range,
+          inputGroupRequiredVetoes: []
         }
         if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
           currentInput.subjectType = currentInput.subjectTypes[ 0 ]
@@ -633,9 +766,11 @@
               nameProperties: subInput.nameProperties,
               dataAutomationId: inputFromOntology.dataAutomationId,
               widgetOptions: subInput.widgetOptions,
-              id: subInput.id
+              suggestValueFrom: subInput.suggestValueFrom,
+              id: subInput.id,
+              required: subInput.required
               // ,
-              // values: emptyValues(false, type === "searchable-with-result-in-side-panel")
+              // values: emptyValues(false, type === 'searchable-with-result-in-side-panel')
             }),
             parentInput: currentInput
           }
@@ -689,25 +824,40 @@
               visible: true,
               indexTypes: [ input.searchMainResource.indexType ],
               selectedIndexType: input.searchMainResource.indexType,
-              searchResult: null,
               isMainEntry: true,
               isRoot: input.searchMainResource.isRoot,
               widgetOptions: input.widgetOptions,
+              suggestValueFrom: input.suggestValueFrom,
               datatype: input.datatype,
               showOnlyWhenEmpty: input.searchMainResource.showOnlyWhenMissingTargetUri,
-              dataAutomationId: input.searchMainResource.automationId
+              dataAutomationId: input.searchMainResource.automationId,
+              inputIndex: index
+            })
+          } else if (input.searchForValueSuggestions) {
+            groupInputs.push({
+              label: input.searchForValueSuggestions.label,
+              values: emptyValues(false, true),
+              type: 'searchable-for-value-suggestions',
+              visible: true,
+              widgetOptions: input.widgetOptions,
+              datatype: input.datatype,
+              showOnlyWhenEmpty: input.searchForValueSuggestions.showOnlyWhenMissingTargetUri,
+              dataAutomationId: input.searchForValueSuggestions.automationId,
+              searchForValueSuggestions: input.searchForValueSuggestions,
+              inputIndex: index
             })
           } else {
+            input.inputIndex = index
             if (input.rdfProperty) {
               ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
               assignUniqueValueIds(ontologyInput)
               if (typeof ontologyInput === 'undefined') {
-                throw new Error("Group '" + inputGroup.id + "' specified unknown property '" + input.rdfProperty + "'")
+                throw new Error(`Group "${inputGroup.id} " specified unknown property "${input.rdfProperty}"`)
               }
             } else if (input.subInputs) {
               ontologyInput = createInputForCompoundInput(input, inputGroup, ontologyUri, inputMap)
             } else {
-              throw new Error('Input #' + index + " of tab or form with id '" + inputGroup.id + "' must have rdfProperty, subInputs or searchMainResource")
+              throw new Error(`Input #${index} of tab or form with id ${inputGroup.id} must have rdfProperty, subInputs or searchMainResource`)
             }
 
             if (inputGroup.rdfType === unPrefix(ontologyInput.domain)) {
@@ -715,15 +865,20 @@
               ontologyInput.rdfType = inputGroup.rdfType
             }
             transferInputGroupOptions(input, ontologyInput)
-            transferWidgetOptions(input, ontologyInput, inputMap, ontologyUri)
+            if (input.widgetOptions) {
+              ontologyInput.widgetOptions = input.widgetOptions
+            }
+            if (input.suggestValueFrom) {
+              ontologyInput.suggestValueFrom = input.suggestValueFrom
+            }
           }
           copyResourceForms(input)
         })
         return groupInputs
       }
 
-      var configInputsForVisibleGroup = function (inputGroup) {
-        var group = {}
+      var configInputsForVisibleGroup = function (inputGroup, index) {
+        var group = { groupIndex: index }
         var groupInputs = createInputsForGroup(inputGroup)
         group.inputs = groupInputs
         group.tabLabel = inputGroup.label
@@ -743,6 +898,7 @@
       _.each(applicationData.config.tabs, configInputsForVisibleGroup)
       applicationData.inputGroups = inputGroups
       applicationData.inputs = inputs
+      applicationData.inputMap = inputMap
       applicationData.maintenanceInputs = createInputsForGroup(applicationData.config.authorityMaintenance[ 0 ])
       markFirstAndLastInputsInGroup({ inputs: applicationData.maintenanceInputs })
       return axios.all(predefinedValues).then(function (values) {
@@ -792,6 +948,49 @@
       })
     }
 
+    function externalSourceHitDescription (graph, source) {
+      var workGraph = graph.byType('Work')[ 0 ]
+      if (!workGraph) {
+        throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om verket.`)
+      }
+      var mainHitLine = []
+      var detailsHitLine = []
+      var publicationGraph = graph.byType('Publication')[ 0 ]
+      if (!publicationGraph) {
+        throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om utgivelsen.`)
+      }
+      mainHitLine = _.map(publicationGraph.getAll('mainTitle'), function (prop) {
+        return prop.value
+      })
+      detailsHitLine = _.map(publicationGraph.getAll('publicationYear'), function (prop) {
+        return prop.value
+      })
+
+      _.each(workGraph.outAll('contributor'), function (contributor) {
+        if (contributor.isA('deichman:MainEntry')) {
+          var agent = contributor.out('agent')
+          detailsHitLine.push(agent.get('name').value)
+        }
+      })
+      return {
+        main: mainHitLine.join(' - '),
+        details: detailsHitLine.join(' - '),
+        graph: graph,
+        source: source
+      }
+    }
+
+    function isBlankNodeUri (uri) {
+      return uri && uri.startsWith('_:')
+    }
+
+    function getSuggestedValuesSearchInput () {
+      var suggestValueInput = _.find(_.flatten(_.pluck(ractive.get('inputGroups'), 'inputs')), function (input) {
+        return input.searchForValueSuggestions
+      })
+      return suggestValueInput
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -826,24 +1025,16 @@
           return workItem
         }
       },
-      getURLParameter: function (name) {
-        // http://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-url-parameter
-        name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]')
-        var regexS = '[\\?&]' + name + '=([^&#]*)'
-        var regex = new RegExp(regexS)
-        var results = regex.exec(location.search)
-        return results === null ? null : results[ 1 ]
-      },
       patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
         var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype)
         if (patch && patch.trim() !== '' && patch.trim() !== '[]') {
           ractive.set('save_status', 'arbeider...')
           axios.patch(subject, patch, {
-              headers: {
-                Accept: 'application/ld+json',
-                'Content-Type': 'application/ldpatch+json'
-              }
-            })
+            headers: {
+              Accept: 'application/ld+json',
+              'Content-Type': 'application/ldpatch+json'
+            }
+          })
             .then(function (response) {
               // successfully patched resource
               updateInputsForResource(response, subject, { keepDocumentUrl: true })
@@ -861,15 +1052,21 @@
             })
           // .catch(function (response) {
           //    // failed to patch resource
-          //    console.log("HTTP PATCH failed with: ")
-          //    errors.push("Noe gikk galt! Fikk ikke lagret endringene")
-          //    ractive.set("save_status", "")
+          //    console.log('HTTP PATCH failed with: ')
+          //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
+          //    ractive.set('save_status', '')
           // })
         }
       },
+      predefinedLabelValue: function (type, uri) {
+        return i18nLabelValue(_.find(ractive.get('predefinedValues.' + type), function (predefinedValue) {
+          return predefinedValue[ '@id' ] === uri
+        })[ 'rdfs:label' ])
+      },
+
       init: function (template) {
         var query = URI.parseQuery(URI.parse(document.location.href).query)
-        var template = '/templates/' + (query.template || template || 'menu') + '.html'
+        template = '/templates/' + (query.template || template || 'menu') + '.html'
         var partials = [
           'input',
           'input-string',
@@ -880,13 +1077,21 @@
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
           'searchable-authority-dropdown',
+          'searchable-for-value-suggestions',
+          'suggested-values',
+          'suggestor-for-searchable-with-result-in-side-panel',
+          'suggestor-for-select-predefined-value',
+          'suggestor-for-input-string',
+          'suggestor-for-input-gYear',
+          'suggestor-for-input-nonNegativeInteger',
+          'suggestor-for-input-literal',
           'select-predefined-value',
           'work'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
         //    // TODO remove this when everything works perfectly (as if...)
-        //    console.log('ERROR: "' + message + '" in file: ' + url + ', line: ' + line)
+        //    console.log('ERROR: '' + message + '' in file: ' + url + ', line: ' + line)
         // }
 
         // axios and phantomjs needs a Promise polyfill, so we use the one provided by ractive.
@@ -973,27 +1178,32 @@
           }
           ractive.set('save_status', 'arbeider...')
           return axios.patch(mainSubject, JSON.stringify(patch), {
-              headers: {
-                Accept: 'application/ld+json',
-                'Content-Type': 'application/ldpatch+json'
-              }
-            })
+            headers: {
+              Accept: 'application/ld+json',
+              'Content-Type': 'application/ldpatch+json'
+            }
+          })
             .then(function (response) {
               // successfully patched resource
               ractive.set('save_status', 'alle endringer er lagret')
             })
           // .catch(function (response) {
           //    // failed to patch resource
-          //    console.log("HTTP PATCH failed with: ")
-          //    errors.push("Noe gikk galt! Fikk ikke lagret endringene")
-          //    ractive.set("save_status", "")
+          //    console.log('HTTP PATCH failed with: ')
+          //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
+          //    ractive.set('save_status', '')
           // })
         }
 
         var initRactive = function (applicationData) {
           Ractive.decorators.select2.type.singleSelect = function (node) {
             return {
-              maximumSelectionLength: 1
+              maximumSelectionLength: 1,
+              templateSelection: function (selection) {
+                var source = $(selection.element.parentElement).attr('data-accepted-source')
+                var sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+                return $(`<span>${selection.text}${sourceSpan}</span>`)
+              }
             }
           }
 
@@ -1070,7 +1280,7 @@
                   $(e.target).select2('val', '')
                 }
                 var inputNode = ractive.get(grandParentOf(keypath))
-                if (!inputNode.isSubInput && keypath.indexOf("enableCreateNewResource") === -1) {
+                if (!inputNode.isSubInput && keypath.indexOf('enableCreateNewResource') === -1) {
                   Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
                     ractive.get(keypath), inputNode.datatype, errors, keypath)
                 }
@@ -1091,18 +1301,23 @@
           }
           var clickOutsideSupportPanelDetector = function (node) {
             $(document).click(function (event) {
-              var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath))
-              var targetIsInsideSupportPanel = $(event.target).closest('span.support-panel').length
-              var targetIsSupportPanel = $(event.target).is('span.support-panel')
-              var targetIsASupportPanelButton = $(event.target).is('.support-panel-button')
+              var outsideX = event.pageX < supportPanelLeftEdge || event.pageX > (supportPanelLeftEdge + supportPanelWidth)
+              var targetIsInsideSupportPanel = !outsideX && $(event.target).closest('span.support-panel').length
+              var targetIsSupportPanel = !outsideX && $(event.target).is('span.support-panel')
+              var targetIsASupportPanelButton = !outsideX && $(event.target).is('.support-panel-button')
 
-              var targetIsARadioButtonThatWasOffButIsOnNow = $(event.target).is("input[type='radio'][value='on']")
-              var targetIsASelect2RemoveSelectionCross = $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
+              var targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.target).is('input[type=\'radio\'][value=\'on\']')
+              var targetIsASelect2RemoveSelectionCross = !outsideX && $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
               if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross)) {
                 clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
-                clearMaintenanceInputs()
               }
             })
+            return {
+              teardown: function () {}
+            }
+          }
+          var unload = function (node) {
+            $(window).unload(saveSuggestionData)
             return {
               teardown: function () {}
             }
@@ -1120,7 +1335,6 @@
               resource_type: '',
               resource_label: '',
               ontology: null,
-              searchResult: null,
               config: applicationData.config,
               save_status: 'ny ressurs',
               authorityLabels: {},
@@ -1131,7 +1345,7 @@
                 return url.replace(/[:\/\.]/g, '_')
               },
               isSelected: function (option, value) {
-                return option[ '@id' ].contains(value) ? "selected='selected'" : ''
+                return option[ '@id' ].contains(value) ? 'selected=\'selected\'' : ''
               },
               getRdfsLabelValue: function (label) {
                 return i18nLabelValue(label)
@@ -1145,14 +1359,10 @@
               readyToAddRole: function (node) {
                 return true
               },
-              spy: function (node) {
+              spy: function (node, nmode2) {
                 console.log('spy: ' + node.keypath)
               },
-              predefinedLabelValue: function (type, uri) {
-                return i18nLabelValue(_.find(ractive.get('predefinedValues.' + type), function (predefinedValue) {
-                  return predefinedValue[ '@id' ] === uri
-                })[ 'rdfs:label' ])
-              },
+              predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {
                 var publicationIdInput = _.find(ractive.get('inputs'), function (input) {
                   return input.predicate.indexOf('#recordID') !== -1
@@ -1196,26 +1406,17 @@
                 return typeof ractive.get('targetUri.' + type) !== 'undefined'
               },
               getSearchResultItemLabel: function (item, itemLabelProperties) {
-                return _.compact(_.values(_.pick(item, itemLabelProperties))).join(" - ")
+                return _.compact(_.values(_.pick(item, itemLabelProperties))).join(' - ')
               },
               tabIdFromDocumentUrl: function () {
                 var uri = URI.parse(document.location.href)
                 var queryParameters = URI.parseQuery(uri.query)
                 return queryParameters.openTab || 0
               },
-              targetResources: {
-                Work: {
-                  uri: '',
-                  pendingProperties: []
-                },
-                Person: {
-                  uri: '',
-                  pendingProperties: []
-                },
-                Publication: {
-                  uri: '',
-                  pendingProperties: []
-                }
+              unacceptedSuggestions: function (input) {
+                return _.find(input.subInputs[ 0 ].input.values, function (value) {
+                  return value.suggested && value.suggested !== null
+                })
               }
             },
             decorators: {
@@ -1223,7 +1424,8 @@
               repositionSupportPanel: repositionSupportPanel,
               detectChange: detectChange,
               handleAddNewBySelect2: handleAddNewBySelect2,
-              clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector
+              clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
+              unload: unload
             },
             partials: applicationData.partials
           })
@@ -1234,14 +1436,18 @@
               // addValue adds another input field for the predicate.
               addValue: function (event) {
                 var mainInput = ractive.get(event.keypath)
-                visitInputs(mainInput, function (input) {
-                  input.values[ input.values.length ] = {
+                visitInputs(mainInput, function (input, index) {
+                  var length = input.values.length
+                  input.values[ length ] = {
                     old: { value: '', lang: '' },
                     current: { value: '', lang: '' },
                     uniqueId: _.uniqueId(),
-                    searchable: mainInput.type === 'searchable-with-result-in-side-panel'
+                    searchable: input.type === 'searchable-with-result-in-side-panel',
+                    searchResult: null
                   }
-                  input.searchResult = null
+                  if (index === 0) {
+                    input.values[ length ].subjectType = null
+                  }
                 })
                 ractive.update()
                 ractive.set(event.keypath + '.allowAddNewButton', false)
@@ -1251,7 +1457,7 @@
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, clearProperty) {
                 var input = ractive.get(grandParentOf(event.keypath))
-                if (!input.isSubInput) {
+                if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
                   var inputValue = event.context
                   if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
                     return
@@ -1274,8 +1480,10 @@
                 patchObject(input, applicationData, index, 'add').then(function () {
                   visitInputs(input, function (input) {
                     if (input.isSubInput) {
-                      _.each(input.values, function (value) {
-                        value.nonEditable = true
+                      _.each(input.values, function (value, valueIdex) {
+                        if (valueIdex === index) {
+                          value.nonEditable = true
+                        }
                       })
                     }
                   })
@@ -1304,8 +1512,11 @@
                 })
               },
               searchResource: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
+                var inputkeyPath = grandParentOf(event.keypath)
                 if (!searchString) {
-                  ractive.set(grandParentOf(event.keypath) + ".searchResult", null)
+                  if (ractive.get(event.keypath + '.searchResult.')) {
+                    ractive.set(event.keypath + '.searchResult.', null)
+                  }
                 } else {
                   var searchBody
                   var config = ractive.get('config')
@@ -1316,21 +1527,21 @@
                       personAsMainEntryFilter: function (filterArg) {
                         return {
                           nested: {
-                            path: "work.contributors",
+                            path: 'work.contributors',
                             query: {
                               bool: {
                                 filter: [
                                   {
                                     term: {
-                                      "work.contributors.mainEntry": true
+                                      'work.contributors.mainEntry': true
                                     }
                                   },
                                   {
                                     nested: {
-                                      path: "work.contributors.agent",
+                                      path: 'work.contributors.agent',
                                       query: {
                                         term: {
-                                          "work.contributors.agent.uri": filterArg
+                                          'work.contributors.agent.uri': filterArg
                                         }
                                       }
                                     }
@@ -1346,11 +1557,14 @@
                       }
                     }
                     var filterArg = null
-                    var filterArgInputRef = ractive.get(grandParentOf(event.keypath) + '.widgetOptions.filter.inputRef')
+                    var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
                     if (filterArgInputRef) {
                       filterArg = _.find(allInputs(), function (input) {
                         return filterArgInputRef === input.id
                       }).values[ 0 ].current.value
+                    }
+                    if (isBlankNodeUri(filterArg)) {
+                      filterArg = undefined
                     }
 
                     var matchBody = {}
@@ -1359,14 +1573,14 @@
                       operator: 'and'
                     }
 
-                    var filterName = filterArg ? ractive.get(grandParentOf(event.keypath) + '.widgetOptions.filter.name') || 'default' : 'default'
+                    var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'
 
                     searchBody = {
-                      "query": {
-                        "bool": {
-                          "filter": [
+                      query: {
+                        bool: {
+                          filter: [
                             {
-                              "match": matchBody
+                              match: matchBody
                             }, filters[ filterName ](filterArg)
                           ]
                         }
@@ -1376,11 +1590,11 @@
                     axiosMethod = axios.get
                     searchBody = {
                       params: {
-                        q: config.search[ indexType ].queryTerm + ':' + searchString + '*'
+                        q: `${config.search[ indexType ].queryTerm}:${searchString}*`
                       }
                     }
                   }
-                  var searchURI = config.resourceApiUri + 'search/' + indexType + '/_search'
+                  var searchURI = `${config.resourceApiUri}search/${indexType}/_search`
 
                   axiosMethod(searchURI, searchBody)
                     .then(function (response) {
@@ -1400,10 +1614,11 @@
                           })
                         }
                       })
-                      ractive.set(grandParentOf(event.keypath) + '.searchResult', {
+                      ractive.set(event.keypath + '.searchResult', {
                         items: _.map(_.pluck(_.pluck(results.hits.hits, '_source'), indexType),
                           Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]),
-                        origin: event.keypath
+                        origin: event.keypath,
+                        searchTerm: searchString
                       })
                       positionSupportPanels()
                     })
@@ -1411,6 +1626,9 @@
                   //    console.log(err)
                   // })
                 }
+              },
+              searchResourceFromSuggestion: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
+                ractive.fire('searchResource', { keypath: grandParentOf(event.keypath) + '.values.0' }, searchString, indexType, loadWorksAsSubjectOfItem)
               },
               toggleWork: function (event, findWorksAsSubjectOfType, origin) {
                 var keypath = event.keypath + '.toggleWork'
@@ -1420,7 +1638,7 @@
                 }
               },
               selectSearchableItem: function (event, origin, displayValue) {
-                ractive.set(grandParentOf(origin) + ".searchResult", null)
+                ractive.set(origin + '.searchResult', null)
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
                 var uri = event.context.uri
@@ -1447,7 +1665,7 @@
                       ractive.get(grandParentOf(origin)).predicate,
                       unPrefix(input.domain))
                   }
-                  ractive.set(inputKeyPath + '.searchResult', null)
+                  ractive.set(origin + '.searchResult', null)
                 }
               },
               selectWorkResource: function (event) {
@@ -1506,12 +1724,13 @@
                         })
                         if (targetInput) {
                           targetInput.values = deepClone(sourceInput.values)
+                          targetInput.datatype = sourceInput.datatype
                         }
                       }
                     })
                   })
                   saveNewResourceFromInputs(newResourceType.type)
-                  ractive.update();
+                  ractive.update()
                 }
                 var foundSelectedTab = false
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
@@ -1528,20 +1747,19 @@
                 })
               },
               showCreateNewResource: function (event, origin) {
-                ractive.set(grandParentOf(origin) + ".searchResult.hidden", true)
-                var searchTerm = ractive.get(origin + '.current')
-                if (searchTerm && searchTerm.displayValue) {
+                ractive.set(origin + '.searchResult.hidden', true)
+                var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
+                if (searchTerm) {
                   _.each(event.context.inputs, function (input) {
                     if (input.preFillFromSearchField) {
-                      input.values[ 0 ].current.value = searchTerm.displayValue
-                      ractive.update()
+                      input.values[ 0 ].current.value = searchTerm
                     }
                   })
                 }
-                ractive.set(grandParentOf(event.keypath) + '.showInputs', true)
+                ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
               },
               createNewResource: function (event, origin) {
-                var maintenance = origin.indexOf("maintenanceInputs") != -1
+                var maintenance = origin.indexOf('maintenanceInputs') !== -1
                 var displayValueInput = _.find(event.context.inputs, function (input) {
                   return input.displayValueSource === true
                 })
@@ -1566,9 +1784,9 @@
                   return resourceUri
                 }
                 var patchMotherResource = function (resourceUri) {
-                  var targetInput = ractive.get(grandParentOf(origin));
+                  var targetInput = ractive.get(grandParentOf(origin))
                   if (!useAfterCreation && !targetInput.isSubInput) {
-                    Main.patchResourceFromValue(ractive.get("targetUri." + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatype, errors)
+                    Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatype, errors)
                   }
                   return resourceUri
                 }
@@ -1591,8 +1809,8 @@
                   return resourceUri
                 }
                 var clearInputsAndSearchResult = function () {
-                  if (ractive.get(grandParentOf(origin) + '.searchResult')) {
-                    ractive.set(grandParentOf(origin) + '.searchResult', null)
+                  if (ractive.get(origin + '.searchResult')) {
+                    ractive.set(origin + '.searchResult', null)
                   }
                   _.each(event.context.inputs, function (input, index) {
                     ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false))
@@ -1610,11 +1828,162 @@
                   .then(clearInputsAndSearchResult)
               },
               cancelEdit: function (event) {
-                clearSupportPanels();
+                clearSupportPanels()
                 ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
+              },
+              fetchValueSuggestions: function (event) {
+                var searchValue = event.context.current.value
+                if (searchValue && searchValue !== '') {
+                  var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
+                  searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource = []
+                  searchExternalSourceInput.searchForValueSuggestions.valuesFromPreferredSource = []
+                  _.each(allInputs(), function (input) {
+                    input.suggestedValues = null
+                  })
+                  ractive.update()
+                  var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
+                  _.each(sources, function (source) {
+                    axios.get('/valueSuggestions/' + source + '/' + searchValue).then(function (response) {
+                      var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
+                      var hitsFromPreferredSource = { source: response.data.source, items: [] }
+                      _.each(response.data.hits, function (hit) {
+                        var graph = ldGraph.parse(hit)
+                        if (fromPreferredSource) {
+                          hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
+                        } else {
+                          var options = {
+                            keepDocumentUrl: true,
+                            onlyValueSuggestions: true,
+                            source: response.data.source
+                          }
+                          _.each([ 'Work', 'Publication' ], function (domain) {
+                            updateInputsForResource({ data: {} }, null, options, graph.byType(domain)[ 0 ], domain)
+                          })
+                        }
+                      })
+                      if (fromPreferredSource) {
+                        searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource.push(hitsFromPreferredSource)
+                      }
+                      ractive.update()
+                    }).then(function () {
+                      updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
+                    }).catch(function (error) {
+                      errors.push(error)
+                    })
+                  })
+                }
+              },
+              acceptSuggestedPredefinedValue: function (event, value) {
+                var input = ractive.get(grandParentOf(event.keypath))
+                var source = $(event.node).attr('data-accepted-source')
+                if (!input.multiple) {
+                  setMultiValues([ { id: value.value } ], input, 0, { source: source })
+                } else {
+                  var oldValues = _.map(input.values[ 0 ].current.value, function (value) {
+                    return { id: value }
+                  })
+                  oldValues.push({ id: value.value })
+                  setMultiValues(oldValues, input, 0, { source: source })
+                }
+                ractive.update()
+                ractive.fire('patchResource',
+                  { keypath: grandParentOf(event.keypath) + '.values.0', context: input.values[ 0 ] },
+                  input.predicate,
+                  unPrefix(input.domain))
+              },
+              acceptSuggestedLiteralValue: function (event, value) {
+                var input = ractive.get(grandParentOf(event.keypath))
+                if (!input.multiple) {
+                  setSingleValue(value, input, 0)
+                } else {
+                  var oldValues = input.values
+                  setSingleValue(value, input, oldValues.length, { isNew: true })
+                }
+                ractive.update()
+                var valueIndex = oldValues ? oldValues.length - 1 : 0
+                ractive.fire('patchResource',
+                  {
+                    keypath: grandParentOf(event.keypath) + '.values.' + (valueIndex),
+                    context: input.values[ valueIndex ]
+                  },
+                  input.predicate,
+                  unPrefix(input.domain))
+              },
+              acceptExternalItem: function (event) {
+                var inputsWithValueSuggestionEnabled = _.filter(allInputs(), function (input) {
+                    return input.suggestValueFrom
+                  }
+                )
+
+                _.each([ 'Work', 'Publication' ], function (domain) {
+                  var node = event.context.graph.byType(domain)[ 0 ]
+                  updateInputsForResource({ data: {} }, null, {
+                    keepDocumentUrl: true,
+                    source: event.context.source
+                  }, node, domain)
+                  _.each(inputsWithValueSuggestionEnabled, function (input) {
+                    if (input.suggestValueFrom.domain === domain) {
+                      input.values = input.values || [ { current: {} } ]
+                      _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
+                        input.values[ index ].current.displayValue = value.value
+                      })
+                    }
+                  })
+                })
+                ractive.set('primarySuggestionAccepted', true)
+                ractive.update()
+              },
+              useSuggestion: function (event) {
+                event.context.suggested = null
+                event.context.keepOrder = true
+                ractive.update()
               }
             }
           )
+
+          function castVetoForRequiredSubInput (inputGroupKeypath, valueIndex, voter, veto) {
+            var vetoesKeyPath = inputGroupKeypath + '.inputGroupRequiredVetoes.' + valueIndex
+            var inputGroupRequiredVetoes = (ractive.get(vetoesKeyPath) || '').split('')
+            if (veto) {
+              inputGroupRequiredVetoes = _.union(inputGroupRequiredVetoes, [ voter ])
+            } else {
+              inputGroupRequiredVetoes = _.difference(inputGroupRequiredVetoes, [ voter ])
+            }
+            ractive.set(vetoesKeyPath, inputGroupRequiredVetoes.join(''))
+          }
+
+          function checkRequiredSubjectTypeSelection (keypath, newValue) {
+            var valueIndex = _.last(parentOf(keypath).split('.'))
+            var inputKeypath = parentOf(grandParentOf(keypath))
+            var inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
+            var input = ractive.get(inputKeypath)
+            if (input.required && _.isArray(input.subjectTypes) && input.subjectTypes.length < 2) {
+              var veto = newValue === undefined || newValue === null
+              castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, '*', veto)
+            }
+          }
+
+          function checkRequiredSubInput (newValue, keypath) {
+            newValue = _.flatten([ newValue ]).join('')
+            var valueIndex = _.last(grandParentOf(keypath).split('.'))
+            var inputKeypath = grandParentOf(grandParentOf(keypath))
+            var inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
+            var input = ractive.get(inputKeypath)
+            if (input.required) {
+              var voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
+              var veto = !(typeof newValue === 'string' && newValue.length > 0) ||
+                (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
+              castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
+            }
+          }
+
+          ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
+            checkRequiredSubjectTypeSelection(keypath, newValue)
+          }, { init: false })
+
+          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+            checkRequiredSubInput(newValue, keypath)
+          })
 
           ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
             if (newValue && newValue.current) {
@@ -1623,10 +1992,11 @@
                 return
               }
               var parent = grandParentOf(keypath)
-              if (typeof newValue.current.value[ 0 ] === 'string') {
+              let uri = newValue.current.value[ 0 ]
+              if (typeof uri === 'string') {
                 var predicate = ractive.get(parent + '.predicate')
-                if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== newValue.current.value[ 0 ]) {
-                  fetchExistingResource(newValue.current.value[ 0 ])
+                if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== uri && !isBlankNodeUri(uri)) {
+                  fetchExistingResource(uri)
                 }
               }
               var valid = false
@@ -1642,51 +2012,40 @@
                 ractive.set(keypath + '.error', 'ugyldig input')
               }
             }
-          })
-          ractive.observe('searchResult.results.hits.hits.*._source.person.isChecked', function (newValue, oldValue, keypath) {
-            if (newValue === true) {
-              var workPath = getParentFromKeypath(keypath)
-              checkSelectedSearchResults([ workPath ])
-            }
-          })
-
-          ractive.observe('searchResult.results.hits.hits.*._source.person.work.*.isChecked', function (newValue, oldValue, keypath) {
-            if (newValue === true) {
-              var workPath = getParentFromKeypath(keypath)
-              var personPath = getParentFromKeypath(keypath, 3)
-              checkSelectedSearchResults([ personPath, workPath ])
-            }
-          })
+          }, { init: false })
 
           ractive.observe('targetUri.Work', function (newValue, oldValue, keypath) {
-            _.each(ractive.get('inputs'), function (input, inputIndex) {
-              if (input.predicate.indexOf('#publicationOf') !== -1) {
-                ractive.set('inputs.' + inputIndex + '.values.0.current.value', newValue)
-                ractive.set('inputs.' + inputIndex + '.values.0.old.value', '')
+            _.each(allInputs(), function (input, inputIndex) {
+              if (input.predicate && input.predicate.indexOf('#publicationOf') !== -1) {
+                input.values = [
+                  {
+                    current: {
+                      value: [ newValue ]
+                    }
+                  }
+                ]
+                // ractive.set('inputs.' + inputIndex + '.values.0.current.value', newValue)
+                // ractive.set('inputs.' + inputIndex + '.values.0.old.value', '')
               }
             })
             ractive.update()
-          })
+          }, { init: false })
 
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
             if (newValue === true) {
               updateBrowserLocationWithTab(keypath.split('.')[ 1 ])
             }
-          })
+          }, { init: false })
 
-          function getParentFromKeypath (keypath, parentLevels) {
-            parentLevels = parentLevels || 1
-            var split = keypath.split('.')
-            return split.splice(0, split.length - parentLevels).join('.')
-          }
-
-          function checkSelectedSearchResults (pathsToCheck) {
-            ractive.set('searchResult.results.hits.hits.*._source.person.isChecked', false)
-            ractive.set('searchResult.results.hits.hits.*._source.person.work.*.isChecked', false)
-            pathsToCheck.forEach(function (path) {
-              ractive.set(path + '.isChecked', true)
-            })
-          }
+          ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
+            var openInputForms = ractive.get('openInputForms') || []
+            if (newValue === true) {
+              openInputForms = _.union(openInputForms, [ keypath ])
+            } else {
+              openInputForms = _.without(openInputForms, keypath)
+            }
+            ractive.set('openInputForms', openInputForms)
+          }, { init: false })
 
           ractive.set('inputGroups', applicationData.inputGroups)
           ractive.set('inputs', applicationData.inputs)
@@ -1759,6 +2118,37 @@
         var loadResourceOfQuery = function (applicationData) {
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           var tab = query.openTab
+          var externalSources = _.compact(_.flatten([ query.externalSource ]))
+          if (externalSources && externalSources.length > 0) {
+            applicationData.externalSources = externalSources
+          }
+          var suggestionsAccepted = query.acceptedSuggestionsFrom
+          if (suggestionsAccepted) {
+            var suggestionParts = suggestionsAccepted.split(':')
+            var property = suggestionParts[ 0 ]
+            var value = suggestionParts[ 1 ]
+            var suggestValueInput = getSuggestedValuesSearchInput()
+            if (suggestValueInput) {
+              if (window.sessionStorage[ property ] && window.sessionStorage[ property ] === value) {
+                var suggestionData = JSON.parse(window.sessionStorage.suggestionData)
+                _.each(suggestionData, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.suggestedValues)
+                })
+                var acceptedData = JSON.parse(window.sessionStorage.acceptedData)
+                _.each(acceptedData, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.value)
+                })
+                ractive.set('primarySuggestionAccepted', true)
+              }
+              suggestValueInput.values = [ {
+                current: {
+                  value: value
+                }
+              } ]
+              ractive.update()
+              window.sessionStorage.clear()
+            }
+          }
           if (query.Publication) {
             fetchExistingResource(query.Publication)
               .then(loadWorkOfPublication)
@@ -1777,6 +2167,7 @@
           }
           return applicationData
         }
+
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
@@ -1788,12 +2179,12 @@
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
           .catch(function (err) {
-            console.log("Error initiating Main: " + err)
+            console.log('Error initiating Main: ' + err)
           })
       },
       repositionSupportPanelsHorizontally: function () {
-        var supportPanelLeftEdge = $('#right-dummy-panel').position().left
-        var supportPanelWidth = $('#right-dummy-panel').width()
+        supportPanelLeftEdge = $('#right-dummy-panel').position().left
+        supportPanelWidth = $('#right-dummy-panel').width()
 
         $('.support-panel').each(function (index, panel) {
           $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
@@ -1801,7 +2192,8 @@
       },
       getRactive: function () {
         return ractive
-      }
+      },
+      saveSuggestionData: saveSuggestionData
     }
     return Main
   }

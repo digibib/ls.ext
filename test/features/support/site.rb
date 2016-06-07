@@ -16,8 +16,19 @@ class Site
         'emne' => 'subject',
         'sjanger' => 'genre',
         'hovedtittel' => "mainTitle",
-        'undertittel' => "subtitle"
-    }[concept.downcase]
+        'undertittel' => "subtitle",
+        'bidrag' => 'Contribution',
+        'rolle' => 'role',
+        'utgivelsen' => 'Publication',
+        'utgivelsesår' => 'publicationYear',
+        'sidetall' => 'numberOfPages',
+        'språk' => 'language',
+        'første' => 1,
+        'andre' => 2,
+        'tredje' => 3,
+        'fjerde' => 4,
+        'femte' => 5
+    }[concept.downcase] || concept
   end
 
   def initialize(browser)
