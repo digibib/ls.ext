@@ -1832,44 +1832,46 @@
                 ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
               },
               fetchValueSuggestions: function (event) {
-                var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
-                searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource = []
-                searchExternalSourceInput.searchForValueSuggestions.valuesFromPreferredSource = []
-                _.each(allInputs(), function (input) {
-                  input.suggestedValues = null
-                })
-                ractive.update()
                 var searchValue = event.context.current.value
-                var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
-                _.each(sources, function (source) {
-                  axios.get('/valueSuggestions/' + source + '/' + searchValue).then(function (response) {
-                    var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
-                    var hitsFromPreferredSource = { source: response.data.source, items: [] }
-                    _.each(response.data.hits, function (hit) {
-                      var graph = ldGraph.parse(hit)
-                      if (fromPreferredSource) {
-                        hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
-                      } else {
-                        var options = {
-                          keepDocumentUrl: true,
-                          onlyValueSuggestions: true,
-                          source: response.data.source
-                        }
-                        _.each([ 'Work', 'Publication' ], function (domain) {
-                          updateInputsForResource({ data: {} }, null, options, graph.byType(domain)[ 0 ], domain)
-                        })
-                      }
-                    })
-                    if (fromPreferredSource) {
-                      searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource.push(hitsFromPreferredSource)
-                    }
-                    ractive.update()
-                  }).then(function () {
-                    updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
-                  }).catch(function (error) {
-                    errors.push(error)
+                if (searchValue && searchValue !== '') {
+                  var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
+                  searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource = []
+                  searchExternalSourceInput.searchForValueSuggestions.valuesFromPreferredSource = []
+                  _.each(allInputs(), function (input) {
+                    input.suggestedValues = null
                   })
-                })
+                  ractive.update()
+                  var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
+                  _.each(sources, function (source) {
+                    axios.get('/valueSuggestions/' + source + '/' + searchValue).then(function (response) {
+                      var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
+                      var hitsFromPreferredSource = { source: response.data.source, items: [] }
+                      _.each(response.data.hits, function (hit) {
+                        var graph = ldGraph.parse(hit)
+                        if (fromPreferredSource) {
+                          hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
+                        } else {
+                          var options = {
+                            keepDocumentUrl: true,
+                            onlyValueSuggestions: true,
+                            source: response.data.source
+                          }
+                          _.each([ 'Work', 'Publication' ], function (domain) {
+                            updateInputsForResource({ data: {} }, null, options, graph.byType(domain)[ 0 ], domain)
+                          })
+                        }
+                      })
+                      if (fromPreferredSource) {
+                        searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource.push(hitsFromPreferredSource)
+                      }
+                      ractive.update()
+                    }).then(function () {
+                      updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
+                    }).catch(function (error) {
+                      errors.push(error)
+                    })
+                  })
+                }
               },
               acceptSuggestedPredefinedValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
