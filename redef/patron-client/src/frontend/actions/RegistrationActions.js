@@ -1,70 +1,85 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
-import { requireLoginBeforeAction } from './LoginActions'
 import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
-import Errors from '../constants/Errors'
-import * as ProfileActions from './ProfileActions'
+import * as LoginActions from './LoginActions'
 
 export function startRegistration () {
   return showModal(ModalComponents.REGISTRATION, {})
 }
-/*
-export function requestRegistration (checkoutId) {
+
+export function requestPostRegistration () {
   return {
-    type: types.REQUEST_EXTEND_LOAN,
-    payload: {
-      checkoutId: checkoutId
-    }
+    type: types.REQUEST_REGISTRATION
   }
 }
 
-export function registrationSuccess (checkoutId) {
-  return dispatch => {
-    dispatch(showModal(ModalComponents.EXTEND_LOAN, { isSuccess: true, checkoutId: checkoutId }))
-    dispatch(ProfileActions.fetchProfileLoans())
-    dispatch({
-      type: types.EXTEND_LOAN_SUCCESS,
-      payload: {
-        checkoutId: checkoutId
-      }
-    })
-  }
-}
-
-export function registrationFailure (error, checkoutId) {
+export function postRegistrationFailure (error) {
   console.log(error)
   return dispatch => {
-    dispatch(showModal(ModalComponents.EXTEND_LOAN, { isError: true, message: error.message, checkoutId: checkoutId }))
-    dispatch(ProfileActions.fetchProfileLoans())
+    dispatch(showModal(ModalComponents.REGISTRATION, {
+      isError: true
+    }))
     dispatch({
-      type: types.EXTEND_LOAN_FAILURE,
+      type: types.REGISTRATION_FAILURE,
       payload: error,
       error: true
     })
   }
 }
 
-export function registration (checkoutId) {
-  const url = '/api/v1/checkouts'
+export function postRegistrationSuccess (username, password) {
   return dispatch => {
-    dispatch(requestRegistration(checkoutId))
+    dispatch(showModal(ModalComponents.REGISTRATION, { isSuccess: true, username: username }))
+    dispatch({ type: types.REGISTRATION_SUCCESS })
+    dispatch(LoginActions.login(username, password))
+  }
+}
+
+export function postRegistration (successAction) {
+  const url = '/api/v1/registration'
+  return (dispatch, getState) => {
+    const { registration: { firstName, lastName, day, month, year, email, mobile, address, zipcode, city, country, gender, pin, history, library } } = getState().form
+    const registrationInfo = {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      day: day.value,
+      month: month.value,
+      year: year.value,
+      email: email.value,
+      mobile: mobile.value,
+      address: address.value,
+      zipcode: zipcode.value,
+      city: city.value,
+      country: country.value,
+      gender: gender.value,
+      pin: pin.value,
+      history: history.value,
+      library: library.value
+    }
+    dispatch(requestPostRegistration())
     return fetch(url, {
-      method: 'PUT',
+      method: 'POST',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ checkoutId: checkoutId })
+      body: JSON.stringify(registrationInfo)
     })
       .then(response => {
-        if (response.status === 200) {
-          dispatch(registrationSuccess(checkoutId))
+        console.log(response.status)
+        if (response.status === 201) {
+          return response.json()
         } else {
-          throw Error(Errors.reservation.GENERIC_EXTEND_LOAN_ERROR)
+          throw Error('Unexpected status code')
         }
       })
-      .catch(error => dispatch(registrationFailure(error, checkoutId)))
+      .then(json => {
+        dispatch(postRegistrationSuccess(json.username, registrationInfo.pin))
+        if (successAction) {
+          dispatch(successAction)
+        }
+      })
+      .catch(error => dispatch(postRegistrationFailure(error)))
   }
 }
-*/

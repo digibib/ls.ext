@@ -13,6 +13,7 @@ function setup (propOverrides) {
     isLoggedIn: false,
     loginActions: { login: expect.createSpy() },
     modalActions: {},
+    registrationActions: {},
     isRequestingLogin: false,
     ...propOverrides
   }

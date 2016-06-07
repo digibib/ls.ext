@@ -1,0 +1,65 @@
+.register-modal {
+  width: 95%;
+  height: auto;
+  padding: rhythm(6);
+  background: $white;
+  margin: 5% auto;
+  border-radius: 5px;
+
+  @include breakpoint($small){
+    width: 40%;
+  }
+
+  h1 {
+    text-align: center;
+    @include semiBoldFont;
+  }
+
+  h2 {
+    @include regularFont;
+    margin-bottom: rhythm(1);
+  }
+
+  h3 {
+    @include regularFontSize;
+    text-align: center;
+  }
+
+  input[type=text] {
+    width: 240px;
+  }
+
+  @include breakpoint($xlarge){
+    #address {
+      width: 500px;
+      display: block;
+    }
+  }
+
+
+  button {
+    width: 100%;
+  }
+
+  .date-of-birth {
+    .item {
+      display: inline-block;
+      
+      input {
+        margin-right: rhythm(4);
+        width: 80px;
+      }
+      
+    }
+  }
+
+  .select-container {
+    max-width: 240px;
+    border-width: 1px;
+  }
+
+  input[type=radio] p {
+    display: inline-block !important;
+  }
+
+}

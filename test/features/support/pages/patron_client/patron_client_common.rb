@@ -45,4 +45,12 @@ class PatronClientCommon < PageRoot
   def reservation_error_modal_visible?
     @browser.element(data_automation_id: 'reservation_error_modal').exists?
   end
+
+  def registration_modal_visible?
+    @browser.element(data_automation_id: 'registration_modal').exists?
+  end
+
+  def registration_success_modal_visible?
+    @browser.element(data_automation_id: 'registration_success_modal').exists?
+  end
 end

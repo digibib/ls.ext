@@ -7,12 +7,17 @@ module.exports = (app) => {
     if (!request.body.username || !request.body.password) {
       return response.sendStatus(403)
     }
-    fetch(`http://koha:8081/cgi-bin/koha/svc/authentication?userid=${request.body.username}&password=${request.body.password}`,
-      { method: 'GET', body: {} })
+    fetch('http://koha:8081/api/v1/auth/session',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          userid: request.body.username,
+          password: request.body.password
+        })
+      })
       .then(res => {
-        if (res.headers && res.headers._headers && res.headers._headers[ 'set-cookie' ] && res.headers._headers[ 'set-cookie' ][ 0 ]) {
+        if (res.status === 201) {
           request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
-          request.session.username = request.body.username
 
           fetch(`http://koha:8081/api/v1/patrons?userid=${request.body.username}`, {
             method: 'GET',
@@ -21,8 +26,7 @@ module.exports = (app) => {
             }
           }).then(res => res.json())
             .then(json => {
-              request.session.borrowerNumber = json[0].borrowernumber
-              request.session.borrowerName = `${json[0].firstname} ${json[0].surname}`
+              request.session.borrowerNumber = json[ 0 ].borrowernumber
               response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
             })
             .catch(error => {
@@ -45,8 +49,7 @@ module.exports = (app) => {
 
   app.get('/api/v1/loginStatus', (request, response) => {
     response.send({
-      isLoggedIn: request.session.kohaSession !== undefined,
-      username: request.session.username,
+      isLoggedIn: request.session.borrowerNumber !== undefined,
       borrowerNumber: request.session.borrowerNumber
     })
   })

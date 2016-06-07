@@ -1,20 +1,20 @@
-.login-modal {
+.register-check-modal {
   width: 95%;
   height: auto;
   padding: rhythm(6);
   background: $white;
   margin: 5% auto;
   border-radius: 5px;
-  
+
   @include breakpoint($small){
-     width: 40%;
+    width: 40%;
   }
 
   h1 {
     text-align: center;
     @include semiBoldFont;
   }
-  
+
   h2 {
     @include regularFont;
     margin-bottom: rhythm(1);
@@ -32,27 +32,17 @@
   button {
     width: 100%;
   }
-}
 
-.error-msg {
-  width: 95%;
-  height: auto;
-  padding: rhythm(2);
-  background: $white;
-  margin: rhythm(2) auto;
-  margin-bottom: -2%;
-  border: 2px solid $redColor;
-  border-radius: 5px;
-  text-align: center;
-  
-  @include breakpoint($small){
-    width: 40%;
-    margin-bottom: -4%;
+  .date-of-birth {
+    .item {
+      display: inline-block;
+
+      input {
+        margin-right: rhythm(4);
+        width: 80px;
+      }
+
+    }
   }
 
-  p {
-    color: $redColor;
-    margin-bottom: 0;
-  }
-  
 }

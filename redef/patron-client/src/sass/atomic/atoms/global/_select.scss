@@ -1,0 +1,21 @@
+.select-container {
+  overflow: hidden;
+  background: url(/images/btn-search-sorting.svg) no-repeat right;
+  background-position: 95%;
+  border: 3px solid #212121;
+
+  select {
+    background: transparent;
+    width: 100%;
+    padding: 0 0 0 5px;
+    height: 34px;
+    font-size: 16px;
+    font-family: poppins-regular, sans-serif;
+    line-height: 1;
+    border: 0;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+  }
+}

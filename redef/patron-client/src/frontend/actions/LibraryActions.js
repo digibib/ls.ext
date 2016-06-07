@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
-import { sortByField } from '../utils/sorting'
+import { mapLibraries } from '../utils/libraryMapper'
 
 export function requestLibraries () {
   return {
@@ -9,15 +9,10 @@ export function requestLibraries () {
 }
 
 export function receiveLibraries (libraries) {
-  const mappedLibraries = {}
-  sortByField(libraries, 'branchname').forEach(library => {
-    mappedLibraries[ library.branchcode ] = library.branchname
-  })
-
   return {
     type: types.RECEIVE_LIBRARIES,
     payload: {
-      libraries: mappedLibraries
+      libraries: libraries
     }
   }
 }
@@ -46,7 +41,7 @@ export function fetchLibraries () {
           throw Error('Error fetching libraries')
         }
       })
-      .then(json => dispatch(receiveLibraries(json)))
+      .then(json => dispatch(receiveLibraries(mapLibraries(json))))
       .catch(error => dispatch(librariesFailure(error)))
   }
 }

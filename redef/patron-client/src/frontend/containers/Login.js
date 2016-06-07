@@ -63,12 +63,12 @@ class Login extends React.Component {
               <h2><FormattedMessage {...messages.password} /></h2>
               <input ref={e => this.passwordInput = e} type='password' />
               <p>Glemt PIN-kode?</p>
-              <button className='red-btn' type='button' disabled={this.props.isRequestingLogin}
+              <button className='black-btn' type='submit' disabled={this.props.isRequestingLogin}
                       onClick={this.handleLogin}
                       data-automation-id='login_button'>
                 <FormattedMessage {...messages.logIn} />
               </button>
-              <h3>Er du ikke registrert? <a onClick={this.handleRegistrationClick} title='register'>Registrer deg</a></h3>
+              <h3>Er du ikke registrert? <a data-automation-id='registration_link' onClick={this.handleRegistrationClick} title='register'>Registrer deg</a></h3>
             </form>
           </div>
         </section>
@@ -116,6 +116,7 @@ Login.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   loginActions: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
+  registrationActions: PropTypes.object.isRequired,
   isRequestingLogin: PropTypes.bool.isRequired,
   successAction: PropTypes.object,
   loginError: PropTypes.string,

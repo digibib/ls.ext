@@ -4,6 +4,7 @@ const session = require('express-session')
 const uuid = require('node-uuid')
 const port = process.env.PORT || 8000
 const app = express()
+const fetch = require('isomorphic-fetch')
 
 app.use(session({
   genid: req => uuid.v4(),
@@ -32,5 +33,15 @@ app.use(express.static(`${__dirname}/../../public`))
 
 require('./routes')(app)
 
-app.listen(port)
+app.listen(port, undefined, () => {
+  fetch('http://koha:8081/cgi-bin/koha/svc/authentication?userid=api&password=secret',
+    { method: 'GET', body: {} })
+    .then(res => {
+      if (res.headers && res.headers._headers && res.headers._headers[ 'set-cookie' ] && res.headers._headers[ 'set-cookie' ][ 0 ]) {
+        app.set('kohaSession', res.headers._headers[ 'set-cookie' ][ 0 ])
+        console.log('Kohasettings set')
+      }
+    }).catch(error => console.log(error))
+})
+
 console.log(`Server started on port ${port} with environment ${process.env.NODE_ENV || 'development'}`)

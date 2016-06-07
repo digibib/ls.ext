@@ -19,10 +19,10 @@ function setup (propOverrides) {
   }
 
   const store = createStore(rootReducer)
-  const libraries = [
-    { branchcode: 'branchCode_1', branchname: 'library_1' },
-    { branchcode: 'branchCode_2', branchname: 'library_2' }
-  ]
+  const libraries = {
+    'branchCode_1': 'library_1',
+    'branchCode_2': 'library_2'
+  }
   store.dispatch(LibraryActions.receiveLibraries(libraries))
   const loansAndReservations = {
     pickups: [

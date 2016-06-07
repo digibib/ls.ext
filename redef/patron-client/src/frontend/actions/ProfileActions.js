@@ -28,9 +28,9 @@ export function receiveProfileSettings (settings) {
 
 export function fetchProfileSettings () {
   return (dispatch) => {
-    let uri = '/api/v1/profile/settings'
+    const url = '/api/v1/profile/settings'
     dispatch(requestProfileSettings())
-    return fetch(uri, {
+    return fetch(url, {
       method: 'GET',
       credentials: 'same-origin',
       headers: {
@@ -69,9 +69,9 @@ export function receiveProfileLoans (loans) {
 
 export function fetchProfileLoans () {
   return (dispatch) => {
-    let uri = '/api/v1/profile/loans'
+    const url = '/api/v1/profile/loans'
     dispatch(requestProfileLoans())
-    return fetch(uri, {
+    return fetch(url, {
       method: 'GET',
       credentials: 'same-origin',
       headers: {
@@ -110,9 +110,9 @@ export function receiveProfileInfo (info) {
 
 export function fetchProfileInfo () {
   return (dispatch) => {
-    let uri = '/api/v1/profile/info'
+    const url = '/api/v1/profile/info'
     dispatch(requestProfileInfo())
-    return fetch(uri, {
+    return fetch(url, {
       method: 'GET',
       credentials: 'same-origin',
       headers: {

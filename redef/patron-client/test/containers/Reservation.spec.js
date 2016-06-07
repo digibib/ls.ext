@@ -12,7 +12,7 @@ function setup (propOverrides) {
     isLoggedIn: true,
     isRequestingReservation: false,
     reservationActions: { reservePublication: expect.createSpy() },
-    libraries: {'L1': 'Library One', 'L2': 'Library Two'},
+    libraries: { 'L1': 'Library One', 'L2': 'Library Two' },
     modalActions: {},
     ...propOverrides
   }

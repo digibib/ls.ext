@@ -5,6 +5,7 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ModalActions from '../actions/ModalActions'
+import Libraries from '../components/Libraries'
 
 class Reservation extends React.Component {
   constructor (props) {
@@ -13,21 +14,9 @@ class Reservation extends React.Component {
     this.handleCancel = this.handleCancel.bind(this)
   }
 
-  renderBranches () {
-    const branchOptions = []
-    const libraries = this.props.libraries
-    Object.keys(libraries).forEach(branchCode => {
-      const branchName = libraries[branchCode]
-      branchOptions.push(<option key={branchCode} value={branchCode}>
-                           {branchName}
-                         </option>)
-    })
-    return branchOptions
-  }
-
   handleReserve (event) {
     event.preventDefault()
-    this.props.reservationActions.reservePublication(this.props.recordId, this.branchSelect.value)
+    this.props.reservationActions.reservePublication(this.props.recordId, this.librarySelect.getValue())
   }
 
   handleCancel (event) {
@@ -77,9 +66,7 @@ class Reservation extends React.Component {
           <p>
             <FormattedMessage {...messages.choosePickupLocation} />
           </p>
-          <select ref={e => this.branchSelect = e}>
-            {this.renderBranches()}
-          </select>
+          <Libraries ref={e => this.librarySelect = e} libraries={this.props.libraries} />
           <br />
           <br />
           <button className='black-btn' data-automation-id='reserve_button' disabled={this.props.isRequestingReservation}

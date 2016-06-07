@@ -77,27 +77,27 @@ class UserInfo extends React.Component {
             <h2><FormattedMessage {...messages.address} /></h2>
             <address typeof='schema:PostalAddress'>
               <span property='schema:streetAddress'>
-                <label htmlFor='streetaddress'>Adresse</label>
+                <label htmlFor='streetaddress'><FormattedMessage {...messages.address} /></label>
                 <input data-automation-id='UserInfo_address' id='streetaddress' type='text'
                        placeholder={this.props.intl.formatMessage(messages.address)} {...address} />
               </span><br />
 
               <span property='schema:postalCode' className='display-inline'>
-                <h2>Postnr.</h2>
+                <h2><FormattedMessage {...messages.zipcode} /></h2>
                 <label htmlFor='postal'>Postnr.</label>
                 <input data-automation-id='UserInfo_zipcode' id='postal' type='number'
                        placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
               </span>
 
               <span property='schema:addressLocality' className='display-inline'>
-                <h2>Poststed</h2>
+                <h2><FormattedMessage {...messages.city} /></h2>
                 <label htmlFor='city'>Poststed</label>
                 <input data-automation-id='UserInfo_city' id='city' type='text'
                        placeholder={this.props.intl.formatMessage(messages.city)} {...city} />
               </span><br />
 
               <span property='schema:addressCountry'>
-                <h2>Land</h2>
+                <h2><FormattedMessage {...messages.country} /></h2>
                 <label htmlFor='country'>Land</label>
                 <input data-automation-id='UserInfo_country' id='country' type='text'
                        placeholder={this.props.intl.formatMessage(messages.country)} {...country} />
@@ -114,7 +114,7 @@ class UserInfo extends React.Component {
 
             <div className='phone'>
               <h2>Telefon</h2>
-              <label htmlFor='phone'>Land</label>
+              <label htmlFor='phone'><FormattedMessage {...messages.country} /></label>
               <input data-automation-id='UserInfo_mobile' id='phone' type='number'
                      placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
 

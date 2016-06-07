@@ -32,7 +32,7 @@ module.exports = (app) => {
     fetch(`http://koha:8081/api/v1/holds/${request.body.reserveId}`, {
       method: 'DELETE',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {

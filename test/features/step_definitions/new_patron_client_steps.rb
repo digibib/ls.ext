@@ -285,3 +285,24 @@ When(/^skal ingen av avkrysningsboksene være skrudd på inne på innstillinger$
     checkbox.set?.should eq false
   end
 end
+
+When(/^jeg trykker på logg inn$/) do
+  @browser.element(data_automation_id: 'login_element').click
+end
+
+When(/^jeg trykker på registreringslenken$/) do
+  @browser.element(data_automation_id: 'registration_link').click
+end
+
+When(/^skal jeg se registreringsskjemaet$/) do
+  @site.PatronClientCommon.registration_modal_visible?.should eq true
+end
+
+When(/^jeg trykker på registreringsknappen$/) do
+  @browser.element(data_automation_id: 'register_button').click
+end
+
+When(/^skal jeg få et brukernavn$/) do
+  wait_for {  @site.PatronClientCommon.registration_success_modal_visible?.eql? true }
+  @browser.element(data_automation_id: 'username').length.should eq 6
+end

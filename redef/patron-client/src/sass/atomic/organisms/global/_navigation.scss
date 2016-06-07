@@ -15,7 +15,7 @@
   }
 }
 
-
+// MOBILE NAV
 .btn-mobile {
 
   float: right;
@@ -31,6 +31,30 @@
   }
 }
 
+// FOOTER MENU
+.secondary-navigation {
+  @include span(12 of 12);
+
+  @include breakpoint($small){
+    @include span(11 of 12);
+    float: right;
+    text-align: right;
+  }
+
+  ul, li {
+    list-style-type: none;
+    margin-bottom: rhythm(3);
+
+    @include breakpoint($small){
+      display: inline-block;
+      margin: rhythm(3);
+    }
+  }
+}
+
+
+
+//TAB BAR
 .tab-bar, .tab-bar-secondary {
   list-style-type: none;
   @include span(12 of 12);
