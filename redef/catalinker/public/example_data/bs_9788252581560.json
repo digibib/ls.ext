@@ -1,0 +1,77 @@
+{
+  "source": "bs",
+  "hits": [
+    {
+      "@context": {
+        "deichman": "http://192.168.50.12:8005/ontology#",
+        "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      },
+      "@graph": [
+        {
+          "deichman:name": "Bringsværd, Tor Åge",
+          "deichman:dates": "1939-",
+          "@type": [
+            "deichman:Person"
+          ],
+          "@id": "_:6cc005de-31ba-4d7f-a26e-5fe976ddf9fa"
+        },
+        {
+          "deichman:name": "Holt, Anne G.",
+          "deichman:dates": "1961-",
+          "@type": [
+            "deichman:Person"
+          ],
+          "@id": "_:0ce9d683-0d1e-4137-b193-942a13ff8f1d"
+        },
+        {
+          "deichman:mainTitle": "Karsten og Petra spiser glass!",
+          "deichman:subtitle": "på eventyr i Stockholm",
+          "deichman:contributor": [
+              { "@id": "_:d738edc4-b82c-4ca1-8e6c-b7320d6e5e06"},
+              { "@id": "_:d738edc4-b82c-4ca1-8e6c-b73dddde5e06"}
+          ],
+          "@type": "deichman:Work",
+          "@id": "_:c2a9cb64-9851-4500-8063-8d744c31458c"
+        },
+        {
+          "deichman:isbn": "978-82-525-8156-0",
+          "deichman:placeOfPublication": "[Oslo]",
+          "deichman:publisher": "Cappelen Damm",
+          "deichman:publicationYear": "2013",
+          "deichman:numberOfPages": "[89] s.",
+          "deichman:isPublicationOf": {
+            "@id": "_:c2a9cb64-9851-4500-8063-8d744c31458c"
+          },
+          "deichman:mainTitle": "Karsten og Petra spiser glass!",
+          "deichman:subtitle": "på eventyr i Stockholm",
+          "@type": "deichman:Publication"
+        },
+        {
+          "deichman:agent": {
+            "@id": "_:6cc005de-31ba-4d7f-a26e-5fe976ddf9fa"
+          },
+          "deichman:role": {
+            "@id": "http://data.deichman.no/role#author"
+          },
+          "@type": [
+            "deichman:Contribution",
+            "deichman:MainEntry"
+          ],
+          "@id": "_:d738edc4-b82c-4ca1-8e6c-b7320d6e5e06"
+        },
+        {
+          "deichman:agent": {
+            "@id": "_:0ce9d683-0d1e-4137-b193-942a13ff8f1d"
+          },
+          "deichman:role": {
+            "@id": "http://data.deichman.no/role#illustrator"
+          },
+          "@type": [
+            "deichman:Contribution"
+          ],
+          "@id": "_:d738edc4-b82c-4ca1-8e6c-b73dddde5e06"
+        }
+      ]
+    }
+  ]
+}

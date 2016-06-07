@@ -74,7 +74,7 @@ app.get('/version', function (request, response) {
 })
 
 app.get('/valueSuggestions/demo_:source/:isbn', function (req, res, next) {
-  res.sendFile(req.params.source + '.json', { root: path.join(__dirname, '/../public/example_data') })
+  res.sendFile(`${req.params.source}_${req.params.isbn}.json`, { root: path.join(__dirname, '/../public/example_data') })
 })
 
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')

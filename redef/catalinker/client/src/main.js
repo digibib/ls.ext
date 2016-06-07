@@ -171,8 +171,8 @@
       if (value) {
         input.values[ index ] = {
           old: {
-            value: options.isNew ? null : (input.values[index] || {current: {value: undefined}}).current.value,
-            lang: options.isNew ? null : (input.values[index] || {current: {value: undefined}}).current.lang
+            value: options.isNew ? null : (input.values[ index ] || { current: { value: undefined } }).current.value,
+            lang: options.isNew ? null : (input.values[ index ] || { current: { value: undefined } }).current.lang
           },
           current: {
             value: value.value,
@@ -950,9 +950,15 @@
 
     function externalSourceHitDescription (graph, source) {
       var workGraph = graph.byType('Work')[ 0 ]
+      if (!workGraph) {
+        throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om verket.`)
+      }
       var mainHitLine = []
       var detailsHitLine = []
       var publicationGraph = graph.byType('Publication')[ 0 ]
+      if (!publicationGraph) {
+        throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om utgivelsen.`)
+      }
       mainHitLine = _.map(publicationGraph.getAll('mainTitle'), function (prop) {
         return prop.value
       })
@@ -1844,11 +1850,11 @@
                       if (fromPreferredSource) {
                         hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
                       } else {
-                          var options = {
-                            keepDocumentUrl: true,
-                            onlyValueSuggestions: true,
-                            source: response.data.source
-                          }
+                        var options = {
+                          keepDocumentUrl: true,
+                          onlyValueSuggestions: true,
+                          source: response.data.source
+                        }
                         _.each([ 'Work', 'Publication' ], function (domain) {
                           updateInputsForResource({ data: {} }, null, options, graph.byType(domain)[ 0 ], domain)
                         })
@@ -1858,9 +1864,12 @@
                       searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource.push(hitsFromPreferredSource)
                     }
                     ractive.update()
+                  }).then(function () {
+                    updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
+                  }).catch(function (error) {
+                    errors.push(error)
                   })
                 })
-                updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
               },
               acceptSuggestedPredefinedValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
