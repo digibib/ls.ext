@@ -95,7 +95,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
-    Og så trykker jeg på "Neste steg: Beskrivelse"-knappen
+    Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Og at jeg skriver inn tilfeldig sted i feltet "Utgivelsessted" og trykker enter
     Så får jeg ingen treff
     Og jeg trykker på "Opprett nytt sted"-knappen
@@ -104,8 +104,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Og jeg trykker på "Opprett ny serie"-knappen
     Og jeg trykker på "Opprett"-knappen
-    Og så trykker jeg på "Neste steg: Verksopplysninger"-knappen
-    Og så trykker jeg på "Neste steg: Beskriv verket"-knappen
+    Så trykker jeg på "Neste steg: Verksopplysninger"-knappen
+    Så trykker jeg på "Neste steg: Beskriv verket"-knappen
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff

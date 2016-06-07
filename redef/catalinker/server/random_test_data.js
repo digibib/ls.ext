@@ -22,34 +22,6 @@ module.exports = (app) => {
               },
               '@graph': [
                 {
-                  '@id': 'http://lexvo.org/id/iso639-3/nob',
-                  '@type': 'http://lexvo.org/ontology#Language',
-                  'rdfs:label': [
-                    {
-                      '@language': 'en',
-                      '@value': 'Norwegian Bokmål'
-                    },
-                    {
-                      '@language': 'no',
-                      '@value': 'Norsk (bokmål)'
-                    }
-                  ]
-                },
-                {
-                  '@id': 'http://lexvo.org/id/iso639-3/hrv',
-                  '@type': 'http://lexvo.org/ontology#Language',
-                  'rdfs:label': [
-                    {
-                      '@language': 'en',
-                      '@value': 'Croatian'
-                    },
-                    {
-                      '@language': 'no',
-                      '@value': 'Kroatisk'
-                    }
-                  ]
-                },
-                {
                   '@id': '_:N62bb7e44e5414c30905dacfa3f3ad263',
                   '@type': 'deichman:Publication',
                   'deichman:audience': {
@@ -116,21 +88,6 @@ module.exports = (app) => {
                   }
                 },
                 {
-                  '@id': 'http://data.deichman.no/audience#adult',
-                  '@type': 'http://data.deichman.no/utility#Audience',
-                  'http://data.deichman.no/utility#code': 'ad',
-                  'rdfs:label': [
-                    {
-                      '@language': 'en',
-                      '@value': 'Adults'
-                    },
-                    {
-                      '@language': 'no',
-                      '@value': 'Voksne'
-                    }
-                  ]
-                },
-                {
                   '@id': '_:N5c9b2fcaef3246c295aa6fc121e7b155',
                   '@type': 'deichman:Person',
                   'http://data.deichman.no/duo#bibliofilPersonId': '19887600',
@@ -145,7 +102,7 @@ module.exports = (app) => {
                   '@id': '_:N788edbeea7104c42adda64d78d844440',
                   '@type': 'deichman:Work',
                   'deichman:audience': {
-                    '@id': 'http://data.deichman.no/audience#adult'
+                    '@id': request.params.source === 'bs' ?  'http://data.deichman.no/audience#adult' : 'http://data.deichman.no/audience#juvenile'
                   },
                   'deichman:contributor': {
                     '@id': '_:N61c1076a2d094a67995a293daec3b879'
@@ -154,14 +111,14 @@ module.exports = (app) => {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
                   'deichman:language': {
-                    '@id': 'http://lexvo.org/id/iso639-3/hrv'
+                    '@id': request.params.source === 'bs' ? 'http://lexvo.org/id/iso639-3/hrv' : 'http://lexvo.org/id/iso639-3/swe'
                   },
                   'deichman:literaryForm': [
                     {
-                      '@id': 'http://data.deichman.no/literaryForm#fiction'
+                      '@id': request.params.source === 'bs' ? 'http://data.deichman.no/literaryForm#fiction' : 'http://data.deichman.no/literaryForm#drama'
                     },
                     {
-                      '@id': 'http://data.deichman.no/literaryForm#novel'
+                      '@id': request.params.source === 'bs' ?  'http://data.deichman.no/literaryForm#novel' : 'http://data.deichman.no/literaryForm#pointingBook'
                     }
                   ],
                   'deichman:mainTitle': randomName()
@@ -212,7 +169,7 @@ module.exports = (app) => {
                     '@id': '_:N5c9b2fcaef3246c295aa6fc121e7b155'
                   },
                   'deichman:role': {
-                    '@id': 'http://data.deichman.no/role#translator'
+                    '@id': request.params.source === 'bs' ?  'http://data.deichman.no/role#translator' :  'http://data.deichman.no/role#coreographer'
                   }
                 }
               ]

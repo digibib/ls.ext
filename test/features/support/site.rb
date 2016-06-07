@@ -21,7 +21,13 @@ class Site
         'rolle' => 'role',
         'utgivelsen' => 'Publication',
         'utgivelsesår' => 'publicationYear',
-        'sidetall' => 'numberOfPages'
+        'sidetall' => 'numberOfPages',
+        'språk' => 'language',
+        'første' => 1,
+        'andre' => 2,
+        'tredje' => 3,
+        'fjerde' => 4,
+        'femte' => 5
     }[concept.downcase] || concept
   end
 

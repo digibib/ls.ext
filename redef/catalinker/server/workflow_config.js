@@ -1,3 +1,4 @@
+var _ = require('underscore')
 function manintenanceInputs (label, type) {
   return {
     // this is an input type used to search for a main resource, e.g. Work. The rendered input field

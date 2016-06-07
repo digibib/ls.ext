@@ -62,10 +62,9 @@
 </div>
 {{/if}}
 {{/searchResult}}
-
-{{#if widgetOptions.enableCreateNewResource.showInputs || widgetOptions.enableEditResource.showInputs}}
-{{#widgetOptions[widgetOptions.enableEditResource.showInputs === true ? 'enableEditResource' : 'enableCreateNewResource'].forms[selectedIndexType]}}
-<div class="support-panel-content">
+{{#if widgetOptions.enableCreateNewResource.showInputs === (inputValueIndex || 0) || widgetOptions.enableEditResource.showInputs === (inputValueIndex || 0)}}
+{{#widgetOptions[widgetOptions.enableEditResource.showInputs === (inputValueIndex || 0) ? 'enableEditResource' : 'enableCreateNewResource'].forms[selectedIndexType]}}
+    <div class="support-panel-content">
     <div class="search-result pure-u-1">
         {{#each inputs}}
             {{./label}}:
@@ -75,7 +74,7 @@
                 </span>
             {{/each}}
         {{/each}}
-        {{#if widgetOptions.enableCreateNewResource.showInputs}}
+        {{#if widgetOptions.enableCreateNewResource.showInputs === (inputValueIndex || 0)}}
             <span class="pure-u-1-1">
                 <div class="add-new-btn-row">
                     <div class="pure-u-2-3"><a on-click="cancelEdit">Avbryt</a></div>

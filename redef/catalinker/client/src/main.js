@@ -158,6 +158,7 @@
         input.values[ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
           input.values[ index ].suggested = { source: options.source }
+          input.suggestedValues = valuesAsArray
         } else if (options.source) {
           input.values[ index ].current.accepted = { source: options.source }
         }
@@ -1749,7 +1750,7 @@
                     }
                   })
                 }
-                ractive.set(grandParentOf(event.keypath) + '.showInputs', true)
+                ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
               },
               createNewResource: function (event, origin) {
                 var maintenance = origin.indexOf('maintenanceInputs') !== -1
@@ -1843,12 +1844,13 @@
                       if (fromPreferredSource) {
                         hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
                       } else {
-                        _.each([ 'Work', 'Publication' ], function (domain) {
-                          updateInputsForResource({ data: {} }, null, {
+                          var options = {
                             keepDocumentUrl: true,
                             onlyValueSuggestions: true,
                             source: response.data.source
-                          }, graph.byType(domain)[ 0 ], domain)
+                          }
+                        _.each([ 'Work', 'Publication' ], function (domain) {
+                          updateInputsForResource({ data: {} }, null, options, graph.byType(domain)[ 0 ], domain)
                         })
                       }
                     })
