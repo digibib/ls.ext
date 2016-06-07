@@ -1430,6 +1430,9 @@
             partials: applicationData.partials
           })
           ractive.on({
+              toggle: function (event) {
+                this.toggle(event.keypath + '.expanded');
+              },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)
               },

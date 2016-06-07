@@ -8,10 +8,10 @@ Egenskap: katalogisere med eksterne kilder
 
   Scenario: Hente inn eksterne data
     Gitt at jeg har en bok
-    Og jeg legger inn et ISBN-nummer på startsida og trykker tab
+    Og jeg legger inn et ISBN-nummer på startsida og trykker enter
     Og jeg venter litt
     Så Sjekker jeg at det vises treff fra preferert ekstern kilde
-    Og jeg trykker på "Bruk forslag"-knappen
+    Så trykker jeg på "Bruk forslag"-knappen
     Så åpner jeg listen med eksterne forslag fra andre kilder for agent som skal knyttes til bidrag og velger det første forslaget
     Så får jeg ingen treff
     Og jeg trykker på "Opprett ny person"-knappen

@@ -424,13 +424,13 @@ When(/^ser jeg at det er (ett|to) treff i resultatlisten$/) do |one_or_two|
   @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/).should_not exist
 end
 
-When(/^jeg legger inn et ISBN\-nummer på startsida og trykker tab$/) do
+When(/^jeg legger inn et ISBN\-nummer på startsida og trykker enter/) do
   @site.WorkFlow.visit
   isbn = rand(999).to_s + rand(999).to_s + rand(999).to_s
   @context['isbn'] = isbn
   isbn_text_field = @browser.text_field(:data_automation_id => 'searchValueSuggestions')
   isbn_text_field.set isbn
-  isbn_text_field.send_keys :tab
+  isbn_text_field.send_keys :enter
 end
 
 When(/^Sjekker jeg at det vises treff fra preferert ekstern kilde$/) do
@@ -465,9 +465,9 @@ When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal
   end
 
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    suggestion_list.label(:class => 'unchecked').present?
+    suggestion_list.a(:class => 'unexpanded').present?
   }
-  suggestion_list_expander = suggestion_list.label(:class => 'unchecked')
+  suggestion_list_expander = suggestion_list.a(:class => 'unexpanded')
   suggestion_list_expander.click
   support_panel_expander_link = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").a(:class => 'support-panel-expander')
   use_suggestion_button = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").a(:class => 'suggested-value')

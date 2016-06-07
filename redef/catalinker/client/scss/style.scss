@@ -218,7 +218,7 @@ body {
                 background-color: $lightergray;
                 display: inline-block;
                 padding: 5px;
-                a {
+                a, button {
                   float: right;
                   margin-top: 14px;
                 }
@@ -230,38 +230,18 @@ body {
           }
           div.external-sources {
             margin-top: 10px;
-            input[type="checkbox"][id^="suggVal_"] {
-              position: absolute;
-              left: -9999px;
-            }
-            label {
+            &>a {
               background-repeat: no-repeat;
               background-position: right center;
               border-bottom: 1px solid black;
-              &.unchecked {
+              cursor: pointer;
+              display: block;
+              &.unexpanded {
                 background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▽</text></svg>");
               }
-              &.checked {
+              &.expanded {
                 background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>△</text></svg>");
               }
-            }
-            [id^="suggVal_"]:checked + label.unchecked {
-              display: none;
-            }
-            [id^="suggVal_"]:checked + label.unchecked + label.checked {
-              display: block;
-            }
-            [id^="suggVal_"]:checked + label.unchecked + label.checked + * {
-              display: block;
-            }
-            [id^="suggVal_"]:not(:checked) + label.unchecked {
-              display: block;
-            }
-            [id^="suggVal_"]:not(:checked) + label.unchecked + label.checked {
-              display: none;
-            }
-            [id^="suggVal_"]:not(:checked) + label.unchecked + label.checked + * {
-              display: none;
             }
           }
           div.suggested-values {

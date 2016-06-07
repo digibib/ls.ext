@@ -1,6 +1,6 @@
-<input {{#disabled}} disabled="true" {{/}}
+<input autofocus {{#disabled}} disabled="true" {{/}}
 class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='fetchValueSuggestions'
+on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
 <div class="external-source-results">
@@ -15,7 +15,7 @@ value="{{current.value}}" />
                 <div class="main-line">{{main}}</div>
                 <div class="details-line">{{details}}</div>
             </span>
-            <a  {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</a>
+            <button {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</button>
         </li>
         {{/each}}
     </ul>
