@@ -83,62 +83,62 @@ Egenskap: Katalogisere i arbeidsflyt
     Gitt at jeg har en bok
     Og jeg legger inn et nytt navn på startsida
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett ny person"-knappen
+    Så trykker jeg på "Opprett ny person"-knappen
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
     Og jeg trykker på "Legg til"-knappen
     Så legger jeg inn et verksnavn i søkefeltet for å søke etter det
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett nytt verk"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Og at jeg skriver inn tilfeldig sted i feltet "Utgivelsessted" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett nytt sted"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett nytt sted"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og at jeg skriver inn tilfeldig serie i feltet "Serie" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett ny serie"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett ny serie"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Så trykker jeg på "Neste steg: Verksopplysninger"-knappen
     Så trykker jeg på "Neste steg: Beskriv verket"-knappen
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett nytt generelt emne"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett nytt generelt emne"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Så tar jeg en liten pause
     Og jeg trykker på "Legg til et emne til"-knappen
     Så tar jeg en liten pause
     Så velger jeg emnetype "Person"
     Og at jeg skriver inn tilfeldig person i feltet "Emne" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett ny person"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett ny person"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Så tar jeg en liten pause
     Og jeg trykker på "Legg til et emne til"-knappen
     Så velger jeg emnetype "Verk"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett nytt verk"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og at jeg skriver inn tilfeldig sjanger i feltet "Sjanger" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett ny sjanger"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett ny sjanger"-knappen
+    Så trykker jeg på "Opprett"-knappen
 
   Scenario: Redigere person i katalogisering
     Gitt at jeg vil opprette en person
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
     Og at jeg skriver inn tilfeldig person i feltet "Personer" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett ny person"-knappen
+    Så trykker jeg på "Opprett ny person"-knappen
     Så legger jeg inn fødselsår og dødsår og velger "Norsk" som nasjonalitet
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige person i feltet "Personer" og trykker enter
     Så velger jeg en person fra treffliste fra personregisteret
@@ -148,8 +148,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
     Og at jeg skriver inn tilfeldig emne i feltet "Emner" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett nytt generelt emne"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett nytt generelt emne"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
     Så velger jeg et emne fra treffliste fra emneregisteret
@@ -159,8 +159,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
     Og at jeg skriver inn tilfeldig sjanger i feltet "Sjangre" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett ny sjanger"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett ny sjanger"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige sjanger i feltet "Sjangre" og trykker enter
     Så velger jeg en sjanger fra treffliste fra emneregisteret
@@ -170,8 +170,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
     Og at jeg skriver inn tilfeldig serie i feltet "Serier" og trykker enter
     Så får jeg ingen treff
-    Og jeg trykker på "Opprett ny serie"-knappen
-    Og jeg trykker på "Opprett"-knappen
+    Så trykker jeg på "Opprett ny serie"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige serie i feltet "Serier" og trykker enter
     Så velger jeg en serie fra treffliste fra emneregisteret
