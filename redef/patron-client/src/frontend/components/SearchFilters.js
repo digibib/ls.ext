@@ -17,7 +17,7 @@ class SearchFilters extends React.Component {
   }
 
   render () {
-    let groupedFilters = {}
+    const groupedFilters = {}
     if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
         const aggregation = filter.id.split('_')[0]
@@ -46,7 +46,7 @@ class SearchFilters extends React.Component {
 
           <section data-automation-id='search_filters'>
             {this.props.locationQuery.hideFilters === null ? null : Object.keys(groupedFilters).map(aggregation => {
-              let filtersByAggregation = groupedFilters[ aggregation ]
+              const filtersByAggregation = groupedFilters[ aggregation ]
               return (
                 <SearchFilter
                   key={aggregation}

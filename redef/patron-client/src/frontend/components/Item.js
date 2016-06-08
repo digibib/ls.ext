@@ -3,7 +3,7 @@ import { injectIntl, intlShape } from 'react-intl'
 
 class Item extends React.Component {
   render () {
-    let item = this.props.item
+    const { item } = this.props
     return (
       <tr about={item.barcode}>
         <td data-automation-id='item_branch'>{item.branch}</td>
