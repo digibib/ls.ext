@@ -1353,9 +1353,9 @@
               authorityLabels: {},
               headlinePart: function (headlinePart) {
                 return {
-                  value: headlinePart.predefinedValue ?
-                    Main.predefinedLabelValue(headlinePart.fragment, this.get(headlinePart.keypath)) :
-                    this.get(headlinePart.keypath)
+                  value: headlinePart.predefinedValue
+                    ? Main.predefinedLabelValue(headlinePart.fragment, this.get(headlinePart.keypath))
+                    : this.get(headlinePart.keypath)
                 }
               },
               getAuthorityLabel: function (uri) {
@@ -1451,7 +1451,7 @@
           })
           ractive.on({
               toggle: function (event) {
-                this.toggle(event.keypath + '.expanded');
+                this.toggle(event.keypath + '.expanded')
               },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)
@@ -2210,10 +2210,9 @@
             }
           })
           applicationData.headlineParts = headlineParts
-          ractive.update();
+          ractive.update()
           return applicationData
         }
-        
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
