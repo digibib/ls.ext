@@ -1995,7 +1995,7 @@
                 return
               }
               var parent = grandParentOf(keypath)
-              let uri = newValue.current.value[ 0 ]
+              var uri = newValue.current.value[ 0 ]
               if (typeof uri === 'string') {
                 var predicate = ractive.get(parent + '.predicate')
                 if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== uri && !isBlankNodeUri(uri)) {
