@@ -1,12 +1,18 @@
 FROM java:8
-ADD javarunner.sh /javarunner.sh
+
+RUN apt-get update && apt-get install -y \
+    mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
 
 ADD build/libs/services-1.0-SNAPSHOT-standalone.jar /services-1.0-SNAPSHOT-standalone.jar
 
-CMD /javarunner.sh \
+ADD entrypoint.sh /entrypoint.sh
+
+CMD /entrypoint.sh \
     -DKOHA_PORT="$KOHA_PORT" \
-    -DKOHA_USER="$KOHA_USER" \
-    -DKOHA_PASSWORD="$KOHA_PASSWORD" \
+    -DKOHA_API_USER="$KOHA_API_USER" \
+    -DKOHA_API_PASS="$KOHA_API_PASS" \
     -DTRIPLESTORE_PORT="$TRIPLESTORE_PORT" \
     -DDATA_BASEURI="$DATA_BASEURI" \
     -DELASTICSEARCH_URL="$ELASTICSEARCH_URL" \
