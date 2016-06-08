@@ -12,7 +12,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 /**
- * Responsibility: TODO.
+ * Responsibility: expose MARCXML record representation of a Publication, as it is stored in Koha.
  */
 @Singleton
 @Path("marc")
@@ -29,7 +29,7 @@ public class MarcResource extends ResourceBase {
     @Path("/{recordId: [0-9]+}")
     @Produces("application/xml")
     public final Response getMarcRecord(@PathParam("recordId") String recordId){
-        return Response.ok().entity(getKohaAdapter().retrieveMarcXml(recordId)).build();
+        return Response.ok().entity(getKohaAdapter().retrieveBiblioMARCXML(recordId)).build();
     }
 
 

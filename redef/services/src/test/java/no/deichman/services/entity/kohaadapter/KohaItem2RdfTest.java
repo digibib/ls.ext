@@ -1,30 +1,26 @@
 package no.deichman.services.entity.kohaadapter;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import no.deichman.services.entity.EntityServiceImplTest;
 import no.deichman.services.uridefaults.BaseURI;
-import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 import org.junit.Test;
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
-import org.marc4j.marc.VariableField;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
-import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class Marc2RdfTest {
+public class KohaItem2RdfTest {
 
     private final String itemBase = "http://deichman.no/exemplar/";
     private final String ontologyNs = "http://deichman.no/ontology#";
@@ -32,41 +28,38 @@ public class Marc2RdfTest {
 
     @Test
     public void test_it_exists(){
-        assertNotNull(new Marc2Rdf());
+        assertNotNull(new KohaItem2Rdf());
     }
 
     @Test
     public void test_baseURI_can_be_set_got(){
         BaseURI base = BaseURI.local();
-        Marc2Rdf m2r = new Marc2Rdf();
+        KohaItem2Rdf m2r = new KohaItem2Rdf();
         m2r.setBaseURI(base);
         assertNotNull(m2r.getBaseURI());
     }
 
     @Test
     public void test_default_constructor_sets_baseURI(){
-        Marc2Rdf m2r = new Marc2Rdf();
+        KohaItem2Rdf m2r = new KohaItem2Rdf();
         assertEquals(m2r.getBaseURI().getClass(), BaseURI.class);
     }
 
     @Test
     public void test_overloaded_constructor_sets_baseURI(){
-        Marc2Rdf m2r = new Marc2Rdf(BaseURI.local());
+        KohaItem2Rdf m2r = new KohaItem2Rdf(BaseURI.local());
         assertEquals(m2r.getBaseURI().getClass(), BaseURI.class);
     }
 
     @Test
-    public void test_mapItemsToModel(){
-        List<VariableField> itemsFields = new ArrayList<VariableField>();
-        InputStream in = getClass().getClassLoader().getResourceAsStream("marc.xml");
-        MarcReader reader = new MarcXmlReader(in);
-        while (reader.hasNext()) {
-            Record record = reader.next();
-            itemsFields.addAll(record.getVariableFields(MarcConstants.FIELD_952));
-        }
-
-        Marc2Rdf m2r = new Marc2Rdf(BaseURI.local());
-        Model m = m2r.mapItemsToModel(itemsFields);
+    public void test_mapItemsToModel() throws IOException {
+        String in = IOUtils.toString(
+                EntityServiceImplTest.class.getClassLoader().getResourceAsStream("biblio_expanded.json"),
+                "UTF-8"
+        );
+        JsonObject json = new Gson().fromJson(in, JsonObject.class);
+        KohaItem2Rdf m2r = new KohaItem2Rdf(BaseURI.local());
+        Model m = m2r.mapItemsToModel(json.getAsJsonArray("items"));
 
         String barcode = "03010626460038";
 
@@ -84,12 +77,17 @@ public class Marc2RdfTest {
         Statement locationStatement = createStatement(
                 createResource(s),
                 createProperty(ontologyNs + "location"),
-                createPlainLiteral("fmaj")
+                createPlainLiteral("m")
+        );
+        Statement branchStatement = createStatement(
+                createResource(s),
+                createProperty(ontologyNs + "branch"),
+                createPlainLiteral("Hovedbiblioteket")
         );
         Statement shelfmarkStatement = createStatement(
                 createResource(s),
                 createProperty(duoNs + "shelfmark"),
-                createPlainLiteral("Rag")
+                createPlainLiteral("952 Cri")
         );
 
         String loanedBarcode = "03010626460056";
@@ -98,29 +96,24 @@ public class Marc2RdfTest {
         Statement loanedExample = createStatement(
                 createResource(sLoaned),
                 createProperty(ontologyNs + "status"),
-                createPlainLiteral("2014-11-27")
+                createPlainLiteral("Utlånt")
         );
 
-        Statement onloanAvailableStatement = createStatement(
+        Statement availableStatement = createStatement(
                 createResource(s),
-                createProperty(duoNs + "onloan"),
-                createTypedLiteral("false", XSDDatatype.XSDboolean)
+                createProperty(ontologyNs + "status"),
+                createPlainLiteral("Ledig")
         );
 
-        Statement onloanLoanedStatement = createStatement(
-                createResource(sLoaned),
-                createProperty(duoNs + "onloan"),
-                createTypedLiteral("true", XSDDatatype.XSDboolean)
-        );
 
         assertNotNull(m);
         assertTrue(m.contains(formatStatement));
+        assertTrue(m.contains(branchStatement));
         assertTrue(m.contains(barcodeStatement));
         assertTrue(m.contains(locationStatement));
         assertFalse(m.listSubjectsWithProperty(createProperty(ontologyNs + "status")).toList().contains(s));
         assertTrue(m.contains(shelfmarkStatement));
         assertTrue(m.contains(loanedExample));
-        assertTrue(m.contains(onloanAvailableStatement));
-        assertTrue(m.contains(onloanLoanedStatement));
+        assertTrue(m.contains(availableStatement));
     }
 }

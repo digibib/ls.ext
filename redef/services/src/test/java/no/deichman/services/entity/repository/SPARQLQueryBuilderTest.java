@@ -123,16 +123,14 @@ public class SPARQLQueryBuilderTest {
                 + "    ?uri deichman:status ?status .\n"
                 + "    ?uri deichman:barcode ?barcode .\n"
                 + "    ?uri duo:shelfmark ?shelfmark .\n"
-                + "    ?uri duo:onloan ?onloan .\n"
                 + "  }\n"
                 + "WHERE\n"
                 + "  { ?uri  a                     deichman:Item ;\n"
                 + "          deichman:branch       ?branch ;\n"
-                + "          deichman:location     ?location ;\n"
                 + "          deichman:status       ?status ;\n"
-                + "          deichman:barcode      ?barcode ;\n"
-                + "          duo:shelfmark         ?shelfmark ;\n"
-                + "          duo:onloan            ?onloan\n"
+                + "          deichman:barcode      ?barcode .\n"
+                + " OPTIONAL { ?uri duo:shelfmark ?shelfmark }\n"
+                + " OPTIONAL { ?uri deichman:location ?location}\n"
                 + "  }\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
         Query query = sqb.getItemsFromModelQuery(uri);

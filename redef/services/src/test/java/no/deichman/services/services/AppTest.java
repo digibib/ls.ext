@@ -15,6 +15,7 @@ import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.services.search.EmbeddedElasticsearchServer;
 import no.deichman.services.testutil.PortSelector;
 import no.deichman.services.uridefaults.XURI;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -189,7 +190,7 @@ public class AppTest {
 
     private static void setUpKohaExpectation(String biblioNumber) {
             kohaSvcMock.addLoginExpectation();
-            kohaSvcMock.addPostNewBiblioExpectation(biblioNumber);
+            kohaSvcMock.addCreateNewBiblioExpectation(biblioNumber);
     }
 
     private static RequestBodyEntity buildCreateRequest(String uri, String body) {
@@ -255,7 +256,7 @@ public class AppTest {
     @Test
     public void test_update_work_index_when_publication_is_updated() throws Exception {
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
+        kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);
 
         final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
         assertResponse(CREATED, createWorkResponse);
@@ -294,7 +295,7 @@ public class AppTest {
     public void happy_day_scenario() throws Exception {
 
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
+        kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);
 
         final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
 
@@ -345,7 +346,7 @@ public class AppTest {
         final HttpResponse<String> patchWorkIntoPublicationResponse = buildPatchRequest(publicationUri, workIntoPublicationPatch).asString();
         assertResponse(Status.OK, patchWorkIntoPublicationResponse);
 
-        kohaSvcMock.addPostNewBiblioExpectation(SECOND_BIBLIO_ID);
+        kohaSvcMock.addCreateNewBiblioExpectation(SECOND_BIBLIO_ID);
 
         final HttpResponse<JsonNode> createSecondPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
         assertResponse(CREATED, createSecondPublicationResponse);
@@ -376,8 +377,8 @@ public class AppTest {
                 equalTo(2));
 
         // Two publications with a total of three items
-        kohaSvcMock.addGetBiblioExpectation(FIRST_BIBLIO_ID, 2);
-        kohaSvcMock.addGetBiblioExpectation(SECOND_BIBLIO_ID, 1);
+        kohaSvcMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, 2);
+        kohaSvcMock.addGetBiblioExpandedExpectation(SECOND_BIBLIO_ID, 1);
 
         final HttpResponse<JsonNode> getWorkWith2Plus1ItemsResponse = buildGetItemsRequest(workUri).asJson();
         final JsonNode work1Plus2Items = getWorkWith2Plus1ItemsResponse.getBody();
@@ -394,9 +395,6 @@ public class AppTest {
                 equalTo(2 + 1));
         assertThat("model does not contain shelfmarks",
                 work1Plus2ItemsModel.listSubjectsWithProperty(createProperty("http://data.deichman.no/utility#shelfmark")).toList().size(),
-                equalTo(2 + 1));
-        assertThat("model does not contain onloan booleans",
-                work1Plus2ItemsModel.listSubjectsWithProperty(createProperty("http://data.deichman.no/utility#onloan")).toList().size(),
                 equalTo(2 + 1));
         Unirest.get(workUri).asJson();
         HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
@@ -739,7 +737,7 @@ public class AppTest {
     @Test
     public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.newBiblioWithItemsExpectation(ANOTHER_BIBLIO_ID, "03011527411001");
+        kohaSvcMock.addCreateNewBiblioWithItemsExpectation(ANOTHER_BIBLIO_ID, "03011527411001");
 
         String input = "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#bibliofilID> \"1527411\" .\n"
                 + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#language> <http://lexvo.org/id/iso639-3/eng> .\n"
@@ -1013,7 +1011,7 @@ public class AppTest {
     }
 
     @Test
-    public void correct_marc_xml_gets_sent_to_koha_on_post_publication() throws UnirestException {
+    public void correct_marc_xml_gets_sent_to_koha_on_create_publication() throws UnirestException {
         String creator = "Knut Hamsun";
         String workTitle = "Hunger";
         String publicationTitle = "Sult";
@@ -1088,13 +1086,13 @@ public class AppTest {
                 + "<marcxml:datafield tag=\"260\" ind1=\" \" ind2=\" \">"
                 + "<marcxml:subfield code=\"c\">" + publicationYear + "</marcxml:subfield></marcxml:datafield>"
                 + "</marcxml:record></marcxml:collection>\n";
-        kohaSvcMock.newBiblioFromMarcXmlExpectation(FIRST_BIBLIO_ID, expectedPayload);
+        kohaSvcMock.addCreateNewBiblioFromMarcXmlExpectation(FIRST_BIBLIO_ID, expectedPayload);
     }
 
     @Test
     public void should_return_marc_xml_for_existing_biblio_id() throws UnirestException, IOException {
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addPostNewBiblioExpectation(FIRST_BIBLIO_ID);
+        kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);
 
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<record\n"
@@ -1111,6 +1109,7 @@ public class AppTest {
                 + "    <subfield code=\"d\">27</subfield>\n"
                 + "  </datafield>\n"
                 + "</record>\n";
+        String resp = "{ \"marcxml\": \"" + StringEscapeUtils.escapeJava(expected) + "\"}";
 
         HttpResponse<String> response = buildEmptyCreateRequest(baseUri + "publication").asString();
         String location = getLocation(response);
@@ -1121,7 +1120,7 @@ public class AppTest {
         final String[] recordId = new String[1];
         model.listObjectsOfProperty(createProperty(baseUri + "ontology#recordID")).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
 
-        kohaSvcMock.addGetBiblioExpectation(recordId[0], expected);
+        kohaSvcMock.addGetBiblioExpectation(recordId[0], resp);
         HttpResponse<String> result = Unirest.get(baseUri + "marc/" + recordId[0]).asString();
         assertEquals(expected, result.getBody());
     }

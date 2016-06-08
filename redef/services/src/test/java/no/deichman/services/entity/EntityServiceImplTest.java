@@ -1,7 +1,9 @@
 package no.deichman.services.entity;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
-import no.deichman.services.entity.kohaadapter.Marc2Rdf;
+import no.deichman.services.entity.kohaadapter.KohaItem2Rdf;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
@@ -9,6 +11,7 @@ import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -25,18 +28,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.BadRequestException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
 
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.PERSON;
@@ -84,16 +84,16 @@ public class EntityServiceImplTest {
     @Mock
     private KohaAdapter mockKohaAdapter;
 
-    static Model modelForBiblio() {
+    static Model modelForBiblio() throws IOException {
         Model model = ModelFactory.createDefaultModel();
-        Model m = ModelFactory.createDefaultModel();
-        InputStream in = EntityServiceImplTest.class.getClassLoader().getResourceAsStream("ragde.marcxml");
-        MarcReader reader = new MarcXmlReader(in);
-        Marc2Rdf marcRdf = new Marc2Rdf(BaseURI.local());
-        while (reader.hasNext()) {
-            Record record = reader.next();
-            m.add(marcRdf.mapItemsToModel(record.getVariableFields(MarcConstants.FIELD_952)));
-        }
+        String in = IOUtils.toString(
+                EntityServiceImplTest.class.getClassLoader().getResourceAsStream("biblio_expanded.json"),
+                "UTF-8"
+        );
+        JsonObject json = new Gson().fromJson(in, JsonObject.class);
+        KohaItem2Rdf m2r = new KohaItem2Rdf(BaseURI.local());
+        Model m = m2r.mapItemsToModel(json.getAsJsonArray("items"));
+
         model.add(m);
         return model;
     }
@@ -239,7 +239,7 @@ public class EntityServiceImplTest {
             i++;
             ni.next();
         }
-        final int expectedNoOfItems = 1;
+        final int expectedNoOfItems = 2;
         assertEquals(expectedNoOfItems, i);
     }
 

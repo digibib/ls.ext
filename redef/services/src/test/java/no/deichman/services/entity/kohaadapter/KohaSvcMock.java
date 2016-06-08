@@ -12,8 +12,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.POST;
+import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.PUT;
 import static com.github.restdriver.clientdriver.RestClientDriver.giveResponse;
 import static com.github.restdriver.clientdriver.RestClientDriver.onRequestTo;
+import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.OK;
 
 /**
@@ -54,20 +56,29 @@ public final class KohaSvcMock {
         clientDriver.addExpectation(
                 onRequestTo("/cgi-bin/koha/svc/authentication")
                         .withMethod(POST)
-                        .withBody("userid=admin&password=secret", MediaType.APPLICATION_FORM_URLENCODED_TYPE.toString()),
+                        .withBody("userid=api&password=secret", MediaType.APPLICATION_FORM_URLENCODED_TYPE.toString()),
                 giveResponse(authenticationOKResponse, "text/xml").withStatus(OK.getStatusCode())
                         .withHeader(HttpHeaders.SET_COOKIE, KohaAdapterImpl.SESSION_COOKIE_KEY + "=huh"));
     }
 
-    public void addGetBiblioExpectation(String biblioId, String responseMarcXML) throws IOException {
+    public void addGetBiblioExpandedExpectation(String biblioId, String responseJSON) throws IOException {
         clientDriver.addExpectation(
-                onRequestTo("/cgi-bin/koha/svc/bib/" + biblioId)
+                onRequestTo("/api/v1/biblios/" + biblioId+ "/expanded")
                         .withMethod(ClientDriverRequest.Method.GET)
-                        .withParam("items", 1)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(
-                        responseMarcXML,
-                        "application/xml"));
+                        responseJSON,
+                        "application/json; charset=utf8"));
+    }
+
+    public void addGetBiblioExpectation(String biblioId, String responseJSON) throws IOException {
+        clientDriver.addExpectation(
+                onRequestTo("/api/v1/biblios/" + biblioId)
+                        .withMethod(ClientDriverRequest.Method.GET)
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                giveResponse(
+                        responseJSON,
+                        "application/json; charset=utf8"));
     }
 
     public void addLenientUpdateExpectation(String biblioId) {
@@ -91,113 +102,78 @@ public final class KohaSvcMock {
                 + "</response>\n";
 
         clientDriver.addExpectation(
-                onRequestTo("/cgi-bin/koha/svc/bib/" + biblioId + "?items=0")
-                        .withMethod(POST)
+                onRequestTo("/api/v1/biblios/" + biblioId)
+                        .withMethod(PUT)
                         .withBody(Pattern.compile("(?s).*"), MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
                         .withStatus(OK.getStatusCode()));
     }
 
-    public void addGetBiblioExpectation(String biblioId, int noOfItems) throws IOException {
-        String responseMarcXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<record\n"
-                + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "    xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"\n"
-                + "    xmlns=\"http://www.loc.gov/MARC21/slim\">\n"
-                + "\n"
-                + "  <leader>00055    a2200037   4500</leader>\n"
-                + "  <datafield tag=\"999\" ind1=\" \" ind2=\" \">\n"
-                + "    <subfield code=\"c\">1528227</subfield>\n"
-                + "    <subfield code=\"d\">1528227</subfield>\n"
-                + "  </datafield>\n"
-                + itemsXml(biblioId, noOfItems)
-                + "</record>\n";
-        addGetBiblioExpectation(biblioId, responseMarcXML);
+    public void addGetBiblioExpandedExpectation(String biblioId, int noOfItems) throws IOException {
+        String responseJSON = "{\n"
+                + "  \"biblio\": {\n"
+                + "    \"author\": \"Ragde, Anne B.\",\n"
+                + "    \"biblionumber\": \"626460\",\n"
+                + "    \"title\": \"Berlinerpoplene\"\n"
+                + "  },\n"
+                + "  \"items\": [\n"
+                + itemsArray(biblioId, noOfItems)
+                + "  ]\n"
+                + "}";
+        addGetBiblioExpandedExpectation(biblioId, responseJSON);
     }
 
-    private String itemsXml(String biblioId, int noOfItems) {
-        StringBuilder result = new StringBuilder();
+    private String itemsArray(String biblioId, int noOfItems) {
+        String[] items = new String[noOfItems];
         for (int i = 0; i < noOfItems; i++) {
-            result.append(itemXml(biblioId + "0" + i));
+            items[i] = itemObject(biblioId + "0" + i);
         }
-        return result.toString();
+        return String.join(",\n", items);
     }
 
-    private String itemXml(final String barcode) {
-        return "  <datafield tag=\"" + MarcConstants.FIELD_952 + "\" ind1=\" \" ind2=\" \">\n"
-                + "    <subfield code=\"0\">0</subfield>\n"
-                + "    <subfield code=\"1\">0</subfield>\n"
-                + "    <subfield code=\"2\">ddc</subfield>\n"
-                + "    <subfield code=\"4\">0</subfield>\n"
-                + "    <subfield code=\"7\">0</subfield>\n"
-                + "    <subfield code=\"9\">73</subfield>\n"
-                + "    <subfield code=\"a\">c3928c8f</subfield>\n"
-                + "    <subfield code=\"b\">c3928c8f</subfield>\n"
-                + "    <subfield code=\"d\">2015-08-17</subfield>\n"
-                + "    <subfield code=\"o\">920 Tes</subfield>\n"
-                + "    <subfield code=\"p\">" + barcode + "</subfield>\n"
-                + "    <subfield code=\"r\">2015-08-17</subfield>\n"
-                + "    <subfield code=\"w\">2015-08-17</subfield>\n"
-                + "    <subfield code=\"y\">2177EA48</subfield>\n"
-                + "  </datafield>\n";
+    private String itemObject(final String barcode) {
+        return "{\n"
+                + "      \"barcode\": \"" + barcode + "\",\n"
+                + "      \"biblionumber\": \"126\",\n"
+                + "      \"holdingbranch\": \"hutl\",\n"
+                + "      \"homebranch\": \"hutl\",\n"
+                + "      \"itemcallnumber\": \"952 Cri\",\n"
+                + "      \"itype\": \"L\",\n"
+                + "      \"location\": \"m\",\n"
+                + "      \"status\": \"Ledig\"\n"
+                + "}";
     }
 
-    public void addPostNewBiblioExpectation(String returnedBiblioId) {
-        String responseXml = "<?xml version='1.0' standalone='yes'?>\n"
-                + "<response>\n"
-                + "  <biblionumber>" + returnedBiblioId + "</biblionumber>\n"
-                + "  <marcxml>\n"
-                + "<record\n"
-                + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "    xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"\n"
-                + "    xmlns=\"http://www.loc.gov/MARC21/slim\">\n"
-                + "\n"
-                + "  <leader>00049    a2200037   4500</leader>\n"
-                + "  <datafield tag=\"999\" ind1=\" \" ind2=\" \">\n"
-                + "    <subfield code=\"c\">26</subfield>\n"
-                + "    <subfield code=\"d\">26</subfield>\n"
-                + "  </datafield>\n"
-                + "</record>\n"
-                + "</marcxml>\n"
-                + "  <status>ok</status>\n"
-                + "</response>\n";
+    public void addCreateNewBiblioExpectation(String returnedBiblioId) {
+        String responseJSON = ""
+                + "{\n"
+                + "    \"biblionumber\": \"" + returnedBiblioId + "\", \n"
+                + "    \"items\": \"\"\n"
+                + "}\n";
 
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
                 + "<marcxml:record><marcxml:leader>00000    a2200000       </marcxml:leader>"
-                + "</marcxml:record>"
-                + "</marcxml:collection>\n";
+                + "</marcxml:record></marcxml:collection>\n";
 
         clientDriver.addExpectation(
-                onRequestTo("/cgi-bin/koha/svc/new_bib")
+                onRequestTo("/api/v1/biblios")
                         .withMethod(POST)
                         .withBody(expectedPayload, MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
-                giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
-                        .withStatus(OK.getStatusCode()));
+                giveResponse(responseJSON, "application/json; charset=utf8")
+                        .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + returnedBiblioId)
+                        .withStatus(CREATED.getStatusCode()));
     }
 
-    public void newBiblioWithItemsExpectation(String biblioId, String... barcode) {
+    public void addCreateNewBiblioWithItemsExpectation(String biblioId, String... barcode) {
         // TODO most likely this needs to be fixed
-        String responseXml = "<?xml version='1.0' standalone='yes'?>\n"
-                + "<response>\n"
-                + "  <biblionumber>" + biblioId + "</biblionumber>\n"
-                + "  <marcxml>\n"
-                + "<record\n"
-                + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "    xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"\n"
-                + "    xmlns=\"http://www.loc.gov/MARC21/slim\">\n"
-                + "\n"
-                + "  <leader>00049    a2200037   4500</leader>\n"
-                + "  <datafield tag=\"999\" ind1=\" \" ind2=\" \">\n"
-                + "    <subfield code=\"c\">26</subfield>\n"
-                + "    <subfield code=\"d\">26</subfield>\n"
-                + "  </datafield>\n"
-                + "</record>\n"
-                + "</marcxml>\n"
-                + "  <status>ok</status>\n"
-                + "</response>\n";
+        String responseJSON = ""
+                + "{\n"
+                + "    \"biblionumber\": \"" + biblioId + "\", \n"
+                + "    \"items\": \"1\"\n"
+                + "}\n";
 
         // TODO most likely this needs to be fixed
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -211,23 +187,28 @@ public final class KohaSvcMock {
                 + "</marcxml:collection>\n";
 
         clientDriver.addExpectation(
-                onRequestTo("/cgi-bin/koha/svc/new_bib")
-                        .withParam("items", "1")
+                onRequestTo("/api/v1/biblios")
                         .withMethod(POST)
                         .withBody(Pattern.compile("(?s).*"), MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
-                giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
-                        .withStatus(OK.getStatusCode()));
+                giveResponse(responseJSON, "application/json; charset=utf8")
+                        .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + biblioId)
+                        .withStatus(CREATED.getStatusCode()));
     }
 
-    public void newBiblioFromMarcXmlExpectation(String biblioId, String expectedPayload) {
-        String responseXml = "<response><biblionumber>" + biblioId + "</biblionumber></response>"; //Bare minimum response
+    public void addCreateNewBiblioFromMarcXmlExpectation(String biblioId, String expectedPayload) {
+        String responseJSON = ""
+                + "{\n"
+                + "    \"biblionumber\": \"" + biblioId + "\", \n"
+                + "    \"items\": \"\"\n"
+                + "}\n";
         clientDriver.addExpectation(
-                onRequestTo("/cgi-bin/koha/svc/new_bib")
+                onRequestTo("/api/v1/biblios")
                         .withMethod(POST)
                         .withBody(expectedPayload, MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
-                giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
-                        .withStatus(OK.getStatusCode()));
+                giveResponse(responseJSON, "application/json; charset=utf8")
+                        .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + biblioId)
+                        .withStatus(CREATED.getStatusCode()));
     }
 }

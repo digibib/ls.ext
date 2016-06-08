@@ -142,16 +142,14 @@ public final class SPARQLQueryBuilder {
                 + "    deichman:location ?location ;"
                 + "    deichman:status ?status ;"
                 + "    deichman:barcode ?barcode ;"
-                + "    duo:shelfmark ?shelfmark ;"
-                + "    duo:onloan ?onloan"
+                + "    duo:shelfmark ?shelfmark ."
                 + "} WHERE { \n"
                 + "  ?uri a deichman:Item ;\n"
                 + "    deichman:branch ?branch ;\n"
-                + "    deichman:location ?location ;\n"
                 + "    deichman:status ?status ;"
-                + "    deichman:barcode ?barcode ;\n"
-                + "    duo:shelfmark ?shelfmark ;\n"
-                + "    duo:onloan ?onloan ."
+                + "    deichman:barcode ?barcode .\n"
+                + " OPTIONAL { ?uri duo:shelfmark ?shelfmark }\n"
+                + " OPTIONAL { ?uri deichman:location ?location }\n"
                 + "}";
         return QueryFactory.create(q);
     }

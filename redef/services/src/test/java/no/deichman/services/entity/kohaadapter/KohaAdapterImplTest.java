@@ -20,9 +20,9 @@ public class KohaAdapterImplTest {
     }
 
     @Test
-    public void should_return_a_biblio() throws Exception {
+    public void should_create_a_new_biblio() throws Exception {
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addGetBiblioExpectation("626460", stringFromClassPathResource("ragde.marcxml"));
+        kohaSvcMock.addGetBiblioExpandedExpectation("626460", stringFromClassPathResource("biblio_expanded.json"));
 
         assertNotNull(kohaAdapter.getBiblio("626460"));
     }
@@ -30,7 +30,7 @@ public class KohaAdapterImplTest {
     @Test
     public void should_return_new_biblio_ID() throws Exception {
         kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addPostNewBiblioExpectation("26");
+        kohaSvcMock.addCreateNewBiblioExpectation("26");
 
         String biblioId = kohaAdapter.createNewBiblio();
         assertEquals("26", biblioId);
@@ -40,9 +40,9 @@ public class KohaAdapterImplTest {
     public void should_return_raw_marc_xml() throws IOException {
         kohaSvcMock.addLoginExpectation();
         String expected = stringFromClassPathResource("ragde.marcxml");
-        kohaSvcMock.addGetBiblioExpectation("626460", expected);
+        kohaSvcMock.addGetBiblioExpandedExpectation("626460", expected);
 
-        assertEquals(expected, kohaAdapter.retrieveMarcXml("626460"));
+        assertEquals(expected, kohaAdapter.retrieveBiblioExpanded("626460"));
     }
 
     private String stringFromClassPathResource(String classPathResource) throws IOException {

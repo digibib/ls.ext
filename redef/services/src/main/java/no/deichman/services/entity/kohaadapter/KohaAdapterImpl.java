@@ -1,13 +1,11 @@
 package no.deichman.services.entity.kohaadapter;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.marc4j.MarcReader;
-import org.marc4j.MarcXmlReader;
-import org.marc4j.marc.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -18,13 +16,8 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
+import static javax.ws.rs.core.Response.Status.CREATED;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import static javax.ws.rs.core.Response.Status.OK;
 
@@ -53,7 +46,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     private void login() {
-        String url = kohaPort + "/cgi-bin/koha/svc/authentication";
+        String url = kohaPort + "/cgi-bin/koha/svc/authentication"; // TODO switch to using /api/v1 when it can handle authentication
 
         Form form = new Form();
         form.param("userid", KOHA_USER);
@@ -75,32 +68,36 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     @Override
     public Model getBiblio(String recordId) {
-        return mapMarcToModel(retrieveMarcXml(recordId));
+        return mapBiblioToModel(retrieveBiblioExpanded(recordId));
     }
 
-    private Response requestItems(String id) {
+    private Response requestBiblio(String id) {
         Client client = ClientBuilder.newClient();
-        String url = kohaPort + "/cgi-bin/koha/svc/bib/" + id + "?items=1";
+        String url = kohaPort + "/api/v1/biblios/" + id;
         WebTarget webTarget = client.target(url);
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_XML);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.cookie(sessionCookie.toCookie());
         return invocationBuilder.get();
     }
 
-    private Model mapMarcToModel(String marc21Xml) {
+    private Response requestExpandedBiblio(String id) {
+        Client client = ClientBuilder.newClient();
+        String url = kohaPort + "/api/v1/biblios/" + id + "/expanded";
+        WebTarget webTarget = client.target(url);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.get();
+    }
+
+    private Model mapBiblioToModel(String response) {
         Model m = ModelFactory.createDefaultModel();
-        log.debug("Received marc from koha\n" + marc21Xml);
-        InputStream in = new ByteArrayInputStream(marc21Xml.getBytes(StandardCharsets.UTF_8));
-        MarcReader reader = new MarcXmlReader(in);
-        Marc2Rdf marcRdf = new Marc2Rdf();
-        while (reader.hasNext()) {
-            Record record = reader.next();
-            m.add(marcRdf.mapItemsToModel(record.getVariableFields(MarcConstants.FIELD_952)));
-        }
+        KohaItem2Rdf itemRdf = new KohaItem2Rdf();
+        JsonObject json = new Gson().fromJson(response, JsonObject.class);
+        m.add(itemRdf.mapItemsToModel(json.getAsJsonArray("items")));
         return m;
     }
 
-    private Response postMarcRecord(String url, MarcRecord marcRecord) {
+    private Response sendMarcRecord(String method, String url, MarcRecord marcRecord) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(url);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
@@ -108,23 +105,31 @@ public final class KohaAdapterImpl implements KohaAdapter {
             login();
         }
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.post(Entity.entity(marcRecord.getMarcXml(), MediaType.TEXT_XML));
+        switch (method) {
+            case "POST":
+                return invocationBuilder.post(Entity.entity(marcRecord.getMarcXml(), MediaType.TEXT_XML));
+            case "PUT":
+                return invocationBuilder.put(Entity.entity(marcRecord.getMarcXml(), MediaType.TEXT_XML));
+            default:
+                throw new RuntimeException("Expected method POST or PUT; got " + method);
+        }
+
     }
 
     private Response requestNewRecord(MarcRecord marcRecord) {
-        String url = kohaPort + "/cgi-bin/koha/svc/new_bib" + (marcRecord != null && marcRecord.hasItems() ? "?items=1" : "");
-        return postMarcRecord(url, marcRecord);
+        String url = kohaPort + "/api/v1/biblios";
+        return sendMarcRecord("POST", url, marcRecord);
     }
 
     @Override
     public Response updateRecord(String recordId, MarcRecord marcRecord) {
-        String url = kohaPort + "/cgi-bin/koha/svc/bib/" + recordId + "?items=0";
-        return postMarcRecord(url, marcRecord);
+        String url = kohaPort + "/api/v1/biblios/" + recordId;
+        return sendMarcRecord("PUT", url, marcRecord);
     }
 
     @Override
     public String createNewBiblio() {
-        return createNewBiblioWithMarcRecord(new MarcRecord()); // empty argument list
+        return createNewBiblioWithMarcRecord(new MarcRecord());
     }
 
     @Override
@@ -140,49 +145,59 @@ public final class KohaAdapterImpl implements KohaAdapter {
             login();
             response = requestNewRecord(marcRecord);
         }
-        if (OK.getStatusCode() != response.getStatus()) {
+        if (CREATED.getStatusCode() != response.getStatus()) {
             throw new RuntimeException("Request new bibilo failed with HTTP status: " + response.getStatusInfo());
         }
 
-        String body = response.readEntity(String.class);
-        InputSource inputSource = new InputSource(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        String biblioId;
-        try {
-            biblioId = xpath.evaluate("//response/biblionumber", inputSource);
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException("Could not get biblionumber from Koha response: " + body);
+        String location = response.getHeaderString("Location");
+        if (location == null || location.lastIndexOf('/') == -1) {
+            throw new RuntimeException("Could not get Koha biblionumber from Location header: " + response.toString());
         }
 
-        if (biblioId == null || "".equals(biblioId)) {
-            log.error("Koha failed to create a new bibliographic record");
-            throw new RuntimeException("Koha connection for new biblio failed, missing biblioId");
-        } else {
-            log.info("LOG: Koha created a new bibliographic record with ID: " + biblioId);
-        }
+        String biblioId = location.substring(location.lastIndexOf('/') + 1);
+        log.info("LOG: Koha created a new bibliographic record with ID: " + biblioId);
 
         return biblioId;
     }
 
     @Override
-    public String retrieveMarcXml(String recordId) {
+    public String retrieveBiblioExpanded(String recordId) {
         // TODO Handle login in a filter / using template pattern
         if (sessionCookie == null) {
             login();
         }
 
-        log.info("Attempting to retrieve " + recordId + " from Koha SVC");
-        Response response = requestItems(recordId);
+        Response response = requestExpandedBiblio(recordId);
 
         if (response.getStatus() == FORBIDDEN.getStatusCode()) {
             // Session has expired; try login again
             login();
-            response = requestItems(recordId);
+            response = requestExpandedBiblio(recordId);
         }
         if (OK.getStatusCode() != response.getStatus()) {
-            throw new RuntimeException("Unexpected response when requesting items: http status: " + response.getStatusInfo()); // FIXME !!
+            throw new RuntimeException("Unexpected response when requesting expanded biblio: http status: " + response.getStatusInfo()); // FIXME !!
         }
         return response.readEntity(String.class);
+    }
+
+    @Override
+    public String retrieveBiblioMARCXML(String recordId) {
+        // TODO Handle login in a filter / using template pattern
+        if (sessionCookie == null) {
+            login();
+        }
+
+        Response response = requestBiblio(recordId);
+
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = requestBiblio(recordId);
+        }
+        if (OK.getStatusCode() != response.getStatus()) {
+            throw new RuntimeException("Unexpected response when requesting biblio: http status:" + response.getStatusInfo()); // FIXME !!
+        }
+        return new Gson().fromJson(response.readEntity(String.class), JsonObject.class).get("marcxml").getAsString();
     }
 
 }
