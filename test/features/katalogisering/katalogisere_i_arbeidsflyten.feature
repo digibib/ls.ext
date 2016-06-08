@@ -40,6 +40,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
     Så velger jeg en utgiver fra treffliste fra utgiverregisteret
+    Så sjekker jeg at overskriften viser informasjon om hva som blir katalogisert
     Og bekrefter for å gå videre til "Beskriv verk"
     Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
     Og bekrefter for å gå videre til "Emneopplysninger"

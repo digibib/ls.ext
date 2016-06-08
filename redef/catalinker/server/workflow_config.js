@@ -216,6 +216,9 @@ module.exports = (app) => {
                         } ],
                         useAfterCreation: false
                       }
+                    },
+                    headlinePart: {
+                      order: 10
                     }
                   },
                   {
@@ -278,13 +281,38 @@ module.exports = (app) => {
           label: 'Beskriv utgivelse',
           inputs: [
             { rdfProperty: 'publicationOf', type: 'entity' },
-            { rdfProperty: 'mainTitle' },
-            { rdfProperty: 'subtitle' },
-            { rdfProperty: 'partTitle' },
+            {
+              rdfProperty: 'mainTitle',
+              headlinePart: {
+                order: 20,
+                styleClass: 'title'
+              }
+            },
+            {
+              rdfProperty: 'subtitle',
+              headlinePart: {
+                order: 30,
+                styleClass: 'title'
+              }
+            },
+            {
+              rdfProperty: 'partTitle',
+              headlinePart: {
+                order: 40,
+                styleClass: 'title'
+              }
+            },
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'edition' },
-            { rdfProperty: 'publicationYear' },
-            { rdfProperty: 'numberOfPages'},
+            {
+              rdfProperty: 'publicationYear',
+              headlinePart: {
+                order: 60,
+                prefix: '(',
+                postfix: ')'
+              }
+            },
+            { rdfProperty: 'numberOfPages' },
             { rdfProperty: 'illustrativeMatter' },
             {
               rdfProperty: 'isbn',
@@ -311,6 +339,9 @@ module.exports = (app) => {
                     targetType: 'publisher'
                   } ]
                 }
+              },
+              headlinePart: {
+                order: 50,
               }
             },
             {
@@ -379,7 +410,13 @@ module.exports = (app) => {
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'publicationYear' },
             { rdfProperty: 'language', multiple: true },
-            { rdfProperty: 'literaryForm', multiple: true },
+            {
+              rdfProperty: 'literaryForm',
+              multiple: true,
+              headlinePart: {
+                order: 45
+              }
+            },
             { rdfProperty: 'audience', multiple: true },
             { rdfProperty: 'biography', multiple: true },
             { rdfProperty: 'adaptationOfWorkForParticularUserGroups', multiple: true }

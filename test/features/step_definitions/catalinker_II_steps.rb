@@ -198,7 +198,7 @@ end
 
 When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
   data_automation_id = "Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0"
-  person_name_field =  @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
+  person_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
   person_name_field.set(@context[:person_name])
   person_name_field.send_keys :enter
 end
@@ -329,7 +329,7 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
   @site.WorkFlow.next_step
   @context[:work_identifier] = @site.WorkFlow.get_work_uri || @context[:work_identifier]
   @context[:publication_identifier] = @site.WorkFlow.get_publication_uri || @context[:publication_identifier]
-  @site.WorkFlow.assert_selected_tab(tab_label  )
+  @site.WorkFlow.assert_selected_tab(tab_label)
 end
 
 When(/^får jeg ingen treff$/) do
@@ -367,7 +367,7 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.as(:text => link_label).select{|a| a.visible?}[0].click
+  @browser.as(:text => link_label).select { |a| a.visible? }[0].click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
@@ -486,7 +486,7 @@ end
 
 When(/^trykker jeg på den (første|andre|tredje|fjerde|femte|sjette) trekanten for å søke opp personen i forslaget$/) do |ordinal|
   index = @site.translate(ordinal) - 1
-  @browser.as(:class => 'support-panel-expander').select{|a| a.visible?}[index].click
+  @browser.as(:class => 'support-panel-expander').select { |a| a.visible? }[index].click
 end
 
 When(/^noterer jeg ned navnet på personen$/) do
@@ -495,11 +495,18 @@ When(/^noterer jeg ned navnet på personen$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     name_field.present?
   }
- @context[:person_name] = name_field.value
+  @context[:person_name] = name_field.value
 end
 
 When(/^sjekker jeg at "([^"]*)" er blant verdiene som er valgt for (.*)$/) do |value, parameter_label|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     @browser.span(:xpath => "//div[preceding-sibling::div/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//ul/li[@class='select2-selection__choice']/span[normalize-space()='#{value}']").present?
   }
+end
+
+When(/^sjekker jeg at overskriften viser informasjon om hva som blir katalogisert$/) do
+  [:work_maintitle, :person_name, :publisher_name, :publication_publicationyear].each do |item|
+    puts item
+    @browser.element(:data_automation_id => 'headline').text.include?(@context[item]).should == true
+  end
 end

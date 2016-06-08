@@ -80,6 +80,16 @@ body {
   h1, h2, h3 {
     line-height: 1.2;
   }
+  h3.headline {
+    display: flex;
+    font-size: 1.0em;
+    .title {
+      font-style: italic;
+    }
+    span.default-postfix {
+      padding-right: 0.5em;
+    }
+  }
   a:hover {
     cursor: pointer;
   }
@@ -276,7 +286,7 @@ body {
         }
         .add-new-btn-row {
           padding: 4px 8px 8px 8px;
-          a {
+          a,button {
             float: right;
             width: auto;
           }

@@ -331,22 +331,30 @@
       }
     }
 
+    function allGroupInputs (handleInput) {
+      _.each(ractive.get('inputGroups'), function (group, groupIndex) {
+        _.each(group.inputs, function (input, inputIndex) {
+          if (input.subInputs) {
+            _.each(input.subInputs, function (subInput, subInputIndex) {
+              handleInput(subInput.input, groupIndex, inputIndex, subInputIndex)
+            })
+          } else {
+            handleInput(input, groupIndex, inputIndex)
+          }
+        })
+      })
+    }
+
     function allInputs () {
       var inputs = _.select(ractive.get('inputs'), function (input) {
         return (input.fragment === 'publicationOf' || input.fragment === 'recordID')
       })
 
-      _.each(ractive.get('inputGroups'), function (group) {
-        _.each(group.inputs, function (input) {
-          if (input.subInputs) {
-            _.each(input.subInputs, function (subInput) {
-              inputs.push(subInput.input)
-            })
-          } else {
-            inputs.push(input)
-          }
-        })
-      })
+      var addInput = function (input) {
+        inputs.push(input)
+      }
+
+      allGroupInputs(addInput)
 
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
         _.each([ 'Edit', 'CreateNew' ], function (action) {
@@ -766,6 +774,7 @@
               nameProperties: subInput.nameProperties,
               dataAutomationId: inputFromOntology.dataAutomationId,
               widgetOptions: subInput.widgetOptions,
+              headlinePart: subInput.headlinePart,
               suggestValueFrom: subInput.suggestValueFrom,
               id: subInput.id,
               required: subInput.required
@@ -868,6 +877,9 @@
             if (input.widgetOptions) {
               ontologyInput.widgetOptions = input.widgetOptions
             }
+            if (input.headlinePart) {
+              ontologyInput.headlinePart = input.headlinePart
+            }
             if (input.suggestValueFrom) {
               ontologyInput.suggestValueFrom = input.suggestValueFrom
             }
@@ -924,7 +936,7 @@
       _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, 'input') : [ mainInput ], visitor)
     }
 
-    function positionSupportPanels () {
+    function positionSupportPanels (applicationData) {
       var dummyPanel = $('#right-dummy-panel')
       var supportPanelLeftEdge = dummyPanel.position().left
       var supportPanelWidth = dummyPanel.width()
@@ -939,6 +951,7 @@
           })
         }
       })
+      return applicationData
     }
 
     function loadWorksAsSubject (target) {
@@ -1338,6 +1351,13 @@
               config: applicationData.config,
               save_status: 'ny ressurs',
               authorityLabels: {},
+              headlinePart: function (headlinePart) {
+                return {
+                  value: headlinePart.predefinedValue ?
+                    Main.predefinedLabelValue(headlinePart.fragment, this.get(headlinePart.keypath)) :
+                    this.get(headlinePart.keypath)
+                }
+              },
               getAuthorityLabel: function (uri) {
                 return ractive.get('authorityLabels')[ uri ]
               },
@@ -2171,6 +2191,29 @@
           return applicationData
         }
 
+        var initHeadlineParts = function (applicationData) {
+          var headlineParts = []
+          allGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+            if (input.headlinePart) {
+              var subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
+              var keypath
+              if (input.type === 'select-predefined-value') {
+                input.headlinePart.predefinedValue = true
+                keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.value[0]`
+              } else {
+                var valuePart = input.type === 'searchable-with-result-in-side-panel' ? 'displayValue' : 'value'
+                keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.${valuePart}`
+              }
+              input.headlinePart.keypath = keypath
+              input.headlinePart.fragment = input.fragment
+              headlineParts.push(input.headlinePart)
+            }
+          })
+          applicationData.headlineParts = headlineParts
+          ractive.update();
+          return applicationData
+        }
+        
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
@@ -2181,6 +2224,7 @@
           .then(initRactive)
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
+          .then(initHeadlineParts)
           .catch(function (err) {
             console.log('Error initiating Main: ' + err)
           })
