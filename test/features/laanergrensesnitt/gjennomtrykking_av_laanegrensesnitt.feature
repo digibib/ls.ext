@@ -82,26 +82,27 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker på utgivelsen med "Norsk (bokmål)" språk
     Så skal jeg se et panel med informasjon om utgivelsen
     Og den skal inneholde eksemplarinformasjonen
-      | Filial                    | Antall | Plassering | Status               |
-      | random_migrate_branchcode | 2      | placement1 | Ledig                |
-      | random_migrate_branchcode | 1      | placement2 | Forventet 2011-06-20 |
+      | Filial                    | Antall | Plassering | Status              |
+      | random_migrate_branchcode | 1      | placement1 | Ledig               |
+      | random_migrate_branchcode | 1      | placement1 | Utlånt              |
+      | random_migrate_branchcode | 1      | placement2 | Utlånt              |
     Når jeg trykker på krysset i boksen med utgivelsesinformasjon
     Så skal jeg ikke se et panel med informasjon om utgivelsen
     Når jeg trykker på utgivelsen med "Dansk" språk
     Så skal jeg se et panel med informasjon om utgivelsen
     Og den skal inneholde eksemplarinformasjonen
       | Filial                    | Antall | Plassering | Status               |
-      | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
+      | random_migrate_branchcode | 1      | placement1 | Utlånt               |
     Når jeg trykker oppfrisk i nettleseren
     Så den skal inneholde eksemplarinformasjonen
       | Filial                    | Antall | Plassering | Status               |
-      | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
+      | random_migrate_branchcode | 1      | placement1 | Utlånt               |
     Når jeg trykker tilbake i nettleseren
     Så skal jeg ikke se et panel med informasjon om utgivelsen
     Når jeg trykker fremover i nettleseren
     Så den skal inneholde eksemplarinformasjonen
       | Filial                    | Antall | Plassering | Status               |
-      | random_migrate_branchcode | 1      | placement1 | Forventet 2011-06-20 |
+      | random_migrate_branchcode | 1      | placement1 | Utlånt               |
 
   Scenario: Logge inn på Min Side
     Gitt at jeg er logget inn som adminbruker

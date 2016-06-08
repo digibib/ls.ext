@@ -1,13 +1,7 @@
 import React, { PropTypes } from 'react'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape } from 'react-intl'
 
 class Item extends React.Component {
-  renderStatus (status) {
-    return status === 'AVAIL'
-      ? <span><FormattedMessage {...messages.available} /></span>
-      : <span><FormattedMessage {...messages.expectedAvailable} values={{status: status}} /></span>
-  }
-
   render () {
     let item = this.props.item
     return (
@@ -15,7 +9,7 @@ class Item extends React.Component {
         <td data-automation-id='item_branch'>{item.branch}</td>
         <td data-automation-id='item_count'>{item.count}</td>
         <td data-automation-id='item_shelfmark'>{item.shelfmark}</td>
-        <td data-automation-id='item_status'>{this.renderStatus(item.status)}</td>
+        <td data-automation-id='item_status'>{item.status}</td>
       </tr>
     )
   }
@@ -25,18 +19,5 @@ Item.propTypes = {
   item: PropTypes.object.isRequired,
   intl: intlShape.isRequired
 }
-
-const messages = defineMessages({
-  available: {
-    id: 'Item.available',
-    description: 'Available item',
-    defaultMessage: 'Available'
-  },
-  expectedAvailable: {
-    id: 'Item.expectedAvailable',
-    description: 'When the item is expected available',
-    defaultMessage: 'Expected {status}'
-  }
-})
 
 export default injectIntl(Item)

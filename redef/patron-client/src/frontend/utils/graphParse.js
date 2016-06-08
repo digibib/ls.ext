@@ -82,7 +82,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     publication.uri = publicationResource.id
     publication.id = getId(publicationResource.id)
     populateItems(publication, 'items', publicationResource.inAll('editionOf'))
-    publication.available = publication.items.filter(item => item.status === 'AVAIL').length > 0
+    publication.available = publication.items.filter(item => item.status === 'Ledig').length > 0
     populateLiteral(publication, 'hasImage', publicationResource, 'image')
 
     if (publication.image) {
@@ -105,20 +105,12 @@ function populateItems (target, field, itemResources) {
     populateLiteral(item, 'shelfmark', itemResource)
     populateLiteral(item, 'status', itemResource)
     populateLiteral(item, 'location', itemResource)
-    const key = `${item.location}_${item.shelfmark}`
+    populateLiteral(item, 'branch', itemResource)
+    populateLiteral(item, 'barcode', itemResource)
+    const key = `${item.branch}_${item.location}_${item.shelfmark}_${item.status}`
     if (items[ key ]) {
       items[ key ].count++
-      if (item.status === 'AVAIL') {
-        items[ key ].status = 'AVAIL'
-      } else {
-        const date = new Date(item.status)
-        if (items[ key ].status !== 'AVAIL' && !isNaN(date.getTime()) && date < items[ key ].status) {
-          items[ key ].status = date
-        }
-      }
     } else {
-      populateLiteral(item, 'branch', itemResource)
-      populateLiteral(item, 'barcode', itemResource)
       item.count = 1
       items[ key ] = item
     }

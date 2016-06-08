@@ -48,7 +48,7 @@ When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter o
   ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
               <publication> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
               <publication> <http://#{ENV['HOST']}:8005/ontology#hasItem> <http://item> .
-              <http://item> <http://#{ENV['HOST']}:8005/itemSubfieldCode/a> \"test\" .
+              <http://item> <http://#{ENV['HOST']}:8005/itemSubfieldCode/a> \"#{@context[:random_migrate_branchcode]}\" .
               <publication> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_title}\" ."
   post_publication_ntriples publication_title, ntriples
 end

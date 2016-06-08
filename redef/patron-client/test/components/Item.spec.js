@@ -45,14 +45,14 @@ describe('components', () => {
           branch: 'branch',
           count: 'count',
           shelfmark: 'shelfmark',
-          status: '01.01.2020'
+          status: 'Utlånt'
         }
       })
 
       expect(node.querySelector("[data-automation-id='item_branch']").textContent).toBe(props.item.branch)
       expect(node.querySelector("[data-automation-id='item_count']").textContent).toBe(props.item.count)
       expect(node.querySelector("[data-automation-id='item_shelfmark']").textContent).toBe(props.item.shelfmark)
-      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe(`Expected ${props.item.status}`)
+      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe(`${props.item.status}`)
     })
 
     it('should render one available item', () => {
@@ -61,14 +61,14 @@ describe('components', () => {
           branch: 'branch',
           count: 'count',
           shelfmark: 'shelfmark',
-          status: 'AVAIL'
+          status: 'Ledig'
         }
       })
 
       expect(node.querySelector("[data-automation-id='item_branch']").textContent).toBe(props.item.branch)
       expect(node.querySelector("[data-automation-id='item_count']").textContent).toBe(props.item.count)
       expect(node.querySelector("[data-automation-id='item_shelfmark']").textContent).toBe(props.item.shelfmark)
-      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe('Available')
+      expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe('Ledig')
     })
   })
 })

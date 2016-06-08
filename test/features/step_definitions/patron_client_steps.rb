@@ -104,7 +104,7 @@ end
 
 Then(/^ser jeg at eksemplaret ikke er ledig$/) do
   @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
-    row.td(data_automation_id: "item_status").text.should match(/Forventet [0-9]{4}-[0-9]{2}-[0-9]{2}/)
+    row.td(data_automation_id: "item_status").text.should eq("Utlånt")
   end
 end
 
