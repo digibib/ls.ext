@@ -1,6 +1,7 @@
 const fetch = require('isomorphic-fetch')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
+const userSettingsMapper = require('../utils/userSettingsMapper')
 
 module.exports = (app) => {
   app.get('/api/v1/profile/info', (request, response) => {
@@ -54,39 +55,41 @@ module.exports = (app) => {
   })
 
   app.get('/api/v1/profile/loans', (request, response) => {
-    Promise.all([fetchAllCheckouts(request), fetchAllHoldsAndPickups(request)])
-    .then(([checkouts, holdsAndPickups]) => {
-      const holds = holdsAndPickups.filter(item => item.status !== 'W')
-      const pickups = holdsAndPickups.filter(item => item.status === 'W')
-      response.send({
-        name: `${request.session.borrowerName}`,
-        loans: checkouts,
-        reservations: holds,
-        pickups: pickups
+    Promise.all([ fetchAllCheckouts(request), fetchAllHoldsAndPickups(request) ])
+      .then(([checkouts, holdsAndPickups]) => {
+        const holds = holdsAndPickups.filter(item => item.status !== 'W')
+        const pickups = holdsAndPickups.filter(item => item.status === 'W')
+        response.send({
+          name: `${request.session.borrowerName}`,
+          loans: checkouts,
+          reservations: holds,
+          pickups: pickups
+        })
       })
-    })
   })
 
   app.get('/api/v1/profile/checkouts', (request, response) => {
     fetchAllCheckouts(request)
-    .then(res => {
-      console.log(res)
-      response.status(200).send(res)
-    }).catch(error => {
-      console.log(error)
-      response.sendStatus(500)
-    })
+      .then(res => {
+        console.log(res)
+        response.status(200).send(res)
+      })
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
   })
 
   app.get('/api/v1/profile/holdsandpickups', (request, response) => {
     fetchAllHoldsAndPickups(request)
-    .then(res => {
-      console.log(res)
-      response.status(200).send(res)
-    }).catch(error => {
-      console.log(error)
-      response.sendStatus(500)
-    })
+      .then(res => {
+        console.log(res)
+        response.status(200).send(res)
+      })
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
   })
 
   function fetchAllHoldsAndPickups (request) {
@@ -122,9 +125,9 @@ module.exports = (app) => {
         throw Error(res.statusText)
       }
     }).then(json => {
-      const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[2]}/${hold.reserve_id}` : 'unknown'
+      const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[ 2 ]}/${hold.reserve_id}` : 'unknown'
       const waitingPeriod = hold.found === 'T' ? '1-2 dager' : 'cirka 2-4 uker'
-      const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[0] : 'unknown'
+      const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ] : 'unknown'
       return {
         recordId: hold.biblionumber,
         reserveId: hold.reserve_id,
@@ -188,35 +191,44 @@ module.exports = (app) => {
   }
 
   app.post('/api/v1/profile/settings', jsonParser, (request, response) => {
-    request.session.profileSettings = request.body
-    response.sendStatus(200)
+    fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
+      method: 'PUT',
+      headers: {
+        'Cookie': request.session.kohaSession,
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings(request.body))
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        response.status(res.status).send(res.body)
+      }
+    }).then(kohaSettings => response.status(200).send(userSettingsMapper.kohaSettingsToPatronSettings(kohaSettings)))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
   })
 
   app.get('/api/v1/profile/settings', (request, response) => {
-    if (request.session.profileSettings) {
-      response.send(request.session.profileSettings)
-    } else {
-      response.send({
-        alerts: {
-          reminderOfDueDate: {
-            sms: true,
-            email: false
-          },
-          reminderOfPickup: {
-            sms: false,
-            email: true
-          }
-        },
-        reciepts: {
-          loans: {
-            email: true
-          },
-          returns: {
-            email: true
-          }
-        }
+    return fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
+      method: 'GET',
+      headers: {
+        'Cookie': request.session.kohaSession
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        throw Error(res.statusText)
+      }
+    }).then(kohaSettings => userSettingsMapper.kohaSettingsToPatronSettings(kohaSettings))
+      .then(patronSettings => response.send(patronSettings))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
       })
-    }
   })
 
   function parsePatron (patron) {

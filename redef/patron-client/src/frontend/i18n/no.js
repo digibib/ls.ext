@@ -144,7 +144,7 @@ export default {
   'UserSettings.reminderOfPickup': 'Påminnelse om henting?',
   'UserSettings.reciepts': 'Kvitteringer',
   'UserSettings.loanReciept': 'Motta kvittering for utlån på epost',
-  'UserSettings.returnReciept': 'Motta kvittering for innvevering på epost',
+  'UserSettings.returnReciept': 'Motta kvittering for innlevering på epost',
   'UserSettings.save': 'Lagre innstillinger',
   'UserSettings.freeNotification': 'Merk! Alle varslinger og kvitteringer er gratis.',
   'UserSettings.bySms': 'På SMS',

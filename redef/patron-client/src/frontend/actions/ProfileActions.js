@@ -217,13 +217,16 @@ export function postProfileSettings (profileSettings, successAction) {
     })
       .then(response => {
         if (response.status === 200) {
-          dispatch(postProfileSettingsSuccess())
-          dispatch(fetchProfileSettings())
-          if (successAction) {
-            dispatch(successAction)
-          }
+          return response.json()
         } else {
           throw Error('Unexpected status code')
+        }
+      })
+      .then(json => {
+        dispatch(postProfileSettingsSuccess())
+        dispatch(receiveProfileSettings(json))
+        if (successAction) {
+          dispatch(successAction)
         }
       })
       .catch(error => dispatch(postProfileSettingsFailure(error)))
