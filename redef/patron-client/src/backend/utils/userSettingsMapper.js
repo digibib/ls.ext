@@ -1,7 +1,7 @@
 module.exports.patronSettingsToKohaSettings = patronSettings => {
   return {
     advance_notice: {
-      days_in_advance: 3,
+      days_in_advance: 2,
       transports: patronSettingToArray(patronSettings.alerts.reminderOfDueDate),
       wants_digest: false
     },
