@@ -267,6 +267,11 @@ module.exports = (app) => {
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Beskrivelse',
+            disabledUnless: {
+              presentTargetUri: 'Work',
+              inputIsNonEditable: 'mainEntryPersonInput',
+              disabledTooltip: 'For å komme videre, må du registrere hovedinnførsel og idenfisere eller opprette verk.'
+            },
             createNewResource: {
               type: 'Publication',
               prefillValuesFromResource: {

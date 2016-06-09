@@ -41,7 +41,7 @@
                     <div class="pure-u-1-2">
                         {{#nextStep}}
                         <button class="pure-button pure-button-primary next-step-button"
-                                disabled="{{!nextStepEnabled(domain)}}" on-click="nextStep:{{.}}">{{buttonLabel}}
+                                {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled" title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="nextStep:{{.}}">{{buttonLabel}}
                         </button>
                         {{/nextStep}}
                     </div>

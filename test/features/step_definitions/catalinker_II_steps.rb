@@ -30,8 +30,10 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
 end
 
 When(/^velger jeg (en|et) (person|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    @browser.input(:class => "select-result-item-radio").present?
+  }
   @browser.inputs(:class => "select-result-item-radio")[0].click
-  sleep 1
 end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do

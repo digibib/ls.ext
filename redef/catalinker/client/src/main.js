@@ -1358,6 +1358,17 @@
                     : this.get(headlinePart.keypath)
                 }
               },
+              checkDisabledNextStep(disabledUnlessSpec) {
+                var enabled = true;
+                if (disabledUnlessSpec.presentTargetUri) {
+                  enabled &= typeof ractive.get('targetUri.' + disabledUnlessSpec.presentTargetUri) !== 'undefined'
+                }
+                if (disabledUnlessSpec.inputIsNonEditable) {
+                  var keypath = ractive.get(`inputLinks.${disabledUnlessSpec.inputIsNonEditable}`)
+                  enabled &= ractive.get(`${keypath}.values.0.nonEditable`)
+                }
+                return !enabled
+              },
               getAuthorityLabel: function (uri) {
                 return ractive.get('authorityLabels')[ uri ]
               },
@@ -2213,6 +2224,20 @@
           ractive.update()
           return applicationData
         }
+
+        var initInputLinks = function (applicationData) {
+          var inputLinks = {}
+          allGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+            if (input.id) {
+              var subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
+              var keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}`
+              inputLinks[ input.id ] = keypath
+            }
+          })
+          ractive.set('inputLinks', inputLinks)
+          return applicationData
+        }
+
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
@@ -2224,6 +2249,7 @@
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
           .then(initHeadlineParts)
+          .then(initInputLinks)
           .catch(function (err) {
             console.log('Error initiating Main: ' + err)
           })
