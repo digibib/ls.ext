@@ -47,6 +47,13 @@ public abstract class ResourceBase {
         return entityService;
     }
 
+    public static final InMemoryRepository getInMemoryRepository() {
+        if (staticInMemoryRepository == null) {
+            staticInMemoryRepository = new InMemoryRepository(BaseURI.remote());
+        }
+        return staticInMemoryRepository;
+    }
+
     private RDFRepository getRdfRepository() {
         RDFRepository repository;
         if (getConfig() != null && "true".equals(getConfig().getInitParameter(SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY))) {

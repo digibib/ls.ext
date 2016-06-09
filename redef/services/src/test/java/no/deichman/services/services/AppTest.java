@@ -9,12 +9,15 @@ import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import no.deichman.services.App;
 import no.deichman.services.entity.EntityType;
+import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.entity.kohaadapter.KohaSvcMock;
+import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.ontology.AuthorizedValue;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.services.search.EmbeddedElasticsearchServer;
 import no.deichman.services.testutil.PortSelector;
 import no.deichman.services.uridefaults.XURI;
+import no.deichman.services.utils.ResourceReader;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -23,7 +26,9 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDFS;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,6 +41,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.json.Json.createObjectBuilder;
@@ -1202,4 +1208,113 @@ public class AppTest {
         doSearchForWorksWithHoldingbranch("Hunger", "fgry");
     }
 
+    @Test
+    public void resources_are_reindexed_when_themself_or_connected_resources_are_changed() throws Exception {
+        kohaSvcMock.addLoginExpectation(); // TODO understand why needed here
+
+        InMemoryRepository repo = ResourceBase.getInMemoryRepository();
+        String data = new ResourceReader().readFile("searchsynctestdata.ttl").replaceAll("__PORT__", String.valueOf(appPort));
+        repo.createResource(RDFModelUtil.modelFrom(data, Lang.TTL));
+
+        String workUri = "http://127.0.0.1:" + appPort + "/work/w4e5db3a95caa282e5968f68866774e20";
+        String pubUri1 = "http://127.0.0.1:" + appPort + "/publication/p594502562255";
+        String pubUri2 = "http://127.0.0.1:" + appPort + "/publication/p735933031021";
+        String persUri1 = "http://127.0.0.1:" + appPort + "/person/h10834700";
+        String persUri2 = "http://127.0.0.1:" + appPort + "/person/h11234";
+        String subjUri = "http://127.0.0.1:" + appPort + "/subject/e1200005";
+
+        // 1 ) Verify that resources exist in triplestore:
+
+        assertTrue(repo.askIfResourceExists(new XURI(workUri)));
+        assertTrue(repo.askIfResourceExists(new XURI(pubUri1)));
+        assertTrue(repo.askIfResourceExists(new XURI(pubUri2)));
+        assertTrue(repo.askIfResourceExists(new XURI(persUri1)));
+        assertTrue(repo.askIfResourceExists(new XURI(persUri2)));
+        assertTrue(repo.askIfResourceExists(new XURI(subjUri)));
+
+        // 2) Verify that none of the resources are indexed:
+
+        assertFalse(resourceIsIndexed(workUri));
+        assertFalse(resourceIsIndexed(pubUri1));
+        assertFalse(resourceIsIndexed(pubUri2));
+        assertFalse(resourceIsIndexed(persUri1));
+        assertFalse(resourceIsIndexed(persUri2));
+        assertFalse(resourceIsIndexed(subjUri));
+
+        // 3) Patch work, and verify that work and its publications get indexed within 2 seconds:
+
+        buildPatchRequest(
+                workUri,
+                buildLDPatch(
+                        buildPatchStatement("add", workUri, baseUri + "ontology#partTitle", "æøå"))).asString();
+
+        assertTrue(resourceIsIndexedWithinNumSeconds(workUri, 2));
+        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 2));
+        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 2));
+
+        // 4) Patch publication, and verify that publication and work get reindexed within 2 seconds:
+
+        buildPatchRequest(
+                pubUri1,
+                buildLDPatch(
+                        buildPatchStatement("add", pubUri1, baseUri + "ontology#hasHoldingBranch", "branch_xyz123"))).asString();
+
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "branch_xyz123", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "branch_xyz123", 2));
+
+        // 5) Patch person, and verify that work and publications get reindexed within few seconds
+        buildPatchRequest(
+                persUri1,
+                buildLDPatch(
+                        buildPatchStatement("del", persUri1, baseUri + "ontology#name", "Ragde, Anne B."),
+                        buildPatchStatement("add", persUri1, baseUri + "ontology#name", "Zappa, Frank"))).asString();
+
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Zappa, Frank", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Zappa, Frank", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Zappa, Frank", 2));
+
+        // TODO also reindex by changes in subject resource
+    }
+
+    private Boolean resourceIsIndexed(String uri) throws Exception {
+        String uriEncoded = URLEncoder.encode(uri, "UTF-8");
+        SearchResponse res = EmbeddedElasticsearchServer.getInstance().getClient()
+                .prepareSearch().setQuery(QueryBuilders.idsQuery().addIds(uriEncoded))
+                .execute().actionGet();
+
+        return res.getHits().getTotalHits() > 0;
+    }
+
+    private Boolean resourceIsIndexedWithValue(String uri, String value) throws Exception {
+        String uriEncoded = URLEncoder.encode(uri, "UTF-8");
+        SearchResponse res = EmbeddedElasticsearchServer.getInstance().getClient()
+                .prepareSearch().setQuery(QueryBuilders.idsQuery().addIds(uriEncoded))
+                .execute().actionGet();
+
+        return res.toString().contains(value);
+    }
+
+    private Boolean resourceIsIndexedWithinNumSeconds(String uri, Integer numSeconds) throws Exception {
+        Integer c = 0;
+        while(c <= numSeconds) {
+            if (resourceIsIndexed(uri)) {
+                return true;
+            }
+            Thread.sleep(ONE_SECOND);
+            c++;
+        }
+        return false;
+    }
+
+    private Boolean resourceIsIndexedWithValueWithinNumSeconds(String uri, String value, Integer numSeconds) throws Exception {
+        Integer c = 0;
+        while(c <= numSeconds) {
+            if (resourceIsIndexedWithValue(uri, value)) {
+                return true;
+            }
+            Thread.sleep(ONE_SECOND);
+            c++;
+        }
+        return false;
+    }
 }

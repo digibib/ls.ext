@@ -1,0 +1,61 @@
+{
+  "type": "Publication",
+  "contributors": {
+    "type": "Contribution",
+    "agent": {
+      "type": "Agent"
+    }
+  },
+  "@context": {
+    "contributors": {
+      "@id": "deichman:contributor",
+      "@container": "@set"
+    },
+    "formats": {
+      "@id": "deichman:format",
+      "@container": "@set"
+    },
+    "branches": {
+      "@id": "deichman:hasHoldingBranch",
+      "@container": "@set"
+    },
+    "Publication": "deichman:Publication",
+    "partTitle": "deichman:partTitle",
+    "languages": {
+      "@id": "deichman:language",
+      "@container": "@set"
+    },
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph",
+    "birthYear": "deichman:birthYear",
+    "deathYear": "deichman:deathYear",
+    "audiences": {
+      "@id": "deichman:audience",
+      "@container": "@set"
+    },
+    "deichman": "__ONTOLOGY__",
+    "mainTitle": "deichman:mainTitle",
+    "publications": {
+      "@id": "deichman:publication",
+      "@container": "@set"
+    },
+    "name": "deichman:name",
+    "workUri": "deichman:publicationOf",
+    "publicationYear": "deichman:publicationYear",
+    "Person": "deichman:Person",
+    "subjects": {
+      "@id": "deichman:subject",
+      "@container": "@set"
+    },
+    "Subject": "deichman:Subject",
+    "role": "deichman:role",
+    "mainEntry": "deichman:mainEntry",
+    "author": "http://data.deichman.no/role#author",
+    "translator": "http://data.deichman.no/role#translator",
+    "agent": "deichman:agent",
+    "Contribution": "deichman:Contribution",
+    "Agent": "deichman:Agent",
+    "image": "deichman:hasImage"
+  }
+}

@@ -58,6 +58,7 @@ public class SearchServiceImpl implements SearchService {
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
+    private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -116,6 +117,7 @@ public class SearchServiceImpl implements SearchService {
             putIndexMapping(httpclient, "place");
             putIndexMapping(httpclient, "subject");
             putIndexMapping(httpclient, "genre");
+            putIndexMapping(httpclient, "publication");
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
@@ -213,6 +215,22 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         }
+
+        // Index all publications belonging to work
+        // TODO instead of iterating over all subjects, find only subjects of triples with publicationOf as predicate
+        ResIterator subjectIterator = workModelWithLinkedResources.listSubjects();
+        while (subjectIterator.hasNext()) {
+            Resource subj = subjectIterator.next();
+            if (subj.isAnon()) {
+                continue;
+            }
+            if (subj.toString().contains("publication")) {
+                XURI pubUri = new XURI(subj.toString());
+                indexDocument(pubUri, publicationModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, pubUri));
+
+            }
+        }
+
     }
 
     private void doIndexPerson(XURI xuri, boolean indexedWork) throws Exception {
