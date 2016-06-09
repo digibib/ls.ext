@@ -65,7 +65,7 @@ class Publication extends React.Component {
           <p>
               <span data-automation-id='publication_year'>
                 {publication.publicationYear}
-              </span>{publication.publicationYear && languages.length > 0 ? ',' : null}
+              </span>{publication.publicationYear && languages.length > 0 ? ', ' : null}
               <span data-automation-id='publication_languages'>
                 {languages.join(', ')}
               </span>
