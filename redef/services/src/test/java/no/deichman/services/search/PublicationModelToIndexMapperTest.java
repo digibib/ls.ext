@@ -38,7 +38,7 @@ public class PublicationModelToIndexMapperTest {
             + "        \"mainTitle\": \"La casa delle bugie\",\n"
             + "        \"publicationYear\": \"2013\",\n"
             + "        \"subjects\": [\"Trondheim\"],\n"
-            + "        \"deichman:workUri\": \"http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20\"\n"
+            + "        \"workUri\": \"http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "    }\n"
             + "}";
 

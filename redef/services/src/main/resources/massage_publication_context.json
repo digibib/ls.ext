@@ -41,7 +41,7 @@
       "@container": "@set"
     },
     "name": "deichman:name",
-    "workUri": "deichman:publicationOf",
+    "workUri": "deichman:workUri",
     "publicationYear": "deichman:publicationYear",
     "Person": "deichman:Person",
     "subjects": {
