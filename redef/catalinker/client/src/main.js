@@ -1358,8 +1358,8 @@
                     : this.get(headlinePart.keypath)
                 }
               },
-              checkDisabledNextStep(disabledUnlessSpec) {
-                var enabled = true;
+              checkDisabledNextStep (disabledUnlessSpec) {
+                var enabled = true
                 if (disabledUnlessSpec.presentTargetUri) {
                   enabled &= typeof ractive.get('targetUri.' + disabledUnlessSpec.presentTargetUri) !== 'undefined'
                 }
