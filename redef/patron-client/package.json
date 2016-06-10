@@ -93,7 +93,7 @@
     "style-loader": "0.13.1",
     "susy": "2.2.12",
     "urijs": "1.18.1",
-    "webpack": "1.13.1",
+    "webpack": "2.1.0-beta.13",
     "webpack-dev-middleware": "1.6.1",
     "webpack-dev-server": "1.14.1",
     "webpack-hot-middleware": "2.10.0"
