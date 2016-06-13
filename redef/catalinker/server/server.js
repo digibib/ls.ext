@@ -8,6 +8,8 @@ var app = express()
 var requestProxy = require('express-request-proxy')
 require('./workflow_config')(app)
 require('./random_test_data')(app)
+var babelify = require('express-babelify-middleware')
+require('ejs')
 
 if (app.get('env') === 'development') {
   var livereload = require('express-livereload')
@@ -22,7 +24,13 @@ var Server
 app.use(logger('dev'))
 app.use(express.static(path.join(__dirname, '/../public')))
 
-app.get('/js/bundle.js', browserify([ './client/src/main', 'jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator', { './client/src/bootstrap': { run: true } } ]))
+app.set('views', './views')
+app.set('view-engine', 'ejs')
+
+app.get('/js/bundle.js',
+  babelify(['jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator', { './client/src/bootstrap': { run: true } }])
+)
+
 app.get('/js/bundle_for_old.js', browserify([ './client/src/main_old' ]))
 
 app.get('/css/vendor/:cssFile', function (request, response) {
@@ -97,12 +105,11 @@ app.use(function (req, res, next) {
   next(err)
 })
 
-// error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function (err, req, res, next) {
+    console.error(err.message)
     res.status(err.status || 500)
     res.render('error', {
       message: err.message,
@@ -114,6 +121,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
+  console.error(err.message)
   res.status(err.status || 500)
   res.render('error', {
     message: err.message,

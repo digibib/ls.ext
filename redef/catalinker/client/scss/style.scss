@@ -3,13 +3,6 @@ $lightergray: #e8e8e8;
 $input-background: white;
 $mintgreen: #DCFC9F;
 
-@mixin use-this {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>&#x1f44d;</text></svg>");
-  display: block;
-  background-repeat: no-repeat;
-  padding-left: 24px;
-}
-
 @mixin source-logo-bb {
   background-image: url('/images/logos/bb_large.jpg');
   background-repeat: no-repeat;
@@ -33,7 +26,7 @@ body {
   }
   .select2-container {
     .select2-selection {
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▼</text></svg>");
+      background-image: url("/images/arrow_down_solid.svg");
       background-repeat: no-repeat;
       background-position: 291px 10px;
       ul {
@@ -246,10 +239,10 @@ body {
               cursor: pointer;
               display: block;
               &.unexpanded {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▽</text></svg>");
+                background-image: url("/images/arrow_down_outline.svg");
               }
               &.expanded {
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>△</text></svg>");
+                background-image: url("/images/arrow_up_outline.svg");
               }
             }
           }
@@ -295,11 +288,11 @@ body {
           width: 22px;
           position: relative;
           min-height: 22px;
-          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>▶</text></svg>");
+          background-image: url("/images/arrow_right_solid.svg");
           background-repeat: no-repeat;
           display: block;
           &.suggested-value {
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='25px' width='20px'><text x='0' y='17' font-size='20'>&#x1f44d;</text></svg>");
+            background-image: url("/images/arrow_down_outline.svg");
           }
         }
         span:not(.input-wrapper) {

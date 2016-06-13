@@ -994,7 +994,7 @@
     }
 
     function isBlankNodeUri (uri) {
-      return uri && uri.startsWith('_:')
+      return uri && /^_:/.test(uri)
     }
 
     function getSuggestedValuesSearchInput () {
