@@ -164,3 +164,21 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker på avbestill reservasjon
     Og jeg bekrefter at jeg skal avbestille reservasjonen
     Så skal jeg ikke ha noen reservasjoner
+
+  Scenario: Låner endrer personlige innstillinger
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en låner med passord
+    Og brukeren har rettigheten "superlibrarian"
+    Og at jeg er i søkegrensesnittet
+    Når jeg går til Min Side
+    Så skal jeg se innloggingsvinduet
+    Når jeg logger inn
+    Og jeg går til innstillinger
+    Når slår på alle avkrysningsboksene inne på innstillinger
+    Og jeg trykker lagre inne på innstillinger
+    Og jeg trykker oppfrisk i nettleseren
+    Så skal alle avkrysningsboksene være skrudd på inne på innstillinger
+    Når jeg skrur av alle avkrysningsnboksene inne på innstillinger
+    Og jeg trykker lagre inne på innstillinger
+    Og jeg trykker oppfrisk i nettleseren
+    Så skal ingen av avkrysningsboksene være skrudd på inne på innstillinger

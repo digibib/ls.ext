@@ -70,3 +70,24 @@ def retry_http_request(tries=3, &block)
     retry
   end
 end
+
+class CheckboxHelper
+  def initialize(browser)
+    @browser = browser
+  end
+
+  def set(data_automation_id, checked = true)
+    checkbox = @browser.checkbox(data_automation_id: data_automation_id)
+    if checkbox.checked?.eql? checked
+      return
+    end
+    label = @browser.label(for: checkbox.id)
+    if (label.exists?)
+      label.click
+      # In a single page app, DOM manipulations might happen after the click so that we lose the checkbox, therefore we specifically retrieve it again
+      wait_for { @browser.checkbox(data_automation_id: data_automation_id).checked?.eql? checked }
+    else
+      raise "Label for checkbox with id #{checkbox.id} not found!"
+    end
+  end
+end

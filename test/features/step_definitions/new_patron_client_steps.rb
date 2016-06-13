@@ -251,3 +251,37 @@ end
 When(/^skal jeg ikke ha noen reservasjoner$/) do
   wait_for { @site.PatronClientLoansAndReservationsPage.reservations.size.eql? 0 }
 end
+
+When(/^jeg går til innstillinger$/) do
+ @browser.element(data_automation_id: 'tabs').element(text: 'Innstillinger').click
+end
+
+When(/^slår på alle avkrysningsboksene inne på innstillinger$/) do
+  @browser.checkboxes(data_automation_id: /^UserSettings_/).each do |checkbox|
+    CheckboxHelper.new(@browser).set(checkbox.attribute_value('data-automation-id'))
+  end
+end
+
+When(/^jeg trykker lagre inne på innstillinger$/) do
+  @browser.element(data_automation_id: 'UserSettings_saveButton').click
+end
+
+When(/^skal alle avkrysningsboksene være skrudd på inne på innstillinger$/) do
+  wait_for { @browser.checkboxes(data_automation_id: /^UserSettings_/).size > 0 }
+  @browser.checkboxes(data_automation_id: /^UserSettings_/).each do |checkbox|
+    checkbox.set?.should eq true
+  end
+end
+
+When(/^jeg skrur av alle avkrysningsnboksene inne på innstillinger$/) do
+  @browser.checkboxes(data_automation_id: /^UserSettings_/).each do |checkbox|
+    CheckboxHelper.new(@browser).set(checkbox.attribute_value('data-automation-id'), false)
+  end
+end
+
+When(/^skal ingen av avkrysningsboksene være skrudd på inne på innstillinger$/) do
+  wait_for { @browser.checkboxes(data_automation_id: /^UserSettings_/).size > 0 }
+  @browser.checkboxes(data_automation_id: /^UserSettings_/).each do |checkbox|
+    checkbox.set?.should eq false
+  end
+end
