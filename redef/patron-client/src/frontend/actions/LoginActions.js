@@ -48,7 +48,7 @@ export function showLoginDialog (successAction) {
 }
 
 export function login (username, password, successActions = []) {
-  const url = '/login'
+  const url = '/api/v1/login'
   return dispatch => {
     dispatch(requestLogin(username))
     return fetch(url, {
@@ -97,7 +97,7 @@ export function logoutFailure (error) {
 }
 
 export function logout () {
-  const url = '/logout'
+  const url = '/api/v1/logout'
   return dispatch => {
     dispatch(requestLogout())
     return fetch(url, {
@@ -140,7 +140,7 @@ export function loginStatusFailure (error) {
 }
 
 export function updateLoginStatus () {
-  const url = '/loginStatus'
+  const url = '/api/v1/loginStatus'
   return dispatch => {
     dispatch(requestLoginStatus())
     return fetch(url, {
@@ -160,7 +160,7 @@ export function requireLoginBeforeAction (successAction) {
 }
 
 export function updateLoginStatusBeforeAction (successAction) {
-  const url = '/loginStatus'
+  const url = '/api/v1/loginStatus'
   return dispatch => {
     dispatch(requestLoginStatus())
     return fetch(url, {

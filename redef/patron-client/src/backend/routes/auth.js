@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
 module.exports = (app) => {
-  app.post('/login', jsonParser, (request, response) => {
+  app.post('/api/v1/login', jsonParser, (request, response) => {
     if (!request.body.username || !request.body.password) {
       return response.sendStatus(403)
     }
@@ -40,42 +40,15 @@ module.exports = (app) => {
       })
   })
 
-  app.post('/logout', (request, response) => {
+  app.post('/api/v1/logout', (request, response) => {
     request.session.destroy((error) => error ? response.sendStatus(500) : response.sendStatus(200))
   })
 
-  app.get('/loginStatus', (request, response) => {
+  app.get('/api/v1/loginStatus', (request, response) => {
     response.send({
       isLoggedIn: request.session.kohaSession !== undefined,
       username: request.session.username,
       borrowerNumber: request.session.borrowerNumber
     })
-  })
-
-  app.get('/kohaLoginStatus', (request, response) => {
-    fetch('http://koha:8081/cgi-bin/koha/svc/authentication',
-      {
-        method: 'GET',
-        body: {},
-        headers: {
-          'Cookie': request.session.kohaSession
-        }
-      })
-      .then(res => res.text())
-      .then(res => {
-        parseXML(res, (error, result) => {
-          if (error) {
-            throw error
-          } else if (result.response.status[ 0 ] === 'ok') {
-            response.send({ isLoggedIn: true })
-          } else {
-            response.send({ isLoggedIn: false })
-          }
-        })
-      })
-      .catch(error => {
-        console.log(error)
-        response.sendStatus(500)
-      })
   })
 }
