@@ -30,4 +30,8 @@ public interface SearchService {
     Response searchSubject(String query);
 
     Response searchGenre(String query);
+
+    Response searchPublication(String query);
+
+    Response searchPublicationWithJson(String json);
 }

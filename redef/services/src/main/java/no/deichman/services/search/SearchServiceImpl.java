@@ -88,6 +88,12 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public final Response searchPublicationWithJson(String json) {
+        return searchWithJson(json, getPublicationSearchUriBuilder());
+    }
+
+
+    @Override
     public final Response clearIndex() {
         try (CloseableHttpClient httpclient = createDefault()) {
             URI uri = getIndexUriBuilder().setPath("/search").build();
@@ -200,6 +206,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public final Response searchGenre(String query) {
         return doSearch(query, getGenreSearchUriBuilder());
+    }
+
+    @Override
+    public final Response searchPublication(String query) {
+        return doSearch(query, getPublicationSearchUriBuilder());
     }
 
     private void doIndexWork(XURI xuri, boolean indexedPerson) throws Exception {
@@ -336,5 +347,9 @@ public class SearchServiceImpl implements SearchService {
 
     public final URIBuilder getGenreSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/genre/_search");
+    }
+
+    public final URIBuilder getPublicationSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/publication/_search");
     }
 }

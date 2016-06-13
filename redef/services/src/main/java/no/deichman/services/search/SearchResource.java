@@ -66,6 +66,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchSubject(query);
             case "genre":
                 return getSearchService().searchGenre(query);
+            case "publication":
+                return getSearchService().searchPublication(query);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
@@ -95,6 +97,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchSubject(body);
             case "genre":
                 return getSearchService().searchGenre(body);
+            case "publication":
+                return getSearchService().searchPublicationWithJson(body);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
