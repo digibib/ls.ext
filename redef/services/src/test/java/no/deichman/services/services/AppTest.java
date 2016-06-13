@@ -425,6 +425,8 @@ public class AppTest {
         final HttpResponse<String> patchAddNewCreatorNameToPersonPatchResponse = buildPatchRequest(personUri, addNewCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchAddNewCreatorNameToPersonPatchResponse);
         doSearchForPersons("Orwell");
+
+        doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
     }
 
     @Test
@@ -937,6 +939,23 @@ public class AppTest {
         } while (!foundSerial && attempts-- > 0);
 
         assertTrue("Should have found name of serial in index by now", foundSerial);
+    }
+
+    private void doSearchForPublicationByRecordId(String recordId) throws UnirestException, InterruptedException {
+        boolean foundPublication;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(baseUri + "search/publication/_search").queryString("q", "publication.recordId:" + recordId);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundPublication = responseBody.contains(recordId);
+            if (!foundPublication) {
+                LOG.info("Serial not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundPublication && attempts-- > 0);
+
+        assertTrue("Should have found recordId of publication in index by now", foundPublication);
     }
 
     private void doSearchForSubject(String name) throws UnirestException, InterruptedException {

@@ -78,5 +78,6 @@
     "editor": "http://data.deichman.no/role#editor",
     "contributor": "http://data.deichman.no/role#contributor",
     "coreographer": "http://data.deichman.no/role#coreographer"
+    "recordId": "deichman:recordID"
   }
 }

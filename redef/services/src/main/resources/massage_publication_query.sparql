@@ -21,7 +21,8 @@ CONSTRUCT {
                deich:subject ?subjectName ;
                deich:audience ?audience ;
                deich:agent ?pubAgentName ;
-               ?pubRoleURI ?pubAgentName .
+               ?pubRoleURI ?pubAgentName ;
+               deich:recordID ?recordId .
  ?pubContrib a deich:Contribution ;
                deich:role ?pubRole ;
                deich:agent ?pubAgent .
@@ -38,7 +39,9 @@ CONSTRUCT {
 WHERE {
   BIND(uri("__PUBLICATIONURI__") AS ?pub)
   ?pub a deich:Publication ;
-       deich:publicationOf ?work .
+       deich:publicationOf ?work ;
+       deich:recordID ?recordId .
+
   BIND(str(?work) AS ?workUri )
 
   OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }

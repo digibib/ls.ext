@@ -42,6 +42,7 @@ public class PublicationModelToIndexMapperTest {
             + "        \"mainTitle\": \"La casa delle bugie\",\n"
             + "        \"norwegianTitle\": \"Berlinerpoplene\",\n"
             + "        \"publicationYear\": \"2013\",\n"
+            + "        \"recordId\": \"3\",\n"
             + "        \"firstPublicationYear\": \"2004\",\n"
             + "        \"subjects\": [\"Trondheim\"],\n"
             + "        \"workUri\": \"http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20\"\n"
