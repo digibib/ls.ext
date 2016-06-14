@@ -58,6 +58,10 @@
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
     "image": "deichman:hasImage",
+    "imagesFromAllPublications": {
+      "@id": "deichman:hasImageAll",
+      "@container": "@set"
+    },
     "norwegianTitle": "deichman:norwegianTitle",
     "englishTitle": "deichman:englishTitle"
   }

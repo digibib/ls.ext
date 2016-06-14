@@ -34,6 +34,7 @@ public class PublicationModelToIndexMapperTest {
             + "        }],\n"
             + "        \"formats\": [\"http://data.deichman.no/format#Book\"],\n"
             + "        \"image\": \"http://static.deichman.no/1549895/bk/1_thumb.jpg\",\n"
+            + "        \"imagesFromAllPublications\": [\"http://static.deichman.no/626460/kr/1_thumb.jpg\"],\n"
             + "        \"languages\": [\"http://lexvo.org/id/iso639-3/ita\"],\n"
             + "        \"mainTitle\": \"La casa delle bugie\",\n"
             + "        \"norwegianTitle\": \"Berlinerpoplene\",\n"

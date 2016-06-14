@@ -16,6 +16,7 @@ CONSTRUCT {
                deich:hasHoldingBranch ?branch ;
                deich:contributor ?pubContrib ;
                deich:hasImage ?img ;
+               deich:hasImageAll ?allImg ;
                deich:workUri ?workUri ;
                deich:subject ?subjectName ;
                deich:audience ?audience .
@@ -52,6 +53,11 @@ WHERE {
        deich:mainTitle ?norwegianTitle ;
        deich:language <http://lexvo.org/id/iso639-3/eng> .
   }
+
+  OPTIONAL {
+      ?p deich:publicationOf ?work ;
+         deich:hasImage ?allImg.
+    }
 
   OPTIONAL {
     {
