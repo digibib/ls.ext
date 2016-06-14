@@ -420,24 +420,26 @@ public class EntityServiceImplTest {
         addContributorToWorkPatch(personUri, workUri);
         addContributorToWorkPatch(personUri, workUri2);
         Model worksByCreator = service.retrieveWorksByCreator(personUri);
+        String testJSON = format(""
+                + "{"
+                + "  \"@graph\":["
+                + "      {"
+                + "        \"@id\":\"%s\","
+                + "        \"name\": \"Work Name\""
+                + "      },"
+                + "      {"
+                + "        \"@id\":\"%s\","
+                + "        \"name\": \"Work Name\""
+                + "      },"
+                + "      { \"@type\": \"deichman:Contribution\" },"
+                + "      { \"@type\": \"deichman:Contribution\" },"
+                + "      { \"@id\": \"%3$s\" }"
+                + "    ]"
+                + "}", workUri.getUri(), workUri2.getUri(), personUri.getUri());
+
         assertFalse(worksByCreator.isEmpty());
-        assertThat(stringFrom(worksByCreator, JSONLD),
-                sameJSONAs(format(""
-                        + "{"
-                        + "  \"@graph\":["
-                        + "      {"
-                        + "        \"@id\":\"%s\","
-                        + "        \"rdfs:name\": \"Work Name\""
-                        + "      },"
-                        + "      {"
-                        + "        \"@id\":\"%s\","
-                        + "        \"rdfs:name\": \"Work Name\""
-                        + "      },"
-                        + "      { \"@type\": \"deichman:Contribution\" },"
-                        + "      { \"@type\": \"deichman:Contribution\" },"
-                        + "      { \"@id\": \"%3$s\" }"
-                        + "    ]"
-                        + "}", workUri.getUri(), workUri2.getUri(), personUri.getUri()))
+        assertThat("Got: " + stringFrom(worksByCreator, JSONLD), stringFrom(worksByCreator, JSONLD),
+                sameJSONAs(testJSON)
                         .allowingExtraUnexpectedFields()
                         .allowingAnyArrayOrdering());
     }

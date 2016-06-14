@@ -100,13 +100,17 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     public final XURI retrieveWorkByRecordId(String recordId) throws Exception {
         try (QueryExecution qexec = getQueryExecution(sqb.getWorkByRecordId(recordId))) {
             disableCompression(qexec);
+            XURI returnValue = null;
             ResultSet resultSet = qexec.execSelect();
-            boolean found = resultSet.hasNext();
-            if (!found) {
+
+            if (resultSet.hasNext()) {
+                returnValue = new XURI(resultSet.next().getResource("work").toString());
+            } else {
                 throw new NotFoundException();
             }
-            return new XURI(resultSet.next().getResource("work").toString());
+            return returnValue;
         }
+
     }
 
     @Override
