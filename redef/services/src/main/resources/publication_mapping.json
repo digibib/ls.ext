@@ -46,6 +46,14 @@
         "subtitle": {
           "type": "string"
         },
+        "norwegianTitle": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "englishTitle": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "uri": {
           "type": "string",
           "index": "no"

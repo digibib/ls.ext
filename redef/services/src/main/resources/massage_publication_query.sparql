@@ -6,6 +6,8 @@ CONSTRUCT {
         ?pub a deich:Publication ;
                deich:mainTitle ?pubMainTitle ;
                deich:partTitle ?pubPartTitle ;
+               deich:norwegianTitle ?norwegianTitle ;
+               deich:englishTitle ?enlishTitle ;
                deich:language ?language ;
                deich:format ?format ;
                deich:publicationYear ?pubPublicationYear ;
@@ -38,6 +40,18 @@ WHERE {
 
   OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
   OPTIONAL { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
+
+  OPTIONAL {
+    ?p deich:publicationOf ?work ;
+       deich:mainTitle ?norwegianTitle ;
+       deich:language <http://lexvo.org/id/iso639-3/nob> .
+  }
+
+  OPTIONAL {
+    ?p deich:publicationOf ?work ;
+       deich:mainTitle ?norwegianTitle ;
+       deich:language <http://lexvo.org/id/iso639-3/eng> .
+  }
 
   OPTIONAL {
     {

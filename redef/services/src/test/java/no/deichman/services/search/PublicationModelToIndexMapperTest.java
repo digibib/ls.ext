@@ -36,6 +36,7 @@ public class PublicationModelToIndexMapperTest {
             + "        \"image\": \"http://static.deichman.no/1549895/bk/1_thumb.jpg\",\n"
             + "        \"languages\": [\"http://lexvo.org/id/iso639-3/ita\"],\n"
             + "        \"mainTitle\": \"La casa delle bugie\",\n"
+            + "        \"norwegianTitle\": \"Berlinerpoplene\",\n"
             + "        \"publicationYear\": \"2013\",\n"
             + "        \"firstPublicationYear\": \"2004\",\n"
             + "        \"subjects\": [\"Trondheim\"],\n"

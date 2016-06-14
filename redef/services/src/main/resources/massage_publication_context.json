@@ -57,6 +57,8 @@
     "agent": "deichman:agent",
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
-    "image": "deichman:hasImage"
+    "image": "deichman:hasImage",
+    "norwegianTitle": "deichman:norwegianTitle",
+    "englishTitle": "deichman:englishTitle"
   }
 }
