@@ -43,6 +43,7 @@
     "name": "deichman:name",
     "workUri": "deichman:workUri",
     "publicationYear": "deichman:publicationYear",
+    "firstPublicationYear": "deichman:firstPublicationYear",
     "Person": "deichman:Person",
     "subjects": {
       "@id": "deichman:subject",

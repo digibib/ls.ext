@@ -9,6 +9,7 @@ CONSTRUCT {
                deich:language ?language ;
                deich:format ?format ;
                deich:publicationYear ?pubPublicationYear ;
+               deich:firstPublicationYear ?workPublicationYear ;
                deich:audience ?audience ;
                deich:hasHoldingBranch ?branch ;
                deich:contributor ?pubContrib ;
@@ -36,6 +37,7 @@ WHERE {
   BIND(str(?work) AS ?workUri )
 
   OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
+  OPTIONAL { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
 
   OPTIONAL {
     {
