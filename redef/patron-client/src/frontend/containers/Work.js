@@ -106,7 +106,7 @@ class Work extends React.Component {
                 consequat. Morbi id nulla ac quam luctus posuere nec a risus. Aenean congue quam tortor, a volutpat
                 quam mollis nec. Nullam metus ex, efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel
                 accumsan odio, venenatis fringilla ex.</p>
-              <button className='black-btn patron-placeholder' type='button'>Bestill første ledige</button>
+              <button className='black-btn' type='button'>Lån denne</button>
               <button className='white-btn-checkmark patron-placeholder' type='button'>Min huskeliste</button>
             </div>
             <aside className='work-subjects hidden-mobile show-desktop'>
