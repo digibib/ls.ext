@@ -1,5 +1,4 @@
 const fetch = require('isomorphic-fetch')
-const parseXML = require('xml2js').parseString
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
