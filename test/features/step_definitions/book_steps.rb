@@ -85,7 +85,7 @@ end
 Then(/^kan jeg søke opp boka$/) do
   biblio_page = @site.Home.search_catalog(@active[:book].title)
   biblio_page.header.should include(@active[:book].title)
-  biblio_page.status.should include("vailable")
+  biblio_page.status.should include("Tilgjengelig")
 end
 
 Given(/^at det finnes et verk med en publikasjon og et eksemplar$/) do

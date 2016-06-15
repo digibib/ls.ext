@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # language: no
 
-@redef @arbeidsflyt @check-for-errors @xvfb
+@redef @arbeidsflyt @check-for-errors
 Egenskap: katalogisere med eksterne kilder
   Som katalogisator
   Ønsker jeg å kunne hente data fra eksterne kilder for at katalogiseringen skal gå raskere og få høyest mulig kvalitet

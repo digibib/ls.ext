@@ -54,7 +54,9 @@
     "ractive-multi-decorator": "^0.1.0",
     "select2": "git+https://github.com/select2/select2.git#4.0.2-rc.1",
     "underscore": "^1.8.3",
-    "urijs": "^1.17.0"
+    "urijs": "^1.17.0",
+    "es5-shim": "4.5.9",
+    "babel-polyfill": "6.9.1"
   },
   "devDependencies": {
     "babel-eslint": "6.0.4",
