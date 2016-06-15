@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y \
 RUN add-apt-repository ppa:brightbox/ruby-ng
 RUN apt-get update && apt-get install -y --force-yes ruby2.2 ruby2.2-dev xvfb && apt-get clean
 
-RUN wget --quiet http://heanet.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_47.0-0ubuntu1_amd64.deb && \
-    dpkg -i firefox-mozilla-build_47.0-0ubuntu1_amd64.deb && \
-    rm -rf firefox-mozilla-build_47.0-0ubuntu1_amd64.deb
+RUN wget --quiet http://heanet.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_46.0.1-0ubuntu1_amd64.deb && \
+    dpkg -i firefox-mozilla-build_46.0.1-0ubuntu1_amd64.deb && \
+    rm -rf firefox-mozilla-build_46.0.1-0ubuntu1_amd64.deb
 
 RUN wget --quiet http://chromedriver.storage.googleapis.com/2.22/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && rm chromedriver_linux64.zip
