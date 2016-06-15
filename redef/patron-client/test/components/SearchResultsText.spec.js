@@ -10,6 +10,7 @@ function setup (propOverrides) {
   const props = {
     locationQuery: {},
     totalHits: 0,
+    totalHitsPublications: 0,
     isSearching: false,
     ...propOverrides
   }

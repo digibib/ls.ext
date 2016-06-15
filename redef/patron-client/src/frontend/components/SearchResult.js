@@ -12,9 +12,9 @@ class SearchResult extends React.Component {
   }
 
   componentWillMount () {
-    const { relativeUri } = this.props.result
-    if (this.shouldShowStatus() && !this.props.resources[ relativeUri ]) {
-      this.props.fetchWorkResource(relativeUri)
+    const { id } = this.props.result
+    if (this.shouldShowStatus() && !this.props.resources[ id ]) {
+      this.props.fetchWorkResource(id)
     }
   }
 
@@ -32,22 +32,18 @@ class SearchResult extends React.Component {
   }
 
   renderDisplayTitle (result) {
-    let displayTitle = result.mainTitle
-    if (result.partTitle) {
-      displayTitle += ` — ${result.partTitle}`
-    }
     return (
       <Link data-automation-id='work-link' to={this.getResultUrl(result)}>
-        <span className='workTitle' data-automation-id='work-title'>{displayTitle}</span>
+        <span className='workTitle' data-automation-id='work-title'>{result.displayTitle}</span>
       </Link>
     )
   }
 
-  renderOriginalTitle (result) {
-    if (result.originalTitle) {
+  renderOriginalTitle (publication) {
+    if (publication.originalTitle) {
       return (
         <p data-automation-id='work_originaltitle'>
-          <FormattedMessage {...messages.originalTitle} /> {result.originalTitle}
+          <FormattedMessage {...messages.originalTitle} /> {publication.originalTitle}
         </p>
       )
     }
@@ -60,8 +56,8 @@ class SearchResult extends React.Component {
           <strong>
             <FormattedMessage {...messages.subjects} />
             {result.subjects.map(subject => (
-              <span key={subject.searchQuery}>
-                <Link to={subject.searchQuery}> {subject.name} </Link>
+              <span key={subject}>
+                <Link to='/'> {subject} </Link>
                 </span>
             ))}
           </strong>
@@ -98,16 +94,14 @@ class SearchResult extends React.Component {
 
   render () {
     const { result } = this.props
+    const firstPublishedYear = result.publication.firstPublicationYear
     const pubFormats = new Set()
-    result.publications.forEach(publication => {
-      publication.formats.forEach(format => {
-        pubFormats.add(this.props.intl.formatMessage({ id: format }))
-      })
+    result.publication.formats = result.publication.formats || []
+    result.publication.formats.forEach(format => {
+      pubFormats.add(this.props.intl.formatMessage({ id: format }))
     })
-    const formats = [ ...pubFormats ]
-    const issuedYears = result.publications.filter(publication => publication.issued && !isNaN(publication.issued)).map(publication => publication.issued)
-    const firstPublishedYear = issuedYears.length > 0 ? issuedYears.reduce((a, b) => Math.min(a, b)) : ''
 
+    const formats = [ ...pubFormats ]
     return (
       <div className='single-entry' data-formats={formats.join(', ')}>
         <aside className='book-cover'>
@@ -132,20 +126,23 @@ class SearchResult extends React.Component {
           </h1>
 
           <div className='contributors'>
-            {this.renderContributors(result.contributors)}
+            {this.renderContributors(result.publication.contributors)}
           </div>
 
           <div>
-            {this.renderOriginalTitle(result)}
+            {this.renderOriginalTitle(result.publication)}
           </div>
 
           <div>
-            {this.renderSubjects(result)}
+            {this.renderSubjects(result.publication)}
           </div>
 
-          <div>
-            <strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span>
-          </div>
+          {firstPublishedYear
+            ? <div>
+                <strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span>
+              </div>
+            : null
+          }
 
           <div>
             <p className='patron-placeholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa

@@ -29,6 +29,7 @@ SearchResultsText.propTypes = {
   isSearching: PropTypes.bool.isRequired,
   locationQuery: PropTypes.object,
   totalHits: PropTypes.number.isRequired,
+  totalHitsPublications: PropTypes.number.isRequired,
   mediaQueryValues: PropTypes.object
 }
 

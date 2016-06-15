@@ -31,7 +31,7 @@ class Search extends React.Component {
 
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'page' ].includes(key)).forEach(key => {
+    Object.keys(locationQuery).filter(key => [ 'query', 'filter' ].includes(key)).forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
@@ -49,7 +49,7 @@ class Search extends React.Component {
   }
 
   renderPagination () {
-    if ((this.props.totalHits > Constants.searchQuerySize) && this.props.location.query.query) {
+    if ((this.props.totalHits > Constants.maxSearchResultsPerPage) && this.props.location.query.query) {
       return (
         <section className='pagination-area'
                  data-automation-id='search-results-pagination'>
@@ -59,7 +59,7 @@ class Search extends React.Component {
                          forceSelected={this.props.location.query.page - 1 || 0}
                          marginPagesDisplayed={1}
                          pageRangeDisplayed={5}
-                         pageNum={Math.ceil(this.props.totalHits / Constants.searchQuerySize)}
+                         pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
                          clickCallback={this.handlePageClick}
                          containerClassName={'pagination'}
                          subContainerClassName={'pages pagination'}
@@ -77,6 +77,7 @@ class Search extends React.Component {
             ? (<div className='search-results-footer'>
             <div className='search-results-number'>
               <SearchResultsText totalHits={this.props.totalHits}
+                                 totalHitsPublications={this.props.totalHitsPublications}
                                  locationQuery={this.props.locationQuery}
                                  isSearching={this.props.isSearching} />
             </div>
@@ -110,6 +111,7 @@ class Search extends React.Component {
                            searchError={this.props.searchError}
                            fetchWorkResource={this.props.resourceActions.fetchWorkResource}
                            resources={this.props.resources}
+                           page={this.props.location.query.page}
             /> ]
             : null}
           {this.renderPagination()}
@@ -130,6 +132,7 @@ Search.propTypes = {
   location: PropTypes.object.isRequired,
   searchFieldInput: PropTypes.string,
   totalHits: PropTypes.number.isRequired,
+  totalHitsPublications: PropTypes.number.isRequired,
   locationQuery: PropTypes.object.isRequired,
   resources: PropTypes.object.isRequired,
   resourceActions: PropTypes.object.isRequired
@@ -141,6 +144,7 @@ function mapStateToProps (state) {
   return {
     searchResults: state.search.searchResults,
     totalHits: state.search.totalHits,
+    totalHitsPublications: state.search.totalHitsPublications,
     isSearching: state.search.isSearching,
     searchError: state.search.searchError,
     filters: state.search.filters,

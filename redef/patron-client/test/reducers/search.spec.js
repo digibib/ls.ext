@@ -14,6 +14,7 @@ describe('reducers', () => {
         filters: [],
         isSearching: false,
         totalHits: 0,
+        totalHitsPublications: 0,
         searchError: false,
         inputQuery: ''
       })
@@ -42,6 +43,7 @@ describe('reducers', () => {
           payload: {
             searchResults: 'searchResults',
             totalHits: 'totalHits',
+            totalHitsPublications: 'totalHitsPublications',
             filters: 'filters'
           }
         })
@@ -50,6 +52,7 @@ describe('reducers', () => {
         searchError: false,
         searchResults: 'searchResults',
         totalHits: 'totalHits',
+        totalHitsPublications: 'totalHitsPublications',
         filters: 'filters'
       })
     })

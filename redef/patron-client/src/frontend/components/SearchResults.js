@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchResult from './SearchResult'
+import Constants from '../constants/Constants'
 
 class SearchResults extends React.Component {
   render () {
@@ -12,8 +13,10 @@ class SearchResults extends React.Component {
       )
     }
     let entries = []
+    const from = Constants.maxSearchResultsPerPage * (this.props.page - 1)
+    const to = from + Constants.maxSearchResultsPerPage
     if (this.props.locationQuery.query) {
-      entries = this.props.searchResults.map(result => (
+      entries = this.props.searchResults.slice(from, to).map(result => (
           <SearchResult key={result.relativeUri}
                         result={result}
                         locationQuery={this.props.locationQuery}
@@ -41,7 +44,8 @@ SearchResults.propTypes = {
   totalHits: PropTypes.number.isRequired,
   searchResults: PropTypes.array.isRequired,
   resources: PropTypes.object.isRequired,
-  fetchWorkResource: PropTypes.func.isRequired
+  fetchWorkResource: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired
 }
 
 const messages = defineMessages({
@@ -52,4 +56,5 @@ const messages = defineMessages({
   }
 })
 
+SearchResults.defaultProps = { page: 1 }
 export default SearchResults

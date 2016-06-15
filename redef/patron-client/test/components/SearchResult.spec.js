@@ -11,16 +11,18 @@ function setup (resultPropOverrides) {
     showStatus: () => {},
     locationQuery: {showStatus: 'test_relativeUri'},
     result: {
-      originalTitle: 'test_originalTitle',
-      mainTitle: 'test_mainTitle',
-      publications: [],
-      contributors: [ {
-        role: 'author',
-        agent: {
-          name: 'test_creator_name',
-          relativeUri: 'test_creator_relativeUri'
-        }
-      } ],
+      displayTitle: 'test_mainTitle',
+      publication: {
+        mainTitle: 'test_mainTitle',
+        originalTitle: 'test_originalTitle',
+        contributors: [ {
+          role: 'author',
+          agent: {
+            name: 'test_creator_name',
+            relativeUri: 'test_creator_relativeUri'
+          }
+        } ]
+      },
       relativeUri: 'test_relativeUri',
       ...resultPropOverrides
     },
@@ -70,51 +72,48 @@ describe('components', () => {
   describe('SearchResult', () => {
     it('should render the result', () => {
       const { node, props } = setup()
-      expect(node.querySelector("[data-automation-id='work-title']").textContent).toBe(props.result.mainTitle)
-      expect(node.querySelector("[data-automation-id='work_originaltitle']").textContent.endsWith(props.result.originalTitle)).toBe(true)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 0 ].agent.name)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 0 ].agent.relativeUri)
-    })
-
-    it('should render part title and main title as title', () => {
-      const { node, props } = setup({ partTitle: 'test_partTitle' })
-      expect(node.querySelector("[data-automation-id='work-title']").textContent).toEqual(props.result.mainTitle + ' — ' + props.result.partTitle)
+      expect(node.querySelector("[data-automation-id='work-title']").textContent).toBe(props.result.displayTitle)
+      expect(node.querySelector("[data-automation-id='work_originaltitle']").textContent).toBe(`Original title: ${props.result.publication.originalTitle}`)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
     })
 
     it('should render multiple contributors', () => {
       const { node, props } = setup({
-        contributors: [
-          {
-            role: 'author',
-            agent: {
-              name: 'creator_1',
-              relativeUri: 'relativeUri_1'
+        publication: {
+          contributors: [
+            {
+              role: 'author',
+              agent: {
+                name: 'creator_1',
+                relativeUri: 'relativeUri_1'
+              }
+            },
+            {
+              role: 'illustrator',
+              agent: {
+                name: 'creator_2',
+                relativeUri: 'relativeUri_2'
+              }
             }
-          },
-          {
-            role: 'illustrator',
-            agent: {
-              name: 'creator_2',
-              relativeUri: 'relativeUri_2'
-            }
-          }
-        ]
+          ]
+        }
       })
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 0 ].agent.name)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 0 ].agent.relativeUri)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 1 ].agent.name)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 1 ].agent.relativeUri)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 1 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 1 ].agent.relativeUri)
     })
 
     it('should render formats', () => {
       const { node, props } = setup({
-        publications: [ { formats: [ 'format_1' ] }, { formats: [ 'format_2' ] }, { formats: [ 'format_3' ] } ]
+        publication: { formats: [ 'format_1', 'format_2', 'format_3' ], contributors: [] }
       })
 
       // TODO: Change back when search results render formats again
       /* expect(node.querySelector("[data-automation-id='work_formats']").innerHTML) */
       expect(node.getAttribute('data-formats'))
-        .toContain(props.result.publications[ 0 ].formats[ 0 ] + ', ' + props.result.publications[ 1 ].formats[ 0 ] + ', ' + props.result.publications[ 2 ].formats[ 0 ])
+        .toContain(props.result.publication.formats.join(', '))
     })
   })
 })

@@ -24,7 +24,6 @@ class App extends React.Component {
           <SearchHeader locationQuery={this.props.location.query}
                         dispatch={this.props.dispatch}
                         locale={this.props.locale}
-                        totalHits={this.props.totalHits}
                         isLoggedIn={this.props.isLoggedIn}
                         logout={this.props.loginActions.logout}
                         showLoginDialog={this.props.loginActions.showLoginDialog}
@@ -47,7 +46,6 @@ App.propTypes = {
   libraryActions: PropTypes.object.isRequired,
   loginActions: PropTypes.object.isRequired,
   locale: PropTypes.string.isRequired,
-  totalHits: PropTypes.number.isRequired,
   isLoggedIn: PropTypes.bool.isRequired
 }
 
@@ -55,8 +53,7 @@ function mapStateToProps (state) {
   return {
     routing: state.routing,
     locale: state.application.locale,
-    isLoggedIn: state.application.isLoggedIn,
-    totalHits: state.search.totalHits
+    isLoggedIn: state.application.isLoggedIn
   }
 }
 

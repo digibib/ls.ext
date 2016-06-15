@@ -1,7 +1,7 @@
 import Constants from '../constants/Constants'
 
 export function parseFilters (locationQuery) {
-  const filters = []
+  let filterBuckets = {}
   const filterableFields = Constants.filterableFields
   Object.keys(locationQuery).forEach(parameter => {
     if (parameter === 'filter') {
@@ -10,86 +10,65 @@ export function parseFilters (locationQuery) {
         const split = value.split('_')
         const filterableField = filterableFields[ split[ 0 ] ]
         const aggregation = filterableField.name
-        const bucket = filterableField.prefix + value.substring(`${split[ 0 ]}_`.length)
-        filters.push({ aggregation: aggregation, bucket: bucket })
+        if (!filterBuckets[aggregation]) {
+          filterBuckets[aggregation] = []
+        }
+        let val = filterableField.prefix + value.substring(`${split[ 0 ]}_`.length)
+        filterBuckets[aggregation].push(val)
       })
     }
+  })
+  let filters = []
+  Object.keys(filterBuckets).forEach(aggregation => {
+    filters.push({ aggregation: aggregation, bucket: filterBuckets[aggregation] })
   })
   return filters
 }
 
 export function filteredSearchQuery (locationQuery) {
-  let query = locationQuery.query
-  let filters = parseFilters(locationQuery)
+  const { query } = locationQuery
+  const filters = parseFilters(locationQuery)
 
-  let elasticSearchQuery = initQuery(query)
+  const elasticSearchQuery = initQuery(query)
   let musts = {}
-  let nestedMusts = {}
-
   filters.forEach(filter => {
-    let path = getPath(filter.aggregation)
-    if (musts[ path ]) {
-      if (nestedMusts[ filter.aggregation ]) {
-        nestedMusts[ filter.aggregation ].terms[ filter.aggregation ].push(filter.bucket)
-      } else {
-        let nestedMust = { terms: {} }
-        nestedMust.terms[ filter.aggregation ] = [ filter.bucket ]
-        musts[ path ].nested.query.bool.must.push(nestedMust)
-        nestedMusts[ filter.aggregation ] = nestedMust
-      }
-    } else {
-      let must = createMust(path)
-      must.nested.query.bool.must[ 0 ].terms[ filter.aggregation ] = [ filter.bucket ]
-      nestedMusts[ filter.aggregation ] = must.nested.query.bool.must[ 0 ]
-      musts[ path ] = must
-    }
+    const aggregation = filter.aggregation
+    const must = createMust(aggregation, filter.bucket)
+    musts[ aggregation ] = must
   })
 
   Object.keys(musts).forEach(aggregation => {
     elasticSearchQuery.query.filtered.filter.bool.must.push(musts[ aggregation ])
   })
 
-  elasticSearchQuery.size = Constants.searchQuerySize
-  elasticSearchQuery.aggregations = { all: { global: {}, aggregations: {} } }
-
   Object.keys(Constants.filterableFields).forEach(key => {
     const field = Constants.filterableFields[ key ]
     const fieldName = field.name
-    let aggregations = {
+    elasticSearchQuery.aggs.facets.aggs[ fieldName ] = {
       filter: {
-        and: [ elasticSearchQuery.query.filtered.query ]
+        bool: Object.assign({}, elasticSearchQuery.query.filtered.query.bool)
       },
-      aggregations: {
-        [ fieldName ]: {
-          nested: {
-            path: getPath(fieldName)
-          },
-          aggregations: {
-            [ fieldName ]: {
-              terms: {
-                field: fieldName
-              }
-            }
+      aggs: {
+        [fieldName]: {
+          terms: {
+            field: fieldName,
+            size: 0
           }
         }
       }
     }
 
-    Object.keys(musts).forEach(path => {
-      let must = createMust(path)
-      let nestedMusts = musts[ path ].nested.query.bool.must
-      must.nested.query.bool.must = nestedMusts.filter(nestedMust => { return !nestedMust.terms[ fieldName ] })
-      aggregations.filter.and.push({ bool: { must: must } })
+    let aggregationMusts = []
+    Object.keys(musts).forEach(aggregation => {
+      const must = musts[aggregation]
+      if (aggregation !== fieldName) {
+        aggregationMusts.push(must)
+      }
     })
-
-    elasticSearchQuery.aggregations.all.aggregations[ fieldName ] = aggregations
+    elasticSearchQuery.aggs.facets.aggs[ fieldName ].filter.bool.must = aggregationMusts
   })
 
   return elasticSearchQuery
-}
-
-function getPath (field) {
-  return field.split('.').slice(0, -1).join('.')
 }
 
 function initQuery (query) {
@@ -107,42 +86,33 @@ function initQuery (query) {
               {
                 simple_query_string: {
                   query: query,
-                  default_operator: 'and'
+                  default_operator: 'and',
+                  fields: ['publication.mainTitle', 'publication.partTitle', 'publication.subjects', 'publication.contributors.agent.name']
                 }
               }
             ],
+            must: [],
             should: [
               {
                 nested: {
-                  path: 'work.contributors.agent',
+                  path: 'publication.contributors.agent',
                   query: {
                     multi_match: {
                       query: query,
-                      fields: [ 'work.contributors.agent.name^2' ]
+                      fields: [ 'publication.contributors.agent.name^2' ]
                     }
                   }
                 }
               },
               {
-                nested: {
-                  path: 'work.publications',
-                  query: {
-                    multi_match: {
-                      query: query,
-                      fields: [ 'work.publications.mainTitle^2', 'work.publications.partTitle' ]
-                    }
-                  }
+                multi_match: {
+                  query: query,
+                  fields: [ 'publication.mainTitle^2', 'publication.partTitle' ]
                 }
               },
               {
-                nested: {
-                  path: 'work.subjects',
-                  query: {
-                    multi_match: {
-                      query: query,
-                      fields: [ 'work.subjects.name' ]
-                    }
-                  }
+                match: {
+                  'publication.subjects': query
                 }
               }
             ]
@@ -150,31 +120,38 @@ function initQuery (query) {
         }
       }
     },
-    highlight: {
-      'pre_tags': [ '' ],
-      'post_tags': [ '' ],
-      fields: {
-        'work.publications.mainTitle': {},
-        'work.publications.partTitle': {},
-        'work.contributors.agent.name': {}
+    size: 0,
+    aggs: {
+      facets: {
+        global: {},
+        aggs: {}
+      },
+      byWork: {
+        terms: {
+          field: 'publication.workUri',
+          size: 100
+        },
+        aggs: {
+          publications: {
+            top_hits: {
+              size: 1
+            }
+          }
+        }
+      },
+      workCount: {
+        cardinality: {
+          field: 'publication.workUri'
+        }
       }
     }
   }
 }
 
-function createMust (path) {
+function createMust (field, terms) {
   return {
-    nested: {
-      path: path,
-      query: {
-        bool: {
-          must: [
-            {
-              terms: {}
-            }
-          ]
-        }
-      }
+    terms: {
+      [field]: terms
     }
   }
 }

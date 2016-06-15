@@ -75,7 +75,6 @@ SearchHeader.propTypes = {
   requireLoginBeforeAction: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
   locale: PropTypes.string.isRequired,
-  totalHits: PropTypes.number.isRequired,
   showLoginDialog: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   logout: PropTypes.func.isRequired,

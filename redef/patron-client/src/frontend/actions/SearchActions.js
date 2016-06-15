@@ -22,6 +22,7 @@ export function receiveSearch (processedResponse) {
     payload: {
       searchResults: processedResponse.searchResults,
       totalHits: processedResponse.totalHits,
+      totalHitsPublications: processedResponse.totalHitsPublications,
       filters: processedResponse.filters
     }
   }
@@ -46,8 +47,8 @@ export function search () {
     const inputQuery = locationQuery.query
 
     const uri = page
-      ? `${Constants.backendUri}/search/work/_search?from=${(page - 1) * Constants.searchQuerySize}`
-      : `${Constants.backendUri}/search/work/_search`
+      ? `${Constants.backendUri}/search/publication/_search?from=${(page - 1) * Constants.maxSearchResultsPerPage}`
+      : `${Constants.backendUri}/search/publication/_search`
 
     const elasticSearchQuery = filteredSearchQuery(locationQuery)
     dispatch(requestSearch(inputQuery, elasticSearchQuery))

@@ -18,6 +18,7 @@ function setup (propOverrides) {
     location: { query: {} },
     locationQuery: {},
     totalHits: 0,
+    totalHitsPublications: 0,
     searchFilterActions: {
       toggleFilter: () => {},
       toggleFilterVisibility: () => {},
@@ -52,14 +53,14 @@ describe('containers', () => {
     })
 
     it('should not render pagination when few results', () => {
-      const { node } = setup({ location: { query: { query: 'test' } }, totalHits: Constants.searchQuerySize })
+      const { node } = setup({ location: { query: { query: 'test' } }, totalHits: Constants.maxSearchResultsPerPage })
       expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(0)
     })
 
     it('should render pagination when many results', () => {
       const { node } = setup({
         location: { query: { query: 'test' } },
-        totalHits: Constants.searchQuerySize + 1
+        totalHits: Constants.maxSearchResultsPerPage + 1
       })
       expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(1)
     })
@@ -67,7 +68,7 @@ describe('containers', () => {
     it('should render links to pages', () => {
       const { node } = setup({
         location: { query: { query: 'test' } },
-        totalHits: Constants.searchQuerySize * 3
+        totalHits: Constants.maxSearchResultsPerPage * 3
       })
       expect(node.querySelector("[data-automation-id='search-results-pagination']")
         .getElementsByClassName('pagination')[ 0 ].children.length).toBe(5) // including next and prev

@@ -15,9 +15,8 @@ end
 Given(/^at det finnes et verk med tre ledd i tittelen$/) do
   steps %Q{
    Gitt at jeg er i katalogiseringsgrensesnittet
-   Så leverer systemet en ny ID for det nye verket
-   Og jeg kan legge til tittel med tre ledd for det nye verket
-   Når jeg legger til et årstall for førsteutgave av nye verket
+   Gitt at det finnes et verk og en utgivelse
+   Og jeg kan legge til tittel med tre ledd for utgivelsen
    Så grensesnittet viser at endringene er lagret
   }
 end
@@ -479,9 +478,9 @@ Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
   @site.RegPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
 end
 
-Then(/^jeg kan legge til tittel med tre ledd for det nye verket$/) do
-  @context[:work_maintitle] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
+Then(/^jeg kan legge til tittel med tre ledd for utgivelsen$/) do
+  @context[:publication_maintitle] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
+  @site.RegPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
 end
 
 Then(/^grensesnittet viser at endringene er lagret$/) do
