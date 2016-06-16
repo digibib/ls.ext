@@ -116,6 +116,17 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     }
 
+    private Response deleteRecord(String url) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(url);
+        Invocation.Builder invocationBuilder = webTarget.request();
+        if (sessionCookie == null) {
+            login();
+        }
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.delete();
+    }
+
     private Response requestNewRecord(MarcRecord marcRecord) {
         String url = kohaPort + "/api/v1/biblios";
         return sendMarcRecord("POST", url, marcRecord);
@@ -125,6 +136,18 @@ public final class KohaAdapterImpl implements KohaAdapter {
     public Response updateRecord(String recordId, MarcRecord marcRecord) {
         String url = kohaPort + "/api/v1/biblios/" + recordId;
         return sendMarcRecord("PUT", url, marcRecord);
+    }
+
+    @Override
+    public void deleteBiblio(String recordId) throws PublicationHasItemsException {
+        String url = kohaPort + "/api/v1/biblios/" + recordId;
+        JsonObject json = new Gson().fromJson(retrieveBiblioExpanded(recordId), JsonObject.class);
+        int numberOfItems = json.getAsJsonArray("items").size();
+        if (numberOfItems == 0) {
+            deleteRecord(url);
+        } else {
+            throw new PublicationHasItemsException(numberOfItems);
+        }
     }
 
     @Override

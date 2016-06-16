@@ -42,6 +42,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,7 +74,7 @@ public class EntityResourceTest {
     public void setUp() throws Exception {
         baseURI = BaseURI.local();
         EntityServiceImpl service = new EntityServiceImpl(baseURI, new InMemoryRepository(), mockKohaAdapter);
-        entityResource = new EntityResource(baseURI, service, mockSearchService);
+        entityResource = new EntityResource(baseURI, service, mockSearchService, mockKohaAdapter);
     }
 
     @Test
@@ -82,7 +84,7 @@ public class EntityResourceTest {
 
     @Test
     public void get_should_return_a_valid_json_work() throws Exception {
-        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null), mockSearchService);
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), null), mockSearchService, mockKohaAdapter);
         String workId = "w00001";
 
         Response result = entityResource.get(WORK, workId);
@@ -222,7 +224,7 @@ public class EntityResourceTest {
     public void get_work_items_should_return_list_of_items() throws Exception {
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(modelForBiblio());
 
-        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService);
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
 
         XURI xuri = new XURI("http://deichman.no/work/w0009112");
 
@@ -235,7 +237,7 @@ public class EntityResourceTest {
 
     @Test
     public void get_creator_works_should_return_list_of_works() throws Exception {
-        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService);
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
 
         XURI xuri = new XURI("http://deichman.no/person/h12321011");
         Response result = entityResource.getWorksByCreator(xuri.getType(), xuri.getId());
@@ -302,8 +304,10 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void delete_publication_should_return_no_content() throws Exception{
+    public void delete_publication_should_return_no_content() throws Exception {
+        entityResource = new EntityResource(baseURI, new EntityServiceImpl(baseURI, repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
         when(mockKohaAdapter.createNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+        doNothing().when(mockKohaAdapter).deleteBiblio(anyString());
         Response createResponse = entityResource.createFromLDJSON(PUBLICATION, createTestRDF("publication_SHOULD_BE_PATCHABLE", PUBLICATION));
         String publicationId = createResponse.getHeaderString(LOCATION).replaceAll("http://deichman.no/publication/", "");
         Response response = entityResource.delete(PUBLICATION, publicationId);

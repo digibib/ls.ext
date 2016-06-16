@@ -19,10 +19,22 @@ import java.util.Optional;
  * Responsibility: Common logic for handling dependencies.
  */
 public abstract class ResourceBase {
-
     public static final String SERVLET_INIT_PARAM_KOHA_PORT = "kohaPort";
     public static final String SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY = "inMemoryRDFRepository";
     public static final String ELASTIC_SEARCH_URL = "elasticsearch.url";
+    private EntityService entityService;
+    private SearchService searchService;
+    private KohaAdapter kohaAdapter;
+
+    public ResourceBase() {
+    }
+
+    protected ResourceBase(BaseURI baseURI, EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
+        this.baseURI = baseURI;
+        this.entityService = entityService;
+        this.searchService = searchService;
+        this.kohaAdapter = kohaAdapter;
+    }
 
     protected final String elasticSearchBaseUrl() {
         return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://192.168.50.12:8200");
@@ -31,18 +43,15 @@ public abstract class ResourceBase {
     private static InMemoryRepository staticInMemoryRepository;
     @Context
     private ServletConfig servletConfig;
-    private EntityService entityService;
     private BaseURI baseURI;
     private JSONLDCreator jsonldCreator;
-    private SearchService searchService;
 
     protected abstract ServletConfig getConfig();
 
     protected final EntityService getEntityService() {
         if (entityService == null) {
-            KohaAdapter kohaAdapter = getKohaAdapter();
             RDFRepository repository = getRdfRepository();
-            entityService = new EntityServiceImpl(getBaseURI(), repository, kohaAdapter);
+            entityService = new EntityServiceImpl(getBaseURI(), repository, getKohaAdapter());
         }
         return entityService;
     }
@@ -68,7 +77,11 @@ public abstract class ResourceBase {
     }
 
     protected final KohaAdapter getKohaAdapter() {
-        return (KohaAdapter) MonProxyFactory.monitor(new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null));
+        if (kohaAdapter == null) {
+            kohaAdapter = new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null);
+            kohaAdapter = (KohaAdapter) MonProxyFactory.monitor(kohaAdapter);
+        }
+        return kohaAdapter;
     }
 
     protected final BaseURI getBaseURI() {
@@ -101,5 +114,9 @@ public abstract class ResourceBase {
             searchService = (SearchService) MonProxyFactory.monitor(new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService()));
         }
         return searchService;
+    }
+
+    public final void setKohaAdapter(KohaAdapter kohaAdapter) {
+        this.kohaAdapter = kohaAdapter;
     }
 }

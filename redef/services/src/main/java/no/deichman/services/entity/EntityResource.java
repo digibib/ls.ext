@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
@@ -31,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,10 +59,8 @@ public final class EntityResource extends ResourceBase {
     public EntityResource() {
     }
 
-    EntityResource(BaseURI baseURI, EntityService entityService, SearchService searchService) {
-        setBaseURI(baseURI);
-        setEntityService(entityService);
-        setSearchService(searchService);
+    EntityResource(BaseURI baseURI, EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
+        super(baseURI, entityService, searchService, kohaAdapter);
     }
 
     @POST
@@ -177,7 +177,20 @@ public final class EntityResource extends ResourceBase {
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
-        getEntityService().delete(model);
+        if (xuri.getTypeAsEntityType() == PUBLICATION) {
+            String recordID = model.listObjectsOfProperty(ResourceFactory.createProperty(getBaseURI().ontology("recordID"))).next().asLiteral().getString();
+            getKohaAdapter().deleteBiblio(recordID);
+            getEntityService().delete(model);
+            getSearchService().delete(xuri);
+            Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(getBaseURI().ontology("publicationOf")));
+            while (sourceIterator.hasNext()) {
+                String publicationOf = sourceIterator.next().asResource().getURI();
+                getSearchService().index(new XURI(publicationOf));
+            }
+        } else {
+            getEntityService().delete(model);
+            getSearchService().delete(xuri);
+        }
         return noContent().build();
     }
 
@@ -277,4 +290,5 @@ public final class EntityResource extends ResourceBase {
                 : ok().entity(getJsonldCreator().asJSONLD(model)))
                 .build();
     }
+
 }

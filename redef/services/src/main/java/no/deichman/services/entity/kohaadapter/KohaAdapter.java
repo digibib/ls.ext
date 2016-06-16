@@ -20,4 +20,6 @@ public interface KohaAdapter {
     String retrieveBiblioExpanded(String recordId);
 
     Response updateRecord(String id, MarcRecord marcRecord);
+
+    void deleteBiblio(String recordId) throws PublicationHasItemsException;
 }

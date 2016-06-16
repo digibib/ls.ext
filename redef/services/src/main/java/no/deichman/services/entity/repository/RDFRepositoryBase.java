@@ -38,7 +38,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     private static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
     private final BaseURI baseURI;
     private final SPARQLQueryBuilder sqb;
     private final UniqueURIGenerator uriGenerator;

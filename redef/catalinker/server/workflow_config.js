@@ -1,5 +1,5 @@
 var _ = require('underscore')
-function manintenanceInputs (label, type) {
+function maintenanceInputs (label, type) {
   return {
     // this is an input type used to search for a main resource, e.g. Work. The rendered input field
     // will not be tied to a particular subject and predicate
@@ -91,7 +91,7 @@ module.exports = (app) => {
           rdfType: 'Genre',
           inputs: [
             {
-              rdfProperty: 'name',
+              rdfProperty: 'prefLabel',
               displayValueSource: true,
               type: 'input-string',
               // after resource is created, the value entered
@@ -240,7 +240,6 @@ module.exports = (app) => {
               searchMainResource: {
                 label: 'Søk etter eksisterende verk',
                 indexType: 'work',
-                isRoot: true,
                 automationId: 'searchWorkAsMainResource',
                 showOnlyWhenMissingTargetUri: 'Work' // only show this search field if a work has not been loaded or created
               },
@@ -288,6 +287,7 @@ module.exports = (app) => {
             { rdfProperty: 'publicationOf', type: 'entity' },
             {
               rdfProperty: 'mainTitle',
+              id: 'publicationMainTitle',
               headlinePart: {
                 order: 20,
                 styleClass: 'title'
@@ -402,6 +402,14 @@ module.exports = (app) => {
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Verksopplysninger'
+          },
+          deleteResource: {
+            buttonLabel: 'Slett utgivelsen',
+            resourceType: 'Publication',
+            afterSuccess: {
+              gotoTab: 0,
+              setResourceInDocumentUrlFromTargetUri: 'Work'
+            }
           }
         },
         {
@@ -409,7 +417,11 @@ module.exports = (app) => {
           rdfType: 'Work',
           label: 'Beskriv verk',
           inputs: [
-            { rdfProperty: 'mainTitle', multiple: true },
+            {
+              id: 'workMainTitle',
+              rdfProperty: 'mainTitle', 
+              multiple: true 
+            },
             { rdfProperty: 'subtitle' },
             { rdfProperty: 'partTitle' },
             { rdfProperty: 'partNumber' },
@@ -442,7 +454,7 @@ module.exports = (app) => {
               type: 'searchable-with-result-in-side-panel',
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
-              nameProperties: [ 'name', 'prefLabel', 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
+              nameProperties: [ 'prefLabel', 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
               indexTypes: [ 'subject', 'person', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
@@ -472,7 +484,7 @@ module.exports = (app) => {
               addAnotherLabel: 'Legg til en sjanger til',
               type: 'searchable-with-result-in-side-panel',
               authority: true,
-              nameProperties: [ 'name' ],
+              nameProperties: [ 'prefLabel' ],
               indexTypes: [ 'genre' ],
               indexDocumentFields: [ 'name' ],
               widgetOptions: {
@@ -537,15 +549,26 @@ module.exports = (app) => {
             restart: true
           }
         }
-
       ],
       authorityMaintenance: [
         {
           inputs: [
-            manintenanceInputs('Personer', 'person'),
-            manintenanceInputs('Emner', 'subject'),
-            manintenanceInputs('Sjangre', 'genre'),
-            manintenanceInputs('Serier', 'serial')
+            maintenanceInputs('Personer', 'person'),
+            maintenanceInputs('Emner', 'subject'),
+            maintenanceInputs('Sjangre', 'genre'),
+            maintenanceInputs('Serier', 'serial'),
+            {
+              // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+              // will not be tied to a particular subject and predicate
+              searchMainResource: {
+                label: 'Utgivelser',
+                indexType: 'publication'
+              },
+              widgetOptions: {
+                editWithTemplate: "workflow"
+              }
+            }
+
           ]
         }
       ],
@@ -589,6 +612,11 @@ module.exports = (app) => {
           selectIndexLabel: 'Serie',
           queryTerm: 'serial.name',
           resultItemLabelProperties: [ 'name' ]
+        },
+        publication: {
+          selectIndexLabel: 'Utgivelse',
+          queryTerm: 'publication.recordId',
+          resultItemLabelProperties: [ 'mainTitle', 'subTitle' ]
         }
       }
     }
