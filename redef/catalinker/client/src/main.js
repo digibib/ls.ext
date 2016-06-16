@@ -18,13 +18,14 @@
     // Browser globals (root is window)
     root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI)
   }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, dialog) {
     'use strict'
 
     Ractive.DEBUG = false
     var ractive
     var supportPanelLeftEdge
     var supportPanelWidth
+    require('jquery-ui/dialog')
 
     var deepClone = function (object) {
       var clone = _.clone(object)
@@ -98,7 +99,8 @@
         })
       })
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
-        if (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs')) {
+        if (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs') !== undefined ||
+          ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableEditResource.showInputs') !== undefined) {
           if (input.widgetOptions) {
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
@@ -123,6 +125,65 @@
       ractive.update()
       ractive.set('targetUri.' + domainType, null)
       updateBrowserLocationWithUri(domainType, null)
+    }
+
+    var deleteResource = function (uri, resourceType, success) {
+      if (resourceType === 'Publication') {
+        ractive.set('deletePublicationDialog.work', valueOfInputByInputId('workMainTitle'))
+        ractive.set('deletePublicationDialog.title', valueOfInputByInputId('publicationMainTitle'))
+        ractive.set('deletePublicationDialog.creator', valueOfInputByInputId('mainEntryPersonInput'))
+        ractive.set('deletePublicationDialog.error', null)
+        var idPrefix = _.uniqueId()
+        $('#delete-publication-dialog').dialog({
+          resizable: false,
+          modal: true,
+          width: 450,
+          buttons: [
+            {
+              text: 'Slett',
+              id: `${idPrefix}-do-del-pub`,
+              click: function () {
+                axios.delete(uri)
+                  .then(function (response) {
+                    unloadResourceForDomain('Publication')
+                    $(`#${idPrefix}-do-del-pub, #${idPrefix}-cancel-del-pub`).hide()
+                    $(`#${idPrefix}-ok-del-pub`).show()
+                    ractive.set('deletePublicationDialog.deleted', true)
+                    $(this).dialog('close')
+                    return response
+                  })
+                  .catch(function (response) {
+                    if (response.status === 400 && response.data.numberOfItemsLeft) {
+                      ractive.set('deletePublicationDialog.error', { itemsLeft: { numberOfItemsLeft: response.data.numberOfItemsLeft } })
+                    }
+                  })
+              }
+            },
+            {
+              text: 'Avbryt',
+              id: `${idPrefix}-cancel-del-pub`,
+              click: function () {
+                $(this).dialog('close')
+                ractive.set('deletePublicationDialog', null)
+              }
+            },
+            {
+              text: 'Ok',
+              id: `${idPrefix}-ok-del-pub`,
+              click: function () {
+                $(this).dialog('close')
+                ractive.set('deletePublicationDialog', null)
+                if (success) {
+                  success()
+                }
+              }
+            }
+          ],
+          open: function () {
+            $(`#${idPrefix}-ok-del-pub`).hide()
+          }
+        })
+      }
     }
 
     function i18nLabelValue (label) {
@@ -257,11 +318,9 @@
         return triumphRanking[ param ] > triumphRanking[ memo ] ? param : memo
       }, type)
       if (triumph === type) {
-        if (resourceUri) {
-          queryParameters = _.omit(queryParameters, _.keys(triumphRanking))
-          queryParameters[ type ] = resourceUri
-        }
-        oldUri.query = URI.buildQuery(queryParameters)
+        queryParameters = _.omit(queryParameters, _.keys(triumphRanking))
+        queryParameters[ type ] = resourceUri
+        oldUri.query = URI.buildQuery(_.pick(queryParameters, _.identity))
         history.replaceState('', '', URI.build(oldUri))
       }
     }
@@ -270,6 +329,14 @@
       var oldUri = URI.parse(document.location.href)
       var queryParameters = URI.parseQuery(oldUri.query)
       queryParameters[ 'openTab' ] = tabNumber
+      oldUri.query = URI.buildQuery(queryParameters)
+      history.replaceState('', '', URI.build(oldUri))
+    }
+
+    function updateBrowserLocationWithTemplate (template) {
+      var oldUri = URI.parse(document.location.href)
+      var queryParameters = URI.parseQuery(oldUri.query)
+      queryParameters[ 'template' ] = template
       oldUri.query = URI.buildQuery(queryParameters)
       history.replaceState('', '', URI.build(oldUri))
     }
@@ -834,13 +901,13 @@
               indexTypes: [ input.searchMainResource.indexType ],
               selectedIndexType: input.searchMainResource.indexType,
               isMainEntry: true,
-              isRoot: input.searchMainResource.isRoot,
               widgetOptions: input.widgetOptions,
               suggestValueFrom: input.suggestValueFrom,
               datatype: input.datatype,
               showOnlyWhenEmpty: input.searchMainResource.showOnlyWhenMissingTargetUri,
               dataAutomationId: input.searchMainResource.automationId,
-              inputIndex: index
+              inputIndex: index,
+              id: input.id
             })
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
@@ -853,7 +920,8 @@
               showOnlyWhenEmpty: input.searchForValueSuggestions.showOnlyWhenMissingTargetUri,
               dataAutomationId: input.searchForValueSuggestions.automationId,
               searchForValueSuggestions: input.searchForValueSuggestions,
-              inputIndex: index
+              inputIndex: index,
+              id: input.id
             })
           } else {
             input.inputIndex = index
@@ -883,6 +951,9 @@
             if (input.suggestValueFrom) {
               ontologyInput.suggestValueFrom = input.suggestValueFrom
             }
+            if (input.id) {
+              ontologyInput.id = input.id
+            }
           }
           copyResourceForms(input)
         })
@@ -900,6 +971,9 @@
 
         if (inputGroup.nextStep) {
           group.nextStep = inputGroup.nextStep
+        }
+        if (inputGroup.deleteResource) {
+          group.deleteResource = inputGroup.deleteResource
         }
 
         markFirstAndLastInputsInGroup(group)
@@ -1004,6 +1078,13 @@
       return suggestValueInput
     }
 
+    function valueOfInputByInputId (inputId) {
+      let input = _.find(allInputs(), function (input) {
+        return inputId === input.id
+      })
+      return input ? input.values[ 0 ].current[ input.type === 'searchable-with-result-in-side-panel' ? 'displayValue' : 'value' ] : undefined
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -1099,7 +1180,8 @@
           'suggestor-for-input-nonNegativeInteger',
           'suggestor-for-input-literal',
           'select-predefined-value',
-          'work'
+          'work',
+          'delete-publication-dialog'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
@@ -1320,8 +1402,9 @@
               var targetIsASupportPanelButton = !outsideX && $(event.target).is('.support-panel-button')
 
               var targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.target).is('input[type=\'radio\'][value=\'on\']')
+              var targetIsEditResourceLink = !outsideX && $(event.target).is('a.edit-resource')
               var targetIsASelect2RemoveSelectionCross = !outsideX && $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
-              if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross)) {
+              if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross || targetIsEditResourceLink)) {
                 clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
               }
             })
@@ -1593,9 +1676,7 @@
                     var filterArg = null
                     var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
                     if (filterArgInputRef) {
-                      filterArg = _.find(allInputs(), function (input) {
-                        return filterArgInputRef === input.id
-                      }).values[ 0 ].current.value
+                      filterArg = valueOfInputByInputId(filterArgInputRef)
                     }
                     if (isBlankNodeUri(filterArg)) {
                       filterArg = undefined
@@ -1676,12 +1757,17 @@
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
                 var uri = event.context.uri
-                if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
+                var template = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
+                if (template) {
+                  fetchExistingResource(uri)
+                  updateBrowserLocationWithTemplate(template)
+                  Main.init()
+                } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
                   var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
-                  var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType)
+                  var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
                   unloadResourceForDomain(rdfType)
                   fetchExistingResource(uri, { keepDocumentUrl: true })
-                  ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', true)
+                  ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
                 } else if (input.isMainEntry) {
                   fetchExistingResource(uri)
                 } else {
@@ -1777,6 +1863,22 @@
                       foundSelectedTab = true
                     }
                     ractive.set(keyPath + '.tabSelected', false)
+                  }
+                })
+              },
+              deleteResource: function (event) {
+                var uriToDelete = ractive.get(`targetUri.${event.context.resourceType}`)
+                deleteResource(uriToDelete, event.context.resourceType, function () {
+                  if (event.context.afterSuccess) {
+                    if (event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri) {
+                      var targetUri = ractive.get(`targetUri.${event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri}`)
+                      if (targetUri) {
+                        updateBrowserLocationWithUri(event.context.afterSuccess.targetUriType, targetUri)
+                      }
+                    }
+                    if (event.context.afterSuccess.gotoTab !== undefined) {
+                      ractive.fire('activateTab', { keypath: 'inputGroups.' + (event.context.afterSuccess.gotoTab) })
+                    }
                   }
                 })
               },

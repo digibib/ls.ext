@@ -41,6 +41,7 @@
     "express-request-proxy": "^1.1.0",
     "jade": "~1.11.0",
     "jquery": "^2.1.4",
+    "jquery-ui": "^1.10.5",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#c85905ea5370a657c46b0e8058ec06844727731b",
     "morgan": "~1.6.1",
     "node-sass": "^3.4.2",

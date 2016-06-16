@@ -9,9 +9,13 @@
                 <div class="pure-u-1">
                     <div class="pure-g">
                         <div class="pure-u-1-12">
+                            {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
+                                <a class="edit-resource" on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}" title="Rediger"/>
+                            {{else}}
                             <input class="select-result-item-radio" type="radio"
                                    on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}"
                                    checked="{{isChecked}}"/>
+                            {{/if}}
                         </div>
                         <div class="pure-u-5-6">
                             <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}</p>

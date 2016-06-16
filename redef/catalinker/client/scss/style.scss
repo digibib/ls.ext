@@ -336,6 +336,15 @@ body {
           background: white;
           padding: 0.5em;
           min-height: 65px;
+          .edit-resource {
+            display: inline-block;
+            background-image: url('/images/lower_right_pencil.svg');
+            background-repeat: no-repeat;
+            background-position: left top;
+            padding-left: 2em;
+            cursor: pointer;
+            height: 20px
+          }
           .search-result-subitem {
             background: $lightergray;
             margin-bottom: 2px;

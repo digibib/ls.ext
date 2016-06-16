@@ -28,7 +28,7 @@ app.set('views', './views')
 app.set('view-engine', 'ejs')
 
 app.get('/js/bundle.js',
-  babelify(['jquery', 'ractive-decorators-select2', 'select2', 'ractive-multi-decorator', { './client/src/bootstrap': { run: true } }])
+  babelify([{ './client/src/bootstrap': { run: true } }])
 )
 
 app.get('/js/bundle_for_old.js', browserify([ './client/src/main_old' ]))
