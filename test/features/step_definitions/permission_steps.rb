@@ -13,3 +13,13 @@ end
 When(/^brukeren har rettigheten "([^"]*)"$/) do |permission|
   @site.Patrons.visit.set_permission(@context[:patrons].first.surname, permission)
 end
+
+Given(/^at det finnes en bruker med følgende rettigheter:$/) do |permissions|
+	step "at det finnes en låner med passord"
+	data = permissions.raw
+	data.each do |row|
+	  row.each do |entry|
+	    step "brukeren har rettigheten \"#{entry}\""
+	  end
+	end
+end

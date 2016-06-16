@@ -212,3 +212,19 @@ Then(/^kan jeg følge lenken og finne den bibliografiske posten$/) do
   json = JSON.parse(res.body)
   json["biblionumber"].should eq(@context[:biblio_api_response][:biblionumber])
 end
+
+When(/^at jeg autentiserer brukeren mot Kohas REST API$/) do
+  KohaRESTAPI::Auth.new(@browser,@context,@active).login(@active[:patron].userid, @active[:patron].password)
+end
+
+When(/^jeg sjekker brukersesjonen mot Koha REST API$/) do
+  res = KohaRESTAPI::Auth.new(@browser,@context,@active).getsession
+  json = JSON.parse(res.body)
+  @context[:session_api_response] = json
+end
+
+Then(/^gir APIet tilbakemelding med riktige brukerrettigheter$/) do
+  session = @context[:session_api_response]
+  session["borrowernumber"].should eq(@active[:patron].borrowernumber)
+  session["permissions"].should eq({"editcatalogue"=>1, "staffaccess"=>1, "borrowers"=>1})
+end
