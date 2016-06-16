@@ -13,7 +13,8 @@ Egenskap: Autentisering på automat
   etter at vi har lastet dem med riktig oppsett. Test med automat er manuell.
 
   Bakgrunn:
-    Gitt at det finnes en utlånsautomat
+    Gitt at jeg er autentisert som superbruker via REST API
+    Og at det finnes en utlånsautomat
 
   Scenario: Autentisering av eksisterende låner for utlån på automat
     Gitt at det finnes en låner med lånekort

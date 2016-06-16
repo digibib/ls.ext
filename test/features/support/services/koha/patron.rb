@@ -9,12 +9,28 @@ module KohaRESTAPI
 
   class Patron < Service
 
+    # valid params: userid, cardnumber, surname
     def list(params)
-      return "Not implemented"
+      headers = {
+        'Cookie' => @context[:koha_rest_api_cookie],
+        'Content-Type' => 'application/json'
+      }
+
+      filters = params.select { |k, | [:userid, :cardnumber, :surname, :firstname].include? k }
+      http = Net::HTTP.new(host, 8081)
+      uri = URI(intranet(:koha_rest_api) + "patrons?" + URI.encode_www_form(params))
+      res = http.get(uri, headers)
+      expect(res.code).to eq("200"), "got unexpected #{res.code} when listing patrons.\nResponse body: #{res.body}"
+      res.body
     end
 
     def get(borrowernumber)
       return "Not implemented"
+    end
+
+    def exists?(params)
+      res = JSON.parse(list(params))
+      return res.length >= 1
     end
 
     # params in JSON BODY: branchcode, categorycode, cardnumber, userid, passsword, etc.

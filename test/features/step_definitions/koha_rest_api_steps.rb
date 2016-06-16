@@ -8,7 +8,9 @@ require_relative '../support/services/koha/item.rb'
 Given(/^at det finnes en superbruker$/) do
   step "at jeg er logget inn som adminbruker"
 
-  unless SVC::User.new(@browser,@context,@active).exists?("Librarian, Super")
+  begin
+    wait_for { @site.Patrons.visit.search("Librarian, Super").header }
+  rescue
     # prereq: library and patron category
     branchcode   = generateRandomString
     branchname   = generateRandomString

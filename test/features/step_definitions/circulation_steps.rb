@@ -166,11 +166,12 @@ end
 When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   @browser.goto intranet(:reserve)+@context[:publication_recordid]
   barcode = @context[:item_barcode]
-  user = SVC::User.new(@browser).get(name).first
+  res = KohaRESTAPI::Patron.new(@browser,@context,@active).list({surname: name})
+  user = JSON.parse(res).first
 
   # lookup patron via holds
   form = @browser.form(:id => "holds_patronsearch")
-  form.text_field(:id => "patron").set user["dt_cardnumber"]
+  form.text_field(:id => "patron").set user["cardnumber"]
   form.submit
 
   # place reservation on user's own branch
@@ -178,7 +179,7 @@ When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   if @active[:patron]
     form.select_list(:name => "pickup").select_value @active[:patron].branch.code
   else
-    form.select_list(:name => "pickup").select_value user["dt_branch"]
+    form.select_list(:name => "pickup").select_value user["branchcode"]
   end
   # TODO: place hold on specific item?
   # form.radio(:value => book.items.first.itemnumber).set

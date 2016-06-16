@@ -6,7 +6,7 @@ Egenskap: Autentisere eksterne ressurser mot Koha REST API
   Ønsker jeg å kunne autentisere via REST API
 
   Bakgrunn:
-	Gitt at jeg er logget inn som adminbruker
+    Gitt at jeg er logget inn som adminbruker
     Og at det finnes en bruker med følgende rettigheter:
       | borrowers     |
       | editcatalogue |

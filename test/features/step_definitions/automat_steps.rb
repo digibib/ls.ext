@@ -12,7 +12,7 @@ require_relative '../support/services/svc/user.rb'
 Given(/^at det finnes en utlånsautomat$/) do
   step "at jeg er logget inn som adminbruker"
 
-  unless SVC::User.new(@browser,@context,@active).exists?("Automat")
+  unless KohaRESTAPI::Patron.new(@browser,@context,@active).exists?({userid: "autouser"})
     # prereq: library and patron category
     branchcode   = generateRandomString
     branchname   = generateRandomString
@@ -87,7 +87,7 @@ When(/^låneren identifiserer seg på automat med (riktig|feil) PIN$/) do | pin 
   @context[:sip_patron_information] = @context[:sip_client].userlogin(@active[:patron].branch.code,
                                                                       @active[:patron].cardnumber,
                                                                       pin)
-  @context[:sip_patron_information]["AE"].should include("Knut #{@active[:patron].surname}")
+  @context[:sip_patron_information]["AE"].should include("#{@active[:patron].surname}")
 end
 
 Then(/^får låneren beskjed om at PIN( ikke)? er riktig$/) do |invalidpin|
