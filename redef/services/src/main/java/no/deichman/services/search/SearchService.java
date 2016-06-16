@@ -34,4 +34,6 @@ public interface SearchService {
     Response searchPublication(String query);
 
     Response searchPublicationWithJson(String json);
+
+    void delete(XURI xuri);
 }

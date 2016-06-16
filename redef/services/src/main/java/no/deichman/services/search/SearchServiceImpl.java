@@ -213,6 +213,21 @@ public class SearchServiceImpl implements SearchService {
         return doSearch(query, getPublicationSearchUriBuilder());
     }
 
+    @Override
+    public final void delete(XURI xuri) {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            HttpDelete httpDelete = new HttpDelete(getIndexUriBuilder()
+                    .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8)))
+                    .build());
+            try (CloseableHttpResponse putResponse = httpclient.execute(httpDelete)) {
+                LOG.debug(putResponse.getStatusLine().toString());
+            }
+        } catch (Exception e) {
+            LOG.error(format("Failed to delete %s in elasticsearch", xuri.getUri()), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private void doIndexWork(XURI xuri, boolean indexedPerson) throws Exception {
 
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(xuri);
