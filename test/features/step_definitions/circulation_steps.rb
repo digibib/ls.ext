@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require_relative '../support/services/svc/preference.rb'
-require_relative '../support/services/svc/user.rb'
 require 'pp'
 
 Given(/^at en bok er utlånt til en låner$/) do

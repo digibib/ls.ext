@@ -1,5 +1,4 @@
 # encoding: UTF-8
-require_relative '../support/services/svc/user.rb'
 require_relative '../support/services/koha/hold.rb'
 require_relative '../support/services/koha/patron.rb'
 require_relative '../support/services/koha/item.rb'

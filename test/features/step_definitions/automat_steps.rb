@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require_relative '../support/services/sip/SIP2Client.rb'
-require_relative '../support/services/svc/user.rb'
 
 #############################
 # AUTOMAT CIRCULATION STEPS
