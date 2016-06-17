@@ -49,6 +49,10 @@ class SearchResult extends React.Component {
     }
   }
 
+  subjectSearchLink (subject) {
+    return '/search?query=publication.subjects%3A' + subject
+  }
+
   renderSubjects (result) {
     if (result.subjects) {
       return (
@@ -57,7 +61,7 @@ class SearchResult extends React.Component {
             <FormattedMessage {...messages.subjects} />
             {result.subjects.map(subject => (
               <span key={subject}>
-                <Link to='/'> {subject} </Link>
+                <Link to={this.subjectSearchLink(subject)}> {subject} </Link>
                 </span>
             ))}
           </strong>

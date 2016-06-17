@@ -1,8 +1,6 @@
 import fetch from 'isomorphic-fetch'
 
-import Constants from '../constants/Constants'
 import * as types from '../constants/ActionTypes'
-import { filteredSearchQuery } from '../utils/searchBuilder'
 import { processSearchResponse } from '../utils/searchResponseParser'
 import { toggleParameterValue } from './ParameterActions'
 
@@ -10,8 +8,7 @@ export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
     type: types.REQUEST_SEARCH,
     payload: {
-      inputQuery: inputQuery,
-      elasticSearchQuery: elasticSearchQuery
+      inputQuery: inputQuery
     }
   }
 }
@@ -43,21 +40,14 @@ export function search () {
     if (!locationQuery || !locationQuery.query) {
       return
     }
-    const page = locationQuery.page
+
     const inputQuery = locationQuery.query
+    dispatch(requestSearch(inputQuery))
 
-    const uri = page
-      ? `${Constants.backendUri}/search/publication/_search?from=${(page - 1) * Constants.maxSearchResultsPerPage}`
-      : `${Constants.backendUri}/search/publication/_search`
-
-    const elasticSearchQuery = filteredSearchQuery(locationQuery)
-    dispatch(requestSearch(inputQuery, elasticSearchQuery))
-
-    return fetch(uri, {
-      method: 'POST', headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }, body: JSON.stringify(elasticSearchQuery)
+    return fetch('/q' + getState().routing.locationBeforeTransitions.search, {
+      method: 'GET', headers: {
+        'Accept': 'application/json'
+      }
     })
       .then(response => response.json())
       .then(json => processSearchResponse(json, locationQuery))

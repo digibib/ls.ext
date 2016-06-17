@@ -1,7 +1,14 @@
 import { toggleParameter, toggleParameterValue } from './ParameterActions'
 
 export function toggleFilter (filterId) {
-  return toggleParameterValue('filter', filterId)
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+
+    // Toggeling a filter implies a new search, so we discard any pagination parameter
+    delete locationQuery.page
+
+    dispatch(toggleParameterValue('filter', filterId, locationQuery))
+  }
 }
 
 export function toggleFilterVisibility (aggregation) {

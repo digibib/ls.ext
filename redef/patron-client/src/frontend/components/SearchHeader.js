@@ -40,9 +40,9 @@ class SearchHeader extends React.Component {
                 <li><Link to='/profile'><FormattedMessage {...messages.myProfile} /></Link></li>
                 {this.props.isLoggedIn
                   ? <li data-automation-id='logout_element' onClick={this.props.logout}>
-                  <FormattedMessage { ...messages.logout } /></li>
+                  <FormattedMessage {...messages.logout} /></li>
                   : <li data-automation-id='login_element' onClick={this.handleLoginClick}>
-                  <FormattedMessage {...messages.logIn } /></li>}
+                  <FormattedMessage {...messages.logIn} /></li>}
               </ul>
             </div>
           </div>

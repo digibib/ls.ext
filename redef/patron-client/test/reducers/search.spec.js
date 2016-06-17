@@ -25,14 +25,12 @@ describe('reducers', () => {
         search({}, {
           type: types.REQUEST_SEARCH,
           payload: {
-            inputQuery: 'inputQuery',
-            elasticSearchQuery: 'elasticSearchQuery'
+            inputQuery: 'inputQuery'
           }
         })
       ).toEqual({
         isSearching: true,
-        inputQuery: 'inputQuery',
-        elasticSearchQuery: 'elasticSearchQuery'
+        inputQuery: 'inputQuery'
       })
     })
 

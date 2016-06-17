@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   backendUri: '/services',
   maxVisibleFilterItems: 5,
   maxSearchResults: 100,

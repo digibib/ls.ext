@@ -33,8 +33,7 @@ export default function search (state = initialState, action) {
       return {
         ...state,
         isSearching: true,
-        inputQuery: action.payload.inputQuery,
-        elasticSearchQuery: action.payload.elasticSearchQuery
+        inputQuery: action.payload.inputQuery
       }
     default:
       return state
