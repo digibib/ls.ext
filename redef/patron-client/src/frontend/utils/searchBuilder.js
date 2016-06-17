@@ -87,21 +87,15 @@ function initQuery (query) {
                 simple_query_string: {
                   query: query,
                   default_operator: 'and',
-                  fields: ['publication.mainTitle', 'publication.partTitle', 'publication.subjects', 'publication.contributors.agent.name']
+                  fields: ['publication.mainTitle', 'publication.partTitle', 'publication.subjects', 'publication.agent']
                 }
               }
             ],
             must: [],
             should: [
               {
-                nested: {
-                  path: 'publication.contributors.agent',
-                  query: {
-                    multi_match: {
-                      query: query,
-                      fields: [ 'publication.contributors.agent.name^2' ]
-                    }
-                  }
+                match: {
+                  'publication.agent^2': query
                 }
               },
               {
