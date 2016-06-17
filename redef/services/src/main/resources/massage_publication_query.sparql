@@ -19,7 +19,9 @@ CONSTRUCT {
                deich:hasImageAll ?allImg ;
                deich:workUri ?workUri ;
                deich:subject ?subjectName ;
-               deich:audience ?audience .
+               deich:audience ?audience ;
+               deich:agent ?pubAgentName ;
+               ?pubRoleURI ?pubAgentName .
  ?pubContrib a deich:Contribution ;
                deich:role ?pubRole ;
                deich:agent ?pubAgent .
