@@ -486,7 +486,7 @@ module.exports = (app) => {
               authority: true,
               nameProperties: [ 'prefLabel' ],
               indexTypes: [ 'genre' ],
-              indexDocumentFields: [ 'name' ],
+              indexDocumentFields: [ 'prefLabel' ],
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [ {
@@ -595,8 +595,8 @@ module.exports = (app) => {
         },
         genre: {
           selectIndexLabel: 'Sjanger',
-          queryTerm: 'genre.name',
-          resultItemLabelProperties: [ 'name' ]
+          queryTerm: 'genre.prefLabel',
+          resultItemLabelProperties: [ 'prefLabel' ]
         },
         publisher: {
           selectIndexLabel: 'Utgiver',

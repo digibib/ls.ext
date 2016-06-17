@@ -2,7 +2,7 @@
   "type": "Genre",
   "@context": {
     "deichman": "__ONTOLOGY__",
-    "name": "deichman:name",
+    "prefLabel": "deichman:prefLabel",
     "Genre": "deichman:Genre",
     "type": "@type",
     "uri": "@id",

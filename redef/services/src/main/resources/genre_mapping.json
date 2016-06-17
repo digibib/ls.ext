@@ -1,9 +1,8 @@
 {
   "properties": {
     "genre": {
-      "properties":
-      {
-        "name": {
+      "properties": {
+        "prefLabel": {
           "type": "string"
         }
       }

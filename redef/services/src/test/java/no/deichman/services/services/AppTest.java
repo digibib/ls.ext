@@ -576,7 +576,7 @@ public class AppTest {
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#name";
+        String p1 = baseUri + "ontology#prefLabel";
         String o1 = "Romance";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
@@ -979,7 +979,7 @@ public class AppTest {
         boolean foundSubject;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/genre/_search").queryString("q", "genre.name:" + name);
+            HttpRequest request = Unirest.get(baseUri + "search/genre/_search").queryString("q", "genre.prefLabel:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSubject = responseBody.contains(name);
