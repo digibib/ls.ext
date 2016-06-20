@@ -29,6 +29,7 @@ Egenskap: Utvidet beskrivelse av verk
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om verket
 
+  @wip
   Scenario: Verk finnes - registrer to verdier litterær form, målgruppe, biografisk innhold og spesiell tilrettelegging for verket
     Gitt at jeg har en bok
     Og at jeg har lagt til en person
