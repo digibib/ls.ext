@@ -1,16 +1,12 @@
 {
-  "properties": {
-    "serial": {
-      "properties":
-        {
-          "name": {
-            "type": "string"
-          },
-          "uri": {
-            "type": "string",
-            "index": "no"
-          }
-        }
+  "properties":
+  {
+    "name": {
+      "type": "string"
+    },
+    "uri": {
+      "type": "string",
+      "index": "no"
     }
   }
 }

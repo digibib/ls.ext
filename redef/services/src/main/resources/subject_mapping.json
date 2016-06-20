@@ -1,15 +1,11 @@
 {
-  "properties": {
-    "subject": {
-      "properties":
-      {
-        "prefLabel": {
-          "type": "string"
-        },
-        "specification": {
-          "type": "String"
-        }
-      }
+  "properties":
+  {
+    "prefLabel": {
+      "type": "string"
+    },
+    "specification": {
+      "type": "String"
     }
   }
 }

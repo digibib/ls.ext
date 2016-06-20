@@ -290,7 +290,7 @@ public class SearchServiceImpl implements SearchService {
     private void indexDocument(XURI xuri, String document) {
         try (CloseableHttpClient httpclient = createDefault()) {
             HttpPut httpPut = new HttpPut(getIndexUriBuilder()
-                    .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8)))
+                    .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8))) // TODO drop urlencoded ID, and define _id in mapping from field uri
                     .build());
             httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
             httpPut.setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.withCharset(UTF_8).toString());

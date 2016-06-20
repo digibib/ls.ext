@@ -1,46 +1,42 @@
 {
   "properties": {
-    "person": {
+    "name": {
+      "type": "string"
+    },
+    "birthYear": {
+      "type": "string",
+      "index": "no"
+    },
+    "deathYear": {
+      "type": "string",
+      "index": "no"
+    },
+    "nationality": {
+      "type": "string",
+      "index": "no"
+    },
+    "uri": {
+      "type": "string",
+      "index": "no"
+    },
+    "work": {
+      "type": "nested",
       "properties": {
-        "name": {
-          "type": "string"
-        },
-        "birthYear": {
-          "type": "string",
-          "index": "no"
-        },
-        "deathYear": {
-          "type": "string",
-          "index": "no"
-        },
-        "nationality": {
-          "type": "string",
-          "index": "no"
-        },
         "uri": {
           "type": "string",
           "index": "no"
         },
-        "work": {
-          "type": "nested",
-          "properties": {
-            "uri": {
-              "type": "string",
-              "index": "no"
-            },
-            "mainTitle": {
-              "type": "string",
-              "index": "no"
-            },
-            "partTitle": {
-              "type": "string",
-              "index": "no"
-            },
-            "publicationYear": {
-              "type": "string",
-              "index": "no"
-            }
-          }
+        "mainTitle": {
+          "type": "string",
+          "index": "no"
+        },
+        "partTitle": {
+          "type": "string",
+          "index": "no"
+        },
+        "publicationYear": {
+          "type": "string",
+          "index": "no"
         }
       }
     }

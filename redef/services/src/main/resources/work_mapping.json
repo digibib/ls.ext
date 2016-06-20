@@ -1,19 +1,52 @@
 {
   "properties": {
-    "work": {
+    "subjects": {
+      "type": "nested",
       "properties": {
-        "subjects": {
+        "uri": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "contributors": {
+      "type": "nested",
+      "properties": {
+        "role": {
+          "type": "string",
+          "index": "no"
+        },
+        "agent": {
           "type": "nested",
           "properties": {
             "uri": {
               "type": "string",
-              "index": "not_analyzed"
+              "index": "no"
             },
             "name": {
               "type": "string"
+            },
+            "birthYear": {
+              "type": "string",
+              "index": "no"
+            },
+            "deathYear": {
+              "type": "string",
+              "index": "no"
             }
           }
         },
+        "mainEntry": {
+          "type": "boolean"
+        }
+      }
+    },
+    "publications": {
+      "type": "nested",
+      "properties": {
         "contributors": {
           "type": "nested",
           "properties": {
@@ -26,7 +59,7 @@
               "properties": {
                 "uri": {
                   "type": "string",
-                  "index": "not_analyzed"
+                  "index": "no"
                 },
                 "name": {
                   "type": "string"
@@ -40,78 +73,12 @@
                   "index": "no"
                 }
               }
-            },
-            "mainEntry": {
-              "type": "boolean"
             }
           }
         },
-        "publications": {
-          "type": "nested",
-          "properties": {
-            "contributors": {
-              "type": "nested",
-              "properties": {
-                "role": {
-                  "type": "string",
-                  "index": "not_analyzed"
-                },
-                "agent": {
-                  "type": "nested",
-                  "properties": {
-                    "uri": {
-                      "type": "string",
-                      "index": "no"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "birthYear": {
-                      "type": "string",
-                      "index": "no"
-                    },
-                    "deathYear": {
-                      "type": "string",
-                      "index": "no"
-                    }
-                  }
-                }
-              }
-            },
-            "uri": {
-              "type": "string",
-              "index": "no"
-            },
-            "mainTitle": {
-              "type": "string"
-            },
-            "partTitle": {
-              "type": "string"
-            },
-            "languages": {
-              "type": "string",
-              "index": "not_analyzed"
-            },
-            "formats": {
-              "type": "string",
-              "index": "not_analyzed"
-            },
-            "publicationYear": {
-              "type": "string"
-            },
-            "audiences": {
-              "type": "string",
-              "index": "not_analyzed"
-            },
-            "holdingBranches": {
-              "type": "string",
-              "index": "not_analyzed"
-            },
-            "image": {
-              "type": "string",
-              "index": "no"
-            }
-          }
+        "uri": {
+          "type": "string",
+          "index": "no"
         },
         "mainTitle": {
           "type": "string"
@@ -119,18 +86,47 @@
         "partTitle": {
           "type": "string"
         },
-        "subtitle": {
-          "type": "string"
-        },
-        "uri": {
+        "languages": {
           "type": "string",
-          "index": "no"
+          "index": "not_analyzed"
+        },
+        "formats": {
+          "type": "string",
+          "index": "not_analyzed"
         },
         "publicationYear": {
+          "type": "string"
+        },
+        "audiences": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "holdingBranches": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "image": {
           "type": "string",
           "index": "no"
         }
       }
+    },
+    "mainTitle": {
+      "type": "string"
+    },
+    "partTitle": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "uri": {
+      "type": "string",
+      "index": "no"
+    },
+    "publicationYear": {
+      "type": "string",
+      "index": "no"
     }
   }
 }

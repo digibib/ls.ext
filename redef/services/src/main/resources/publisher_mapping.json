@@ -1,12 +1,8 @@
 {
-  "properties": {
-    "publisher": {
-      "properties":
-        {
-          "name": {
-            "type": "string"
-          }
-        }
+  "properties":
+  {
+    "name": {
+      "type": "string"
     }
   }
 }

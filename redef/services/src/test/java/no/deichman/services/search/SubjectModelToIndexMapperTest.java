@@ -41,11 +41,9 @@ public class SubjectModelToIndexMapperTest {
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"subject\": {"
-                + "      \"uri\": \"" + subjetXuri1.getUri() + "\","
-                + "      \"prefLabel\": \"Strikking\","
-                + "      \"specification\": \"Måte å lage klesplagg ved hjelp av to pinner og garn\","
-                + "  }\n"
+                + "  \"uri\": \"" + subjetXuri1.getUri() + "\","
+                + "  \"prefLabel\": \"Strikking\","
+                + "  \"specification\": \"Måte å lage klesplagg ved hjelp av to pinner og garn\","
                 + "}").allowingAnyArrayOrdering());
     }
 }

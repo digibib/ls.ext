@@ -45,7 +45,7 @@
     "publicationYear": "deichman:publicationYear",
     "firstPublicationYear": "deichman:firstPublicationYear",
     "Person": "deichman:Person",
-    "subjects": {
+    "subject": {
       "@id": "deichman:subject",
       "@container": "@set"
     },

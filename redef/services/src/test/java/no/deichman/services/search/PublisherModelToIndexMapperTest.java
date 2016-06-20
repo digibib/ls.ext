@@ -40,10 +40,8 @@ public class PublisherModelToIndexMapperTest {
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"publisher\": {"
-                + "      \"uri\": \"" + xuri.getUri() + "\","
-                + "      \"name\": \"publisherName_value\""
-                + "  }\n"
+                + "  \"uri\": \"" + xuri.getUri() + "\","
+                + "  \"name\": \"publisherName_value\""
                 + "}").allowingAnyArrayOrdering());
     }
 }

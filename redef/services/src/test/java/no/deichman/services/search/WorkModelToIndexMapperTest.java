@@ -15,7 +15,6 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
  */
 public class WorkModelToIndexMapperTest {
     private String comparisonJsonDocument = "{\n"
-            + "    \"work\": {\n"
             + "        \"uri\": \"%1$s\",\n"
             + "        \"contributors\": [{\n"
             + "            \"agent\": {\n"
@@ -71,7 +70,6 @@ public class WorkModelToIndexMapperTest {
             + "            \"image\": \"http://static.deichman.no/626460/kr/1_thumb.jpg\",\n"
             + "            \"mainTitle\": \"Berlinerpoplene\"\n"
             + "        }]\n"
-            + "    }\n"
             + "}";
 
     @Test

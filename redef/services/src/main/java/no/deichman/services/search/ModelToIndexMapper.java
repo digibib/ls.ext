@@ -71,7 +71,7 @@ public class ModelToIndexMapper {
         indexNodes(graph);
         removeTypeAndBnodeIdAndEmbedAllNodes(graph);
         Map<String, Object> root = new HashMap<>();
-        root.put(type, graph);
+        root.putAll(graph);
         return new Gson().toJson(root);
     }
 

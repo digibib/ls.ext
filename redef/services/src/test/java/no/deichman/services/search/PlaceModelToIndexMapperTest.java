@@ -41,11 +41,9 @@ public class PlaceModelToIndexMapperTest {
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"place\": {"
-                + "      \"uri\": \"" + placeXuri1.getUri() + "\","
-                + "      \"prefLabel\": \"Bø\","
-                + "      \"specification\": \"Telemark\","
-                + "  }\n"
+                + "  \"uri\": \"" + placeXuri1.getUri() + "\","
+                + "  \"prefLabel\": \"Bø\","
+                + "  \"specification\": \"Telemark\","
                 + "}").allowingAnyArrayOrdering());
     }
 }

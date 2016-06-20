@@ -1,156 +1,150 @@
 {
   "properties": {
-    "publication": {
+    "contributors": {
+      "type": "nested",
       "properties": {
-        "contributors": {
+        "role": {
+          "type": "string",
+          "index": "no"
+        },
+        "agent": {
           "type": "nested",
           "properties": {
-            "role": {
+            "uri": {
               "type": "string",
               "index": "no"
             },
-            "agent": {
-              "type": "nested",
-              "properties": {
-                "uri": {
-                  "type": "string",
-                  "index": "no"
-                },
-                "name": {
-                  "type": "string",
-                  "index": "no"
-                },
-                "birthYear": {
-                  "type": "string",
-                  "index": "no"
-                },
-                "deathYear": {
-                  "type": "string",
-                  "index": "no"
-                }
-              }
+            "name": {
+              "type": "string"
             },
-            "mainEntry": {
-              "type": "boolean",
+            "birthYear": {
+              "type": "string",
+              "index": "no"
+            },
+            "deathYear": {
+              "type": "string",
               "index": "no"
             }
           }
         },
-        "contributorNames": {
-          "type": "string"
-        },
-        "mainTitle": {
-          "type": "string"
-        },
-        "partTitle": {
-          "type": "string"
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "norwegianTitle": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "englishTitle": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "uri": {
-          "type": "string",
-          "index": "no"
-        },
-        "publicationYear": {
-          "type": "string",
-          "index": "no"
-        },
-        "firstPublicationYear": {
-          "type": "string",
-          "index": "no"
-        },
-        "audiences": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "holdingBranches": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "image": {
-          "type": "string",
-          "index": "no"
-        },
-        "formats": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "languages": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "subjects": {
-          "type": "string"
-        },
-        "workUri": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "scriptWriter": {
-          "type": "string"
-        },
-        "agent": {
-          "type": "string"
-        },
-        "actor": {
-          "type": "string"
-        },
-        "photographer": {
-          "type": "string"
-        },
-        "lyricist": {
-          "type": "string"
-        },
-        "composer": {
-          "type": "string"
-        },
-        "director": {
-          "type": "string"
-        },
-        "performer": {
-          "type": "string"
-        },
-        "musicalArranger": {
-          "type": "string"
-        },
-        "reader": {
-          "type": "string"
-        },
-        "conductor": {
-          "type": "string"
-        },
-        "author": {
-          "type": "string"
-        },
-        "translator": {
-          "type": "string"
-        },
-        "illustrator": {
-          "type": "string"
-        },
-        "editor": {
-          "type": "string"
-        },
-        "contributor": {
-          "type": "string"
-        },
-        "coreographer": {
-          "type": "string"
-        },
-        "recordId": {
-          "type": "string",
-          "index": "not_analyzed"
+        "mainEntry": {
+          "type": "boolean"
         }
       }
+    },
+    "recordId": {
+      "type": "string",
+      "index": "not_analyzed"
+    },
+    "contributorNames": {
+      "type": "string"
+    },
+    "mainTitle": {
+      "type": "string"
+    },
+    "partTitle": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "norwegianTitle": {
+      "type": "string",
+      "index": "no"
+    },
+    "englishTitle": {
+      "type": "string",
+      "index": "no"
+    },
+    "uri": {
+      "type": "string",
+      "index": "no"
+    },
+    "publicationYear": {
+      "type": "string",
+      "index": "no"
+    },
+    "firstPublicationYear": {
+      "type": "string",
+      "index": "no"
+    },
+    "audiences": {
+      "type": "string",
+      "index": "not_analyzed"
+    },
+    "holdingBranches": {
+      "type": "string",
+      "index": "not_analyzed"
+    },
+    "image": {
+      "type": "string",
+      "index": "no"
+    },
+    "formats": {
+      "type": "string",
+      "index": "not_analyzed"
+    },
+    "languages": {
+      "type": "string",
+      "index": "not_analyzed"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "workUri": {
+      "type": "string",
+      "index": "not_analyzed"
+    },
+    "scriptWriter": {
+      "type": "string"
+    },
+    "agent": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "photographer": {
+      "type": "string"
+    },
+    "lyricist": {
+      "type": "string"
+    },
+    "composer": {
+      "type": "string"
+    },
+    "director": {
+      "type": "string"
+    },
+    "performer": {
+      "type": "string"
+    },
+    "musicalArranger": {
+      "type": "string"
+    },
+    "reader": {
+      "type": "string"
+    },
+    "conductor": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "translator": {
+      "type": "string"
+    },
+    "illustrator": {
+      "type": "string"
+    },
+    "editor": {
+      "type": "string"
+    },
+    "contributor": {
+      "type": "string"
+    },
+    "coreographer": {
+      "type": "string"
     }
   }
 }

@@ -64,7 +64,6 @@ import static org.junit.Assert.fail;
 public class AppTest {
     private static final int ONE_SECOND = 1000;
     private static final int TEN_TIMES = 10;
-    private static final int FIFTY_TIMES = 50;
     private static final boolean SHOULD_NOT_FIND = true;
     private static final Logger LOG = LoggerFactory.getLogger(AppTest.class);
     private static final boolean USE_IN_MEMORY_REPO = true;
@@ -210,7 +209,7 @@ public class AppTest {
     private void doSearchForWorkWithFormat(String name, String format) throws UnirestException, InterruptedException {
         boolean foundWorkInIndex;
         boolean foundFormatInIndex;
-        int attempts = FIFTY_TIMES;
+        int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
                     .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle=" + name);
@@ -236,7 +235,7 @@ public class AppTest {
     private void doSearchForWorksWithHoldingbranch(String name, String branch) throws UnirestException, InterruptedException {
         boolean foundWorkInIndex;
         boolean foundBranchInIndex;
-        int attempts = FIFTY_TIMES;
+        int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
                     .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle=" + name);
@@ -868,10 +867,10 @@ public class AppTest {
     private void doSearchForWorks(String name, boolean... invert) throws UnirestException, InterruptedException {
         boolean foundWorkInIndex;
         boolean doInvert = invert != null && invert.length > 0 && invert[0];
-        int attempts = FIFTY_TIMES;
+        int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle=" + name);
+                    .get(baseUri + "search/work/_search").queryString("q", "mainTitle=" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
@@ -894,7 +893,7 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/person/_search").queryString("q", "person.name=" + name);
+                    .get(baseUri + "search/person/_search").queryString("q", "name:" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
@@ -911,7 +910,7 @@ public class AppTest {
         boolean foundPlaceInIndex;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/place/_search").queryString("q", "place.prefLabel:" + place);
+            HttpRequest request = Unirest.get(baseUri + "search/place/_search").queryString("q", "prefLabel:" + place);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundPlaceInIndex = responseBody.contains(place);
@@ -928,7 +927,7 @@ public class AppTest {
         boolean foundSerial;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/serial/_search").queryString("q", "serial.name:" + name);
+            HttpRequest request = Unirest.get(baseUri + "search/serial/_search").queryString("q", "name:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSerial = responseBody.contains(name);
@@ -962,7 +961,7 @@ public class AppTest {
         boolean foundSubject;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/subject/_search").queryString("q", "subject.prefLabel:" + name);
+            HttpRequest request = Unirest.get(baseUri + "search/subject/_search").queryString("q", "prefLabel:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSubject = responseBody.contains(name);
@@ -979,7 +978,7 @@ public class AppTest {
         boolean foundSubject;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/genre/_search").queryString("q", "genre.prefLabel:" + name);
+            HttpRequest request = Unirest.get(baseUri + "search/genre/_search").queryString("q", "prefLabel:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSubject = responseBody.contains(name);
@@ -995,7 +994,7 @@ public class AppTest {
     private void indexWork(String workId, String title) {
         getClient().prepareIndex("search", "work", workId)
                 .setSource(""
-                        + "{ \"work\": {"
+                        + "{ "
                         + "    \"mainTitle\": \"" + title + "\","
                         + "    \"publicationYear\": \"1890\","
                         + "    \"uri\": \"http://deichman.no/work/w12344553\","
@@ -1005,7 +1004,6 @@ public class AppTest {
                         + "       \"deathYear\": \"1952\","
                         + "       \"uri\": \"http://deichman.no/person/h12345\"}"
                         + "    }]"
-                        + "}"
                         + "}")
                 .execute()
                 .actionGet();
