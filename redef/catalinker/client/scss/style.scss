@@ -570,9 +570,9 @@ body {
   }
 
   .footer {
-    position: fixed;
-    bottom: 0;
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
     #errors {
       float: right;
       position: relative;

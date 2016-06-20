@@ -89,11 +89,21 @@
       window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
     }
 
-    function clearSupportPanels (options) {
+  function inputHasOpenForm (input) {
+    var inputHasOpenForm = false
+    if (input.widgetOptions) {
+      inputHasOpenForm = _.some(_.pick(input.widgetOptions, 'enableCreateNewResource', 'enableEditResource'), function (action) {
+        return !isNaN(Number.parseInt(action.showInputs))
+      })
+    }
+    return inputHasOpenForm
+  }
+
+  function clearSupportPanels (options) {
       var keepActions = (options || {}).keep || []
       _.each(allInputs(), function (input) {
         _.each(input.values, function (value) {
-          if (value.searchResult) {
+          if (value.searchResult && !inputHasOpenForm(input)) {
             value.searchResult = null
           }
         })
@@ -105,9 +115,10 @@
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
                 input.widgetOptions[ action ].showInputs = null
-                input.values[ 0 ].searchResult = null
-                var domainType = input.widgetOptions[ action ].forms[ input.selectedIndexType ].rdfType
-                unloadResourceForDomain(domainType)
+                if (!isNaN(Number.parseInt(input.widgetOptions[ action ].showInputs))) {
+                  var domainType = input.widgetOptions[ action ].forms[ input.selectedIndexType ].rdfType
+                  unloadResourceForDomain(domainType)
+                }
               }
             })
           }
@@ -155,6 +166,10 @@
                   .catch(function (response) {
                     if (response.status === 400 && response.data.numberOfItemsLeft) {
                       ractive.set('deletePublicationDialog.error', { itemsLeft: { numberOfItemsLeft: response.data.numberOfItemsLeft } })
+                    } else {
+                      ractive.set('deletePublicationDialog.error.message', 'Noe gikk galt under sletting.')
+                      $(`#${idPrefix}-do-del-pub, #${idPrefix}-ok-del-pub`).hide()
+                      $(`#${idPrefix}-cancel-del-pub`).show()
                     }
                   })
               }
@@ -424,6 +439,7 @@
       allGroupInputs(addInput)
 
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
+        inputs.push(input)
         _.each([ 'Edit', 'CreateNew' ], function (action) {
           var forms = (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enable' + action + 'Resource.forms'))
           if (forms) {
@@ -1676,7 +1692,9 @@
                     var filterArg = null
                     var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
                     if (filterArgInputRef) {
-                      filterArg = valueOfInputByInputId(filterArgInputRef)
+                      filterArg = _.find(allInputs(), function (input) {
+                        return filterArgInputRef === input.id
+                      }).values[ 0 ].current.value
                     }
                     if (isBlankNodeUri(filterArg)) {
                       filterArg = undefined
@@ -1884,15 +1902,16 @@
               },
               showCreateNewResource: function (event, origin) {
                 ractive.set(origin + '.searchResult.hidden', true)
+                ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
                 var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
                 if (searchTerm) {
                   _.each(event.context.inputs, function (input) {
                     if (input.preFillFromSearchField) {
                       input.values[ 0 ].current.value = searchTerm
+                      ractive.update()
                     }
                   })
                 }
-                ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
               },
               createNewResource: function (event, origin) {
                 var maintenance = origin.indexOf('maintenanceInputs') !== -1
@@ -2175,7 +2194,7 @@
 
           ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
             var openInputForms = ractive.get('openInputForms') || []
-            if (newValue === true) {
+            if (!isNaN(parseInt(newValue))) {
               openInputForms = _.union(openInputForms, [ keypath ])
             } else {
               openInputForms = _.without(openInputForms, keypath)
@@ -2367,6 +2386,8 @@
       getRactive: function () {
         return ractive
       },
+      $: $,
+      _: _,
       saveSuggestionData: saveSuggestionData
     }
     return Main
