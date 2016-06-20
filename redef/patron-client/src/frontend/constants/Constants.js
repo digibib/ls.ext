@@ -5,19 +5,19 @@ module.exports = {
   maxSearchResultsPerPage: 10,
   filterableFields: {
     branch: {
-      name: 'publication.branches',
+      name: 'branches',
       prefix: ''
     },
     format: {
-      name: 'publication.formats',
+      name: 'formats',
       prefix: 'http://data.deichman.no/format#'
     },
     language: {
-      name: 'publication.languages',
+      name: 'languages',
       prefix: 'http://lexvo.org/id/iso639-3/'
     },
     audience: {
-      name: 'publication.audiences',
+      name: 'audiences',
       prefix: 'http://data.deichman.no/audience#'
     }
   }

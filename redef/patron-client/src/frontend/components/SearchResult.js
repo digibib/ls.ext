@@ -50,16 +50,16 @@ class SearchResult extends React.Component {
   }
 
   subjectSearchLink (subject) {
-    return '/search?query=publication.subjects%3A' + subject
+    return '/search?query=subject%3A' + subject
   }
 
   renderSubjects (result) {
-    if (result.subjects) {
+    if (result.subject) {
       return (
         <p data-automation-id='work_subjects'>
           <strong>
             <FormattedMessage {...messages.subjects} />
-            {result.subjects.map(subject => (
+            {result.subject.map(subject => (
               <span key={subject}>
                 <Link to={this.subjectSearchLink(subject)}> {subject} </Link>
                 </span>

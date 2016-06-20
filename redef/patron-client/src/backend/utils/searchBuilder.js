@@ -11,7 +11,7 @@ function initCommonQuery () {
       },
       byWork: {
         terms: {
-          field: 'publication.workUri',
+          field: 'workUri',
           size: Constants.maxSearchResults
         },
         aggs: {
@@ -24,7 +24,7 @@ function initCommonQuery () {
       },
       workCount: {
         cardinality: {
-          field: 'publication.workUri'
+          field: 'workUri'
         }
       }
     }
@@ -46,7 +46,7 @@ function initSimpleQuery (query) {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: ['publication.mainTitle', 'publication.partTitle', 'publication.subjects', 'publication.agent']
+                fields: ['mainTitle', 'partTitle', 'subject', 'agent']
               }
             }
           ],
@@ -54,18 +54,18 @@ function initSimpleQuery (query) {
           should: [
             {
               match: {
-                'publication.agent^2': query
+                'agent^2': query
               }
             },
             {
               multi_match: {
                 query: query,
-                fields: [ 'publication.mainTitle^2', 'publication.partTitle' ]
+                fields: [ 'mainTitle^2', 'partTitle' ]
               }
             },
             {
               match: {
-                'publication.subjects': query
+                'subject': query
               }
             }
           ]

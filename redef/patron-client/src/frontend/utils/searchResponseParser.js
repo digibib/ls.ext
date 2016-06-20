@@ -18,7 +18,7 @@ export function processSearchResponse (response, locationQuery) {
       result.workUri = element.key
       result.id = getId(result.workUri)
       result.relativeUri = relativeUri(result.workUri)
-      result.publication = element.publications.hits.hits[0]._source.publication
+      result.publication = element.publications.hits.hits[0]._source
       result.publication.contributors = result.publication.contributors || []
       result.publication.contributors.forEach(contributor => {
         contributor.agent.relativeUri = relativeUri(contributor.agent.uri)

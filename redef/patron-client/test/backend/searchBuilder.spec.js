@@ -22,7 +22,7 @@ describe('searchBuilder', () => {
                     simple_query_string: {
                       query: queryWant,
                       default_operator: 'and',
-                      fields: ['publication.mainTitle', 'publication.partTitle', 'publication.subjects', 'publication.agent']
+                      fields: ['mainTitle', 'partTitle', 'subject', 'agent']
                     }
                   }
                 ],
@@ -30,18 +30,18 @@ describe('searchBuilder', () => {
                 should: [
                   {
                     match: {
-                      'publication.agent^2': queryWant
+                      'agent^2': queryWant
                     }
                   },
                   {
                     multi_match: {
                       query: queryWant,
-                      fields: [ 'publication.mainTitle^2', 'publication.partTitle' ]
+                      fields: [ 'mainTitle^2', 'partTitle' ]
                     }
                   },
                   {
                     match: {
-                      'publication.subjects': queryWant
+                      'subject': queryWant
                     }
                   }
                 ]
@@ -80,12 +80,12 @@ describe('searchBuilder', () => {
         [
           {
             'terms': {
-              'publication.audiences': ['http://data.deichman.no/audience#juvenile']
+              'audiences': ['http://data.deichman.no/audience#juvenile']
             }
           },
           {
             'terms': {
-              'publication.branches': ['flam', 'fmaj', 'ftor']
+              'branches': ['flam', 'fmaj', 'ftor']
             }
           }
         ]
@@ -98,11 +98,11 @@ describe('searchBuilder', () => {
     const query = buildQuery(urlQueryString)
 
     it('should include activated filters in aggregations, excluding filters of the given aggregation', () => {
-      expect(query.aggs.facets.aggs['publication.audiences'].filter.bool.must).toEqual(
+      expect(query.aggs.facets.aggs['audiences'].filter.bool.must).toEqual(
         [
           {
             'terms': {
-              'publication.branches': ['flam', 'fmaj', 'ftor']
+              'branches': ['flam', 'fmaj', 'ftor']
             }
           }
         ]
@@ -110,11 +110,11 @@ describe('searchBuilder', () => {
     })
 
     it('should include activated filters in aggregations, excluding filters of the given aggregation II', () => {
-      expect(query.aggs.facets.aggs['publication.branches'].filter.bool.must).toEqual(
+      expect(query.aggs.facets.aggs['branches'].filter.bool.must).toEqual(
         [
           {
             'terms': {
-              'publication.audiences': ['http://data.deichman.no/audience#juvenile']
+              'audiences': ['http://data.deichman.no/audience#juvenile']
             }
           }
         ]
