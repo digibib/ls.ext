@@ -3,6 +3,7 @@
 
 @redef
 @check-for-errors
+@wip
 Egenskap: Se felter i Koha
   Som bibliotekar
   Skal jeg kunne se utvalgt data om en utgivelse i Koha
