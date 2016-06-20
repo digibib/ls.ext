@@ -51,7 +51,7 @@
                 {{#search_result}}
                 <div class="prop-search-results">
                     {{#results.hits.hits}}
-                    {{#with _source.person}}
+                    {{#with _source}}
                     <div class="search-result" data-automation-id="{{uri}}" on-click="selectResource:{{predicate}},{{origin}}">
                         <span class="search-result-name" data-automation-id="search-result-name">{{name}}</span>
                         <span class="birth-and-death">{{#birthYear}}(<span class="birthYear">{{birthYear}}</span>-<span class="deathYear">{{deathYear}}</span>){{/birthYear}}</span>

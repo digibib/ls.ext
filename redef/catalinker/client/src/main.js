@@ -1333,7 +1333,7 @@
                 dataType: 'json',
                 delay: 250,
                 id: function (item) {
-                  return item._source.person.uri
+                  return item._source.uri
                 },
                 data: function (params) {
                   return {
@@ -1345,9 +1345,9 @@
                   params.page = params.page || 1
 
                   var select2Data = $.map(data.hits.hits, function (obj) {
-                    obj.id = obj._source[ indexType ].uri
+                    obj.id = obj._source.uri
                     obj.text = _.map(inputDef.indexDocumentFields, function (field) {
-                      return obj._source[ indexType ][ field ]
+                      return obj._source[ field ]
                     }).join(' - ')
                     return obj
                   })
@@ -1660,21 +1660,21 @@
                       personAsMainEntryFilter: function (filterArg) {
                         return {
                           nested: {
-                            path: 'work.contributors',
+                            path: 'contributors',
                             query: {
                               bool: {
                                 filter: [
                                   {
                                     term: {
-                                      'work.contributors.mainEntry': true
+                                      'contributors.mainEntry': true
                                     }
                                   },
                                   {
                                     nested: {
-                                      path: 'work.contributors.agent',
+                                      path: 'contributors.agent',
                                       query: {
                                         term: {
-                                          'work.contributors.agent.uri': filterArg
+                                          'contributors.agent.uri': filterArg
                                         }
                                       }
                                     }
@@ -1733,7 +1733,7 @@
                     .then(function (response) {
                       var results = ensureJSON(response.data)
                       results.hits.hits.forEach(function (hit) {
-                        var item = hit._source[ indexType ]
+                        var item = hit._source
                         item.isChecked = false
                         if (loadWorksAsSubjectOfItem) {
                           item.work = null
@@ -1748,7 +1748,7 @@
                         }
                       })
                       ractive.set(event.keypath + '.searchResult', {
-                        items: _.map(_.pluck(_.pluck(results.hits.hits, '_source'), indexType),
+                        items: _.map(_.pluck(results.hits.hits, '_source'),
                           Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]),
                         origin: event.keypath,
                         searchTerm: searchString

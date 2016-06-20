@@ -7,13 +7,11 @@
         "_type": "person",
         "_id": "http%3A%2F%2F192.168.50.12%3A7000%2Fperson%2Fh123456",
         "_source": {
-          "person": {
             "name": "Test Monkey",
-            "birthYear": "1944",
-            "deathYear": "1988",
-            "nationality": ["Norsk","Norwegian"],
-            "uri": "http://192.168.50.12:7000/person/h123456"
-          }
+          "birthYear": "1944",
+          "deathYear": "1988",
+          "nationality": ["Norsk","Norwegian"],
+          "uri": "http://192.168.50.12:7000/person/h123456"
         }
       },
       {
@@ -21,12 +19,10 @@
         "_type": "person",
         "_id": "http%3A%2F%2F192.168.50.12%3A7000%2Fperson%2Fh234567",
         "_source": {
-          "person": {
-            "name": "Another Test Monkey",
-            "birthYear": "1955",
-            "deathYear": "1999",
-            "uri": "http://192.168.50.12:7000/person/h234567"
-          }
+          "name": "Another Test Monkey",
+          "birthYear": "1955",
+          "deathYear": "1999",
+          "uri": "http://192.168.50.12:7000/person/h234567"
         }
       }
     ]

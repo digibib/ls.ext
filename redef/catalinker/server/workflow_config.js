@@ -419,8 +419,8 @@ module.exports = (app) => {
           inputs: [
             {
               id: 'workMainTitle',
-              rdfProperty: 'mainTitle', 
-              multiple: true 
+              rdfProperty: 'mainTitle',
+              multiple: true
             },
             { rdfProperty: 'subtitle' },
             { rdfProperty: 'partTitle' },
@@ -575,42 +575,42 @@ module.exports = (app) => {
       search: {
         person: {
           selectIndexLabel: 'Person',
-          queryTerm: 'person.name',
+          queryTerm: 'name',
           resultItemLabelProperties: [ 'name' ],
           resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
           itemHandler: 'personItemHandler'
         },
         subject: {
           selectIndexLabel: 'Generelt',
-          queryTerm: 'subject.prefLabel',
+          queryTerm: 'prefLabel',
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         work: {
           structuredQuery: true,
           selectIndexLabel: 'Verk',
-          queryTerm: 'work.mainTitle',
+          queryTerm: 'mainTitle',
           resultItemLabelProperties: [ 'mainTitle', 'subTitle' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
         },
         genre: {
           selectIndexLabel: 'Sjanger',
-          queryTerm: 'genre.prefLabel',
+          queryTerm: 'prefLabel',
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         publisher: {
           selectIndexLabel: 'Utgiver',
-          queryTerm: 'publisher.name',
+          queryTerm: 'name',
           resultItemLabelProperties: [ 'name' ]
         },
         place: {
           selectIndexLabel: 'Sted',
-          queryTerm: 'place.prefLabel',
+          queryTerm: 'prefLabel',
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         },
         serial: {
           selectIndexLabel: 'Serie',
-          queryTerm: 'serial.name',
+          queryTerm: 'name',
           resultItemLabelProperties: [ 'name' ]
         },
         publication: {

@@ -115,10 +115,10 @@ describe("Catalinker", function () {
         testRactive.update().then(function () {           // force DOM update
           var res = testRactive.get("search_result").results;
           expect(res.hits.total).to.equal(2);
-          expect(res.hits.hits[0]._source.person.uri).to.equal("http://192.168.50.12:7000/person/h123456");
-          expect(res.hits.hits[0]._source.person.name).to.equal("Test Monkey");
-          expect(res.hits.hits[1]._source.person.uri).to.equal("http://192.168.50.12:7000/person/h234567");
-          expect(res.hits.hits[1]._source.person.name).to.equal("Another Test Monkey");
+          expect(res.hits.hits[0]._source.uri).to.equal("http://192.168.50.12:7000/person/h123456");
+          expect(res.hits.hits[0]._source.name).to.equal("Test Monkey");
+          expect(res.hits.hits[1]._source.uri).to.equal("http://192.168.50.12:7000/person/h234567");
+          expect(res.hits.hits[1]._source.name).to.equal("Another Test Monkey");
           done();
         }).catch(done);
       });
