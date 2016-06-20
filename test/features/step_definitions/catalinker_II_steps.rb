@@ -29,14 +29,22 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
   creator_name_field.send_keys :enter
 end
 
-When(/^velger jeg (en|et) (person|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|utgivelse|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|utgivelses|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    @browser.input(:class => "select-result-item-radio").present?
+    @browser.a(:class => 'edit-resource').present? || @browser.input(:class => "select-result-item-radio").present?
   }
-  @browser.inputs(:class => "select-result-item-radio")[0].click
+  if @browser.a(:class => 'edit-resource').present?
+    @browser.as(:class => 'edit-resource')[0].click
+  end
+  if @browser.input(:class => "select-result-item-radio").present?
+    @browser.inputs(:class => "select-result-item-radio")[0].click
+  end
 end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
+  wait_for{
+    @browser.span(:class => "toggle-show-works").present?
+  }
   @browser.spans(:class => "toggle-show-works")[0].click
   @browser.inputs(:class => "select-work-radio")[0].click
 end
@@ -88,8 +96,8 @@ def workflow_batch_add_props(domain, data)
       @context[symbol] = value
       @context[label_symbol] = textualValue
       @site.WorkFlow.method(method).call(domain, predicate, textualValue, 0, true)
-    rescue
-      fail "Error adding #{fragment} for #{domain}"
+    # rescue
+    #   fail "Error adding #{fragment} for #{domain}"
     end
   end
 end
@@ -127,7 +135,8 @@ When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label
 end
 
 def do_select_value(selectable_parameter_label, value)
-  select = @browser.selects(:xpath => "//div[preceding-sibling::label/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']/select")[0]
+  select = @browser.selects(:xpath => "//div[preceding-sibling::div/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']//select")[0]
+  wait_for{select.present?}
   select_id = select.attribute_value('data-automation-id')
   predicate = select_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
   domain = select_id.match(/^(Work|Publication|Person)_.*/).captures[0]
@@ -294,10 +303,16 @@ end
 
 When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
   data_automation_id_serial = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#serial_0"
+  wait_for {
+    @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']").present?
+  }
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']")
   name.should exist
   data_automation_id_issue = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
   issueSpan = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']")
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    issueSpan.present?
+  }
   issueSpan.should exist
 end
 
@@ -381,7 +396,14 @@ end
 
 
 When(/^trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
+  @browser.button(:text => button_label).wait_until_present(BROWSER_WAIT_TIMEOUT)
   @browser.button(:text => button_label).click
+end
+
+When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
+  button = @browser.button(:xpath => "//button[span[@class='ui-button-text'][normalize-space()='#{button_label}']]")
+  button.wait_until_present(BROWSER_WAIT_TIMEOUT)
+  button.click
 end
 
 When(/^velger jeg emnetype "([^"]*)"$/) do |subject_type|
@@ -508,7 +530,16 @@ end
 
 When(/^sjekker jeg at overskriften viser informasjon om hva som blir katalogisert$/) do
   [:work_maintitle, :person_name, :publisher_name, :publication_publicationyear].each do |item|
-    puts item
     @browser.element(:data_automation_id => 'headline').text.include?(@context[item]).should == true
   end
+end
+
+When(/^jeg skriver verdien på (tittelnummer) i feltet som heter "([^"]*)" og trykker enter$/) do |concept, label|
+  field = @site.WorkFlow.get_text_field_from_label(label)
+  field.set(@context[@site.translate(concept).to_sym])
+  field.send_keys :enter
+end
+
+When(/^husker jeg tittelnummeret til senere$/) do
+  @context[:publication_record_id] = /.*biblionumber=([0-9]*)/.match(@browser.a(:data_automation_id => 'biblio_record_link').attribute_value('href'))[1]
 end
