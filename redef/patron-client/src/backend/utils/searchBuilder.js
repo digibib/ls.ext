@@ -150,7 +150,7 @@ module.exports.buildQuery = function (urlQueryString) {
     const fieldName = field.name
     elasticSearchQuery.aggs.facets.aggs[ fieldName ] = {
       filter: {
-        bool: Object.assign({}, elasticSearchQuery.query.filtered.query.bool)
+        bool: Object.assign({}, elasticSearchQuery.query.filtered.query.bool || {filter: [elasticSearchQuery.query.filtered.query]})
       },
       aggs: {
         [fieldName]: {
