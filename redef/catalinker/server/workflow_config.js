@@ -615,7 +615,7 @@ module.exports = (app) => {
         },
         publication: {
           selectIndexLabel: 'Utgivelse',
-          queryTerm: 'publication.recordId',
+          queryTerm: 'recordId',
           resultItemLabelProperties: [ 'mainTitle', 'subTitle' ]
         }
       }

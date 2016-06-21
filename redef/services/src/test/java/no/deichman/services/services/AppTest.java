@@ -944,7 +944,7 @@ public class AppTest {
         boolean foundPublication;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/publication/_search").queryString("q", "publication.recordId:" + recordId);
+            HttpRequest request = Unirest.get(baseUri + "search/publication/_search").queryString("q", "recordId:" + recordId);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundPublication = responseBody.contains(recordId);
