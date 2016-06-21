@@ -39,7 +39,6 @@ app.listen(port, undefined, () => {
     .then(res => {
       if (res.headers && res.headers._headers && res.headers._headers[ 'set-cookie' ] && res.headers._headers[ 'set-cookie' ][ 0 ]) {
         app.set('kohaSession', res.headers._headers[ 'set-cookie' ][ 0 ])
-        console.log('Kohasettings set')
       }
     }).catch(error => console.log(error))
 })
