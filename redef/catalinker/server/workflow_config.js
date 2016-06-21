@@ -575,48 +575,73 @@ module.exports = (app) => {
       search: {
         person: {
           selectIndexLabel: 'Person',
-          queryTerm: 'name',
+          queryTerms: [{
+            field: 'name',
+            wildcard: true
+          }],
           resultItemLabelProperties: [ 'name' ],
           resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
           itemHandler: 'personItemHandler'
         },
         subject: {
           selectIndexLabel: 'Generelt',
-          queryTerm: 'prefLabel',
+          queryTerms: [{
+            field: 'prefLabel',
+            wildcard: true
+          }],
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         work: {
           structuredQuery: true,
           selectIndexLabel: 'Verk',
-          queryTerm: 'mainTitle',
+          queryTerms: [{
+            field: 'mainTitle',
+            wildcard: true
+          }],
           resultItemLabelProperties: [ 'mainTitle', 'subTitle' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
         },
         genre: {
           selectIndexLabel: 'Sjanger',
-          queryTerm: 'prefLabel',
+          queryTerms: [{
+            field: 'prefLabel',
+            wildcard: true
+          }],
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         publisher: {
           selectIndexLabel: 'Utgiver',
-          queryTerm: 'name',
+          queryTerms: [{
+            field: 'name',
+            wildcard: true
+          }],
           resultItemLabelProperties: [ 'name' ]
         },
         place: {
           selectIndexLabel: 'Sted',
-          queryTerm: 'prefLabel',
+          queryTerms: [{
+            field: 'prefLabel',
+            wildcard: true
+          }],
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         },
         serial: {
           selectIndexLabel: 'Serie',
-          queryTerm: 'name',
+          queryTerms: [{
+            field: 'name',
+            wildcard: true
+          }],
           resultItemLabelProperties: [ 'name' ]
         },
         publication: {
           selectIndexLabel: 'Utgivelse',
-          queryTerm: 'recordId',
-          resultItemLabelProperties: [ 'mainTitle', 'subTitle' ]
+          queryTerms: [
+            { field: 'recordId'},
+            { field: 'mainTitle', wildcard: true}
+          ],
+          resultItemLabelProperties: [ 'creator', 'mainTitle', 'subTitle', 'publicationYear', 'recordId' ],
+          itemHandler: 'publicationItemHandler'
         }
       }
     }

@@ -4,16 +4,13 @@
       "type": "string"
     },
     "birthYear": {
-      "type": "string",
-      "index": "no"
+      "type": "string"
     },
     "deathYear": {
-      "type": "string",
-      "index": "no"
+      "type": "string"
     },
     "nationality": {
-      "type": "string",
-      "index": "no"
+      "type": "string"
     },
     "uri": {
       "type": "string",
@@ -27,16 +24,13 @@
           "index": "no"
         },
         "mainTitle": {
-          "type": "string",
-          "index": "no"
+          "type": "string"
         },
         "partTitle": {
-          "type": "string",
-          "index": "no"
+          "type": "string"
         },
         "publicationYear": {
-          "type": "string",
-          "index": "no"
+          "type": "string"
         }
       }
     }

@@ -323,6 +323,12 @@ body {
         .searchable {
           padding-right: 1.5em;
         }
+        span.advanced-search-legend {
+          position: absolute;
+          font-size: 0.7em;
+          font-style: italic;
+          padding: 4px 1px;
+        }
         .suggestion-source-bs {
           @include source-logo-bs;
           background-position: 85% 5px;

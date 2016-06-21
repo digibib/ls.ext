@@ -89,17 +89,17 @@
       window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
     }
 
-  function inputHasOpenForm (input) {
-    var inputHasOpenForm = false
-    if (input.widgetOptions) {
-      inputHasOpenForm = _.some(_.pick(input.widgetOptions, 'enableCreateNewResource', 'enableEditResource'), function (action) {
-        return !isNaN(Number.parseInt(action.showInputs))
-      })
+    function inputHasOpenForm (input) {
+      var inputHasOpenForm = false
+      if (input.widgetOptions) {
+        inputHasOpenForm = _.some(_.pick(input.widgetOptions, 'enableCreateNewResource', 'enableEditResource'), function (action) {
+          return !isNaN(Number.parseInt(action.showInputs))
+        })
+      }
+      return inputHasOpenForm
     }
-    return inputHasOpenForm
-  }
 
-  function clearSupportPanels (options) {
+    function clearSupportPanels (options) {
       var keepActions = (options || {}).keep || []
       _.each(allInputs(), function (input) {
         _.each(input.values, function (value) {
@@ -322,6 +322,10 @@
           ractive.update()
         })
       }
+    }
+
+    function isAdvancedQuery (queryString) {
+      return /[:\+\-^()´"*]/.test(queryString)
     }
 
     function updateBrowserLocationWithUri (type, resourceUri) {
@@ -1101,6 +1105,24 @@
       return input ? input.values[ 0 ].current[ input.type === 'searchable-with-result-in-side-panel' ? 'displayValue' : 'value' ] : undefined
     }
 
+    function mainEntryContributor (contributionTarget) {
+      var author = _.find(contributionTarget.contributors, function (contributor) {
+        return contributor.mainEntry
+      })
+      if (author) {
+        var creatorAgent = author.agent
+        contributionTarget.creator = creatorAgent.name
+        if (creatorAgent.birthYear) {
+          contributionTarget.creator += ' (' + creatorAgent.birthYear + '–'
+          if (creatorAgent.deathYear) {
+            contributionTarget.creator += creatorAgent.deathYear
+          }
+          contributionTarget.creator += ')'
+        }
+      }
+      return contributionTarget
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -1118,21 +1140,15 @@
           return personItem
         },
         workItemHandler: function (workItem) {
-          var author = _.find(workItem.contributors, function (contributor) {
-            return contributor.mainEntry
-          })
-          if (author) {
-            var creatorAgent = author.agent
-            workItem.creator = creatorAgent.name
-            if (creatorAgent.birthYear) {
-              workItem.creator += ' (' + creatorAgent.birthYear + '–'
-              if (creatorAgent.deathYear) {
-                workItem.creator += creatorAgent.deathYear
-              }
-              workItem.creator += ')'
-            }
+          return mainEntryContributor(workItem)
+        },
+        publicationItemHandler: function (publicationItem) {
+          mainEntryContributor(publicationItem)
+          publicationItem.publicationYear = publicationItem.publicationYear ? ` (${publicationItem.publicationYear})` : ''
+          if (publicationItem.recordId) {
+            publicationItem.recordId = `tittelnr ${publicationItem.recordId}`
           }
-          return workItem
+          return publicationItem
         }
       },
       patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
@@ -1547,7 +1563,8 @@
                 return _.find(input.subInputs[ 0 ].input.values, function (value) {
                   return value.suggested && value.suggested !== null
                 })
-              }
+              },
+              isAdvancedQuery: isAdvancedQuery
             },
             decorators: {
               multi: require('ractive-multi-decorator'),
@@ -1644,7 +1661,11 @@
                   }
                 })
               },
-              searchResource: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
+              searchResource: function (event, searchString, indexType, loadWorksAsSubjectOfItem, options) {
+                options = options || {}
+                if (options.skipIfAdvancedQuery && isAdvancedQuery(searchString)) {
+                  return
+                }
                 var inputkeyPath = grandParentOf(event.keypath)
                 if (!searchString) {
                   if (ractive.get(event.keypath + '.searchResult.')) {
@@ -1654,7 +1675,7 @@
                   var searchBody
                   var config = ractive.get('config')
                   var axiosMethod
-                  if (config.search[ indexType ].structuredQuery) {
+                  if (config.search[ indexType ].structuredQuery && !isAdvancedQuery(searchString)) {
                     axiosMethod = axios.post
                     var filters = {
                       personAsMainEntryFilter: function (filterArg) {
@@ -1701,10 +1722,12 @@
                     }
 
                     var matchBody = {}
-                    matchBody[ config.search[ indexType ].queryTerm ] = {
-                      query: searchString,
-                      operator: 'and'
-                    }
+                    _.each(config.search[ indexType ].queryTerms, function (queryTerm) {
+                      matchBody[ queryTerm.field ] = {
+                        query: `${searchString}${queryTerm.wildcard ? '*' : ''}`,
+                        operator: 'and'
+                      }
+                    })
 
                     var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'
 
@@ -1721,9 +1744,13 @@
                     }
                   } else {
                     axiosMethod = axios.get
+                    var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {
+                      var wildCardPostfix = queryTerm.wildcard ? '*' : ''
+                      return `${queryTerm.field}:${searchString}${wildCardPostfix}`
+                    }).join(' OR ')
                     searchBody = {
                       params: {
-                        q: `${config.search[ indexType ].queryTerm}:${searchString}*`
+                        q: query
                       }
                     }
                   }

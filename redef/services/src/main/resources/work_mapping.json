@@ -125,8 +125,7 @@
       "index": "no"
     },
     "publicationYear": {
-      "type": "string",
-      "index": "no"
+      "type": "string"
     }
   }
 }
