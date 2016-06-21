@@ -22,29 +22,11 @@ describe('searchBuilder', () => {
                     simple_query_string: {
                       query: queryWant,
                       default_operator: 'and',
-                      fields: ['mainTitle', 'partTitle', 'subject', 'agents']
+                      fields: ['mainTitle^2', 'partTitle', 'subject', 'agents^2']
                     }
                   }
                 ],
-                must: [],
-                should: [
-                  {
-                    match: {
-                      'agents^2': queryWant
-                    }
-                  },
-                  {
-                    multi_match: {
-                      query: queryWant,
-                      fields: [ 'mainTitle^2', 'partTitle' ]
-                    }
-                  },
-                  {
-                    match: {
-                      'subject': queryWant
-                    }
-                  }
-                ]
+                must: []
               }
             }
           }
