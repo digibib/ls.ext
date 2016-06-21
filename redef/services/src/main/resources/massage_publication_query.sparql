@@ -25,7 +25,8 @@ CONSTRUCT {
                deich:recordID ?recordId .
  ?pubContrib a deich:Contribution ;
                deich:role ?pubRole ;
-               deich:agent ?pubAgent .
+               deich:agent ?pubAgent ;
+               deich:mainEntry ?mainEntry .
    ?pubAgent a deich:Agent ;
                deich:name ?pubAgentName ;
                deich:birthYear ?pubAgentBirthYear ;
@@ -89,6 +90,12 @@ WHERE {
                           deich:role ?pubRoleURI .
              ?pubAgent deich:name ?pubAgentName .
              BIND(str(?pubRoleURI) AS ?pubRole)
+             OPTIONAL {
+                 ?workContrib a deich:MainEntry ;
+                             deich:agent ?pubAgent ;
+                             deich:role ?pubRoleURI .
+                 BIND(true as ?mainEntry) .
+             }
   }
   OPTIONAL { ?pubAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?pubAgentBirthYear) }
   OPTIONAL { ?pubAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?pubAgentDeathYear) }
