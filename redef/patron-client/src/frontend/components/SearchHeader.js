@@ -10,6 +10,10 @@ class SearchHeader extends React.Component {
     this.handleLoginClick = this.handleLoginClick.bind(this)
   }
 
+  componentDidUpdate () {
+    this.searchFieldInput.value = this.props.locationQuery.query || ''
+  }
+
   handleSearch (event) {
     event.preventDefault()
     this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
