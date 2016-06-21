@@ -222,6 +222,7 @@ public final class EntityResource extends ResourceBase {
                 XURI workXURI = new XURI(workUri);
 
                 getSearchService().index(workXURI);
+                getSearchService().index(xuri);
             }
         } else {
             getSearchService().index(xuri);

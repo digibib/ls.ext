@@ -1,6 +1,7 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.EntityService;
+import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -22,6 +23,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,14 +57,16 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     private final EntityService entityService;
+    private final BaseURI baseURI;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
     private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
 
-    public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
+    public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService, BaseURI baseURI) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
         this.entityService = entityService;
+        this.baseURI = baseURI;
         getIndexUriBuilder();
     }
 
@@ -72,6 +76,8 @@ public class SearchServiceImpl implements SearchService {
             case WORK: doIndexWork(xuri, false);
                 break;
             case PERSON: doIndexPerson(xuri, false);
+                break;
+            case PUBLICATION: doIndexPublication(xuri);
                 break;
             default: doIndex(xuri);
         }
@@ -226,6 +232,17 @@ public class SearchServiceImpl implements SearchService {
             LOG.error(format("Failed to delete %s in elasticsearch", xuri.getUri()), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private void doIndexPublication(XURI pubUri) throws Exception {
+        Model pubModel = entityService.retrieveById(pubUri);
+        Property publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
+        if (pubModel.getProperty(null, publicationOfProperty) != null) {
+            String workUri = pubModel.getProperty(null, publicationOfProperty).getObject().toString();
+            XURI workXURI = new XURI(workUri);
+            pubModel = entityService.retrieveWorkWithLinkedResources(workXURI);
+        }
+        indexDocument(pubUri, publicationModelToIndexMapper.createIndexDocument(pubModel, pubUri));
     }
 
     private void doIndexWork(XURI xuri, boolean indexedPerson) throws Exception {

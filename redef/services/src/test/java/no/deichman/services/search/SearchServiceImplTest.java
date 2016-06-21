@@ -18,11 +18,11 @@ public class SearchServiceImplTest {
 
     @Test(expected = RuntimeException.class)
     public void testConstructorWithInvalidUrl_throwsException() {
-        new SearchServiceImpl(INVALID_URL, null);
+        new SearchServiceImpl(INVALID_URL, null, null);
     }
 
     @Test
     public void testConstructor() {
-        new SearchServiceImpl(VALID_URL, null);
+        new SearchServiceImpl(VALID_URL, null, null);
     }
 }

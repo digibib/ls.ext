@@ -111,7 +111,7 @@ public abstract class ResourceBase {
 
     public final SearchService getSearchService() {
         if (searchService == null) {
-            searchService = (SearchService) MonProxyFactory.monitor(new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService()));
+            searchService = (SearchService) MonProxyFactory.monitor(new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService(), getBaseURI()));
         }
         return searchService;
     }
