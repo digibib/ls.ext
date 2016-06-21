@@ -22,7 +22,7 @@ describe('searchBuilder', () => {
                     simple_query_string: {
                       query: queryWant,
                       default_operator: 'and',
-                      fields: ['mainTitle', 'partTitle', 'subject', 'agent']
+                      fields: ['mainTitle', 'partTitle', 'subject', 'agents']
                     }
                   }
                 ],
@@ -30,7 +30,7 @@ describe('searchBuilder', () => {
                 should: [
                   {
                     match: {
-                      'agent^2': queryWant
+                      'agents^2': queryWant
                     }
                   },
                   {
