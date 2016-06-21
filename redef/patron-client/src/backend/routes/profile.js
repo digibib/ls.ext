@@ -211,6 +211,27 @@ module.exports = (app) => {
       })
   })
 
+  app.put('/api/v1/profile/settings/password', jsonParser, (request, response) => {
+    fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+      method: 'PUT',
+      headers: {
+        'Cookie': request.session.kohaSession,
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({password: request.body.password})
+    }).then(res => {
+      console.log(res.status)
+      if (res.status === 200) {
+        response.sendStatus(200)
+      } else {
+        response.status(res.status).send(res.body)
+      }
+    }).catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
   app.get('/api/v1/profile/settings', (request, response) => {
     return fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
       method: 'GET',

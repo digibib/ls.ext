@@ -9,7 +9,6 @@ module.exports = (app) => {
   require('./libraries')(app)
   require('./registration')(app)
   require('./search')(app)
-  require('./patrons')(app)
 
   app.all('/services/*', requestProxy({
     url: 'http://services:8005/*'

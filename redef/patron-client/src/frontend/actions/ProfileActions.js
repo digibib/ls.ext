@@ -233,6 +233,57 @@ export function postProfileSettings (profileSettings, successAction) {
   }
 }
 
+export function requestPostPassword () {
+  return {
+    type: types.REQUEST_POST_PASSWORD
+  }
+}
+
+export function postPasswordFailure (error) {
+  console.log(error)
+  return {
+    type: types.POST_PASSWORD_FAILURE,
+    payload: error,
+    error: true
+  }
+}
+
+export function postPasswordSuccess () {
+  return {
+    type: types.POST_PASSWORD_SUCCESS
+  }
+}
+
+export function postPassword (password, successAction) {
+  const url = '/api/v1/profile/settings/password'
+  return dispatch => {
+    dispatch(requestPostPassword())
+    return fetch(url, {
+      method: 'put',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ password: password })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else {
+          throw Error('Unexpected status code')
+        }
+      })
+      .then(json => {
+        dispatch(postPasswordSuccess())
+        dispatch(receivePassword(json))
+        if (successAction) {
+          dispatch(successAction)
+        }
+      })
+      .catch(error => dispatch(postPasswordFailure(error)))
+  }
+}
+
 export function fetchAllProfileData () {
   return dispatch => {
     dispatch(fetchProfileInfo())
