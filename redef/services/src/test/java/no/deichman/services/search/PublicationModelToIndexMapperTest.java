@@ -31,7 +31,7 @@ public class PublicationModelToIndexMapperTest {
             + "        },\n"
             + "        \"role\": \"http://data.deichman.no/role#translator\"\n"
             + "    }],\n"
-            + "    \"agent\": [\"Ragde, Anne B.\",\"Falcinella, Cristina\"],\n"
+            + "    \"agents\": [\"Ragde, Anne B.\",\"Falcinella, Cristina\"],\n"
             + "    \"author\": \"Ragde, Anne B.\",\n"
             + "    \"translator\": \"Falcinella, Cristina\",\n"
             + "    \"firstPublicationYear\": \"2004\",\n"

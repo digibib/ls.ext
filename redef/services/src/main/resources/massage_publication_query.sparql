@@ -20,7 +20,7 @@ CONSTRUCT {
                deich:workUri ?workUri ;
                deich:subject ?subjectName ;
                deich:audience ?audience ;
-               deich:agent ?pubAgentName ;
+               deich:agents ?pubAgentName ;
                ?pubRoleURI ?pubAgentName ;
                deich:recordID ?recordId .
  ?pubContrib a deich:Contribution ;

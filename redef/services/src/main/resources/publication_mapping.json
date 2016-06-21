@@ -12,7 +12,7 @@
           "properties": {
             "uri": {
               "type": "string",
-              "index": "no"
+              "index": "not_analyzed"
             },
             "name": {
               "type": "string"
@@ -98,7 +98,7 @@
     "scriptWriter": {
       "type": "string"
     },
-    "agent": {
+    "agents": {
       "type": "string"
     },
     "actor": {

@@ -46,7 +46,7 @@ function initSimpleQuery (query) {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: ['mainTitle', 'partTitle', 'subject', 'agent']
+                fields: ['mainTitle', 'partTitle', 'subject', 'agents']
               }
             }
           ],
@@ -54,7 +54,7 @@ function initSimpleQuery (query) {
           should: [
             {
               match: {
-                'agent^2': query
+                'agents^2': query
               }
             },
             {
