@@ -8,6 +8,7 @@ class UserSettings extends React.Component {
   constructor (props) {
     super(props)
     this.handleSaveClick = this.handleSaveClick.bind(this)
+    this.handleChangePasswordClick = this.handleChangePasswordClick.bind(this)
   }
 
   handleSaveClick (event) {
@@ -33,6 +34,11 @@ class UserSettings extends React.Component {
       }
     }
     this.props.profileActions.postProfileSettings(profileSettings)
+  }
+
+  handleChangePasswordClick (event) {
+    event.preventDefault()
+    this.props.profileActions.changePassword(this.currentPasswordField.value, this.passwordField.value)
   }
 
   render () {
@@ -156,20 +162,20 @@ class UserSettings extends React.Component {
 
             <div className='change-pin-fields'>
               <h2><FormattedMessage {...messages.currentPin} /></h2>
-              <input type='text' name='current-pin' id='current-pin' />
+              <input type='text' name='current-pin' id='current-pin' ref={e => this.currentPinField = e} />
               <label htmlFor='current-pin'> <FormattedMessage {...messages.currentPin} /></label>
 
               <h2><FormattedMessage {...messages.newPin} /></h2>
-              <input type='text' name='new-pin' id='new-pin' />
+              <input type='text' name='new-pin' id='new-pin' ref={e => this.pinField = e} />
               <label htmlFor='new-pin'><FormattedMessage {...messages.repeatPin} /></label>
 
               <h2><FormattedMessage {...messages.repeatPin} /></h2>
-              <input type='text' name='repeat-pin' id='repeat-pin' />
+              <input type='text' name='repeat-pin' id='repeat-pin' ref={e => this.repeatPinField = e} />
               <label htmlFor='repeat-pin'><FormattedMessage {...messages.repeatPin} /></label>
             </div>
           </section>
           <footer>
-            <button className='black-btn' type='button'><FormattedMessage {...messages.changePin} /><br /></button>
+            <button className='black-btn' type='button' onClick={this.handleChangePasswordClick}><FormattedMessage {...messages.changePin} /><br /></button>
           </footer>
         </div>
       </div>

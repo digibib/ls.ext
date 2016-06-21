@@ -233,54 +233,53 @@ export function postProfileSettings (profileSettings, successAction) {
   }
 }
 
-export function requestPostPassword () {
+export function requestChangePassword () {
   return {
-    type: types.REQUEST_POST_PASSWORD
+    type: types.REQUEST_CHANGE_PASSWORD
   }
 }
 
-export function postPasswordFailure (error) {
+export function changePasswordFailure (error) {
   console.log(error)
   return {
-    type: types.POST_PASSWORD_FAILURE,
+    type: types.CHANGE_PASSWORD_FAILURE,
     payload: error,
     error: true
   }
 }
 
-export function postPasswordSuccess () {
+export function changePasswordSuccess () {
   return {
-    type: types.POST_PASSWORD_SUCCESS
+    type: types.CHANGE_PASSWORD_SUCCESS
   }
 }
 
-export function postPassword (password, successAction) {
+export function changePassword (oldPassword, newPassword, confirmPassword, successAction) {
   const url = '/api/v1/profile/settings/password'
   return dispatch => {
-    dispatch(requestPostPassword())
+    if (newPassword !== confirmPassword) {
+      return dispatch(changePasswordFailure({ message: 'passwordsNotEqual' }))
+    }
+    dispatch(requestChangePassword())
     return fetch(url, {
       method: 'put',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ password: password })
+      body: JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword })
     })
       .then(response => {
         if (response.status === 200) {
-          return response.json()
+          dispatch(changePasswordSuccess())
+          if (successAction) {
+            dispatch(successAction)
+          }
         } else {
           throw Error('Unexpected status code')
         }
       })
-      .then(json => {
-        dispatch(postPasswordSuccess())
-        dispatch(receivePassword(json))
-        if (successAction) {
-          dispatch(successAction)
-        }
-      })
-      .catch(error => dispatch(postPasswordFailure(error)))
+      .catch(error => dispatch(changePasswordFailure(error)))
   }
 }
 

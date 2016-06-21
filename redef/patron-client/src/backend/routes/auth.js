@@ -1,6 +1,7 @@
 const fetch = require('isomorphic-fetch')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
+const bcrypt = require('bcrypt-nodejs')
 
 module.exports = (app) => {
   app.post('/api/v1/login', jsonParser, (request, response) => {
@@ -17,15 +18,15 @@ module.exports = (app) => {
       })
       .then(res => {
         if (res.status === 201) {
-          request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
-
           fetch(`http://koha:8081/api/v1/patrons?userid=${request.body.username}`, {
             method: 'GET',
             headers: {
-              'Cookie': request.session.kohaSession
+              'Cookie': app.settings.kohaSession
             }
           }).then(res => res.json())
             .then(json => {
+              request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
+              request.session.passwordHash = bcrypt.hashSync(request.body.password)
               request.session.borrowerNumber = json[ 0 ].borrowernumber
               response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
             })

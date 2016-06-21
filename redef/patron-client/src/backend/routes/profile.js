@@ -2,13 +2,14 @@ const fetch = require('isomorphic-fetch')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
+const bcrypt = require('bcrypt-nodejs')
 
 module.exports = (app) => {
   app.get('/api/v1/profile/info', (request, response) => {
     fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
       method: 'GET',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {
@@ -38,7 +39,7 @@ module.exports = (app) => {
     fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
       method: 'PUT',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       },
       body: JSON.stringify(patron)
     }).then(res => {
@@ -96,7 +97,7 @@ module.exports = (app) => {
     return fetch(`http://koha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`, {
       method: 'GET',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {
@@ -116,7 +117,7 @@ module.exports = (app) => {
     return fetch(`http://koha:8081/api/v1/biblios/${hold.biblionumber}`, {
       method: 'GET',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {
@@ -149,7 +150,7 @@ module.exports = (app) => {
     return fetch(`http://koha:8081/api/v1/checkouts?borrowernumber=${request.session.borrowerNumber}`, {
       method: 'GET',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {
@@ -169,7 +170,7 @@ module.exports = (app) => {
     return fetch(`http://koha:8081/api/v1/items/${loan.itemnumber}/biblio`, {
       method: 'GET',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {
@@ -194,7 +195,7 @@ module.exports = (app) => {
     fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
       method: 'PUT',
       headers: {
-        'Cookie': request.session.kohaSession,
+        'Cookie': app.settings.kohaSession,
         'Content-type': 'application/json'
       },
       body: JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings(request.body))
@@ -212,31 +213,35 @@ module.exports = (app) => {
   })
 
   app.put('/api/v1/profile/settings/password', jsonParser, (request, response) => {
-    fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
-      method: 'PUT',
-      headers: {
-        'Cookie': request.session.kohaSession,
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({password: request.body.password})
-    }).then(res => {
-      console.log(res.status)
-      if (res.status === 200) {
-        response.sendStatus(200)
-      } else {
-        response.status(res.status).send(res.body)
-      }
-    }).catch(error => {
+    if (bcrypt.compareSync(request.body.oldPassword, request.session.passwordHash)) {
+      fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+        method: 'PUT',
+        headers: {
+          'Cookie': app.settings.kohaSession,
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ password: request.body.newPassword })
+      }).then(res => {
+        console.log(res.status)
+        if (res.status === 200) {
+          response.sendStatus(200)
+        } else {
+          response.status(res.status).send(res.body)
+        }
+      }).catch(error => {
         console.log(error)
         response.sendStatus(500)
       })
+    } else {
+      response.status(403).send('Old password is not correct')
+    }
   })
 
   app.get('/api/v1/profile/settings', (request, response) => {
     return fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
       method: 'GET',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {

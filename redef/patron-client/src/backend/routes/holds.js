@@ -7,7 +7,7 @@ module.exports = (app) => {
     fetch('http://koha:8081/api/v1/holds', {
       method: 'POST',
       headers: {
-        'Cookie': request.session.kohaSession
+        'Cookie': app.settings.kohaSession
       },
       body: JSON.stringify({
         borrowernumber: Number(request.session.borrowerNumber),
