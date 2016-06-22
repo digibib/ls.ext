@@ -14,27 +14,23 @@ CONSTRUCT {
                deich:firstPublicationYear ?workPublicationYear ;
                deich:audience ?audience ;
                deich:hasHoldingBranch ?branch ;
-               deich:contributor ?pubContrib ;
+               deich:contributor ?contrib ;
                deich:hasImage ?img ;
                deich:hasImageAll ?allImg ;
                deich:workUri ?workUri ;
                deich:subject ?subjectName ;
                deich:audience ?audience ;
-               deich:agents ?pubAgentName ;
-               ?pubRoleURI ?pubAgentName ;
+               deich:agents ?contribAgentName ;
+               ?contribRoleURI ?contribAgentName ;
                deich:recordID ?recordId .
- ?pubContrib a deich:Contribution ;
-               deich:role ?pubRole ;
-               deich:agent ?pubAgent ;
+    ?contrib a deich:Contribution ;
+               deich:role ?contribRole ;
+               deich:agent ?contribAgent ;
                deich:mainEntry ?mainEntry .
-   ?pubAgent a deich:Agent ;
-               deich:name ?pubAgentName ;
-               deich:birthYear ?pubAgentBirthYear ;
-               deich:deathYear ?pubAgentDeathYear .
-      ?agent a deich:Agent ;
-               deich:name ?name ;
-               deich:birthYear ?birthYear ;
-               deich:deathYear ?deathYear .
+?contribAgent a deich:Agent ;
+               deich:name ?contribAgentName ;
+               deich:birthYear ?contribAgentBirthYear ;
+               deich:deathYear ?contribAgentDeathYear .
       ?subject deich:name ?subjectName .
 }
 WHERE {
@@ -84,21 +80,18 @@ WHERE {
   OPTIONAL { ?pub deich:mainTitle ?pubMainTitle }
   OPTIONAL { ?pub deich:partTitle ?pubPartTitle }
   OPTIONAL { ?pub deich:hasHoldingBranch ?branch }
-  OPTIONAL { ?pub deich:contributor ?pubContrib .
-             ?pubContrib a deich:Contribution ;
-                          deich:agent ?pubAgent ;
-                          deich:role ?pubRoleURI .
-             ?pubAgent deich:name ?pubAgentName .
-             BIND(str(?pubRoleURI) AS ?pubRole)
-             OPTIONAL {
-                 ?workContrib a deich:MainEntry ;
-                             deich:agent ?pubAgent ;
-                             deich:role ?pubRoleURI .
-                 BIND(true as ?mainEntry) .
-             }
+  OPTIONAL {
+             { ?pub deich:contributor ?contrib } UNION { ?work deich:contributor ?contrib }
+             ?contrib a deich:Contribution ;
+                      deich:agent ?contribAgent ;
+                      deich:role ?contribRoleURI .
+             ?contribAgent deich:name ?contribAgentName .
+             BIND(str(?contribRoleURI) AS ?contribRole)
+             OPTIONAL { ?contrib a deich:MainEntry . BIND(true as ?mainEntry) . }
   }
-  OPTIONAL { ?pubAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?pubAgentBirthYear) }
-  OPTIONAL { ?pubAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?pubAgentDeathYear) }
+
+  OPTIONAL { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }
+  OPTIONAL { ?contribAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?contribAgentDeathYear) }
 
   OPTIONAL { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
   OPTIONAL { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
