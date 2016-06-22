@@ -67,7 +67,7 @@ class Registration extends React.Component {
   render () {
     const {
       fields: {
-        firstName, lastName, day, month, year, email, mobile, address, zipcode, city, country, pin, confirmPin, library
+        firstName, lastName, day, month, year, email, mobile, address, zipcode, city, country, pin, repeatPin, library
       },
       submitting
     } = this.props
@@ -158,9 +158,10 @@ class Registration extends React.Component {
               <h2>Velg deg en pin kode</h2>
               <input name='code' type='password' id='code' {...pin} />
               <label htmlFor='code'>Velg deg en kode</label>
-              <input name='code' type='password' id='code' {...confirmPin} />
+              <input name='code' type='password' id='code' {...repeatPin} />
               <label htmlFor='code'>Bekreft PIN</label>
               {this.getValidator(pin)}
+              {this.getValidator(repeatPin)}
               <h2>Velg "Din filial"</h2>
               <div className='select-container'>
                 <Libraries libraries={this.props.libraries} selectProps={library} />
@@ -221,7 +222,7 @@ const messages = defineMessages({
   genericRegistrationError: {
     id: 'Registration.genericRegistrationError',
     description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
-    defaultMessage: 'Something went wrong when attempting to extend loan!'
+    defaultMessage: 'Something went wrong when registering loaner. Please try again later.'
   },
   registerAsLoaner: {
     id: 'Registration.registerAsLoaner',
@@ -314,9 +315,9 @@ const messages = defineMessages({
     defaultMessage: 'Invalid email address'
   },
   pinMustBeEqual: {
-    id: 'Registration.pinMustBeEqual',
-    description: 'Displayed when the pin and confirm pin is not equal',
-    defaultMessage: 'Must be equal'
+    id: 'Registration.pinsMustBeEqual',
+    description: 'Displayed when the pin and repeat pin is not equal',
+    defaultMessage: 'PINs must be equal'
   }
 })
 
@@ -324,7 +325,6 @@ Registration.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
   registrationActions: PropTypes.object.isRequired,
-  isRequestingRegistration: PropTypes.bool.isRequired,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   libraries: PropTypes.object.isRequired,
@@ -339,7 +339,6 @@ Registration.propTypes = {
 function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
-    isRequestingRegistration: state.reservation.isRequestingRegistration,
     loginError: state.application.loginError,
     libraries: state.application.libraries,
     initialValues: {
@@ -401,8 +400,8 @@ const validate = values => {
   }
   if (!values.pin) {
     errors.pin = messages.required
-  } else if (values.pin !== values.confirmPin) {
-    errors.pin = messages.pinMustBeEqual
+  } else if (values.pin !== values.repeatPin) {
+    errors.repeatPin = messages.pinMustBeEqual
   }
   if (!values.library) {
     errors.library = messages.required
@@ -413,7 +412,7 @@ const validate = values => {
 export default reduxForm(
   {
     form: 'registration',
-    fields: [ 'firstName', 'lastName', 'day', 'month', 'year', 'email', 'mobile', 'address', 'zipcode', 'city', 'country', 'gender', 'pin', 'confirmPin', 'history', 'library', 'readTerms' ],
+    fields: [ 'firstName', 'lastName', 'day', 'month', 'year', 'email', 'mobile', 'address', 'zipcode', 'city', 'country', 'gender', 'pin', 'repeatPin', 'history', 'library', 'readTerms' ],
     validate
   },
   mapStateToProps,

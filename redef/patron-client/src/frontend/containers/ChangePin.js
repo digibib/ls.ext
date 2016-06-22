@@ -90,11 +90,6 @@ class ChangePin extends React.Component {
 }
 
 const messages = defineMessages({
-  xxx: {
-    id: 'ChangePin.xxx',
-    description: 'xxx',
-    defaultMessage: 'xxx'
-  },
   changePin: {
     id: 'ChangePin.changePin',
     description: 'The change PIN code header and button text',

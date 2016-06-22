@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
 const sanitizeHtml = require('sanitize-html')
-const mysql = require('mysql')
+// const mysql = require('mysql')
 
 module.exports = (app) => {
   app.post('/api/v1/registration', jsonParser, (request, response) => {
@@ -75,8 +75,12 @@ module.exports = (app) => {
   }
 
   function sanitize (dirtyInput) {
-    return mysql.escape(sanitizeHtml(dirtyInput, {
+    // TODO: Fix. mysql.escape returns quoted output
+    // return mysql.escape(sanitizeHtml(dirtyInput, {
+    //   allowedTags: []
+    // }))
+    sanitizeHtml(dirtyInput, {
       allowedTags: []
-    }))
+    })
   }
 }
