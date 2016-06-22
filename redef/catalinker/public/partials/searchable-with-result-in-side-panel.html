@@ -35,7 +35,11 @@ on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},
 on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
 value="{{./current.displayValue}}"/>
 {{#if isAdvancedQuery(./current.displayValue)}}
-<span class="advanced-search-legend">Du bruker nå avansert søk. Trykk Enter for å søke.</span>
+<span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Du bruker nå avansert søk. Trykk Enter for å søke.</span>
+{{else}}
+{{#if config.search[../../selectedIndexType].legend}}
+<span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
+{{/if}}
 {{/if}}
 
 {{/if}}

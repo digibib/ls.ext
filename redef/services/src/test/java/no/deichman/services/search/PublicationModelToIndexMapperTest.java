@@ -34,6 +34,7 @@ public class PublicationModelToIndexMapperTest {
             + "    }],\n"
             + "    \"agents\": [\"Ragde, Anne B.\",\"Falcinella, Cristina\"],\n"
             + "    \"author\": \"Ragde, Anne B.\",\n"
+            + "    \"mainEntryName\": \"Ragde, Anne B.\",\n"
             + "    \"translator\": \"Falcinella, Cristina\",\n"
             + "    \"firstPublicationYear\": \"2004\",\n"
             + "    \"norwegianTitle\": \"Berlinerpoplene\",\n"

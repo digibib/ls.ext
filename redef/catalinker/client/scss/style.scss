@@ -324,6 +324,11 @@ body {
           padding-right: 1.5em;
         }
         span.advanced-search-legend {
+          span.ui-icon {
+            display: inline-block;
+            height: 14px;
+            margin: 0 3px -2px 0;
+          }
           position: absolute;
           font-size: 0.7em;
           font-style: italic;

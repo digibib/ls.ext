@@ -52,6 +52,7 @@
     "Subject": "deichman:Subject",
     "role": "deichman:role",
     "mainEntry": "deichman:mainEntry",
+    "mainEntryName": "deichman:mainEntryName",
     "agent": "deichman:agent",
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",

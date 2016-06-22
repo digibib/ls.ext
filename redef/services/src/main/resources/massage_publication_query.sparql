@@ -22,6 +22,7 @@ CONSTRUCT {
                deich:audience ?audience ;
                deich:agents ?contribAgentName ;
                ?contribRoleURI ?contribAgentName ;
+               deich:mainEntryName ?mainEntryName ;
                deich:recordID ?recordId .
     ?contrib a deich:Contribution ;
                deich:role ?contribRole ;
@@ -87,7 +88,11 @@ WHERE {
                       deich:role ?contribRoleURI .
              ?contribAgent deich:name ?contribAgentName .
              BIND(str(?contribRoleURI) AS ?contribRole)
-             OPTIONAL { ?contrib a deich:MainEntry . BIND(true as ?mainEntry) . }
+             OPTIONAL {
+                ?contrib a deich:MainEntry .
+                BIND(true as ?mainEntry) .
+                ?contribAgent deich:name ?mainEntryName .
+             }
   }
 
   OPTIONAL { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }

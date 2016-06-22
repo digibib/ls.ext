@@ -638,8 +638,11 @@ module.exports = (app) => {
           selectIndexLabel: 'Utgivelse',
           queryTerms: [
             { field: 'recordId'},
-            { field: 'mainTitle', wildcard: true}
+            { field: 'mainTitle', wildcard: true},
+            { field: 'subTitle', wildcard: true},
+            { field: 'mainEntryName', wildcard: true}
           ],
+          legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
           resultItemLabelProperties: [ 'creator', 'mainTitle', 'subTitle', 'publicationYear', 'recordId' ],
           itemHandler: 'publicationItemHandler'
         }

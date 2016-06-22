@@ -144,6 +144,9 @@
     },
     "coreographer": {
       "type": "string"
+    },
+    "mainEntryName": {
+      "type": "string"
     }
   }
 }
