@@ -271,7 +271,7 @@ When(/^jeg sletter eksisterende forfatter på verket$/) do
   statements.push(
     RDF::Statement.new(
         RDF::URI.new(@context[:work_identifier]),
-        RDF::URI.new(client.addr+"/ontology#contributor"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#contributor"),
         bnode
       )
     )
@@ -279,27 +279,27 @@ When(/^jeg sletter eksisterende forfatter på verket$/) do
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new(client.addr+"/ontology#Contribution"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#Contribution"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new(client.addr+"/ontology#MainEntry"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#MainEntry"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new(client.addr+"/ontology#agent"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#agent"),
         RDF::URI.new(@context[:person_identifier])
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new(client.addr+"/ontology#role"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#role"),
         RDF::URI.new("http://data.deichman.no/role#author")
       )
     )
@@ -336,7 +336,7 @@ When(/^velger person fra en treffliste$/) do
   statements.push(
     RDF::Statement.new(
         RDF::URI.new(@context[:work_identifier]),
-        RDF::URI.new(client.addr+"/ontology#contributor"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#contributor"),
         bnode
       )
     )
@@ -344,27 +344,27 @@ When(/^velger person fra en treffliste$/) do
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new(client.addr+"/ontology#Contribution"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#Contribution"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new(client.addr+"/ontology#MainEntry"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#MainEntry"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new(client.addr+"/ontology#agent"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#agent"),
         RDF::URI.new(@context[:person_identifier])
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new(client.addr+"/ontology#role"),
+        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#role"),
         RDF::URI.new("http://data.deichman.no/role#author")
       )
     )
