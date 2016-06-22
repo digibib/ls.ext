@@ -86,22 +86,8 @@ Given(/^at jeg er i katalogiseringsgrensesnittet$/) do
   @site.RegWork.visit
 end
 
-Given(/^at det er en feil i systemet for katalogisering$/) do
-  `sudo docker stop redef_services_container`
-  @cleanup.push("restarting redef_services_container" =>
-                    lambda do
-                      `sudo docker start redef_services_container`
-                      sleep 15 # give container time to get up running properly for next tests
-                    end
-  )
-end
-
 Given(/^at systemet har returnert en ny ID for det nye verket$/) do
   step "leverer systemet en ny ID for det nye verket"
-end
-
-Given(/^at det er en feil i systemet som behandler katalogisering$/) do
-  pending # express the regexp above with the code you wish you had
 end
 
 Given(/^at verket har en tittel$/) do
