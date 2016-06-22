@@ -6,7 +6,7 @@ require_relative '../support/context_structs.rb'
 Given(/^at jeg har en ontologi som beskriver (verk|utgivelse)$/) do | resource_name |
   client = ServicesAPIClient.new()
   class_statement = RDF::Statement::new(
-    RDF::URI.new("#{client.addr}/ontology##{Resource.type_from_name(resource_name)}"),
+    RDF::URI.new("http://#{host}:#{port(:services)}/ontology##{Resource.type_from_name(resource_name)}"),
     RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
     RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#Class")
       )
