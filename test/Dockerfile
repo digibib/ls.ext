@@ -20,7 +20,7 @@ RUN wget --quiet http://heanet.dl.sourceforge.net/project/ubuntuzilla/mozilla/ap
 RUN wget --quiet http://chromedriver.storage.googleapis.com/2.22/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && rm chromedriver_linux64.zip
 
-RUN wget --quiet https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
+RUN wget --quiet https://github.com/Medium/phantomjs/releases/download/v2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
     bzip2 -d phantomjs-2.1.1-linux-x86_64.tar.bz2 && \
     tar -f phantomjs-2.1.1-linux-x86_64.tar -x phantomjs-2.1.1-linux-x86_64/bin/phantomjs && \
     mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin &&\
