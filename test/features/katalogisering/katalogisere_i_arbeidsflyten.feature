@@ -80,6 +80,24 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
+  Scenario: Slette utgivelse
+    Gitt at jeg har en bok
+    Og at det finnes et verk med forfatter
+    Når jeg legger inn forfatternavnet på startsida
+    Og velger verket fra lista tilkoplet forfatteren
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Så husker jeg tittelnummeret til senere
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Så jeg skriver verdien på tittelnummer i feltet som heter "Utgivelser" og trykker enter
+    Så velger jeg en utgivelse fra treffliste fra utgivelsesregisteret
+    Så trykker jeg på "Slett utgivelsen"-knappen
+    Så trykker jeg på "Slett"-knappen i dialogen
+    Så trykker jeg på "Ok"-knappen i dialogen
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Så jeg skriver verdien på tittelnummer i feltet som heter "Utgivelser" og trykker enter
+    Så får jeg ingen treff
+
   Scenario: Opprette autoriteter underveis i katalogisering
     Gitt at jeg har en bok
     Og jeg legger inn et nytt navn på startsida
