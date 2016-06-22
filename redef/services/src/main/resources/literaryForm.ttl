@@ -25,10 +25,10 @@ literaryForm:drama a duo:LiteraryForm ;
   duo:code "s" ;
   rdfs:label "Skuespill"@no ;
   rdfs:label "Drama"@en .
-literaryForm:cartoon a duo:LiteraryForm ;
+literaryForm:comicBook a duo:LiteraryForm ;
   duo:code "t" ;
   rdfs:label "Tegneserie"@no ;
-  rdfs:label "Cartoon"@en .
+  rdfs:label "Comic book"@en .
 literaryForm:anthology a duo:LiteraryForm ;
   duo:code "a" ;
   rdfs:label "Antologi"@no ;
