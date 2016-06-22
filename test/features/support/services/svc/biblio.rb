@@ -10,7 +10,7 @@ module SVC
   class Biblio < Service
 
     def add
-      http = Net::HTTP.new(host, 8081)
+      http = Net::HTTP.new("koha", 8081)
       res = http.get("/cgi-bin/koha/svc/authentication?userid=#{ENV['KOHA_ADMINUSER']}&password=#{ENV['KOHA_ADMINPASS']}")
       res.body.should_not include("failed")
       @context[:svc_cookie] = res.response['set-cookie']

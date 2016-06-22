@@ -17,7 +17,7 @@ module Paths
       :catalinker => 8010,
       :patron_client => 8000,
       :services => 8005,
-      :email_api => 8100,
+      :email_api => 8000,
       :triplestore => 3030
     }
     raise ArgumentError, "Invalid port argument" unless port && ports[port.to_sym]
@@ -35,7 +35,7 @@ module Paths
   end
 
   def opac
-    "http://#{host}:#{port(:koha_opac)}"
+    "http://koha:#{port(:koha_opac)}"
   end
 
   def intranet(path=nil)
@@ -82,7 +82,7 @@ module Paths
       :koha_rest_api => "/api/v1/"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://#{host}:#{port(:koha_intra)}#{paths[path.to_sym]}"
+    "http://koha:#{port(:koha_intra)}#{paths[path.to_sym]}"
   end
 
   def catalinker(path=nil)
@@ -99,7 +99,7 @@ module Paths
         :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://#{host}:#{port(:catalinker)}#{paths[path.to_sym]}"
+    "http://catalinker:#{port(:catalinker)}#{paths[path.to_sym]}"
   end
 
   def patron_client(path=nil)
@@ -112,11 +112,11 @@ module Paths
       user_info: '/profile/info'
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://#{host(:patron_client)}:#{port(:patron_client)}#{paths[path.to_sym]}"
+    "http://patron-client:#{port(:patron_client)}#{paths[path.to_sym]}"
   end
 
   def patron_client_search_page()
-    "http://#{host}:#{port(:patron_client)}/"
+    "http://patron-client:#{port(:patron_client)}/"
   end
 
   def services(path=nil)
@@ -125,7 +125,7 @@ module Paths
       :publication => "/publication"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://#{host}:#{port(:services)}#{paths[path.to_sym]}"
+    "http://services:#{port(:services)}#{paths[path.to_sym]}"
   end
 
   def triplestore(path=nil)
@@ -133,7 +133,7 @@ module Paths
       :work => "/sparql"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://#{host}:#{port(:triplestore)}#{paths[path.to_sym]}"
+    "http://fuseki:#{port(:triplestore)}#{paths[path.to_sym]}"
   end
 
 end

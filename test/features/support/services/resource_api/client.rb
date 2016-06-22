@@ -12,7 +12,7 @@ class ServicesAPIClient < Service
   end
 
   def addr
-    "http://#{host}:#{port(:services)}"
+    "http://services:#{port(:services)}"
   end
 
   def get_ontology()
@@ -30,7 +30,8 @@ class ServicesAPIClient < Service
   end
 
   def get_resource(resource)
-    RDF::Graph.load(URI(resource), format: :jsonld)
+    u = URI.parse(resource)
+    RDF::Graph.load(URI("#{self.addr}#{u.path}"), format: :jsonld)
   end
 
   def patch_resource(resource, statements, op="add")
@@ -47,14 +48,14 @@ class ServicesAPIClient < Service
     req = Net::HTTP::Patch.new(uri.path)
     req.add_field('Content-Type', 'application/ldpatch+json')
     req.body = patches.to_json
-    res = Net::HTTP.new(uri.host, uri.port).request(req)
+    res = Net::HTTP.new("services", port(:services)).request(req)
     expect(res.code).to eq("200"), "got unexpected #{res.code} when patching resource"
     res
   end
 
   def remove_resource(resource)
     uri = URI(resource)
-    res = Net::HTTP::new(uri.host, uri.port).delete(uri.path)
+    res = Net::HTTP::new("services", port(:services)).delete(uri.path)
     expect(res.code).to eq("204"), "got unexpected #{res.code} when removing resource"
     res
   end

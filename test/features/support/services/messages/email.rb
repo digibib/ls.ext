@@ -13,7 +13,7 @@ module Messaging
     end
 
     def api
-      "http://#{host}:#{port(:email_api)}"
+      "http://smtp:#{port(:email_api)}"
     end
 
     def status
