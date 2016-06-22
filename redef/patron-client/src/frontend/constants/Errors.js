@@ -8,5 +8,9 @@ export default {
     GENERIC_RESERVATION_ERROR: 'genericReservationError',
     GENERIC_EXTEND_LOAN_ERROR: 'genericExtendLoanError',
     GENERIC_CANCEL_RESERVATION_ERROR: 'genericCancelReservationError'
+  },
+  profile: {
+    CURRENT_PIN_NOT_CORRRECT: 'currentPinNotCorrect',
+    GENERIC_CHANGE_PIN_ERROR: 'genericChangePinError'
   }
 }

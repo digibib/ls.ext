@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
+import Errors from '../constants/Errors'
 
 export function requestProfileSettings () {
   return {
@@ -254,12 +255,9 @@ export function changePasswordSuccess () {
   }
 }
 
-export function changePassword (oldPassword, newPassword, confirmPassword, successAction) {
+export function changePassword (currentPassword, newPassword, successAction) {
   const url = '/api/v1/profile/settings/password'
   return dispatch => {
-    if (newPassword !== confirmPassword) {
-      return dispatch(changePasswordFailure({ message: 'passwordsNotEqual' }))
-    }
     dispatch(requestChangePassword())
     return fetch(url, {
       method: 'put',
@@ -267,7 +265,7 @@ export function changePassword (oldPassword, newPassword, confirmPassword, succe
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword })
+      body: JSON.stringify({ currentPassword: currentPassword, newPassword: newPassword })
     })
       .then(response => {
         if (response.status === 200) {
@@ -275,8 +273,10 @@ export function changePassword (oldPassword, newPassword, confirmPassword, succe
           if (successAction) {
             dispatch(successAction)
           }
+        } else if (response.status === 403) {
+          throw Error(Errors.profile.CURRENT_PIN_NOT_CORRRECT)
         } else {
-          throw Error('Unexpected status code')
+          throw Error(Errors.profile.GENERIC_CHANGE_PIN_ERROR)
         }
       })
       .catch(error => dispatch(changePasswordFailure(error)))

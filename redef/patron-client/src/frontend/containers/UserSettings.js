@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
+import ChangePin from './ChangePin'
 
 class UserSettings extends React.Component {
   constructor (props) {
     super(props)
     this.handleSaveClick = this.handleSaveClick.bind(this)
-    this.handleChangePasswordClick = this.handleChangePasswordClick.bind(this)
   }
 
   handleSaveClick (event) {
@@ -36,13 +36,8 @@ class UserSettings extends React.Component {
     this.props.profileActions.postProfileSettings(profileSettings)
   }
 
-  handleChangePasswordClick (event) {
-    event.preventDefault()
-    this.props.profileActions.changePassword(this.currentPasswordField.value, this.passwordField.value)
-  }
-
   render () {
-    const {settings} = this.props
+    const { settings } = this.props
     if (this.props.isRequestingSettings || Object.keys(settings).length === 0) {
       return <div />
     } else if (this.props.settingsError) {
@@ -84,16 +79,16 @@ class UserSettings extends React.Component {
               </li>
               {/* <li className='patron-placeholder'>
 
-                <input data-automation-id='??'
-                       type='checkbox' name='user-settings-reminder-dont-send'
-                       id='user-settings-reminder-dont-send'
-                       ref={e => this.reminderOfDueDateEmailCheckbox = e}
-                       defaultChecked={settings.alerts.reminderOfDueDate.email} />
-                <label
-                  htmlFor='user-settings-reminder-email'><span></span>
-                  <span>Nei, ikke send</span></label>
+               <input data-automation-id='??'
+               type='checkbox' name='user-settings-reminder-dont-send'
+               id='user-settings-reminder-dont-send'
+               ref={e => this.reminderOfDueDateEmailCheckbox = e}
+               defaultChecked={settings.alerts.reminderOfDueDate.email} />
+               <label
+               htmlFor='user-settings-reminder-email'><span></span>
+               <span>Nei, ikke send</span></label>
 
-              </li> */}
+               </li> */}
             </ul>
           </div>
 
@@ -150,34 +145,7 @@ class UserSettings extends React.Component {
                   onClick={this.handleSaveClick}><FormattedMessage {...messages.save} /></button>
         </footer>
 
-        <div className='change-pin-container'>
-          <header>
-            <h1><FormattedMessage {...messages.changePin} /></h1>
-          </header>
-
-          <section className='change-pin'>
-            <div className='important'>
-              <p><FormattedMessage {...messages.pinInfo} /></p>
-            </div>
-
-            <div className='change-pin-fields'>
-              <h2><FormattedMessage {...messages.currentPin} /></h2>
-              <input type='text' name='current-pin' id='current-pin' ref={e => this.currentPinField = e} />
-              <label htmlFor='current-pin'> <FormattedMessage {...messages.currentPin} /></label>
-
-              <h2><FormattedMessage {...messages.newPin} /></h2>
-              <input type='text' name='new-pin' id='new-pin' ref={e => this.pinField = e} />
-              <label htmlFor='new-pin'><FormattedMessage {...messages.repeatPin} /></label>
-
-              <h2><FormattedMessage {...messages.repeatPin} /></h2>
-              <input type='text' name='repeat-pin' id='repeat-pin' ref={e => this.repeatPinField = e} />
-              <label htmlFor='repeat-pin'><FormattedMessage {...messages.repeatPin} /></label>
-            </div>
-          </section>
-          <footer>
-            <button className='black-btn' type='button' onClick={this.handleChangePasswordClick}><FormattedMessage {...messages.changePin} /><br /></button>
-          </footer>
-        </div>
+        <ChangePin />
       </div>
     )
   }
@@ -241,31 +209,6 @@ const messages = defineMessages({
     id: 'UserSettings.byEmail',
     description: 'The label for the by email option',
     defaultMessage: 'By email'
-  },
-  changePin: {
-    id: 'UserSettings.changePin',
-    description: 'The change PIN code header and button text',
-    defaultMessage: 'Change PIN code'
-  },
-  pinInfo: {
-    id: 'UserSettings.pinInfo',
-    description: 'Important information about PIN codes',
-    defaultMessage: 'Important information, read this: New passwords must be provided in the form of a 4 digit PIN code. Do not use PIN codes that you have used other places. Choose a PIN code that noone can guess. Avoid PINs such as 1111 and 1234.'
-  },
-  currentPin: {
-    id: 'UserSettings.currentPin',
-    description: 'The label for the current PIN input',
-    defaultMessage: 'Current PIN code'
-  },
-  newPin: {
-    id: 'UserSettings.newPin',
-    description: 'The label for the new PIN input',
-    defaultMessage: 'New PIN code'
-  },
-  repeatPin: {
-    id: 'UserSettings.repeatPin',
-    description: 'The label for the input where the new PIN is repeated',
-    defaultMessage: 'Repeat PIN code'
   },
   settingsError: {
     id: 'UserSettings.settingsError',

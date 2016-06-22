@@ -418,4 +418,4 @@ export default reduxForm(
   },
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(intlRegistration))
+)(intlRegistration)

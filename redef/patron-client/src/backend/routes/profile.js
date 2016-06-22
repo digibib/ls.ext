@@ -213,7 +213,7 @@ module.exports = (app) => {
   })
 
   app.put('/api/v1/profile/settings/password', jsonParser, (request, response) => {
-    if (bcrypt.compareSync(request.body.oldPassword, request.session.passwordHash)) {
+    if (bcrypt.compareSync(request.body.currentPassword, request.session.passwordHash)) {
       fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
         method: 'PUT',
         headers: {
@@ -224,6 +224,7 @@ module.exports = (app) => {
       }).then(res => {
         console.log(res.status)
         if (res.status === 200) {
+          request.session.passwordHash = bcrypt.hashSync(request.body.newPassword)
           response.sendStatus(200)
         } else {
           response.status(res.status).send(res.body)
