@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'pp'
-require 'headless'
 
 # TODO: Should pull report dir (if any) from cucumber command options
 REPORT_DIR = 'report'
@@ -33,14 +32,7 @@ Before do
 end
 
 Before do |scenario|
-  if scenario.source_tag_names.include?("@xvfb") and !ENV['BROWSER']
-    # Run scenarios tagged @xvfb with firefox in a virual framebuffer
-    @headless = Headless.new
-    @headless.start
-    @browser = @browser || (Watir::Browser.new :firefox)
-  else
-    @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-  end
+  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
   @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
   @site = @site || Site.new(@browser)
 end

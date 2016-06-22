@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     apt-get clean
 
 RUN add-apt-repository ppa:brightbox/ruby-ng
-RUN apt-get update && apt-get install -y --force-yes ruby2.2 ruby2.2-dev xvfb && apt-get clean
+RUN apt-get update && apt-get install -y --force-yes ruby2.2 ruby2.2-dev && apt-get clean
 
 RUN wget --quiet http://heanet.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_45.0.1-0ubuntu1_amd64.deb && \
     dpkg -i firefox-mozilla-build_45.0.1-0ubuntu1_amd64.deb && \
@@ -34,8 +34,7 @@ RUN gem install \
     rdf \
     json-ld \
     rest-client \
-    nokogiri \
-    headless
+    nokogiri
 
 RUN gem install cucumber -v 2.4.0
 RUN gem install selenium-webdriver -v 2.48.1

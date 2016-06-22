@@ -36,7 +36,6 @@ class GlobalSetup
 
     SVC::Preference.new(@growser).set("pref_noItemTypeImages", "1")
     @growser.close if @growser
-    @headless.destroy if @headless
   end
 end
 
