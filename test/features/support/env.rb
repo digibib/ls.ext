@@ -5,6 +5,7 @@ require 'pry-nav' # https://banisterfiend.wordpress.com/2012/02/14/the-pry-ecosy
 
 require 'rspec'
 require 'securerandom'
+require 'uri'
 
 BROWSER_WAIT_TIMEOUT = 5 # timeout for waiting for elements to appear using Watir::Wait.until {}
 
@@ -90,4 +91,11 @@ class CheckboxHelper
       raise "Label for checkbox with id #{checkbox.id} not found!"
     end
   end
+end
+
+def proxy_to_services(uri)
+  new_uri = URI.parse(uri)
+  new_uri.host = "services"
+  new_uri.port = 8005
+  return new_uri.to_s
 end

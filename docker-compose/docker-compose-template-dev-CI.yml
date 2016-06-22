@@ -237,7 +237,7 @@ services:
   catalinker:
     container_name: redef_catalinker_container
     build:
-      context: /vagrant/redef/catalinker
+      context: "${LSEXTPATH}/redef/catalinker"
       dockerfile: Dockerfile
     networks:
       - backend
@@ -259,15 +259,15 @@ services:
   build_services:
     container_name: build_services
     build:
-      context: /vagrant/redef/services
+      context: "${LSEXTPATH}/redef/services"
       dockerfile: Dockerfile.build
     volumes:
-      - /vagrant/redef/services/build:/services/build
+      - "${LSEXTPATH}/redef/services/build:/services/build"
 
   services:
     container_name: redef_services_container
     build:
-      context: /vagrant/redef/services
+      context: "${LSEXTPATH}/redef/services"
       dockerfile: Dockerfile
     networks:
       - backend
@@ -301,7 +301,7 @@ services:
   patron-client:
     container_name: redef_patron_client_container
     build:
-      context: /vagrant/redef/patron-client
+      context: "${LSEXTPATH}/redef/patron-client"
       dockerfile: Dockerfile
     networks:
       - backend
@@ -320,7 +320,7 @@ services:
   overview:
     container_name: overview_container
     build:
-      context: /vagrant/redef/overview
+      context: "${LSEXTPATH}/redef/overview"
     networks:
       - backend
     ports:
@@ -347,12 +347,12 @@ services:
   cuke_tests:
     container_name: cuke_tests
     build:
-      context: /vagrant/test
+      context: "${LSEXTPATH}/test"
     networks:
       - backend
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /vagrant/test:/tests
+      - "${LSEXTPATH}/test:/tests"
     environment:
       HOST: "${HOST}"
       KOHA_ADMINPASS: "${KOHA_ADMINPASS}"

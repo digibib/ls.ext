@@ -6,7 +6,8 @@ require 'pry'
 module RandomMigrate
   class Entity
     def initialize(type, services)
-      @services = services
+      @services = "http://services:8005"
+      @host = "http://#{ENV['HOST']}:8005"
       @type = type.downcase
       @literals = Hash.new
       @authorized_values = Hash.new
@@ -28,25 +29,25 @@ module RandomMigrate
     def add_item(available, placement, branchcode)
       barcode = SecureRandom.hex(8)
       type = "item-#{barcode}"
-      add_raw("<publication> <#{@services}/ontology#hasItem> <#{type}> .
-               <#{type}> <#{@services}/itemSubfieldCode/a> \"#{branchcode}\" .
-               <#{type}> <#{@services}/itemSubfieldCode/b> \"#{branchcode}\" .
-               <#{type}> <#{@services}/itemSubfieldCode/l> \"12\" .
-               <#{type}> <#{@services}/itemSubfieldCode/o> \"#{placement}\" .
-               <#{type}> <#{@services}/itemSubfieldCode/p> \"#{barcode}\" .
-               <#{type}> <#{@services}/itemSubfieldCode/t> \"#{@raw.size}\" .
-               <#{type}> <#{@services}/itemSubfieldCode/y> \"l\" .
-               #{"<#{type}> <#{@services}/itemSubfieldCode/q> \"2011-06-20\" ." unless available}"
+      add_raw("<publication> <#{@host}/ontology#hasItem> <#{type}> .
+               <#{type}> <#{@host}/itemSubfieldCode/a> \"#{branchcode}\" .
+               <#{type}> <#{@host}/itemSubfieldCode/b> \"#{branchcode}\" .
+               <#{type}> <#{@host}/itemSubfieldCode/l> \"12\" .
+               <#{type}> <#{@host}/itemSubfieldCode/o> \"#{placement}\" .
+               <#{type}> <#{@host}/itemSubfieldCode/p> \"#{barcode}\" .
+               <#{type}> <#{@host}/itemSubfieldCode/t> \"#{@raw.size}\" .
+               <#{type}> <#{@host}/itemSubfieldCode/y> \"l\" .
+               #{"<#{type}> <#{@host}/itemSubfieldCode/q> \"2011-06-20\" ." unless available}"
       )
     end
 
     def to_ntriples()
-      ntriples = "<#{@type}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology##{@type.capitalize}> .\n"
+      ntriples = "<#{@type}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology##{@type.capitalize}> .\n"
       @literals.each do |predicate, value|
-        ntriples << "<#{@type}> <#{@services}/ontology##{predicate}> \"#{value}\" .\n"
+        ntriples << "<#{@type}> <#{@host}/ontology##{predicate}> \"#{value}\" .\n"
       end
       @authorized_values.each do |predicate, value|
-        ntriples << "<#{@type}> <#{@services}/ontology##{predicate}> <#{value}> .\n"
+        ntriples << "<#{@type}> <#{@host}/ontology##{predicate}> <#{value}> .\n"
       end
       @raw.each do |raw|
         ntriples << "#{raw}\n"
@@ -56,9 +57,10 @@ module RandomMigrate
   end
 
   class Migrator
-    def initialize(services)
+    def initialize(host)
       @id = generate_random_string
-      @services = services
+      @host = host
+      @services = "http://services:8005"
       @formats = %w(Audiobook Book DVD Microfiche Compact_Disc Blu-ray_Audio E-book)
       @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/jpn http://lexvo.org/id/iso639-3/swe)
       @audiences = %w(juvenile ages11To12 ages13To15 ages13To15)
@@ -71,32 +73,32 @@ module RandomMigrate
 
     def generate_person()
       person_name = generate_random_string
-      ntriples = "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Person> .
-                  <person> <#{@services}/ontology#name> \"#{person_name}\" ."
+      ntriples = "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Person> .
+                  <person> <#{@host}/ontology#name> \"#{person_name}\" ."
       return person_name, ntriples
     end
 
     def generate_work(person_uri, prefix = '')
       work_title = generate_random_string
       work_part_title = generate_random_string
-      ntriples = "<work> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Work> .
-                  <work> <#{@services}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
-                  <work> <#{@services}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
-                  <work> <#{@services}/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
-                  <work> <#{@services}/ontology#contributor> _:c1 .
-                  _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Contribution> .
-                  _:c1 <#{@services}/ontology#agent> <#{person_uri}> .
-                  _:c1 <#{@services}/ontology#role> <http://data.deichman.no/role#author> ."
+      ntriples = "<work> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Work> .
+                  <work> <#{@host}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
+                  <work> <#{@host}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
+                  <work> <#{@host}/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
+                  <work> <#{@host}/ontology#contributor> _:c1 .
+                  _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Contribution> .
+                  _:c1 <#{@host}/ontology#agent> <#{person_uri}> .
+                  _:c1 <#{@host}/ontology#role> <http://data.deichman.no/role#author> ."
       return work_title, ntriples
     end
 
     def generate_publication(work_uri, language = nil, prefix = nil)
       publication_title = generate_random_string
-      ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@services}/ontology#Publication> .
-                  <publication> <#{@services}/ontology#publicationOf> <#{work_uri}> .
-                  <publication> <#{@services}/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
-                  <publication> <#{@services}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <publication> <#{@services}/ontology#language> <#{language || @languages.sample}> ."
+      ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Publication> .
+                  <publication> <#{@host}/ontology#publicationOf> <#{work_uri}> .
+                  <publication> <#{@host}/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
+                  <publication> <#{@host}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
+                  <publication> <#{@host}/ontology#language> <#{language || @languages.sample}> ."
       return publication_title, ntriples
     end
 
@@ -186,9 +188,9 @@ module RandomMigrate
     end
 
     def get_record_data(work_uri, publication_uri)
-      res = RestClient.get "#{work_uri}/items"
+      res = RestClient.get "#{proxy_to_services(work_uri)}/items"
       items = JSON.parse(res)
-      res = RestClient.get "#{publication_uri}"
+      res = RestClient.get "#{proxy_to_services(publication_uri)}"
       publication = JSON.parse(res)
       return {
         :publication_recordid => publication["deichman:recordID"],
@@ -199,7 +201,7 @@ module RandomMigrate
     def get_record_ids
       record_ids = []
       @publication_uris.each do | uri |
-        res = RestClient.get "#{uri}"
+        res = RestClient.get "#{proxy_to_services(uri)}"
         record_ids << JSON.parse(res)["deichman:recordID"]
       end
       record_ids

@@ -57,7 +57,7 @@ def post_publication_ntriples(publication_title, ntriples)
   response = RestClient.post "http://services:8005/publication", ntriples, :content_type => 'application/n-triples'
   response.code.should == 201
   @context[:publication_identifier] = response.headers[:location]
-  @context[:publication_recordid] = JSON.parse(RestClient.get(@context[:publication_identifier]))["deichman:recordID"]
+  @context[:publication_recordid] = JSON.parse(RestClient.get(proxy_to_services(@context[:publication_identifier])))["deichman:recordID"]
   @context[:publication_maintitle] = publication_title
 end
 
@@ -79,6 +79,8 @@ When(/^jeg sørger for at utgivelsen er synkronisert i Koha$/) do
   if @context[:publication_identifier].to_s.empty?
     fail
   end
-  response = RestClient.put "#{@context[:publication_identifier]}/sync", {}
+  id = @context[:publication_identifier]
+  id = id[id.rindex("/")...id.length]
+  response = RestClient.put "http://services:#{port(:services)}/publication#{id}/sync", {}
   response.code.should == 202
 end

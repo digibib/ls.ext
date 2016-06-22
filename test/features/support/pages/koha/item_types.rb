@@ -36,6 +36,7 @@ class ItemTypes < AdminPage
     @browser.execute_script("document.getElementById('description').value = '" + desc + "'")
 
     form.submit
+
     self
   end
 

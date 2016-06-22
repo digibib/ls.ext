@@ -17,7 +17,7 @@ Given(/^at det finnes en superbruker$/) do
     categorydesc = generateRandomString
 
     @site.Branches.visit.create(branchname, branchcode)
-    @site.PatronCategories.visit.create(categorycode, categorydesc, "Staff")
+    @site.PatronCategories.visit.create(categorycode, categorydesc, "S")
     @site.Patrons.visit.create(categorydesc, "Super", "Librarian", "super", "secret")
     @site.PatronDetails.set_permission("superlibrarian")
     # Maybe unneccessary step to validate automat user has correct permission

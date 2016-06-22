@@ -13,12 +13,12 @@ class PatronCategories < AdminPage
     self
   end
 
-  def create(code, desc, type="Adult", enrollment_months=1)
+  def create(code, desc, type="A", enrollment_months=1)
     @browser.link(:id => "newcategory").click
     form = @browser.form(:id => "category_form")
     form.text_field(:id => "categorycode").set code
     form.text_field(:id => "description").set desc
-    form.select_list(:id => "category_type").select type
+    form.select_list(:id => "category_type").select_value type
     form.text_field(:id => "enrolmentperiod").set enrollment_months.to_s  # Months
     form.submit
     # Make sure we succeeded

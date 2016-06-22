@@ -36,9 +36,11 @@ lint:
 
 
 test: lint run-test-instance
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) -p 7080:8080 -p 6666:6666 dockercompose_catalinker npm test
+	sudo docker exec $(MODULE_TEST_CONTAINER) npm test
 	@echo "*** Log from module test container"
 	sudo docker logs $(MODULE_TEST_CONTAINER)
+	sudo docker stop $(MODULE_TEST_CONTAINER)
+	sudo docker rm $(MODULE_TEST_CONTAINER)
 
 run-dev-debug: rm
 	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name $(CONTAINER) dockercompose_catalinker npm run-script start-dev-debug

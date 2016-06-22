@@ -235,7 +235,7 @@ services:
   catalinker:
     container_name: redef_catalinker_container
     build:
-      context: /vagrant/redef/catalinker
+      context: "${LSEXTPATH}/redef/catalinker"
       dockerfile: Dockerfile-dev
     networks:
       - backend
@@ -263,15 +263,15 @@ services:
   build_services:
     container_name: build_services
     build:
-      context: /vagrant/redef/services
+      context: "${LSEXTPATH}/redef/services"
       dockerfile: Dockerfile.build
     volumes:
-      - /vagrant/redef/services/build:/services/build
+      - "${LSEXTPATH}/redef/services/build:/services/build"
 
   services:
     container_name: redef_services_container
     build:
-      context: /vagrant/redef/services
+      context: "${LSEXTPATH}/redef/services"
       dockerfile: Dockerfile
     networks:
       - backend
@@ -283,8 +283,6 @@ services:
       - "8005:8005"
       - "8006:8006"
       - "5070:5070"
-    volumes:
-      - /vagrant/redef/services/build:/services/build
     environment:
       KOHA_MYSQL_USER: "${KOHA_ADMINUSER}"
       KOHA_MYSQL_PASS: "${KOHA_ADMINPASS}"
@@ -311,7 +309,7 @@ services:
     depends_on:
       - services
     build:
-      context: /vagrant/redef/patron-client
+      context: "${LSEXTPATH}/redef/patron-client"
       dockerfile: Dockerfile-dev
     volumes:
       - /mnt/patron-client_src:/usr/src/app/src
@@ -332,7 +330,7 @@ services:
   overview:
     container_name: overview_container
     build:
-      context: /vagrant/redef/overview
+      context: "${LSEXTPATH}/redef/overview"
     networks:
       - backend
     ports:
@@ -359,12 +357,12 @@ services:
   cuke_tests:
     container_name: cuke_tests
     build:
-      context: /vagrant/test
+      context: "${LSEXTPATH}/test"
     networks:
       - backend
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /vagrant/test:/tests
+      - "${LSEXTPATH}/test:/tests"
     environment:
       HOST: "${HOST}"
       KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
@@ -394,7 +392,7 @@ services:
   migration:
     container_name: migration
     build:
-      context: /vagrant/docker-compose/dockerfiles/migration
+      context: "${LSEXTPATH}/docker-compose/dockerfiles/migration"
       args:
         - MYSQL_DATABASE=koha_${KOHA_INSTANCE}
         - MYSQL_USER=${KOHA_ADMINUSER}
