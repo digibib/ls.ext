@@ -148,13 +148,13 @@ class Registration extends React.Component {
                 <input name='country' type='text' id='country' {...country} />
                 {this.getValidator(country)}
               </address>
-              <h2><FormattedMessage {...messages.gender} /></h2>
-              <div className='select-container'>
-                <select>
-                  <option>Mann</option>
-                  <option>Kvinne</option>
-                </select>
-              </div>
+              {/* <h2><FormattedMessage {...messages.gender} /></h2>
+               <div className='select-container'>
+               <select>
+               <option>Mann</option>
+               <option>Kvinne</option>
+               </select>
+               </div> */}
               <h2>Velg deg en pin kode</h2>
               <input name='code' type='password' id='code' {...pin} />
               <label htmlFor='code'>Velg deg en kode</label>
@@ -323,9 +323,7 @@ const messages = defineMessages({
 Registration.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
-  loanActions: PropTypes.object.isRequired,
   registrationActions: PropTypes.object.isRequired,
-  checkoutId: PropTypes.string.isRequired,
   isRequestingRegistration: PropTypes.bool.isRequired,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -345,19 +343,7 @@ function mapStateToProps (state) {
     loginError: state.application.loginError,
     libraries: state.application.libraries,
     initialValues: {
-      firstName: 'Patron',
-      lastName: 'McPatronface',
-      year: '1980',
-      month: '12',
-      day: '09',
-      email: 'test@example.com',
-      address: 'Skyline road 45',
-      zipcode: '8811',
-      city: 'Oslow',
-      country: 'Norway',
-      pin: '4444',
-      confirmPin: '4444',
-      library: 'fnya'
+      library: Object.keys(state.application.libraries)[ 0 ] // Makes sure this field has a value even if it is not touched
     }
   }
 }
@@ -394,6 +380,9 @@ const validate = values => {
     errors.email = messages.required
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
     errors.email = messages.invalidEmail
+  }
+  if (!values.mobile) {
+    errors.mobile = messages.required
   }
   if (!values.address) {
     errors.address = messages.required

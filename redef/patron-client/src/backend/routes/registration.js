@@ -12,7 +12,8 @@ module.exports = (app) => {
       surname: request.body.lastName,
       dateofbirth: `${request.body.year}-${request.body.month}-${request.body.day}`,
       email: request.body.email,
-      address: sanitize(request.body.address),
+      mobile: request.body.mobile,
+      address: sanitize(request.body.address), // TODO: Finish sanitization
       zipcode: request.body.zipcode,
       city: request.body.city,
       password: request.body.pin,
