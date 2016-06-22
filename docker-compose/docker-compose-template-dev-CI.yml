@@ -350,10 +350,7 @@ services:
     networks:
       - backend
     volumes:
-      - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
-      - /lib/x86_64-linux-gnu/libsystemd-journal.so.0:/lib/x86_64-linux-gnu/libsystemd-journal.so.0
-      - /vagrant/pillar:/srv/pillar
       - /vagrant/test:/tests
     environment:
       HOST: "${HOST}"

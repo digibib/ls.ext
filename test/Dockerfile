@@ -6,8 +6,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     software-properties-common \
-    lxc \
-    chromium-browser && \
+    chromium-browser \
+    apparmor && \
     apt-get clean
 
 RUN add-apt-repository ppa:brightbox/ruby-ng
@@ -41,9 +41,7 @@ RUN gem install cucumber -v 2.4.0
 RUN gem install selenium-webdriver -v 2.48.1
 RUN gem install watir-webdriver -v 0.9.1
 
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && \
-  echo "deb http://apt.dockerproject.org/repo ubuntu-trusty main" | tee /etc/apt/sources.list.d/docker.list && \
-  apt-get update && apt-get install -y docker-engine && apt-get clean
+RUN wget https://get.docker.com/builds/Linux/x86_64/docker-1.10.3 && mv docker-1.10.3 /usr/bin/docker && chmod +x /usr/bin/docker
 
 VOLUME ["/tests"]
 WORKDIR /tests
