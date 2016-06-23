@@ -396,7 +396,7 @@ end
 
 
 When(/^trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
-  @browser.button(:text => button_label).wait_until_present(BROWSER_WAIT_TIMEOUT)
+  @browser.button(:text => button_label).wait_until_present(BROWSER_WAIT_TIMEOUT*5)
   @browser.button(:text => button_label).click
 end
 

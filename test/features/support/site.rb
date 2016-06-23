@@ -23,6 +23,7 @@ class Site
         'utgivelsesår' => 'publicationYear',
         'sidetall' => 'numberOfPages',
         'språk' => 'language',
+        'tittelnummer' => 'publication_record_id',
         'første' => 1,
         'andre' => 2,
         'tredje' => 3,
