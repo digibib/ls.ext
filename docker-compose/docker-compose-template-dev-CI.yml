@@ -38,6 +38,7 @@ services:
       NLVENDORURL: "${NLVENDORURL}"
       NLVENDORUSER: "${NLVENDORUSER}"
       NLVENDORPASS: "${NLVENDORPASS}"
+      NLVENDORKEY: "${NLVENDORKEY}"
     ports:
       - "6001:6001"
       - "8080:8080"
