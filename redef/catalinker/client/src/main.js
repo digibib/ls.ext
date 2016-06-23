@@ -574,7 +574,7 @@
 
     var fetchExistingResource = function (resourceUri, options) {
       options = options || {}
-      return axios.get(resourceUri)
+      return axios.get(proxyToServices(resourceUri))
         .then(function (response) {
             updateInputsForResource(response, resourceUri, options)
           }
@@ -640,7 +640,7 @@
     }
 
     var loadPredefinedValues = function (url, property) {
-      return axios.get(url)
+      return axios.get(proxyToServices(url))
         .then(function (response) {
           var values = ensureJSON(response.data)
           // resolve all @id uris
@@ -1155,7 +1155,7 @@
         var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype)
         if (patch && patch.trim() !== '' && patch.trim() !== '[]') {
           ractive.set('save_status', 'arbeider...')
-          axios.patch(subject, patch, {
+          axios.patch(proxyToServices(subject), patch, {
             headers: {
               Accept: 'application/ld+json',
               'Content-Type': 'application/ldpatch+json'
@@ -1304,7 +1304,7 @@
             })
           }
           ractive.set('save_status', 'arbeider...')
-          return axios.patch(mainSubject, JSON.stringify(patch), {
+          return axios.patch(proxyToServices(mainSubject), JSON.stringify(patch), {
             headers: {
               Accept: 'application/ld+json',
               'Content-Type': 'application/ldpatch+json'
