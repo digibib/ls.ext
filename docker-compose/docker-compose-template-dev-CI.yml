@@ -5,6 +5,9 @@ networks:
   backend:
     driver: bridge
 
+volumes:
+  mysqlsocket:
+
 services:
   koha:
     container_name: koha_container
@@ -45,6 +48,8 @@ services:
     volumes_from:
       - koha_index
       - koha_state
+    volumes:
+      - mysqlsocket:/var/run/mysqld
     logging:
       driver: "json-file"
       options:
@@ -65,6 +70,7 @@ services:
       - "--max_allowed_packet=64M"
       - "--wait_timeout=6000"
       - "--bind-address=0.0.0.0"
+      - "--socket=/tmp/mysql/mysqld.sock"
     environment:
       MYSQL_DATABASE: "koha_${KOHA_INSTANCE}"
       MYSQL_PASSWORD: "${KOHA_ADMINPASS}"
@@ -74,6 +80,8 @@ services:
       - "3306:3306"
     volumes_from:
       - koha_mysql_data
+    volumes:
+      - mysqlsocket:/tmp/mysql
     logging:
       driver: "json-file"
       options:
