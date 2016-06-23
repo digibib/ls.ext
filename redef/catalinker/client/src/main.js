@@ -154,6 +154,7 @@
               text: 'Slett',
               id: `${idPrefix}-do-del-pub`,
               click: function () {
+                ractive.set('deletePublicationDialog.error', null)
                 axios.delete(uri)
                   .then(function (response) {
                     unloadResourceForDomain('Publication')
@@ -1918,7 +1919,7 @@
                     if (event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri) {
                       var targetUri = ractive.get(`targetUri.${event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri}`)
                       if (targetUri) {
-                        updateBrowserLocationWithUri(event.context.afterSuccess.targetUriType, targetUri)
+                        updateBrowserLocationWithUri(event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri, targetUri)
                       }
                     }
                     if (event.context.afterSuccess.gotoTab !== undefined) {
