@@ -34,13 +34,15 @@ data-automation-id="{{dataAutomationId}}"
 on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
 on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
 value="{{./current.displayValue}}"/>
+<span class="legend">
 {{#if isAdvancedQuery(./current.displayValue)}}
-<span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Du bruker nå avansert søk. Trykk Enter for å søke.</span>
+    <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Du bruker nå avansert søk. Trykk Enter for å søke.</span>
 {{else}}
-{{#if config.search[../../selectedIndexType].legend}}
-<span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
+    {{#if config.search[../../selectedIndexType].legend}}
+        <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
+    {{/if}}
 {{/if}}
-{{/if}}
+</span>
 
 {{/if}}
 <a class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>

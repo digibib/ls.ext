@@ -16,6 +16,7 @@ class Site
         'emne' => 'subject',
         'sjanger' => 'genre',
         'hovedtittel' => "mainTitle",
+        'verkshovedtittel' => "work_maintitle",
         'undertittel' => "subtitle",
         'bidrag' => 'Contribution',
         'rolle' => 'role',

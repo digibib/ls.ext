@@ -75,6 +75,7 @@ module.exports = (app) => {
             {
               rdfProperty: 'prefLabel',
               displayValueSource: true,
+              type: 'input-string',
               // after resource is created, the value entered
               // in input marked with this is used to populate displayValue of the parent input
               preFillFromSearchField: true
@@ -208,7 +209,7 @@ module.exports = (app) => {
                     dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
                     id: 'mainEntryPersonInput',
                     widgetOptions: {
-                      showSelectWork: true, // show and enable select work radio button
+                      showSelectItem: true, // show and enable select work radio button
                       enableCreateNewResource: {
                         formRefs: [ {
                           formId: 'create-person-form',
@@ -382,7 +383,7 @@ module.exports = (app) => {
                     nameProperties: [ 'name' ],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
-                      showSelectWork: false, // show and enable select work radio button
+                      showSelectItem: false, // show and enable select work radio button
                       enableCreateNewResource: {
                         formRefs: [ {
                           formId: 'create-serial-form',
@@ -406,6 +407,13 @@ module.exports = (app) => {
           deleteResource: {
             buttonLabel: 'Slett utgivelsen',
             resourceType: 'Publication',
+            dialogKeypath: 'deletePublicationDialog',
+            dialogId: 'delete-publication-dialog',
+            dialogTemplateValues: {
+              work: 'workMainTitle',
+              title: 'publicationMainTitle',
+              creator: 'mainEntryPersonInput'
+            },
             afterSuccess: {
               gotoTab: 0,
               setResourceInDocumentUrlFromTargetUri: 'Work'
@@ -440,6 +448,19 @@ module.exports = (app) => {
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Beskriv verket'
+          },
+          deleteResource: {
+            buttonLabel: 'Slett verket',
+            resourceType: 'Work',
+            dialogKeypath: 'deleteWorkDialog',
+            dialogId: 'delete-work-dialog',
+            dialogTemplateValues: {
+              title: 'workMainTitle',
+              creator: 'mainEntryPersonInput'
+            },
+            afterSuccess: {
+              gotoTab: 0
+            }
           }
         },
         {
@@ -522,7 +543,7 @@ module.exports = (app) => {
                     indexTypes: 'person',
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
-                      showSelectWork: false, // show and enable select work radio button
+                      showSelectItem: false, // show and enable select work radio button
                       enableCreateNewResource: {
                         formRefs: [ {
                           formId: 'create-person-form',
@@ -567,13 +588,23 @@ module.exports = (app) => {
               widgetOptions: {
                 editWithTemplate: "workflow"
               }
+            },
+            {
+              searchMainResource: {
+                label: 'Verk',
+                indexType: 'workUnstructured'
+              },
+              widgetOptions: {
+                editWithTemplate: "workflow",
+                editSubItemWithTemplate: "workflow"
+              }
             }
-
           ]
         }
       ],
       search: {
         person: {
+          type: 'person',
           selectIndexLabel: 'Person',
           queryTerms: [{
             field: 'name',
@@ -581,9 +612,11 @@ module.exports = (app) => {
           }],
           resultItemLabelProperties: [ 'name' ],
           resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
-          itemHandler: 'personItemHandler'
+          itemHandler: 'personItemHandler',
+          subItemsExpandTooltip: 'Vis/skjul verk'
         },
         subject: {
+          type: 'subject',
           selectIndexLabel: 'Generelt',
           queryTerms: [{
             field: 'prefLabel',
@@ -592,6 +625,7 @@ module.exports = (app) => {
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         work: {
+          type: 'work',
           structuredQuery: true,
           selectIndexLabel: 'Verk',
           queryTerms: [{
@@ -602,7 +636,23 @@ module.exports = (app) => {
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
         },
+        workUnstructured: {
+          type: 'work',
+          selectIndexLabel: 'Verk',
+          queryTerms: [
+            { field: 'mainTitle', wildcard: true },
+            { field: 'partTitle', wildcard: true },
+            { field: 'subtitle', wildcard: true },
+            { field: 'publicationYear' }
+          ],
+          legend: 'Søk etter tittel og/eller utgivelsesår',
+          resultItemLabelProperties: [ 'mainTitle', 'subTitle', 'publicationYear' ],
+          resultItemDetailsLabelProperties: [ 'creator' ],
+          itemHandler: 'workItemHandler',
+          subItemsExpandTooltip: 'Vis/skjul utgivelser' 
+        },
         genre: {
+          type: 'genre',
           selectIndexLabel: 'Sjanger',
           queryTerms: [{
             field: 'prefLabel',
@@ -611,6 +661,7 @@ module.exports = (app) => {
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         publisher: {
+          type: 'publisher',
           selectIndexLabel: 'Utgiver',
           queryTerms: [{
             field: 'name',
@@ -619,6 +670,7 @@ module.exports = (app) => {
           resultItemLabelProperties: [ 'name' ]
         },
         place: {
+          type: 'place',
           selectIndexLabel: 'Sted',
           queryTerms: [{
             field: 'prefLabel',
@@ -627,6 +679,7 @@ module.exports = (app) => {
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         },
         serial: {
+          type: 'serial',
           selectIndexLabel: 'Serie',
           queryTerms: [{
             field: 'name',
@@ -635,6 +688,7 @@ module.exports = (app) => {
           resultItemLabelProperties: [ 'name' ]
         },
         publication: {
+          type: 'publication',
           selectIndexLabel: 'Utgivelse',
           queryTerms: [
             { field: 'recordId'},

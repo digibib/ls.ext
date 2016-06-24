@@ -323,6 +323,12 @@ body {
         .searchable {
           padding-right: 1.5em;
         }
+        span.legend {
+          display: none;
+        }
+        .searchable:focus + span.legend {
+          display: inline;
+        }
         span.advanced-search-legend {
           span.ui-icon {
             display: inline-block;
@@ -378,6 +384,9 @@ body {
             margin: 0;
             font-size:90%;
             font-style: italic;
+          }
+          .toggle-show-sub-items {
+            cursor: pointer;
           }
         }
         .subject-type-select {

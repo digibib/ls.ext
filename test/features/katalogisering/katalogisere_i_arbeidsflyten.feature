@@ -80,6 +80,20 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
+  Scenario: Slette verk
+    Gitt at jeg har en bok
+    Og at det finnes et verk med forfatter
+    Når jeg legger inn forfatternavnet på startsida
+    Og velger verket fra lista tilkoplet forfatteren
+    Så fjerner jeg hovedinnførselen
+    Så klikker jeg på fanen "Beskriv verk"
+    Så trykker jeg på "Slett verket"-knappen
+    Så trykker jeg på "Slett"-knappen i dialogen
+    Så trykker jeg på "Ok"-knappen i dialogen
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og jeg skriver verdien på verkshovedtittel i feltet som heter "Verk" og trykker enter
+    Så får jeg ingen treff
+
   Scenario: Slette utgivelse
     Gitt at jeg har en bok
     Og at det finnes et verk med forfatter

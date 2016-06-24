@@ -43,9 +43,9 @@ end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
   wait_for{
-    @browser.span(:class => "toggle-show-works").present?
+    @browser.span(:class => "toggle-show-sub-items").present?
   }
-  @browser.spans(:class => "toggle-show-works")[0].click
+  @browser.spans(:class => "toggle-show-sub-items")[0].click
   @browser.inputs(:class => "select-work-radio")[0].click
 end
 
@@ -264,6 +264,10 @@ end
 
 When(/^fjerner jeg den første biinførselen$/) do
   @browser.as(:xpath => "//*[@id='confirm-addedentry']//a[@class='delete']")[0].click
+end
+
+When(/^fjerner jeg hovedinnførselen$/) do
+  @browser.as(:xpath => "//*[@id='confirm-person']//a[@class='delete']")[0].click
 end
 
 When(/^at jeg skriver inn serie i feltet for serie og trykker enter$/) do
@@ -534,7 +538,7 @@ When(/^sjekker jeg at overskriften viser informasjon om hva som blir katalogiser
   end
 end
 
-When(/^jeg skriver verdien på (tittelnummer) i feltet som heter "([^"]*)" og trykker enter$/) do |concept, label|
+When(/^jeg skriver verdien på (tittelnummer|verkshovedtittel) i feltet som heter "([^"]*)" og trykker enter$/) do |concept, label|
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.set(@context[@site.translate(concept).to_sym])
   field.send_keys :enter
@@ -542,4 +546,8 @@ end
 
 When(/^husker jeg tittelnummeret til senere$/) do
   @context[:publication_record_id] = /.*biblionumber=([0-9]*)/.match(@browser.a(:data_automation_id => 'biblio_record_link').attribute_value('href'))[1]
+end
+
+When(/^klikker jeg på fanen "([^"]*)"$/) do |tab_label|
+  @browser.a(:xpath => "//a[@role='tab'][normalize-space()='#{tab_label}']").click
 end

@@ -138,68 +138,66 @@
       updateBrowserLocationWithUri(domainType, null)
     }
 
-    var deleteResource = function (uri, resourceType, success) {
-      if (resourceType === 'Publication') {
-        ractive.set('deletePublicationDialog.work', valueOfInputByInputId('workMainTitle'))
-        ractive.set('deletePublicationDialog.title', valueOfInputByInputId('publicationMainTitle'))
-        ractive.set('deletePublicationDialog.creator', valueOfInputByInputId('mainEntryPersonInput'))
-        ractive.set('deletePublicationDialog.error', null)
-        var idPrefix = _.uniqueId()
-        $('#delete-publication-dialog').dialog({
-          resizable: false,
-          modal: true,
-          width: 450,
-          buttons: [
-            {
-              text: 'Slett',
-              id: `${idPrefix}-do-del-pub`,
-              click: function () {
-                ractive.set('deletePublicationDialog.error', null)
-                axios.delete(uri)
-                  .then(function (response) {
-                    unloadResourceForDomain('Publication')
-                    $(`#${idPrefix}-do-del-pub, #${idPrefix}-cancel-del-pub`).hide()
-                    $(`#${idPrefix}-ok-del-pub`).show()
-                    ractive.set('deletePublicationDialog.deleted', true)
-                    $(this).dialog('close')
-                    return response
-                  })
-                  .catch(function (response) {
-                    if (response.status === 400 && response.data.numberOfItemsLeft) {
-                      ractive.set('deletePublicationDialog.error', { itemsLeft: { numberOfItemsLeft: response.data.numberOfItemsLeft } })
-                    } else {
-                      ractive.set('deletePublicationDialog.error.message', 'Noe gikk galt under sletting.')
-                      $(`#${idPrefix}-do-del-pub, #${idPrefix}-ok-del-pub`).hide()
-                      $(`#${idPrefix}-cancel-del-pub`).show()
-                    }
-                  })
-              }
-            },
-            {
-              text: 'Avbryt',
-              id: `${idPrefix}-cancel-del-pub`,
-              click: function () {
-                $(this).dialog('close')
-                ractive.set('deletePublicationDialog', null)
-              }
-            },
-            {
-              text: 'Ok',
-              id: `${idPrefix}-ok-del-pub`,
-              click: function () {
-                $(this).dialog('close')
-                ractive.set('deletePublicationDialog', null)
-                if (success) {
-                  success()
-                }
+    var deleteResource = function (uri, deleteConfig, success) {
+      _.each(_.pairs(deleteConfig.dialogTemplateValues), function (pair) {
+        ractive.set(`${deleteConfig.dialogKeypath}.${pair[ 0 ]}`, valueOfInputByInputId(pair[ 1 ]))
+      })
+      ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
+      var idPrefix = _.uniqueId()
+      $(`#${deleteConfig.dialogId}`).dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        buttons: [
+          {
+            text: 'Slett',
+            id: `${idPrefix}-do-del`,
+            click: function () {
+              ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
+              axios.delete(uri)
+                .then(function (response) {
+                  unloadResourceForDomain(deleteConfig.resourceType)
+                  $(`#${idPrefix}-do-del, #${idPrefix}-cancel-del`).hide()
+                  $(`#${idPrefix}-ok-del`).show()
+                  ractive.set(`${deleteConfig.dialogKeypath}.deleted`, true)
+                  $(this).dialog('close')
+                  return response
+                })
+                .catch(function (response) {
+                  if (response.status === 400 && response.data.numberOfItemsLeft) {
+                    ractive.set(`${deleteConfig.dialogKeypath}.error`, { itemsLeft: { numberOfItemsLeft: response.data.numberOfItemsLeft } })
+                  } else {
+                    ractive.set(`${deleteConfig.dialogKeypath}.error.message`, 'Noe gikk galt under sletting.')
+                    $(`#${idPrefix}-do-del, #${idPrefix}-ok-del`).hide()
+                    $(`#${idPrefix}-cancel-del`).show()
+                  }
+                })
+            }
+          },
+          {
+            text: 'Avbryt',
+            id: `${idPrefix}-cancel-del`,
+            click: function () {
+              $(this).dialog('close')
+              ractive.set(deleteConfig.dialogKeypath, null)
+            }
+          },
+          {
+            text: 'Ok',
+            id: `${idPrefix}-ok-del`,
+            click: function () {
+              $(this).dialog('close')
+              ractive.set(deleteConfig.dialogKeypath, null)
+              if (success) {
+                success()
               }
             }
-          ],
-          open: function () {
-            $(`#${idPrefix}-ok-del-pub`).hide()
           }
-        })
-      }
+        ],
+        open: function () {
+          $(`#${idPrefix}-ok-del`).hide()
+        }
+      })
     }
 
     function i18nLabelValue (label) {
@@ -315,7 +313,7 @@
           ractive.update()
         }
       } else {
-        axios.get(uri).then(function (response) {
+        axios.get(proxyToServices(uri)).then(function (response) {
           var graphData = ensureJSON(response.data)
           var root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
@@ -359,6 +357,7 @@
       queryParameters[ 'template' ] = template
       oldUri.query = URI.buildQuery(queryParameters)
       history.replaceState('', '', URI.build(oldUri))
+      updateBrowserLocationWithTab(undefined)
     }
 
     function updateBrowserLocationWithSuggestionParameter (parameter, value) {
@@ -1130,6 +1129,8 @@
           return item
         },
         personItemHandler: function (personItem) {
+          personItem.subItems = personItem.work
+          personItem.subItemType = 'work'
           personItem.lifeSpan = ''
           if (personItem.birthYear) {
             personItem.lifeSpan += '(' + personItem.birthYear + '–'
@@ -1141,6 +1142,8 @@
           return personItem
         },
         workItemHandler: function (workItem) {
+          workItem.subItems = workItem.publications
+          workItem.subItemType = 'publication'
           return mainEntryContributor(workItem)
         },
         publicationItemHandler: function (publicationItem) {
@@ -1214,7 +1217,9 @@
           'suggestor-for-input-literal',
           'select-predefined-value',
           'work',
-          'delete-publication-dialog'
+          'publication',
+          'delete-publication-dialog',
+          'delete-work-dialog'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
@@ -1755,7 +1760,7 @@
                       }
                     }
                   }
-                  var searchURI = `${config.resourceApiUri}search/${indexType}/_search`
+                  var searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/_search`
 
                   axiosMethod(searchURI, searchBody)
                     .then(function (response) {
@@ -1791,10 +1796,10 @@
               searchResourceFromSuggestion: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
                 ractive.fire('searchResource', { keypath: grandParentOf(event.keypath) + '.values.0' }, searchString, indexType, loadWorksAsSubjectOfItem)
               },
-              toggleWork: function (event, findWorksAsSubjectOfType, origin) {
-                var keypath = event.keypath + '.toggleWork'
+              toggleSubItem: function (event, findWorksAsSubjectOfType, origin) {
+                var keypath = event.keypath + '.toggleSubItem'
                 ractive.get(keypath) !== true ? ractive.set(keypath, true) : ractive.set(keypath, false)
-                if (findWorksAsSubjectOfType && !origin.work) {
+                if (findWorksAsSubjectOfType && !origin.subItems) {
                   loadWorksAsSubject(origin)
                 }
               },
@@ -1807,6 +1812,9 @@
                 if (template) {
                   fetchExistingResource(uri)
                   updateBrowserLocationWithTemplate(template)
+                  if (uri.indexOf('publication') !== -1) {
+                    updateBrowserLocationWithTab(1)
+                  }
                   Main.init()
                 } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
                   var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
@@ -1833,6 +1841,11 @@
                   }
                   ractive.set(origin + '.searchResult', null)
                 }
+              },
+              openResourceWithTemplate (event, uri, template) {
+                fetchExistingResource(uri)
+                updateBrowserLocationWithTemplate(template)
+                Main.init()
               },
               selectWorkResource: function (event) {
                 var uri = event.context.uri
@@ -1914,7 +1927,7 @@
               },
               deleteResource: function (event) {
                 var uriToDelete = ractive.get(`targetUri.${event.context.resourceType}`)
-                deleteResource(uriToDelete, event.context.resourceType, function () {
+                deleteResource(uriToDelete, event.context, function () {
                   if (event.context.afterSuccess) {
                     if (event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri) {
                       var targetUri = ractive.get(`targetUri.${event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri}`)
@@ -2175,7 +2188,7 @@
                 return
               }
               var parent = grandParentOf(keypath)
-              var uri = newValue.current.value[ 0 ]
+              var uri = _.flatten([ newValue.current.value ])[ 0 ]
               if (typeof uri === 'string') {
                 var predicate = ractive.get(parent + '.predicate')
                 if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== uri && !isBlankNodeUri(uri)) {
@@ -2203,7 +2216,7 @@
                 input.values = [
                   {
                     current: {
-                      value: [ newValue ]
+                      value: newValue
                     }
                   }
                 ]
@@ -2404,7 +2417,7 @@
           })
       },
       repositionSupportPanelsHorizontally: function () {
-        supportPanelLeftEdge = $('#right-dummy-panel').position().left
+        supportPanelLeftEdge = $('#right-dummy-panel').offsetParent().left
         supportPanelWidth = $('#right-dummy-panel').width()
 
         $('.support-panel').each(function (index, panel) {

@@ -1,0 +1,24 @@
+{{#deleteWorkDialog}}
+<div id="delete-work-dialog" title="Slett utgivelse">
+    {{#if !error}}
+        {{#if ! deleted}}
+            <h3>Bekreft sletting av verk</h3>
+            <p>Ja, jeg vil gjerne slette dette verket:</p>
+            <p><b>{{title}}</b> av <b>{{creator}}</b></p>
+        {{else}}
+            <p>Verket {{title}} er slettet</p>
+        {{/if}}
+    {{/if}}
+    {{#error}}
+            <h3>Kunne ikke slette verket</h3>
+            {{#publicationsLeft}}
+            <p>Det er {{numberOfPublicationsLeft}} utgivelser knyttet til det.</p>
+
+
+            {{/publicationsLeft}}
+            {{#with message}}
+                <p>{{.}}</p>
+            {{/with}}
+    {{/}}
+</div>
+{{/deleteWorkDialog}}

@@ -23,25 +23,26 @@
                         </div>
 
                         <div class="pure-u-1-12">
-                            {{#work.length || loadWorksAsSubjectOfItem}}
-                            <span class="toggle-show-works" on-click="toggleWork:{{loadWorksAsSubjectOfItem}},{{.}}">{{#toggleWork}}&#x25B2;{{else}}&#x25BC;{{/toggleWork}}</span>{{/}}
+                            {{#subItems.length || loadWorksAsSubjectOfItem}}
+                            <span class="toggle-show-sub-items" {{#config.search[selectedIndexType].subItemsExpandTooltip}}title="{{config.search[selectedIndexType].subItemsExpandTooltip}}"{{/}} on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}">{{#toggleSubItem}}&#x25B2;{{else}}&#x25BC;{{/toggleSubItem}}</span>
+                            {{/}}
                         </div>
                         {{>"additional-search-result-item-info-for-"+selectedIndexType}}
-                        {{#toggleWork}}
+                        {{#toggleSubItem}}
                         <div class="work-items pure-u-1">
-                            {{#work}}
+                            {{#subItems}}
                             <div class="search-result-subitem pure-g">
-                                {{>work}}
-                                {{# widgetOptions.showSelectWork}}
-                        <span class="search-result-work-selector pure-u-2-24">
-                            <input class="select-work-radio" type="radio" checked="{{isChecked}}"
-                                   on-click="setResourceAndWorkResource:{{items[itemIndex]}},{{origin}},'Person'"/>
-                        </span>
+                                {{>subItemType}}
+                                {{# widgetOptions.showSelectItem}}
+                                    <span class="search-result-work-selector pure-u-2-24">
+                                        <input class="select-work-radio" type="radio" checked="{{isChecked}}"
+                                               on-click="setResourceAndWorkResource:{{items[itemIndex]}},{{origin}},'Person'"/>
+                                    </span>
                                 {{/}}
                             </div>
                             {{/work}}
                         </div>
-                        {{/toggleWork}}
+                        {{/toggleSubItem}}
                     </div>
                 </div>
                 {{/each}}
