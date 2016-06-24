@@ -30,8 +30,11 @@ setup_koha: massage_input_data
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/itypes.sql'
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
-	@echo "-- Truncating tables: biblio, bibliotiems and items"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;SET foreign_key_checks=1;"'
+	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems and items"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;SET foreign_key_checks=1;"'
+	@echo "-- Clearing zebra index"
+	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios' 2> /dev/null
+	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit' 2> /dev/null
 	@echo "OK Done setting up Koha\n"
 
 migrate_catalogue: setup_koha
