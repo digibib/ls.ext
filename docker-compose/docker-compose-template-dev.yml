@@ -391,3 +391,14 @@ services:
       options:
         max-size: "1m"
         max-file: "2"
+
+  migration:
+    container_name: migration
+    build:
+      context: /vagrant/docker-compose/dockerfiles/migration
+      args:
+        - MYSQL_DATABASE="koha_${KOHA_INSTANCE}"
+        - MYSQL_USER="${KOHA_ADMINPASS}
+        - MYSQL_PASSWORD="${KOHA_ADMINUSER}"
+    networks:
+      - backend
