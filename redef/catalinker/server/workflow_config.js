@@ -475,7 +475,7 @@ module.exports = (app) => {
               type: 'searchable-with-result-in-side-panel',
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
-              nameProperties: [ 'prefLabel', 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
+              nameProperties: [ 'prefLabel', 'mainTitle', 'subTitle', 'name' ], // these are property names used to label already connected entities
               indexTypes: [ 'subject', 'person', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
