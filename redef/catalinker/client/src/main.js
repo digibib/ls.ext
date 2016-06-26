@@ -1408,10 +1408,7 @@
                 enableChange = false
                 var inputValue = Ractive.getNodeInfo(e.target)
                 var keypath = inputValue.keypath
-                ractive.set(keypath + '.current.value', changeType === 'select2:unselecting' ? [] : $(e.target).val())
-                if (changeType === 'select2:unselecting') {
-                  $(e.target).select2('val', '')
-                }
+                ractive.set(keypath + '.current.value', $(e.target).val())
                 var inputNode = ractive.get(grandParentOf(keypath))
                 if (!inputNode.isSubInput && keypath.indexOf('enableCreateNewResource') === -1) {
                   Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
