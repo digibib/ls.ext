@@ -1,28 +1,36 @@
-all: migrate_catalogue
+
+# Variables
+# =========
 
 KOHA_INSTANCE ?= name
 LIMIT ?= -1
 DATASET ?= example
-MIGRATION_DATA="/vagrant/migration/example_data"
+MIGRATION_DATA=$(shell pwd)/example_data
 ifeq ($(DATASET),full)
-    MIGRATION_DATA="/vagrant/migration/data"
+    MIGRATION_DATA=$(shell pwd)/data
 endif
 MIGRATION_RUN_CMD=sudo docker run --net=dockercompose_backend --rm -v $(shell pwd)/out:/out -v $(MIGRATION_DATA):/data dockercompose_migration bash -c
 VMARC=$(shell ls -1 $(MIGRATION_DATA)/*vmarc.*.txt | xargs basename)
 EXEMP=$(shell ls -1 $(MIGRATION_DATA)/*exemp.*.txt | xargs basename)
 MYSQL_CMD=mysql --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE
 
-clear_old_output:
-	@echo "   Clearing out directory from old output data"
-	@rm -f out/*
-	@echo ""
+# Tasks
+# =====
 
-massage_input_data: clear_old_output
+.PHONY: all clean
+
+all: out/done.migrate_catalogue_to_koha
+
+clean:
+	@rm -f out/*
+
+out/done.massage_input_data:
 	@echo "   Massaging and transforming input data (Bibliofil exports)"
 	@$(MIGRATION_RUN_CMD) "catmassage -outdir=/out -vmarc=/data/$(VMARC) -exemp=/data/$(EXEMP) -limit=$(LIMIT)"
 	@echo "OK Done massaging\n"
+	@touch out/done.massage_input_data
 
-setup_koha: massage_input_data
+out/done.setup_koha: out/done.massage_input_data
 	@echo "   Setting up Koha with branches, itemtypes and authorized values"
 	@echo "-- Populating branches"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/branches.sql'
@@ -36,8 +44,9 @@ setup_koha: massage_input_data
 	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios' 2> /dev/null
 	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit' 2> /dev/null
 	@echo "OK Done setting up Koha\n"
+	@touch out/done.setup_koha
 
-migrate_catalogue: setup_koha
+out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "   Importing catalogue with items into Koha"
 	@echo "-- Stopping Zebra indexer"
 	@sudo docker exec koha_container koha-stop-zebra $$KOHA_INSTANCE
@@ -48,3 +57,4 @@ migrate_catalogue: setup_koha
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec koha_container koha-stop-zebra $$KOHA_INSTANCE
 	@echo "OK Done importing catalogue into Koha"
+	@touch out/done.migrate_catalogue_to_koha
