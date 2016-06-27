@@ -2,6 +2,7 @@
 # Variables
 # =========
 
+HOSTNAME ?= 192.168.50.12:8005
 KOHA_INSTANCE ?= name
 LIMIT ?= -1
 DATASET ?= example
@@ -61,7 +62,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
-	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && ruby marc2rdf.rb -i /out/catalogue.marcxml > /out/catalogue.nt" 2> /dev/null
+	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOSTNAME)/ config/mapping.yaml && ruby marc2rdf.rb -i /out/catalogue.marcxml -h $(HOSTNAME) > /out/catalogue.nt" 2> /dev/null
 	@echo "OK Done initial convertion of catalogue to RDF"
 	@echo "!! TODO further processsing (generate works etc)"
 	@touch out/done.convert_catalogue_to_nt
