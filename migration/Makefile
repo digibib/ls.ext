@@ -2,7 +2,7 @@
 # Variables
 # =========
 
-HOSTNAME ?= 192.168.50.12:8005
+HOST ?= 192.168.50.12:8005
 KOHA_INSTANCE ?= name
 LIMIT ?= -1
 DATASET ?= example
@@ -62,7 +62,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
-	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOSTNAME)/ config/mapping.yaml && ruby marc2rdf.rb -i /out/catalogue.marcxml -h $(HOSTNAME) > /out/catalogue.nt" 2> /dev/null
+	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST)/ config/mapping.yaml && ruby marc2rdf.rb -i /out/catalogue.marcxml -h $(HOST) > /out/catalogue.nt" 2> /dev/null
 	@echo "OK Done initial convertion of catalogue to RDF\n"
 	@touch out/done.convert_catalogue_to_nt
 
@@ -70,7 +70,7 @@ migrate: out/done.migrate_catalogue_to_koha out/done.clean_and_massage_catalogue
 
 VIRTUOSO=http://192.168.50.12:8890
 out/done.clean_and_massage_catalogue_in_virtuoso: out/done.convert_catalogue_to_nt
-	@echo "   Importing RDF into LS.EXT (Fuseki)"
+	@echo "   Importing RDF into LSEXT (Fuseki)"
 	@echo "-- Stopping and removing temprorary virtuoso triplestore (if present)"
 	-@sudo docker stop virtuoso
 	-@sudo docker rm virtuoso
@@ -78,15 +78,16 @@ out/done.clean_and_massage_catalogue_in_virtuoso: out/done.convert_catalogue_to_
 	@sudo docker run -d --net=dockercompose_backend --name=virtuoso -p 8890:8890 digibib/virtuoso
 	@echo "-- waiting until virtuoso is ready"
 	@until $$(curl --output /dev/null --silent --head --fail $(VIRTUOSO)/sparql); do printf '.' ; sleep 2 ; done ; printf "\n"
-	@echo "-- Splitting cataloge.nt into chunks"
+	@echo "-- Splitting catalogue.nt into chunks"
 	@split --lines 250000 out/catalogue.nt out/dumps
 	@echo "-- Importing chunks into virtuoso"
 	@for f in out/dumps* ; do \
-	curl -s -w "%{time_total}s\n" -X POST --digest -u dba:dba -H Content-Type:application/n-triples.-T $$f \
+	curl -s -w "%{time_total}s\n" -X POST --digest -u dba:dba -H Content-Type:application/n-triples -T $$f \
 		-G $(VIRTUOSO)/sparql-graph-crud-auth --data-urlencode graph=http://deichman.no/migration ; sleep 3 ; done
+	@echo "-- Running SPARQL queries to massage resource"
+	@ls sparql/*.sparql | xargs sed -e s/__HOST__/$(HOST)/g | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba > /dev/null # TODO minimize output from isql
+	@echo "!! TODO run bulkmigrate.go"
 	@#echo "-- Stopping and removing temprorary virtuoso triplestore"
 	@#sudo docker stop virtuoso
 	@#sudo docker rm virtuoso
-	@echo "!! TODO run queries"
-	@echo "!! TODO run bulkmigrate.go"
 	@echo "OK Completed RDF import to fuseki"
