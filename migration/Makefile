@@ -17,9 +17,9 @@ MYSQL_CMD=mysql --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MY
 # Tasks
 # =====
 
-.PHONY: all clean
+.PHONY: all clean migrate
 
-all: out/done.migrate_catalogue_to_koha
+all: migrate
 
 clean:
 	@rm -f out/*
@@ -58,3 +58,12 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@sudo docker exec koha_container koha-stop-zebra $$KOHA_INSTANCE
 	@echo "OK Done importing catalogue into Koha"
 	@touch out/done.migrate_catalogue_to_koha
+
+out/done.convert_catalogue_to_nt: out/done.massage_input_data
+	@echo "   Converting catalogue to RDF with migmarc2rdf"
+	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && ruby marc2rdf.rb -i /out/catalogue.marcxml > /out/catalogue.nt" 2> /dev/null
+	@echo "OK Done initial convertion of catalogue to RDF"
+	@echo "!! TODO further processsing (generate works etc)"
+	@touch out/done.convert_catalogue_to_nt
+
+migrate: out/done.migrate_catalogue_to_koha out/done.convert_catalogue_to_nt
