@@ -7,6 +7,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN go get github.com/digibib/migtools/catmassage
+RUN go get github.com/digibib/migtools/construct
 
 RUN git clone https://github.com/digibib/migmarc2rdf /usr/src/migmarc2rdf
 WORKDIR /usr/src/migmarc2rdf

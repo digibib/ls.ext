@@ -66,10 +66,10 @@ out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "OK Done initial convertion of catalogue to RDF\n"
 	@touch out/done.convert_catalogue_to_nt
 
-migrate: out/done.migrate_catalogue_to_koha out/done.clean_and_massage_catalogue_in_virtuoso
+migrate: out/done.migrate_catalogue_to_koha out/done.import_into_fuseki
 
 VIRTUOSO=http://192.168.50.12:8890
-out/done.clean_and_massage_catalogue_in_virtuoso: out/done.convert_catalogue_to_nt
+out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "   Importing RDF into LSEXT (Fuseki)"
 	@echo "-- Stopping and removing temprorary virtuoso triplestore (if present)"
 	-@sudo docker stop virtuoso
@@ -84,10 +84,16 @@ out/done.clean_and_massage_catalogue_in_virtuoso: out/done.convert_catalogue_to_
 	@for f in out/dumps* ; do \
 	curl -s -w "%{time_total}s\n" -X POST --digest -u dba:dba -H Content-Type:application/n-triples -T $$f \
 		-G $(VIRTUOSO)/sparql-graph-crud-auth --data-urlencode graph=http://deichman.no/migration ; sleep 3 ; done
-	@echo "-- Running SPARQL queries to massage resource"
+	@echo "-- Running SPARQL queries to massage resources (create works & relationships)"
 	@ls sparql/*.sparql | xargs sed -e s/__HOST__/$(HOST)/g | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba > /dev/null # TODO minimize output from isql
-	@echo "!! TODO run bulkmigrate.go"
+	@echo "-- Constructing the complete RDF resources to be migrated (resources.nt)"
+	@$(MIGRATION_RUN_CMD) 'construct > /out/resources.nt'
+	@echo "-- Splitting resources.nt into chunks"
+	@split --additional-suffix=.nt --lines 250000 out/resources.nt out/complete
+	@echo "-- Import chunks into Fuseki"
+	@$(MIGRATION_RUN_CMD) 'for f in /out/complete* ; do curl -s -w "%{time_total}s\n" -X POST fuseki:3030/ds/upload -F grap=default -F import.nt=@$$f ; done'
 	@#echo "-- Stopping and removing temprorary virtuoso triplestore"
 	@#sudo docker stop virtuoso
 	@#sudo docker rm virtuoso
-	@echo "OK Completed RDF import to fuseki"
+	@touch out/done.import_into_fuseki
+	@echo "OK Completed RDF import to Fuseki"
