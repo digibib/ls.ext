@@ -18,6 +18,7 @@ CMD=vagrant ssh $(SHIP)
 LSEXTPATH=/vagrant
 HOST ?= 192.168.50.1
 DOCKER_GW=$(HOST)
+NOVAGRANT=false
 endif
 
 all: cycle_ship test                       		## Run tests after (re)loading and (re)provisioning environment.
