@@ -35,7 +35,15 @@ export function processSearchResponse (response, locationQuery) {
       if (!result.publication.mainTitle.includes(locationQuery.query)) {
         // The query does not match in title. This can happen f.ex when searching for author name
         // If possible - choose the norwegian or enlglish title for display:
-        result.displayTitle = result.publication.norwegianTitle || result.publication.englishTitle || result.displayTitle
+        let norwegianTitle = result.publication.norwegianTitle
+        let englishTitle = result.publication.englishTitle
+        if (Array.isArray(norwegianTitle)) {
+          norwegianTitle = norwegianTitle[0]
+        }
+        if (Array.isArray(englishTitle)) {
+          englishTitle = englishTitle[0]
+        }
+        result.displayTitle = norwegianTitle || englishTitle || result.displayTitle
 
         // choose another image as well
         result.image = sample(result.publication.imagesFromAllPublications) || result.publication.image
