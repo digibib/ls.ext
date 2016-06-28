@@ -48,8 +48,8 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "-- Stopping Zebra indexer"
 	@sudo docker exec koha_container koha-stop-zebra $$KOHA_INSTANCE
 	@echo "-- Clearing Zebra index"
-	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios' 2> /dev/null
-	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit' 2> /dev/null
+	-@sudo docker exec koha_container /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios"' 2> /dev/null
+	-@sudo docker exec koha_container /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
 	@sudo docker run --net=dockercompose_backend --rm -v dockercompose_koha_state:/data -v $(shell pwd)/out:/out busybox cp /out/catalogue.mrc /data/
 	@echo "-- Importing to Koha with bulkmarcimport"
 	@sudo docker exec koha_container koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
@@ -120,6 +120,5 @@ out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_in
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
-	@echo "   Migration is complete!"
-	@echo "   Goodbye!"
-	@echo "!! TODO stop virtuoso container (left up for easier debugging)"
+	@echo "   Migration is complete. Goodbye!"
+	@echo "!! TODO stop running virtuoso container (left up for debugging)"
