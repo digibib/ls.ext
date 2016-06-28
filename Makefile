@@ -164,7 +164,7 @@ clean_report:
 	rm test/report/*.* || true
 
 clean: 					## Destroy $(SHIP) box. Prompts for ok.
-	vagrant destroy -f $(SHIP)
+	@$(NOVAGRANT) || vagrant destroy -f $(SHIP)
 
 dump_ship:						## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
 	$(CMD) -c "sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host $(LXHOST) --port 3306 --databases koha_name > $(LSEXTPATH)/koha_name_dump.sql"
@@ -189,13 +189,10 @@ cuke_redef:						## Run only redef cucumber tests
 	@$(XHOST_REMOVE)
 
 test_patron_client:					## Run unit and module tests of patron-client
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/patron-client && make test'
-
-test_services:						## Run unit and module tests of services
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/services && make test'
+	$(CMD) -c 'cd $(LSEXTPATH)/redef/patron-client && make test'
 
 test_catalinker:
-	vagrant ssh $(SHIP) -c 'cd /vagrant/redef/catalinker && make test'
+	$(CMD) -c 'cd $(LSEXTPATH)/redef/patron-client && make test'
 
 login: # needs EMAIL, PASSWORD, USER
 	@ $(CMD) -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'

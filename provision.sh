@@ -41,7 +41,8 @@ if [ ! -f "$2/docker-compose/secrets.env" ]; then
 fi
 
 echo -e "\n6) Provisioning system with docker-compose\n"
-cd /vagrant/docker-compose
+export LSEXTPATH=$2
+cd "$LSEXTPATH/docker-compose"
 source docker-compose.env
 source secrets.env
 export OVERVIEW_BUILD_DIR="$LSEXTPATH/redef/overview"
