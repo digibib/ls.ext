@@ -2,7 +2,11 @@
 # Variables
 # =========
 
+ifdef NOVAGRANT
+HOST=localhost
+else
 HOST ?= 192.168.50.12:8005
+endif
 KOHA_INSTANCE ?= name
 LIMIT ?= -1
 DATASET ?= example
@@ -64,7 +68,7 @@ out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "OK Done initial convertion of catalogue to RDF\n"
 	@touch out/done.convert_catalogue_to_nt
 
-VIRTUOSO=http://192.168.50.12:8890
+VIRTUOSO=http://$(HOST):8890
 out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "   Importing RDF into LSEXT (Fuseki)"
 	@echo "-- Stopping and removing temprorary virtuoso triplestore (if present)"
@@ -83,7 +87,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "-- Running SPARQL queries to massage resources (create works & relationships)"
 	@ls sparql/*.sparql | xargs sed -e s/__HOST__/$(HOST)/g | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba > /dev/null # TODO minimize output from isql
 	@echo "-- Constructing the complete RDF resources to be migrated (resources.nt)"
-	@$(MIGRATION_RUN_CMD) 'construct > /out/resources.nt'
+	@$(MIGRATION_RUN_CMD) 'construct -se=http://services:8005 -ve=http://virtuoso:8890/sparql-auth/ > /out/resources.nt'
 	@echo "-- Splitting resources.nt into chunks"
 	@split --additional-suffix=.nt --lines 250000 out/resources.nt out/complete
 	@echo "-- Clearing default graph in Fuseki"
