@@ -107,9 +107,19 @@ out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_in
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
 	@$(MIGRATION_RUN_CMD) "syncbranches -h=$(HOST) -i=/out/holdingbranches.tsv > /out/holdingbranches.sparql"
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/holdingbranches.sparql fuseki:3030/ds/update'
-	@echo "!! TODO migrate image links"
+	@echo "-- Inserting image links"
+	@cp config_data/images.csv.gz out/images.csv.gz
+	@$(MIGRATION_RUN_CMD) "syncimages -h=$(HOST) -i=/out/images.csv.gz > /out/images.sparql"
+	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/images.sparql fuseki:3030/ds/update'
 	@echo "OK Done syncing.\n"
 	@touch out/done.koha_fuseki_sync
+	@echo "-- Starting resurce indexing into Elasticsearch..."
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/person/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@echo "   Migration is complete!"
-	@echo "!! TODO start indexing into elasticsearch.."
+	@echo "   Goodbye!"
 	@echo "!! TODO stop virtuoso container (left up for easier debugging)"
