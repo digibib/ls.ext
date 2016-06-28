@@ -167,13 +167,13 @@ clean: 					## Destroy $(SHIP) box. Prompts for ok.
 	@$(NOVAGRANT) || vagrant destroy -f $(SHIP)
 
 dump_ship:						## DEV: Dump database koha_name to koha_name_dump.sql (standard admin.sls only).
-	$(CMD) -c "sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host $(LXHOST) --port 3306 --databases koha_name > $(LSEXTPATH)/koha_name_dump.sql"
+	$(CMD) -c "sudo apt-get install mysql-client && sudo mysqldump --user admin --password=secret --host $(HOST) --port 3306 --databases koha_name > $(LSEXTPATH)/koha_name_dump.sql"
 
 login_ship:						## DEV: Login to database from vm-ext (standard admin.sls only)
 	$(CMD) -c "sudo mysql --user admin --password=secret --host $(LXHOST) --port 3306"
 
 mysql_client:
-	$(CMD) -c "sudo apt-get install mysql-client && sudo mysql --user MYadmin --password=MYsecret --host $(LXHOST) --port 3306"
+	$(CMD) -c "sudo apt-get install mysql-client && sudo mysql --user MYadmin --password=MYsecret --host $(HOST) --port 3306"
 
 # Commands for redef build & dev
 

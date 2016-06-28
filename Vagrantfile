@@ -31,25 +31,25 @@ Vagrant.configure(2) do |config|
     if ENV['LSDEVMODE'] == 'dev'
       # sync node app source trees. Use NFS to enable instant reload (for MAC-users)
       if ENV['MOUNT_WITH_NFS']
-        config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server", type: "nfs"
-        config.vm.synced_folder "redef/catalinker/client", "/mnt/catalinker_client", type: "nfs"
-        config.vm.synced_folder "redef/catalinker/public", "/mnt/catalinker_public", type: "nfs"
+        config.vm.synced_folder "redef/catalinker/server", "/mnt/redef/catalinker/server", type: "nfs"
+        config.vm.synced_folder "redef/catalinker/client", "/mnt/redef/catalinker/client", type: "nfs"
+        config.vm.synced_folder "redef/catalinker/public", "/mnt/redef/catalinker/public", type: "nfs"
 
-        config.vm.synced_folder "redef/patron-client/src", "/mnt/patron-client_src", type: "nfs"
-        config.vm.synced_folder "redef/patron-client/test", "/mnt/patron-client_test", type: "nfs"
+        config.vm.synced_folder "redef/patron-client/src", "/mnt/redef/patron-client/src", type: "nfs"
+        config.vm.synced_folder "redef/patron-client/test", "/mnt/redef/patron-client/test", type: "nfs"
       else
-        config.vm.synced_folder "redef/catalinker/server", "/mnt/catalinker_server"
-        config.vm.synced_folder "redef/catalinker/client", "/mnt/catalinker_client"
-        config.vm.synced_folder "redef/catalinker/public", "/mnt/catalinker_public"
+        config.vm.synced_folder "redef/catalinker/server", "/mnt/redef/catalinker/server"
+        config.vm.synced_folder "redef/catalinker/client", "/mnt/redef/catalinker/client"
+        config.vm.synced_folder "redef/catalinker/public", "/mnt/redef/catalinker/public"
 
-        config.vm.synced_folder "redef/patron-client/src", "/mnt/patron-client_src"
-        config.vm.synced_folder "redef/patron-client/test", "/mnt/patron-client_test"
+        config.vm.synced_folder "redef/patron-client/src", "/mnt/redef/patron-client/src"
+        config.vm.synced_folder "redef/patron-client/test", "/mnt/redef/patron-client/test"
       end
     end
 
     config.vm.provision "shell" do |s|
       s.path = "provision.sh"
-      s.args = ["#{ENV['LSDEVMODE']}"]
+      s.args = ["#{ENV['LSDEVMODE']}", "/vagrant", "192.168.50.12"]
     end
 
   end

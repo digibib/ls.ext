@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-echo -e "\n Provisioning for $1 env\n"
+if [ "$#" -ne 3 ]; then
+  echo "provision.sh takes exactly three parameters:"
+  echo "  provision.sh [lsenv] [lsextpath] [host]"
+fi
+export LSENV=$1
+export LSEXTPATH=$2
+export HOST=$3
+echo -e "\n Provisioning for $LSENV env, LSENV=$LSENV, LSEXTPATH=$LSEXTPATH, HOST=$HOST\n"
 echo -e "\n1) Installing Docker\n"
 VERSION="1.11.2-0~$(lsb_release -c -s)"
 INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
@@ -36,12 +43,11 @@ echo -e "\n4) Installing Graphviz\n"
 which dot > /dev/null || sudo apt-get install -y graphviz
 
 echo -e "\n5) Making sure secrets.env is present\n"
-if [ ! -f "$2/docker-compose/secrets.env" ]; then
-  touch "$2/docker-compose/secrets.env"
+if [ ! -f "$LSEXTPATH/docker-compose/secrets.env" ]; then
+  touch "$LSEXTPATH/docker-compose/secrets.env"
 fi
 
 echo -e "\n6) Provisioning system with docker-compose\n"
-export LSEXTPATH=$2
 cd "$LSEXTPATH/docker-compose"
 source docker-compose.env
 source secrets.env
@@ -54,7 +60,7 @@ else
   export MOUNTPATH=$LSEXTPATH
 fi
 
-case "$LXENV" in
+case "$LSENV" in
   'build')
   envsubst < "docker-compose-template-dev-CI.yml" > "docker-compose.yml"
   ;;
@@ -68,13 +74,13 @@ esac
 sudo docker-compose stop overview && sudo docker-compose rm -f overview
 sudo docker-compose up -d
 
-if [ "$1" == "prod" ]; then
+if [ "$LSENV" == "prod" ]; then
   exit 0
 fi
 
 echo -e "\n7) Attempting to set up Elasticsearch indices and mappings"
 for i in {1..10}; do
-  wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "localhost:8005/search/clear_index" &> /dev/null
+  wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "$HOST:8005/search/clear_index" &> /dev/null
   if [ $? = 0 ]; then break; fi;
   sleep 3s;
 done;

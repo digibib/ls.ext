@@ -243,9 +243,9 @@ services:
       - services
       - z3950proxy
     volumes:
-      - /mnt/catalinker_client:/usr/src/app/client
-      - /mnt/catalinker_public:/usr/src/app/public
-      - /mnt/catalinker_server:/usr/src/app/server
+      - ${MOUNTPATH}/redef/catalinker/client:/usr/src/app/client
+      - ${MOUNTPATH}/redef/catalinker/public:/usr/src/app/public
+      - ${MOUNTPATH}/redef/catalinker/server:/usr/src/app/server
     ports:
       - "8010:8010"
     environment:
@@ -312,8 +312,8 @@ services:
       context: "${LSEXTPATH}/redef/patron-client"
       dockerfile: Dockerfile-dev
     volumes:
-      - /mnt/patron-client_src:/usr/src/app/src
-      - /mnt/patron-client_test:/usr/src/app/test
+      - ${MOUNTPATH}/redef/patron-client/src:/usr/src/app/src
+      - ${MOUNTPATH}/redef/patron-client/test:/usr/src/app/test
     ports:
       - "8000:8000"
       - "35729:35729"
