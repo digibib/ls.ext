@@ -47,7 +47,8 @@ up_ship:                                              ##
 	@$(NOVAGRANT) && sudo $(CMD) -c "cd $(LSEXTPATH)/docker-compose && sudo docker-compose up -d" || true
 
 shell_provision_ship:					## Run ONLY shell provisioners
-	vagrant provision $(SHIP) --provision-with shell
+	@$(NOVAGRANT) || vagrant provision $(SHIP) --provision-with shell
+	@$(NOVAGRANT) && ./provision.sh $(LSDEVMODE) $(LSEXTPATH) $(HOST)
 
 provision:  shell_provision_ship wait_until_ready   	## Full provision
 
