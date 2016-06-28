@@ -65,8 +65,6 @@ out/done.convert_catalogue_to_nt: out/done.massage_input_data
 
 migrate: sync
 	@echo "   Migration is complete!"
-	@echo "!! TODO migrate image links"
-	@echo "!! TODO migrate holdingbranches|"
 	@echo "!! TODO start indexing into elasticsearch.."
 	@echo "!! TODO stop virtuoso container (left up for easier debugging)"
 
@@ -74,10 +72,10 @@ VIRTUOSO=http://192.168.50.12:8890
 out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "   Importing RDF into LSEXT (Fuseki)"
 	@echo "-- Stopping and removing temprorary virtuoso triplestore (if present)"
-	-@sudo docker stop virtuoso
-	-@sudo docker rm virtuoso
+	-@sudo docker stop virtuoso > /dev/null
+	-@sudo docker rm virtuoso > /dev/null
 	@echo "-- Starting temporary virtuoso triplestore"
-	@sudo docker run -d --net=dockercompose_backend --name=virtuoso -p 8890:8890 digibib/virtuoso
+	@sudo docker run -d --net=dockercompose_backend --name=virtuoso -p 8890:8890 digibib/virtuoso > /dev/null
 	@echo "-- waiting until virtuoso is ready"
 	@until $$(curl --output /dev/null --silent --head --fail $(VIRTUOSO)/sparql); do printf '.' ; sleep 2 ; done ; printf "\n"
 	@echo "-- Splitting catalogue.nt into chunks"
@@ -93,7 +91,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "-- Splitting resources.nt into chunks"
 	@split --additional-suffix=.nt --lines 250000 out/resources.nt out/complete
 	@echo "-- Import chunks into Fuseki"
-	@$(MIGRATION_RUN_CMD) 'for f in /out/complete* ; do curl -s -w "%{time_total}s\n" -X POST fuseki:3030/ds/upload -F grap=default -F import.nt=@$$f ; done'
+	@$(MIGRATION_RUN_CMD) 'for f in /out/complete* ; do curl -s -w "%{time_total}s\n" -X POST fuseki:3030/ds/upload -F grap=default -F import.nt=@$$f ; done' > /dev/null
 	@#echo "-- Stopping and removing temprorary virtuoso triplestore"
 	@#sudo docker stop virtuoso
 	@#sudo docker rm virtuoso
@@ -104,7 +102,9 @@ sync: out/done.migrate_catalogue_to_koha out/done.import_into_fuseki
 	@echo "   Syncing Koha and Fuseki"
 	@echo "-- Extracting biblionumber and bibliofil-tittelnumbers from Koha"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblionumber, ExtractValue(marcxml, '\''//controlfield[@tag=\"001\"]'\'') AS '\''bibliofilPublicationId'\'' FROM biblioitems;"' > out/sync_ids.tsv
-	@echo "-- Generating SPARQL query to sync ids, and send it to Fuseki"
+	@echo "-- Generating SPARQL query to sync IDs, and send it to Fuseki"
 	@$(MIGRATION_RUN_CMD) "syncids -h=$(HOST) -i=/out/sync_ids.tsv > /out/sync.sparql"
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "%{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/sync.sparql fuseki:3030/ds/update '
+	@echo "!! TODO migrate image links"
+	@echo "!! TODO migrate holdingbranches|"
 	@echo "OK Done syncing."
