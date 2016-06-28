@@ -5,7 +5,7 @@
 ifdef NOVAGRANT
 HOST=localhost
 else
-HOST ?= 192.168.50.12:8005
+HOST ?= 192.168.50.12
 endif
 KOHA_INSTANCE ?= name
 LIMIT ?= -1
@@ -64,7 +64,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
-	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST)/ config/mapping.yaml && ruby marc2rdf.rb -i /out/catalogue.marcxml -h $(HOST) > /out/catalogue.nt" 2> /dev/null
+	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST):8005/ config/mapping.yaml && ruby marc2rdf.rb -i /out/catalogue.marcxml -h $(HOST):8005 > /out/catalogue.nt" 2> /dev/null
 	@echo "OK Done initial convertion of catalogue to RDF\n"
 	@touch out/done.convert_catalogue_to_nt
 
@@ -76,7 +76,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	-@sudo docker rm virtuoso > /dev/null
 	@echo "-- Starting temporary virtuoso triplestore"
 	@sudo docker run -d --net=dockercompose_backend --name=virtuoso -p 8890:8890 digibib/virtuoso > /dev/null
-	@echo "-- waiting until virtuoso is ready"
+	@echo "-- Waiting until virtuoso is ready"
 	@until $$(curl --output /dev/null --silent --head --fail $(VIRTUOSO)/sparql); do printf '.' ; sleep 2 ; done ; printf "\n"
 	@echo "-- Splitting catalogue.nt into chunks"
 	@split --lines 250000 out/catalogue.nt out/dumps
@@ -85,15 +85,15 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	curl -s -w "   %{time_total}s\n" -X POST --digest -u dba:dba -H Content-Type:application/n-triples -T $$f \
 		-G $(VIRTUOSO)/sparql-graph-crud-auth --data-urlencode graph=http://deichman.no/migration ; sleep 3 ; done
 	@echo "-- Running SPARQL queries to massage resources (create works & relationships)"
-	@ls sparql/*.sparql | xargs sed -e s/__HOST__/$(HOST)/g | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba > /dev/null # TODO minimize output from isql
+	@ls sparql/*.sparql | xargs sed -e s/__HOST__/$(HOST):8005/g | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba > /dev/null # TODO minimize output from isql
 	@echo "-- Constructing the complete RDF resources to be migrated (resources.nt)"
-	@$(MIGRATION_RUN_CMD) 'construct -se=http://services:8005 -ve=http://virtuoso:8890/sparql-auth/ > /out/resources.nt'
+	@$(MIGRATION_RUN_CMD) 'construct -se=http://localhost:8005 -ve=http://virtuoso:8890/sparql-auth/ > /out/resources.nt'
 	@echo "-- Splitting resources.nt into chunks"
 	@split --additional-suffix=.nt --lines 250000 out/resources.nt out/complete
 	@echo "-- Clearing default graph in Fuseki"
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST --data-urlencode update="clear default" http://fuseki:3030/ds/update' > /dev/null
-	@echo "-- Import chunks into Fuseki"
-	@$(MIGRATION_RUN_CMD) 'for f in /out/complete* ; do curl -s -w "%{time_total}s\n" -X POST fuseki:3030/ds/upload -F grap=default -F import.nt=@$$f ; done' > /dev/null
+	@echo "-- Importing chunks into Fuseki"
+	@$(MIGRATION_RUN_CMD) 'for f in /out/complete* ; do curl -s -w "   %{time_total}s\n" -X POST fuseki:3030/ds/upload -F grap=default -F $$f=@$$f ; done'
 	@#echo "-- Stopping and removing temprorary virtuoso triplestore"
 	@#sudo docker stop virtuoso
 	@#sudo docker rm virtuoso
@@ -105,15 +105,15 @@ out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_in
 	@echo "-- Extracting biblionumber and bibliofil-tittelnumbers from Koha"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblionumber, ExtractValue(marcxml, '\''//controlfield[@tag=\"001\"]'\'') AS '\''bibliofilPublicationId'\'' FROM biblioitems;"' > out/sync_ids.tsv
 	@echo "-- Generating SPARQL query to sync IDs, and send it to Fuseki"
-	@$(MIGRATION_RUN_CMD) "syncids -h=$(HOST) -i=/out/sync_ids.tsv > /out/ids.sparql"
+	@$(MIGRATION_RUN_CMD) "syncids -h=$(HOST):8005 -i=/out/sync_ids.tsv > /out/ids.sparql"
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/ids.sparql fuseki:3030/ds/update'
 	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
-	@$(MIGRATION_RUN_CMD) "syncbranches -h=$(HOST) -i=/out/holdingbranches.tsv > /out/holdingbranches.sparql"
+	@$(MIGRATION_RUN_CMD) "syncbranches -h=$(HOST):8005 -i=/out/holdingbranches.tsv > /out/holdingbranches.sparql"
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/holdingbranches.sparql fuseki:3030/ds/update'
 	@echo "-- Inserting image links"
 	@cp config_data/images.csv.gz out/images.csv.gz
-	@$(MIGRATION_RUN_CMD) "syncimages -h=$(HOST) -i=/out/images.csv.gz > /out/images.sparql"
+	@$(MIGRATION_RUN_CMD) "syncimages -h=$(HOST):8005 -i=/out/images.csv.gz > /out/images.sparql"
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/images.sparql fuseki:3030/ds/update'
 	@echo "OK Done syncing.\n"
 	@touch out/done.koha_fuseki_sync
