@@ -1,0 +1,19 @@
+# Knytt utgivelsessted til allerede eksisterende stedsressurs
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX raw: <http://__HOST__/raw#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  ?pub :hasPlaceOfPublication ?place
+}
+
+WHERE {
+    ?pub a :Publication ;
+         raw:publicationPlace ?placeLabel .
+    ?place a :Place ;
+         :prefLabel ?placeLabel .
+}
+;

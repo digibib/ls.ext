@@ -1,0 +1,130 @@
+# 1) Legg til normaliserte personnavn på personer med invertert navn
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+	?person :nameNormalized `CONCAT(bif:trim(bif:subseq(?name, bif:strchr(?name, ',')+1)), " ", bif:left(?name, bif:strchr(?name, ',')))` .
+}
+
+WHERE {
+	?person a :Person ;
+		:name ?name .
+	FILTER (REGEX(?name, ","))
+}
+;
+
+
+# 2) Legg til normaliserte personnavn på personer uten invertert navn
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+	?person :nameNormalized ?name .
+}
+
+WHERE {
+	?person a :Person ;
+		:name ?name .
+	FILTER (!REGEX(?name, ","))
+}
+;
+
+
+# 3) Opprett displayLabel for personer
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+	?person :displayLabel ?name .
+}
+
+WHERE {
+	?person a :Person ;
+		:nameNormalized ?name .
+}
+;
+
+
+# 4 Legg til ordenstall
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+	?person :displayLabel ?label .
+}
+
+INSERT {
+	?person :displayLabel `concat(?label, " ", ?ordinal)` .
+}
+
+WHERE {
+	?person :ordinal ?ordinal ;
+		a :Person ;
+		:displayLabel ?label .
+}
+;
+
+
+# 5 Legg til tilføyelse
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+	?person :displayLabel ?label .
+}
+
+INSERT {
+	?person :displayLabel `concat(?label, ", ", ?specification)` .
+}
+
+WHERE {
+	?person :specification ?specification ;
+		a :Person ;
+		:displayLabel ?label .
+}
+;
+
+
+# 6 Legg til årstall
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX raw: <http://192.168.50.12:8005/raw#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+	?person :displayLabel ?label .
+}
+
+INSERT {
+	?person :displayLabel `concat(?label, ", ", ?lifeSpan)` .
+}
+
+WHERE {
+	?person raw:lifeSpan ?lifeSpan ;
+		a :Person ;
+		:displayLabel ?label .
+}
+;

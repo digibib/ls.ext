@@ -1,0 +1,66 @@
+# 1) Construct media type based on format
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  ?pub :mediaType ?mediaType
+}
+
+WHERE {
+    ?pub a :Publication ;
+         :format ?format  .
+
+    VALUES (?format ?mediaType) {
+      (format:Book                    mediaType:Book)
+      (format:E-Book                  mediaType:Book)
+      (format:Audiobook               mediaType:Audiobook)
+      (format:DAISY                   mediaType:Audiobook)
+      (format:Language_course         mediaType:LanguageCourse)
+      (format:Music_recording         mediaType:MusicRecording)
+      (format:Sheet_music             mediaType:SheetMusic)
+      (format:Videotape               mediaType:Film)
+      (format:DVD                     mediaType:Film)
+      (format:Blu-ray_Disk            mediaType:Film)
+      (format:Personal_computer_game  mediaType:Game)
+      (format:Playstation_2_game      mediaType:Game)
+      (format:Playstation_3_game      mediaType:Game)
+      (format:Playstation_4_game      mediaType:Game)
+      (format:Xbox_360_game           mediaType:Game)
+      (format:Xbox_One_game           mediaType:Game)
+      (format:Nintendo_DS_game        mediaType:Game)
+      (format:Nintendo_Wii_game       mediaType:Game)
+    }
+}
+;
+
+
+# 2) Change media type for comics
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?pub :mediaType mediaType:Book .
+}
+
+INSERT {
+  ?pub :mediaType mediaType:comicBook .
+}
+
+WHERE {
+  ?pub :literaryForm literaryForm:comicBook ;
+    :mediaType mediaType:Book ;
+    a :Publication .
+}
+;

@@ -1,0 +1,21 @@
+# 1) Velg minste førsteutgavekandidat som årstall på verk
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX raw: <http://__HOST__/raw#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+    ?work :publicationYear ?minYear .
+} WHERE {
+{
+    SELECT ?work MIN(?year) as ?minYear WHERE {
+        ?publication raw:firstEditionCandidate ?year ;
+            a :Publication ;
+                :publicationOf ?work .
+    }
+}
+}
+;
