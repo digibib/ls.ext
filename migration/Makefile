@@ -104,7 +104,10 @@ sync: out/done.migrate_catalogue_to_koha out/done.import_into_fuseki
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblionumber, ExtractValue(marcxml, '\''//controlfield[@tag=\"001\"]'\'') AS '\''bibliofilPublicationId'\'' FROM biblioitems;"' > out/sync_ids.tsv
 	@echo "-- Generating SPARQL query to sync IDs, and send it to Fuseki"
 	@$(MIGRATION_RUN_CMD) "syncids -h=$(HOST) -i=/out/sync_ids.tsv > /out/sync.sparql"
-	@$(MIGRATION_RUN_CMD) 'curl -s -w "%{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/sync.sparql fuseki:3030/ds/update '
+	@$(MIGRATION_RUN_CMD) 'curl -s -w "%{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/sync.sparql fuseki:3030/ds/update'
+	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
+	@$(MIGRATION_RUN_CMD) "syncbranches -h=$(HOST) -i=/out/holdingbranches.tsv > /out/holdingbranches.sparql"
+	@$(MIGRATION_RUN_CMD) 'curl -s -w "%{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/holdingbranches.sparql.sparql fuseki:3030/ds/update'
 	@echo "!! TODO migrate image links"
-	@echo "!! TODO migrate holdingbranches|"
 	@echo "OK Done syncing."
