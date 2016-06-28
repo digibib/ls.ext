@@ -39,11 +39,13 @@ out/done.setup_koha: out/done.massage_input_data
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/itypes.sql'
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
-	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems and items"
+	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems and items\n"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;SET foreign_key_checks=1;"'
 
 out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "   Migration catalogue with items into Koha"
+	@echo "-- Stopping Zebra indexer"
+	@sudo docker exec koha_container koha-stop-zebra $$KOHA_INSTANCE
 	@echo "-- Clearing zebra index"
 	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios' 2> /dev/null
 	-@sudo docker exec koha_container /bin/sh -c 'sudo zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit' 2> /dev/null
@@ -51,7 +53,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "-- Importing to Koha with bulkmarcimport"
 	@sudo docker exec koha_container koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
 	@echo "-- Starting Zebra indexer"
-	@sudo docker exec koha_container koha-stop-zebra $$KOHA_INSTANCE
+	@sudo docker exec koha_container koha-start-zebra $$KOHA_INSTANCE
 	@echo "OK Done importing catalogue into Koha\n"
 	@touch out/done.migrate_catalogue_to_koha
 
@@ -64,7 +66,9 @@ out/done.convert_catalogue_to_nt: out/done.massage_input_data
 migrate: sync
 	@echo "   Migration is complete!"
 	@echo "!! TODO migrate image links"
+	@echo "!! TODO migrate holdingbranches|"
 	@echo "!! TODO start indexing into elasticsearch.."
+	@echo "!! TODO stop virtuoso container (left up for easier debugging)"
 
 VIRTUOSO=http://192.168.50.12:8890
 out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
