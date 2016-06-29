@@ -479,7 +479,7 @@
           var rootIndex = 0
           _.each(actualRoots, function (root) {
             var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || false
-            var mainEntryNode = (root.isA('deichman:MainEntry') === true) || false
+            var mainEntryNode = (root.isA('MainEntry') === true) || false
             if (mainEntryInput === mainEntryNode) {
               if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
                 var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
@@ -1086,7 +1086,7 @@
       })
 
       _.each(workGraph.outAll('contributor'), function (contributor) {
-        if (contributor.isA('deichman:MainEntry')) {
+        if (contributor.isA('MainEntry')) {
           var agent = contributor.out('agent')
           detailsHitLine.push(agent.get('name').value)
         }

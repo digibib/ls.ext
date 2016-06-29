@@ -290,6 +290,7 @@ services:
       TRIPLESTORE_PORT: "http://fuseki:3030"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
       DATA_BASEURI: "${DATA_BASEURI}"
+      Z3950_PROXY_PORT: "http://z3950proxy:3000"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
     logging:

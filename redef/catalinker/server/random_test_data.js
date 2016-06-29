@@ -23,7 +23,7 @@ module.exports = (app) => {
               '@graph': [
                 {
                   '@id': '_:N62bb7e44e5414c30905dacfa3f3ad263',
-                  '@type': 'deichman:Publication',
+                  '@type': ['deichman:Publication'],
                   'deichman:audience': {
                     '@id': 'http://data.deichman.no/audience#adult'
                   },
@@ -56,7 +56,7 @@ module.exports = (app) => {
                     '@id': '_:N788edbeea7104c42adda64d78d844440'
                   },
                   'deichman:publicationYear': {
-                    '@type': 'xsd:gYear',
+                    '@type': ['xsd:gYear'],
                     '@value': request.params.source === 'bs' ? '1998' : '2000'
                   },
                   'deichman:recordID': '202417',
@@ -66,7 +66,7 @@ module.exports = (app) => {
                   'http://migration.deichman.no/creator': {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
-                  'http://migration.deichman.no/numberOfPages': request.params.source === 'bs' ? '207 s.' : '208',
+                  'http://migration.deichman.no/numberOfPages': request.params.source === 'bs' ? '207' : '208',
                   'http://migration.deichman.no/originalLanguage': {
                     '@id': 'http://lexvo.org/id/iso639-3/hrv'
                   },
@@ -79,7 +79,7 @@ module.exports = (app) => {
                 },
                 {
                   '@id': '_:Nfa97dd73eff64195a220cdea3a16afde',
-                  '@type': 'deichman:Contribution',
+                  '@type': ['deichman:Contribution'],
                   'deichman:agent': {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
@@ -89,7 +89,7 @@ module.exports = (app) => {
                 },
                 {
                   '@id': '_:N5c9b2fcaef3246c295aa6fc121e7b155',
-                  '@type': 'deichman:Person',
+                  '@type': ['deichman:Person'],
                   'http://data.deichman.no/duo#bibliofilPersonId': '19887600',
                   'deichman:birthYear': '1949',
                   'deichman:name': randomName() + ', ' + randomName(),
@@ -100,7 +100,7 @@ module.exports = (app) => {
                 },
                 {
                   '@id': '_:N788edbeea7104c42adda64d78d844440',
-                  '@type': 'deichman:Work',
+                  '@type': ['deichman:Work'],
                   'deichman:audience': {
                     '@id': request.params.source === 'bs' ?  'http://data.deichman.no/audience#adult' : 'http://data.deichman.no/audience#juvenile'
                   },
@@ -140,7 +140,7 @@ module.exports = (app) => {
                 },
                 {
                   '@id': '_:N9fdb7e0d043e44708df915d456bbb132',
-                  '@type': 'deichman:Person',
+                  '@type': ['deichman:Person'],
                   'http://data.deichman.no/duo#bibliofilPersonId': '29406800',
                   'deichman:birthYear': '1949',
                   'deichman:name': randomName() + ', ' + randomName(),
@@ -164,7 +164,7 @@ module.exports = (app) => {
                 },
                 {
                   '@id': '_:N0d3f253e2e624cf49c45d545fbf5a41f',
-                  '@type': 'deichman:Contribution',
+                  '@type': ['deichman:Contribution'],
                   'deichman:agent': {
                     '@id': '_:N5c9b2fcaef3246c295aa6fc121e7b155'
                   },

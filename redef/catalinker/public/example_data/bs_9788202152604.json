@@ -29,7 +29,7 @@
               { "@id": "_:d738edc4-b82c-4ca1-8e6c-b7320d6e5e06"},
               { "@id": "_:d738edc4-b82c-4ca1-8e6c-b73dddde5e06"}
           ],
-          "@type": "deichman:Work",
+          "@type": ["deichman:Work"],
           "@id": "_:c2a9cb64-9851-4500-8063-8d744c31458c"
         },
         {
@@ -42,7 +42,7 @@
             "@id": "_:c2a9cb64-9851-4500-8063-8d744c31458c"
           },
           "deichman:mainTitle": "Karsten og Petra på teater",
-          "@type": "deichman:Publication"
+          "@type": ["deichman:Publication"]
         },
         {
           "deichman:agent": {

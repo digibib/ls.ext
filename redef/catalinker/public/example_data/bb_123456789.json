@@ -5,7 +5,7 @@
       "@graph": [
         {
           "@id": "_:b5",
-          "@type": "deichman:Contribution",
+          "@type": ["deichman:Contribution"],
           "deichman:agent": {
             "@id": "_:b6"
           },
@@ -14,7 +14,7 @@
           }
         },{
           "@id": "_:b7",
-          "@type": "deichman:Contribution",
+          "@type": ["deichman:Contribution"],
           "deichman:agent": {
             "@id": "_:b8"
           },
@@ -36,7 +36,7 @@
         },
         {
           "@id": "_:b1",
-          "@type": "deichman:Person",
+          "@type": ["deichman:Person"],
           "deichman:birthYear": "1922",
           "deichman:deathYear": "2012",
           "deichman:name": "Hans Olsen",
@@ -46,7 +46,7 @@
         },
         {
           "@id": "_:b6",
-          "@type": "deichman:Person",
+          "@type": ["deichman:Person"],
           "deichman:birthYear": "1922",
           "deichman:deathYear": "2012",
           "deichman:name": "Kåre Olsen",
@@ -56,7 +56,7 @@
         },
         {
           "@id": "_:b8",
-          "@type": "deichman:Person",
+          "@type": ["deichman:Person"],
           "deichman:birthYear": "1922",
           "deichman:deathYear": "2012",
           "deichman:name": "Odny Olderbolle",
@@ -66,7 +66,7 @@
         },
         {
           "@id": "_:b3",
-          "@type": "deichman:Work",
+          "@type": ["deichman:Work"],
           "deichman:contributor": {
             "@id": "_:b0"
           },
@@ -85,7 +85,7 @@
         },
         {
           "@id": "_:b4",
-          "@type": "deichman:Publication",
+          "@type": ["deichman:Publication"],
           "deichman:contributor": [
             {"@id": "_:b5"},
             {"@id": "_:b7"}

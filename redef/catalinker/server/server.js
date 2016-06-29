@@ -94,6 +94,10 @@ app.use('/services', requestProxy(services, {
   }
 }))
 
+app.get('/valueSuggestions/:source/:isbn', requestProxy({
+  url: services + '/datasource/:source/:isbn'
+}))
+
 app.use('/style', compileSass({
   root: path.join(__dirname, '/../client/scss'),
   sourceMap: true, // Includes Base64 encoded source maps in output css

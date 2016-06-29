@@ -11,7 +11,7 @@
       "@graph": [
         {
           "@id": "http://lexvo.org/id/iso639-3/nob",
-          "@type": "http://lexvo.org/ontology#Language",
+          "@type": ["http://lexvo.org/ontology#Language"],
           "rdfs:label": [
             {
               "@language": "en",
@@ -25,7 +25,7 @@
         },
         {
           "@id": "http://lexvo.org/id/iso639-3/hrv",
-          "@type": "http://lexvo.org/ontology#Language",
+          "@type": ["http://lexvo.org/ontology#Language"],
           "rdfs:label": [
             {
               "@language": "en",
@@ -39,7 +39,7 @@
         },
         {
           "@id": "_:N62bb7e44e5414c30905dacfa3f3ad263",
-          "@type": "deichman:Publication",
+          "@type": ["deichman:Publication"],
           "deichman:audience": {
             "@id": "http://data.deichman.no/audience#adult"
           },
@@ -72,7 +72,7 @@
             "@id": "_:N788edbeea7104c42adda64d78d844440"
           },
           "deichman:publicationYear": {
-            "@type": "xsd:gYear",
+            "@type": ["xsd:gYear"],
             "@value": "1998"
           },
           "deichman:recordID": "202417",
@@ -95,7 +95,7 @@
         },
         {
           "@id": "_:Nfa97dd73eff64195a220cdea3a16afde",
-          "@type": "deichman:Contribution",
+          "@type": ["deichman:Contribution"],
           "deichman:agent": {
             "@id": "_:N9fdb7e0d043e44708df915d456bbb132"
           },
@@ -105,7 +105,7 @@
         },
         {
           "@id": "http://data.deichman.no/audience#adult",
-          "@type": "http://data.deichman.no/utility#Audience",
+          "@type": ["http://data.deichman.no/utility#Audience"],
           "http://data.deichman.no/utility#code": "ad",
           "rdfs:label": [
             {
@@ -120,7 +120,7 @@
         },
         {
           "@id": "_:N5c9b2fcaef3246c295aa6fc121e7b155",
-          "@type": "deichman:Person",
+          "@type": ["deichman:Person"],
           "http://data.deichman.no/duo#bibliofilPersonId": "19887600",
           "deichman:birthYear": "1949",
           "deichman:name": "Korssjøen, Kirsten Johanne",
@@ -131,7 +131,7 @@
         },
         {
           "@id": "_:N788edbeea7104c42adda64d78d844440",
-          "@type": "deichman:Work",
+          "@type": ["deichman:Work"],
           "deichman:audience": {
             "@id": "http://data.deichman.no/audience#adult"
           },
@@ -156,7 +156,7 @@
         },
         {
           "@id": "http://data.deichman.no/format#Book",
-          "@type": "http://data.deichman.no/utility#Format",
+          "@type": ["http://data.deichman.no/utility#Format"],
           "http://data.deichman.no/utility#code": "l",
           "rdfs:label": [
             {
@@ -171,7 +171,7 @@
         },
         {
           "@id": "_:N9fdb7e0d043e44708df915d456bbb132",
-          "@type": "deichman:Person",
+          "@type": ["deichman:Person"],
           "http://data.deichman.no/duo#bibliofilPersonId": "29406800",
           "deichman:birthYear": "1949",
           "deichman:name": "Drakulić, Slavenka",
@@ -195,7 +195,7 @@
         },
         {
           "@id": "_:N0d3f253e2e624cf49c45d545fbf5a41f",
-          "@type": "deichman:Contribution",
+          "@type": ["deichman:Contribution"],
           "deichman:agent": {
             "@id": "_:N5c9b2fcaef3246c295aa6fc121e7b155"
           },
