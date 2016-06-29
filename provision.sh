@@ -25,29 +25,19 @@ else
   echo "docker installed."
 fi
 
-echo -e "\n2) Installing PIP\n"
-PIP_VERSION=8.1.2
-dpkg -l python-pip >/dev/null 2>&1
-if [ $? -eq 0 ] ; then
-	echo "python-pip installed, removing ...";
-	sudo apt-get purge --assume-yes --quiet python-pip
-fi
-echo "Making sure pip is correct version: $PIP_VERSION";
-sudo apt-get install --assume-yes --quiet libffi-dev libssl-dev python-setuptools
-sudo easy_install --script-dir=/usr/bin --upgrade pip==$PIP_VERSION
+echo -e "\n2) Installing Docker-compose\n"
+sudo bash -c "curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+sudo chmod +x /usr/local/bin/docker-compose
 
-echo -e "\n3) Installing Docker-compose\n"
-sudo pip install pyopenssl ndg-httpsclient pyasn1 docker-compose==1.7.1
-
-echo -e "\n4) Installing Graphviz\n"
+echo -e "\n3) Installing Graphviz\n"
 which dot > /dev/null || sudo apt-get install -y graphviz
 
-echo -e "\n5) Making sure secrets.env is present\n"
+echo -e "\n4) Making sure secrets.env is present\n"
 if [ ! -f "$LSEXTPATH/docker-compose/secrets.env" ]; then
   touch "$LSEXTPATH/docker-compose/secrets.env"
 fi
 
-echo -e "\n6) Provisioning system with docker-compose\n"
+echo -e "\n5) Provisioning system with docker-compose\n"
 cd "$LSEXTPATH/docker-compose"
 source docker-compose.env
 source secrets.env
@@ -78,7 +68,7 @@ if [ "$LSENV" == "prod" ]; then
   exit 0
 fi
 
-echo -e "\n7) Attempting to set up Elasticsearch indices and mappings"
+echo -e "\n6) Attempting to set up Elasticsearch indices and mappings"
 for i in {1..10}; do
   wget --method=POST --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 -qO- "$HOST:8005/search/clear_index" &> /dev/null
   if [ $? = 0 ]; then break; fi;
