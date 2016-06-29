@@ -196,7 +196,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige sjanger i feltet "Sjangre" og trykker enter
-    Så velger jeg en sjanger fra treffliste fra emneregisteret
+    Så velger jeg en sjanger fra treffliste fra sjangerregisteret
 
   Scenario: Redigere serie i katalogisering
     Gitt at jeg vil opprette en serie
@@ -207,7 +207,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige serie i feltet "Serier" og trykker enter
-    Så velger jeg en serie fra treffliste fra emneregisteret
+    Så velger jeg en serie fra treffliste fra serieregisteret
 
   Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
     Gitt at det finnes et verk med forfatter
