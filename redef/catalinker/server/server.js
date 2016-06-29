@@ -5,10 +5,11 @@ var browserify = require('browserify-middleware')
 var axios = require('axios')
 var compileSass = require('express-compile-sass')
 var app = express()
-var requestProxy = require('express-request-proxy')
+var requestProxy = require('express-http-proxy')
 require('./workflow_config')(app)
 require('./random_test_data')(app)
 var babelify = require('express-babelify-middleware')
+var url = require('url')
 require('ejs')
 
 if (app.get('env') === 'development') {
@@ -86,8 +87,11 @@ app.get('/valueSuggestions/demo_:source/:isbn', function (req, res, next) {
 })
 
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
-app.all('/services/*', requestProxy({
-  url: services + '/*'
+
+app.use('/services', requestProxy(services, {
+  forwardPath: function(req, res) {
+    return url.parse(req.url).path;
+  }
 }))
 
 app.use('/style', compileSass({
