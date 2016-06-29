@@ -89,14 +89,14 @@ app.get('/valueSuggestions/demo_:source/:isbn', function (req, res, next) {
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
 
 app.use('/services', requestProxy(services, {
-  forwardPath: function(req, res) {
-    return url.parse(req.url).path;
+  forwardPath: function (req, res) {
+    return url.parse(req.url).path
   }
 }))
 
 app.get('/valueSuggestions/:source/:isbn', requestProxy(services, {
-  forwardPath: function(req, res) {
-    var reqUrl = services + "/datasource/" + req.params.source + "/" + req.params.isbn
+  forwardPath: function (req, res) {
+    var reqUrl = services + '/datasource/' + req.params.source + '/' + req.params.isbn
     console.log(reqUrl)
     return url.parse(reqUrl).path
   }
@@ -123,10 +123,10 @@ if (app.get('env') === 'development') {
   app.use(function (err, req, res, next) {
     console.error(err.message)
     if (res.headersSent) {
-      return next(err);
+      return next(err)
     }
-    res.status(500);
-    res.render('error', { error: err });
+    res.status(500)
+    res.render('error', { error: err })
   })
 }
 
@@ -135,10 +135,10 @@ if (app.get('env') === 'development') {
 app.use(function (err, req, res, next) {
   console.error(err.message)
   if (res.headersSent) {
-    return next(err);
+    return next(err)
   }
-  res.status(500);
-  res.render('error', { error: err });
+  res.status(500)
+  res.render('error', { error: err })
 })
 
 Server = app.listen(process.env.BIND_PORT || 8010, process.env.BIND_IP, function () {
