@@ -9,6 +9,7 @@ HOST ?= 192.168.50.12
 endif
 KOHA_INSTANCE ?= name
 LIMIT ?= -1
+SKIP ?= 0
 DATASET ?= example
 MIGRATION_DATA=$(shell pwd)/example_data
 ifeq ($(DATASET),full)
@@ -31,7 +32,7 @@ clean:
 
 out/done.massage_input_data:
 	@echo "   Massaging and transforming input data (Bibliofil exports)"
-	@$(MIGRATION_RUN_CMD) "catmassage -outdir=/out -vmarc=/data/$(VMARC) -exemp=/data/$(EXEMP) -limit=$(LIMIT)"
+	@$(MIGRATION_RUN_CMD) "catmassage -outdir=/out -vmarc=/data/$(VMARC) -exemp=/data/$(EXEMP) -limit=$(LIMIT) -skip=$(SKIP)"
 	@echo "OK Done massaging\n"
 	@touch out/done.massage_input_data
 
