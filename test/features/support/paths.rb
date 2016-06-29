@@ -99,7 +99,7 @@ module Paths
         :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://catalinker:#{port(:catalinker)}#{paths[path.to_sym]}"
+    "http://#{ENV['CATALINKER_HOST'] || 'catalinker'}:#{port(:catalinker)}#{paths[path.to_sym]}"
   end
 
   def patron_client(path=nil)
