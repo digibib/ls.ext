@@ -1,11 +1,12 @@
 # encoding: UTF-8
 # language: no
 
-@redef @arbeidsflyt @check-for-errors
+@redef @arbeidsflyt @check-for-errors @wip
 Egenskap: katalogisere med eksterne kilder
   Som katalogisator
   Ønsker jeg å kunne hente data fra eksterne kilder for at katalogiseringen skal gå raskere og få høyest mulig kvalitet
 
+  @wip
   Scenario: Hente inn eksterne data
     Gitt at jeg har en bok
     Og jeg legger inn et ISBN-nummer på startsida og trykker enter
