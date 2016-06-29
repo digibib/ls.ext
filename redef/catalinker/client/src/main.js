@@ -246,8 +246,8 @@
       if (value) {
         input.values[ index ] = {
           old: {
-            value: options.isNew ? null : (input.values[ index ] || { current: { value: undefined } }).current.value,
-            lang: options.isNew ? null : (input.values[ index ] || { current: { value: undefined } }).current.lang
+            value: value.value,
+            lang: value.lang
           },
           current: {
             value: value.value,
@@ -603,7 +603,8 @@
           _.each(inputsToSave, function (input) {
             var predicate = input.predicate
             _.each(input.values, function (value) {
-              Main.patchResourceFromValue(resourceUri, predicate, value, input.datatype, errors)
+              Main.patchResourceFromValue(resourceUri, predicate, value, input.datatypes[0], errors)
+              value.old = deepClone(value.current)
             })
           })
           ractive.update()
@@ -732,38 +733,49 @@
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
-    function assignInputTypeFromRange (input) {
-      switch (input.ranges[ 0 ]) {
-        case 'http://www.w3.org/2001/XMLSchema#string':
-          input.type = 'input-string'
-          break
-        case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString':
-          input.type = 'input-lang-string'
-          break
-        case 'http://www.w3.org/2001/XMLSchema#gYear':
-          input.type = 'input-gYear'
-          break
-        case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
-          input.type = 'input-nonNegativeInteger'
-          break
-        case 'deichman:Place':
-        case 'deichman:Work':
-        case 'deichman:Person':
-        case 'deichman:Publisher':
-        case 'deichman:Role':
-        case 'deichman:Serial':
-        case 'deichman:Contribution':
-        case 'deichman:SerialIssue':
-        case 'deichman:Subject':
-        case 'deichman:Genre':
-          // TODO infer from ontology that this is an URI
-          // (because deichman:Work a rdfs:Class)
-          input.datatype = 'http://www.w3.org/2001/XMLSchema#anyURI'
-          input.type = 'input-string' // temporarily
-          break
-        default:
-          throw new Error('Don\'t know which input-type to assign to range: ' + input.range)
-      }
+  var typesFromRange = function (range) {
+    var inputType
+    var rdfType = range
+    switch (range) {
+      case 'http://www.w3.org/2001/XMLSchema#string':
+        inputType = 'input-string'
+        break
+      case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString':
+        inputType = 'input-lang-string'
+        break
+      case 'http://www.w3.org/2001/XMLSchema#gYear':
+        inputType = 'input-gYear'
+        break
+      case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
+        inputType = 'input-nonNegativeInteger'
+        break
+      case 'deichman:Place':
+      case 'deichman:Work':
+      case 'deichman:Person':
+      case 'deichman:Publisher':
+      case 'deichman:Role':
+      case 'deichman:Serial':
+      case 'deichman:Contribution':
+      case 'deichman:SerialIssue':
+      case 'deichman:Subject':
+      case 'deichman:Genre':
+      case 'http://www.w3.org/2001/XMLSchema#anyURI':
+        rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
+        inputType = 'input-string'
+        break
+      default:
+        throw new Error('Don\'t know which input-type to assign to range: ' + range)
+    }
+    return {
+      inputType: inputType,
+      rdfType: rdfType
+    }
+  }
+
+  function assignInputTypeFromRange (input) {
+      var types = typesFromRange(input.ranges[ 0 ])
+      input.type = types.inputType
+      input.datatypes = [types.rdfType]
     }
 
     function assignUniqueValueIds (input) {
@@ -816,7 +828,7 @@
 
           if (input.predefined) {
             input.type = 'select-predefined-value'
-            input.datatype = 'http://www.w3.org/2001/XMLSchema#anyURI'
+            input.datatypes = ['http://www.w3.org/2001/XMLSchema#anyURI']
           } else {
             assignInputTypeFromRange(input)
           }
@@ -923,7 +935,7 @@
               isMainEntry: true,
               widgetOptions: input.widgetOptions,
               suggestValueFrom: input.suggestValueFrom,
-              datatype: input.datatype,
+              datatypes: input.datatypes,
               showOnlyWhenEmpty: input.searchMainResource.showOnlyWhenMissingTargetUri,
               dataAutomationId: input.searchMainResource.automationId,
               inputIndex: index,
@@ -936,7 +948,7 @@
               type: 'searchable-for-value-suggestions',
               visible: true,
               widgetOptions: input.widgetOptions,
-              datatype: input.datatype,
+              datatypes: input.datatypes,
               showOnlyWhenEmpty: input.searchForValueSuggestions.showOnlyWhenMissingTargetUri,
               dataAutomationId: input.searchForValueSuggestions.automationId,
               searchForValueSuggestions: input.searchForValueSuggestions,
@@ -1156,7 +1168,7 @@
         }
       },
       patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
-        var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, datatype)
+        var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, typesFromRange(datatype).rdfType)
         if (patch && patch.trim() !== '' && patch.trim() !== '[]') {
           ractive.set('save_status', 'arbeider...')
           axios.patch(proxyToServices(subject), patch, {
@@ -1294,7 +1306,7 @@
               p: subInput.input.predicate,
               o: {
                 value: _.isArray(value) ? value[ 0 ] : value,
-                type: subInput.input.datatype
+                type: subInput.input.datatypes[0]
               }
             })
           })
@@ -1412,7 +1424,7 @@
                 var inputNode = ractive.get(grandParentOf(keypath))
                 if (!inputNode.isSubInput && keypath.indexOf('enableCreateNewResource') === -1) {
                   Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
-                    ractive.get(keypath), inputNode.datatype, errors, keypath)
+                    ractive.get(keypath), inputNode.datatypes[0], errors, keypath)
                 }
                 changeType = null
               }
@@ -1615,7 +1627,7 @@
                   if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
                     return
                   }
-                  var datatypeKeypath = grandParentOf(event.keypath) + '.datatype'
+                  var datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
                   var subject = ractive.get('targetUri.' + rdfType)
                   if (subject) {
                     Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
@@ -1900,7 +1912,7 @@
                         })
                         if (targetInput) {
                           targetInput.values = deepClone(sourceInput.values)
-                          targetInput.datatype = sourceInput.datatype
+                          targetInput.datatypes = sourceInput.datatypes
                         }
                       }
                     })
@@ -1979,7 +1991,7 @@
                 var patchMotherResource = function (resourceUri) {
                   var targetInput = ractive.get(grandParentOf(origin))
                   if (!useAfterCreation && !targetInput.isSubInput) {
-                    Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatype, errors)
+                    Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatypes[0], errors)
                   }
                   return resourceUri
                 }
