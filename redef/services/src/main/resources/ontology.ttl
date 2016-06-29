@@ -97,7 +97,7 @@
 
 # ToDo: Erstatte personTitle med :specification. Domain: Person, Corporation, Subject, Place
 :personTitle a rdfs:Property ;
-  rdfs:label "Person title"@en ;
+  rdfs:label "Person mainTitle"@en ;
   rdfs:label "Personens tittel"@no ;
   rdfs:domain :Person ;
   rdfs:range xsd:string .
@@ -220,14 +220,14 @@
 
 # ToDo: Erstattes med :hasMainTitle
 :mainTitle a rdfs:Property ;
-  rdfs:label "Main title"@en ;
+  rdfs:label "Main mainTitle"@en ;
   rdfs:label "Hovedtittel"@no ;
   rdfs:domain :Work, :Publication ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartTitle
 :partTitle a rdfs:Property ;
-  rdfs:label "Part title"@no ;
+  rdfs:label "Part mainTitle"@no ;
   rdfs:label "Deltittel"@no ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .

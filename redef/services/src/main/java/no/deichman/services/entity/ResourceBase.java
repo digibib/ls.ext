@@ -19,9 +19,11 @@ import java.util.Optional;
  * Responsibility: Common logic for handling dependencies.
  */
 public abstract class ResourceBase {
+
     public static final String SERVLET_INIT_PARAM_KOHA_PORT = "kohaPort";
     public static final String SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY = "inMemoryRDFRepository";
     public static final String ELASTIC_SEARCH_URL = "elasticsearch.url";
+    public static final String Z3950_ENDPOINT = "z3950Endpoint";
     private EntityService entityService;
     private SearchService searchService;
     private KohaAdapter kohaAdapter;
@@ -36,7 +38,7 @@ public abstract class ResourceBase {
         this.kohaAdapter = kohaAdapter;
     }
 
-    protected final String elasticSearchBaseUrl() {
+    private String elasticSearchBaseUrl() {
         return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://192.168.50.12:8200");
     }
 
@@ -56,7 +58,7 @@ public abstract class ResourceBase {
         return entityService;
     }
 
-    public static final InMemoryRepository getInMemoryRepository() {
+    public static InMemoryRepository getInMemoryRepository() {
         if (staticInMemoryRepository == null) {
             staticInMemoryRepository = new InMemoryRepository(BaseURI.remote());
         }
@@ -91,13 +93,13 @@ public abstract class ResourceBase {
         return baseURI;
     }
 
-    protected final JSONLDCreator getJsonldCreator() {
+    final JSONLDCreator getJsonldCreator() {
         if (jsonldCreator == null) {
             jsonldCreator = new JSONLDCreator(getBaseURI());
         }
         return jsonldCreator;
     }
-    protected final void setEntityService(EntityService entityService) {
+    final void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+        xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+        <leader>01016 am a2200193   4500</leader>
+        <controlfield tag="001">000001</controlfield>
+        <controlfield tag="008">                      a          1dnob 2</controlfield>
+        <datafield tag="015" ind1=" " ind2=" ">
+            <subfield code="a">0250080</subfield>
+            <subfield code="b">BIBBI</subfield>
+        </datafield>
+        <datafield tag="019" ind1=" " ind2=" ">
+            <subfield code="b">l</subfield>
+            <subfield code="d">R</subfield>
+        </datafield>
+        <datafield tag="020" ind1=" " ind2=" ">
+            <subfield code="a">000-12-345-678-9</subfield>
+            <subfield code="b">ib.</subfield>
+            <subfield code="c">Nkr 199.00</subfield>
+        </datafield>
+        <datafield tag="035" ind1=" " ind2=" ">
+            <subfield code="a">0250080</subfield>
+        </datafield>
+        <datafield tag="082" ind1="3" ind2="1">
+            <subfield code="a">839.823</subfield>
+            <subfield code="2">5</subfield>
+        </datafield>
+        <datafield tag="100" ind1=" " ind2="0">
+            <subfield code="a">Eksempelsen, Eksempel</subfield>
+            <subfield code="d">1931-</subfield>
+            <subfield code="j">n.</subfield>
+        </datafield>
+        <datafield tag="245" ind1="3" ind2="0">
+            <subfield code="a">Et eksempel</subfield>
+            <subfield code="b">roman</subfield>
+            <subfield code="c">Eksempel Eksempelsen</subfield>
+            <subfield code="n">Andre bok</subfield>
+        </datafield>
+        <datafield tag="260" ind1=" " ind2=" ">
+            <subfield code="a">Oslo</subfield>
+            <subfield code="b">Oktober</subfield>
+            <subfield code="c">2007</subfield>
+        </datafield>
+        <datafield tag="300" ind1=" " ind2=" ">
+            <subfield code="a">191 s.</subfield>
+        </datafield>
+        <datafield tag="520" ind1=" " ind2=" ">
+            <subfield code="a">Eksempel Eksempelsens tredje, selv-biografisk roman, sørger for tung lesing samt behov for suppe. Det er ingen tvil om at denne blir en norsk klassiker som kan måles opp mot blant annet Karsten &amp; Petra har Lucia-fest.</subfield>
+        </datafield>
+        <datafield tag="600" ind1=" " ind2="2">
+            <subfield code="a">Eksempelsen, Eksempel</subfield>
+            <subfield code="d">1931-</subfield>
+            <subfield code="j">n.</subfield>
+            <subfield code="x">Fortellinger</subfield>
+            <subfield code="1">839.823</subfield>
+            <subfield code="2">BS</subfield>
+            <subfield code="9">nob</subfield>
+        </datafield>
+        <datafield tag="655" ind1=" " ind2="2">
+            <subfield code="a">Biografisk</subfield>
+            <subfield code="2">BS</subfield>
+            <subfield code="9">nor</subfield>
+        </datafield>
+        <datafield tag="700" ind1=" " ind2=" ">
+            <subfield code="a">Jimson Jimson</subfield>
+            <subfield code="e">Illustratør</subfield>
+        </datafield>
+    </record>
+</collection>

@@ -1,0 +1,76 @@
+[
+  {
+    "@graph": [
+      {
+        "deichman:name": "Eksempelsen, Eksempel",
+        "deichman:birthYear": "1931",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Jimson Jimson",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:contributor": {
+          "@id": "_:0000000"
+        },
+        "deichman:mainTitle": "A example",
+        "@type": [
+          "deichman:Work"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:isbn": "000-12-345-678-9",
+        "deichman:edition": "1. utg.",
+        "deichman:placeOfPublication": "Oslo",
+        "deichman:publisher": "Oktober",
+        "deichman:publicationYear": "2007",
+        "deichman:numberOfPages": "191 s.",
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:publicationOf": {
+          "@id": "_:0000000"
+        },
+        "deichman:mainTitle": "Et eksempel",
+        "deichman:subtitle": "roman",
+        "@type": [
+          "deichman:Publication"
+        ]
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "@type": [
+          "deichman:Contribution",
+          "deichman:MainEntry"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": "Illustratør",
+        "@type": [
+          "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      }
+    ],
+    "@context": {
+      "deichman": "http://deichman.no/ontology#",
+      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    }
+  }
+]

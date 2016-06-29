@@ -2,6 +2,7 @@ package no.deichman.services;
 
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import no.deichman.services.datasource.Datasource;
 import no.deichman.services.entity.EntityResource;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.marc.MarcResource;
@@ -36,26 +37,27 @@ import static java.util.Arrays.asList;
  * Responsibility: Start application (using embedded web server).
  */
 public final class App {
-    public static final int JAMON_WEBAPP_PORT = 8006;
+    private static final int JAMON_WEBAPP_PORT = 8006;
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
     private static final int SERVICES_PORT_NO = 8005;
     private final int port;
     private Server jettyServer;
-    private Server jamonJettyServer;
     private String kohaPort;
     private boolean inMemoryRDFRepository;
     private int jamonAppPort;
     private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://localhost:9200");
+    private String z3950Endpoint;
 
-    public App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort) {
+    public App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort, String z3950Endpoint) {
         this.port = port;
         this.kohaPort = kohaPort;
         this.inMemoryRDFRepository = inMemoryRDFRepository;
         this.jamonAppPort = jamonAppPort;
+        this.z3950Endpoint = z3950Endpoint;
     }
 
     public static void main(String[] args) {
-        App app = new App(SERVICES_PORT_NO, null, false, JAMON_WEBAPP_PORT);
+        App app = new App(SERVICES_PORT_NO, null, false, JAMON_WEBAPP_PORT, null);
         try {
             app.startSync();
         } catch (Exception e) {
@@ -121,6 +123,10 @@ public final class App {
         if (elasticSearchUrl != null) {
             jerseyServlet.setInitParameter(ResourceBase.ELASTIC_SEARCH_URL, elasticSearchUrl);
         }
+
+        if (z3950Endpoint != null) {
+            jerseyServlet.setInitParameter(ResourceBase.Z3950_ENDPOINT, z3950Endpoint);
+        }
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
                 String.join(",", asList(
@@ -131,7 +137,8 @@ public final class App {
                         MarcResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName(),
                         VersionResource.class.getCanonicalName(),
-                        TranslationResource.class.getCanonicalName()
+                        TranslationResource.class.getCanonicalName(),
+                        Datasource.class.getCanonicalName()
                 )));
 
         jettyServer.start();
@@ -139,7 +146,7 @@ public final class App {
     }
 
     private void setUpJamonWebApp() throws Exception {
-        jamonJettyServer = new Server(jamonAppPort);
+        Server jamonJettyServer = new Server(jamonAppPort);
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/");
         File tempFile = new File(System.getProperty("java.io.tmpdir"), "jamon.war");

@@ -1,5 +1,8 @@
 package no.deichman.services.services;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -12,6 +15,8 @@ import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.entity.kohaadapter.KohaSvcMock;
 import no.deichman.services.entity.repository.InMemoryRepository;
+import no.deichman.services.entity.z3950.MappingTester;
+import no.deichman.services.entity.z3950.Z3950ServiceMock;
 import no.deichman.services.ontology.AuthorizedValue;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.services.search.EmbeddedElasticsearchServer;
@@ -81,6 +86,7 @@ public class AppTest {
     private static KohaSvcMock kohaSvcMock;
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
     private static int appPort;
+    private static Z3950ServiceMock z3950ServiceMock;
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -88,9 +94,13 @@ public class AppTest {
         int jamonAppPort = PortSelector.randomFree();
         kohaSvcMock = new KohaSvcMock();
         String svcEndpoint = LOCALHOST + ":" + kohaSvcMock.getPort();
+        z3950ServiceMock = new Z3950ServiceMock();
+        String z3950Endpoint = LOCALHOST + ":" + z3950ServiceMock.getPort();
+        System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
+
         baseUri = LOCALHOST + ":" + appPort + "/";
         System.setProperty("DATA_BASEURI", baseUri);
-        app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO, jamonAppPort);
+        app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO, jamonAppPort, z3950Endpoint);
         app.startAsync();
 
         setupElasticSearch();
@@ -1291,6 +1301,22 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Zappa, Frank", 2));
 
         // TODO also reindex by changes in subject resource
+    }
+
+    @Test
+    public void test_z3950_resource_is_retrieved_and_mapped() throws UnirestException {
+        z3950ServiceMock.getSingleMarcRecordExpectation();
+
+        String url = baseUri + "/datasource/bibbi/912312312312";
+
+        HttpResponse<String> result = Unirest.get(url).asString();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        MappingTester mappingTester = new MappingTester();
+        String resultJson = mappingTester.simplifyBNodes(gson.toJson(new JsonParser().parse(result.getBody()).getAsJsonObject()));
+        String comparisonJson = mappingTester.simplifyBNodes(new ResourceReader().readFile("BS_external_data_processed.json"));
+
+        assertEquals(comparisonJson, resultJson);
     }
 
     private Boolean resourceIsIndexed(String uri) throws Exception {
