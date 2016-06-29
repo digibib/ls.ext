@@ -43,8 +43,9 @@ out/done.setup_koha: out/done.massage_input_data
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/itypes.sql'
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
-	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems and items\n"
+	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems and items"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;SET foreign_key_checks=1;"'
+	@echo "OK Done setting up Koha\n"
 	@touch out/done.setup_koha
 
 out/done.migrate_catalogue_to_koha: out/done.setup_koha
@@ -87,13 +88,13 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "-- Running SPARQL queries to massage resources (create works & relationships)"
 	@ls sparql/*.sparql | xargs sed -e s/__HOST__/$(HOST):8005/g | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba > /dev/null # TODO minimize output from isql
 	@echo "-- Constructing the complete RDF resources to be migrated (resources.nt)"
-	@$(MIGRATION_RUN_CMD) 'construct -se=http://localhost:8005 -ve=http://virtuoso:8890/sparql-auth/ > /out/resources.nt'
+	@$(MIGRATION_RUN_CMD) 'construct -se=http://$(HOST):8005 -ve=http://virtuoso:8890/sparql > /out/resources.nt'
 	@echo "-- Splitting resources.nt into chunks"
 	@split --additional-suffix=.nt --lines 250000 out/resources.nt out/complete
 	@echo "-- Clearing default graph in Fuseki"
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST --data-urlencode update="clear default" http://fuseki:3030/ds/update' > /dev/null
 	@echo "-- Importing chunks into Fuseki"
-	@$(MIGRATION_RUN_CMD) 'for f in /out/complete* ; do curl -s -w "   %{time_total}s\n" -X POST fuseki:3030/ds/upload -F grap=default -F $$f=@$$f ; done'
+	@$(MIGRATION_RUN_CMD) 'for f in /out/complete* ; do curl -s  -o /dev/null -w "   %{time_total}s\n" -X POST fuseki:3030/ds/upload -F grap=default -F $$f=@$$f ; done'
 	@#echo "-- Stopping and removing temprorary virtuoso triplestore"
 	@#sudo docker stop virtuoso
 	@#sudo docker rm virtuoso
@@ -117,7 +118,7 @@ out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_in
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/images.sparql fuseki:3030/ds/update'
 	@echo "OK Done syncing.\n"
 	@touch out/done.koha_fuseki_sync
-	@echo "-- Starting resurce indexing into Elasticsearch..."
+	@echo "-- Starting indexing resources in Elasticsearch..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/person/reindex_all'
