@@ -177,7 +177,7 @@ mysql_client:
 
 # Commands for redef build & dev
 
-test_redef: test_patron_client test_services test_catalinker cuke_redef  ## Test only Redef
+test_redef: test_patron_client test_catalinker cuke_redef  ## Test only Redef (excluding services — this is tested during build)
 
 cuke_redef:						## Run only redef cucumber tests
 	@$(XHOST_ADD)
