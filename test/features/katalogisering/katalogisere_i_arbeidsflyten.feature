@@ -103,6 +103,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så husker jeg tittelnummeret til senere
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og jeg venter litt
+    Og jeg venter litt
     Så jeg skriver verdien på tittelnummer i feltet som heter "Utgivelser" og trykker enter
     Så velger jeg en utgivelse fra treffliste fra utgivelsesregisteret
     Så trykker jeg på "Slett utgivelsen"-knappen
@@ -233,6 +235,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg kan legge til tittelen for det nye verket
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
     Så ser jeg at det er to treff i resultatlisten
+    Og jeg venter litt
     Når jeg legger inn forfatternavnet på startsida
     Så velger jeg en person fra treffliste fra personregisteret
     Og at jeg legger navnet på verket og trykker enter
