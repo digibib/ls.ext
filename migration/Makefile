@@ -30,6 +30,9 @@ all: out/done.koha_fuseki_sync
 rebuild:
 	@sudo docker-compose -f ../docker-compose/docker-compose.yml build --no-cache migration
 
+debug: # Spin up a migration container and enter it
+	@MIGRATION_RUN_CMD=sudo docker run --net=dockercompose_backend --rm --cpu-shares=100 -it -v $(shell pwd)/out:/out -v $(MIGRATION_DATA):/data dockercompose_migration bash
+
 clean:
 	@rm -f out/*
 
