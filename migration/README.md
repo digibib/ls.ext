@@ -2,7 +2,7 @@
 
 ## Data flow diagram
 
-Comming soon.
+![Migration data flow](flow.png?raw=true "Migration data flow")
 
 ## How to
 
