@@ -182,7 +182,7 @@ test_redef: test_patron_client test_catalinker cuke_redef  ## Test only Redef (e
 cuke_redef:						## Run only redef cucumber tests
 	@$(XHOST_ADD)
 	$(CMD) -c "rm -rf $(LSEXTPATH)/test/report/*.* && \
-	  cd $(LSEXTPATH)/docker-compose && sudo docker-compose run $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
+	  cd $(LSEXTPATH)/docker-compose && sudo docker-compose run --rm $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt \
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)'"
