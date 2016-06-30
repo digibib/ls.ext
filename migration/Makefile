@@ -70,7 +70,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
 	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST):8005/ config/mapping.yaml && ruby marc2rdf.rb -i /out/catalogue.marcxml -h $(HOST):8005 > /out/catalogue.nt" 2> /dev/null
-	@echo "OK Done initial convertion of catalogue to RDF\n"
+	@echo "OK Done initial conversion of catalogue to RDF\n"
 	@touch out/done.convert_catalogue_to_nt
 
 VIRTUOSO=http://$(HOST):8890
