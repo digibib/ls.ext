@@ -23,9 +23,12 @@ MYSQL_CMD=mysql --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MY
 # Tasks
 # =====
 
-.PHONY: all clean
+.PHONY: all clean rebuild
 
 all: out/done.koha_fuseki_sync
+
+rebuild:
+	@sudo docker-compose -f ../docker-compose/docker-compose.yml build --no-cache migration
 
 clean:
 	@rm -f out/*
