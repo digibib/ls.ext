@@ -128,7 +128,6 @@ out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_in
 	@echo "-- Starting indexing resources in Elasticsearch..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/person/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
