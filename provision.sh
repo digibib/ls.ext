@@ -26,7 +26,7 @@ else
 fi
 
 echo -e "\n2) Installing Docker-compose\n"
-sudo bash -c "curl -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+sudo bash -c "curl -s -L https://github.com/docker/compose/releases/download/1.7.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
 sudo chmod +x /usr/local/bin/docker-compose
 
 echo -e "\n3) Installing Graphviz\n"
