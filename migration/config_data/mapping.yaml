@@ -2669,7 +2669,7 @@
     -
       '001':
         titleNumber:
-          predicate: "ONTOLOGY.bibliofilPublicationID"
+          predicate: "ONTOLOGY.recordID"
           object:
             datatype: "literal"
             regex_strip: "^0+"

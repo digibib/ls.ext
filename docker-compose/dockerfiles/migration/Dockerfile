@@ -8,7 +8,6 @@ RUN apt-get update \
 
 RUN go get github.com/digibib/migtools/catmassage
 RUN go get github.com/digibib/migtools/construct
-RUN go get github.com/digibib/migtools/syncids
 RUN go get github.com/digibib/migtools/syncbranches
 RUN go get github.com/digibib/migtools/syncimages
 

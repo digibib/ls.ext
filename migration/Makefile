@@ -43,7 +43,7 @@ out/done.massage_input_data:
 	@touch out/done.massage_input_data
 
 out/done.setup_koha: out/done.massage_input_data
-	@echo "   Setting up Koha with branches, itemtypes and authorized values"
+	@echo "   Setting up Koha"
 	@echo "-- Populating branches"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/branches.sql'
 	@echo "-- Populating itemtypes"
@@ -65,6 +65,9 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@sudo docker run --net=dockercompose_backend --rm -v dockercompose_koha_state:/data -v $(shell pwd)/out:/out busybox cp /out/catalogue.mrc /data/
 	@echo "-- Importing to Koha with bulkmarcimport"
 	@sudo docker exec koha_container koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
+	@echo "-- Updating biblionumbers (so that biblionumber=tittelnummer)"
+	@cp sql/*.sql out/
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec koha_container koha-start-zebra $$KOHA_INSTANCE
 	@echo "OK Done importing catalogue into Koha\n"
@@ -111,11 +114,6 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 
 out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_into_fuseki
 	@echo "   Syncing Koha and Fuseki"
-	@echo "-- Extracting biblionumber and bibliofil-tittelnumbers from Koha"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblionumber, ExtractValue(marcxml, '\''//controlfield[@tag=\"001\"]'\'') AS '\''bibliofilPublicationId'\'' FROM biblioitems;"' > out/sync_ids.tsv
-	@echo "-- Generating SPARQL query to sync IDs, and send it to Fuseki"
-	@$(MIGRATION_RUN_CMD) "syncids -h=$(HOST):8005 -i=/out/sync_ids.tsv > /out/ids.sparql"
-	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/ids.sparql fuseki:3030/ds/update'
 	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
 	@$(MIGRATION_RUN_CMD) "syncbranches -h=$(HOST):8005 -i=/out/holdingbranches.tsv > /out/holdingbranches.sparql"
