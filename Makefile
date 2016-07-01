@@ -48,7 +48,7 @@ up_ship:                                              ##
 
 shell_provision_ship:					## Run ONLY shell provisioners
 	@$(NOVAGRANT) || vagrant provision $(SHIP) --provision-with shell
-	@$(NOVAGRANT) && ./provision.sh $(LSDEVMODE) $(LSEXTPATH) $(HOST)
+	-@$(NOVAGRANT) && ./provision.sh $(LSDEVMODE) $(LSEXTPATH) $(HOST)
 
 provision:  shell_provision_ship wait_until_ready   	## Full provision
 
