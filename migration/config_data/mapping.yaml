@@ -1,0 +1,3025 @@
+---
+  tags:
+    -
+      '100':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.creator"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/person/h"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilPersonId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "ONTOLOGY.birthYear"
+                      object:
+                        datatype: "gYear"
+                        regex_match: "(\\d+)-"
+                  -
+                    d:
+                      predicate: "ONTOLOGY.deathYear"
+                      object:
+                        datatype: "gYear"
+                        regex_match: "-(\\d+)"
+                  -
+                    d:
+                      predicate: "RAW.lifeSpan"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "ONTOLOGY.nationality"
+                      object:
+                        datatype: "uri"
+                        regex_strip: "[\\.\\s]+"
+                        prefix: "http://data.deichman.no/nationality#"
+                        regex_split: "[\\-]+"
+                  -
+                    q:
+                      predicate: "RAW.fullName"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Person"
+    -
+      '100':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/person/h"
+              conditions:
+                subfield:
+                  e:
+                    default: "ROLE.author"
+                    subs:
+                      arr: "ROLE.musicalArranger"
+                      biogr: "MIGRATION.biographed"
+                      regissør: "ROLE.director"
+                      reg: "ROLE.director"
+                      illustr: "ROLE.illustrator"
+                      ill: "ROLE.illustrator"
+                      dir: "ROLE.conductor"
+                      innl: "ROLE.reader"
+                      oppl: "ROLE.reader"
+                      komm: "ROLE.reader"
+                      medf: "ROLE.author"
+                      fort: "ROLE.reader"
+                      opprforf: "ROLE.author"
+                      forf: "ROLE.author"
+                      medforf: "ROLE.author"
+                      medarb: "ROLE.contributor"
+                      bearb: "ROLE.contributor"
+                      foto: "ROLE.photographer"
+                      fotogr: "ROLE.photographer"
+                      red: "ROLE.editor"
+                      komp: "ROLE.composer"
+                      k: "ROLE.composer"
+                      utøv: "ROLE.performer"
+                      eks: "ROLE.performer"
+                      overs: "ROLE.translator"
+                      gjendikt: "ROLE.translator"
+                      tekstf: "ROLE.lyricist"
+                      t: "ROLE.lyricist"
+                      manusforf: "ROLE.scriptWriter"
+                      sang: "ROLE.performer"
+                      skuesp: "ROLE.actor"
+                      koreogr: "ROLE.coreographer"
+                    orig: "arr|bearb|biogr|dir|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+    -
+      '100':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.mainEntry"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/person/h"
+    -
+      '110':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.creator"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/corporation/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilCorporationId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    b:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.place"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "RAW.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "RAW.nationality"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Corporation"
+    -
+      '110':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/corporation/x"
+              conditions:
+                subfield:
+                  e:
+                    default: "ROLE.author"
+                    subs:
+                      arr: "ROLE.musicalArranger"
+                      biogr: "MIGRATION.biographed"
+                      regissør: "ROLE.director"
+                      reg: "ROLE.director"
+                      illustr: "ROLE.illustrator"
+                      ill: "ROLE.illustrator"
+                      dir: "ROLE.conductor"
+                      innl: "ROLE.reader"
+                      oppl: "ROLE.reader"
+                      komm: "ROLE.reader"
+                      medf: "ROLE.author"
+                      fort: "ROLE.reader"
+                      opprforf: "ROLE.author"
+                      forf: "ROLE.author"
+                      medforf: "ROLE.author"
+                      medarb: "ROLE.contributor"
+                      bearb: "ROLE.contributor"
+                      foto: "ROLE.photographer"
+                      fotogr: "ROLE.photographer"
+                      red: "ROLE.editor"
+                      komp: "ROLE.composer"
+                      k: "ROLE.composer"
+                      utøv: "ROLE.performer"
+                      eks: "ROLE.performer"
+                      overs: "ROLE.translator"
+                      gjendikt: "ROLE.translator"
+                      tekstf: "ROLE.lyricist"
+                      t: "ROLE.lyricist"
+                      manusforf: "ROLE.scriptWriter"
+                      sang: "ROLE.performer"
+                      skuesp: "ROLE.actor"
+                      koreogr: "ROLE.coreographer"
+                    orig: "arr|bearb|biogr|dir|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+
+    -
+      '110':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.mainEntry"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/corporation/x"
+    -
+      '111':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.creator"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/event/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilEventId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.place"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "RAW.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    n:
+                      predicate: "RAW.number"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "RAW.Event"
+    -
+      '111':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.mainEntry"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/event/x"
+    -
+      '130':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.mainEntry"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilWorkId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    p:
+                      predicate: "ONTOLOGY.partTitle"
+                      object:
+                        datatype: "literal"
+              class: "MIGRATION.Work"
+    -
+      '240':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.originalTitle"
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+          -
+            b:
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+              conditions:
+                indicator:
+                  indicator1:
+                    subs:
+                      '1': "MIGRATION.originalSubtitle"
+                    orig: "1"
+          -
+            n:
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+              conditions:
+                indicator:
+                  indicator1:
+                    subs:
+                      '1': "MIGRATION.originalPartNumber"
+                    orig: "1"
+          -
+            p:
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+              conditions:
+                indicator:
+                  indicator1:
+                    subs:
+                      '1': "MIGRATION.originalPartTitle"
+                    orig: "1"
+          -
+            w:
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+              conditions:
+                indicator:
+                  indicator1:
+                    subs:
+                      '1': "MIGRATION.originalSortingForm"
+                    orig: "1"
+    -
+      '240':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.publicationOf"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilWorkId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    n:
+                      predicate: "ONTOLOGY.partNumber"
+                      object:
+                        datatype: "literal"
+                  -
+                    p:
+                      predicate: "ONTOLOGY.partTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+              class: "MIGRATION.Work"
+    -
+      '245':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.mainTitle"
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+          -
+            b:
+              predicate: "ONTOLOGY.subtitle"
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+          -
+            c:
+              predicate: "RAW.statementOfResponsibility"
+              object:
+                datatype: "literal"
+          -
+            h:
+              predicate: "RAW.materialDescription"
+              object:
+                datatype: "literal"
+          -
+            n:
+              predicate: "ONTOLOGY.partNumber"
+              object:
+                datatype: "literal"
+          -
+            p:
+              predicate: "ONTOLOGY.partTitle"
+              object:
+                datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+          -
+            w:
+              predicate: "RAW.sortingForm"
+              object:
+                datatype: "literal"
+    -
+      '245':
+        subfields:
+          -
+            '9':
+              predicate: "RAW.untranscribedTitle"
+              object:
+                combinestring: "_"
+                datatype: "literal"
+                combine:
+                  - "a"
+                  - "9"
+    -
+      '246':
+        subfields:
+          -
+            a:
+              predicate: "RAW.parallelMainTitle"
+              object:
+                datatype: "literal"
+          -
+            b:
+              predicate: "RAW.parallelSubtitle"
+              object:
+                datatype: "literal"
+          -
+            n:
+              predicate: "RAW.parallelPartNumber"
+              object:
+                datatype: "literal"
+          -
+            p:
+              predicate: "RAW.parallelPartTitle"
+              object:
+                datatype: "literal"
+    -
+      '250':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.edition"
+              object:
+                datatype: "literal"
+    -
+      '260':
+        subfields:
+          -
+            a:
+              predicate: "RAW.publicationPlace"
+              object:
+                datatype: "literal"
+                regex_strip: "[^\\p{Word},\\s\\.()-;:]+"
+          -
+            b:
+              predicate: "MIGRATION.publisher"
+              object:
+                datatype: "literal"
+          -
+            c:
+              predicate: "ONTOLOGY.publicationYear"
+              object:
+                datatype: "gYear"
+                regex_match: "[\\d]{4}"
+    -
+      '260':
+        subfields:
+          -
+            c:
+              predicate: "RAW.publicationYear"
+              object:
+                datatype: "literal"
+    -
+      '260':
+        subfields:
+          -
+            c:
+              predicate: "RAW.firstEditionCandidate"
+              object:
+                datatype: "gYear"
+                regex_match: "[\\d]{4}"
+    -
+      '300':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.numberOfPages"
+              object:
+                datatype: "literal"
+          -
+            b:
+              predicate: "RAW.illustrativeMatter"
+              object:
+                datatype: "literal"
+          -
+            e:
+              predicate: "RAW.physicalDescription"
+              object:
+                datatype: "literal"
+    -
+      '440':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.series"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/serial/s"
+              relation:
+                class: "ONTOLOGY.Serial"
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilSerieId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "ONTOLOGY.issn"
+                      object:
+                        datatype: "literal"
+    -
+      '440':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.seriesEntry"
+
+              object:
+                combinestring: "_"
+                datatype: "uri"
+                prefix: "http://placeholder.com/seriesEntry/x"
+                urlize: true
+                combine:
+                  - "3"
+                  - "v"
+              relation:
+                class: "MIGRATION.SeriesEntry"
+                subfields:
+                  -
+                    '3':
+                      predicate: "MIGRATION.series"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/series/x"
+                  -
+                    v:
+                      predicate: "RAW.volumeNumber"
+                      object:
+                        datatype: "literal"
+    -
+      '500':
+        subfields:
+          -
+            a:
+              predicate: "RAW.description"
+              object:
+                datatype: "literal"
+    -
+      '500':
+        subfields:
+          -
+            a:
+              predicate: "RAW.firstEditionCandidate"
+              object:
+                datatype: "gYear"
+                regex_match: "[uU]tg.+([\\d]{4})"
+    -
+      '503':
+        subfields:
+          -
+            a:
+              predicate: "RAW.firstEditionCandidate"
+              object:
+                datatype: "gYear"
+                regex_match: "[\\d]{4}"
+    -
+      '505':
+        subfields:
+          -
+            a:
+              predicate: "RAW.contentsDescription"
+              object:
+                datatype: "literal"
+    -
+      '520':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.abstract"
+              object:
+                datatype: "literal"
+    -
+      '571':
+        subfields:
+          -
+            a:
+              predicate: "RAW.identifierNote"
+              object:
+                datatype: "literal"
+    -
+      '600':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/person/h"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilPersonId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "ONTOLOGY.birthYear"
+                      object:
+                        datatype: "gYear"
+                        regex_match: "(\\d+)-"
+                  -
+                    d:
+                      predicate: "ONTOLOGY.deathYear"
+                      object:
+                        datatype: "gYear"
+                        regex_match: "-(\\d+)"
+                  -
+                    d:
+                      predicate: "RAW.lifeSpan"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "ONTOLOGY.nationality"
+                      object:
+                        datatype: "uri"
+                        regex_strip: "[\\.\\s]+"
+                        prefix: "http://data.deichman.no/nationality#"
+                        regex_split: "[\\-]+"
+                  -
+                    q:
+                      predicate: "RAW.fullName"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Person"
+    -
+      '600':
+        subfields:
+          -
+            't':
+              predicate: "ONTOLOGY.subject"
+              object:
+                combinestring: "_"
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+                urlize: true
+                combine:
+                  - "3"
+                  - "t"
+              relation:
+                class: "MIGRATION.Work"
+                subfields:
+                  -
+                    '3':
+                      predicate: "MIGRATION.creator"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/person/h"
+                  -
+                    t:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+    -
+      '600':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/subject/s"
+                md5: true
+              relation:
+                class: "ONTOLOGY.Subject"
+                subfields:
+                  -
+                    x:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '600':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/personSubjectAuthority/h"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "MIGRATION.lifeSpan"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "MIGRATION.nationality"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "RAW.fullName"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM600"
+    -
+      '610':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/corporation/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilCorporationId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    b:
+                      predicate: "MIGRATION.corporationSubdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.place"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "RAW.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "MIGRATION.nationality"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Corporation"
+    -
+      '610':
+        subfields:
+          -
+            't':
+              predicate: "ONTOLOGY.subject"
+              object:
+                combinestring: "_"
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+                urlize: true
+                combine:
+                  - "3"
+                  - "t"
+              relation:
+                class: "MIGRATION.Work"
+                subfields:
+                  -
+                    '3':
+                      predicate: "MIGRATION.creator"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/corporation/x"
+                  -
+                    t:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+    -
+      '610':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/subject/s"
+                md5: true
+              relation:
+                class: "ONTOLOGY.Subject"
+                subfields:
+                  -
+                    x:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '610':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/corporationSubjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    b:
+                      predicate: "MIGRATION.corporationSubdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.place"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "RAW.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "MIGRATION.nationality"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM610"
+    -
+      '611':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/event/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilEventId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.place"
+                      object:
+                        datatype: "uri"
+                        md5: true
+                        prefix: "http://placeholder.com/place/g"
+                  -
+                    d:
+                      predicate: "MIGRATION.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    n:
+                      predicate: "RAW.number"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "RAW.Event"
+    -
+      '611':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/subject/s"
+                md5: true
+              relation:
+                class: "ONTOLOGY.Subject"
+                subfields:
+                  -
+                    x:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '611':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/eventSubjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "MIGRATION.place"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "MIGRATION.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    n:
+                      predicate: "RAW.number"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM611"
+    -
+      '630':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilWorkId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    p:
+                      predicate: "ONTOLOGY.partTitle"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.Work"
+    -
+      '630':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/subject/s"
+                md5: true
+              relation:
+                class: "ONTOLOGY.Subject"
+                subfields:
+                  -
+                    x:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '630':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/workSubjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    p:
+                      predicate: "ONTOLOGY.partTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM630"
+    -
+      '650':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                combinestring: "_"
+                md5: true
+                combine:
+                  - "a"
+                  - "q"
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    'q':
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '650':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                regex_strip: "^\\(|\\)$"
+                md5: true
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        regex_strip: "^\\(|\\)$"
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '650':
+        subfields:
+          -
+            'z':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/place/g"
+              relation:
+                subfields:
+                  -
+                    'z':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Place"
+    -
+      '650':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/subjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "MIGRATION.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM650"
+    -
+      '651':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                combinestring: "_"
+                md5: true
+                combine:
+                  - "a"
+                  - "q"
+                prefix: "http://placeholder.com/place/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    'q':
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Place"
+    -
+      '651':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                regex_strip: "^\\(|\\)$"
+                md5: true
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        regex_strip: "^\\(|\\)$"
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '651':
+        subfields:
+          -
+            'z':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/place/g"
+              relation:
+                subfields:
+                  -
+                    'z':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Place"
+    -
+      '651':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/geoSubjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "MIGRATION.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM651"
+    -
+      '652':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.musicGenre"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/musicGenre/x"
+              relation:
+                class: "MIGRATION.MusicGenre"
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilMusicGenreId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '653':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/keywordAuthority/x"
+              relation:
+                class: "MIGRATION.SubjectAuthorityM653"
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '653':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                class: "ONTOLOGY.Subject"
+                subfields:
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '655':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.genre"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/genre/g"
+              relation:
+                class: "ONTOLOGY.Genre"
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilGenreId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "RAW.genreSubdivision"
+                      object:
+                        datatype: "literal"
+    -
+      '658':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.musicalStaff"
+              object:
+                datatype: "literal"
+                combinestring: "\n"
+                combine:
+                  - "a"
+                  - "b"
+    -
+      '690':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                combinestring: "_"
+                md5: true
+                combine:
+                  - "a"
+                  - "q"
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    'q':
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '690':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '690':
+        subfields:
+          -
+            'z':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/place/g"
+              relation:
+                subfields:
+                  -
+                    'z':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Place"
+    -
+      '690':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/dfbSubjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "MIGRATION.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM690"
+    -
+      '691':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                combinestring: "_"
+                md5: true
+                combine:
+                  - "a"
+                  - "q"
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    'q':
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '691':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '691':
+        subfields:
+          -
+            'z':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/place/g"
+              relation:
+                subfields:
+                  -
+                    'z':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Place"
+    -
+      '691':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/fictionSubjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "MIGRATION.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM691"
+    -
+      '692':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                combinestring: "_"
+                md5: true
+                combine:
+                  - "a"
+                  - "q"
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    'q':
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '692':
+        subfields:
+          -
+            'x':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '692':
+        subfields:
+          -
+            'z':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/place/g"
+              relation:
+                subfields:
+                  -
+                    'z':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Place"
+    -
+      '692':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/juvenileFictionSubjectAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "MIGRATION.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM692"
+    -
+      '693':
+        subfields:
+          -
+            '3':
+              predicate: "ONTOLOGY.genre"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/genre/g"
+              relation:
+                class: "ONTOLOGY.Genre"
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilGenreId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "RAW.genreSubdivision"
+                      object:
+                        datatype: "literal"
+    -
+      '694':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/juvenileKeywordAuthority/x"
+              relation:
+                class: "MIGRATION.SubjectAuthorityM694"
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '694':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.subject"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                class: "ONTOLOGY.Subject"
+                subfields:
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+    -
+      '695':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.tag"
+              object:
+                datatype: "uri"
+                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+                prefix: "http://placeholder.com/tag/x"
+                regex_split: " "
+                urlize: true
+              relation:
+                subfields:
+                  -
+                    a:
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        lang: "no"
+                class: "ONTOLOGY.Tag"
+    -
+      '699':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.BsSubject"
+              object:
+                datatype: "uri"
+                combinestring: "_"
+                md5: true
+                combine:
+                  - "a"
+                  - "q"
+                prefix: "http://placeholder.com/subject/s"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    'q':
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Subject"
+    -
+      '699':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.subjectAuthority"
+              object:
+                combinestring: "_"
+                prefix: "http://placeholder.com/bsSubjectAuthority/"
+                combine:
+                  - "a"
+                  - "q"
+                  - "x"
+                  - "z"
+                  - "0"
+                urlize: true
+                datatype: "uri"
+                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "RAW.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "RAW.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.SubjectAuthorityM699"
+    -
+      '700':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/person/h"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilPersonId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "ONTOLOGY.birthYear"
+                      object:
+                        datatype: "gYear"
+                        regex_match: "(\\d+)-"
+                  -
+                    d:
+                      predicate: "ONTOLOGY.deathYear"
+                      object:
+                        datatype: "gYear"
+                        regex_match: "-(\\d+)"
+                  -
+                    d:
+                      predicate: "RAW.lifeSpan"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "ONTOLOGY.nationality"
+                      object:
+                        datatype: "uri"
+                        regex_strip: "[\\.\\s]+"
+                        prefix: "http://data.deichman.no/nationality#"
+                        regex_split: "[\\-]+"
+                  -
+                    q:
+                      predicate: "RAW.fullName"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Person"
+    -
+      '700':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/person/h"
+              conditions:
+                subfield:
+                  e:
+                    default: "ROLE.contributor"
+                    subs:
+                      arr: "ROLE.musicalArranger"
+                      biogr: "MIGRATION.biographed"
+                      regissør: "ROLE.director"
+                      reg: "ROLE.director"
+                      illustr: "ROLE.illustrator"
+                      ill: "ROLE.illustrator"
+                      dir: "ROLE.conductor"
+                      innl: "ROLE.reader"
+                      oppl: "ROLE.reader"
+                      komm: "ROLE.reader"
+                      medf: "ROLE.author"
+                      fort: "ROLE.reader"
+                      opprforf: "ROLE.author"
+                      forft: "ROLE.author"
+                      forf: "ROLE.author"
+                      medforf: "ROLE.author"
+                      medarb: "ROLE.contributor"
+                      bearb: "ROLE.contributor"
+                      foto: "ROLE.photographer"
+                      fotogr: "ROLE.photographer"
+                      red: "ROLE.editor"
+                      komp: "ROLE.composer"
+                      k: "ROLE.composer"
+                      utøv: "ROLE.performer"
+                      eks: "ROLE.performer"
+                      overs: "ROLE.translator"
+                      gjendikt: "ROLE.translator"
+                      tekstf: "ROLE.lyricist"
+                      t: "ROLE.lyricist"
+                      manusforf: "ROLE.scriptWriter"
+                      sang: "ROLE.performer"
+                      skuesp: "ROLE.actor"
+                      koreogr: "ROLE.coreographer"
+                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+    -
+      '700':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/person/h"
+              conditions:
+                subfield:
+                  e:
+                    subs:
+                      medf: "MIGRATION.creator"
+                      medforf: "MIGRATION.creator"
+                    orig: "medf|medforf"
+    -
+      '700':
+        subfields:
+          -
+            't':
+              conditions:
+                indicator:
+                  default: "ONTOLOGY.basedOn"
+                  indicator2:
+                    subs:
+                      '0': "ONTOLOGY.basedOn"
+                      '2': "ONTOLOGY.hasPart"
+                    orig: "0|2"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+                combinestring: "_"
+                combine:
+                  - "3"
+                  - "t"
+                urlize: true
+                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+              relation:
+                subfield:
+                  -
+                    '3':
+                      predicate: "MIGRATION.creator"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/person/h"
+                  -
+                    t:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.Work"
+    -
+      '710':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/corporation/x"
+              conditions:
+                subfield:
+                  e:
+                    default: "ROLE.contributor"
+                    subs:
+                      arr: "ROLE.musicalArranger"
+                      biogr: "MIGRATION.biographed"
+                      regissør: "ROLE.director"
+                      reg: "ROLE.director"
+                      illustr: "ROLE.illustrator"
+                      ill: "ROLE.illustrator"
+                      dir: "ROLE.conductor"
+                      innl: "ROLE.reader"
+                      oppl: "ROLE.reader"
+                      komm: "ROLE.reader"
+                      medf: "ROLE.author"
+                      fort: "ROLE.reader"
+                      opprforf: "ROLE.author"
+                      forft: "ROLE.author"
+                      forf: "ROLE.author"
+                      medforf: "ROLE.author"
+                      medarb: "ROLE.contributor"
+                      bearb: "ROLE.contributor"
+                      foto: "ROLE.photographer"
+                      fotogr: "ROLE.photographer"
+                      red: "ROLE.editor"
+                      komp: "ROLE.composer"
+                      k: "ROLE.composer"
+                      utøv: "ROLE.performer"
+                      eks: "ROLE.performer"
+                      overs: "ROLE.translator"
+                      gjendikt: "ROLE.translator"
+                      tekstf: "ROLE.lyricist"
+                      t: "ROLE.lyricist"
+                      manusforf: "ROLE.scriptWriter"
+                      sang: "ROLE.performer"
+                      skuesp: "ROLE.actor"
+                      koreogr: "ROLE.coreographer"
+                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+    -
+      '710':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/corporation/x"
+              conditions:
+                subfield:
+                  e:
+                    subs:
+                      medf: "MIGRATION.creator"
+                      medforf: "MIGRATION.creator"
+                    orig: "medf|medforf"
+    -
+      '710':
+        subfields:
+          -
+            't':
+              conditions:
+                indicator:
+                  default: "ONTOLOGY.basedOn"
+                  indicator2:
+                    subs:
+                      '0': "ONTOLOGY.basedOn"
+                      '2': "ONTOLOGY.hasPart"
+                    orig: "0|2"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+                combinestring: "_"
+                combine:
+                  - "3"
+                  - "t"
+                urlize: true
+                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+              relation:
+                subfield:
+                  -
+                    '3':
+                      predicate: "MIGRATION.creator"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/corporation/x"
+                  -
+                    t:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.Work"
+    -
+      '711':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/event/x"
+              conditions:
+                subfield:
+                  e:
+                    default: "ROLE.contributor"
+                    subs:
+                      arr: "ROLE.musicalArranger"
+                      biogr: "MIGRATION.biographed"
+                      regissør: "ROLE.director"
+                      reg: "ROLE.director"
+                      illustr: "ROLE.illustrator"
+                      ill: "ROLE.illustrator"
+                      dir: "ROLE.conductor"
+                      innl: "ROLE.reader"
+                      oppl: "ROLE.reader"
+                      komm: "ROLE.reader"
+                      medf: "ROLE.author"
+                      fort: "ROLE.reader"
+                      opprforf: "ROLE.author"
+                      forft: "ROLE.author"
+                      forf: "ROLE.author"
+                      medforf: "ROLE.author"
+                      medarb: "ROLE.contributor"
+                      bearb: "ROLE.contributor"
+                      foto: "ROLE.photographer"
+                      fotogr: "ROLE.photographer"
+                      red: "ROLE.editor"
+                      komp: "ROLE.composer"
+                      k: "ROLE.composer"
+                      utøv: "ROLE.performer"
+                      eks: "ROLE.performer"
+                      overs: "ROLE.translator"
+                      gjendikt: "ROLE.translator"
+                      tekstf: "ROLE.lyricist"
+                      t: "ROLE.lyricist"
+                      manusforf: "ROLE.scriptWriter"
+                      sang: "ROLE.performer"
+                      skuesp: "ROLE.actor"
+                      koreogr: "ROLE.coreographer"
+                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+    -
+      '711':
+        subfields:
+          -
+            '3':
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/event/x"
+              conditions:
+                subfield:
+                  e:
+                    subs:
+                      medf: "MIGRATION.creator"
+                      medforf: "MIGRATION.creator"
+                    orig: "medf|medforf"
+    -
+      '711':
+        subfields:
+          -
+            't':
+              conditions:
+                indicator:
+                  default: "ONTOLOGY.basedOn"
+                  indicator2:
+                    subs:
+                      '0': "ONTOLOGY.basedOn"
+                      '2': "ONTOLOGY.hasPart"
+                    orig: "0|2"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+                combinestring: "_"
+                combine:
+                  - "3"
+                  - "t"
+                urlize: true
+                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+              relation:
+                subfield:
+                  -
+                    '3':
+                      predicate: "MIGRATION.creator"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/event/x"
+                  -
+                    t:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.Work"
+    -
+      '730':
+        subfields:
+          -
+            '3':
+              conditions:
+                indicator:
+                  default: "ONTOLOGY.basedOn"
+                  indicator2:
+                    subs:
+                      '0': "ONTOLOGY.basedOn"
+                      '2': "ONTOLOGY.hasPart"
+                    orig: "0|2"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilWorkId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    n:
+                      predicate: "ONTOLOGY.partNumber"
+                      object:
+                        datatype: "literal"
+                  -
+                    p:
+                      predicate: "ONTOLOGY.partTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+              class: "MIGRATION.Work"
+    -
+      '740':
+        subfields:
+          -
+            a:
+              object:
+                datatype: "literal"
+              conditions:
+                indicator:
+                  default: "RAW.alternativeTitle"
+                  indicator2:
+                    subs:
+                      '0': "RAW.alternativeTitle"
+                      '2': "RAW.hasPart"
+                    orig: "0|2"
+    -
+      '760':
+        subfields:
+          -
+            w:
+              predicate: "MIGRATION.parentRecordId"
+              object:
+                datatype: "literal"
+    -
+      '769':
+        subfields:
+          -
+            w:
+              predicate: "MIGRATION.parentRecordId"
+              object:
+                datatype: "literal"
+    -
+      '780':
+        subfields:
+          -
+            w:
+              predicate: "MIGRATION.previousRecordId"
+              object:
+                datatype: "literal"
+    -
+      '785':
+        subfields:
+          -
+            w:
+              predicate: "MIGRATION.nextRecordId"
+              object:
+                datatype: "literal"
+    -
+      '800':
+        subfields:
+          -
+            t:
+              predicate: "MIGRATION.isPartOf"
+              object:
+                combinestring: "_"
+                prefix: "http://placeholder.com/work/x"
+                combine:
+                  - "3"
+                  - "t"
+                urlize: true
+                datatype: "uri"
+                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "MIGRATION.creator"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/person/h"
+                  -
+                    t:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.Work"
+    -
+      '830':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.isPartOf"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/work/x"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilWorkId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.mainTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    n:
+                      predicate: "ONTOLOGY.partNumber"
+                      object:
+                        datatype: "literal"
+                  -
+                    p:
+                      predicate: "ONTOLOGY.partTitle"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+              class: "MIGRATION.Work"
+    -
+      '856':
+        subfields:
+          -
+            u:
+              predicate: "RAW.hasURL"
+              object:
+                datatype: "uri"
+                prefix: ""
+    -
+      '001':
+        titleNumber:
+          predicate: "ONTOLOGY.bibliofilPublicationID"
+          object:
+            datatype: "literal"
+            regex_strip: "^0+"
+    -
+      '008':
+        language:
+          predicate: "ONTOLOGY.language"
+          object:
+            datatype: "uri"
+            prefix: "http://lexvo.org/id/iso639-3/"
+            substr_length: 3
+            substr_offset: 35
+        audience:
+          predicate: "ONTOLOGY.audience"
+          object:
+            datatype: "uri"
+            prefix: "http://data.deichman.no/audience#"
+            substr_length: 1
+            substr_offset: 22
+            regex_substitute:
+              orig: "a|j"
+              subs:
+                a: "adult"
+                j: "juvenile"
+        writingSystem:
+          predicate: "ONTOLOGY.writingSystem"
+          object:
+            datatype: "uri"
+            prefix: "http://data.deichman.no/writingSystem#"
+            substr_length: 1
+            substr_offset: 32
+            regex_substitute:
+              orig: "a|b|c|d|e|f|g|h|i|j|k|l|m|u|z"
+              subs:
+                a: "latin"
+                b: "latin"
+                c: "cyrillic"
+                d: "japanese"
+                e: "chinese"
+                f: "arabic"
+                g: "greek"
+                h: "hebrew"
+                i: "thai"
+                j: "devanagari"
+                k: "korean"
+                l: "tamil"
+                m: "gothic"
+                u: "unknown"
+                z: "burmese"
+        literaryForm:
+          predicate: "ONTOLOGY.literaryForm"
+          object:
+            datatype: "uri"
+            prefix: "http://data.deichman.no/literaryForm#"
+            substr_length: 1
+            substr_offset: 33
+            regex_substitute:
+              orig: "0|1|r|n|d|s|t|a|l|p|b"
+              subs:
+                '0': "nonfiction"
+                '1': "fiction"
+                r: "novel"
+                n: "shortStory"
+                d: "poem"
+                s: "drama"
+                t: "cartoon"
+                a: "anthology"
+                l: "textBook"
+                p: "pointingBook"
+                b: "pictureBook"
+        biography:
+          predicate: "ONTOLOGY.biography"
+          object:
+            datatype: "uri"
+            prefix: "http://data.deichman.no/biography#"
+            substr_length: 1
+            substr_offset: 34
+            regex_substitute:
+              orig: "0|1|a|b|c|d"
+              subs:
+                '1': "biographicalContent"
+                a: "autobiography"
+                b: "singleBiograpy"
+                c: "collectiveBiography"
+                d: "biographicalInformation"
+    -
+      '019':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.audience"
+              object:
+                datatype: "uri"
+                prefix: "http://data.deichman.no/audience#"
+                regex_split: ","
+                regex_substitute:
+                  orig: "aa|a|b|bu|u|mu"
+                  subs:
+                    aa: "ages0To2"
+                    a: "ages3To5"
+                    b: "ages6To8"
+                    bu: "ages9To10"
+                    u: "ages11To12"
+                    mu: "ages13To15"
+          -
+            b:
+              predicate: "ONTOLOGY.format"
+              object:
+                datatype: "uri"
+                prefix: "http://data.deichman.no/format#"
+                regex_split: ", *"
+                regex_substitute:
+                  default: "Document"
+                  subs:
+                    a: "Map"
+                    ab: "Map"
+                    c: "Sheet_music"
+                    da: "Gramophone_record"
+                    db: "Compact_Cassette"
+                    dc: "Compact_Disc"
+                    dd: "Digi_book"
+                    de: "Digi_card"
+                    dg: "Music_recording"
+                    dh: "Language_course"
+                    di: "Audiobook"
+                    dj: "Audiobook"
+                    dl: "Super_Audio_CD"
+                    dm: "DVD-Audio"
+                    dn: "Blu-ray_Audio"
+                    dz: "MP3"
+                    ed: "Videotape"
+                    ee: "DVD"
+                    ef: "Blu-ray_Disk"
+                    fd: "Diapositive"
+                    fm: "Poster"
+                    ga: "E-book"
+                    gc: "DVD-ROM"
+                    gd: "CD-ROM"
+                    ge: "Web_page"
+                    gt: "DAISY"
+                    h: "Physical_body"
+                    ib: "Microfilm_reel"
+                    ic: "Microfiche"
+                    j: "Periodical"
+                    l: "Book"
+                    la: "E-book"
+                    ma: "Personal_computer_game"
+                    mb: "Playstation_2_game"
+                    mc: "Playstation_3_game"
+                    me: "Playstation_4_game"
+                    mj: "Xbox_360_game"
+                    mk: "Xbox_One_game"
+                    mn: "Nintendo_DS_game"
+                    mo: "Nintendo_Wii_game"
+                    na: "E-book"
+                    nb: "E-book"
+                    o: "E-book"
+                    sm: "Periodical"
+                    vo: "File_folder"
+                  orig: "ab|da|db|dc|dd|de|dg|dh|di|dj|dl|dm|dn|dz|ed|ee|ef|fd|fm|ga|gc|gd|ge|gt|ib|ic|la|ma|mb|mc|me|mj|mk|mn|mo|na|nb|sm|vo|a|c|h|j|l|o"
+          -
+            d:
+              predicate: "ONTOLOGY.literaryForm"
+              object:
+                datatype: "uri"
+                prefix: "http://data.deichman.no/literaryForm#"
+                regex_split: "(\\w{1})"
+                regex_substitute:
+                  orig: "r|n|d|s|t|a|l|p|b"
+                  subs:
+                    r: "novel"
+                    n: "shortStory"
+                    d: "poem"
+                    s: "drama"
+                    t: "cartoon"
+                    a: "anthology"
+                    l: "textBook"
+                    p: "pointingBook"
+                    b: "pictureBook"
+          -
+            e:
+              predicate: "ONTOLOGY.adaptationOfPublicationForParticularUserGroups"
+              object:
+                datatype: "uri"
+                prefix: "http://data.deichman.no/adaptationForParticularUserGroups#"
+                regex_match: ".{2}"
+                regex_substitute:
+                  orig: "ta|tb|tc|td|te|tf|tg|th|tj"
+                  subs:
+                    ta: "easyLanguage"
+                    tb: "easyContent"
+                    tc: "largePrint"
+                    td: "largePrint"
+                    te: "braille"
+                    tf: "signLanguage"
+                    tg: "tactile"
+                    tj: "capitalLetters"
+                regex_strip: "^(ta|tb|tc|td|te|tf|tg|tj)$"
+          -
+            s:
+              predicate: "ONTOLOGY.ageLimit"
+              object:
+                datatype: "literal"
+                regex_strip: "[\\D]+"
+    -
+      '020':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.isbn"
+              object:
+                datatype: "literal"
+            b:
+              predicate: "MIGRATION.binding"
+              object:
+                datatype: "literal"
+            z:
+              predicate: "RAW.incorrectIsbn"
+              object:
+                datatype: "literal"
+    -
+      '022':
+        subfields:
+          -
+            a:
+              predicate: "RAW.issn"
+              object:
+                datatype: "literal"
+    -
+      '025':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.ean"
+              object:
+                datatype: "literal"
+    -
+      '028':
+        subfields:
+          -
+            a:
+              predicate: "RAW.recordingIdentifier"
+              object:
+                datatype: "literal"
+          -
+            b:
+              predicate: "RAW.recordCompany"
+              object:
+                datatype: "literal"
+    -
+      '041':
+        subfields:
+          -
+            a:
+              predicate: "ONTOLOGY.language"
+              object:
+                datatype: "uri"
+                regex_strip: "[\\W]+"
+                prefix: "http://lexvo.org/id/iso639-3/"
+                regex_split: "(\\w{3})"
+            h:
+              predicate: "MIGRATION.originalLanguage"
+              object:
+                datatype: "uri"
+                regex_strip: "[\\W]+"
+                prefix: "http://lexvo.org/id/iso639-3/"
+                regex_split: "(\\w{3})"
+            b:
+              predicate: "ONTOLOGY.subTitles"
+              object:
+                datatype: "uri"
+                regex_strip: "[\\W]+"
+                prefix: "http://lexvo.org/id/iso639-3/"
+                regex_split: "(\\w{3})"
+    -
+      '082':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.classification"
+              object:
+                combinestring: "_"
+                datatype: "uri"
+                prefix: "http://placeholder.com/classification/x"
+                combine:
+                  - "a"
+                  - "2"
+                  - "z"
+                urlize: true
+              relation:
+                subfields:
+                  -
+                    "2":
+                      predicate: "RAW.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    "a":
+                      predicate: "RAW.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    "z":
+                      predicate: "RAW.classificationType"
+                      object:
+                        datatype: "literal"
+    -
+      '090':
+        subfields:
+          -
+            a:
+              predicate: "RAW.locationCategory"
+              object:
+                datatype: "literal"
+          -
+            c:
+              predicate: "RAW.locationDewey"
+              object:
+                datatype: "literal"
+          -
+            b:
+              predicate: "RAW.locationFormat"
+              object:
+                datatype: "literal"
+          -
+            d:
+              predicate: "RAW.locationSignature"
+              object:
+                datatype: "literal"
+    -
+      '092':
+        subfields:
+          -
+            '3':
+              predicate: "RAW.location"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/location/x"
+              relation:
+                subfields:
+                  -
+                    "a":
+                      predicate: "ONTOLOGY.label"
+                      object:
+                        datatype: "literal"
+    -
+      '084':
+        subfields:
+          -
+            a:
+              predicate: "RAW.musicClass"
+              object:
+                datatype: "literal"
