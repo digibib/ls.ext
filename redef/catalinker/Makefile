@@ -1,18 +1,18 @@
 all: build
 ifdef NOVAGRANT
-PCPATH=$(shell pwd)
+CLPATH=$(shell pwd)
 else
 CMD=vagrant ssh $(SHIP)
-PCPATH=/vagrant/redef/catalinker
+CLPATH=/vagrant/redef/catalinker
 endif
 
 IMAGE=digibib/redef-catalinker
 CONTAINER=redef_catalinker_container
 MODULE_TEST_CONTAINER=redef_catalinker_test_container
-HOST_VOLUME_BINDINGS=-v $(PCPATH)/client:/usr/src/app/client \
-	-v $(PCPATH)/public:/usr/src/app/public \
-	-v $(PCPATH)/server:/usr/src/app/server \
-	-v $(PCPATH)/module-test:/usr/src/app/module-test
+HOST_VOLUME_BINDINGS=-v $(CLPATH)/client:/usr/src/app/client \
+	-v $(CLPATH)/public:/usr/src/app/public \
+	-v $(CLPATH)/server:/usr/src/app/server \
+	-v $(CLPATH)/module-test:/usr/src/app/module-test
 
 run-dev:
 	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name dockercompose_catalinker dockercompose_catalinker npm run-script start-dev
