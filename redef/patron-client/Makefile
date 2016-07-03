@@ -1,10 +1,18 @@
 IMAGE=dockercompose_patron-client
 DOCKERHUB=digibib/redef-patron-client
 CONTAINER=redef_patron_client_container
-HOST_VOLUME_BINDINGS=-v /vagrant/redef/patron-client/src:/usr/src/app/src \
-	-v /vagrant/redef/patron-client/test:/usr/src/app/test
 
-.PHONY: test
+ifdef NOVAGRANT
+PCPATH=$(shell pwd)
+else
+CMD=vagrant ssh $(SHIP)
+PCPATH=/vagrant/redef/patron-client
+endif
+
+HOST_VOLUME_BINDINGS=-v $(PCPATH)/src:/usr/src/app/src \
+	-v $(PCPATH)/test:/usr/src/app/test
+
+.PHONY: test lit logs push
 
 lint:
 	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE) npm run -s lint

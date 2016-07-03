@@ -1,12 +1,18 @@
 all: build
+ifdef NOVAGRANT
+PCPATH=$(shell pwd)
+else
+CMD=vagrant ssh $(SHIP)
+PCPATH=/vagrant/redef/catalinker
+endif
 
 IMAGE=digibib/redef-catalinker
 CONTAINER=redef_catalinker_container
 MODULE_TEST_CONTAINER=redef_catalinker_test_container
-HOST_VOLUME_BINDINGS=-v /vagrant/redef/catalinker/client:/usr/src/app/client \
-	-v /vagrant/redef/catalinker/public:/usr/src/app/public \
-	-v /vagrant/redef/catalinker/server:/usr/src/app/server \
-	-v /vagrant/redef/catalinker/module-test:/usr/src/app/module-test
+HOST_VOLUME_BINDINGS=-v $(PCPATH)/client:/usr/src/app/client \
+	-v $(PCPATH)/public:/usr/src/app/public \
+	-v $(PCPATH)/server:/usr/src/app/server \
+	-v $(PCPATH)/module-test:/usr/src/app/module-test
 
 run-dev:
 	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name dockercompose_catalinker dockercompose_catalinker npm run-script start-dev
@@ -25,7 +31,7 @@ rm: stop
 	sudo docker rm $(CONTAINER) || true
 	sudo docker rm dockercompose_catalinker || true
 
-rm-test-instance: stop-test-instance 
+rm-test-instance: stop-test-instance
 	sudo docker rm $(MODULE_TEST_CONTAINER) || true
 
 run-test-instance: rm-test-instance
