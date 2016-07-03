@@ -191,7 +191,7 @@ test_patron_client:					## Run unit and module tests of patron-client
 	$(CMD) -c 'cd $(LSEXTPATH)/redef/patron-client && make test'
 
 test_catalinker:
-	$(CMD) -c 'cd $(LSEXTPATH)/redef/patron-client && make test'
+	$(CMD) -c 'cd $(LSEXTPATH)/redef/catalinker && make test'
 
 login: # needs EMAIL, PASSWORD, USER
 	@ $(CMD) -c 'sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)'
