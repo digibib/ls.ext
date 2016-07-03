@@ -1410,10 +1410,8 @@
           }
           var detectChange = function (node) {
             var enableChange = false
-            var changeType = null
             $(node).on('select2:selecting select2:unselecting', function (event) {
               enableChange = true
-              changeType = event.type
             })
             $(node).on('change', function (e) {
               if (enableChange) {
@@ -1426,7 +1424,6 @@
                   Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[0], errors, keypath)
                 }
-                changeType = null
               }
             })
             return {
