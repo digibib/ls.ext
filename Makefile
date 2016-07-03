@@ -64,7 +64,6 @@ CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
 endif
 
 ifeq ($(shell uname -s), Darwin)
-DOCKER_GW=192.168.59.1
 XHOST_PATH=/opt/X11/bin/
 endif
 
