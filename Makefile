@@ -204,7 +204,7 @@ push:
 
 docker_cleanup:						## Clean up unused docker containers and images
 	@echo "cleaning up unused containers, images and volumes"
-	$(CMD) -c 'sudo docker rm $$(sudo docker ps -aq -f status=exited) 2> /dev/null || true'
+	#$(CMD) -c 'sudo docker rm $$(sudo docker ps -aq -f status=exited) 2> /dev/null || true'
 	$(CMD) -c 'sudo docker rmi $$(sudo docker images -aq -f dangling=true) 2> /dev/null || true'
 	$(CMD) -c 'sudo docker volume rm $$(sudo docker volume ls -q -f=dangling=true) 2> /dev/null || true'
 
