@@ -57,7 +57,7 @@ export GITREF=$(shell git rev-parse HEAD)
 endif
 
 wait_until_ready:					## Checks if koha is up and running
-	$(CMD) -c 'sudo docker exec -t koha_container ./wait_until_ready.py'
+	$(CMD) -c 'sudo docker exec -t koha ./wait_until_ready.py'
 
 ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
@@ -111,7 +111,7 @@ rebuild_catalinker:					## Force rebuilds catalinker
 
 rebuild_patron_client:					## Force rebuilds patron-client
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
-	$(call rebuild,patron-client)
+	$(call rebuild,patron_client)
 
 rebuild_overview:					## Force rebuilds overview
 	@echo "======= FORCE RECREATING OVERVIEW ======\n"
@@ -138,20 +138,20 @@ test_one:						## Run 'utlaan_via_adminbruker'.
 
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
-	$(CMD) -c 'sudo docker stop koha_container'
+	$(CMD) -c 'sudo docker stop koha'
 
 delete_koha: stop_koha
-	$(CMD) -c 'sudo docker rm koha_container'
+	$(CMD) -c 'sudo docker rm koha'
 
 rebuild_zebra:
-	$(CMD) -c 'sudo docker exec koha_container koha-rebuild-zebra -full -v -b name'
+	$(CMD) -c 'sudo docker exec koha koha-rebuild-zebra -full -v -b name'
 
 stop_ship:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
-	$(CMD) -c '(sudo docker stop koha_container || true) && sudo docker stop koha_mysql'
+	$(CMD) -c '(sudo docker stop koha || true) && sudo docker stop koha_mysql'
 
 delete_ship: stop_ship
-	$(CMD) -c '(sudo docker rm koha_container || true) && sudo docker rm -v koha_mysql'
+	$(CMD) -c '(sudo docker rm koha || true) && sudo docker rm -v koha_mysql'
 
 delete_db: stop_ship
 	$(CMD) -c 'sudo docker rm koha_mysql_data'
@@ -204,9 +204,9 @@ push:
 
 docker_cleanup:						## Clean up unused docker containers and images
 	@echo "cleaning up unused containers, images and volumes"
-	$(CMD) -c 'sudo docker rm $(sudo docker ps -aq -f dangling=true) 2> /dev/null || true'
-	$(CMD) -c 'sudo docker rmi $(sudo docker images -aq -f dangling=true) 2> /dev/null || true'
-	$(CMD) -c 'sudo docker volume rm $(sudo docker volume ls -q -f=dangling=true) 2> /dev/null || true'
+	$(CMD) -c 'sudo docker rm $$(sudo docker ps -aq -f status=exited) 2> /dev/null || true'
+	$(CMD) -c 'sudo docker rmi $$(sudo docker images -aq -f dangling=true) 2> /dev/null || true'
+	$(CMD) -c 'sudo docker volume rm $$(sudo docker volume ls -q -f=dangling=true) 2> /dev/null || true'
 
 DOCKER_COMPOSE_DOT_IMAGE ?= 21af6b4fd714903cebd3d4658ad35da4d0db0051
 create_dev_stack_image:

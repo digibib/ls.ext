@@ -7,8 +7,8 @@ CLPATH=/vagrant/redef/catalinker
 endif
 
 IMAGE=digibib/redef-catalinker
-CONTAINER=redef_catalinker_container
-MODULE_TEST_CONTAINER=redef_catalinker_test_container
+CONTAINER=catalinker
+MODULE_TEST_CONTAINER=catalinker_test
 HOST_VOLUME_BINDINGS=-v $(CLPATH)/client:/usr/src/app/client \
 	-v $(CLPATH)/public:/usr/src/app/public \
 	-v $(CLPATH)/server:/usr/src/app/server \

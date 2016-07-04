@@ -7,7 +7,7 @@ networks:
 
 services:
   koha:
-    container_name: koha_container
+    container_name: koha
     image: "digibib/koha:${KOHA_IMAGE_TAG}"
     networks:
       - backend
@@ -145,7 +145,7 @@ services:
       - /usr/share/elasticsearch/data
 
   elasticsearch:
-    container_name: elasticsearch_container
+    container_name: elasticsearch
     image: elasticsearch:2.3.1
     networks:
       - backend
@@ -167,7 +167,7 @@ services:
       - /data
 
   fuseki:
-    container_name: fuseki_container
+    container_name: fuseki
     image: fisch42/fuseki
     networks:
       - backend
@@ -182,7 +182,7 @@ services:
         max-file: "2"
 
   sip:
-    container_name: sip_proxy_container
+    container_name: sip_proxy
     image: "digibib/tcp-proxy:14dc5417bf211317351a0bae084db12c64a1dd45"
     networks:
       - backend
@@ -201,7 +201,7 @@ services:
         max-file: "2"
 
   catalinker:
-    container_name: redef_catalinker_container
+    container_name: catalinker
     image: "digibib/redef-catalinker:${GITREF}"
     networks:
       - backend
@@ -223,7 +223,7 @@ services:
         max-file: "2"
 
   services:
-    container_name: redef_services_container
+    container_name: services
     image: "digibib/redef-services:${GITREF}"
     networks:
       - backend
@@ -253,7 +253,7 @@ services:
         max-file: "2"
 
   patron-client:
-    container_name: redef_patron_client_container
+    container_name: patron_client
     image: "digibib/redef-patron-client:${GITREF}"
     networks:
       - backend
@@ -274,7 +274,7 @@ services:
         max-file: "2"
 
   overview:
-    container_name: overview_container
+    container_name: overview
     build:
       context: "${OVERVIEW_BUILD_DIR}"
     networks:

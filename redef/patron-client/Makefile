@@ -1,6 +1,6 @@
 IMAGE=dockercompose_patron-client
 DOCKERHUB=digibib/redef-patron-client
-CONTAINER=redef_patron_client_container
+CONTAINER=patron_client
 
 ifdef NOVAGRANT
 PCPATH=$(shell pwd)

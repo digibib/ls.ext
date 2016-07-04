@@ -112,11 +112,11 @@ module Paths
       user_info: '/profile/info'
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://patron-client:#{port(:patron_client)}#{paths[path.to_sym]}"
+    "http://patron_client:#{port(:patron_client)}#{paths[path.to_sym]}"
   end
 
   def patron_client_search_page()
-    "http://patron-client:#{port(:patron_client)}/"
+    "http://patron_client:#{port(:patron_client)}/"
   end
 
   def services(path=nil)

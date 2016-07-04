@@ -15,10 +15,10 @@
                     <div class="column three-fifths prop-values">
                         <input disabled="disabled" data-automation-id="resource_uri" value="{{resource_uri}}" />
                         {{#resource_type === "Work"}}
-                        <a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(/http:\/\/.*8005/,'http://patron-client:8000')}}" class="link"></a>
+                        <a data-automation-id="work_page_link" target="_blank" href="{{resource_uri.replace(/http:\/\/.*8005/,'http://patron_client:8000')}}" class="link"></a>
                         {{/}}
                         {{#resource_type === "Person"}}
-                        <a data-automation-id="person_page_link" target="_blank" href="{{resource_uri.replace(/http:\/\/.*8005/,'http://patron-client:8000')}}" class="link"></a>
+                        <a data-automation-id="person_page_link" target="_blank" href="{{resource_uri.replace(/http:\/\/.*8005/,'http://patron_client:8000')}}" class="link"></a>
                         {{/}}
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         <a data-automation-id="biblio_record_link" target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
                         {{/}}
                         {{#predicate.endsWith("#publicationOf") && current.value !== ""}}
-                        <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(/http:\/\/.*8005/,'http://patron-client:8000')}}" class="link"></a>
+                        <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(/http:\/\/.*8005/,'http://patron_client:8000')}}" class="link"></a>
                         {{/}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                         {{/each}}

@@ -8,9 +8,9 @@ Ports = {
   :koha_opac =>  { :host => "koha", :port => "8080", :path =>'/' },
   :koha_intra => { :host => "koha", :port => "8081", :path =>'/' },
   :services => { :host => "services", :port => "8005", :path =>'/application.wadl?detail=true' },
-  :patron_client_search => { :host => "patron-client", :port => "8000", :path =>'/' },
-  :patron_client_person => { :host => "patron-client", :port => "8000", :path =>'/person/dummyid' },
-  :patron_client_work => { :host => "patron-client", :port => "8000", :path =>'/work/dummyid' },
+  :patron_client_search => { :host => "patron_client", :port => "8000", :path =>'/' },
+  :patron_client_person => { :host => "patron_client", :port => "8000", :path =>'/person/dummyid' },
+  :patron_client_work => { :host => "patron_client", :port => "8000", :path =>'/work/dummyid' },
   :catalinker => { :host => "catalinker", :port => "8010", :path =>'/cataloguing' },
   :elasticsearch => { :host => "elasticsearch", :port => "9200", :path =>'/' }
 }
