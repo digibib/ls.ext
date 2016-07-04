@@ -28,10 +28,10 @@ public abstract class ResourceBase {
     private SearchService searchService;
     private KohaAdapter kohaAdapter;
 
-    public ResourceBase() {
+    protected ResourceBase() {
     }
 
-    protected ResourceBase(BaseURI baseURI, EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
+    ResourceBase(BaseURI baseURI, EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
         this.baseURI = baseURI;
         this.entityService = entityService;
         this.searchService = searchService;
@@ -99,9 +99,6 @@ public abstract class ResourceBase {
         }
         return jsonldCreator;
     }
-    final void setEntityService(EntityService entityService) {
-        this.entityService = entityService;
-    }
 
     protected final void setSearchService(SearchService searchService) {
         this.searchService = searchService;
@@ -116,9 +113,5 @@ public abstract class ResourceBase {
             searchService = (SearchService) MonProxyFactory.monitor(new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService(), getBaseURI()));
         }
         return searchService;
-    }
-
-    public final void setKohaAdapter(KohaAdapter kohaAdapter) {
-        this.kohaAdapter = kohaAdapter;
     }
 }

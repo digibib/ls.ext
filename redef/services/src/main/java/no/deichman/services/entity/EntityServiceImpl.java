@@ -47,7 +47,7 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * Responsibility: TODO.
  */
-public final class EntityServiceImpl implements EntityService {
+final class EntityServiceImpl implements EntityService {
 
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String AUDIENCE_TTL_FILE = "audience.ttl";
@@ -68,7 +68,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property publicationYearProperty;
 
 
-    public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
+    EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
         this.baseURI = baseURI;
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
@@ -105,9 +105,13 @@ public final class EntityServiceImpl implements EntityService {
             objectResources.stream()
                     .filter(node -> node.toString()
                             .contains("http://lexvo.org/id/iso639-3/")).collect(Collectors.toList())
-                    .forEach(lv -> {
-                        input.add(extractNamedResourceFromModel(lv.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE));
-                    });
+                    .forEach(lv -> input.add(
+                            extractNamedResourceFromModel(
+                                    lv.toString(),
+                                    EntityServiceImpl.class.getClassLoader().
+                                            getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE
+                            )
+                    ));
         }
 
         return input;
@@ -132,10 +136,13 @@ public final class EntityServiceImpl implements EntityService {
             objectResources.stream()
                     .filter(node -> node.toString()
                             .contains("http://data.deichman.no/" + path + "#")).collect(Collectors.toList())
-                    .forEach(result -> {
-                        input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(filename), Lang.TURTLE)
-                        );
-                    });
+                    .forEach(result -> input.add(
+                            extractNamedResourceFromModel(
+                                    result.toString(),
+                                    EntityServiceImpl.class.getClassLoader()
+                                            .getResourceAsStream(filename), Lang.TURTLE
+                            )
+                    ));
         }
 
         return input;
@@ -435,19 +442,18 @@ public final class EntityServiceImpl implements EntityService {
     private List<String> getPersonNames(Model work) {
         List<String> personNames = new ArrayList<>();
 
-        for (Statement stmt : work.listStatements().toList()) {
-            if (stmt.getPredicate().equals(agentProperty)) {
-                try {
-                    Model person = repository.retrieveResourceByURI(new XURI(stmt.getObject().toString()));
-                    NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
-                    while (nameIterator.hasNext()) {
-                        personNames.add(nameIterator.next().asLiteral().toString());
+        work.listStatements().toList().stream().filter(stmt -> stmt.getPredicate().equals(agentProperty))
+                .forEach(stmt -> {
+                    try {
+                        Model person = repository.retrieveResourceByURI(new XURI(stmt.getObject().toString()));
+                     NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
+                      while (nameIterator.hasNext()) {
+                            personNames.add(nameIterator.next().asLiteral().toString());
+                      }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+                });
 
         return personNames;
     }
