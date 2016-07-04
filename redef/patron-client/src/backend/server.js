@@ -4,7 +4,6 @@ const session = require('express-session')
 const uuid = require('node-uuid')
 const port = process.env.PORT || 8000
 const app = express()
-const fetch = require('isomorphic-fetch')
 
 app.use(session({
   genid: req => uuid.v4(),
