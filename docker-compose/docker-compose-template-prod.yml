@@ -265,6 +265,8 @@ services:
       SERVICES_PORT: "http://services:${SERVICES_PORT}"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
+      KOHA_API_USER: "${KOHA_API_USER}"
+      KOHA_API_PASS: "${KOHA_API_PASS}"
     logging:
       driver: "json-file"
       options:

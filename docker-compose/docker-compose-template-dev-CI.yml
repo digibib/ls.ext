@@ -312,6 +312,8 @@ services:
       - "8000:8000"
     environment:
       SERVICES_PORT: "http://${HOST}:${SERVICES_PORT}"
+      KOHA_API_USER: "${KOHA_API_USER}"
+      KOHA_API_PASS: "${KOHA_API_PASS}"
     logging:
       driver: "json-file"
       options:
