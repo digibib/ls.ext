@@ -62,7 +62,7 @@ When(/^"(.*?)" legger materialet på automaten$/) do |name|
 end
 
 When(/^låneren velger "(.*?)" på automaten$/) do |mode|
-  sip = SIP2Client.new("sip_proxy_container", 9999)
+  sip = SIP2Client.new("sip_proxy", 9999)
   res = sip.connect
   res[:statusCode].should eq("Login_Response")
   res[:statusData].should eq("1")

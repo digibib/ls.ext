@@ -58,18 +58,18 @@ out/done.setup_koha: out/done.massage_input_data
 out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "   Migration catalogue with items into Koha"
 	@echo "-- Stopping Zebra indexer"
-	@sudo docker exec koha_container koha-stop-zebra $$KOHA_INSTANCE
+	@sudo docker exec koha koha-stop-zebra $$KOHA_INSTANCE
 	@echo "-- Clearing Zebra index"
-	-@sudo docker exec koha_container /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios"' 2> /dev/null
-	-@sudo docker exec koha_container /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
+	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios"' 2> /dev/null
+	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
 	@sudo docker run --net=dockercompose_backend --rm -v dockercompose_koha_state:/data -v $(shell pwd)/out:/out busybox cp /out/catalogue.mrc /data/
 	@echo "-- Importing to Koha with bulkmarcimport"
-	@sudo docker exec koha_container koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
+	@sudo docker exec koha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
 	@echo "-- Updating biblionumbers (so that biblionumber=tittelnummer)"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
 	@echo "-- Starting Zebra indexer"
-	@sudo docker exec koha_container koha-start-zebra $$KOHA_INSTANCE
+	@sudo docker exec koha koha-start-zebra $$KOHA_INSTANCE
 	@echo "OK Done importing catalogue into Koha\n"
 	@touch out/done.migrate_catalogue_to_koha
 

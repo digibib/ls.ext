@@ -4,7 +4,7 @@ all: test build
 
 IMAGE=digibib/redef-services
 TESTIMAGE=services_test_container
-CONTAINER=redef_services_container
+CONTAINER=services
 
 test:
 	 # (same as build, but build will also run check and test tasks)

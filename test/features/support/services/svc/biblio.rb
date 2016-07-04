@@ -38,7 +38,7 @@ module SVC
       book.biblionumber = res.body.match(/<biblionumber>(\d+)<\/biblionumber>/)[1]
 
       # force rebuild and restart zebra bibliographic index
-      `docker exec koha_container koha-rebuild-zebra -v -b #{ENV['KOHA_INSTANCE']}`
+      `docker exec koha koha-rebuild-zebra -v -b #{ENV['KOHA_INSTANCE']}`
       STDERR.puts "koha-rebuild-zebra has returned"
 
       return book
