@@ -1,4 +1,3 @@
-const fetch = require('isomorphic-fetch')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
@@ -6,6 +5,7 @@ const sanitizeHtml = require('sanitize-html')
 // const mysql = require('mysql')
 
 module.exports = (app) => {
+  const fetch = require('../fetch')(app)
   app.post('/api/v1/registration', jsonParser, (request, response) => {
     const patron = {
       firstname: request.body.firstName,
@@ -23,9 +23,6 @@ module.exports = (app) => {
     }
     fetch('http://koha:8081/api/v1/patrons', {
       method: 'POST',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      },
       body: JSON.stringify(patron)
     }).then(res => {
       if (res.status === 201) {

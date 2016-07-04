@@ -1,15 +1,11 @@
-const fetch = require('isomorphic-fetch')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
 module.exports = (app) => {
+  const fetch = require('../fetch')(app)
   app.get('/api/v1/libraries', jsonParser, (request, response) => {
-    fetch('http://koha:8081/api/v1/libraries', {
-      method: 'GET',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    fetch('http://koha:8081/api/v1/libraries')
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else {

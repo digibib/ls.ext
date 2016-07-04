@@ -1,17 +1,13 @@
-const fetch = require('isomorphic-fetch')
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
 const bcrypt = require('bcrypt-nodejs')
 
 module.exports = (app) => {
+  const fetch = require('../fetch')(app)
   app.get('/api/v1/profile/info', (request, response) => {
-    fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
-      method: 'GET',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`)
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else {
@@ -94,12 +90,8 @@ module.exports = (app) => {
   })
 
   function fetchAllHoldsAndPickups (request) {
-    return fetch(`http://koha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`, {
-      method: 'GET',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    return fetch(`http://koha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`)
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else {
@@ -114,12 +106,8 @@ module.exports = (app) => {
   }
 
   function fetchHoldFromBiblioNumber (hold, request) {
-    return fetch(`http://koha:8081/api/v1/biblios/${hold.biblionumber}`, {
-      method: 'GET',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    return fetch(`http://koha:8081/api/v1/biblios/${hold.biblionumber}`)
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else {
@@ -147,12 +135,8 @@ module.exports = (app) => {
   }
 
   function fetchAllCheckouts (request) {
-    return fetch(`http://koha:8081/api/v1/checkouts?borrowernumber=${request.session.borrowerNumber}`, {
-      method: 'GET',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    return fetch(`http://koha:8081/api/v1/checkouts?borrowernumber=${request.session.borrowerNumber}`)
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else {
@@ -167,12 +151,8 @@ module.exports = (app) => {
   }
 
   function fetchLoanFromItemNumber (loan, request) {
-    return fetch(`http://koha:8081/api/v1/items/${loan.itemnumber}/biblio`, {
-      method: 'GET',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    return fetch(`http://koha:8081/api/v1/items/${loan.itemnumber}/biblio`)
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else {
@@ -195,7 +175,6 @@ module.exports = (app) => {
     fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
       method: 'PUT',
       headers: {
-        'Cookie': app.settings.kohaSession,
         'Content-type': 'application/json'
       },
       body: JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings(request.body))
@@ -217,7 +196,6 @@ module.exports = (app) => {
       fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
         method: 'PUT',
         headers: {
-          'Cookie': app.settings.kohaSession,
           'Content-type': 'application/json'
         },
         body: JSON.stringify({ password: request.body.newPassword })
@@ -239,12 +217,8 @@ module.exports = (app) => {
   })
 
   app.get('/api/v1/profile/settings', (request, response) => {
-    return fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
-      method: 'GET',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    return fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`)
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else {

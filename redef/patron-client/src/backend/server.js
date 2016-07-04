@@ -33,14 +33,6 @@ app.use(express.static(`${__dirname}/../../public`))
 
 require('./routes')(app)
 
-app.listen(port, undefined, () => {
-  fetch('http://koha:8081/cgi-bin/koha/svc/authentication?userid=api&password=secret',
-    { method: 'GET', body: {} })
-    .then(res => {
-      if (res.headers && res.headers._headers && res.headers._headers[ 'set-cookie' ] && res.headers._headers[ 'set-cookie' ][ 0 ]) {
-        app.set('kohaSession', res.headers._headers[ 'set-cookie' ][ 0 ])
-      }
-    }).catch(error => console.log(error))
-})
+app.listen(port, undefined, () => {})
 
 console.log(`Server started on port ${port} with environment ${process.env.NODE_ENV || 'development'}`)
