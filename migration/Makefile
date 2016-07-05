@@ -26,7 +26,7 @@ MYSQL_CMD=mysql --local-infile=1 --default-character-set=utf8 -h koha_mysql -u$$
 # Tasks
 # =====
 
-.PHONY: all clean rebuild migrate_patrons
+.PHONY: all clean rebuild
 
 all: out/done.koha_fuseki_sync
 
@@ -54,7 +54,7 @@ out/done.setup_koha: out/done.massage_input_data
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
 	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems and items"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;SET foreign_key_checks=1;"'
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;SET foreign_key_checks=1;"'
 	@echo "OK Done setting up Koha\n"
 	@touch out/done.setup_koha
 
@@ -115,7 +115,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@touch out/done.import_into_fuseki
 	@echo "OK Completed RDF import to Fuseki\n"
 
-out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_into_fuseki
+out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@echo "   Syncing Koha and Fuseki"
 	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
@@ -136,7 +136,8 @@ out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_in
 	@echo "   Migration is complete. Goodbye!"
 	@echo "!! TODO stop running virtuoso container (left up for debugging)"
 
-migrate_patrons:
+out/done.migrate_patrons:
+ifdef MIGRATE_PATRONS
 	@echo "   Migrating patrons to Koha"
 	@echo "-- Merging information from laaner, lmarc and lnel dumps"
 	@$(MIGRATION_RUN_CMD) "patronmassage -lmarc=/data/$(LMARC) -laaner=/data/$(LAANER) -lnel=/data/$(LNEL) -outdir=/out"
@@ -144,10 +145,19 @@ migrate_patrons:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
 	@echo "-- Inserting patron home branches into MySQL"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
-	@echo "-- TODO Importing patrons to Koha"
+	@echo "-- Importing patrons to Koha"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
 	@echo "!! TODO Inserting extended patron attributes"
 	@echo "!! TODO Inserting NL details"
 	@echo "OK Done migrating patrons.\n"
+endif
 	@touch out/done.migrate_patrons
+
+out/done.migrate_loans: out/done.migrate_patrons out/done.migrate_catalogue_to_koha
+ifdef MIGRATE_PATRONS
+	@echo "   Migrating active loans to Koha"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
+	@echo "OK Done migrating loans\n"
+	@touch out/done.migrate_loans
+endif
