@@ -18,12 +18,15 @@ endif
 MIGRATION_RUN_CMD=sudo docker run --net=dockercompose_backend --rm -v $(shell pwd)/out:/out -v $(MIGRATION_DATA):/data dockercompose_migration bash -c
 VMARC=$(shell ls -1 $(MIGRATION_DATA)/*vmarc.*.txt | xargs basename)
 EXEMP=$(shell ls -1 $(MIGRATION_DATA)/*exemp.*.txt | xargs basename)
-MYSQL_CMD=mysql --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE
+LAANER=$(shell ls -1 $(MIGRATION_DATA)/*laaner.*.txt | xargs basename)
+LMARC=$(shell ls -1 $(MIGRATION_DATA)/*lmarc.*.txt | xargs basename)
+LNEL=$(shell ls -1 $(MIGRATION_DATA)/*lnel.*.txt | xargs basename)
+MYSQL_CMD=mysql --local-infile=1 --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE
 
 # Tasks
 # =====
 
-.PHONY: all clean rebuild
+.PHONY: all clean rebuild migrate_patrons
 
 all: out/done.koha_fuseki_sync
 
@@ -132,3 +135,19 @@ out/done.koha_fuseki_sync: out/done.migrate_catalogue_to_koha out/done.import_in
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@echo "   Migration is complete. Goodbye!"
 	@echo "!! TODO stop running virtuoso container (left up for debugging)"
+
+migrate_patrons:
+	@echo "   Migrating patrons to Koha"
+	@echo "-- Merging information from laaner, lmarc and lnel dumps"
+	@$(MIGRATION_RUN_CMD) "patronmassage -lmarc=/data/$(LMARC) -laaner=/data/$(LAANER) -lnel=/data/$(LNEL) -outdir=/out"
+	@echo "-- Inserting patron categories into MySQL"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
+	@echo "-- Inserting patron home branches into MySQL"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
+	@echo "-- TODO Importing patrons to Koha"
+	@cp sql/*.sql out/
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
+	@echo "!! TODO Inserting extended patron attributes"
+	@echo "!! TODO Inserting NL details"
+	@echo "OK Done migrating patrons.\n"
+	@touch out/done.migrate_patrons

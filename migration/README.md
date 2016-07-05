@@ -2,7 +2,7 @@
 
 ## Data flow diagram
 
-![Migration data flow](flow.png?raw=true "Migration data flow")
+![Migration data flow](https://raw.githubusercontent.com/digibib/ls.ext/develop/migration/flow.svg)
 
 ## How to
 
