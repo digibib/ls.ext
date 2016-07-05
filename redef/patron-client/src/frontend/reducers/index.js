@@ -7,10 +7,11 @@ import modal from './modal'
 import profile from './profile'
 import search from './search'
 import reservation from './reservation'
+import registration from './registration'
 import resources from './resources'
 
 const rootReducer = combineReducers({
-  application, modal, profile, search, reservation, resources,
+  application, modal, profile, search, reservation, registration, resources,
   routing: routerReducer,
   form: formReducer
 })

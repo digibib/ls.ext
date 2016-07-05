@@ -183,15 +183,3 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg trykker lagre inne på innstillinger
     Og jeg trykker oppfrisk i nettleseren
     Så skal ingen av avkrysningsboksene være skrudd på inne på innstillinger
-
-  @wip
-  Scenario: Registrere seg som låner
-    Gitt at jeg er i søkegrensesnittet
-    Og jeg trykker på logg inn
-    Så skal jeg se innloggingsvinduet
-    Når jeg trykker på registreringslenken
-    Så skal jeg se registreringsskjemaet
-    Når jeg trykker på registreringsknappen
-    Så skal jeg få et brukernavn
-
-

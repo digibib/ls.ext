@@ -286,6 +286,10 @@ When(/^skal ingen av avkrysningsboksene være skrudd på inne på innstillinger$
   end
 end
 
+Given(/^at det finnes en person som ikke er låner$/) do
+  step "at jeg har mottatt opplysninger om en låner"
+end
+
 When(/^jeg trykker på logg inn$/) do
   @browser.element(data_automation_id: 'login_element').click
 end
@@ -298,11 +302,55 @@ When(/^skal jeg se registreringsskjemaet$/) do
   @site.PatronClientCommon.registration_modal_visible?.should eq true
 end
 
+When(/^jeg legger inn mine personalia$/) do
+  @browser.text_field(id: 'firstname').set generateRandomString
+  @browser.text_field(id: 'lastname').set @active[:patron].surname
+  @browser.text_field(id: 'day').set '%02d' % (rand(29)+1)
+  @browser.text_field(id: 'month').set '%02d' % (rand(11)+1)
+  @browser.text_field(id: 'year').set "19#{rand(100)}"
+  @browser.text_field(id: 'ssn').set '%011d' % rand(10**11)
+end
+
+When(/^jeg trykker på knappen for å sjekke om jeg er registrert fra før$/) do
+  wait_for { @browser.element(data_automation_id: 'check_existing_user_button').enabled? }
+  @browser.element(data_automation_id: 'check_existing_user_button').click
+end
+
+Then(/^får jeg vite at jeg ikke er registrert fra før$/) do
+  wait_for { @browser.element(data_automation_id: 'check_for_existing_user_success').present? }
+end
+
+When(/^jeg fyller inn resten av skjemaet$/) do
+  @browser.text_field(id: 'email').set @active[:patron].email
+  @browser.text_field(id: 'mobile').set '%08d' % rand(10**8)
+  @browser.text_field(id: 'address').set generateRandomString
+  @browser.text_field(id: 'zipcode').set '%04d' % rand(10000)
+  @browser.text_field(id: 'city').set generateRandomString
+  @browser.text_field(id: 'country').set generateRandomString
+  @browser.select_list(data_automation_id: 'gender_selection').select_value 'female'
+  @browser.text_field(data_automation_id: 'choose_pin').set '1234'
+  @browser.text_field(data_automation_id: 'repeat_pin').set '1234'
+end
+
+When(/^jeg godtar lånerreglementet$/) do
+  @browser.input(data_automation_id: 'accept_terms').set
+end
+
 When(/^jeg trykker på registreringsknappen$/) do
+  wait_for { @browser.element(data_automation_id: 'register_button').enabled? }
   @browser.element(data_automation_id: 'register_button').click
 end
 
-When(/^skal jeg få et brukernavn$/) do
-  wait_for {  @site.PatronClientCommon.registration_success_modal_visible?.eql? true }
-  @browser.element(data_automation_id: 'username').length.should eq 6
+Then(/^får jeg tilbakemelding om at registreringen er godkjent$/) do
+  wait_for { @browser.element(data_automation_id: 'registration_success_modal').present? }
+end
+
+Then(/^jeg har fått et midlertidig brukernavn$/) do
+  @active[:patron].userid = @browser.element(data_automation_id: 'username').text
+  @active[:patron].userid.should_not be_empty
+end
+
+Then(/^jeg kan søkes opp i systemet som låner$/) do
+  @site.Patrons.visit.search @active[:patron].surname
+  @browser.div(class: 'patroninfo').text.should include(@active[:patron].surname)
 end
