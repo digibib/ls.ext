@@ -33,6 +33,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Singleton
 @Path("search")
 public class SearchResource extends ResourceBase {
+    private static final int NUMTHREADS = 3;
+    private static final ForkJoinPool THREADPOOL = new ForkJoinPool(NUMTHREADS);
     private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
     @Context
     private ServletConfig servletConfig;
@@ -113,7 +115,7 @@ public class SearchResource extends ResourceBase {
     @POST
     @Path("{type: "+ ALL_TYPES_PATTERN + "}/reindex_all")
     public final Response reIndex(@PathParam("type") final String type) {
-        ForkJoinPool.commonPool().execute(new Runnable() {
+        THREADPOOL.execute(new Runnable() {
             @Override
             public void run() {
                 LOG.info("Starting to reindex " + type);
