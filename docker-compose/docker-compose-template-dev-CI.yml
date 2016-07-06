@@ -198,11 +198,12 @@ services:
     container_name: fuseki_data
     image: "busybox:latest"
     volumes:
-      - /data
+      - /data/databases/ds
 
   fuseki:
     container_name: fuseki
-    image: fisch42/fuseki
+    build:
+      context: "${LSEXTPATH}/docker-compose/dockerfiles/fuseki"
     networks:
       - backend
     ports:
