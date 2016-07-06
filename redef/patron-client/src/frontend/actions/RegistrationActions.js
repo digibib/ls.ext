@@ -45,7 +45,7 @@ export function postRegistrationSuccess (username, password) {
 export function checkForExistingUser () {
   const url = '/api/v1/checkforexistinguser'
   return (dispatch, getState) => {
-    const { registration: { firstName, lastName, day, month, year, ssn} } = getState().form
+    const { registration: { firstName, lastName, day, month, year, ssn } } = getState().form
     const registrationInfo = {
       firstName: firstName.value,
       lastName: lastName.value,
@@ -72,9 +72,9 @@ export function checkForExistingUser () {
       })
       .then(json => {
         if (json.localdb) {
-          dispatch(checkForExistingUserFailure({ error: "User exists", message: "userExistsInLocalDB" }))
+          dispatch(checkForExistingUserFailure({ error: 'User exists', message: 'userExistsInLocalDB' }))
         } else if (json.centraldb) {
-          dispatch(checkForExistingUserFailure({ error: "User exists", message: "userExistsInCentralDB" }))
+          dispatch(checkForExistingUserFailure({ error: 'User exists', message: 'userExistsInCentralDB' }))
         } else {
           dispatch(checkForExistingUserSuccess())
         }

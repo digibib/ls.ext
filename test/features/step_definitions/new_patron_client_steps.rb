@@ -327,7 +327,7 @@ When(/^jeg fyller inn resten av skjemaet$/) do
   @browser.text_field(id: 'zipcode').set '%04d' % rand(10000)
   @browser.text_field(id: 'city').set generateRandomString
   @browser.text_field(id: 'country').set generateRandomString
-  @browser.select_list(data_automation_id: 'gender_selection').select_value 'female'
+  #@browser.select_list(data_automation_id: 'gender_selection').select_value 'female' # TODO: Must be fixed in patron-client
   @browser.text_field(data_automation_id: 'choose_pin').set '1234'
   @browser.text_field(data_automation_id: 'repeat_pin').set '1234'
 end

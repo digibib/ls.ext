@@ -2,7 +2,7 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
 const sanitizeHtml = require('sanitize-html')
-const querystring = require('querystring');
+const querystring = require('querystring')
 // const mysql = require('mysql')
 
 module.exports = (app) => {
@@ -16,9 +16,8 @@ module.exports = (app) => {
     }
 
     fetch(`http://koha:8081/api/v1/checkexistinguser?${querystring.stringify(params)}`, {
-      method: 'GET',
       headers: {
-        'Cookie': app.settings.kohaSession,
+        'Cookie': app.settings.kohaSession
       }
     }).then(res => {
       if (res.status === 200) {
@@ -108,10 +107,10 @@ module.exports = (app) => {
 
   // Simple generator for a valid YYYY-MM-DD format, return null if not valid
   function dateOfBirth (year, month, day) {
-    const validFormat=/^(19|20)\d\d(-)(0[1-9]|1[012])(-)(0[1-9]|[12][0-9]|3[01])$/
-    const y = (parseInt(year)+Math.pow(10,4)+"").slice(1)
-    const m = (parseInt(month)+Math.pow(10,2)+"").slice(1)
-    const d = (parseInt(day)+Math.pow(10,2)+"").slice(1)
+    const validFormat = /^(19|20)\d\d(-)(0[1-9]|1[012])(-)(0[1-9]|[12][0-9]|3[01])$/
+    const y = (parseInt(year) + Math.pow(10, 4) + '').slice(1)
+    const m = (parseInt(month) + Math.pow(10, 2) + '').slice(1)
+    const d = (parseInt(day) + Math.pow(10, 2) + '').slice(1)
     const date = `${y}-${m}-${d}`
     if (!validFormat.test(date)) {
       return null

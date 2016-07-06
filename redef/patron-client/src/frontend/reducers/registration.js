@@ -1,7 +1,6 @@
-import { LOCATION_CHANGE } from 'react-router-redux'
-
 import {
   TOGGLE_SSN_INFO,
+  TOGGLE_TERMS_AND_CONDITIONS_INFO,
   REQUEST_CHECK_FOR_EXISTING_USER,
   CHECK_FOR_EXISTING_USER_SUCCESS,
   CHECK_FOR_EXISTING_USER_FAILURE
@@ -19,6 +18,11 @@ export default function registration (state = initialState, action) {
       return {
         ...state,
         showSSNInfo: !state.showSSNInfo
+      }
+    case TOGGLE_TERMS_AND_CONDITIONS_INFO:
+      return {
+        ...state,
+        showTermsAndConditions: !state.showTermsAndConditions
       }
     case REQUEST_CHECK_FOR_EXISTING_USER:
       return {

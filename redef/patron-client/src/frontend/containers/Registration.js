@@ -66,7 +66,7 @@ class Registration extends React.Component {
   renderSecondPartOfForm () {
     const {
       fields: {
-        email, mobile, address, zipcode, city, country, gender
+        email, mobile, address, zipcode, city, country /*, gender */
       }
     } = this.props
     return (
@@ -106,13 +106,15 @@ class Registration extends React.Component {
           <input name='country' type='text' id='country' {...country} />
           {this.getValidator(country)}
         </address>
+        {/*
         <h2><FormattedMessage {...messages.gender} /></h2>
         <div className='select-container'>
-          <select data-automation-id='gender_selection'>
-            <option value="male"><FormattedMessage {...messages.male} /></option>
-            <option value="female"><FormattedMessage {...messages.female} /></option>
+          <select data-automation-id='gender_selection' >
+            <option value='male'><FormattedMessage {...messages.male} /></option>
+            <option value='female'><FormattedMessage {...messages.female} /></option>
           </select>
         </div>
+        */}
       </fieldset>
     )
   }
@@ -147,7 +149,6 @@ class Registration extends React.Component {
           <label htmlFor='code'><FormattedMessage {...messages.noOption} /></label>
         </div>
         */}
-        {/*}
         <div className='terms_and_conditions'>
           <input data-automation-id='accept_terms' id='acceptTerms' type='checkbox' {...acceptTerms} />
           <label htmlFor='accept_terms'><span></span>
@@ -155,9 +156,8 @@ class Registration extends React.Component {
               <FormattedMessage {...messages.acceptTermsLink} />
             </a>
           </label>
-          {this.props.showTermsAndCondition ? this.renderTermsAndConditions() : ''}
+          {this.props.showTermsAndConditions ? this.renderTermsAndConditions() : ''}
         </div>
-        */}
         <button className='black-btn' type='submit' disabled={submitting || this.hasInvalidFormFields()}
                 data-automation-id='register_button'>
           <FormattedMessage {...messages.register} />
@@ -216,8 +216,7 @@ class Registration extends React.Component {
     const {
       fields: {
         firstName, lastName, day, month, year, ssn
-      },
-      submitting,
+      }
     } = this.props
     if (this.props.isError) {
       return this.renderError()
@@ -565,6 +564,10 @@ Registration.propTypes = {
   message: PropTypes.string,
   isError: PropTypes.bool,
   isSuccess: PropTypes.bool,
+  isCheckingForExistingUser: PropTypes.bool,
+  checkForExistingUserSuccess: PropTypes.bool,
+  showSSNInfo: PropTypes.bool,
+  showTermsAndConditions: PropTypes.bool,
   intl: intlShape.isRequired
 }
 
@@ -574,6 +577,7 @@ function mapStateToProps (state) {
     loginError: state.application.loginError,
     libraries: state.application.libraries,
     showSSNInfo: state.registration.showSSNInfo,
+    showTermsAndConditions: state.registration.showTermsAndConditions,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
     initialValues: {
@@ -603,17 +607,17 @@ const validate = values => {
   }
   if (!values.year) {
     errors.year = messages.required
-  } else if ( values.year < 1900 || values.year > new Date().getFullYear() - 5 ) { /* What is the actual requirements for age? */
+  } else if (values.year < 1900 || values.year > new Date().getFullYear() - 5) { /* What is the actual requirements for age? */
     errors.year = messages.invalidYear
   }
   if (!values.month) {
     errors.month = messages.required
-  } else if ( values.month < 1 || values.month > 13 ) {
+  } else if (values.month < 1 || values.month > 13) {
     errors.month = messages.invalidMonth
   }
   if (!values.day) {
     errors.day = messages.required
-  } else if (values.day < 1 || values.day > 31 ) { /* TODO: Regular date check? */
+  } else if (values.day < 1 || values.day > 31) { /* TODO: Regular date check? */
     errors.day = messages.invalidDay
   }
   if (!values.email) {
@@ -652,7 +656,6 @@ const validate = values => {
   }
   return errors
 }
-
 
 export default reduxForm(
   {
