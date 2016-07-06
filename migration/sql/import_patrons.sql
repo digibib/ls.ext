@@ -4,5 +4,5 @@ CHARACTER SET utf8
 FIELDS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '\"'
 LINES TERMINATED BY '\n'
-(userid,cardnumber,surname,firstname,address,zipcode,city,country,smsalertnumber,email,categorycode);
+(userid,cardnumber,surname,firstname,address,address2,zipcode,city,country,phone,smsalertnumber,email,categorycode,privacy,branchcode);
 SHOW WARNINGS;

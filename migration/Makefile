@@ -53,7 +53,7 @@ out/done.setup_koha: out/done.massage_input_data
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/itypes.sql'
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
-	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems and items"
+	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems, items and issues"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;SET foreign_key_checks=1;"'
 	@echo "OK Done setting up Koha\n"
 	@touch out/done.setup_koha
@@ -136,7 +136,7 @@ out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@echo "   Migration is complete. Goodbye!"
 	@echo "!! TODO stop running virtuoso container (left up for debugging)"
 
-out/done.migrate_patrons:
+out/done.migrate_patrons: out/done.setup_koha
 ifdef MIGRATE_PATRONS
 	@echo "   Migrating patrons to Koha"
 	@echo "-- Merging information from laaner, lmarc and lnel dumps"
