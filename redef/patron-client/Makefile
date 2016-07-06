@@ -1,4 +1,4 @@
-IMAGE=dockercompose_patron-client
+IMAGE=dockercompose_patron_client
 DOCKERHUB=digibib/redef-patron-client
 CONTAINER=patron_client
 
