@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Finn bok
   Som adminbruker
   Ønsker jeg å kunne finne en bok i systemet
