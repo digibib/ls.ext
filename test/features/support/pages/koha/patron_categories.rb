@@ -32,7 +32,7 @@ class PatronCategories < AdminPage
     if form.hidden(:name, "categorycode").value == categorycode
       form.submit
     end
-    @browser.div(:class => "dialog message").text.should eq("Patron category deleted successfully.")
+    @browser.div(:class => "dialog message").text.should =~ /deleted|slettet/
     self
   end
 end

@@ -24,7 +24,7 @@ class Branches < IntraPage
     if form.text.include?(branch_code)
       form.submit
     end
-    @browser.div(:class => "dialog message").text.should eq("Library deleted successfully.")
+    @browser.div(:class => "dialog message").text.should =~ /deleted|slettet/
     self
   end
 
