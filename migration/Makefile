@@ -53,8 +53,11 @@ out/done.setup_koha: out/done.massage_input_data
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/itypes.sql'
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
+	@cp sql/*.sql out/
+	@echo "-- Populating table defining extended patron attribute types"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_extended_patron_attributes.sql'
 	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems, items and issues"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;SET foreign_key_checks=1;"'
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;SET foreign_key_checks=1;"'
 	@echo "OK Done setting up Koha\n"
 	@touch out/done.setup_koha
 
@@ -145,10 +148,15 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
 	@echo "-- Inserting patron home branches into MySQL"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
+	@echo "-- Truncating tables borrowers, borrwer_attributes"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;SET foreign_key_checks=1;"'
+	@echo "-- Recreating API user (since we just truncated borrowers table)"
+	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 1 && kill \$$PID" 2> /dev/null
 	@echo "-- Importing patrons to Koha"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
-	@echo "!! TODO Inserting extended patron attributes"
+	@echo "-- Inserting extended patron attributes (fnr)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
 	@echo "!! TODO Inserting NL details"
 	@echo "OK Done migrating patrons.\n"
 endif
