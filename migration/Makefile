@@ -26,7 +26,7 @@ MYSQL_CMD=mysql --local-infile=1 --default-character-set=utf8 -h koha_mysql -u$$
 # Tasks
 # =====
 
-.PHONY: all clean rebuild
+.PHONY: all clean rebuild verify
 
 all: out/done.koha_fuseki_sync
 
@@ -34,7 +34,7 @@ rebuild:
 	@sudo docker-compose -f ../docker-compose/docker-compose.yml build --no-cache migration
 
 debug: # Spin up a migration container and enter it
-	@MIGRATION_RUN_CMD=sudo docker run --net=dockercompose_backend --rm --cpu-shares=100 -it -v $(shell pwd)/out:/out -v $(MIGRATION_DATA):/data dockercompose_migration bash
+	@MIGRATION_RUN_CMD=sudo docker run --net=dockercompose_backend --rm  -it -v $(shell pwd)/out:/out -v $(MIGRATION_DATA):/data dockercompose_migration bash
 
 clean:
 	@rm -f out/*
@@ -169,3 +169,7 @@ ifdef MIGRATE_PATRONS
 	@echo "OK Done migrating loans\n"
 	@touch out/done.migrate_loans
 endif
+
+verify:
+	@echo "   Verifying migration"
+	@$(MIGRATION_RUN_CMD) verify
