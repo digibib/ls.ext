@@ -8,6 +8,9 @@ UPDATE items
     ORDER BY biblionumber DESC)
 ;
 
+UPDATE items
+SET biblioitemnumber = biblionumber;
+
 ALTER TABLE biblio MODIFY biblionumber INT(11) NOT NULL;
 ALTER TABLE biblio DROP PRIMARY KEY;
 
