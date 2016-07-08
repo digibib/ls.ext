@@ -18,7 +18,7 @@ import java.net.URL;
  */
 public class Z3950HttpClient {
 
-    private static final String Z3950_PROXY_PORT = System.getProperty("Z3950_ENDPOINT", "http://192.168.50.12:3000");
+    private static final String Z3950_PROXY_PORT = System.getProperty("Z3950_ENDPOINT", "http://z3950proxy:3000");
 
     private String baseURI;
     private int proxyPort;

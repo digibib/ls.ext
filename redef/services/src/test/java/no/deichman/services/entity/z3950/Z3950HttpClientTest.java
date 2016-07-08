@@ -1,15 +1,11 @@
 package no.deichman.services.entity.z3950;
 
-import no.deichman.services.uridefaults.BaseURI;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -19,14 +15,6 @@ public class Z3950HttpClientTest {
 
     private static final int THREE_THOUSAND = 3000;
     private Z3950ServiceMock z3950ServiceMock = new Z3950ServiceMock();
-
-    @Test
-    public void test_constructor_sets_default_baseUri_and_port() throws MalformedURLException, URISyntaxException {
-        Z3950HttpClient z3950HttpClient = new Z3950HttpClient();
-        URI baseUri = new URI(BaseURI.remote().getBaseUriRoot());
-        assertEquals("http://" + baseUri.getHost(), z3950HttpClient.getBaseURI());
-        assertNotNull(z3950HttpClient.getProxyPort());
-    }
 
     @Test
     public void test_getting_setting() throws MalformedURLException {
