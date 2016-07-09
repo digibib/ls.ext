@@ -5,6 +5,9 @@ networks:
   backend:
     driver: bridge
 
+volumes:
+  koha_state: {}
+
 services:
   koha:
     container_name: koha
@@ -44,7 +47,8 @@ services:
       - "8081:8081"
     volumes_from:
       - koha_index
-      - koha_state
+    volumes:
+      - koha_state:/var/lib/state
     logging:
       driver: "json-file"
       options:
