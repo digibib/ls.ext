@@ -45,7 +45,7 @@ public final class App {
     private String kohaPort;
     private boolean inMemoryRDFRepository;
     private int jamonAppPort;
-    private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://localhost:9200");
+    private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://elasticsearch:9200");
     private String z3950Endpoint;
 
     public App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort, String z3950Endpoint) {

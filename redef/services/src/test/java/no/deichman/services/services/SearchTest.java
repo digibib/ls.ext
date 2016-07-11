@@ -28,7 +28,7 @@ public class SearchTest {
     private static final int THREE = 3;
     private static final int TEN_TIMES = 10;
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
-    private static String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://localhost:9200");
+    private static String elasticSearchUrl = "http://localhost:9200";
 
     @BeforeClass
     public static void setup() throws Exception {

@@ -26,7 +26,6 @@ import static javax.ws.rs.core.Response.Status.OK;
  */
 public final class KohaAdapterImpl implements KohaAdapter {
 
-    private static final String DEFAULT_KOHA_PORT = "http://192.168.50.12:8081";
     private static final String KOHA_USER = System.getProperty("KOHA_API_USER", "api");
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_API_PASS", "secret");
     static final String SESSION_COOKIE_KEY = "CGISESSID";
@@ -37,7 +36,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
     private NewCookie sessionCookie;
 
     public KohaAdapterImpl(String kohaPort) {
-        this.kohaPort = kohaPort != null ? kohaPort : System.getProperty("KOHA_PORT", DEFAULT_KOHA_PORT);
+        this.kohaPort = kohaPort != null ? kohaPort : System.getProperty("KOHA_PORT", "http://koha:8081");
         log.info("Koha adapter started with kohaPort: " + this.kohaPort);
     }
 

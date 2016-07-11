@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public final class RemoteRepository extends RDFRepositoryBase {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteRepository.class);
     private static HttpClient httpClient = new SystemDefaultHttpClient();
-    private static final String TRIPLESTORE_PORT = System.getProperty("TRIPLESTORE_PORT", "http://192.168.50.12:3030");
+    private static final String TRIPLESTORE_PORT = "http://fuseki:3030";
     private final String triplestorePort;
 
     RemoteRepository(String triplestorePort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {

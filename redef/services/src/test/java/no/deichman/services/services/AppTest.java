@@ -97,6 +97,7 @@ public class AppTest {
         z3950ServiceMock = new Z3950ServiceMock();
         String z3950Endpoint = LOCALHOST + ":" + z3950ServiceMock.getPort();
         System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
+        System.setProperty("ELASTICSEARCH_URL", "http://localhost:9200");
 
         baseUri = LOCALHOST + ":" + appPort + "/";
         System.setProperty("DATA_BASEURI", baseUri);
