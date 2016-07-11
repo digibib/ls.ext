@@ -24,6 +24,19 @@ class GlobalSetup
     # Enable extended patron attributes and messaging preferences, old ids, NL, etc.
     SVC::Preference.new(@growser).set("pref_ExtendedPatronAttributes", "1")
     SVC::Preference.new(@growser).set("pref_EnhancedMessagingPreferences", "1")
+
+    sql = %Q{
+INSERT IGNORE INTO branches  (branchcode, branchname)
+VALUES ('hutl','Hovedbiblioteket');
+
+INSERT IGNORE INTO itemtypes (itemtype, description)
+VALUES ('B','Bok');
+
+INSERT IGNORE INTO categories (categorycode, description, category_type, enrolmentperioddate)
+VALUES('V','Voksen','A','2999-12-31');
+}.gsub(/\s+/, " ").strip
+
+    `mysql --default-character-set=utf8 -h koha_mysql -u#{ENV['KOHA_ADMINUSER']} -p#{ENV['KOHA_ADMINPASS']} koha_name -e "#{sql}"`
   end
 
   def teardown

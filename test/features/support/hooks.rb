@@ -26,7 +26,13 @@ end
 # BEFORE HOOKS will run in the same order of which they are registered.
 
 Before do
-  @context = {}
+  @context = {
+    :defaults => {
+        :branch => "hutl",
+        :item_type => "B",
+        :patron_category => "V"
+    }
+  }
   @active = {} # Hash of active context objects (Book, Patron, Branch, etc.)
   @cleanup = [] # A stack of operations to be undone in reversed order after feature
 end

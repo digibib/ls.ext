@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     software-properties-common \
     chromium-browser \
+    mysql-client \
     apparmor && \
     apt-get clean
 
