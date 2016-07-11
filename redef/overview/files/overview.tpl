@@ -132,32 +132,6 @@
             <p>Grensesnittet er ikke ferdig og vil utvikles frem mot september.</p>
         </div>
     </div>
-    <h2>Tekniske grensesnitt</h2>
-    <ul>
-        <li>
-            <a href="http://${HOST}:${SERVICES_PORT}/application.wadl?detail=true">Services</a><br/>
-            API for LS.ext som håndterer dataflyt mellom RDF, Koha og presentasjonslag.
-        </li>
-        <li>
-            <a href="http://${HOST}:${JAMON_PORT}/jamonadmin.jsp">JAMon</a><br/>
-            Måleverktøy for ytelse og responstider i Services
-        </li>
-        <li>
-            <a href="http://${HOST}:${TRIPLESTORE_PORT}">Triplestore</a><br/>
-            RDF database og SPARQL endpoint
-        </li>
-        <li>
-            <a href="http://${HOST}:${ELASTICSEARCH_PORT}/?pretty">Elasticsearch</a><br/>
-            Indekseringsmotor
-        </li>
-        <li>
-            <a href="http://${HOST}:${CATALINKER_PORT}/index_old.html">Katalogisering</a><br/>
-            For avanserte brukere
-        </li>
-    </ul>
-    <h2>Kohas OPAC</h2>
-    <p><a href="http://${HOST}:${KOHA_OPAC_PORT}">Kohas OPAC</a> er standardgrensesnittet for brukeren for andre som bruker Koha som biblioteksystem.</p>
-    <p><strong>Dette skal ikke vi skal bruke.</strong> Vi lager eget Søk og Min side.</p>
     <h2>Versjonsinformasjon</h2>
     <p><strong>GITREF:</strong> ${GITREF}</p>
     <p><strong>Jenkins bygg nr.</strong>${BUILD_TAG}</p>

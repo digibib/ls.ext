@@ -43,7 +43,6 @@ services:
       NLVENDORKEY: "${NLVENDORKEY}"
     ports:
       - "6001:6001"
-      - "8080:8080"
       - "8081:8081"
     volumes_from:
       - koha_index
@@ -74,8 +73,6 @@ services:
       MYSQL_PASSWORD: "${KOHA_ADMINPASS}"
       MYSQL_ROOT_PASSWORD: "${KOHA_ADMINPASS}"
       MYSQL_USER: "${KOHA_ADMINUSER}"
-    ports:
-      - "3306:3306"
     volumes_from:
       - koha_mysql_data
     logging:
@@ -132,8 +129,6 @@ services:
     image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
     networks:
       - backend
-    ports:
-      - "8100:8000"
     environment:
       FORWARD_SMTP: "${FORWARD_SMTP}"
     logging:
@@ -153,9 +148,6 @@ services:
     image: elasticsearch:2.3.1
     networks:
       - backend
-    ports:
-      - "8200:9200"
-      - "8300:9300"
     volumes_from:
       - elasticsearch_data
     logging:
@@ -176,8 +168,6 @@ services:
       context: "${LSEXTPATH}/docker-compose/dockerfiles/fuseki"
     networks:
       - backend
-    ports:
-      - "3030:3030"
     volumes_from:
       - fuseki_data
     logging:
@@ -235,9 +225,6 @@ services:
     depends_on:
       - fuseki
       - koha
-    ports:
-      - "8005:8005"
-      - "8006:8006"
     environment:
       KOHA_MYSQL_USER: "${KOHA_ADMINUSER}"
       KOHA_MYSQL_PASS: "${KOHA_ADMINPASS}"
