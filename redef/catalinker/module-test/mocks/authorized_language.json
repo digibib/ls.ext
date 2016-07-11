@@ -2,28 +2,28 @@
   "@graph" : [ {
     "@id" : "language:ara",
     "@type" : "lvont:Language",
-    "rdfs:label" : {
+    "label" : {
       "@language" : "no",
       "@value" : "Arabisk"
     }
   }, {
     "@id" : "language:chi",
     "@type" : "lvont:Language",
-    "rdfs:label" : {
+    "label" : {
       "@language" : "no",
       "@value" : "Kinesisk"
     }
   }, {
     "@id" : "language:eng",
     "@type" : "lvont:Language",
-    "rdfs:label" : {
+    "label" : {
       "@language" : "no",
       "@value" : "Engelsk"
     }
   }, {
     "@id" : "language:nob",
     "@type" : "lvont:Language",
-    "rdfs:label" : {
+    "label" : {
       "@language" : "no",
       "@value" : "Norsk (bokmål)"
     }

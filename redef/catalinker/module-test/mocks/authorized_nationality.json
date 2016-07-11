@@ -3,7 +3,7 @@
     {
       "@id": "nationality:n",
       "@type": "duo:Nationality",
-      "rdfs:label": {
+      "label": {
         "@language": "no",
         "@value": "Norsk"
       }
@@ -11,7 +11,7 @@
     {
       "@id": "nationality:eng",
       "@type": "duo:Nationality",
-      "rdfs:label": {
+      "label": {
         "@language": "no",
         "@value": "Engelsk"
       }
@@ -19,7 +19,7 @@
     {
       "@id": "nationality:fær",
       "@type": "duo:Nationality",
-      "rdfs:label": {
+      "label": {
         "@language": "no",
         "@value": "Færøyisk"
       }

@@ -3,7 +3,7 @@
     {
       "@id": "format:Compact_Disc",
       "@type": "duo:Format",
-      "rdfs:label": {
+      "label": {
         "@language": "no",
         "@value": "CD"
       }
@@ -11,7 +11,7 @@
     {
       "@id": "format:Book",
       "@type": "duo:Format",
-      "rdfs:label": {
+      "label": {
         "@language": "no",
         "@value": "Bok"
       }
@@ -19,7 +19,7 @@
     {
       "@id": "format:DVD",
       "@type": "duo:Format",
-      "rdfs:label": {
+      "label": {
         "@language": "no",
         "@value": "DVD"
       }
