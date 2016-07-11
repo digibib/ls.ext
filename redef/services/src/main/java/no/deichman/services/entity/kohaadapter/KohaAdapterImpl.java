@@ -12,7 +12,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -45,20 +44,20 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     private void login() {
-        String url = kohaPort + "/cgi-bin/koha/svc/authentication"; // TODO switch to using /api/v1 when it can handle authentication
+        String url = kohaPort + "/api/v1/auth/session";
 
-        Form form = new Form();
-        form.param("userid", KOHA_USER);
-        form.param("password", KOHA_PASSWORD);
+        JsonObject body = new JsonObject();
+        body.addProperty("userid", KOHA_USER);
+        body.addProperty("password", KOHA_PASSWORD);
 
         Response response = ClientBuilder.newClient()
                 .target(url)
                 .request()
-                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+                .post(Entity.entity(new Gson().toJson(body), MediaType.APPLICATION_JSON));
 
         sessionCookie = response.getCookies() == null ? null : response.getCookies().get(SESSION_COOKIE_KEY);
 
-        if (response.getStatus() != OK.getStatusCode() || sessionCookie == null) {
+        if (response.getStatus() != CREATED.getStatusCode() || sessionCookie == null) {
             String message = "Cannot authenticate with Koha: " + response + ", sessionCookie: " + sessionCookie;
             log.error(message);
             throw new IllegalStateException(message);

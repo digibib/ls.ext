@@ -48,16 +48,11 @@ public final class KohaSvcMock {
     }
 
     public void addLoginExpectation() {
-        String authenticationOKResponse = "<?xml version='1.0' standalone='yes'?>\n"
-                + "<response>\n"
-                + "  <status>ok</status>\n"
-                + "</response>";
-
         clientDriver.addExpectation(
-                onRequestTo("/cgi-bin/koha/svc/authentication")
+                onRequestTo("/api/v1/auth/session")
                         .withMethod(POST)
-                        .withBody("userid=api&password=secret", MediaType.APPLICATION_FORM_URLENCODED_TYPE.toString()),
-                giveResponse(authenticationOKResponse, "text/xml").withStatus(OK.getStatusCode())
+                        .withBody("{\"userid\":\"api\",\"password\":\"secret\"}", MediaType.APPLICATION_JSON.toString()),
+                giveResponse("{}", "application/json").withStatus(CREATED.getStatusCode())
                         .withHeader(HttpHeaders.SET_COOKIE, KohaAdapterImpl.SESSION_COOKIE_KEY + "=huh"));
     }
 
