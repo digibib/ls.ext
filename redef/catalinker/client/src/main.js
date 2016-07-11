@@ -650,10 +650,10 @@
           })
 
           var valuesSorted = values[ '@graph' ].sort(function (a, b) {
-            if (a[ 'rdfs:label' ][ '@value' ] < b[ 'rdfs:label' ][ '@value' ]) {
+            if (a[ 'label' ][ '@value' ] < b[ 'label' ][ '@value' ]) {
               return -1
             }
-            if (a[ 'rdfs:label' ][ '@value' ] > b[ 'rdfs:label' ][ '@value' ]) {
+            if (a[ 'label' ][ '@value' ] > b[ 'label' ][ '@value' ]) {
               return 1
             }
             return 0
@@ -1203,7 +1203,7 @@
       predefinedLabelValue: function (type, uri) {
         return i18nLabelValue(_.find(ractive.get('predefinedValues.' + type), function (predefinedValue) {
           return predefinedValue[ '@id' ] === uri
-        })[ 'rdfs:label' ])
+        })[ 'label' ])
       },
 
       init: function (template) {

@@ -89,7 +89,7 @@
         value="{{current.value}}">
     <option value="">(ikke valgt)</option>
     {{#getAuthorizedValues(fragment)}}
-    <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
+    <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["label"])}}</option>
     {{/each}}
 </select>
 {{else}}

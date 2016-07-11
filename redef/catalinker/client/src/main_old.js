@@ -183,10 +183,10 @@
                 });
 
                 var values_sorted = values["@graph"].sort(function (a, b) {
-                    if (a["rdfs:label"]["@value"] < b["rdfs:label"]["@value"]) {
+                    if (a["label"]["@value"] < b["label"]["@value"]) {
                         return -1;
                     }
-                    if (a["rdfs:label"]["@value"] > b["rdfs:label"]["@value"]) {
+                    if (a["label"]["@value"] > b["label"]["@value"]) {
                         return 1;
                     }
                     return 0;

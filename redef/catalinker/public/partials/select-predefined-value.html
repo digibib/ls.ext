@@ -9,7 +9,7 @@
         data-automation-id="{{dataAutomationId}}"
         multiple {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
     {{#each predefinedValues[../../fragment]}}
-    <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["rdfs:label"])}}</option>
+    <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["label"])}}</option>
     {{/each}}
 </select>
 {{/if}}
