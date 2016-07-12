@@ -155,6 +155,8 @@ ifdef MIGRATE_PATRONS
 	@echo "-- Importing patrons to Koha"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
+	@echo "-- Setting patron expiry date far into the future"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET dateexpiry=\"2099-01-01\";"'
 	@echo "-- Inserting extended patron attributes (fnr)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
 	@echo "!! TODO Inserting NL details"
@@ -193,5 +195,7 @@ staff:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
 	@echo "-- Grating staff permissions (all superusers for now; TODO differentiate)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET flags=1;"'
+	@echo "-- Setting staff expiry date far into the future"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET dateexpiry=\"2099-01-01\";"'
 	@echo "-- Inserting extended patron attributes (fnr)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
