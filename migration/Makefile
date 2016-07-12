@@ -26,7 +26,7 @@ MYSQL_CMD=mysql --local-infile=1 --default-character-set=utf8 -h koha_mysql -u$$
 # Tasks
 # =====
 
-.PHONY: all clean rebuild verify
+.PHONY: all clean rebuild verify staff
 
 all: out/done.koha_fuseki_sync
 
@@ -173,3 +173,25 @@ endif
 verify:
 	@echo "   Verifying migration"
 	@$(MIGRATION_RUN_CMD) verify
+
+staff:
+	@echo "   Importing staff users"
+	@echo "-- Populating table defining extended patron attribute types"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_extended_patron_attributes.sql'
+	@echo "-- Merging information from laaner, lmarc and lnel dumps"
+	@$(MIGRATION_RUN_CMD) "patronmassage -staff=true -lmarc=/data/$(LMARC) -laaner=/data/$(LAANER) -lnel=/data/$(LNEL) -outdir=/out"
+	@echo "-- Inserting patron categories into MySQL"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
+	@echo "-- Inserting patron home branches into MySQL"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
+	@echo "-- Truncating tables borrowers, borrwer_attributes"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;SET foreign_key_checks=1;"'
+	@echo "-- Recreating API user (since we just truncated borrowers table)"
+	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 1 && kill \$$PID" 2> /dev/null
+	@echo "-- Importing patrons to Koha"
+	@cp sql/*.sql out/
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
+	@echo "-- Grating staff permissions (all superusers for now; TODO differentiate)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET flags=1;"'
+	@echo "-- Inserting extended patron attributes (fnr)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
