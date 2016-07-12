@@ -64,7 +64,7 @@ out/done.setup_koha: out/done.massage_input_data
 out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "   Migration catalogue with items into Koha"
 	@echo "-- Stopping Zebra indexer"
-	@sudo docker exec koha koha-stop-zebra $$KOHA_INSTANCE
+	@sudo docker exec koha /bin/sh -c 'sudo koha-stop-zebra $$KOHA_INSTANCE'
 	@echo "-- Clearing Zebra index"
 	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios"' 2> /dev/null
 	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
@@ -75,7 +75,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
 	@echo "-- Starting Zebra indexer"
-	@sudo docker exec koha koha-start-zebra $$KOHA_INSTANCE
+	@sudo docker exec koha /bin/sh -c 'sudo koha-start-zebra $$KOHA_INSTANCE'
 	@echo "OK Done importing catalogue into Koha\n"
 	@touch out/done.migrate_catalogue_to_koha
 
