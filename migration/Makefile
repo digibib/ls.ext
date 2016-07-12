@@ -148,8 +148,8 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
 	@echo "-- Inserting patron home branches into MySQL"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
-	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;SET foreign_key_checks=1;"'
+	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences, borrower_sync"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;TRUNCATE TABLE borrower_sync;SET foreign_key_checks=1;"'
 	@echo "-- Recreating API user (since we just truncated borrowers table)"
 	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 1 && kill \$$PID" 2> /dev/null
 	@echo "-- Importing patrons to Koha"
@@ -161,7 +161,8 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/msgprefs.sql'
 	@echo "-- Inserting extended patron attributes (fnr)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
-	@echo "!! TODO Inserting NL details"
+	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_sync (borrowernumber, synctype, sync, syncstatus) SELECT borrowernumber, \"norwegianpatrondb\",1,\"new\" FROM borrower_attributes WHERE code=\"fnr\";"'
 	@echo "OK Done migrating patrons.\n"
 endif
 	@touch out/done.migrate_patrons
@@ -188,14 +189,14 @@ staff:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
 	@echo "-- Inserting patron home branches into MySQL"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
-	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;SET foreign_key_checks=1;"'
+	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences, borrower_sync"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;TRUNCATE TABLE borrower_sync;SET foreign_key_checks=1;"'
 	@echo "-- Recreating API user (since we just truncated borrowers table)"
 	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 1 && kill \$$PID" 2> /dev/null
 	@echo "-- Importing patrons to Koha"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
-	@echo "-- Grating staff permissions (all superusers for now; TODO differentiate)"
+	@echo "-- Granting staff permissions (all superusers for now; TODO differentiate)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET flags=1;"'
 	@echo "-- Setting staff expiry date far into the future"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET dateexpiry=\"2099-01-01\";"'
@@ -203,3 +204,6 @@ staff:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/msgprefs.sql'
 	@echo "-- Inserting extended patron attributes (fnr)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
+	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_sync (borrowernumber, synctype, sync, syncstatus) SELECT borrowernumber, \"norwegianpatrondb\",1,\"new\" FROM borrower_attributes WHERE code=\"fnr\";"'
+	@echo "OK Done migrating staff.\n"
