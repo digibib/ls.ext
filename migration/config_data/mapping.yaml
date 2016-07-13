@@ -439,13 +439,23 @@
         subfields:
           -
             '9':
-              predicate: "RAW.untranscribedTitle"
+              predicate: "MIGRATION.untranscribedTitle"
               object:
-                combinestring: "_"
+                combinestring: ""
                 datatype: "literal"
                 combine:
                   - "a"
-                  - "9"
+    -
+      '245':
+        subfields:
+          -
+            '9':
+              predicate: "MIGRATION.untranscribedSubtitle"
+              object:
+                combinestring: ""
+                datatype: "literal"
+                combine:
+                  - "b"
     -
       '246':
         subfields:
