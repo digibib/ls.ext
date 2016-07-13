@@ -74,6 +74,8 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "-- Updating biblionumbers (so that biblionumber=tittelnummer)"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
+	@echo "-- Updating biblioitems.marcxml 999 with changed biblioitemnumber"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec koha /bin/sh -c 'sudo koha-start-zebra $$KOHA_INSTANCE'
 	@echo "OK Done importing catalogue into Koha\n"
