@@ -1,15 +1,9 @@
 SET foreign_key_checks=0;
 START TRANSACTION;
-UPDATE items
-  SET biblionumber =
-    (SELECT ExtractValue(biblioitems.marcxml, '//controlfield[@tag="001"]')
-    FROM biblioitems
-    WHERE items.biblioitemnumber=biblioitems.biblioitemnumber
-    ORDER BY biblionumber DESC)
-;
 
-UPDATE items
-SET biblioitemnumber = biblionumber;
+UPDATE items SET
+  biblionumber = CONVERT(SUBSTRING(barcode, 5, 7), SIGNED INTEGER),
+  biblioitemnumber = biblionumber;
 
 ALTER TABLE biblio MODIFY biblionumber INT(11) NOT NULL;
 ALTER TABLE biblio DROP PRIMARY KEY;
