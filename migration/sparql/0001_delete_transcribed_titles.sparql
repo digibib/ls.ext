@@ -3,12 +3,17 @@
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
+PREFIX raw: <http://deichman.no/raw#>
 
 WITH <http://deichman.no/migration>
 
 
 DELETE {
   ?doc :mainTitle ?transcribedTitle .
+}
+
+INSERT {
+  ?doc raw:transcribedTitle ?transcribedTitle
 }
 
 WHERE {
@@ -24,6 +29,7 @@ WHERE {
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
+PREFIX raw: <http://deichman.no/raw#>
 
 WITH <http://deichman.no/migration>
 
@@ -31,6 +37,9 @@ DELETE {
   ?doc :subtitle ?transcribedSubtitle .
 }
 
+INSERT {
+  ?doc raw:transcribedSubtitle ?transcribedSubtitle
+}
 
 WHERE {
   ?doc migration:untranscribedSubtitle ?untranscribedSubtitle ;
