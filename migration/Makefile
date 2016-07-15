@@ -22,7 +22,7 @@ LAANER=$(shell ls -1 $(MIGRATION_DATA)/*laaner.*.txt | xargs basename)
 LMARC=$(shell ls -1 $(MIGRATION_DATA)/*lmarc.*.txt | xargs basename)
 LNEL=$(shell ls -1 $(MIGRATION_DATA)/*lnel.*.txt | xargs basename)
 MYSQL_CMD=mysql --local-infile=1 --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE
-
+TIMEIT=/usr/bin/time -f"   %es"
 # Tasks
 # =====
 
@@ -41,7 +41,7 @@ clean:
 
 out/done.massage_input_data:
 	@echo "   Massaging and transforming input data (Bibliofil exports)"
-	@$(MIGRATION_RUN_CMD) "catmassage -outdir=/out -vmarc=/data/$(VMARC) -exemp=/data/$(EXEMP) -limit=$(LIMIT) -skip=$(SKIP)"
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) "catmassage -outdir=/out -vmarc=/data/$(VMARC) -exemp=/data/$(EXEMP) -limit=$(LIMIT) -skip=$(SKIP)"
 	@echo "OK Done massaging\n"
 	@touch out/done.massage_input_data
 
@@ -73,9 +73,9 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@sudo docker exec koha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
 	@echo "-- Updating biblionumbers (so that biblionumber=tittelnummer)"
 	@cp sql/*.sql out/
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
 	@echo "-- Updating biblioitems.marcxml 999 with changed biblioitemnumber"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec koha /bin/sh -c 'sudo koha-start-zebra $$KOHA_INSTANCE'
 	@echo "OK Done importing catalogue into Koha\n"
