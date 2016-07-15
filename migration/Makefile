@@ -179,7 +179,7 @@ endif
 
 verify:
 	@echo "   Verifying migration"
-	@$(MIGRATION_RUN_CMD) verify
+	@$(MIGRATION_RUN_CMD) verify -h $(HOST)
 
 staff:
 	@echo "   Importing staff users"
