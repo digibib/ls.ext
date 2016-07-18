@@ -131,7 +131,7 @@ out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@$(MIGRATION_RUN_CMD) "syncimages -h=$(HOST):8005 -i=/out/images.csv.gz > /out/images.sparql"
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/images.sparql fuseki:3030/ds/update'
 	@echo "OK Done syncing.\n"
-	@touch out/done.koha_fuseki_sync
+	@touch out/done_koha_fuseki_sync
 	@echo "-- Starting indexing resources in Elasticsearch..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
