@@ -35,8 +35,8 @@ class Registration extends React.Component {
 
   renderSSNInfo () {
     return (
-      <div data-automation-id='ssninfo'>
-        <span className='display-inline'>
+      <div data-automation-id="ssninfo">
+        <span className="display-inline">
           <FormattedMessage {...messages.ssninfo} />
         </span>
       </div>
@@ -45,8 +45,8 @@ class Registration extends React.Component {
 
   renderCheckingForExistingUser () {
     return (
-      <div data-automation-id='checking_existing_user'>
-        <span className='display-inline'>
+      <div data-automation-id="checking_existing_user">
+        <span className="display-inline">
           <FormattedMessage {...messages.checkingForExistingUser} />
         </span>
       </div>
@@ -55,8 +55,8 @@ class Registration extends React.Component {
 
   renderCheckForExistingUserSuccess () {
     return (
-      <div data-automation-id='check_for_existing_user_success'>
-        <span className='display-inline'>
+      <div data-automation-id="check_for_existing_user_success">
+        <span className="display-inline">
           <FormattedMessage {...messages.checkForExistingUserSuccess} />
         </span>
       </div>
@@ -72,46 +72,46 @@ class Registration extends React.Component {
     return (
       <fieldset>
         <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
-        <span className='display-inline'>
+        <span className="display-inline">
           <h2><FormattedMessage {...messages.email} /></h2>
-          <input name='email' type='text' id='email' {...email} />
-          <label htmlFor='email'><FormattedMessage {...messages.email} /></label>
+          <input name="email" type="text" id="email" {...email} />
+          <label htmlFor="email"><FormattedMessage {...messages.email} /></label>
           {this.getValidator(email)}
         </span>
-        <span className='display-inline'>
+        <span className="display-inline">
           <h2><FormattedMessage {...messages.mobile} /></h2>
-          <input name='mobile' type='text' id='mobile' {...mobile} />
-          <label htmlFor='mobile'><FormattedMessage {...messages.mobile} /></label>
+          <input name="mobile" type="text" id="mobile" {...mobile} />
+          <label htmlFor="mobile"><FormattedMessage {...messages.mobile} /></label>
           {this.getValidator(mobile)}
         </span>
         <address>
           <h2><FormattedMessage {...messages.address} /></h2>
-          <input name='address' type='text' id='address' {...address} />
-          <label htmlFor='address'><FormattedMessage {...messages.address} /></label>
+          <input name="address" type="text" id="address" {...address} />
+          <label htmlFor="address"><FormattedMessage {...messages.address} /></label>
           {this.getValidator(address)}
-          <span className='display-inline'>
+          <span className="display-inline">
             <h2><FormattedMessage {...messages.zipcode} /></h2>
-            <input name='zipcode' type='text' id='zipcode' {...zipcode} />
-            <label htmlFor='zipcode'><FormattedMessage {...messages.zipcode} /></label>
+            <input name="zipcode" type="text" id="zipcode" {...zipcode} />
+            <label htmlFor="zipcode"><FormattedMessage {...messages.zipcode} /></label>
             {this.getValidator(zipcode)}
           </span>
-          <span className='display-inline'>
+          <span className="display-inline">
             <h2><FormattedMessage {...messages.city} /></h2>
-            <input name='city' type='text' id='city' {...city} />
-            <label htmlFor='city'><FormattedMessage {...messages.city} /></label>
+            <input name="city" type="text" id="city" {...city} />
+            <label htmlFor="city"><FormattedMessage {...messages.city} /></label>
             {this.getValidator(city)}
           </span>
           <h2><FormattedMessage {...messages.country} /></h2>
-          <label htmlFor='country'><FormattedMessage {...messages.country} /></label>
-          <input name='country' type='text' id='country' {...country} />
+          <label htmlFor="country"><FormattedMessage {...messages.country} /></label>
+          <input name="country" type="text" id="country" {...country} />
           {this.getValidator(country)}
         </address>
         {/*
         <h2><FormattedMessage {...messages.gender} /></h2>
-        <div className='select-container'>
-          <select data-automation-id='gender_selection' >
-            <option value='male'><FormattedMessage {...messages.male} /></option>
-            <option value='female'><FormattedMessage {...messages.female} /></option>
+        <div className="select-container">
+          <select data-automation-id="gender_selection" >
+            <option value="male"><FormattedMessage {...messages.male} /></option>
+            <option value="female"><FormattedMessage {...messages.female} /></option>
           </select>
         </div>
         */}
@@ -128,54 +128,54 @@ class Registration extends React.Component {
       <fieldset>
         <legend><FormattedMessage {...messages.personSettingsLegend} /></legend>
         <h2><FormattedMessage {...messages.choosePin} /></h2>
-        <input data-automation-id='choose_pin' name='code' type='password' id='code' {...pin} />
-        <label htmlFor='code'><FormattedMessage {...messages.choosePin} /></label>
-        <input data-automation-id='repeat_pin' name='code' type='password' id='code' {...repeatPin} />
-        <label htmlFor='code'><FormattedMessage {...messages.repeatPin} /></label>
+        <input data-automation-id="choose_pin" name="code" type="password" id="code" {...pin} />
+        <label htmlFor="code"><FormattedMessage {...messages.choosePin} /></label>
+        <input data-automation-id="repeat_pin" name="code" type="password" id="code" {...repeatPin} />
+        <label htmlFor="code"><FormattedMessage {...messages.repeatPin} /></label>
         {this.getValidator(pin)}
         {this.getValidator(repeatPin)}
         <h2><FormattedMessage {...messages.chooseBranch} /></h2>
-        <div className='select-container'>
+        <div className="select-container">
           <Libraries libraries={this.props.libraries} selectProps={library} />
         </div>
         {/*
-        <div className='display-inline'>
+        <div className="display-inline">
           <h2><FormattedMessage {...messages.rememberHistory} /></h2>
-          <input name='yes' type='radio' id='yes' />
-          <p className='display-inline'><FormattedMessage {...messages.yesOption} /></p>
-          <label htmlFor='yes'><FormattedMessage {...messages.yesOption} /></label>
-          <input name='no' type='radio' id='no' />
-          <p className='display-inline'><FormattedMessage {...messages.noOption} /></p>
-          <label htmlFor='code'><FormattedMessage {...messages.noOption} /></label>
+          <input name="yes" type="radio" id="yes" />
+          <p className="display-inline"><FormattedMessage {...messages.yesOption} /></p>
+          <label htmlFor="yes"><FormattedMessage {...messages.yesOption} /></label>
+          <input name="no" type="radio" id="no" />
+          <p className="display-inline"><FormattedMessage {...messages.noOption} /></p>
+          <label htmlFor="code"><FormattedMessage {...messages.noOption} /></label>
         </div>
         */}
-        <div className='terms_and_conditions'>
-          <input data-automation-id='accept_terms' id='acceptTerms' type='checkbox' {...acceptTerms} />
-          <label htmlFor='accept_terms'><span></span>
-            <a onClick={this.handleExpandedTermsAndCondition} title='termslink'>
+        <div className="terms_and_conditions">
+          <input data-automation-id="accept_terms" id="acceptTerms" type="checkbox" {...acceptTerms} />
+          <label htmlFor="accept_terms"><span></span>
+            <a onClick={this.handleExpandedTermsAndCondition} title="termslink">
               <FormattedMessage {...messages.acceptTermsLink} />
             </a>
           </label>
           {this.props.showTermsAndConditions ? this.renderTermsAndConditions() : ''}
         </div>
-        <button className='black-btn' type='submit' disabled={submitting || this.hasInvalidFormFields()}
-                data-automation-id='register_button'>
+        <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
+                data-automation-id="register_button">
           <FormattedMessage {...messages.register} />
         </button>
-        <h3><a onClick={this.handleCancel} title='cancel'><FormattedMessage {...messages.cancel} /></a></h3>
+        <h3><a onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a></h3>
       </fieldset>
     )
   }
 
   renderSuccess () {
     return (
-      <div data-automation-id='registration_success_modal' className='default-modal'>
+      <div data-automation-id="registration_success_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
           <FormattedMessage {...messages.messageSuccess} /><br />
-          <span data-automation-id='username'>{this.props.username}</span>
+          <span data-automation-id="username">{this.props.username}</span>
         </p>
-        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
+        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -184,14 +184,14 @@ class Registration extends React.Component {
 
   renderError () {
     return (
-      <div data-automation-id='registration_error_modal' className='default-modal'>
+      <div data-automation-id="registration_error_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>
           {messages[ this.props.message ]
             ? <FormattedMessage {...messages[ this.props.message ]} />
             : <FormattedMessage {...messages.genericRegistrationError} />}
         </p>
-        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
+        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -225,63 +225,63 @@ class Registration extends React.Component {
     }
     return (
       <div>
-        <section className='register-modal'>
-          <div data-automation-id='registration_modal'>
+        <section className="register-modal">
+          <div data-automation-id="registration_modal">
             <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
               <fieldset disabled={this.props.checkForExistingUserSuccess}>
                 <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
-                <span className='display-inline'>
+                <span className="display-inline">
                   <h2><FormattedMessage {...messages.firstName} /></h2>
-                  <input name='firstname' type='text' id='firstname' {...firstName} />
-                  <label htmlFor='name'><FormattedMessage {...messages.firstName} /></label>
+                  <input name="firstname" type="text" id="firstname" {...firstName} />
+                  <label htmlFor="name"><FormattedMessage {...messages.firstName} /></label>
                   {this.getValidator(firstName)}
                 </span>
-                <span className='display-inline'>
+                <span className="display-inline">
                   <h2><FormattedMessage {...messages.lastName} /></h2>
-                  <input name='lastname' type='text' id='lastname' {...lastName} />
-                  <label htmlFor='lastname'><FormattedMessage {...messages.lastName} /></label>
+                  <input name="lastname" type="text" id="lastname" {...lastName} />
+                  <label htmlFor="lastname"><FormattedMessage {...messages.lastName} /></label>
                   {this.getValidator(lastName)}
                 </span>
               </fieldset>
               <fieldset disabled={this.props.checkForExistingUserSuccess}>
                 <legend><FormattedMessage {...messages.personInfoLegend} /></legend>
-                <div className='date-of-birth'>
-                  <div className='item'>
+                <div className="date-of-birth">
+                  <div className="item">
                     <h2><FormattedMessage {...messages.day} /></h2>
-                    <input name='day' type='number' id='day' {...day} />
-                    <label htmlFor='day'><FormattedMessage {...messages.day} /></label>
+                    <input name="day" type="number" id="day" {...day} />
+                    <label htmlFor="day"><FormattedMessage {...messages.day} /></label>
                     {this.getValidator(day)}
                   </div>
-                  <div className='item'>
+                  <div className="item">
                     <h2><FormattedMessage {...messages.month} /></h2>
-                    <input name='month' type='number' id='month' {...month} />
-                    <label htmlFor='month'><FormattedMessage {...messages.month} /></label>
+                    <input name="month" type="number" id="month" {...month} />
+                    <label htmlFor="month"><FormattedMessage {...messages.month} /></label>
                     {this.getValidator(month)}
                   </div>
-                  <div className='item'>
+                  <div className="item">
                     <h2><FormattedMessage {...messages.year} /></h2>
-                    <input name='year' type='number' id='year' {...year} />
-                    <label htmlFor='year'><FormattedMessage {...messages.year} /></label>
+                    <input name="year" type="number" id="year" {...year} />
+                    <label htmlFor="year"><FormattedMessage {...messages.year} /></label>
                     {this.getValidator(year)}
                   </div>
                 </div>
-                <div className='ssn-info'>
-                   <h3><a onClick={this.handleExpandedSSNInfo} title='ssnlink'><FormattedMessage {...messages.ssnlink} /></a></h3>
+                <div className="ssn-info">
+                   <h3><a onClick={this.handleExpandedSSNInfo} title="ssnlink"><FormattedMessage {...messages.ssnlink} /></a></h3>
                    {this.props.showSSNInfo ? this.renderSSNInfo() : ''}
                 </div>
-                <span className='display-inline'>
+                <span className="display-inline">
                   <h2><FormattedMessage {...messages.ssnheader} /></h2>
-                  <input name='ssn' type='text' id='ssn' {...ssn} />
-                  <label htmlFor='ssn'><FormattedMessage {...messages.ssnlabel} /></label>
+                  <input name="ssn" type="text" id="ssn" {...ssn} />
+                  <label htmlFor="ssn"><FormattedMessage {...messages.ssnlabel} /></label>
                   {this.getValidator(ssn)}
                 </span>
                 {this.props.isCheckingForExistingUser ? this.renderCheckingForExistingUser() : ''}
                 {/* TODO: also handle all fields empty */}
-                <button className='black-btn' onClick={this.handleCheckForExistingUser} disabled={this.hasInvalidFormFields()}
-                        data-automation-id='check_existing_user_button'>
+                <button className="black-btn" onClick={this.handleCheckForExistingUser} disabled={this.hasInvalidFormFields()}
+                        data-automation-id="check_existing_user_button">
                   <FormattedMessage {...messages.checkForExistingUser} />
                 </button>
-                <h3><a onClick={this.handleCancel} title='register'>Avbryt</a></h3>
+                <h3><a onClick={this.handleCancel} title="register">Avbryt</a></h3>
               </fieldset>
               {this.props.checkForExistingUserSuccess ? this.renderCheckForExistingUserSuccess() : ''}
               {this.props.checkForExistingUserSuccess && !this.hasInvalidFormFields() ? this.renderSecondPartOfForm() : ''}

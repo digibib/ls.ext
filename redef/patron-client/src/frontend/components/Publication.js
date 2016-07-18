@@ -30,7 +30,7 @@ class Publication extends React.Component {
     const { publication, publication: { available } } = this.props
     if (publication.items.length > 0) {
       return (
-        <button className={available ? 'black-btn' : 'grey-btn'} type='button' onClick={this.handleReservationClick}
+        <button className={available ? 'black-btn' : 'grey-btn'} type="button" onClick={this.handleReservationClick}
                 data-automation-id={`recordId_${publication.recordId}`}>
               <span data-automation-id={available ? 'publication_reserve' : 'publication_order'}>
                   {available
@@ -49,33 +49,33 @@ class Publication extends React.Component {
     return (
       <article onClick={this.handleClick} className={this.props.open ? 'single-publication open' : 'single-publication'}
                data-automation-id={`publication_${publication.uri}`} data-formats={formats}>
-        <div className='book-cover'>
+        <div className="book-cover">
           {publication.image ? <img src={publication.image} /> : null}
         </div>
-        <div className='publication-text-container'>
-              <span data-automation-id='publication_available'>
+        <div className="publication-text-container">
+              <span data-automation-id="publication_available">
                 <p
-                  className='free'><FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} /></p>
+                  className="free"><FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} /></p>
               </span>
           <h2>
-              <span data-automation-id='publication_title'>
+              <span data-automation-id="publication_title">
                 {this.renderTitle(publication)}
               </span>
           </h2>
           <p>
-              <span data-automation-id='publication_year'>
+              <span data-automation-id="publication_year">
                 {publication.publicationYear}
               </span>{publication.publicationYear && languages.length > 0 ? ', ' : null}
-              <span data-automation-id='publication_languages'>
+              <span data-automation-id="publication_languages">
                 {languages.join(', ')}
               </span>
           </p>
           {this.renderButton()}
         </div>
-        <div className='show-status'>
+        <div className="show-status">
           <strong>Vis status</strong>
-          <button className='show-status-arrow' type='button'>
-            <img src='/images/btn-red-arrow-open.svg' alt='Red arrow pointing down' />
+          <button className="show-status-arrow" type="button">
+            <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" />
           </button>
         </div>
       </article>

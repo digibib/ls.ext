@@ -23,7 +23,7 @@ function setup (propOverrides) {
   }
 
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en'>
+    <IntlProvider locale="en">
       <Publications {...props} />
     </IntlProvider>
   )
@@ -40,7 +40,7 @@ describe('components', () => {
     DefaultExportPublicationsRewireApi.__Rewire__('Publication', React.createClass({
       render () {
         return (
-          <div data-automation-id='publication_mock' />
+          <div data-automation-id="publication_mock" />
         )
       }
     }))

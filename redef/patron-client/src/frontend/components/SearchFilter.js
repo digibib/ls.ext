@@ -16,7 +16,7 @@ class SearchFilter extends React.Component {
   }
 
   renderEmpty () {
-    return <div data-automation-id='empty'></div>
+    return <div data-automation-id="empty"></div>
   }
 
   shouldShowMore () {
@@ -61,7 +61,7 @@ class SearchFilter extends React.Component {
       return
     }
     return (
-      <div className='show-more' onClick={this.handleShowAllClick}>
+      <div className="show-more" onClick={this.handleShowAllClick}>
         <h3>{this.shouldShowMore() || this.props.filters.length <= Constants.maxVisibleFilterItems
           ? <FormattedMessage {...messages.showLess} />
           : <FormattedMessage {...messages.showMore} />}</h3>
@@ -75,19 +75,19 @@ class SearchFilter extends React.Component {
     }
     return (
       <div data-automation-id={`filter_${this.props.aggregation}`}>
-        <header className='filterTitle'>
+        <header className="filterTitle">
           <h1>{this.renderTitle()}</h1>
-          <button onClick={this.handleCollapse} className='single-filter-close' type='button'>
+          <button onClick={this.handleCollapse} className="single-filter-close" type="button">
             {this.isCollapsed()
-              ? <img src='/images/btn-single-filter-open.svg' alt='Black circle with plus' />
-              : <img src='/images/btn-single-filter-close.svg' alt='Black circle with dash' />}
+              ? <img src="/images/btn-single-filter-open.svg" alt="Black circle with plus" />
+              : <img src="/images/btn-single-filter-close.svg" alt="Black circle with dash" />}
           </button>
         </header>
         {this.isCollapsed() ? null
-          : [ <section key='searchfilter_header'>
-          <ul className='searchfilters'>{this.renderFilters()}</ul>
+          : [ <section key="searchfilter_header">
+          <ul className="searchfilters">{this.renderFilters()}</ul>
         </section>,
-          <footer key='searchfilter_footer'>{this.renderShowMore()}</footer> ]}
+          <footer key="searchfilter_footer">{this.renderShowMore()}</footer> ]}
       </div>
     )
   }

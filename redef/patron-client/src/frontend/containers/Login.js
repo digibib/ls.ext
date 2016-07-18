@@ -37,8 +37,8 @@ class Login extends React.Component {
   renderError () {
     if (this.props.loginError) {
       return (
-        <div className='error-msg'>
-          <p data-automation-id='login_error_message'>
+        <div className="error-msg">
+          <p data-automation-id="login_error_message">
             {messages[ this.props.loginError ]
               ? <FormattedMessage {...messages[ this.props.loginError ]} />
               : <FormattedMessage {...messages.genericLoginError} />}
@@ -54,21 +54,21 @@ class Login extends React.Component {
         <header>
           {this.renderError()}
         </header>
-        <section className='login-modal'>
-          <div data-automation-id='login_modal'>
+        <section className="login-modal">
+          <div data-automation-id="login_modal">
             <form onSubmit={this.handleLogin}>
               <h1>Logg inn for å reservere</h1>
               <h2><FormattedMessage {...messages.username} /></h2>
-              <input name='username' ref={e => this.usernameInput = e} type='text' id='username' />
+              <input name="username" ref={e => this.usernameInput = e} type="text" id="username" />
               <h2><FormattedMessage {...messages.password} /></h2>
-              <input ref={e => this.passwordInput = e} type='password' />
+              <input ref={e => this.passwordInput = e} type="password" />
               <p>Glemt PIN-kode?</p>
-              <button className='black-btn' type='submit' disabled={this.props.isRequestingLogin}
+              <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}
                       onClick={this.handleLogin}
-                      data-automation-id='login_button'>
+                      data-automation-id="login_button">
                 <FormattedMessage {...messages.logIn} />
               </button>
-              <h3>Er du ikke registrert? <a data-automation-id='registration_link' onClick={this.handleRegistrationClick} title='register'>Registrer deg</a></h3>
+              <h3>Er du ikke registrert? <a data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer deg</a></h3>
             </form>
           </div>
         </section>

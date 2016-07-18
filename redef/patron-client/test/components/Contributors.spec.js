@@ -15,7 +15,7 @@ function setup (propOverrides) {
   }
 
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en' messages={messages}>
+    <IntlProvider locale="en" messages={messages}>
       <Contributors {...props} />
     </IntlProvider>
   )

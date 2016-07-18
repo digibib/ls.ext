@@ -20,7 +20,7 @@ class App extends React.Component {
     return (
       <div>
         <ModalRoot />
-        <div className='outer-container'>
+        <div className="outer-container">
           <SearchHeader locationQuery={this.props.location.query}
                         dispatch={this.props.dispatch}
                         locale={this.props.locale}

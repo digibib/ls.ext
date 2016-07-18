@@ -38,7 +38,7 @@ function setup (resultPropOverrides) {
     illustrator: 'illustrator'
   }
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en' messages={messages}>
+    <IntlProvider locale="en" messages={messages}>
       <SearchResult {...props} />
     </IntlProvider>
   )

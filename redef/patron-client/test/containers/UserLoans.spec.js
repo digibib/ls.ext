@@ -84,7 +84,7 @@ function setup (propOverrides) {
 
   const output = TestUtils.renderIntoDocument(
     <Provider store={store}>
-      <IntlProvider locale='en'>
+      <IntlProvider locale="en">
         <UserLoans {...props} />
       </IntlProvider>
     </Provider>

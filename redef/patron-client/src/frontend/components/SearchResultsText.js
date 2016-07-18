@@ -7,15 +7,15 @@ class SearchResultsText extends React.Component {
     if (!this.props.locationQuery.query) {
       return null
     } else if (this.props.isSearching) {
-      return <p data-automation-id='is_searching'><FormattedMessage {...messages.searching} /></p>
+      return <p data-automation-id="is_searching"><FormattedMessage {...messages.searching} /></p>
     } else {
       return (
         <p>
-          <MediaQuery query='(min-width: 668px)' values={{...this.props.mediaQueryValues}}>
+          <MediaQuery query="(min-width: 668px)" values={{...this.props.mediaQueryValues}}>
             <FormattedHTMLMessage {...messages.totalHits}
               values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
           </MediaQuery>
-          <MediaQuery query='(max-width: 667px)' values={{...this.props.mediaQueryValues}}>
+          <MediaQuery query="(max-width: 667px)" values={{...this.props.mediaQueryValues}}>
             <FormattedHTMLMessage {...messages.totalHitsMobile}
               values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
           </MediaQuery>

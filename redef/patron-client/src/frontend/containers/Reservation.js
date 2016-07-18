@@ -26,12 +26,12 @@ class Reservation extends React.Component {
 
   renderSuccess () {
     return (
-      <div data-automation-id='reservation_success_modal' className='default-modal'>
+      <div data-automation-id="reservation_success_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
           <FormattedMessage {...messages.messageSuccess} />
         </p>
-        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
+        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -40,14 +40,14 @@ class Reservation extends React.Component {
 
   renderError () {
     return (
-      <div data-automation-id='reservation_error_modal' className='default-modal'>
+      <div data-automation-id="reservation_error_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>
           {messages[ this.props.message ]
              ? <FormattedMessage {...messages[ this.props.message ]} />
              : <FormattedMessage {...messages.genericReservationError} />}
         </p>
-        <button className='black-btn' onClick={this.props.modalActions.hideModal}>
+        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -61,7 +61,7 @@ class Reservation extends React.Component {
       return this.renderSuccess()
     }
     return (
-      <div data-automation-id='reservation_modal' className='default-modal'>
+      <div data-automation-id="reservation_modal" className="default-modal">
         <form>
           <p>
             <FormattedMessage {...messages.choosePickupLocation} />
@@ -69,11 +69,11 @@ class Reservation extends React.Component {
           <Libraries ref={e => this.librarySelect = e} libraries={this.props.libraries} />
           <br />
           <br />
-          <button className='black-btn' data-automation-id='reserve_button' disabled={this.props.isRequestingReservation}
+          <button className="black-btn" data-automation-id="reserve_button" disabled={this.props.isRequestingReservation}
                   onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>
-          <button className='grey-btn' disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
+          <button className="grey-btn" disabled={this.props.isRequestingReservation} onClick={this.handleCancel}>
             <FormattedMessage {...messages.cancel} />
           </button>
         </form>

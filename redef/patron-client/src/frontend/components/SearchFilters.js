@@ -9,7 +9,7 @@ class SearchFilters extends React.Component {
   }
 
   renderEmpty () {
-    return <div data-automation-id='empty'></div>
+    return <div data-automation-id="empty"></div>
   }
 
   handleFiltersOpenClick () {
@@ -26,25 +26,25 @@ class SearchFilters extends React.Component {
       })
 
       return (
-        <aside className='filters'>
-          <div className='limit-filters'>
+        <aside className="filters">
+          <div className="limit-filters">
             {this.props.locationQuery.hideFilters === null
-              ? (<span className='limit-filters-text'><p>Vis filter</p></span>)
-              : (<span className='limit-filters-text'><p>Skjul filter</p></span>)}
+              ? (<span className="limit-filters-text"><p>Vis filter</p></span>)
+              : (<span className="limit-filters-text"><p>Skjul filter</p></span>)}
             {this.props.locationQuery.hideFilters === null
-              ? (<button onClick={this.handleFiltersOpenClick} className='limit-filters-open' type='button'>
-              <img src='/images/btn-limit-filter-open.svg' alt='Red arrow pointing down' />
+              ? (<button onClick={this.handleFiltersOpenClick} className="limit-filters-open" type="button">
+              <img src="/images/btn-limit-filter-open.svg" alt="Red arrow pointing down" />
             </button>)
-              : (<button onClick={this.handleFiltersOpenClick} className='limit-filters-open' type='button'>
-              <img src='/images/btn-limit-filter-close.svg' alt='Red arrow pointing up' />
+              : (<button onClick={this.handleFiltersOpenClick} className="limit-filters-open" type="button">
+              <img src="/images/btn-limit-filter-close.svg" alt="Red arrow pointing up" />
             </button>)}
           </div>
 
-          <header className='limit-filters-header'>
+          <header className="limit-filters-header">
             <FormattedMessage {...messages.limit} />
           </header>
 
-          <section data-automation-id='search_filters'>
+          <section data-automation-id="search_filters">
             {this.props.locationQuery.hideFilters === null ? null : Object.keys(groupedFilters).map(aggregation => {
               const filtersByAggregation = groupedFilters[ aggregation ]
               return (

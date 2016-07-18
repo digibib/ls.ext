@@ -13,7 +13,7 @@ class ClickableButton extends React.Component {
 
   render () {
     return (
-      <button onClick={this.handleClick} className='black-btn'>
+      <button onClick={this.handleClick} className="black-btn">
         {this.props.children}
       </button>
     )

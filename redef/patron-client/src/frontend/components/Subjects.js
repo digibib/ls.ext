@@ -15,10 +15,10 @@ class Subjects extends React.Component {
     return (
       <div>
         <h2><FormattedMessage {...messages.subjects} /></h2>
-        <ul data-automation-id='work_subjects'>
-          {subjects.map(subject => <li key={subject}><a href='#' alt={subject}>{subject}</a></li>)}
+        <ul data-automation-id="work_subjects">
+          {subjects.map(subject => <li key={subject}><a href="#" alt={subject}>{subject}</a></li>)}
         </ul>
-        <a className='patron-placeholder' href='#' alt='More subjects'>Se flere emner</a>
+        <a className="patron-placeholder" href="#" alt="More subjects">Se flere emner</a>
       </div>
     )
   }

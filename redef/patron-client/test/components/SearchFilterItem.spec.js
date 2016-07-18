@@ -17,7 +17,7 @@ function setup (propOverrides) {
   const messages = {'test_bucket': 'test_bucket_translation'}
 
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en' messages={messages}>
+    <IntlProvider locale="en" messages={messages}>
       <SearchFilterItem {...props} />
     </IntlProvider>
   )

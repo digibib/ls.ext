@@ -15,10 +15,10 @@ class Genres extends React.Component {
     return (
       <div>
         <h2><FormattedMessage {...messages.genre} /></h2>
-        <ul data-automation-id='work_genres'>
-          {genres.map(genre => <li key={genre}><a href='#' alt={genre}>{genre}</a></li>)}
+        <ul data-automation-id="work_genres">
+          {genres.map(genre => <li key={genre}><a href="#" alt={genre}>{genre}</a></li>)}
         </ul>
-        <a className='patron-placeholder' href='#' alt='More genres'>Se flere sjangre</a>
+        <a className="patron-placeholder" href="#" alt="More genres">Se flere sjangre</a>
       </div>
     )
   }

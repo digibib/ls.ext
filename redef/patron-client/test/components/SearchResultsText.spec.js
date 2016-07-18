@@ -16,7 +16,7 @@ function setup (propOverrides) {
   }
 
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en'>
+    <IntlProvider locale="en">
       <SearchResultsText {...props} />
     </IntlProvider>
   )

@@ -13,22 +13,22 @@ class Footer extends React.Component {
 
   render () {
     return (
-      <footer className='main-footer'>
-        <nav className='secondary-navigation' type='navigation'>
+      <footer className="main-footer">
+        <nav className="secondary-navigation" type="navigation">
           <ul>
             <li><FormattedMessage {...messages.contactUs} /></li>
             <li><FormattedMessage {...messages.openingHours} /></li>
-            <li data-automation-id='change_language_element'
+            <li data-automation-id="change_language_element"
                 data-current-language={this.props.intl.formatMessage(messages.currentLanguage)}
                 onClick={this.handleChangeLanguage}><FormattedMessage {...messages.languageChoice} /></li>
             <li><FormattedMessage {...messages.aboutUs} /></li>
           </ul>
         </nav>
-        <div className='footer-text'>
+        <div className="footer-text">
           <p><FormattedHTMLMessage {...messages.info} /></p>
         </div>
-        <div className='footer-icon'>
-          <img src='/images/footer-icon.svg' alt='White box with black circle' />
+        <div className="footer-icon">
+          <img src="/images/footer-icon.svg" alt="White box with black circle" />
         </div>
       </footer>
     )

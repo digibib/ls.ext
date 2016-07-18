@@ -14,29 +14,29 @@ import ClickableButton from '../components/ClickableButton'
 class UserLoans extends React.Component {
   renderPickups () {
     return this.props.loansAndReservations.pickups.map(item => (
-      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_pickup'
+      <section key={item.recordId} className="single-entry" data-automation-id="UserLoans_pickup"
                data-recordid={item.recordId}>
-        <aside className='book-cover'><a className='book-cover-item' href=''></a>
+        <aside className="book-cover"><a className="book-cover-item" href=""></a>
         </aside>
-        <article className='entry-content'>
-          <h1 data-automation-id='UserLoans_pickup_title'>{item.title}</h1>
+        <article className="entry-content">
+          <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
           <div>
-            <div className='contributors'>
+            <div className="contributors">
               <p>
-                <FormattedMessage {...messages.author} />: <a href='#'
-                                                              data-automation-id='UserLoans_pickup_author'>{item.author}</a>
+                <FormattedMessage {...messages.author} />: <a href="#"
+                                                              data-automation-id="UserLoans_pickup_author">{item.author}</a>
               </p>
-              <p className='published'><FormattedMessage {...messages.publicationYear} />: <span
-                data-automation-id='UserLoans_pickup_publicationYear'>{item.publicationYear}</span></p>
+              <p className="published"><FormattedMessage {...messages.publicationYear} />: <span
+                data-automation-id="UserLoans_pickup_publicationYear">{item.publicationYear}</span></p>
             </div>
             <div>
-              <div className='loan-expire'>
+              <div className="loan-expire">
                 <p><FormattedMessage {...messages.expiry} /></p>
-                <h2 data-automation-id='UserLoans_pickup_expiry'>{item.expiry}</h2>
+                <h2 data-automation-id="UserLoans_pickup_expiry">{item.expiry}</h2>
               </div>
-              <div className='loan-pickup-number'>
+              <div className="loan-pickup-number">
                 <p><FormattedMessage {...messages.pickupNumber} /></p>
-                <h2 data-automation-id='UserLoans_pickup_pickupNumber'>{item.pickupNumber}</h2>
+                <h2 data-automation-id="UserLoans_pickup_pickupNumber">{item.pickupNumber}</h2>
               </div>
             </div>
           </div>
@@ -48,7 +48,7 @@ class UserLoans extends React.Component {
   renderReservations () {
     return (
       <div>
-        <MediaQuery query='(min-width: 992px)' values={{...this.props.mediaQueryValues}}>
+        <MediaQuery query="(min-width: 992px)" values={{...this.props.mediaQueryValues}}>
 
           <table>
             <thead>
@@ -61,12 +61,12 @@ class UserLoans extends React.Component {
             </tr>
             </thead>
             <tbody>{this.props.loansAndReservations.reservations.map(item => (
-              <tr key={item.recordId} data-automation-id='UserLoans_reservation' data-recordid={item.recordId}>
-                <td data-automation-id='UserLoans_reservation_title'>{item.title}</td>
-                <td data-automation-id='UserLoans_reservation_author'>{item.author}</td>
-                <td data-automation-id='UserLoans_reservation_orderedDate'>{item.orderedDate}</td>
-                <td data-automation-id='UserLoans_reservation_waitingPeriod'>{item.waitingPeriod}</td>
-                <td data-automation-id='UserLoans_reservation_library'>{this.props.libraries[ item.branchCode ]}</td>
+              <tr key={item.recordId} data-automation-id="UserLoans_reservation" data-recordid={item.recordId}>
+                <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
+                <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
+                <td data-automation-id="UserLoans_reservation_orderedDate">{item.orderedDate}</td>
+                <td data-automation-id="UserLoans_reservation_waitingPeriod">{item.waitingPeriod}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td>
                   <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}
                                    onClickArguments={[item.reserveId]}>
@@ -78,26 +78,26 @@ class UserLoans extends React.Component {
           </table>
         </MediaQuery>
 
-        <MediaQuery query='(max-width: 991px)' values={{...this.props.mediaQueryValues}}>
+        <MediaQuery query="(max-width: 991px)" values={{...this.props.mediaQueryValues}}>
           {this.props.loansAndReservations.reservations.map(item => (
-            <div className='reserved-entry-content' key={item.recordId} data-automation-id='UserLoans_reservation'
+            <div className="reserved-entry-content" key={item.recordId} data-automation-id="UserLoans_reservation"
                  data-recordid={item.recordId}>
-              <div className='title'><FormattedMessage {...messages.title} /></div>
-              <div className='content' data-automation-id='UserLoans_reservation_title'>{item.title}</div>
+              <div className="title"><FormattedMessage {...messages.title} /></div>
+              <div className="content" data-automation-id="UserLoans_reservation_title">{item.title}</div>
 
-              <div className='title'><FormattedMessage {...messages.author} /></div>
-              <div className='content' data-automation-id='UserLoans_reservation_author'>{item.author}</div>
+              <div className="title"><FormattedMessage {...messages.author} /></div>
+              <div className="content" data-automation-id="UserLoans_reservation_author">{item.author}</div>
 
-              <div className='title'><FormattedMessage {...messages.orderedDate} /></div>
-              <div className='content' data-automation-id='UserLoans_reservation_orderedDate'>{item.orderedDate}</div>
+              <div className="title"><FormattedMessage {...messages.orderedDate} /></div>
+              <div className="content" data-automation-id="UserLoans_reservation_orderedDate">{item.orderedDate}</div>
 
-              <div className='title'><FormattedMessage {...messages.waitingPeriod} /></div>
-              <div className='content'
-                   data-automation-id='UserLoans_reservation_waitingPeriod'>{item.waitingPeriod}</div>
+              <div className="title"><FormattedMessage {...messages.waitingPeriod} /></div>
+              <div className="content"
+                   data-automation-id="UserLoans_reservation_waitingPeriod">{item.waitingPeriod}</div>
 
-              <div className='title'><FormattedMessage {...messages.pickupLocation} /></div>
-              <div className='content'
-                   data-automation-id='UserLoans_reservation_library'>{this.props.libraries[ item.branchCode ]}</div>
+              <div className="title"><FormattedMessage {...messages.pickupLocation} /></div>
+              <div className="content"
+                   data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</div>
 
             </div>
           ))}
@@ -108,24 +108,24 @@ class UserLoans extends React.Component {
 
   renderLoans () {
     return this.props.loansAndReservations.loans.map(item => (
-      <section key={item.recordId} className='single-entry' data-automation-id='UserLoans_loan'
+      <section key={item.recordId} className="single-entry" data-automation-id="UserLoans_loan"
                data-recordid={item.recordId}>
-        <aside className='book-cover'><a className='book-cover-item' href=''></a>
+        <aside className="book-cover"><a className="book-cover-item" href=""></a>
         </aside>
-        <article className='entry-content'>
-          <h1 data-automation-id='UserLoans_loan_title'>{item.title}</h1>
+        <article className="entry-content">
+          <h1 data-automation-id="UserLoans_loan_title">{item.title}</h1>
           <div>
-            <div className='contributors'>
-              <p><FormattedMessage {...messages.author} />: <a href='#'
-                                                               data-automation-id='UserLoans_loan_author'>{item.author}</a>
+            <div className="contributors">
+              <p><FormattedMessage {...messages.author} />: <a href="#"
+                                                               data-automation-id="UserLoans_loan_author">{item.author}</a>
               </p>
-              <p className='published'><FormattedMessage {...messages.publicationYear} />: <span
-                data-automation-id='UserLoans_loan_publicationYear'>{item.publicationYear}</span></p>
+              <p className="published"><FormattedMessage {...messages.publicationYear} />: <span
+                data-automation-id="UserLoans_loan_publicationYear">{item.publicationYear}</span></p>
             </div>
-            <div className='due-date'>
+            <div className="due-date">
               <div>
                 <p><FormattedMessage {...messages.dueDate} /></p>
-                <h2 data-automation-id='UserLoans_loan_dueDate'>{item.dueDate}</h2>
+                <h2 data-automation-id="UserLoans_loan_dueDate">{item.dueDate}</h2>
               </div>
               <div>
                 <ClickableButton onClickAction={this.props.loanActions.startExtendLoan}
@@ -147,9 +147,9 @@ class UserLoans extends React.Component {
     ]
     return <Tabs push={this.props.routerActions.push}
                  tabList={tabList}
-                 tabBarClass='tab-bar-secondary'
-                 tabClass='tab-bar-tab-small'
-                 tabActiveClass='tab-bar-tab-small-active'
+                 tabBarClass="tab-bar-secondary"
+                 tabClass="tab-bar-tab-small"
+                 tabActiveClass="tab-bar-tab-small-active"
                  currentPath={this.props.location.pathname} />
   }
 
@@ -169,20 +169,20 @@ class UserLoans extends React.Component {
       <div>
         {this.renderTabs()}
 
-        <div className='pickup'>
-          <div className='title'><FormattedMessage {...messages.canBePickedUp} /></div>
+        <div className="pickup">
+          <div className="title"><FormattedMessage {...messages.canBePickedUp} /></div>
           {this.renderPickups()}
         </div>
 
-        <div className='reserve'>
-          <div className='title'><FormattedMessage {...messages.reservations} /></div>
+        <div className="reserve">
+          <div className="title"><FormattedMessage {...messages.reservations} /></div>
           {this.renderReservations()}
         </div>
 
-        <div className='registered'>
-          <div className='title'><FormattedMessage {...messages.nameAndDate}
+        <div className="registered">
+          <div className="title"><FormattedMessage {...messages.nameAndDate}
             values={{name: this.props.loansAndReservations.name, date: date, time: time}} />
-            <button className='black-btn patron-placeholder'><FormattedMessage {...messages.renewAllLoans} /></button>
+            <button className="black-btn patron-placeholder"><FormattedMessage {...messages.renewAllLoans} /></button>
           </div>
           {this.renderLoans()}
         </div>

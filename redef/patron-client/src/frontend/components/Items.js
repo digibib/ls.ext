@@ -5,7 +5,7 @@ import Item from './Item'
 
 class Items extends React.Component {
   renderEmpty () {
-    return <p><span data-automation-id='no_items'><FormattedMessage {...messages.noItems} /></span></p>
+    return <p><span data-automation-id="no_items"><FormattedMessage {...messages.noItems} /></span></p>
   }
 
   renderItems () {
@@ -19,7 +19,7 @@ class Items extends React.Component {
           <th><FormattedMessage {...messages.status} /></th>
         </tr>
         </thead>
-        <tbody data-automation-id='work_items'>
+        <tbody data-automation-id="work_items">
         {this.props.items.map(item => <Item key={item.barcode} item={item} />)}
         </tbody>
       </table>

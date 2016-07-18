@@ -48,37 +48,37 @@ class ChangePin extends React.Component {
       changePasswordSuccess
     } = this.props
     return (
-      <div className='change-pin-container'>
+      <div className="change-pin-container">
         <form onSubmit={handleSubmit(this.handleChangePin)}>
 
           <header>
             <h1><FormattedMessage {...messages.changePin} /></h1>
           </header>
 
-          <section className='change-pin'>
-            <div className='important'>
+          <section className="change-pin">
+            <div className="important">
               <p><FormattedMessage {...messages.pinInfo} /></p>
             </div>
 
-            <div className='change-pin-fields'>
+            <div className="change-pin-fields">
               <h2><FormattedMessage {...messages.currentPin} /></h2>
-              <input type='text' name='current-pin' id='current-pin'
+              <input type="text" name="current-pin" id="current-pin"
                      ref={e => this.currentPinField = e} {...currentPin} />
-              <label htmlFor='current-pin'> <FormattedMessage {...messages.currentPin} /></label>
+              <label htmlFor="current-pin"> <FormattedMessage {...messages.currentPin} /></label>
               {this.renderError()}
               {this.getValidator(currentPin)}
               <h2><FormattedMessage {...messages.newPin} /></h2>
-              <input type='text' name='new-pin' id='new-pin' ref={e => this.pinField = e} {...newPin} />
-              <label htmlFor='new-pin'><FormattedMessage {...messages.repeatPin} /></label>
+              <input type="text" name="new-pin" id="new-pin" ref={e => this.pinField = e} {...newPin} />
+              <label htmlFor="new-pin"><FormattedMessage {...messages.repeatPin} /></label>
               {this.getValidator(newPin)}
               <h2><FormattedMessage {...messages.repeatPin} /></h2>
-              <input type='text' name='repeat-pin' id='repeat-pin' ref={e => this.repeatPinField = e} {...repeatPin} />
-              <label htmlFor='repeat-pin'><FormattedMessage {...messages.repeatPin} /></label>
+              <input type="text" name="repeat-pin" id="repeat-pin" ref={e => this.repeatPinField = e} {...repeatPin} />
+              <label htmlFor="repeat-pin"><FormattedMessage {...messages.repeatPin} /></label>
               {this.getValidator(repeatPin)}
             </div>
           </section>
           <footer>
-            <button className='black-btn' type='submit' disabled={submitting}>
+            <button className="black-btn" type="submit" disabled={submitting}>
               <FormattedMessage {...messages.changePin} /><br /></button>
             {changePasswordSuccess
               ? <div style={{color: 'green'}}><FormattedMessage {...messages.changePinSuccess} /></div> : null}

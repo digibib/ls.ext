@@ -7,7 +7,7 @@ class SearchResults extends React.Component {
   render () {
     if (this.props.searchError) {
       return (
-        <p data-automation-id='search-error'>
+        <p data-automation-id="search-error">
           <FormattedMessage {...messages.searchError} />
         </p>
       )
@@ -28,8 +28,8 @@ class SearchResults extends React.Component {
       )
     }
     return (
-      <section className='search-results'>
-        <div data-automation-id='search-result-entries'>
+      <section className="search-results">
+        <div data-automation-id="search-result-entries">
           {entries}
         </div>
       </section>

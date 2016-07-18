@@ -11,9 +11,9 @@ function setup (propOverrides) {
   }
 
   const wrapper = shallow(
-    <IntlProvider locale='en'>
+    <IntlProvider locale="en">
       <MyPage {...props}>
-        <div data-automation-id='test-child' />
+        <div data-automation-id="test-child" />
       </MyPage>
     </IntlProvider>
   )

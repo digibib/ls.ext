@@ -38,7 +38,7 @@ class Person extends React.Component {
     }
     return person.works.map(work => {
       return (
-        <p className='work' key={work.relativeUri}>
+        <p className="work" key={work.relativeUri}>
           <Link to={work.relativeUri}>
             <strong>{workTitle(work)}</strong>
           </Link>
@@ -52,7 +52,7 @@ class Person extends React.Component {
       return (
         <p>
           <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
-          data-automation-id='person-nationality'>{this.props.intl.formatMessage({ id: person.nationality })}</span>
+          data-automation-id="person-nationality">{this.props.intl.formatMessage({ id: person.nationality })}</span>
         </p>
       )
     }
@@ -69,22 +69,22 @@ class Person extends React.Component {
     }
 
     return (
-      <div className='container'>
-        <div className='panel row person-info'>
-          <div className='col person-image hidden'>
+      <div className="container">
+        <div className="panel row person-info">
+          <div className="col person-image hidden">
             TODO
           </div>
-          <div className='col'>
-            <h2><span data-automation-id='person-title'>{person.personTitle}</span>&nbsp;<span
-              data-automation-id='person-name'>{person.name}</span></h2>
-            <h3><span data-automation-id='lifespan'>{this.renderLifeSpan(person)}</span></h3>
-            <div className='small-text'>
+          <div className="col">
+            <h2><span data-automation-id="person-title">{person.personTitle}</span>&nbsp;<span
+              data-automation-id="person-name">{person.name}</span></h2>
+            <h3><span data-automation-id="lifespan">{this.renderLifeSpan(person)}</span></h3>
+            <div className="small-text">
               {this.renderNationality(person)}
             </div>
           </div>
         </div>
-        <div className='panel column full'>
-          <div className='col'>
+        <div className="panel column full">
+          <div className="col">
             <h3><FormattedMessage {...messages.work} /></h3>
             {this.renderWorks(person)}
           </div>

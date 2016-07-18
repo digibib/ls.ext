@@ -6,7 +6,7 @@ import { IntlProvider } from 'react-intl'
 class Root extends React.Component {
   render () {
     return (
-      <IntlProvider key='intl' locale={this.props.locale}
+      <IntlProvider key="intl" locale={this.props.locale}
                     messages={this.props.messages[this.props.locale]}>{routes}</IntlProvider>
     )
   }

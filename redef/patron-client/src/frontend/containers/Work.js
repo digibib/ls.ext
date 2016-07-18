@@ -42,11 +42,11 @@ class Work extends React.Component {
       return (
         <p>
           <strong><FormattedMessage {...messages.firstTimePublished} /></strong> <span
-          data-automation-id='work_date'>{work.publicationYear}</span>
+          data-automation-id="work_date">{work.publicationYear}</span>
         </p>
       )
     }
-    return <span data-automation-id='work_date' />
+    return <span data-automation-id="work_date" />
   }
 
   render () {
@@ -74,31 +74,31 @@ class Work extends React.Component {
 
     const { back } = this.props.location.query
     return (
-      <div className='container'>
-        <div className='row'>
+      <div className="container">
+        <div className="row">
           {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
             ? (
-            <header className='back-to-results'>
-              <Link to={this.props.location.query.back} alt='Back to search page'>Tilbake til søkeresultat</Link>
+            <header className="back-to-results">
+              <Link to={this.props.location.query.back} alt="Back to search page">Tilbake til søkeresultat</Link>
             </header>
           ) : ''}
-          <article className='work-entry'>
-            <div className='book-cover'>
+          <article className="work-entry">
+            <div className="book-cover">
               {work.image ? <img src={work.image} /> : null}
             </div>
-            <section className='work-information'>
-              <h1 data-automation-id='work_title'>{this.renderTitle(work)}</h1>
+            <section className="work-information">
+              <h1 data-automation-id="work_title">{this.renderTitle(work)}</h1>
               <Contributors contributors={work.contributors} />
               {this.renderYear(work)}
             </section>
-            <aside className='work-subjects show-mobile hidden-tablet hidden-desktop'>
+            <aside className="work-subjects show-mobile hidden-tablet hidden-desktop">
               <Subjects subjects={work.subjects} />
             </aside>
-            <aside className='work-genres show-mobile hidden-tablet hidden-desktop'>
+            <aside className="work-genres show-mobile hidden-tablet hidden-desktop">
               <Genres genres={work.genres} />
             </aside>
-            <div className='work-excerpt'>
-              <p className='patron-placeholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
+            <div className="work-excerpt">
+              <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
                 id mauris maximus porta. In
                 dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur nunc est vitae purus.
                 Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices, sapien in volutpat vehicula, lacus
@@ -106,13 +106,13 @@ class Work extends React.Component {
                 consequat. Morbi id nulla ac quam luctus posuere nec a risus. Aenean congue quam tortor, a volutpat
                 quam mollis nec. Nullam metus ex, efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel
                 accumsan odio, venenatis fringilla ex.</p>
-              <button className='black-btn' type='button'>Lån denne</button>
-              <button className='white-btn-checkmark patron-placeholder' type='button'>Min huskeliste</button>
+              <button className="black-btn" type="button">Lån denne</button>
+              <button className="white-btn-checkmark patron-placeholder" type="button">Min huskeliste</button>
             </div>
-            <aside className='work-subjects hidden-mobile show-desktop'>
+            <aside className="work-subjects hidden-mobile show-desktop">
               <Subjects subjects={work.subjects} />
             </aside>
-            <aside className='work-genres hidden-mobile show-desktop'>
+            <aside className="work-genres hidden-mobile show-desktop">
               <Genres genres={work.genres} />
             </aside>
           </article>

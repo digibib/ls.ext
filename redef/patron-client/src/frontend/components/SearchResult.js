@@ -21,7 +21,7 @@ class SearchResult extends React.Component {
   renderContributors (contributors) {
     if (contributors.length > 0) {
       return (
-        <p data-automation-id='work_contributors'> {contributors.map(contribution => (
+        <p data-automation-id="work_contributors"> {contributors.map(contribution => (
           <span
             key={contribution.agent.relativeUri}>{this.props.intl.formatMessage({ id: contribution.role })}: <strong><Link
             to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></strong></span>
@@ -33,8 +33,8 @@ class SearchResult extends React.Component {
 
   renderDisplayTitle (result) {
     return (
-      <Link data-automation-id='work-link' to={this.getResultUrl(result)}>
-        <span className='workTitle' data-automation-id='work-title'>{result.displayTitle}</span>
+      <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
+        <span className="workTitle" data-automation-id="work-title">{result.displayTitle}</span>
       </Link>
     )
   }
@@ -42,7 +42,7 @@ class SearchResult extends React.Component {
   renderOriginalTitle (publication) {
     if (publication.originalTitle) {
       return (
-        <p data-automation-id='work_originaltitle'>
+        <p data-automation-id="work_originaltitle">
           <FormattedMessage {...messages.originalTitle} /> {publication.originalTitle}
         </p>
       )
@@ -56,7 +56,7 @@ class SearchResult extends React.Component {
   renderSubjects (result) {
     if (result.subject) {
       return (
-        <p data-automation-id='work_subjects'>
+        <p data-automation-id="work_subjects">
           <strong>
             <FormattedMessage {...messages.subjects} />
             {result.subject.map(subject => (
@@ -107,19 +107,19 @@ class SearchResult extends React.Component {
 
     const formats = [ ...pubFormats ]
     return (
-      <div className='single-entry' data-formats={formats.join(', ')}>
-        <aside className='book-cover'>
-          <Link to={this.getResultUrl(result)} className='book-cover-item'>
+      <div className="single-entry" data-formats={formats.join(', ')}>
+        <aside className="book-cover">
+          <Link to={this.getResultUrl(result)} className="book-cover-item">
             {result.image ? <img src={result.image} /> : null}
           </Link>
         </aside>
 
-        <article className='entry-content'>
+        <article className="entry-content">
 
-          <div className='entry-content-icon patron-placeholder'>
-            <div className='entry-content-icon-single'>
+          <div className="entry-content-icon patron-placeholder">
+            <div className="entry-content-icon-single">
 
-              <img src='/images/icon-audiobook.svg' alt='Black speaker with audio waves' />
+              <img src="/images/icon-audiobook.svg" alt="Black speaker with audio waves" />
               <p>Lydbok</p>
 
             </div>
@@ -129,7 +129,7 @@ class SearchResult extends React.Component {
             {this.renderDisplayTitle(result)}
           </h1>
 
-          <div className='contributors'>
+          <div className="contributors">
             {this.renderContributors(result.publication.contributors)}
           </div>
 
@@ -149,7 +149,7 @@ class SearchResult extends React.Component {
           }
 
           <div>
-            <p className='patron-placeholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
+            <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
               id mauris maximus
               porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
               nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
@@ -162,16 +162,16 @@ class SearchResult extends React.Component {
         </article>
 
         {this.shouldShowStatus()
-          ? [ (<div key='show-more-content' className='show-more-content' onClick={this.handleShowStatusClick}>
+          ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}>
           <p><FormattedMessage {...messages.hideStatus} /></p>
-          <img src='/images/btn-red-arrow-close.svg' alt='Red arrow pointing up' />
+          <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" />
         </div>),
-          (<div key='entry-more-content' className='entry-content-more'>
+          (<div key="entry-more-content" className="entry-content-more">
             {this.renderItems(result)}
           </div>) ]
-          : (<div className='show-more-content' onClick={this.handleShowStatusClick}>
+          : (<div className="show-more-content" onClick={this.handleShowStatusClick}>
           <p><FormattedMessage {...messages.showStatus} /></p>
-          <img src='/images/btn-red-arrow-open.svg' alt='Red arrow pointing down' />
+          <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" />
         </div>)
         }
 

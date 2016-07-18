@@ -16,19 +16,19 @@ class PublicationInfo extends React.Component {
     const { publication, publication: { items } } = this.props
     return (
       <div>
-        <section className='publication-info' data-automation-id={`publication_info_${publication.uri}`}>
+        <section className="publication-info" data-automation-id={`publication_info_${publication.uri}`}>
 
-          <div className='close-publication-info'
+          <div className="close-publication-info"
                data-automation-id={`close_publication_info_${publication.uri}`}
                onClick={this.handleClick}>
-            <button className='close' type='button'>
-              <img src='/images/btn-x.svg' alt='Large X' />
+            <button className="close" type="button">
+              <img src="/images/btn-x.svg" alt="Large X" />
             </button>
           </div>
 
-          <div className='title'><h2><FormattedMessage {...messages.about} /></h2></div>
-          <div className='entry-content'>
-            <div className='col'>
+          <div className="title"><h2><FormattedMessage {...messages.about} /></h2></div>
+          <div className="entry-content">
+            <div className="col">
               <ul>
                 <li><strong><FormattedMessage {...messages.isbn} /></strong>
                   &nbsp;<span>{publication.isbn}</span>
@@ -39,7 +39,7 @@ class PublicationInfo extends React.Component {
               </ul>
             </div>
 
-            <div className='col'>
+            <div className="col">
               <ul>
                 <li><strong><FormattedMessage {...messages.edition} /></strong>
                   &nbsp;<span>{publication.edition}</span>
@@ -53,8 +53,8 @@ class PublicationInfo extends React.Component {
 
           </div>
 
-          <div className='title'><h2><FormattedMessage {...messages.items} /></h2></div>
-          <div className='entry-content'><Items items={items} /></div>
+          <div className="title"><h2><FormattedMessage {...messages.items} /></h2></div>
+          <div className="entry-content"><Items items={items} /></div>
         </section>
       </div>
     )

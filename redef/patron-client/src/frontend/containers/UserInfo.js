@@ -42,25 +42,25 @@ class UserInfo extends React.Component {
     const { personalInformation } = this.props
     return (
       <div>
-        <div className='col patron-placeholder'>
-          <div className='birth'>
+        <div className="col patron-placeholder">
+          <div className="birth">
             <h2><FormattedMessage {...messages.birthdate} /></h2>
-            <p data-automation-id='UserInfo_birthdate'>{personalInformation.birthdate}</p>
+            <p data-automation-id="UserInfo_birthdate">{personalInformation.birthdate}</p>
           </div>
 
-          <div className='sex patron-placeholder'>
+          <div className="sex patron-placeholder">
             <h2>Kjønn</h2>
             <p>Mann</p>
           </div>
 
-          <div className='loan-card'>
+          <div className="loan-card">
             <h2><FormattedMessage {...messages.loanerCardIssued} /></h2>
-            <p data-automation-id='UserInfo_loanerCardIssued'>{this.props.personalInformation.loanerCardIssued}</p>
+            <p data-automation-id="UserInfo_loanerCardIssued">{this.props.personalInformation.loanerCardIssued}</p>
           </div>
 
-          <div className='category'>
+          <div className="category">
             <h2><FormattedMessage {...messages.loanerCategory} /></h2>
-            <p data-automation-id='UserInfo_loanerCategory'>{this.props.personalInformation.loanerCategory}</p>
+            <p data-automation-id="UserInfo_loanerCategory">{this.props.personalInformation.loanerCategory}</p>
           </div>
         </div>
       </div>
@@ -70,58 +70,58 @@ class UserInfo extends React.Component {
   renderEditInfo (editable) {
     const { fields: { address, zipcode, city, country, mobile, email } } = this.props
     return (
-      <section className='user-details'>
-        <form name='change-user-details' id='change-user-details'>
-          <div className='address col'>
+      <section className="user-details">
+        <form name="change-user-details" id="change-user-details">
+          <div className="address col">
 
             <h2><FormattedMessage {...messages.address} /></h2>
-            <address typeof='schema:PostalAddress'>
-              <span property='schema:streetAddress'>
-                <label htmlFor='streetaddress'><FormattedMessage {...messages.address} /></label>
-                <input data-automation-id='UserInfo_address' id='streetaddress' type='text'
+            <address typeof="schema:PostalAddress">
+              <span property="schema:streetAddress">
+                <label htmlFor="streetaddress"><FormattedMessage {...messages.address} /></label>
+                <input data-automation-id="UserInfo_address" id="streetaddress" type="text"
                        placeholder={this.props.intl.formatMessage(messages.address)} {...address} />
               </span><br />
 
-              <span property='schema:postalCode' className='display-inline'>
+              <span property="schema:postalCode" className="display-inline">
                 <h2><FormattedMessage {...messages.zipcode} /></h2>
-                <label htmlFor='postal'>Postnr.</label>
-                <input data-automation-id='UserInfo_zipcode' id='postal' type='number'
+                <label htmlFor="postal">Postnr.</label>
+                <input data-automation-id="UserInfo_zipcode" id="postal" type="number"
                        placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
               </span>
 
-              <span property='schema:addressLocality' className='display-inline'>
+              <span property="schema:addressLocality" className="display-inline">
                 <h2><FormattedMessage {...messages.city} /></h2>
-                <label htmlFor='city'>Poststed</label>
-                <input data-automation-id='UserInfo_city' id='city' type='text'
+                <label htmlFor="city">Poststed</label>
+                <input data-automation-id="UserInfo_city" id="city" type="text"
                        placeholder={this.props.intl.formatMessage(messages.city)} {...city} />
               </span><br />
 
-              <span property='schema:addressCountry'>
+              <span property="schema:addressCountry">
                 <h2><FormattedMessage {...messages.country} /></h2>
-                <label htmlFor='country'>Land</label>
-                <input data-automation-id='UserInfo_country' id='country' type='text'
+                <label htmlFor="country">Land</label>
+                <input data-automation-id="UserInfo_country" id="country" type="text"
                        placeholder={this.props.intl.formatMessage(messages.country)} {...country} />
               </span><br />
             </address>
           </div>
 
-          <div className='col'>
-            <div className='cell-phone'>
+          <div className="col">
+            <div className="cell-phone">
               <h2><FormattedMessage {...messages.mobile} /></h2>
-              <label htmlFor='cellphone'>Mobil</label>
-              <input data-automation-id='UserInfo_mobile' id='cellphone' type='number'
+              <label htmlFor="cellphone">Mobil</label>
+              <input data-automation-id="UserInfo_mobile" id="cellphone" type="number"
                      placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
 
-            <div className='phone'>
+            <div className="phone">
               <h2>Telefon</h2>
-              <label htmlFor='phone'><FormattedMessage {...messages.country} /></label>
-              <input data-automation-id='UserInfo_mobile' id='phone' type='number'
+              <label htmlFor="phone"><FormattedMessage {...messages.country} /></label>
+              <input data-automation-id="UserInfo_mobile" id="phone" type="number"
                      placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
 
-            <div className='email'>
+            <div className="email">
               <h2><FormattedMessage {...messages.email} /></h2>
-              <label htmlFor='email'>E-post</label>
-              <input data-automation-id='UserInfo_email' id='email' type='email'
+              <label htmlFor="email">E-post</label>
+              <input data-automation-id="UserInfo_email" id="email" type="email"
                      placeholder={this.props.intl.formatMessage(messages.email)} {...email} />
             </div>
           </div>
@@ -137,28 +137,28 @@ class UserInfo extends React.Component {
   renderInfo (editable) {
     const { personalInformation } = this.props
     return (
-      <section className='user-details'>
-        <div className='address col'>
+      <section className="user-details">
+        <div className="address col">
 
           <h2><FormattedMessage {...messages.address} /></h2>
-          <address typeof='schema:PostalAddress'>
-            <span data-automation-id='UserInfo_address'
-                  property='schema:streetAddress'>{personalInformation.address}</span><br />
-            <span data-automation-id='UserInfo_zipcode'
-                  property='schema:postalCode'>{personalInformation.zipcode}</span>
-            <span data-automation-id='UserInfo_city' property='schema:addressLocality'>{personalInformation.city}</span><br />
-            <span data-automation-id='UserInfo_country'
-                  property='schema:addressCountry'>{personalInformation.country}</span><br />
+          <address typeof="schema:PostalAddress">
+            <span data-automation-id="UserInfo_address"
+                  property="schema:streetAddress">{personalInformation.address}</span><br />
+            <span data-automation-id="UserInfo_zipcode"
+                  property="schema:postalCode">{personalInformation.zipcode}</span>
+            <span data-automation-id="UserInfo_city" property="schema:addressLocality">{personalInformation.city}</span><br />
+            <span data-automation-id="UserInfo_country"
+                  property="schema:addressCountry">{personalInformation.country}</span><br />
           </address>
 
-          <div className='cell-phone'>
+          <div className="cell-phone">
             <h2><FormattedMessage {...messages.mobile} /></h2>
-            <p data-automation-id='UserInfo_mobile'>{personalInformation.mobile}</p>
+            <p data-automation-id="UserInfo_mobile">{personalInformation.mobile}</p>
           </div>
 
-          <div className='email'>
+          <div className="email">
             <h2><FormattedMessage {...messages.email} /></h2>
-            <p data-automation-id='UserInfo_email'>{personalInformation.email}</p>
+            <p data-automation-id="UserInfo_email">{personalInformation.email}</p>
           </div>
         </div>
 
@@ -172,18 +172,18 @@ class UserInfo extends React.Component {
   renderButtonAndLastUpdated (editable, classNames) {
     return (
       <footer className={classNames.join(' ')}>
-        <div className='change-information'>
+        <div className="change-information">
           {editable
-            ? <button className='black-btn' type='button' onClick={this.handleSubmit}>
+            ? <button className="black-btn" type="button" onClick={this.handleSubmit}>
             <FormattedMessage {...messages.saveChanges} /></button>
-            : <button className='black-btn' type='button' onClick={this.handleChangeClick}>
+            : <button className="black-btn" type="button" onClick={this.handleChangeClick}>
             <FormattedMessage {...messages.editPersonalInfo} /></button>}
         </div>
 
-        <div className='last-updated'>
+        <div className="last-updated">
           <FormattedMessage {...messages.lastUpdated} />:&nbsp;
-            <span data-automation-id='UserInfo_lastUpdated'
-                  className='green-text'>{this.props.personalInformation.lastUpdated}</span>
+            <span data-automation-id="UserInfo_lastUpdated"
+                  className="green-text">{this.props.personalInformation.lastUpdated}</span>
         </div>
       </footer>
     )
@@ -201,10 +201,10 @@ class UserInfo extends React.Component {
     return (
       <div>
         <header>
-          <h1 data-automation-id='UserInfo_name'>{personalInformation.name}</h1>
+          <h1 data-automation-id="UserInfo_name">{personalInformation.name}</h1>
 
-          <div className='borrow-number'><FormattedMessage {...messages.borrowerNumber} />: <span
-            data-automation-id='UserInfo_borrowerNumber'>{personalInformation.borrowerNumber}</span></div>
+          <div className="borrow-number"><FormattedMessage {...messages.borrowerNumber} />: <span
+            data-automation-id="UserInfo_borrowerNumber">{personalInformation.borrowerNumber}</span></div>
         </header>
 
         {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}

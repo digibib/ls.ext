@@ -6,10 +6,10 @@ class Item extends React.Component {
     const { item } = this.props
     return (
       <tr about={item.barcode}>
-        <td data-automation-id='item_branch'>{item.branch}</td>
-        <td data-automation-id='item_count'>{item.count}</td>
-        <td data-automation-id='item_shelfmark'>{item.shelfmark}</td>
-        <td data-automation-id='item_status'>{item.status}</td>
+        <td data-automation-id="item_branch">{item.branch}</td>
+        <td data-automation-id="item_count">{item.count}</td>
+        <td data-automation-id="item_shelfmark">{item.shelfmark}</td>
+        <td data-automation-id="item_status">{item.status}</td>
       </tr>
     )
   }

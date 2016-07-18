@@ -26,7 +26,7 @@ function setup (propOverrides) {
     'test_language': 'test_language_english'
   }
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale='en' messages={messages}>
+    <IntlProvider locale="en" messages={messages}>
       <Publication {...props} />
     </IntlProvider>
   )

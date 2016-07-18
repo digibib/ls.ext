@@ -22,7 +22,7 @@ class MyPage extends React.Component {
   }
 
   renderNotLoggedIn () {
-    return <div data-automation-id='profile_not_logged_in'><FormattedMessage {...messages.mustBeLoggedIn} /></div>
+    return <div data-automation-id="profile_not_logged_in"><FormattedMessage {...messages.mustBeLoggedIn} /></div>
   }
 
   render () {
@@ -35,7 +35,7 @@ class MyPage extends React.Component {
       { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' }
     ]
     return (
-      <div data-automation-id='profile_page'>
+      <div data-automation-id="profile_page">
         <Tabs tabList={tabList} currentPath={this.props.location.pathname} push={this.props.routerActions.push} />
         <hr />
         {this.props.children}

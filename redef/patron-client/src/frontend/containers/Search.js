@@ -51,11 +51,11 @@ class Search extends React.Component {
   renderPagination () {
     if ((this.props.totalHits > Constants.maxSearchResultsPerPage) && this.props.location.query.query) {
       return (
-        <section className='pagination-area'
-                 data-automation-id='search-results-pagination'>
+        <section className="pagination-area"
+                 data-automation-id="search-results-pagination">
           <ReactPaginate previousLabel={'<'}
                          nextLabel={'>'}
-                         breakLabel={<li className='break'><span>...</span></li>}
+                         breakLabel={<li className="break"><span>...</span></li>}
                          forceSelected={this.props.location.query.page - 1 || 0}
                          marginPagesDisplayed={1}
                          pageRangeDisplayed={5}
@@ -71,21 +71,21 @@ class Search extends React.Component {
 
   render () {
     return (
-      <div className='container'>
-        <div className='row'>
+      <div className="container">
+        <div className="row">
           {this.props.locationQuery.query
-            ? (<div className='search-results-footer'>
-            <div className='search-results-number'>
+            ? (<div className="search-results-footer">
+            <div className="search-results-number">
               <SearchResultsText totalHits={this.props.totalHits}
                                  totalHitsPublications={this.props.totalHitsPublications}
                                  locationQuery={this.props.locationQuery}
                                  isSearching={this.props.isSearching} />
             </div>
             {this.props.totalHits > 0
-              ? (<div className='search-sorting patron-placeholder'>
+              ? (<div className="search-sorting patron-placeholder">
               <p>Sorter treff på</p>
 
-              <div className='search-sorting-select-box'>
+              <div className="search-sorting-select-box">
                 <select>
                   <option defaultValue>Årstall</option>
                   <option>Nyeste</option>
@@ -96,14 +96,14 @@ class Search extends React.Component {
           </div>)
             : null}
           {this.props.totalHits > 0
-            ? [ <SearchFilters key='searchFilters'
+            ? [ <SearchFilters key="searchFilters"
                                filters={this.props.filters}
                                locationQuery={this.props.location.query}
                                toggleFilter={this.props.searchFilterActions.toggleFilter}
                                toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
                                toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
                                toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter} />,
-            <SearchResults key='searchResults'
+            <SearchResults key="searchResults"
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
                            searchResults={this.props.searchResults}

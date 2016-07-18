@@ -24,17 +24,17 @@ function requireLogin () {
 
 export default (
   <Router history={history}>
-    <Route path='/' component={App}>
+    <Route path="/" component={App}>
       <IndexRoute component={Search} />
-      <Route path='search' component={Search} />
-      <Route path='work/:workId' component={Work} />
-      <Route path='work/:workId/publication/:publicationId' component={Work} />
-      <Route path='person/:personId' component={Person} />
-      <Route path='profile' component={MyPage} onEnter={requireLogin}>
+      <Route path="search" component={Search} />
+      <Route path="work/:workId" component={Work} />
+      <Route path="work/:workId/publication/:publicationId" component={Work} />
+      <Route path="person/:personId" component={Person} />
+      <Route path="profile" component={MyPage} onEnter={requireLogin}>
         <IndexRoute component={UserLoans} />
-        <Route path='loans' component={UserLoans} />
-        <Route path='info' component={UserInfo} />
-        <Route path='settings' component={UserSettings} />
+        <Route path="loans" component={UserLoans} />
+        <Route path="info" component={UserInfo} />
+        <Route path="settings" component={UserSettings} />
       </Route>
     </Route>
   </Router>

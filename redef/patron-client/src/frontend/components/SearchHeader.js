@@ -27,43 +27,43 @@ class SearchHeader extends React.Component {
   render () {
     return (
       <div>
-        <header className='row'>
-          <div className='container'>
-            <div className='logo'>
-              <Link to='/'>
-                <img src='/images/logo.png' alt={this.props.intl.formatMessage(messages.logoAlt)} />
+        <header className="row">
+          <div className="container">
+            <div className="logo">
+              <Link to="/">
+                <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
               </Link>
             </div>
-            <button type='button' className='btn-mobile'>
-              <Link to='/'>
-                <img src='/images/btn-mobile.svg' alt='3 black bars' />
+            <button type="button" className="btn-mobile">
+              <Link to="/">
+                <img src="/images/btn-mobile.svg" alt="3 black bars" />
               </Link>
             </button>
-            <div className='primary-menu'>
+            <div className="primary-menu">
               <ul>
-                <li><Link to='/profile'><FormattedMessage {...messages.myProfile} /></Link></li>
+                <li><Link to="/profile"><FormattedMessage {...messages.myProfile} /></Link></li>
                 {this.props.isLoggedIn
-                  ? <li data-automation-id='logout_element' onClick={this.props.logout}>
+                  ? <li data-automation-id="logout_element" onClick={this.props.logout}>
                   <FormattedMessage {...messages.logout} /></li>
-                  : <li data-automation-id='login_element' onClick={this.handleLoginClick}>
+                  : <li data-automation-id="login_element" onClick={this.handleLoginClick}>
                   <FormattedMessage {...messages.logIn} /></li>}
               </ul>
             </div>
           </div>
         </header>
-        <section className='search-container'>
-          <div className='search-box'>
+        <section className="search-container">
+          <div className="search-box">
             <form onSubmit={this.handleSearch}>
-              <label htmlFor='search'><img src='/images/icon-searchbar-search.svg'
-                                           alt='Black Magnifying glass' /></label>
+              <label htmlFor="search"><img src="/images/icon-searchbar-search.svg"
+                                           alt="Black Magnifying glass" /></label>
               <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-                     type='search'
+                     type="search"
                      defaultValue={this.props.locationQuery.query || ''}
                      ref={e => this.searchFieldInput = e}
-                     data-automation-id='search_input_field'
+                     data-automation-id="search_input_field"
               />
-              <button onClick={this.handleSearch} type='button' className='search-submit'
-                      data-automation-id='search_button'>
+              <button onClick={this.handleSearch} type="button" className="search-submit"
+                      data-automation-id="search_button">
                 <FormattedMessage {...messages.search} />
               </button>
             </form>

@@ -10,7 +10,7 @@ class Contributors extends React.Component {
           <p key={role}>
             <strong>{this.props.intl.formatMessage({ id: role })}</strong>:&nbsp;
             {this.props.contributors[ role ].map(person =>
-              <Link data-automation-id='work_contributor_link' key={person.relativeUri + role}
+              <Link data-automation-id="work_contributor_link" key={person.relativeUri + role}
                     to={person.relativeUri}>{person.name}</Link>
             )}
           </p>
