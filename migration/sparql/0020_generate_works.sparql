@@ -138,7 +138,6 @@ SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
-PREFIX util: <http://data.deichman.no/utility#>
 PREFIX duo: <http://data.deichman.no/duo#>
 
 WITH <http://deichman.no/migration>
