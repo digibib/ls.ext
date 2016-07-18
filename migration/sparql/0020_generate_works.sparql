@@ -109,7 +109,6 @@ SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
-PREFIX util: <http://data.deichman.no/utility#>
 PREFIX duo: <http://data.deichman.no/duo#>
 
 WITH <http://deichman.no/migration>
@@ -131,7 +130,7 @@ WHERE {
 ;
 
 
-# 6) Verk fra utgivelser uten originaltittel
+# 6) Verk fra utgivelser med originaltittel
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -153,7 +152,7 @@ WHERE {
   ?publication migration:workAuthority ?workAuthority ;
     migration:originalTitle ?originalTitle ;
     a :Publication .
-  OPTIONAL { ?publication :partTitle ?partTitle }
+  OPTIONAL { ?publication migration:originalPartTitle ?partTitle }
 }
 ;
 
