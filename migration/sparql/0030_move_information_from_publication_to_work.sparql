@@ -12,7 +12,7 @@ INSERT {
 WHERE {
       ?publication :publicationOf ?work ;
                    ?p ?o .
-      VALUES ?p { :audience :literaryForm :genre :subject }
+      VALUES ?p { :audience :literaryForm :genre :subject :author :editor :director :composer :actor}
 }
 ;
 
