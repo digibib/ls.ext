@@ -138,6 +138,7 @@ out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
 	@echo "   Migration is complete. Goodbye!"
 	@echo "!! TODO stop running virtuoso container (left up for debugging)"
 
