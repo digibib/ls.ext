@@ -3,7 +3,8 @@ import {
   TOGGLE_TERMS_AND_CONDITIONS_INFO,
   REQUEST_CHECK_FOR_EXISTING_USER,
   CHECK_FOR_EXISTING_USER_SUCCESS,
-  CHECK_FOR_EXISTING_USER_FAILURE
+  CHECK_FOR_EXISTING_USER_FAILURE,
+  HIDE_MODAL
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -39,6 +40,8 @@ export default function registration (state = initialState, action) {
         ...state,
         checkForExistingUserSuccess: false, isCheckingForExistingUser: false
       }
+    case HIDE_MODAL:
+      return initialState
     default:
       return state
   }
