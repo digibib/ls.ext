@@ -84,7 +84,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
 	@cp config_data/mapping.yaml out/
-	@$(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST):8005/ /out/mapping.yaml && ruby marc2rdf.rb -m /out/mapping.yaml -i /out/catalogue.marcxml -h $(HOST):8005 > /out/catalogue.nt" 2> /dev/null
+	@@$(TIMEIT) $(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST):8005/ /out/mapping.yaml && ruby marc2rdf.rb -m /out/mapping.yaml -i /out/catalogue.marcxml -h $(HOST):8005 > /out/catalogue.nt"
 	@echo "OK Done initial conversion of catalogue to RDF\n"
 	@touch out/done.convert_catalogue_to_nt
 
