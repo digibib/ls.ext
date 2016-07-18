@@ -26,7 +26,7 @@ TIMEIT=/usr/bin/time -f"   %es"
 # Tasks
 # =====
 
-.PHONY: all clean rebuild verify staff
+.PHONY: all clean rebuild verify staff virtuoso
 
 all: out/done.koha_fuseki_sync
 
@@ -119,6 +119,23 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@#sudo docker rm virtuoso
 	@touch out/done.import_into_fuseki
 	@echo "OK Completed RDF import to Fuseki\n"
+
+virtuoso: out/done.convert_catalogue_to_nt
+	@echo "   Importing RDF into Virtuoso (without running SPARQL rules)"
+	@echo "-- Stopping and removing temprorary virtuoso triplestore (if present)"
+	-@sudo docker stop virtuoso > /dev/null
+	-@sudo docker rm virtuoso > /dev/null
+	@echo "-- Starting temporary virtuoso triplestore"
+	@sudo docker run -d --net=dockercompose_backend --name=virtuoso -p 8890:8890 digibib/virtuoso > /dev/null
+	@echo "-- Waiting until virtuoso is ready"
+	@until $$(curl --output /dev/null --silent --head --fail $(VIRTUOSO)/sparql); do printf '.' ; sleep 2 ; done ; printf "\n"
+	@echo "-- Splitting catalogue.nt into chunks"
+	@split --lines 250000 out/catalogue.nt out/dumps
+	@echo "-- Importing chunks into virtuoso"
+	@for f in out/dumps* ; do \
+	curl -s -w "   %{time_total}s\n" -X POST --digest -u dba:dba -H Content-Type:application/n-triples -T $$f \
+		-G $(VIRTUOSO)/sparql-graph-crud-auth --data-urlencode graph=http://deichman.no/migration ; sleep 3 ; done
+	@echo "OK Imported RDF to Virtuoso\n"
 
 out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@echo "   Syncing Koha and Fuseki"
