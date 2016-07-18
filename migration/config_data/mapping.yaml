@@ -2361,6 +2361,49 @@
                       skuesp: "ROLE.actor"
                       koreogr: "ROLE.coreographer"
                     orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    b:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.place"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "RAW.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    j:
+                      predicate: "RAW.nationality"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Corporation"
     -
       '710':
         subfields:
@@ -2459,6 +2502,39 @@
                       skuesp: "ROLE.actor"
                       koreogr: "ROLE.coreographer"
                     orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "ONTOLOGY.name"
+                      object:
+                        datatype: "literal"
+                  -
+                    c:
+                      predicate: "ONTOLOGY.place"
+                      object:
+                        datatype: "literal"
+                  -
+                    d:
+                      predicate: "RAW.date"
+                      object:
+                        datatype: "literal"
+                  -
+                    n:
+                      predicate: "RAW.number"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "ONTOLOGY.specification"
+                      object:
+                        datatype: "literal"
+                class: "RAW.Event"
     -
       '711':
         subfields:
