@@ -114,10 +114,11 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partTitle))))` a :Work ;
+  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` a :Work ;
     :mainTitle ?mainTitle ;
+    :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partTitle))))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` .
 }
 
 WHERE {
@@ -125,6 +126,7 @@ WHERE {
     a :Publication ;
     :mainTitle ?mainTitle .
   MINUS { ?publication migration:originalTitle ?originalTitle }
+  OPTIONAL { ?publication :partNumber ?partNumber }
   OPTIONAL { ?publication :partTitle ?partTitle }
 }
 ;
@@ -142,17 +144,19 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partTitle))))` a :Work ;
+  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` a :Work ;
     :mainTitle ?mainTitle ;
+    :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partTitle))))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` .
 }
 
 WHERE {
   ?publication migration:workAuthority ?workAuthority ;
-    migration:originalTitle ?originalTitle ;
+    migration:originalTitle ?mainTitle ;
     a :Publication .
-  OPTIONAL { ?publication migration:originalPartTitle ?partTitle }
+  OPTIONAL { ?publication :originalPartNumber ?partNumber }
+  OPTIONAL { ?publication :originalPartTitle ?partTitle }
 }
 ;
 
@@ -169,15 +173,16 @@ PREFIX role: <http://data.deichman.no/role#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?contributors), ?mainTitle, ?partTitle))))` a :Work ;
+  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?contributors), ?mainTitle, ?partNumber, ?partTitle))))` a :Work ;
     :mainTitle ?mainTitle ;
-    :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?contributors), ?mainTitle, ?partTitle))))` .
+    :partTitle ?partTitle ;
+    :partNumber ?partNumber .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?contributors), ?mainTitle, ?partNumber, ?partTitle))))` .
 }
 
 WHERE {
   {
-    SELECT SUM(xsd:int(?contributor_id)) as ?contributors ?publication ?mainTitle ?partTitle
+    SELECT SUM(xsd:int(?contributor_id)) as ?contributors ?publication ?mainTitle ?partNumber ?partTitle
     WHERE {
         ?publication a :Publication ;
                      :mainTitle ?mainTitle .
@@ -185,6 +190,7 @@ WHERE {
                    ?contributor duo:bibliofilPersonId ?contributor_id .}
         OPTIONAL { ?publication role:contributor ?contributor .
                    ?contributor duo:bibliofilCorporationId ?contributor_id .}
+        OPTIONAL { ?publication :partNumber ?partNumber }
         OPTIONAL { ?publication :partTitle ?partTitle }
         MINUS { ?publication :publicationOf ?work }
     }
