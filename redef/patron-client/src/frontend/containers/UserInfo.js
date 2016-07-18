@@ -5,7 +5,6 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import * as ParameterActions from '../actions/ParameterActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
-import EditableField from '../components/EditableField'
 
 class UserInfo extends React.Component {
   constructor (props) {
@@ -23,19 +22,6 @@ class UserInfo extends React.Component {
   handleChangeClick (event) {
     event.preventDefault()
     this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('edit'))
-  }
-
-  generateField (fieldName, editable) {
-    const field = this.props.fields[ fieldName ]
-    return (
-      <div key={fieldName}>
-        <FormattedMessage {...messages[ fieldName ]} /><br />
-        <EditableField data-automation-id={`UserInfo_${fieldName}`}
-                       editable={editable}
-                       inputProps={{placeholder: this.props.intl.formatMessage({...messages[fieldName]}), ...field}} />
-        {field.touched && field.error && <div style={{color: 'red'}}>{this.props.intl.formatMessage(field.error)}</div>}
-      </div>
-    )
   }
 
   renderStaticInfo () {
