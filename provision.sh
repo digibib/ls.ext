@@ -7,36 +7,41 @@ export LSENV=$1
 export LSEXTPATH=$2
 export HOST=$3
 echo -e "\n Provisioning for $LSENV env, LSENV=$LSENV, LSEXTPATH=$LSEXTPATH, HOST=$HOST\n"
-echo -e "\n1) Installing Docker\n"
-VERSION="1.11.2-0~$(lsb_release -c -s)"
-INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
-if [ $VERSION = "$INSTALLED" ] ; then
-  echo "docker version $VERSION already installed";
-else
-  echo "Installing docker version $VERSION ...";
-  sudo apt-get purge --assume-yes --quiet docker-engine >/dev/null 2>&1 || true
-  sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-  echo "deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -c -s) main" | sudo tee /etc/apt/sources.list.d/docker.list
-  sudo apt-get update
-  sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold \
-    install linux-image-extra-$(uname -r) make git docker-engine=$VERSION
-  sudo echo 'DOCKER_OPTS="--storage-driver=aufs"' > /etc/default/docker
-  sudo service docker restart
-  echo "docker installed."
-fi
+if [[ `uname -s` == 'Linux' ]]; then
+  echo -e "\n1) Installing Docker\n"
+  VERSION="1.11.2-0~$(lsb_release -c -s)"
+  INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
+  if [ $VERSION = "$INSTALLED" ] ; then
+    echo "docker version $VERSION already installed";
+  else
+    echo "Installing docker version $VERSION ...";
+    sudo apt-get purge --assume-yes --quiet docker-engine >/dev/null 2>&1 || true
+    sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+    echo "deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -c -s) main" | sudo tee /etc/apt/sources.list.d/docker.list
+    sudo apt-get update
+    sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold \
+      install linux-image-extra-$(uname -r) make git docker-engine=$VERSION
+    sudo echo 'DOCKER_OPTS="--storage-driver=aufs"' > /etc/default/docker
+    sudo service docker restart
+    echo "docker installed."
+  fi
 
-echo -e "\n2) Installing Docker-compose\n"
-COMPOSEVERSION=1.7.1
-INSTALLED=`docker-compose -v | cut -d',' -f1 | cut -d' ' -f3`
-if [ $COMPOSEVERSION = "$INSTALLED" ] ; then
-  echo "docker-compose version $COMPOSEVERSION already installed"
-else
-  sudo bash -c "curl -s -L https://github.com/docker/compose/releases/download/$COMPOSEVERSION/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
-  sudo chmod +x /usr/local/bin/docker-compose
-fi
+  echo -e "\n2) Installing Docker-compose\n"
+  COMPOSEVERSION=1.7.1
+  INSTALLED=`docker-compose -v | cut -d',' -f1 | cut -d' ' -f3`
+  if [ $COMPOSEVERSION = "$INSTALLED" ] ; then
+    echo "docker-compose version $COMPOSEVERSION already installed"
+  else
+    sudo bash -c "curl -s -L https://github.com/docker/compose/releases/download/$COMPOSEVERSION/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+    sudo chmod +x /usr/local/bin/docker-compose
+  fi
 
-echo -e "\n3) Installing Graphviz\n"
-which dot > /dev/null || sudo apt-get install -y graphviz
+  echo -e "\n3) Installing Graphviz\n"
+  which dot > /dev/null || sudo apt-get install -y graphviz
+else
+  echo "Cannot provision for OSX; please install docker & docker-compose yourself"
+  echo "You also need envsubst (TODO find a cross-platform solution)"
+fi
 
 echo -e "\n4) Making sure secrets.env is present\n"
 if [ ! -f "$LSEXTPATH/docker-compose/secrets.env" ]; then
