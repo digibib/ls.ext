@@ -114,11 +114,11 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` a :Work ;
+  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` .
 }
 
 WHERE {
@@ -143,11 +143,11 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` a :Work ;
+  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle))))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` .
 }
 
 WHERE {
@@ -161,6 +161,7 @@ WHERE {
 
 
 # X) Create work to any publications not belonging to any work (i.e not matched by above queries)
+#    TODO remove?
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -186,13 +187,69 @@ WHERE {
         ?publication a :Publication ;
                      :mainTitle ?mainTitle .
         OPTIONAL { ?publication role:contributor ?contributor .
-                   ?contributor duo:bibliofilPersonId ?contributor_id .}
-        OPTIONAL { ?publication role:contributor ?contributor .
-                   ?contributor duo:bibliofilCorporationId ?contributor_id .}
+                   ?contributor duo:bibliofilAuthorityId ?contributor_id .}
         OPTIONAL { ?publication :partNumber ?partNumber }
         OPTIONAL { ?publication :partTitle ?partTitle }
         MINUS { ?publication :publicationOf ?work }
     }
   }
 }
+;
+
+
+# Remove duplicate mainTitle and partTitle from work (result of lowecasing titles for generating work uris)
+;
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+INSERT { ?work :keepMainTitle ?mainTitle }
+WHERE {
+ SELECT ?work SAMPLE(?title) AS ?mainTitle WHERE {
+   ?work a :Work ;
+        :mainTitle ?title
+  }  GROUP BY ?work
+}
+;
+
+;
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+INSERT { ?work :keepPartTitle ?partTitle }
+WHERE {
+ SELECT ?work SAMPLE(?title) AS ?partTitle WHERE {
+   ?work a :Work ;
+        :partTitle ?title
+  }  GROUP BY ?work
+}
+;
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+DELETE { ?work :mainTitle ?mainTitle }
+WHERE { ?work a :Work ; :mainTitle ?mainTitle }
+;
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+DELETE { ?work :partTitle ?partTitle }
+WHERE { ?work a :Work ; :partTitle ?partTitle }
+;
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+INSERT { ?work :mainTitle ?mainTitle }
+DELETE { ?work :keepMainTitle ?mainTitle }
+WHERE { ?work :keepMainTitle ?mainTitle }
+;
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+INSERT { ?work :partTitle ?partTitle }
+DELETE { ?work :keepPartTitle ?partTitle  }
+WHERE { ?work :keepPartTitle ?partTitle }
 ;
