@@ -62,17 +62,17 @@ class ChangePin extends React.Component {
 
             <div className="change-pin-fields">
               <h2><FormattedMessage {...messages.currentPin} /></h2>
-              <input type="text" name="current-pin" id="current-pin"
+              <input type="password" name="current-pin" id="current-pin"
                      ref={e => this.currentPinField = e} {...currentPin} />
               <label htmlFor="current-pin"> <FormattedMessage {...messages.currentPin} /></label>
               {this.renderError()}
               {this.getValidator(currentPin)}
               <h2><FormattedMessage {...messages.newPin} /></h2>
-              <input type="text" name="new-pin" id="new-pin" ref={e => this.pinField = e} {...newPin} />
+              <input type="password" name="new-pin" id="new-pin" ref={e => this.pinField = e} {...newPin} />
               <label htmlFor="new-pin"><FormattedMessage {...messages.repeatPin} /></label>
               {this.getValidator(newPin)}
               <h2><FormattedMessage {...messages.repeatPin} /></h2>
-              <input type="text" name="repeat-pin" id="repeat-pin" ref={e => this.repeatPinField = e} {...repeatPin} />
+              <input type="password" name="repeat-pin" id="repeat-pin" ref={e => this.repeatPinField = e} {...repeatPin} />
               <label htmlFor="repeat-pin"><FormattedMessage {...messages.repeatPin} /></label>
               {this.getValidator(repeatPin)}
             </div>
