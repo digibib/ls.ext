@@ -53,7 +53,7 @@ WHERE {
 
   OPTIONAL {
     ?p deich:publicationOf ?work ;
-       deich:mainTitle ?norwegianTitle ;
+       deich:mainTitle ?englishTitle ;
        deich:language <http://lexvo.org/id/iso639-3/eng> .
   }
 
