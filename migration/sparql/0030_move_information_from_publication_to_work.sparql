@@ -10,90 +10,17 @@ INSERT {
 	?work ?p ?o .
 }
 
+DELETE {
+  ?publication ?p ?o
+}
+
 WHERE {
       ?publication :publicationOf ?work ;
                    ?p ?o .
-      VALUES ?p { :audience :literaryForm :genre :subject role:author role:editor role:director role:composer role:actor role:lyricist}
+      VALUES ?p { :audience :literaryForm :genre :subject }
 }
 ;
 
-# 2a) Fjern til informasjon fra publications, som nå ligger på verk, eller som ikke
-#    lenger er relevant (eks. informasjon kun brukt for å generere verk):
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication :genre ?o .}
-WHERE { ?publication :publicationOf ?work ; :genre ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication :subject ?o .}
-WHERE { ?publication :publicationOf ?work ; :subject ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication :audience ?o .}
-WHERE { ?publication :publicationOf ?work ; :audience ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication :literaryForm ?o .}
-WHERE { ?publication :publicationOf ?work ; :literaryForm ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX role: <http://data.deichman.no/role#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication role:author ?o .}
-WHERE { ?publication :publicationOf ?work ; role:author ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX role: <http://data.deichman.no/role#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication role:editor ?o .}
-WHERE { ?publication :publicationOf ?work ; role:editor ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX role: <http://data.deichman.no/role#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication role:director ?o .}
-WHERE { ?publication :publicationOf ?work ; role:director ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX role: <http://data.deichman.no/role#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication role:composer ?o .}
-WHERE { ?publication :publicationOf ?work ; role:composer ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX role: <http://data.deichman.no/role#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication role:actor ?o .}
-WHERE { ?publication :publicationOf ?work ; role:actor ?o }
-;
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX role: <http://data.deichman.no/role#>
-WITH <http://deichman.no/migration>
-DELETE { ?publication role:lyricist ?o .}
-WHERE { ?publication :publicationOf ?work ; role:lyricist ?o }
-;
 
 # 2b)
 SPARQL
