@@ -241,15 +241,15 @@ WHERE { ?work a :Work ; :partTitle ?partTitle }
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 WITH <http://deichman.no/migration>
-INSERT { ?work :mainTitle ?mainTitle }
 DELETE { ?work :keepMainTitle ?mainTitle }
+INSERT { ?work :mainTitle ?mainTitle }
 WHERE { ?work :keepMainTitle ?mainTitle }
 ;
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 WITH <http://deichman.no/migration>
-INSERT { ?work :partTitle ?partTitle }
 DELETE { ?work :keepPartTitle ?partTitle  }
+INSERT { ?work :partTitle ?partTitle }
 WHERE { ?work :keepPartTitle ?partTitle }
 ;
