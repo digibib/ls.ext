@@ -313,13 +313,12 @@
               predicate: "MIGRATION.originalTitle"
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                regex_strip: "^[\\[]|[\\]]$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
           -
             b:
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
               conditions:
                 indicator:
                   indicator1:
@@ -330,8 +329,7 @@
             n:
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                regex_strip: "^[\\[]|[\\]]$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
               conditions:
                 indicator:
                   indicator1:
@@ -342,8 +340,7 @@
             p:
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                regex_strip: "^[\\[]|[\\]]$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
               conditions:
                 indicator:
                   indicator1:
@@ -382,20 +379,19 @@
                       predicate: "ONTOLOGY.mainTitle"
                       object:
                         datatype: "literal"
-                        regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                        regex_strip: "^[\\[]|[\\]]$"
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                   -
                     n:
                       predicate: "ONTOLOGY.partNumber"
                       object:
                         datatype: "literal"
-                        regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                        regex_strip: "^[\\[]|[\\]]$"
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                   -
                     p:
                       predicate: "ONTOLOGY.partTitle"
                       object:
                         datatype: "literal"
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                   -
                     w:
                       predicate: "RAW.sortingForm"
@@ -410,14 +406,13 @@
               predicate: "ONTOLOGY.mainTitle"
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                regex_strip: "^[\\[]|[\\]]$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
           -
             b:
               predicate: "ONTOLOGY.subtitle"
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
           -
             c:
               predicate: "RAW.statementOfResponsibility"
@@ -433,15 +428,13 @@
               predicate: "ONTOLOGY.partNumber"
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                regex_strip: "^[\\[]|[\\]]$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
           -
             p:
               predicate: "ONTOLOGY.partTitle"
               object:
                 datatype: "literal"
-                regex_strip: "[\\.:,;\\/\\s]\\s*$"
-                regex_strip: "^[\\[]|[\\]]$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
           -
             w:
               predicate: "RAW.sortingForm"
@@ -738,7 +731,7 @@
                 md5: true
                 datatype: "uri"
                 prefix: "http://placeholder.com/work/w"
-                urlize: true
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 combine:
                   - "3"
                   - "t"
@@ -913,7 +906,7 @@
                 md5: true
                 datatype: "uri"
                 prefix: "http://placeholder.com/work/w"
-                urlize: true
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 combine:
                   - "3"
                   - "t"
@@ -2312,8 +2305,7 @@
                 combine:
                   - "3"
                   - "t"
-                urlize: true
-                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
               relation:
                 subfield:
                   -
@@ -2454,8 +2446,7 @@
                 combine:
                   - "3"
                   - "t"
-                urlize: true
-                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
               relation:
                 subfield:
                   -
@@ -2586,8 +2577,7 @@
                 combine:
                   - "3"
                   - "t"
-                urlize: true
-                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
               relation:
                 subfield:
                   -
@@ -2682,7 +2672,7 @@
         subfields:
           -
             w:
-              predicate: "MIGRATION.previousRecordId"
+              predicate: "MIGRATION.followsRecordId"
               object:
                 datatype: "literal"
     -
@@ -2690,7 +2680,7 @@
         subfields:
           -
             w:
-              predicate: "MIGRATION.nextRecordId"
+              predicate: "MIGRATION.followedByRecordId"
               object:
                 datatype: "literal"
     -
@@ -2706,8 +2696,7 @@
                   - "3"
                   - "t"
                 urlize: true
-                datatype: "uri"
-                regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
               relation:
                 subfields:
                   -
