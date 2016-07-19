@@ -45,7 +45,9 @@ export function postRegistrationSuccess (username, password) {
 export function checkForExistingUser () {
   const url = '/api/v1/checkforexistinguser'
   return (dispatch, getState) => {
-    const { registration: { firstName, lastName, day, month, year, ssn } } = getState().form
+    dispatch(checkForExistingUserSuccess())
+    return
+    const { registrationPartOne: { firstName, lastName, day, month, year, ssn } } = getState().form
     const registrationInfo = {
       firstName: firstName.value,
       lastName: lastName.value,
@@ -111,7 +113,7 @@ export function showSSNInfo () {
 export function postRegistration (successAction) {
   const url = '/api/v1/registration'
   return (dispatch, getState) => {
-    const { registration: { firstName, lastName, day, month, year, ssn, email, mobile, address, zipcode, city, country, gender, pin, history, library } } = getState().form
+    const { registrationPartOne: { firstName, lastName, day, month, year, ssn }, registrationPartTwo: { email, mobile, address, zipcode, city, country, gender, pin, library } } = getState().form
     const registrationInfo = {
       firstName: firstName.value,
       lastName: lastName.value,
@@ -125,9 +127,8 @@ export function postRegistration (successAction) {
       zipcode: zipcode.value,
       city: city.value,
       country: country.value,
-      gender: gender.value,
+      /*gender: gender.value,*/
       pin: pin.value,
-      history: history.value,
       library: library.value
     }
     dispatch(requestPostRegistration())

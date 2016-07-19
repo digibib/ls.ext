@@ -79,7 +79,7 @@ export default {
   'Registration.cancel': 'Avbryt',
   'Registration.yesOption': 'Ja',
   'Registration.noOption': 'Nei',
-  'Registration.headerTextSuccess': 'Suksess!',
+  'Registration.headerTextSuccess': 'Du er nå klar til å reservere og låne bøker hos Deichman',
   'Registration.messageSuccess': 'Du er nå registrert som låner. Nedenfor er en midlertidig brukerid som du kan bruke til å logge inn for å reservere. Vennligst kontakt ditt bibliotek for å få lånerkort.',
   'Registration.headerTextError': 'En feil har oppstått',
   'Registration.genericRegistrationError': 'Kunne ikke registrere ny låner. Vennligst prøv igjen senere.',

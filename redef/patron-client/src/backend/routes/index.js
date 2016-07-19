@@ -9,6 +9,7 @@ module.exports = (app) => {
   require('./libraries')(app)
   require('./registration')(app)
   require('./search')(app)
+  require('./validation')(app)
 
   app.all('/services/*', requestProxy({
     url: 'http://services:8005/*'

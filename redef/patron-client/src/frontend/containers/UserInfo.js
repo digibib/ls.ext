@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
-import { reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import * as ParameterActions from '../actions/ParameterActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
+import UserInfoForm from './forms/UserInfoForm'
 
 class UserInfo extends React.Component {
   constructor (props) {
     super(props)
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChangeClick = this.handleChangeClick.bind(this)
   }
 
@@ -54,64 +54,9 @@ class UserInfo extends React.Component {
   }
 
   renderEditInfo (editable) {
-    const { fields: { address, zipcode, city, country, mobile, email } } = this.props
     return (
       <section className="user-details">
-        <form name="change-user-details" id="change-user-details">
-          <div className="address col">
-
-            <h2><FormattedMessage {...messages.address} /></h2>
-            <address typeof="schema:PostalAddress">
-              <span property="schema:streetAddress">
-                <label htmlFor="streetaddress"><FormattedMessage {...messages.address} /></label>
-                <input data-automation-id="UserInfo_address" id="streetaddress" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.address)} {...address} />
-              </span><br />
-
-              <span property="schema:postalCode" className="display-inline">
-                <h2><FormattedMessage {...messages.zipcode} /></h2>
-                <label htmlFor="postal">Postnr.</label>
-                <input data-automation-id="UserInfo_zipcode" id="postal" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
-              </span>
-
-              <span property="schema:addressLocality" className="display-inline">
-                <h2><FormattedMessage {...messages.city} /></h2>
-                <label htmlFor="city">Poststed</label>
-                <input data-automation-id="UserInfo_city" id="city" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.city)} {...city} />
-              </span><br />
-
-              <span property="schema:addressCountry">
-                <h2><FormattedMessage {...messages.country} /></h2>
-                <label htmlFor="country">Land</label>
-                <input data-automation-id="UserInfo_country" id="country" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.country)} {...country} />
-              </span><br />
-            </address>
-          </div>
-
-          <div className="col">
-            <div className="cell-phone">
-              <h2><FormattedMessage {...messages.mobile} /></h2>
-              <label htmlFor="cellphone">Mobil</label>
-              <input data-automation-id="UserInfo_mobile" id="cellphone" type="number"
-                     placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
-
-            <div className="phone">
-              <h2>Telefon</h2>
-              <label htmlFor="phone"><FormattedMessage {...messages.country} /></label>
-              <input data-automation-id="UserInfo_mobile" id="phone" type="number"
-                     placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
-
-            <div className="email">
-              <h2><FormattedMessage {...messages.email} /></h2>
-              <label htmlFor="email">E-post</label>
-              <input data-automation-id="UserInfo_email" id="email" type="email"
-                     placeholder={this.props.intl.formatMessage(messages.email)} {...email} />
-            </div>
-          </div>
-        </form>
+        <UserInfoForm />
 
         {this.renderButtonAndLastUpdated(editable, [ 'hidden-desktop' ])}
 
@@ -322,22 +267,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const validate = values => {
-  const errors = {}
-  if (!values.email) {
-    errors.email = messages.required
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = messages.invalidEmail
-  }
-  return errors
-}
-
-export default reduxForm(
-  {
-    form: 'userInfo',
-    fields: [ 'address', 'zipcode', 'city', 'country', 'mobile', 'email' ],
-    validate
-  },
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(injectIntl(UserInfo))

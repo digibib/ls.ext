@@ -4,8 +4,10 @@ const userSettingsMapper = require('../utils/userSettingsMapper')
 const sanitizeHtml = require('sanitize-html')
 const querystring = require('querystring')
 // const mysql = require('mysql')
+const validator = require('../utils/validator')
+const registrationForm = Object.assign(require('../../common/forms/registrationPartOne'), require('../../common/forms/registrationPartTwo'))
 
-module.exports = (app) => {
+  module.exports = (app) => {
   const fetch = require('../fetch')(app)
   app.post('/api/v1/checkforexistinguser', jsonParser, (request, response) => {
     const params = {
@@ -37,13 +39,19 @@ module.exports = (app) => {
   })
 
   app.post('/api/v1/registration', jsonParser, (request, response) => {
+    const errors = validator(request.body, Object.keys(registrationForm).filter(field=> !registrationForm[ field ].skipFinalVerification).filter(field => registrationForm[ field ].required))
+    if (Object.keys(errors).length > 0) {
+      response.status(400).send({ errors: errors })
+      return
+    }
+
     const patron = {
       firstname: request.body.firstName,
       surname: request.body.lastName,
       dateofbirth: dateOfBirth(request.body.year, request.body.month, request.body.day),
       email: request.body.email,
       mobile: request.body.mobile,
-      address: sanitize(request.body.address), // TODO: Finish sanitization
+      address: request.body.address,
       zipcode: request.body.zipcode,
       city: request.body.city,
       password: request.body.pin,
