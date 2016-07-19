@@ -71,7 +71,7 @@ class UserInfo extends React.Component {
               <span property="schema:postalCode" className="display-inline">
                 <h2><FormattedMessage {...messages.zipcode} /></h2>
                 <label htmlFor="postal">Postnr.</label>
-                <input data-automation-id="UserInfo_zipcode" id="postal" type="number"
+                <input data-automation-id="UserInfo_zipcode" id="postal" type="text"
                        placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
               </span>
 
