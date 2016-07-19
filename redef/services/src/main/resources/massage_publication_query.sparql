@@ -47,14 +47,26 @@ WHERE {
 
   OPTIONAL {
     ?p deich:publicationOf ?work ;
-       deich:mainTitle ?norwegianTitle ;
+       deich:mainTitle ?norwegianMainTitle ;
        deich:language <http://lexvo.org/id/iso639-3/nob> .
+    OPTIONAL {
+    ?p deich:publicationOf ?work ;
+           deich:partTitle ?norwegianPartTitle ;
+           deich:language <http://lexvo.org/id/iso639-3/nob> .
+    }
+    BIND(IF(BOUND(?norwegianPartTitle), CONCAT(?norwegianMainTitle, " — ", ?norwegianPartTitle), ?norwegianMainTitle) AS ?norwegianTitle)
   }
 
   OPTIONAL {
     ?p deich:publicationOf ?work ;
-       deich:mainTitle ?englishTitle ;
+       deich:mainTitle ?englishMainTitle ;
        deich:language <http://lexvo.org/id/iso639-3/eng> .
+    OPTIONAL {
+        ?p deich:publicationOf ?work ;
+               deich:partTitle ?englishPartTitle ;
+               deich:language <http://lexvo.org/id/iso639-3/eng> .
+        }
+        BIND(IF(BOUND(?englishPartTitle), CONCAT(?englishMainTitle, " — ", ?englishPartTitle), ?englishMainTitle) AS ?norwegianTitle)
   }
 
   OPTIONAL {
