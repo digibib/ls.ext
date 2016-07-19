@@ -10,10 +10,6 @@ INSERT {
 	?work ?p ?o .
 }
 
-DELETE {
-  ?publication ?p ?o
-}
-
 WHERE {
       ?publication :publicationOf ?work ;
                    ?p ?o .
@@ -21,6 +17,34 @@ WHERE {
 }
 ;
 
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+DELETE { ?publication :genre ?o .}
+WHERE { ?publication :publicationOf ?work ; :genre ?o }
+;
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+DELETE { ?publication :subject ?o .}
+WHERE { ?publication :publicationOf ?work ; :subject ?o }
+;
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+DELETE { ?publication :audience ?o .}
+WHERE { ?publication :publicationOf ?work ; :audience ?o }
+;
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+WITH <http://deichman.no/migration>
+DELETE { ?publication :literaryForm ?o .}
+WHERE { ?publication :publicationOf ?work ; :literaryForm ?o }
+;
 
 # 2b)
 SPARQL
