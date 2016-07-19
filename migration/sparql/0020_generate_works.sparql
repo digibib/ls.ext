@@ -154,8 +154,8 @@ WHERE {
   ?publication migration:workAuthority ?workAuthority ;
     migration:originalTitle ?mainTitle ;
     a :Publication .
-  OPTIONAL { ?publication :originalPartNumber ?partNumber }
-  OPTIONAL { ?publication :originalPartTitle ?partTitle }
+  OPTIONAL { ?publication migration:originalPartNumber ?partNumber }
+  OPTIONAL { ?publication migration:originalPartTitle ?partTitle }
 }
 ;
 
