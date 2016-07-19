@@ -284,7 +284,7 @@
               predicate: "ONTOLOGY.mainEntry"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
+                prefix: "http://placeholder.com/work/w"
               relation:
                 subfields:
                   -
@@ -312,6 +312,7 @@
               object:
                 datatype: "literal"
                 regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[]|[\\]]$"
           -
             b:
               object:
@@ -328,6 +329,7 @@
               object:
                 datatype: "literal"
                 regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[]|[\\]]$"
               conditions:
                 indicator:
                   indicator1:
@@ -339,6 +341,7 @@
               object:
                 datatype: "literal"
                 regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[]|[\\]]$"
               conditions:
                 indicator:
                   indicator1:
@@ -364,7 +367,7 @@
               predicate: "MIGRATION.publicationOf"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
+                prefix: "http://placeholder.com/work/w"
               relation:
                 subfields:
                   -
@@ -377,11 +380,15 @@
                       predicate: "ONTOLOGY.mainTitle"
                       object:
                         datatype: "literal"
+                        regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                        regex_strip: "^[\\[]|[\\]]$"
                   -
                     n:
                       predicate: "ONTOLOGY.partNumber"
                       object:
                         datatype: "literal"
+                        regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                        regex_strip: "^[\\[]|[\\]]$"
                   -
                     p:
                       predicate: "ONTOLOGY.partTitle"
@@ -402,6 +409,7 @@
               object:
                 datatype: "literal"
                 regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[]|[\\]]$"
           -
             b:
               predicate: "ONTOLOGY.subtitle"
@@ -423,12 +431,15 @@
               predicate: "ONTOLOGY.partNumber"
               object:
                 datatype: "literal"
+                regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[]|[\\]]$"
           -
             p:
               predicate: "ONTOLOGY.partTitle"
               object:
                 datatype: "literal"
                 regex_strip: "[\\.:,;\\/\\s]\\s*$"
+                regex_strip: "^[\\[]|[\\]]$"
           -
             w:
               predicate: "RAW.sortingForm"
@@ -722,9 +733,9 @@
             't':
               predicate: "ONTOLOGY.subject"
               object:
-                combinestring: "_"
+                md5: true
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
+                prefix: "http://placeholder.com/work/w"
                 urlize: true
                 combine:
                   - "3"
@@ -897,9 +908,9 @@
             't':
               predicate: "ONTOLOGY.subject"
               object:
-                combinestring: "_"
+                md5: true
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
+                prefix: "http://placeholder.com/work/w"
                 urlize: true
                 combine:
                   - "3"
@@ -1160,7 +1171,7 @@
               predicate: "ONTOLOGY.subject"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
+                prefix: "http://placeholder.com/work/w"
               relation:
                 subfields:
                   -
@@ -2293,8 +2304,8 @@
                     orig: "0|2"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
-                combinestring: "_"
+                prefix: "http://placeholder.com/work/w"
+                md5: true
                 combine:
                   - "3"
                   - "t"
@@ -2434,8 +2445,8 @@
                     orig: "0|2"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
-                combinestring: "_"
+                prefix: "http://placeholder.com/work/w"
+                md5: true
                 combine:
                   - "3"
                   - "t"
@@ -2565,8 +2576,8 @@
                     orig: "0|2"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
-                combinestring: "_"
+                prefix: "http://placeholder.com/work/w"
+                md5: true
                 combine:
                   - "3"
                   - "t"
@@ -2601,7 +2612,7 @@
                     orig: "0|2"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
+                prefix: "http://placeholder.com/work/w"
               relation:
                 subfields:
                   -
@@ -2684,8 +2695,8 @@
             t:
               predicate: "MIGRATION.isPartOf"
               object:
-                combinestring: "_"
-                prefix: "http://placeholder.com/work/x"
+                md5: true
+                prefix: "http://placeholder.com/work/w"
                 combine:
                   - "3"
                   - "t"
@@ -2714,7 +2725,7 @@
               predicate: "MIGRATION.isPartOf"
               object:
                 datatype: "uri"
-                prefix: "http://placeholder.com/work/x"
+                prefix: "http://placeholder.com/work/w"
               relation:
                 subfields:
                   -
