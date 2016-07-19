@@ -14,15 +14,14 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication migration:creator ?agent ;
+    ?publication migration:creator [duo:bibliofilAuthorityId ?id] ;
       a :Publication .
-    ?agent duo:bibliofilAuthorityId ?id .
   }}
 }
 ;
 
 
-# 2) workAuthority for utgivelser med editor, uten creator
+# 2) workAuthority for utgivelser med editor
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -39,16 +38,15 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-   ?publication role:editor ?agent ;
+   ?publication role:editor [duo:bibliofilAuthorityId ?id] ;
       a :Publication .
-    ?agent duo:bibliofilAuthorityId ?id .
-    MINUS {?publication migration:creator ?creator .}
+    MINUS {?publication migration:workAuthority ?o .}
   }}
 }
 ;
 
 
-# 3) workAuthority for utgivelser med director, uten creator, editor
+# 3) workAuthority for utgivelser med director
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -65,17 +63,15 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:director ?agent ;
+    ?publication role:director [duo:bibliofilAuthorityId ?id] ;
      a :Publication .
-    ?agent duo:bibliofilAuthorityId ?id .
-    MINUS {?publication migration:creator ?creator .}
-    MINUS {?publication role:editor ?editor .}
+    MINUS {?publication migration:workAuthority ?o .}
   }}
 }
 ;
 
 
-# 4) workAuthority for utgivelser med composer, uten creator, editor, director
+# 4) workAuthority for utgivelser med composer
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -92,18 +88,15 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:composer ?agent ;
+    ?publication role:composer [duo:bibliofilAuthorityId ?id] ;
      a :Publication .
-   ?agent duo:bibliofilAuthorityId ?id .
-   MINUS {?publication migration:creator ?creator .}
-   MINUS {?publication role:editor ?editor .}
-   MINUS {?publication role:director ?director .}
+    MINUS {?publication migration:workAuthority ?o .}
   }}
 }
 ;
 
 
-# 5) workAuthority for utgivelser med performer, uten creator, editor, director, composer
+# 5) workAuthority for utgivelser med performer
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -120,20 +113,16 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:performer ?agent ;
+    ?publication role:performer [duo:bibliofilAuthorityId ?id] ;
      a :Publication .
-   ?agent duo:bibliofilAuthorityId ?id .
-   MINUS {?publication migration:creator ?creator .}
-   MINUS {?publication role:editor ?editor .}
-   MINUS {?publication role:director ?director .}
-   MINUS {?publication role:composer ?composer .}
+    MINUS {?publication migration:workAuthority ?o .}
   }}
 }
 ;
 
 
 
-# 6) workAuthority for utgivelser med publisher, uten creator, editor, director, composer, performer
+# 6) workAuthority for utgivelser med illustrator
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -150,21 +139,16 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:publisher ?agent ;
+    ?publication role:illustrator [duo:bibliofilAuthorityId ?id] ;
      a :Publication .
-   ?agent duo:bibliofilAuthorityId ?id .
-   MINUS {?publication migration:creator ?creator .}
-   MINUS {?publication role:editor ?editor .}
-   MINUS {?publication role:director ?director .}
-   MINUS {?publication role:composer ?composer .}
-   MINUS {?publication role:performer ?performer .}
+    MINUS {?publication migration:workAuthority ?o .}
   }}
 }
 ;
 
 
 
-# 7) workAuthority for utgivelser med contributor, uten creator, editor, director, composer, performer, publisher
+# 7) workAuthority for utgivelser med publisher
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -181,15 +165,35 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:contributor ?agent ;
+    ?publication role:publisher [duo:bibliofilAuthorityId ?id] ;
+      a :Publication .
+    MINUS {?publication migration:workAuthority ?o .}
+  }}
+}
+;
+
+
+
+# 8) workAuthority for utgivelser med contributor
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+PREFIX role: <http://data.deichman.no/role#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  ?publication migration:workAuthority ?sum .
+}
+
+WHERE {
+ { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
+    ?publication role:contributor [duo:bibliofilAuthorityId ?id] ;
      a :Publication .
-   ?agent duo:bibliofilAuthorityId ?id .
-   MINUS {?publication migration:creator ?creator .}
-   MINUS {?publication role:editor ?editor .}
-   MINUS {?publication role:director ?director .}
-   MINUS {?publication role:composer ?composer .}
-   MINUS {?publication role:performer ?performer .}
-   MINUS {?publication role:publisher ?publisher .}
+    MINUS {?publication migration:workAuthority ?o .}
   }}
 }
 ;
