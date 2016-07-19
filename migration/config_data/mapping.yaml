@@ -99,6 +99,7 @@
                       k: "ROLE.composer"
                       utøv: "ROLE.performer"
                       eks: "ROLE.performer"
+                      utg: "ROLE.publisher"
                       overs: "ROLE.translator"
                       gjendikt: "ROLE.translator"
                       tekstf: "ROLE.lyricist"
@@ -107,7 +108,7 @@
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
                       koreogr: "ROLE.coreographer"
-                    orig: "arr|bearb|biogr|dir|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+                    orig: "arr|bearb|biogr|dir|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|utg|forf|eks|k|t"
     -
       '100':
         subfields:
@@ -205,6 +206,7 @@
                       komp: "ROLE.composer"
                       k: "ROLE.composer"
                       utøv: "ROLE.performer"
+                      utg: "ROLE.publisher"
                       eks: "ROLE.performer"
                       overs: "ROLE.translator"
                       gjendikt: "ROLE.translator"
@@ -214,7 +216,7 @@
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
                       koreogr: "ROLE.coreographer"
-                    orig: "arr|bearb|biogr|dir|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+                    orig: "arr|bearb|biogr|dir|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|utg|forf|eks|k|t"
 
     -
       '110':
@@ -2268,12 +2270,13 @@
                       overs: "ROLE.translator"
                       gjendikt: "ROLE.translator"
                       tekstf: "ROLE.lyricist"
+                      utg: "ROLE.publisher"
                       t: "ROLE.lyricist"
                       manusforf: "ROLE.scriptWriter"
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
                       koreogr: "ROLE.coreographer"
-                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|utg|forf|eks|k|t"
     -
       '700':
         subfields:
@@ -2363,6 +2366,7 @@
                       k: "ROLE.composer"
                       utøv: "ROLE.performer"
                       eks: "ROLE.performer"
+                      utg: "ROLE.publisher"
                       overs: "ROLE.translator"
                       gjendikt: "ROLE.translator"
                       tekstf: "ROLE.lyricist"
@@ -2371,7 +2375,7 @@
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
                       koreogr: "ROLE.coreographer"
-                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|utg|forf|eks|k|t"
               relation:
                 subfields:
                   -
@@ -2504,6 +2508,7 @@
                       k: "ROLE.composer"
                       utøv: "ROLE.performer"
                       eks: "ROLE.performer"
+                      utg: "ROLE.publisher"
                       overs: "ROLE.translator"
                       gjendikt: "ROLE.translator"
                       tekstf: "ROLE.lyricist"
@@ -2512,7 +2517,7 @@
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
                       koreogr: "ROLE.coreographer"
-                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|forf|eks|k|t"
+                    orig: "arr|bearb|biogr|dir|forft|fort|fotogr|foto|gjendikt|illustr|ill|innl|komm|komp|koreogr|manusforf|medarb|medforf|medf|oppl|opprforf|overs|red|regissør|reg|sang|skuesp|tekstf|utøv|utg|forf|eks|k|t"
               relation:
                 subfields:
                   -
