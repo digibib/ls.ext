@@ -12,25 +12,21 @@ class SearchResults extends React.Component {
         </p>
       )
     }
-    let entries = []
     const from = Constants.maxSearchResultsPerPage * (this.props.page - 1)
     const to = from + Constants.maxSearchResultsPerPage
-    if (this.props.locationQuery.query) {
-      entries = this.props.searchResults.slice(from, to).map(result => (
-          <SearchResult key={result.relativeUri}
-                        result={result}
-                        locationQuery={this.props.locationQuery}
-                        showStatus={this.props.searchActions.showStatus}
-                        fetchWorkResource={this.props.fetchWorkResource}
-                        resources={this.props.resources}
-          />
-        )
-      )
-    }
     return (
       <section className="search-results">
         <div data-automation-id="search-result-entries">
-          {entries}
+          {this.props.locationQuery.query
+            ? this.props.searchResults.slice(from, to).map(result => (
+            <SearchResult key={result.relativeUri}
+                          result={result}
+                          locationQuery={this.props.locationQuery}
+                          showStatus={this.props.searchActions.showStatus}
+                          fetchWorkResource={this.props.fetchWorkResource}
+                          resources={this.props.resources}
+            />
+          )) : null}
         </div>
       </section>
     )
