@@ -45,3 +45,9 @@ literaryForm:pictureBook a duo:LiteraryForm ;
   duo:code "b" ;
   rdfs:label "Bildebok"@no ;
   rdfs:label "Picture book"@en .
+literaryForm:dictionary a duo:LiteraryForm ;
+  rdfs:label "Ordbok"@no ;
+  rdfs:label "Dictionary"@en .
+literaryForm:referenceWork a duo:LiteraryForm ;
+  rdfs:label "Oppslagsverk"@no ;
+  rdfs:label "Reference Work"@en .
