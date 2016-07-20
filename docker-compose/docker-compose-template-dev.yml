@@ -189,8 +189,8 @@ services:
     networks:
       - backend
     ports:
-      - "8200:9200"
-      - "8300:9300"
+      - "9200:9200"
+      - "9300:9300"
     volumes_from:
       - elasticsearch_data
     logging:
