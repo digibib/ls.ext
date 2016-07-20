@@ -729,6 +729,7 @@
               predicate: "ONTOLOGY.subject"
               object:
                 md5: true
+                lowercase: true
                 datatype: "uri"
                 prefix: "http://placeholder.com/work/w"
                 regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
@@ -904,6 +905,7 @@
               predicate: "ONTOLOGY.subject"
               object:
                 md5: true
+                lowercase: true
                 datatype: "uri"
                 prefix: "http://placeholder.com/work/w"
                 regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
@@ -2302,6 +2304,7 @@
                 datatype: "uri"
                 prefix: "http://placeholder.com/work/w"
                 md5: true
+                lowercase: true
                 combine:
                   - "3"
                   - "t"
@@ -2443,6 +2446,7 @@
                 datatype: "uri"
                 prefix: "http://placeholder.com/work/w"
                 md5: true
+                lowercase: true
                 combine:
                   - "3"
                   - "t"
@@ -2574,6 +2578,7 @@
                 datatype: "uri"
                 prefix: "http://placeholder.com/work/w"
                 md5: true
+                lowercase: true
                 combine:
                   - "3"
                   - "t"
@@ -2691,6 +2696,7 @@
               predicate: "MIGRATION.isPartOf"
               object:
                 md5: true
+                lowercase: true
                 prefix: "http://placeholder.com/work/w"
                 combine:
                   - "3"
