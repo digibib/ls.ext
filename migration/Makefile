@@ -23,6 +23,10 @@ LMARC=$(shell ls -1 $(MIGRATION_DATA)/*lmarc.*.txt | xargs basename)
 LNEL=$(shell ls -1 $(MIGRATION_DATA)/*lnel.*.txt | xargs basename)
 MYSQL_CMD=mysql --local-infile=1 --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE
 TIMEIT=/usr/bin/time -f"   %es"
+ifeq ($(shell uname -s), Darwin)
+TIMEIT=/bin/sh
+endif
+
 # Tasks
 # =====
 
