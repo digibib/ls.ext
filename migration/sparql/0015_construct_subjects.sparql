@@ -13,8 +13,10 @@ DELETE {
 }
 
 INSERT {
+
     ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i kunsten")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i kunsten")))))` :prefLabel `CONCAT(STR(?label), " i kunsten")` .
+    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i kunsten")))))` :prefLabel `CONCAT(STR(?label), " i kunsten")` ;
+    a :Subject .
 } WHERE {
     ?aut migration:specification "Motiv" ;
         migration:subdivision "Kunst" ;
@@ -45,7 +47,8 @@ DELETE {
 
 INSERT {
     ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i litteraturen")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i litteraturen")))))` :prefLabel `CONCAT(STR(?label), " i litteraturen")` .
+    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i litteraturen")))))` :prefLabel `CONCAT(STR(?label), " i litteraturen")` ;
+    a :Subject .
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Litteratur" ;
@@ -76,7 +79,8 @@ DELETE {
 
 INSERT {
     ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i barnelitteraturen")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i barnelitteraturen")))))` :prefLabel `CONCAT(STR(?label), " i barnelitteraturen")` .
+    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i barnelitteraturen")))))` :prefLabel `CONCAT(STR(?label), " i barnelitteraturen")` ;
+    a :Subject .
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Barnelitteratur" ;
@@ -107,7 +111,8 @@ DELETE {
 
 INSERT {
     ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i film")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i film")))))` :prefLabel `CONCAT(STR(?label), " i film")` .
+    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i film")))))` :prefLabel `CONCAT(STR(?label), " i film")` ;
+    a :Subject .
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Film" ;
