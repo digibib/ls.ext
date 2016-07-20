@@ -89,7 +89,7 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
 	@cp config_data/mapping.yaml out/
-	@@$(TIMEIT) $(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST):8005/ /out/mapping.yaml && ruby marc2rdf.rb -m /out/mapping.yaml -i /out/catalogue.marcxml -h $(HOST):8005 > /out/catalogue.nt"
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && sed -i s/placeholder.com/$(HOST):8005/ /out/mapping.yaml && ruby marc2rdf.rb -m /out/mapping.yaml -i /out/catalogue.marcxml -h $(HOST):8005 > /out/catalogue.nt"
 	@echo "OK Done initial conversion of catalogue to RDF\n"
 	@touch out/done.convert_catalogue_to_nt
 
@@ -195,7 +195,7 @@ endif
 out/done.migrate_loans: out/done.migrate_patrons out/done.migrate_catalogue_to_koha
 ifdef MIGRATE_PATRONS
 	@echo "   Migrating active loans to Koha"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
 	@echo "OK Done migrating loans\n"
 	@touch out/done.migrate_loans
 endif
@@ -203,8 +203,10 @@ endif
 out/done.migrate_holds: out/done.migrate_patrons out/done.migrate_catalogue_to_koha
 ifdef MIGRATE_PATRONS
 	@echo "   Migrating holds to Koha"
-	@$(MIGRATION_RUN_CMD) "res2sql -res=/data/$(RES) > /out/holds.sql"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/holds.sql'
+	@echo "-- Generating holds SQL"
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) "res2sql -res=/data/$(RES) > /out/holds.sql"
+	@echo "-- Inserting holds SQL"
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/holds.sql'
 	@echo "OK Done migrating holds\n"
 	@touch out/done.migrate_holds
 endif
