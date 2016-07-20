@@ -18,8 +18,7 @@ INSERT {
 } WHERE {
     ?aut migration:specification "Motiv" ;
         migration:subdivision "Kunst" ;
-        migration:mainLabel ?label ;
-        a migration:SubjectAuthority .
+        migration:mainLabel ?label .
     ?pub :subject <http://__HOST__/subject/s25fd40aa38e2dade45f2cef549cd1efa> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
@@ -50,8 +49,7 @@ INSERT {
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Litteratur" ;
-        migration:mainLabel ?label ;
-        a migration:SubjectAuthority .
+        migration:mainLabel ?label .
     ?pub :subject <http://__HOST__/subject/sc4a76e14eeb35d88fa9f97ff9d2be9c0> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
@@ -82,8 +80,7 @@ INSERT {
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Barnelitteratur" ;
-        migration:mainLabel ?label ;
-        a migration:SubjectAuthority .
+        migration:mainLabel ?label .
     ?pub :subject <http://__HOST__/subject/sf00b6852e4a3a5858afdb394e75504fb> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
@@ -114,8 +111,7 @@ INSERT {
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Film" ;
-        migration:mainLabel ?label ;
-        a migration:SubjectAuthority .
+        migration:mainLabel ?label .
     ?pub :subject <http://__HOST__/subject/sbae9023301664a3ea829a63c67d6f882> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
