@@ -99,7 +99,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "-- Waiting until virtuoso is ready"
 	@until $$(curl --output /dev/null --silent --head --fail $(VIRTUOSO)/sparql); do printf '.' ; sleep 2 ; done ; printf "\n"
 	@echo "-- Splitting catalogue.nt into chunks"
-	@split --lines 250000 out/catalogue.nt out/dumps
+	@$(MIGRATION_RUN_CMD) 'split --lines 250000 /out/catalogue.nt /out/dumps'
 	@echo "-- Importing chunks into virtuoso"
 	@for f in out/dumps* ; do \
 	curl -s -w "   %{time_total}s\n" -X POST --digest -u dba:dba -H Content-Type:application/n-triples -T $$f \
@@ -109,7 +109,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "-- Constructing the complete RDF resources to be migrated (resources.nt)"
 	@$(MIGRATION_RUN_CMD) 'construct -se=http://$(HOST):8005 -ve=http://virtuoso:8890/sparql > /out/resources.nt'
 	@echo "-- Splitting resources.nt into chunks"
-	@split --additional-suffix=.nt --lines 250000 out/resources.nt out/complete
+	@$(MIGRATION_RUN_CMD) 'split --additional-suffix=.nt --lines 250000 /out/resources.nt /out/complete'
 	@echo "-- Clearing default graph in Fuseki"
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST --data-urlencode update="clear default" http://fuseki:3030/ds/update' > /dev/null
 	@echo "-- Importing chunks into Fuseki"
@@ -130,7 +130,7 @@ virtuoso: out/done.convert_catalogue_to_nt
 	@echo "-- Waiting until virtuoso is ready"
 	@until $$(curl --output /dev/null --silent --head --fail $(VIRTUOSO)/sparql); do printf '.' ; sleep 2 ; done ; printf "\n"
 	@echo "-- Splitting catalogue.nt into chunks"
-	@split --lines 250000 out/catalogue.nt out/dumps
+	@$(MIGRATION_RUN_CMD) 'split --lines 250000 /out/catalogue.nt /out/dumps'
 	@echo "-- Importing chunks into virtuoso"
 	@for f in out/dumps* ; do \
 	curl -s -w "   %{time_total}s\n" -X POST --digest -u dba:dba -H Content-Type:application/n-triples -T $$f \
