@@ -13,6 +13,7 @@ RUN go get github.com/digibib/migtools/syncbranches
 RUN go get github.com/digibib/migtools/syncimages
 RUN go get github.com/digibib/migtools/patronmassage
 RUN go get github.com/digibib/migtools/verify
+RUN go get github.com/digibib/migtools/res2sql
 
 RUN git clone https://github.com/digibib/migmarc2rdf /usr/src/migmarc2rdf
 WORKDIR /usr/src/migmarc2rdf

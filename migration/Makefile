@@ -21,6 +21,7 @@ EXEMP=$(shell ls -1 $(MIGRATION_DATA)/*exemp.*.txt | xargs basename)
 LAANER=$(shell ls -1 $(MIGRATION_DATA)/*laaner.*.txt | xargs basename)
 LMARC=$(shell ls -1 $(MIGRATION_DATA)/*lmarc.*.txt | xargs basename)
 LNEL=$(shell ls -1 $(MIGRATION_DATA)/*lnel.*.txt | xargs basename)
+RES=$(shell ls -1 $(MIGRATION_DATA)/*res.*.txt | xargs basename)
 MYSQL_CMD=mysql --local-infile=1 --default-character-set=utf8 -h koha_mysql -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE
 TIMEIT=/usr/bin/time -f"   %es"
 ifeq ($(shell uname -s), Darwin)
@@ -60,8 +61,8 @@ out/done.setup_koha: out/done.massage_input_data
 	@cp sql/*.sql out/
 	@echo "-- Populating table defining extended patron attribute types"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_extended_patron_attributes.sql'
-	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems, items and issues"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;SET foreign_key_checks=1;"'
+	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems, items, issues and reserves"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;TRUNCATE TABLE reserves;SET foreign_key_checks=1;"'
 	@echo "OK Done setting up Koha\n"
 	@touch out/done.setup_koha
 
@@ -141,7 +142,7 @@ virtuoso: out/done.convert_catalogue_to_nt
 		-G $(VIRTUOSO)/sparql-graph-crud-auth --data-urlencode graph=http://deichman.no/migration ; sleep 3 ; done
 	@echo "OK Imported RDF to Virtuoso\n"
 
-out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
+out/done.koha_fuseki_sync: out/done.migrate_loans out/done.migrate_holds out/done.import_into_fuseki
 	@echo "   Syncing Koha and Fuseki"
 	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
@@ -198,6 +199,16 @@ ifdef MIGRATE_PATRONS
 	@echo "OK Done migrating loans\n"
 	@touch out/done.migrate_loans
 endif
+
+out/done.migrate_holds: out/done.migrate_patrons out/done.migrate_catalogue_to_koha
+ifdef MIGRATE_PATRONS
+	@echo "   Migrating holds to Koha"
+	@$(MIGRATION_RUN_CMD) "res2sql -res=/data/$(RES) > /out/holds.sql"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/holds.sql'
+	@echo "OK Done migrating holds\n"
+	@touch out/done.migrate_holds
+endif
+
 
 verify:
 	@echo "   Verifying migration"
