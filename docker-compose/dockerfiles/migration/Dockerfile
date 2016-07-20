@@ -1,9 +1,10 @@
-FROM golang:1.6.2-wheezy
+FROM golang:1.6.3
 
 RUN apt-get update \
     && apt-get install -y \
     mysql-client \
     ruby-dev \
+    rubygems \
     && rm -rf /var/lib/apt/lists/*
 
 RUN go get github.com/digibib/migtools/catmassage
