@@ -31,7 +31,7 @@ endif
 # Tasks
 # =====
 
-.PHONY: all clean rebuild verify staff virtuoso
+.PHONY: all clean rebuild verify staff virtuoso reindex
 
 all: out/done.koha_fuseki_sync
 
@@ -249,3 +249,11 @@ staff:
 	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_sync (borrowernumber, synctype, sync, syncstatus) SELECT borrowernumber, \"norwegianpatrondb\",1,\"new\" FROM borrower_attributes WHERE code=\"fnr\";"'
 	@echo "OK Done migrating staff.\n"
+
+reindex:
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
