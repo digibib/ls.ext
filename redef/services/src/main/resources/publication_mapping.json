@@ -147,6 +147,10 @@
     },
     "mainEntryName": {
       "type": "string"
+    },
+    "abstract": {
+      "type": "string",
+      "index": "no"
     }
   }
 }

@@ -142,6 +142,13 @@ class SearchResult extends React.Component {
             : null
           }
 
+          {result.publication.abstract
+           ? <div>
+               <p>{result.publication.abstract}</p>
+            </div>
+            : null
+          }
+
           <div>
             {this.renderSubjects(result.publication)}
           </div>

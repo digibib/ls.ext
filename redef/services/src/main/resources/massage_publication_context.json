@@ -80,6 +80,7 @@
     "contributor": "http://data.deichman.no/role#contributor",
     "coreographer": "http://data.deichman.no/role#coreographer",
     "recordId": "deichman:recordID",
-    "agents": "deichman:agents"
+    "agents": "deichman:agents",
+    "abstract": "deichman:abstract"
   }
 }
