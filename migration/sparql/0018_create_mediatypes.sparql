@@ -94,3 +94,37 @@ WHERE {
     a :Publication .
 }
 ;
+
+
+# 4) Add media type and format for card games and board games
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+PREFIX format: <http://data.deichman.no/format#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?pub :genre <http://__HOST__/genre/g2049303700> .
+  ?pub :genre <http://__HOST__/genre/g2049303800> .
+}
+
+INSERT {
+  ?pub :mediaType mediaType:Game ;
+    :format ?format .
+}
+
+WHERE {
+  ?pub :format format:Physical_body ;
+    :genre ?genre ;
+    a :Publication .
+
+  VALUES (?genre  ?format) {
+    (<http://__HOST__/genre/g2049303700>   format:BoardGame)
+    (<http://__HOST__/genre/g2049303800>   format:CardGame)
+  }
+}
+;
