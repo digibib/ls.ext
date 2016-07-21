@@ -192,3 +192,11 @@ format:Diapositive a duo:Format ;
   rdfs:label "Dias"@no ;
   rdfs:label "Diapositive"@en .
 
+format:BoardGame a duo:Format ;
+  rdfs:label "Brettspill"@no ;
+  rdfs:label "Board Game"@en .
+
+format:CardGame a duo:Format ;
+  rdfs:label "Kortspill"@no ;
+  rdfs:label "Card Game"@en .
+
