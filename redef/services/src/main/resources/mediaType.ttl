@@ -29,3 +29,11 @@ mediaType:Film a duo:MediaType ;
 mediaType:Game a duo:MediaType ;
   rdfs:label "Spill"@no ;
   rdfs:label "Game"@en .
+
+mediaType:Map a duo:MediaType ;
+  rdfs:label "Kart"@no ;
+  rdfs:label "Map"@en .
+
+mediaType:Periodical a duo:MediaType ;
+  rdfs:label "Periodika"@no ;
+  rdfs:label "Periodical"@en .

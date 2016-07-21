@@ -1,4 +1,4 @@
-# 1) Construct media type based on format
+# 1) Construct media type based on format, keep format
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -18,11 +18,7 @@ WHERE {
     VALUES (?format ?mediaType) {
       (format:Book                    mediaType:Book)
       (format:E-Book                  mediaType:Book)
-      (format:Audiobook               mediaType:Audiobook)
       (format:DAISY                   mediaType:Audiobook)
-      (format:Language_course         mediaType:LanguageCourse)
-      (format:Music_recording         mediaType:MusicRecording)
-      (format:Sheet_music             mediaType:SheetMusic)
       (format:Videotape               mediaType:Film)
       (format:DVD                     mediaType:Film)
       (format:Blu-ray_Disk            mediaType:Film)
@@ -38,8 +34,42 @@ WHERE {
 }
 ;
 
+# 2) Replace format with Media Type
 
-# 2) Change media type for comics
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY 
+
+DELETE {
+  ?pub :format ?format .
+}
+
+INSERT {
+  ?pub :mediaType ?mediaType
+}
+
+WHERE {
+    ?pub a :Publication ;
+         :format ?format  .
+
+    VALUES (?format ?mediaType) {
+      (format:Audiobook               mediaType:Audiobook)
+      (format:Language_course         mediaType:LanguageCourse)
+      (format:Music_recording         mediaType:MusicRecording)
+      (format:Sheet_music             mediaType:SheetMusic)
+      (format:Map                     mediaType:Map)
+      (format:Periodical              mediaType:Periodical)
+    }
+}
+;
+
+
+# 3) Change media type for comic books
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
