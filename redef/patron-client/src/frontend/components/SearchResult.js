@@ -21,12 +21,12 @@ class SearchResult extends React.Component {
   renderContributors (contributors) {
     if (contributors.length > 0) {
       return (
-        <p data-automation-id="work_contributors"> {contributors.map(contribution => (
-          <span
-            key={contribution.agent.relativeUri}>{this.props.intl.formatMessage({ id: contribution.role })}: <strong><Link
-            to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></strong></span>
+        <div data-automation-id="work_contributors"> {contributors.map(contribution => (
+          <p
+            key={contribution.agent.relativeUri}><strong>{this.props.intl.formatMessage({ id: contribution.role })}: </strong><Link
+            to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></p>
         ))}
-        </p>
+        </div>
       )
     }
   }
@@ -57,14 +57,12 @@ class SearchResult extends React.Component {
     if (result.subject) {
       return (
         <p data-automation-id="work_subjects">
-          <strong>
-            <FormattedMessage {...messages.subjects} />
-            {result.subject.map(subject => (
+          <strong><FormattedMessage {...messages.subjects} /></strong><br />
+            {result.subject.map((subject, i) => (
               <span key={subject}>
-                <Link to={this.subjectSearchLink(subject)}> {subject} </Link>
+                <Link to={this.subjectSearchLink(subject)}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
                 </span>
             ))}
-          </strong>
         </p>
       )
     }
@@ -137,16 +135,16 @@ class SearchResult extends React.Component {
             {this.renderOriginalTitle(result.publication)}
           </div>
 
-          <div>
-            {this.renderSubjects(result.publication)}
-          </div>
-
           {firstPublishedYear
             ? <div>
-                <strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span>
+                <p><strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span></p>
               </div>
             : null
           }
+
+          <div>
+            {this.renderSubjects(result.publication)}
+          </div>
 
           <div>
             <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
