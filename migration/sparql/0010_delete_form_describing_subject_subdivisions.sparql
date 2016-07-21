@@ -81,16 +81,23 @@ WHERE {
 ;
 
 
-# 4) Slett emneinnførsler på underavdeling "Filmer"
+# 4) Slett emneinnførsler på underavdeling "Filmer", legg til som mediatype
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
 
 WITH <http://deichman.no/migration>
 
+MODIFY
+
 DELETE {
     ?doc :subject <http://__HOST__/subject/se0b8be8ffba2e9d06835d2f508501be8> .
+}
+
+INSERT {
+    ?doc :mediaType mediaType:Film .
 }
 
 WHERE {
