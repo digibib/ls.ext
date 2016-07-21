@@ -24,6 +24,7 @@ WHERE {
 # 2) workAuthority for utgivelser med editor
 
 SPARQL
+DEFINE sql:log-enable 2
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
@@ -49,6 +50,7 @@ WHERE {
 # 3) workAuthority for utgivelser med director
 
 SPARQL
+DEFINE sql:log-enable 2
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
@@ -74,6 +76,7 @@ WHERE {
 # 4) workAuthority for utgivelser med composer
 
 SPARQL
+DEFINE sql:log-enable 2
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
@@ -125,6 +128,7 @@ WHERE {
 # 6) workAuthority for utgivelser med illustrator
 
 SPARQL
+DEFINE sql:log-enable 2
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
@@ -177,6 +181,7 @@ WHERE {
 # 8) workAuthority for utgivelser med contributor
 
 SPARQL
+DEFINE sql:log-enable 2
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
@@ -231,6 +236,7 @@ WHERE {
 # 20) Verk fra utgivelser med originaltittel
 
 SPARQL
+DEFINE sql:log-enable 2
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
