@@ -85,7 +85,7 @@ DELETE {
 }
 
 INSERT {
-  ?pub :mediaType mediaType:comicBook .
+  ?pub :mediaType mediaType:ComicBook .
 }
 
 WHERE {
