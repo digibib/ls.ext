@@ -30,6 +30,10 @@ mediaType:Game a duo:MediaType ;
   rdfs:label "Spill"@no ;
   rdfs:label "Game"@en .
 
+mediaType:ComicBook a duo:MediaType ;
+  rdfs:label "Tegneserie"@no ;
+  rdfs:label "Comic book"@en .
+
 mediaType:Map a duo:MediaType ;
   rdfs:label "Kart"@no ;
   rdfs:label "Map"@en .
