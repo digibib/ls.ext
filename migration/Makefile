@@ -76,6 +76,11 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@sudo docker run --net=dockercompose_backend --rm -v dockercompose_koha_state:/data -v $(shell pwd)/out:/out busybox cp /out/catalogue.mrc /data/
 	@echo "-- Importing to Koha with bulkmarcimport"
 	@sudo docker exec koha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
+	@touch out/done.migrate_catalogue_to_koha
+	@echo "OK Done importing catalogue into Koha\n"
+
+out/done.messing_with_migrated_catalogue: out/done.migrate_catalogue_to_koha
+	@echo "   Messing with the migrated catalogue in Koha"
 	@echo "-- Updating biblionumbers (so that biblionumber=tittelnummer)"
 	@cp sql/*.sql out/
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
@@ -83,8 +88,8 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec koha /bin/sh -c 'sudo koha-start-zebra $$KOHA_INSTANCE'
-	@echo "OK Done importing catalogue into Koha\n"
-	@touch out/done.migrate_catalogue_to_koha
+	@touch out/done.messing_with_migrated_catalogue
+	@echo "OK Done messing with catalogue\n"
 
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
@@ -192,7 +197,7 @@ ifdef MIGRATE_PATRONS
 endif
 	@touch out/done.migrate_patrons
 
-out/done.migrate_loans: out/done.migrate_patrons out/done.migrate_catalogue_to_koha
+out/done.migrate_loans: out/done.migrate_patrons out/done.messing_with_migrated_catalogue
 ifdef MIGRATE_PATRONS
 	@echo "   Migrating active loans to Koha"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
@@ -200,7 +205,7 @@ ifdef MIGRATE_PATRONS
 	@touch out/done.migrate_loans
 endif
 
-out/done.migrate_holds: out/done.migrate_patrons out/done.migrate_catalogue_to_koha
+out/done.migrate_holds: out/done.migrate_patrons out/done.messing_with_migrated_catalogue
 ifdef MIGRATE_PATRONS
 	@echo "   Migrating holds to Koha"
 	@echo "-- Generating holds SQL"
