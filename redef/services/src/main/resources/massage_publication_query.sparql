@@ -33,7 +33,7 @@ CONSTRUCT {
                deich:name ?contribAgentName ;
                deich:birthYear ?contribAgentBirthYear ;
                deich:deathYear ?contribAgentDeathYear .
-      ?subject deich:name ?subjectName .
+      ?subject deich:name ?subjectLabel .
 }
 WHERE {
   BIND(uri("__PUBLICATIONURI__") AS ?pub)
@@ -93,6 +93,8 @@ WHERE {
       ?subject a deich:Person ;
               deich:name ?subjectName  .
     }
+    OPTIONAL { ?work deich:subject ?subject . ?subject deich:specification ?subjectSpec }
+    BIND(IF(BOUND(?subjectSpec), CONCAT(?subjectName, " (", ?subjectSpec, ")"), ?subjectName) AS ?subjectLabel)
   }
 
   OPTIONAL { ?pub deich:mainTitle ?pubMainTitle }
