@@ -1,0 +1,19 @@
+# Legg til role:author på utgivelser som har mainEntry uten rolle
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX role: <http://data.deichman.no/role#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+	?publication migration:mainEntryRole role:author .
+}
+
+WHERE {
+	?publication :mainEntry ?agent ;
+		a :Publication .
+	MINUS {?publication migration:mainEntryRole ?role .}
+}
+;
