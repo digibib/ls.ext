@@ -117,9 +117,11 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "-- Running SPARQL queries to massage resources (create works & relationships)"
 	@ls sparql/*.sparql | xargs sed -e s/__HOST__/$(HOST):8005/g | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba > /dev/null # TODO minimize output from isql
 	@echo "-- Constructing the complete RDF resources to be migrated (resources.nt)"
-	@$(MIGRATION_RUN_CMD) 'construct -se=http://$(HOST):8005 -ve=http://virtuoso:8890/sparql > /out/resources.nt'
-	@echo "-- Splitting resources.nt into chunks"
-	@$(MIGRATION_RUN_CMD) 'split --additional-suffix=.nt --lines 250000 /out/resources.nt /out/complete'
+	@$(MIGRATION_RUN_CMD) 'construct -n=3 -se=http://$(HOST):8005 -ve=http://virtuoso:8890/sparql > /out/resources.nt'
+	@echo "-- Anonymizing blank nodes"
+	@$(TIMEIT) $(MIGRATION_RUN_CMD) 'nt2ttl -f=/out/resources.nt > /out/resources.ttl'
+	@echo "-- Splitting resources.ttl into chunks"
+	@$(MIGRATION_RUN_CMD) 'split --additional-suffix=.ttl --lines 250000 /out/resources.ttl /out/complete'
 	@echo "-- Clearing default graph in Fuseki"
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST --data-urlencode update="clear default" http://fuseki:3030/ds/update' > /dev/null
 	@echo "-- Importing chunks into Fuseki"
