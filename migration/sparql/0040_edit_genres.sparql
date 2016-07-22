@@ -1,0 +1,30 @@
+# 1) Slett sjanger på tegneserier med underavdeling, legg til underavdeling som sjanger
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX raw: <http://__HOST__/raw#>
+PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+    ?work :genre ?genre .
+}
+
+INSERT {
+	?work :literaryForm literaryForm:comicBook ;
+		:genre `IRI(CONCAT(STR("http://__HOST__/genre/g"), MD5(?subdivision)))` .
+	`IRI(CONCAT(STR("http://__HOST__/genre/g"), MD5(?subdivision)))` a :Genre ;
+		:prefLabel ?subdivision .
+}
+
+WHERE {
+    ?genre :prefLabel "Tegneserier" ;
+    	raw:genreSubdivision ?subdivision ;
+    	a :Genre .
+    ?work :genre ?genre ;
+    	a :Work.
+}
+;
