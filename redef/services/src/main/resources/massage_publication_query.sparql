@@ -18,7 +18,7 @@ CONSTRUCT {
                deich:hasImage ?img ;
                deich:hasImageAll ?allImg ;
                deich:workUri ?workUri ;
-               deich:subject ?subjectName ;
+               deich:subject ?subjectLabel ;
                deich:audience ?audience ;
                deich:agents ?contribAgentName ;
                ?contribRoleURI ?contribAgentName ;
@@ -33,7 +33,6 @@ CONSTRUCT {
                deich:name ?contribAgentName ;
                deich:birthYear ?contribAgentBirthYear ;
                deich:deathYear ?contribAgentDeathYear .
-      ?subject deich:name ?subjectLabel .
 }
 WHERE {
   BIND(uri("__PUBLICATIONURI__") AS ?pub)
