@@ -19,3 +19,20 @@ INSERT {
 }
 }
 ;
+
+# 2) Velg den mainEntryRole som IKKE er author, dersom det er flere ulike som tilhører samme verk
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+WITH <http://deichman.no/migration>
+DELETE { ?pub1 migration:mainEntryRole <http://data.deichman.no/role#author> }
+INSERT { ?pub1 migration:mainEntryRole ?role }
+WHERE {
+	?pub1 :publicationOf ?work ;
+		  migration:mainEntryRole <http://data.deichman.no/role#author> .
+	?pub2 :publicationOf ?work ;
+		  migration:mainEntryRole ?role .
+    MINUS { ?pub2 migration:mainEntryRole <http://data.deichman.no/role#author> }
+	FILTER(?pub1 != ?pub2)
+}
+;
