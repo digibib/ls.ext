@@ -184,7 +184,7 @@ const messages = defineMessages({
     defaultMessage: 'Last name'
   },
   personInfoLegend: {
-    id: 'RegistrationFormPartTwo.personInfoLegend',
+    id: 'RegistrationFormPartOne.personInfoLegend',
     description: 'Fieldset legend for personal information',
     defaultMessage: 'Personal information'
   },

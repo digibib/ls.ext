@@ -136,46 +136,6 @@ const messages = defineMessages({
     description: 'The label for the email',
     defaultMessage: 'Email'
   },
-  birthdate: {
-    id: 'UserInfoForm.birthdate',
-    description: 'The label for the birth date',
-    defaultMessage: 'Birth date'
-  },
-  loanerCardIssued: {
-    id: 'UserInfoForm.loanerCardIssued',
-    description: 'The label for when the loaner card was issued',
-    defaultMessage: 'Loaner card issue date'
-  },
-  loanerCategory: {
-    id: 'UserInfoForm.loanerCategory',
-    description: 'The label for the loaner category',
-    defaultMessage: 'Loaner category'
-  },
-  editPersonalInfo: {
-    id: 'UserInfoForm.editPersonalInfo',
-    description: 'The label for the edit personal information button',
-    defaultMessage: 'Edit personal information'
-  },
-  saveChanges: {
-    id: 'UserInfoForm.saveChanges',
-    description: 'The label for the save changes button',
-    defaultMessage: 'Save changes'
-  },
-  lastUpdated: {
-    id: 'UserInfoForm.lastUpdated',
-    description: 'The label for the last updated field',
-    defaultMessage: 'Last updated'
-  },
-  borrowerNumber: {
-    id: 'UserInfoForm.borrowerNumber',
-    description: 'The label for borrower number',
-    defaultMessage: 'Borrower number'
-  },
-  personalInformationError: {
-    id: 'UserInfoForm.personalInformationError',
-    description: 'The text shown when retrieving personal information has failed.',
-    defaultMessage: 'Something went wrong when retrieving personal information.'
-  },
   required: {
     id: 'UserInfoForm.required',
     description: 'Displayed below a field when not filled out',

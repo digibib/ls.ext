@@ -235,7 +235,7 @@ const messages = defineMessages({
     defaultMessage: 'Accept Terms and Conditions'
   },
   cancel: {
-    id: 'RegistrationModal.cancel',
+    id: 'RegistrationFormPartTwo.cancel',
     description: 'The cancel button text',
     defaultMessage: 'Cancel'
   }
