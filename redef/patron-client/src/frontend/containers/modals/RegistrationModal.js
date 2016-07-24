@@ -105,7 +105,6 @@ const messages = defineMessages({
 RegistrationModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
-  libraries: PropTypes.object.isRequired,
   username: PropTypes.string,
   message: PropTypes.string,
   isError: PropTypes.bool,

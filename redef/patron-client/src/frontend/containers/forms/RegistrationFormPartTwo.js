@@ -249,7 +249,10 @@ RegistrationFormPartTwo.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   libraries: PropTypes.object.isRequired,
   submitting: PropTypes.bool.isRequired,
-  asyncValidating: PropTypes.string.isRequired,
+  asyncValidating: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool
+  ]).isRequired,
   username: PropTypes.string,
   message: PropTypes.string,
   isError: PropTypes.bool,
@@ -323,9 +326,6 @@ const asyncValidate = (values/*, dispatch*/) => {
         if (Object.keys(json.errors).length === 0) {
           resolve()
         } else {
-          Object.keys(json.errors).forEach(key => {
-            json.errors[ key ] = messages[ json.errors[ key ] ]
-          })
           reject(json.errors)
         }
       })

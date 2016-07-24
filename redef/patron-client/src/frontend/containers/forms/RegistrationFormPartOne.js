@@ -5,6 +5,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import fetch from 'isomorphic-fetch'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
+import * as ModalActions from '../../actions/ModalActions'
 import fields from '../../../common/forms/registrationPartOne'
 import ValidationMessage from '../../components/ValidationMessage'
 
@@ -230,9 +231,11 @@ RegistrationFormPartOne.propTypes = {
   registrationActions: PropTypes.object.isRequired,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  libraries: PropTypes.object.isRequired,
   submitting: PropTypes.bool.isRequired,
-  asyncValidating: PropTypes.string.isRequired,
+  asyncValidating: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool
+  ]).isRequired,
   username: PropTypes.string,
   message: PropTypes.string,
   isError: PropTypes.bool,
@@ -267,7 +270,8 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    registrationActions: bindActionCreators(RegistrationActions, dispatch)
+    registrationActions: bindActionCreators(RegistrationActions, dispatch),
+    modalActions: bindActionCreators(ModalActions, dispatch)
   }
 }
 
@@ -296,9 +300,6 @@ const asyncValidate = (values/*, dispatch*/) => {
         if (Object.keys(json.errors).length === 0) {
           resolve()
         } else {
-          Object.keys(json.errors).forEach(key => {
-            //json.errors[ key ] = messages[ json.errors[ key ] ]
-          })
           reject(json.errors)
         }
       })

@@ -10,7 +10,7 @@ class ValidationMessage extends React.Component {
 }
 
 ValidationMessage.propTypes = {
-  message: PropTypes.array.isRequired
+  message: PropTypes.string.isRequired
 }
 
 const messages = defineMessages({
