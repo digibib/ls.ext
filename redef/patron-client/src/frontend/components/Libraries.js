@@ -6,9 +6,11 @@ class Libraries extends React.Component {
     const libraries = this.props.libraries
     Object.keys(libraries).forEach(branchCode => {
       const branchName = libraries[ branchCode ]
-      branchOptions.push(<option key={branchCode} value={branchCode}>
-        {branchName}
-      </option>)
+      branchOptions.push(
+        <option key={branchCode} value={branchCode}>
+          {branchName}
+        </option>
+      )
     })
     return branchOptions
   }
