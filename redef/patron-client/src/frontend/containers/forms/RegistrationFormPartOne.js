@@ -6,6 +6,7 @@ import fetch from 'isomorphic-fetch'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import fields from '../../../common/forms/registrationPartOne'
+import ValidationMessage from '../../components/ValidationMessage'
 
 class RegistrationFormPartOne extends React.Component {
   constructor (props) {
@@ -50,7 +51,7 @@ class RegistrationFormPartOne extends React.Component {
 
   getValidator (field) {
     if (field.touched && field.error) {
-      return <div style={{ color: 'red' }}>{this.props.intl.formatMessage(field.error)}</div>
+      return <div style={{ color: 'red' }}><ValidationMessage message={field.error} /></div>
     }
   }
 
@@ -220,31 +221,6 @@ const messages = defineMessages({
     id: 'RegistrationFormPartOne.ssninfo',
     description: 'Expanded info on ssn',
     defaultMessage: 'SSN is your personal Social security number. It is either ... etc'
-  },
-  required: {
-    id: 'RegistrationFormPartOne.required',
-    description: 'Displayed below a field when not filled out',
-    defaultMessage: 'Required'
-  },
-  invalidYear: {
-    id: 'RegistrationFormPartOne.invalidYear',
-    description: 'Displayed when the year is not valid',
-    defaultMessage: 'Invalid year'
-  },
-  invalidMonth: {
-    id: 'RegistrationFormPartOne.invalidMonth',
-    description: 'Displayed when the month is not valid',
-    defaultMessage: 'Invalid month'
-  },
-  invalidDay: {
-    id: 'RegistrationFormPartOne.invalidDay',
-    description: 'Displayed when the day is not valid',
-    defaultMessage: 'Invalid day'
-  },
-  illegalCharacters: {
-    id: 'RegistrationFormPartOne.illegalCharacters',
-    description: 'Displayed when the input contains illegal characters',
-    defaultMessage: 'Illegal characters'
   }
 })
 
@@ -302,7 +278,7 @@ const validate = values => {
   const errors = {}
   Object.keys(fields).filter(field => fields[ field ].required).forEach(field => {
     if (!values[ field ]) {
-      errors[ field ] = messages.required
+      errors[ field ] = 'required'
     }
   })
   return errors
@@ -321,7 +297,7 @@ const asyncValidate = (values/*, dispatch*/) => {
           resolve()
         } else {
           Object.keys(json.errors).forEach(key => {
-            json.errors[ key ] = messages[ json.errors[ key ] ]
+            //json.errors[ key ] = messages[ json.errors[ key ] ]
           })
           reject(json.errors)
         }

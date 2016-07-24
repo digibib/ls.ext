@@ -8,6 +8,7 @@ import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as ModalActions from '../../actions/ModalActions'
 import Libraries from '../../components/Libraries'
 import fields from '../../../common/forms/registrationPartTwo'
+import ValidationMessage from '../../components/ValidationMessage'
 
 class RegistrationFormPartTwo extends React.Component {
   constructor (props) {
@@ -37,7 +38,7 @@ class RegistrationFormPartTwo extends React.Component {
 
   getValidator (field) {
     if (field.touched && field.error) {
-      return <div style={{ color: 'red' }}>{this.props.intl.formatMessage(field.error)}</div>
+      return <div style={{ color: 'red' }}><ValidationMessage message={field.error} /></div>
     }
   }
 
@@ -203,26 +204,6 @@ const messages = defineMessages({
     description: 'The register button text',
     defaultMessage: 'Register'
   },
-  required: {
-    id: 'RegistrationFormPartTwo.required',
-    description: 'Displayed below a field when not filled out',
-    defaultMessage: 'Required'
-  },
-  invalidEmail: {
-    id: 'RegistrationFormPartTwo.invalidEmail',
-    description: 'Displayed when the email is not valid',
-    defaultMessage: 'Invalid email address'
-  },
-  illegalCharacters: {
-    id: 'RegistrationFormPartTwo.illegalCharacters',
-    description: 'Displayed when the input contains illegal characters',
-    defaultMessage: 'Illegal characters'
-  },
-  pinMustBeEqual: {
-    id: 'RegistrationFormPartTwo.pinsMustBeEqual',
-    description: 'Displayed when the pin and repeat pin is not equal',
-    defaultMessage: 'PINs must be equal'
-  },
   contactInfoLegend: {
     id: 'RegistrationFormPartTwo.contactInfoLegend',
     description: 'Fieldset legend for contact information',
@@ -319,13 +300,13 @@ const validate = values => {
   const errors = {}
   Object.keys(fields).filter(field => fields[ field ].required).forEach(field => {
     if (!values[ field ]) {
-      errors[ field ] = messages.required
+      errors[ field ] = 'required'
     }
   })
   if (!values.pin) {
-    errors.pin = messages.required
+    errors.pin = 'required'
   } else if (values.pin !== values.repeatPin) {
-    errors.repeatPin = messages.pinMustBeEqual
+    errors.repeatPin = 'pinMustBeEqual'
   }
   return errors
 }
