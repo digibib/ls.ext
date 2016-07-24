@@ -138,22 +138,6 @@ class RegistrationFormPartTwo extends React.Component {
 }
 
 const messages = defineMessages({
-  button: {
-    id: 'RegistrationFormPartTwo.button',
-    description: 'The button to exit the modal dialog',
-    defaultMessage: 'Close'
-  },
-  cancel: {
-    id: 'RegistrationFormPartTwo.cancel',
-    description: 'The cancel button text',
-    defaultMessage: 'Cancel'
-  },
-
-  registerAsLoaner: {
-    id: 'RegistrationFormPartTwo.registerAsLoaner',
-    description: 'The header text of the modal dialog',
-    defaultMessage: 'Register as loaner'
-  },
   email: {
     id: 'RegistrationFormPartTwo.email',
     description: 'Label for the email field',
@@ -214,11 +198,6 @@ const messages = defineMessages({
     description: 'Label for repeating chosen pin field',
     defaultMessage: 'Bekreft PIN'
   },
-  history: {
-    id: 'RegistrationFormPartTwo.history',
-    description: 'Label for the history field',
-    defaultMessage: 'History'
-  },
   register: {
     id: 'RegistrationFormPartTwo.register',
     description: 'The register button text',
@@ -243,11 +222,6 @@ const messages = defineMessages({
     id: 'RegistrationFormPartTwo.pinsMustBeEqual',
     description: 'Displayed when the pin and repeat pin is not equal',
     defaultMessage: 'PINs must be equal'
-  },
-  personInfoLegend: {
-    id: 'RegistrationFormPartTwo.personInfoLegend',
-    description: 'Fieldset legend for personal information',
-    defaultMessage: 'Personal information'
   },
   contactInfoLegend: {
     id: 'RegistrationFormPartTwo.contactInfoLegend',
@@ -274,15 +248,15 @@ const messages = defineMessages({
     description: 'Choose home branch label',
     defaultMessage: 'Choose Your Home Branch'
   },
-  rememberHistory: {
-    id: 'RegistrationFormPartTwo.rememberHistory',
-    description: 'Toggle for choice to remember Loans',
-    defaultMessage: 'Remember Loans (history)'
-  },
   acceptTermsLink: {
     id: 'RegistrationFormPartTwo.acceptTermsLink',
     description: 'Link text for Terms and Conditions',
     defaultMessage: 'Accept Terms and Conditions'
+  },
+  cancel: {
+    id: 'RegistrationModal.cancel',
+    description: 'The cancel button text',
+    defaultMessage: 'Cancel'
   }
 })
 

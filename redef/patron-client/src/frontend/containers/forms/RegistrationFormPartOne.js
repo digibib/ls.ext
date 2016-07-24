@@ -136,16 +136,6 @@ class RegistrationFormPartOne extends React.Component {
 }
 
 const messages = defineMessages({
-  button: {
-    id: 'RegistrationFormPartOne.button',
-    description: 'The button to exit the modal dialog',
-    defaultMessage: 'Close'
-  },
-  registration: {
-    id: 'RegistrationFormPartOne.registration',
-    description: 'The extend loan button text',
-    defaultMessage: 'Register'
-  },
   checkForExistingUser: {
     id: 'RegistrationFormPartOne.checkForExistingUser',
     description: 'The user validation button in registration form',
@@ -171,11 +161,6 @@ const messages = defineMessages({
     description: 'Message displayed to user when already registered in the Norwegian Patron DB',
     defaultMessage: 'User seems to be already registered in the Norwegian Patron Database. Please contact library to get credentials'
   },
-  validate: {
-    id: 'RegistrationFormPartOne.validate',
-    description: 'The validate user button in registration form',
-    defaultMessage: 'Validate'
-  },
   cancel: {
     id: 'RegistrationFormPartOne.cancel',
     description: 'The cancel button text',
@@ -195,6 +180,11 @@ const messages = defineMessages({
     id: 'RegistrationFormPartOne.lastName',
     description: 'Label for the last name field',
     defaultMessage: 'Last name'
+  },
+  personInfoLegend: {
+    id: 'RegistrationFormPartTwo.personInfoLegend',
+    description: 'Fieldset legend for personal information',
+    defaultMessage: 'Personal information'
   },
   day: {
     id: 'RegistrationFormPartOne.day',
@@ -231,20 +221,10 @@ const messages = defineMessages({
     description: 'Expanded info on ssn',
     defaultMessage: 'SSN is your personal Social security number. It is either ... etc'
   },
-  register: {
-    id: 'RegistrationFormPartOne.register',
-    description: 'The register button text',
-    defaultMessage: 'Register'
-  },
   required: {
     id: 'RegistrationFormPartOne.required',
     description: 'Displayed below a field when not filled out',
     defaultMessage: 'Required'
-  },
-  invalidEmail: {
-    id: 'RegistrationFormPartOne.invalidEmail',
-    description: 'Displayed when the email is not valid',
-    defaultMessage: 'Invalid email address'
   },
   invalidYear: {
     id: 'RegistrationFormPartOne.invalidYear',
@@ -265,51 +245,6 @@ const messages = defineMessages({
     id: 'RegistrationFormPartOne.illegalCharacters',
     description: 'Displayed when the input contains illegal characters',
     defaultMessage: 'Illegal characters'
-  },
-  pinMustBeEqual: {
-    id: 'RegistrationFormPartOne.pinsMustBeEqual',
-    description: 'Displayed when the pin and repeat pin is not equal',
-    defaultMessage: 'PINs must be equal'
-  },
-  personInfoLegend: {
-    id: 'RegistrationFormPartOne.personInfoLegend',
-    description: 'Fieldset legend for personal information',
-    defaultMessage: 'Personal information'
-  },
-  contactInfoLegend: {
-    id: 'RegistrationFormPartOne.contactInfoLegend',
-    description: 'Fieldset legend for contact information',
-    defaultMessage: 'Contact information'
-  },
-  personSettingsLegend: {
-    id: 'RegistrationFormPartOne.personSettingsLegend',
-    description: 'Fieldset legend for personal settings',
-    defaultMessage: 'Personal settings'
-  },
-  yesOption: {
-    id: 'RegistrationFormPartOne.yesOption',
-    description: 'Affirmative select option',
-    defaultMessage: 'Yes'
-  },
-  noOption: {
-    id: 'RegistrationFormPartOne.noOption',
-    description: 'Negative select option',
-    defaultMessage: 'No'
-  },
-  chooseBranch: {
-    id: 'RegistrationFormPartOne.chooseBranch',
-    description: 'Choose home branch label',
-    defaultMessage: 'Choose Your Home Branch'
-  },
-  rememberHistory: {
-    id: 'RegistrationFormPartOne.rememberHistory',
-    description: 'Toggle for choice to remember Loans',
-    defaultMessage: 'Remember Loans (history)'
-  },
-  acceptTermsLink: {
-    id: 'RegistrationFormPartOne.acceptTermsLink',
-    description: 'Link text for Terms and Conditions',
-    defaultMessage: 'Accept Terms and Conditions'
   }
 })
 
