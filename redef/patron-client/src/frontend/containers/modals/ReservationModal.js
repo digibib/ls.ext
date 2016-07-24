@@ -3,11 +3,11 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-import * as ReservationActions from '../actions/ReservationActions'
-import * as ModalActions from '../actions/ModalActions'
-import Libraries from '../components/Libraries'
+import * as ReservationActions from '../../actions/ReservationActions'
+import * as ModalActions from '../../actions/ModalActions'
+import Libraries from '../../components/Libraries'
 
-class Reservation extends React.Component {
+class ReservationModal extends React.Component {
   constructor (props) {
     super(props)
     this.handleReserve = this.handleReserve.bind(this)
@@ -82,7 +82,7 @@ class Reservation extends React.Component {
   }
 }
 
-Reservation.propTypes = {
+ReservationModal.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   isRequestingReservation: PropTypes.bool.isRequired,
   reservationActions: PropTypes.object.isRequired,
@@ -96,47 +96,47 @@ Reservation.propTypes = {
 
 const messages = defineMessages({
   choosePickupLocation: {
-    id: 'Reservation.choosePickupLocation',
+    id: 'ReservationModal.choosePickupLocation',
     description: 'The label for choosing pickup location:',
     defaultMessage: 'Choose pickup location'
   },
   reserve: {
-    id: 'Reservation.reserve',
+    id: 'ReservationModal.reserve',
     description: 'The label the reserve button',
     defaultMessage: 'Reserve'
   },
   cancel: {
-    id: 'Reservation.cancel',
+    id: 'ReservationModal.cancel',
     description: 'The label for the cancel button',
     defaultMessage: 'Cancel'
   },
   headerTextSuccess: {
-    id: 'Reservation.headerTextSuccess',
+    id: 'ReservationModal.headerTextSuccess',
     description: 'The header text for the reservation success dialog',
     defaultMessage: 'The reservation is successful.'
   },
   messageSuccess: {
-    id: 'Reservation.messageSuccess',
+    id: 'ReservationModal.messageSuccess',
     description: 'The reservation success message',
     defaultMessage: 'You will receive a message by e-mail or SMS when it is ready for pickup.'
   },
   headerTextError: {
-    id: 'Reservation.headerTextError',
+    id: 'ReservationModal.headerTextError',
     description: 'The header text for the reservation error dialog',
     defaultMessage: 'The reservation failed.'
   },
   genericReservationError: {
-    id: 'Reservation.genericReservationError',
+    id: 'ReservationModal.genericReservationError',
     description: 'A generic reservation error message',
     defaultMessage: 'Something went wrong when reserving #sadpanda'
   },
   tooManyReserves: {
-    id: 'Reservation.tooManyReserves',
+    id: 'ReservationModal.tooManyReserves',
     description: 'The error message when the user has too many reserves',
     defaultMessage: 'Too many reserves already placed.'
   },
   button: {
-    id: 'Reservation.button',
+    id: 'ReservationModal.button',
     description: 'The button to exit the modal dialog',
     defaultMessage: 'OK'
   }
@@ -158,9 +158,9 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-export { Reservation as Reservation }
+export { ReservationModal as ReservationModal }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Reservation)
+)(ReservationModal)

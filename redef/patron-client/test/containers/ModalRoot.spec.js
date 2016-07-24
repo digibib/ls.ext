@@ -62,12 +62,12 @@ describe('containers', () => {
       expect(node.querySelectorAll("[data-automation-id='login_modal']").length).toBe(1)
     })
 
-    it('should display Reservation modal', () => {
+    it('should display ReservationModal', () => {
       const { node } = setup({ modalType: 'RESERVATION', modalProps: {recordId: 'test_recordId'} })
       expect(node.querySelectorAll("[data-automation-id='reservation_modal']").length).toBe(1)
     })
 
-    it('should display ExtendLoan modal', () => {
+    it('should display ExtendLoanModal', () => {
       const { node } = setup({ modalType: 'EXTEND_LOAN', modalProps: {checkoutId: 'test_checkoutId'} })
       expect(node.querySelectorAll("[data-automation-id='extend_loan_modal']").length).toBe(1)
     })

@@ -3,9 +3,9 @@ import { reduxForm, reset } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-import * as ProfileActions from '../actions/ProfileActions'
+import * as ProfileActions from '../../actions/ProfileActions'
 
-class ChangePin extends React.Component {
+class ChangePinForm extends React.Component {
   constructor (props) {
     super(props)
     this.handleChangePin = this.handleChangePin.bind(this)
@@ -91,63 +91,63 @@ class ChangePin extends React.Component {
 
 const messages = defineMessages({
   changePin: {
-    id: 'ChangePin.changePin',
+    id: 'ChangePinForm.changePin',
     description: 'The change PIN code header and button text',
     defaultMessage: 'Change PIN code'
   },
   pinInfo: {
-    id: 'ChangePin.pinInfo',
+    id: 'ChangePinForm.pinInfo',
     description: 'Important information about PIN codes',
     defaultMessage: 'Important information, read this: New passwords must be provided in the form of a 4 digit PIN code. Do not use PIN codes that you have used other places. Choose a PIN code that noone can guess. Avoid PINs such as 1111 and 1234.'
   },
   currentPin: {
-    id: 'ChangePin.currentPin',
+    id: 'ChangePinForm.currentPin',
     description: 'The label for the current PIN input',
     defaultMessage: 'Current PIN code'
   },
   newPin: {
-    id: 'ChangePin.newPin',
+    id: 'ChangePinForm.newPin',
     description: 'The label for the new PIN input',
     defaultMessage: 'New PIN code'
   },
   repeatPin: {
-    id: 'ChangePin.repeatPin',
+    id: 'ChangePinForm.repeatPin',
     description: 'The label for the input where the new PIN is repeated',
     defaultMessage: 'Repeat PIN code'
   },
   currentPinRequired: {
-    id: 'ChangePin.currentPinRequired',
+    id: 'ChangePinForm.currentPinRequired',
     description: 'The error message when current PIN is not provided',
     defaultMessage: 'Current PIN must be provided'
   },
   newPinRequired: {
-    id: 'ChangePin.newPinRequired',
+    id: 'ChangePinForm.newPinRequired',
     description: 'The error message when a new PIN is not provided',
     defaultMessage: 'A new PIN must be provided'
   },
   pinsMustBeEqual: {
-    id: 'ChangePin.pinsMustBeEqual',
+    id: 'ChangePinForm.pinsMustBeEqual',
     description: 'The error message when the two PIN fields do not match',
     defaultMessage: 'Must be equal'
   },
   currentPinNotCorrect: {
-    id: 'ChangePin.currentPinNotCorrect',
+    id: 'ChangePinForm.currentPinNotCorrect',
     description: 'Error when the current PIN is not correct',
     defaultMessage: 'The current PIN code is not correct'
   },
   genericChangePasswordError: {
-    id: 'ChangePin.genericChangePasswordError',
+    id: 'ChangePinForm.genericChangePasswordError',
     description: 'Generic error message when change of PIN fails',
     defaultMessage: 'Something went wrong when changing the PIN'
   },
   changePinSuccess: {
-    id: 'ChangePin.changePinSuccess',
+    id: 'ChangePinForm.changePinSuccess',
     description: 'Message shown when PIN successfully changed',
     defaultMessage: 'PIN was changed!'
   }
 })
 
-ChangePin.propTypes = {
+ChangePinForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   profileActions: PropTypes.object.isRequired,
   changePasswordSuccess: PropTypes.bool.isRequired,
@@ -173,8 +173,8 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const intlChangePin = injectIntl(ChangePin)
-export { intlChangePin as ChangePin }
+const intlChangePinForm = injectIntl(ChangePinForm)
+export { intlChangePinForm as ChangePinForm }
 
 const validate = (values, props) => {
   const errors = {}
@@ -201,4 +201,4 @@ export default reduxForm(
   },
   mapStateToProps,
   mapDispatchToProps
-)(intlChangePin)
+)(intlChangePinForm)

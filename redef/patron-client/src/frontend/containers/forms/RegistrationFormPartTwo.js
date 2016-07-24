@@ -338,8 +338,8 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const intlRegistration = injectIntl(RegistrationFormPartTwo)
-export { intlRegistration as Registration }
+const intlRegistrationFormPartTwo = injectIntl(RegistrationFormPartTwo)
+export { intlRegistrationFormPartTwo as RegistrationFormPartTwo }
 
 const validate = values => {
   const errors = {}
@@ -387,4 +387,4 @@ export default reduxForm(
   },
   mapStateToProps,
   mapDispatchToProps
-)(intlRegistration)
+)(intlRegistrationFormPartTwo)

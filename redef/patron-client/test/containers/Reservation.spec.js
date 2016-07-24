@@ -3,7 +3,7 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import { Reservation } from '../../src/frontend/containers/Reservation'
+import { Reservation } from '../../src/frontend/containers/modals/ReservationModal'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 

@@ -3,19 +3,15 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
-import * as LoanActions from '../actions/LoanActions'
-import * as ModalActions from '../actions/ModalActions'
+import * as ModalActions from '../../actions/ModalActions'
 
-class ExtendLoan extends React.Component {
+import FormPartTwo from '../forms/RegistrationFormPartTwo'
+import NameAndSsnForm from '../forms/RegistrationFormPartOne'
+
+class RegistrationModal extends React.Component {
   constructor (props) {
     super(props)
-    this.handleExtendLoan = this.handleExtendLoan.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
-  }
-
-  handleExtendLoan (event) {
-    event.preventDefault()
-    this.props.loanActions.extendLoan(this.props.checkoutId)
   }
 
   handleCancel (event) {
@@ -25,10 +21,11 @@ class ExtendLoan extends React.Component {
 
   renderSuccess () {
     return (
-      <div data-automation-id="extend_loan_success_modal" className="default-modal">
+      <div data-automation-id="registration_success_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
-          <FormattedMessage {...messages.messageSuccess} />
+          <FormattedMessage {...messages.messageSuccess} /><br />
+          <span data-automation-id="username">{this.props.username}</span>
         </p>
         <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
@@ -39,12 +36,12 @@ class ExtendLoan extends React.Component {
 
   renderError () {
     return (
-      <div data-automation-id="extend_loan_error_modal" className="default-modal">
+      <div data-automation-id="registration_error_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>
           {messages[ this.props.message ]
             ? <FormattedMessage {...messages[ this.props.message ]} />
-            : <FormattedMessage {...messages.genericExtendLoanError} />}
+            : <FormattedMessage {...messages.genericRegistrationError} />}
         </p>
         <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
@@ -60,16 +57,13 @@ class ExtendLoan extends React.Component {
       return this.renderSuccess()
     }
     return (
-      <div data-automation-id="extend_loan_modal" className="default-modal">
-        <h2>{this.props.message}</h2>
-        <button className="black-btn" disabled={this.props.isRequestingExtendLoan} onClick={this.handleExtendLoan}
-                data-automation-id="confirm_button">
-          <FormattedMessage {...messages.extendLoan} />
-        </button>
-        <button className="grey-btn" disabled={this.props.isRequestingExtendLoan} onClick={this.handleCancel}
-                data-automation-id="cancel_button">
-          <FormattedMessage {...messages.cancel} />
-        </button>
+      <div>
+        <section className="register-modal">
+          <div data-automation-id="registration_modal">
+            <NameAndSsnForm />
+            {this.props.checkForExistingUserSuccess ? <FormPartTwo /> : null}
+          </div>
+        </section>
       </div>
     )
   }
@@ -77,74 +71,68 @@ class ExtendLoan extends React.Component {
 
 const messages = defineMessages({
   button: {
-    id: 'ExtendLoan.button',
+    id: 'RegistrationModal.button',
     description: 'The button to exit the modal dialog',
     defaultMessage: 'Close'
   },
-  extendLoan: {
-    id: 'ExtendLoan.extendLoan',
-    description: 'The extend loan button text',
-    defaultMessage: 'Extend loan'
-  },
   cancel: {
-    id: 'ExtendLoan.cancel',
+    id: 'RegistrationModal.cancel',
     description: 'The cancel button text',
     defaultMessage: 'Cancel'
   },
   headerTextSuccess: {
-    id: 'ExtendLoan.headerTextSuccess',
-    description: 'The header text for the extend loan success dialog',
+    id: 'RegistrationModal.headerTextSuccess',
+    description: 'You are now ready to reserve and loan books at Deichman',
     defaultMessage: 'Success!'
   },
   messageSuccess: {
-    id: 'ExtendLoan.messageSuccess',
+    id: 'RegistrationModal.messageSuccess',
     description: 'The extend loan success message',
-    defaultMessage: 'The loan is now extended.'
+    defaultMessage: 'You have successfully registered. A temporary user id is given below. Please contact library to get a library card.'
   },
   headerTextError: {
-    id: 'ExtendLoan.headerTextError',
+    id: 'RegistrationModal.headerTextError',
     description: 'The header text for the extend loan error dialog',
     defaultMessage: 'Failure'
   },
-  genericExtendLoanError: {
-    id: 'ExtendLoan.genericExtendLoanError',
+  genericRegistrationError: {
+    id: 'RegistrationModal.genericRegistrationError',
     description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
-    defaultMessage: 'Something went wrong when attempting to extend loan!'
+    defaultMessage: 'Something went wrong when registering loaner. Please try again later.'
   }
 })
 
-ExtendLoan.propTypes = {
+RegistrationModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
-  loanActions: PropTypes.object.isRequired,
-  checkoutId: PropTypes.string.isRequired,
-  isRequestingExtendLoan: PropTypes.bool.isRequired,
+  libraries: PropTypes.object.isRequired,
+  username: PropTypes.string,
   message: PropTypes.string,
   isError: PropTypes.bool,
   isSuccess: PropTypes.bool,
+  isCheckingForExistingUser: PropTypes.bool,
+  checkForExistingUserSuccess: PropTypes.bool,
   intl: intlShape.isRequired
 }
 
 function mapStateToProps (state) {
   return {
-    isLoggedIn: state.application.isLoggedIn,
-    isRequestingExtendLoan: state.reservation.isRequestingExtendLoan,
-    loginError: state.application.loginError
+    isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
+    checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    loanActions: bindActionCreators(LoanActions, dispatch),
     modalActions: bindActionCreators(ModalActions, dispatch)
   }
 }
 
-const intlExtendLoan = injectIntl(ExtendLoan)
-export { intlExtendLoan as ExtendLoan }
+const intlRegistrationModal = injectIntl(RegistrationModal)
+export { intlRegistrationModal as RegistrationModal }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(intlExtendLoan)
+)(intlRegistrationModal)

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
-import ChangePin from './ChangePin'
+import ChangePin from './forms/ChangePinForm'
 
 class UserSettings extends React.Component {
   constructor (props) {

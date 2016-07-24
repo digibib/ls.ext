@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Reservation from './Reservation'
+import Reservation from './modals/ReservationModal'
 import Login from './Login'
 import Modal from 'react-modal'
 import * as ModalActions from '../actions/ModalActions'
-import CancelReservation from './CancelReservation'
-import ExtendLoan from './ExtendLoan'
-import Registration from './Registration'
+import CancelReservation from './modals/CancelReservationModal'
+import ExtendLoan from './modals/ExtendLoanModal'
+import Registration from './modals/RegistrationModal'
 
 const MODAL_COMPONENTS = {
   'CANCEL_RESERVATION': CancelReservation,
