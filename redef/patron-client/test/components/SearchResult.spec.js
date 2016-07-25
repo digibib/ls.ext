@@ -11,6 +11,7 @@ function setup (resultPropOverrides) {
     showStatus: () => {},
     locationQuery: {showStatus: 'test_relativeUri'},
     result: {
+      mediaTypes: [],
       displayTitle: 'test_mainTitle',
       publication: {
         mainTitle: 'test_mainTitle',

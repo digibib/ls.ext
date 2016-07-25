@@ -26,6 +26,7 @@ export function processSearchResponse (response, locationQuery) {
       result.relativePublicationUri = `${result.relativeUri}${relativeUri(result.publication.uri)}`
 
       result.image = result.publication.image || sample(result.publication.imagesFromAllPublications)
+      result.mediaTypes = result.publication.mediaTypesFromAllPublications || []
 
       result.displayTitle = result.publication.mainTitle
       if (result.publication.partTitle) {

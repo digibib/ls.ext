@@ -17,6 +17,7 @@ CONSTRUCT {
                deich:contributor ?contrib ;
                deich:hasImage ?img ;
                deich:hasImageAll ?allImg ;
+               deich:hasMediaTypeAll ?allMediaType ;
                deich:workUri ?workUri ;
                deich:subject ?subjectLabel ;
                deich:genre ?genreLabel ;
@@ -72,8 +73,14 @@ WHERE {
 
   OPTIONAL {
       ?p deich:publicationOf ?work ;
-         deich:hasImage ?allImg.
+         deich:hasImage ?allImg .
     }
+
+  OPTIONAL {
+        ?p deich:publicationOf ?work ;
+           deich:mediaType ?mto .
+        BIND(str(?mto) AS ?allMediaType)
+      }
 
   OPTIONAL {
     {

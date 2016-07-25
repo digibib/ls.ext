@@ -64,6 +64,10 @@
       "@id": "deichman:hasImageAll",
       "@container": "@set"
     },
+    "mediaTypesFromAllPublications": {
+      "@id": "deichman:hasMediaTypeAll",
+      "@container": "@set"
+    },
     "norwegianTitle": "deichman:norwegianTitle",
     "englishTitle": "deichman:englishTitle",
     "scriptWriter": "http://data.deichman.no/role#scriptWriter",

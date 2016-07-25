@@ -154,6 +154,14 @@
     "abstract": {
       "type": "string",
       "index": "no"
+    },
+    "imagesFromAllPublications": {
+      "type": "string",
+      "index": "no"
+    },
+    "mediatypesFromAllPublications": {
+      "type": "string",
+      "index": "no"
     }
   }
 }

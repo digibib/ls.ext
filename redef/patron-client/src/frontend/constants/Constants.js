@@ -20,5 +20,17 @@ module.exports = {
       name: 'audiences',
       prefix: 'http://data.deichman.no/audience#'
     }
+  },
+  mediaTypeIcons: {
+    'http://data.deichman.no/mediaType#Book': 'book',
+    'http://data.deichman.no/mediaType#Audiobook': 'audiobook',
+    'http://data.deichman.no/mediaType#LanguageCourse': 'book',
+    'http://data.deichman.no/mediaType#MusicRecording': 'music',
+    'http://data.deichman.no/mediaType#SheetMusic': 'music-note',
+    'http://data.deichman.no/mediaType#Film': 'movie',
+    'http://data.deichman.no/mediaType#Game': 'play',
+    'http://data.deichman.no/mediaType#ComicBook': 'book',
+    'http://data.deichman.no/mediaType#Map': 'book',
+    'http://data.deichman.no/mediaType#Periodical': 'book'
   }
 }

@@ -12,11 +12,12 @@
       float: left !important;
       text-transform: uppercase;
       @include semiBoldFont;
+      padding-right: 0.5em;
     }
-    
+
     span {
       float: left;
     }
-    
+
   }
 }

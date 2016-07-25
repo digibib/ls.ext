@@ -6,7 +6,7 @@ mediaType:Book a duo:MediaType ;
   rdfs:label "Bok"@no ;
   rdfs:label "Book"@en .
 
-mediaType:Audio a duo:MediaType ;
+mediaType:Audiobook a duo:MediaType ;
   rdfs:label "Lydbok"@no ;
   rdfs:label "Audiobook"@en .
 
