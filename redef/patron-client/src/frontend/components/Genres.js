@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
+import { Link } from 'react-router'
 
 class Genres extends React.Component {
   renderLabel (genre) {
@@ -10,13 +11,17 @@ class Genres extends React.Component {
     return label
   }
 
+  searchLink (genre) {
+    return '/search?query=genre%3A' + genre
+  }
+
   render () {
     const genres = this.props.genres.map(genre => this.renderLabel(genre))
     return (
       <div>
         <h2><FormattedMessage {...messages.genre} /></h2>
         <ul data-automation-id="work_genres">
-          {genres.map(genre => <li key={genre}><a href="#" alt={genre}>{genre}</a></li>)}
+          {genres.map(genre => <li key={genre}><Link to={this.searchLink(genre)}>{genre}</Link></li>)}
         </ul>
         <a className="patron-placeholder" href="#" alt="More genres">Se flere sjangre</a>
       </div>
