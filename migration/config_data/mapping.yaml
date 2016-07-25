@@ -1731,7 +1731,7 @@
                         datatype: "literal"
                   -
                     x:
-                      predicate: "RAW.genreSubdivision"
+                      predicate: "ONTOLOGY.specification"
                       object:
                         datatype: "literal"
     -
@@ -2145,7 +2145,7 @@
                         datatype: "literal"
                   -
                     x:
-                      predicate: "RAW.genreSubdivision"
+                      predicate: "ONTOLOGY.specification"
                       object:
                         datatype: "literal"
     -
