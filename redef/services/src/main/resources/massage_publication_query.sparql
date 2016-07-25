@@ -19,6 +19,7 @@ CONSTRUCT {
                deich:hasImageAll ?allImg ;
                deich:workUri ?workUri ;
                deich:subject ?subjectLabel ;
+               deich:genre ?genreLabel ;
                deich:audience ?audience ;
                deich:agents ?contribAgentName ;
                ?contribRoleURI ?contribAgentName ;
@@ -95,6 +96,14 @@ WHERE {
     OPTIONAL { ?work deich:subject ?subject . ?subject deich:specification ?subjectSpec }
     BIND(IF(BOUND(?subjectSpec), CONCAT(?subjectName, " (", ?subjectSpec, ")"), ?subjectName) AS ?subjectLabel)
   }
+
+  OPTIONAL {
+      ?work deich:genre ?genre .
+      ?genre a deich:Genre ;
+            deich:prefLabel ?genreName  .
+      OPTIONAL { ?work deich:genre ?genre. ?genre deich:specification ?genreSpec }
+      BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
+    }
 
   OPTIONAL { ?pub deich:mainTitle ?pubMainTitle }
   OPTIONAL { ?pub deich:partTitle ?pubPartTitle }

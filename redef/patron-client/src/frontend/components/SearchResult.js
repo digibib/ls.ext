@@ -53,6 +53,10 @@ class SearchResult extends React.Component {
     return '/search?query=subject%3A' + subject
   }
 
+  genreSearchLink (genre) {
+    return '/search?query=genre%3A' + genre
+  }
+
   renderSubjects (result) {
     if (result.subject) {
       return (
@@ -61,6 +65,21 @@ class SearchResult extends React.Component {
             {result.subject.map((subject, i) => (
               <span key={subject}>
                 <Link to={this.subjectSearchLink(subject)}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
+                </span>
+            ))}
+        </p>
+      )
+    }
+  }
+
+  renderGenres (result) {
+    if (result.genre) {
+      return (
+        <p data-automation-id="work_genres">
+          <strong><FormattedMessage {...messages.genres} /></strong><br />
+            {result.genre.map((genre, i) => (
+              <span key={genre}>
+                <Link to={this.genreSearchLink(genre)}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
                 </span>
             ))}
         </p>
@@ -154,16 +173,9 @@ class SearchResult extends React.Component {
           </div>
 
           <div>
-            <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
-              id mauris maximus
-              porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur
-              nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
-              sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.
-              Aliquam sit amet nisl non tortor elementum consequat. Morbi id nulla ac quam luctus posuere
-              nec a risus. Aenean congue quam tortor, a volutpat quam mollis nec. Nullam metus ex,
-              efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel accumsan odio, venenatis
-              fringilla ex.</p>
+            {this.renderGenres(result.publication)}
           </div>
+
         </article>
 
         {this.shouldShowStatus()
@@ -214,6 +226,11 @@ const messages = defineMessages({
     id: 'SearchResult.subjects',
     description: 'The text displayed to identify subjects',
     defaultMessage: 'Subjects:'
+  },
+  genres: {
+    id: 'SearchResult.genres',
+    description: 'The text displayed to identify genres',
+    defaultMessage: 'Genres:'
   },
   showStatus: {
     id: 'SearchResult.showStatus',

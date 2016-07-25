@@ -156,6 +156,7 @@ export default {
   'SearchResult.originalTitle': 'Originaltittel:',
   'SearchResult.allPublications': 'alle utgivelser ►',
   'SearchResult.subjects': 'Emner:',
+  'SearchResult.genres': 'Sjanger:',
   'SearchResult.availableAs': 'Finnes som:',
   'SearchResult.showStatus': 'Vis status',
   'SearchResult.hideStatus': 'Skjul status',

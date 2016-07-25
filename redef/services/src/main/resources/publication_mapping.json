@@ -90,6 +90,9 @@
     "subject": {
       "type": "string"
     },
+    "genre": {
+      "type": "string"
+    },
     "workUri": {
       "type": "string",
       "index": "not_analyzed"

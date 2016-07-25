@@ -46,6 +46,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"publicationYear\": \"2013\",\n"
             + "     \"recordId\": \"3\",\n"
             + "    \"subject\": [\"Trondheim\"],\n"
+            + "    \"genre\": [\"Krim (spesial)\"],\n"
             + "    \"workUri\": \"http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
 
@@ -111,6 +112,7 @@ public class PublicationModelToIndexMapperTest {
                 + "        <http://data.deichman.no/literaryForm#novel> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
+                + "    ns2:genre <http://deichman.no/genre/g1> ;"
                 + "    ns2:subject <http://deichman.no/subject/e1200005> .\n"
                 + "\n"
                 + "<http://192.168.50.12:8005/person/h10834700> rdf:type ns2:Person ;\n"
@@ -126,7 +128,11 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:nationality <http://data.deichman.no/nationality#ita> .\n"
                 + "\n"
                 + "<http://deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
-                + "    ns2:prefLabel \"Trondheim\"";
+                + "    ns2:prefLabel \"Trondheim\" ."
+                + "\n"
+                + "<http://deichman.no/genre/g1> rdf:type ns2:Genre ;\n"
+                + "    ns2:prefLabel \"Krim\" ;\n"
+                + "    ns2:specification \"spesial\" .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication", BaseURI.local()).createIndexDocument(model, publicationXuri1);
