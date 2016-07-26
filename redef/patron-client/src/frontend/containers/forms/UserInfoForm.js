@@ -88,7 +88,6 @@ class UserInfoForm extends React.Component {
 
 UserInfoForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired,
   profileActions: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
   fields: PropTypes.object.isRequired,

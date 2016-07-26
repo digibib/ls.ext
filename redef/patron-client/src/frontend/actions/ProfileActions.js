@@ -217,7 +217,7 @@ export function postProfileSettings (profileSettings, successAction) {
       body: JSON.stringify(profileSettings)
     })
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 204) {
           return response.json()
         } else {
           throw Error('Unexpected status code')
