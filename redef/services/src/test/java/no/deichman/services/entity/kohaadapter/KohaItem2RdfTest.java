@@ -65,10 +65,6 @@ public class KohaItem2RdfTest {
 
         String s = itemBase + "e" + barcode;
 
-        Statement formatStatement = createStatement(
-                createResource(s),
-                createProperty(ontologyNs + "format"),
-                createPlainLiteral("L"));
         Statement barcodeStatement = createStatement(
                 createResource(s),
                 createProperty(ontologyNs + "barcode"),
@@ -107,7 +103,6 @@ public class KohaItem2RdfTest {
 
 
         assertNotNull(m);
-        assertTrue(m.contains(formatStatement));
         assertTrue(m.contains(branchStatement));
         assertTrue(m.contains(barcodeStatement));
         assertTrue(m.contains(locationStatement));

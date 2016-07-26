@@ -26,7 +26,6 @@ public final class KohaItem2Rdf {
 
     private static final String DEICHMAN_NS_EXEMPLAR = "http://deichman.no/exemplar/";
     private static final String RDF_SYNTAX_NS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-    private static final String DEICHMAN_FORMAT = "format";
     private static final String DEICHMAN_ITEM = "Item";
     private static final String DEICHMAN_STATUS = "status";
     private static final String DEICHMAN_LOCATION = "location";
@@ -107,7 +106,6 @@ public final class KohaItem2Rdf {
                 );
             }
 
-            safeAddTriple(model, "itype", subject, ontologyNS + DEICHMAN_FORMAT, itemData);
             safeAddTriple(model, "status", subject, ontologyNS + DEICHMAN_STATUS, itemData);
             safeAddTriple(model, "location", subject, ontologyNS + DEICHMAN_LOCATION, itemData);
             safeAddTriple(model, "barcode", subject, ontologyNS + DEICHMAN_BARCODE, itemData);
