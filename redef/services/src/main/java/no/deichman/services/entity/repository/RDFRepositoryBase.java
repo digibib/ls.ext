@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -314,6 +315,18 @@ public abstract class RDFRepositoryBase implements RDFRepository {
                 consumer.accept(querySolution.get("uri").asResource().getURI());
             });
         }
+    }
+
+    @Override
+    public final List<String> getWorkURIsByAgent(XURI agent) {
+        List<String> res = new ArrayList<>();
+        try (QueryExecution qexec = getQueryExecution(sqb.selectWorksByAgent(agent))) {
+            disableCompression(qexec);
+            qexec.execSelect().forEachRemaining(querySolution -> {
+                res.add(querySolution.get("work").asResource().getURI());
+            });
+        }
+        return res;
     }
 
 

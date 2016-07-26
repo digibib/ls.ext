@@ -1080,6 +1080,7 @@ public class AppTest {
                 + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
                 + "<work> <" + ontologyURI + "contributor> _:b1 .\n"
                 + "_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Contribution> .\n"
+                + "_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "MainEntry> .\n"
                 + "_:b1  <" + ontologyURI + "role> <http://data.deichman.no/role#author> .\n"
                 + "_:b1  <" + ontologyURI + "agent> <__CREATORURI__> .\n";
         HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(baseUri + "work", workTriples.replace("__CREATORURI__", personUri)).asJson();

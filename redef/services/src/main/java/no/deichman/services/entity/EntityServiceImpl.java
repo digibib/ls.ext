@@ -30,7 +30,6 @@ import org.apache.jena.vocabulary.RDF;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -270,18 +269,16 @@ public final class EntityServiceImpl implements EntityService {
             modelWithoutItems = ModelFactory.createDefaultModel();
         }
 
-        List<String> personNames;
+        String mainEntryName = null;
         if (inputModel.contains(null, publicationOfProperty)) {
             Model work = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
             if (work.isEmpty()) {
                 throw new BadRequestException("Associated work does not exist.");
             }
-            personNames = getPersonNames(work);
-        } else {
-            personNames = new ArrayList<>();
+            mainEntryName = getMainEntryName(work);
         }
 
-        MarcRecord marcRecord = generateMarcRecordForPublication(inputModel, personNames);
+        MarcRecord marcRecord = generateMarcRecordForPublication(inputModel, mainEntryName);
         streamFrom(inputModel.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
@@ -333,52 +330,49 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Model synchronizeKoha(XURI xuri) throws Exception {
+    public Model synchronizeKoha(XURI xuri) throws Exception { // TODO why must this method return model?
 
-        Model model = retrieveById(xuri);
+        Model model;
 
         if (xuri.getTypeAsEntityType().equals(EntityType.PERSON)) {
-            Model works = repository.retrieveWorksByCreator(xuri);
-            streamFrom(works.listStatements())
-                    .collect(groupingBy(Statement::getSubject))
-                    .forEach((subject, statements) -> {
-                        if (subject.isAnon()) {
-                            return;
-                        }
-                        Model work = ModelFactory.createDefaultModel();
-                        work.add(statements);
-                        work.add(ResourceFactory.createStatement(
-                                subject,
-                                ResourceFactory.createProperty(baseURI.ontology() + "agent"),
-                                ResourceFactory.createResource(xuri.getUri())));
-                        XURI workXuri = null;
-                        try {
-                            workXuri = new XURI(subject.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        updatePublicationsByWork(workXuri, work);
-                    });
+            model = retrieveById(xuri); // TODO Who needs this model?
+
+            List<String> resources = repository.getWorkURIsByAgent(xuri);
+            for (String resource : resources) {
+                try {
+                    XURI resXuri = new XURI(resource);
+                    Model work = retrieveWorkWithLinkedResources(resXuri);
+                    updatePublicationsByWork(resXuri, work);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         } else if (xuri.getTypeAsEntityType().equals(EntityType.WORK)) {
+            model = retrieveWorkWithLinkedResources(xuri);
             updatePublicationsByWork(xuri, model);
-        } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION) && model.getProperty(null, publicationOfProperty) != null) {
-            XURI workXURI = new XURI(model.getProperty(null, publicationOfProperty).getObject().toString());
-            updatePublicationWithWork(workXURI, model);
         } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION)) {
-            updatePublicationInKoha(model, new ArrayList<>());
+            model = retrieveById(xuri);
+            if (model.getProperty(null, publicationOfProperty) != null) {
+                XURI workXURI = new XURI(model.getProperty(null, publicationOfProperty).getObject().toString());
+                updatePublicationWithWork(workXURI, model);
+            } else {
+                updatePublicationInKoha(model, null);
+            }
+        } else {
+            model = retrieveById(xuri);
         }
         return model;
     }
 
     private void updatePublicationWithWork(XURI workXURI, Model publication) {
-        Model work = repository.retrieveResourceByURI(workXURI);
-        List<String> personNames = getPersonNames(work);
-        updatePublicationInKoha(publication, personNames);
+        Model work = repository.retrieveWorkAndLinkedResourcesByURI(workXURI);
+        String mainEntryName = getMainEntryName(work);
+        updatePublicationInKoha(publication, mainEntryName);
     }
 
     private void updatePublicationsByWork(XURI xuri, Model work) {
 
-        List<String> personNames = getPersonNames(work);
+        String mainEntryName = getMainEntryName(work);
         Model publications = repository.retrievePublicationsByWork(xuri);
 
         streamFrom(publications.listStatements())
@@ -387,7 +381,7 @@ public final class EntityServiceImpl implements EntityService {
                     if (isPublication(statements)) {
                         Model publication = ModelFactory.createDefaultModel();
                         publication.add(statements);
-                        updatePublicationInKoha(publication, personNames);
+                        updatePublicationInKoha(publication, mainEntryName);
                     }
                 });
     }
@@ -396,16 +390,16 @@ public final class EntityServiceImpl implements EntityService {
         return statements.stream().anyMatch(typeStatement("Publication"));
     }
 
-    private void updatePublicationInKoha(Model publication, List<String> personNames) {
-        MarcRecord marcRecord = generateMarcRecordForPublication(publication, personNames);
+    private void updatePublicationInKoha(Model publication, String mainEntryName) {
+        MarcRecord marcRecord = generateMarcRecordForPublication(publication, mainEntryName);
         kohaAdapter.updateRecord(publication.getProperty(null, recordIdProperty).getString(), marcRecord);
     }
 
-    private MarcRecord generateMarcRecordForPublication(Model publication, List<String> personNames) {
+    private MarcRecord generateMarcRecordForPublication(Model publication, String mainEntryName) {
         MarcRecord marcRecord = new MarcRecord();
 
-        for (String personName : personNames) {
-            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, personName);
+        if (mainEntryName != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, mainEntryName);
         }
         if (publication.getProperty(null, mainTitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A,
@@ -432,24 +426,18 @@ public final class EntityServiceImpl implements EntityService {
     }
 
 
-    private List<String> getPersonNames(Model work) {
-        List<String> personNames = new ArrayList<>();
+    private String getMainEntryName(Model work) {
+        String mainEntryName = null;
 
-        for (Statement stmt : work.listStatements().toList()) {
-            if (stmt.getPredicate().equals(agentProperty)) {
-                try {
-                    Model person = repository.retrieveResourceByURI(new XURI(stmt.getObject().toString()));
-                    NodeIterator nameIterator = person.listObjectsOfProperty(nameProperty);
-                    while (nameIterator.hasNext()) {
-                        personNames.add(nameIterator.next().asLiteral().toString());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        Query query = new SPARQLQueryBuilder(baseURI).getMainEntryName();
+        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution soln = results.nextSolution();
+                mainEntryName = soln.getLiteral("name").asLiteral().toString();
             }
         }
-
-        return personNames;
+        return mainEntryName;
     }
 
     @Override

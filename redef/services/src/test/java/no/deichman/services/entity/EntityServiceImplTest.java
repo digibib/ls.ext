@@ -616,6 +616,7 @@ public class EntityServiceImplTest {
                 + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
                 + "<work> <" + ontologyURI + "contributor> _:b0 .\n"
                 + "_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Contribution> .\n"
+                + "_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "MainEntry> .\n"
                 + "_:b0 <" + ontologyURI + "agent> <__CREATORURI__> .\n"
                 + "_:b0 <" + ontologyURI + "role> <http://data.deichman.no/role#author> .\n";
         String publicationTriples = ""

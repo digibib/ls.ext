@@ -337,4 +337,30 @@ public final class SPARQLQueryBuilder {
                 baseURI.ontology(), recordId);
         return QueryFactory.create(q);
     }
+
+    public Query getMainEntryName() {
+        String q = String.format(""
+                + "PREFIX deichman: <%1$s>\n"
+                + "SELECT ?name\n"
+                + "WHERE {\n"
+                + "  ?work a deichman:Work ;\n"
+                + "    deichman:contributor ?contrib .\n"
+                + "  ?contrib a deichman:MainEntry ;\n"
+                + "    deichman:agent ?agent.\n"
+                + "  ?agent deichman:name ?name ."
+                + "}", baseURI.ontology());
+        return QueryFactory.create(q);
+    }
+
+    public Query selectWorksByAgent(XURI agent) {
+        String q = String.format(""
+                + "PREFIX deichman: <%1$s>\n"
+                + "SELECT ?work\n"
+                + "WHERE {\n"
+                + "  ?work a deichman:Work ;\n"
+                + "    deichman:contributor ?contrib .\n"
+                + "  ?contrib  deichman:agent <%2$s> .\n"
+                + "}", baseURI.ontology(), agent.getUri());
+        return QueryFactory.create(q);
+    }
 }
