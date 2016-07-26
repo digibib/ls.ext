@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+
 import * as ParameterActions from '../../actions/ParameterActions'
 import * as ProfileActions from '../../actions/ProfileActions'
 import * as LoginActions from '../../actions/LoginActions'
@@ -82,7 +83,6 @@ class UserInfoForm extends React.Component {
             <input data-automation-id="UserInfoForm_mobile" id="cellphone" type="number"
                    placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
           {this.getValidator(mobile)}
-
 
           <div className="phone">
             <h2>Telefon</h2>

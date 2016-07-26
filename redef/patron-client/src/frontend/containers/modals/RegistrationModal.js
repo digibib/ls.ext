@@ -117,7 +117,7 @@ RegistrationModal.propTypes = {
 function mapStateToProps (state) {
   return {
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
-    checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
+    checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess
   }
 }
 

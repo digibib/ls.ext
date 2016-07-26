@@ -5,7 +5,7 @@ const querystring = require('querystring')
 const registrationForm = Object.assign(require('../../common/forms/registrationPartOne'), require('../../common/forms/registrationPartTwo'))
 const extendedValidator = require('../utils/extendedValidator')(registrationForm)
 
-  module.exports = (app) => {
+module.exports = (app) => {
   const fetch = require('../fetch')(app)
   app.post('/api/v1/checkforexistinguser', jsonParser, (request, response) => {
     const params = {

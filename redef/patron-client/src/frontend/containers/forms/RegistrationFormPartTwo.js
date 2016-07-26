@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import fetch from 'isomorphic-fetch'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as ModalActions from '../../actions/ModalActions'

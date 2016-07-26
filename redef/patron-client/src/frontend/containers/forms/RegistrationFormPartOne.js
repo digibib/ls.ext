@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import fetch from 'isomorphic-fetch'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as ModalActions from '../../actions/ModalActions'
@@ -112,7 +111,8 @@ class RegistrationFormPartOne extends React.Component {
             </div>
           </div>
           <div className="ssn-info">
-            <h3><a onClick={this.props.registrationActions.showSSNInfo} title="ssnLink"><FormattedMessage {...messages.ssnLink} /></a>
+            <h3><a onClick={this.props.registrationActions.showSSNInfo}
+                   title="ssnLink"><FormattedMessage {...messages.ssnLink} /></a>
             </h3>
             {this.props.showSSNInfo ? this.renderSSNInfo() : ''}
           </div>
@@ -129,7 +129,6 @@ class RegistrationFormPartOne extends React.Component {
                   data-automation-id="check_existing_user_button">
             <FormattedMessage {...messages.checkForExistingUser} />
           </button>
-
 
           <h3><a onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a></h3>
         </fieldset>

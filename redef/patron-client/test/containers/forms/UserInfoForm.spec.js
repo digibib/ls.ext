@@ -2,13 +2,13 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import UserInfo from '../../src/frontend/containers/UserInfo'
+import UserInfoForm from '../../../src/frontend/containers/forms/UserInfoForm'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 import { createStore } from 'redux'
-import rootReducer from '../../src/frontend/reducers'
+import rootReducer from '../../../src/frontend/reducers'
 import { Provider } from 'react-redux'
-import * as ProfileActions from '../../src/frontend/actions/ProfileActions'
+import * as ProfileActions from '../../../src/frontend/actions/ProfileActions'
 
 function setup (propOverrides) {
   const props = {
@@ -18,17 +18,11 @@ function setup (propOverrides) {
 
   const profileInformation = {
     address: 'address',
-    birthdate: 'birthdate',
-    borrowerNumber: 'borrowerNumber',
+    zipcode: 'zipcode',
     city: 'city',
     country: 'country',
-    email: 'email',
-    lastUpdated: 'lastUpdated',
-    loanerCardIssued: 'loanerCardIssued',
-    loanerCategory: 'loanerCategory',
     mobile: 'mobile',
-    name: 'name',
-    zipcode: 'zipcode'
+    email: 'email'
   }
 
   const store = createStore(rootReducer)
@@ -37,7 +31,7 @@ function setup (propOverrides) {
   const output = TestUtils.renderIntoDocument(
     <Provider store={store}>
       <IntlProvider locale="en">
-        <UserInfo {...props} />
+        <UserInfoForm {...props} />
       </IntlProvider>
     </Provider>
   )
@@ -51,13 +45,16 @@ function setup (propOverrides) {
 }
 
 describe('containers', () => {
-  describe('UserInfo', () => {
-    it('should display values from store', () => {
-      const { node, store } = setup({ location: { query: {} } })
+  describe('UserInfoForm', () => {
+    it('should display values from store in editable fields', () => {
+      const { node, store } = setup({ location: { query: { edit: null } } })
       const { personalInformation } = store.getState().profile
       Object.keys(personalInformation).forEach(key => {
         const value = personalInformation[ key ]
-        expect(node.querySelector(`[data-automation-id='UserInfo_${key}']`).textContent).toEqual(value)
+        const fieldValue = node.querySelector(`[data-automation-id='UserInfoForm_${key}']`).value
+        if (fieldValue) {
+          expect(fieldValue).toEqual(value)
+        }
       })
     })
   })

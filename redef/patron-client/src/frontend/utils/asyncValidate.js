@@ -1,4 +1,6 @@
-export default (values/*, dispatch*/) => {
+import fetch from 'isomorphic-fetch'
+
+export default (values) => {
   return new Promise((resolve, reject) => {
     fetch('/api/v1/validation', {
       method: 'POST',

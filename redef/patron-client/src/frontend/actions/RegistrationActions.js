@@ -45,8 +45,6 @@ export function postRegistrationSuccess (username, password) {
 export function checkForExistingUser () {
   const url = '/api/v1/checkforexistinguser'
   return (dispatch, getState) => {
-    dispatch(checkForExistingUserSuccess())
-    return
     const { registrationPartOne: { firstName, lastName, day, month, year, ssn } } = getState().form
     const registrationInfo = {
       firstName: firstName.value,
@@ -115,7 +113,7 @@ export function postRegistration (successAction) {
   return (dispatch, getState) => {
     const {
       registrationPartOne: { firstName, lastName, day, month, year, ssn },
-      registrationPartTwo: { email, mobile, address, zipcode, city, country, gender, pin, repeatPin, library }
+      registrationPartTwo: { email, mobile, address, zipcode, city, country, /* gender, */ pin, repeatPin, library }
     } = getState().form
     const registrationInfo = {
       firstName: firstName.value,
@@ -130,7 +128,7 @@ export function postRegistration (successAction) {
       zipcode: zipcode.value,
       city: city.value,
       country: country.value,
-      /*gender: gender.value,*/
+      /* gender: gender.value, */
       pin: pin.value,
       repeatPin: repeatPin.value,
       library: library.value
@@ -145,7 +143,6 @@ export function postRegistration (successAction) {
       body: JSON.stringify(registrationInfo)
     })
       .then(response => {
-        console.log(response.status)
         if (response.status === 201) {
           return response.json()
         } else {

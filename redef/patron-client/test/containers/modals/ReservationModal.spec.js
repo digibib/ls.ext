@@ -3,7 +3,7 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import { Reservation } from '../../src/frontend/containers/modals/ReservationModal'
+import { ReservationModal } from '../../../src/frontend/containers/modals/ReservationModal'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 
@@ -19,7 +19,7 @@ function setup (propOverrides) {
 
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale="en">
-      <Reservation {...props} />
+      <ReservationModal {...props} />
     </IntlProvider>
   )
 
@@ -31,7 +31,7 @@ function setup (propOverrides) {
 }
 
 describe('containers', () => {
-  describe('Reservation', () => {
+  describe('ReservationModal', () => {
     it('should display success dialog', () => {
       const { node } = setup({ isSuccess: true, message: 'test', recordId: 'test_recordId' })
       expect(node.getAttribute('data-automation-id')).toEqual('reservation_success_modal')

@@ -6,7 +6,7 @@ module.exports = (form) => {
     const errors = form ? validator(values) : {}
     Object.keys(values).forEach(field => {
       const value = values[field]
-      if (value && value != sanitize(value)) {
+      if (value && value !== sanitize(value)) {
         errors[ field ] = 'illegalCharacters'
       }
     })
