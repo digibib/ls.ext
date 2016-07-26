@@ -80,9 +80,11 @@ WHERE {
 
   OPTIONAL {
         ?p4 deich:publicationOf ?work ;
-           deich:mediaType ?mediaType ;
-           deich:format ?mtFormatO .
-           BIND(str(?mtFormatO) AS ?mtFormat)
+           deich:mediaType ?mediaType .
+        OPTIONAL {
+          ?p4 deich:format ?mtFormatO .
+          BIND(str(?mtFormatO) AS ?mtFormat)
+        }
       }
 
   OPTIONAL {

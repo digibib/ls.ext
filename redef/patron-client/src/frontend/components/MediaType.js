@@ -3,7 +3,8 @@ import { injectIntl, intlShape } from 'react-intl'
 import Constants from '../constants/Constants'
 
 class MediaType extends React.Component {
-  renderFormats (mediaType, formats) {
+  renderFormats (mediaType, maybeFormats) {
+    const formats = maybeFormats || []
     const filtered = formats.filter(format => {
       if (mediaType === 'http://data.deichman.no/mediaType#Book' && (formats.length === 1 && formats[0] === 'http://data.deichman.no/format#Book')) {
         return false
