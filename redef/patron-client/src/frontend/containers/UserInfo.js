@@ -10,6 +10,7 @@ import UserInfoForm from './forms/UserInfoForm'
 class UserInfo extends React.Component {
   constructor (props) {
     super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChangeClick = this.handleChangeClick.bind(this)
   }
 
