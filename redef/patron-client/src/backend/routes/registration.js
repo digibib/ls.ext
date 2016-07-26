@@ -1,9 +1,7 @@
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
-const sanitizeHtml = require('sanitize-html')
 const querystring = require('querystring')
-// const mysql = require('mysql')
 const registrationForm = Object.assign(require('../../common/forms/registrationPartOne'), require('../../common/forms/registrationPartTwo'))
 const extendedValidator = require('../utils/extendedValidator')(registrationForm)
 
@@ -121,15 +119,5 @@ const extendedValidator = require('../utils/extendedValidator')(registrationForm
     } else {
       return date
     }
-  }
-
-  function sanitize (dirtyInput) {
-    // TODO: Fix. mysql.escape returns quoted output
-    // return mysql.escape(sanitizeHtml(dirtyInput, {
-    //   allowedTags: []
-    // }))
-    return sanitizeHtml(dirtyInput, {
-      allowedTags: []
-    })
   }
 }
