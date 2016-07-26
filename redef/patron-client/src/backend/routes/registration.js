@@ -39,7 +39,7 @@ const registrationForm = Object.assign(require('../../common/forms/registrationP
   })
 
   app.post('/api/v1/registration', jsonParser, (request, response) => {
-    const errors = validator(request.body, Object.keys(registrationForm).filter(field=> !registrationForm[ field ].skipFinalVerification).filter(field => registrationForm[ field ].required))
+    const errors = validator(request.body, Object.keys(registrationForm).filter(field => !registrationForm[ field ].skipFinalVerification).filter(field => registrationForm[ field ].required))
     if (Object.keys(errors).length > 0) {
       response.status(400).send({ errors: errors })
       return
