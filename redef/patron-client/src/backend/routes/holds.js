@@ -27,10 +27,7 @@ module.exports = (app) => {
 
   app.delete('/api/v1/holds', jsonParser, (request, response) => {
     fetch(`http://koha:8081/api/v1/holds/${request.body.reserveId}`, {
-      method: 'DELETE',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
+      method: 'DELETE'
     }).then(res => {
       if (res.status === 200) {
         response.sendStatus(200)

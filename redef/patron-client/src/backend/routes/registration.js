@@ -15,11 +15,8 @@ module.exports = (app) => {
       ssn: request.body.ssn
     }
 
-    fetch(`http://koha:8081/api/v1/checkexistinguser?${querystring.stringify(params)}`, {
-      headers: {
-        'Cookie': app.settings.kohaSession
-      }
-    }).then(res => {
+    fetch(`http://koha:8081/api/v1/checkexistinguser?${querystring.stringify(params)}`, {})
+    .then(res => {
       if (res.status === 200) {
         return res.json()
       } else if (res.status === 403) {
@@ -79,7 +76,6 @@ module.exports = (app) => {
     fetch(`http://koha:8081/api/v1/messagepreferences/${borrowerNumber}`, {
       method: 'PUT',
       headers: {
-        'Cookie': app.settings.kohaSession,
         'Content-type': 'application/json'
       },
       body: JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings({

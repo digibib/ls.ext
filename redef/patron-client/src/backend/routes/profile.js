@@ -34,9 +34,6 @@ module.exports = (app) => {
 
     fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
       method: 'PUT',
-      headers: {
-        'Cookie': app.settings.kohaSession
-      },
       body: JSON.stringify(patron)
     }).then(res => {
       if (res.status === 200) {
