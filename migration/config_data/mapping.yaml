@@ -3035,6 +3035,7 @@
                     gc: "DVD-ROM"
                     gd: "CD-ROM"
                     ge: "Web_page"
+                    gg: "Blu-ray_ROM"
                     gt: "DAISY"
                     h: "Physical_body"
                     ib: "Microfilm_reel"

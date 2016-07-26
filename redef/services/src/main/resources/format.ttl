@@ -67,6 +67,11 @@ format:Blu-ray_Audio a duo:Format ;
   rdfs:label "Blu-ray-audio"@no ;
   rdfs:label "Blu-ray audio"@en .
 
+format:Blu-ray_ROM a duo:Format ;
+  duo:code "gg" ;
+  rdfs:label "Blu-ray-ROM"@no ;
+  rdfs:label "Blu-ray-ROM"@en .
+
 format:DVD-Audio a duo:Format ;
   duo:code "dm" ;
   rdfs:label "DVD-audio"@no ;

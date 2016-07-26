@@ -22,6 +22,7 @@ WHERE {
       (format:Videotape               mediaType:Film)
       (format:DVD                     mediaType:Film)
       (format:Blu-ray_Disk            mediaType:Film)
+      (format:Blu-ray_ROM             mediaType:Game)
       (format:Personal_computer_game  mediaType:Game)
       (format:Playstation_2_game      mediaType:Game)
       (format:Playstation_3_game      mediaType:Game)
