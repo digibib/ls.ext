@@ -4,8 +4,8 @@ const userSettingsMapper = require('../utils/userSettingsMapper')
 const sanitizeHtml = require('sanitize-html')
 const querystring = require('querystring')
 // const mysql = require('mysql')
-const validator = require('../utils/validator')
 const registrationForm = Object.assign(require('../../common/forms/registrationPartOne'), require('../../common/forms/registrationPartTwo'))
+const extendedValidator = require('../utils/extendedValidator')(registrationForm)
 
   module.exports = (app) => {
   const fetch = require('../fetch')(app)
@@ -39,7 +39,7 @@ const registrationForm = Object.assign(require('../../common/forms/registrationP
   })
 
   app.post('/api/v1/registration', jsonParser, (request, response) => {
-    const errors = validator(request.body, Object.keys(registrationForm).filter(field => !registrationForm[ field ].skipFinalVerification).filter(field => registrationForm[ field ].required))
+    const errors = extendedValidator(request.body)
     if (Object.keys(errors).length > 0) {
       response.status(400).send({ errors: errors })
       return
@@ -56,7 +56,7 @@ const registrationForm = Object.assign(require('../../common/forms/registrationP
       city: request.body.city,
       password: request.body.pin,
       branchcode: request.body.library,
-      categorycode: 'V', // TODO: defaulting to Voksen patron category
+      categorycode: 'V', // TODO: Correct loaner category must be set
       userid: `${Math.floor(Math.random() * (99 - 10) + 10)}-${Math.floor(Math.random() * (999 - 100) + 100)}` // TODO: Proper user ID
     }
     fetch('http://koha:8081/api/v1/patrons', {

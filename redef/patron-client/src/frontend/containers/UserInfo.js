@@ -153,8 +153,6 @@ UserInfo.propTypes = {
   location: PropTypes.object.isRequired,
   profileActions: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
-  fields: PropTypes.object.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
   parameterActions: PropTypes.object.isRequired,
   isRequestingPersonalInformation: PropTypes.bool.isRequired,
   loginActions: PropTypes.object.isRequired,

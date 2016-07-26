@@ -113,7 +113,10 @@ export function showSSNInfo () {
 export function postRegistration (successAction) {
   const url = '/api/v1/registration'
   return (dispatch, getState) => {
-    const { registrationPartOne: { firstName, lastName, day, month, year, ssn }, registrationPartTwo: { email, mobile, address, zipcode, city, country, gender, pin, library } } = getState().form
+    const {
+      registrationPartOne: { firstName, lastName, day, month, year, ssn },
+      registrationPartTwo: { email, mobile, address, zipcode, city, country, gender, pin, repeatPin, library }
+    } = getState().form
     const registrationInfo = {
       firstName: firstName.value,
       lastName: lastName.value,
@@ -129,6 +132,7 @@ export function postRegistration (successAction) {
       country: country.value,
       /*gender: gender.value,*/
       pin: pin.value,
+      repeatPin: repeatPin.value,
       library: library.value
     }
     dispatch(requestPostRegistration())

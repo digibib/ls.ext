@@ -2,6 +2,8 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
 const bcrypt = require('bcrypt-nodejs')
+const userInfoForm = require('../../common/forms/userInfoForm')
+const extendedValidator = require('../utils/extendedValidator')(userInfoForm)
 
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
@@ -22,6 +24,12 @@ module.exports = (app) => {
   })
 
   app.post('/api/v1/profile/info', jsonParser, (request, response) => {
+    const errors = extendedValidator(request.body)
+    if (Object.keys(errors).length > 0) {
+      response.status(400).send({ errors: errors })
+      return
+    }
+
     const patron = {
       address: request.body.address,
       zipcode: request.body.zipcode,
