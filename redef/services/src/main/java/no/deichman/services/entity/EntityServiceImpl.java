@@ -65,6 +65,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property partNumberProperty;
     private final Property isbnProperty;
     private final Property publicationYearProperty;
+    private final Property subtitleProperty;
 
 
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
@@ -81,6 +82,7 @@ public final class EntityServiceImpl implements EntityService {
         partNumberProperty = ResourceFactory.createProperty(baseURI.ontology("partNumber"));
         isbnProperty = ResourceFactory.createProperty(baseURI.ontology("isbn"));
         publicationYearProperty = ResourceFactory.createProperty(baseURI.ontology("publicationYear"));
+        subtitleProperty = ResourceFactory.createProperty(baseURI.ontology("subtitle"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -404,6 +406,10 @@ public final class EntityServiceImpl implements EntityService {
         if (publication.getProperty(null, mainTitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A,
                     publication.getProperty(null, mainTitleProperty).getLiteral().getString());
+        }
+        if (publication.getProperty(null, subtitleProperty) != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_B,
+                    publication.getProperty(null, subtitleProperty).getLiteral().getString());
         }
         if (publication.getProperty(null, partTitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_P,
