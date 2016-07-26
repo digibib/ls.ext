@@ -10,13 +10,18 @@ module.exports = {
     }
   },
   month: (month) => {
-    if (month && (month < 1 || month > 13)) {
+    if (month < 1 || month > 12) {
       return 'invalidMonth'
     }
   },
   day: (day) => {
     if (day < 1 || day > 31) {
       return 'invalidDay'
+    }
+  },
+  repeatPin: (repeatPin, values) => {
+    if((values.newPin && repeatPin !== values.newPin) || (values.pin && repeatPin !== values.pin)) {
+      return 'pinsMustBeEqual'
     }
   }
 }

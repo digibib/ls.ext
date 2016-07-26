@@ -5,6 +5,10 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import * as ParameterActions from '../../actions/ParameterActions'
 import * as ProfileActions from '../../actions/ProfileActions'
 import * as LoginActions from '../../actions/LoginActions'
+import validator from '../../../common/validation/validator'
+import fields from '../../../common/forms/userInfoForm'
+import ValidationMessage from '../../components/ValidationMessage'
+import asyncValidate from '../../utils/asyncValidate'
 
 class UserInfoForm extends React.Component {
   constructor (props) {
@@ -24,6 +28,12 @@ class UserInfoForm extends React.Component {
     this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('edit'))
   }
 
+  getValidator (field) {
+    if (field.touched && field.error) {
+      return <div style={{ color: 'red' }}><ValidationMessage message={field.error} /></div>
+    }
+  }
+
   render () {
     const { fields: { address, zipcode, city, country, mobile, email } } = this.props
     return (
@@ -36,6 +46,7 @@ class UserInfoForm extends React.Component {
                 <label htmlFor="streetaddress"><FormattedMessage {...messages.address} /></label>
                 <input data-automation-id="UserInfoForm_address" id="streetaddress" type="text"
                        placeholder={this.props.intl.formatMessage(messages.address)} {...address} />
+                {this.getValidator(address)}
               </span><br />
 
             <span property="schema:postalCode" className="display-inline">
@@ -43,6 +54,7 @@ class UserInfoForm extends React.Component {
                 <label htmlFor="postal">Postnr.</label>
                 <input data-automation-id="UserInfoForm_zipcode" id="postal" type="text"
                        placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
+              {this.getValidator(zipcode)}
               </span>
 
             <span property="schema:addressLocality" className="display-inline">
@@ -50,6 +62,7 @@ class UserInfoForm extends React.Component {
                 <label htmlFor="city">Poststed</label>
                 <input data-automation-id="UserInfoForm_city" id="city" type="text"
                        placeholder={this.props.intl.formatMessage(messages.city)} {...city} />
+              {this.getValidator(city)}
               </span><br />
 
             <span property="schema:addressCountry">
@@ -57,6 +70,7 @@ class UserInfoForm extends React.Component {
                 <label htmlFor="country">Land</label>
                 <input data-automation-id="UserInfoForm_country" id="country" type="text"
                        placeholder={this.props.intl.formatMessage(messages.country)} {...country} />
+              {this.getValidator(country)}
               </span><br />
           </address>
         </div>
@@ -67,6 +81,8 @@ class UserInfoForm extends React.Component {
             <label htmlFor="cellphone">Mobil</label>
             <input data-automation-id="UserInfoForm_mobile" id="cellphone" type="number"
                    placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
+          {this.getValidator(mobile)}
+
 
           <div className="phone">
             <h2>Telefon</h2>
@@ -79,6 +95,7 @@ class UserInfoForm extends React.Component {
             <label htmlFor="email">E-post</label>
             <input data-automation-id="UserInfoForm_email" id="email" type="email"
                    placeholder={this.props.intl.formatMessage(messages.email)} {...email} />
+            {this.getValidator(email)}
           </div>
         </div>
       </form>
@@ -165,21 +182,13 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const validate = values => {
-  const errors = {}
-  if (!values.email) {
-    errors.email = messages.required
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = messages.invalidEmail
-  }
-  return errors
-}
-
 export default reduxForm(
   {
     form: 'userInfo',
-    fields: [ 'address', 'zipcode', 'city', 'country', 'mobile', 'email' ],
-    validate
+    fields: Object.keys(fields),
+    asyncValidate,
+    asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
+    validate: validator(fields)
   },
   mapStateToProps,
   mapDispatchToProps

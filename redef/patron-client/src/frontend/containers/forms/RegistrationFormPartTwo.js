@@ -7,8 +7,10 @@ import fetch from 'isomorphic-fetch'
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as ModalActions from '../../actions/ModalActions'
 import Libraries from '../../components/Libraries'
-import fields from '../../../common/forms/registrationPartTwo'
 import ValidationMessage from '../../components/ValidationMessage'
+import fields from '../../../common/forms/registrationPartTwo'
+import validator from '../../../common/validation/validator'
+import asyncValidate from '../../utils/asyncValidate'
 
 class RegistrationFormPartTwo extends React.Component {
   constructor (props) {
@@ -299,46 +301,13 @@ function mapDispatchToProps (dispatch) {
 const intlRegistrationFormPartTwo = injectIntl(RegistrationFormPartTwo)
 export { intlRegistrationFormPartTwo as RegistrationFormPartTwo }
 
-const validate = values => {
-  const errors = {}
-  Object.keys(fields).filter(field => fields[ field ].required).forEach(field => {
-    if (!values[ field ]) {
-      errors[ field ] = 'required'
-    }
-  })
-  if (!values.pin) {
-    errors.pin = 'required'
-  } else if (values.pin !== values.repeatPin) {
-    errors.repeatPin = 'pinMustBeEqual'
-  }
-  return errors
-}
-
-const asyncValidate = (values/*, dispatch*/) => {
-  return new Promise((resolve, reject) => {
-    fetch('/api/v1/validation', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }, body: JSON.stringify({ values: values })
-    }).then(response => response.json())
-      .then(json => {
-        if (Object.keys(json.errors).length === 0) {
-          resolve()
-        } else {
-          reject(json.errors)
-        }
-      })
-  })
-}
-
 export default reduxForm(
   {
     form: 'registrationPartTwo',
     fields: Object.keys(fields),
     asyncValidate,
     asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
-    validate
+    validate: validator(fields)
   },
   mapStateToProps,
   mapDispatchToProps
