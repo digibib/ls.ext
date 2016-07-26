@@ -26,7 +26,7 @@ class RegistrationFormPartOne extends React.Component {
     return (
       <div data-automation-id="ssninfo">
         <span className="display-inline">
-          <FormattedMessage {...messages.ssninfo} />
+          <FormattedMessage {...messages.ssnInfo} />
         </span>
       </div>
     )
@@ -112,14 +112,14 @@ class RegistrationFormPartOne extends React.Component {
             </div>
           </div>
           <div className="ssn-info">
-            <h3><a onClick={this.props.registrationActions.showSSNInfo} title="ssnlink"><FormattedMessage {...messages.ssnlink} /></a>
+            <h3><a onClick={this.props.registrationActions.showSSNInfo} title="ssnLink"><FormattedMessage {...messages.ssnLink} /></a>
             </h3>
             {this.props.showSSNInfo ? this.renderSSNInfo() : ''}
           </div>
           <span className="display-inline">
-                  <h2><FormattedMessage {...messages.ssnheader} /></h2>
+                  <h2><FormattedMessage {...messages.ssnHeader} /></h2>
                   <input name="ssn" type="text" id="ssn" {...ssn} />
-                  <label htmlFor="ssn"><FormattedMessage {...messages.ssnlabel} /></label>
+                  <label htmlFor="ssn"><FormattedMessage {...messages.ssnLabel} /></label>
             {this.getValidator(ssn)}
                 </span>
           {this.props.isCheckingForExistingUser ? this.renderCheckingForExistingUser() : ''}
@@ -205,23 +205,23 @@ const messages = defineMessages({
     description: 'Label for the year field',
     defaultMessage: 'Year'
   },
-  ssnheader: {
-    id: 'RegistrationFormPartOne.ssnheader',
+  ssnHeader: {
+    id: 'RegistrationFormPartOne.ssnHeader',
     description: 'Header for input field social security number',
     defaultMessage: 'ID-number'
   },
-  ssnlabel: {
-    id: 'RegistrationFormPartOne.ssnlabel',
+  ssnLabel: {
+    id: 'RegistrationFormPartOne.ssnLabel',
     description: 'Label(s) for social security number',
     defaultMessage: 'SSN/D-nr./DUF.nr.'
   },
-  ssnlink: {
-    id: 'RegistrationFormPartOne.ssnlink',
+  ssnLink: {
+    id: 'RegistrationFormPartOne.ssnLink',
     description: 'Link label for info on ssn',
     defaultMessage: 'Why do I need to fill in birth date and Social security number?'
   },
-  ssninfo: {
-    id: 'RegistrationFormPartOne.ssninfo',
+  ssnInfo: {
+    id: 'RegistrationFormPartOne.ssnInfo',
     description: 'Expanded info on ssn',
     defaultMessage: 'SSN is your personal Social security number. It is either ... etc'
   }
