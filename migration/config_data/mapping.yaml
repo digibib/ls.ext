@@ -3056,7 +3056,7 @@
                     o: "E-book"
                     sm: "Periodical"
                     vo: "File_folder"
-                  orig: "ab|da|db|dc|dd|de|dg|dh|di|dj|dl|dm|dn|dz|ed|ee|ef|fd|fm|ga|gc|gd|ge|gt|ib|ic|la|ma|mb|mc|me|mj|mk|mn|mo|na|nb|sm|vo|a|c|h|j|l|o"
+                  orig: "ab|da|db|dc|dd|de|dg|dh|di|dj|dl|dm|dn|dz|ed|ee|ef|fd|fm|ga|gc|gd|ge|gg|gt|ib|ic|la|ma|mb|mc|me|mj|mk|mn|mo|na|nb|sm|vo|a|c|h|j|l|o"
           -
             d:
               predicate: "ONTOLOGY.literaryForm"
