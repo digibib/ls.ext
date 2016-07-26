@@ -160,8 +160,17 @@
       "index": "no"
     },
     "mediatypesFromAllPublications": {
-      "type": "string",
-      "index": "no"
+      "type": "nested",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "index": "no"
+        },
+        "formats": {
+          "type": "string",
+          "index": "no"
+        }
+      }
     }
   }
 }

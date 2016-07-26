@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import Constants from '../constants/Constants'
 import Items from '../components/Items'
+import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 
 class SearchResult extends React.Component {
@@ -134,16 +134,9 @@ class SearchResult extends React.Component {
         <article className="entry-content">
 
           <div className="entry-content-icon">
-            <div className="entry-content-icon-single">
-              {result.mediaTypes.map(mediaType => {
-                return (
-                  <div>
-                    <img src={`/images/icon-${Constants.mediaTypeIcons[mediaType]}.svg`} />
-                    <p>{this.props.intl.formatMessage({ id: mediaType })}</p>
-                  </div>
-                )
-              })}
-            </div>
+            {result.mediaTypes.map(mediaType => {
+              return <MediaType mediaType={mediaType} />
+            })}
           </div>
 
           <h1>

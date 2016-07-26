@@ -17,7 +17,7 @@ CONSTRUCT {
                deich:contributor ?contrib ;
                deich:hasImage ?img ;
                deich:hasImageAll ?allImg ;
-               deich:hasMediaTypeAll ?allMediaType ;
+               deich:hasMediaTypeAll ?mediaType ;
                deich:workUri ?workUri ;
                deich:subject ?subjectLabel ;
                deich:genre ?genreLabel ;
@@ -27,6 +27,8 @@ CONSTRUCT {
                deich:mainEntryName ?mainEntryName ;
                deich:recordID ?recordId ;
                deich:abstract ?abstract .
+  ?mediaType a deich:Mediatype ;
+               deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
                deich:role ?contribRole ;
                deich:agent ?contribAgent ;
@@ -60,11 +62,11 @@ WHERE {
   }
 
   OPTIONAL {
-    ?p deich:publicationOf ?work ;
+    ?p2 deich:publicationOf ?work ;
        deich:mainTitle ?englishMainTitle ;
        deich:language <http://lexvo.org/id/iso639-3/eng> .
     OPTIONAL {
-        ?p deich:publicationOf ?work ;
+        ?p2 deich:publicationOf ?work ;
                deich:partTitle ?englishPartTitle ;
                deich:language <http://lexvo.org/id/iso639-3/eng> .
         }
@@ -72,14 +74,15 @@ WHERE {
   }
 
   OPTIONAL {
-      ?p deich:publicationOf ?work ;
+      ?p3 deich:publicationOf ?work ;
          deich:hasImage ?allImg .
     }
 
   OPTIONAL {
-        ?p deich:publicationOf ?work ;
-           deich:mediaType ?mto .
-        BIND(str(?mto) AS ?allMediaType)
+        ?p4 deich:publicationOf ?work ;
+           deich:mediaType ?mediaType ;
+           deich:format ?mtFormatO .
+           BIND(str(?mtFormatO) AS ?mtFormat)
       }
 
   OPTIONAL {
