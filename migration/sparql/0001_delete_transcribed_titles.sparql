@@ -3,7 +3,7 @@
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
-PREFIX raw: <http://deichman.no/raw#>
+PREFIX raw: <http://data.deichman.no/raw#>
 
 WITH <http://deichman.no/migration>
 
@@ -29,7 +29,7 @@ WHERE {
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
-PREFIX raw: <http://deichman.no/raw#>
+PREFIX raw: <http://data.deichman.no/raw#>
 
 WITH <http://deichman.no/migration>
 

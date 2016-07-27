@@ -2,7 +2,7 @@
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
-PREFIX raw: <http://__HOST__/raw#>
+PREFIX raw: <http://data.deichman.no/raw#>
 
 WITH <http://deichman.no/migration>
 
