@@ -270,16 +270,15 @@ public final class EntityServiceImpl implements EntityService {
             modelWithoutItems = ModelFactory.createDefaultModel();
         }
 
-        String mainEntryName = null;
+        Model work = ModelFactory.createDefaultModel();
         if (inputModel.contains(null, publicationOfProperty)) {
-            Model work = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
+            work = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
             if (work.isEmpty()) {
                 throw new BadRequestException("Associated work does not exist.");
             }
-            mainEntryName = getMainEntryName(work);
         }
 
-        MarcRecord marcRecord = generateMarcRecordForPublication(inputModel, mainEntryName);
+        MarcRecord marcRecord = generateMarcRecordForPublication(inputModel, work);
         streamFrom(inputModel.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
@@ -357,7 +356,7 @@ public final class EntityServiceImpl implements EntityService {
                 XURI workXURI = new XURI(model.getProperty(null, publicationOfProperty).getObject().toString());
                 updatePublicationWithWork(workXURI, model);
             } else {
-                updatePublicationInKoha(model, null);
+                updatePublicationInKoha(model, ModelFactory.createDefaultModel());
             }
         } else {
             model = retrieveById(xuri);
@@ -367,13 +366,10 @@ public final class EntityServiceImpl implements EntityService {
 
     private void updatePublicationWithWork(XURI workXURI, Model publication) {
         Model work = repository.retrieveWorkAndLinkedResourcesByURI(workXURI);
-        String mainEntryName = getMainEntryName(work);
-        updatePublicationInKoha(publication, mainEntryName);
+        updatePublicationInKoha(publication, work);
     }
 
     private void updatePublicationsByWork(XURI xuri, Model work) {
-
-        String mainEntryName = getMainEntryName(work);
         Model publications = repository.retrievePublicationsByWork(xuri);
 
         streamFrom(publications.listStatements())
@@ -382,7 +378,7 @@ public final class EntityServiceImpl implements EntityService {
                     if (isPublication(statements)) {
                         Model publication = ModelFactory.createDefaultModel();
                         publication.add(statements);
-                        updatePublicationInKoha(publication, mainEntryName);
+                        updatePublicationInKoha(publication, work);
                     }
                 });
     }
@@ -391,13 +387,17 @@ public final class EntityServiceImpl implements EntityService {
         return statements.stream().anyMatch(typeStatement("Publication"));
     }
 
-    private void updatePublicationInKoha(Model publication, String mainEntryName) {
-        MarcRecord marcRecord = generateMarcRecordForPublication(publication, mainEntryName);
+    private void updatePublicationInKoha(Model publication, Model work) {
+        MarcRecord marcRecord = generateMarcRecordForPublication(publication, work);
         kohaAdapter.updateRecord(publication.getProperty(null, recordIdProperty).getString(), marcRecord);
     }
 
-    private MarcRecord generateMarcRecordForPublication(Model publication, String mainEntryName) {
+    private MarcRecord generateMarcRecordForPublication(Model publication, Model work) {
+
+        String mainEntryName = getMainEntryName(work);
+
         MarcRecord marcRecord = new MarcRecord();
+
 
         if (mainEntryName != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, mainEntryName);
