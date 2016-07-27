@@ -413,7 +413,7 @@ public class AppTest {
         doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
 
         // delete publication
-        kohaSvcMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, 0);
+        kohaSvcMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, "{\"items\":[]}");
         kohaSvcMock.addDeleteBibloExpectation(FIRST_BIBLIO_ID);
         assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(publicationUri).getStatus());
 
