@@ -411,6 +411,14 @@ public class AppTest {
         doSearchForPersons("Orwell");
 
         doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
+
+        // delete publication
+        kohaSvcMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, 0);
+        kohaSvcMock.addDeleteBibloExpectation(FIRST_BIBLIO_ID);
+        assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(publicationUri).getStatus());
+
+        // delete work
+        assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(workUri).getStatus());
     }
 
     @Test

@@ -173,20 +173,6 @@ public final class SPARQLQueryBuilder {
         return baos.toString("UTF-8");
     }
 
-    public String updateDelete(Model inputModel) {
-        StringWriter sw = new StringWriter();
-        RDFDataMgr.write(sw, inputModel, Lang.NTRIPLES);
-        String data = sw.toString();
-
-        return "DELETE {\n"
-                + data
-                + "} WHERE {\n"
-                + "\n"
-                + data
-                + "\n"
-                + "}";
-    }
-
     public String patch(List<Patch> patches) {
         StringBuilder q = new StringBuilder();
 

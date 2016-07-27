@@ -1,6 +1,8 @@
 package no.deichman.services.entity.repository;
 
 import no.deichman.services.entity.patch.Patch;
+import no.deichman.services.entity.patch.PatchParser;
+import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -224,7 +226,12 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final void delete(Model inputModel) {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.updateDelete(inputModel));
+        UpdateRequest updateRequest = null;
+        try {
+            updateRequest = UpdateFactory.create(sqb.patch(PatchParser.createDeleteModelAsPatches(inputModel)));
+        } catch (PatchParserException e) {
+            throw new RuntimeException(e);
+        }
         executeUpdate(updateRequest);
     }
 

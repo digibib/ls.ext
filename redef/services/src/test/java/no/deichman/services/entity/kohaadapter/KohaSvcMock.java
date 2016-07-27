@@ -10,8 +10,10 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.DELETE;
 import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.POST;
 import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.PUT;
+import static com.github.restdriver.clientdriver.RestClientDriver.giveEmptyResponse;
 import static com.github.restdriver.clientdriver.RestClientDriver.giveResponse;
 import static com.github.restdriver.clientdriver.RestClientDriver.onRequestTo;
 import static javax.ws.rs.core.Response.Status.CREATED;
@@ -42,7 +44,7 @@ public final class KohaSvcMock {
 
     public void addGetBiblioExpandedExpectation(String biblioId, String responseJSON) throws IOException {
         clientDriver.addExpectation(
-                onRequestTo("/api/v1/biblios/" + biblioId+ "/expanded")
+                onRequestTo("/api/v1/biblios/" + biblioId + "/expanded")
                         .withMethod(ClientDriverRequest.Method.GET)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(
@@ -126,5 +128,13 @@ public final class KohaSvcMock {
                 giveResponse(responseJSON, "application/json; charset=utf8")
                         .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + biblioId)
                         .withStatus(CREATED.getStatusCode()));
+    }
+
+    public void addDeleteBibloExpectation(String biblioId) {
+        clientDriver.addExpectation(
+                onRequestTo("api/v1/biblios/" + biblioId)
+                        .withMethod(DELETE)
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                giveEmptyResponse().withStatus(OK.getStatusCode()));
     }
 }

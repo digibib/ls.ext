@@ -157,23 +157,6 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test
-    public void test_update_delete(){
-        Statement s = getTestStatement();
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
-        Model m = ModelFactory.createDefaultModel();
-        m.add(s);
-        String triple = "<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> .";
-        String expected = "DELETE {\n"
-                + triple + "\n"
-                + "} WHERE {\n"
-                + "\n"
-                + triple
-                + "\n\n"
-                + "}";
-        assertEquals(expected,sqb.updateDelete(m));
-    }
-
-    @Test
     public void test_insert_patch() throws Exception{
         List<Patch> patches = new ArrayList<Patch>();
         Statement s = statement("http://example.com/a", "http://example.com/ontology/name", "json");

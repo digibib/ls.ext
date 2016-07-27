@@ -85,7 +85,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at det finnes et verk med forfatter
     Når jeg legger inn forfatternavnet på startsida
     Og velger verket fra lista tilkoplet forfatteren
-    Så fjerner jeg hovedinnførselen
     Så klikker jeg på fanen "Beskriv verk"
     Så trykker jeg på "Slett verket"-knappen
     Så trykker jeg på "Slett"-knappen i dialogen
@@ -96,11 +95,20 @@ Egenskap: Katalogisere i arbeidsflyt
 
   Scenario: Slette utgivelse
     Gitt at jeg har en bok
+    Og jeg vil lage en ny serie
+    Så leverer systemet en ny ID for den nye serien
+    Og jeg kan legge inn seriens navn
     Og at det finnes et verk med forfatter
     Når jeg legger inn forfatternavnet på startsida
     Og velger verket fra lista tilkoplet forfatteren
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg venter litt
+    Og at jeg skriver inn serie i feltet "Serie" og trykker enter
+    Så velger jeg en serie fra treffliste fra serieregisteret
+    Så skriver jeg inn "12" som utgivelsens nummer i serien
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Så sjekker jeg at utgivelsen er nummer "12" i serien
     Så husker jeg tittelnummeret til senere
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
     Og jeg venter litt
@@ -185,6 +193,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt generelt emne"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Og jeg venter litt
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
     Så velger jeg et emne fra treffliste fra emneregisteret
