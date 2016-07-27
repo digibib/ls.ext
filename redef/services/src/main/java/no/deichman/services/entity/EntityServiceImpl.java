@@ -64,6 +64,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property isbnProperty;
     private final Property publicationYearProperty;
     private final Property subtitleProperty;
+    private final Property ageLimitProperty;
 
 
 
@@ -80,6 +81,7 @@ public final class EntityServiceImpl implements EntityService {
         isbnProperty = ResourceFactory.createProperty(baseURI.ontology("isbn"));
         publicationYearProperty = ResourceFactory.createProperty(baseURI.ontology("publicationYear"));
         subtitleProperty = ResourceFactory.createProperty(baseURI.ontology("subtitle"));
+        ageLimitProperty = ResourceFactory.createProperty(baseURI.ontology("ageLimit"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -424,6 +426,11 @@ public final class EntityServiceImpl implements EntityService {
             marcRecord.addMarcField(MarcConstants.FIELD_260, MarcConstants.SUBFIELD_C,
                     publication.getProperty(null, publicationYearProperty).getLiteral().getString());
         }
+        if (publication.getProperty(null, ageLimitProperty) != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_019, MarcConstants.SUBFIELD_C,
+                    publication.getProperty(null, ageLimitProperty).getLiteral().getString());
+        }
+
 
         return marcRecord;
     }

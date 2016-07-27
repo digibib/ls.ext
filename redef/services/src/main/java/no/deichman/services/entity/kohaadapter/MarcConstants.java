@@ -4,6 +4,7 @@ package no.deichman.services.entity.kohaadapter;
  * Responsibility: Provide MARC constants.
  */
 public final class MarcConstants {
+    public static final String FIELD_019 = "019";
     public static final String FIELD_100 = "100";
     public static final String FIELD_952 = "952";
     public static final String FIELD_260 = "260";
