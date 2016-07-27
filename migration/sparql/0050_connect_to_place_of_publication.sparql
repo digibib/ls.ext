@@ -1,5 +1,4 @@
 # Knytt utgivelsessted til allerede eksisterende stedsressurs
-
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 PREFIX raw: <http://data.deichman.no/raw#>
@@ -16,4 +15,31 @@ WHERE {
     ?place a :Place ;
          :prefLabel ?placeLabel .
 }
+;
+
+# Knytt utgivelsessted med kjente, vanlige forkortelser til allerede eksisterende stedsressurs
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX raw: <http://data.deichman.no/raw#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  ?pub :hasPlaceOfPublication ?place
+}
+
+WHERE {
+    ?pub a :Publication ;
+         raw:publicationPlace ?placeRawLabel .
+    VALUES (?placeRawLabel ?placeLabel) {
+	  ("Kbh."  "København")
+      ("Sthm." "Stockholm")
+      ("Sthm"  "Stockholm")
+      ("Kra."  "Oslo") # Christiania
+	}
+
+    ?place a :Place ;
+         :prefLabel ?placeLabel .
+}
+
 ;
