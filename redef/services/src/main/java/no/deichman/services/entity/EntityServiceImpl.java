@@ -260,19 +260,20 @@ public final class EntityServiceImpl implements EntityService {
 
     private String createPublication(Model inputModel) throws Exception {
 
-        Model work = ModelFactory.createDefaultModel();
         if (inputModel.contains(null, publicationOfProperty)) {
-            work = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
+            Model work = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
             if (work.isEmpty()) {
                 throw new BadRequestException("Associated work does not exist.");
             }
+            inputModel.add(work);
         }
 
-        MarcRecord marcRecord = generateMarcRecordForPublication(inputModel, work);
+        MarcRecord marcRecord = generateMarcRecordForPublication(null, inputModel);
+        String recordId = kohaAdapter.createNewBiblioWithMarcRecord(marcRecord);
 
         return repository.createPublication(
                 inputModel,
-                kohaAdapter.createNewBiblioWithMarcRecord(marcRecord)
+                recordId
         );
     }
 
@@ -317,9 +318,9 @@ public final class EntityServiceImpl implements EntityService {
             model = retrieveById(xuri);
             if (model.getProperty(null, publicationOfProperty) != null) {
                 XURI workXURI = new XURI(model.getProperty(null, publicationOfProperty).getObject().toString());
-                updatePublicationWithWork(workXURI, model);
+                updatePublicationWithWork(workXURI, xuri);
             } else {
-                updatePublicationInKoha(model, ModelFactory.createDefaultModel());
+                updatePublicationInKoha(xuri, model);
             }
         } else {
             model = retrieveById(xuri);
@@ -327,21 +328,24 @@ public final class EntityServiceImpl implements EntityService {
         return model;
     }
 
-    private void updatePublicationWithWork(XURI workXURI, Model publication) {
+    private void updatePublicationWithWork(XURI workXURI, XURI publication) {
         Model work = repository.retrieveWorkAndLinkedResourcesByURI(workXURI);
         updatePublicationInKoha(publication, work);
     }
 
-    private void updatePublicationsByWork(XURI xuri, Model work) {
+    private void updatePublicationsByWork(XURI xuri, Model work)  {
         Model publications = repository.retrievePublicationsByWork(xuri);
 
         streamFrom(publications.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
                     if (isPublication(statements)) {
-                        Model publication = ModelFactory.createDefaultModel();
-                        publication.add(statements);
-                        updatePublicationInKoha(publication, work);
+                        try {
+                            XURI publicationXURI = new XURI(subject.toString());
+                            updatePublicationInKoha(publicationXURI, work);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
     }
@@ -350,48 +354,61 @@ public final class EntityServiceImpl implements EntityService {
         return statements.stream().anyMatch(typeStatement("Publication"));
     }
 
-    private void updatePublicationInKoha(Model publication, Model work) {
+    private void updatePublicationInKoha(XURI publication, Model work) {
         MarcRecord marcRecord = generateMarcRecordForPublication(publication, work);
-        kohaAdapter.updateRecord(publication.getProperty(null, recordIdProperty).getString(), marcRecord);
+        kohaAdapter.updateRecord(work.getProperty(publication.getAsResource(), recordIdProperty).getString(), marcRecord);
     }
 
-    private MarcRecord generateMarcRecordForPublication(Model publication, Model work) {
-
+    private MarcRecord generateMarcRecordForPublication(XURI publication, Model work) {
+        // Extract information from work:
         String mainEntryName = getMainEntryName(work);
+
+        if (work.getProperty(null, publicationOfProperty) != null) {
+            // We have now extracted all information from work, and remove work triples from model,
+            // in order not to fetch eg. work.mainTitle when fetching literals below.
+            work.removeAll(work.getProperty(null, publicationOfProperty).getObject().asResource(), null, null);
+        }
 
         MarcRecord marcRecord = new MarcRecord();
 
+        Resource publicationResource = null; // default null if we are creating MARC record for a new publication without URI yet
+        if (publication != null) {
+            publicationResource = publication.getAsResource();
+        }
 
         if (mainEntryName != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, mainEntryName);
         }
-        if (publication.getProperty(null, mainTitleProperty) != null) {
+
+        // Extract information from publication literals:
+
+        if (work.getProperty(publicationResource, mainTitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A,
-                    publication.getProperty(null, mainTitleProperty).getLiteral().getString());
+                    work.getProperty(publicationResource, mainTitleProperty).getLiteral().getString());
         }
-        if (publication.getProperty(null, subtitleProperty) != null) {
+        if (work.getProperty(publicationResource, subtitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_B,
-                    publication.getProperty(null, subtitleProperty).getLiteral().getString());
+                    work.getProperty(publicationResource, subtitleProperty).getLiteral().getString());
         }
-        if (publication.getProperty(null, partTitleProperty) != null) {
+        if (work.getProperty(publicationResource, partTitleProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_P,
-                    publication.getProperty(null, partTitleProperty).getLiteral().getString());
+                    work.getProperty(publicationResource, partTitleProperty).getLiteral().getString());
         }
-        if (publication.getProperty(null, partNumberProperty) != null) {
+        if (work.getProperty(publicationResource, partNumberProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_N,
-                    publication.getProperty(null, partNumberProperty).getLiteral().getString());
+                    work.getProperty(publicationResource, partNumberProperty).getLiteral().getString());
         }
-        if (publication.getProperty(null, isbnProperty) != null) {
+        if (work.getProperty(publicationResource, isbnProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A,
-                    publication.getProperty(null, isbnProperty).getLiteral().getString());
+                    work.getProperty(publicationResource, isbnProperty).getLiteral().getString());
         }
-        if (publication.getProperty(null, publicationYearProperty) != null) {
+        if (work.getProperty(publicationResource, publicationYearProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_260, MarcConstants.SUBFIELD_C,
-                    publication.getProperty(null, publicationYearProperty).getLiteral().getString());
+                    work.getProperty(publicationResource, publicationYearProperty).getLiteral().getString());
         }
-        if (publication.getProperty(null, ageLimitProperty) != null) {
+        if (work.getProperty(publicationResource, ageLimitProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_019, MarcConstants.SUBFIELD_C,
-                    publication.getProperty(null, ageLimitProperty).getLiteral().getString());
+                    work.getProperty(publicationResource, ageLimitProperty).getLiteral().getString());
         }
 
 

@@ -1,6 +1,8 @@
 package no.deichman.services.uridefaults;
 
 import no.deichman.services.entity.EntityType;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,6 +29,10 @@ public class XURI {
 
     public final String getId() {
         return id;
+    }
+
+    public final Resource getAsResource() {
+        return ResourceFactory.createResource(uri);
     }
 
     public XURI(String inputBaseURI, String type, String id) throws Exception {
