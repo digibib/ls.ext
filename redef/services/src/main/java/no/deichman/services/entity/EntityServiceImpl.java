@@ -57,8 +57,6 @@ public final class EntityServiceImpl implements EntityService {
     private final BaseURI baseURI;
     private final Property hasItemProperty;
     private final Property mainTitleProperty;
-    private final Property nameProperty;
-    private final Property agentProperty;
     private final Property publicationOfProperty;
     private final Property recordIdProperty;
     private final Property partTitleProperty;
@@ -68,14 +66,13 @@ public final class EntityServiceImpl implements EntityService {
     private final Property subtitleProperty;
 
 
+
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
         this.baseURI = baseURI;
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
         hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
         mainTitleProperty = ResourceFactory.createProperty(baseURI.ontology("mainTitle"));
-        nameProperty = ResourceFactory.createProperty(baseURI.ontology("name"));
-        agentProperty = ResourceFactory.createProperty(baseURI.ontology("agent"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
         recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
         partTitleProperty = ResourceFactory.createProperty(baseURI.ontology("partTitle"));
