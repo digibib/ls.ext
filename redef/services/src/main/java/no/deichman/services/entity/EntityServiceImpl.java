@@ -2,7 +2,6 @@ package no.deichman.services.entity;
 
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
-import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
@@ -55,7 +54,6 @@ public final class EntityServiceImpl implements EntityService {
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final BaseURI baseURI;
-    private final Property hasItemProperty;
     private final Property mainTitleProperty;
     private final Property publicationOfProperty;
     private final Property recordIdProperty;
@@ -72,7 +70,6 @@ public final class EntityServiceImpl implements EntityService {
         this.baseURI = baseURI;
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
-        hasItemProperty = ResourceFactory.createProperty(baseURI.ontology("hasItem"));
         mainTitleProperty = ResourceFactory.createProperty(baseURI.ontology("mainTitle"));
         publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
         recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
@@ -262,13 +259,6 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     private String createPublication(Model inputModel) throws Exception {
-        Set<Resource> items = objectsOfProperty(hasItemProperty, inputModel);
-        Model modelWithoutItems;
-        if (items.isEmpty()) {
-            modelWithoutItems = inputModel;
-        } else {
-            modelWithoutItems = ModelFactory.createDefaultModel();
-        }
 
         Model work = ModelFactory.createDefaultModel();
         if (inputModel.contains(null, publicationOfProperty)) {
@@ -279,40 +269,13 @@ public final class EntityServiceImpl implements EntityService {
         }
 
         MarcRecord marcRecord = generateMarcRecordForPublication(inputModel, work);
-        streamFrom(inputModel.listStatements())
-                .collect(groupingBy(Statement::getSubject))
-                .forEach((subject, statements) -> {
-                    if (items.contains(subject)) {
-                        marcRecord.addMarcField(as952Subfields(statements));
-                    } else {
-                        statements.forEach(s -> {
-                            if (!s.getPredicate().equals(hasItemProperty)) {
-                                modelWithoutItems.add(s);
-                            }
-                        });
-                    }
-                });
 
         return repository.createPublication(
-                modelWithoutItems,
+                inputModel,
                 kohaAdapter.createNewBiblioWithMarcRecord(marcRecord)
         );
     }
 
-    private MarcField as952Subfields(List<Statement> statements) {
-        MarcField marcField = MarcRecord.newDataField(MarcConstants.FIELD_952);
-
-        statements.forEach(s -> {
-            String predicate = s.getPredicate().getURI();
-            String fieldCode = predicate.substring(predicate.lastIndexOf("/") + 1);
-
-            RDFNode object = s.getObject();
-            if (object.isLiteral() && !(fieldCode.length() > 1)) {
-                marcField.addSubfield(fieldCode.charAt(0), object.asLiteral().getString());
-            }
-        });
-        return marcField;
-    }
 
     @Override
     public void delete(Model model) {

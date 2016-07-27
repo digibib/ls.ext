@@ -40,10 +40,6 @@ public class MarcRecord {
         addMarcField(marcField);
     }
 
-    final boolean hasItems() {
-        return !record.find(MarcConstants.FIELD_952, "").isEmpty();
-    }
-
     final String getMarcXml() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         MarcWriter writer = new MarcXmlWriter(baos);

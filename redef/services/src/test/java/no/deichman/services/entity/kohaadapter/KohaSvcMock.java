@@ -9,7 +9,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.POST;
 import static com.github.restdriver.clientdriver.ClientDriverRequest.Method.PUT;
@@ -27,21 +26,6 @@ public final class KohaSvcMock {
 
     @Rule
     private final ClientDriverRule clientDriver = new ClientDriverRule(clientdriverPort);
-
-    public static String itemMarc(final String barcode) {
-        return "<marcxml:datafield tag=\"" + MarcConstants.FIELD_952 + "\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">hutl</marcxml:subfield>"
-                + "<marcxml:subfield code=\"b\">hutl</marcxml:subfield>"
-                + "<marcxml:subfield code=\"c\">m</marcxml:subfield>"
-                + "<marcxml:subfield code=\"l\">3</marcxml:subfield>"
-                + "<marcxml:subfield code=\"m\">1</marcxml:subfield>"
-                + "<marcxml:subfield code=\"o\">952 Cri</marcxml:subfield>"
-                + "<marcxml:subfield code=\"p\">" + barcode + "</marcxml:subfield>"
-                + "<marcxml:subfield code=\"q\">2014-11-05</marcxml:subfield>"
-                + "<marcxml:subfield code=\"t\">1</marcxml:subfield>"
-                + "<marcxml:subfield code=\"y\">L</marcxml:subfield>"
-                + "</marcxml:datafield>";
-    }
 
     public int getPort() {
         return clientdriverPort;
@@ -105,41 +89,6 @@ public final class KohaSvcMock {
                         .withStatus(OK.getStatusCode()));
     }
 
-    public void addGetBiblioExpandedExpectation(String biblioId, int noOfItems) throws IOException {
-        String responseJSON = "{\n"
-                + "  \"biblio\": {\n"
-                + "    \"author\": \"Ragde, Anne B.\",\n"
-                + "    \"biblionumber\": \"626460\",\n"
-                + "    \"title\": \"Berlinerpoplene\"\n"
-                + "  },\n"
-                + "  \"items\": [\n"
-                + itemsArray(biblioId, noOfItems)
-                + "  ]\n"
-                + "}";
-        addGetBiblioExpandedExpectation(biblioId, responseJSON);
-    }
-
-    private String itemsArray(String biblioId, int noOfItems) {
-        String[] items = new String[noOfItems];
-        for (int i = 0; i < noOfItems; i++) {
-            items[i] = itemObject(biblioId + "0" + i);
-        }
-        return String.join(",\n", items);
-    }
-
-    private String itemObject(final String barcode) {
-        return "{\n"
-                + "      \"barcode\": \"" + barcode + "\",\n"
-                + "      \"biblionumber\": \"126\",\n"
-                + "      \"holdingbranch\": \"hutl\",\n"
-                + "      \"homebranch\": \"hutl\",\n"
-                + "      \"itemcallnumber\": \"952 Cri\",\n"
-                + "      \"itype\": \"L\",\n"
-                + "      \"location\": \"m\",\n"
-                + "      \"status\": \"Ledig\"\n"
-                + "}";
-    }
-
     public void addCreateNewBiblioExpectation(String returnedBiblioId) {
         String responseJSON = ""
                 + "{\n"
@@ -162,34 +111,6 @@ public final class KohaSvcMock {
                         .withStatus(CREATED.getStatusCode()));
     }
 
-    public void addCreateNewBiblioWithItemsExpectation(String biblioId, String... barcode) {
-        // TODO most likely this needs to be fixed
-        String responseJSON = ""
-                + "{\n"
-                + "    \"biblionumber\": \"" + biblioId + "\", \n"
-                + "    \"items\": \"1\"\n"
-                + "}\n";
-
-        // TODO most likely this needs to be fixed
-        String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
-                + "<marcxml:record><marcxml:leader>00080    a2200049   4500</marcxml:leader>"
-                + "<marcxml:datafield tag=\"" + MarcConstants.FIELD_245 + "\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">" + "Test test test" + "</marcxml:subfield>"
-                + "</marcxml:datafield>"
-                + Stream.of(barcode).map(KohaSvcMock::itemMarc).reduce("", String::concat)
-                + "</marcxml:record>"
-                + "</marcxml:collection>\n";
-
-        clientDriver.addExpectation(
-                onRequestTo("/api/v1/biblios")
-                        .withMethod(POST)
-                        .withBody(Pattern.compile("(?s).*"), MediaType.TEXT_XML)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
-                giveResponse(responseJSON, "application/json; charset=utf8")
-                        .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + biblioId)
-                        .withStatus(CREATED.getStatusCode()));
-    }
 
     public void addCreateNewBiblioFromMarcXmlExpectation(String biblioId, String expectedPayload) {
         String responseJSON = ""

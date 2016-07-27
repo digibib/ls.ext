@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.KohaItem2Rdf;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
-import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.InMemoryRepository;
@@ -302,31 +301,6 @@ public class EntityServiceImplTest {
                 createProperty(DCTerms.identifier.getURI()),
                 createPlainLiteral(testId));
         assertTrue(repository.askIfStatementExists(s));
-    }
-
-    @Test
-    public void test_create_publication_with_items() throws Exception {
-        MarcRecord marcRecord = new MarcRecord();
-        String title = "Titely title";
-        MarcField titleField = MarcRecord.newDataField(MarcConstants.FIELD_245);
-        titleField.addSubfield('a', title);
-        marcRecord.addMarcField(titleField);
-        MarcField itemsField = MarcRecord.newDataField(MarcConstants.FIELD_952);
-        itemsField.addSubfield('a', "hutl");
-        itemsField.addSubfield('b', "hutl");
-        itemsField.addSubfield('c', "m");
-        itemsField.addSubfield('l', "3");
-        itemsField.addSubfield('m', "1");
-        itemsField.addSubfield('o', "952 Cri");
-        itemsField.addSubfield('p', "213123123");
-        itemsField.addSubfield('q', "2014-11-05");
-        itemsField.addSubfield('t', "1");
-        itemsField.addSubfield('y', "L");
-        marcRecord.addMarcField(itemsField);
-        when(mockKohaAdapter.createNewBiblioWithMarcRecord(marcRecord)).thenReturn("123");
-        Model test = modelFrom(itemNTriples(title, "213123123").replaceAll("__BASEURI__", "http://deichman.no/"), Lang.NTRIPLES);
-        String response = service.create(PUBLICATION, test);
-        assertTrue(response.substring(response.lastIndexOf("/") + 1, response.length()).matches("p[0-9]+"));
     }
 
     @Test

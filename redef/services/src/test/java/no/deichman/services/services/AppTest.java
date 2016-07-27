@@ -392,32 +392,6 @@ public class AppTest {
                 workWith2PublicationsCount.execSelect().next().getLiteral("noOfPublications").getInt(),
                 equalTo(2));
 
-        // Two publications with a total of three items
-        kohaSvcMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, 2);
-        kohaSvcMock.addGetBiblioExpandedExpectation(SECOND_BIBLIO_ID, 1);
-
-        final HttpResponse<JsonNode> getWorkWith2Plus1ItemsResponse = buildGetItemsRequest(workUri).asJson();
-        final JsonNode work1Plus2Items = getWorkWith2Plus1ItemsResponse.getBody();
-        final Model work1Plus2ItemsModel = RDFModelUtil.modelFrom(work1Plus2Items.toString(), Lang.JSONLD);
-
-        final QueryExecution workWith1Plus2ItemsCount = QueryExecutionFactory.create(
-                QueryFactory.create(
-                        "PREFIX deichman: <" + baseUri + "ontology#>"
-                                + "SELECT (COUNT (?item) AS ?noOfItems) { "
-                                + "?item a deichman:Item ."
-                                + "}"), work1Plus2ItemsModel);
-        assertThat("model does not have 2 + 1 = 3 items",
-                workWith1Plus2ItemsCount.execSelect().next().getLiteral("noOfItems").getInt(),
-                equalTo(2 + 1));
-        assertThat("model does not contain shelfmarks",
-                work1Plus2ItemsModel.listSubjectsWithProperty(createProperty("http://data.deichman.no/utility#shelfmark")).toList().size(),
-                equalTo(2 + 1));
-        Unirest.get(workUri).asJson();
-        HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
-        assertNotNull(stringHttpResponse);
-        doSearchForWorks("Sult");
-        doSearchForPersons("Hamsun");
-
         //Change the work title and search for it again.
         final JsonArray delTitleToWorkPatch = buildLDPatch(buildPatchStatement("del", workUri, baseUri + "ontology#mainTitle", "Sult"));
         final HttpResponse<String> patchDelTitleToWorkPatchResponse = buildPatchRequest(workUri, delTitleToWorkPatch).asString();
@@ -750,40 +724,6 @@ public class AppTest {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", "{}").asString();
         HttpResponse<String> result2 = buildDeleteRequest(getLocation(result1));
         assertEquals(Status.NO_CONTENT.getStatusCode(), result2.getStatus());
-    }
-
-    @Test
-    public void publication_with_data_and_items_should_post_items_to_koha() throws Exception {
-        kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addCreateNewBiblioWithItemsExpectation(ANOTHER_BIBLIO_ID, "03011527411001");
-
-        String input = "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#bibliofilID> \"1527411\" .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#language> <http://lexvo.org/id/iso639-3/eng> .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#format> <__BASEURI__format#Book> .\n"
-                + "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#mainTitle> \"Critical issues in contemporary Japan\" ."
-                + itemNTriples("03011527411001");
-        input = input.replace("__BASEURI__", baseUri);
-        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
-        String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
-
-        HttpResponse<JsonNode> createPublicationResponse = buildCreateRequest(baseUri + "publication", body).asJson();
-        String publicationUri = getLocation(createPublicationResponse);
-        assertIsUri(publicationUri);
-        assertThat(publicationUri, startsWith(baseUri));
-    }
-
-    private String itemNTriples(final String barcode) {
-        return "<__BASEURI__bibliofilResource/1527411> <__BASEURI__ontology#hasItem> <__BASEURI__bibliofilItem/x" + barcode + "> .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/a> \"hutl\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/b> \"hutl\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/c> \"m\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/l> \"3\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/m> \"1\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/o> \"952 Cri\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/p> \"" + barcode + "\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/q> \"2014-11-05\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/t> \"1\" .\n"
-                + "<__BASEURI__bibliofilItem/x" + barcode + "> <__BASEURI__itemSubfieldCode/y> \"L\" .";
     }
 
     @Test
