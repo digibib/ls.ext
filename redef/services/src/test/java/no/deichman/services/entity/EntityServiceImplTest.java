@@ -709,6 +709,10 @@ public class EntityServiceImplTest {
         field = MarcRecord.newDataField("260");
         field.addSubfield('c', "2004");
         want.addMarcField(field);
+        // Sjanger:
+        field = MarcRecord.newDataField("655");
+        field.addSubfield('a', "Krim");
+        want.addMarcField(field);
 
         MarcRecord got = service.generateMarcRecordForPublication(pub, model);
         assertTrue(got.equals(want));

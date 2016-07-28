@@ -30,6 +30,7 @@ import org.apache.jena.vocabulary.RDF;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -361,8 +362,23 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     public MarcRecord generateMarcRecordForPublication(XURI publication, Model work) {
+
+        MarcRecord marcRecord = new MarcRecord();
+
         // Extract information from work:
+
         String mainEntryName = getMainEntryName(work);
+
+        if (mainEntryName != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, mainEntryName);
+        }
+
+        List<String> genres = getGenres(work);
+        if (!genres.isEmpty()) {
+            for (String genre : genres) {
+                marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, genre);
+            }
+        }
 
         if (work.getProperty(null, publicationOfProperty) != null) {
             // We have now extracted all information from work, and remove work triples from model,
@@ -370,16 +386,12 @@ public final class EntityServiceImpl implements EntityService {
             work.removeAll(work.getProperty(null, publicationOfProperty).getObject().asResource(), null, null);
         }
 
-        MarcRecord marcRecord = new MarcRecord();
 
         Resource publicationResource = null; // default null if we are creating MARC record for a new publication without URI yet
         if (publication != null) {
             publicationResource = publication.getAsResource();
         }
 
-        if (mainEntryName != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, mainEntryName);
-        }
 
         // Extract information from publication literals:
 
@@ -433,6 +445,19 @@ public final class EntityServiceImpl implements EntityService {
             }
         }
         return mainEntryName;
+    }
+
+    private List<String> getGenres(Model work) {
+        List<String> genres = new ArrayList<>();
+        Query query = new SPARQLQueryBuilder(baseURI).getGenreLabels();
+        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
+            ResultSet results = qexec.execSelect();
+            while (results.hasNext()) {
+                QuerySolution soln = results.nextSolution();
+                genres.add(soln.getLiteral("genreLabel").asLiteral().toString());
+            }
+        }
+        return genres;
     }
 
     @Override
