@@ -1,9 +1,9 @@
 {
-  "type": "Publisher",
+  "type": "Corporation",
   "@context": {
     "deichman": "__ONTOLOGY__",
     "name": "deichman:name",
-    "Publisher": "deichman:Publisher",
+    "Corporation": "deichman:Corporation",
     "type": "@type",
     "uri": "@id",
     "graph": "@graph"

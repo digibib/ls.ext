@@ -152,8 +152,8 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createPublisher(Model inputModel) throws Exception {
-        return createResource(inputModel, "Publisher");
+    public final String createCorporation(Model inputModel) throws Exception {
+        return createResource(inputModel, "Corporation");
     }
 
     @Override

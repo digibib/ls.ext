@@ -24,7 +24,7 @@ public class BaseURITest {
             add("ui#");
             add("exemplar/");
             add("place/");
-            add("publisher/");
+            add("corporation/");
         }};
 
         entities.forEach(s -> {

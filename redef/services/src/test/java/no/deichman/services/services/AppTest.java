@@ -682,25 +682,6 @@ public class AppTest {
     }
 
     @Test
-    public void publisher_resource_can_be_created_if_not_a_duplicate() throws UnirestException {
-        String input = "<__BASEURI__externalPublisher/i1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Publisher> .\n"
-                + "<__BASEURI__externalPublisher/i1234> <__BASEURI__ontology#name> \"Publisher name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
-                + "<__BASEURI__externalPublisher/i1234> <http://data.deichman.no/duo#bibliofilPublisherId> \"1234\" .\n";
-        input = input.replace("__BASEURI__", baseUri);
-
-        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
-        String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
-
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", body).asString();
-        HttpResponse<String> result2 = buildCreateRequest(baseUri + "publisher", body).asString();
-
-        assertResponse(Status.CONFLICT, result2);
-        String location1 = getLocation(result1);
-        String location2 = getLocation(result2);
-        assertTrue(location1.equals(location2));
-    }
-
-    @Test
     public void serial_resource_can_be_created() throws UnirestException {
         String input = "<__BASEURI__serial/s1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Serial> .\n"
                 + "<__BASEURI__serial/s1234> <__BASEURI__ontology#name> \"Serial name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
@@ -715,8 +696,8 @@ public class AppTest {
     }
 
     @Test
-    public void publisher_is_patched() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", "{}").asString();
+    public void corporation_is_patched() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "corporation", "{}").asString();
         String op = "ADD";
         String s = getLocation(result1);
         String p = baseUri + "ontology#name";
@@ -728,8 +709,8 @@ public class AppTest {
     }
 
     @Test
-    public void place_of_publisher_is_deleted() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "publisher", "{}").asString();
+    public void place_of_corporation_is_deleted() throws UnirestException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "corporation", "{}").asString();
         HttpResponse<String> result2 = buildDeleteRequest(getLocation(result1));
         assertEquals(Status.NO_CONTENT.getStatusCode(), result2.getStatus());
     }

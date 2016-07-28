@@ -76,7 +76,7 @@ public class EntityServiceImplTest {
     private String publicationURI;
     private String personURI;
     private String placeURI;
-    private String publisherURI;
+    private String corporationURI;
     private String serialURI;
     private String subjectURI;
     private String genreURI;
@@ -110,7 +110,7 @@ public class EntityServiceImplTest {
         publicationURI = localBaseURI.publication();
         personURI = localBaseURI.person();
         placeURI = localBaseURI.place();
-        publisherURI = localBaseURI.publisher();
+        corporationURI = localBaseURI.corporation();
         serialURI = localBaseURI.serial();
         subjectURI = localBaseURI.subject();
         genreURI = localBaseURI.genre();
@@ -472,9 +472,9 @@ public class EntityServiceImplTest {
                 resourceClass = "Place";
                 resourceURI = placeURI;
                 break;
-            case "publisher":
-                resourceClass = "Publisher";
-                resourceURI = publisherURI;
+            case "corporation":
+                resourceClass = "Corporation";
+                resourceURI = corporationURI;
                 break;
             case "serial":
                 resourceClass = "Serial";

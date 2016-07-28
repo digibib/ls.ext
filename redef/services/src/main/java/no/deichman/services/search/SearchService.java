@@ -23,7 +23,7 @@ public interface SearchService {
 
     Response searchPlace(String query);
 
-    Response searchPublisher(String query);
+    Response searchCorporation(String query);
 
     Response searchSerial(String query);
 

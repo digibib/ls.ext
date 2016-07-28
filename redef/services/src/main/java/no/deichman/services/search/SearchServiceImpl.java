@@ -125,7 +125,7 @@ public class SearchServiceImpl implements SearchService {
             putIndexMapping(httpclient, "work");
             putIndexMapping(httpclient, "person");
             putIndexMapping(httpclient, "serial");
-            putIndexMapping(httpclient, "publisher");
+            putIndexMapping(httpclient, "corporation");
             putIndexMapping(httpclient, "place");
             putIndexMapping(httpclient, "subject");
             putIndexMapping(httpclient, "genre");
@@ -195,8 +195,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final Response searchPublisher(String query) {
-        return doSearch(query, getPublisherSearchUriBuilder());
+    public final Response searchCorporation(String query) {
+        return doSearch(query, getCorporationSearchUriBuilder());
     }
 
     @Override
@@ -365,8 +365,8 @@ public class SearchServiceImpl implements SearchService {
         return getIndexUriBuilder().setPath("/search/place/_search");
     }
 
-    public final URIBuilder getPublisherSearchUriBuilder() {
-        return getIndexUriBuilder().setPath("/search/publisher/_search");
+    public final URIBuilder getCorporationSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/corporation/_search");
     }
 
     public final URIBuilder getSerialSearchUriBuilder() {

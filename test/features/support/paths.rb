@@ -94,7 +94,7 @@ module Paths
         :workflow => "/cataloguing?template=workflow&externalSource=random_bs&&externalSource=random_bb",
         :place => "/place",
         :serial => "/serial",
-        :publisher => "/publisher",
+        :corporation => "/corporation",
         :subject => "/subject",
         :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1"
     }

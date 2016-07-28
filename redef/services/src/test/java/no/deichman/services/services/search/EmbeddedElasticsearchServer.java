@@ -49,7 +49,7 @@ public final class EmbeddedElasticsearchServer {
 
         prepareMappingOf("person");
         prepareMappingOf("work");
-        prepareMappingOf("publisher");
+        prepareMappingOf("corporation");
         prepareMappingOf("serial");
         prepareMappingOf("subject");
         prepareMappingOf("genre");

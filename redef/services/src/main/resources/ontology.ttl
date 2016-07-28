@@ -44,10 +44,6 @@
   rdfs:label "Place"@en ;
   rdfs:label "Sted"@no .
 
-:Publisher a rdfs:Class ;
-  rdfs:label "Publisher"@en ;
-  rdfs:label "Utgiver"@no .
-
 # ToDo: Erstattes med :Series
 :Serial a rdfs:Class ;
   rdfs:label "Serial"@en ;
@@ -92,7 +88,7 @@
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person, :Publisher, :Serial, :Corporation, :Subject, :Genre ;
+  rdfs:domain :Person, :Serial, :Corporation, :Subject, :Genre ;
   rdfs:range xsd:string .
 
 # ToDo: Erstatte personTitle med :specification. Domain: Person, Corporation, Subject, Place
@@ -317,7 +313,7 @@
   rdfs:label "Published by"@en ;
   rdfs:label "Utgitt av"@no ;
   rdfs:domain :Publication ;
-  rdfs:range :Publisher .
+  rdfs:range :Corporation, :Person .
 
 # ToDo: Erstattes med :hasSeriesEntry
 # ToDo: Range: :Issue

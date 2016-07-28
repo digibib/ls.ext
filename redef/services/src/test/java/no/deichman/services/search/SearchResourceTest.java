@@ -35,7 +35,7 @@ public class SearchResourceTest {
     private Response mockPlaceSearchResponse;
 
     @Mock
-    private Response mockPublisherSearchResponse;
+    private Response mockCorporationSearchResponse;
 
     @Mock
     private Response mockSerialSearchResponse;
@@ -47,7 +47,7 @@ public class SearchResourceTest {
         when(mockSearchService.searchWork(anyString())).thenReturn(mockWorkSearchResponse);
         when(mockSearchService.searchPerson(anyString())).thenReturn(mockPersonSearchResponse);
         when(mockSearchService.searchPlace(anyString())).thenReturn(mockPlaceSearchResponse);
-        when(mockSearchService.searchPublisher(anyString())).thenReturn(mockPublisherSearchResponse);
+        when(mockSearchService.searchCorporation(anyString())).thenReturn(mockCorporationSearchResponse);
         when(mockSearchService.searchSerial(anyString())).thenReturn(mockSerialSearchResponse);
     }
 
@@ -67,8 +67,8 @@ public class SearchResourceTest {
     }
 
     @Test
-    public void when_search_for_publisher_returns_publisher_response() throws Exception {
-        Assert.assertSame(mockPublisherSearchResponse, searchResource.search("publisher", "query"));
+    public void when_search_for_corporation_returns_publisher_response() throws Exception {
+        Assert.assertSame(mockCorporationSearchResponse, searchResource.search("corporation", "query"));
     }
 
     @Test

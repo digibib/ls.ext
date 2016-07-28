@@ -60,8 +60,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchPerson(query);
             case "place":
                 return getSearchService().searchPlace(query);
-            case "publisher":
-                return getSearchService().searchPublisher(query);
+            case "corporation":
+                return getSearchService().searchCorporation(query);
             case "serial":
                 return getSearchService().searchSerial(query);
             case "subject":
@@ -91,8 +91,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchPersonWithJson(body);
             case "place":
                 return getSearchService().searchPlace(body);
-            case "publisher":
-                return getSearchService().searchPublisher(body);
+            case "corporation":
+                return getSearchService().searchCorporation(body);
             case "serial":
                 return getSearchService().searchSerial(body);
             case "subject":

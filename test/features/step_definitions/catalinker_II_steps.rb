@@ -290,8 +290,8 @@ When(/^jeg kan legge inn emnets navn$/) do
 end
 
 When(/^jeg kan legge inn utgiverens navn$/) do
-  @context[:publisher_name] = generateRandomString
-  @site.RegPublisher.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:publisher_name])
+  @context[:corporation_name] = generateRandomString
+  @site.RegCorporation.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:corporation_name])
 end
 
 When(/^skriver jeg inn "([^"]*)" som utgivelsens nummer i serien$/) do |issue|
@@ -533,7 +533,7 @@ When(/^sjekker jeg at "([^"]*)" er blant verdiene som er valgt for (.*)$/) do |v
 end
 
 When(/^sjekker jeg at overskriften viser informasjon om hva som blir katalogisert$/) do
-  [:work_maintitle, :person_name, :publisher_name, :publication_publicationyear].each do |item|
+  [:work_maintitle, :person_name, :corporation_name, :publication_publicationyear].each do |item|
     @browser.element(:data_automation_id => 'headline').text.include?(@context[item]).should == true
   end
 end

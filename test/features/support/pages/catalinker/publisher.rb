@@ -2,16 +2,16 @@
 
 require_relative 'catalinker_page.rb'
 
-class RegPublisher < CatalinkerPage
+class RegCorporation < CatalinkerPage
   def visit
-    visit_sub_page(:publisher)
+    visit_sub_page(:corporation)
   end
 
   def get_link
-    @browser.a(:data_automation_id => "publisher_page_link").href
+    @browser.a(:data_automation_id => "corporation_page_link").href
   end
 
   def open(resource)
-    super(resource, "publisher")
+    super(resource, "corporation")
   end
 end

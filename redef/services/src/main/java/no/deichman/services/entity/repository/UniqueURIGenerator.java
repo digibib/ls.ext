@@ -33,7 +33,7 @@ class UniqueURIGenerator {
                 break;
             case "Place": result = baseURI.place() + "g" + uniquePart;
                 break;
-            case "Publisher": result = baseURI.publisher() + "i" + uniquePart;
+            case "Corporation": result = baseURI.corporation() + "i" + uniquePart;
                 break;
             case "Serial": result = baseURI.serial() + "s" + uniquePart;
                 break;

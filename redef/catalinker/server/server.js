@@ -72,7 +72,7 @@ app.get('/cataloguing', function (req, res, next) {
   res.sendFile('main.html', { title: 'Katalogisering', root: path.join(__dirname, '/../public/') })
 })
 
-app.get('/:type(person|work|publication|place|serial|publisher|subject|genre)', function (req, res, next) {
+app.get('/:type(person|work|publication|place|serial|corporation|subject|genre)', function (req, res, next) {
   newResource(req.params.type).then(function (response) {
     res.redirect('/cataloguing_old/' + req.params.type + '?resource=' + response.headers.location)
   })

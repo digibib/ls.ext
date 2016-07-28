@@ -106,9 +106,9 @@ module.exports = (app) => {
           ]
         },
         {
-          id: 'create-publisher-form',
+          id: 'create-corporation-form',
           labelForCreateButton: 'Opprett ny utgiver',
-          rdfType: 'Publisher',
+          rdfType: 'Corporation',
           inputs: [
             {
               rdfProperty: 'name',
@@ -334,15 +334,15 @@ module.exports = (app) => {
               rdfProperty: 'publishedBy',
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'name' ], // these are property names used to label already connected entities
-              indexTypes: 'publisher', // this is the name of the elasticsearch index type from which authorities are searched within
+              indexTypes: 'corporation', // this is the name of the elasticsearch index type from which authorities are searched within
               indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels f
               // or authoroty select list are concatenated
               type: 'searchable-with-result-in-side-panel',
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [ {
-                    formId: 'create-publisher-form',
-                    targetType: 'publisher'
+                    formId: 'create-corporation-form',
+                    targetType: 'corporation'
                   } ]
                 }
               },
@@ -660,8 +660,8 @@ module.exports = (app) => {
           }],
           resultItemLabelProperties: [ 'prefLabel' ]
         },
-        publisher: {
-          type: 'publisher',
+        corporation: {
+          type: 'corporation',
           selectIndexLabel: 'Utgiver',
           queryTerms: [{
             field: 'name',

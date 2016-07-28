@@ -61,8 +61,8 @@ public final class BaseURI {
         return baseUriRoot + "place/";
     }
 
-    public String publisher() {
-        return baseUriRoot + "publisher/";
+    public String corporation() {
+        return baseUriRoot + "corporation/";
     }
 
     public String serial() {

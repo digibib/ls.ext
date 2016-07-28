@@ -752,7 +752,7 @@
       case 'deichman:Place':
       case 'deichman:Work':
       case 'deichman:Person':
-      case 'deichman:Publisher':
+      case 'deichman:Corporation':
       case 'deichman:Role':
       case 'deichman:Serial':
       case 'deichman:Contribution':

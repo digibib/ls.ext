@@ -152,7 +152,7 @@ WHERE {
 
 
 
-# 7) workAuthority for utgivelser med publisher
+# 7) workAuthority for utgivelser med corporation
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>

@@ -551,7 +551,7 @@ When(/^jeg vil lage et nytt emne/) do
 end
 
 When(/^jeg vil lage en ny utgiver/) do
-  @site.RegPublisher.visit
+  @site.RegCorporation.visit
 end
 
 When(/^leverer systemet en ny ID for den nye personen$/) do
@@ -575,9 +575,9 @@ When(/^leverer systemet en ny ID for det nye emnet/) do
 end
 
 When(/^leverer systemet en ny ID for den nye utgiveren/) do
-  @context[:publisher_identifier] = @site.RegPublisher.get_id()
-  @context[:publisher_identifier].should_not be_empty
-  @context[:publishedby_identifier] = @context[:publisher_identifier]
+  @context[:corporation_identifier] = @site.RegCorporation.get_id()
+  @context[:corporation_identifier].should_not be_empty
+  @context[:publishedby_identifier] = @context[:corporation_identifier]
 end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do

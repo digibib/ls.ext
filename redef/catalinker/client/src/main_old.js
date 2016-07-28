@@ -256,7 +256,7 @@
                     case "deichman:Work":
                     case "deichman:Person":
                     case "deichman:Place":
-                    case "deichman:Publisher":
+                    case "deichman:Corporation":
                     case "deichman:Genre":
                         // TODO infer from ontology that this is an URI
                         // (because deichman:Work a rdfs:Class)

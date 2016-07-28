@@ -237,8 +237,8 @@ public final class EntityServiceImpl implements EntityService {
             case PLACE:
                 uri = repository.createPlace(inputModel);
                 break;
-            case PUBLISHER:
-                uri = repository.createPublisher(inputModel);
+            case CORPORATION:
+                uri = repository.createCorporation(inputModel);
                 break;
             case SERIAL:
                 uri = repository.createSerial(inputModel);

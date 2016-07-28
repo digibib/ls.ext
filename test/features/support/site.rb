@@ -10,7 +10,7 @@ class Site
         'utgivelse' => 'publication',
         'person' => 'person',
         'sted' => 'hasPlaceOfPublication',
-        'utgiver' => 'publisher',
+        'utgiver' => 'corporation',
         'utgitt av' => 'publishedBy',
         'serie' => 'serial',
         'emne' => 'subject',

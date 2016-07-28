@@ -15,16 +15,16 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 /**
  * Responsibility: unit test PublisherModelToIndexMapper.
  */
-public class PublisherModelToIndexMapperTest {
+public class CorporationModelToIndexMapperTest {
     private BaseURI baseURI = BaseURI.local();
     @Test
     public void testModelToIndexDocument() throws Exception {
-        XURI xuri = new XURI(baseURI.getBaseUriRoot(), EntityType.PUBLISHER.getPath(), "h00000121");
+        XURI xuri = new XURI(baseURI.getBaseUriRoot(), EntityType.CORPORATION.getPath(), "h00000121");
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(xuri.getUri()),
                 RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + "Publisher")));
+                ResourceFactory.createResource(baseURI.ontology() + "Corporation")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(xuri.getUri()),
@@ -36,7 +36,7 @@ public class PublisherModelToIndexMapperTest {
                 ResourceFactory.createProperty(baseURI.ontology() + "name"),
                 ResourceFactory.createPlainLiteral("publisherName_value")));
 
-        String jsonDocument = new ModelToIndexMapper("publisher", BaseURI.local()).createIndexDocument(model, xuri);
+        String jsonDocument = new ModelToIndexMapper("corporation", BaseURI.local()).createIndexDocument(model, xuri);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
