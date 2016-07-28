@@ -13,7 +13,7 @@ import org.junit.Test;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 
 /**
- * Responsibility: unit test PublisherModelToIndexMapper.
+ * Responsibility: unit test CorporationModelToIndexMapper.
  */
 public class CorporationModelToIndexMapperTest {
     private BaseURI baseURI = BaseURI.local();

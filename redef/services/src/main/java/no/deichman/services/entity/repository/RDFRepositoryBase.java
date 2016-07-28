@@ -242,19 +242,6 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final Optional<String> getResourceURIByBibliofilId(String personId) {
-        try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPersonResource(personId))) {
-            disableCompression(qexec);
-            ResultSet resultSet = qexec.execSelect();
-            boolean uri = resultSet.hasNext();
-            if (uri) {
-                return Optional.of(resultSet.next().getResource("uri").toString());
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
     public final Optional<String> getResourceURIByBibliofilId(String id, String type) {
         try (QueryExecution qexec = getQueryExecution(sqb.getImportedResourceById(id, type))) {
             disableCompression(qexec);
@@ -267,33 +254,6 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         return Optional.empty();
     }
 
-
-
-    @Override
-    public final Optional<String> getPlaceResourceURIByBibliofilId(String id) {
-        try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPlaceResource(id))) {
-            disableCompression(qexec);
-            ResultSet resultSet = qexec.execSelect();
-            boolean uri = resultSet.hasNext();
-            if (uri) {
-                return Optional.of(resultSet.next().getResource("uri").toString());
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public final Optional<String> getPublisherResourceURIByBibliofilId(String id) {
-        try (QueryExecution qexec = getQueryExecution(sqb.getBibliofilPublisherResource(id))) {
-            disableCompression(qexec);
-            ResultSet resultSet = qexec.execSelect();
-            boolean uri = resultSet.hasNext();
-            if (uri) {
-                return Optional.of(resultSet.next().getResource("uri").toString());
-            }
-        }
-        return Optional.empty();
-    }
 
     @Override
     public final Model retrieveWorksByCreator(XURI xuri) {

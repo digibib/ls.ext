@@ -45,12 +45,6 @@ public interface RDFRepository {
 
     void patch(List<Patch> patches);
 
-    Optional<String> getResourceURIByBibliofilId(String personId);
-
-    Optional<String> getPlaceResourceURIByBibliofilId(String id);
-
-    Optional<String> getPublisherResourceURIByBibliofilId(String bibliofilId);
-
     List<String> getWorkURIsByAgent(XURI agent);
 
     Model retrieveWorksByCreator(XURI xuri);

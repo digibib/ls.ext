@@ -18,7 +18,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -27,7 +26,6 @@ import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.vocabulary.RDF.type;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -166,62 +164,6 @@ public class InMemoryRepositoryTest {
         repository = repositoryWithDataFrom("testdata.ttl");
         XURI test = new XURI("http://deichman.no/work/w00001");
         assertTrue(repository.askIfResourceExists(test));
-    }
-
-    @Test
-    public void test_get_person_resource_URI_by_Bibliofil_id() throws Exception {
-        String personId = "n12345";
-        String person = setUpBibliofilImportedTestNTriples(PERSON, personId);
-        Optional personExists = queryBibliofilResource(PERSON, personId);
-        assertEquals("Expected person ID to result in URI match", person, personExists.get());
-    }
-
-    @Test
-    public void test_get_place_resource_URI_by_bibliofil_id() throws Exception {
-        String placeId = "n12345";
-        String place = setUpBibliofilImportedTestNTriples(PERSON, placeId);
-        Optional personExists = queryBibliofilResource(PERSON, placeId);
-        assertEquals("Expected person ID to result in URI match", place, personExists.get());
-    }
-
-    private Optional queryBibliofilResource(String type, String identifier) {
-        Optional exists;
-        switch (type) {
-            case "Person": exists = repository.getResourceURIByBibliofilId(identifier);
-                break;
-            case "Place": exists = repository.getPlaceResourceURIByBibliofilId(identifier);
-                break;
-            default: exists = Optional.of(UNRECOGNISED_TYPE_ERROR);
-                break;
-        }
-
-        if (exists.isPresent() && exists.get() == UNRECOGNISED_TYPE_ERROR) {
-            throw new Error(UNRECOGNISED_TYPE_ERROR);
-        }
-
-        return exists;
-    }
-
-    private String setUpBibliofilImportedTestNTriples(String type, String identifier) throws Exception {
-        String testData = "<#> <http://data.deichman.no/duo#bibliofil" + type + "Id> \"" + identifier + "\" .";
-        Model model = RDFModelUtil.modelFrom(testData, Lang.NTRIPLES);
-
-        String retVal = null;
-
-        switch (type) {
-            case PERSON: retVal = repository.createPerson(model);
-                break;
-            case PLACE: retVal = repository.createPlace(model);
-                break;
-            default: retVal = UNRECOGNISED_TYPE_ERROR;
-                break;
-        }
-
-        if (retVal == UNRECOGNISED_TYPE_ERROR) {
-            throw new Error(UNRECOGNISED_TYPE_ERROR);
-        }
-
-        return retVal;
     }
 
     public static InMemoryRepository repositoryWithDataFrom(String fileName) {
