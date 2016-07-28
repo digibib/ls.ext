@@ -650,6 +650,7 @@ public class EntityServiceImplTest {
                 + "    ns2:hasImage \"http://static.deichman.no/626460/kr/1_thumb.jpg\" ;\n"
                 + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
                 + "    ns2:subtitle \"roman\" ;\n"
+                + "    ns2:ageLimit \"75\" ;\n"
                 + "    ns4:locationSignature \"Rag\" ;\n"
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
@@ -722,6 +723,10 @@ public class EntityServiceImplTest {
         want.addMarcField(field);
         field = MarcRecord.newDataField("690");
         field.addSubfield('a', "Popler");
+        want.addMarcField(field);
+        // Aldersgrense:
+        field = MarcRecord.newDataField("019");
+        field.addSubfield('c', "75");
         want.addMarcField(field);
 
 
