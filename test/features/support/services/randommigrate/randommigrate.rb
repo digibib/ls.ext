@@ -26,21 +26,6 @@ module RandomMigrate
       @raw << raw
     end
 
-    def add_item(available, placement, branchcode)
-      barcode = SecureRandom.hex(8)
-      type = "item-#{barcode}"
-      add_raw("<publication> <#{@host}/ontology#hasItem> <#{type}> .
-               <#{type}> <#{@host}/itemSubfieldCode/a> \"#{branchcode}\" .
-               <#{type}> <#{@host}/itemSubfieldCode/b> \"#{branchcode}\" .
-               <#{type}> <#{@host}/itemSubfieldCode/l> \"12\" .
-               <#{type}> <#{@host}/itemSubfieldCode/o> \"#{placement}\" .
-               <#{type}> <#{@host}/itemSubfieldCode/p> \"#{barcode}\" .
-               <#{type}> <#{@host}/itemSubfieldCode/t> \"#{@raw.size}\" .
-               <#{type}> <#{@host}/itemSubfieldCode/y> \"l\" .
-               #{"<#{type}> <#{@host}/itemSubfieldCode/q> \"2011-06-20\" ." unless available}"
-      )
-    end
-
     def to_ntriples()
       ntriples = "<#{@type}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology##{@type.capitalize}> .\n"
       @literals.each do |predicate, value|
@@ -150,6 +135,14 @@ module RandomMigrate
       return @id
     end
 
+    def add_item(record_id, available, placement, branchcode, copynumber)
+      barcode = SecureRandom.hex(8)
+      onloan = available ? "'2011-06-20'" : "NULL"
+      cmd ="INSERT INTO items (biblionumber, biblioitemnumber, barcode, homebranch, holdingbranch,itype,itemcallnumber,onloan,copynumber) \
+            VALUES(#{record_id},#{record_id},'#{barcode}','#{branchcode}','#{branchcode}','l','#{placement}',#{onloan},'#{copynumber}')"
+      `mysql -h koha_mysql -u#{ENV['KOHA_ADMINUSER']} -p#{ENV['KOHA_ADMINPASS']} koha_name -e "#{cmd}"`
+    end
+
     def specialized_migrate(branchcode)
       person_uri = post_ntriples 'person', generate_person[1]
       work_uri = post_ntriples('work', generate_work(person_uri)[1])
@@ -158,9 +151,6 @@ module RandomMigrate
       publication_1.add_authorized('publicationOf', work_uri)
       publication_1.add_literal('mainTitle', "pubprefix0#{@id} #{@id}nob")
       publication_1.add_authorized('language', 'http://lexvo.org/id/iso639-3/nob')
-      publication_1.add_item(true, 'placement1', branchcode)
-      publication_1.add_item(false, 'placement2', branchcode)
-      publication_1.add_item(false, 'placement1', branchcode)
       @publication_uris << post_ntriples('publication', publication_1.to_ntriples)
 
       publication_2 = Entity.new('publication', @services)
@@ -179,8 +169,14 @@ module RandomMigrate
       publication_4.add_authorized('publicationOf', work_uri)
       publication_4.add_literal('mainTitle', "pubprefix1#{@id} #{@id}dan")
       publication_4.add_authorized('language', 'http://lexvo.org/id/iso639-3/dan')
-      publication_4.add_item(false, 'placement1', branchcode)
       @publication_uris << post_ntriples('publication', publication_4.to_ntriples)
+
+      ids = self.get_record_ids
+      ids = ids.last.sort
+      self.add_item(ids.first, true, 'placement1', branchcode, 1)
+      self.add_item(ids.first, false, 'placement2', branchcode, 2)
+      self.add_item(ids.first, false, 'placement1', branchcode, 3)
+      self.add_item(ids.last, false, 'placement1', branchcode, 1)
 
       index('work', work_uri)
 
