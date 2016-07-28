@@ -419,7 +419,7 @@ public final class EntityServiceImpl implements EntityService {
             field.addSubfield(MarcConstants.SUBFIELD_N,
                     work.getProperty(publicationResource, partNumberProperty).getLiteral().getString());
         }
-        if (field.size() > 0 ) {
+        if (field.size() > 0) {
             marcRecord.addMarcField(field);
         }
         if (work.getProperty(publicationResource, isbnProperty) != null) {
