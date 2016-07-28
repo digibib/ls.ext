@@ -742,12 +742,22 @@ public class EntityServiceImplTest {
 
 
     private MarcRecord getMarcRecord(String mainTitle, String name, String partTitle, String partNumber, String isbn, String publicationYear) {
-        MarcRecord marcRecord = getMarcRecord(mainTitle, name);
+        MarcRecord marcRecord = new MarcRecord();
+        if (name != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, name);
+        }
+        MarcField field = MarcRecord.newDataField(MarcConstants.FIELD_245);
+        if (mainTitle != null) {
+            field.addSubfield(MarcConstants.SUBFIELD_A, mainTitle);
+        }
         if (partTitle != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_P, partTitle);
+            field.addSubfield(MarcConstants.SUBFIELD_P, partTitle);
         }
         if (partNumber != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_N, partNumber);
+            field.addSubfield(MarcConstants.SUBFIELD_N, partNumber);
+        }
+        if (field.size() > 0) {
+            marcRecord.addMarcField(field);
         }
         if (isbn != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A, isbn);
