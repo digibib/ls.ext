@@ -667,7 +667,7 @@ public class EntityServiceImplTest {
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
                 + "    ns2:genre <http://deichman.no/genre/g1> ;"
-                + "    ns2:subject <http://deichman.no/subject/e1200005> .\n"
+                + "    ns2:subject <http://deichman.no/subject/e1200005>, <http://deichman.no/subject/e1200006> .\n"
                 + "\n"
                 + "<http://192.168.50.12:8005/person/h10834700> rdf:type ns2:Person ;\n"
                 + "    ns2:birthYear \"1957\" ;\n"
@@ -683,6 +683,9 @@ public class EntityServiceImplTest {
                 + "\n"
                 + "<http://deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
                 + "    ns2:prefLabel \"Trondheim\" ."
+                + "\n"
+                + "<http://deichman.no/subject/e1200006> rdf:type ns2:Subject ;\n"
+                + "    ns2:prefLabel \"Popler\" ."
                 + "\n"
                 + "<http://deichman.no/genre/g1> rdf:type ns2:Genre ;\n"
                 + "    ns2:prefLabel \"Krim\" ;\n"
@@ -713,6 +716,14 @@ public class EntityServiceImplTest {
         field = MarcRecord.newDataField("655");
         field.addSubfield('a', "Krim");
         want.addMarcField(field);
+        // Emner:
+        field = MarcRecord.newDataField("690");
+        field.addSubfield('a', "Trondheim");
+        want.addMarcField(field);
+        field = MarcRecord.newDataField("690");
+        field.addSubfield('a', "Popler");
+        want.addMarcField(field);
+
 
         MarcRecord got = service.generateMarcRecordForPublication(pub, model);
         assertTrue(got.equals(want));

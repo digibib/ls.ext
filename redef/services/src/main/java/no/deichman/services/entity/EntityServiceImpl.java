@@ -380,6 +380,13 @@ public final class EntityServiceImpl implements EntityService {
             }
         }
 
+        List<String> subjects = getSubjects(work);
+        if (!subjects.isEmpty()) {
+            for (String subject : subjects) {
+                marcRecord.addMarcField(MarcConstants.FIELD_690, MarcConstants.SUBFIELD_A, subject);
+            }
+        }
+
         if (work.getProperty(null, publicationOfProperty) != null) {
             // We have now extracted all information from work, and remove work triples from model,
             // in order not to fetch eg. work.mainTitle when fetching literals below.
@@ -458,6 +465,19 @@ public final class EntityServiceImpl implements EntityService {
             }
         }
         return genres;
+    }
+
+    private List<String> getSubjects(Model work) {
+        List<String> subjects = new ArrayList<>();
+        Query query = new SPARQLQueryBuilder(baseURI).getSubjectLabels();
+        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
+            ResultSet results = qexec.execSelect();
+            while (results.hasNext()) {
+                QuerySolution soln = results.nextSolution();
+                subjects.add(soln.getLiteral("subjectLabel").asLiteral().toString());
+            }
+        }
+        return subjects;
     }
 
     @Override

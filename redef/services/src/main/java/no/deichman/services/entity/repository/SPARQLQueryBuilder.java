@@ -350,6 +350,18 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
+    public Query getSubjectLabels() {
+        String q = String.format(""
+                + "PREFIX deichman: <%1$s>\n"
+                + "SELECT ?subjectLabel\n"
+                + "WHERE {\n"
+                + "  ?work a deichman:Work ;\n"
+                + "    deichman:subject ?subject .\n"
+                + "  ?subject deichman:prefLabel ?subjectLabel ."
+                + "}", baseURI.ontology());
+        return QueryFactory.create(q);
+    }
+
     public Query selectWorksByAgent(XURI agent) {
         String q = String.format(""
                 + "PREFIX deichman: <%1$s>\n"
