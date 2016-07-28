@@ -19,6 +19,10 @@ public class MarcField {
         dataField.addSubfield(new SubfieldImpl(subfield, value));
     }
 
+    public final int size() {
+        return dataField.countSubfields();
+    }
+
     final DataField getDataField() {
         return dataField;
     }

@@ -2,6 +2,7 @@ package no.deichman.services.entity;
 
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
+import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
@@ -359,7 +360,7 @@ public final class EntityServiceImpl implements EntityService {
         kohaAdapter.updateRecord(work.getProperty(publication.getAsResource(), recordIdProperty).getString(), marcRecord);
     }
 
-    private MarcRecord generateMarcRecordForPublication(XURI publication, Model work) {
+    public MarcRecord generateMarcRecordForPublication(XURI publication, Model work) {
         // Extract information from work:
         String mainEntryName = getMainEntryName(work);
 
@@ -382,21 +383,25 @@ public final class EntityServiceImpl implements EntityService {
 
         // Extract information from publication literals:
 
+        MarcField field = MarcRecord.newDataField(MarcConstants.FIELD_245);
         if (work.getProperty(publicationResource, mainTitleProperty) != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A,
+            field.addSubfield(MarcConstants.SUBFIELD_A,
                     work.getProperty(publicationResource, mainTitleProperty).getLiteral().getString());
         }
         if (work.getProperty(publicationResource, subtitleProperty) != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_B,
+            field.addSubfield(MarcConstants.SUBFIELD_B,
                     work.getProperty(publicationResource, subtitleProperty).getLiteral().getString());
         }
         if (work.getProperty(publicationResource, partTitleProperty) != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_P,
+            field.addSubfield(MarcConstants.SUBFIELD_P,
                     work.getProperty(publicationResource, partTitleProperty).getLiteral().getString());
         }
         if (work.getProperty(publicationResource, partNumberProperty) != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_N,
+            field.addSubfield(MarcConstants.SUBFIELD_N,
                     work.getProperty(publicationResource, partNumberProperty).getLiteral().getString());
+        }
+        if (field.size() > 0 ) {
+            marcRecord.addMarcField(field);
         }
         if (work.getProperty(publicationResource, isbnProperty) != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A,

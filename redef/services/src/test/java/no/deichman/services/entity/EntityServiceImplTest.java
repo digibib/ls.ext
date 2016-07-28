@@ -5,9 +5,11 @@ import com.google.gson.JsonObject;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.KohaItem2Rdf;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
+import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.entity.repository.InMemoryRepository;
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
@@ -622,6 +624,94 @@ public class EntityServiceImplTest {
 
         service.patch(personUri, getPatch(personUri.getUri(), "name", originalCreator, newCreator));
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator));
+    }
+
+    @Test
+    public void test_generate_full_marc_record_from_work_and_publication_info() throws Exception {
+        String inputGraph = "@prefix ns1: <http://data.deichman.no/duo#> .\n"
+                + "@prefix ns2: <http://deichman.no/ontology#> .\n"
+                + "@prefix ns4: <http://192.168.50.12:8005/raw#> .\n"
+                + "@prefix ns5: <http://data.deichman.no/role#> .\n"
+                + "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n"
+                + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+                + "@prefix xml: <http://www.w3.org/XML/1998/namespace> .\n"
+                + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n"
+                + "\n"
+                + "<http://192.168.50.12:8005/publication/p735933031021> rdf:type ns2:Publication ;\n"
+                + "    ns2:bibliofilPublicationID \"0626460\" ;\n"
+                + "    ns2:format <http://data.deichman.no/format#Book> ;\n"
+                + "    ns2:mediaType <http://data.deichman.no/mediaType#Book> ;\n"
+                + "    ns2:isbn \"82-495-0272-8\" ;\n"
+                + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
+                + "    ns2:mainTitle \"Berlinerpoplene\" ; ns2:partTitle \"deltittel\" ;\n"
+                + "    ns2:publicationOf <http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20> ;\n"
+                + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
+                + "    ns2:recordID \"11\" ;\n"
+                + "    ns2:hasImage \"http://static.deichman.no/626460/kr/1_thumb.jpg\" ;\n"
+                + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
+                + "    ns2:subtitle \"roman\" ;\n"
+                + "    ns4:locationSignature \"Rag\" ;\n"
+                + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
+                + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
+                + "\n"
+                + "\n"
+                + "<http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
+                + "    ns2:audience <http://data.deichman.no/audience#adult> ;\n"
+                + "    ns2:contributor [ rdf:type ns2:Contribution,\n"
+                + "                ns2:MainEntry ;\n"
+                + "            ns2:agent <http://192.168.50.12:8005/person/h10834700> ;\n"
+                + "            ns2:role ns5:author ] ;\n"
+                + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
+                + "    ns2:literaryForm <http://data.deichman.no/literaryForm#fiction>,\n"
+                + "        <http://data.deichman.no/literaryForm#novel> ;\n"
+                + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
+                + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
+                + "    ns2:genre <http://deichman.no/genre/g1> ;"
+                + "    ns2:subject <http://deichman.no/subject/e1200005> .\n"
+                + "\n"
+                + "<http://192.168.50.12:8005/person/h10834700> rdf:type ns2:Person ;\n"
+                + "    ns2:birthYear \"1957\" ;\n"
+                + "    ns2:name \"Ragde, Anne B.\" ;\n"
+                + "    ns2:nationality <http://data.deichman.no/nationality#n> ;\n"
+                + "    ns2:personTitle \"forfatter\" ;\n"
+                + "    ns4:lifeSpan \"1957-\" ;\n"
+                + "    ns1:bibliofilPersonId \"10834700\" .\n"
+                + "\n"
+                + "<http://192.168.50.12:8005/person/h11234> rdf:type ns2:Person ;\n"
+                + "    ns2:name \"Falcinella, Cristina\" ;\n"
+                + "    ns2:nationality <http://data.deichman.no/nationality#ita> .\n"
+                + "\n"
+                + "<http://deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
+                + "    ns2:prefLabel \"Trondheim\" ."
+                + "\n"
+                + "<http://deichman.no/genre/g1> rdf:type ns2:Genre ;\n"
+                + "    ns2:prefLabel \"Krim\" ;\n"
+                + "    ns2:specification \"spesial\" .";
+
+        Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
+        XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
+        MarcRecord want = new MarcRecord();
+        // Hovedinnførsel:
+        MarcField field = MarcRecord.newDataField("100");
+        field.addSubfield('a', "Ragde, Anne B.");
+        want.addMarcField(field);
+        // Tittelopplysninger:
+        field = MarcRecord.newDataField("245");
+        field.addSubfield('a', "Berlinerpoplene");
+        field.addSubfield('b', "roman");
+        field.addSubfield('p', "deltittel");
+        want.addMarcField(field);
+        // ISBN:
+        field = MarcRecord.newDataField("020");
+        field.addSubfield('a', "82-495-0272-8");
+        want.addMarcField(field);
+        // Utgiverinfo:
+        field = MarcRecord.newDataField("260");
+        field.addSubfield('c', "2004");
+        want.addMarcField(field);
+
+        MarcRecord got = service.generateMarcRecordForPublication(pub, model);
+        assertTrue(got.equals(want));
     }
 
     private MarcRecord getMarcRecord(String mainTitle, String name) {
