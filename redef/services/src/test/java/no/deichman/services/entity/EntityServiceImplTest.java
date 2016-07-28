@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static java.lang.String.format;
+import static no.deichman.services.entity.EntityType.CORPORATION;
 import static no.deichman.services.entity.EntityType.PERSON;
 import static no.deichman.services.entity.EntityType.PLACE;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
@@ -221,6 +222,35 @@ public class EntityServiceImplTest {
                                 createResource("http://data.deichman.no/nationality#eng"),
                                 createProperty(RDFS.label.getURI()),
                                 createLangLiteral("England", "no")
+                        )
+                )
+        );
+    }
+
+    @Test
+    public void test_retrieve_corporation_by_id_with_nationality() throws Exception {
+        String testId = "test_retrieve_corporation_by_id_with_nationality";
+        String corporationData = "{\n"
+                + "    \"@context\": {\n"
+                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
+                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
+                + "    },\n"
+                + "    \"@graph\": {\n"
+                + "        \"@id\": \"http://deichman.no/corporation/" + testId + "\",\n"
+                + "        \"@type\": \"deichman:Corporation\"\n,"
+                + "        \"deichman:nationality\":  { \"@id\": \"http://data.deichman.no/nationality#n\" } \n"
+                + "    }\n"
+                + "}";
+        Model inputModel = modelFrom(corporationData, JSONLD);
+        String corporationId = service.create(CORPORATION, inputModel);
+        XURI xuri = new XURI(corporationId);
+        Model test = service.retrieveCorporationWithLinkedResources(xuri);
+        assertTrue(
+                test.contains(
+                        createStatement(
+                                createResource("http://data.deichman.no/nationality#n"),
+                                createProperty(RDFS.label.getURI()),
+                                createLangLiteral("Norge", "no")
                         )
                 )
         );

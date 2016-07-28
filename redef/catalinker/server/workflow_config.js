@@ -107,7 +107,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-corporation-form',
-          labelForCreateButton: 'Opprett ny utgiver',
+          labelForCreateButton: 'Opprett ny organisasjon',
           rdfType: 'Corporation',
           inputs: [
             {
@@ -195,16 +195,16 @@ module.exports = (app) => {
               }
             },
             {
-              label: 'Person (hovedinnførsel)',
+              label: 'Hovedansvarlig',
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'contributor', // the rdf property of the resource
                 range: 'Contribution', // this is the shorthand name of the type of the blank node
                 inputs: [ // these are the actual sub inputs
                   {
-                    label: 'Person',
+                    label: 'Person eller organisasjon',
                     required: true,
                     rdfProperty: 'agent',
-                    indexTypes: 'person',
+                    indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
                     dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
                     id: 'mainEntryPersonInput',
@@ -214,7 +214,11 @@ module.exports = (app) => {
                         formRefs: [ {
                           formId: 'create-person-form',
                           targetType: 'person'
-                        } ],
+                        },
+                          {
+                            formId: 'create-corporation-form',
+                            targetType: 'corporation'
+                          } ],
                         useAfterCreation: false
                       }
                     },
@@ -476,7 +480,7 @@ module.exports = (app) => {
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'prefLabel', 'mainTitle', 'subTitle', 'name' ], // these are property names used to label already connected entities
-              indexTypes: [ 'subject', 'person', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
+              indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
                 enableCreateNewResource: {
@@ -491,6 +495,10 @@ module.exports = (app) => {
                     {
                       formId: 'create-person-form',
                       targetType: 'person'
+                    },
+                    {
+                      formId: 'create-corporation-form',
+                      targetType: 'corporation'
                     },
                     {
                       formId: 'create-place-form',
@@ -575,6 +583,7 @@ module.exports = (app) => {
         {
           inputs: [
             maintenanceInputs('Personer', 'person'),
+            maintenanceInputs('Organisasjoner', 'corporation'),
             maintenanceInputs('Emner', 'subject'),
             maintenanceInputs('Sjangre', 'genre'),
             maintenanceInputs('Serier', 'serial'),
@@ -606,10 +615,10 @@ module.exports = (app) => {
         person: {
           type: 'person',
           selectIndexLabel: 'Person',
-          queryTerms: [{
+          queryTerms: [ {
             field: 'name',
             wildcard: true
-          }],
+          } ],
           resultItemLabelProperties: [ 'name' ],
           resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
           itemHandler: 'personItemHandler',
@@ -618,20 +627,20 @@ module.exports = (app) => {
         subject: {
           type: 'subject',
           selectIndexLabel: 'Generelt',
-          queryTerms: [{
+          queryTerms: [ {
             field: 'prefLabel',
             wildcard: true
-          }],
+          } ],
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         work: {
           type: 'work',
           structuredQuery: true,
           selectIndexLabel: 'Verk',
-          queryTerms: [{
+          queryTerms: [ {
             field: 'mainTitle',
             wildcard: true
-          }],
+          } ],
           resultItemLabelProperties: [ 'mainTitle', 'subTitle' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
@@ -649,52 +658,52 @@ module.exports = (app) => {
           resultItemLabelProperties: [ 'mainTitle', 'subTitle', 'publicationYear' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler',
-          subItemsExpandTooltip: 'Vis/skjul utgivelser' 
+          subItemsExpandTooltip: 'Vis/skjul utgivelser'
         },
         genre: {
           type: 'genre',
           selectIndexLabel: 'Sjanger',
-          queryTerms: [{
+          queryTerms: [ {
             field: 'prefLabel',
             wildcard: true
-          }],
+          } ],
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         corporation: {
           type: 'corporation',
-          selectIndexLabel: 'Utgiver',
-          queryTerms: [{
+          selectIndexLabel: 'Organisasjon',
+          queryTerms: [ {
             field: 'name',
             wildcard: true
-          }],
+          } ],
           resultItemLabelProperties: [ 'name' ]
         },
         place: {
           type: 'place',
           selectIndexLabel: 'Sted',
-          queryTerms: [{
+          queryTerms: [ {
             field: 'prefLabel',
             wildcard: true
-          }],
+          } ],
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         },
         serial: {
           type: 'serial',
           selectIndexLabel: 'Serie',
-          queryTerms: [{
+          queryTerms: [ {
             field: 'name',
             wildcard: true
-          }],
+          } ],
           resultItemLabelProperties: [ 'name' ]
         },
         publication: {
           type: 'publication',
           selectIndexLabel: 'Utgivelse',
           queryTerms: [
-            { field: 'recordId'},
-            { field: 'mainTitle', wildcard: true},
-            { field: 'subTitle', wildcard: true},
-            { field: 'mainEntryName', wildcard: true}
+            { field: 'recordId' },
+            { field: 'mainTitle', wildcard: true },
+            { field: 'subTitle', wildcard: true },
+            { field: 'mainEntryName', wildcard: true }
           ],
           legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
           resultItemLabelProperties: [ 'creator', 'mainTitle', 'subTitle', 'publicationYear', 'recordId' ],

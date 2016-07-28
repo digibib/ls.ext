@@ -54,4 +54,6 @@ public interface RDFRepository {
     void findAllUrisOfType(String type, Consumer<String> uriConsumer);
 
     Optional<String> getResourceURIByBibliofilId(String id, String type);
+
+    Model retrieveCorporationAndLinkedResourcesByURI(String uri);
 }

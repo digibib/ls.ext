@@ -1,6 +1,7 @@
 package no.deichman.services.search;
 
 import no.deichman.services.entity.EntityService;
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
@@ -61,6 +62,7 @@ public class SearchServiceImpl implements SearchService {
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
+    private ModelToIndexMapper corporationModelToIndexMapper = new ModelToIndexMapper("corporation");
     private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService, BaseURI baseURI) {
@@ -73,13 +75,18 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public final void index(XURI xuri) throws Exception {
         switch (xuri.getTypeAsEntityType()) {
-            case WORK: doIndexWork(xuri, false);
+            case WORK:
+                doIndexWork(xuri, false);
                 break;
-            case PERSON: doIndexPerson(xuri, false);
+            case PERSON:
+            case CORPORATION:
+                doIndexWorkCreator(xuri, false);
                 break;
-            case PUBLICATION: doIndexPublication(xuri);
+            case PUBLICATION:
+                doIndexPublication(xuri);
                 break;
-            default: doIndex(xuri);
+            default:
+                doIndex(xuri);
         }
     }
 
@@ -251,10 +258,10 @@ public class SearchServiceImpl implements SearchService {
         indexDocument(xuri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, xuri));
 
         if (!indexedPerson) {
-            for (Statement stmt : workModelWithLinkedResources .listStatements().toList()) {
+            for (Statement stmt : workModelWithLinkedResources.listStatements().toList()) {
                 if (stmt.getPredicate().equals(AGENT)) {
                     XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
-                    doIndexPersonOnly(creatorXuri);
+                    doIndexWorkCreatorOnly(creatorXuri);
                 }
             }
         }
@@ -276,8 +283,8 @@ public class SearchServiceImpl implements SearchService {
 
     }
 
-    private void doIndexPerson(XURI xuri, boolean indexedWork) throws Exception {
-        Model works = entityService.retrieveWorksByCreator(xuri);
+    private void doIndexWorkCreator(XURI creatorUri, boolean indexedWork) throws Exception {
+        Model works = entityService.retrieveWorksByCreator(creatorUri);
         if (!indexedWork) {
             ResIterator subjectIterator = works.listSubjects();
             while (subjectIterator.hasNext()) {
@@ -286,13 +293,26 @@ public class SearchServiceImpl implements SearchService {
                     continue;
                 }
                 XURI workUri = new XURI(subj.toString());
-                if (!workUri.getUri().equals(xuri.getUri())) {
+                if (!workUri.getUri().equals(creatorUri.getUri())) {
                     doIndexWorkOnly(workUri);
                 }
             }
         }
-        Model personWithWorksModel = entityService.retrievePersonWithLinkedResources(xuri).add(works);
-        indexDocument(xuri, personModelToIndexMapper.createIndexDocument(personWithWorksModel, xuri));
+        switch (creatorUri.getTypeAsEntityType()) {
+            case PERSON:
+                indexDocument(creatorUri, personModelToIndexMapper
+                        .createIndexDocument(entityService.retrievePersonWithLinkedResources(creatorUri).add(works), creatorUri));
+                break;
+            case CORPORATION:
+                indexDocument(creatorUri, corporationModelToIndexMapper
+                        .createIndexDocument(entityService.retrieveCorporationWithLinkedResources(creatorUri).add(works), creatorUri));
+                break;
+            default:
+                throw new RuntimeException(format(
+                        "Tried to index work creator of type %1$s. Should be %2$s or %3$s",
+                        creatorUri.getTypeAsEntityType(), EntityType.PERSON, EntityType.CORPORATION
+                ));
+        }
     }
 
     private void doIndex(XURI xuri) throws Exception {
@@ -330,8 +350,8 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private void doIndexPersonOnly(XURI xuri) throws Exception {
-        doIndexPerson(xuri, true);
+    private void doIndexWorkCreatorOnly(XURI xuri) throws Exception {
+        doIndexWorkCreator(xuri, true);
     }
 
     private URIBuilder getIndexUriBuilder() {

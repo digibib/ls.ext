@@ -52,7 +52,7 @@ import static no.deichman.services.restutils.MimeType.NTRIPLES;
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
 
-    public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|i|s|e|m";
+    public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|c|s|e|m";
     @Context
     private ServletConfig servletConfig;
 

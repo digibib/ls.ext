@@ -136,6 +136,15 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg trykker på "Legg til"-knappen
+    Så ombestemmer jeg meg
+    Så fjerner jeg hovedinnførselen
+    Så velger jeg hovedansvarligtype "Organisasjon"
+    Og jeg legger inn et nytt navn
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny organisasjon"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg velger rollen "Forfatter"
+    Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
@@ -220,6 +229,17 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige serie i feltet "Serier" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
+
+  Scenario: Redigere organisasjon i katalogisering
+    Gitt at jeg vil opprette en organisasjon
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig organisasjon i feltet "Organisasjoner" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny organisasjon"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige organisasjon i feltet "Organisasjoner" og trykker enter
+    Så velger jeg en organisasjon fra treffliste fra organisasjonsregisteret
 
   Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
     Gitt at det finnes et verk med forfatter

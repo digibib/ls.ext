@@ -84,6 +84,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final Model retrieveCorporationAndLinkedResourcesByURI(String uri) {
+        log.debug("Attempting to retrieve corporation: " + uri);
+        try (QueryExecution qexec = getQueryExecution(sqb.describeCorporationAndLinkedResources(uri))) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
     public final void updateWork(String work) {
         InputStream stream = new ByteArrayInputStream(work.getBytes(StandardCharsets.UTF_8));
         Model model = ModelFactory.createDefaultModel();

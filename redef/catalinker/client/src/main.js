@@ -461,7 +461,7 @@
       var graphData = ensureJSON(response.data)
       var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
 
-      type = type || StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial)\/.*$/g.exec(resourceUri)[ 1 ])
+      type = type || StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial|corporation)\/.*$/g.exec(resourceUri)[ 1 ])
       root = root || ldGraph.parse(graphData).byId(resourceUri)
 
       var promises = []
@@ -1608,7 +1608,9 @@
                     searchResult: null
                   }
                   if (index === 0) {
-                    input.values[ length ].subjectType = null
+                    input.values[ length ].subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length == 1
+                      ? mainInput.subjectTypes[0]
+                      : null
                   }
                 })
                 ractive.update()

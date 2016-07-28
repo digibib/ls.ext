@@ -180,6 +180,14 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
+    public Model retrieveCorporationWithLinkedResources(XURI xuri) {
+        Model m = ModelFactory.createDefaultModel();
+        m.add(repository.retrieveCorporationAndLinkedResourcesByURI(xuri.getUri()));
+        m = getLinkedNationalityResource(m);
+        return m;
+    }
+
+    @Override
     public XURI updateHoldingBranches(String recordId, String branches) throws Exception {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.remote());
         String query = sqb.updateHoldingBranches(recordId, branches);

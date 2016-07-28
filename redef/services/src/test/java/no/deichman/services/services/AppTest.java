@@ -590,7 +590,7 @@ public class AppTest {
             HttpResponse<String> createResult = createEmptyResource(entityType);
             XURI location = new XURI(getLocation(createResult));
             HttpResponse<String> addResult = buildPatchRequest(location.getUri(), createSimplePatch(ADD, location)).asString();
-            assertEquals(Status.OK.getStatusCode(), addResult.getStatus());
+            assertEquals("expected OK when creating " + entityType + " but got " + addResult.getStatus(), Status.OK.getStatusCode(), addResult.getStatus());
             HttpResponse<String> delResult = buildPatchRequest(location.getUri(), createSimplePatch(DEL, location)).asString();
             assertEquals(Status.OK.getStatusCode(), delResult.getStatus());
         }

@@ -29,7 +29,7 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
   creator_name_field.send_keys :enter
 end
 
-When(/^velger jeg (en|et) (person|utgivelse|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|utgivelses|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     @browser.a(:class => 'edit-resource').present? || @browser.input(:class => "select-result-item-radio").present?
   }
@@ -363,11 +363,17 @@ end
 
 When(/^jeg legger inn et nytt navn på startsida$/) do
   @site.WorkFlow.visit
+  step "jeg legger inn et nytt navn"
+end
+
+When(/^jeg legger inn et nytt navn$/) do
   @context[:person_name] = generateRandomString
   creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end
+
+
 
 When(/^trykker jeg på knappen for å legge til ny$/) do
   @browser.a(:text => /Legg til ny/).click
@@ -410,8 +416,7 @@ When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
   button.click
 end
 
-When(/^velger jeg emnetype "([^"]*)"$/) do |subject_type|
-  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+When(/^velger jeg (emnetype|hovedansvarligtype) "([^"]*)"$/) do |dummy, subject_type|
   @browser.span(:class => 'index-type-select').select().select(subject_type)
 end
 
@@ -550,4 +555,8 @@ end
 
 When(/^klikker jeg på fanen "([^"]*)"$/) do |tab_label|
   @browser.a(:xpath => "//a[@role='tab'][normalize-space()='#{tab_label}']").click
+end
+
+When(/^ombestemmer jeg meg$/) do
+  #
 end

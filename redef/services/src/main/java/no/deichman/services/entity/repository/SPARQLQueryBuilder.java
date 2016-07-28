@@ -102,6 +102,21 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
+    public Query describeCorporationAndLinkedResources(String corporationId) {
+        String queryString = String.format("#\n"
+                + "PREFIX deichman: <%1$s>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "DESCRIBE <%2$s> ?name ?nationality ?nationalityLabel \n"
+                + "WHERE {\n"
+                + "    <%2$s> a deichman:Corporation .\n"
+                + "    optional { <%2$s> deichman:name ?name . }\n"
+                + "    optional { <%2$s> deichman:nationality ?nationality . \n"
+                + "                 ?nationality rdfs:label ?nationalityLabel .\n"
+                + "             }\n"
+                + "}", baseURI.ontology(), corporationId);
+        return QueryFactory.create(queryString);
+    }
+
     public String getUpdateWorkQueryString(Model work) {
         return getCreateQueryString(work);
     }
