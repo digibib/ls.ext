@@ -262,7 +262,7 @@ public class EntityServiceImplTest {
     @Test
     public void test_create_publication() throws Exception {
         when(mockKohaAdapter.createNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
-        String testId = "SERVICE_PUBLICATION_SHOULD_EXIST";
+        String testId = "pSERVICE_PUBLICATION_SHOULD_EXIST";
         String publication = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publication, JSONLD);
 
@@ -277,7 +277,7 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_create_person() throws Exception {
-        String testId = "SERVICE_PERSON_SHOULD_EXIST";
+        String testId = "hSERVICE_PERSON_SHOULD_EXIST";
         String person = getTestJSON(testId, "person");
         Model inputModel = modelFrom(person, JSONLD);
 
@@ -292,7 +292,7 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_create_place() throws Exception {
-        String testId = "SERVICE_PLACE_SHOULD_EXIST";
+        String testId = "pSERVICE_PLACE_SHOULD_EXIST";
         String place = getTestJSON(testId, "place");
         Model inputModel = modelFrom(place, JSONLD);
 
@@ -544,12 +544,12 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.createNewBiblioWithMarcRecord(getMarcRecord(originalMainTitle, null, partTitle, partNumber, isbn, publicationYear))).thenReturn(A_BIBLIO_ID);
 
         String publicationTriples = ""
-                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "mainTitle> \"" + originalMainTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
-                + "<publication> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
-                + "<publication> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
+                + "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "mainTitle> \"" + originalMainTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
 
         Model inputPublication = modelFrom(publicationTriples, Lang.NTRIPLES);
         XURI publicationUri = new XURI(service.create(PUBLICATION, inputPublication));
@@ -567,9 +567,9 @@ public class EntityServiceImplTest {
         thrown.expectMessage("Associated work does not exist.");
         String publicationTitle = "Sult";
         String publicationTriples = ""
-                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
+                + "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
 
         Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workURI + "w1230002111"), Lang.NTRIPLES);
         service.create(PUBLICATION, inputPublication);
@@ -588,17 +588,17 @@ public class EntityServiceImplTest {
         when(mockKohaAdapter.createNewBiblioWithMarcRecord(marcRecord)).thenReturn(A_BIBLIO_ID);
 
         String workTriples = ""
-                + "<work> <" + ontologyURI + "mainTitle> \"" + originalWorkTitle + "\" .\n"
-                + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
-                + "<work> <" + ontologyURI + "contributor> _:b0 .\n"
+                + "<http://host/work/w1> <" + ontologyURI + "mainTitle> \"" + originalWorkTitle + "\" .\n"
+                + "<http://host/work/w1> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<http://host/work/w1> <" + ontologyURI + "contributor> _:b0 .\n"
                 + "_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Contribution> .\n"
                 + "_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "MainEntry> .\n"
                 + "_:b0 <" + ontologyURI + "agent> <__CREATORURI__> .\n"
                 + "_:b0 <" + ontologyURI + "role> <http://data.deichman.no/role#author> .\n";
         String publicationTriples = ""
-                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "mainTitle> \"" + originalPublicationTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
+                + "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "mainTitle> \"" + originalPublicationTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n";
         String personTriples = ""
                 + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
                 + "<person> <" + ontologyURI + "name> \"" + originalCreator + "\" .";

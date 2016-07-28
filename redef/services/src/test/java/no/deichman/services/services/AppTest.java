@@ -1010,13 +1010,13 @@ public class AppTest {
         String workUri = createWorkInRdfStore(workTitle, ontologyURI, personUri);
 
         String publicationTriples = ""
-                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n"
-                + "<publication> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
-                + "<publication> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
-                + "<publication> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
+                + "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
 
         HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
         assertNotNull(getLocation(createpublicationResponse));
@@ -1024,9 +1024,9 @@ public class AppTest {
 
     private String createWorkInRdfStore(String workTitle, String ontologyURI, String personUri) throws UnirestException {
         String workTriples = ""
-                + "<work> <" + ontologyURI + "mainTitle> \"" + workTitle + "\" .\n"
-                + "<work> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
-                + "<work> <" + ontologyURI + "contributor> _:b1 .\n"
+                + "<http://host/work/w1> <" + ontologyURI + "mainTitle> \"" + workTitle + "\" .\n"
+                + "<http://host/work/w1> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<http://host/work/w1> <" + ontologyURI + "contributor> _:b1 .\n"
                 + "_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Contribution> .\n"
                 + "_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "MainEntry> .\n"
                 + "_:b1  <" + ontologyURI + "role> <http://data.deichman.no/role#author> .\n"
@@ -1037,16 +1037,16 @@ public class AppTest {
 
     private String createPersonInRdfStore(String person, String ontologyURI) throws UnirestException {
         String personTriples = ""
-                + "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
-                + "<person> <" + ontologyURI + "name> \"" + person + "\" .";
+                + "<http://host/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
+                + "<http://host/person/h1> <" + ontologyURI + "name> \"" + person + "\" .";
         HttpResponse<JsonNode> createPersonResponse = buildCreateRequestNtriples(baseUri + "person", personTriples).asJson();
         return getLocation(createPersonResponse);
     }
 
     private String createSubjectInRdfStore(String subject, String ontologyURI) throws UnirestException {
         String subjectTriples = ""
-                + "<subject> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Subject> .\n"
-                + "<subject> <" + ontologyURI + "prefLabel> \"" + subject + "\" .";
+                + "<http://host/subject/s1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Subject> .\n"
+                + "<http://host/subject/s1> <" + ontologyURI + "prefLabel> \"" + subject + "\" .";
         HttpResponse<JsonNode> createSubjectResponse = buildCreateRequestNtriples(baseUri + "subject", subjectTriples).asJson();
         return getLocation(createSubjectResponse);
     }
@@ -1158,14 +1158,14 @@ public class AppTest {
         String personUri = createPersonInRdfStore(creator, ontologyURI);
         String workUri = createWorkInRdfStore(workTitle, ontologyURI, personUri);
         String publicationTriples = ""
-                + "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<publication> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
-                + "<publication> <" + ontologyURI + "publicationOf> <" + workUri + "> .\n"
-                + "<publication> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
-                + "<publication> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
-                + "<publication> <" + ontologyURI + "hasHoldingBranch> \"hutl\" .\n"
-                + "<publication> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
+                + "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "publicationOf> <" + workUri + "> .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "hasHoldingBranch> \"hutl\" .\n"
+                + "<http://host/publication/p1> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
 
         HttpResponse<JsonNode> createPublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples).asJson();
         assertResponse(CREATED, createPublicationResponse);

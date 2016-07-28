@@ -262,15 +262,22 @@ public final class EntityServiceImpl implements EntityService {
 
     private String createPublication(Model inputModel) throws Exception {
 
+        XURI publication = null;
+        if (inputModel.listStatements().hasNext()) {
+            publication = new XURI(inputModel.listStatements().next().getSubject().toString());
+        }
+
+        MarcRecord marcRecord;
         if (inputModel.contains(null, publicationOfProperty)) {
             Model work = repository.retrieveWorkAndLinkedResourcesByURI(new XURI(inputModel.getProperty(null, publicationOfProperty).getObject().toString()));
             if (work.isEmpty()) {
                 throw new BadRequestException("Associated work does not exist.");
             }
-            inputModel.add(work);
+            marcRecord = generateMarcRecordForPublication(publication, work.add(inputModel));
+        } else {
+            marcRecord = generateMarcRecordForPublication(publication, inputModel);
         }
 
-        MarcRecord marcRecord = generateMarcRecordForPublication(null, inputModel);
         String recordId = kohaAdapter.createNewBiblioWithMarcRecord(marcRecord);
 
         return repository.createPublication(
@@ -364,6 +371,9 @@ public final class EntityServiceImpl implements EntityService {
     public MarcRecord generateMarcRecordForPublication(XURI publication, Model work) {
 
         MarcRecord marcRecord = new MarcRecord();
+        if (publication == null) {
+            return marcRecord;
+        }
 
         // Extract information from work:
 
@@ -387,18 +397,7 @@ public final class EntityServiceImpl implements EntityService {
             }
         }
 
-        if (work.getProperty(null, publicationOfProperty) != null) {
-            // We have now extracted all information from work, and remove work triples from model,
-            // in order not to fetch eg. work.mainTitle when fetching literals below.
-            work.removeAll(work.getProperty(null, publicationOfProperty).getObject().asResource(), null, null);
-        }
-
-
-        Resource publicationResource = null; // default null if we are creating MARC record for a new publication without URI yet
-        if (publication != null) {
-            publicationResource = publication.getAsResource();
-        }
-
+        Resource publicationResource = publication.getAsResource();
 
         // Extract information from publication literals:
 

@@ -84,7 +84,6 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-
     public Query describePersonAndLinkedResources(String personId) {
         String queryString = String.format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
