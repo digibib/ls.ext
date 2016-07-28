@@ -315,14 +315,14 @@ public final class EntityServiceImpl implements EntityService {
                 try {
                     XURI resXuri = new XURI(resource);
                     Model work = retrieveWorkWithLinkedResources(resXuri);
-                    updatePublicationsByWork(resXuri, work);
+                    updatePublicationsByWork(work);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         } else if (xuri.getTypeAsEntityType().equals(EntityType.WORK)) {
             model = retrieveWorkWithLinkedResources(xuri);
-            updatePublicationsByWork(xuri, model);
+            updatePublicationsByWork(model);
         } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION)) {
             model = retrieveById(xuri);
             if (model.getProperty(null, publicationOfProperty) != null) {
@@ -342,10 +342,8 @@ public final class EntityServiceImpl implements EntityService {
         updatePublicationInKoha(publication, work);
     }
 
-    private void updatePublicationsByWork(XURI xuri, Model work)  {
-        Model publications = repository.retrievePublicationsByWork(xuri);
-
-        streamFrom(publications.listStatements())
+    private void updatePublicationsByWork(Model work)  {
+        streamFrom(work.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
                     if (isPublication(statements)) {
