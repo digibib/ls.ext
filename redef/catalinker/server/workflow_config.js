@@ -341,7 +341,7 @@ module.exports = (app) => {
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'name' ], // these are property names used to label already connected entities
               indexTypes: [ 'corporation', 'person' ], // this is the name of the elasticsearch index type from which authorities are searched within
-              preselectFirstIndexType : true,
+              preselectFirstIndexType: true,
               indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels f
               // or authoroty select list are concatenated
               type: 'searchable-with-result-in-side-panel',
@@ -555,18 +555,24 @@ module.exports = (app) => {
                 range: 'Contribution', // this is the shorthand name of the type of the blank node
                 inputs: [ // these are the actual sub inputs
                   {
-                    label: 'Person',
+                    label: 'Aktør',
                     required: true,
                     rdfProperty: 'agent',
-                    indexTypes: 'person',
+                    indexTypes: ['person', 'corporation'],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
                       showSelectItem: false, // show and enable select work radio button
                       enableCreateNewResource: {
-                        formRefs: [ {
-                          formId: 'create-person-form',
-                          targetType: 'person'
-                        } ],
+                        formRefs: [
+                          {
+                            formId: 'create-person-form',
+                            targetType: 'person'
+                          },
+                          {
+                            formId: 'create-corporation-form',
+                            targetType: 'corporation'
+                          }
+                        ],
                         useAfterCreation: false
                       }
                     }
