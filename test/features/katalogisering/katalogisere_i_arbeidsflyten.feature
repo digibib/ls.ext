@@ -19,9 +19,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Så leverer systemet en ny ID for det nye stedet
     Og jeg kan legge inn stedsnavn og land
     Og grensesnittet viser at endringene er lagret
-    Og jeg vil lage en ny utgiver
-    Så leverer systemet en ny ID for den nye utgiveren
-    Og jeg kan legge inn utgiverens navn
+    Og jeg vil lage en ny organisasjon
+    Så leverer systemet en ny ID for den nye organisasjonen
+    Og jeg kan legge inn organisasjonens navn
     Og grensesnittet viser at endringene er lagret
     Når jeg legger inn forfatternavnet på startsida
     Og jeg venter litt
@@ -39,7 +39,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
-    Så velger jeg en utgiver fra treffliste fra utgiverregisteret
+    Så velger jeg en organisasjon fra treffliste fra organisasjonsregisteret
     Så sjekker jeg at overskriften viser informasjon om hva som blir katalogisert
     Og bekrefter for å gå videre til "Beskriv verk"
     Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte

@@ -550,7 +550,7 @@ When(/^jeg vil lage et nytt emne/) do
   @site.RegSubject.visit
 end
 
-When(/^jeg vil lage en ny utgiver/) do
+When(/^jeg vil lage en ny organisasjon/) do
   @site.RegCorporation.visit
 end
 
@@ -574,7 +574,7 @@ When(/^leverer systemet en ny ID for det nye emnet/) do
   @context[:subject_identifier].should_not be_empty
 end
 
-When(/^leverer systemet en ny ID for den nye utgiveren/) do
+When(/^leverer systemet en ny ID for den nye organisasjonen/) do
   @context[:corporation_identifier] = @site.RegCorporation.get_id()
   @context[:corporation_identifier].should_not be_empty
   @context[:publishedby_identifier] = @context[:corporation_identifier]

@@ -289,7 +289,7 @@ When(/^jeg kan legge inn emnets navn$/) do
   @site.RegSubject.add_prop("http://#{ENV['HOST']}:8005/ontology#prefLabel", @context[:subject_name])
 end
 
-When(/^jeg kan legge inn utgiverens navn$/) do
+When(/^jeg kan legge inn organisasjonens navn$/) do
   @context[:corporation_name] = generateRandomString
   @site.RegCorporation.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:corporation_name])
 end
