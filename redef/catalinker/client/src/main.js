@@ -685,7 +685,7 @@
       }
       if (prop.indexTypes) {
         input.indexTypes = _.isArray(prop.indexTypes) ? prop.indexTypes : [ prop.indexTypes ]
-        input.selectedIndexType = input.indexTypes.length === 1 ? input.indexTypes[ 0 ] : undefined
+        input.selectedIndexType = input.indexTypes.length === 1 || prop.preselectFirstIndexType ? input.indexTypes[ 0 ] : undefined
       } else {
         input.selectedIndexType = ''
       }

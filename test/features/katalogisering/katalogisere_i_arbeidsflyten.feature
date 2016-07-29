@@ -138,7 +138,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Legg til"-knappen
     Så ombestemmer jeg meg
     Så fjerner jeg hovedinnførselen
-    Så velger jeg hovedansvarligtype "Organisasjon"
+    Så velger jeg aktørtype "Organisasjon"
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen
@@ -148,6 +148,16 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
+    Og at jeg skriver inn tilfeldig organisasjon i feltet "Utgitt av" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny organisasjon"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Så fjerner jeg valgt verdi i feltet "Utgitt av"
+    Så velger jeg aktørtype "Person"
+    Og at jeg skriver inn tilfeldig person i feltet "Utgitt av" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny person"-knappen
+    Så trykker jeg på "Opprett"-knappen
     Og at jeg skriver inn tilfeldig sted i feltet "Utgivelsessted" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt sted"-knappen

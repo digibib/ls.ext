@@ -416,7 +416,7 @@ When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
   button.click
 end
 
-When(/^velger jeg (emnetype|hovedansvarligtype) "([^"]*)"$/) do |dummy, subject_type|
+When(/^velger jeg (emnetype|aktørtype) "([^"]*)"$/) do |dummy, subject_type|
   @browser.span(:class => 'index-type-select').select().select(subject_type)
 end
 
@@ -559,4 +559,9 @@ end
 
 When(/^ombestemmer jeg meg$/) do
   #
+end
+
+When(/^fjerner jeg valgt verdi i feltet "([^"]*)"$/) do |label|
+  select2_value = @site.WorkFlow.get_select2_single_value_from_label(label)
+  select2_value.spans[0].click
 end

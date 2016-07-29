@@ -79,6 +79,10 @@ class WorkFlow < CatalinkerPage
     @browser.text_field(:xpath => "//div[./preceding-sibling::div[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input[@type='search']")
   end
 
+  def get_select2_single_value_from_label(label)
+    @browser.li(:xpath => "//div[./preceding-sibling::div[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//ul/li")
+  end
+
   def finish
     @browser.buttons(:text => "Avslutt registrering av utgivelsen").first.click
   end
