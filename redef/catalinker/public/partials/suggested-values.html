@@ -2,7 +2,7 @@
 {{#if../../suggestedValues}}
 {{#../../suggestedValues}}
 <div class="external-sources">
-    <a href="#" on-click='toggle' class="{{expanded ? '' : 'un'}}expanded">{{expanded ? 'Skjul' : 'Se'}} forslag fra andre eksterne kilder</a>
+    <span tabindex="0" on-keyup="toggle" on-click='toggle' class="{{expanded ? '' : 'un'}}expanded">{{expanded ? 'Skjul' : 'Se'}} forslag fra andre eksterne kilder</span>
     {{#expanded}}
     <div class="suggested-values pure-u-1-1">
         {{#each ../../suggestedValues}}

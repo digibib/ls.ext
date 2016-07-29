@@ -3,14 +3,14 @@ $lightergray: #e8e8e8;
 $input-background: white;
 $mintgreen: #DCFC9F;
 
-@mixin source-logo-bb {
-  background-image: url('/images/logos/bb_large.jpg');
+@mixin source-logo-loc {
+  background-image: url('/images/logos/loc.svg');
   background-repeat: no-repeat;
-  background-size: auto 20px;
+  background-size: auto 27px;
 }
 
-@mixin source-logo-bs {
-  background-image: url('/images/logos/bs.png');
+@mixin source-logo-bibbi {
+  background-image: url('/images/logos/bibbi.png');
   background-repeat: no-repeat;
   background-size: auto 20px;
 
@@ -32,15 +32,15 @@ body {
       ul {
         li {
           span.suggestion-source {
-            &.suggestion-source-bs {
+            &.suggestion-source-bibbi {
               padding: 0px 24px 2px 0;
-              @include source-logo-bs;
+              @include source-logo-bibbi;
               background-size: auto 16px;
               background-position: 6px 0;
             }
-            &.suggestion-source-bb {
+            &.suggestion-source-loc {
               padding: 0px 65px 2px 0;
-              @include source-logo-bb;
+              @include source-logo-loc;
               background-size: auto 16px;
               background-position: 6px 0;
             }
@@ -232,7 +232,7 @@ body {
           }
           div.external-sources {
             margin-top: 10px;
-            &>a {
+            &>span {
               background-repeat: no-repeat;
               background-position: right center;
               border-bottom: 1px solid black;
@@ -251,18 +251,18 @@ body {
             .suggested-value {
               clear: both;
               margin-bottom: 12px;
-              &.suggestion-source-bs {
-                @include source-logo-bs;
+              &.suggestion-source-bibbi {
+                @include source-logo-bibbi;
                 background-position: 58%;
                 &.searchable {
                   background-position: 87%;
                 }
               }
-              &.suggestion-source-bb {
-                @include source-logo-bb;
+              &.suggestion-source-loc {
+                @include source-logo-loc;
                 background-position: 51%;
                 &.searchable {
-                  background-position: 86%;
+                  background-position: 86% 0;
                 }
               }
               a:not(.support-panel-expander) {
@@ -291,6 +291,7 @@ body {
           background-image: url("/images/arrow_right_solid.svg");
           background-repeat: no-repeat;
           display: block;
+          cursor: pointer;
           &.suggested-value {
             background-image: url("/images/arrow_down_outline.svg");
           }
@@ -340,12 +341,12 @@ body {
           font-style: italic;
           padding: 4px 1px;
         }
-        .suggestion-source-bs {
-          @include source-logo-bs;
+        .suggestion-source-bibbi {
+          @include source-logo-bibbi;
           background-position: 85% 5px;
         }
-        .suggestion-source-bb {
-          @include source-logo-bb;
+        .suggestion-source-loc {
+          @include source-logo-loc;
           background-position: 85% 5px;
         }
 
@@ -523,12 +524,12 @@ body {
                 content: "Rollen er knyttet til ";
               }
             }
-            .suggestion-source-bs {
-              @include source-logo-bs;
+            .suggestion-source-bibbi {
+              @include source-logo-bibbi;
               background-position: left;
             }
-            .suggestion-source-bb {
-              @include source-logo-bb;
+            .suggestion-source-loc {
+              @include source-logo-loc;
               background-position: left;
             }
             .use-suggestion-button {

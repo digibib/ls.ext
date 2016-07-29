@@ -1590,6 +1590,7 @@
           })
           ractive.on({
               toggle: function (event) {
+                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
                 this.toggle(event.keypath + '.expanded')
               },
               updateBrowserLocationWithTab: function (event, tabId) {
@@ -1802,6 +1803,7 @@
                 }
               },
               searchResourceFromSuggestion: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
+                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
                 ractive.fire('searchResource', { keypath: grandParentOf(event.keypath) + '.values.0' }, searchString, indexType, loadWorksAsSubjectOfItem)
               },
               toggleSubItem: function (event, findWorksAsSubjectOfType, origin) {

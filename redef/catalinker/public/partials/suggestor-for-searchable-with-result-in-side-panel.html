@@ -1,4 +1,7 @@
 <div class="suggested-value suggestion-source-{{source}} searchable">
     <span class="suggested-value pure-u-5-6">{{value}}</span>
-    <a href="#" class="pure-u-1-6 support-panel-expander" on-click='searchResourceFromSuggestion:{{value}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'></a>
+    <span tabindex="0" class="pure-u-1-6 support-panel-expander"
+          on-click='searchResourceFromSuggestion:{{value}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
+          on-keyup='searchResourceFromSuggestion:{{value}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
+    ></span>
 </div>
