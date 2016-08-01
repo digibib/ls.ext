@@ -221,7 +221,7 @@ endif
 
 verify:
 	@echo "   Verifying migration"
-	@$(MIGRATION_RUN_CMD) verify -h $(HOST)
+	@$(MIGRATION_RUN_CMD) "verify -h=$(HOST)"
 
 staff:
 	@echo "   Importing staff users"
