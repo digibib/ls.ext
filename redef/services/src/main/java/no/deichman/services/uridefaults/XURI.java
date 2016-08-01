@@ -48,8 +48,6 @@ public class XURI {
 
         try {
             URI aUri = new URI(uri);
-            String scheme = aUri.getScheme();
-            String host = aUri.getHost();
             String[] aPath = aUri.getPath().split("/");
 
             if (testEntity(aPath[1]) && testId(aPath[2])) {
