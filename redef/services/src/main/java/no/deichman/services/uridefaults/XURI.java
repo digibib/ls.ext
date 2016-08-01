@@ -50,7 +50,7 @@ public class XURI {
             URI aUri = new URI(uri);
             String[] aPath = aUri.getPath().split("/");
 
-            if (testEntity(aPath[1]) && testId(aPath[2])) {
+            if (aPath.length > 2 && testEntity(aPath[1]) && testId(aPath[2])) {
                 this.uri = uri;
                 this.type = aPath[1];
                 this.id = aPath[2];
