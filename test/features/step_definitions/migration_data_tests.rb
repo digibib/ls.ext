@@ -37,19 +37,17 @@ end
 
 When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter$/) do
   publication_name = generateRandomString
-  ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
-              <publication> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
-              <publication> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_name}\" ."
+  ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
+              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
+              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_name}\" ."
   post_publication_ntriples publication_name, ntriples
 end
 
 When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter og items$/) do
   publication_title = generateRandomString
-  ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
-              <publication> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
-              <publication> <http://#{ENV['HOST']}:8005/ontology#hasItem> <http://item> .
-              <http://item> <http://#{ENV['HOST']}:8005/itemSubfieldCode/a> \"#{@context[:random_migrate_branchcode]}\" .
-              <publication> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_title}\" ."
+  ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
+              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
+              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_title}\" ."
   post_publication_ntriples publication_title, ntriples
 end
 

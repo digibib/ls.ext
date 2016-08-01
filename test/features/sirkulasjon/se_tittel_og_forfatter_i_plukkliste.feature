@@ -96,6 +96,7 @@ Egenskap: Se tittel og forfatter i plukkliste
     Så ser jeg tittelen i bokposten
     Og ser jeg forfatteren i bokposten
 
+  @wip
   Scenario: Finn utgivelsestittel og forfatter i Koha på migrert utgivelse med items
     Gitt at det finnes et verk med person
     Og jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter og items

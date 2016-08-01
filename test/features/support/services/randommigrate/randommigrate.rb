@@ -58,19 +58,19 @@ module RandomMigrate
 
     def generate_person()
       person_name = generate_random_string
-      ntriples = "<person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Person> .
-                  <person> <#{@host}/ontology#name> \"#{person_name}\" ."
+      ntriples = "<http://host/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Person> .
+                  <http://host/person/h1> <#{@host}/ontology#name> \"#{person_name}\" ."
       return person_name, ntriples
     end
 
     def generate_work(person_uri, prefix = '')
       work_title = generate_random_string
       work_part_title = generate_random_string
-      ntriples = "<work> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Work> .
-                  <work> <#{@host}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
-                  <work> <#{@host}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
-                  <work> <#{@host}/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
-                  <work> <#{@host}/ontology#contributor> _:c1 .
+      ntriples = "<http://host/work/w1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Work> .
+                  <http://host/work/w1> <#{@host}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
+                  <http://host/work/w1> <#{@host}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
+                  <http://host/work/w1> <#{@host}/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
+                  <http://host/work/w1> <#{@host}/ontology#contributor> _:c1 .
                   _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Contribution> .
                   _:c1 <#{@host}/ontology#agent> <#{person_uri}> .
                   _:c1 <#{@host}/ontology#role> <http://data.deichman.no/role#author> ."
@@ -79,11 +79,11 @@ module RandomMigrate
 
     def generate_publication(work_uri, language = nil, prefix = nil)
       publication_title = generate_random_string
-      ntriples = "<publication> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Publication> .
-                  <publication> <#{@host}/ontology#publicationOf> <#{work_uri}> .
-                  <publication> <#{@host}/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
-                  <publication> <#{@host}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <publication> <#{@host}/ontology#language> <#{language || @languages.sample}> ."
+      ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Publication> .
+                  <http://host/publication/p1> <#{@host}/ontology#publicationOf> <#{work_uri}> .
+                  <http://host/publication/p1> <#{@host}/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
+                  <http://host/publication/p1> <#{@host}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
+                  <http://host/publication/p1> <#{@host}/ontology#language> <#{language || @languages.sample}> ."
       return publication_title, ntriples
     end
 
@@ -147,32 +147,32 @@ module RandomMigrate
       person_uri = post_ntriples 'person', generate_person[1]
       work_uri = post_ntriples('work', generate_work(person_uri)[1])
 
-      publication_1 = Entity.new('publication', @services)
+      publication_1 = Entity.new('http://host/publication/p1', @services)
       publication_1.add_authorized('publicationOf', work_uri)
       publication_1.add_literal('mainTitle', "pubprefix0#{@id} #{@id}nob")
       publication_1.add_authorized('language', 'http://lexvo.org/id/iso639-3/nob')
       @publication_uris << post_ntriples('publication', publication_1.to_ntriples)
 
-      publication_2 = Entity.new('publication', @services)
+      publication_2 = Entity.new('http://host/publication/p2', @services)
       publication_2.add_authorized('publicationOf', work_uri)
       publication_2.add_literal('mainTitle', "pubprefix0#{@id} #{@id}eng")
       publication_2.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
       @publication_uris << post_ntriples('publication', publication_2.to_ntriples)
 
-      publication_3 = Entity.new('publication', @services)
+      publication_3 = Entity.new('http://host/publication/p3', @services)
       publication_3.add_authorized('publicationOf', work_uri)
       publication_3.add_literal('mainTitle', "pubprefix1#{@id} #{@id}eng")
       publication_3.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
       @publication_uris << post_ntriples('publication', publication_3.to_ntriples)
 
-      publication_4 = Entity.new('publication', @services)
+      publication_4 = Entity.new('http://host/publication/p4', @services)
       publication_4.add_authorized('publicationOf', work_uri)
       publication_4.add_literal('mainTitle', "pubprefix1#{@id} #{@id}dan")
       publication_4.add_authorized('language', 'http://lexvo.org/id/iso639-3/dan')
       @publication_uris << post_ntriples('publication', publication_4.to_ntriples)
 
       ids = self.get_record_ids
-      ids = ids.last.sort
+      ids = ids[ids.length-4,ids.length-1]
       self.add_item(ids.first, true, 'placement1', branchcode, 1)
       self.add_item(ids.first, false, 'placement2', branchcode, 2)
       self.add_item(ids.first, false, 'placement1', branchcode, 3)
