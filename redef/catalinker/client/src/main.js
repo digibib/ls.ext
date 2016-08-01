@@ -1609,7 +1609,7 @@
                     searchResult: null
                   }
                   if (index === 0) {
-                    input.values[ length ].subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length == 1
+                    input.values[ length ].subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
                       ? mainInput.subjectTypes[0]
                       : null
                   }
