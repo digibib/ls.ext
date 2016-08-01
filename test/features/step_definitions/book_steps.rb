@@ -93,15 +93,16 @@ Given(/^at det finnes et verk med en publikasjon og et eksemplar$/) do
   services = "http://#{ENV['HOST']}:#{port(:services)}"
   migrator = RandomMigrate::Migrator.new(services)
 
-  work = RandomMigrate::Entity.new('work', services)
+  work = RandomMigrate::Entity.new('http://host/work/w1', services)
   @context[:work_uri] = migrator.post_ntriples('work', work.to_ntriples)
 
-  publication = RandomMigrate::Entity.new('publication', services)
+  publication = RandomMigrate::Entity.new('http://host/publication/p1', services)
   @context[:publication_maintitle] = "book #{id}"
   publication.add_literal('mainTitle', @context[:publication_maintitle])
   publication.add_authorized('publicationOf', @context[:work_uri])
-  publication.add_item(true, 'placement1', @active[:branch].code)
   @context[:publication_uri] = migrator.post_ntriples('publication', publication.to_ntriples)
+  id = migrator.get_record_id(@context[:publication_uri])
+  migrator.add_item(id, false, 'placement1', @active[:branch].code, 0)
 
   record_data = migrator.get_record_data(@context[:work_uri], @context[:publication_uri])
   @context[:publication_recordid] = record_data[:publication_recordid]

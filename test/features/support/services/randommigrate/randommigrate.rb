@@ -194,6 +194,11 @@ module RandomMigrate
       }
     end
 
+    def get_record_id(uri)
+      res = RestClient.get "#{proxy_to_services(uri)}"
+      JSON.parse(res)["deichman:recordID"]
+    end
+
     def get_record_ids
       record_ids = []
       @publication_uris.each do | uri |
