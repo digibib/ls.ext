@@ -331,43 +331,6 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public Query getMainEntryName() {
-        String q = String.format(""
-                + "PREFIX deichman: <%1$s>\n"
-                + "SELECT ?name\n"
-                + "WHERE {\n"
-                + "  ?work a deichman:Work ;\n"
-                + "    deichman:contributor ?contrib .\n"
-                + "  ?contrib a deichman:MainEntry ;\n"
-                + "    deichman:agent ?agent.\n"
-                + "  ?agent deichman:name ?name ."
-                + "}", baseURI.ontology());
-        return QueryFactory.create(q);
-    }
-
-    public Query getGenreLabels() {
-        String q = String.format(""
-                + "PREFIX deichman: <%1$s>\n"
-                + "SELECT ?genreLabel\n"
-                + "WHERE {\n"
-                + "  ?work a deichman:Work ;\n"
-                + "    deichman:genre ?genre.\n"
-                + "  ?genre deichman:prefLabel ?genreLabel ."
-                + "}", baseURI.ontology());
-        return QueryFactory.create(q);
-    }
-
-    public Query getSubjectLabels() {
-        String q = String.format(""
-                + "PREFIX deichman: <%1$s>\n"
-                + "SELECT ?subjectLabel\n"
-                + "WHERE {\n"
-                + "  ?work a deichman:Work ;\n"
-                + "    deichman:subject ?subject .\n"
-                + "  ?subject deichman:prefLabel ?subjectLabel ."
-                + "}", baseURI.ontology());
-        return QueryFactory.create(q);
-    }
 
     public Query selectWorksByAgent(XURI agent) {
         String q = String.format(""
@@ -378,6 +341,50 @@ public final class SPARQLQueryBuilder {
                 + "    deichman:contributor ?contrib .\n"
                 + "  ?contrib  deichman:agent <%2$s> .\n"
                 + "}", baseURI.ontology(), agent.getUri());
+        return QueryFactory.create(q);
+    }
+
+    public Query constructInformationForMARC(XURI publication) {
+        String q = String.format(""
+                + "PREFIX deichman: <%1$s>\n"
+                + "CONSTRUCT {\n"
+                + "  ?pub deichman:mainTitle ?mainTitle ;\n"
+                + "       deichman:partTitle ?partTitle ;\n"
+                + "       deichman:subtitle ?subtitle ;\n"
+                + "       deichman:partNumber ?partNumber ;\n"
+                + "       deichman:isbn ?isbn ;\n"
+                + "       deichman:publicationYear ?publicationYear ;\n"
+                + "       deichman:ageLimit ?ageLimit ;\n"
+                + "       deichman:mainEntry ?mainEntryName ;\n"
+                + "       deichman:subject ?subjectLabel ;\n"
+                + "       deichman:genre ?genreLabel .\n"
+                + "}\n"
+                + "WHERE {\n"
+                + "  BIND(<%2$s> AS ?pub)\n"
+                + "  ?pub deichman:mainTitle ?mainTitle .\n"
+                + "  OPTIONAL { ?pub deichman:subtitle ?subtitle }\n"
+                + "  OPTIONAL { ?pub deichman:partTitle ?partTitle }\n"
+                + "  OPTIONAL { ?pub deichman:partNumber ?partNumber }\n"
+                + "  OPTIONAL { ?pub deichman:isbn ?isbn }\n"
+                + "  OPTIONAL { ?pub deichman:publicationYear ?publicationYear }\n"
+                + "  OPTIONAL { ?pub deichman:ageLimit ?ageLimit }\n"
+                + "\n"
+                + "  OPTIONAL { ?work a deichman:Work . }\n"
+                + "  OPTIONAL {\n"
+                + "    ?work deichman:contributor ?contrib .\n"
+                + "    ?contrib a deichman:MainEntry ;\n"
+                + "      deichman:agent ?agent .\n"
+                + "    ?agent deichman:name ?mainEntryName .\n"
+                + "  }\n"
+                + "  OPTIONAL {\n"
+                + "    ?work deichman:subject ?subject .\n"
+                + "    ?subject deichman:prefLabel ?subjectLabel .\n"
+                + "  }\n"
+                + "  OPTIONAL {\n"
+                + "    ?work deichman:genre ?genre .\n"
+                + "    ?genre deichman:prefLabel ?genreLabel .\n"
+                + "  }\n"
+                + "}", baseURI.ontology(), publication.getUri());
         return QueryFactory.create(q);
     }
 }

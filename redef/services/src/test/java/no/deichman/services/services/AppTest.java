@@ -1039,14 +1039,14 @@ public class AppTest {
                 + "<marcxml:record><marcxml:leader>00000    a2200000       </marcxml:leader>"
                 + "<marcxml:datafield tag=\"100\" ind1=\" \" ind2=\" \">"
                 + "<marcxml:subfield code=\"a\">" + creator + "</marcxml:subfield></marcxml:datafield>"
-                + "<marcxml:datafield tag=\"245\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">" + publicationTitle + "</marcxml:subfield>"
-                + "<marcxml:subfield code=\"p\">" + partTitle + "</marcxml:subfield>"
-                + "<marcxml:subfield code=\"n\">" + partNumber + "</marcxml:subfield></marcxml:datafield>"
-                + "<marcxml:datafield tag=\"020\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"a\">" + isbn + "</marcxml:subfield></marcxml:datafield>"
                 + "<marcxml:datafield tag=\"260\" ind1=\" \" ind2=\" \">"
                 + "<marcxml:subfield code=\"c\">" + publicationYear + "</marcxml:subfield></marcxml:datafield>"
+                + "<marcxml:datafield tag=\"020\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"a\">" + isbn + "</marcxml:subfield></marcxml:datafield>"
+                + "<marcxml:datafield tag=\"245\" ind1=\" \" ind2=\" \">"
+                + "<marcxml:subfield code=\"n\">" + partNumber + "</marcxml:subfield>"
+                + "<marcxml:subfield code=\"p\">" + partTitle + "</marcxml:subfield>"
+                + "<marcxml:subfield code=\"a\">" + publicationTitle + "</marcxml:subfield></marcxml:datafield>"
                 + "</marcxml:record></marcxml:collection>\n";
         kohaSvcMock.addCreateNewBiblioFromMarcXmlExpectation(FIRST_BIBLIO_ID, expectedPayload);
     }

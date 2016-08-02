@@ -24,13 +24,13 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -65,6 +65,9 @@ public final class EntityServiceImpl implements EntityService {
     private final Property publicationYearProperty;
     private final Property subtitleProperty;
     private final Property ageLimitProperty;
+    private final Property subjectProperty;
+    private final Property genreProperty;
+    private final Property mainEntryProperty;
 
 
 
@@ -81,6 +84,9 @@ public final class EntityServiceImpl implements EntityService {
         publicationYearProperty = ResourceFactory.createProperty(baseURI.ontology("publicationYear"));
         subtitleProperty = ResourceFactory.createProperty(baseURI.ontology("subtitle"));
         ageLimitProperty = ResourceFactory.createProperty(baseURI.ontology("ageLimit"));
+        subjectProperty = ResourceFactory.createProperty(baseURI.ontology("subject"));
+        genreProperty = ResourceFactory.createProperty(baseURI.ontology("genre"));
+        mainEntryProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntry"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -381,108 +387,44 @@ public final class EntityServiceImpl implements EntityService {
             return marcRecord;
         }
 
-        // Extract information from work:
+        MarcField field245 = MarcRecord.newDataField(MarcConstants.FIELD_245);
 
-        String mainEntryName = getMainEntryName(work);
-
-        if (mainEntryName != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, mainEntryName);
-        }
-
-        List<String> genres = getGenres(work);
-        if (!genres.isEmpty()) {
-            for (String genre : genres) {
-                marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, genre);
+        Query query = new SPARQLQueryBuilder(baseURI).constructInformationForMARC(publication);
+        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
+            Model pubModel = qexec.execConstruct();
+            StmtIterator iter = pubModel.listStatements();
+            while (iter.hasNext()) {
+                Statement stmt = iter.nextStatement();
+                Property pred = stmt.getPredicate();
+                if (pred.equals(mainEntryProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(publicationYearProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_260, MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
+                } else if (pred.equals(isbnProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(mainTitleProperty)) {
+                    field245.addSubfield(MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(subtitleProperty)) {
+                    field245.addSubfield(MarcConstants.SUBFIELD_B, stmt.getLiteral().getString());
+                } else if (pred.equals(partTitleProperty)) {
+                    field245.addSubfield(MarcConstants.SUBFIELD_P, stmt.getLiteral().getString());
+                } else if (pred.equals(partNumberProperty)) {
+                    field245.addSubfield(MarcConstants.SUBFIELD_N, stmt.getLiteral().getString());
+                } else if (pred.equals(ageLimitProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_019, MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
+                } else if (pred.equals(subjectProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_690, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(genreProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                }
             }
         }
 
-        List<String> subjects = getSubjects(work);
-        if (!subjects.isEmpty()) {
-            for (String subject : subjects) {
-                marcRecord.addMarcField(MarcConstants.FIELD_690, MarcConstants.SUBFIELD_A, subject);
-            }
+        if (field245.size() > 0) {
+            marcRecord.addMarcField(field245);
         }
-
-        Resource publicationResource = publication.getAsResource();
-
-        // Extract information from publication literals:
-
-        MarcField field = MarcRecord.newDataField(MarcConstants.FIELD_245);
-        if (work.getProperty(publicationResource, mainTitleProperty) != null) {
-            field.addSubfield(MarcConstants.SUBFIELD_A,
-                    work.getProperty(publicationResource, mainTitleProperty).getLiteral().getString());
-        }
-        if (work.getProperty(publicationResource, subtitleProperty) != null) {
-            field.addSubfield(MarcConstants.SUBFIELD_B,
-                    work.getProperty(publicationResource, subtitleProperty).getLiteral().getString());
-        }
-        if (work.getProperty(publicationResource, partTitleProperty) != null) {
-            field.addSubfield(MarcConstants.SUBFIELD_P,
-                    work.getProperty(publicationResource, partTitleProperty).getLiteral().getString());
-        }
-        if (work.getProperty(publicationResource, partNumberProperty) != null) {
-            field.addSubfield(MarcConstants.SUBFIELD_N,
-                    work.getProperty(publicationResource, partNumberProperty).getLiteral().getString());
-        }
-        if (field.size() > 0) {
-            marcRecord.addMarcField(field);
-        }
-        if (work.getProperty(publicationResource, isbnProperty) != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A,
-                    work.getProperty(publicationResource, isbnProperty).getLiteral().getString());
-        }
-        if (work.getProperty(publicationResource, publicationYearProperty) != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_260, MarcConstants.SUBFIELD_C,
-                    work.getProperty(publicationResource, publicationYearProperty).getLiteral().getString());
-        }
-        if (work.getProperty(publicationResource, ageLimitProperty) != null) {
-            marcRecord.addMarcField(MarcConstants.FIELD_019, MarcConstants.SUBFIELD_C,
-                    work.getProperty(publicationResource, ageLimitProperty).getLiteral().getString());
-        }
-
 
         return marcRecord;
-    }
-
-
-    private String getMainEntryName(Model work) {
-        String mainEntryName = null;
-
-        Query query = new SPARQLQueryBuilder(baseURI).getMainEntryName();
-        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
-            ResultSet results = qexec.execSelect();
-            if (results.hasNext()) {
-                QuerySolution soln = results.nextSolution();
-                mainEntryName = soln.getLiteral("name").asLiteral().toString();
-            }
-        }
-        return mainEntryName;
-    }
-
-    private List<String> getGenres(Model work) {
-        List<String> genres = new ArrayList<>();
-        Query query = new SPARQLQueryBuilder(baseURI).getGenreLabels();
-        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
-            ResultSet results = qexec.execSelect();
-            while (results.hasNext()) {
-                QuerySolution soln = results.nextSolution();
-                genres.add(soln.getLiteral("genreLabel").asLiteral().toString());
-            }
-        }
-        return genres;
-    }
-
-    private List<String> getSubjects(Model work) {
-        List<String> subjects = new ArrayList<>();
-        Query query = new SPARQLQueryBuilder(baseURI).getSubjectLabels();
-        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
-            ResultSet results = qexec.execSelect();
-            while (results.hasNext()) {
-                QuerySolution soln = results.nextSolution();
-                subjects.add(soln.getLiteral("subjectLabel").asLiteral().toString());
-            }
-        }
-        return subjects;
     }
 
     @Override
