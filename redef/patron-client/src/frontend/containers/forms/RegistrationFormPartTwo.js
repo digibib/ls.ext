@@ -121,11 +121,10 @@ class RegistrationFormPartTwo extends React.Component {
           </div>
           <div className="terms_and_conditions">
             <input data-automation-id="accept_terms" id="acceptTerms" type="checkbox" {...acceptTerms} />
-            <label htmlFor="accept_terms"><span></span>
+            <label htmlFor="acceptTerms"><span>{/* Helper for checkbox styling */}</span></label>
               <a onClick={this.handleExpandedTermsAndCondition} title="termslink">
                 <FormattedMessage {...messages.acceptTermsLink} />
               </a>
-            </label>
             {/* this.props.showTermsAndConditions ? this.renderTermsAndConditions() : '' */}
           </div>
           <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
