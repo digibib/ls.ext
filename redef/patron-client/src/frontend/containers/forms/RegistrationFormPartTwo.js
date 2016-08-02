@@ -276,14 +276,6 @@ function mapStateToProps (state) {
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
     initialValues: {
       library: Object.keys(state.application.libraries)[ 0 ], // Makes sure this field has a value even if it is not touched,
-      email: 'patron@patrons.com',
-      mobile: '12345678',
-      address: 'Skyline rd. 45',
-      zipcode: '0912',
-      city: 'Oslo',
-      country: 'Norway',
-      pin: '1111',
-      repeatPin: '1111',
       acceptTerms: 'true'
     }
   }

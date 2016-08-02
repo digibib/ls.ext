@@ -257,14 +257,7 @@ function mapStateToProps (state) {
     showTermsAndConditions: state.registration.showTermsAndConditions,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
-    initialValues: {
-      firstName: 'Patron',
-      lastName: 'McPatronFace',
-      day: '16',
-      month: '09',
-      year: '1987',
-      ssn: '01234567890'
-    }
+    initialValues: {}
   }
 }
 
