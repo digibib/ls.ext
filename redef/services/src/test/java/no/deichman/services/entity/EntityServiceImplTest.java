@@ -681,6 +681,7 @@ public class EntityServiceImplTest {
                 + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
                 + "    ns2:subtitle \"roman\" ;\n"
                 + "    ns2:ageLimit \"75\" ;\n"
+                + "    ns2:hasPlaceOfPublication <http://deichman.no/place/p1> ;"
                 + "    ns4:locationSignature \"Rag\" ;\n"
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
@@ -720,7 +721,10 @@ public class EntityServiceImplTest {
                 + "\n"
                 + "<http://deichman.no/genre/g1> rdf:type ns2:Genre ;\n"
                 + "    ns2:prefLabel \"Krim\" ;\n"
-                + "    ns2:specification \"spesial\" .";
+                + "    ns2:specification \"spesial\" ."
+                + "\n"
+                + "<http://deichman.no/place/p1> rdf:type ns2:Place ;\n"
+                + "    ns2:prefLabel \"Oslo\" .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
@@ -741,6 +745,7 @@ public class EntityServiceImplTest {
         want.addMarcField(field);
         // Utgiverinfo:
         field = MarcRecord.newDataField("260");
+        field.addSubfield('a', "Oslo");
         field.addSubfield('c', "2004");
         want.addMarcField(field);
         // Sjanger:

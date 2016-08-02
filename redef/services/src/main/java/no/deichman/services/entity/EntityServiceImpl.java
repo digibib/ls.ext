@@ -68,6 +68,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property subjectProperty;
     private final Property genreProperty;
     private final Property mainEntryProperty;
+    private final Property publicationPlaceProperty;
 
 
 
@@ -87,6 +88,7 @@ public final class EntityServiceImpl implements EntityService {
         subjectProperty = ResourceFactory.createProperty(baseURI.ontology("subject"));
         genreProperty = ResourceFactory.createProperty(baseURI.ontology("genre"));
         mainEntryProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntry"));
+        publicationPlaceProperty = ResourceFactory.createProperty(baseURI.ontology("publicationPlace"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -388,6 +390,7 @@ public final class EntityServiceImpl implements EntityService {
         }
 
         MarcField field245 = MarcRecord.newDataField(MarcConstants.FIELD_245);
+        MarcField field260 = MarcRecord.newDataField(MarcConstants.FIELD_260);
 
         Query query = new SPARQLQueryBuilder(baseURI).constructInformationForMARC(publication);
         try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
@@ -399,7 +402,9 @@ public final class EntityServiceImpl implements EntityService {
                 if (pred.equals(mainEntryProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(publicationYearProperty)) {
-                    marcRecord.addMarcField(MarcConstants.FIELD_260, MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
+                    field260.addSubfield(MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
+                } else if (pred.equals(publicationPlaceProperty)) {
+                    field260.addSubfield(MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(isbnProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(mainTitleProperty)) {
@@ -422,6 +427,10 @@ public final class EntityServiceImpl implements EntityService {
 
         if (field245.size() > 0) {
             marcRecord.addMarcField(field245);
+        }
+
+        if (field260.size() > 0) {
+            marcRecord.addMarcField(field260);
         }
 
         return marcRecord;
