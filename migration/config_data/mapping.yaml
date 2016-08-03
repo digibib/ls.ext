@@ -578,6 +578,7 @@
               object:
                 combinestring: ""
                 datatype: "literal"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 combine:
                   - "a"
     -
@@ -589,6 +590,7 @@
               object:
                 combinestring: ""
                 datatype: "literal"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 combine:
                   - "b"
     -
