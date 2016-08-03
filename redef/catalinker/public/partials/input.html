@@ -1,10 +1,10 @@
 <div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel" {{#if
      resourceIsLoaded(showOnlyWhenEmpty) }} style="display:none;" {{/if}}>
-<div class="pure-u-1-2 label {{firstInGroup ? 'first':''}} panel-part"
+<div class="pure-u-1-{{./accordionHeader ? '1' : '2'}} label {{firstInGroup ? 'first':''}} panel-part"
      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
 </div>
-<div class="panel-part pure-u-1-2 {{lastInGroup ? 'last':''}}">
-        {{#each values:index}}
+<div class="panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}} {{lastInGroup ? 'last':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
+        {{#each values:inputValueIndex}}
         <span class="field pure-u-1-1" id="support_panel_base_{{uniqueId}}">
             {{>type}}
             {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
@@ -18,7 +18,7 @@
             {{/}}
             <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
         </span>
-        {{#index == values.length -1}}
+        {{#inputValueIndex == values.length -1}}
         <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
             {{>"support-for-"+type}}
         </span>
@@ -35,18 +35,24 @@
         Forslag fra andre eksterne kilder
     </div>
     {{#each subInputs[0].input.values:inputValueIndex}}
-        <div style="order: {{inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" class="pure-u-1-1 field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
-              {{#if
-              nonEditable}}disabled="disabled" {{/if}}>
+    {{#if nonEditable && ../../../../../accordionHeader}}
+    <h3 class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
+        {{#with ../../../../../accordionHeader}}
+        {{>"accordion-header-for-"+. }}
+        {{/with}}
+    </h3>
+    {{/if}}
+        <div style="order: {{nonEditable ? valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1 : 100}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
+              {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
             {{#if nonEditable && !suggested}}
             <a class="delete" title="Slett oppføring"
-               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
+               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" onclick="main.$(this).closest('.ui-accordion-content').prev().remove();main.$(this).closest('.ui-accordion-content').remove()"></a>
             {{/if}}
             <span class="input-wrapper">
                 <span class="inputs">
                     {{#each ../../../../../subInputs}}
-                        <span class="input {{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">
-                            <span class="label {{#if !nonEditable && !suggested}}pure-u-1-1{{/if}}"
+                        <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
+                            <span class="label {{#if !nonEditable && !suggested}}pure-u-1-1{{/if}} {{#if input.type === 'input-boolean'}}for-checkbox{{/if}}"
                                   data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
                             {{#with input.values[inputValueIndex]}}
                                 <span class="value sub-field" id="support_panel_base_{{uniqueId}}">

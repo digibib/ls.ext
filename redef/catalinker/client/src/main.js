@@ -26,6 +26,7 @@
     var supportPanelLeftEdge
     var supportPanelWidth
     require('jquery-ui/dialog')
+    require('jquery-ui/accordion')
 
     var deepClone = function (object) {
       var clone = _.clone(object)
@@ -51,6 +52,26 @@
 
     function unPrefix (prefixed) {
       return _.last(prefixed.split(':'))
+    }
+
+    function checkRangeStart (input) {
+      var endRangeInput = $(input).closest(".input").next().find("input")
+      var rangeEndVal = Number(endRangeInput.val());
+      var startRangeVal = Number($(input).val())
+      if (!isNaN(startRangeVal) && (isNaN(rangeEndVal) || rangeEndVal < startRangeVal)) {
+        endRangeInput.val(Math.max(startRangeVal, rangeEndVal));
+        ractive.updateModel()
+      }
+    }
+
+    function checkRangeEnd (input) {
+      var startRangeInput = $(input).closest(".input").prev().find("input")
+      var rangeStartVal = Number(startRangeInput.val());
+      var endRangeVal = Number($(input).val())
+      if (!isNaN(endRangeVal) && (isNaN(rangeStartVal) || rangeStartVal > endRangeVal)) {
+        startRangeInput.val(Math.min(endRangeVal, rangeStartVal));
+        ractive.updateModel()
+      }
     }
 
     function saveSuggestionData () {
@@ -603,7 +624,7 @@
           _.each(inputsToSave, function (input) {
             var predicate = input.predicate
             _.each(input.values, function (value) {
-              Main.patchResourceFromValue(resourceUri, predicate, value, input.datatypes[0], errors)
+              Main.patchResourceFromValue(resourceUri, predicate, value, input.datatypes[ 0 ], errors)
               value.old = deepClone(value.current)
             })
           })
@@ -733,49 +754,53 @@
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
-  var typesFromRange = function (range) {
-    var inputType
-    var rdfType = range
-    switch (range) {
-      case 'http://www.w3.org/2001/XMLSchema#string':
-        inputType = 'input-string'
-        break
-      case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString':
-        inputType = 'input-lang-string'
-        break
-      case 'http://www.w3.org/2001/XMLSchema#gYear':
-        inputType = 'input-gYear'
-        break
-      case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
-        inputType = 'input-nonNegativeInteger'
-        break
-      case 'deichman:Place':
-      case 'deichman:Work':
-      case 'deichman:Person':
-      case 'deichman:Corporation':
-      case 'deichman:Role':
-      case 'deichman:Serial':
-      case 'deichman:Contribution':
-      case 'deichman:SerialIssue':
-      case 'deichman:Subject':
-      case 'deichman:Genre':
-      case 'http://www.w3.org/2001/XMLSchema#anyURI':
-        rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
-        inputType = 'input-string'
-        break
-      default:
-        throw new Error('Don\'t know which input-type to assign to range: ' + range)
+    var typesFromRange = function (range) {
+      var inputType
+      var rdfType = range
+      switch (range) {
+        case 'http://www.w3.org/2001/XMLSchema#boolean':
+          inputType = 'input-boolean'
+          break
+        case 'http://www.w3.org/2001/XMLSchema#string':
+          inputType = 'input-string'
+          break
+        case 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString':
+          inputType = 'input-lang-string'
+          break
+        case 'http://www.w3.org/2001/XMLSchema#gYear':
+          inputType = 'input-gYear'
+          break
+        case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
+          inputType = 'input-nonNegativeInteger'
+          break
+        case 'deichman:Place':
+        case 'deichman:Work':
+        case 'deichman:Person':
+        case 'deichman:Corporation':
+        case 'deichman:Role':
+        case 'deichman:Serial':
+        case 'deichman:Contribution':
+        case 'deichman:SerialIssue':
+        case 'deichman:Subject':
+        case 'deichman:Genre':
+        case 'deichman:PublicationPart':
+        case 'http://www.w3.org/2001/XMLSchema#anyURI':
+          rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
+          inputType = 'input-string'
+          break
+        default:
+          throw new Error('Don\'t know which input-type to assign to range: ' + range)
+      }
+      return {
+        inputType: inputType,
+        rdfType: rdfType
+      }
     }
-    return {
-      inputType: inputType,
-      rdfType: rdfType
-    }
-  }
 
-  function assignInputTypeFromRange (input) {
+    function assignInputTypeFromRange (input) {
       var types = typesFromRange(input.ranges[ 0 ])
       input.type = types.inputType
-      input.datatypes = [types.rdfType]
+      input.datatypes = [ types.rdfType ]
     }
 
     function assignUniqueValueIds (input) {
@@ -828,7 +853,7 @@
 
           if (input.predefined) {
             input.type = 'select-predefined-value'
-            input.datatypes = ['http://www.w3.org/2001/XMLSchema#anyURI']
+            input.datatypes = [ 'http://www.w3.org/2001/XMLSchema#anyURI' ]
           } else {
             assignInputTypeFromRange(input)
           }
@@ -851,13 +876,21 @@
           predicate: ontologyUri + prop.subInputs.rdfProperty,
           ranges: prop.subInputs.ranges,
           range: prop.subInputs.range,
-          inputGroupRequiredVetoes: []
+          inputGroupRequiredVetoes: [],
+          accordionHeader: prop.subInputs.accordionHeader,
+          orderBy: prop.subInputs.orderBy
         }
         if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
           currentInput.subjectType = currentInput.subjectTypes[ 0 ]
         }
         _.each(prop.subInputs.inputs, function (subInput) {
-          var inputFromOntology = deepClone(inputMap[ prop.subInputs.range + '.' + ontologyUri + subInput.rdfProperty ])
+          if (!subInput.rdfProperty) {
+            throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
+          }
+          var inputFromOntology = deepClone(inputMap[ `${prop.subInputs.range}.${ontologyUri}${subInput.rdfProperty }` ])
+          if (!inputFromOntology) {
+            throw new Error(`Property "${subInput.rdfProperty}" doesn't have "${prop.subInputs.range}" in its domain`)
+          }
           assignUniqueValueIds(inputFromOntology)
           var indexTypes = _.isArray(subInput.indexTypes) ? subInput.indexTypes : [ subInput.indexTypes ]
           var type = subInput.type || inputFromOntology.type
@@ -1212,6 +1245,7 @@
         var partials = [
           'input',
           'input-string',
+          'input-boolean',
           'input-string-large',
           'input-lang-string',
           'input-gYear',
@@ -1231,7 +1265,8 @@
           'work',
           'publication',
           'delete-publication-dialog',
-          'delete-work-dialog'
+          'delete-work-dialog',
+          'accordion-header-for-collection'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
@@ -1305,8 +1340,8 @@
               s: '_:b0',
               p: subInput.input.predicate,
               o: {
-                value: _.isArray(value) ? value[ 0 ] : value,
-                type: subInput.input.datatypes[0]
+                value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
+                type: subInput.input.datatypes[ 0 ]
               }
             })
           })
@@ -1402,6 +1437,15 @@
           }
 
           // decorators
+          var accordionDecorator = function (node) {
+            $(node).accordion({
+              collapsible: true,
+              header: "> .accordion-header"
+            })
+            return {
+              teardown: function () {}
+            }
+          }
           var repositionSupportPanel = function (node) {
             Main.repositionSupportPanelsHorizontally()
             return {
@@ -1422,7 +1466,7 @@
                 var inputNode = ractive.get(grandParentOf(keypath))
                 if (!inputNode.isSubInput && keypath.indexOf('enableCreateNewResource') === -1) {
                   Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
-                    ractive.get(keypath), inputNode.datatypes[0], errors, keypath)
+                    ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
                 }
               }
             })
@@ -1576,7 +1620,24 @@
                   return value.suggested && value.suggested !== null
                 })
               },
-              isAdvancedQuery: isAdvancedQuery
+              isAdvancedQuery: isAdvancedQuery,
+              valueOfInputById: function (inputId, valueIndex) {
+                var keyPath = ractive.get(`inputLinks.${inputId[0]}`)
+                return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
+              },
+              valueOrderOfInputById: function (inputId, valueIndex) {
+                let keyPath = ractive.get(`inputLinks.${inputId[0]}`)
+                let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
+                let values = ractive.get(`${keyPath}.values`)
+                let index = _.findIndex(_.sortBy(values, function(val){return val.current.value}), function (v) {
+                  return v.current.value === value
+                })
+                if (index > -1) {
+                  return Number(index + 1).toString()
+                } else {
+                  return null
+                }
+              }
             },
             decorators: {
               multi: require('ractive-multi-decorator'),
@@ -1584,9 +1645,31 @@
               detectChange: detectChange,
               handleAddNewBySelect2: handleAddNewBySelect2,
               clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
-              unload: unload
+              unload: unload,
+              accordion: accordionDecorator
             },
-            partials: applicationData.partials
+            partials: applicationData.partials,
+            transitions: {
+              accordion: function (transition) {
+                $($(transition.element.node)[0]).accordion({
+                  active: false,
+                  collapsible: true,
+                  header: '.accordionHeader',
+                  heightStyle: 'content',
+                  icons: {
+                    header: 'ui-icon-circle-plus',
+                    activeHeader: 'ui-icon-circle-minus'
+                  }
+                })
+              },
+              accordionSection: function (transition) {
+                var parent = $(transition.element.node).parent()
+                if (parent.accordion()) {
+                  parent.accordion('refresh')
+                  parent.accordion('option', 'active', false)
+                }
+              }
+            }
           })
           ractive.on({
               toggle: function (event) {
@@ -1610,7 +1693,7 @@
                   }
                   if (index === 0) {
                     input.values[ length ].subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
-                      ? mainInput.subjectTypes[0]
+                      ? mainInput.subjectTypes[ 0 ]
                       : null
                   }
                 })
@@ -1992,7 +2075,7 @@
                 var patchMotherResource = function (resourceUri) {
                   var targetInput = ractive.get(grandParentOf(origin))
                   if (!useAfterCreation && !targetInput.isSubInput) {
-                    Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatypes[0], errors)
+                    Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                   }
                   return resourceUri
                 }
@@ -2422,9 +2505,9 @@
           .then(positionSupportPanels)
           .then(initHeadlineParts)
           .then(initInputLinks)
-          .catch(function (err) {
-            console.log('Error initiating Main: ' + err)
-          })
+        // .catch(function (err) {
+        //   console.log('Error initiating Main: ' + err)
+        // })
       },
       repositionSupportPanelsHorizontally: function () {
         supportPanelLeftEdge = $('#right-dummy-panel').offsetParent().left
@@ -2439,7 +2522,9 @@
       },
       $: $,
       _: _,
-      saveSuggestionData: saveSuggestionData
+      saveSuggestionData: saveSuggestionData,
+      checkRangeStart: checkRangeStart,
+      checkRangeEnd: checkRangeEnd
     }
     return Main
   }

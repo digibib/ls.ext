@@ -74,6 +74,10 @@
   rdfs:label "Genre"@en ;
   rdfs:label "Sjanger"@no .
 
+:PublicationPart a rdfs:Class ;
+  rdfs:label "Publication part"@en ;
+  rdfs:label "Delutgivelse"@no .
+
 :prefLabel a rdfs:Property ;
   rdfs:label "Preferred label"@en ;
   rdfs:label "Foretrukket betegnelse"@no ;
@@ -216,9 +220,15 @@
 
 # ToDo: Erstattes med :hasMainTitle
 :mainTitle a rdfs:Property ;
-  rdfs:label "Main mainTitle"@en ;
+  rdfs:label "Main title"@en ;
   rdfs:label "Hovedtittel"@no ;
   rdfs:domain :Work, :Publication ;
+  rdfs:range xsd:string .
+
+:hasOriginalTitle a rdfs:Property ;
+  rdfs:label "Original title"@en ;
+  rdfs:label "Originaltittel"@no ;
+  rdfs:domain :PublicationPart ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartTitle
@@ -352,7 +362,7 @@
   rdfs:label "Rolle"@no ;
   duo:valuesFrom values:role ;
   rdfs:range :Role ;
-  rdfs:domain :Contribution .
+  rdfs:domain :Contribution, :PublicationPart .
 
 # ToDo: Erstattes med :hasAgent
 :agent a rdfs:Property ;
@@ -360,7 +370,7 @@
   rdfs:label "Agent"@en ;
   rdfs:label "Agent"@no ;
   rdfs:range :Person ;
-  rdfs:domain :Contribution .
+  rdfs:domain :Contribution, :PublicationPart .
 
 # ToDo: Erstattes med :hasGenre
 :genre a rdfs:Property ;
@@ -368,3 +378,33 @@
   rdfs:label "Sjanger"@no ;
   rdfs:range :Genre ;
   rdfs:domain :Work .
+
+:hasPublicationPart a rdfs:Property ;
+  rdfs:label "Har delutgivelse"@no ;
+  rdfs:label "Has publication part"@en ;
+  rdfs:range :PublicationPart ;
+  rdfs:domain :Publication .
+
+:hasWork a rdfs:Property ;
+  rdfs:label "Har verk"@no ;
+  rdfs:label "Has wotrk"@en ;
+  rdfs:range :Work;
+  rdfs:domain :PublicationPart .
+
+:startsAtPage a rdfs:Property ;
+  rdfs:label "Start page"@en ;
+  rdfs:label "Begynner på side"@no ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:domain :PublicationPart .
+
+:endsAtPage a rdfs:Property ;
+  rdfs:label "End page"@en ;
+  rdfs:label "Slutter på side"@no ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:domain :PublicationPart .
+
+:improperWork a rdfs:Property ;
+  rdfs:label "Improper work"@en ;
+  rdfs:label "Ikke eget verk"@no ;
+  rdfs:range xsd:boolean ;
+  rdfs:domain :PublicationPart .

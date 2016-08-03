@@ -244,6 +244,9 @@
                     case "http://www.w3.org/2001/XMLSchema#string":
                         input.type = "input-string";
                         break;
+                    case 'http://www.w3.org/2001/XMLSchema#boolean':
+                        input.type = 'input-boolean'
+                        break
                     case "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString":
                         input.type = "input-lang-string";
                         break;
@@ -257,6 +260,7 @@
                     case "deichman:Person":
                     case "deichman:Place":
                     case "deichman:Corporation":
+                    case 'deichman:PublicationPart':
                     case "deichman:Genre":
                         // TODO infer from ontology that this is an URI
                         // (because deichman:Work a rdfs:Class)

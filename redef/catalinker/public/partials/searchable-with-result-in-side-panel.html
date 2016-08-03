@@ -12,7 +12,7 @@
         </select>
     </span>
 {{/if}}
-{{#if deletable}}
+{{#if ./deletable}}
 <div class="pure-u-1-1">
     <span class="select2 select2-container select2-container--default select2-container--above select2-container--focus"
           style="width: 100%;">
@@ -27,7 +27,7 @@
     </span>
 </div>
 {{else}}
-<input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#deletable}}readonly {{/deletable}} type="search" {{#if indexTypes.length > 0 && !selectedIndexType}}disabled{{/if}}
+<input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}} type="search" {{#if indexTypes.length > 0 && !selectedIndexType}}disabled{{/if}}
 on-click="{{#deletable}}unselectEntity{{/deletable}}"
 class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if searchable}}searchable{{/if}} {{#if ./current.accepted}}suggestion-source-{{./current.accepted.source}}{{/if}}"
 data-automation-id="{{dataAutomationId}}"

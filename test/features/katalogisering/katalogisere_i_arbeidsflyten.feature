@@ -48,6 +48,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg legger inn emnet i søkefelt for emne og trykker enter
     Så velger jeg et emne fra treffliste fra emneregisteret
     Så sjekker jeg at emnet er listet opp på verket
+    Og bekrefter for å gå videre til "Beskriv deler"
     Og bekrefter for å gå videre til "Biinnførsler"
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt

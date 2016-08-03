@@ -2,8 +2,15 @@
 <span data-automation-id="{{../../dataAutomationId}}">{{./current.value}}</span>
 {{else}}
 <input {{#disabled}} disabled="true" {{/}}
-class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
+type="number" min="0"
+class="pure-u-{{input.widgetOptions.isRangeStart ? '1-1' : (input.widgetOptions.isRangeEnd ? '1-4' : '1-1')}} {{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
+{{#if input.widgetOptions.isRangeStart}}
+oninput="main.checkRangeStart(this)"
+{{/if}}
+{{#if input.widgetOptions.isRangeEnd}}
+onchange="main.checkRangeEnd(this)"
+{{/if}}
 data-automation-id="{{../../dataAutomationId}}"
 value="{{./current.value}}" />
 {{/if}}

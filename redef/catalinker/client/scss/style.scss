@@ -98,6 +98,7 @@ body {
     li {
       float: left;
       display: block;
+      margin-bottom: -7px;
       label {
         display: block;
         position: relative;
@@ -128,6 +129,10 @@ body {
     }
     z-index: 100;
     .grid-tab {
+      .grid-tab-link {
+        padding: 0.5em 0.5em;
+        font-size: 0.9em;
+      }
       .grid-tab-link-selected {
         background: $lightestgray;
       }
@@ -174,11 +179,34 @@ body {
           &:after {
             content: ":";
           }
+          &:empty:after {
+            font-size: 0px;
+          }
         }
         .input-wrapper .label {
           padding: 12px 12px 4px 0px;
         }
         .panel-part {
+          &.ui-accordion {
+            .ui-accordion-icons {
+              padding-left: 13px;
+            }
+            .ui-accordion-header {
+              border-radius: 0px;
+              background: none;
+              margin: 4px 13px;
+              .ui-accordion-header-icon {
+                right: .5em;
+                left: auto;
+              }
+            }
+            .ui-accordion-content {
+              border: none;
+              padding: 13px;
+              display: none;
+            }
+          }
+
           display: flex;
           flex-direction: column;
           &.label {
@@ -232,7 +260,7 @@ body {
           }
           div.external-sources {
             margin-top: 10px;
-            &>span {
+            & > span {
               background-repeat: no-repeat;
               background-position: right center;
               border-bottom: 1px solid black;
@@ -275,10 +303,13 @@ body {
         }
         input {
           height: 26px;
+          &[type=number] {
+            text-align: right;
+          }
         }
         .add-new-btn-row {
-          padding: 4px 8px 8px 8px;
-          a,button {
+          padding: 4px 13px 8px 8px;
+          a, button {
             float: right;
             width: auto;
           }
@@ -296,13 +327,13 @@ body {
             background-image: url("/images/arrow_down_outline.svg");
           }
         }
-        span:not(.input-wrapper) {
+        :not(.input-wrapper) {
           .support-panel-expander {
             left: 293px;
             top: -24px;
           }
         }
-        span.input-wrapper {
+        .input-wrapper {
           .support-panel-expander {
             left: 270px;
             top: -24px;
@@ -383,7 +414,7 @@ body {
           }
           .search-result-item-detail-label {
             margin: 0;
-            font-size:90%;
+            font-size: 90%;
             font-style: italic;
           }
           .toggle-show-sub-items {
@@ -423,9 +454,22 @@ body {
                 &:after {
                   content: ":";
                 }
+                &:empty:after {
+                  display: none;
+                }
               }
               .field {
                 padding: 0;
+              }
+              &.rangeStart:after {
+                content: " – ";
+              }
+              &.rangeStart,
+              &.rangeEnd {
+                display: inline;
+              }
+              .boolean-value {
+                display: inline-block;
               }
             }
           }
@@ -435,18 +479,32 @@ body {
         }
         .default-editable,
         .additional-entries-editable {
+          margin-top: 10px;
           min-height: 60px;
           padding: 8px;
           .inputs {
             .input {
               background: $mintgreen;
               padding: 0 12px;
+              .value input[type=checkbox] {
+                width: auto;
+                margin-top: -2px;
+              }
               .label {
                 background: inherit;
+                &.for-checkbox {
+                  display: inline;
+                }
               }
               .field {
                 padding: 0;
                 background: inherit;
+              }
+              &.rangeStart:after {
+                content: "–";
+                position: absolute;
+                margin-top: -24px;
+                margin-left: 9px;
               }
             }
           }
@@ -466,6 +524,8 @@ body {
           padding: 8px;
           .input-wrapper {
             padding-left: 10px;
+            display: block;
+            border: 1px solid black;
             .inputs {
               text-align: center;
               padding-right: 24px;
@@ -486,7 +546,6 @@ body {
             .subject-type-association {
               display: block;
               text-align: left;
-              padding: 10px;
               &:before {
                 content: "Rollen er knyttet til ";
               }

@@ -537,6 +537,95 @@ module.exports = (app) => {
             }
           ],
           nextStep: {
+            buttonLabel: 'Neste steg: Beskriv deler'
+          }
+        },
+        {
+          id: 'collection-of-works',
+          rdfType: 'Publication',
+          label: 'Beskriv deler',
+          inputs: [
+            {
+              label: 'Verk som inngår i samling',
+              multiple: true,
+              subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
+                rdfProperty: 'hasPublicationPart', // the rdf property of the resource
+                range: 'PublicationPart', // this is the shorthand name of the type of the blank node
+                accordionHeader: 'collection',
+                orderBy: ['startsAtPageInput'],
+                inputs: [
+                  {
+                    label: 'Aktør',
+                    rdfProperty: 'agent',
+                    indexTypes: [ 'person', 'corporation' ],
+                    type: 'searchable-with-result-in-side-panel',
+                    id: 'publicationPartActorInput',
+                    widgetOptions: {
+                      enableCreateNewResource: {
+                        formRefs: [
+                          {
+                            formId: 'create-person-form',
+                            targetType: 'person'
+                          },
+                          {
+                            formId: 'create-corporation-form',
+                            targetType: 'corporation'
+                          }
+                        ],
+                        useAfterCreation: false
+                      }
+                    }
+                  },
+                  {
+                    label: 'Rolle',
+                    rdfProperty: 'role'
+                  },
+                  {
+                    label: 'Tittel på delverk',
+                    rdfProperty: 'hasWork',
+                    required: true,
+                    type: 'searchable-with-result-in-side-panel',
+                    authority: true, // this indicates it is an authorized entity
+                    nameProperties: [ 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
+                    indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
+                    widgetOptions: {
+                      enableCreateNewResource: {
+                        formRefs: [ {
+                          formId: 'create-work-form',
+                          targetType: 'work' // these are matched against index types, hence lower case
+                        } ]
+                      }
+                    }
+                  },
+                  {
+                    label: 'Originaltittel',
+                    rdfProperty: 'hasOriginalTitle'
+                  },
+                  {
+                    label: 'Skal ikke vises som verk',
+                    rdfProperty: 'improperWork'
+                  },
+                  // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
+                  {
+                    label: 'Sidetall',
+                    id: 'startsAtPageInput',
+                    rdfProperty: 'startsAtPage',
+                    widgetOptions: {
+                      isRangeStart: true,
+                    }
+                  },
+                  {
+                    rdfProperty: 'endsAtPage',
+                    widgetOptions: {
+                      isRangeEnd: true,
+                    }
+                  }
+                ]
+              },
+              addAnotherLabel: 'Legg til et delverk til'
+            }
+          ],
+          nextStep: {
             buttonLabel: 'Neste steg: Biinnførsler'
           }
         },
@@ -558,7 +647,7 @@ module.exports = (app) => {
                     label: 'Aktør',
                     required: true,
                     rdfProperty: 'agent',
-                    indexTypes: ['person', 'corporation'],
+                    indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
                       showSelectItem: false, // show and enable select work radio button

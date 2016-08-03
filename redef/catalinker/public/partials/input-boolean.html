@@ -1,0 +1,9 @@
+{{#if nonEditable}}
+<span data-automation-id="{{../../dataAutomationId}}" class="boolean-value"><span class="{{./current.value === true ? 'ui-icon ui-icon-check' : ''}}"></span></span>
+{{else}}
+<input type="checkbox" {{#disabled}} disabled="true" {{/}}
+class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
+data-automation-id="{{../../dataAutomationId}}"
+checked="{{./current.value}}" />
+{{/if}}

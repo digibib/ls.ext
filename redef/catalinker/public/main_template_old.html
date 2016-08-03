@@ -112,6 +112,21 @@ value="{{current.value}}" />
 {{/if}}
 {{/partial}}
 
+{{#partial input-boolean}}
+{{#if ! readOnly}}
+<input type="checkbox"
+        {{#disabled}} disabled="true" {{/}}
+class="{{#error}}invalid-input{{else}}valid{{/error}}"
+on-blur='patchResource:{{predicate}}'
+on-keyup="countdownToSave"
+on-change="countdownToSave"
+data-automation-id="{{predicate}}_{{@index}}"
+checked="{{current.value}}" />
+{{else}}
+<span class="readonly" data-automation-id="{{predicate}}_{{@index}}">{{current.value}}</span>
+{{/if}}
+{{/partial}}
+
 {{#partial input-string-searchable}}
 <input
         {{#deletable}}readonly="readonly"{{/deletable}}
