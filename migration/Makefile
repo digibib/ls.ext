@@ -225,6 +225,7 @@ verify:
 
 staff:
 	@echo "   Importing staff users"
+	@cp sql/*.sql out/
 	@echo "-- Populating table defining extended patron attribute types"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_extended_patron_attributes.sql'
 	@echo "-- Merging information from laaner, lmarc and lnel dumps"
@@ -238,7 +239,6 @@ staff:
 	@echo "-- Recreating API user (since we just truncated borrowers table)"
 	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 1 && kill \$$PID" 2> /dev/null
 	@echo "-- Importing patrons to Koha"
-	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
 	@echo "-- Granting staff permissions (all superusers for now; TODO differentiate)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET flags=1;"'
