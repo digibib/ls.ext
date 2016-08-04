@@ -6,6 +6,15 @@
     margin-top: 0;
   }
 
+  @include breakpoint($small){
+     @include span(7 of 12);
+     @include push(2 of 12);
+  }
+
+  @include breakpoint($medium){
+    @include push(1.5 of 12);
+  }
+
 }
 
 .work-excerpt {
@@ -13,11 +22,11 @@
 
   @include breakpoint($small){
      @include span(7 of 12);
-     // @include push(2 of 12);
+     @include push(2 of 12);
   }
 
   @include breakpoint($medium){
-    // @include push(1.5 of 12);
+    @include push(1.5 of 12);
   }
 
 }
