@@ -48,7 +48,8 @@ class Publications extends React.Component {
           if (showMorePublication) {
             output.push(<div className="row" key={showMorePublication.id}>
                 <PublicationInfo expandSubResource={this.props.expandSubResource}
-                                 publication={showMorePublication} />
+                                 publication={showMorePublication}
+                                 startReservation={this.props.startReservation} />
               </div>
             )
           }

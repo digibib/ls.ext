@@ -11,9 +11,11 @@ function setup (propOverrides) {
   const props = {
     publication: {
       id: 'test_id',
-      uri: 'test_uri'
+      uri: 'test_uri',
+      items: []
     },
     expandSubResource: expect.createSpy(),
+    startReservation: () => {},
     ...propOverrides
   }
 
