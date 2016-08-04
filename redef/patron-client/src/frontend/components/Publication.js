@@ -30,7 +30,7 @@ class Publication extends React.Component {
           {publication.image ? <img src={publication.image} /> : null}
         </div>
         <div className="publication-text-container">
-              <span data-automation-id="publication_available">
+              <span data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
                 <p
                   className="free"><FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} /></p>
               </span>
