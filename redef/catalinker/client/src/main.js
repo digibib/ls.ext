@@ -55,21 +55,21 @@
     }
 
     function checkRangeStart (input) {
-      var endRangeInput = $(input).closest(".input").next().find("input")
-      var rangeEndVal = Number(endRangeInput.val());
+      var endRangeInput = $(input).closest('.input').next().find('input')
+      var rangeEndVal = Number(endRangeInput.val())
       var startRangeVal = Number($(input).val())
       if (!isNaN(startRangeVal) && (isNaN(rangeEndVal) || rangeEndVal < startRangeVal)) {
-        endRangeInput.val(Math.max(startRangeVal, rangeEndVal));
+        endRangeInput.val(Math.max(startRangeVal, rangeEndVal))
         ractive.updateModel()
       }
     }
 
     function checkRangeEnd (input) {
-      var startRangeInput = $(input).closest(".input").prev().find("input")
-      var rangeStartVal = Number(startRangeInput.val());
+      var startRangeInput = $(input).closest('.input').prev().find('input')
+      var rangeStartVal = Number(startRangeInput.val())
       var endRangeVal = Number($(input).val())
       if (!isNaN(endRangeVal) && (isNaN(rangeStartVal) || rangeStartVal > endRangeVal)) {
-        startRangeInput.val(Math.min(endRangeVal, rangeStartVal));
+        startRangeInput.val(Math.min(endRangeVal, rangeStartVal))
         ractive.updateModel()
       }
     }
@@ -887,7 +887,7 @@
           if (!subInput.rdfProperty) {
             throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
           }
-          var inputFromOntology = deepClone(inputMap[ `${prop.subInputs.range}.${ontologyUri}${subInput.rdfProperty }` ])
+          var inputFromOntology = deepClone(inputMap[ `${prop.subInputs.range}.${ontologyUri}${subInput.rdfProperty}` ])
           if (!inputFromOntology) {
             throw new Error(`Property "${subInput.rdfProperty}" doesn't have "${prop.subInputs.range}" in its domain`)
           }
@@ -1440,7 +1440,7 @@
           var accordionDecorator = function (node) {
             $(node).accordion({
               collapsible: true,
-              header: "> .accordion-header"
+              header: '> .accordion-header'
             })
             return {
               teardown: function () {}
@@ -1629,7 +1629,7 @@
                 let keyPath = ractive.get(`inputLinks.${inputId[0]}`)
                 let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
                 let values = ractive.get(`${keyPath}.values`)
-                let index = _.findIndex(_.sortBy(values, function(val){return val.current.value}), function (v) {
+                let index = _.findIndex(_.sortBy(values, function (val) { return val.current.value }), function (v) {
                   return v.current.value === value
                 })
                 if (index > -1) {
