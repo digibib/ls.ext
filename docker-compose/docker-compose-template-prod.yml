@@ -49,10 +49,7 @@ services:
     volumes:
       - koha_state:/var/lib/state
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   koha_mysql:
     container_name: koha_mysql
@@ -76,10 +73,7 @@ services:
     volumes_from:
       - koha_mysql_data
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   koha_mysql_data:
     container_name: koha_mysql_data
@@ -119,10 +113,7 @@ services:
       SIP_SERVER: sip:9999
       SIP_CONNS: 10
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   smtp:
     container_name: mailrelay
@@ -132,10 +123,7 @@ services:
     environment:
       FORWARD_SMTP: "${FORWARD_SMTP}"
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   elasticsearch_data:
     container_name: elasticsearch_data
@@ -151,10 +139,7 @@ services:
     volumes_from:
       - elasticsearch_data
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   fuseki_data:
     container_name: fuseki_data
@@ -171,10 +156,7 @@ services:
     volumes_from:
       - fuseki_data
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   sip:
     container_name: sip_proxy
@@ -190,10 +172,7 @@ services:
       - "${HOST}:${SIP_PORT}"
       - "-replace=(|AB)10([0-9]{14})~$$1$$2"
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   catalinker:
     container_name: catalinker
@@ -212,10 +191,7 @@ services:
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   services:
     container_name: services
@@ -236,10 +212,7 @@ services:
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   patron-client:
     container_name: patron_client
@@ -257,10 +230,7 @@ services:
       KOHA_API_USER: "${KOHA_API_USER}"
       KOHA_API_PASS: "${KOHA_API_PASS}"
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   overview:
     container_name: overview
@@ -284,10 +254,7 @@ services:
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   z3950proxy:
     container_name: z3950proxy
@@ -302,10 +269,7 @@ services:
       BS_USER: "${BS_USER}"
       BS_PASS: "${BS_PASS}"
     logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+      driver: "journald"
 
   migration:
     container_name: migration
