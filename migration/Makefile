@@ -31,7 +31,7 @@ endif
 # Tasks
 # =====
 
-.PHONY: all clean rebuild verify staff virtuoso reindex
+.PHONY: all clean rebuild verify staff virtuoso reindex settings
 
 all: out/done.koha_fuseki_sync
 
@@ -43,6 +43,14 @@ debug: # Spin up a migration container and enter it
 
 clean:
 	@rm -f out/*
+
+settings:
+	@echo "   Loading Koha preferences and predefined values"
+	@bash -c "source ../docker-compose/docker-compose.env && source ../docker-compose/secrets.env && export HOST=$(HOST) && \
+	for f in config_data/*.csv ; do envsubst < \$$f > out/\$$(basename \$$f) ; done"
+	@cp sql/*.sql out/
+	@echo "-- Loading system preferences"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/sysprefs.sql'
 
 out/done.massage_input_data:
 	@echo "   Massaging and transforming input data (Bibliofil exports)"
