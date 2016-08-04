@@ -66,9 +66,6 @@ class Work extends React.Component {
       if (chosenPublication) {
         work.mainTitle = chosenPublication.mainTitle
         work.partTitle = chosenPublication.partTitle
-        if (chosenPublication.image) {
-          work.image = chosenPublication.image
-        }
       }
     }
 
@@ -83,9 +80,6 @@ class Work extends React.Component {
             </header>
           ) : ''}
           <article className="work-entry">
-            <div className="book-cover">
-              {work.image ? <img src={work.image} /> : null}
-            </div>
             <section className="work-information">
               <h1 data-automation-id="work_title">{this.renderTitle(work)}</h1>
               <Contributors contributors={work.contributors} />
