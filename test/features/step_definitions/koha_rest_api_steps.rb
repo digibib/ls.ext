@@ -188,7 +188,7 @@ When(/^jeg legger inn boka via Kohas API$/) do
   res = KohaRESTAPI::Biblios.new(@browser,@context,@active).add(marcxml)
   json = JSON.parse(res.body)
   @context[:biblio_api_response] = {
-    url: res["Location"],
+    url: "http://koha:8081/api/v1/biblios/#{json['biblionumber']}",
     biblionumber: json["biblionumber"],
     items: json["items"]
   }
