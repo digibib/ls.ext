@@ -51,6 +51,8 @@ settings:
 	@cp sql/*.sql out/
 	@echo "-- Loading system preferences"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/sysprefs.sql'
+	@echo "-- Loading column visibility settings"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/columns.sql'
 
 out/done.massage_input_data:
 	@echo "   Massaging and transforming input data (Bibliofil exports)"
