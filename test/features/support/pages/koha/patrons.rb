@@ -26,7 +26,8 @@ class Patrons < IntraPage
     form.select(:id => "searchtype_filter").select_value "contain"
     form.text_field(:id => "searchmember_filter").set query
     form.submit
-    @browser.div(:class => 'patroninfo').wait_until_present
+    # wait until patron checkouts turns up to be certain patron details has loaded
+    @browser.div(:id => 'finesholdsissues').wait_until_present
     @site.PatronDetails
   end
 

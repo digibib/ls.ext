@@ -144,22 +144,48 @@ end
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   patron = Patron.new
   # Branch and PatronCategory are prerequisites
-  patron.branch   = @active[:branch]
-  patron.category = @active[:patroncategory]
+  patron.branch    = @active[:branch]
+  patron.category  = @active[:patroncategory]
+  patron.firstname = name
 
-  @site.Patrons.
-      visit.
-      create(patron.category.description,
-             name,
-             patron.surname,
-             "#{name}.#{patron.surname}",
-             patron.surname)
+  # 2016-08-05: TODO Does not work with phantomjs
+  # Rewritten to use API
+  #@site.Patrons.
+  #    visit.
+  #    create(patron.category.description,
+  #           name,
+  #           patron.surname,
+  #           "#{name}.#{patron.surname}",
+  #           patron.surname)
 
+  #@active[:patron] = patron
+  #(@context[:patrons] ||= []) << patron
+  #@cleanup.push( "låner #{name} #{patron.surname}" =>
+  #  lambda do
+  #    @site.Patrons.visit.delete(name, patron.surname)
+  #  end
+  #)
+  step "at jeg er autentisert som superbruker via REST API"
+  params = {
+    categorycode: patron.category.code,
+    branchcode: patron.branch.code,
+    surname: patron.surname,
+    firstname: patron.firstname,
+    cardnumber: patron.cardnumber,
+    userid: patron.userid,
+    dateenrolled: patron.dateenrolled,
+    dateexpiry: patron.dateexpiry
+  }
+
+  res = KohaRESTAPI::Patron.new(@browser,@context,@active).add(params)
+  json = JSON.parse(res)
+  patron.borrowernumber = json["borrowernumber"]
   @active[:patron] = patron
-  (@context[:patrons] ||= []) << patron
-  @cleanup.push( "låner #{name} #{patron.surname}" =>
+  @context[:patron] = @active[:patron]
+
+  @cleanup.push("låner #{patron.surname}" =>
     lambda do
-      @site.Patrons.visit.delete(name, patron.surname)
+      KohaRESTAPI::Patron.new(@browser,@context,@active).delete(patron.borrowernumber)
     end
   )
 end
