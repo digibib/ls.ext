@@ -224,8 +224,9 @@ When(/^velger radioknappen for "([^"]*)" for å velge "([^"]*)"$/) do |value, la
 end
 
 When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
-  data_automation_id = "Contribution_http://#{ENV['HOST']}:8005/ontology#role_0"
-  role_select_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search'][not(@disabled)]")
+  data_automation_id_1 = "Contribution_http://#{ENV['HOST']}:8005/ontology#role_0"
+  data_automation_id_2 = "PublicationPart_http://#{ENV['HOST']}:8005/ontology#role_0"
+  role_select_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id_1}' or @data-automation-id='#{data_automation_id_2}']//input[@type='search'][not(@disabled)]")
   role_select_field.click
   role_select_field.set(role_name)
   select_first_in_open_dropdown
@@ -342,7 +343,7 @@ end
 
 When(/^sjekker jeg at emnet er listet opp på verket$/) do
   data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
-  subject_field = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id}']//li/span[@class='value']")
+  subject_field = @browser.span(:xpath => "//*[@data-automation-id='#{data_automation_id}']//li/span[@class='value']")
   subject_field.text.should eq @context[:subject_name]
 end
 
@@ -368,7 +369,7 @@ end
 
 When(/^jeg legger inn et nytt navn$/) do
   @context[:person_name] = generateRandomString
-  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
+  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0' or @data-automation-id='PublicationPart_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end
@@ -564,4 +565,13 @@ end
 When(/^fjerner jeg valgt verdi i feltet "([^"]*)"$/) do |label|
   select2_value = @site.WorkFlow.get_select2_single_value_from_label(label)
   select2_value.spans[0].click
+end
+
+When(/^skriver jeg inn "([^"]*)" og "([^"]*)" i intervallfeltene "([^"]*)"$/) do |lower, upper, label|
+  @site.WorkFlow.get_low_range_text_field_from_label(label).set(lower)
+  @site.WorkFlow.get_high_range_text_field_from_label(label).set(upper)
+end
+
+When(/^krysser jeg av i avkrysningboksen for "([^"]*)"$/) do |label|
+  @site.WorkFlow.get_checkbox_from_label(label).click
 end

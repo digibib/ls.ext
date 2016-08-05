@@ -49,6 +49,34 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg et emne fra treffliste fra emneregisteret
     Så sjekker jeg at emnet er listet opp på verket
     Og bekrefter for å gå videre til "Beskriv deler"
+    Så velger jeg aktørtype "Organisasjon"
+    Og jeg legger inn et nytt navn
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny organisasjon"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg velger rollen "Forfatter"
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Tittel på delverk" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Og jeg trykker på "Legg til et delverk til"-knappen
+    Så velger jeg aktørtype "Person"
+    Og jeg legger inn et nytt navn
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny person"-knappen
+    Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg velger rollen "Forfatter"
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Tittel på delverk" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og at jeg skriver inn tilfeldig originaltittel i feltet "Originaltittel" og trykker enter
+    Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
+    Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
+    Og jeg trykker på "Legg til"-knappen
     Og bekrefter for å gå videre til "Biinnførsler"
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt

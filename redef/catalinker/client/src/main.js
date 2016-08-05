@@ -151,7 +151,7 @@
     var unloadResourceForDomain = function (domainType) {
       _.each(allInputs(), function (input) {
         if (input.domain && domainType === unPrefix(input.domain)) {
-          input.values = emptyValues(false, false)
+          input.values = emptyValues(false)
         }
       })
       ractive.update()
@@ -524,7 +524,7 @@
                           input.parentInput.allowAddNewButton = true
                         }
                       }
-                      input.values[ index ].searchable = true
+                      input.searchable = true
                       setAllowNewButtonForInput(input)
                     } else {
                       setDisplayValue(input, index, node, options)
@@ -583,11 +583,9 @@
       })
       Promise.all(promises).then(function () {
         ractive.update()
-        ractive.set('save_status', 'åpnet eksisterende ressurs')
-        if (resourceUri) {
-          ractive.set('targetUri.' + type, resourceUri)
-        }
         if (!(options.keepDocumentUrl)) {
+          ractive.set('save_status', 'åpnet eksisterende ressurs')
+          ractive.set('targetUri.' + type, resourceUri)
           updateBrowserLocationWithUri(type, resourceUri)
         }
       })
@@ -685,12 +683,11 @@
         })
     }
 
-    function emptyValues (predefined, searchable) {
+    function emptyValues (predefined) {
       return [ {
         old: { value: '', lang: '' },
         current: { value: predefined ? [] : null, lang: '' },
-        uniqueId: _.uniqueId(),
-        searchable: searchable === true
+        uniqueId: _.uniqueId()
       } ]
     }
 
@@ -738,7 +735,7 @@
         input.loadWorksAsSubjectOfItem = prop.loadWorksAsSubjectOfItem
       }
       if (prop.type === 'searchable-with-result-in-side-panel') {
-        input.values[ 0 ].searchable = true
+        input.searchable = true
       }
       if (prop.required) {
         input.required = prop.required
@@ -909,7 +906,8 @@
               headlinePart: subInput.headlinePart,
               suggestValueFrom: subInput.suggestValueFrom,
               id: subInput.id,
-              required: subInput.required
+              required: subInput.required,
+              searchable: type === 'searchable-with-result-in-side-panel'
               // ,
               // values: emptyValues(false, type === 'searchable-with-result-in-side-panel')
             }),
@@ -919,7 +917,7 @@
           copyResourceForms(subInput)
 
           if (type === 'searchable-with-result-in-side-panel') {
-            newSubInput.input.values[ 0 ].searchable = true
+            newSubInput.input.searchable = true
           }
           currentInput.subInputs.push(newSubInput)
         })
@@ -960,8 +958,9 @@
           if (input.searchMainResource) {
             groupInputs.push({
               label: input.searchMainResource.label,
-              values: emptyValues(false, true),
+              values: emptyValues(false),
               type: 'searchable-with-result-in-side-panel',
+              searchable: true,
               visible: true,
               indexTypes: [ input.searchMainResource.indexType ],
               selectedIndexType: input.searchMainResource.indexType,
@@ -979,6 +978,7 @@
               label: input.searchForValueSuggestions.label,
               values: emptyValues(false, true),
               type: 'searchable-for-value-suggestions',
+              searchable: true,
               visible: true,
               widgetOptions: input.widgetOptions,
               datatypes: input.datatypes,
@@ -1688,7 +1688,6 @@
                     old: { value: '', lang: '' },
                     current: { value: '', lang: '' },
                     uniqueId: _.uniqueId(),
-                    searchable: input.type === 'searchable-with-result-in-side-panel',
                     searchResult: null
                   }
                   if (index === 0) {
@@ -2102,7 +2101,7 @@
                     ractive.set(origin + '.searchResult', null)
                   }
                   _.each(event.context.inputs, function (input, index) {
-                    ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false))
+                    ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
                   })
                   ractive.set(event.keypath + '.showInputs', false)
                   ractive.set(grandParentOf(origin) + '.allowAddNewButton', true)

@@ -76,11 +76,23 @@ class WorkFlow < CatalinkerPage
   end
 
   def get_text_field_from_label(label)
-    @browser.text_field(:xpath => "//div[./preceding-sibling::div[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input[@type='search']")
+    @browser.text_field(:xpath => "//*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input")
+  end
+
+  def get_checkbox_from_label(label)
+    @browser.checkbox(:xpath => "//*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input[@type='checkbox']")
   end
 
   def get_select2_single_value_from_label(label)
-    @browser.li(:xpath => "//div[./preceding-sibling::div[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//ul/li")
+    @browser.li(:xpath => "//*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//ul/li")
+  end
+
+  def get_low_range_text_field_from_label(label)
+    @browser.text_field(:xpath => "//*[contains(concat(' ',normalize-space(@class),' '),' rangeStart ')]/*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input")
+  end
+
+  def get_high_range_text_field_from_label(label)
+    @browser.text_field(:xpath => "//*[contains(concat(' ',normalize-space(@class),' '),' rangeEnd ')][preceding-sibling::*/*[@data-uri-escaped-label='#{URI::escape(label)}']]//input")
   end
 
   def finish
