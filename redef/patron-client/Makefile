@@ -28,5 +28,5 @@ ifndef TAG
 	@echo "You must specify TAG when pushing"
 	exit 1
 endif
-	sudo docker tag -f $(IMAGE) $(DOCKERHUB):$(TAG)
+	sudo docker tag $(IMAGE) $(DOCKERHUB):$(TAG)
 	sudo docker push $(DOCKERHUB):$(TAG)

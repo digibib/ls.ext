@@ -21,5 +21,5 @@ ifndef TAG
 	@echo "You must specify TAG when pushing"
 	exit 1
 endif
-	sudo docker tag -f dockercompose_services $(IMAGE):$(TAG)
+	sudo docker tag dockercompose_services $(IMAGE):$(TAG)
 	sudo docker push $(IMAGE):$(TAG)
