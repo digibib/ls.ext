@@ -25,6 +25,10 @@ class GlobalSetup
     SVC::Preference.new(@growser).set("pref_ExtendedPatronAttributes", "1")
     SVC::Preference.new(@growser).set("pref_EnhancedMessagingPreferences", "1")
 
+    # Check Previous Checkouts default yes but can be overridden
+    # Needed for new patron category to work
+    SVC::Preference.new(@growser).set("pref_CheckPrevCheckout", "softyes")
+
     sql = %Q{
 INSERT IGNORE INTO branches  (branchcode, branchname)
 VALUES ('hutl','Hovedbiblioteket');

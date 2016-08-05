@@ -18,7 +18,7 @@ class Patrons < IntraPage
     form.text_field(:id => "password").set passwd
     form.text_field(:id => "password2").set passwd
     form.text_field(:id => "email").set email
-    form.button(:name => "save").click
+    @browser.button(:id => "saverecord").click
   end
 
   def search(query)
