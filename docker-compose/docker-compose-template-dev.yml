@@ -375,6 +375,8 @@ services:
       KOHA_ADMINPASS: "${KOHA_ADMINPASS}"
       KOHA_ADMINUSER: "${KOHA_ADMINUSER}"
       KOHA_INSTANCE: "${KOHA_INSTANCE}"
+      KOHA_API_USER: "${KOHA_API_USER}"
+      KOHA_API_PASS: "${KOHA_API_PASS}"
 
   z3950proxy:
     container_name: z3950proxy

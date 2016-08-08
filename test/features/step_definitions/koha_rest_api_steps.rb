@@ -6,23 +6,7 @@ require_relative '../support/services/koha/item.rb'
 # Superlibrarian user should not be deleted after creation
 Given(/^at det finnes en superbruker$/) do
   step "at jeg er logget inn som adminbruker"
-
-  begin
-    wait_for { @site.Patrons.visit.search("Librarian, Super").header }
-  rescue
-    # prereq: library and patron category
-    branchcode   = generateRandomString
-    branchname   = generateRandomString
-    categorycode = generateRandomString
-    categorydesc = generateRandomString
-
-    @site.Branches.visit.create(branchname, branchcode)
-    @site.PatronCategories.visit.create(categorycode, categorydesc, "S")
-    @site.Patrons.visit.create(categorydesc, "Super", "Librarian", "super", "secret")
-    @site.PatronDetails.set_permission("superlibrarian")
-    # Maybe unneccessary step to validate automat user has correct permission
-    @site.Patrons.visit.check_permission("Librarian, Super", "superlibrarian")
-  end
+  true # api-user set up by services
 end
 
 Given(/^at jeg er autentisert som superbruker via REST API$/) do
@@ -31,7 +15,7 @@ Given(/^at jeg er autentisert som superbruker via REST API$/) do
 end
 
 Given(/^at jeg er logget på som superbruker via REST API$/) do
-  KohaRESTAPI::Auth.new(@browser,@context,@active).login("super", "secret")
+  KohaRESTAPI::Auth.new(@browser,@context,@active).login(ENV['KOHA_API_USER'], ENV['KOHA_API_PASS'])
 end
 
 When(/^låneren reserverer boka via API$/) do
