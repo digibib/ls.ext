@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'pp'
+require 'headless'
 
 # TODO: Should pull report dir (if any) from cucumber command options
 REPORT_DIR = 'report'
@@ -38,9 +39,15 @@ Before do
 end
 
 Before do |scenario|
-  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
-  @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
-  @site = @site || Site.new(@browser)
+  unless ENV['BROWSER']
+    @headless = Headless.new
+    @headless.start
+    @browser = @browser || (Watir::Browser.new :firefox )
+  else
+    @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+    @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
+  end
+    @site = @site || Site.new(@browser)
 end
 
 Before do |scenario|
