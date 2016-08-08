@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@wip
 Egenskap: Varsling på epost
   Som en bruker
   Siden jeg liker å holde meg oppdatert
