@@ -78,8 +78,10 @@ out/done.setup_koha: out/done.massage_input_data
 
 out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@echo "   Migration catalogue with items into Koha"
+	@echo "-- Stopping Cron"
+	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop cron'
 	@echo "-- Stopping Zebra indexer"
-	@sudo docker exec koha /bin/sh -c 'sudo koha-stop-zebra $$KOHA_INSTANCE'
+	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop zebra_indexer'
 	@echo "-- Clearing Zebra index"
 	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios"' 2> /dev/null
 	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
@@ -97,8 +99,10 @@ out/done.messing_with_migrated_catalogue: out/done.migrate_catalogue_to_koha
 	@echo "-- Updating biblioitems.marcxml 999 with changed biblioitemnumber"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
 	@echo "-- Starting Zebra indexer"
-	@sudo docker exec koha /bin/sh -c 'sudo koha-start-zebra $$KOHA_INSTANCE'
+	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
 	@touch out/done.messing_with_migrated_catalogue
+	@echo "-- Starting Cron"
+	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start cron'
 	@echo "OK Done messing with catalogue\n"
 
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
