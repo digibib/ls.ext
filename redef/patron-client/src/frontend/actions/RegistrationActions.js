@@ -66,15 +66,19 @@ export function checkForExistingUser () {
       .then(response => {
         if (response.status === 200) {
           return response.json()
+        } else if (response.status === 403) {
+          return { error: response.json() }
         } else {
           throw Error('Unexpected status code')
         }
       })
       .then(json => {
         if (json.localdb) {
-          dispatch(checkForExistingUserFailure({ error: 'User exists', message: 'userExistsInLocalDB' }))
+          dispatch(checkForExistingUserFailure({error: 'userExistsInLocalDB'}))
         } else if (json.centraldb) {
-          dispatch(checkForExistingUserFailure({ error: 'User exists', message: 'userExistsInCentralDB' }))
+          dispatch(checkForExistingUserFailure({error: 'userExistsInCentralDB'}))
+        } else if (json.error) {
+          dispatch(checkForExistingUserFailure({error: 'genericRegistrationError'}))
         } else {
           dispatch(checkForExistingUserSuccess())
         }
@@ -93,7 +97,6 @@ export function checkForExistingUserSuccess () {
 export function checkForExistingUserFailure (error) {
   console.log(error)
   return dispatch => {
-    dispatch(showModal(ModalComponents.REGISTRATION, { isError: true, message: error.message }))
     dispatch({
       type: types.CHECK_FOR_EXISTING_USER_FAILURE,
       payload: error,

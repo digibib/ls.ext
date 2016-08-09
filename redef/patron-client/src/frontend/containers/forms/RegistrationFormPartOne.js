@@ -51,6 +51,20 @@ class RegistrationFormPartOne extends React.Component {
     )
   }
 
+  renderCheckForExistingUserError (message) {
+    return (
+      <div data-automation-id="check_for_existing_user_error">
+        <span className="display-inline">
+          <p data-automation-id="check_for_existing_user_error_message">
+            {messages[ message ]
+              ? <FormattedMessage {...messages[ message ]} />
+              : <FormattedMessage {...messages.genericRegistrationError} />}
+          </p>
+        </span>
+      </div>
+    )
+  }
+
   getValidator (field) {
     if (field.touched && field.error) {
       return <div style={{ color: 'red' }}><ValidationMessage message={field.error} /></div>
@@ -133,12 +147,18 @@ class RegistrationFormPartOne extends React.Component {
           <h3><a onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a></h3>
         </fieldset>
         {this.props.checkForExistingUserSuccess ? this.renderCheckForExistingUserSuccess() : ''}
+        {this.props.checkForExistingUserFailure ? this.renderCheckForExistingUserError(this.props.registrationError) : ''}
       </form>
     )
   }
 }
 
 const messages = defineMessages({
+  genericRegistrationError: {
+    id: 'RegistrationFormPartOne.genericRegistrationError',
+    description: 'Error message when registering',
+    defaultMessage: 'Some error occurred during registering. Please try again later.'
+  },
   checkForExistingUser: {
     id: 'RegistrationFormPartOne.checkForExistingUser',
     description: 'The user validation button in registration form',
@@ -243,6 +263,7 @@ RegistrationFormPartOne.propTypes = {
   isSuccess: PropTypes.bool,
   isCheckingForExistingUser: PropTypes.bool,
   checkForExistingUserSuccess: PropTypes.bool,
+  checkForExistingUserFailure: PropTypes.bool,
   showSSNInfo: PropTypes.bool,
   showTermsAndConditions: PropTypes.bool,
   intl: intlShape.isRequired
@@ -257,6 +278,8 @@ function mapStateToProps (state) {
     showTermsAndConditions: state.registration.showTermsAndConditions,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
+    checkForExistingUserFailure: state.registration.checkForExistingUserFailure,
+    registrationError: state.registration.registrationError,
     initialValues: {}
   }
 }
