@@ -12,7 +12,7 @@ const initialState = {
   isCheckingForExistingUser: false,
   checkForExistingUserSuccess: false,
   checkForExistingUserFailure: false,
-  registrationError: false
+  registrationError: null
 }
 
 export default function registration (state = initialState, action) {

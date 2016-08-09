@@ -264,6 +264,7 @@ RegistrationFormPartOne.propTypes = {
   isCheckingForExistingUser: PropTypes.bool,
   checkForExistingUserSuccess: PropTypes.bool,
   checkForExistingUserFailure: PropTypes.bool,
+  registrationError: PropTypes.string,
   showSSNInfo: PropTypes.bool,
   showTermsAndConditions: PropTypes.bool,
   intl: intlShape.isRequired
