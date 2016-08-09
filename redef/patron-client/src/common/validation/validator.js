@@ -14,7 +14,7 @@ module.exports = (form) => (values) => {
     if (validator) {
       const error = validator(value, values)
       if (error) {
-        errors[ field ] = validator(value)
+        errors[ field ] = error
         return
       }
     }

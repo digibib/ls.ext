@@ -20,7 +20,13 @@ module.exports = {
     }
   },
   repeatPin: (repeatPin, values) => {
-    if ((values.newPin && repeatPin !== values.newPin) || (values.pin && repeatPin !== values.pin)) {
+    if (!values.pin) {
+      return
+    }
+    if (!values.repeatPin) {
+      return
+    }
+    if (values.pin !== values.repeatPin) {
       return 'pinsMustBeEqual'
     }
   }

@@ -109,10 +109,10 @@ class RegistrationFormPartTwo extends React.Component {
         <fieldset>
           <legend><FormattedMessage {...messages.personSettingsLegend} /></legend>
           <h2><FormattedMessage {...messages.choosePin} /></h2>
-          <input data-automation-id="choose_pin" name="code" type="password" id="code" {...pin} />
-          <label htmlFor="code"><FormattedMessage {...messages.choosePin} /></label>
-          <input data-automation-id="repeat_pin" name="code" type="password" id="code" {...repeatPin} />
-          <label htmlFor="code"><FormattedMessage {...messages.repeatPin} /></label>
+          <input data-automation-id="choose_pin" name="pin" type="password" id="pin" {...pin} />
+          <label htmlFor="pin"><FormattedMessage {...messages.choosePin} /></label>
+          <input data-automation-id="repeat_pin" name="repeatPin" type="password" id="repeatPin" {...repeatPin} />
+          <label htmlFor="repeatPin"><FormattedMessage {...messages.repeatPin} /></label>
           {this.getValidator(pin)}
           {this.getValidator(repeatPin)}
           <h2><FormattedMessage {...messages.chooseBranch} /></h2>

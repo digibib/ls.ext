@@ -39,7 +39,7 @@ const messages = defineMessages({
     description: 'Displayed when the email is not valid',
     defaultMessage: 'Invalid email address'
   },
-  pinMustBeEqual: {
+  pinsMustBeEqual: {
     id: 'ValidationMessage.pinsMustBeEqual',
     description: 'Displayed when the pin and repeat pin is not equal',
     defaultMessage: 'PINs must be equal'
