@@ -109,6 +109,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
+  @check-for-errors
+  @wip
   Scenario: Slette verk
     Gitt at jeg har en bok
     Og at det finnes et verk med forfatter
@@ -122,6 +124,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg skriver verdien på verkshovedtittel i feltet som heter "Verk" og trykker enter
     Så får jeg ingen treff
 
+  @check-for-errors
+  @wip
   Scenario: Slette utgivelse
     Gitt at jeg har en bok
     Og jeg vil lage en ny serie
