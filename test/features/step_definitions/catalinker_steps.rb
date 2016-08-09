@@ -386,12 +386,16 @@ end
 
 When(/^jeg oppretter et eksemplar av utgivelsen$/) do
   @context[:item_barcode] = '0301%010d' % rand(10 ** 10)
-  @browser.button(:text => "New").click
+  if @browser.button(:text => "New").present?
+    @browser.button(:text => "New").click
+  else
+    @browser.button(:text => "Ny").click
+  end
   @browser.link(:id => "newitem").click
-  @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:itemtypes][0].desc)
+  @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:defaults][:item_type][:desc])
   @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set(@context[:item_barcode])
   @browser.text_field(:id => /^tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' % [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
-  @browser.button(:text => "Add item").click
+  @browser.button(:name => "add_submit").click
   record_id = @context[:publication_recordid]
 
   @cleanup.push("delete items of biblio ##{record_id}" =>
