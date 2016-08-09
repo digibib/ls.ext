@@ -218,6 +218,11 @@ create_dev_stack_image:
 
 prepare_prod: # provision for prod, assuming docker & docker-compose installed
 	@echo "Preparing docker-compose template"
-	@bash -c  "cd docker-compose && source docker-compose.env && source secrets.env && export DATA_BASEURI=http://$(HOST):8005/ && LSEXTPATH=$$(pwd) && envsubst < docker-compose-template-prod.yml > docker-compose.yml"
+	@bash -c  "cd docker-compose && \
+		source docker-compose.env && \
+		source secrets.env && \
+		export DATA_BASEURI=http://$(HOST):8005/ && \
+		LSEXTPATH=$$(pwd) && \
+		envsubst < docker-compose-template-prod.yml > docker-compose.yml"
 	@echo "Fetching containers (using GITREF=$(GITREF))"
 	@docker-compose -f docker-compose/docker-compose.yml pull
