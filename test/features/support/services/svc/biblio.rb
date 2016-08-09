@@ -19,12 +19,12 @@ module SVC
       book = Book.new
       book.addItem
       book.items.first.branch   = @active[:branch]
-      book.items.first.itemtype = @active[:itemtype]
+      book.items.first.itemtype = @context[:defaults][:item_type]
 
       data = File.read("features/upload-files/Fargelegg byen!.marc21", :encoding => 'UTF-8')
       data = data.gsub(/\{\{ book_title \}\}/, book.title)
       data = data.gsub(/\{\{ branchcode \}\}/, @active[:branch].code)
-      data = data.gsub(/\{\{ item_type_code \}\}/, @active[:itemtype].code)
+      data = data.gsub(/\{\{ item_type_code \}\}/, @context[:defaults][:item_type][:code])
       data = data.gsub(/\{\{ item_barcode \}\}/, book.items.first.barcode)
       headers = {
         'Cookie' => @context[:svc_cookie],

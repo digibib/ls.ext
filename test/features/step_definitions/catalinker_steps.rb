@@ -33,7 +33,6 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
   steps %Q{
     Gitt at jeg er logget inn som adminbruker
     Gitt at det finnes en avdeling
-    Når jeg legger til en materialtype
   }
 
   # Add 3 publications of the work, with 2 exemplars of each
@@ -43,7 +42,7 @@ Gitt(/^et verk med flere utgivelser og eksemplarer$/) do
     2.times do
       # create new item
       page = @site.BiblioDetail.visit(@context[:publication_recordid])
-      page.add_item_with_random_barcode_and_itemtype(@context[:itemtypes][0].desc)
+      page.add_item_with_random_barcode_and_itemtype(@context[:defaults][:item_type][:desc])
     end
     record_id = @context[:publication_recordid] # need to store it in a variable so the cleanup can close over it
     @cleanup.push("delete items of biblio ##{record_id}" =>
@@ -67,7 +66,6 @@ Given(/^at det finnes et eksemplar av en bok registrert i Koha/) do
   steps %Q{
     Gitt at jeg er logget inn som adminbruker
     Gitt at det finnes en avdeling
-    Når jeg legger til en materialtype
   }
   book = SVC::Biblio.new(@browser, @context, @active).add
   @active[:book] = book
@@ -169,7 +167,6 @@ When(/^jeg følger lenken til posten i Koha$/) do
   steps %Q{
     Gitt at jeg er logget inn som adminbruker
     Gitt at det finnes en avdeling
-    Når jeg legger til en materialtype
   }
   @browser.goto(@browser.url[0..@browser.url.index("/cgi-bin")] + link[link.index("/cgi-bin")+1..-1])
 end

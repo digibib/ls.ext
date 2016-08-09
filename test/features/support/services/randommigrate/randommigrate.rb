@@ -139,7 +139,7 @@ module RandomMigrate
       barcode = SecureRandom.hex(8)
       onloan = available ? "'2011-06-20'" : "NULL"
       cmd ="INSERT INTO items (biblionumber, biblioitemnumber, barcode, homebranch, holdingbranch,itype,itemcallnumber,onloan,copynumber) \
-            VALUES(#{record_id},#{record_id},'#{barcode}','#{branchcode}','#{branchcode}','l','#{placement}',#{onloan},'#{copynumber}')"
+            VALUES(#{record_id},#{record_id},'#{barcode}','#{branchcode}','#{branchcode}','B','#{placement}',#{onloan},'#{copynumber}')"
       `mysql -h koha_mysql -u#{ENV['KOHA_ADMINUSER']} -p#{ENV['KOHA_ADMINPASS']} koha_name -e "#{cmd}"`
     end
 

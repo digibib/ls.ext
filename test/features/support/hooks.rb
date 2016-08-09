@@ -29,9 +29,9 @@ end
 Before do
   @context = {
     :defaults => {
-        :branch => "hutl",
-        :item_type => "B",
-        :patron_category => "V"
+        :branch => {:code => "hutl", :desc => "Hovedutlånet"},
+        :item_type => {:code => "B", :desc => "Bok" },
+        :patron_category => {:code => "V", :desc => "Voksen" }
     }
   }
   @active = {} # Hash of active context objects (Book, Patron, Branch, etc.)
@@ -47,7 +47,7 @@ Before do |scenario|
     @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
     @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
   end
-    @site = @site || Site.new(@browser)
+  @site = @site || Site.new(@browser)
 end
 
 Before do |scenario|

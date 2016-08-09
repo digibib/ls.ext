@@ -1,13 +1,9 @@
 # encoding: UTF-8
 require_relative '../support/context_structs.rb'
-Given(/^at det finnes en materialtype$/) do
-  step "jeg legger til en materialtype"
-end
 
 Given(/^at boka finnes i biblioteket$/) do
   steps %Q{
     Gitt at det finnes en avdeling
-    Når jeg legger til en materialtype
     Og jeg legger inn boka som en ny bok
   }
 end
@@ -22,7 +18,6 @@ end
 
 When(/^jeg legger inn boka som en ny bok$/) do
   step "at det finnes en avdeling"       unless @active[:branch]
-  step "jeg legger til en materialtype"  unless @active[:itemtype]
   book = SVC::Biblio.new(@browser,@context,@active).add
 
   @active[:book] = book
@@ -47,25 +42,6 @@ When(/^jeg legger til et nytt eksemplar$/) do
       add(book.items[1].barcode, book.items[1].branch.code, book.items[1].itemtype.code)
 
   @active[:item] = book.items[1]
-end
-
-When(/^jeg legger til en materialtype$/) do
-  itemtype = ItemType.new
-
-  @site.ItemTypes.visit.create(itemtype.code, itemtype.desc)
-
-  @active[:itemtype] = itemtype
-  (@context[:itemtypes] ||= []) << itemtype
-
-  @cleanup.push( "materialtype #{itemtype.code}" =>
-    lambda do
-      @site.ItemTypes.visit.show_all.delete(itemtype.code)
-    end
-  )
-end
-
-Then(/^kan jeg se materialtypen i listen over materialtyper$/) do
-  @site.ItemTypes.visit.show_all.exists(@active[:itemtype].code, @active[:itemtype].desc)
 end
 
 Then(/^viser systemet at boka er en bok som( ikke)? kan lånes ut$/) do |boolean|
