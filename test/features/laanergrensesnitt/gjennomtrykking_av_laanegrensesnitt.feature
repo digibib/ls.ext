@@ -109,7 +109,6 @@ Egenskap: Gå gjennom lånegrensesnittet
   Scenario: Logge inn på Min Side
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
-    Og brukeren har rettigheten "superlibrarian"
     Og at jeg er i søkegrensesnittet
     Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
@@ -120,7 +119,6 @@ Egenskap: Gå gjennom lånegrensesnittet
   Scenario: Låner reserverer bok på verkssiden
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
-    Og brukeren har rettigheten "superlibrarian"
     Og at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
     Og jeg trykker på første treff
@@ -150,7 +148,6 @@ Egenskap: Gå gjennom lånegrensesnittet
   Scenario: Låner reserverer og avbestiller reservasjon
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
-    Og brukeren har rettigheten "superlibrarian"
     Og at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
     Og jeg trykker på første treff
@@ -170,7 +167,6 @@ Egenskap: Gå gjennom lånegrensesnittet
   Scenario: Låner endrer personlige innstillinger
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
-    Og brukeren har rettigheten "superlibrarian"
     Og at jeg er i søkegrensesnittet
     Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
