@@ -43,6 +43,7 @@ Before do |scenario|
     @headless = Headless.new
     @headless.start
     @browser = @browser || (Watir::Browser.new :firefox )
+    @browser.window.resize_to(1200, 1024)
   else
     @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
     @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
