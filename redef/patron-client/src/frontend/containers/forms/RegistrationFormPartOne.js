@@ -68,6 +68,8 @@ class RegistrationFormPartOne extends React.Component {
   getValidator (field) {
     if (field.touched && field.error) {
       return <div style={{ color: 'red' }}><ValidationMessage message={field.error} /></div>
+    } else {
+      return <div>&nbsp;</div>
     }
   }
 
