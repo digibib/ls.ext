@@ -232,7 +232,7 @@ services:
       - "/app/tcp-proxy"
       - "-vv"
       - "-r"
-      - "${HOST}:${SIP_PORT}"
+      - "koha:${SIP_PORT}"
       - "-replace=(|AB)10([0-9]{14})~$$1$$2"
     logging:
       driver: "json-file"
@@ -257,8 +257,8 @@ services:
     ports:
       - "8010:8010"
     environment:
-      KOHA_OPAC_PORT: "http://${HOST}:8080"
-      KOHA_INTRA_PORT: "http://${HOST}:8081"
+      KOHA_OPAC_PORT: "http://koha:8080"
+      KOHA_INTRA_PORT: "http://koha:8081"
       SERVICES_PORT: "http://services:8005"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
