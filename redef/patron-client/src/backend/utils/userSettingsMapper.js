@@ -1,5 +1,9 @@
 module.exports.patronSettingsToKohaSettings = patronSettings => {
   return {
+    item_due: {
+      transports: patronSettingToArray(patronSettings.alerts.reminderOfDueDate),
+      wants_digest: false
+    },
     advance_notice: {
       days_in_advance: 2,
       transports: patronSettingToArray(patronSettings.alerts.reminderOfDueDate),
@@ -10,12 +14,12 @@ module.exports.patronSettingsToKohaSettings = patronSettings => {
       wants_digest: false
     },
     item_checkout: {
-      transports: patronSettingToArray(patronSettings.reciepts.loans),
-      wants_digest: false
+      transports: patronSettingToArray(patronSettings.receipts.loans),
+      wants_digest: true
     },
     item_check_in: {
-      transports: patronSettingToArray(patronSettings.reciepts.returns),
-      wants_digest: false
+      transports: patronSettingToArray(patronSettings.receipts.returns),
+      wants_digest: true
     }
   }
 }

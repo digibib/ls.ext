@@ -62,7 +62,6 @@ module.exports = (app) => {
       body: JSON.stringify(patron)
     }).then(res => {
       if (res.status === 201) {
-        response.status(201).send({ username: patron.userid })
         return res.json()
       } else if (res.status === 403) {
         response.sendStatus(403)
@@ -70,40 +69,50 @@ module.exports = (app) => {
         throw Error('Could not register patron')
       }
     }).then(json => {
-      defaultSettings(json.borrowernumber) // TODO: Make this handling better
+      if (!json.borrowernumber) {
+        throw Error('Missing borrowernumber in request')
+      }
+      patron.borrowernumber = json.borrowernumber
+      setDefaultSettings(json.borrowernumber)
+    }).then(json => {
+      response.status(201).send({ username: patron.userid })
     }).catch(error => {
       console.log(error)
       response.sendStatus(500)
     })
   })
 
-  // TODO: check this, probably not working
-  function defaultSettings (borrowerNumber) {
+  function setDefaultSettings (borrowerNumber) {
+    const settings = JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings({
+      alerts: {
+        reminderOfDueDate: {
+          email: true
+        },
+        reminderOfPickup: {
+          email: true
+        }
+      },
+      receipts: {
+        loans: {
+          email: true
+        },
+        returns: {
+          email: true
+        }
+      }
+    }))
     fetch(`http://koha:8081/api/v1/messagepreferences/${borrowerNumber}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json'
       },
-      body: JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings({
-        alerts: {
-          reminderOfDueDate: {
-            sms: false,
-            email: true
-          },
-          reminderOfPickup: {
-            sms: false,
-            email: true
-          }
-        },
-        reciepts: {
-          loans: {
-            email: true
-          },
-          returns: {
-            email: true
-          }
-        }
-      }))
+      body: settings
+    }).then(res => {
+      if (res.status === 200) {
+        return res.json()
+      } else {
+        throw Error('Could not set default message preferences')
+      }
     })
   }
 
