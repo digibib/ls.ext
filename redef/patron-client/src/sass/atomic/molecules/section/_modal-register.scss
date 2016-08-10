@@ -25,6 +25,13 @@
     text-align: center;
   }
 
+  h4 {
+    color: $darkGreyColor;
+    text-align: left;
+    margin: 0;
+    font-size: 95%
+  }
+
   input[type=text] {
     width: 240px;
   }

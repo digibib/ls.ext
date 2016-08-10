@@ -92,13 +92,13 @@ class RegistrationFormPartOne extends React.Component {
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
           <span className="display-inline">
-                  <h2><FormattedMessage {...messages.firstName} /></h2>
+                  <h4><FormattedMessage {...messages.firstName} /></h4>
                   <input name="firstname" type="text" id="firstname" {...firstName} />
                   <label htmlFor="name"><FormattedMessage {...messages.firstName} /></label>
             {this.getValidator(firstName)}
                 </span>
           <span className="display-inline">
-                  <h2><FormattedMessage {...messages.lastName} /></h2>
+                  <h4><FormattedMessage {...messages.lastName} /></h4>
                   <input name="lastname" type="text" id="lastname" {...lastName} />
                   <label htmlFor="lastname"><FormattedMessage {...messages.lastName} /></label>
             {this.getValidator(lastName)}
@@ -107,20 +107,21 @@ class RegistrationFormPartOne extends React.Component {
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.personInfoLegend} /></legend>
           <div className="date-of-birth">
+            <h2><FormattedMessage {...messages.birthdate} /></h2>
             <div className="item">
-              <h2><FormattedMessage {...messages.day} /></h2>
+              <h4><FormattedMessage {...messages.day} /></h4>
               <input name="day" type="number" id="day" {...day} />
               <label htmlFor="day"><FormattedMessage {...messages.day} /></label>
               {this.getValidator(day)}
             </div>
             <div className="item">
-              <h2><FormattedMessage {...messages.month} /></h2>
+              <h4><FormattedMessage {...messages.month} /></h4>
               <input name="month" type="number" id="month" {...month} />
               <label htmlFor="month"><FormattedMessage {...messages.month} /></label>
               {this.getValidator(month)}
             </div>
             <div className="item">
-              <h2><FormattedMessage {...messages.year} /></h2>
+              <h4><FormattedMessage {...messages.year} /></h4>
               <input name="year" type="number" id="year" {...year} />
               <label htmlFor="year"><FormattedMessage {...messages.year} /></label>
               {this.getValidator(year)}
@@ -134,6 +135,7 @@ class RegistrationFormPartOne extends React.Component {
           </div>
           <span className="display-inline">
                   <h2><FormattedMessage {...messages.ssnHeader} /></h2>
+                  <h4><FormattedMessage {...messages.ssnSpec} /></h4>
                   <input name="ssn" type="text" id="ssn" {...ssn} />
                   <label htmlFor="ssn"><FormattedMessage {...messages.ssnLabel} /></label>
             {this.getValidator(ssn)}
@@ -211,6 +213,11 @@ const messages = defineMessages({
     description: 'Fieldset legend for personal information',
     defaultMessage: 'Personal information'
   },
+  birthdate: {
+    id: 'RegistrationFormPartOne.birthdate',
+    description: 'Label for birthdate',
+    defaultMessage: 'Birthdate'
+  },
   day: {
     id: 'RegistrationFormPartOne.day',
     description: 'Label for the day field',
@@ -230,6 +237,11 @@ const messages = defineMessages({
     id: 'RegistrationFormPartOne.ssnHeader',
     description: 'Header for input field social security number',
     defaultMessage: 'ID-number'
+  },
+  ssnSpec: {
+    id: 'RegistrationFormPartOne.ssnSpec',
+    description: 'Specification of social security number',
+    defaultMessage: 'Personnr./D-nr./DUF-nr'
   },
   ssnLabel: {
     id: 'RegistrationFormPartOne.ssnLabel',

@@ -64,41 +64,41 @@ class RegistrationFormPartTwo extends React.Component {
         <fieldset>
           <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
           <span className="display-inline">
-          <h2><FormattedMessage {...messages.email} /></h2>
+          <h4><FormattedMessage {...messages.email} /></h4>
           <input name="email" type="text" id="email" {...email} />
           <label htmlFor="email"><FormattedMessage {...messages.email} /></label>
             {this.getValidator(email)}
         </span>
           <span className="display-inline">
-          <h2><FormattedMessage {...messages.mobile} /></h2>
+          <h4><FormattedMessage {...messages.mobile} /></h4>
           <input name="mobile" type="text" id="mobile" {...mobile} />
           <label htmlFor="mobile"><FormattedMessage {...messages.mobile} /></label>
             {this.getValidator(mobile)}
         </span>
           <address>
-            <h2><FormattedMessage {...messages.address} /></h2>
+            <h4><FormattedMessage {...messages.address} /></h4>
             <input name="address" type="text" id="address" {...address} />
             <label htmlFor="address"><FormattedMessage {...messages.address} /></label>
             {this.getValidator(address)}
             <span className="display-inline">
-            <h2><FormattedMessage {...messages.zipcode} /></h2>
+            <h4><FormattedMessage {...messages.zipcode} /></h4>
             <input name="zipcode" type="text" id="zipcode" {...zipcode} />
             <label htmlFor="zipcode"><FormattedMessage {...messages.zipcode} /></label>
               {this.getValidator(zipcode)}
           </span>
             <span className="display-inline">
-            <h2><FormattedMessage {...messages.city} /></h2>
+            <h4><FormattedMessage {...messages.city} /></h4>
             <input name="city" type="text" id="city" {...city} />
             <label htmlFor="city"><FormattedMessage {...messages.city} /></label>
               {this.getValidator(city)}
           </span>
-            <h2><FormattedMessage {...messages.country} /></h2>
+            <h4><FormattedMessage {...messages.country} /></h4>
             <label htmlFor="country"><FormattedMessage {...messages.country} /></label>
             <input name="country" type="text" id="country" {...country} />
             {this.getValidator(country)}
           </address>
 
-          <h2><FormattedMessage {...messages.gender} /></h2>
+          <h4><FormattedMessage {...messages.gender} /></h4>
           <div className="select-container">
             <select data-automation-id="gender_selection" name="gender" {...gender}>
               <option value="male">{this.props.intl.formatMessage({ ...messages.male })}</option>
