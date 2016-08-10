@@ -111,7 +111,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
   @check-for-errors
-  @wip
   Scenario: Slette verk
     Gitt at jeg har en bok
     Og at det finnes et verk med forfatter
@@ -126,7 +125,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
 
   @check-for-errors
-  @wip
   Scenario: Slette utgivelse
     Gitt at jeg har en bok
     Og jeg vil lage en ny serie
