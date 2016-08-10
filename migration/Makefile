@@ -245,35 +245,6 @@ verify:
 	@echo "   Verifying migration"
 	@$(MIGRATION_RUN_CMD) "verify -h=$(HOST)"
 
-staff:
-	@echo "   Importing staff users"
-	@cp sql/*.sql out/
-	@echo "-- Populating table defining extended patron attribute types"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_extended_patron_attributes.sql'
-	@echo "-- Merging information from laaner, lmarc and lnel dumps"
-	@$(MIGRATION_RUN_CMD) "patronmassage -staff=true -lmarc=/data/$(LMARC) -laaner=/data/$(LAANER) -lnel=/data/$(LNEL) -outdir=/out"
-	@echo "-- Inserting patron categories into MySQL"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
-	@echo "-- Inserting patron home branches into MySQL"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
-	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences, borrower_sync"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;TRUNCATE TABLE borrower_sync;SET foreign_key_checks=1;"'
-	@echo "-- Recreating API user (since we just truncated borrowers table)"
-	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 1 && kill \$$PID" 2> /dev/null
-	@echo "-- Importing patrons to Koha"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
-	@echo "-- Granting staff permissions (all superusers for now; TODO differentiate)"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET flags=1;"'
-	@echo "-- Setting staff expiry date far into the future"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET dateexpiry=\"2099-01-01\";"'
-	@echo "-- Migrating patron message transport preferences"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/msgprefs.sql'
-	@echo "-- Inserting extended patron attributes (fnr)"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
-	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_sync (borrowernumber, synctype, sync, syncstatus) SELECT borrowernumber, \"norwegianpatrondb\",1,\"new\" FROM borrower_attributes WHERE code=\"fnr\";"'
-	@echo "OK Done migrating staff.\n"
-
 reindex:
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
