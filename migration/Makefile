@@ -98,6 +98,8 @@ out/done.messing_with_migrated_catalogue: out/done.migrate_catalogue_to_koha
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
 	@echo "-- Updating biblioitems.marcxml 999 with changed biblioitemnumber"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
+	@echo "-- Populating zebra queue"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
 	@touch out/done.messing_with_migrated_catalogue
