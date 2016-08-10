@@ -74,15 +74,74 @@
   rdfs:label "Genre"@en ;
   rdfs:label "Sjanger"@no .
 
+:Instrument a rdfs:Class ;
+  rdfs:label "Musical instrument"@en ;
+  rdfs:label "Musikkinstrument"@no .
+
 :PublicationPart a rdfs:Class ;
   rdfs:label "Publication part"@en ;
   rdfs:label "Delutgivelse"@no .
+
+:WorkRelation a rdfs:Class ;
+  rdfs:label "Work relation"@en ;
+  rdfs:label "Verksrelasjon"@no .
+
+:RelationType a rdfs:Class ;
+  rdfs:label "Work relation"@en ;
+  rdfs:label "Verksrelasjon"@no .
+
+:CompositionType a rdfs:Class ;
+  rdfs:label "Musical composition type"@en ;
+  rdfs:label "Koompissjonstype"@no .
+
+:Instrumentation a rdfs:Class ;
+  rdfs:label "Instrumentation"@en ;
+  rdfs:label "Besetning"@no .
+
+:DeweyClassification a rdfs:Class ;
+  rdfs:label "Dewey classification"@en ;
+  rdfs:label "Deweyklassifisering"@no .
+
+:DeweyEdition a rdfs:Class ;
+  rdfs:label "Dewey edition"@en ;
+  rdfs:label "Deweyutgave"@no .
+
+:hasNumberOfPerformers a rdfs:Property ;
+  rdfs:label "Performers"@en ;
+  rdfs:label "Antall"@no ;
+  rdfs:domain :Instrumentation ;
+  rdfs:range xsd:nonNegativeInteger .
+
+:hasInstrument a rdfs:Property ;
+  rdfs:label "Instrument"@en ;
+  rdfs:label "Instrument"@no ;
+  rdfs:range :Instrument ;
+  rdfs:domain :Instrumentation .
+
+:hasRelationType a rdfs:Property ;
+  rdfs:label "Relation type"@en ;
+  rdfs:label "Relasjonstype"@no ;
+  duo:valuesFrom values:relationType ;
+  rdfs:range :RelationType ;
+  rdfs:domain :WorkRelation .
+
+:work a rdfs:Property ;
+  rdfs:label "Related to"@en ;
+  rdfs:label "Relatert til"@no ;
+  rdfs:range :Work ;
+  rdfs:domain :WorkRelation .
+
+:isRelatedTo a rdfs:Property ;
+  rdfs:label "Is related to"@en ;
+  rdfs:label "Er relatert til"@no ;
+  rdfs:range :WorkRelation ;
+  rdfs:domain :Work .
 
 :prefLabel a rdfs:Property ;
   rdfs:label "Preferred label"@en ;
   rdfs:label "Foretrukket betegnelse"@no ;
   rdfs:range xsd:string ;
-  rdfs:domain :Place, :Subject, :Genre.
+  rdfs:domain :Place, :Subject, :Genre, :CompositionType, :Instrument.
 
 :altLabel a rdfs:Property ;
   rdfs:label "Alternative label"@en ;
@@ -105,7 +164,7 @@
 :specification a rdfs:Property ;
   rdfs:label "Specification"@en ;
   rdfs:label "Forklarende tilføyelse"@no ;
-  rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject;
+  rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument;
   rdfs:range xsd:string .
 
 # ToDo: Fjernes
@@ -361,7 +420,7 @@
   rdfs:label "Role"@en ;
   rdfs:label "Rolle"@no ;
   duo:valuesFrom values:role ;
-  rdfs:range :Role ;
+  rdfs:range duo:Role ;
   rdfs:domain :Contribution, :PublicationPart .
 
 # ToDo: Erstattes med :hasAgent
@@ -407,4 +466,83 @@
   rdfs:label "Improper work"@en ;
   rdfs:label "Ikke eget verk"@no ;
   rdfs:range xsd:boolean ;
-  rdfs:domain :PublicationPart .
+  rdfs:domain :PublicationPart, :Work .
+
+:duration a rdfs:Property ;
+  rdfs:label "Duration"@en ;
+  rdfs:label "Spilletid"@no ;
+  rdfs:range duo:duration ;
+  rdfs:domain :Publication .
+
+:missingMainEntry a rdfs:Property ;
+  rdfs:label "Missing main entry"@en ;
+  rdfs:label "Mangler hovedansvarlig"@no ;
+  rdfs:range xsd:boolean ;
+  rdfs:domain :Work .
+
+:hasEan a rdfs:Property ;
+  rdfs:label "EAN"@en ;
+  rdfs:label "EAN"@no ;
+  rdfs:range xsd:string ;
+  rdfs:domain :Publication .
+
+:ageLimit a rdfs:Property ;
+  rdfs:label "Age limit"@en ;
+  rdfs:label "Aldersgrense"@no ;
+  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:domain :Publication .
+
+:hasSubtitles a rdfs:Property ;
+  rdfs:label "Subtitles"@en ;
+  rdfs:label "Undertekster"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range lvont:Language ;
+  duo:valuesFrom values:language .
+
+:hasSummary a rdfs:Property ;
+  rdfs:label "Summary"@en ;
+  rdfs:label "Sammendrag"@no ;
+  rdfs:domain :Work ;
+  rdfs:range xsd:string .
+
+:hasSummary a rdfs:Property ;
+  rdfs:label "Summary"@en ;
+  rdfs:label "Sammendrag"@no ;
+  rdfs:domain :Work ;
+  rdfs:range xsd:string .
+
+:hasCompositionType a rdfs:Property ;
+  rdfs:label "Composition type"@en ;
+  rdfs:label "Komposisjonstype"@no ;
+  rdfs:domain :Work ;
+  rdfs:range :CompositionType .
+
+:hasDewey a rdfs:Property ;
+  rdfs:label "Dewey"@en ;
+  rdfs:label "Dewey"@no ;
+  rdfs:domain :DeweyClassification ;
+  rdfs:range xsd:string .
+
+:hasDeweyEdition a rdfs:Property ;
+  rdfs:label "Dewey edition"@en ;
+  rdfs:label "Deweyutgave"@no ;
+  rdfs:domain :DeweyClassification ;
+  rdfs:range duo:DeweyEdition ;
+  duo:valuesFrom values:deweyEdition .
+
+:hasDeweyClassification a rdfs:Property ;
+  rdfs:label "Dewey"@en ;
+  rdfs:label "Dewey"@no ;
+  rdfs:domain :DeweyClassification ;
+  rdfs:range xsd:string .
+
+:inKey a rdfs:Property ;
+  rdfs:label "Muical key"@en ;
+  rdfs:label "Toneart"@no ;
+  rdfs:domain :Work ;
+  rdfs:range duo:Key ;
+  duo:valuesFrom values:key .
+
+
+
+

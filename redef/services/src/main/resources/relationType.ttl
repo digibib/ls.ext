@@ -1,0 +1,20 @@
+@prefix relationType: <http://data.deichman.no/relationType#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+relationType:partOf a duo:RelationType ;
+  duo:code "po" ;
+  rdfs:label "Del av"@no ;
+  rdfs:label "Part of"@en .
+relationType:basedOn a duo:relationType ;
+  duo:code "bo" ;
+  rdfs:label "Basert på"@no ;
+  rdfs:label "Based on"@en .
+relationType:continuationOf a duo:relationType ;
+  duo:code "co" ;
+  rdfs:label "Fortsettelse av"@no ;
+  rdfs:label "Continuation of"@en .
+relationType:continuedIn a duo:relationType ;
+  duo:code "ci" ;
+  rdfs:label "Fortsettes i"@no ;
+  rdfs:label "Continued in"@en .
+

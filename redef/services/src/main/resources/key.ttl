@@ -1,0 +1,129 @@
+@prefix key: <http://data.deichman.no/key#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+key:ass-dur a duo:Key ;
+  rdfs:label "ass-dur"@no .
+  
+key:ass-moll a duo:Key ;
+  rdfs:label "ass-moll"@no .
+  
+key:a-dur a duo:Key ;
+  rdfs:label "a-dur"@no .
+  
+key:a-moll a duo:Key ;
+  rdfs:label "a-moll"@no .
+  
+key:aiss-dur a duo:Key ;
+  rdfs:label "aiss-dur"@no .
+  
+key:aiss-moll a duo:Key ;
+  rdfs:label "aiss-moll"@no .
+  
+key:b-dur a duo:Key ;
+  rdfs:label "b-dur"@no .
+  
+key:b-moll a duo:Key ;
+  rdfs:label "b-moll"@no .
+  
+key:h-dur a duo:Key ;
+  rdfs:label "h-dur"@no .
+  
+key:h-moll a duo:Key ;
+  rdfs:label "h-moll"@no .
+  
+key:hiss-dur a duo:Key ;
+  rdfs:label "hiss-dur"@no .
+  
+key:hiss-moll a duo:Key ;
+  rdfs:label "hiss-moll"@no .
+  
+key:cess-dur a duo:Key ;
+  rdfs:label "cess-dur"@no .
+  
+key:cess-moll a duo:Key ;
+  rdfs:label "cess-moll"@no .
+  
+key:c-dur a duo:Key ;
+  rdfs:label "c-dur"@no .
+  
+key:c-moll a duo:Key ;
+  rdfs:label "c-moll"@no .
+  
+key:ciss-dur a duo:Key ;
+  rdfs:label "ciss-dur"@no .
+  
+key:ciss-moll a duo:Key ;
+  rdfs:label "ciss-moll"@no .
+  
+key:dess-dur a duo:Key ;
+  rdfs:label "dess-dur"@no .
+  
+key:dess-moll a duo:Key ;
+  rdfs:label "dess-moll"@no .
+  
+key:d-dur a duo:Key ;
+  rdfs:label "d-dur"@no .
+  
+key:d-moll a duo:Key ;
+  rdfs:label "d-moll"@no .
+  
+key:diss-dur a duo:Key ;
+  rdfs:label "diss-dur"@no .
+  
+key:diss-moll a duo:Key ;
+  rdfs:label "diss-moll"@no .
+  
+key:ess-dur a duo:Key ;
+  rdfs:label "ess-dur"@no .
+  
+key:ess-moll a duo:Key ;
+  rdfs:label "ess-moll"@no .
+  
+key:e-dur a duo:Key ;
+  rdfs:label "e-dur"@no .
+  
+key:e-moll a duo:Key ;
+  rdfs:label "e-moll"@no .
+  
+key:eiss-dur a duo:Key ;
+  rdfs:label "eiss-dur"@no .
+  
+key:eiss-moll a duo:Key ;
+  rdfs:label "eiss-moll"@no .
+  
+key:fess-dur a duo:Key ;
+  rdfs:label "fess-dur"@no .
+  
+key:fess-moll a duo:Key ;
+  rdfs:label "fess-moll"@no .
+  
+key:f-dul a duo:Key ;
+  rdfs:label "f-dul"@no .
+  
+key:f-moll a duo:Key ;
+  rdfs:label "f-moll"@no .
+  
+key:fiss-dur a duo:Key ;
+  rdfs:label "fiss-dur"@no .
+  
+key:fiss-moll a duo:Key ;
+  rdfs:label "fiss-moll"@no .
+  
+key:gess-dur a duo:Key ;
+  rdfs:label "gess-dur"@no .
+  
+key:gess-moll a duo:Key ;
+  rdfs:label "gess-moll"@no .
+  
+key:g-dur a duo:Key ;
+  rdfs:label "g-dur"@no .
+  
+key:g-moll a duo:Key ;
+  rdfs:label "g-moll"@no .
+  
+key:giss-dur a duo:Key ;
+  rdfs:label "giss-dur"@no .
+  
+key:giss-moll a duo:Key ;
+  rdfs:label "giss-moll"@no .
