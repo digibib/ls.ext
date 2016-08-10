@@ -26,7 +26,7 @@ module.exports.kohaSettingsToPatronSettings = kohaSettings => {
       reminderOfDueDate: kohaSettingToObject(kohaSettings.advance_notice),
       reminderOfPickup: kohaSettingToObject(kohaSettings.hold_filled)
     },
-    reciepts: {
+    receipts: {
       loans: kohaSettingToObject(kohaSettings.item_checkout),
       returns: kohaSettingToObject(kohaSettings.item_check_in)
     }

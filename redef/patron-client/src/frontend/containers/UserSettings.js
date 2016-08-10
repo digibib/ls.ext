@@ -24,12 +24,12 @@ class UserSettings extends React.Component {
           email: this.reminderOfPickupEmailCheckbox.checked
         }
       },
-      reciepts: {
+      receipts: {
         loans: {
-          email: this.recieptOnLoansEmailCheckbox.checked
+          email: this.receiptOnLoansEmailCheckbox.checked
         },
         returns: {
-          email: this.recieptOnReturnsEmailCheckbox.checked
+          email: this.receiptOnReturnsEmailCheckbox.checked
         }
       }
     }
@@ -117,24 +117,24 @@ class UserSettings extends React.Component {
             </ul>
           </div>
 
-          <div className="reciept col">
-            <h2><FormattedMessage {...messages.reciepts} /></h2>
+          <div className="receipt col">
+            <h2><FormattedMessage {...messages.receipts} /></h2>
             <ul>
               <li>
-                <input data-automation-id="UserSettings_recieptOnLoansEmail"
-                       type="checkbox" name="reciept-loans-email" id="reciept-loans-email"
-                       ref={e => this.recieptOnLoansEmailCheckbox = e}
-                       defaultChecked={settings.reciepts.loans.email} />
-                <label htmlFor="reciept-loans-email"><span></span>
-                  <FormattedMessage {...messages.loanReciept} /></label>
+                <input data-automation-id="UserSettings_receiptOnLoansEmail"
+                       type="checkbox" name="receipt-loans-email" id="receipt-loans-email"
+                       ref={e => this.receiptOnLoansEmailCheckbox = e}
+                       defaultChecked={settings.receipts.loans.email} />
+                <label htmlFor="receipt-loans-email"><span></span>
+                  <FormattedMessage {...messages.loanReceipt} /></label>
               </li>
               <li>
-                <input data-automation-id="UserSettings_recieptOnReturnsEmail"
-                       type="checkbox" name="reciept-returns-email" id="reciept-returns-email"
-                       ref={e => this.recieptOnReturnsEmailCheckbox = e}
-                       defaultChecked={settings.reciepts.returns.email} />
-                <label htmlFor="reciept-returns-email"><span></span>
-                  <FormattedMessage {...messages.returnReciept} /></label>
+                <input data-automation-id="UserSettings_receiptOnReturnsEmail"
+                       type="checkbox" name="receipt-returns-email" id="receipt-returns-email"
+                       ref={e => this.receiptOnReturnsEmailCheckbox = e}
+                       defaultChecked={settings.receipts.returns.email} />
+                <label htmlFor="receipt-returns-email"><span></span>
+                  <FormattedMessage {...messages.returnReceipt} /></label>
               </li>
             </ul>
           </div>
@@ -175,20 +175,20 @@ const messages = defineMessages({
     description: 'The label for the reminder of pickup options',
     defaultMessage: 'Reminder of pickup?'
   },
-  reciepts: {
-    id: 'UserSettings.reciepts',
-    description: 'The reciepts header',
-    defaultMessage: 'Reciepts'
+  receipts: {
+    id: 'UserSettings.receipts',
+    description: 'The receipts header',
+    defaultMessage: 'Receipts'
   },
-  loanReciept: {
-    id: 'UserSettings.loanReciept',
-    description: 'The label for the option to receive loan reciepts by email',
-    defaultMessage: 'Receive a reciept for loans by email'
+  loanReceipt: {
+    id: 'UserSettings.loanReceipt',
+    description: 'The label for the option to receive loan receipts by email',
+    defaultMessage: 'Receive a receipt for loans by email'
   },
-  returnReciept: {
-    id: 'UserSettings.returnReciept',
-    description: 'The label for the option to receive return reciepts by email',
-    defaultMessage: 'Receive a reciept for returns by email'
+  returnReceipt: {
+    id: 'UserSettings.returnReceipt',
+    description: 'The label for the option to receive return receipts by email',
+    defaultMessage: 'Receive a receipt for returns by email'
   },
   save: {
     id: 'UserSettings.save',
@@ -197,8 +197,8 @@ const messages = defineMessages({
   },
   freeNotification: {
     id: 'UserSettings.freeNotification',
-    description: 'The message to notify users that reciepts and alerts are free',
-    defaultMessage: 'Notice! All alerts and reciepts are free'
+    description: 'The message to notify users that receipts and alerts are free',
+    defaultMessage: 'Notice! All alerts and receipts are free'
   },
   bySms: {
     id: 'UserSettings.bySms',

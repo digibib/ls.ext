@@ -26,7 +26,7 @@ function setup (propOverrides) {
         email: true
       }
     },
-    reciepts: {
+    receipts: {
       loans: {
         email: true
       },
