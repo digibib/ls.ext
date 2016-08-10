@@ -197,7 +197,7 @@ ifdef MIGRATE_PATRONS
 	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences, borrower_sync"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;TRUNCATE TABLE borrower_sync;SET foreign_key_checks=1;"'
 	@echo "-- Recreating API user (since we just truncated borrowers table)"
-	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 1 && kill \$$PID" 2> /dev/null
+	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 4 && kill \$$PID" > /dev/null 2>&1
 	@echo "-- Importing patrons to Koha"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
@@ -209,6 +209,14 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
 	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_sync (borrowernumber, synctype, sync, syncstatus) SELECT borrowernumber, \"norwegianpatrondb\",1,\"new\" FROM borrower_attributes WHERE code=\"fnr\";"'
+ifdef EMAIL
+	@echo "  Setting email-adress of all users to: $(EMAIL)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET email=\"$(EMAIL)\";"'
+endif
+ifdef PHONE
+	@echo "  Setting smsalertnumber of all users to: $(PHONE)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET smsalertnumber=\"$(PHONE)\";"'
+endif
 	@echo "OK Done migrating patrons.\n"
 endif
 	@touch out/done.migrate_patrons
