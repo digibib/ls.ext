@@ -81,6 +81,8 @@ public class EntityServiceImplTest {
     private String serialURI;
     private String subjectURI;
     private String genreURI;
+    private String instrumentURI;
+    private String compositionTypeURI;
     private String baseURI;
 
     @Mock
@@ -115,6 +117,8 @@ public class EntityServiceImplTest {
         serialURI = localBaseURI.serial();
         subjectURI = localBaseURI.subject();
         genreURI = localBaseURI.genre();
+        instrumentURI = localBaseURI.instrument();
+        compositionTypeURI = localBaseURI.compositionType();
     }
 
     @Test
@@ -517,6 +521,14 @@ public class EntityServiceImplTest {
             case "genre":
                 resourceClass = "Genre";
                 resourceURI = genreURI;
+                break;
+            case "instrument":
+                resourceClass = "Instrument";
+                resourceURI = instrumentURI;
+                break;
+            case "compositiontype":
+                resourceClass = "CompositionType";
+                resourceURI = compositionTypeURI;
                 break;
             default:
                 break;

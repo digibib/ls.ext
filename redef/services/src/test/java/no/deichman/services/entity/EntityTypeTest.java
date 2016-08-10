@@ -8,7 +8,7 @@ import org.junit.Test;
  */
 public class EntityTypeTest {
 
-    private static final String[] ENTITIES = new String[]{"work", "publication", "person", "place", "corporation", "serial", "subject", "genre"};
+    private static final String[] ENTITIES = new String[]{"work", "publication", "person", "place", "corporation", "serial", "subject", "genre", "instrument", "compositiontype"};
 
     @Test
     public void test_all_types_pattern_is_available() {

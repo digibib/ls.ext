@@ -105,6 +105,16 @@ public class SearchServiceImpl implements SearchService {
         return searchWithJson(json, getPublicationSearchUriBuilder());
     }
 
+    @Override
+    public final Response searchInstrument(String query) {
+        return doSearch(query, getInstrumentSearchUriBuilder());
+    }
+
+    @Override
+    public final Response searchCompositionType(String query) {
+        return doSearch(query, getCompositionTypeSearchUriBuilder());
+    }
+
 
     @Override
     public final Response clearIndex() {
@@ -137,6 +147,8 @@ public class SearchServiceImpl implements SearchService {
             putIndexMapping(httpclient, "subject");
             putIndexMapping(httpclient, "genre");
             putIndexMapping(httpclient, "publication");
+            putIndexMapping(httpclient, "instrument");
+            putIndexMapping(httpclient, "compositiontype");
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
@@ -403,5 +415,13 @@ public class SearchServiceImpl implements SearchService {
 
     public final URIBuilder getPublicationSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/publication/_search");
+    }
+
+    public final URIBuilder getInstrumentSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/instrument/_search");
+    }
+
+    public final URIBuilder getCompositionTypeSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/compositiontype/_search");
     }
 }

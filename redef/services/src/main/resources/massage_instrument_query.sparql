@@ -1,0 +1,14 @@
+PREFIX  :     <__ONTOLOGY__>
+
+CONSTRUCT {
+  ?instrumentUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Instrument ;
+            :prefLabel ?label ;
+            :specification ?specification .
+}
+
+WHERE {
+  BIND(uri("__INSTRUMENTURI__") AS ?instrumentUri)
+  ?instrumentUri a :Instrument .
+  OPTIONAL { ?instrumentUri :prefLabel ?label }
+  OPTIONAL { ?instrumentUri :specification ?specification }
+}

@@ -525,6 +525,28 @@ public class AppTest {
     }
 
     @Test
+    public void compositiontype_is_searchable() throws UnirestException, InterruptedException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "compositiontype", "{}").asString();
+
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#prefLabel";
+        String o1 = "Menuette";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+        String p2 = baseUri + "ontology#specification";
+        String o2 = "Posh dance";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .add(buildLDPatch(buildPatchStatement(op, s, p2, o2, type)).get(0))
+                .build();
+
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+        doSearchForCompositionType("Menuette");
+    }
+
+    @Test
     public void serial_is_searchable() throws UnirestException, InterruptedException {
         HttpResponse<String> result1 = buildCreateRequest(baseUri + "serial", "{}").asString();
 
@@ -775,6 +797,15 @@ public class AppTest {
             case WRITING_SYSTEM:
                 testData = "<http://data.deichman.no/writingSystem#cyrillic> <http://www.w3.org/2000/01/rdf-schema#label> \"Cyrillic\"@en .";
                 break;
+            case RELATION_TYPE:
+                testData = "<http://data.deichman.no/relationType#basedOn> <http://www.w3.org/2000/01/rdf-schema#label> \"Based on\"@en .";
+                break;
+            case DEWEY_EDITION:
+                testData = "<http://data.deichman.no/deweyEdition#ddc22> <http://www.w3.org/2000/01/rdf-schema#label> \"Dewey full\"@en .";
+                break;
+            case MUSICAL_KEY:
+                testData = "<http://data.deichman.no/key#ass-moll> <http://www.w3.org/2000/01/rdf-schema#label> \"ass-moll\"@no .";
+                break;
             default:
                 throw new Exception("Couldn't find test data for authorized value: " + authorizedValue.getPath());
         }
@@ -861,6 +892,23 @@ public class AppTest {
         } while (!foundPlaceInIndex && attempts-- > 0);
 
         assertTrue("Should have found place of publication in index by now", foundPlaceInIndex);
+    }
+
+    private void doSearchForCompositionType(String compositionType) throws UnirestException, InterruptedException {
+        boolean foundCompositionTypeInIndex;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(baseUri + "search/compositiontype/_search").queryString("q", "prefLabel:" + compositionType);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundCompositionTypeInIndex = responseBody.contains(compositionType);
+            if (!foundCompositionTypeInIndex) {
+                LOG.info("CompositionType not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundCompositionTypeInIndex && attempts-- > 0);
+
+        assertTrue("Should have found compositionType of publication in index by now", foundCompositionTypeInIndex);
     }
 
     private void doSearchForSerial(String name) throws UnirestException, InterruptedException {
@@ -1197,7 +1245,7 @@ public class AppTest {
         assertFalse(resourceIsIndexed(persUri2));
         assertFalse(resourceIsIndexed(subjUri));
 
-        // 3) Patch work, and verify that work and its publications get indexed within 2 seconds:
+        // 3) Patch work, and verify that work and its publications getByIsbn indexed within 2 seconds:
 
         buildPatchRequest(
                 workUri,
@@ -1208,7 +1256,7 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 2));
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 2));
 
-        // 4) Patch publication, and verify that publication and work get reindexed within 2 seconds:
+        // 4) Patch publication, and verify that publication and work getByIsbn reindexed within 2 seconds:
 
         buildPatchRequest(
                 pubUri1,
@@ -1218,7 +1266,7 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "branch_xyz123", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "branch_xyz123", 2));
 
-        // 5) Patch person, and verify that work and publications get reindexed within few seconds
+        // 5) Patch person, and verify that work and publications getByIsbn reindexed within few seconds
         buildPatchRequest(
                 persUri1,
                 buildLDPatch(
@@ -1236,7 +1284,7 @@ public class AppTest {
     public void test_z3950_resource_is_retrieved_and_mapped() throws UnirestException {
         z3950ServiceMock.getSingleMarcRecordExpectation();
 
-        String url = baseUri + "/datasource/bibbi/912312312312";
+        String url = baseUri + "/datasource/bibbi/isbn/912312312312";
 
         HttpResponse<String> result = Unirest.get(url).asString();
 

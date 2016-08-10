@@ -76,4 +76,12 @@ public final class BaseURI {
     public String genre() {
         return baseUriRoot + "genre/";
     }
+
+    public String instrument() {
+        return baseUriRoot + "instrument/";
+    }
+
+    public String compositionType() {
+        return baseUriRoot + "compositiontype/";
+    }
 }

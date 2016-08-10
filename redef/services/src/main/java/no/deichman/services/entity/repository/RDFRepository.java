@@ -15,13 +15,24 @@ import java.util.function.Consumer;
 public interface RDFRepository {
 
     String createWork(Model model) throws Exception;
+
     String createPublication(Model model, String recordID) throws Exception;
+
     String createPerson(Model inputModel) throws Exception;
+
     String createPlace(Model inputModel) throws Exception;
+
     String createCorporation(Model inputModel) throws Exception;
-    String createSerial(Model inputModel)  throws Exception;
+
+    String createSerial(Model inputModel) throws Exception;
+
     String createSubject(Model inputModel) throws Exception;
+
     String createGenre(Model inputModel) throws Exception;
+
+    String createMusicalInstrument(Model inputModel) throws Exception;
+
+    String createMusicalCompositionType(Model inputModel) throws Exception;
 
     void createResource(Model model) throws Exception;
 
@@ -56,4 +67,5 @@ public interface RDFRepository {
     Optional<String> getResourceURIByBibliofilId(String id, String type);
 
     Model retrieveCorporationAndLinkedResourcesByURI(String uri);
+
 }

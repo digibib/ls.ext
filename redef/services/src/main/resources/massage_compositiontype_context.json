@@ -1,0 +1,12 @@
+{
+  "type": "CompositionType",
+  "@context": {
+    "specification": "deichman:specification",
+    "prefLabel": "deichman:prefLabel",
+    "CompositionType": "deichman:CompositionType",
+    "deichman": "__ONTOLOGY__",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph"
+  }
+}

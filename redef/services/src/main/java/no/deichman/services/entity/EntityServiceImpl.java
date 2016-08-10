@@ -265,6 +265,12 @@ public final class EntityServiceImpl implements EntityService {
             case GENRE:
                 uri = repository.createGenre(inputModel);
                 break;
+            case MUSICAL_INSTRUMENT:
+                uri = repository.createMusicalInstrument(inputModel);
+                break;
+            case MUSICAL_COMPOSITION_TYPE:
+                uri = repository.createMusicalCompositionType(inputModel);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown entity type:" + type);
         }

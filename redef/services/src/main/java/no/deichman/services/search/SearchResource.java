@@ -70,6 +70,10 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchGenre(query);
             case "publication":
                 return getSearchService().searchPublication(query);
+            case "instrument":
+                return getSearchService().searchInstrument(query);
+            case "compositiontype":
+                return getSearchService().searchCompositionType(query);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }

@@ -188,6 +188,16 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final String createMusicalInstrument(Model inputModel) throws Exception {
+        return createResource(inputModel, "Instrument");
+    }
+
+    @Override
+    public final String createMusicalCompositionType(Model inputModel) throws Exception {
+        return createResource(inputModel, "CompositionType");
+    }
+
+    @Override
     public final void createResource(Model inputModel) throws Exception {
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
         executeUpdate(updateRequest);

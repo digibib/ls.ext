@@ -41,6 +41,10 @@ class UniqueURIGenerator {
                 break;
             case "Genre": result = baseURI.genre() + "m" + uniquePart;
                 break;
+            case "Instrument": result = baseURI.instrument() + "i" + uniquePart;
+                break;
+            case "CompositionType": result = baseURI.compositionType() + "t" + uniquePart;
+                break;
             default:            throw new IllegalArgumentException("Unknown URI-type " + type);
         }
         return result;
