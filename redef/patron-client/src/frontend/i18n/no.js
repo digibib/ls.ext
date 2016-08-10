@@ -218,6 +218,7 @@ export default {
   'ValidationMessage.invalidMonth': 'Ugyldig måned',
   'ValidationMessage.invalidDay': 'Ugyldig dag',
   'ValidationMessage.invalidEmail': 'Eposten må være i et gyldig format',
+  'ValidationMessage.invalidPin': 'PIN-koden må være 4 siffer',
   'ValidationMessage.pinsMustBeEqual': 'PIN-kodene må være like',
   'ValidationMessage.illegalCharacters': 'Feltet inneholder ulovlige karakterer',
   'ValidationMessage.genericFieldError': 'Feltet inneholder feil',

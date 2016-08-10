@@ -19,6 +19,11 @@ module.exports = {
       return 'invalidDay'
     }
   },
+  pin: (pin) => {
+    if (!/^\d{4}$/.test(pin)) {
+      return 'invalidPin'
+    }
+  },
   repeatPin: (repeatPin, values) => {
     if (!values.pin) {
       return

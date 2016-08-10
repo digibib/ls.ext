@@ -39,6 +39,11 @@ const messages = defineMessages({
     description: 'Displayed when the email is not valid',
     defaultMessage: 'Invalid email address'
   },
+  invalidPin: {
+    id: 'ValidationMessage.invalidPin',
+    description: 'Displayed when the PIN-code is not valid',
+    defaultMessage: 'PIN-code must be exactly 4 digits'
+  },
   pinsMustBeEqual: {
     id: 'ValidationMessage.pinsMustBeEqual',
     description: 'Displayed when the pin and repeat pin is not equal',
