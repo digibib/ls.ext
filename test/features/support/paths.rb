@@ -91,7 +91,7 @@ module Paths
         :work => "/work",
         :publication => "/publication",
         :person => "/person",
-        :workflow => "/cataloguing?template=workflow&externalSource=random_bs&&externalSource=random_bb",
+        :workflow => "/cataloguing?template=workflow&mediaType=book&openTab=0",
         :place => "/place",
         :serial => "/serial",
         :corporation => "/corporation",

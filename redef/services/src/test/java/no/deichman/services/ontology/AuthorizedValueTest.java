@@ -25,7 +25,10 @@ public class AuthorizedValueTest {
             "writingSystem",
             "illustrativeMatter",
             "role",
-            "mediaType"));
+            "mediaType",
+            "relationType",
+            "deweyEdition",
+            "key"));
 
     @Test
     public void test_all_types_pattern_is_available() {

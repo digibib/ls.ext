@@ -1,11 +1,12 @@
-<div class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel" {{#if
+<span class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel" {{#if
      resourceIsLoaded(showOnlyWhenEmpty) }} style="display:none;" {{/if}}>
-<div class="pure-u-1-{{./accordionHeader ? '1' : '2'}} label {{firstInGroup ? 'first':''}} panel-part"
+<span {{#if (type == 'input-boolean')}}class='panel-part pure-u-1-2 for-checkbox'{{/if}}>
+<span class="{{#if (type != 'input-boolean')}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}pure-u-2-3{{/if}} label {{firstInGroup ? 'first':''}} {{(type == 'input-boolean') ? 'for-checkbox' : 'panel-part'}}"
      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
-</div>
-<div class="panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}} {{lastInGroup ? 'last':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
+</span>
+<span class="{{#if type != 'input-boolean'}}panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}checkbox{{/if}} {{lastInGroup ? 'last':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
         {{#each values:inputValueIndex}}
-        <span class="field pure-u-1-1" id="support_panel_base_{{uniqueId}}">
+        <span class="field {{#if (type != 'input-boosslean')}}pure-u-1-1{{/if}}" id="support_panel_base_{{uniqueId}}">
             {{>type}}
             {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
             <a data-automation-id="biblio_record_link" target="_blank"
@@ -31,9 +32,11 @@
         {{/with}}
 
     {{#if subInputs}}
-    <div class="pure-u-1-1 label" style="order: 99; {{#if !unacceptedSuggestions(.)}}display:none;{{/if}}">
+    {{#if unacceptedSuggestions(.)}}
+    <div class="pure-u-1-1 label" style="order: 99;">
         Forslag fra andre eksterne kilder
     </div>
+    {{/if}}
     {{#each subInputs[0].input.values:inputValueIndex}}
     {{#if nonEditable && ../../../../../accordionHeader}}
     <h3 class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
@@ -80,20 +83,21 @@
                             {{#if ! nonEditable && ! (suggested && multiple)}}
                                 {{#each subjectTypes:index}}
                                 {{#with ./subInputs[0].input.values[inputValueIndex]}}
-                                    <span class="subject-type-select" {{#if (subjectTypes.length== 1) }}
-                                          style="display:none" {{/if}}>
+                                    {{#if (subjectTypes.length > 1)}}
+                                    <span class="subject-type-select">
                                         <input type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
                                                {{# false && !targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
                                                disabled='disabled' {{/}}/>
                                         <label>{{subjectTypeLabel(subjectTypes[index])}}</label>
                                     </span>
+                                {{/if}}
                                 {{/with}}
                                 {{/each}}
                                 <span>
-                                    <a class="pure-button pure-button-primary add-item-button"
+                                    <a tabindex="0" class="pure-button pure-button-primary add-item-button"
                                        {{#if typeof subjectType=== 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType)) || ../../../inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
                                       title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
-                                       on-click="saveObject:{{inputValueIndex}}">Legg til</a>
+                                       on-click="saveObject:{{inputValueIndex}}" on-keyup="saveObject:{{inputValueIndex}}">Legg til</a>
                                 </span>
                             {{/if}}
                         {{/with}}
@@ -107,7 +111,7 @@
                 <div class="pure-u-1-1 suggestion-source-{{suggested.source}}">
                    <span class="pure-u-4-6"></span>
                     <span class="pure-u-2-6 use-suggestion-button">
-                        <a href="#" on-click="useSuggestion" class="pure-button pure-button-primary">Bruk forslag</a>
+                        <a tabindex="0" on-click="useSuggestion" class="pure-button pure-button-primary">Bruk forslag</a>
                     </span>
                 </div>
                 {{/if}}
@@ -118,8 +122,9 @@
 <span class="pure-u-1-1" style="order: 1000;">
         <div class="add-new-btn-row">
             <div class="pure-u-1-12"> </div>
-            <a class="pure-button pure-button-primary" on-click="addValue">{{addAnotherLabel || 'Legg til ny'}}</a>
+            <a tabindex="0" class="pure-button pure-button-primary" on-click="addValue" on-keyup="addValue">{{addAnotherLabel || 'Legg til ny'}}</a>
         </div>
     </span>
 {{/}}
-</div>
+</span>
+</span>

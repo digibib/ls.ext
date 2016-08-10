@@ -11,22 +11,19 @@
                     <div class="inner-content">
                         <div class="grid-panel grid-panel-selected pure-g media-type-menu">
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediatype=book">Bøker</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediaType=book">Bok</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediatype=film">Film</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediaType=film">Film</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediatype=music">Musikk</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediaType=musical_score">Musikknoter</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediatype=game">Spill</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediaType=musical_recording">Musikkopptak</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-2-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediatype=game&externalSource=random_bs&externalSource=random_bb">Eksterne kilder, tilfeldige verdier</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-2-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediatype=game&externalSource=demo_bs">Eksterne kilder, demo</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&mediaType=game">Spill</a>
                             </div>
                         </div>
                     </div>
@@ -49,6 +46,10 @@
                 </div>
             </li>
         </ul>
+    </div>
+    <div class="footer">
+        <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
+        <div id="save-stat">{{save_status}}</div>
     </div>
 </div>
 

@@ -22,7 +22,10 @@ public enum AuthorizedValue {
     WRITING_SYSTEM("writingSystem"),
     ILLUSTRATIVE_MATTER("illustrativeMatter"),
     ROLE("role"),
-    MEDIA_TYPE("mediaType");
+    MEDIA_TYPE("mediaType"),
+    RELATION_TYPE("relationType"),
+    DEWEY_EDITION("deweyEdition"),
+    MUSICAL_KEY("key");
 
     public static final String ALL_TYPES_PATTERN = "("
             + "language|"
@@ -37,7 +40,10 @@ public enum AuthorizedValue {
             + "writingSystem|"
             + "illustrativeMatter|"
             + "role|"
-            + "mediaType)";
+            + "mediaType|"
+            + "relationType|"
+            + "deweyEdition|"
+            + "key)";
 
     private final String path;
 

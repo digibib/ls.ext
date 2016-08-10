@@ -175,7 +175,7 @@
             id: `${idPrefix}-do-del`,
             click: function () {
               ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
-              axios.delete(uri)
+              axios.delete(proxyToServices(uri))
                 .then(function (response) {
                   unloadResourceForDomain(deleteConfig.resourceType)
                   $(`#${idPrefix}-do-del, #${idPrefix}-cancel-del`).hide()
@@ -481,8 +481,8 @@
       options = options || {}
       var graphData = ensureJSON(response.data)
       var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
-
-      type = type || StringUtil.titelize(/^.*\/(work|person|publication|genre|subject|serial|corporation)\/.*$/g.exec(resourceUri)[ 1 ])
+      var typeMap = ractive.get('applicationData.config.typeMap')
+      type = type || typeMap[resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ]]
       root = root || ldGraph.parse(graphData).byId(resourceUri)
 
       var promises = []
@@ -505,11 +505,6 @@
               if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
                 var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
                 promises = _.union(promises, loadLabelsForAuthorizedValues(values, input, 0, root))
-                if (input.isSubInput) {
-                  input.values[ rootIndex ].nonEditable = true
-                  input.values[ rootIndex ].subjectType = type
-                  input.parentInput.allowAddNewButton = true
-                }
               } else if (input.type === 'searchable-with-result-in-side-panel') {
                 if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                   _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
@@ -573,6 +568,11 @@
                   }
                 })
               }
+              if (input.isSubInput) {
+                input.values[ rootIndex ].nonEditable = true
+                input.values[ rootIndex ].subjectType = type
+                input.parentInput.allowAddNewButton = true
+              }
               rootIndex++
             }
           })
@@ -584,8 +584,8 @@
       Promise.all(promises).then(function () {
         ractive.update()
         if (!(options.keepDocumentUrl)) {
-          ractive.set('save_status', 'åpnet eksisterende ressurs')
           ractive.set('targetUri.' + type, resourceUri)
+          ractive.set('save_status', 'åpnet eksisterende ressurs')
           updateBrowserLocationWithUri(type, resourceUri)
         }
       })
@@ -615,7 +615,7 @@
         })
       })
       var errors = []
-      return axios.post(ractive.get('config.resourceApiUri') + resourceType.charAt(0).toLowerCase() + resourceType.slice(1),
+      return axios.post(ractive.get('config.resourceApiUri') + resourceType.toLowerCase(),
         {}, { headers: { Accept: 'application/ld+json', 'Content-Type': 'application/ld+json' } })
         .then(function (response) {
           var resourceUri = response.headers.location
@@ -770,6 +770,9 @@
         case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
           inputType = 'input-nonNegativeInteger'
           break
+        case 'http://data.deichman.no/utility#duration':
+          inputType = 'input-duration'
+          break
         case 'deichman:Place':
         case 'deichman:Work':
         case 'deichman:Person':
@@ -781,6 +784,12 @@
         case 'deichman:Subject':
         case 'deichman:Genre':
         case 'deichman:PublicationPart':
+        case 'deichman:WorkRelation':
+        case 'deichman:Instrument':
+        case 'deichman:Instrumentation':
+        case 'deichman:CompositionType':
+        case 'deichman:DeweyEdition':
+        case 'deichman:DeweyClassification':
         case 'http://www.w3.org/2001/XMLSchema#anyURI':
           rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
           inputType = 'input-string'
@@ -953,7 +962,7 @@
 
       function createInputsForGroup (inputGroup) {
         var groupInputs = []
-        _.each(inputGroup.inputs, function (input, index) {
+        _.each(_.compact(inputGroup.inputs), function (input, index) {
           var ontologyInput
           if (input.searchMainResource) {
             groupInputs.push({
@@ -992,10 +1001,10 @@
             input.inputIndex = index
             if (input.rdfProperty) {
               ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
-              assignUniqueValueIds(ontologyInput)
               if (typeof ontologyInput === 'undefined') {
                 throw new Error(`Group "${inputGroup.id} " specified unknown property "${input.rdfProperty}"`)
               }
+              assignUniqueValueIds(ontologyInput)
             } else if (input.subInputs) {
               ontologyInput = createInputForCompoundInput(input, inputGroup, ontologyUri, inputMap)
             } else {
@@ -1249,6 +1258,7 @@
           'input-string-large',
           'input-lang-string',
           'input-gYear',
+          'input-duration',
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
@@ -1506,6 +1516,13 @@
               teardown: function () {}
             }
           }
+          var timePicker = function (node) {
+            require('timepicker')
+            $(node).timepicker({'timeFormat': 'H:i:s', step: 50000})
+            return {
+              teardown: function () {}
+            }
+          }
 
           // Initialize ractive component from template
           ractive = new Ractive({
@@ -1537,6 +1554,11 @@
                 if (disabledUnlessSpec.inputIsNonEditable) {
                   var keypath = ractive.get(`inputLinks.${disabledUnlessSpec.inputIsNonEditable}`)
                   enabled &= ractive.get(`${keypath}.values.0.nonEditable`)
+                }
+                if (disabledUnlessSpec.inputIsNonEditableWhenNotOverridden) {
+                  var nonEditableInputKeypath = ractive.get(`inputLinks.${disabledUnlessSpec.inputIsNonEditableWhenNotOverridden.nonEditableInput}`)
+                  var overrridingInputKeypath = ractive.get(`inputLinks.${disabledUnlessSpec.inputIsNonEditableWhenNotOverridden.overridingInput}`)
+                  enabled &= (ractive.get(`${nonEditableInputKeypath}.values.0.nonEditable`) || ractive.get(`${overrridingInputKeypath}.values.0.current.value`))
                 }
                 return !enabled
               },
@@ -1626,16 +1648,20 @@
                 return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
               },
               valueOrderOfInputById: function (inputId, valueIndex) {
-                let keyPath = ractive.get(`inputLinks.${inputId[0]}`)
-                let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
-                let values = ractive.get(`${keyPath}.values`)
-                let index = _.findIndex(_.sortBy(values, function (val) { return val.current.value }), function (v) {
-                  return v.current.value === value
-                })
-                if (index > -1) {
-                  return Number(index + 1).toString()
+                if (inputId) {
+                  let keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
+                  let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
+                  let values = ractive.get(`${keyPath}.values`)
+                  let index = _.findIndex(_.sortBy(values, function (val) { return val.current.value }), function (v) {
+                    return v.current.value === value
+                  })
+                  if (index > -1) {
+                    return Number(index + 1).toString()
+                  } else {
+                    return null
+                  }
                 } else {
-                  return null
+                  return valueIndex + 1
                 }
               }
             },
@@ -1646,7 +1672,8 @@
               handleAddNewBySelect2: handleAddNewBySelect2,
               clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
               unload: unload,
-              accordion: accordionDecorator
+              accordion: accordionDecorator,
+              timePicker: timePicker
             },
             partials: applicationData.partials,
             transitions: {
@@ -1681,6 +1708,7 @@
               },
               // addValue adds another input field for the predicate.
               addValue: function (event) {
+                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
                 var mainInput = ractive.get(event.keypath)
                 visitInputs(mainInput, function (input, index) {
                   var length = input.values.length
@@ -1723,12 +1751,13 @@
                 }
               },
               saveObject: function (event, index) {
+                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
                 var input = event.context
                 patchObject(input, applicationData, index, 'add').then(function () {
                   visitInputs(input, function (input) {
                     if (input.isSubInput) {
-                      _.each(input.values, function (value, valueIdex) {
-                        if (valueIdex === index) {
+                      _.each(input.values, function (value, valueIndex) {
+                        if (valueIndex === index) {
                           value.nonEditable = true
                         }
                       })
@@ -1912,7 +1941,7 @@
                   var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
                   var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
                   unloadResourceForDomain(rdfType)
-                  fetchExistingResource(uri, { keepDocumentUrl: true })
+                  fetchExistingResource(uri)
                   ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
                 } else if (input.isMainEntry) {
                   fetchExistingResource(uri)
@@ -2131,7 +2160,7 @@
                   ractive.update()
                   var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
                   _.each(sources, function (source) {
-                    axios.get('/valueSuggestions/' + source + '/' + searchValue).then(function (response) {
+                    axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`).then(function (response) {
                       var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
                       var hitsFromPreferredSource = { source: response.data.source, items: [] }
                       _.each(response.data.hits, function (hit) {
@@ -2492,7 +2521,7 @@
           return applicationData
         }
 
-        return axios.get('/config')
+        return axios.get(`/config/${URI.parseQuery(URI.parse(document.location.href).query).mediaType || 'book'}`)
           .then(extractConfig)
           .then(loadTemplate)
           .then(loadPartials)

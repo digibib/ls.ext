@@ -29,7 +29,11 @@ describe("Catalinker", function () {
       sinon.stub(axios, "get", function (path) {
 
         switch (path) {
-        case "/config":
+        case "/config/book":
+        case "/config/film":
+        case "/config/musical_score":
+        case "/config/musical_recording":
+        case "/config/game":
           return Promise.resolve({data: {
             kohaOpacUri: "http://koha.deichman.no",
             kohaIntraUri: "http://koha.deichman.no",

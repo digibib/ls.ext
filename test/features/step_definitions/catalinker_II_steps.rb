@@ -30,8 +30,9 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
 end
 
 When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    @browser.a(:class => 'edit-resource').present? || @browser.input(:class => "select-result-item-radio").present?
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT*5) {
+    @browser.element(:xpath => "//a[contains(concat(' ',normalize-space(@class),' '),' edit-resource ')]|//input[contains(concat(' ',normalize-space(@class),' '),' select-result-item-radio ')]").present?
+#    @browser.a(:class => 'edit-resource').present? || @browser.input(:class => "select-result-item-radio").present?
   }
   if @browser.a(:class => 'edit-resource').present?
     @browser.as(:class => 'edit-resource')[0].click
@@ -124,10 +125,10 @@ When(/^legger inn tilleggsopplyningene om verket for utgivelsesår og språk$/) 
 end
 
 When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label|
-  input = @browser.inputs(:xpath => '//input[preceding-sibling::label/@data-uri-escaped-label = "' + URI::escape(parameter_label) + '"]')[0]
+  input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").find(&:visible?)
   input_id = input.attribute_value('data-automation-id')
-  predicate = input_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
-  domain = input_id.match(/^(Work|Publication|Person)_.*/).captures[0]
+  predicate = input_id.sub(/^([a-zA-Z]*)_/, '').sub(/_[0-9]+$/, '')
+  domain = input_id.match(/^([a-zA-Z]*)_.*/).captures[0]
   @site.WorkFlow.add_prop(domain, predicate, value)
   fragment = predicate.partition('#').last()
   symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym
@@ -172,7 +173,7 @@ When(/^at jeg skriver inn sted i feltet for utgivelsessted og trykker enter$/) d
   publication_place_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
   publication_place_field.click
   publication_place_field.set(@context[:placeofpublication_place])
-  publication_place_field.send_keys :enter
+#  publication_place_field.send_keys :enter
 end
 
 When(/^at jeg skriver inn (tilfeldig |)(.*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
@@ -314,11 +315,9 @@ When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']")
   name.should exist
   data_automation_id_issue = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
-  issueSpan = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']")
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    issueSpan.present?
+    @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']").present?
   }
-  issueSpan.should exist
 end
 
 When(/^jeg velger emnetype "([^"]*)" emne$/) do |subject_type|
@@ -400,7 +399,7 @@ end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
   @context[:work_maintitle] = generateRandomString
-  input = @browser.text_field(:xpath => '//div[preceding-sibling::div/@data-uri-escaped-label = "' + URI::escape('Søk etter eksisterende verk') + '"]//input')
+  input = @browser.text_field(:xpath => '//*[preceding-sibling::*/@data-uri-escaped-label = "' + URI::escape('Søk etter eksisterende verk') + '"]//input')
   input.set(@context[:work_maintitle])
   input.send_keys :enter
 end
@@ -514,7 +513,7 @@ end
 
 
 When(/^sjekker jeg at verdien for "([^"]*)" (nå er|er) "([^"]*)"$/) do |parameter_label, nowness, expected_value|
-  input = @browser.inputs(:xpath => "//div[preceding-sibling::div/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//input")[0]
+  input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").find(&:visible?)
   input.value.should eq expected_value
 end
 
@@ -574,4 +573,8 @@ end
 
 When(/^krysser jeg av i avkrysningboksen for "([^"]*)"$/) do |label|
   @site.WorkFlow.get_checkbox_from_label(label).click
+end
+
+When(/^klikker jeg utenfor sprettopp\-skjemaet$/) do
+  @browser.h2s()[0].click
 end

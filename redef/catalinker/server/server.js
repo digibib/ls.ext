@@ -94,9 +94,9 @@ app.use('/services', requestProxy(services, {
   }
 }))
 
-app.get('/valueSuggestions/:source/:isbn', requestProxy(services, {
+app.get('/valueSuggestions/:source/:type/:id', requestProxy(services, {
   forwardPath: function (req, res) {
-    var reqUrl = services + '/datasource/' + req.params.source + '/' + req.params.isbn
+    var reqUrl = services + '/datasource/' + req.params.source + '/' + req.params.type + '/' + req.params.id
     console.log(reqUrl)
     return url.parse(reqUrl).path
   }

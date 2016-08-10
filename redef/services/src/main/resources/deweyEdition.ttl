@@ -1,0 +1,20 @@
+@prefix deweyEdition: <http://data.deichman.no/deweyEdition#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+deweyEdition:ddc22 a duo:DeweyEdition ;
+  duo:code "22" ;
+  rdfs:label "Dewey full"@en ;
+  rdfs:label "Fullstendig Dewey"@no .
+deweyEdition:ddk5nor a duo:DeweyEdition ;
+  duo:code "5/nor" ;
+  rdfs:label "Dewey full norwegian"@en ;
+  rdfs:label "Fullstednig norsk"@no .
+deweyEdition:ddk3nor a duo:DeweyEdition ;
+  duo:code "3/nor" ;
+  rdfs:label "DDC3 norwegian"@en ;
+  rdfs:label "DDK3 norsk"@no .
+deweyEdition:ddc15 a duo:DeweyEdition ;
+  duo:code "15" ;
+  rdfs:label "Abridged"@en ;
+  rdfs:label "DDC15 Forkortet"@no .

@@ -24,6 +24,12 @@ body {
   [class^='select2'] {
     border-radius: 2px !important;
   }
+  .ui-timepicker-wrapper {
+    display: none !important;
+  }
+  .pure-button:focus {
+    background-color: rgb(0, 112, 216);
+  }
   .select2-container {
     .select2-selection {
       background-image: url("/images/arrow_down_solid.svg");
@@ -182,11 +188,20 @@ body {
           &:empty:after {
             font-size: 0px;
           }
+          &.for-checkbox {
+            display: inline;
+          }
+        }
+        .checkbox {
+          margin-top: 13px;
         }
         .input-wrapper .label {
           padding: 12px 12px 4px 0px;
         }
         .panel-part {
+          &.for-checkbox{
+            display: flex;
+          }
           &.ui-accordion {
             .ui-accordion-icons {
               padding-left: 13px;
@@ -205,18 +220,22 @@ body {
               padding: 13px;
               display: none;
             }
-          }
-
           display: flex;
           flex-direction: column;
           &.label {
             flex-direction: row;
           }
+          }
+
           .field {
             padding: 0px 12px 15px 12px;
             background: $input-background;
             .index-type-select {
               margin-bottom: 12px;
+            }
+            input[type=checkbox] {
+              width: auto;
+              margin-top: -2px;
             }
           }
           border-left: 1px solid lightgrey;
@@ -232,6 +251,7 @@ body {
             background: lightgrey;
             content: "";
             margin: 0px 12px 0px 12px;
+            order:1000;
           }
           &:last-child.last {
             border-bottom: 1px solid lightgrey;
@@ -492,9 +512,6 @@ body {
               }
               .label {
                 background: inherit;
-                &.for-checkbox {
-                  display: inline;
-                }
               }
               .field {
                 padding: 0;
@@ -506,6 +523,12 @@ body {
                 margin-top: -24px;
                 margin-left: 9px;
               }
+              &.duration {
+                text-align: right;
+              }
+            }
+            .boolean-value {
+              display: inline-block;
             }
           }
           .subject-type-association {

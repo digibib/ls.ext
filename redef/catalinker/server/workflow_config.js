@@ -28,7 +28,13 @@ function maintenanceInputs (label, type) {
 }
 
 module.exports = (app) => {
-  app.get('/config', function (request, response) {
+  app.get('/config/:mediaType(book|film|musical_score|musical_recording|game)|/config', function (request, response) {
+    var mediaType = request.params.mediaType
+    console.log(mediaType)
+    function includeOnlyFor (targetTypes, object) {
+      return (_.isArray(targetTypes) && _.contains(targetTypes, mediaType) || targetTypes === mediaType) ? object : null
+    }
+
     var config =
     {
       kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
@@ -171,6 +177,42 @@ module.exports = (app) => {
               preFillFromSearchField: true
             }
           ]
+        },
+        {
+          id: 'create-instrument-form',
+          labelForCreateButton: 'Opprett nytt musikkinstrument',
+          rdfType: 'Instrument',
+          inputs: [
+            {
+              label: 'Foretrukken betegnelse',
+              rdfProperty: 'prefLabel',
+              type: 'input-string',
+              preFillFromSearchField: true
+            },
+            {
+              label: 'Forklarende tilføyelse',
+              rdfProperty: 'specification',
+              type: 'input-string'
+            }
+          ]
+        },
+        {
+          id: 'create-compositiontype-form',
+          labelForCreateButton: 'Opprett ny komposisjonstype',
+          rdfType: 'CompositionType',
+          inputs: [
+            {
+              label: 'Foretrukken betegnelse',
+              rdfProperty: 'prefLabel',
+              type: 'input-string',
+              preFillFromSearchField: true
+            },
+            {
+              label: 'Forklarende tilføyelse',
+              rdfProperty: 'specification',
+              type: 'input-string'
+            }
+          ]
         }
       ],
       tabs: [
@@ -179,21 +221,40 @@ module.exports = (app) => {
           rdfType: 'Work',
           label: 'Hovedinnførsel',
           inputs: [
-            {
-              // this is an input type used to search for a main resource, e.g. Work. The rendered input field
-              // will not be tied to a particular subject and predicate
-              searchForValueSuggestions: {
-                label: 'ISBN',
-                parameterName: 'isbn',
-                automationId: 'searchValueSuggestions',
-                showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-                sources: [ 'bibbi', 'loc' ],
-                preferredSource: {
-                  id: 'bibbi',
-                  name: 'Biblioteksentralen'
+            includeOnlyFor(
+              'book', {
+                // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+                // will not be tied to a particular subject and predicate
+                searchForValueSuggestions: {
+                  label: 'ISBN',
+                  parameterName: 'isbn',
+                  automationId: 'searchValueSuggestions',
+                  showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+                  sources: [ 'bibbi', 'loc' ],
+                  preferredSource: {
+                    id: 'bibbi',
+                    name: 'Biblioteksentralen'
+                  }
                 }
               }
-            },
+            ),
+            includeOnlyFor(
+              [ 'film', 'musical_recording' ], {
+                // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+                // will not be tied to a particular subject and predicate
+                searchForValueSuggestions: {
+                  label: 'EAN',
+                  parameterName: 'ean',
+                  automationId: 'searchEanValueSuggestions',
+                  showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+                  sources: [ 'bibbi' ],
+                  preferredSource: {
+                    id: 'bibbi',
+                    name: 'Biblioteksentralen'
+                  }
+                }
+              }
+            ),
             {
               label: 'Hovedansvarlig',
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
@@ -202,7 +263,6 @@ module.exports = (app) => {
                 inputs: [ // these are the actual sub inputs
                   {
                     label: 'Aktør',
-                    required: true,
                     rdfProperty: 'agent',
                     indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
@@ -242,6 +302,15 @@ module.exports = (app) => {
               // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
             },
             {
+              label: "Verket har ikke hovedansvarlig",
+              id: 'missingMainEntry',
+              rdfProperty: 'missingMainEntry',
+            },
+            {
+              label: "Verket er ikke et selvstendig verk",
+              rdfProperty: 'improperWork',
+            },
+            {
               // this is an input type used to search for a main resource, e.g. Work. The rendered input field
               // will not be tied to a particular subject and predicate
               searchMainResource: {
@@ -275,7 +344,10 @@ module.exports = (app) => {
             buttonLabel: 'Neste steg: Beskrivelse',
             disabledUnless: {
               presentTargetUri: 'Work',
-              inputIsNonEditable: 'mainEntryPersonInput',
+              inputIsNonEditableWhenNotOverridden: {
+                nonEditableInput: 'mainEntryPersonInput',
+                overridingInput: 'missingMainEntry'
+              },
               disabledTooltip: 'For å komme videre, må du registrere hovedinnførsel og idenfisere eller opprette verk.'
             },
             createNewResource: {
@@ -326,15 +398,41 @@ module.exports = (app) => {
             },
             { rdfProperty: 'numberOfPages' },
             { rdfProperty: 'illustrativeMatter' },
-            {
+            includeOnlyFor('book', {
               rdfProperty: 'isbn',
               multiple: true,
               addAnotherLabel: 'Legg til et ISBN-nummer til'
-            },
-            { rdfProperty: 'binding' },
+            }),
+            includeOnlyFor([ 'film', 'musical_recording' ], {
+              rdfProperty: 'hasEan'
+            }),
+            includeOnlyFor(
+              'book', {
+                rdfProperty: 'binding'
+              }
+            ),
             { rdfProperty: 'language' },
+            includeOnlyFor(
+              'film', {
+                rdfProperty: 'hasSubtitles'
+              }
+            ),
             { rdfProperty: 'format', multiple: true },
-            { rdfProperty: 'writingSystem', multiple: true },
+            includeOnlyFor(
+              [ 'film', 'musical_recording' ], {
+                rdfProperty: 'duration',
+                type: 'input-duration'
+              }
+            ),
+            includeOnlyFor(
+              [ 'film', 'game' ], {
+                rdfProperty: 'ageLimit',
+                widgetOptions: {
+                  short: true
+                }
+              }
+            ),
+            includeOnlyFor('book', { rdfProperty: 'writingSystem', multiple: true }),
             { rdfProperty: 'adaptationOfPublicationForParticularUserGroups', multiple: true },
             {
               rdfProperty: 'publishedBy',
@@ -343,7 +441,7 @@ module.exports = (app) => {
               indexTypes: [ 'corporation', 'person' ], // this is the name of the elasticsearch index type from which authorities are searched within
               preselectFirstIndexType: true,
               indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels f
-              // or authoroty select list are concatenated
+              // or authority select list are concatenated
               type: 'searchable-with-result-in-side-panel',
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg type aktør',
@@ -369,7 +467,7 @@ module.exports = (app) => {
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'prefLabel', 'specification' ], // these are property names used to label already connected entities
               indexTypes: 'place', // this is the name of the elasticsearch index type from which authorities are searched within
-              // the labels for authoroty select list are concatenated
+              // the labels for authority select list are concatenated
               type: 'searchable-with-result-in-side-panel',
               widgetOptions: {
                 enableCreateNewResource: {
@@ -458,7 +556,46 @@ module.exports = (app) => {
             },
             { rdfProperty: 'audience', multiple: true },
             { rdfProperty: 'biography', multiple: true },
-            { rdfProperty: 'adaptationOfWorkForParticularUserGroups', multiple: true }
+            { rdfProperty: 'adaptationOfWorkForParticularUserGroups', multiple: true },
+            {
+              label: 'Relasjon til annet verk',
+              multiple: true,
+              addAnotherLabel: 'Legg til en relasjon til',
+              subInputs: {
+                rdfProperty: 'isRelatedTo',
+                range: 'WorkRelation',
+                inputs: [
+                  {
+                    label: 'Verk',
+                    rdfProperty: 'work',
+                    indexTypes: [ 'work' ],
+                    type: 'searchable-with-result-in-side-panel',
+                    nameProperties: [ 'mainTitle' ],
+                    widgetOptions: {
+                      enableCreateNewResource: {
+                        formRefs: [
+                          {
+                            formId: 'create-work-form',
+                            targetType: 'work'
+                          }
+                        ],
+                        useAfterCreation: false
+                      }
+                    }
+                  },
+                  {
+                    label: 'Type relasjon',
+                    rdfProperty: 'hasRelationType',
+                    required: true
+                  }
+                ]
+              },
+              subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+            },
+            {
+              rdfProperty: 'hasSummary',
+              type: 'input-string-large'
+            },
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Beskriv verket'
@@ -482,6 +619,64 @@ module.exports = (app) => {
           rdfType: 'Work',
           label: 'Emneopplysninger',
           inputs: [
+            includeOnlyFor('musical_score', {
+              rdfProperty: 'hasCompositionType',
+              type: 'searchable-with-result-in-side-panel',
+              nameProperties: [ 'prefLabel' ],
+              indexTypes: [ 'compositiontype' ],
+              labelForCreateButton: 'Opprett ny kompodisjonstype',
+              widgetOptions: {
+                enableCreateNewResource: {
+                  formRefs: [
+                    {
+                      formId: 'create-compositiontype-form',
+                      targetType: 'compositiontype'
+                    }
+                  ]
+                }
+              }
+            }),
+            includeOnlyFor(['musical_score', 'musical_recording'], {
+                rdfProperty: 'inKey',
+                multiple: true
+            }),
+            includeOnlyFor('musical_score', {
+              label: 'Besetning',
+              multiple: true,
+              addAnotherLabel: 'Legg til et instrument til',
+              subInputs: {
+                rdfProperty: 'hasInstrument',
+                range: 'Instrumentation',
+                inputs: [
+                  {
+                    label: 'Instrument',
+                    rdfProperty: 'hasInstrument',
+                    indexTypes: [ 'instrument' ],
+                    type: 'searchable-with-result-in-side-panel',
+                    nameProperties: [ 'prefLabel' ],
+                    widgetOptions: {
+                      enableCreateNewResource: {
+                        formRefs: [
+                          {
+                            formId: 'create-instrument-form',
+                            targetType: 'instrument'
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    label: 'Antall utøvere',
+                    rdfProperty: 'hasNumberOfPerformers',
+                    widgetOptions: {
+                      short: true
+                    },
+                    required: true
+                  }
+                ]
+              },
+              subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+            }),
             {
               rdfProperty: 'subject',
               multiple: true,
@@ -515,6 +710,27 @@ module.exports = (app) => {
                       targetType: 'place'
                     } ]
                 }
+              }
+            },
+            {
+              label: 'Dewey-klassifikasjon',
+              multiple: true,
+              addAnotherLabel: 'Legg til en klassifikasjon til',
+              subInputs: {
+                rdfProperty: 'hasDeweyClassification',
+                range: 'DeweyClassification',
+                inputs: [
+                  {
+                    label: 'Klassifikasjonsnummer',
+                    rdfProperty: 'hasDewey',
+                    required: true
+                  },
+                  {
+                    label: 'Utgave',
+                    rdfProperty: 'hasDeweyEdition',
+                    required: true
+                  }
+                ]
               }
             },
             {
@@ -552,7 +768,7 @@ module.exports = (app) => {
                 rdfProperty: 'hasPublicationPart', // the rdf property of the resource
                 range: 'PublicationPart', // this is the shorthand name of the type of the blank node
                 accordionHeader: 'collection',
-                orderBy: ['startsAtPageInput'],
+                orderBy: [ 'startsAtPageInput' ],
                 inputs: [
                   {
                     label: 'Aktør',
@@ -692,6 +908,8 @@ module.exports = (app) => {
             maintenanceInputs('Emner', 'subject'),
             maintenanceInputs('Sjangre', 'genre'),
             maintenanceInputs('Serier', 'serial'),
+            maintenanceInputs('Musikkinstrumenter', 'instrument'),
+            maintenanceInputs('Komposisjonstyper', 'compositiontype'),
             {
               // this is an input type used to search for a main resource, e.g. Work. The rendered input field
               // will not be tied to a particular subject and predicate
@@ -813,7 +1031,38 @@ module.exports = (app) => {
           legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
           resultItemLabelProperties: [ 'creator', 'mainTitle', 'subTitle', 'publicationYear', 'recordId' ],
           itemHandler: 'publicationItemHandler'
+        },
+        instrument: {
+          type: 'instrument',
+          selectIndexLabel: 'Instrument',
+          queryTerms: [ {
+            field: 'prefLabel',
+            wildcard: true
+          } ],
+          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+        },
+        compositiontype: {
+          type: 'compositiontype',
+          selectIndexLabel: 'Komposisjonstype',
+          queryTerms: [ {
+            field: 'prefLabel',
+            wildcard: true
+          } ],
+          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         }
+      },
+      typeMap: {
+        // this map contains a map of all known independent resource types (i.e. not blank node types) as they appear in 
+        // resource urls and their canonical names
+        work: 'Work',
+        person: 'Person',
+        publication: 'Publication',
+        genre: 'Genre',
+        subject: 'Subject',
+        serial: 'Serial',
+        corporation: 'Corporation',
+        instrument: 'Instrument',
+        compositiontype: 'CompositionType'
       }
     }
     response.json(config)

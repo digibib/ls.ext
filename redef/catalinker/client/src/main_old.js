@@ -256,12 +256,18 @@
                     case "http://www.w3.org/2001/XMLSchema#nonNegativeInteger":
                         input.type = "input-nonNegativeInteger";
                         break;
+                    case 'http://data.deichman.no/utility#duration':
+                        input.type = 'input-duration'
+                        break
                     case "deichman:Work":
                     case "deichman:Person":
                     case "deichman:Place":
                     case "deichman:Corporation":
                     case 'deichman:PublicationPart':
                     case "deichman:Genre":
+                    case 'deichman:CompositionType':
+                    case 'deichman:Instrument':
+                    case 'deichman:DeweyEdition':
                         // TODO infer from ontology that this is an URI
                         // (because deichman:Work a rdfs:Class)
                         input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
@@ -270,6 +276,9 @@
                     case "deichman:Contribution": //ignore, as these are blank nodes
                     case "deichman:SerialIssue":
                     case "deichman:Subject":
+                    case 'deichman:WorkRelation':
+                    case 'deichman:Instrumentation':
+                    case 'deichman:DeweyClassification':
                         break;
                     default:
                         throw "Doesn't know which input-type to assign to range: " + input.range;

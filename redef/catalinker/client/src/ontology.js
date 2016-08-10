@@ -84,7 +84,7 @@
             if (_.isArray(oldValue) && !_.isArray(currentValue)) {
                 currentValue = [currentValue];
             }
-            if (typeof currentValue == 'string' && currentValue != oldValue) {
+            if ((typeof currentValue === 'string' || typeof currentValue === 'number') && currentValue != oldValue) {
                 if (currentValue !== "") {
                     var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue, type: datatype}};
                     if (oldAndCurrentValue.current.lang !== "") {

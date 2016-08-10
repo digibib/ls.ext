@@ -30,7 +30,7 @@ class CatalinkerPage < PageRoot
   end
 
   def add_prop(predicate, value, nr=0, skip_wait=false)
-    input = @browser.text_field(:data_automation_id => predicate+"_#{nr}")
+    input = @browser.element(:data_automation_id => predicate+"_#{nr}").to_subtype
     input.set('')
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value == '' }
     input.set(value)

@@ -31,6 +31,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
+    Og jeg venter litt
     Så velger jeg et sted fra treffliste fra stedregisteret
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
@@ -90,7 +91,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Så velger jeg en person fra treffliste fra personregisteret
     Og jeg velger rollen "Fotograf"
-    Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
+    Og velger radioknappen for "Utgivelse" for å velge "hva rollen gjelder"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
@@ -171,6 +172,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Legg til"-knappen
     Så ombestemmer jeg meg
     Så fjerner jeg hovedinnførselen
+    Og jeg venter litt
     Så velger jeg aktørtype "Organisasjon"
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
@@ -250,6 +252,11 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
     Så velger jeg et emne fra treffliste fra emneregisteret
+    Så jeg skriver verdien "Beskrivelse" for "Forklarende tilføyelse"
+    Så klikker jeg utenfor sprettopp-skjemaet
+    Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
+    Så velger jeg et emne fra treffliste fra emneregisteret
+    Så sjekker jeg at verdien for "Forklarende tilføyelse" nå er "Beskrivelse"
 
   Scenario: Redigere sjanger i katalogisering
     Gitt at jeg vil opprette en sjanger

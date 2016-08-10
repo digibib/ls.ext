@@ -72,7 +72,7 @@
     <div class="support-panel-content">
     <div class="search-result pure-u-1">
         {{#each inputs}}
-            {{./label}}:
+            <span data-uri-escaped-label="{{encodeURI(./label)}}">{{./label}}:</span>
             {{#each values}}
                 <span class="field pure-u-1-1">
                     {{>type}}
