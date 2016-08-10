@@ -26,15 +26,15 @@ public class Datasource {
     public Datasource() {}
 
     @GET
-    @Path("{datasource: (bibbi|loc)}/{isbn: ([0-9Xx]+)}")
+    @Path("{datasource: (bibbi|loc)}/{idType: (isbn|ean)}/{id: ([0-9Xx]+)}")
     @Produces(LD_JSON + MimeType.UTF_8)
-    public final Response getByISBN(@PathParam("datasource") String datasource, @PathParam("isbn") String isbn) throws Exception {
+    public final Response getByISBN(@PathParam("datasource") String datasource, @PathParam("idType") String idType, @PathParam("id") String id) throws Exception {
         Mapper mapper = new Mapper();
 
         Z3950HttpClient z3950HttpClient = new Z3950HttpClient();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        String record = z3950HttpClient.get(datasource, isbn);
+        String record = idType.equals("isbn") ? z3950HttpClient.getByIsbn(datasource, id) : z3950HttpClient.getByEan(datasource, id);
 
         String result = "";
 

@@ -48,10 +48,18 @@ public class Z3950HttpClientTest {
     }
 
     @Test
-    public void test_it_gets_a_single_MARC_record() throws IOException {
+    public void test_it_gets_a_single_MARC_record_by_isbn() throws IOException {
         z3950ServiceMock.getSingleMarcRecordExpectation();
         Z3950HttpClient z3950HttpClient = new Z3950HttpClient("http://localhost", z3950ServiceMock.getPort());
-        String response = z3950HttpClient.get("bibbi", "123123123");
+        String response = z3950HttpClient.getByIsbn("bibbi", "123123123");
+        assertTrue(response.contains("Eksempel Eksempelsen"));
+    }
+
+    @Test
+    public void test_it_gets_a_single_MARC_record_by_ean() throws IOException {
+        z3950ServiceMock.getSingleMarcRecordExpectation();
+        Z3950HttpClient z3950HttpClient = new Z3950HttpClient("http://localhost", z3950ServiceMock.getPort());
+        String response = z3950HttpClient.getByEan("bibbi", "123123123");
         assertTrue(response.contains("Eksempel Eksempelsen"));
     }
 }

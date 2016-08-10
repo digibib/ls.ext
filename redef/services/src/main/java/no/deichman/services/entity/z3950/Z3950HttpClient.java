@@ -19,6 +19,8 @@ import java.net.URL;
 public class Z3950HttpClient {
 
     private static final String Z3950_PROXY_PORT = System.getProperty("Z3950_ENDPOINT", "http://z3950proxy:3000");
+    public static final String ISBN = "isbn";
+    private static final String EAN = "ean";
 
     private String baseURI;
     private int proxyPort;
@@ -54,38 +56,39 @@ public class Z3950HttpClient {
         this.proxyPort = proxyPort;
     }
 
-    public final String get(String targetString, String isbn) throws IOException {
+    public final String getByIsbn(String targetString, String isbn) throws IOException {
+        return doGet(targetString, isbn, ISBN);
+    }
 
+    public final String getByEan(String target, String ean) throws IOException {
+        return doGet(target, ean, EAN);
+    }
+
+    private String doGet(String targetString, String searhTerm, String parameter) throws IOException {
         Target target = Target.valueOf(targetString.toUpperCase());
-
         String response = null;
-
         try (
                 CloseableHttpClient httpClient = HttpClients.createDefault();
-                CloseableHttpResponse httpResponse = httpClient.execute(new HttpGet(getURL(target, isbn)))
+                CloseableHttpResponse httpResponse = httpClient.execute(new HttpGet(getURL(target, searhTerm, parameter)))
         ) {
-
             if (httpResponse.getStatusLine().getStatusCode() == Response.Status.OK.getStatusCode()) {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 response = IOUtils.toString(httpEntity.getContent());
                 EntityUtils.consume(httpEntity);
             }
         }
-
         return response;
     }
 
-    private String getURL(Target target, String isbn) {
-
+    private String getURL(Target target, String isbn, final String searchTerm) {
         return baseURI
                 + ":" + proxyPort
                 + "?apikey=somethingsomething"
                 + "&base="
                 + target.getDatabaseName()
-                + "&isbn="
+                + "&" + searchTerm + "="
                 + isbn
                 + "&format="
                 + target.getDataFormat();
     }
-
 }
