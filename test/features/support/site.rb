@@ -9,6 +9,7 @@ class Site
         'verk' => 'work',
         'utgivelse' => 'publication',
         'person' => 'person',
+        '_person' => 'Person',
         'sted' => 'hasPlaceOfPublication',
         'utgiver' => 'corporation',
         'utgitt av' => 'publishedBy',
@@ -29,7 +30,8 @@ class Site
         'andre' => 2,
         'tredje' => 3,
         'fjerde' => 4,
-        'femte' => 5
+        'femte' => 5,
+        'navn' => 'name'
     }[concept.downcase] || concept
   end
 

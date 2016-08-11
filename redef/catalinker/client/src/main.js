@@ -266,7 +266,7 @@
       options = options || {}
       if (value) {
         input.values[ index ] = {
-          old: {
+          old: options.keepOld ? input.values[ index ].old : {
             value: value.value,
             lang: value.lang
           },
@@ -569,7 +569,7 @@
                 })
               }
               if (input.isSubInput) {
-                input.values[ rootIndex ].nonEditable = true
+ //               input.values[ rootIndex ].nonEditable = true
                 input.values[ rootIndex ].subjectType = type
                 input.parentInput.allowAddNewButton = true
               }
@@ -1177,7 +1177,11 @@
       return contributionTarget
     }
 
-    var Main = {
+  function eventShouldBeIgnored (event) {
+    return (event.original && event.original.type === 'keyup' && event.original.keyCode !== 13)
+  }
+
+  var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -1700,7 +1704,7 @@
           })
           ractive.on({
               toggle: function (event) {
-                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
+                if (eventShouldBeIgnored(event)) return
                 this.toggle(event.keypath + '.expanded')
               },
               updateBrowserLocationWithTab: function (event, tabId) {
@@ -1708,7 +1712,7 @@
               },
               // addValue adds another input field for the predicate.
               addValue: function (event) {
-                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
+                if (eventShouldBeIgnored(event)) return
                 var mainInput = ractive.get(event.keypath)
                 visitInputs(mainInput, function (input, index) {
                   var length = input.values.length
@@ -1751,7 +1755,7 @@
                 }
               },
               saveObject: function (event, index) {
-                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
+                if (eventShouldBeIgnored(event)) return
                 var input = event.context
                 patchObject(input, applicationData, index, 'add').then(function () {
                   visitInputs(input, function (input) {
@@ -1914,7 +1918,7 @@
                 }
               },
               searchResourceFromSuggestion: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
-                if (event.original.type === 'keyup' && event.original.keyCode !== 13) return
+                if (eventShouldBeIgnored(event)) return
                 ractive.fire('searchResource', { keypath: grandParentOf(event.keypath) + '.values.0' }, searchString, indexType, loadWorksAsSubjectOfItem)
               },
               toggleSubItem: function (event, findWorksAsSubjectOfType, origin) {
@@ -2063,6 +2067,7 @@
                 })
               },
               showCreateNewResource: function (event, origin) {
+                if (eventShouldBeIgnored(event)) return
                 ractive.set(origin + '.searchResult.hidden', true)
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
                 var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
@@ -2210,11 +2215,11 @@
               },
               acceptSuggestedLiteralValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
+                var oldValues = input.values
                 if (!input.multiple) {
-                  setSingleValue(value, input, 0)
+                  setSingleValue(value, input, 0, {keepOld: true})
                 } else {
-                  var oldValues = input.values
-                  setSingleValue(value, input, oldValues.length, { isNew: true })
+                  setSingleValue(value, input, oldValues.length)
                 }
                 ractive.update()
                 var valueIndex = oldValues ? oldValues.length - 1 : 0

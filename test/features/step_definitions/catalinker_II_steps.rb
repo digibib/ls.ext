@@ -35,10 +35,10 @@ When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne
 #    @browser.a(:class => 'edit-resource').present? || @browser.input(:class => "select-result-item-radio").present?
   }
   if @browser.a(:class => 'edit-resource').present?
-    @browser.as(:class => 'edit-resource')[0].click
+    @browser.as(:class => 'edit-resource').first.click
   end
   if @browser.input(:class => "select-result-item-radio").present?
-    @browser.inputs(:class => "select-result-item-radio")[0].click
+    @browser.inputs(:class => "select-result-item-radio").first.click
   end
 end
 
@@ -46,8 +46,8 @@ When(/^velger verket fra lista tilkoplet forfatteren$/) do
   wait_for{
     @browser.span(:class => "toggle-show-sub-items").present?
   }
-  @browser.spans(:class => "toggle-show-sub-items")[0].click
-  @browser.inputs(:class => "select-work-radio")[0].click
+  @browser.spans(:class => "toggle-show-sub-items").first.click
+  @browser.inputs(:class => "select-work-radio").first.click
 end
 
 When(/^verifiserer at verkets basisopplysninger uten endringer er korrekte$/) do
@@ -200,7 +200,7 @@ When(/^skriver jeg inn samme (tilfeldige |)(.*) i feltet "([^"]*)" og trykker en
 end
 
 def select_first_in_open_dropdown
-  @browser.elements(:xpath => "//span[@class='select2-results']/ul/li")[0].click
+  @browser.elements(:xpath => "//span[@class='select2-results']/ul/li").first.click
 end
 
 When(/^velger jeg første (.*) i listen som dukker opp$/) do |concept|
@@ -235,15 +235,15 @@ When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
 end
 
 When(/^trykker jeg på knappen for legge til biinnførselen$/) do
-  @browser.as(:xpath => "//*[@id='confirm-addedentry']//span[@class='subject-type-association']//a[text()='Legg til']")[0].click
+  @browser.elements(:xpath => "//*[@id='confirm-addedentry']//span[@class='subject-type-association']//*[text()='Legg til']").first.click
 end
 
 When(/^trykker jeg på knappen for legge til serieinformasjon$/) do
-  @browser.as(:xpath => "//*[@id='describe-publication']//a[text()='Legg til']")[0].click
+  @browser.elements(:xpath => "//*[@id='describe-publication']//*[text()='Legg til']").first.click
 end
 
 When(/^trykker jeg på knappen for legge til mer$/) do
-  @browser.as(:xpath => "//div[./div[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//a[text()='Legg til ny']")[0].click
+  @browser.elements(:xpath => "//div[./div[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//*[text()='Legg til ny']").first.click
 end
 
 When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, role_name, association|
@@ -265,11 +265,11 @@ When(/^sjekker jeg at det er "([^"]*)" biinnførsler totalt$/) do |number_of_add
 end
 
 When(/^fjerner jeg den første biinførselen$/) do
-  @browser.as(:xpath => "//*[@id='confirm-addedentry']//a[@class='delete']")[0].click
+  @browser.as(:xpath => "//*[@id='confirm-addedentry']//a[@class='delete']").first.click
 end
 
 When(/^fjerner jeg hovedinnførselen$/) do
-  @browser.as(:xpath => "//*[@id='confirm-person']//a[@class='delete']")[0].click
+  @browser.as(:xpath => "//*[@id='confirm-person']//a[@class='delete']").first.click
 end
 
 When(/^at jeg skriver inn serie i feltet for serie og trykker enter$/) do
@@ -337,7 +337,7 @@ end
 
 When(/^velger første emne i trefflisten$/) do
   sleep 1
-  @browser.inputs(:class => "select-result-item-radio")[0].click
+  @browser.inputs(:class => "select-result-item-radio").first.click
 end
 
 When(/^sjekker jeg at emnet er listet opp på verket$/) do
@@ -368,7 +368,7 @@ end
 
 When(/^jeg legger inn et nytt navn$/) do
   @context[:person_name] = generateRandomString
-  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0' or @data-automation-id='PublicationPart_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
+  creator_name_field = @browser.text_field(:xpath => "//*[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0' or @data-automation-id='PublicationPart_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end
@@ -389,12 +389,12 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
   @browser.text_field(:data_automation_id => data_automation_id).set(@context[:person_deathyear])
 
   @browser.span(:data_automation_id => "Person_http://#{ENV['HOST']}:8005/ontology#nationality_0").text_field().set(nationality)
-  @browser.ul(:class => "select2-results__options").lis()[0].click
+  @browser.ul(:class => "select2-results__options").lis().first.click
 
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.as(:text => link_label).select { |a| a.visible? }[0].click
+  @browser.elements(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled? &&!a.attribute_value('disabled')}.first.click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
@@ -406,8 +406,8 @@ end
 
 
 When(/^trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
-  @browser.button(:text => button_label).wait_until_present(BROWSER_WAIT_TIMEOUT*5)
-  @browser.button(:text => button_label).click
+  @browser.element(:text => button_label, :class => 'pure-button').wait_until_present(BROWSER_WAIT_TIMEOUT*5)
+  @browser.element(:text => button_label, :class => 'pure-button').click
 end
 
 When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
@@ -449,7 +449,7 @@ When(/^ser jeg at det står forfatter med navn og levetid i resultatlisten$/) do
 end
 
 When(/^så trykker jeg på Legg til ny biinnførsel\-knappen$/) do
-  @browser.a(:text, /Legg til ny biinn.*/).click
+  @browser.buttons(:text, /Legg til ny biinn.*/).first.click
 end
 
 When(/^ser jeg at det er (ett|to) treff i resultatlisten$/) do |one_or_two|
@@ -468,7 +468,7 @@ end
 
 When(/^Sjekker jeg at det vises treff fra preferert ekstern kilde$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    @browser.li(:xpath => '//div[@class="external-source-results"]//ul/li[@class="external-hit"]').present?
+    @browser.li(:xpath => '//*[@class="external-source-results"]//ul/li[@class="external-hit"]').present?
   }
 end
 
@@ -494,21 +494,24 @@ When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal
       suggestion_list = @browser.div(:xpath => "//span[preceding-sibling::span[descendant::span/@data-automation-id='#{data_automation_id}']]//div[@class='external-sources']")
     end
   else
-    suggestion_list = @browser.div(:xpath => "//div[descendant::span/input[@data-automation-id='#{data_automation_id}']]/span/div[@class='external-sources']")
+    suggestion_list = @browser.div(:xpath => "//span[descendant::span/input[@data-automation-id='#{data_automation_id}']]/span/div[@class='external-sources']")
   end
 
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    suggestion_list.a(:class => 'unexpanded').present?
+    suggestion_list.span(:class => 'unexpanded').present?
   }
-  suggestion_list_expander = suggestion_list.a(:class => 'unexpanded')
+  suggestion_list_expander = suggestion_list.span(:class => 'unexpanded')
   suggestion_list_expander.click
-  support_panel_expander_link = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").a(:class => 'support-panel-expander')
-  use_suggestion_button = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").a(:class => 'suggested-value')
+  support_panel_expander_link = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").span(:class => 'support-panel-expander')
+  use_suggestion_button = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").button(:class => 'suggested-value')
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     support_panel_expander_link.present? || use_suggestion_button.present?
   }
-  support_panel_expander_link.click if support_panel_expander_link.exists?
-  use_suggestion_button.click if use_suggestion_button.exists?
+  if support_panel_expander_link.exists?
+    support_panel_expander_link.click
+  else
+    use_suggestion_button.click if use_suggestion_button.exists?
+  end
 end
 
 
@@ -533,7 +536,7 @@ end
 
 When(/^sjekker jeg at "([^"]*)" er blant verdiene som er valgt for (.*)$/) do |value, parameter_label|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    @browser.span(:xpath => "//div[preceding-sibling::div/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//ul/li[@class='select2-selection__choice']/span[normalize-space()='#{value}']").present?
+    @browser.span(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//ul/li[@class='select2-selection__choice']/span[normalize-space()='#{value}']").present?
   }
 end
 
@@ -563,7 +566,7 @@ end
 
 When(/^fjerner jeg valgt verdi i feltet "([^"]*)"$/) do |label|
   select2_value = @site.WorkFlow.get_select2_single_value_from_label(label)
-  select2_value.spans[0].click
+  select2_value.spans.first.click
 end
 
 When(/^skriver jeg inn "([^"]*)" og "([^"]*)" i intervallfeltene "([^"]*)"$/) do |lower, upper, label|
@@ -576,5 +579,10 @@ When(/^krysser jeg av i avkrysningboksen for "([^"]*)"$/) do |label|
 end
 
 When(/^klikker jeg utenfor sprettopp\-skjemaet$/) do
-  @browser.h2s()[0].click
+  @browser.h2s().first.click
+end
+
+When(/^husker (.*)et på (.*)(en|et) jeg nettopp opprettet$/) do |field, domain, article|
+  data_automation_id = "#{@site.translate(domain)}_http://#{ENV['HOST']}:8005/ontology##{@site.translate(field)}_0"
+  @context["#{@site.translate(domain).downcase}_#{@site.translate(field).downcase}".to_sym] = @browser.input(:data_automation_id => data_automation_id).value
 end

@@ -171,6 +171,7 @@ body {
         margin-left: auto;
         display: block;
         margin-top: 20px;
+        float: right;
       }
       .prop-input {
         .add-item-button {
@@ -268,7 +269,7 @@ body {
                 background-color: $lightergray;
                 display: inline-block;
                 padding: 5px;
-                a, button {
+                .pure-button {
                   float: right;
                   margin-top: 14px;
                 }
@@ -298,7 +299,6 @@ body {
             margin-top: 10px;
             .suggested-value {
               clear: both;
-              margin-bottom: 12px;
               &.suggestion-source-bibbi {
                 @include source-logo-bibbi;
                 background-position: 58%;
@@ -313,9 +313,11 @@ body {
                   background-position: 86% 0;
                 }
               }
-              a:not(.support-panel-expander) {
-                display: inline-block;
+              button {
                 float: right;
+              }
+              .support-panel-expander {
+                margin-top: 2px;
               }
             }
           }
@@ -329,7 +331,7 @@ body {
         }
         .add-new-btn-row {
           padding: 4px 13px 8px 8px;
-          a, button {
+          a, button, span {
             float: right;
             width: auto;
           }
@@ -532,7 +534,7 @@ body {
             }
           }
           .subject-type-association {
-            span {
+            span:not(.pure-button) {
               background: $mintgreen;
               padding: 0 12px;
               span.add-association-legend {

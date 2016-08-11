@@ -1,12 +1,11 @@
 # encoding: UTF-8
 # language: no
 
-@redef @arbeidsflyt @check-for-errors @wip
+@redef @arbeidsflyt @check-for-errors
 Egenskap: katalogisere med eksterne kilder
   Som katalogisator
   Ønsker jeg å kunne hente data fra eksterne kilder for at katalogiseringen skal gå raskere og få høyest mulig kvalitet
 
-  @wip
   Scenario: Hente inn eksterne data
     Gitt at jeg har en bok
     Og jeg legger inn et ISBN-nummer på startsida og trykker enter
@@ -16,6 +15,7 @@ Egenskap: katalogisere med eksterne kilder
     Så åpner jeg listen med eksterne forslag fra andre kilder for agent som skal knyttes til bidrag og velger det første forslaget
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
+    Og husker navnet på _personen jeg nettopp opprettet
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Så trykker jeg på "Opprett"-knappen
     Så åpner jeg listen med eksterne forslag fra andre kilder for rolle som skal knyttes til bidrag og velger det første forslaget
@@ -28,21 +28,26 @@ Egenskap: katalogisere med eksterne kilder
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Dirigent" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
+    Og jeg venter litt
     Så åpner jeg listen med eksterne forslag fra andre kilder for utgivelsesår som skal knyttes til utgivelsen og velger det første forslaget
     Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
     Så sjekker jeg at verdien for "Utgivelsesår" nå er "2000"
-    Så sjekker jeg at verdien for "Sidetall" er "207 s."
+    Så sjekker jeg at verdien for "Sidetall" er "207"
     Så åpner jeg listen med eksterne forslag fra andre kilder for sidetall som skal knyttes til utgivelsen og velger det første forslaget
     Så sjekker jeg at verdien for "Sidetall" nå er "208"
     Så åpner jeg listen med eksterne forslag fra andre kilder for language som skal knyttes til utgivelsen og velger det første forslaget
     Så sjekker jeg at "Norsk (bokmål)" er blant verdiene som er valgt for Språk
     Så trykker jeg på "Neste steg: Verksopplysninger"-knappen
     Så trykker jeg på "Neste steg: Beskriv verket"-knappen
+    Så trykker jeg på "Neste steg: Beskriv deler"-knappen
     Så trykker jeg på "Neste steg: Biinnførsler"-knappen
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
     Så trykker jeg på "Opprett ny person"-knappen
-    Så noterer jeg ned navnet på personen
+    Og husker navnet på _personen jeg nettopp opprettet
     Så trykker jeg på "Opprett"-knappen
+    Og debugger jeg
     Og jeg trykker på "Legg til"-knappen
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "utgivelsen"
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget

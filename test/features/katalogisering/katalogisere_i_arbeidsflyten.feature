@@ -162,7 +162,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
-    Og jeg trykker på "Legg til"-knappen
     Så legger jeg inn et verksnavn i søkefeltet for å søke etter det
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen

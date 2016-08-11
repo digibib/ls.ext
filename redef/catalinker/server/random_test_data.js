@@ -8,10 +8,10 @@ function randomName () {
 }
 
 module.exports = (app) => {
-  app.get('/valueSuggestions/random_:source/:isbn', function (request, response) {
+  app.get(/\/valueSuggestions\/random_([^\/]*)\/([^\/]*)/, function (request, response) {
       response.json(
         {
-          source: request.params.source,
+          source: request.params[0],
           hits: [
             {
               '@context': {
@@ -39,7 +39,7 @@ module.exports = (app) => {
                   'deichman:format': {
                     '@id': 'http://data.deichman.no/format#Book'
                   },
-                  'deichman:isbn': request.params.isbn,
+                  'deichman:isbn': request.params[1],
                   'deichman:language': {
                     '@id': 'http://lexvo.org/id/iso639-3/nob'
                   },
@@ -57,7 +57,7 @@ module.exports = (app) => {
                   },
                   'deichman:publicationYear': {
                     '@type': ['xsd:gYear'],
-                    '@value': request.params.source === 'bs' ? '1998' : '2000'
+                    '@value': request.params[0] === 'bibbi' ? '1998' : '2000'
                   },
                   'deichman:recordID': '202417',
                   'http://koha1.deichman.no:8005/raw#locationSignature': 'Dra',
@@ -66,7 +66,7 @@ module.exports = (app) => {
                   'http://migration.deichman.no/creator': {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
-                  'http://migration.deichman.no/numberOfPages': request.params.source === 'bs' ? '207' : '208',
+                  'http://migration.deichman.no/numberOfPages': request.params[0] === 'bibbi' ? '207' : '208',
                   'http://migration.deichman.no/originalLanguage': {
                     '@id': 'http://lexvo.org/id/iso639-3/hrv'
                   },
@@ -84,7 +84,7 @@ module.exports = (app) => {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
                   'deichman:role': {
-                    '@id': request.params.source === 'bs' ? 'http://data.deichman.no/role#author' : 'http://data.deichman.no/role#composer'
+                    '@id': request.params[0] === 'bibbi' ? 'http://data.deichman.no/role#author' : 'http://data.deichman.no/role#composer'
                   }
                 },
                 {
@@ -102,7 +102,7 @@ module.exports = (app) => {
                   '@id': '_:N788edbeea7104c42adda64d78d844440',
                   '@type': ['deichman:Work'],
                   'deichman:audience': {
-                    '@id': request.params.source === 'bs' ?  'http://data.deichman.no/audience#adult' : 'http://data.deichman.no/audience#juvenile'
+                    '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/audience#adult' : 'http://data.deichman.no/audience#juvenile'
                   },
                   'deichman:contributor': {
                     '@id': '_:N61c1076a2d094a67995a293daec3b879'
@@ -111,14 +111,14 @@ module.exports = (app) => {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
                   'deichman:language': {
-                    '@id': request.params.source === 'bs' ? 'http://lexvo.org/id/iso639-3/hrv' : 'http://lexvo.org/id/iso639-3/swe'
+                    '@id': request.params[0] === 'bibbi' ? 'http://lexvo.org/id/iso639-3/hrv' : 'http://lexvo.org/id/iso639-3/swe'
                   },
                   'deichman:literaryForm': [
                     {
-                      '@id': request.params.source === 'bs' ? 'http://data.deichman.no/literaryForm#fiction' : 'http://data.deichman.no/literaryForm#drama'
+                      '@id': request.params[0] === 'bibbi' ? 'http://data.deichman.no/literaryForm#fiction' : 'http://data.deichman.no/literaryForm#drama'
                     },
                     {
-                      '@id': request.params.source === 'bs' ?  'http://data.deichman.no/literaryForm#novel' : 'http://data.deichman.no/literaryForm#pointingBook'
+                      '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/literaryForm#novel' : 'http://data.deichman.no/literaryForm#pointingBook'
                     }
                   ],
                   'deichman:mainTitle': randomName()
@@ -159,7 +159,7 @@ module.exports = (app) => {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
                   'deichman:role': {
-                    '@id': request.params.source === 'bs' ? 'http://data.deichman.no/role#author' : 'http://data.deichman.no/role#conductor'
+                    '@id': request.params[0] === 'bibbi' ? 'http://data.deichman.no/role#author' : 'http://data.deichman.no/role#conductor'
                   }
                 },
                 {
@@ -169,7 +169,7 @@ module.exports = (app) => {
                     '@id': '_:N5c9b2fcaef3246c295aa6fc121e7b155'
                   },
                   'deichman:role': {
-                    '@id': request.params.source === 'bs' ?  'http://data.deichman.no/role#translator' :  'http://data.deichman.no/role#coreographer'
+                    '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/role#translator' :  'http://data.deichman.no/role#coreographer'
                   }
                 }
               ]
