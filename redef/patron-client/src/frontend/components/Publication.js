@@ -23,11 +23,13 @@ class Publication extends React.Component {
     const { publication } = this.props
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
+    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, {title: this.renderTitle(publication)})
+
     return (
       <article onClick={this.handleClick} className={this.props.open ? 'single-publication open' : 'single-publication'}
                data-automation-id={`publication_${publication.uri}`} data-formats={formats}>
         <div className="book-cover">
-          {publication.image ? <img src={publication.image} /> : null}
+          {publication.image ? <img src={publication.image} alt={coverAltText} /> : null}
         </div>
         <div className="publication-text-container">
               <span data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
@@ -76,6 +78,11 @@ const messages = defineMessages({
     id: 'Publication.unavailable',
     description: 'The text displayed when the publication unavailable',
     defaultMessage: 'Unavailable'
+  },
+  coverImageOf: {
+    id: 'Publication.coverImageOf',
+    description: 'Used for alt text in images',
+    defaultMessage: 'Cover image of: {title}'
   }
 })
 

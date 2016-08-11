@@ -122,6 +122,13 @@ class SearchResult extends React.Component {
     return (showStatus && showStatus === id || (Array.isArray(showStatus) && showStatus.includes(id)))
   }
 
+  bookCoverText (result) {
+    if (result.publication.mainEntryName) {
+      return `${result.displayTitle} / ${result.publication.mainEntryName}`
+    }
+    return result.mainTitle
+  }
+
   render () {
     const { result } = this.props
     const firstPublishedYear = result.publication.firstPublicationYear
@@ -132,11 +139,12 @@ class SearchResult extends React.Component {
     })
 
     const formats = [ ...pubFormats ]
+    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, {title: result.displayTitle})
     return (
       <div className="single-entry" data-formats={formats.join(', ')}>
         <aside className="book-cover">
           <Link to={this.getResultUrl(result)} className="book-cover-item">
-            {result.image ? <img src={result.image} /> : null}
+            {result.image ? <img src={result.image} alt={coverAltText} /> : null}
           </Link>
         </aside>
 
@@ -252,6 +260,11 @@ const messages = defineMessages({
     id: 'SearchResult.firstPublished',
     description: 'Label for when the work was first published',
     defaultMessage: 'First published: '
+  },
+  coverImageOf: {
+    id: 'SearchResult.coverImageOf',
+    description: 'Used for alt text in images',
+    defaultMessage: 'Cover image of: {title}'
   }
 })
 
