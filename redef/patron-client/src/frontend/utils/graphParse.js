@@ -39,7 +39,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   populateLiteral(work, 'mainTitle', workResource)
   populateLiteral(work, 'partTitle', workResource)
   populateLiteral(work, 'publicationYear', workResource)
-  populateItems(work, 'items', workGraph.byType('Item'))
+  work.items = []
 
   work.contributors = {}
   workResource.outAll('contributor').forEach(contribution => {
@@ -79,9 +79,11 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateLiteral(publication, 'recordID', publicationResource, 'recordId')
     populateUris(publication, 'language', publicationResource, 'languages')
     populateUris(publication, 'format', publicationResource, 'formats')
+    populateUris(publication, 'mediaType', publicationResource, 'mediaType')
     publication.uri = publicationResource.id
     publication.id = getId(publicationResource.id)
     populateItems(publication, 'items', publicationResource.inAll('editionOf'))
+    work.items.push.apply(work.items, publication.items)
     publication.available = publication.items.filter(item => item.status === 'Ledig').length > 0
     populateLiteral(publication, 'hasImage', publicationResource, 'image')
 
@@ -101,19 +103,25 @@ export function parseWorkResponse (workResponse, itemsResponse) {
 function populateItems (target, field, itemResources) {
   const items = {}
   itemResources.forEach(itemResource => {
-    const item = {}
+    const item = {
+      languages: target.languages || [],
+      mediaType: target.mediaType
+    }
     populateLiteral(item, 'shelfmark', itemResource)
     populateLiteral(item, 'status', itemResource)
     populateLiteral(item, 'location', itemResource)
     populateLiteral(item, 'branch', itemResource)
     populateLiteral(item, 'barcode', itemResource)
-    const key = `${item.branch}_${item.location}_${item.shelfmark}_${item.status}`
-    if (items[ key ]) {
-      items[ key ].count++
-    } else {
-      item.count = 1
+    const key = `${item.branch}_${item.shelfmark}`
+    if (!items[ key ]) {
+      item.available = 0
+      item.total = 0
       items[ key ] = item
     }
+    if (item.status === 'Ledig') {
+      items[ key ].available++
+    }
+    items[ key ].total++
   })
   const targetField = target[field] = []
   Object.keys(items).forEach(key => {

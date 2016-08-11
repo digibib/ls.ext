@@ -13,8 +13,8 @@ class Items extends React.Component {
       <table>
         <thead>
         <tr>
-          <th><FormattedMessage {...messages.branch} /></th>
-          <th><FormattedMessage {...messages.count} /></th>
+          <th><FormattedMessage {...messages.mediaType} /></th>
+          <th><FormattedMessage {...messages.language} /></th>
           <th><FormattedMessage {...messages.placement} /></th>
           <th><FormattedMessage {...messages.status} /></th>
         </tr>
@@ -38,9 +38,6 @@ Items.propTypes = {
 }
 
 const messages = defineMessages({
-  branch: {
-    id: 'Items.branch', description: 'Branch of item', defaultMessage: 'branch'
-  },
   count: {
     id: 'Items.count', description: 'Count of item', defaultMessage: 'count'
   },
@@ -70,6 +67,9 @@ const messages = defineMessages({
   },
   numberOfCopies: {
     id: 'Items.numberOfCopies', description: 'The number of copies', defaultMessage: 'Copies ({numberOfCopies})'
+  },
+  mediaType: {
+    id: 'Items.mediaType', description: 'MediaType of item', defaultMessage: 'media type'
   }
 })
 

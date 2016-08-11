@@ -89,22 +89,21 @@ Then(/^ser jeg format og språk for utgivelsen$/) do
   step "vises opplysningene brukerne skal se om utgivelsen på verkssiden"
 end
 
-Then(/^ser jeg avdelinga og oppstillinga av eksemplaret$/) do
+Then(/^ser jeg oppstillinga av eksemplaret$/) do
   @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
-    row.td(data_automation_id: 'item_branch').text.should_not be_empty
     row.td(data_automation_id: 'item_shelfmark').text.should_not be_empty
   end
 end
 
 Then(/^ser jeg at eksemplaret er ledig$/) do
   @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
-    row.td(data_automation_id: "item_status").text.should eq("Ledig")
+    row.td(data_automation_id: "item_status").text.should eq("1 av 1 ledige")
   end
 end
 
 Then(/^ser jeg at eksemplaret ikke er ledig$/) do
   @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
-    row.td(data_automation_id: "item_status").text.should eq("Utlånt")
+    row.td(data_automation_id: "item_status").text.should eq("0 av 1 ledige")
   end
 end
 

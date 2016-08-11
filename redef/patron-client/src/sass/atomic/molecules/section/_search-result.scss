@@ -63,4 +63,22 @@
   img {
     max-width: 1em;
   }
+
+}
+
+.entry-content-more {
+  clear: both;
+}
+
+.items-by-branch {
+  background-color: #eee;
+  padding: 1em;
+  h1 {
+    @include regularFont;
+    font-weight: normal;
+  }
+
+  table {
+    th { background-color: #eee; }
+  }
 }

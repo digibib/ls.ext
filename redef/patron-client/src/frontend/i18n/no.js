@@ -38,6 +38,7 @@ export default {
   'Items.count': 'antall',
   'Items.title': 'tittel',
   'Items.language': 'språk',
+  'Items.mediaType': 'mediatype',
   'Items.format': 'format',
   'Items.barcode': 'strekkode',
   'Items.placement': 'plassering',

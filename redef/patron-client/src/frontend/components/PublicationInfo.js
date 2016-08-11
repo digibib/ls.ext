@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import Items from './Items'
+import { groupByBranch } from '../utils/sorting'
 
 class PublicationInfo extends React.Component {
   constructor (props) {
@@ -30,6 +31,20 @@ class PublicationInfo extends React.Component {
               </span>
         </button>
       )
+    }
+  }
+
+  renderItems (items) {
+    if (items) {
+      return groupByBranch(items).map(el => {
+        return (
+          <div className="items-by-branch">
+            <h1>{el.branch}</h1>
+            <Items items={el.items} />
+            <p style={{clear: 'both'}}></p>
+          </div>
+          )
+      })
     }
   }
 
@@ -79,7 +94,7 @@ class PublicationInfo extends React.Component {
           </div>
 
           <div className="title"><h2><FormattedMessage {...messages.items} /></h2></div>
-          <div className="entry-content"><Items items={items} /></div>
+          <div className="entry-content">{this.renderItems(items)}</div>
         </section>
       </div>
     )

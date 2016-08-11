@@ -4,6 +4,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import Items from '../components/Items'
 import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
+import { groupByBranch } from '../utils/sorting'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -98,7 +99,15 @@ class SearchResult extends React.Component {
   renderItems (result) {
     const resource = this.props.resources[ result.id ]
     if (resource) {
-      return <Items items={resource.items} />
+      return groupByBranch(resource.items).map(el => {
+        return (
+          <div className="items-by-branch">
+            <h1>{el.branch}</h1>
+            <Items items={el.items} />
+            <p style={{clear: 'both'}}></p>
+          </div>
+          )
+      })
     }
   }
 
