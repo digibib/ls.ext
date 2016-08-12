@@ -487,11 +487,11 @@ When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal
   data_automation_id = "#{@site.translate(domain)}_http://#{ENV['HOST']}:8005/ontology##{@site.translate(predicate)}_0"
   element = @browser.element(:data_automation_id => data_automation_id)
   element_type = element.tag_name
-  if element_type === 'span'
+  if element_type === 'span' # this is a pre selected value
     if element.parent.class_name.include? 'sub-field'
       suggestion_list = @browser.div(:xpath => "//div[preceding-sibling::span/@data-automation-id='#{data_automation_id}'][@class='external-sources']")
     else
-      suggestion_list = @browser.div(:xpath => "//span[preceding-sibling::span[descendant::span/@data-automation-id='#{data_automation_id}']]//div[@class='external-sources']")
+      suggestion_list = @browser.div(:xpath => "//div[preceding-sibling::span[descendant::span/@data-automation-id='#{data_automation_id}']][@class='external-sources']")
     end
   else
     suggestion_list = @browser.div(:xpath => "//span[descendant::span/input[@data-automation-id='#{data_automation_id}']]/span/div[@class='external-sources']")
@@ -500,8 +500,7 @@ When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     suggestion_list.span(:class => 'unexpanded').present?
   }
-  suggestion_list_expander = suggestion_list.span(:class => 'unexpanded')
-  suggestion_list_expander.click
+  suggestion_list.span(:class => 'unexpanded').click
   support_panel_expander_link = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").span(:class => 'support-panel-expander')
   use_suggestion_button = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").button(:class => 'suggested-value')
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {

@@ -27,6 +27,7 @@
     var supportPanelWidth
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
+    require('block-ui')
 
     var deepClone = function (object) {
       var clone = _.clone(object)
@@ -482,7 +483,7 @@
       var graphData = ensureJSON(response.data)
       var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
       var typeMap = ractive.get('applicationData.config.typeMap')
-      type = type || typeMap[resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ]]
+      type = type || typeMap[ resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ] ]
       root = root || ldGraph.parse(graphData).byId(resourceUri)
 
       var promises = []
@@ -569,7 +570,7 @@
                 })
               }
               if (input.isSubInput) {
- //               input.values[ rootIndex ].nonEditable = true
+                //               input.values[ rootIndex ].nonEditable = true
                 input.values[ rootIndex ].subjectType = type
                 input.parentInput.allowAddNewButton = true
               }
@@ -598,10 +599,10 @@
             updateInputsForResource(response, resourceUri, options)
           }
         )
-      // .catch(function (err) {
-      //    console.log('HTTP GET existing resource failed with:')
-      //    console.log(err)
-      // })
+        .catch(function (err) {
+          console.log('HTTP GET existing resource failed with:')
+          console.log(err)
+        })
     }
 
     function saveInputs (inputsToSave, resourceType) {
@@ -1177,11 +1178,24 @@
       return contributionTarget
     }
 
-  function eventShouldBeIgnored (event) {
-    return (event.original && event.original.type === 'keyup' && event.original.keyCode !== 13)
-  }
+    function eventShouldBeIgnored (event) {
+      return (event.original && event.original.type === 'keyup' && event.original.keyCode !== 13)
+    }
 
-  var Main = {
+    function blockUI () {
+      $.blockUI({
+        message: null,
+        overlayCSS: {
+          opacity: 0.5
+        }
+      })
+    }
+
+    function unblockUI () {
+      $.unblockUI()
+    }
+
+    var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -1522,13 +1536,13 @@
           }
           var timePicker = function (node) {
             require('timepicker')
-            $(node).timepicker({'timeFormat': 'H:i:s', step: 50000})
+            $(node).timepicker({ 'timeFormat': 'H:i:s', step: 50000 })
             return {
               teardown: function () {}
             }
           }
           var slideDown = function (node) {
-            let suggestedValues = $(node).find('.suggested-values')[0]
+            let suggestedValues = $(node).find('.suggested-values')[ 0 ]
             $(suggestedValues).hide()
             let toggle = function () {
               $(suggestedValues).slideToggle()
@@ -1663,7 +1677,7 @@
               },
               isAdvancedQuery: isAdvancedQuery,
               valueOfInputById: function (inputId, valueIndex) {
-                var keyPath = ractive.get(`inputLinks.${inputId[0]}`)
+                var keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
                 return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
               },
               valueOrderOfInputById: function (inputId, valueIndex) {
@@ -1698,7 +1712,7 @@
             partials: applicationData.partials,
             transitions: {
               accordion: function (transition) {
-                $($(transition.element.node)[0]).accordion({
+                $($(transition.element.node)[ 0 ]).accordion({
                   active: false,
                   collapsible: true,
                   header: '.accordionHeader',
@@ -1717,7 +1731,6 @@
                 }
               },
               slideIn: function (transition) {
-                console.log("sliding...")
                 $(transition.element.node).hide()
                 $(transition.element.node).slideDown()
               }
@@ -2185,14 +2198,21 @@
                   })
                   ractive.update()
                   var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
+                  var promises = []
+                  blockUI()
+                  let resultStat = {
+                    itemsFromPreferredSource: 0,
+                    itemsFromOtherSources: {}
+                  }
                   _.each(sources, function (source) {
-                    axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`).then(function (response) {
+                    promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`).then(function (response) {
                       var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
                       var hitsFromPreferredSource = { source: response.data.source, items: [] }
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
                         if (fromPreferredSource) {
                           hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
+                          resultStat.itemsFromPreferredSource++
                         } else {
                           var options = {
                             keepDocumentUrl: true,
@@ -2200,7 +2220,10 @@
                             source: response.data.source
                           }
                           _.each([ 'Work', 'Publication' ], function (domain) {
-                            updateInputsForResource({ data: {} }, null, options, graph.byType(domain)[ 0 ], domain)
+                            let byType = graph.byType(domain)
+                            updateInputsForResource({ data: {} }, null, options, byType[ 0 ], domain)
+                            resultStat.itemsFromOtherSources[ source ] = resultStat.itemsFromOtherSources[ source ] || 0
+                            resultStat.itemsFromOtherSources[ source ]++
                           })
                         }
                       })
@@ -2212,7 +2235,16 @@
                       updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
                     }).catch(function (error) {
                       errors.push(error)
-                    })
+                    }))
+                  })
+                  Promise.all(promises).then(function () {
+                    unblockUI()
+                    if (resultStat.itemsFromPreferredSource + _.reduce(
+                        _.values(resultStat.itemsFromOtherSources), function (memo, value) {
+                          return memo + value
+                        }, 0) === 0) {
+                      window.alert('Ingen treff i eksterne kilder')
+                    }
                   })
                 }
               },
@@ -2238,7 +2270,7 @@
                 var input = ractive.get(grandParentOf(event.keypath))
                 var oldValues = input.values
                 if (!input.multiple) {
-                  setSingleValue(value, input, 0, {keepOld: true})
+                  setSingleValue(value, input, 0, { keepOld: true })
                 } else {
                   setSingleValue(value, input, oldValues.length)
                 }
