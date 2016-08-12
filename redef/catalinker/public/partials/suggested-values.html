@@ -1,7 +1,7 @@
 {{#if primarySuggestionAccepted && (!input.isSubInput || !multiple)}}
 {{#if../../suggestedValues}}
 {{#../../suggestedValues}}
-<div class="external-sources" decorator="slideDown">
+<div class="external-sources" decorator="slideDown" intro="slideIn">
     <span tabindex="0" on-keyup="toggle" on-click='toggle' class="{{expanded ? '' : 'un'}}expanded">{{expanded ? 'Skjul' : 'Se'}} forslag fra andre eksterne kilder</span>
     <div class="suggested-values pure-u-1-1">
         {{#each ../../suggestedValues}}

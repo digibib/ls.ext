@@ -1529,7 +1529,7 @@
           }
           var slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[0]
-            $(suggestedValues).slideUp()
+            $(suggestedValues).hide()
             let toggle = function () {
               $(suggestedValues).slideToggle()
             }
@@ -1715,6 +1715,11 @@
                   parent.accordion('refresh')
                   parent.accordion('option', 'active', false)
                 }
+              },
+              slideIn: function (transition) {
+                console.log("sliding...")
+                $(transition.element.node).hide()
+                $(transition.element.node).slideDown()
               }
             }
           })

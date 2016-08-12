@@ -194,7 +194,8 @@ body {
           }
         }
         .checkbox {
-          margin-top: 13px;
+          top: 13px;
+          position: relative;
         }
         .input-wrapper .label {
           padding: 12px 12px 4px 0px;
@@ -259,6 +260,9 @@ body {
             padding-bottom: 15px;
           }
           div.external-source-results {
+            span {
+              width: 100%;
+            }
             margin-top: 7px;
             ul {
               margin-top: 3px;

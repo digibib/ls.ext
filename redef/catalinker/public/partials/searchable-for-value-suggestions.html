@@ -5,19 +5,21 @@ data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
 <div class="external-source-results">
     {{#each searchForValueSuggestions.hitsFromPreferredSource}}
-    <div class="external-source">
-        Treff i ekstern kilde - {{../../preferredSource.name}}
-    </div>
-    <ul>
-        {{#each items}}
-        <li class="external-hit">
-            <span>
-                <div class="main-line">{{main}}</div>
-                <div class="details-line">{{details}}</div>
-            </span>
-            <button {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</button>
-        </li>
-        {{/each}}
-    </ul>
+    <span intro="slideIn">
+        <div class="external-source">
+            Treff i ekstern kilde - {{../../preferredSource.name}}
+        </div>
+        <ul>
+            {{#each items}}
+            <li class="external-hit">
+                <span>
+                    <div class="main-line">{{main}}</div>
+                    <div class="details-line">{{details}}</div>
+                </span>
+                <button {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</button>
+            </li>
+            {{/each}}
+        </ul>
+    </span>
     {{/each}}
 </div>
