@@ -1527,6 +1527,21 @@
               teardown: function () {}
             }
           }
+          var slideDown = function (node) {
+            let suggestedValues = $(node).find('.suggested-values')[0]
+            $(suggestedValues).slideUp()
+            let toggle = function () {
+              $(suggestedValues).slideToggle()
+            }
+            $(node).find('.expanded, .unexpanded').click(toggle).keypress(function (event) {
+              if (!eventShouldBeIgnored(event)) {
+                toggle()
+              }
+            })
+            return {
+              teardown: function () {}
+            }
+          }
 
           // Initialize ractive component from template
           ractive = new Ractive({
@@ -1677,7 +1692,8 @@
               clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
               unload: unload,
               accordion: accordionDecorator,
-              timePicker: timePicker
+              timePicker: timePicker,
+              slideDown: slideDown
             },
             partials: applicationData.partials,
             transitions: {
