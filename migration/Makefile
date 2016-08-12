@@ -207,6 +207,8 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET dateexpiry=\"2099-01-01\";"'
 	@echo "-- Migrating patron message transport preferences"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/msgprefs.sql'
+	@echo "-- Updating message transport preferences (set want digest for all patrons)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrower_message_preferences SET wants_digest=1 WHERE message_attribute_id=1 OR message_attribute_id=2;"'
 	@echo "-- Inserting extended patron attributes (fnr)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
 	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
