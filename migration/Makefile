@@ -165,7 +165,7 @@ virtuoso: out/done.convert_catalogue_to_nt
 		-G $(VIRTUOSO)/sparql-graph-crud-auth --data-urlencode graph=http://deichman.no/migration ; sleep 3 ; done
 	@echo "OK Imported RDF to Virtuoso\n"
 
-out/done.koha_fuseki_sync: out/done.migrate_loans out/done.migrate_holds out/done.import_into_fuseki
+out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@echo "   Syncing Koha and Fuseki"
 	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
@@ -227,23 +227,16 @@ endif
 
 out/done.migrate_loans: out/done.migrate_patrons out/done.messing_with_migrated_catalogue
 ifdef MIGRATE_PATRONS
-	@echo "   Migrating active loans to Koha"
+	@echo "   Migrating loans and holds to Koha"
+	@echo "-- Inserting issues SQL"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
-	@echo "OK Done migrating loans\n"
-	@touch out/done.migrate_loans
-endif
-
-out/done.migrate_holds: out/done.migrate_patrons out/done.messing_with_migrated_catalogue
-ifdef MIGRATE_PATRONS
-	@echo "   Migrating holds to Koha"
 	@echo "-- Generating holds SQL"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) "res2sql -res=/data/$(RES) > /out/holds.sql"
 	@echo "-- Inserting holds SQL"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/holds.sql'
-	@echo "OK Done migrating holds\n"
-	@touch out/done.migrate_holds
+	@echo "OK Done migrating loands and holds\n"
+	@touch out/done.migrate_loans
 endif
-
 
 verify:
 	@echo "   Verifying migration"
