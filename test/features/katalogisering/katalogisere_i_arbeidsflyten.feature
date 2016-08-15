@@ -318,3 +318,16 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg legger navnet på verket og trykker enter
     Så ser jeg at det er ett treff i resultatlisten
 
+  Scenario: Katalogisere verk som ikke er eget verk og som mangler hovedansvarlig
+    Gitt jeg kan dikte opp en verkstittel
+    Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
+    Så krysser jeg av i avkrysningboksen for "Ikke eget verk"
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
+    Så verifiserer jeg innskrevet verdi for "Mangler hovedansvarlig"
+    Så verifiserer jeg innskrevet verdi for "Ikke eget verk"
+

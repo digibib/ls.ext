@@ -124,15 +124,18 @@ When(/^legger inn tilleggsopplyningene om verket for utgivelsesår og språk$/) 
   workflow_batch_add_props 'Work', data
 end
 
-When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label|
-  input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").find(&:visible?)
+def save_value_for_later(input, parameter_label, value)
   input_id = input.attribute_value('data-automation-id')
   predicate = input_id.sub(/^([a-zA-Z]*)_/, '').sub(/_[0-9]+$/, '')
   domain = input_id.match(/^([a-zA-Z]*)_.*/).captures[0]
-  @site.WorkFlow.add_prop(domain, predicate, value)
-  fragment = predicate.partition('#').last()
-  symbol = "#{domain.downcase}_#{fragment.downcase}".to_sym
   @context[parameter_label] = value
+  return domain, predicate
+end
+
+When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label|
+  input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").find(&:visible?)
+  domain, predicate = save_value_for_later(input, parameter_label, value)
+  @site.WorkFlow.add_prop(domain, predicate, value)
 end
 
 def do_select_value(selectable_parameter_label, value)
@@ -574,7 +577,9 @@ When(/^skriver jeg inn "([^"]*)" og "([^"]*)" i intervallfeltene "([^"]*)"$/) do
 end
 
 When(/^krysser jeg av i avkrysningboksen for "([^"]*)"$/) do |label|
-  @site.WorkFlow.get_checkbox_from_label(label).click
+  checkbox = @site.WorkFlow.get_checkbox_from_label(label)
+  checkbox.click
+  save_value_for_later(checkbox, label, 'on')
 end
 
 When(/^klikker jeg utenfor sprettopp\-skjemaet$/) do
@@ -584,4 +589,8 @@ end
 When(/^husker (.*)et på (.*)(en|et) jeg nettopp opprettet$/) do |field, domain, article|
   data_automation_id = "#{@site.translate(domain)}_http://#{ENV['HOST']}:8005/ontology##{@site.translate(field)}_0"
   @context["#{@site.translate(domain).downcase}_#{@site.translate(field).downcase}".to_sym] = @browser.input(:data_automation_id => data_automation_id).value
+end
+
+When(/^at jeg er i arbeidsflyten$/) do
+  @site.WorkFlow.visit
 end
