@@ -384,8 +384,9 @@ body {
         span.legend {
           display: none;
         }
-        .searchable:focus + span.legend {
-          display: inline;
+        .searchable:focus + span.legend,
+        .simple-searchable:focus + span.legend {
+          display: block;
         }
         span.advanced-search-legend {
           span.ui-icon {

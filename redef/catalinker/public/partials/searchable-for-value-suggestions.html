@@ -1,8 +1,13 @@
 <input autofocus {{#disabled}} disabled="true" {{/}}
-class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
+class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}} simple-searchable"
 on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
+<span class="legend">
+    {{#current.value}}
+    <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Trykk Enter for å søke.</span>
+    {{/}}
+</span>
 <div class="external-source-results">
     {{#each searchForValueSuggestions.hitsFromPreferredSource}}
     <span intro="slideIn">
