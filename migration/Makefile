@@ -179,10 +179,10 @@ out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@touch out/done.koha_fuseki_sync
 	@echo "-- Starting indexing resources in Elasticsearch..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
+	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
+	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
+	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
+	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
 	@echo "-- Enabeling koha email sending"
 	@sudo docker exec koha /bin/sh -c 'koha-enable-email $$KOHA_INSTANCE'
