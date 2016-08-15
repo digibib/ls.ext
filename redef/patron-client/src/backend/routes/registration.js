@@ -19,10 +19,8 @@ module.exports = (app) => {
     .then(res => {
       if (res.status === 200) {
         return res.json()
-      } else if (res.status === 403) {
-        response.sendStatus(403)
       } else {
-        throw Error('Could not check for existing patron')
+        return Promise.reject({message: 'Could not check for existing patron', status: res.status})
       }
     }).then(json => {
       response.json({
@@ -30,9 +28,10 @@ module.exports = (app) => {
         localdb: json.localdb,
         centraldb: json.centraldb
       })
-    }).catch(error => {
-      console.log(error)
-      response.sendStatus(500)
+    }).catch((error) => {
+      console.log(`Checkexistinguser error: ${error.message}`)
+      console.log(`Status Code: ${error.status}`)
+      response.sendStatus(error.status)
     })
   })
 
@@ -47,6 +46,7 @@ module.exports = (app) => {
       firstname: request.body.firstName,
       surname: request.body.lastName,
       dateofbirth: dateOfBirth(request.body.year, request.body.month, request.body.day),
+      ssn: request.body.ssn,
       email: request.body.email,
       mobile: request.body.mobile,
       address: request.body.address,
@@ -54,36 +54,43 @@ module.exports = (app) => {
       city: request.body.city,
       password: request.body.pin,
       branchcode: request.body.library,
-      categorycode: 'V', // TODO: Correct loaner category must be set
+      categorycode: 'V', // TODO: DEICH-168 choose default new patron category
       userid: `${Math.floor(Math.random() * (99 - 10) + 10)}-${Math.floor(Math.random() * (999 - 100) + 100)}` // TODO: Proper user ID
     }
-    fetch('http://koha:8081/api/v1/patrons', {
-      method: 'POST',
-      body: JSON.stringify(patron)
-    }).then(res => {
-      if (res.status === 201) {
-        return res.json()
-      } else if (res.status === 403) {
-        response.sendStatus(403)
-      } else {
-        throw Error('Could not register patron')
-      }
-    }).then(json => {
-      if (!json.borrowernumber) {
-        throw Error('Missing borrowernumber in request')
-      }
-      patron.borrowernumber = json.borrowernumber
-      setDefaultSettings(json.borrowernumber)
-    }).then(json => {
-      response.status(201).send({ username: patron.userid })
+    registerPatron(patron)
+    .then(json => setDefaultMessagingSettings(json))
+    .then(json => setDefaultSyncStatusAndAttributes(json))
+    .then(json => {
+      response.status(201).send({ username: json.userid })
     }).catch(error => {
-      console.log(error)
-      response.sendStatus(500)
+      console.log(`Registration error: ${error.message}`)
+      console.log(`Status Code: ${error.status}`)
+      response.sendStatus(error.status)
     })
   })
 
-  function setDefaultSettings (borrowerNumber) {
-    const settings = JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings({
+  function registerPatron (patron) {
+    // ssn is needed only for NL sync, so exclude it from POST request
+    return fetch('http://koha:8081/api/v1/patrons', {
+      method: 'POST',
+      body: JSON.stringify(patron, (k, v) => k === 'ssn' ? undefined : v)
+    }).then(res => {
+      if (res.status === 201) {
+        return res.json()
+      } else {
+        return Promise.reject({message: 'Could not register patron', status: res.status})
+      }
+    }).then(json => {
+      patron.borrowernumber = json.borrowernumber
+      return patron
+    })
+  }
+
+  function setDefaultMessagingSettings (patron) {
+    if (!patron.borrowernumber) {
+      return Promise.reject({message: 'Missing borrowernumber when setting messaging defaults, not able to complete registration', status: 400})
+    }
+    const messageSettings = JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings({
       alerts: {
         reminderOfDueDate: {
           email: true
@@ -101,17 +108,33 @@ module.exports = (app) => {
         }
       }
     }))
-    fetch(`http://koha:8081/api/v1/messagepreferences/${borrowerNumber}`, {
+    return fetch(`http://koha:8081/api/v1/messagepreferences/${patron.borrowernumber}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json'
       },
-      body: settings
+      body: messageSettings
     }).then(res => {
       if (res.status === 200) {
         return res.json()
       } else {
-        throw Error('Could not set default message preferences')
+        return Promise.reject({message: 'Could not set default message preferences', status: res.status})
+      }
+    }).then(json => {
+      patron.messageSettings = json
+      return patron
+    })
+  }
+
+  function setDefaultSyncStatusAndAttributes (patron) {
+    // TODO: standardize Koha API on PUT params in body?
+    return fetch(`http://koha:8081/api/v1/patronsyncdefaults/${patron.borrowernumber}?ssn=${patron.ssn}&password=${patron.password}`, {
+      method: 'PUT'
+    }).then(res => {
+      if (res.status === 200) {
+        return patron
+      } else {
+        return Promise.reject({message: 'Could not set patron sync defaults', status: res.status})
       }
     })
   }
