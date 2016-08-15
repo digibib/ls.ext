@@ -84,7 +84,7 @@
             if (_.isArray(oldValue) && !_.isArray(currentValue)) {
                 currentValue = [currentValue];
             }
-            if ((typeof currentValue === 'string' || typeof currentValue === 'number') && currentValue != oldValue) {
+            if ((['string', 'number', 'boolean'].indexOf(typeof currentValue) > -1) && currentValue != oldValue) {
                 if (currentValue !== "") {
                     var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue, type: datatype}};
                     if (oldAndCurrentValue.current.lang !== "") {
@@ -139,7 +139,7 @@
                         values[predicate] = [];
                         for (var v in resource[prop]) {
                             var val = resource[prop][v];
-                            if (typeof val === "string") {
+                            if (['string', 'number', 'boolean'].indexOf(typeof val) > -1) {
                                 values[predicate].push({
                                     old: {value: val, lang: ""},
                                     current: {value: val, lang: ""}

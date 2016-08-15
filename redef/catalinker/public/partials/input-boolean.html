@@ -3,7 +3,7 @@
 {{else}}
 <input type="checkbox" {{#disabled}} disabled="true" {{/}}
 class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
-on-blur='patchResource:{{predicate}},{{rdfType}}'
+on-change='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{../../dataAutomationId}}"
 checked="{{./current.value}}" />
 {{/if}}

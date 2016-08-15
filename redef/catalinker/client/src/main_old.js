@@ -490,6 +490,9 @@
                 }).catch(function (err) {
                     console.log("Error loading ontology: " + err);
                 });
+        },
+        getRactive() {
+            return ractive;
         }
     };
 
