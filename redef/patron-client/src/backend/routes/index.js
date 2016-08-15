@@ -13,7 +13,7 @@ module.exports = (app) => {
 
   app.all('/services/*', requestProxy({
     url: 'http://services:8005/*',
-    timeout: 30*1000 // 30 seconds
+    timeout: 30 * 1000 // 30 seconds
   }))
 
   app.get('*', (request, response) => {
