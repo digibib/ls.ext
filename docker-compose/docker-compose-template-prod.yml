@@ -110,7 +110,7 @@ services:
       - "6005:6005"
       - "8899:8899"
     environment:
-      SIP_SERVER: sip:9999
+      SIP_SERVER: sip:6002
       SIP_CONNS: 10
     logging:
       driver: "journald"
