@@ -105,7 +105,7 @@ services:
 
   rfidhub:
     container_name: rfidhub
-    image: "digibib/rfidhub:fd78f904ae3c58adfb9629ad67bab0418c3d5802"
+    image: "digibib/rfidhub:61093b5d6be6422b1763589919cad18659b94cde"
     networks:
       - backend
     depends_on:
