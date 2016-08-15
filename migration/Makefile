@@ -185,7 +185,7 @@ out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
 	@echo "-- Enabeling koha email sending"
-	@sudo docker exec koha /bin/sh -c 'koha-enable-email $$KOHA_INSTANCE'
+	@sudo docker exec koha /bin/sh -c 'koha-email-enable $$KOHA_INSTANCE'
 	@echo "   Migration is complete. Goodbye!"
 	@echo "!! TODO stop running virtuoso container (left up for debugging)"
 
@@ -193,7 +193,7 @@ out/done.migrate_patrons: out/done.setup_koha
 ifdef MIGRATE_PATRONS
 	@echo "   Migrating patrons to Koha"
 	@echo "-- Disabeling koha email sending"
-	@sudo docker exec koha /bin/sh -c 'koha-disable-email $$KOHA_INSTANCE'
+	@sudo docker exec koha /bin/sh -c 'koha-email-disable $$KOHA_INSTANCE'
 	@echo "-- Merging information from laaner, lmarc and lnel dumps"
 	@$(MIGRATION_RUN_CMD) "patronmassage -lmarc=/data/$(LMARC) -laaner=/data/$(LAANER) -lnel=/data/$(LNEL) -outdir=/out"
 	@echo "-- Inserting patron categories into MySQL"
