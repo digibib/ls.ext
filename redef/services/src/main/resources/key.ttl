@@ -1,129 +1,171 @@
 @prefix key: <http://data.deichman.no/key#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+  
+key:a_major a duo:Key ;
+  rdfs:label "A-dur"@no ;
+  rdfs:label "A major"@en .
+  
+key:a_minor a duo:Key ;
+  rdfs:label "A-moll"@no ;
+  rdfs:label "A minor"@en .
+  
+key:b_major a duo:Key ;
+  rdfs:label "H-dur"@no ;
+  rdfs:label "B major"@en .
+  
+key:b_minor a duo:Key ;
+  rdfs:label "H-moll"@no ;
+  rdfs:label "B minor"@en .
+  
+key:c_major a duo:Key ;
+  rdfs:label "C-dur"@no ;
+  rdfs:label "C major"@en .
+  
+key:c_minor a duo:Key ;
+  rdfs:label "C-moll"@no ;
+  rdfs:label "C minor"@en .
+  
+key:d_major a duo:Key ;
+  rdfs:label "D-dur"@no ;
+  rdfs:label "D major"@en .
+  
+key:d_minor a duo:Key ;
+  rdfs:label "D-moll"@no ;
+  rdfs:label "D minor"@en .
+  
+key:e_major a duo:Key ;
+  rdfs:label "E-dur"@no ;
+  rdfs:label "E major"@en .
+  
+key:e_minor a duo:Key ;
+  rdfs:label "E-moll"@no ;
+  rdfs:label "E minor"@en .
+  
+key:f_major a duo:Key ;
+  rdfs:label "F-dur"@no ;
+  rdfs:label "F major"@en .
+  
+key:f_minor a duo:Key ;
+  rdfs:label "F-moll"@no ;
+  rdfs:label "F minor"@en .
+  
+key:g_major a duo:Key ;
+  rdfs:label "G-dur"@no ;
+  rdfs:label "G major"@en .
+  
+key:g_minor a duo:Key ;
+  rdfs:label "G-moll"@no ;
+  rdfs:label "G minor"@en .
 
-key:ass-dur a duo:Key ;
-  rdfs:label "ass-dur"@no .
+key:ab_major a duo:Key ;
+  rdfs:label "A♭-dur"@no ;
+  rdfs:label "A♭ major"@en .
   
-key:ass-moll a duo:Key ;
-  rdfs:label "ass-moll"@no .
+key:ab_minor a duo:Key ;
+  rdfs:label "A♭-moll"@no ;
+  rdfs:label "A♭ minor"@en .
   
-key:a-dur a duo:Key ;
-  rdfs:label "a-dur"@no .
+key:bb_major a duo:Key ;
+  rdfs:label "B-dur"@no ;
+  rdfs:label "B♭ major"@en .
   
-key:a-moll a duo:Key ;
-  rdfs:label "a-moll"@no .
+key:bb_minor a duo:Key ;
+  rdfs:label "B-moll"@no ;
+  rdfs:label "B♭ minor"@en .
   
-key:aiss-dur a duo:Key ;
-  rdfs:label "aiss-dur"@no .
+key:cb_major a duo:Key ;
+  rdfs:label "C♭-dur"@no ;
+  rdfs:label "C♭ major"@en .
   
-key:aiss-moll a duo:Key ;
-  rdfs:label "aiss-moll"@no .
+key:cb_minor a duo:Key ;
+  rdfs:label "C♭-moll"@no ;
+  rdfs:label "C♭ minor"@en .
   
-key:b-dur a duo:Key ;
-  rdfs:label "b-dur"@no .
+key:db_major a duo:Key ;
+  rdfs:label "D♭-dur"@no ;
+  rdfs:label "D♭ major"@en .
   
-key:b-moll a duo:Key ;
-  rdfs:label "b-moll"@no .
+key:db_minor a duo:Key ;
+  rdfs:label "D♭-moll"@no ;
+  rdfs:label "D♭ minor"@en .
   
-key:h-dur a duo:Key ;
-  rdfs:label "h-dur"@no .
+key:eb_major a duo:Key ;
+  rdfs:label "E♭-dur"@no ;
+  rdfs:label "E♭ major"@en .
   
-key:h-moll a duo:Key ;
-  rdfs:label "h-moll"@no .
+key:eb_minor a duo:Key ;
+  rdfs:label "E♭-moll"@no ;
+  rdfs:label "E♭ minor"@en .
   
-key:hiss-dur a duo:Key ;
-  rdfs:label "hiss-dur"@no .
+key:fb_major a duo:Key ;
+  rdfs:label "F♭-dur"@no ;
+  rdfs:label "F♭ major"@en .
   
-key:hiss-moll a duo:Key ;
-  rdfs:label "hiss-moll"@no .
+key:fb_minor a duo:Key ;
+  rdfs:label "F♭-moll"@no ;
+  rdfs:label "F♭ minor"@en .
   
-key:cess-dur a duo:Key ;
-  rdfs:label "cess-dur"@no .
+key:gb_major a duo:Key ;
+  rdfs:label "G♭-dur"@no ;
+  rdfs:label "G♭ major"@en .
   
-key:cess-moll a duo:Key ;
-  rdfs:label "cess-moll"@no .
+key:gb_minor a duo:Key ;
+  rdfs:label "G♭-moll"@no ;
+  rdfs:label "G♭ minor"@en .
   
-key:c-dur a duo:Key ;
-  rdfs:label "c-dur"@no .
+key:ax_major a duo:Key ;
+  rdfs:label "A♯-dur"@no ;
+  rdfs:label "A♯ major"@en .
   
-key:c-moll a duo:Key ;
-  rdfs:label "c-moll"@no .
+key:ax_minor a duo:Key ;
+  rdfs:label "A♯-moll"@no ;
+  rdfs:label "A♯ minor"@en .
   
-key:ciss-dur a duo:Key ;
-  rdfs:label "ciss-dur"@no .
+key:bx_major a duo:Key ;
+  rdfs:label "H♯-dur"@no ;
+  rdfs:label "B♯ major"@en .
   
-key:ciss-moll a duo:Key ;
-  rdfs:label "ciss-moll"@no .
+key:bx_minor a duo:Key ;
+  rdfs:label "H♯-moll"@no ;
+  rdfs:label "B♯ minor"@en .
   
-key:dess-dur a duo:Key ;
-  rdfs:label "dess-dur"@no .
+key:cx_major a duo:Key ;
+  rdfs:label "C♯-dur"@no ;
+  rdfs:label "C♯ major"@en .
   
-key:dess-moll a duo:Key ;
-  rdfs:label "dess-moll"@no .
+key:cx_minor a duo:Key ;
+  rdfs:label "C♯-moll"@no ;
+  rdfs:label "C♯ minor"@en .
   
-key:d-dur a duo:Key ;
-  rdfs:label "d-dur"@no .
+key:dx_major a duo:Key ;
+  rdfs:label "D♯-dur"@no ;
+  rdfs:label "D♯ major"@en .
   
-key:d-moll a duo:Key ;
-  rdfs:label "d-moll"@no .
+key:dx_minor a duo:Key ;
+  rdfs:label "D♯-moll"@no ;
+  rdfs:label "D♯ minor"@en .
   
-key:diss-dur a duo:Key ;
-  rdfs:label "diss-dur"@no .
+key:ex_major a duo:Key ;
+  rdfs:label "E♯-dur"@no ;
+  rdfs:label "E♯ major"@en .
   
-key:diss-moll a duo:Key ;
-  rdfs:label "diss-moll"@no .
+key:ex_minor a duo:Key ;
+  rdfs:label "E♯-moll"@no ;
+  rdfs:label "E♯ minor"@en .
   
-key:ess-dur a duo:Key ;
-  rdfs:label "ess-dur"@no .
+key:fx_major a duo:Key ;
+  rdfs:label "F♯-dur"@no ;
+  rdfs:label "F♯ major"@en .
   
-key:ess-moll a duo:Key ;
-  rdfs:label "ess-moll"@no .
+key:fx_minor a duo:Key ;
+  rdfs:label "F♯-moll"@no ;
+  rdfs:label "F♯ minor"@en .
   
-key:e-dur a duo:Key ;
-  rdfs:label "e-dur"@no .
+key:gx_major a duo:Key ;
+  rdfs:label "G♯-dur"@no ;
+  rdfs:label "G♯ major"@en .
   
-key:e-moll a duo:Key ;
-  rdfs:label "e-moll"@no .
-  
-key:eiss-dur a duo:Key ;
-  rdfs:label "eiss-dur"@no .
-  
-key:eiss-moll a duo:Key ;
-  rdfs:label "eiss-moll"@no .
-  
-key:fess-dur a duo:Key ;
-  rdfs:label "fess-dur"@no .
-  
-key:fess-moll a duo:Key ;
-  rdfs:label "fess-moll"@no .
-  
-key:f-dul a duo:Key ;
-  rdfs:label "f-dul"@no .
-  
-key:f-moll a duo:Key ;
-  rdfs:label "f-moll"@no .
-  
-key:fiss-dur a duo:Key ;
-  rdfs:label "fiss-dur"@no .
-  
-key:fiss-moll a duo:Key ;
-  rdfs:label "fiss-moll"@no .
-  
-key:gess-dur a duo:Key ;
-  rdfs:label "gess-dur"@no .
-  
-key:gess-moll a duo:Key ;
-  rdfs:label "gess-moll"@no .
-  
-key:g-dur a duo:Key ;
-  rdfs:label "g-dur"@no .
-  
-key:g-moll a duo:Key ;
-  rdfs:label "g-moll"@no .
-  
-key:giss-dur a duo:Key ;
-  rdfs:label "giss-dur"@no .
-  
-key:giss-moll a duo:Key ;
-  rdfs:label "giss-moll"@no .
+key:gx_minor a duo:Key ;
+  rdfs:label "G♯-moll"@no ;
+  rdfs:label "G♯ minor"@en .
