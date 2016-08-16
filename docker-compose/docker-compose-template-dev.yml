@@ -103,25 +103,6 @@ services:
     networks:
       - backend
 
-  rfidhub:
-    container_name: rfidhub
-    image: "digibib/rfidhub:61093b5d6be6422b1763589919cad18659b94cde"
-    networks:
-      - backend
-    depends_on:
-      - sip
-    ports:
-      - "6005:6005"
-      - "8899:8899"
-    environment:
-      SIP_SERVER: sip:6002
-      SIP_CONNS: 1
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
-
   smtp:
     container_name: mailrelay
     image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
