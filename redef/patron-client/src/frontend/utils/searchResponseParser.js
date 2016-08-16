@@ -20,6 +20,9 @@ export function processSearchResponse (response, locationQuery) {
       result.relativeUri = relativeUri(result.workUri)
       result.publication = element.publications.hits.hits[0]._source
       result.publication.contributors = result.publication.contributors || []
+      result.publication.contributors = result.publication.contributors.filter(c => {
+        return c.mainEntry
+      })
       result.publication.contributors.forEach(contributor => {
         contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
       })
