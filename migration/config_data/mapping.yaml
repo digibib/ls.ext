@@ -3074,6 +3074,7 @@
             prefix: "http://lexvo.org/id/iso639-3/"
             substr_length: 3
             substr_offset: 35
+            lowercase: true
         audience:
           predicate: "ONTOLOGY.audience"
           object:
