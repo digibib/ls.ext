@@ -244,9 +244,14 @@ ifdef MIGRATE_PATRONS
 	@touch out/done.migrate_loans
 endif
 
+ifdef MIGRATE_PATRONS
+NOCIRC=false
+else
+NOCIRC=true
+endif
 verify:
 	@echo "   Verifying migration"
-	@$(MIGRATION_RUN_CMD) "verify -h=$(HOST)"
+	@$(MIGRATION_RUN_CMD) "verify -h=$(HOST) -nocirc=$(NOCIRC)"
 
 reindex:
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
