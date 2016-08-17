@@ -22,11 +22,6 @@ module.exports = {
       },
       '__DEVTOOLS__': false
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    }),
     new ExtractTextPlugin('master.css', { allChunks: true }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
