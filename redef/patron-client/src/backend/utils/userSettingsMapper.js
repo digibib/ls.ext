@@ -2,12 +2,12 @@ module.exports.patronSettingsToKohaSettings = patronSettings => {
   return {
     item_due: {
       transports: patronSettingToArray(patronSettings.alerts.reminderOfDueDate),
-      wants_digest: false
+      wants_digest: true
     },
     advance_notice: {
       days_in_advance: 2,
       transports: patronSettingToArray(patronSettings.alerts.reminderOfDueDate),
-      wants_digest: false
+      wants_digest: true
     },
     hold_filled: {
       transports: patronSettingToArray(patronSettings.alerts.reminderOfPickup),

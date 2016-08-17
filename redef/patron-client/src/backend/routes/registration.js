@@ -101,10 +101,10 @@ module.exports = (app) => {
       },
       receipts: {
         loans: {
-          email: true
+          email: false
         },
         returns: {
-          email: true
+          email: false
         }
       }
     }))
