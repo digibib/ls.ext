@@ -45,7 +45,8 @@ public final class EmbeddedElasticsearchServer {
         if (existsResponse.isExists()) {
             assertTrue(getClient().admin().indices().prepareDelete("search").execute().actionGet().isAcknowledged());
         }
-        assertTrue(getClient().admin().indices().prepareCreate("search").execute().actionGet().isAcknowledged());
+        String settings = IOUtils.toString(getClass().getResourceAsStream("/search_index.json"), "UTF-8");
+        assertTrue(getClient().admin().indices().prepareCreate("search").setSource(settings).execute().actionGet().isAcknowledged());
 
         prepareMappingOf("person");
         prepareMappingOf("work");

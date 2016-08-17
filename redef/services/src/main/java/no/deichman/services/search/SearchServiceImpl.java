@@ -132,7 +132,9 @@ public class SearchServiceImpl implements SearchService {
                     }
                 }
             }
-            try (CloseableHttpResponse create = httpclient.execute(new HttpPut(uri))) {
+            HttpPut createIndexRequest = new HttpPut(uri);
+            createIndexRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/search_index.json"), ContentType.APPLICATION_JSON));
+            try (CloseableHttpResponse create = httpclient.execute(createIndexRequest)) {
                 int statusCode = create.getStatusLine().getStatusCode();
                 LOG.info("Create index request returned status " + statusCode);
                 if (statusCode != HTTP_OK) {

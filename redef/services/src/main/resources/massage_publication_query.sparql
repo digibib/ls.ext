@@ -26,7 +26,8 @@ CONSTRUCT {
                ?contribRoleURI ?contribAgentName ;
                deich:mainEntryName ?mainEntryName ;
                deich:recordID ?recordId ;
-               deich:abstract ?abstract .
+               deich:abstract ?abstract ;
+               deich:formatNo ?formatNo .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -139,6 +140,10 @@ WHERE {
 
   OPTIONAL { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
   OPTIONAL { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
+  OPTIONAL { ?pub deich:format ?formatURI .
+             ?formatURI rdfs:label ?formatNoLang .
+             BIND(str(?formatNoLang) AS ?formatNo)
+             FILTER(lang(?formatNoLang) = "no") }
   OPTIONAL { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
   OPTIONAL { ?pub deich:hasImage ?img }
   OPTIONAL { ?pub deich:abstract ?abstract }

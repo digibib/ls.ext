@@ -11,6 +11,7 @@
       "@id": "deichman:contributor",
       "@container": "@set"
     },
+    "format": "deichman:formatNo",
     "formats": {
       "@id": "deichman:format",
       "@container": "@set"

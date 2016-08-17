@@ -83,6 +83,10 @@
       "type": "string",
       "index": "not_analyzed"
     },
+    "format": {
+      "type": "string",
+      "analyzer": "format_analyzer"
+    },
     "languages": {
       "type": "string",
       "index": "not_analyzed"

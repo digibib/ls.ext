@@ -38,6 +38,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"translator\": \"Falcinella, Cristina\",\n"
             + "    \"firstPublicationYear\": \"2004\",\n"
             + "    \"norwegianTitle\": \"Berlinerpoplene — deltittel\",\n"
+            + "    \"format\": \"E-bok\",\n"
             + "    \"formats\": [\"http://data.deichman.no/format#E-Book\"],\n"
             + "    \"image\": \"http://static.deichman.no/1549895/bk/1_thumb.jpg\",\n"
             + "    \"imagesFromAllPublications\": [\"http://static.deichman.no/626460/kr/1_thumb.jpg\", \"http://static.deichman.no/1549895/bk/1_thumb.jpg\"],\n"
@@ -137,7 +138,9 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://deichman.no/genre/g1> rdf:type ns2:Genre ;\n"
                 + "    ns2:prefLabel \"Krim\" ;\n"
-                + "    ns2:specification \"spesial\" .";
+                + "    ns2:specification \"spesial\" ."
+                + "\n"
+                + "<http://data.deichman.no/format#E-Book> rdfs:label \"E-bok\"@no .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication", BaseURI.local()).createIndexDocument(model, publicationXuri1);

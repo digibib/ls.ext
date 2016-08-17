@@ -1,0 +1,47 @@
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "format_synonym_filter": {
+          "type": "synonym",
+          "synonyms": [
+            "videotape,vhs",
+            "blu-ray,blu-ray disk",
+            "file folder,arkivmappe",
+            "web page,webside",
+            "mikrofilm reel,mikrofilm",
+            "daisy audiobook,daisy-lydbok",
+            "e-book,e-bok",
+            "periodical,periodika",
+            "dvd audio,dvd-audio",
+            "language course,språkkurs",
+            "audiobook,lydbok",
+            "music recording,musikkopptak",
+            "digicard,digikort",
+            "cassette,kassett",
+            "vinyl record,vinylplate",
+            "poster,plansje",
+            "map,kart",
+            "sheet music,musikknoter",
+            "fysisk gjenstand,physical body",
+            "pc game,pc-spill",
+            "book,bok",
+            "diapositive,dias",
+            "board game,brettspill",
+            "card game,kortspill"
+          ]
+        }
+      },
+      "analyzer": {
+        "format_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "format_synonym_filter"
+          ]
+        }
+      }
+    }
+  }
+}
