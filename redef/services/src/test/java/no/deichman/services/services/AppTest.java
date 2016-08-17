@@ -801,7 +801,7 @@ public class AppTest {
                 testData = "<http://data.deichman.no/relationType#basedOn> <http://www.w3.org/2000/01/rdf-schema#label> \"Based on\"@en .";
                 break;
             case DEWEY_EDITION:
-                testData = "<http://data.deichman.no/deweyEdition#ddc22> <http://www.w3.org/2000/01/rdf-schema#label> \"Dewey full\"@en .";
+                testData = "<http://data.deichman.no/deweyEdition#ddk5> <http://www.w3.org/2000/01/rdf-schema#label> \"DDK 5\"@en .";
                 break;
             case MUSICAL_KEY:
                 testData = "<http://data.deichman.no/key#cb_major> <http://www.w3.org/2000/01/rdf-schema#label> \"C♭-dur\"@no .";
