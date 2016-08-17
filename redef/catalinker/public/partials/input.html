@@ -1,12 +1,12 @@
-<span class="input-panel pure-u-1-1 prop-input" decorator="repositionSupportPanel" {{#if
-     resourceIsLoaded(showOnlyWhenEmpty) }} style="display:none;" {{/if}}>
-<span {{#if (type == 'input-boolean')}}class='panel-part pure-u-1-2 for-checkbox'{{/if}}>
+{{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty))}}
+<span class="input-panel pure-u-1-1 prop-input" intro='slideIn' outro='slideOut'>
+<span {{#if (type === 'input-boolean')}}class='panel-part pure-u-1-2 for-checkbox'{{/if}}>
 <span class="{{#if (type != 'input-boolean')}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}pure-u-2-3{{/if}} label {{firstInGroup ? 'first':''}} {{(type == 'input-boolean') ? 'for-checkbox' : 'panel-part'}}"
      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
 </span>
 <span class="{{#if type != 'input-boolean'}}panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}checkbox{{/if}} {{lastInGroup ? 'last':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
         {{#each values:inputValueIndex}}
-        <span class="field {{#if (type != 'input-boosslean')}}pure-u-1-1{{/if}}" id="support_panel_base_{{uniqueId}}">
+        <span class="field {{#if (type != 'input-boolean')}}pure-u-1-1{{/if}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
             {{>type}}
             {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
             <a data-automation-id="biblio_record_link" target="_blank"
@@ -47,32 +47,35 @@
               {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
             {{#if nonEditable && !suggested}}
             <a class="delete" title="Slett oppføring"
-               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" onclick="main.$(this).closest('.ui-accordion-content').prev().remove();main.$(this).closest('.ui-accordion-content').remove()"></a>
+               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" onclick="main.$(this).closest('.ui-accordion-content').prev().remove();main.$(this).closest('.ui-accordion-content, .field').remove()"></a>
             {{/if}}
             <span class="input-wrapper">
                 <span class="inputs">
                     {{#each ../../../../../subInputs}}
-                        <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
-                            <span class="label {{#if !nonEditable && !suggested}}pure-u-1-1{{/if}} {{#if input.type === 'input-boolean'}}for-checkbox{{/if}}"
-                                  data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
-                            {{#with input.values[inputValueIndex]}}
-                                <span class="value sub-field" id="support_panel_base_{{uniqueId}}">
-                                    {{>../../../input.type}}
-                                    {{#if ! nonEditable }}
-                                        {{>suggested-values}}
-                                    {{/if}}
-                                </span>
-                                {{#if ! nonEditable && !suggested}}
-                                    <span class="support-panel"
-                                          data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
-                                        {{#with ../../../input}}
-                                        {{>"support-for-"+type}}
-                                        {{/with}}
+                        {{#if !(./input.visible === false)}}
+                            <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}"
+                                  intro='slideIn' outro='slideOut'>
+                                <span class="label {{#if !nonEditable && !suggested}}pure-u-1-1{{/if}} {{#if input.type === 'input-boolean'}}for-checkbox{{/if}}"
+                                      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
+                                {{#with input.values[inputValueIndex]}}
+                                    <span class="value sub-field" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                                        {{>../../../input.type}}
+                                        {{#if ! nonEditable }}
+                                            {{>suggested-values}}
+                                        {{/if}}
                                     </span>
-                                {{/if}}
-                            {{/with}}
-                            <span class="invalid-msg {{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">{{#error}}{{error}}{{/error}}</span>
-                        </span>
+                                    {{#if ! nonEditable && !suggested}}
+                                        <span class="support-panel"
+                                              data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+                                            {{#with ../../../input}}
+                                            {{>"support-for-"+type}}
+                                            {{/with}}
+                                        </span>
+                                    {{/if}}
+                                {{/with}}
+                                <span class="invalid-msg {{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">{{#error}}{{error}}{{/error}}</span>
+                            </span>
+                        {{/if}}
                     {{/each}}
                 </span>
                 <span class="subject-type-association">
@@ -125,3 +128,4 @@
     </span>
 {{/}}
 </span>
+{{/if}}

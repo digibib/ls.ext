@@ -138,19 +138,6 @@ describe("Catalinker", function () {
         expect(tabContent[0].querySelector("button.next-step-button").innerHTML).to.equal("Bekreft verk");
         done();
       });
-      it("bruker Ractive til å legge til faner", function (done) {
-        var testPane = {
-          tabLabel: "Test Tab",
-          tabId: "testid"
-        };
-        testRactive.set("inputGroups", [testPane]).then(function () {
-          var tabs = document.querySelectorAll(".grid-tabs li");
-          expect(tabs.length).to.equal(1);
-          expect(tabs[0].children[0].id).to.equal("testid-tab");
-          expect(tabs[0].children[0].innerHTML).to.equal("Test Tab");
-          done();
-        }).catch(done);
-      });
     });
   });
 });

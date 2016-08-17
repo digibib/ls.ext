@@ -256,7 +256,17 @@ module.exports = (app) => {
               }
             ),
             {
+              label: "Verket har ikke hovedansvarlig",
+              id: 'missingMainEntry',
+              rdfProperty: 'missingMainEntry',
+            },
+            {
               label: 'Hovedansvarlig',
+              id: 'mainEntryInput',
+              showOnlyWhen: {
+                inputId: 'missingMainEntry',
+                valueAsStringMatches: '^false$'
+              },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'contributor', // the rdf property of the resource
                 range: 'Contribution', // this is the shorthand name of the type of the blank node
@@ -300,11 +310,6 @@ module.exports = (app) => {
               subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
               cssClassPrefix: 'additional-entries' // prefix of class names to identify a span surrounding this input or group of sub inputs.
               // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
-            },
-            {
-              label: "Verket har ikke hovedansvarlig",
-              id: 'missingMainEntry',
-              rdfProperty: 'missingMainEntry',
             },
             {
               label: "Verket er ikke et selvstendig verk",
@@ -568,6 +573,7 @@ module.exports = (app) => {
                   {
                     label: 'Verk',
                     rdfProperty: 'work',
+                    required: true,
                     indexTypes: [ 'work' ],
                     type: 'searchable-with-result-in-side-panel',
                     nameProperties: [ 'mainTitle' ],
@@ -586,7 +592,18 @@ module.exports = (app) => {
                   {
                     label: 'Type relasjon',
                     rdfProperty: 'hasRelationType',
-                    required: true
+                    required: true,
+                    id: 'relationTypeInput'
+                  },
+                  {
+                    label: 'Del nummer',
+                    rdfProperty: 'partNumber',
+                    id: 'partNumberInput',
+                    showOnlyWhen: {
+                      inputId: 'relationTypeInput',
+                      valueAsStringMatches: '^.*partOf$',
+                      initial: 'hide'
+                    },
                   }
                 ]
               },

@@ -82,6 +82,7 @@ body {
   h3.headline {
     display: flex;
     font-size: 1.0em;
+    min-height: 2em;
     .title {
       font-style: italic;
     }

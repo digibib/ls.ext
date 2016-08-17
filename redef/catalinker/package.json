@@ -71,7 +71,7 @@
     "jscs": "*",
     "jshint": "*",
     "mocha": "*",
-    "jsdom": "^7.2.2",
+    "jsdom": "^9.4.2",
     "nodemon": "*",
     "sinon": "*"
   },

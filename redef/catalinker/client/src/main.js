@@ -439,13 +439,17 @@
       }
     }
 
-    function allGroupInputs (handleInput) {
+    function allGroupInputs (handleInput, options) {
+      options = options || {}
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           if (input.subInputs) {
             _.each(input.subInputs, function (subInput, subInputIndex) {
               handleInput(subInput.input, groupIndex, inputIndex, subInputIndex)
             })
+            if (options.handleInputGroups) {
+              handleInput(input, groupIndex, inputIndex)
+            }
           } else {
             handleInput(input, groupIndex, inputIndex)
           }
@@ -741,6 +745,9 @@
       if (prop.required) {
         input.required = prop.required
       }
+      if (prop.showOnlyWhen) {
+        input.showOnlyWhen = prop.showOnlyWhen
+      }
     }
 
     var lastFoundOrActualLast = function (lastIndexOfVisible, numberOfInputs) {
@@ -885,7 +892,8 @@
           range: prop.subInputs.range,
           inputGroupRequiredVetoes: [],
           accordionHeader: prop.subInputs.accordionHeader,
-          orderBy: prop.subInputs.orderBy
+          orderBy: prop.subInputs.orderBy,
+          id: prop.id
         }
         if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
           currentInput.subjectType = currentInput.subjectTypes[ 0 ]
@@ -917,9 +925,8 @@
               suggestValueFrom: subInput.suggestValueFrom,
               id: subInput.id,
               required: subInput.required,
-              searchable: type === 'searchable-with-result-in-side-panel'
-              // ,
-              // values: emptyValues(false, type === 'searchable-with-result-in-side-panel')
+              searchable: type === 'searchable-with-result-in-side-panel',
+              showOnlyWhen: subInput.showOnlyWhen
             }),
             parentInput: currentInput
           }
@@ -979,6 +986,7 @@
               suggestValueFrom: input.suggestValueFrom,
               datatypes: input.datatypes,
               showOnlyWhenEmpty: input.searchMainResource.showOnlyWhenMissingTargetUri,
+              showOnlyWhen: input.showOnlyWhen,
               dataAutomationId: input.searchMainResource.automationId,
               inputIndex: index,
               id: input.id
@@ -993,6 +1001,7 @@
               widgetOptions: input.widgetOptions,
               datatypes: input.datatypes,
               showOnlyWhenEmpty: input.searchForValueSuggestions.showOnlyWhenMissingTargetUri,
+              showOnlyWhen: input.showOnlyWhen,
               dataAutomationId: input.searchForValueSuggestions.automationId,
               searchForValueSuggestions: input.searchForValueSuggestions,
               inputIndex: index,
@@ -1091,7 +1100,7 @@
       var supportPanelWidth = dummyPanel.width()
       $('span.support-panel').each(function (index, panel) {
         var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
-        var supportPanelBase = $('#' + supportPanelBaseId + ' input')
+        var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] input`)
         if (supportPanelBase.length > 0) {
           $(panel).css({
             top: _.last(_.flatten([ supportPanelBase ])).position().top - 15,
@@ -1362,16 +1371,18 @@
             })
           }
           _.each(input.subInputs, function (subInput) {
-            var value = subInput.input.values[ index ].current.value
-            patch.push({
-              op: operation,
-              s: '_:b0',
-              p: subInput.input.predicate,
-              o: {
-                value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
-                type: subInput.input.datatypes[ 0 ]
-              }
-            })
+            if (!(subInput.input.visible === false)) {
+              var value = subInput.input.values[ index ].current.value
+              patch.push({
+                op: operation,
+                s: '_:b0',
+                p: subInput.input.predicate,
+                o: {
+                  value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
+                  type: subInput.input.datatypes[ 0 ]
+                }
+              })
+            }
           })
           if (input.isMainEntry) {
             patch.push({
@@ -1733,6 +1744,14 @@
               slideIn: function (transition) {
                 $(transition.element.node).hide()
                 $(transition.element.node).slideDown()
+              },
+              slideOut: function (transition) {
+                $(transition.element.node).slideUp({
+                  complete: function () {
+                    $('div.grid-panel-selected span.input-panel span.panel-part:visible').first().addClass('first')
+                    $('div.grid-panel-selected span.input-panel span.panel-part:visible').last().addClass('last')
+                  }
+                })
               }
             }
           })
@@ -2570,12 +2589,44 @@
           var inputLinks = {}
           allGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
             if (input.id) {
+              if (inputLinks[ input.id ]) {
+                throw new Error(`Duplicate input id: "${input.id}"`)
+              }
               var subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
               var keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}`
               inputLinks[ input.id ] = keypath
             }
-          })
+          }, { handleInputGroups: true })
           ractive.set('inputLinks', inputLinks)
+          applicationData.inputLinks = inputLinks
+          return applicationData
+        }
+
+        var initInputInterDependencies = function (applicationData) {
+          allGroupInputs(function (input) {
+            function setInputVisibility (inputKeypath, visible) {
+                ractive.set(`${inputKeypath}.visible`, visible)
+                 .then(positionSupportPanels)
+                 .then(Main.repositionSupportPanelsHorizontally)
+            }
+
+            if (input.showOnlyWhen) {
+              if (!input.id) {
+                throw new Error(`Input "${input.label}" should have its own id attribute in order to handle dependency of input with id "${input.showOnlyWhen.inputId}"`)
+              }
+              let inputKeypath = applicationData.inputLinks[ input.showOnlyWhen.inputId ]
+              if (input.showOnlyWhen.valueAsStringMatches) {
+                ractive.observe(`${inputKeypath}.values.*.current.value`, function (newValue, oldValue, keypath) {
+                  if (newValue !== oldValue) {
+                    setInputVisibility(applicationData.inputLinks[ input.id ], `${_.isArray(newValue) ? newValue[ 0 ] : newValue}`.match(input.showOnlyWhen.valueAsStringMatches) !== null)
+                  }
+                }, { init: false })
+              }
+              if (input.showOnlyWhen.initial && input.showOnlyWhen.initial === 'hide') {
+                setInputVisibility(applicationData.inputLinks[ input.id ], false)
+              }
+            }
+          }, { handleInputGroups: true })
           return applicationData
         }
 
@@ -2591,6 +2642,7 @@
           .then(positionSupportPanels)
           .then(initHeadlineParts)
           .then(initInputLinks)
+          .then(initInputInterDependencies)
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)
         // })
