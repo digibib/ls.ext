@@ -804,7 +804,7 @@ public class AppTest {
                 testData = "<http://data.deichman.no/deweyEdition#ddc22> <http://www.w3.org/2000/01/rdf-schema#label> \"Dewey full\"@en .";
                 break;
             case MUSICAL_KEY:
-                testData = "<http://data.deichman.no/key#ass-moll> <http://www.w3.org/2000/01/rdf-schema#label> \"ass-moll\"@no .";
+                testData = "<http://data.deichman.no/key#cb_major> <http://www.w3.org/2000/01/rdf-schema#label> \"C♭-dur\"@no .";
                 break;
             default:
                 throw new Exception("Couldn't find test data for authorized value: " + authorizedValue.getPath());
