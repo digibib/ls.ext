@@ -2,9 +2,11 @@ const validators = require('./validators')
 
 module.exports = function (form) {
   return function (values) {
-    const requiredFields = Object.keys(form).filter(field => form[ field ].required)
+    const requiredFields = Object.keys(form).filter(function (field) {
+      return form[ field ].required
+    })
     const errors = {}
-    Object.keys(values).forEach(field => {
+    Object.keys(values).forEach(function (field) {
       const value = values[ field ]
       if (requiredFields.includes(field) && !value) {
         errors[ field ] = 'required'
