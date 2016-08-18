@@ -69,9 +69,9 @@ class WorkFlow < CatalinkerPage
   def get_resource_uri(type)
     attribute_name = "data-#{type.downcase}-uri"
     element = @browser.div(:data_automation_id => 'targetresources-uris')
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
-      not element.attribute_value(attribute_name).empty?
-    end
+#    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+#      not element.attribute_value(attribute_name).empty?
+#    end
     element.attribute_value(attribute_name)
   end
 
