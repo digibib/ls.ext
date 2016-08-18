@@ -472,9 +472,11 @@ body {
           .inputs {
             display: block;
             border: 1px solid lightgrey;
-            padding: 5px 22px;
+            padding: 5px 13px;
             .input {
-              display: block;
+              &[style*="display: inline-block"] {
+                display: block !important;
+              }
               .label {
                 padding: 0;
                 @extend .label-font;
