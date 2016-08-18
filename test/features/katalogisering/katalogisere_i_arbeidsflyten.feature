@@ -331,3 +331,24 @@ Egenskap: Katalogisere i arbeidsflyt
     Så verifiserer jeg innskrevet verdi for "Mangler hovedansvarlig"
     Så verifiserer jeg innskrevet verdi for "Ikke eget verk"
 
+  Scenario: katalogisere verk med relasjon til annet verk
+    Gitt jeg kan dikte opp en verkstittel
+    Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Verk" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg velger verdien "Del av" for "Type relasjon"
+    Og jeg venter litt
+    Og jeg skriver verdien "1" for "Del nummer"
+    Og jeg trykker på "Legg til"-knappen
+    Så frisker jeg opp nettleseren
+    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Verk" stemmer med verksnavnet
+

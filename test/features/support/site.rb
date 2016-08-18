@@ -31,7 +31,8 @@ class Site
         'tredje' => 3,
         'fjerde' => 4,
         'femte' => 5,
-        'navn' => 'name'
+        'navn' => 'name',
+        'verksnavnet' => 'verksnavn_name'
     }[concept.downcase] || concept
   end
 

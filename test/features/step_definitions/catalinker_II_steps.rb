@@ -29,9 +29,14 @@ When(/^jeg legger inn forfatternavnet på startsida$/) do
   creator_name_field.send_keys :enter
 end
 
+
+def contains_class(class_name)
+  "contains(concat(' ',normalize-space(@class),' '),' #{class_name} ')"
+end
+
 When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT*5) {
-    @browser.element(:xpath => "//a[contains(concat(' ',normalize-space(@class),' '),' edit-resource ')]|//input[contains(concat(' ',normalize-space(@class),' '),' select-result-item-radio ')]").present?
+    @browser.element(:xpath => "//a[#{contains_class('edit-resource')}]|//input[contains(concat(' ',normalize-space(@class),' '),' select-result-item-radio ')]").present?
 #    @browser.a(:class => 'edit-resource').present? || @browser.input(:class => "select-result-item-radio").present?
   }
   if @browser.a(:class => 'edit-resource').present?
@@ -138,12 +143,20 @@ When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label
   @site.WorkFlow.add_prop(domain, predicate, value)
 end
 
+def predicate_from_automation_id(select_id)
+  select_id.sub(/^(Work|Publication|Person|WorkRelation)_/, '').sub(/_[0-9]+$/, '')
+end
+
+def domain_of_automation_id(select_id)
+  select_id.match(/^(Work|Publication|Person|WorkRelation)_.*/).captures[0]
+end
+
 def do_select_value(selectable_parameter_label, value)
-  select = @browser.selects(:xpath => "//div[preceding-sibling::div/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']//select")[0]
+  select = @browser.selects(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']//select")[0]
   wait_for{select.present?}
   select_id = select.attribute_value('data-automation-id')
-  predicate = select_id.sub(/^(Work|Publication|Person)_/, '').sub(/_[0-9]+$/, '')
-  domain = select_id.match(/^(Work|Publication|Person)_.*/).captures[0]
+  predicate = predicate_from_automation_id(select_id)
+  domain = domain_of_automation_id(select_id)
   @site.WorkFlow.select_prop(domain, predicate, value)
   fragment = predicate.partition('#').last()
   "#{domain.downcase}_#{fragment.downcase}".to_sym
@@ -593,4 +606,15 @@ end
 
 When(/^at jeg er i arbeidsflyten$/) do
   @site.WorkFlow.visit
+end
+
+
+When(/^sjekker jeg at den tilfeldige verdien jeg la inn for feltet "([^"]*)" stemmer med (.*)/) do |parameter_label, concept|
+  value_span = @browser.spans(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}'][#{contains_class 'value'}]/span").find(&:visible?)
+  value_span.text.should eq @context["random_#{@site.translate(concept)}".to_sym]
+end
+
+When(/^frisker jeg opp nettleseren$/) do
+  @browser.refresh
+  sleep 5
 end
