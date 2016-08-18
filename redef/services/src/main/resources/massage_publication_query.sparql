@@ -28,7 +28,8 @@ CONSTRUCT {
                deich:recordID ?recordId ;
                deich:abstract ?abstract ;
                deich:formatNo ?formatNo ;
-               deich:ageLimit ?ageLimit .
+               deich:ageLimit ?ageLimit ;
+               deich:series ?seriesTitle .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -135,6 +136,10 @@ WHERE {
                 ?contribAgent deich:name ?mainEntryName .
              }
   }
+
+  OPTIONAL { ?pub deich:inSerial ?serialBnode .
+             ?serialBnode deich:serial ?serial .
+             ?serial deich:mainTitle ?seriesTitle . }
 
   OPTIONAL { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }
   OPTIONAL { ?contribAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?contribAgentDeathYear) }

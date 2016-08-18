@@ -838,7 +838,7 @@
                       predicate: "MIGRATION.series"
                       object:
                         datatype: "uri"
-                        prefix: "http://placeholder.com/series/x"
+                        prefix: "http://placeholder.com/serial/s"
                   -
                     v:
                       predicate: "RAW.volumeNumber"

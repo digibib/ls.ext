@@ -91,6 +91,9 @@
       "type": "string",
       "index": "not_analyzed"
     },
+    "series": {
+      "type": "string"
+    },
     "subject": {
       "type": "string"
     },

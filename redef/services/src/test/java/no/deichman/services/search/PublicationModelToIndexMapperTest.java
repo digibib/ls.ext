@@ -48,6 +48,7 @@ public class PublicationModelToIndexMapperTest {
             + "       \"formats\": [\"http://data.deichman.no/format#Book\",\"http://data.deichman.no/format#E-Book\"]}],\n"
             + "    \"languages\": [\"http://lexvo.org/id/iso639-3/ita\"],\n"
             + "    \"mainTitle\": \"La casa delle bugie\",\n"
+            + "    \"series\": [\"italiano norveigano\"],"
             + "    \"publicationYear\": \"2013\",\n"
             + "     \"recordId\": \"3\",\n"
             + "    \"subject\": [\"Trondheim\"],\n"
@@ -77,6 +78,8 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:contributor [ rdf:type ns2:Contribution ;\n"
                 + "            ns2:agent <http://192.168.50.12:8005/person/h11234> ;\n"
                 + "            ns2:role ns5:translator ] ;\n"
+                + "    ns2:inSerial [ rdf:type ns2:SerialIssue ;\n"
+                + "            ns2:serial <http://192.168.50.12:8005/serial/s1> ] ;\n"
                 + "    ns2:format <http://data.deichman.no/format#E-Book> ;\n"
                 + "    ns2:mediaType <http://data.deichman.no/mediaType#Book> ;\n"
                 + "    ns2:isbn \"978-88-545-0662-6\" ;\n"
@@ -142,7 +145,10 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:prefLabel \"Krim\" ;\n"
                 + "    ns2:specification \"spesial\" ."
                 + "\n"
-                + "<http://data.deichman.no/format#E-Book> rdfs:label \"E-bok\"@no .";
+                + "<http://data.deichman.no/format#E-Book> rdfs:label \"E-bok\"@no ."
+                + "\n"
+                + "<http://192.168.50.12:8005/serial/s1> rdf:type ns2:Serial ;\n"
+                + "     ns2:mainTitle \"italiano norveigano\" .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication", BaseURI.local()).createIndexDocument(model, publicationXuri1);

@@ -11,6 +11,10 @@
       "@id": "deichman:contributor",
       "@container": "@set"
     },
+    "series": {
+      "@id": "deichman:series",
+      "@container": "@set"
+    },
     "ageLimit": "deichman:ageLimit",
     "format": "deichman:formatNo",
     "formats": {
