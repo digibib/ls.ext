@@ -27,7 +27,8 @@ CONSTRUCT {
                deich:mainEntryName ?mainEntryName ;
                deich:recordID ?recordId ;
                deich:abstract ?abstract ;
-               deich:formatNo ?formatNo .
+               deich:formatNo ?formatNo ;
+               deich:ageLimit ?ageLimit .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -147,4 +148,5 @@ WHERE {
   OPTIONAL { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
   OPTIONAL { ?pub deich:hasImage ?img }
   OPTIONAL { ?pub deich:abstract ?abstract }
+  OPTIONAL { ?pub deich:ageLimit ?ageLimit }
 }

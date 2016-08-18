@@ -97,6 +97,9 @@
     "genre": {
       "type": "string"
     },
+    "ageLimit": {
+      "type": "integer"
+    },
     "workUri": {
       "type": "string",
       "index": "not_analyzed"
