@@ -1,7 +1,6 @@
 var express = require('express')
 var path = require('path')
 var logger = require('morgan')
-var browserify = require('browserify-middleware')
 var axios = require('axios')
 var compileSass = require('express-compile-sass')
 var app = express()
@@ -32,7 +31,8 @@ app.get('/js/bundle.js',
   babelify([{ './client/src/bootstrap': { run: true } }])
 )
 
-app.get('/js/bundle_for_old.js', browserify([ './client/src/main_old' ]))
+app.get('/js/bundle_for_old.js',
+  babelify([{ './client/src/bootstrap_old': {run: true} }]))
 
 app.get('/css/vendor/:cssFile', function (request, response) {
   response.sendFile(request.params.cssFile, { root: path.resolve(path.join(__dirname, '/../node_modules/select2/dist/css/')) })
