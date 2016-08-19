@@ -2604,6 +2604,8 @@
                     e:
                       predicate: "MIGRATION.relatorTerm"
                       object:
+                        lowercase: true
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                         datatype: "literal"
                     t:
                       predicate: "MIGRATION.titleEntry"
