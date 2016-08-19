@@ -161,6 +161,7 @@ export default {
   'SearchResult.hideStatus': 'Skjul status',
   'SearchResult.firstPublished': 'Utgitt første gang:',
   'SearchResult.coverImageOf': 'Omslagsbilde av: {title}',
+  'SearchResult.partOfSeries': 'Inngår i serie: ',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.searching': 'Søker...',
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',

@@ -58,6 +58,10 @@ class SearchResult extends React.Component {
     return '/search?query=genre%3A' + genre
   }
 
+  seriesSearchLink (series) {
+    return '/search?query=series%3A' + series
+  }
+
   renderSubjects (result) {
     if (result.subject) {
       return (
@@ -86,6 +90,19 @@ class SearchResult extends React.Component {
         </p>
       )
     }
+  }
+
+  renderSeries (series) {
+    return (
+      <div data-automation-id="publication_series">
+        <strong><FormattedMessage {...messages.partOfSeries} /></strong>
+          {series.map((serie, i) => (
+            <span key={serie}>
+              <Link to={this.seriesSearchLink(serie)}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
+            </span>
+          ))}
+      </div>
+    )
   }
 
   getResultUrl (result) {
@@ -198,6 +215,9 @@ class SearchResult extends React.Component {
           <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" />
         </div>),
           (<div key="entry-more-content" className="entry-content-more">
+            {result.publication.series
+              ? this.renderSeries(result.publication.series)
+              : null}
             {this.renderItems(result)}
           </div>) ]
           : (<div className="show-more-content" onClick={this.handleShowStatusClick}>
@@ -265,6 +285,11 @@ const messages = defineMessages({
     id: 'SearchResult.coverImageOf',
     description: 'Used for alt text in images',
     defaultMessage: 'Cover image of: {title}'
+  },
+  partOfSeries: {
+    id: 'SearchResult.partOfSeries',
+    description: 'Text stating that publication is part of a series',
+    defaultMessage: 'Part of series: '
   }
 })
 

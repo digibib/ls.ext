@@ -67,12 +67,12 @@
 }
 
 .entry-content-more {
+  background-color: #eee;
+  padding: 1em;
   clear: both;
 }
 
 .items-by-branch {
-  background-color: #eee;
-  padding: 1em;
   h1 {
     @include regularFont;
     font-weight: normal;
