@@ -226,6 +226,7 @@ export default {
   'ValidationMessage.invalidEmail': 'Eposten må være i et gyldig format',
   'ValidationMessage.invalidPin': 'PIN-koden må være 4 siffer',
   'ValidationMessage.pinsMustBeEqual': 'PIN-kodene må være like',
+  'ValidationMessage.termsMustBeAccepted': 'Brukervilkårene må godkjennes',
   'ValidationMessage.illegalCharacters': 'Feltet inneholder ulovlige karakterer',
   'ValidationMessage.genericFieldError': 'Feltet inneholder feil',
   'Work.noWork': 'Inget verk',

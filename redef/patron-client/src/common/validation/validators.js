@@ -34,5 +34,10 @@ module.exports = {
     if (values.pin !== values.repeatPin) {
       return 'pinsMustBeEqual'
     }
+  },
+  acceptTerms: function (acceptTerms) {
+    if (!acceptTerms) {
+      return 'termsMustBeAccepted'
+    }
   }
 }

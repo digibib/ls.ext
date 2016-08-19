@@ -49,6 +49,11 @@ const messages = defineMessages({
     description: 'Displayed when the pin and repeat pin is not equal',
     defaultMessage: 'PINs must be equal'
   },
+  termsMustBeAccepted: {
+    id: 'ValidationMessage.termsMustBeAccepted',
+    description: 'Displayed when Terms checkbox is not checked',
+    defaultMessage: 'Terms and Conditions must be accepted'
+  },
   illegalCharacters: {
     id: 'ValidationMessage.illegalCharacters',
     description: 'Displayed when the input contains illegal characters',

@@ -111,6 +111,12 @@ export function showSSNInfo () {
   }
 }
 
+export function toggleAcceptTerms () {
+  return dispatch => {
+    dispatch({ type: types.TOGGLE_ACCEPT_TERMS })
+  }
+}
+
 export function postRegistration (successAction) {
   const url = '/api/v1/registration'
   return (dispatch, getState) => {

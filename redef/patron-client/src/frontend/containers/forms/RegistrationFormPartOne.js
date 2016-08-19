@@ -280,7 +280,6 @@ RegistrationFormPartOne.propTypes = {
   checkForExistingUserFailure: PropTypes.bool,
   registrationError: PropTypes.string,
   showSSNInfo: PropTypes.bool,
-  showTermsAndConditions: PropTypes.bool,
   intl: intlShape.isRequired
 }
 
@@ -290,7 +289,6 @@ function mapStateToProps (state) {
     loginError: state.application.loginError,
     libraries: state.application.libraries,
     showSSNInfo: state.registration.showSSNInfo,
-    showTermsAndConditions: state.registration.showTermsAndConditions,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
     checkForExistingUserFailure: state.registration.checkForExistingUserFailure,

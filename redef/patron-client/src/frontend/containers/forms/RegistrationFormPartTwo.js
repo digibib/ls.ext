@@ -16,6 +16,7 @@ class RegistrationFormPartTwo extends React.Component {
     super(props)
     this.handleCheckForExistingUser = this.handleCheckForExistingUser.bind(this)
     this.handleExpandedSSNInfo = this.handleExpandedSSNInfo.bind(this)
+    this.handleAcceptTerms = this.handleAcceptTerms.bind(this)
     this.handleRegistration = this.handleRegistration.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
   }
@@ -26,6 +27,10 @@ class RegistrationFormPartTwo extends React.Component {
 
   handleExpandedSSNInfo () {
     this.props.registrationActions.showSSNInfo()
+  }
+
+  handleAcceptTerms () {
+    this.props.registrationActions.toggleAcceptTerms()
   }
 
   handleRegistration () {
@@ -122,12 +127,12 @@ class RegistrationFormPartTwo extends React.Component {
             <Libraries libraries={this.props.libraries} selectProps={library} />
           </div>
           <div className="terms_and_conditions">
-            <input data-automation-id="accept_terms" id="acceptTerms" type="checkbox" {...acceptTerms} />
+            <input data-automation-id="accept_terms" onClick={this.handleAcceptTerms} id="acceptTerms" type="checkbox" {...acceptTerms} />
             <label htmlFor="acceptTerms"><span>{/* Helper for checkbox styling */}</span></label>
-              <a onClick={this.handleExpandedTermsAndCondition} title="termslink">
+              <a href="/terms" title="termslink" target="_blank">
                 <FormattedMessage {...messages.acceptTermsLink} />
               </a>
-            {/* this.props.showTermsAndConditions ? this.renderTermsAndConditions() : '' */}
+              {this.getValidator(acceptTerms)}
           </div>
           <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
                   data-automation-id="register_button">
@@ -262,7 +267,6 @@ RegistrationFormPartTwo.propTypes = {
   isCheckingForExistingUser: PropTypes.bool,
   checkForExistingUserSuccess: PropTypes.bool,
   showSSNInfo: PropTypes.bool,
-  showTermsAndConditions: PropTypes.bool,
   intl: intlShape.isRequired
 }
 
@@ -272,12 +276,11 @@ function mapStateToProps (state) {
     loginError: state.application.loginError,
     libraries: state.application.libraries,
     showSSNInfo: state.registration.showSSNInfo,
-    showTermsAndConditions: state.registration.showTermsAndConditions,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
+    acceptTerms: state.registration.acceptTerms,
     initialValues: {
-      library: Object.keys(state.application.libraries)[ 0 ], // Makes sure this field has a value even if it is not touched,
-      acceptTerms: 'true'
+      library: Object.keys(state.application.libraries)[ 0 ] // Makes sure this field has a value even if it is not touched,
     }
   }
 }

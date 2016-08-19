@@ -41,6 +41,6 @@ module.exports = {
   },
   acceptTerms: {
     required: true,
-    asyncValidation: false
+    asyncValidation: true
   }
 }
