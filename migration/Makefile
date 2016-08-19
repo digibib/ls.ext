@@ -218,13 +218,15 @@ ifdef MIGRATE_PATRONS
 	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_sync (borrowernumber, synctype, sync, syncstatus) SELECT borrowernumber, \"norwegianpatrondb\",1,\"new\" FROM borrower_attributes WHERE code=\"fnr\";"'
 ifdef EMAIL
-	@echo "  Setting email-adress of all users to: $(EMAIL)"
+	@echo "-- Setting email-adress of all users to: $(EMAIL)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET email=\"$(EMAIL)\";"'
 endif
 ifdef PHONE
-	@echo "  Setting smsalertnumber of all users to: $(PHONE)"
+	@echo "-- Setting smsalertnumber of all users to: $(PHONE)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET smsalertnumber=\"$(PHONE)\";"'
 endif
+	@echo "-- Setting userid=cardid"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber;'
 	@echo "OK Done migrating patrons.\n"
 endif
 	@touch out/done.migrate_patrons
