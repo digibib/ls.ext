@@ -2579,6 +2579,38 @@
                         datatype: "literal"
                 class: "MIGRATION.Work"
     -
+      '700':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.addedEntry"
+              object:
+                datatype: "uri"
+                prefix: "http://placeholder.com/AddedPersonEntry/h"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "MIGRATION.hasPerson"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://placeholder.com/person/h"
+                  -
+                    '7':
+                      predicate: "MIGRATION.pages"
+                      object:
+                        datatype: "literal"
+                  -
+                    e:
+                      predicate: "MIGRATION.relatorTerm"
+                      object:
+                        datatype: "literal"
+                    t:
+                      predicate: "MIGRATION.titleEntry"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.AddedEntry"
+    -
       '710':
         subfields:
           -
