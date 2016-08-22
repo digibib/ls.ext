@@ -533,8 +533,8 @@
 :hasDeweyClassification a rdfs:Property ;
   rdfs:label "Dewey"@en ;
   rdfs:label "Dewey"@no ;
-  rdfs:domain :DeweyClassification ;
-  rdfs:range xsd:string .
+  rdfs:domain :Work ;
+  rdfs:range :DeweyClassification .
 
 :inKey a rdfs:Property ;
   rdfs:label "Muical key"@en ;
