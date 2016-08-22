@@ -1,30 +1,30 @@
 module.exports = {
-  email: function (email) {
+  email: email => {
     if (!/^[^@ ]+@[^@ ]+$/i.test(email)) {
       return 'invalidEmail'
     }
   },
-  year: function (year) {
+  year: year => {
     if (year < 1900 || year > new Date().getFullYear() - 5) { /* What is the actual requirements for age? */
       return 'invalidYear'
     }
   },
-  month: function (month) {
+  month: month => {
     if (month < 1 || month > 12) {
       return 'invalidMonth'
     }
   },
-  day: function (day) {
+  day: day => {
     if (day < 1 || day > 31) {
       return 'invalidDay'
     }
   },
-  pin: function (pin) {
+  pin: pin => {
     if (!/^\d{4}$/.test(pin)) {
       return 'invalidPin'
     }
   },
-  repeatPin: function (repeatPin, values) {
+  repeatPin: (repeatPin, values) => {
     if (!values.pin) {
       return
     }
@@ -35,7 +35,7 @@ module.exports = {
       return 'pinsMustBeEqual'
     }
   },
-  acceptTerms: function (acceptTerms) {
+  acceptTerms: acceptTerms => {
     if (!acceptTerms) {
       return 'termsMustBeAccepted'
     }

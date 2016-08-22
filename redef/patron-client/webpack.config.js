@@ -43,7 +43,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel',
-        include: path.join(__dirname, 'src/frontend')
+        include: [
+          path.join(__dirname, 'src/frontend'),
+          path.join(__dirname, 'src/common')
+        ]
       },
       {
         test: /\.svg$/,
