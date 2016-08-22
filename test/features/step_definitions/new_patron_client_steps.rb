@@ -333,7 +333,8 @@ When(/^jeg fyller inn resten av skjemaet$/) do
 end
 
 When(/^jeg godtar lånerreglementet$/) do
-  @browser.input(data_automation_id: 'accept_terms').set
+  # Need to hijack element because watir refuses to click hidden elements (checkbox hidden due to styling)
+  @browser.execute_script("document.getElementById('acceptTerms').click()")
 end
 
 When(/^jeg trykker på registreringsknappen$/) do

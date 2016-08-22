@@ -17,7 +17,7 @@ Egenskap: Registrere låner
     Og jeg trykker på knappen for å sjekke om jeg er registrert fra før
     Så får jeg vite at jeg ikke er registrert fra før
     Og jeg fyller inn resten av skjemaet
-    #Og jeg godtar lånerreglementet
+    Og jeg godtar lånerreglementet
     Og jeg trykker på registreringsknappen
     Så får jeg tilbakemelding om at registreringen er godkjent
     Og jeg har fått et midlertidig brukernavn
