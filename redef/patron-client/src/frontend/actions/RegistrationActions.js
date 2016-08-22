@@ -34,9 +34,9 @@ export function postRegistrationFailure (error, message) {
   }
 }
 
-export function postRegistrationSuccess (username, password, categorycode) {
+export function postRegistrationSuccess (username, password, categoryCode) {
   return dispatch => {
-    dispatch(showModal(ModalComponents.REGISTRATION, { isSuccess: true, username: username, categorycode: categorycode }))
+    dispatch(showModal(ModalComponents.REGISTRATION, { isSuccess: true, username: username, categoryCode: categoryCode }))
     dispatch({ type: types.REGISTRATION_SUCCESS })
     dispatch(LoginActions.login(username, password))
   }
@@ -106,15 +106,11 @@ export function checkForExistingUserFailure (error) {
 }
 
 export function showSSNInfo () {
-  return dispatch => {
-    dispatch({ type: types.TOGGLE_SSN_INFO })
-  }
+  return { type: types.TOGGLE_SSN_INFO }
 }
 
 export function toggleAcceptTerms () {
-  return dispatch => {
-    dispatch({ type: types.TOGGLE_ACCEPT_TERMS })
-  }
+  return { type: types.TOGGLE_ACCEPT_TERMS }
 }
 
 export function postRegistration (successAction) {
@@ -159,7 +155,7 @@ export function postRegistration (successAction) {
         }
       })
       .then(json => {
-        dispatch(postRegistrationSuccess(json.username, registrationInfo.pin, json.categorycode))
+        dispatch(postRegistrationSuccess(json.username, registrationInfo.pin, json.categoryCode))
         if (successAction) {
           dispatch(successAction)
         }

@@ -24,7 +24,7 @@ class RegistrationModal extends React.Component {
       <div data-automation-id="registration_success_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
-          {this.props.categorycode === 'REGBARN'
+          {this.props.categoryCode === 'REGBARN'
             ? <span data-automation-id="category" className="juvenile">
                 <FormattedMessage {...messages.patronCategoryJuvenile} /><br />
                 <FormattedMessage {...messages.messageSuccessJuvenile} /><br />
@@ -135,7 +135,7 @@ RegistrationModal.propTypes = {
   isSuccess: PropTypes.bool,
   isCheckingForExistingUser: PropTypes.bool,
   checkForExistingUserSuccess: PropTypes.bool,
-  categorycode: PropTypes.string.isRequired,
+  categoryCode: PropTypes.string,
   intl: intlShape.isRequired
 }
 

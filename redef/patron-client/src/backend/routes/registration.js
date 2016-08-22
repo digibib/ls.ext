@@ -11,7 +11,7 @@ module.exports = (app) => {
     const params = {
       firstname: request.body.firstName,
       surname: request.body.lastName,
-      dateofbirth: dateOfBirth(request.body.year, request.body.month, request.body.day),
+      dateofbirth: getDateOfBirth(request.body.year, request.body.month, request.body.day),
       ssn: request.body.ssn
     }
 
@@ -42,13 +42,13 @@ module.exports = (app) => {
       return
     }
 
-    const dateofbirth = dateOfBirth(request.body.year, request.body.month, request.body.day)
-    const age = getAge(dateofbirth)
-    const categorycode = age < 16 ? 'REGBARN' : 'REGVOKSEN'
+    const dateOfBirth = getDateOfBirth(request.body.year, request.body.month, request.body.day)
+    const age = getAge(dateOfBirth)
+    const categoryCode = age < 16 ? 'REGBARN' : 'REGVOKSEN'
     const patron = {
       firstname: request.body.firstName,
       surname: request.body.lastName,
-      dateofbirth: dateofbirth,
+      dateofbirth: dateOfBirth,
       ssn: request.body.ssn,
       email: request.body.email,
       mobile: request.body.mobile,
@@ -57,14 +57,14 @@ module.exports = (app) => {
       city: request.body.city,
       password: request.body.pin,
       branchcode: request.body.library,
-      categorycode: categorycode,
+      categorycode: categoryCode,
       userid: `${Math.floor(Math.random() * (99 - 10) + 10)}-${Math.floor(Math.random() * (999 - 100) + 100)}` // TODO: Proper user ID
     }
     registerPatron(patron)
     .then(json => setDefaultMessagingSettings(json))
     .then(json => setDefaultSyncStatusAndAttributes(json))
     .then(json => {
-      response.status(201).send({username: json.userid, categorycode: categorycode})
+      response.status(201).send({username: json.userid, categoryCode: categoryCode})
     }).catch(error => {
       console.log(`Registration error: ${error.message}`)
       console.log(`Status Code: ${error.status}`)
@@ -143,7 +143,7 @@ module.exports = (app) => {
   }
 
   // Simple generator for a valid YYYY-MM-DD format, return null if not valid
-  function dateOfBirth (year, month, day) {
+  function getDateOfBirth (year, month, day) {
     const validFormat = /^(19|20)\d\d(-)(0[1-9]|1[012])(-)(0[1-9]|[12][0-9]|3[01])$/
     const y = (parseInt(year) + Math.pow(10, 4) + '').slice(1)
     const m = (parseInt(month) + Math.pow(10, 2) + '').slice(1)
@@ -157,8 +157,8 @@ module.exports = (app) => {
   }
 
   // Return age in years given date of birth
-  function getAge (dateofbirth) {
-    const ageMS = Date.now() - Date.parse(dateofbirth)
+  function getAge (dateOfBirth) {
+    const ageMS = Date.now() - Date.parse(dateOfBirth)
     let age = new Date()
     age.setTime(ageMS)
     const ageYear = age.getFullYear() - 1970
