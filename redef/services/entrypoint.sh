@@ -11,8 +11,12 @@ set -e
 
 # Setup Koha REST api user
 # ------------------------
-# Add patron category for API user
-mysql --protocol=tcp -h koha_mysql -u"$KOHA_MYSQL_USER" -p"$KOHA_MYSQL_PASS" "$KOHA_MYSQL_DB" -e "INSERT IGNORE INTO categories(categorycode, description) VALUES ('API', 'API-user')"
+# Add patron categories for API user and Self registrated users
+mysql --protocol=tcp -h koha_mysql -u"$KOHA_MYSQL_USER" -p"$KOHA_MYSQL_PASS" "$KOHA_MYSQL_DB" -e "\
+  INSERT IGNORE INTO categories(categorycode, description, enrolmentperiod, upperagelimit) VALUES \
+  ('API', 'API-user', NULL, NULL), \
+  ('REGVOKSEN', 'Selvregistrert voksen', 1, NULL), \
+  ('REGBARN', 'Selvregistrert barn', 1, 16)"
 # Add branch for API user
 mysql --protocol=tcp -h koha_mysql -u"$KOHA_MYSQL_USER" -p"$KOHA_MYSQL_PASS" "$KOHA_MYSQL_DB" -e "INSERT IGNORE INTO branches(branchcode, branchname) VALUES ('api', 'Intern API avdeling')"
 # Add user with permissions needed for API use
