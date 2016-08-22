@@ -2,6 +2,10 @@
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+classificationSource:ddk4 a duo:ClassificationSource ;
+  duo:code "4" ;
+  rdfs:label "DDK 4"@en ;
+  rdfs:label "DDK 4"@no .
 classificationSource:ddk5 a duo:ClassificationSource ;
   duo:code "5" ;
   rdfs:label "DDK 5"@en ;
@@ -10,3 +14,19 @@ classificationSource:ddk23 a duo:ClassificationSource ;
   duo:code "23/nor" ;
   rdfs:label "DDK 23"@en ;
   rdfs:label "DDK 23"@no .
+classificationSource:ddc20 a duo:ClassificationSource ;
+  duo:code "DDC20" ;
+  rdfs:label "DDC 20"@en ;
+  rdfs:label "DDC 20"@no .
+classificationSource:ddc21 a duo:ClassificationSource ;
+  duo:code "DDC21" ;
+  rdfs:label "DDC 21"@en ;
+  rdfs:label "DDC 21"@no .
+classificationSource:ddc22 a duo:ClassificationSource ;
+  duo:code "DDC22" ;
+  rdfs:label "DDC 22"@en ;
+  rdfs:label "DDC 22"@no .
+classificationSource:ddc23 a duo:ClassificationSource ;
+  duo:code "DDC23" ;
+  rdfs:label "DDC 23"@en ;
+  rdfs:label "DDC 23"@no .
