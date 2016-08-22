@@ -27,7 +27,7 @@ public class AuthorizedValueTest {
             "role",
             "mediaType",
             "relationType",
-            "deweyEdition",
+            "classificationSource",
             "key"));
 
     @Test

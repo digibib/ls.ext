@@ -796,8 +796,8 @@
         case 'deichman:Instrument':
         case 'deichman:Instrumentation':
         case 'deichman:CompositionType':
-        case 'deichman:DeweyEdition':
-        case 'deichman:DeweyClassification':
+        case 'deichman:ClassificationSource':
+        case 'deichman:ClassificationEntry':
         case 'http://www.w3.org/2001/XMLSchema#anyURI':
           rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
           inputType = 'input-string'

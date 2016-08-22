@@ -1,12 +1,12 @@
-@prefix deweyEdition: <http://data.deichman.no/deweyEdition#> .
+@prefix classificationSource: <http://data.deichman.no/classificationSource#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-deweyEdition:ddk5 a duo:DeweyEdition ;
+classificationSource:ddk5 a duo:ClassificationSource ;
   duo:code "5" ;
   rdfs:label "DDK 5"@en ;
   rdfs:label "DDK 5"@no .
-deweyEdition:ddk23 a duo:DeweyEdition ;
+classificationSource:ddk23 a duo:ClassificationSource ;
   duo:code "23/nor" ;
   rdfs:label "DDK 23"@en ;
   rdfs:label "DDK 23"@no .

@@ -734,17 +734,17 @@ module.exports = (app) => {
               multiple: true,
               addAnotherLabel: 'Legg til en klassifikasjon til',
               subInputs: {
-                rdfProperty: 'hasDeweyClassification',
-                range: 'DeweyClassification',
+                rdfProperty: 'hasClassification',
+                range: 'ClassificationEntry',
                 inputs: [
                   {
                     label: 'Klassifikasjonsnummer',
-                    rdfProperty: 'hasDewey',
+                    rdfProperty: 'hasClassificationNumber',
                     required: true
                   },
                   {
                     label: 'Utgave',
-                    rdfProperty: 'hasDeweyEdition',
+                    rdfProperty: 'hasClassificationSource',
                     required: true
                   }
                 ]

@@ -98,13 +98,13 @@
   rdfs:label "Instrumentation"@en ;
   rdfs:label "Besetning"@no .
 
-:DeweyClassification a rdfs:Class ;
-  rdfs:label "Dewey classification"@en ;
-  rdfs:label "Deweyklassifisering"@no .
+:ClassificationEntry a rdfs:Class ;
+  rdfs:label "Classification"@en ;
+  rdfs:label "Klassifikasjon"@no .
 
-:DeweyEdition a rdfs:Class ;
-  rdfs:label "Dewey edition"@en ;
-  rdfs:label "Deweyutgave"@no .
+:ClassificationSource a rdfs:Class ;
+  rdfs:label "Classification source"@en ;
+  rdfs:label "Klassifikasjonskilde"@no .
 
 :hasNumberOfPerformers a rdfs:Property ;
   rdfs:label "Performers"@en ;
@@ -517,24 +517,24 @@
   rdfs:domain :Work ;
   rdfs:range :CompositionType .
 
-:hasDewey a rdfs:Property ;
-  rdfs:label "Dewey"@en ;
-  rdfs:label "Dewey"@no ;
-  rdfs:domain :DeweyClassification ;
+:hasClassificationNumber a rdfs:Property ;
+  rdfs:label "Classification number"@en ;
+  rdfs:label "Klassfikasjonsnummer"@no ;
+  rdfs:domain :ClassificationEntry ;
   rdfs:range xsd:string .
 
-:hasDeweyEdition a rdfs:Property ;
-  rdfs:label "Dewey edition"@en ;
-  rdfs:label "Deweyutgave"@no ;
-  rdfs:domain :DeweyClassification ;
-  rdfs:range duo:DeweyEdition ;
-  duo:valuesFrom values:deweyEdition .
+:hasClassificationSource a rdfs:Property ;
+  rdfs:label "Classification source"@en ;
+  rdfs:label "Klassifikasjonskilde"@no ;
+  rdfs:domain :ClassificationEntry ;
+  rdfs:range duo:ClassificationSource ;
+  duo:valuesFrom values:classificationSource .
 
-:hasDeweyClassification a rdfs:Property ;
-  rdfs:label "Dewey"@en ;
-  rdfs:label "Dewey"@no ;
+:hasClassification a rdfs:Property ;
+  rdfs:label "Classification"@en ;
+  rdfs:label "Klassifikasjon"@no ;
   rdfs:domain :Work ;
-  rdfs:range :DeweyClassification .
+  rdfs:range :ClassificationEntry .
 
 :inKey a rdfs:Property ;
   rdfs:label "Muical key"@en ;
