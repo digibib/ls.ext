@@ -24,7 +24,16 @@ class RegistrationModal extends React.Component {
       <div data-automation-id="registration_success_modal" className="default-modal">
         <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
         <p>
-          <FormattedMessage {...messages.messageSuccess} /><br />
+          {this.props.categorycode === 'REGBARN'
+            ? <span data-automation-id="category" className="juvenile">
+                <FormattedMessage {...messages.patronCategoryJuvenile} /><br/>
+                <FormattedMessage {...messages.messageSuccessJuvenile} /><br/>
+              </span>
+            : <span data-automation-id="category" className="adult">
+                <FormattedMessage {...messages.patronCategoryAdult} /><br/>
+                <FormattedMessage {...messages.messageSuccessAdult} /><br/>
+              </span>
+          }
           <span data-automation-id="username">{this.props.username}</span>
         </p>
         <button className="black-btn" onClick={this.props.modalActions.hideModal}>
@@ -82,22 +91,37 @@ const messages = defineMessages({
   },
   headerTextSuccess: {
     id: 'RegistrationModal.headerTextSuccess',
-    description: 'You are now ready to reserve and loan books at Deichman',
-    defaultMessage: 'Success!'
+    description: 'Message upon successful registration',
+    defaultMessage: 'Success! You are now ready to reserve and loan books at Deichman'
   },
-  messageSuccess: {
-    id: 'RegistrationModal.messageSuccess',
-    description: 'The extend loan success message',
-    defaultMessage: 'You have successfully registered. A temporary user id is given below. Please contact library to get a library card.'
+  messageSuccessAdult: {
+    id: 'RegistrationModal.messageSuccessAdult',
+    description: 'The registration success message for adults',
+    defaultMessage: 'Welcome as a new user of our library. A temporary user id is given below. Please contact library to get a library card.'
+  },
+  patronCategoryAdult: {
+    id: 'RegistrationModal.patronCategoryAdult',
+    description: 'The patron category message for adults',
+    defaultMessage: 'Patron category: adult'
+  },
+  messageSuccessJuvenile: {
+    id: 'RegistrationModal.messageSuccessJuvenile',
+    description: 'The registration success message for juvenile',
+    defaultMessage: 'Welcome as juvenile user of our library. A temporary user id is given below. Please contact library to get a library card.'
+  },
+  patronCategoryJuvenile: {
+    id: 'RegistrationModal.patronCategoryJuvenile',
+    description: 'The patron category message for juvenile',
+    defaultMessage: 'Patron category: juvenile'
   },
   headerTextError: {
     id: 'RegistrationModal.headerTextError',
-    description: 'The header text for the extend loan error dialog',
+    description: 'The header text for the registration error dialog',
     defaultMessage: 'Failure'
   },
   genericRegistrationError: {
     id: 'RegistrationModal.genericRegistrationError',
-    description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
+    description: 'A generic message when registration goes wrong, which can be caused by server errors, network problems etc.',
     defaultMessage: 'Something went wrong when registering loaner. Please try again later.'
   }
 })
@@ -111,6 +135,7 @@ RegistrationModal.propTypes = {
   isSuccess: PropTypes.bool,
   isCheckingForExistingUser: PropTypes.bool,
   checkForExistingUserSuccess: PropTypes.bool,
+  categorycode: PropTypes.string.isRequired,
   intl: intlShape.isRequired
 }
 

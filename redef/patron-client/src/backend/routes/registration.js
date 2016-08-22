@@ -42,10 +42,13 @@ module.exports = (app) => {
       return
     }
 
+    const dateofbirth = dateOfBirth(request.body.year, request.body.month, request.body.day)
+    const age = getAge(dateofbirth)
+    const categorycode = age < 16 ? 'REGBARN' : 'REGVOKSEN'
     const patron = {
       firstname: request.body.firstName,
       surname: request.body.lastName,
-      dateofbirth: dateOfBirth(request.body.year, request.body.month, request.body.day),
+      dateofbirth: dateofbirth,
       ssn: request.body.ssn,
       email: request.body.email,
       mobile: request.body.mobile,
@@ -54,14 +57,16 @@ module.exports = (app) => {
       city: request.body.city,
       password: request.body.pin,
       branchcode: request.body.library,
-      categorycode: 'V', // TODO: DEICH-168 choose default new patron category
+      categorycode: categorycode,
       userid: `${Math.floor(Math.random() * (99 - 10) + 10)}-${Math.floor(Math.random() * (999 - 100) + 100)}` // TODO: Proper user ID
     }
     registerPatron(patron)
     .then(json => setDefaultMessagingSettings(json))
     .then(json => setDefaultSyncStatusAndAttributes(json))
     .then(json => {
-      response.status(201).send({ username: json.userid })
+      console.log(categorycode)
+      console.log(json.categorycode)
+      response.status(201).send({ username: json.userid, categorycode: categorycode})
     }).catch(error => {
       console.log(`Registration error: ${error.message}`)
       console.log(`Status Code: ${error.status}`)
@@ -151,5 +156,15 @@ module.exports = (app) => {
     } else {
       return date
     }
+  }
+
+  // Return age in years given date of birth
+  function getAge(dateofbirth) {
+    ageMS = Date.now() - Date.parse(dateofbirth)
+    age = new Date()
+    age.setTime(ageMS)
+    ageYear = age.getFullYear() - 1970
+
+    return ageYear
   }
 }

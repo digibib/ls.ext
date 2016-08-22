@@ -34,9 +34,9 @@ export function postRegistrationFailure (error, message) {
   }
 }
 
-export function postRegistrationSuccess (username, password) {
+export function postRegistrationSuccess (username, password, categorycode) {
   return dispatch => {
-    dispatch(showModal(ModalComponents.REGISTRATION, { isSuccess: true, username: username }))
+    dispatch(showModal(ModalComponents.REGISTRATION, { isSuccess: true, username: username, categorycode: categorycode }))
     dispatch({ type: types.REGISTRATION_SUCCESS })
     dispatch(LoginActions.login(username, password))
   }
@@ -159,7 +159,7 @@ export function postRegistration (successAction) {
         }
       })
       .then(json => {
-        dispatch(postRegistrationSuccess(json.username, registrationInfo.pin))
+        dispatch(postRegistrationSuccess(json.username, registrationInfo.pin, json.categorycode))
         if (successAction) {
           dispatch(successAction)
         }
