@@ -64,9 +64,7 @@ module.exports = (app) => {
     .then(json => setDefaultMessagingSettings(json))
     .then(json => setDefaultSyncStatusAndAttributes(json))
     .then(json => {
-      console.log(categorycode)
-      console.log(json.categorycode)
-      response.status(201).send({ username: json.userid, categorycode: categorycode})
+      response.status(201).send({username: json.userid, categorycode: categorycode})
     }).catch(error => {
       console.log(`Registration error: ${error.message}`)
       console.log(`Status Code: ${error.status}`)
@@ -159,11 +157,11 @@ module.exports = (app) => {
   }
 
   // Return age in years given date of birth
-  function getAge(dateofbirth) {
-    ageMS = Date.now() - Date.parse(dateofbirth)
-    age = new Date()
+  function getAge (dateofbirth) {
+    const ageMS = Date.now() - Date.parse(dateofbirth)
+    let age = new Date()
     age.setTime(ageMS)
-    ageYear = age.getFullYear() - 1970
+    const ageYear = age.getFullYear() - 1970
 
     return ageYear
   }

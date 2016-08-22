@@ -26,12 +26,12 @@ class RegistrationModal extends React.Component {
         <p>
           {this.props.categorycode === 'REGBARN'
             ? <span data-automation-id="category" className="juvenile">
-                <FormattedMessage {...messages.patronCategoryJuvenile} /><br/>
-                <FormattedMessage {...messages.messageSuccessJuvenile} /><br/>
+                <FormattedMessage {...messages.patronCategoryJuvenile} /><br />
+                <FormattedMessage {...messages.messageSuccessJuvenile} /><br />
               </span>
             : <span data-automation-id="category" className="adult">
-                <FormattedMessage {...messages.patronCategoryAdult} /><br/>
-                <FormattedMessage {...messages.messageSuccessAdult} /><br/>
+                <FormattedMessage {...messages.patronCategoryAdult} /><br />
+                <FormattedMessage {...messages.messageSuccessAdult} /><br />
               </span>
           }
           <span data-automation-id="username">{this.props.username}</span>

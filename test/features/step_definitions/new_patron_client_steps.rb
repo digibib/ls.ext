@@ -302,12 +302,15 @@ When(/^skal jeg se registreringsskjemaet$/) do
   @site.PatronClientCommon.registration_modal_visible?.should eq true
 end
 
-When(/^jeg legger inn mine personalia$/) do
+When(/^jeg legger inn mine personalia som "(barn|voksen)"$/) do |category|
+  juvenileAge = (Time.now - (60*60*24*365*8)).year  # ~8 years
+  adultAge    = (Time.now - (60*60*24*365*40)).year # ~40 years
+
   @browser.text_field(id: 'firstname').set generateRandomString
   @browser.text_field(id: 'lastname').set @active[:patron].surname
   @browser.text_field(id: 'day').set '%02d' % (rand(29)+1)
   @browser.text_field(id: 'month').set '%02d' % (rand(11)+1)
-  @browser.text_field(id: 'year').set "19#{rand(100)}"
+  @browser.text_field(id: 'year').set category == 'barn' ? juvenileAge : adultAge
   @browser.text_field(id: 'ssn').set '%011d' % rand(10**11)
 end
 
@@ -344,6 +347,14 @@ end
 
 Then(/^får jeg tilbakemelding om at registreringen er godkjent$/) do
   wait_for { @browser.element(data_automation_id: 'registration_success_modal').present? }
+end
+
+Then(/^jeg har fått riktig lånerkategori som "(barn|voksen)"$/) do |category|
+  if category == 'barn'
+    @browser.element(data_automation_id: 'category').class_name.should eq('juvenile')
+  else
+    @browser.element(data_automation_id: 'category').class_name.should eq('adult')
+  end
 end
 
 Then(/^jeg har fått et midlertidig brukernavn$/) do
