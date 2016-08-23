@@ -107,11 +107,12 @@ services:
     depends_on:
       - sip
     ports:
-      - "6005:6005"
+      - "6006:6006"
       - "8899:8899"
     environment:
       SIP_SERVER: sip:6002
       SIP_CONNS: 10
+      TCPPORT: 6006
     logging:
       driver: "journald"
 
