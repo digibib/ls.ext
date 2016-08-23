@@ -1,17 +1,14 @@
 import React, { PropTypes } from 'react'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
+import firstBy from 'thenby'
 
 import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
-import { getId } from '../utils/uriParser'
+import { getId, getFragment } from '../utils/uriParser'
+import ClickableElement from './ClickableElement'
 
 class Publications extends React.Component {
-  constructor (props) {
-    super(props)
-    this.handleCollapsePublications = this.handleCollapsePublications.bind(this)
-  }
-
   componentWillMount () {
     if (this.props.publications.length === 1) {
       this.props.expandSubResource(this.props.publications[ 0 ].id, true)
@@ -26,8 +23,7 @@ class Publications extends React.Component {
     )
   }
 
-  renderPublications (publicationsPerRow) {
-    const publications = [ ...this.props.publications ]
+  renderPublications (publications, publicationsPerRow) {
     const publicationRows = []
     while (publications.length > 0) {
       publicationRows.push(publications.splice(0, publicationsPerRow))
@@ -46,7 +42,8 @@ class Publications extends React.Component {
             />
           ))}</div> ]
           if (showMorePublication) {
-            output.push(<div className="row" key={showMorePublication.id}>
+            output.push(
+              <div className="row" key={showMorePublication.id}>
                 <PublicationInfo expandSubResource={this.props.expandSubResource}
                                  publication={showMorePublication}
                                  startReservation={this.props.startReservation} />
@@ -60,52 +57,108 @@ class Publications extends React.Component {
     )
   }
 
-  renderPublicationsMediaQueries () {
+  renderPublicationsMediaQueries (publications) {
     return (
       <div>
-        <MediaQuery query="(min-width: 992px)" values={{...this.props.mediaQueryValues}}>
-          {this.renderPublications(3)}
+        <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
+          {this.renderPublications(publications, 3)}
         </MediaQuery>
-        <MediaQuery query="(min-width: 668px) and (max-width: 991px)" values={{...this.props.mediaQueryValues}}>
-          {this.renderPublications(2)}
+        <MediaQuery query="(min-width: 668px) and (max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
+          {this.renderPublications(publications, 2)}
         </MediaQuery>
-        <MediaQuery query="(max-width: 667px)" values={{...this.props.mediaQueryValues}}>
-          {this.renderPublications(1)}
+        <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
+          {this.renderPublications(publications, 1)}
         </MediaQuery>
       </div>
     )
   }
 
-  handleCollapsePublications () {
-    this.props.toggleParameter('collapsePublications')
-  }
-
   render () {
+    const exceptions = {
+      'http://lexvo.org/id/iso639-3/nob' : 1,
+      'http://lexvo.org/id/iso639-3/eng' : 2,
+      'http://lexvo.org/id/iso639-3/dan' : 3,
+      'http://lexvo.org/id/iso639-3/swe' : 4
+    }
+
+    const { workLanguage } = this.props
+    if (!exceptions[ workLanguage ]) {
+      exceptions[ workLanguage ] = 5
+    }
+
+    const publicationHoldersByMediaType = {}
+    this.props.publications.forEach(publication => {
+      publication.mediaType.forEach(mediaTypeUri => {
+        const mediaType = getFragment(mediaTypeUri)
+        publicationHoldersByMediaType[ mediaType ] = publicationHoldersByMediaType[ mediaType ] || []
+        publicationHoldersByMediaType[ mediaType ].push({
+          original: publication,
+          languages: publication.languages.map(language => this.props.intl.formatMessage({ id: language })),
+          formats: publication.formats.map(format => this.props.intl.formatMessage({ id: format })),
+        })
+      })
+    })
+    Object.keys(publicationHoldersByMediaType).forEach(mediaType => {
+      publicationHoldersByMediaType[ mediaType ].sort(
+        firstBy((a, b) => {
+          if (!a.original.languages[ 0 ]) {
+            return 1
+          } else if (exceptions[ a.original.languages[ 0 ] ] && exceptions[ b.original.languages[ 0 ] ]) {
+            //if both items are exceptions
+            return exceptions[ a.original.languages[ 0 ] ] - exceptions[ b.original.languages[ 0 ] ]
+          } else if (exceptions[ a.original.languages[ 0 ] ]) {
+            //only `a` is in exceptions, sort it to front
+            return -1
+          } else if (exceptions[ b.original.languages[ 0 ] ]) {
+            //only `b` is in exceptions, sort it to back
+            return 1
+          } else {
+            //no exceptions to account for, return alphabetic sort
+            return a.original.languages[ 0 ].localeCompare(b.original.languages[ 0 ])
+          }
+        })
+          .thenBy((a, b) => b.publicationYear - a.publicationYear)
+          .thenBy((a, b) => (a.formats[ 0 ] || '').localeCompare(b.formats[ 0 ]))
+      )
+    })
+    let { locationQuery: { collapsePublications } } = this.props
+    if (!Array.isArray(collapsePublications)) {
+      collapsePublications = [ collapsePublications ]
+    }
+
     return (
       <footer className="other-publications">
-        <header className="other-publications-title">
-          <h2><FormattedMessage {...messages.numberOfPublications}
-            values={{numberOfPublications: this.props.publications.length}} /></h2>
-        </header>
+        {
+          Object.keys(publicationHoldersByMediaType).map(mediaType =>
+            <div key={mediaType}>
+              <header className="other-publications-title">
+                <h2>{mediaType}</h2>
+              </header>
 
-        <div className="entry-content-icon patron-placeholder">
-          <div className="entry-content-icon-single">
-            <img src="/images/icon-audiobook.svg" alt="Black speaker with audio waves" />
-            <p>Lydbok </p>
-          </div>
-        </div>
+              <div className="entry-content-icon patron-placeholder">
+                <div className="entry-content-icon-single">
+                  <img src="/images/icon-audiobook.svg" alt="Black speaker with audio waves" />
+                  <p>Lydbok </p>
+                </div>
+              </div>
 
-        <div className="arrow-close" onClick={this.handleCollapsePublications}>
-          {this.props.locationQuery.collapsePublications === null
-            ? <img src="/images/btn-arrow-open.svg" alt="Black arrow pointing down" />
-            : <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up" />}
-        </div>
-
-        <div className="other-publications-entry-content">
-          {this.props.locationQuery.collapsePublications === null
-            ? null
-            : (this.props.publications.length > 0 ? this.renderPublicationsMediaQueries() : this.renderEmpty())}
-        </div>
+              <ClickableElement onClickAction={this.props.toggleParameterValue}
+                                onClickArguments={[ 'collapsePublications', mediaType ]}>
+                <div className="arrow-close">
+                  {collapsePublications.includes(mediaType)
+                    ? <img src="/images/btn-arrow-open.svg" alt="Black arrow pointing down" />
+                    : <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up" />}
+                </div>
+              </ClickableElement>
+              <div className="other-publications-entry-content">
+                <h1>&nbsp;{/*placeholder to work around css bug*/}</h1>
+                {collapsePublications.includes(mediaType)
+                  ? null
+                  : (this.props.publications.length > 0 ? this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaType ].map(publicationHolder => publicationHolder.original)) : this.renderEmpty())}
+              </div>
+            </div>
+          )
+        }
       </footer>
 
     )
@@ -117,7 +170,8 @@ Publications.propTypes = {
   expandSubResource: PropTypes.func.isRequired,
   locationQuery: PropTypes.object.isRequired,
   startReservation: PropTypes.func.isRequired,
-  toggleParameter: PropTypes.func.isRequired,
+  toggleParameterValue: PropTypes.func.isRequired,
+  intl: intlShape.isRequired,
   mediaQueryValues: PropTypes.object
 }
 
@@ -151,4 +205,4 @@ const messages = defineMessages({
   }
 })
 
-export default Publications
+export default injectIntl(Publications)

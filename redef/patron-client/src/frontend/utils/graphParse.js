@@ -17,7 +17,7 @@ export function parsePersonResponse (personResponse, worksResponse) {
 
   person.works = []
   personGraph.byType('Work').forEach(workResource => {
-    let work = {}
+    const work = {}
     populateLiteral(work, 'mainTitle', workResource)
     populateLiteral(work, 'partTitle', workResource)
     work.relativeUri = relativeUri(workResource.id)
@@ -39,6 +39,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   populateLiteral(work, 'mainTitle', workResource)
   populateLiteral(work, 'partTitle', workResource)
   populateLiteral(work, 'publicationYear', workResource)
+  populateLiteral(work, 'language', workResource)
   work.items = []
 
   work.contributors = {}

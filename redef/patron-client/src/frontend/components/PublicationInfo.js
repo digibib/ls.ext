@@ -38,7 +38,7 @@ class PublicationInfo extends React.Component {
     if (items) {
       return groupByBranch(items).map(el => {
         return (
-          <div className="items-by-branch">
+          <div key={el.branch} className="items-by-branch">
             <h1>{el.branch}</h1>
             <Items items={el.items} />
             <p style={{clear: 'both'}}></p>

@@ -114,7 +114,8 @@ class Work extends React.Component {
                         expandSubResource={this.props.resourceActions.expandSubResource}
                         publications={work.publications}
                         startReservation={this.props.reservationActions.startReservation}
-                        toggleParameter={this.props.parameterActions.toggleParameter}
+                        toggleParameterValue={this.props.parameterActions.toggleParameterValue}
+                        workLanguage={work.language}
           />
         </div>
       </div>
