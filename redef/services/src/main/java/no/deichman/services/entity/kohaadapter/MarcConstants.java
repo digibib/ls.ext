@@ -12,6 +12,7 @@ public final class MarcConstants {
     public static final String FIELD_690 = "690";
     static final String LEADER_TEMPLATE = "         a              ";
     public static final String FIELD_245 = "245";
+    public static final String FIELD_521 = "521";
     public static final char SUBFIELD_A = 'a';
     public static final char SUBFIELD_B = 'b';
     public static final char SUBFIELD_P = 'p';

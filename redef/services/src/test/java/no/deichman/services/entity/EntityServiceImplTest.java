@@ -772,8 +772,8 @@ public class EntityServiceImplTest {
         field.addSubfield('a', "Popler");
         want.addMarcField(field);
         // Aldersgrense:
-        field = MarcRecord.newDataField("019");
-        field.addSubfield('c', "75");
+        field = MarcRecord.newDataField("521");
+        field.addSubfield('a', "Aldersgrense 75");
         want.addMarcField(field);
 
 

@@ -1,7 +1,7 @@
 variable,value
 'AcqEnableFiles','1'
 'AcqViewBaskets','all'
-'AgeRestrictionMarker', 'FSK|12'
+'AgeRestrictionMarker', 'Aldersgrense'
 'AllowHoldItemTypeSelection',0
 'AllowOnShelfHolds',1
 'AllowRenewalLimitOverride', 1

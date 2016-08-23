@@ -71,6 +71,8 @@ out/done.setup_koha: out/done.massage_input_data
 	@cp sql/*.sql out/
 	@echo "-- Populating table defining extended patron attribute types"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_extended_patron_attributes.sql'
+	@echo "-- Creating age restriction link to marc 521a"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_age_restriction.sql'
 	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems, items, issues and reserves"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;TRUNCATE TABLE reserves;SET foreign_key_checks=1;"'
 	@echo "OK Done setting up Koha\n"
