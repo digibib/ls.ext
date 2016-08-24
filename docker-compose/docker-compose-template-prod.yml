@@ -101,7 +101,7 @@ services:
 
   rfidhub:
     container_name: rfidhub
-    image: "digibib/rfidhub:171d0d4acb9efa417513f1db80e11947fdc71834"
+    image: "digibib/rfidhub:7378d8f39f9c54fa388e42bce7100ac22d6cfb67"
     networks:
       - backend
     depends_on:
@@ -112,7 +112,7 @@ services:
     environment:
       SIP_SERVER: sip:6002
       SIP_CONNS: 10
-      TCPPORT: 6006
+      TCP_PORT: 6006
     logging:
       driver: "journald"
 
