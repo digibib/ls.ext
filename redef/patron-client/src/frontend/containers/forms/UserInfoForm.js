@@ -10,6 +10,7 @@ import validator from '../../../common/validation/validator'
 import fields from '../../../common/forms/userInfoForm'
 import ValidationMessage from '../../components/ValidationMessage'
 import asyncValidate from '../../utils/asyncValidate'
+import domOnlyProps from '../../utils/domOnlyProps'
 
 class UserInfoForm extends React.Component {
   constructor (props) {
@@ -46,7 +47,7 @@ class UserInfoForm extends React.Component {
               <span property="schema:streetAddress">
                 <label htmlFor="streetaddress"><FormattedMessage {...messages.address} /></label>
                 <input data-automation-id="UserInfoForm_address" id="streetaddress" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.address)} {...address} />
+                       placeholder={this.props.intl.formatMessage(messages.address)} {...domOnlyProps(address)} />
                 {this.getValidator(address)}
               </span><br />
 
@@ -54,7 +55,7 @@ class UserInfoForm extends React.Component {
                 <h2><FormattedMessage {...messages.zipcode} /></h2>
                 <label htmlFor="postal">Postnr.</label>
                 <input data-automation-id="UserInfoForm_zipcode" id="postal" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.zipcode)} {...zipcode} />
+                       placeholder={this.props.intl.formatMessage(messages.zipcode)} {...domOnlyProps(zipcode)} />
               {this.getValidator(zipcode)}
               </span>
 
@@ -62,7 +63,7 @@ class UserInfoForm extends React.Component {
                 <h2><FormattedMessage {...messages.city} /></h2>
                 <label htmlFor="city">Poststed</label>
                 <input data-automation-id="UserInfoForm_city" id="city" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.city)} {...city} />
+                       placeholder={this.props.intl.formatMessage(messages.city)} {...domOnlyProps(city)} />
               {this.getValidator(city)}
               </span><br />
 
@@ -70,7 +71,7 @@ class UserInfoForm extends React.Component {
                 <h2><FormattedMessage {...messages.country} /></h2>
                 <label htmlFor="country">Land</label>
                 <input data-automation-id="UserInfoForm_country" id="country" type="text"
-                       placeholder={this.props.intl.formatMessage(messages.country)} {...country} />
+                       placeholder={this.props.intl.formatMessage(messages.country)} {...domOnlyProps(country)} />
               {this.getValidator(country)}
               </span><br />
           </address>
@@ -81,20 +82,20 @@ class UserInfoForm extends React.Component {
             <h2><FormattedMessage {...messages.mobile} /></h2>
             <label htmlFor="cellphone">Mobil</label>
             <input data-automation-id="UserInfoForm_mobile" id="cellphone" type="number"
-                   placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
+                   placeholder={this.props.intl.formatMessage(messages.mobile)} {...domOnlyProps(mobile)} /></div>
           {this.getValidator(mobile)}
 
           <div className="phone">
             <h2>Telefon</h2>
             <label htmlFor="phone"><FormattedMessage {...messages.country} /></label>
             <input data-automation-id="UserInfoForm_mobile" id="phone" type="number"
-                   placeholder={this.props.intl.formatMessage(messages.mobile)} {...mobile} /></div>
+                   placeholder={this.props.intl.formatMessage(messages.mobile)} {...domOnlyProps(mobile)} /></div>
 
           <div className="email">
             <h2><FormattedMessage {...messages.email} /></h2>
             <label htmlFor="email">E-post</label>
             <input data-automation-id="UserInfoForm_email" id="email" type="email"
-                   placeholder={this.props.intl.formatMessage(messages.email)} {...email} />
+                   placeholder={this.props.intl.formatMessage(messages.email)} {...domOnlyProps(email)} />
             {this.getValidator(email)}
           </div>
         </div>

@@ -9,6 +9,7 @@ import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
+import domOnlyProps from '../../utils/domOnlyProps'
 
 class RegistrationFormPartOne extends React.Component {
   constructor (props) {
@@ -93,13 +94,13 @@ class RegistrationFormPartOne extends React.Component {
           <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
           <span className="display-inline">
                   <h4><FormattedMessage {...messages.firstName} /></h4>
-                  <input name="firstname" type="text" id="firstname" {...firstName} />
+                  <input name="firstname" type="text" id="firstname" {...domOnlyProps(firstName)} />
                   <label htmlFor="name"><FormattedMessage {...messages.firstName} /></label>
             {this.getValidator(firstName)}
                 </span>
           <span className="display-inline">
                   <h4><FormattedMessage {...messages.lastName} /></h4>
-                  <input name="lastname" type="text" id="lastname" {...lastName} />
+                  <input name="lastname" type="text" id="lastname" {...domOnlyProps(lastName)} />
                   <label htmlFor="lastname"><FormattedMessage {...messages.lastName} /></label>
             {this.getValidator(lastName)}
                 </span>
@@ -110,19 +111,19 @@ class RegistrationFormPartOne extends React.Component {
             <h2><FormattedMessage {...messages.birthdate} /></h2>
             <div className="item">
               <h4><FormattedMessage {...messages.day} /></h4>
-              <input name="day" type="number" id="day" {...day} />
+              <input name="day" type="number" id="day" {...domOnlyProps(day)} />
               <label htmlFor="day"><FormattedMessage {...messages.day} /></label>
               {this.getValidator(day)}
             </div>
             <div className="item">
               <h4><FormattedMessage {...messages.month} /></h4>
-              <input name="month" type="number" id="month" {...month} />
+              <input name="month" type="number" id="month" {...domOnlyProps(month)} />
               <label htmlFor="month"><FormattedMessage {...messages.month} /></label>
               {this.getValidator(month)}
             </div>
             <div className="item">
               <h4><FormattedMessage {...messages.year} /></h4>
-              <input name="year" type="number" id="year" {...year} />
+              <input name="year" type="number" id="year" {...domOnlyProps(year)} />
               <label htmlFor="year"><FormattedMessage {...messages.year} /></label>
               {this.getValidator(year)}
             </div>
@@ -136,7 +137,7 @@ class RegistrationFormPartOne extends React.Component {
           <span className="display-inline">
                   <h2><FormattedMessage {...messages.ssnHeader} /></h2>
                   <h4><FormattedMessage {...messages.ssnSpec} /></h4>
-                  <input name="ssn" type="text" id="ssn" {...ssn} />
+                  <input name="ssn" type="text" id="ssn" {...domOnlyProps(ssn)} />
                   <label htmlFor="ssn"><FormattedMessage {...messages.ssnLabel} /></label>
             {this.getValidator(ssn)}
                 </span>

@@ -10,6 +10,7 @@ import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartTwo'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
+import domOnlyProps from '../../utils/domOnlyProps'
 
 class RegistrationFormPartTwo extends React.Component {
   constructor (props) {
@@ -70,42 +71,42 @@ class RegistrationFormPartTwo extends React.Component {
           <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
           <span className="display-inline">
           <h4><FormattedMessage {...messages.email} /></h4>
-          <input name="email" type="text" id="email" {...email} />
+          <input name="email" type="text" id="email" {...domOnlyProps(email)} />
           <label htmlFor="email"><FormattedMessage {...messages.email} /></label>
             {this.getValidator(email)}
         </span>
           <span className="display-inline">
           <h4><FormattedMessage {...messages.mobile} /></h4>
-          <input name="mobile" type="text" id="mobile" {...mobile} />
+          <input name="mobile" type="text" id="mobile" {...domOnlyProps(mobile)} />
           <label htmlFor="mobile"><FormattedMessage {...messages.mobile} /></label>
             {this.getValidator(mobile)}
         </span>
           <address>
             <h4><FormattedMessage {...messages.address} /></h4>
-            <input name="address" type="text" id="address" {...address} />
+            <input name="address" type="text" id="address" {...domOnlyProps(address)} />
             <label htmlFor="address"><FormattedMessage {...messages.address} /></label>
             {this.getValidator(address)}
             <span className="display-inline">
             <h4><FormattedMessage {...messages.zipcode} /></h4>
-            <input name="zipcode" type="text" id="zipcode" {...zipcode} />
+            <input name="zipcode" type="text" id="zipcode" {...domOnlyProps(zipcode)} />
             <label htmlFor="zipcode"><FormattedMessage {...messages.zipcode} /></label>
               {this.getValidator(zipcode)}
           </span>
             <span className="display-inline">
             <h4><FormattedMessage {...messages.city} /></h4>
-            <input name="city" type="text" id="city" {...city} />
+            <input name="city" type="text" id="city" {...domOnlyProps(city)} />
             <label htmlFor="city"><FormattedMessage {...messages.city} /></label>
               {this.getValidator(city)}
           </span>
             <h4><FormattedMessage {...messages.country} /></h4>
             <label htmlFor="country"><FormattedMessage {...messages.country} /></label>
-            <input name="country" type="text" id="country" {...country} />
+            <input name="country" type="text" id="country" {...domOnlyProps(country)} />
             {this.getValidator(country)}
           </address>
 
           <h4><FormattedMessage {...messages.gender} /></h4>
           <div className="select-container">
-            <select data-automation-id="gender_selection" name="gender" {...gender}>
+            <select data-automation-id="gender_selection" name="gender" {...domOnlyProps(gender)}>
               <option value="male">{this.props.intl.formatMessage({ ...messages.male })}</option>
               <option value="female">{this.props.intl.formatMessage({ ...messages.female })}</option>
             </select>
@@ -116,9 +117,9 @@ class RegistrationFormPartTwo extends React.Component {
         <fieldset>
           <legend><FormattedMessage {...messages.personSettingsLegend} /></legend>
           <h2><FormattedMessage {...messages.choosePin} /></h2>
-          <input data-automation-id="choose_pin" name="pin" type="password" id="pin" {...pin} />
+          <input data-automation-id="choose_pin" name="pin" type="password" id="pin" {...domOnlyProps(pin)} />
           <label htmlFor="pin"><FormattedMessage {...messages.choosePin} /></label>
-          <input data-automation-id="repeat_pin" name="repeatPin" type="password" id="repeatPin" {...repeatPin} />
+          <input data-automation-id="repeat_pin" name="repeatPin" type="password" id="repeatPin" {...domOnlyProps(repeatPin)} />
           <label htmlFor="repeatPin"><FormattedMessage {...messages.repeatPin} /></label>
           {this.getValidator(pin)}
           {this.getValidator(repeatPin)}
@@ -127,7 +128,7 @@ class RegistrationFormPartTwo extends React.Component {
             <Libraries libraries={this.props.libraries} selectProps={library} />
           </div>
           <div className="terms_and_conditions">
-            <input data-automation-id="accept_terms" onClick={this.handleAcceptTerms} id="acceptTerms" type="checkbox" {...acceptTerms} />
+            <input data-automation-id="accept_terms" onClick={this.handleAcceptTerms} id="acceptTerms" type="checkbox" {...domOnlyProps(acceptTerms)} />
             <label htmlFor="acceptTerms"><span>{/* Helper for checkbox styling */}</span></label>
               <a href="/terms" title="termslink" target="_blank">
                 <FormattedMessage {...messages.acceptTermsLink} />

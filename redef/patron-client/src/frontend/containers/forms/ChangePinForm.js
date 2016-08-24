@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { reduxForm, reset } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import domOnlyProps from '../../utils/domOnlyProps'
 
 import * as ProfileActions from '../../actions/ProfileActions'
 
@@ -21,7 +22,7 @@ class ChangePinForm extends React.Component {
 
   getValidator (field) {
     if (field && field.touched && field.error) {
-      return <div style={{color: 'red'}}>{this.props.intl.formatMessage(field.error)}</div>
+      return <div style={{ color: 'red' }}>{this.props.intl.formatMessage(field.error)}</div>
     }
   }
 
@@ -33,8 +34,8 @@ class ChangePinForm extends React.Component {
     const { changePasswordError } = this.props
     if (changePasswordError) {
       return messages[ changePasswordError.message ]
-        ? <div style={{color: 'red'}}><FormattedMessage {...messages[ changePasswordError.message ]} /></div>
-        : <div style={{color: 'red'}}><FormattedMessage {...messages.genericChangePasswordError} /></div>
+        ? <div style={{ color: 'red' }}><FormattedMessage {...messages[ changePasswordError.message ]} /></div>
+        : <div style={{ color: 'red' }}><FormattedMessage {...messages.genericChangePasswordError} /></div>
     }
   }
 
@@ -63,16 +64,18 @@ class ChangePinForm extends React.Component {
             <div className="change-pin-fields">
               <h2><FormattedMessage {...messages.currentPin} /></h2>
               <input type="password" name="current-pin" id="current-pin"
-                     ref={e => this.currentPinField = e} {...currentPin} />
+                     ref={e => this.currentPinField = e} {...domOnlyProps(currentPin)} />
               <label htmlFor="current-pin"> <FormattedMessage {...messages.currentPin} /></label>
               {this.renderError()}
               {this.getValidator(currentPin)}
               <h2><FormattedMessage {...messages.newPin} /></h2>
-              <input type="password" name="new-pin" id="new-pin" ref={e => this.pinField = e} {...newPin} />
+              <input type="password" name="new-pin" id="new-pin"
+                     ref={e => this.pinField = e} {...domOnlyProps(newPin)} />
               <label htmlFor="new-pin"><FormattedMessage {...messages.repeatPin} /></label>
               {this.getValidator(newPin)}
               <h2><FormattedMessage {...messages.repeatPin} /></h2>
-              <input type="password" name="repeat-pin" id="repeat-pin" ref={e => this.repeatPinField = e} {...repeatPin} />
+              <input type="password" name="repeat-pin" id="repeat-pin"
+                     ref={e => this.repeatPinField = e} {...domOnlyProps(repeatPin)} />
               <label htmlFor="repeat-pin"><FormattedMessage {...messages.repeatPin} /></label>
               {this.getValidator(repeatPin)}
             </div>
@@ -81,7 +84,7 @@ class ChangePinForm extends React.Component {
             <button className="black-btn" type="submit" disabled={submitting}>
               <FormattedMessage {...messages.changePin} /><br /></button>
             {changePasswordSuccess
-              ? <div style={{color: 'green'}}><FormattedMessage {...messages.changePinSuccess} /></div> : null}
+              ? <div style={{ color: 'green' }}><FormattedMessage {...messages.changePinSuccess} /></div> : null}
           </footer>
         </form>
       </div>
