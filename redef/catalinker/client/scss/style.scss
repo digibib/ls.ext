@@ -392,13 +392,16 @@ body {
         span.advanced-search-legend {
           span.ui-icon {
             display: inline-block;
-            height: 14px;
-            margin: 0 3px -2px 0;
+            height: 15px;
           }
           position: absolute;
           font-size: 0.7em;
           font-style: italic;
-          padding: 4px 1px;
+          padding: 4px 9px 3px 0;
+          background-color: yellow;
+          margin: 4px 10px 0 0;
+          border: 1px grey solid;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
         .suggestion-source-bibbi {
           @include source-logo-bibbi;
