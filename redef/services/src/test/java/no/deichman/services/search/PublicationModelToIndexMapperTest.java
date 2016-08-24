@@ -53,6 +53,7 @@ public class PublicationModelToIndexMapperTest {
             + "     \"recordId\": \"3\",\n"
             + "    \"subject\": [\"Trondheim\"],\n"
             + "    \"genre\": [\"Krim (spesial)\"],\n"
+            + "    \"dewey\": \"929.209484213\", \n"
             + "    \"workUri\": \"http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
 
@@ -123,7 +124,10 @@ public class PublicationModelToIndexMapperTest {
                 + "        <http://data.deichman.no/literaryForm#novel> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
-                + "    ns2:genre <http://deichman.no/genre/g1> ;"
+                + "    ns2:genre <http://deichman.no/genre/g1> ;\n"
+                + "    ns2:hasClassification [ a ns2:ClassificationEntry ;\n"
+                + "      ns2:hasClassificationNumber  \"929.209484213\" ;\n"
+                + "      ns2:hasClassificationSource  <http://data.deichman.no/classificationSource#ddk5> ] ;\n"
                 + "    ns2:subject <http://deichman.no/subject/e1200005> .\n"
                 + "\n"
                 + "<http://192.168.50.12:8005/person/h10834700> rdf:type ns2:Person ;\n"

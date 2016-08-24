@@ -29,7 +29,8 @@ CONSTRUCT {
                deich:abstract ?abstract ;
                deich:formatNo ?formatNo ;
                deich:ageLimit ?ageLimit ;
-               deich:series ?seriesTitle .
+               deich:series ?seriesTitle ;
+               deich:dewey ?dewey .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -51,6 +52,12 @@ WHERE {
 
   OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
   OPTIONAL { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
+
+  OPTIONAL {
+      ?p deich:publicationOf ?work .
+      ?work deich:hasClassification ?classEntry .
+      ?classEntry deich:hasClassificationNumber ?dewey .
+  }
 
   OPTIONAL {
     ?p deich:publicationOf ?work ;

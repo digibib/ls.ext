@@ -94,6 +94,7 @@
     "coreographer": "http://data.deichman.no/role#coreographer",
     "recordId": "deichman:recordID",
     "agents": "deichman:agents",
-    "abstract": "deichman:abstract"
+    "abstract": "deichman:abstract",
+    "dewey": "deichman:dewey"
   }
 }
