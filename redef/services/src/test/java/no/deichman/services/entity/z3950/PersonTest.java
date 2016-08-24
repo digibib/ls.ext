@@ -23,7 +23,7 @@ public class PersonTest {
 
     @Test
     public void it_has_overloaded_constructor() {
-        assertNotNull(new Person("123123", "A. Name", "1971-"));
+        assertNotNull(new Person("123123", "A. Name", "1971-", "n."));
     }
 
     @Test
@@ -32,7 +32,8 @@ public class PersonTest {
         String id = "21321344";
         String name = "Rogers Roger";
         String dates = "1971-";
-        Person person = new Person(id, name, dates);
+        String nationality = "n.";
+        Person person = new Person(id, name, dates, nationality);
         assertEquals(person.getName(), name);
         Map<String, String> personMap = person.getPersonMap();
         assertTrue(personMap.containsValue(name));

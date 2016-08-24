@@ -6,6 +6,9 @@
         {
           "deichman:name": "Eksempelsen, Eksempel",
           "deichman:birthYear": "1931",
+          "deichman:nationality": {
+            "@id": "http://data.deichman.no/nationality#n"
+          },
           "@type": [
             "deichman:Person"
           ],

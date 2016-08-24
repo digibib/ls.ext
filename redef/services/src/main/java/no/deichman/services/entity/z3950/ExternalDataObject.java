@@ -10,7 +10,7 @@ import java.util.List;
  */
 class ExternalDataObject {
     @SerializedName("@type")
-    private List<String> type = new ArrayList<>();
+    private List<String> type;
     @SerializedName("@id")
     private String id;
 
@@ -27,12 +27,15 @@ class ExternalDataObject {
     }
 
     public final void setType(String type) {
+        if (this.type == null) {
+            this.type = new ArrayList<>();
+        }
         this.type.add(type);
     }
 
     private boolean testBNodeId(String id) {
         boolean value = false;
-        if (id.matches("^_:.+")) {
+        if (id.matches("^_:.+|^http://.*")) {
             value = true;
         }
         return value;

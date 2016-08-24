@@ -24,6 +24,9 @@ public class Person extends ExternalDataObject {
     @SerializedName("deichman:deathYear")
     private String deathYear;
 
+    @SerializedName("deichman:nationality")
+    private ExternalDataObject nationality;
+
     public final String getName() {
         return name;
     }
@@ -36,11 +39,15 @@ public class Person extends ExternalDataObject {
     Person() {
         setType("deichman:Person");
     }
-    Person(String id, String name, String dates) {
+
+    Person(String id, String name, String dates, String nationality) {
         setType("deichman:Person");
         setId(id);
         this.name = name;
         setDates(dates);
+        ExternalDataObject nationality1 = new ExternalDataObject();
+        nationality1.setId(nationality);
+        setNationality(nationality1);
     }
 
     final Map<String, String> getPersonMap() {
@@ -79,5 +86,13 @@ public class Person extends ExternalDataObject {
 
     public final void setDeathYear(String deathYear) {
         this.deathYear = deathYear;
+    }
+
+    public final void setNationality(ExternalDataObject nationality) {
+        this.nationality = nationality;
+    }
+
+    public final ExternalDataObject getNationality() {
+        return nationality;
     }
 }

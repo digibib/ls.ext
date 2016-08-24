@@ -63,7 +63,7 @@ public class MARCMapper {
                         workContribution[0] = (Contribution) workContributionMap.get("contribution");
                         person[0] = (Person) workContributionMap.get("person");
                     });
-                    getSubfieldValue(dataField, 'd').ifPresent(person[0]::setDates);
+                    setPersonDataFromDataField(dataField, person[0]);
                     getSubfieldValue(dataField, 'e').ifPresent(workContribution[0]::setRole);
                     persons.add(person[0]);
                     contributions.add(workContribution[0]);
@@ -101,17 +101,19 @@ public class MARCMapper {
                     break;
                 case "700":
                     final Person[] publicationPerson = new Person[1];
-                    final Contribution[] publicationContribution = new Contribution[1];
-                    getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                        Map<String, Object> publicationContributionMap = composeContribution(s, EntityType.PUBLICATION);
-                        publication.setContributor((String) publicationContributionMap.get("contributorLink"));
-                        publicationContribution[0] = (Contribution) publicationContributionMap.get("contribution");
-                        publicationPerson[0] = (Person) publicationContributionMap.get("person");
-                    });
-                    getSubfieldValue(dataField, 'd').ifPresent(publicationPerson[0]::setDates);
-                    getSubfieldValue(dataField, 'e').ifPresent(publicationContribution[0]::setRole);
-                    persons.add(publicationPerson[0]);
-                    contributions.add(publicationContribution[0]);
+                    if (dataField.getIndicator2() == '0') {
+                        final Contribution[] publicationContribution = new Contribution[1];
+                        getSubfieldValue(dataField, 'a').ifPresent(s -> {
+                            Map<String, Object> publicationContributionMap = composeContribution(s, EntityType.PUBLICATION);
+                            publication.setContributor((String) publicationContributionMap.get("contributorLink"));
+                            publicationContribution[0] = (Contribution) publicationContributionMap.get("contribution");
+                            publicationPerson[0] = (Person) publicationContributionMap.get("person");
+                        });
+                        getSubfieldValue(dataField, 'e').ifPresent(publicationContribution[0]::setRole);
+                        setPersonDataFromDataField(dataField, publicationPerson[0]);
+                        persons.add(publicationPerson[0]);
+                        contributions.add(publicationContribution[0]);
+                    }
                     break;
                 default:
                     //we're not interested in the content so we do nothing -- checkstyle requires default.
@@ -133,6 +135,34 @@ public class MARCMapper {
         graphList.addAll(contributions);
 
         return topLevelMap;
+    }
+
+    private void setPersonDataFromDataField(DataField dataField, Person person) {
+        getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
+        getSubfieldValue(dataField, 'j')
+                .map(this::unPunctuate)
+                .map(fragment -> path("nationality", fragment))
+                .map(this::dataPrefix)
+                .map(id -> externalObject(id))
+                .ifPresent(person::setNationality);
+    }
+
+    private ExternalDataObject externalObject(String id) {
+        ExternalDataObject externalDataObject = new ExternalDataObject();
+        externalDataObject.setId(id);
+        return externalDataObject;
+    }
+
+    private String unPunctuate(String punctuated) {
+        return punctuated.replace(".", "");
+    }
+
+    private String dataPrefix(String unprefixed) {
+        return "http://data.deichman.no/" + unprefixed;
+    }
+
+    private String path(String path, String fragment) {
+        return path + "#" + fragment;
     }
 
     private Optional<String> getSubfieldValue(DataField dataField, Character character) {
