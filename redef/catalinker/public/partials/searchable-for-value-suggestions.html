@@ -2,7 +2,8 @@
 class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}} simple-searchable"
 on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
-value="{{current.value}}" />
+value="{{current.value}}"
+{{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled=disabled{{/if}}/>
 <span class="legend">
     {{#current.value}}
     <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Trykk Enter for å søke.</span>
