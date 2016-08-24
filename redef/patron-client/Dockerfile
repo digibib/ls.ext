@@ -31,12 +31,14 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY . /usr/src/app
+
+COPY package.json /usr/src/app/
 
 RUN npm set progress=false
 RUN npm set color=false
 RUN npm install > install.log 2>&1
 
+COPY . /usr/src/app
 EXPOSE 8000
 
 CMD [ "npm", "run", "production"]
