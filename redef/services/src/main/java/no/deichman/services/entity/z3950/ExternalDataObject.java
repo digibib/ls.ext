@@ -11,8 +11,12 @@ import java.util.List;
 class ExternalDataObject {
     @SerializedName("@type")
     private List<String> type;
+
     @SerializedName("@id")
     private String id;
+
+    @SerializedName("deichman:specification")
+    private String specification;
 
     String bNodize(String id) {
         String value = id;
@@ -47,5 +51,13 @@ class ExternalDataObject {
 
     public final String getId() {
         return this.id;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
+    public String getSpecification() {
+        return specification;
     }
 }

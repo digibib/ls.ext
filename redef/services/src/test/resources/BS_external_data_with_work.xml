@@ -83,5 +83,10 @@
             <subfield code="t">En julefortelling</subfield>
             <subfield code="u">julefortelling</subfield>
         </datafield>
+        <datafield tag="700" ind1=" " ind2="2">
+            <subfield code="a">Capote, Truman</subfield>
+            <subfield code="c">real name Truman Streckfus Persons</subfield>
+        </datafield>
+
     </record>
 </collection>

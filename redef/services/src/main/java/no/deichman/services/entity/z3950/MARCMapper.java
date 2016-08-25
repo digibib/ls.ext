@@ -178,6 +178,7 @@ public class MARCMapper {
 
     private void setPersonDataFromDataField(DataField dataField, Person person) {
         getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
+        getSubfieldValue(dataField, 'c').ifPresent(person::setSpecification);
         getSubfieldValue(dataField, 'j')
                 .map(this::unPunctuate)
                 .map(fragment -> path("nationality", fragment))
