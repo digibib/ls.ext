@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
 /**
- * Responsibility: map format codes to rdf
+ * Responsibility: map format codes to rdf.
  */
 public final class Format {
     private Format() {
@@ -60,7 +60,7 @@ public final class Format {
             .put("vo", "File_folder")
             .build();
 
-    public final static String translate(String formatCode) {
+    public static String translate(String formatCode) {
         return FORMAT_MAP.get(formatCode);
     }
 }

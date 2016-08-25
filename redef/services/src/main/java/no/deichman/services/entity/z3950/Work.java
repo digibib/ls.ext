@@ -48,7 +48,7 @@ public class Work extends BibliographicObjectExternal {
         return summary;
     }
 
-    public void setAudience(ExternalDataObject audience) {
+    public final void setAudience(ExternalDataObject audience) {
         if (this.audience == null) {
             this.audience = new ArrayList<>();
         }

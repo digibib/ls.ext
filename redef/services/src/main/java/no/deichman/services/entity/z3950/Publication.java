@@ -148,11 +148,11 @@ public class Publication extends BibliographicObjectExternal {
         this.publicationOf = map;
     }
 
-    public void setFormat(ExternalDataObject format) {
+    public final void setFormat(ExternalDataObject format) {
         this.format = format;
     }
 
-    public ExternalDataObject getFormat() {
+    public final ExternalDataObject getFormat() {
         return format;
     }
 

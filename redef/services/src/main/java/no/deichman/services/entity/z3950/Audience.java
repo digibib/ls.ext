@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
 /**
- * Responsibility: map format codes to rdf
+ * Responsibility: map audience codes to rdf.
  */
 public final class Audience {
     private Audience() {
@@ -20,7 +20,16 @@ public final class Audience {
             .put("mu", "ages13To15")
             .build();
 
-    public final static String translate(String formatCode) {
+    private static final Map<String, String> FORMAT_MAP_008_22 = ImmutableMap.<String, String>builder()
+            .put("a", "adult")
+            .put("j", "juvenile")
+            .build();
+
+    public static String translate(String formatCode) {
         return FORMAT_MAP.get(formatCode);
+    }
+
+    public static String translate008_22(String formatCode) {
+        return FORMAT_MAP_008_22.get(formatCode);
     }
 }

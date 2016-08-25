@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
+import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import static java.lang.String.format;
 
 /**
  * Responsibility: Map MARC21 to JSON representation.
@@ -54,6 +57,15 @@ public class MARCMapper {
         publication.setPublicationOf(workId);
 
         List<Object> graphList = new ArrayList<>();
+        for (ControlField controlField: r.getControlFields()){
+                switch (controlField.getTag()) {
+                    case "008":
+                        setUriObject(controlField, 22, "audience", work::setAudience, Audience::translate008_22);
+                        break;
+                    default:
+                }
+        }
+
         for (DataField dataField : r.getDataFields()) {
             switch (dataField.getTag()) {
                 case "019":
@@ -201,6 +213,16 @@ public class MARCMapper {
                 .forEach(setterFunction);
     }
 
+    private void setUriObject(ControlField controlField, int position, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
+        getControlFieldValue(controlField, position)
+                .map(mapper)
+                .filter(StringUtils::isNotBlank)
+                .map(fragment -> path(path, fragment))
+                .map(this::dataPrefix)
+                .map(this::externalObject)
+                .ifPresent(setterFunction);
+    }
+
     private void setPersonDataFromDataField(DataField dataField, Person person) {
         getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
         getSubfieldValue(dataField, 'c').ifPresent(person::setSpecification);
@@ -232,6 +254,10 @@ public class MARCMapper {
 
     private Optional<String> getSubfieldValue(DataField dataField, Character character) {
         return getSubfieldValue(dataField, character, null);
+    }
+
+    private Optional<String> getControlFieldValue(ControlField controlField, int position) {
+        return Optional.of("" + format("%1$-39s", controlField.getData()).charAt(position));
     }
 
     private Optional<String> getSubfieldValue(DataField dataField, Character character, String defaultValue) {
