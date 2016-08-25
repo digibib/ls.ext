@@ -30,7 +30,8 @@ CONSTRUCT {
                deich:formatNo ?formatNo ;
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
-               deich:dewey ?dewey .
+               deich:dewey ?dewey ;
+               deich:nationality ?nationLabel .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -141,6 +142,10 @@ WHERE {
                 ?contrib a deich:MainEntry .
                 BIND(true as ?mainEntry) .
                 ?contribAgent deich:name ?mainEntryName .
+                OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
+                  BIND(str(?nationLabelLang) AS ?nationLabel)
+                  FILTER(lang(?nationLabelLang) = "no")
+                }
              }
   }
 

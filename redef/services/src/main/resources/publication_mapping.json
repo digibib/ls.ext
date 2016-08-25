@@ -35,6 +35,9 @@
     "dewey": {
       "type": "string"
     },
+    "nationality": {
+      "type": "string"
+    },
     "recordId": {
       "type": "string",
       "index": "not_analyzed"

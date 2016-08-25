@@ -95,6 +95,7 @@
     "recordId": "deichman:recordID",
     "agents": "deichman:agents",
     "abstract": "deichman:abstract",
-    "dewey": "deichman:dewey"
+    "dewey": "deichman:dewey",
+    "nationality": "deichman:nationality"
   }
 }

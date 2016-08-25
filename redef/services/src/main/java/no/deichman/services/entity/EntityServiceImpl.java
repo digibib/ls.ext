@@ -176,6 +176,7 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedLexvoResource(m);
         m = getLinkedFormatResource(m);
         m = getLinkedAudienceResource(m);
+        m = getLinkedNationalityResource(m);
         return m;
     }
 
