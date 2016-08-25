@@ -2,16 +2,21 @@ package no.deichman.services.entity.z3950;
 
 import no.deichman.services.entity.EntityType;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.DataField;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Responsibility: Map MARC21 to JSON representation.
@@ -51,6 +56,10 @@ public class MARCMapper {
         List<Object> graphList = new ArrayList<>();
         for (DataField dataField : r.getDataFields()) {
             switch (dataField.getTag()) {
+                case "019":
+                    setUriObject(dataField, 'a', "audience", work::setAudience, Audience::translate);
+                    setUriObject(dataField, 'b', "format", publication::setFormat, Format::translate);
+                    break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
                     getSubfieldValue(dataField, 'n').ifPresent(publication::setBinding);
@@ -182,6 +191,16 @@ public class MARCMapper {
                 .ifPresent(contribution::setRole);
     }
 
+    private void setUriObject(DataField dataField, char subField, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
+        getSubfieldValues(dataField, subField)
+                .map(mapper)
+                .filter(StringUtils::isNotBlank)
+                .map(fragment -> path(path, fragment))
+                .map(this::dataPrefix)
+                .map(this::externalObject)
+                .forEach(setterFunction);
+    }
+
     private void setPersonDataFromDataField(DataField dataField, Person person) {
         getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
         getSubfieldValue(dataField, 'c').ifPresent(person::setSpecification);
@@ -221,6 +240,11 @@ public class MARCMapper {
             data = Optional.of(dataField.getSubfield(character).getData());
         }
         return data;
+    }
+
+    private Stream<String> getSubfieldValues(DataField dataField, Character character, String ... separators) {
+        String separator = separators.length > 0 ? separators[0] : ",";
+        return Arrays.stream(getSubfieldValue(dataField, character).orElse("").split(separator)).filter(StringUtils::isNotBlank);
     }
 
     private Map<String, Object> composeContribution(String person, EntityType entityType) {

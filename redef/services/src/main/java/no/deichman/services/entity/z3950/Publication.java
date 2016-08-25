@@ -14,26 +14,39 @@ public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:isbn")
     private String isbn;
+
     @SerializedName("deichman:binding")
     private String binding;
+
     @SerializedName("deichman:edition")
     private String edition;
+
     @SerializedName("deichman:placeOfPublication")
     private String placeOfPublication;
+
     @SerializedName("deichman:publisher")
     private String publisher;
+
     @SerializedName("deichman:publicationYear")
     private String publicationYear;
+
     @SerializedName("deichman:numberOfPages")
     private String numberOfPages;
+
     @SerializedName("deichman:language")
     private String language;
+
     @SerializedName("deichman:contributor")
     private List<Map<String, String>> contributor;
+
     @SerializedName("deichman:hasPublicationPart")
     private List<Map<String, String>> hasPublicationPart;
+
     @SerializedName("deichman:publicationOf")
     private Map<String, String> publicationOf = new HashMap<>();
+
+    @SerializedName("deichman:format")
+    private ExternalDataObject format;
 
     public final String getIsbn() {
         return isbn;
@@ -134,4 +147,14 @@ public class Publication extends BibliographicObjectExternal {
         map.put("@id", this.bNodize(publicationOf));
         this.publicationOf = map;
     }
+
+    public void setFormat(ExternalDataObject format) {
+        this.format = format;
+    }
+
+    public ExternalDataObject getFormat() {
+        return format;
+    }
+
+
 }

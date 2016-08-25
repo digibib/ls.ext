@@ -2,7 +2,9 @@ package no.deichman.services.entity.z3950;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +16,9 @@ public class Work extends BibliographicObjectExternal {
 
     @SerializedName("deichman:hasSummary")
     private String summary;
+
+    @SerializedName("deichman:audience")
+    private List<ExternalDataObject> audience;
 
     public final Map<String, String> getContributor() {
         return contributor;
@@ -41,5 +46,12 @@ public class Work extends BibliographicObjectExternal {
 
     public final String getSummary() {
         return summary;
+    }
+
+    public void setAudience(ExternalDataObject audience) {
+        if (this.audience == null) {
+            this.audience = new ArrayList<>();
+        }
+        this.audience.add(audience);
     }
 }

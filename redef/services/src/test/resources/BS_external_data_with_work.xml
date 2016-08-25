@@ -12,6 +12,7 @@
             <subfield code="b">BIBBI</subfield>
         </datafield>
         <datafield tag="019" ind1=" " ind2=" ">
+            <subfield code="a">bu,u,mu</subfield>
             <subfield code="b">l</subfield>
             <subfield code="d">R</subfield>
         </datafield>

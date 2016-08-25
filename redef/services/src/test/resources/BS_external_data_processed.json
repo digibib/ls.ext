@@ -57,6 +57,9 @@
           "deichman:publicationOf": {
             "@id": "_:0000000"
           },
+          "deichman:format": {
+            "@id": "http://data.deichman.no/format#Book"
+          },
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
           "@type": [
