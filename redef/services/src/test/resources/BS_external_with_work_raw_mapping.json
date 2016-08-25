@@ -58,6 +58,11 @@
             "@id": "http://data.deichman.no/audience#ages13To15"
           }
         ],
+        "deichman:literaryForm": [
+          {
+            "@id": "http://data.deichman.no/literaryForm#fiction"
+          }
+        ],
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
         "@type": [

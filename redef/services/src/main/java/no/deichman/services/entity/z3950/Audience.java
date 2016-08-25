@@ -29,7 +29,7 @@ public final class Audience {
         return FORMAT_MAP.get(formatCode);
     }
 
-    public static String translate008_22(String formatCode) {
+    public static String translate008pos22(String formatCode) {
         return FORMAT_MAP_008_22.get(formatCode);
     }
 }

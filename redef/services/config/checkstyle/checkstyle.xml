@@ -4,6 +4,8 @@
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
+    <module name="SuppressWarningsFilter" />
+
     <!--
         If you set the basedir property below, then all reported file
         names will be relative to the specified directory. See
@@ -92,6 +94,9 @@
         </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
+
+        <!-- allow suppression for some cases -->
+        <module name="SuppressWarningsHolder" />
 
 
         <!-- Checks for whitespace                               -->

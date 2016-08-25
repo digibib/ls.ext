@@ -24,7 +24,11 @@ import static java.lang.String.format;
 /**
  * Responsibility: Map MARC21 to JSON representation.
  */
+@SuppressWarnings("checkstyle:MethodLength")
 public class MARCMapper {
+
+    public static final int TWENTY_TWO = 22;
+    public static final int THIRTY_THREE = 33;
 
     public MARCMapper() {
     }
@@ -60,7 +64,8 @@ public class MARCMapper {
         for (ControlField controlField: r.getControlFields()){
                 switch (controlField.getTag()) {
                     case "008":
-                        setUriObject(controlField, 22, "audience", work::setAudience, Audience::translate008_22);
+                        setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
+                        setUriObject(controlField, THIRTY_THREE, "literaryForm", work::setLiteraryForm, LiteraryForm::translate);
                         break;
                     default:
                 }
@@ -205,8 +210,8 @@ public class MARCMapper {
 
     private void setUriObject(DataField dataField, char subField, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
         getSubfieldValues(dataField, subField)
-                .map(mapper)
                 .filter(StringUtils::isNotBlank)
+                .map(mapper)
                 .map(fragment -> path(path, fragment))
                 .map(this::dataPrefix)
                 .map(this::externalObject)
@@ -215,8 +220,8 @@ public class MARCMapper {
 
     private void setUriObject(ControlField controlField, int position, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
         getControlFieldValue(controlField, position)
-                .map(mapper)
                 .filter(StringUtils::isNotBlank)
+                .map(mapper)
                 .map(fragment -> path(path, fragment))
                 .map(this::dataPrefix)
                 .map(this::externalObject)

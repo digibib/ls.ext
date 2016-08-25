@@ -20,6 +20,9 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:audience")
     private List<ExternalDataObject> audience;
 
+    @SerializedName("deichman:literaryForm")
+    private List<ExternalDataObject> literaryForm;
+
     public final Map<String, String> getContributor() {
         return contributor;
     }
@@ -53,5 +56,12 @@ public class Work extends BibliographicObjectExternal {
             this.audience = new ArrayList<>();
         }
         this.audience.add(audience);
+    }
+
+    public final void setLiteraryForm(ExternalDataObject literaryForm) {
+        if (this.literaryForm == null) {
+            this.literaryForm = new ArrayList<>();
+        }
+        this.literaryForm.add(literaryForm);
     }
 }

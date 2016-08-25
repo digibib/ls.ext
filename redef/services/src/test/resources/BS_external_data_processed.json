@@ -38,6 +38,11 @@
               "@id": "http://data.deichman.no/audience#adult"
             }
           ],
+          "deichman:literaryForm": [
+            {
+              "@id": "http://data.deichman.no/literaryForm#fiction"
+            }
+          ],
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
           "@type": [
