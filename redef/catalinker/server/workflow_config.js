@@ -9,6 +9,7 @@ function maintenanceInputs (label, type) {
     },
     // this is used to control how the search result in the support panel behaves
     widgetOptions: {
+      maintenance: true,
       // make it possible to create a work resource if necessary,
       enableCreateNewResource: {
         formRefs: [ {
@@ -56,7 +57,8 @@ module.exports = (app) => {
               type: 'input-string'
             },
             {
-              rdfProperty: 'birthYear'
+              rdfProperty: 'birthYear',
+              prefillFromSuggestion: true
             },
             {
               rdfProperty: 'deathYear'
@@ -318,6 +320,7 @@ module.exports = (app) => {
             {
               // this is an input type used to search for a main resource, e.g. Work. The rendered input field
               // will not be tied to a particular subject and predicate
+              id: 'searchMainResourceInput',
               searchMainResource: {
                 label: 'Søk etter eksisterende verk',
                 indexType: 'work',
@@ -440,6 +443,7 @@ module.exports = (app) => {
             includeOnlyFor('book', { rdfProperty: 'writingSystem', multiple: true }),
             { rdfProperty: 'adaptationOfPublicationForParticularUserGroups', multiple: true },
             {
+              id: 'publishedByInput',
               rdfProperty: 'publishedBy',
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'name' ], // these are property names used to label already connected entities
@@ -468,6 +472,7 @@ module.exports = (app) => {
               }
             },
             {
+              id: 'hasPlaceOfPublicationInput',
               rdfProperty: 'hasPlaceOfPublication',
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'prefLabel', 'specification' ], // these are property names used to label already connected entities
@@ -496,6 +501,7 @@ module.exports = (app) => {
                     label: 'Serie',
                     required: true,
                     rdfProperty: 'serial',
+                    id: 'serialInput',
                     indexTypes: 'serial',
                     nameProperties: [ 'name' ],
                     type: 'searchable-with-result-in-side-panel',
@@ -573,6 +579,7 @@ module.exports = (app) => {
                   {
                     label: 'Verk',
                     rdfProperty: 'work',
+                    id: 'relatedToWorkInput',
                     required: true,
                     indexTypes: [ 'work' ],
                     type: 'searchable-with-result-in-side-panel',
@@ -653,9 +660,9 @@ module.exports = (app) => {
                 }
               }
             }),
-            includeOnlyFor(['musical_score', 'musical_recording'], {
-                rdfProperty: 'inKey',
-                multiple: true
+            includeOnlyFor([ 'musical_score', 'musical_recording' ], {
+              rdfProperty: 'inKey',
+              multiple: true
             }),
             includeOnlyFor('musical_score', {
               label: 'Besetning',
@@ -696,6 +703,7 @@ module.exports = (app) => {
             }),
             {
               rdfProperty: 'subject',
+              id: 'subjectInput',
               multiple: true,
               addAnotherLabel: 'Legg til et emne til',
               type: 'searchable-with-result-in-side-panel',
@@ -752,6 +760,7 @@ module.exports = (app) => {
             },
             {
               rdfProperty: 'genre',
+              id: 'genreInput',
               multiple: true,
               addAnotherLabel: 'Legg til en sjanger til',
               type: 'searchable-with-result-in-side-panel',
@@ -815,12 +824,14 @@ module.exports = (app) => {
                   },
                   {
                     label: 'Tittel på delverk',
+                    id: 'publicationPartWorkInput',
                     rdfProperty: 'hasWork',
                     required: true,
                     type: 'searchable-with-result-in-side-panel',
                     authority: true, // this indicates it is an authorized entity
                     nameProperties: [ 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
                     indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
+                    indexDocumentFields: [ 'mainTitle' ],
                     widgetOptions: {
                       enableCreateNewResource: {
                         formRefs: [ {
@@ -880,6 +891,7 @@ module.exports = (app) => {
                     label: 'Aktør',
                     required: true,
                     rdfProperty: 'agent',
+                    id: 'contributionAgentInput',
                     indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
@@ -1080,7 +1092,28 @@ module.exports = (app) => {
         corporation: 'Corporation',
         instrument: 'Instrument',
         compositiontype: 'CompositionType'
-      }
+      },
+      suggestionSpecs: [
+        { resourceType: 'Work' },
+        { resourceType: 'Publication' },
+        {
+          resourceType: 'Person',
+          wrappedIn: 'Contribution',
+          predicate: 'agent',
+          enableCreateNewResource: true
+        },
+        {
+          resourceType: 'Person',
+          wrappedIn: 'PublicationPart',
+          predicate: 'agent',
+          enableCreateNewResource: true
+        },
+        {
+          resourceType: 'Work',
+          wrappedIn: 'PublicationPart',
+          predicate: 'hasWork',
+          enableCreateNewResource: true
+        } ]
     }
     response.json(config)
   })

@@ -96,7 +96,7 @@ module.exports = (app) => {
                   'deichman:nationality': {
                     '@id': 'http://data.deichman.no/nationality#n'
                   },
-                  'http://koha1.deichman.no:8005/raw#lifeSpan': '1949-'
+                  'http://koha1.deichman.no:8005/raw#lifeSpan': '1939-'
                 },
                 {
                   '@id': '_:N788edbeea7104c42adda64d78d844440',
