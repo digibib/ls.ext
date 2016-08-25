@@ -22,6 +22,13 @@
           "@id": "_:0000000"
         },
         {
+          "deichman:name": "Connie Contributor",
+          "@type": [
+            "deichman:Person"
+          ],
+          "@id": "_:0000000"
+        },
+        {
           "deichman:contributor": {
             "@id": "_:0000000"
           },
@@ -41,6 +48,9 @@
           "deichman:contributor": [
             {
               "@id": "_:0000000"
+            },
+            {
+              "@id": "_:0000000"
             }
           ],
           "deichman:publicationOf": {
@@ -56,6 +66,9 @@
           "deichman:agent": {
             "@id": "_:0000000"
           },
+          "deichman:role": {
+            "@id": "http://data.deichman.no/role#contributor"
+          },
           "@type": [
             "deichman:Contribution",
             "deichman:MainEntry"
@@ -66,7 +79,21 @@
           "deichman:agent": {
             "@id": "_:0000000"
           },
-          "deichman:role": "Illustratør",
+          "deichman:role": {
+            "@id": "http://data.deichman.no/role#illustrator"
+          },
+          "@type": [
+            "deichman:Contribution"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:agent": {
+            "@id": "_:0000000"
+          },
+          "deichman:role": {
+            "@id": "http://data.deichman.no/role#contributor"
+          },
           "@type": [
             "deichman:Contribution"
           ],

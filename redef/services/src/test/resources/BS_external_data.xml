@@ -65,7 +65,10 @@
         </datafield>
         <datafield tag="700" ind1=" " ind2="0">
             <subfield code="a">Jimson Jimson</subfield>
-            <subfield code="e">Illustratør</subfield>
+            <subfield code="e">illustr.</subfield>
+        </datafield>
+        <datafield tag="700" ind1=" " ind2="0">
+            <subfield code="a">Connie Contributor</subfield>
         </datafield>
     </record>
 </collection>

@@ -5,8 +5,8 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Responsibility: test Contribution class.
@@ -26,13 +26,5 @@ public class ContributionTest {
         map.put("@id", testData);
         contribution.setAgent(map);
         assertEquals(map, contribution.getAgent());
-    }
-
-    @Test
-    public void can_get_and_set_role() {
-        String role = "Author";
-        Contribution contribution = new Contribution();
-        contribution.setRole(role);
-        assertEquals(role, contribution.getRole());
     }
 }

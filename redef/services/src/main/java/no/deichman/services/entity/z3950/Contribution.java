@@ -14,7 +14,7 @@ public class Contribution extends ExternalDataObject {
     private Map<String, String> agent;
 
     @SerializedName("deichman:role")
-    private String role;
+    private ExternalDataObject role;
 
     Contribution() {
         this.setType("deichman:Contribution");
@@ -29,11 +29,11 @@ public class Contribution extends ExternalDataObject {
     }
 
 
-    public final String getRole() {
+    public final ExternalDataObject getRole() {
         return role;
     }
 
-    public final void setRole(String role) {
+    public final void setRole(ExternalDataObject role) {
         this.role = role;
     }
 

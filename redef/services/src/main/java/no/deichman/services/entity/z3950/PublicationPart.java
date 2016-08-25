@@ -8,13 +8,7 @@ import java.util.Map;
  * Responsibility: provide publication part object.
  */
 
-public class PublicationPart extends ExternalDataObject {
-
-    @SerializedName("deichman:agent")
-    private Map<String, String> agent;
-
-    @SerializedName("deichman:role")
-    private String role;
+public class PublicationPart extends Contribution {
 
     @SerializedName("deichman:improperWork")
     private boolean improperWork;
@@ -33,23 +27,6 @@ public class PublicationPart extends ExternalDataObject {
 
     PublicationPart() {
         this.setType("deichman:PublicationPart");
-    }
-
-    public final Map<String, String> getAgent() {
-        return agent;
-    }
-
-    public final void setAgent(Map<String, String> agent) {
-        this.agent = agent;
-    }
-
-
-    public final String getRole() {
-        return role;
-    }
-
-    public final void setRole(String role) {
-        this.role = role;
     }
 
     public final String getHasOriginalTitle() {

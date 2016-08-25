@@ -71,6 +71,9 @@
         "deichman:agent": {
           "@id": "_:0000000"
         },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#contributor"
+        },
         "@type": [
           "deichman:Contribution",
           "deichman:MainEntry"
@@ -81,21 +84,27 @@
         "deichman:agent": {
           "@id": "_:0000000"
         },
-        "deichman:role": "Illustratør",
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#illustrator"
+        },
         "@type": [
           "deichman:Contribution"
         ],
         "@id": "_:0000000"
       },
       {
-        "deichman:agent": {
-          "@id": "_:0000000"
-        },
         "deichman:improperWork": false,
         "deichman:hasWork": {
           "@id": "_:0000000"
         },
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#contributor"
+        },
         "@type": [
+          "deichman:Contribution",
           "deichman:PublicationPart"
         ],
         "@id": "_:0000000"

@@ -66,7 +66,8 @@ public class MARCMapper {
                         person[0] = (Person) workContributionMap.get("person");
                     });
                     setPersonDataFromDataField(dataField, person[0]);
-                    getSubfieldValue(dataField, 'e').ifPresent(workContribution[0]::setRole);
+                    setRole(dataField, workContribution[0]);
+
                     persons.add(person[0]);
                     contributions.add(workContribution[0]);
                     break;
@@ -120,7 +121,7 @@ public class MARCMapper {
                                     publicationPerson[0] = (Person) publicationContributionMap.get("person");
                                 });
                             });
-                            getSubfieldValue(dataField, 'e').ifPresent(publicationPart[0]::setRole);
+                            setRole(dataField, publicationPart[0]);
                             setPersonDataFromDataField(dataField, publicationPerson[0]);
                             persons.add(publicationPerson[0]);
                             publicationParts.add(publicationPart[0]);
@@ -133,7 +134,7 @@ public class MARCMapper {
                             publicationContribution[0] = (Contribution) publicationContributionMap.get("contribution");
                             publicationPerson[0] = (Person) publicationContributionMap.get("person");
                         });
-                        getSubfieldValue(dataField, 'e').ifPresent(publicationContribution[0]::setRole);
+                        setRole(dataField, publicationContribution[0]);
                         setPersonDataFromDataField(dataField, publicationPerson[0]);
                         persons.add(publicationPerson[0]);
                         contributions.add(publicationContribution[0]);
@@ -165,6 +166,16 @@ public class MARCMapper {
         return topLevelMap;
     }
 
+    private void setRole(DataField dataField, Contribution contribution) {
+        getSubfieldValue(dataField, 'e', "contributor")
+                .map(this::unPunctuate)
+                .map(Role::translate)
+                .map(fragment -> path("role", fragment))
+                .map(this::dataPrefix)
+                .map(this::externalObject)
+                .ifPresent(contribution::setRole);
+    }
+
     private void setPersonDataFromDataField(DataField dataField, Person person) {
         getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
         getSubfieldValue(dataField, 'j')
@@ -194,7 +205,11 @@ public class MARCMapper {
     }
 
     private Optional<String> getSubfieldValue(DataField dataField, Character character) {
-        Optional<String> data = Optional.empty();
+        return getSubfieldValue(dataField, character, null);
+    }
+
+    private Optional<String> getSubfieldValue(DataField dataField, Character character, String defaultValue) {
+        Optional<String> data = Optional.ofNullable(defaultValue);
         if (dataField.getSubfield(character) != null) {
             data = Optional.of(dataField.getSubfield(character).getData());
         }
