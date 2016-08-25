@@ -102,6 +102,11 @@ public class MARCMapper {
                 case "300":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setNumberOfPages);
                     break;
+                case "520":
+                    if (dataField.getIndicator1() == ' ') {
+                        getSubfieldValue(dataField, 'a').ifPresent(work::setHasSummary);
+                    }
+                    break;
                 case "700":
                     final Person[] publicationPerson = new Person[1];
                     if (getSubfieldValue(dataField, 't').isPresent()) {

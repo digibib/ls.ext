@@ -12,6 +12,9 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:contributor")
     private Map<String, String> contributor;
 
+    @SerializedName("deichman:hasSummary")
+    private String summary;
+
     public final Map<String, String> getContributor() {
         return contributor;
     }
@@ -30,5 +33,13 @@ public class Work extends BibliographicObjectExternal {
         this.setType("Work");
         this.setMainTitle(title);
         this.setContributor(contributor);
+    }
+
+    public final void setHasSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public final String getSummary() {
+        return summary;
     }
 }
