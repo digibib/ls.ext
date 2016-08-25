@@ -20,6 +20,18 @@
         "@id": "_:0000000"
       },
       {
+        "deichman:name": "Dickens, Charles",
+        "deichman:birthYear": "1812",
+        "deichman:deathYear": "1870",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#eng"
+        },
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
         "deichman:contributor": {
           "@id": "_:0000000"
         },
@@ -37,6 +49,11 @@
         "deichman:publicationYear": "2007",
         "deichman:numberOfPages": "191 s.",
         "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:hasPublicationPart": [
           {
             "@id": "_:0000000"
           }
@@ -67,6 +84,26 @@
         "deichman:role": "Illustratør",
         "@type": [
           "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:improperWork": false,
+        "deichman:hasWork": {
+          "@id": "_:0000000"
+        },
+        "@type": [
+          "deichman:PublicationPart"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:mainTitle": "En julefortelling",
+        "@type": [
+          "deichman:Work"
         ],
         "@id": "_:0000000"
       }

@@ -29,7 +29,9 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:language")
     private String language;
     @SerializedName("deichman:contributor")
-    private List<Map<String, String>> contributor = new ArrayList<>();
+    private List<Map<String, String>> contributor;
+    @SerializedName("deichman:hasPublicationPart")
+    private List<Map<String, String>> hasPublicationPart;
     @SerializedName("deichman:publicationOf")
     private Map<String, String> publicationOf = new HashMap<>();
 
@@ -108,7 +110,19 @@ public class Publication extends BibliographicObjectExternal {
     final void setContributor(String publicationContributor) {
         Map<String, String> contribution = new HashMap<>();
         contribution.put("@id", publicationContributor);
-        this.contributor.add(contribution);
+        if (contributor == null) {
+            contributor = new ArrayList<>();
+        }
+        contributor.add(contribution);
+    }
+
+    final void addPublicationPart(String publicationPartId) {
+        Map<String, String> publicationPart = new HashMap<>();
+        publicationPart.put("@id", publicationPartId);
+        if (hasPublicationPart == null) {
+            hasPublicationPart = new ArrayList<>();
+        }
+        hasPublicationPart.add(publicationPart);
     }
 
     Publication() {

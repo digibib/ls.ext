@@ -63,7 +63,7 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
         </datafield>
-        <datafield tag="700" ind1=" " ind2=" ">
+        <datafield tag="700" ind1=" " ind2="0">
             <subfield code="a">Jimson Jimson</subfield>
             <subfield code="e">Illustratør</subfield>
         </datafield>

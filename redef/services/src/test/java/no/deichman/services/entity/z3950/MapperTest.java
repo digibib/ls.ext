@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.utils.ResourceReader;
 import org.junit.Test;
+import uk.co.datumedge.hamcrest.json.SameJSONAs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 
 /**
@@ -31,6 +33,10 @@ public class MapperTest extends MappingTester {
         Mapper mapper = new Mapper();
 
         assertEquals(simplifyBNodes(json), simplifyBNodes(gson.toJson(mapper.map(sourceName, record))));
+        assertThat(simplifyBNodes(json),
+                SameJSONAs.sameJSONAs(simplifyBNodes(gson.toJson(mapper.map(sourceName, record))))
+                        .allowingAnyArrayOrdering()
+                        .allowingExtraUnexpectedFields());
         assertEquals(sourceName, mapper.map(sourceName, record).getSource());
     }
 

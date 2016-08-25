@@ -76,5 +76,12 @@
             <subfield code="a">Jimson Jimson</subfield>
             <subfield code="e">Illustratør</subfield>
         </datafield>
+        <datafield tag="700" ind1=" " ind2="2">
+            <subfield code="a">Dickens, Charles</subfield>
+            <subfield code="d">1812-1870</subfield>
+            <subfield code="j">eng.</subfield>
+            <subfield code="t">En julefortelling</subfield>
+            <subfield code="u">julefortelling</subfield>
+        </datafield>
     </record>
 </collection>

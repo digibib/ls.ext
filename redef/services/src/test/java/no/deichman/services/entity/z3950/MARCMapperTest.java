@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.utils.ResourceReader;
 import org.junit.Test;
+import uk.co.datumedge.hamcrest.json.SameJSONAs;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Responsibility: test that marc is mapped as expected.
@@ -33,5 +35,9 @@ public class MARCMapperTest extends MappingTester {
         List<Object> mapping = new MARCMapper().getMapping(marc);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         assertEquals(simplifyBNodes(new ResourceReader().readFile("BS_external_with_work_raw_mapping.json")), simplifyBNodes(gson.toJson(mapping)));
+        assertThat(simplifyBNodes(new ResourceReader().readFile("BS_external_with_work_raw_mapping.json")),
+                SameJSONAs.sameJSONAs(simplifyBNodes(gson.toJson(mapping)))
+                        .allowingExtraUnexpectedFields()
+                        .allowingAnyArrayOrdering());
     }
 }

@@ -446,7 +446,7 @@
 
 :hasWork a rdfs:Property ;
   rdfs:label "Har verk"@no ;
-  rdfs:label "Has wotrk"@en ;
+  rdfs:label "Has work"@en ;
   rdfs:range :Work;
   rdfs:domain :PublicationPart .
 
