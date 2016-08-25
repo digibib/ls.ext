@@ -73,6 +73,7 @@ public class MARCMapper {
                     break;
                 case "240":
                     getSubfieldValue(dataField, 'a').ifPresent(work::setMainTitle);
+                    getSubfieldValue(dataField, 'b').ifPresent(work::setSubtitle);
                     break;
                 case "245":
                     boolean standardTitleExists = r.getVariableFields("240").size() != 0;
