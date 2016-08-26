@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Responsibility: provide publication part object.
  */
-
+@SuppressWarnings("checkstyle:DesignForExtension")
 public class PublicationPart extends Contribution {
 
     @SerializedName("deichman:improperWork")
@@ -19,13 +19,17 @@ public class PublicationPart extends Contribution {
     @SerializedName("deichman:startsAtPage")
     private Integer startsAtPage;
 
-    @SerializedName("deichman:hasWork")
-    private Map<String, String> hasWork;
+    @SerializedName("deichman:publicationOf")
+    private Map<String, String> publicationOf;
 
     @SerializedName("deichman:hasOriginalTitle")
     private String hasOriginalTitle;
 
     PublicationPart() {
+    }
+
+    @Override
+    protected final void assignType() {
         this.setType("deichman:PublicationPart");
     }
 
@@ -61,11 +65,11 @@ public class PublicationPart extends Contribution {
         this.startsAtPage = startsAtPage;
     }
 
-    public final Map<String, String> getHasWork() {
-        return hasWork;
+    public final Map<String, String> getPublicationOf() {
+        return publicationOf;
     }
 
-    public final void setHasWork(Map<String, String> hasWork) {
-        this.hasWork = hasWork;
+    public final void setPublicationOf(Map<String, String> publicationOf) {
+        this.publicationOf = publicationOf;
     }
 }

@@ -46,7 +46,8 @@
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
           "@type": [
-            "deichman:Work"
+            "deichman:Work",
+            "deichman:TopBanana"
           ],
           "@id": "_:0000000"
         },

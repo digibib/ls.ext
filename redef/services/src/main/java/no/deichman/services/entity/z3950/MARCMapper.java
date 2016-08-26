@@ -53,6 +53,7 @@ public class MARCMapper {
         List<Work> publicationPartWorks = new ArrayList<>();
 
         Work work = new Work();
+        work.addType("deichman:TopBanana");
 
         String workId = UUID.randomUUID().toString();
         work.setId(workId);
@@ -294,7 +295,7 @@ public class MARCMapper {
         contribution.setId(UUID.randomUUID().toString());
         contribution.setAgent(publicationAgentLink);
         if (entityType == EntityType.WORK) {
-            contribution.setType("deichman:MainEntry");
+            contribution.addType("deichman:MainEntry");
         }
 
         returnValue.put("contributorLink", contribution.getId());
@@ -309,7 +310,6 @@ public class MARCMapper {
         final String personUuid = UUID.randomUUID().toString();
         final Person persons = new Person();
         final PublicationPart publicationPart = new PublicationPart();
-        publicationPart.setId(UUID.randomUUID().toString());
 
         Map<String, String> agentLink = new HashMap<>();
         persons.setId(personUuid);
@@ -321,7 +321,7 @@ public class MARCMapper {
 
         Map<String, String> workLink = new HashMap<>();
         workLink.put("@id", work.getId());
-        publicationPart.setHasWork(workLink);
+        publicationPart.setPublicationOf(workLink);
 
         returnValue.put("publicationPartLink", publicationPart.getId());
         returnValue.put("publicationPart", publicationPart);

@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Responsibility: provide migration work object.
  */
+@SuppressWarnings("checkstyle:DesignForExtension")
 public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:contributor")
     private Map<String, String> contributor;
@@ -34,8 +35,13 @@ public class Work extends BibliographicObjectExternal {
     }
 
     Work() {
+    }
+
+    @Override
+    protected void assignType() {
         this.setType("deichman:Work");
     }
+
     Work(String id, String title, String contributor) {
         this.setId(id);
         this.setType("Work");

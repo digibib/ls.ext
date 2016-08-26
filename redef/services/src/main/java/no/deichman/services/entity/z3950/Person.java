@@ -13,6 +13,7 @@ import java.util.Optional;
 /**
  * Responsibility: create a basic person object.
  */
+@SuppressWarnings("checkstyle:DesignForExtension")
 public class Person extends ExternalDataObject {
 
     @SerializedName("deichman:name")
@@ -37,6 +38,10 @@ public class Person extends ExternalDataObject {
 
 
     Person() {
+    }
+
+    @Override
+    protected void assignType() {
         setType("deichman:Person");
     }
 

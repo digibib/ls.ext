@@ -66,7 +66,8 @@
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
         "@type": [
-          "deichman:Work"
+          "deichman:Work",
+          "deichman:TopBanana"
         ],
         "@id": "_:0000000"
       },
@@ -141,7 +142,7 @@
       },
       {
         "deichman:improperWork": false,
-        "deichman:hasWork": {
+        "deichman:publicationOf": {
           "@id": "_:0000000"
         },
         "deichman:agent": {
@@ -151,7 +152,6 @@
           "@id": "http://data.deichman.no/role#contributor"
         },
         "@type": [
-          "deichman:Contribution",
           "deichman:PublicationPart"
         ],
         "@id": "_:0000000"

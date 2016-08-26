@@ -8,7 +8,14 @@ import java.util.List;
 /**
  * Responsibility: provide basic object for data objects from outside LS.ext.
  */
-class ExternalDataObject {
+@SuppressWarnings("checkstyle:DesignForExtension")
+public class ExternalDataObject {
+    public ExternalDataObject() {
+        assignType();
+    }
+
+    protected void assignType() {}
+
     @SerializedName("@type")
     private List<String> type;
 
@@ -18,7 +25,7 @@ class ExternalDataObject {
     @SerializedName("deichman:specification")
     private String specification;
 
-    String bNodize(String id) {
+    public final String bNodize(String id) {
         String value = id;
         if (!testBNodeId(id)) {
             value = "_:" + id;
@@ -31,9 +38,7 @@ class ExternalDataObject {
     }
 
     public final void setType(String type) {
-        if (this.type == null) {
-            this.type = new ArrayList<>();
-        }
+        this.type = new ArrayList<>();
         this.type.add(type);
     }
 
@@ -53,11 +58,15 @@ class ExternalDataObject {
         return this.id;
     }
 
-    public void setSpecification(String specification) {
+    public final void setSpecification(String specification) {
         this.specification = specification;
     }
 
-    public String getSpecification() {
+    public final String getSpecification() {
         return specification;
+    }
+
+    public void addType(String type) {
+        this.type.add(type);
     }
 }
