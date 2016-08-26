@@ -66,9 +66,9 @@ out/done.setup_koha: out/done.massage_input_data
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/branches.sql'
 	@echo "-- Populating itemtypes"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/itypes.sql'
+	@cp sql/*.sql out/
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
-	@cp sql/*.sql out/
 	@echo "-- Populating table defining extended patron attribute types"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_extended_patron_attributes.sql'
 	@echo "-- Creating age restriction link to marc 521a"

@@ -1,5 +1,4 @@
 *.txt
-*.csv
 *.mrc
 *.marcxml
 out/*
