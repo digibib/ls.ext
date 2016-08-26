@@ -824,11 +824,14 @@ module.exports = (app) => {
                   },
                   {
                     label: 'Tittel på delverk',
-                    id: 'publicationPartWorkInput',
-                    rdfProperty: 'hasWork',
+                    rdfProperty: 'mainTitle',
                     required: true,
+                  },
+                  {
+                    label: 'Originaltittel',
+                    id: 'publicationPartWorkInput',
+                    rdfProperty: 'publicationOf',
                     type: 'searchable-with-result-in-side-panel',
-                    authority: true, // this indicates it is an authorized entity
                     nameProperties: [ 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
                     indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
                     indexDocumentFields: [ 'mainTitle' ],
@@ -840,10 +843,6 @@ module.exports = (app) => {
                         } ]
                       }
                     }
-                  },
-                  {
-                    label: 'Originaltittel',
-                    rdfProperty: 'hasOriginalTitle'
                   },
                   {
                     label: 'Skal ikke vises som verk',
@@ -1093,7 +1092,7 @@ module.exports = (app) => {
         instrument: 'Instrument',
         compositiontype: 'CompositionType'
       },
-      suggestionSpecs: [
+      prefillValuesFromExternalSources: [
         { resourceType: 'Work' },
         { resourceType: 'Publication' },
         {
@@ -1111,9 +1110,10 @@ module.exports = (app) => {
         {
           resourceType: 'Work',
           wrappedIn: 'PublicationPart',
-          predicate: 'hasWork',
+          predicate: 'publicationOf',
           enableCreateNewResource: true
-        } ]
+        }
+        ]
     }
     response.json(config)
   })

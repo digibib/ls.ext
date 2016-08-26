@@ -223,7 +223,7 @@
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;
   rdfs:label "Utgivelse av"@no ;
-  rdfs:domain :Publication ;
+  rdfs:domain :Publication, :PublicationPart ;
   rdfs:range :Work .
 
 :birthYear a rdfs:Property ;
@@ -281,13 +281,7 @@
 :mainTitle a rdfs:Property ;
   rdfs:label "Main title"@en ;
   rdfs:label "Hovedtittel"@no ;
-  rdfs:domain :Work, :Publication ;
-  rdfs:range xsd:string .
-
-:hasOriginalTitle a rdfs:Property ;
-  rdfs:label "Original title"@en ;
-  rdfs:label "Originaltittel"@no ;
-  rdfs:domain :PublicationPart ;
+  rdfs:domain :Work, :Publication, :PublicationPart ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartTitle
@@ -443,12 +437,6 @@
   rdfs:label "Has publication part"@en ;
   rdfs:range :PublicationPart ;
   rdfs:domain :Publication .
-
-:hasWork a rdfs:Property ;
-  rdfs:label "Har verk"@no ;
-  rdfs:label "Has work"@en ;
-  rdfs:range :Work;
-  rdfs:domain :PublicationPart .
 
 :startsAtPage a rdfs:Property ;
   rdfs:label "Start page"@en ;

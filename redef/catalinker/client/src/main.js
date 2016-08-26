@@ -499,8 +499,9 @@
 
       var promises = []
       var skipRest = false
-      _.each(options.inputs || allInputs(), function (input) {
-        if (!skipRest && ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
+      _.each(options.inputs || allInputs(), function (input, index) {
+        if (!skipRest &&
+          ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
           (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
           (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain)))) {
           if (input.belongsToCreateResourceFormOfInput &&
@@ -2352,9 +2353,8 @@
                   }
                 )
                 blockUI()
-                let suggestionSpecs = ractive.get('applicationData.config.suggestionSpecs')
-                _.each(suggestionSpecs, function (suggestionSpec, index) {
-                    console.log(suggestionSpec)
+                let prefillValuesFromExternalSources = ractive.get('applicationData.config.prefillValuesFromExternalSources')
+                _.each(prefillValuesFromExternalSources, function (suggestionSpec) {
                   var domain = suggestionSpec.resourceType
                   _.each(event.context.graph.byType(suggestionSpec.wrappedIn || suggestionSpec.resourceType), function (node) {
                     var wrapperObject
@@ -2370,19 +2370,20 @@
                       deferUpdate: true
                     }, node, domain)
 
-                    _.each(inputsWithValueSuggestionEnabled, function (input) {
-                      if (input.suggestValueFrom.domain === domain) {
-                        input.values = input.values || [ { current: {} } ]
-                        _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
-                          input.values[ index ].current.displayValue = value.value
-                        })
-                      }
-                    })
+                    if (node.isA('TopBanana')) {
+                      _.each(inputsWithValueSuggestionEnabled, function (input) {
+                        if (input.suggestValueFrom.domain === domain && !wrapperObject) {
+                          input.values = input.values || [ { current: {} } ]
+                          _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
+                            input.values[ index ].current.displayValue = value.value
+                          })
+                        }
+                      })
+                    }
                   })
                 })
                 unblockUI()
                 ractive.set('primarySuggestionAccepted', true)
- //               ractive.update()
               },
               useSuggestion: function (event) {
                 event.context.suggested = null
@@ -2467,7 +2468,7 @@
 
           ractive.observe('targetUri.Work', function (newValue, oldValue, keypath) {
             _.each(allInputs(), function (input, inputIndex) {
-              if (input.predicate && input.predicate.indexOf('#publicationOf') !== -1) {
+              if (input.predicate && input.predicate.indexOf('#publicationOf') !== -1 && input.domain === 'deichman:Publication') {
                 input.values = [
                   {
                     current: {
@@ -2475,8 +2476,6 @@
                     }
                   }
                 ]
-                // ractive.set('inputs.' + inputIndex + '.values.0.current.value', newValue)
-                // ractive.set('inputs.' + inputIndex + '.values.0.old.value', '')
               }
             })
             ractive.update()
