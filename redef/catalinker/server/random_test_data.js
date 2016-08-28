@@ -100,7 +100,7 @@ module.exports = (app) => {
                 },
                 {
                   '@id': '_:N788edbeea7104c42adda64d78d844440',
-                  '@type': ['deichman:Work'],
+                  '@type': ['deichman:Work', 'deichman:TopBanana'],
                   'deichman:audience': {
                     '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/audience#adult' : 'http://data.deichman.no/audience#juvenile'
                   },
