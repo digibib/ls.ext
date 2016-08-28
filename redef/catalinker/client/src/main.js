@@ -1405,15 +1405,17 @@
           _.each(input.subInputs, function (subInput) {
             if (!(subInput.input.visible === false)) {
               var value = subInput.input.values[ index ].current.value
-              patch.push({
-                op: operation,
-                s: '_:b0',
-                p: subInput.input.predicate,
-                o: {
-                  value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
-                  type: subInput.input.datatypes[ 0 ]
-                }
-              })
+              if (typeof value !== 'undefined') {
+                patch.push({
+                  op: operation,
+                  s: '_:b0',
+                  p: subInput.input.predicate,
+                  o: {
+                    value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
+                    type: subInput.input.datatypes[ 0 ]
+                  }
+                })
+              }
             }
           })
           if (input.isMainEntry) {
