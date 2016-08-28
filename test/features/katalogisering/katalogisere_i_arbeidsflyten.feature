@@ -41,7 +41,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
     Så velger jeg en organisasjon fra treffliste fra organisasjonsregisteret
-    Så sjekker jeg at overskriften viser informasjon om hva som blir katalogisert
     Og bekrefter for å gå videre til "Beskriv verk"
     Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
     Og bekrefter for å gå videre til "Emneopplysninger"
@@ -56,11 +55,13 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett ny organisasjon"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
-    Og at jeg skriver inn tilfeldig verksnavn i feltet "Tittel på delverk" og trykker enter
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Originaltittel" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
     Og jeg venter litt
     Og jeg trykker på "Legg til et delverk til"-knappen
     Så velger jeg aktørtype "Person"
@@ -70,11 +71,11 @@ Egenskap: Katalogisere i arbeidsflyt
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
-    Og at jeg skriver inn tilfeldig verksnavn i feltet "Tittel på delverk" og trykker enter
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Originaltittel" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
-    Og at jeg skriver inn tilfeldig originaltittel i feltet "Originaltittel" og trykker enter
+    Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
     Og jeg trykker på "Legg til"-knappen
