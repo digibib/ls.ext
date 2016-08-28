@@ -2,44 +2,6 @@
   {
     "@graph": [
       {
-        "deichman:name": "Eksempelsen, Eksempel",
-        "deichman:birthYear": "1931",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "deichman:name": "Jimson Jimson",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "deichman:name": "Dickens, Charles",
-        "deichman:birthYear": "1812",
-        "deichman:deathYear": "1870",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#eng"
-        },
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "deichman:name": "Capote, Truman",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000",
-        "deichman:specification": "real name Truman Streckfus Persons"
-      },
-      {
         "deichman:contributor": {
           "@id": "_:0000000"
         },
@@ -61,6 +23,11 @@
         "deichman:literaryForm": [
           {
             "@id": "http://data.deichman.no/literaryForm#fiction"
+          }
+        ],
+        "deichman:subject": [
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:mainTitle": "A example",
@@ -102,6 +69,51 @@
         "@type": [
           "deichman:Publication"
         ]
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Kulturminnevern"
+      },
+      {
+        "deichman:name": "Eksempelsen, Eksempel",
+        "deichman:birthYear": "1931",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#n"
+        },
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Jimson Jimson",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Dickens, Charles",
+        "deichman:birthYear": "1812",
+        "deichman:deathYear": "1870",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#eng"
+        },
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Capote, Truman",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "real name Truman Streckfus Persons"
       },
       {
         "deichman:agent": {

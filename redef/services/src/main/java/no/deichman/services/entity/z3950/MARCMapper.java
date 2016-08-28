@@ -62,6 +62,9 @@ public class MARCMapper {
         publication.setPublicationOf(workId);
 
         List<Object> graphList = new ArrayList<>();
+        graphList.add(work);
+        graphList.add(publication);
+
         for (ControlField controlField: r.getControlFields()){
                 switch (controlField.getTag()) {
                     case "008":
@@ -135,6 +138,15 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 'a').ifPresent(work::setHasSummary);
                     }
                     break;
+                case "650":
+                    getSubfieldValue(dataField, 'a').ifPresent(a ->{
+                        String subjectId = UUID.randomUUID().toString();
+                        ExternalDataObject subject = externalObject(subjectId, "deichman:Subject");
+                        subject.setPrefLabel(a);
+                        work.addSubject(subject.getId());
+                        graphList.add(subject);
+                    });
+                    break;
                 case "700":
                     final Person[] publicationPerson = new Person[1];
                     if (getSubfieldValue(dataField, 't').isPresent()) {
@@ -183,10 +195,6 @@ public class MARCMapper {
             graphList.addAll(persons);
         }
 
-
-        graphList.add(work);
-        graphList.add(publication);
-
         Map<String, Object> topLevelMap = new HashMap<>();
         topLevelMap.put("@context", new ContextObject().getContext());
         topLevelMap.put("@graph", graphList);
@@ -197,6 +205,12 @@ public class MARCMapper {
         graphList.addAll(publicationPartWorks);
 
         return topLevelMap;
+    }
+
+    private ExternalDataObject externalObject(String subjectId, String type) {
+        ExternalDataObject externalDataObject = externalObject(subjectId);
+        externalDataObject.setType(type);
+        return externalDataObject;
     }
 
     private void setRole(DataField dataField, Contribution contribution) {

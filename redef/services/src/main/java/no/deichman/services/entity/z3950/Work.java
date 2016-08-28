@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.ImmutableMap.of;
+
 /**
  * Responsibility: provide migration work object.
  */
@@ -23,6 +25,9 @@ public class Work extends BibliographicObjectExternal {
 
     @SerializedName("deichman:literaryForm")
     private List<ExternalDataObject> literaryForm;
+
+    @SerializedName("deichman:subject")
+    private List<Map<String, String>> subjects;
 
     public final Map<String, String> getContributor() {
         return contributor;
@@ -69,5 +74,12 @@ public class Work extends BibliographicObjectExternal {
             this.literaryForm = new ArrayList<>();
         }
         this.literaryForm.add(literaryForm);
+    }
+
+    public void addSubject(String subjectId) {
+        if (this.subjects == null) {
+            this.subjects = new ArrayList<>();
+        }
+        this.subjects.add(of("@id", subjectId));
     }
 }

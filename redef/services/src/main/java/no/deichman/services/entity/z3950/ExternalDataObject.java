@@ -25,6 +25,9 @@ public class ExternalDataObject {
     @SerializedName("deichman:specification")
     private String specification;
 
+    @SerializedName("deichman:prefLabel")
+    private String prefLabel;
+
     public final String bNodize(String id) {
         String value = id;
         if (!testBNodeId(id)) {
@@ -68,5 +71,9 @@ public class ExternalDataObject {
 
     public void addType(String type) {
         this.type.add(type);
+    }
+
+    public void setPrefLabel(String prefLabel) {
+        this.prefLabel = prefLabel;
     }
 }
