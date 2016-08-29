@@ -2572,8 +2572,25 @@
         subfields:
           -
             '3':
-              predicate: "MIGRATION.addedEntry"
+              conditions:
+                indicator:
+                  default: "MIGRATION.addedEntry"
+                  indicator2:
+                    subs:
+                      '0': "MIGRATION.addedEntry"
+                      '1': "MIGRATION.addedEntry"
+                      '2': "MIGRATION.analyticalEntry"
+                      '3': "MIGRATION.analyticalEntry"
+                    orig: "0|1|2|3"
               object:
+                md5: true
+                lowercase: true
+                combine:
+                  - "3"
+                  - "7"
+                  - "e"
+                  - "t"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 datatype: "uri"
                 prefix: "http://placeholder.com/AddedPersonEntry/h"
               relation:
