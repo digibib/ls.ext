@@ -12,7 +12,8 @@ function setup (propOverrides) {
       { prefLabel: 'subject_1', specification: 'x' },
       { prefLabel: 'subject_2', specification: 'y' },
       { prefLabel: 'subject_3', specification: 'z' }
-    ], ...propOverrides
+    ],
+    ...propOverrides
   }
 
   const output = TestUtils.renderIntoDocument(

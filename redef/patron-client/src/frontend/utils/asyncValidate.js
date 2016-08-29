@@ -6,7 +6,8 @@ export default (values) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      }, body: JSON.stringify({ values: values })
+      },
+      body: JSON.stringify({ values: values })
     }).then(response => response.json())
       .then(json => {
         if (Object.keys(json.errors).length === 0) {

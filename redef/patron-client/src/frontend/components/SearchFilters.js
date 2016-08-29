@@ -9,7 +9,7 @@ class SearchFilters extends React.Component {
   }
 
   renderEmpty () {
-    return <div data-automation-id="empty"></div>
+    return <div data-automation-id="empty" />
   }
 
   handleFiltersOpenClick () {

@@ -48,7 +48,8 @@ function setup (propOverrides) {
         languages: [],
         formats: []
       }
-    ], ...propOverrides
+    ],
+    ...propOverrides
   }
 
   const messages = {
@@ -114,7 +115,8 @@ describe('components', () => {
 
     it('should group publications by media type', () => {
       const { node } = setup({
-        mediaQueryValues: { width: 992 }, publications: [
+        mediaQueryValues: { width: 992 },
+        publications: [
           {
             uri: '/publication_id1',
             id: 'publication_id1',
@@ -171,7 +173,8 @@ describe('components', () => {
 
     it('should sort publications by language, publication year and format', () => {
       const { node } = setup({
-        mediaQueryValues: { width: 992 }, publications: [
+        mediaQueryValues: { width: 992 },
+        publications: [
           {
             uri: '/uri1',
             id: 'publication_id1',
@@ -225,7 +228,8 @@ describe('components', () => {
 
     it('should prioritize Norwegian, English, Danish and Swedish when sorting by language', () => {
       const { node } = setup({
-        mediaQueryValues: { width: 992 }, publications: [
+        mediaQueryValues: { width: 992 },
+        publications: [
           {
             uri: '/uri1',
             id: 'publication_id1',

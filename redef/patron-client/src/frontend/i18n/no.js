@@ -1,4 +1,3 @@
-/*eslint-disable max-len,quotes*/
 export default {
   'CancelReservationModal.button': 'Lukk',
   'CancelReservationModal.cancelReservation': 'Slett reservasjon',

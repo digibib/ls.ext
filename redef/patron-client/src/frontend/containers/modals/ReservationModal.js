@@ -158,7 +158,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-export { ReservationModal as ReservationModal }
+export { ReservationModal }
 
 export default connect(
   mapStateToProps,

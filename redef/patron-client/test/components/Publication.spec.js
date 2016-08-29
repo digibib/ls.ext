@@ -18,7 +18,8 @@ function setup (propOverrides) {
       formats: [ 'test_format' ],
       items: [],
       available: true
-    }, ...propOverrides
+    },
+    ...propOverrides
   }
 
   const messages = {

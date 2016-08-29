@@ -12,7 +12,8 @@ function setup (propOverrides) {
       { prefLabel: 'genre_1', genreSubdivision: 'x' },
       { prefLabel: 'genre_2', genreSubdivision: 'y' },
       { prefLabel: 'genre_3', genreSubdivision: 'z' }
-    ], ...propOverrides
+    ],
+    ...propOverrides
   }
 
   const output = TestUtils.renderIntoDocument(

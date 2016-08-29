@@ -61,9 +61,8 @@ class UserSettings extends React.Component {
                        type="checkbox" name="user-settings-sms-reminder" id="user-settings-sms-reminder"
                        ref={e => this.reminderOfDueDateSmsCheckbox = e}
                        defaultChecked={settings.alerts.reminderOfDueDate.sms} />
-                <label htmlFor="user-settings-sms-reminder"><span></span>
+                <label htmlFor="user-settings-sms-reminder"><span />
                   <FormattedMessage {...messages.bySms} /></label>
-
               </li>
               <li>
 
@@ -73,7 +72,7 @@ class UserSettings extends React.Component {
                        ref={e => this.reminderOfDueDateEmailCheckbox = e}
                        defaultChecked={settings.alerts.reminderOfDueDate.email} />
                 <label
-                  htmlFor="user-settings-reminder-email"><span></span>
+                  htmlFor="user-settings-reminder-email"><span />
                   <FormattedMessage {...messages.byEmail} /></label>
 
               </li>
@@ -102,7 +101,7 @@ class UserSettings extends React.Component {
                        id="user-settings-delivery-reminder-sms"
                        ref={e => this.reminderOfPickupSmsCheckbox = e}
                        defaultChecked={settings.alerts.reminderOfPickup.sms} />
-                <label htmlFor="user-settings-delivery-reminder-sms"><span></span>
+                <label htmlFor="user-settings-delivery-reminder-sms"><span />
                   <FormattedMessage {...messages.bySms} /></label>
               </li>
               <li>
@@ -111,7 +110,7 @@ class UserSettings extends React.Component {
                        id="user-settings-delivery-reminder-email"
                        ref={e => this.reminderOfPickupEmailCheckbox = e}
                        defaultChecked={settings.alerts.reminderOfPickup.email} />
-                <label htmlFor="user-settings-delivery-reminder-email"><span></span>
+                <label htmlFor="user-settings-delivery-reminder-email"><span />
                   <FormattedMessage {...messages.byEmail} /></label>
               </li>
             </ul>
@@ -125,7 +124,7 @@ class UserSettings extends React.Component {
                        type="checkbox" name="receipt-loans-email" id="receipt-loans-email"
                        ref={e => this.receiptOnLoansEmailCheckbox = e}
                        defaultChecked={settings.receipts.loans.email} />
-                <label htmlFor="receipt-loans-email"><span></span>
+                <label htmlFor="receipt-loans-email"><span />
                   <FormattedMessage {...messages.loanReceipt} /></label>
               </li>
               <li>
@@ -133,7 +132,7 @@ class UserSettings extends React.Component {
                        type="checkbox" name="receipt-returns-email" id="receipt-returns-email"
                        ref={e => this.receiptOnReturnsEmailCheckbox = e}
                        defaultChecked={settings.receipts.returns.email} />
-                <label htmlFor="receipt-returns-email"><span></span>
+                <label htmlFor="receipt-returns-email"><span />
                   <FormattedMessage {...messages.returnReceipt} /></label>
               </li>
             </ul>

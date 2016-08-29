@@ -52,7 +52,8 @@ export function login (username, password, successActions = []) {
   return dispatch => {
     dispatch(requestLogin(username))
     return fetch(url, {
-      method: 'POST', headers: {
+      method: 'POST',
+      headers: {
         'Content-Type': 'application/json'
       },
       credentials: 'same-origin',

@@ -16,7 +16,7 @@ class UserLoans extends React.Component {
     return this.props.loansAndReservations.pickups.map(item => (
       <section key={item.recordId} className="single-entry" data-automation-id="UserLoans_pickup"
                data-recordid={item.recordId}>
-        <aside className="book-cover"><a className="book-cover-item" href=""></a>
+        <aside className="book-cover"><a className="book-cover-item" href="" />
         </aside>
         <article className="entry-content">
           <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
@@ -110,7 +110,7 @@ class UserLoans extends React.Component {
     return this.props.loansAndReservations.loans.map(item => (
       <section key={item.recordId} className="single-entry" data-automation-id="UserLoans_loan"
                data-recordid={item.recordId}>
-        <aside className="book-cover"><a className="book-cover-item" href=""></a>
+        <aside className="book-cover"><a className="book-cover-item" href="" />
         </aside>
         <article className="entry-content">
           <h1 data-automation-id="UserLoans_loan_title">{item.title}</h1>

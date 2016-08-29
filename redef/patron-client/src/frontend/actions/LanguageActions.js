@@ -36,7 +36,8 @@ export function loadLanguage (locale) {
     const url = `${Constants.backendUri}/translations/${locale}`
     dispatch(requestTranslation(locale))
     return fetch(url, {
-      method: 'GET', headers: {
+      method: 'GET',
+      headers: {
         'Accept': 'application/json'
       }
     })
