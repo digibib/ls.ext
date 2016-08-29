@@ -24,9 +24,10 @@ class Publications extends React.Component {
   }
 
   renderPublications (publications, publicationsPerRow) {
+    const publicationsCopy = [...publications]
     const publicationRows = []
-    while (publications.length > 0) {
-      publicationRows.push(publications.splice(0, publicationsPerRow))
+    while (publicationsCopy.length > 0) {
+      publicationRows.push(publicationsCopy.splice(0, publicationsPerRow))
     }
     return (
       <section className="work-publications" data-automation-id="work_publications">
@@ -73,12 +74,12 @@ class Publications extends React.Component {
     )
   }
 
-  render () {
+  getSortedPublicationHolders () {
     const exceptions = {
-      'http://lexvo.org/id/iso639-3/nob' : 1,
-      'http://lexvo.org/id/iso639-3/eng' : 2,
-      'http://lexvo.org/id/iso639-3/dan' : 3,
-      'http://lexvo.org/id/iso639-3/swe' : 4
+      'http://lexvo.org/id/iso639-3/nob': 1,
+      'http://lexvo.org/id/iso639-3/eng': 2,
+      'http://lexvo.org/id/iso639-3/dan': 3,
+      'http://lexvo.org/id/iso639-3/swe': 4
     }
 
     const { workLanguage } = this.props
@@ -94,43 +95,53 @@ class Publications extends React.Component {
         publicationHoldersByMediaType[ mediaType ].push({
           original: publication,
           languages: publication.languages.map(language => this.props.intl.formatMessage({ id: language })),
-          formats: publication.formats.map(format => this.props.intl.formatMessage({ id: format })),
+          formats: publication.formats.map(format => this.props.intl.formatMessage({ id: format }))
         })
       })
     })
     Object.keys(publicationHoldersByMediaType).forEach(mediaType => {
       publicationHoldersByMediaType[ mediaType ].sort(
         firstBy((a, b) => {
-          if (!a.original.languages[ 0 ]) {
+          if (!a.languages[ 0 ]) {
+            // No languages, sort to back
             return 1
           } else if (exceptions[ a.original.languages[ 0 ] ] && exceptions[ b.original.languages[ 0 ] ]) {
-            //if both items are exceptions
+            // If both items are exceptions
             return exceptions[ a.original.languages[ 0 ] ] - exceptions[ b.original.languages[ 0 ] ]
           } else if (exceptions[ a.original.languages[ 0 ] ]) {
-            //only `a` is in exceptions, sort it to front
+            // Only `a` is in exceptions, sort it to front
             return -1
           } else if (exceptions[ b.original.languages[ 0 ] ]) {
-            //only `b` is in exceptions, sort it to back
+            // Only `b` is in exceptions, sort it to back
             return 1
           } else {
-            //no exceptions to account for, return alphabetic sort
-            return a.original.languages[ 0 ].localeCompare(b.original.languages[ 0 ])
+            // No exceptions to account for, return alphabetic sort
+            return a.languages[ 0 ].localeCompare(b.languages[ 0 ])
           }
         })
-          .thenBy((a, b) => b.publicationYear - a.publicationYear)
+          .thenBy((a, b) => b.original.publicationYear - a.original.publicationYear)
           .thenBy((a, b) => (a.formats[ 0 ] || '').localeCompare(b.formats[ 0 ]))
       )
     })
+
+    return publicationHoldersByMediaType
+  }
+
+  render () {
+    const publicationHoldersByMediaType = this.getSortedPublicationHolders()
     let { locationQuery: { collapsePublications } } = this.props
     if (!Array.isArray(collapsePublications)) {
       collapsePublications = [ collapsePublications ]
+    }
+    if (this.props.publications.length === 0) {
+      return this.renderEmpty()
     }
 
     return (
       <footer className="other-publications">
         {
           Object.keys(publicationHoldersByMediaType).map(mediaType =>
-            <div key={mediaType}>
+            <div key={mediaType} data-automation-id="mediaType_group" data-mediatype={mediaType}>
               <header className="other-publications-title">
                 <h2>{mediaType}</h2>
               </header>
@@ -151,10 +162,10 @@ class Publications extends React.Component {
                 </div>
               </ClickableElement>
               <div className="other-publications-entry-content">
-                <h1>&nbsp;{/*placeholder to work around css bug*/}</h1>
+                <p>&nbsp;{/* Temporary placeholder to work around CSS placement issue */}</p>
                 {collapsePublications.includes(mediaType)
                   ? null
-                  : (this.props.publications.length > 0 ? this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaType ].map(publicationHolder => publicationHolder.original)) : this.renderEmpty())}
+                  : this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaType ].map(publicationHolder => publicationHolder.original))}
               </div>
             </div>
           )
@@ -172,6 +183,7 @@ Publications.propTypes = {
   startReservation: PropTypes.func.isRequired,
   toggleParameterValue: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
+  workLanguage: PropTypes.string,
   mediaQueryValues: PropTypes.object
 }
 
