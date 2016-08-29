@@ -180,3 +180,11 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg trykker lagre inne på innstillinger
     Og jeg trykker oppfrisk i nettleseren
     Så skal ingen av avkrysningsboksene være skrudd på inne på innstillinger
+
+  Scenario: Sortering på verkssiden
+    Gitt at jeg er i søkegrensesnittet
+    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
+    Og jeg trykker på første treff
+    Så skal jeg se "10" utgivelser
+    Og skal utgivelsene være inndelt etter medietype
+    Og utgivelsene skal være sortert på språk (med norsk, engelsk, dansk og svensk først), utgivelsesår og format
