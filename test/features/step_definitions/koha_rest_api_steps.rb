@@ -84,6 +84,7 @@ end
 
 Given(/^at låneren har lånt en bok$/) do
   step "at låneren har materiale han ønsker å låne"
+  @site.SelectBranch.visit.select_branch(@active[:patron].branch.code)
   @site.Home.visit.find_patron_for_checkout("#{@active[:patron].surname}")
   step "jeg registrerer utlån av boka"
 end
@@ -98,7 +99,7 @@ Then(/^finnes boka i listen over aktive lån fra APIet$/) do
   biblionumber = @active[:book].biblionumber
   issuestable = @site.IssueHistory.visit(biblionumber).issues
   issue = issuestable.rows[0]
-  issue.tds[0].text.should eq(@active[:patron].surname)
+  issue.tds[0].text.should eq(@active[:patron].cardnumber)
   issue.links[1].href.should include("itemnumber=#{itemnumber}")
   #Date.parse(issue.tds[5].text).should eq(Date.parse(@context[:checkouts][0]["date_due"]))
 end
@@ -198,11 +199,7 @@ Then(/^kan jeg følge lenken og finne den bibliografiske posten$/) do
 end
 
 When(/^at jeg autentiserer brukeren mot Kohas REST API$/) do
-  KohaRESTAPI::Auth.new(@browser,@context,@active).login(@active[:patron].userid, @active[:patron].password)
-end
-
-When(/^jeg sjekker brukersesjonen mot Koha REST API$/) do
-  res = KohaRESTAPI::Auth.new(@browser,@context,@active).getsession
+  res = KohaRESTAPI::Auth.new(@browser,@context,@active).login(@active[:patron].userid, @active[:patron].password)
   json = JSON.parse(res.body)
   @context[:session_api_response] = json
 end
@@ -210,5 +207,5 @@ end
 Then(/^gir APIet tilbakemelding med riktige brukerrettigheter$/) do
   session = @context[:session_api_response]
   session["borrowernumber"].should eq(@active[:patron].borrowernumber)
-  session["permissions"].should eq({"editcatalogue"=>1, "staffaccess"=>1, "borrowers"=>1})
+  session["permissions"].should eq(["borrowers", "editcatalogue", "staffaccess"])
 end

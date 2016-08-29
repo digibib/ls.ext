@@ -10,11 +10,11 @@ module KohaRESTAPI
   class Auth < Service
 
     def login(userid,password)
-      http = Net::HTTP.new("koha", 8081)
-      uri = URI(intranet(:koha_rest_api) + "auth/session")
-      res = http.post(uri, {userid: userid, password: password}.to_json)
+      uri = URI.parse(intranet(:koha_rest_api) + "auth/session")
+      res = Net::HTTP.post_form(uri, {userid: userid, password: password})
       expect(res.code).to eq("201"), "got unexpected #{res.code} when authenticating against Koha REST API.\nResponse body: #{res.body}"
       @context[:koha_rest_api_cookie] = res.response['set-cookie']
+      res
     end
 
     def logout
@@ -29,6 +29,7 @@ module KohaRESTAPI
     end
 
     def getsession
+      return "NOT IMPLEMENTED"
       headers = {
         'Cookie' => @context[:koha_rest_api_cookie],
         'Content-Type' => 'application/json'
