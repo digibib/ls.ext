@@ -1,3 +1,4 @@
+
 ---
   tags:
     -
@@ -120,16 +121,14 @@
                       reg: "ROLE.director"
                       regissør: "ROLE.director"
                       regt: "ROLE.director"
-                      s: "ROLE.contributor"
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
-                      t: "ROLE.lyricist"
                       tekstf: "ROLE.lyricist"
                       tekstforf: "ROLE.lyricist"
                       utg: "ROLE.publisher"
                       u: "ROLE.performer"
                       utøv: "ROLE.performer"
-                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
     -
       '100':
         subfields:
@@ -193,16 +192,14 @@
                     reg: "ROLE.director"
                     regissør: "ROLE.director"
                     regt: "ROLE.director"
-                    s: "ROLE.contributor"
                     sang: "ROLE.performer"
                     skuesp: "ROLE.actor"
-                    t: "ROLE.lyricist"
                     tekstf: "ROLE.lyricist"
                     tekstforf: "ROLE.lyricist"
                     utg: "ROLE.publisher"
                     u: "ROLE.performer"
                     utøv: "ROLE.performer"
-                  orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                  orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
     -
       '110':
         subfields:
@@ -313,16 +310,14 @@
                       reg: "ROLE.director"
                       regissør: "ROLE.director"
                       regt: "ROLE.director"
-                      s: "ROLE.contributor"
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
-                      t: "ROLE.lyricist"
                       tekstf: "ROLE.lyricist"
                       tekstforf: "ROLE.lyricist"
                       utg: "ROLE.publisher"
                       u: "ROLE.performer"
                       utøv: "ROLE.performer"
-                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
     -
       '110':
         subfields:
@@ -386,16 +381,14 @@
                     reg: "ROLE.director"
                     regissør: "ROLE.director"
                     regt: "ROLE.director"
-                    s: "ROLE.contributor"
                     sang: "ROLE.performer"
                     skuesp: "ROLE.actor"
-                    t: "ROLE.lyricist"
                     tekstf: "ROLE.lyricist"
                     tekstforf: "ROLE.lyricist"
                     utg: "ROLE.publisher"
                     u: "ROLE.performer"
                     utøv: "ROLE.performer"
-                  orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                  orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
     -
       '111':
         subfields:
@@ -501,16 +494,14 @@
                     reg: "ROLE.director"
                     regissør: "ROLE.director"
                     regt: "ROLE.director"
-                    s: "ROLE.contributor"
                     sang: "ROLE.performer"
                     skuesp: "ROLE.actor"
-                    t: "ROLE.lyricist"
                     tekstf: "ROLE.lyricist"
                     tekstforf: "ROLE.lyricist"
                     utg: "ROLE.publisher"
                     u: "ROLE.performer"
                     utøv: "ROLE.performer"
-                  orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                  orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
     -
       '130':
         subfields:
@@ -2517,16 +2508,14 @@
                       reg: "ROLE.director"
                       regissør: "ROLE.director"
                       regt: "ROLE.director"
-                      s: "ROLE.contributor"
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
-                      t: "ROLE.lyricist"
                       tekstf: "ROLE.lyricist"
                       tekstforf: "ROLE.lyricist"
                       utg: "ROLE.publisher"
                       u: "ROLE.performer"
                       utøv: "ROLE.performer"
-                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
     -
       '700':
         subfields:
@@ -2670,16 +2659,14 @@
                       reg: "ROLE.director"
                       regissør: "ROLE.director"
                       regt: "ROLE.director"
-                      s: "ROLE.contributor"
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
-                      t: "ROLE.lyricist"
                       tekstf: "ROLE.lyricist"
                       tekstforf: "ROLE.lyricist"
                       utg: "ROLE.publisher"
                       u: "ROLE.performer"
                       utøv: "ROLE.performer"
-                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
               relation:
                 subfields:
                   -
@@ -2832,16 +2819,14 @@
                       reg: "ROLE.director"
                       regissør: "ROLE.director"
                       regt: "ROLE.director"
-                      s: "ROLE.contributor"
                       sang: "ROLE.performer"
                       skuesp: "ROLE.actor"
-                      t: "ROLE.lyricist"
                       tekstf: "ROLE.lyricist"
                       tekstforf: "ROLE.lyricist"
                       utg: "ROLE.publisher"
                       u: "ROLE.performer"
                       utøv: "ROLE.performer"
-                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|t|u|s|f"
+                    orig: "arr|bearb|bikort|billedred|biogr|dirigent|dir|fest|forfanal|forft|fort|forord|fotogr|fotog|foto|gjendikt|illustratør|illustrt|illustr|illus|ill|innl|komm|komp|koreogr|manusforf|medarb|medforfatter|medforf|medf|medred|medutg|oppl|opprforf|oversetter|overs|redaktør|red|regissør|regt|reg|sang|skuesp|tekstforf|tekstf|utøv|utg|forf|eks|k|u|f"
               relation:
                 subfields:
                   -
