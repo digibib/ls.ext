@@ -28,6 +28,9 @@
         "deichman:subject": [
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:mainTitle": "A example",
@@ -75,7 +78,15 @@
           "deichman:Subject"
         ],
         "@id": "_:0000000",
+        "deichman:specification": "Ta vare på gamle ting",
         "deichman:prefLabel": "Kulturminnevern"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Røros"
       },
       {
         "deichman:name": "Eksempelsen, Eksempel",

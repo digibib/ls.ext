@@ -140,11 +140,13 @@ public class MARCMapper {
                     break;
                 case "650":
                     getSubfieldValue(dataField, 'a').ifPresent(a ->{
-                        String subjectId = UUID.randomUUID().toString();
-                        ExternalDataObject subject = externalObject(subjectId, "deichman:Subject");
-                        subject.setPrefLabel(a);
-                        work.addSubject(subject.getId());
-                        graphList.add(subject);
+                        ExternalDataObject subject = addExternalObject(graphList, a, "deichman:Subject", work::addSubject);
+                        getSubfieldValue(dataField, 'q').ifPresent(q -> {
+                            subject.setSpecification(q);
+                        });
+                    });
+                    getSubfieldValue(dataField, 'z').ifPresent(a ->{
+                        addExternalObject(graphList, a, "deichman:Place", work::addSubject);
                     });
                     break;
                 case "700":
@@ -205,6 +207,15 @@ public class MARCMapper {
         graphList.addAll(publicationPartWorks);
 
         return topLevelMap;
+    }
+
+    private ExternalDataObject addExternalObject(List<Object> graphList, String a, String type, Consumer<String> addObjectFunction) {
+        String objectId = UUID.randomUUID().toString();
+        ExternalDataObject externalDataObject = externalObject(objectId, type);
+        externalDataObject.setPrefLabel(a);
+        addObjectFunction.accept(externalDataObject.getId());
+        graphList.add(externalDataObject);
+        return externalDataObject;
     }
 
     private ExternalDataObject externalObject(String subjectId, String type) {
