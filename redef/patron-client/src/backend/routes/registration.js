@@ -44,7 +44,7 @@ module.exports = (app) => {
 
     const dateOfBirth = getDateOfBirth(request.body.year, request.body.month, request.body.day)
     const age = getAge(dateOfBirth)
-    const categoryCode = age < 16 ? 'REGBARN' : 'REGVOKSEN'
+    const categoryCode = age < 15 ? 'REGBARN' : 'REGVOKSEN'
     const patron = {
       firstname: request.body.firstName,
       surname: request.body.lastName,
