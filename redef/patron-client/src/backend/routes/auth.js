@@ -11,10 +11,11 @@ module.exports = (app) => {
     fetch('http://koha:8081/api/v1/auth/session',
       {
         method: 'POST',
-        body: JSON.stringify({
-          userid: request.body.username,
-          password: request.body.password
-        })
+        headers: {
+          'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        },
+        body: `userid=${encodeURIComponent(request.body.username)}&password=${encodeURIComponent(request.body.password)}`
       })
       .then(res => {
         if (res.status === 201) {

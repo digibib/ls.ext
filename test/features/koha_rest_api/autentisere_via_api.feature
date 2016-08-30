@@ -14,5 +14,4 @@ Egenskap: Autentisere eksterne ressurser mot Koha REST API
 
   Scenario: Autentiser mot Koha API
     Gitt at jeg autentiserer brukeren mot Kohas REST API
-    Når jeg sjekker brukersesjonen mot Koha REST API
     Så gir APIet tilbakemelding med riktige brukerrettigheter

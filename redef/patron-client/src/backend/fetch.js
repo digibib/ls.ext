@@ -7,20 +7,22 @@ module.exports = (app) => {
     opts.headers[ 'Cookie' ] = app.settings.kohaSession
     return isofetch(url, opts)
       .then(res => {
-        if (res.status === 403) {
+        if (res.status === 403 || res.status === 401) {
           return res.json().then(json => {
             if (res.status >= 400) {
               console.log(`Call to ${url} with options ${JSON.stringify(opts)}:`)
               console.log(`${res.status}: ${JSON.stringify(json)}`)
             }
-            if (json.error === 'You don\'t have the required permission') {
+            if (json.error === 'Authentication required.') {
               // Unauthorized; we try to renew session and then retry request.
+
               return isofetch('http://koha:8081/api/v1/auth/session', {
                 method: 'POST',
-                body: JSON.stringify({
-                  userid: process.env.KOHA_API_USER,
-                  password: process.env.KOHA_API_PASS
-                })
+                headers: {
+                  'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+                  'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+                },
+                body: `userid=${encodeURIComponent(process.env.KOHA_API_USER)}&password=${encodeURIComponent(process.env.KOHA_API_PASS)}`
               })
                 .then(res => {
                   if (res.headers && res.headers._headers && res.headers._headers[ 'set-cookie' ] && res.headers._headers[ 'set-cookie' ][ 0 ]) {

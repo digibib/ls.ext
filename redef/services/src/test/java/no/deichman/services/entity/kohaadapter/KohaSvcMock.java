@@ -36,8 +36,7 @@ public final class KohaSvcMock {
     public void addLoginExpectation() {
         clientDriver.addExpectation(
                 onRequestTo("/api/v1/auth/session")
-                        .withMethod(POST)
-                        .withBody("{\"userid\":\"api\",\"password\":\"secret\"}", MediaType.APPLICATION_JSON.toString()),
+                        .withMethod(POST),
                 giveResponse("{}", "application/json").withStatus(CREATED.getStatusCode())
                         .withHeader(HttpHeaders.SET_COOKIE, KohaAdapterImpl.SESSION_COOKIE_KEY + "=huh"));
     }
