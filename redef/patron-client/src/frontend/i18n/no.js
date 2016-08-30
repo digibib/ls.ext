@@ -75,6 +75,7 @@ export default {
   'Publications.copies': 'eksemplarer',
   'Publications.noPublications': 'Ingen publikasjoner',
   'Publications.numberOfPublications': 'Utgivelser ({numberOfPublications})',
+  'Publications.noMediaType': 'Ikke kategorisert',
   'RegistrationFormPartOne.checkForExistingUser': 'Sjekk',
   'RegistrationFormPartOne.checkingForExistingUser': 'Sjekker om du er registrert fra før...',
   'RegistrationFormPartOne.userExistsInCentralDB': 'Brukeren er allerede registrert i Nasjonalt låneregister. Vennligst ta kontakt med biblioteket for å få nytt kort.',

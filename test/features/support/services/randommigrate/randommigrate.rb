@@ -112,11 +112,11 @@ module RandomMigrate
       # For search on prefix1#{@id}, get 1 page with 1 result
       # For search on pubprefix0#{@id}, display Norwegian title on work
       # For search on pubprefix1#{@id}, display English title on work
-      # Work page has ten publications
+      # Work page has eleven publications
       # The Norwegian publication has three items, one available and two unavailable
       # The available item has the same placement as one of the unavailable items
       # One of the English publications has one unavailable item
-      # There should be two media types, book and music recording
+      # There should be two media types, book and music recording, also one publication without a media type
       # The books have a language combination to test the special language sorting rules (Norwegian, English, Danish, Swedish, the rest in alphabetical order)
       specialized_migrate(branchcode)
 
@@ -236,6 +236,14 @@ module RandomMigrate
       publication_10.add_authorized('format', 'http://data.deichman.no/format#Book')
       publication_10.add_authorized('mediaType', 'http://data.deichman.no/mediaType#MusicRecording')
       @publication_uris << post_ntriples('publication', publication_10.to_ntriples)
+
+      publication_11 = Entity.new('http://host/publication/p11', @services)
+      publication_11.add_authorized('publicationOf', work_uri)
+      publication_11.add_literal('mainTitle', "pubprefix2#{@id} #{@id}nob")
+      publication_11.add_literal('publicationYear', '1900')
+      publication_11.add_authorized('language', 'http://lexvo.org/id/iso639-3/nob')
+      publication_11.add_authorized('format', 'http://data.deichman.no/format#Book')
+      @publication_uris << post_ntriples('publication', publication_11.to_ntriples)
 
       ids = self.get_record_ids
       ids = ids[ids.length-4,ids.length-1]

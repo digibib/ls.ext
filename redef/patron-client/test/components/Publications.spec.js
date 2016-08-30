@@ -60,7 +60,11 @@ function setup (propOverrides) {
     'http://lexvo.org/id/iso639-3/cze': 'Czech',
     'http://lexvo.org/id/iso639-3/bur': 'Burmese',
     'http://data.deichman.no/format#Book': 'Book',
-    'http://data.deichman.no/format#CD-ROM': 'CD-ROM'
+    'http://data.deichman.no/format#CD-ROM': 'CD-ROM',
+    'http://data.deichman.no/mediaType#Book': 'Book',
+    'http://data.deichman.no/mediaType#MusicRecording': 'Music recording',
+    'http://data.deichman.no/mediaType#Game': 'Game',
+    'Publications.noMediaType': 'Uncategorized'
   }
 
   const output = TestUtils.renderIntoDocument(
@@ -158,17 +162,26 @@ describe('components', () => {
             mediaType: [ 'http://data.deichman.no/mediaType#MusicRecording' ],
             languages: [],
             formats: []
+          },
+          {
+            uri: '/publication_id7',
+            id: 'publication_id7',
+            mediaType: [ ],
+            languages: [],
+            formats: []
           }
         ]
       })
       const mediaTypeGroups = node.querySelectorAll("[data-automation-id='mediaType_group']")
-      expect(mediaTypeGroups.length).toBe(3)
-      expect(node.querySelectorAll("[data-mediatype='Book']").length).toBe(1)
-      expect(node.querySelector("[data-mediatype='Book']").querySelectorAll("[data-automation-id^='publication_']").length).toBe(4)
-      expect(node.querySelectorAll("[data-mediatype='Game']").length).toBe(1)
-      expect(node.querySelector("[data-mediatype='Game']").querySelectorAll("[data-automation-id^='publication_']").length).toBe(2)
-      expect(node.querySelectorAll("[data-mediatype='MusicRecording']").length).toBe(1)
-      expect(node.querySelector("[data-mediatype='MusicRecording']").querySelectorAll("[data-automation-id^='publication_']").length).toBe(1)
+      expect(mediaTypeGroups.length).toBe(4)
+      expect(node.querySelectorAll("[data-mediatype$='Book']").length).toBe(1)
+      expect(node.querySelector("[data-mediatype$='Book']").querySelectorAll("[data-automation-id^='publication_']").length).toBe(4)
+      expect(node.querySelectorAll("[data-mediatype$='Game']").length).toBe(1)
+      expect(node.querySelector("[data-mediatype$='Game']").querySelectorAll("[data-automation-id^='publication_']").length).toBe(2)
+      expect(node.querySelectorAll("[data-mediatype$='MusicRecording']").length).toBe(1)
+      expect(node.querySelector("[data-mediatype$='MusicRecording']").querySelectorAll("[data-automation-id^='publication_']").length).toBe(1)
+      expect(node.querySelectorAll("[data-mediatype$='noMediaType']").length).toBe(1)
+      expect(node.querySelector("[data-mediatype$='noMediaType']").querySelectorAll("[data-automation-id^='publication_']").length).toBe(1)
     })
 
     it('should sort publications by language, publication year and format', () => {

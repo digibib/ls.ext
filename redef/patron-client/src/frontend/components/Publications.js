@@ -24,7 +24,7 @@ class Publications extends React.Component {
   }
 
   renderPublications (publications, publicationsPerRow) {
-    const publicationsCopy = [...publications]
+    const publicationsCopy = [ ...publications ]
     const publicationRows = []
     while (publicationsCopy.length > 0) {
       publicationRows.push(publicationsCopy.splice(0, publicationsPerRow))
@@ -74,6 +74,14 @@ class Publications extends React.Component {
     )
   }
 
+  getPublicationHolder (publication) {
+    return {
+      original: publication,
+      languages: publication.languages.map(language => this.props.intl.formatMessage({ id: language })),
+      formats: publication.formats.map(format => this.props.intl.formatMessage({ id: format }))
+    }
+  }
+
   getSortedPublicationHolders () {
     const exceptions = {
       'http://lexvo.org/id/iso639-3/nob': 1,
@@ -89,18 +97,18 @@ class Publications extends React.Component {
 
     const publicationHoldersByMediaType = {}
     this.props.publications.forEach(publication => {
-      publication.mediaType.forEach(mediaTypeUri => {
-        const mediaType = getFragment(mediaTypeUri)
-        publicationHoldersByMediaType[ mediaType ] = publicationHoldersByMediaType[ mediaType ] || []
-        publicationHoldersByMediaType[ mediaType ].push({
-          original: publication,
-          languages: publication.languages.map(language => this.props.intl.formatMessage({ id: language })),
-          formats: publication.formats.map(format => this.props.intl.formatMessage({ id: format }))
+      if (publication.mediaType.length > 0) {
+        publication.mediaType.forEach(mediaTypeUri => {
+          publicationHoldersByMediaType[ mediaTypeUri ] = publicationHoldersByMediaType[ mediaTypeUri ] || []
+          publicationHoldersByMediaType[ mediaTypeUri ].push(this.getPublicationHolder(publication))
         })
-      })
+      } else {
+        publicationHoldersByMediaType[ messages.noMediaType.id ] = publicationHoldersByMediaType[ messages.noMediaType.id ] || []
+        publicationHoldersByMediaType[ messages.noMediaType.id ].push(this.getPublicationHolder(publication))
+      }
     })
-    Object.keys(publicationHoldersByMediaType).forEach(mediaType => {
-      publicationHoldersByMediaType[ mediaType ].sort(
+    Object.keys(publicationHoldersByMediaType).forEach(mediaTypeUri => {
+      publicationHoldersByMediaType[ mediaTypeUri ].sort(
         firstBy((a, b) => {
           if (!a.languages[ 0 ]) {
             // No languages, sort to back
@@ -140,35 +148,38 @@ class Publications extends React.Component {
     return (
       <footer className="other-publications">
         {
-          Object.keys(publicationHoldersByMediaType).map(mediaType =>
-            <div key={mediaType} data-automation-id="mediaType_group" data-mediatype={mediaType}>
-              <header className="other-publications-title">
-                <h2>{mediaType}</h2>
-              </header>
+          Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
+            const mediaTypeFragment = getFragment(mediaTypeUri)
+            return (
+              <div key={mediaTypeUri} data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
+                <header className="other-publications-title">
+                  <h2>{this.props.intl.formatMessage({ id: mediaTypeUri })}</h2>
+                </header>
 
-              <div className="entry-content-icon patron-placeholder">
-                <div className="entry-content-icon-single">
-                  <img src="/images/icon-audiobook.svg" alt="Black speaker with audio waves" />
-                  <p>Lydbok </p>
+                <div className="entry-content-icon patron-placeholder">
+                  <div className="entry-content-icon-single">
+                    <img src="/images/icon-audiobook.svg" alt="Black speaker with audio waves" />
+                    <p>Lydbok </p>
+                  </div>
+                </div>
+
+                <ClickableElement onClickAction={this.props.toggleParameterValue}
+                                  onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
+                  <div className="arrow-close">
+                    {collapsePublications.includes(mediaTypeFragment)
+                      ? <img src="/images/btn-arrow-open.svg" alt="Black arrow pointing down" />
+                      : <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up" />}
+                  </div>
+                </ClickableElement>
+                <div className="other-publications-entry-content">
+                  <p>&nbsp;{/* Temporary placeholder to work around CSS placement issue */}</p>
+                  {collapsePublications.includes(mediaTypeFragment)
+                    ? null
+                    : this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaTypeUri ].map(publicationHolder => publicationHolder.original))}
                 </div>
               </div>
-
-              <ClickableElement onClickAction={this.props.toggleParameterValue}
-                                onClickArguments={[ 'collapsePublications', mediaType ]}>
-                <div className="arrow-close">
-                  {collapsePublications.includes(mediaType)
-                    ? <img src="/images/btn-arrow-open.svg" alt="Black arrow pointing down" />
-                    : <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up" />}
-                </div>
-              </ClickableElement>
-              <div className="other-publications-entry-content">
-                <p>&nbsp;{/* Temporary placeholder to work around CSS placement issue */}</p>
-                {collapsePublications.includes(mediaType)
-                  ? null
-                  : this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaType ].map(publicationHolder => publicationHolder.original))}
-              </div>
-            </div>
-          )
+            )
+          })
         }
       </footer>
 
@@ -214,6 +225,11 @@ const messages = defineMessages({
     id: 'Publications.numberOfPublications',
     description: 'The number of publications',
     defaultMessage: 'Publications ({numberOfPublications})'
+  },
+  noMediaType: {
+    id: 'Publications.noMediaType',
+    description: 'Label for the category of publications that have no media type',
+    defaultMessage: 'Uncategorized'
   }
 })
 
