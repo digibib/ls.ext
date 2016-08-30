@@ -3360,6 +3360,7 @@
                 regex_strip: "[\\W]+"
                 prefix: "http://lexvo.org/id/iso639-3/"
                 regex_split: "(\\w{3})"
+                lowercase: true
             h:
               predicate: "MIGRATION.originalLanguage"
               object:
@@ -3367,6 +3368,7 @@
                 regex_strip: "[\\W]+"
                 prefix: "http://lexvo.org/id/iso639-3/"
                 regex_split: "(\\w{3})"
+                lowercase: true
             b:
               predicate: "ONTOLOGY.subTitles"
               object:
@@ -3374,6 +3376,7 @@
                 regex_strip: "[\\W]+"
                 prefix: "http://lexvo.org/id/iso639-3/"
                 regex_split: "(\\w{3})"
+                lowercase: true
     -
       '082':
         subfields:
