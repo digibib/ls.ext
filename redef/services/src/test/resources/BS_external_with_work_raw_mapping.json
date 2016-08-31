@@ -31,6 +31,12 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:mainTitle": "A example",
@@ -87,6 +93,20 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Røros"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Røros"
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Kulturhistorie"
       },
       {
         "deichman:name": "Eksempelsen, Eksempel",

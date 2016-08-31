@@ -10,6 +10,7 @@ import org.marc4j.marc.DataField;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,15 +140,10 @@ public class MARCMapper {
                     }
                     break;
                 case "650":
-                    getSubfieldValue(dataField, 'a').ifPresent(a ->{
-                        ExternalDataObject subject = addExternalObject(graphList, a, "deichman:Subject", work::addSubject);
-                        getSubfieldValue(dataField, 'q').ifPresent(q -> {
-                            subject.setSpecification(q);
-                        });
-                    });
-                    getSubfieldValue(dataField, 'z').ifPresent(a ->{
-                        addExternalObject(graphList, a, "deichman:Place", work::addSubject);
-                    });
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, "deichman:Subject", "deichman:Place", 'z');
+                    break;
+                case "651":
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, "deichman:Place", "deichman:Subject", 'x');
                     break;
                 case "700":
                     final Person[] publicationPerson = new Person[1];
@@ -209,7 +205,23 @@ public class MARCMapper {
         return topLevelMap;
     }
 
-    private ExternalDataObject addExternalObject(List<Object> graphList, String a, String type, Consumer<String> addObjectFunction) {
+    private void mapPrimaryAndSubDivisionSubject(
+            Work work,
+            Collection<Object> graphList,
+            DataField dataField,
+            String primarySubjectType,
+            String subDivisionSubjectType,
+            char subDivisionField) {
+        getSubfieldValue(dataField, 'a').ifPresent(a ->{
+            ExternalDataObject subject = addExternalObject(graphList, a, primarySubjectType, work::addSubject);
+            getSubfieldValue(dataField, 'q').ifPresent(subject::setSpecification);
+        });
+        getSubfieldValue(dataField, subDivisionField).ifPresent(a ->{
+            addExternalObject(graphList, a, subDivisionSubjectType, work::addSubject);
+        });
+    }
+
+    private ExternalDataObject addExternalObject(Collection<Object> graphList, String a, String type, Consumer<String> addObjectFunction) {
         String objectId = UUID.randomUUID().toString();
         ExternalDataObject externalDataObject = externalObject(objectId, type);
         externalDataObject.setPrefLabel(a);
