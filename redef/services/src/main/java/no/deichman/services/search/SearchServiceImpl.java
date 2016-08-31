@@ -259,7 +259,7 @@ public class SearchServiceImpl implements SearchService {
         Model pubModel = entityService.retrieveById(pubUri);
         Property publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
         if (pubModel.getProperty(null, publicationOfProperty) != null) {
-            String workUri = pubModel.getProperty(null, publicationOfProperty).getObject().toString();
+            String workUri = pubModel.getProperty(ResourceFactory.createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
             XURI workXURI = new XURI(workUri);
             pubModel = entityService.retrieveWorkWithLinkedResources(workXURI);
         }
