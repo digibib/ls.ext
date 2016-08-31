@@ -229,7 +229,7 @@ ifdef PHONE
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET smsalertnumber=\"$(PHONE)\";"'
 endif
 	@echo "-- Setting userid=cardid"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber;'
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL;"'
 	@echo "OK Done migrating patrons.\n"
 endif
 	@touch out/done.migrate_patrons
