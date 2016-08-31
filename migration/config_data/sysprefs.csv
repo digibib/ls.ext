@@ -14,7 +14,7 @@ variable,value
 "BorrowerUnwantedField","title|initials|othernames|streetnumber|state|mobile|fax|emailpro|phonepro|B_streetnumber|B_streettype|B_address|B_address2|B_city|B_state|B_zipcode|B_country|B_email|B_phone|borrowernotes|opacnote|contactnote|altcontactfirstname|altcontactsurname|altcontactaddress1|altcontactaddress2|altcontactaddress3|altcontactstate|altcontactzipcode|altcontactcountry|altcontactphone"
 "CalendarFirstDayOfWeek",1,"0|1|2|3|4|5|6"
 "CurrencyFormat","FR"
-"dateformat","metric"
+"dateformat","dmydot"
 "DefaultLanguageField008","nor"
 "DefaultLongOverdueChargeValue","Tapt"
 "EnhancedMessagingPreferences",1
@@ -23,6 +23,7 @@ variable,value
 "finesMode","production"
 "FrameworksLoaded","sysprefs.sql|subtag_registry.sql|authorities_normal_marc21.sql|class_sources.sql|marc21_framework_DEFAULT.sql|message_transport_types.sql|sample_frequencies.sql|sample_notices.sql|sample_notices_message_attributes.sql|sample_notices_message_transports.sql|sample_numberpatterns.sql|stopwords.sql|system_preferences.sql|userflags.sql|userpermissions.sql|audio_alerts.sql"
 "HidePatronName",1
+"IntranetUserCSS",".deichman-hidden { display: none !important; }"
 "KohaAdminEmailAddress","digibib@gmail.com"
 "MaxFine","100"
 "NoIssuesChargeGuarantees"

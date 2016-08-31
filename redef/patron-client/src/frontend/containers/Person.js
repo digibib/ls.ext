@@ -19,7 +19,7 @@ class Person extends React.Component {
   }
 
   renderEmpty () {
-    return <div></div>
+    return <div />
   }
 
   renderLifeSpan (person) {

@@ -7,3 +7,7 @@ export function relativeUri (uri) {
 export function getId (uri) {
   return uri.substring(uri.lastIndexOf('/') + 1)
 }
+
+export function getFragment (uri) {
+  return uri.substring(uri.lastIndexOf('#') + 1)
+}

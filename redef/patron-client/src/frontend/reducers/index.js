@@ -11,7 +11,13 @@ import registration from './registration'
 import resources from './resources'
 
 const rootReducer = combineReducers({
-  application, modal, profile, search, reservation, registration, resources,
+  application,
+  modal,
+  profile,
+  search,
+  reservation,
+  registration,
+  resources,
   routing: routerReducer,
   form: formReducer
 })

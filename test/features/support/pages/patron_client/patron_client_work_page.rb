@@ -29,8 +29,15 @@ class PatronClientWorkPage < PageRoot
     wait_retry { @browser.element(data_automation_id: 'work_items').elements(xpath: './*').size > 0 }
   end
 
-  def publication_entries
-    @browser.element(data_automation_id: 'work_publications').when_present(BROWSER_WAIT_TIMEOUT).elements(data_automation_id: /^publication_http/)
+  def publication_entries(media_type = nil)
+    wait_for {
+      @browser.elements(data_automation_id: /^publication_http/).size > 0
+    }
+    if media_type
+      @browser.element(data_mediatype: media_type).elements(data_automation_id: /^publication_http/)
+    else
+      @browser.elements(data_automation_id: 'work_publications').map { |element| element.elements(data_automation_id: /^publication_http/).to_a }.flatten
+    end
   end
 
   def get_items(publication_identifier)

@@ -138,7 +138,7 @@ Search.propTypes = {
   resourceActions: PropTypes.object.isRequired
 }
 
-export { Search as Search }
+export { Search }
 
 function mapStateToProps (state) {
   return {

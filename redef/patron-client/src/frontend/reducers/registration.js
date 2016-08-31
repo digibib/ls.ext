@@ -31,17 +31,21 @@ export default function registration (state = initialState, action) {
     case REQUEST_CHECK_FOR_EXISTING_USER:
       return {
         ...state,
-        isCheckingForExistingUser: true, checkForExistingUserSuccess: false, checkForExistingUserFailure: false, registrationError: null
+        isCheckingForExistingUser: true,
+        checkForExistingUserSuccess: false,
+        checkForExistingUserFailure: false,
+        registrationError: null
       }
     case CHECK_FOR_EXISTING_USER_SUCCESS:
       return {
-        ...state,
-        checkForExistingUserSuccess: true, isCheckingForExistingUser: false, registrationError: null
+        ...state, checkForExistingUserSuccess: true, isCheckingForExistingUser: false, registrationError: null
       }
     case CHECK_FOR_EXISTING_USER_FAILURE:
       return {
         ...state,
-        checkForExistingUserFailure: true, isCheckingForExistingUser: false, registrationError: action.payload.error
+        checkForExistingUserFailure: true,
+        isCheckingForExistingUser: false,
+        registrationError: action.payload.error
       }
     case HIDE_MODAL:
       return initialState

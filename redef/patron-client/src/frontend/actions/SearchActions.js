@@ -45,7 +45,8 @@ export function search () {
     dispatch(requestSearch(inputQuery))
 
     return fetch('/q' + getState().routing.locationBeforeTransitions.search, {
-      method: 'GET', headers: {
+      method: 'GET',
+      headers: {
         'Accept': 'application/json'
       }
     })

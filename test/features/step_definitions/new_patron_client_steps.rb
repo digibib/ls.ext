@@ -264,6 +264,7 @@ end
 
 When(/^jeg trykker lagre inne på innstillinger$/) do
   @browser.element(data_automation_id: 'UserSettings_saveButton').click
+  sleep 1 # TODO: Fix visual response in UI that signalizes successful save that we can wait for
 end
 
 When(/^skal alle avkrysningsboksene være skrudd på inne på innstillinger$/) do
@@ -303,14 +304,14 @@ When(/^skal jeg se registreringsskjemaet$/) do
 end
 
 When(/^jeg legger inn mine personalia som "(barn|voksen)"$/) do |category|
-  juvenileAge = (Time.now - (60*60*24*365*8)).year  # ~8 years
-  adultAge    = (Time.now - (60*60*24*365*40)).year # ~40 years
+  juvenile_age = (Time.now - (60*60*24*365*8)).year  # ~8 years
+  adult_age    = (Time.now - (60*60*24*365*40)).year # ~40 years
 
   @browser.text_field(id: 'firstname').set generateRandomString
   @browser.text_field(id: 'lastname').set @active[:patron].surname
   @browser.text_field(id: 'day').set '%02d' % (rand(29)+1)
   @browser.text_field(id: 'month').set '%02d' % (rand(11)+1)
-  @browser.text_field(id: 'year').set category == 'barn' ? juvenileAge : adultAge
+  @browser.text_field(id: 'year').set category == 'barn' ? juvenile_age : adult_age
   @browser.text_field(id: 'ssn').set '%011d' % rand(10**11)
 end
 
@@ -365,4 +366,34 @@ end
 Then(/^jeg kan søkes opp i systemet som låner$/) do
   @site.Patrons.visit.search @active[:patron].surname
   @browser.div(class: 'patroninfo').text.should include(@active[:patron].surname)
+end
+
+
+When(/^utgivelsene skal være sortert på språk \(med norsk, engelsk, dansk og svensk først\), utgivelsesår og format$/) do
+  publications = @site.PatronClientWorkPage.publication_entries
+
+  def check(element, prefix, postfix)
+    text = element.element(data_automation_id: 'publication_title').text
+    (text.start_with?(prefix) && text.end_with?(postfix)).should eq true
+  end
+
+  check(publications[0], 'pubprefix0', 'nob')
+  check(publications[1], 'pubprefix1', 'eng')
+  check(publications[2], 'pubprefix0', 'eng')
+  check(publications[3], 'pubprefix1', 'dan')
+  check(publications[4], 'pubprefix0', 'swe')
+  check(publications[5], 'pubprefix3', 'cze')
+  check(publications[6], 'pubprefix2', 'cze')
+  check(publications[7], 'pubprefix1', 'cze')
+  check(publications[8], 'pubprefix0', 'cze')
+  check(publications[9], 'pubprefix1', 'swe')
+end
+
+When(/^skal utgivelsene være inndelt etter medietype$/) do
+  book_count = @site.PatronClientWorkPage.publication_entries('http://data.deichman.no/mediaType#Book').size
+  book_count.should eq 9
+  music_recording_count = @site.PatronClientWorkPage.publication_entries('http://data.deichman.no/mediaType#MusicRecording').size
+  music_recording_count.should eq 1
+  uncategorized_count = @site.PatronClientWorkPage.publication_entries('Publications.noMediaType').size
+  @site.PatronClientWorkPage.publication_entries.size.should eq(book_count + music_recording_count + uncategorized_count)
 end
