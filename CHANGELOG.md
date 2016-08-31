@@ -13,6 +13,17 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.1.1 (2016-08-31)
+
+TAG: 39faad72aee09d6500d199a9c31694fb890fcd77
+
+- koha:
+  - update to LinkMobility SMS provider
+  - Add Bug 16942 - Confirm hold results in ugly error to fix HOLD_SLIP
+- patron-client:
+  - work page sorting
+  - self registration age limit 15 years
+
 ## 0.1.0 (2016-08-30)
 
 TAG: 35179d801a7d786ccd5627bdf8b5a0d5a768393e
