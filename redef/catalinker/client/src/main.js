@@ -323,8 +323,18 @@
           }
         } else {
           input.values[ index ].current.displayValue = values
+          var typeMap = ractive.get('applicationData.config.typeMap')
           if (options.source) {
-            input.values[ index ].current.accepted = { source: options.source }
+            var selectedIndexType
+            _.each(input.indexTypes, function (indexType) {
+              if (root.isA(typeMap[ indexType ])) {
+                selectedIndexType = indexType
+              }
+            })
+            input.values[ index ].current.accepted = {
+              source: options.source,
+              selectedIndexType: selectedIndexType
+            }
           }
         }
       }
@@ -338,6 +348,7 @@
           var graphData = ensureJSON(response.data)
           var root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
+          ractive.update()
         })
       }
     }
@@ -541,10 +552,15 @@
                             input.parentInput.allowAddNewButton = true
                           }
                         }
-                        input.searchable = true
                         setAllowNewButtonForInput(input)
+                        if (options.source) {
+                          input.values[ index ].searchable = true
+                        } else {
+                          input.values[ index ].searchable = false
+                        }
                       } else {
                         setDisplayValue(input, index, node, options)
+                        input.values[ index ].searchable = false
                       }
                       input.values[ index ].subjectType = type
                     })
@@ -710,11 +726,12 @@
         })
     }
 
-    function emptyValues (predefined) {
+    function emptyValues (predefined, searchable) {
       return [ {
         old: { value: '', lang: '' },
         current: { value: predefined ? [] : null, lang: '' },
-        uniqueId: _.uniqueId()
+        uniqueId: _.uniqueId(),
+        searchable: searchable
       } ]
     }
 
@@ -956,7 +973,7 @@
           copyResourceForms(newSubInput.input, compoundInput.isMainEntry)
 
           if (type === 'searchable-with-result-in-side-panel') {
-            newSubInput.input.searchable = true
+            newSubInput.input.values[ 0 ].searchable = true
           }
           currentInput.subInputs.push(newSubInput)
         })
@@ -1007,9 +1024,8 @@
           if (input.searchMainResource) {
             groupInputs.push({
               label: input.searchMainResource.label,
-              values: emptyValues(false),
+              values: emptyValues(false, true),
               type: 'searchable-with-result-in-side-panel',
-              searchable: true,
               visible: true,
               indexTypes: [ input.searchMainResource.indexType ],
               selectedIndexType: input.searchMainResource.indexType,
@@ -1028,7 +1044,6 @@
               label: input.searchForValueSuggestions.label,
               values: emptyValues(false, true),
               type: 'searchable-for-value-suggestions',
-              searchable: true,
               visible: true,
               widgetOptions: input.widgetOptions,
               datatypes: input.datatypes,
@@ -1047,6 +1062,9 @@
                 throw new Error(`Group "${inputGroup.id} " specified unknown property "${input.rdfProperty}"`)
               }
               assignUniqueValueIds(ontologyInput)
+              if (input.type === 'searchable-with-result-in-side-panel') {
+                ontologyInput.values[ 0 ].searchable = true
+              }
             } else if (input.subInputs) {
               ontologyInput = createInputForCompoundInput(input, inputGroup, ontologyUri, inputMap)
             } else {
@@ -1405,7 +1423,7 @@
           _.each(input.subInputs, function (subInput) {
             if (!(subInput.input.visible === false)) {
               var value = subInput.input.values[ index ].current.value
-              if (typeof value !== 'undefined') {
+              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || value.length > 0)) {
                 patch.push({
                   op: operation,
                   s: '_:b0',
@@ -1541,6 +1559,7 @@
                   Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
                 }
+                ractive.update()
               }
             })
             return {
@@ -1803,12 +1822,7 @@
                 var mainInput = ractive.get(event.keypath)
                 visitInputs(mainInput, function (input, index) {
                   var length = input.values.length
-                  input.values[ length ] = {
-                    old: { value: '', lang: '' },
-                    current: { value: '', lang: '' },
-                    uniqueId: _.uniqueId(),
-                    searchResult: null
-                  }
+                  input.values[ length ] = emptyValues(false, input.type === 'searchable-with-result-in-side-panel')[ 0 ]
                   if (index === 0) {
                     input.values[ length ].subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
                       ? mainInput.subjectTypes[ 0 ]
@@ -1838,8 +1852,8 @@
                   if (clearProperty) {
                     ractive.set(grandParentOf(event.keypath) + '.' + clearProperty, null)
                   }
-                  ractive.update()
                 }
+                ractive.update()
               },
               saveObject: function (event, index) {
                 if (eventShouldBeIgnored(event)) return
@@ -1867,18 +1881,26 @@
               },
               deleteObject: function (event, parentInput, index) {
                 patchObject(parentInput, applicationData, index, 'del').then(function () {
-                  var subInputs = grandParentOf(grandParentOf(event.keypath))
-                  _.each(parentInput.subInputs, function (input, subInputIndex) {
-                    ractive.get(subInputs + '.' + subInputIndex + '.input.values').splice(index, 1)
-                  })
                   ractive.update()
-                  if (ractive.get(subInputs + '.0.input.values').length === 0) {
-                    var addValueEvent = { keypath: parentOf(subInputs) }
-                    ractive.fire('addValue', addValueEvent)
-                  }
+                  var subInputs = grandParentOf(grandParentOf(event.keypath))
+                  _.each(parentInput.subInputs, function (subInput, subInputIndex) {
+                    if (_.isArray(subInput.input.values)) {
+                      subInput.input.values.splice(index, 1)
+                      ractive.update()
+                    }
+                  })
+                  // $(event.node).closest('.ui-accordion-content').prev().remove()
+                  // $(event.node).closest('.ui-accordion-content, .field').remove()
+                  ractive.update().then(function () {
+                    if (ractive.get(`${subInputs}.0.input.values`).length === 0) {
+                      var addValueEvent = { keypath: parentOf(subInputs) }
+                      ractive.fire('addValue', addValueEvent)
+                    }
+                  })
                 })
               },
-              searchResource: function (event, searchString, indexType, loadWorksAsSubjectOfItem, options) {
+              searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
+                let indexType = preferredIndexType || secondaryIndexType
                 options = options || {}
                 if (options.skipIfAdvancedQuery && isAdvancedQuery(searchString)) {
                   return
@@ -2052,6 +2074,7 @@
                       unPrefix(input.domain))
                   }
                   ractive.set(origin + '.searchResult', null)
+                  ractive.update()
                 }
               },
               openResourceWithTemplate (event, uri, template) {
@@ -2390,6 +2413,16 @@
               useSuggestion: function (event) {
                 event.context.suggested = null
                 event.context.keepOrder = true
+                event.context.suggested = null
+                let subInputs = ractive.get(grandParentOf(grandParentOf(event.keypath)))
+                _.each(subInputs, function (subInput) {
+                  if (typeof subInput.input.values[event.index.inputValueIndex].searchable === 'boolean') {
+                    subInput.input.values[event.index.inputValueIndex].searchable = true
+                  }
+                  if (typeof subInput.input.values[event.index.inputValueIndex].suggested === 'object') {
+                    subInput.input.values[event.index.inputValueIndex].suggested = null
+                  }
+                })
                 ractive.update()
               }
             }
@@ -2431,15 +2464,15 @@
             }
           }
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
+          ractive.observe('applicationData.inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
             checkRequiredSubjectTypeSelection(keypath, newValue)
           }, { init: false })
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+          ractive.observe('applicationData.inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
             checkRequiredSubInput(newValue, keypath)
           })
 
-          ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
+          ractive.observe('applicationData.inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
             if (newValue && newValue.current) {
               if (!newValue.current.value) {
                 ractive.set(keypath + '.error', false)

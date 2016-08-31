@@ -315,7 +315,9 @@ end
 When(/^skriver jeg inn "([^"]*)" som utgivelsens nummer i serien$/) do |issue|
   data_automation_id = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
   issue_field = @browser.text_field(:data_automation_id => data_automation_id)
+  issue_field.focus()
   issue_field.set(issue)
+  sleep 1
 end
 
 When(/^velger jeg den første serien i listen som dukker opp$/) do
@@ -410,7 +412,7 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled? &&!a.attribute_value('disabled')}.first.click
+  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled?}.first.click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do

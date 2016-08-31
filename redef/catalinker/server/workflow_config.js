@@ -155,6 +155,7 @@ module.exports = (app) => {
             {
               label: 'Foretrukken betegnelse',
               rdfProperty: 'prefLabel',
+              displayValueSource: true,
               type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
               preFillFromSearchField: true // value of this field should be copied from the search field above
             },
@@ -865,7 +866,8 @@ module.exports = (app) => {
                   }
                 ]
               },
-              addAnotherLabel: 'Legg til et delverk til'
+              addAnotherLabel: 'Legg til et delverk til',
+              subjects: [ 'Publication' ]
             }
           ],
           nextStep: {
@@ -1087,6 +1089,8 @@ module.exports = (app) => {
         publication: 'Publication',
         genre: 'Genre',
         subject: 'Subject',
+        place: 'Place',
+        event: 'Event',
         serial: 'Serial',
         corporation: 'Corporation',
         instrument: 'Instrument',

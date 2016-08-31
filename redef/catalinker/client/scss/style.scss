@@ -519,6 +519,7 @@ body {
             .input {
               background: $mintgreen;
               padding: 0 12px;
+              margin-bottom: -1px;
               .value input[type=checkbox] {
                 width: auto;
                 margin-top: -2px;

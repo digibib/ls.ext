@@ -27,15 +27,18 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
     Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
     Og jeg venter litt
     Så velger jeg et sted fra treffliste fra stedregisteret
+    Så skriver jeg inn "12" som utgivelsens nummer i serien
+    Så jeg venter litt
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
-    Så skriver jeg inn "12" som utgivelsens nummer i serien
+    Så jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
@@ -60,6 +63,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
+    Så jeg venter litt
+    Så jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Og jeg venter litt
@@ -172,6 +177,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så fjerner jeg hovedinnførselen
     Og jeg venter litt
     Så velger jeg aktørtype "Organisasjon"
+    Og jeg venter litt
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen
