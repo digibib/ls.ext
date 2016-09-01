@@ -148,7 +148,15 @@ public class MARCMapper {
                         Person person1 = new Person(personId, a);
                         setPersonDataFromDataField(dataField, person1);
                         graphList.add(person1);
-                        work.addSubject(personId);
+                        if (getSubfieldValue(dataField, 't').isPresent()) {
+                            getSubfieldValue(dataField, 't').ifPresent(title -> {
+                                String workAsSubjectId = asBlankNodeId(UUID.randomUUID().toString());
+                                graphList.add(new Work(workAsSubjectId, title, personId));
+                                work.addSubject(workAsSubjectId);
+                            });
+                        } else {
+                            work.addSubject(personId);
+                        }
                     });
                     break;
                 case "650":

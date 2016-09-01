@@ -46,6 +46,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -115,6 +118,25 @@
         "deichman:specification": "konge av Norge",
         "deichman:alternativeName": "Christian Frederik Carl Georg Valdemar Axel",
         "deichman:ordinal": "VII"
+      },
+      {
+        "deichman:name": "Shakespeare, William",
+        "deichman:birthYear": "1564",
+        "deichman:deathYear": "1616",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:contributor": {
+          "@id": "_:0000000"
+        },
+        "deichman:mainTitle": "Hamlet",
+        "@type": [
+          "Work"
+        ],
+        "@id": "_:0000000"
       },
       {
         "@type": [
