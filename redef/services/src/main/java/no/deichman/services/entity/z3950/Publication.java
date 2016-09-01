@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Responsibility: provide object for publications.
  */
+@SuppressWarnings("checkstyle:DesignForExtension")
 public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:isbn")
@@ -139,6 +140,10 @@ public class Publication extends BibliographicObjectExternal {
     }
 
     Publication() {
+    }
+
+    @Override
+    protected void assignType() {
         this.setType("deichman:Publication");
     }
 

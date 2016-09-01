@@ -61,6 +61,7 @@ Egenskap: katalogisere med eksterne kilder
     Så trykker jeg på "Opprett ny person"-knappen
     Så noterer jeg ned navnet på personen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"
 

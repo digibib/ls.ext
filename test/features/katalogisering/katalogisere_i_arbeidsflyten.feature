@@ -27,21 +27,23 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
     Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
     Og jeg venter litt
     Så velger jeg et sted fra treffliste fra stedregisteret
+    Så skriver jeg inn "12" som utgivelsens nummer i serien
+    Så jeg venter litt
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
-    Så skriver jeg inn "12" som utgivelsens nummer i serien
+    Så jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
     Så velger jeg en organisasjon fra treffliste fra organisasjonsregisteret
-    Så sjekker jeg at overskriften viser informasjon om hva som blir katalogisert
     Og bekrefter for å gå videre til "Beskriv verk"
     Og verifiserer verkets tilleggsopplysninger uten endringer er korrekte
     Og bekrefter for å gå videre til "Emneopplysninger"
@@ -56,11 +58,15 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett ny organisasjon"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
-    Og at jeg skriver inn tilfeldig verksnavn i feltet "Tittel på delverk" og trykker enter
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Originaltittel" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
+    Så jeg venter litt
+    Så jeg venter litt
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
     Og jeg venter litt
     Og jeg trykker på "Legg til et delverk til"-knappen
     Så velger jeg aktørtype "Person"
@@ -70,11 +76,11 @@ Egenskap: Katalogisere i arbeidsflyt
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
-    Og at jeg skriver inn tilfeldig verksnavn i feltet "Tittel på delverk" og trykker enter
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Originaltittel" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
-    Og at jeg skriver inn tilfeldig originaltittel i feltet "Originaltittel" og trykker enter
+    Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
     Og jeg trykker på "Legg til"-knappen
@@ -171,6 +177,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så fjerner jeg hovedinnførselen
     Og jeg venter litt
     Så velger jeg aktørtype "Organisasjon"
+    Og jeg venter litt
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen

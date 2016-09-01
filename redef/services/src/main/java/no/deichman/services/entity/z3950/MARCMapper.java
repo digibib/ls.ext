@@ -10,6 +10,7 @@ import org.marc4j.marc.DataField;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class MARCMapper {
         List<Work> publicationPartWorks = new ArrayList<>();
 
         Work work = new Work();
+        work.addType("deichman:TopBanana");
 
         String workId = UUID.randomUUID().toString();
         work.setId(workId);
@@ -61,6 +63,9 @@ public class MARCMapper {
         publication.setPublicationOf(workId);
 
         List<Object> graphList = new ArrayList<>();
+        graphList.add(work);
+        graphList.add(publication);
+
         for (ControlField controlField: r.getControlFields()){
                 switch (controlField.getTag()) {
                     case "008":
@@ -134,6 +139,12 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 'a').ifPresent(work::setHasSummary);
                     }
                     break;
+                case "650":
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, "deichman:Subject", "deichman:Place", 'z');
+                    break;
+                case "651":
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, "deichman:Place", "deichman:Subject", 'x');
+                    break;
                 case "700":
                     final Person[] publicationPerson = new Person[1];
                     if (getSubfieldValue(dataField, 't').isPresent()) {
@@ -182,10 +193,6 @@ public class MARCMapper {
             graphList.addAll(persons);
         }
 
-
-        graphList.add(work);
-        graphList.add(publication);
-
         Map<String, Object> topLevelMap = new HashMap<>();
         topLevelMap.put("@context", new ContextObject().getContext());
         topLevelMap.put("@graph", graphList);
@@ -196,6 +203,37 @@ public class MARCMapper {
         graphList.addAll(publicationPartWorks);
 
         return topLevelMap;
+    }
+
+    private void mapPrimaryAndSubDivisionSubject(
+            Work work,
+            Collection<Object> graphList,
+            DataField dataField,
+            String primarySubjectType,
+            String subDivisionSubjectType,
+            char subDivisionField) {
+        getSubfieldValue(dataField, 'a').ifPresent(a ->{
+            ExternalDataObject subject = addExternalObject(graphList, a, primarySubjectType, work::addSubject);
+            getSubfieldValue(dataField, 'q').ifPresent(subject::setSpecification);
+        });
+        getSubfieldValue(dataField, subDivisionField).ifPresent(a ->{
+            addExternalObject(graphList, a, subDivisionSubjectType, work::addSubject);
+        });
+    }
+
+    private ExternalDataObject addExternalObject(Collection<Object> graphList, String a, String type, Consumer<String> addObjectFunction) {
+        String objectId = UUID.randomUUID().toString();
+        ExternalDataObject externalDataObject = externalObject(objectId, type);
+        externalDataObject.setPrefLabel(a);
+        addObjectFunction.accept(externalDataObject.getId());
+        graphList.add(externalDataObject);
+        return externalDataObject;
+    }
+
+    private ExternalDataObject externalObject(String subjectId, String type) {
+        ExternalDataObject externalDataObject = externalObject(subjectId);
+        externalDataObject.setType(type);
+        return externalDataObject;
     }
 
     private void setRole(DataField dataField, Contribution contribution) {
@@ -294,7 +332,7 @@ public class MARCMapper {
         contribution.setId(UUID.randomUUID().toString());
         contribution.setAgent(publicationAgentLink);
         if (entityType == EntityType.WORK) {
-            contribution.setType("deichman:MainEntry");
+            contribution.addType("deichman:MainEntry");
         }
 
         returnValue.put("contributorLink", contribution.getId());
@@ -309,7 +347,6 @@ public class MARCMapper {
         final String personUuid = UUID.randomUUID().toString();
         final Person persons = new Person();
         final PublicationPart publicationPart = new PublicationPart();
-        publicationPart.setId(UUID.randomUUID().toString());
 
         Map<String, String> agentLink = new HashMap<>();
         persons.setId(personUuid);
@@ -321,7 +358,7 @@ public class MARCMapper {
 
         Map<String, String> workLink = new HashMap<>();
         workLink.put("@id", work.getId());
-        publicationPart.setHasWork(workLink);
+        publicationPart.setPublicationOf(workLink);
 
         returnValue.put("publicationPartLink", publicationPart.getId());
         returnValue.put("publicationPart", publicationPart);

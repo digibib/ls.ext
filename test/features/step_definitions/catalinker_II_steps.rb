@@ -66,7 +66,7 @@ end
 When(/^legger inn opplysningene om utgivelsen$/) do
   # TODO: Unify add_prop and select_prop in the page objects to avoid having to specify it.
   data = Hash.new
-  data['publicationYear'] = [rand(2015).to_s, :add_prop]
+  data['publicationYear'] = [(1000 + rand(1015)).to_s, :add_prop]
   data['format'] = [:random, :select_prop]
   data['partTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
@@ -243,7 +243,7 @@ end
 When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
   data_automation_id_1 = "Contribution_http://#{ENV['HOST']}:8005/ontology#role_0"
   data_automation_id_2 = "PublicationPart_http://#{ENV['HOST']}:8005/ontology#role_0"
-  role_select_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id_1}' or @data-automation-id='#{data_automation_id_2}']//input[@type='search'][not(@disabled)]")
+  role_select_field = @browser.text_fields(:xpath => "//span[@data-automation-id='#{data_automation_id_1}' or @data-automation-id='#{data_automation_id_2}']//input[@type='search'][not(@disabled)]").find(&:visible?)
   role_select_field.click
   role_select_field.set(role_name)
   select_first_in_open_dropdown
@@ -315,7 +315,9 @@ end
 When(/^skriver jeg inn "([^"]*)" som utgivelsens nummer i serien$/) do |issue|
   data_automation_id = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
   issue_field = @browser.text_field(:data_automation_id => data_automation_id)
+  issue_field.focus()
   issue_field.set(issue)
+  sleep 1
 end
 
 When(/^velger jeg den første serien i listen som dukker opp$/) do
@@ -410,7 +412,7 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.elements(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled? &&!a.attribute_value('disabled')}.first.click
+  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled?}.first.click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
@@ -537,7 +539,7 @@ end
 
 When(/^trykker jeg på den (første|andre|tredje|fjerde|femte|sjette) trekanten for å søke opp personen i forslaget$/) do |ordinal|
   index = @site.translate(ordinal) - 1
-  @browser.as(:class => 'support-panel-expander').select { |a| a.visible? }[index].click
+  @browser.elements(:class => 'support-panel-expander').select { |a| a.visible? }[index].click
 end
 
 When(/^noterer jeg ned navnet på personen$/) do

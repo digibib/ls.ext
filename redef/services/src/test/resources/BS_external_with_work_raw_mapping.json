@@ -2,6 +2,113 @@
   {
     "@graph": [
       {
+        "deichman:contributor": {
+          "@id": "_:0000000"
+        },
+        "deichman:hasSummary": "Eksempel Eksempelsens tredje, selv-biografisk roman, sørger for tung lesing samt behov for suppe. Det er ingen tvil om at denne blir en norsk klassiker som kan måles opp mot blant annet Karsten og Petra har Lucia-fest.",
+        "deichman:audience": [
+          {
+            "@id": "http://data.deichman.no/audience#adult"
+          },
+          {
+            "@id": "http://data.deichman.no/audience#ages9To10"
+          },
+          {
+            "@id": "http://data.deichman.no/audience#ages11To12"
+          },
+          {
+            "@id": "http://data.deichman.no/audience#ages13To15"
+          }
+        ],
+        "deichman:literaryForm": [
+          {
+            "@id": "http://data.deichman.no/literaryForm#fiction"
+          }
+        ],
+        "deichman:subject": [
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:mainTitle": "A example",
+        "deichman:subtitle": "a novel",
+        "@type": [
+          "deichman:Work",
+          "deichman:TopBanana"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:isbn": "000-12-345-678-9",
+        "deichman:edition": "1. utg.",
+        "deichman:placeOfPublication": "Oslo",
+        "deichman:publisher": "Oktober",
+        "deichman:publicationYear": "2007",
+        "deichman:numberOfPages": "191 s.",
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:hasPublicationPart": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:publicationOf": {
+          "@id": "_:0000000"
+        },
+        "deichman:format": {
+          "@id": "http://data.deichman.no/format#Book"
+        },
+        "deichman:mainTitle": "Et eksempel",
+        "deichman:subtitle": "roman",
+        "@type": [
+          "deichman:Publication"
+        ]
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "Ta vare på gamle ting",
+        "deichman:prefLabel": "Kulturminnevern"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Røros"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Røros"
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Kulturhistorie"
+      },
+      {
         "deichman:name": "Eksempelsen, Eksempel",
         "deichman:birthYear": "1931",
         "deichman:nationality": {
@@ -38,69 +145,6 @@
         ],
         "@id": "_:0000000",
         "deichman:specification": "real name Truman Streckfus Persons"
-      },
-      {
-        "deichman:contributor": {
-          "@id": "_:0000000"
-        },
-        "deichman:hasSummary": "Eksempel Eksempelsens tredje, selv-biografisk roman, sørger for tung lesing samt behov for suppe. Det er ingen tvil om at denne blir en norsk klassiker som kan måles opp mot blant annet Karsten og Petra har Lucia-fest.",
-        "deichman:audience": [
-          {
-            "@id": "http://data.deichman.no/audience#adult"
-          },
-          {
-            "@id": "http://data.deichman.no/audience#ages9To10"
-          },
-          {
-            "@id": "http://data.deichman.no/audience#ages11To12"
-          },
-          {
-            "@id": "http://data.deichman.no/audience#ages13To15"
-          }
-        ],
-        "deichman:literaryForm": [
-          {
-            "@id": "http://data.deichman.no/literaryForm#fiction"
-          }
-        ],
-        "deichman:mainTitle": "A example",
-        "deichman:subtitle": "a novel",
-        "@type": [
-          "deichman:Work"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "deichman:isbn": "000-12-345-678-9",
-        "deichman:edition": "1. utg.",
-        "deichman:placeOfPublication": "Oslo",
-        "deichman:publisher": "Oktober",
-        "deichman:publicationYear": "2007",
-        "deichman:numberOfPages": "191 s.",
-        "deichman:contributor": [
-          {
-            "@id": "_:0000000"
-          },
-          {
-            "@id": "_:0000000"
-          }
-        ],
-        "deichman:hasPublicationPart": [
-          {
-            "@id": "_:0000000"
-          }
-        ],
-        "deichman:publicationOf": {
-          "@id": "_:0000000"
-        },
-        "deichman:format": {
-          "@id": "http://data.deichman.no/format#Book"
-        },
-        "deichman:mainTitle": "Et eksempel",
-        "deichman:subtitle": "roman",
-        "@type": [
-          "deichman:Publication"
-        ]
       },
       {
         "deichman:agent": {
@@ -141,7 +185,7 @@
       },
       {
         "deichman:improperWork": false,
-        "deichman:hasWork": {
+        "deichman:publicationOf": {
           "@id": "_:0000000"
         },
         "deichman:agent": {
@@ -151,7 +195,6 @@
           "@id": "http://data.deichman.no/role#contributor"
         },
         "@type": [
-          "deichman:Contribution",
           "deichman:PublicationPart"
         ],
         "@id": "_:0000000"

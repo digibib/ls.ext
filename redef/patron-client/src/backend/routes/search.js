@@ -9,14 +9,13 @@ module.exports = (app) => {
       body: JSON.stringify(searchBuilder.buildQuery(queryString))
     }).then(res => {
       if (res.ok) {
-        return res.text()
+        return res.json()
       } else {
-        response.status(res.status).send(res.statusText)
-        throw Error(res.json())
+        return res.text().then(error => { return Promise.reject({message: error, queryString: queryString}) })
       }
     }).then(json => response.status(200).send(json))
       .catch(error => {
-        console.log(error)
+        console.log(`Error in query: ${error.queryString}\n${error.message}`)
         response.sendStatus(500)
       })
   })

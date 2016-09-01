@@ -228,8 +228,6 @@ ifdef PHONE
 	@echo "-- Setting smsalertnumber of all users to: $(PHONE)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET smsalertnumber=\"$(PHONE)\";"'
 endif
-	@echo "-- Setting userid=cardid"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber;'
 	@echo "OK Done migrating patrons.\n"
 endif
 	@touch out/done.migrate_patrons
@@ -245,6 +243,8 @@ ifdef MIGRATE_PATRONS
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/holds.sql'
 	@echo "-- Setting reserves.found to NULL when not found"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE reserves SET found=NULL WHERE found=\"\""'
+	@echo "-- Setting userid=cardid"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL;"'
 	@echo "OK Done migrating loands and holds\n"
 	@touch out/done.migrate_loans
 endif

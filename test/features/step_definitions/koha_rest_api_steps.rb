@@ -207,5 +207,5 @@ end
 Then(/^gir APIet tilbakemelding med riktige brukerrettigheter$/) do
   session = @context[:session_api_response]
   session["borrowernumber"].should eq(@active[:patron].borrowernumber)
-  session["permissions"].should eq(["borrowers", "editcatalogue", "staffaccess"])
+  session["permissions"].sort.should eq(["borrowers", "editcatalogue", "staffaccess"].sort)
 end

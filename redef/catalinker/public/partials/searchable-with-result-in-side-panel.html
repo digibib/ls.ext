@@ -1,50 +1,65 @@
 <span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
-{{#if nonEditable || suggested}}{{current.displayValue}}{{else}}
-{{#if ../../indexTypes.length > 1 && !deletable}}
-<span class="index-type-select pure-u-1-2">
-        <select value="{{../../selectedIndexType}}">
-            {{#with widgetOptions.selectIndexTypeLegend}}
-                <option disabled selected>{{.}}</option>
-            {{/with}}
-            {{#each ../../indexTypes}}
-            <option value="{{.}}">{{config.search[.].selectIndexLabel}}</option>
-            {{/each}}
-        </select>
-    </span>
-{{/if}}
-{{#if ./deletable}}
-<div class="pure-u-1-1">
-    <span class="select2 select2-container select2-container--default select2-container--above select2-container--focus"
-          style="width: 100%;">
-        <span class="select2-selection--multiple">
-            <ul class="select2-selection__rendered">
-                <li class="select2-selection__choice">
-                    <span class="select2-selection__choice__remove overrride-outside-detect" on-click="unselectEntity">×</span>
-                    <span class="value">{{current.displayValue}}</span>
-                </li>
-            </ul>
+{{#if nonEditable || suggested}}
+    {{current.displayValue}}
+{{else}}
+    {{#if ../../indexTypes.length > 1 && !current.accepted && !deletable}}
+        <span class="index-type-select pure-u-1-2">
+            {{#if ./current.accepted.selectedIndexType}}
+            <select value="{{./current.accepted.selectedIndexType}}">
+                {{#with widgetOptions.selectIndexTypeLegend}}
+                    <option disabled selected>{{.}}</option>
+                {{/with}}
+                {{#each ../../indexTypes}}
+                <option value="{{.}}">{{config.search[.].selectIndexLabel}}</option>
+                {{/each}}
+            </select>
+            {{else}}
+            <select value="{{../../selectedIndexType}}">
+                {{#with widgetOptions.selectIndexTypeLegend}}
+                    <option disabled selected>{{.}}</option>
+                {{/with}}
+                {{#each ../../indexTypes}}
+                <option value="{{.}}">{{config.search[.].selectIndexLabel}}</option>
+                {{/each}}
+            </select>
+            {{/if}}
         </span>
-    </span>
-</div>
-{{else}}
-<input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}} type="search" {{#if indexTypes.length > 0 && !selectedIndexType}}disabled{{/if}}
-on-click="{{#deletable}}unselectEntity{{/deletable}}"
-class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ../../searchable}}searchable{{/if}} {{#if ./current.accepted}}suggestion-source-{{./current.accepted.source}}{{/if}}"
-data-automation-id="{{dataAutomationId}}"
-on-enter='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
-on-keyup='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
-value="{{./current.displayValue}}"/>
-<span class="legend">
-{{#if isAdvancedQuery(./current.displayValue)}}
-    <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Du bruker nå avansert søk. Trykk Enter for å søke.</span>
-{{else}}
-    {{#if config.search[../../selectedIndexType].legend}}
-        <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
     {{/if}}
-{{/if}}
-</span>
+    {{#if ./deletable}}
+        <div class="pure-u-1-1">
+            <span class="select2 select2-container select2-container--default select2-container--above select2-container--focus"
+                  style="width: 100%;">
+                <span class="select2-selection--multiple">
+                    <ul class="select2-selection__rendered">
+                        <li class="select2-selection__choice">
+                            <span class="select2-selection__choice__remove overrride-outside-detect" on-click="unselectEntity">×</span>
+                            <span class="value">{{current.displayValue}}</span>
+                        </li>
+                    </ul>
+                </span>
+            </span>
+        </div>
+    {{else}}
+        <input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}} type="search"
+        on-click="{{#deletable}}unselectEntity{{/deletable}}"
+        class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted}}suggestion-source-{{./current.accepted.source}}{{/if}}"
+        data-automation-id="{{dataAutomationId}}"
+        on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
+        on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
+        value="{{./current.displayValue}}"/>
+        <span class="legend">
+            {{#if isAdvancedQuery(./current.displayValue)}}
+                <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Du bruker nå avansert søk. Trykk Enter for å søke.</span>
+            {{else}}
+                {{#if config.search[./current.accepted.selectedIndexType || ../../selectedIndexType].legend}}
+                        <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
+                {{/if}}
+            {{/if}}
+        </span>
 
-{{/if}}
-<a class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
+    {{/if}}
+    {{#if ./searchable}}
+        <a class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
+    {{/if}}
 {{/if}}
 </span>

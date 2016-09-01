@@ -349,7 +349,7 @@ public final class EntityServiceImpl implements EntityService {
         } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION)) {
             model = retrieveById(xuri);
             if (model.getProperty(null, publicationOfProperty) != null) {
-                XURI workXURI = new XURI(model.getProperty(null, publicationOfProperty).getObject().toString());
+                XURI workXURI = new XURI(model.getProperty(ResourceFactory.createResource(xuri.toString()), publicationOfProperty).getObject().toString());
                 updatePublicationWithWork(workXURI, xuri);
             } else {
                 updatePublicationInKoha(xuri, model);

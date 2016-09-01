@@ -19,11 +19,9 @@
             {{/}}
             <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
         </span>
-        {{#inputValueIndex == values.length -1}}
         <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
             {{>"support-for-"+type}}
         </span>
-        {{/}}
         {{/each}}
         {{#with values[0]}}
             {{>suggested-values}}
@@ -36,13 +34,13 @@
     </div>
     {{/if}}
     {{#each subInputs[0].input.values:inputValueIndex}}
-    {{#if nonEditable && ../../../../../accordionHeader}}
-    <h3 class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
-        {{#with ../../../../../accordionHeader}}
-        {{>"accordion-header-for-"+. }}
-        {{/with}}
-    </h3>
-    {{/if}}
+        {{#if nonEditable && ../../../../../accordionHeader}}
+        <h3 class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
+            {{#with ../../../../../accordionHeader}}
+            {{>"accordion-header-for-"+. }}
+            {{/with}}
+        </h3>
+        {{/if}}
         <div style="order: {{nonEditable ? valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1 : 100}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
               {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
             {{#if nonEditable && !suggested}}
@@ -68,7 +66,7 @@
                                         <span class="support-panel"
                                               data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
                                             {{#with ../../../input}}
-                                            {{>"support-for-"+type}}
+                                                {{>"support-for-"+type}}
                                             {{/with}}
                                         </span>
                                     {{/if}}
@@ -79,7 +77,7 @@
                     {{/each}}
                 </span>
                 <span class="subject-type-association">
-                    <span class="{{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">
+                    <span class="{{#if !./nonEditable && ! suggested}}pure-u-1-1{{/if}}">
                         {{#with ../../../parentInput}}
                             {{#if ! nonEditable && ! (suggested && multiple)}}
                                 {{#each subjectTypes:index}}
@@ -87,7 +85,7 @@
                                     {{#if (subjectTypes.length > 1)}}
                                     <span class="subject-type-select">
                                         <input type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
-                                               {{# false && !targetUri[.]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
+                                               {{# !targetUri[../../../../../../../subjectTypes[index]]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
                                                disabled='disabled' {{/}}/>
                                         <label>{{subjectTypeLabel(subjectTypes[index])}}</label>
                                     </span>
@@ -96,15 +94,15 @@
                                 {{/each}}
                                 <span>
                                     <button tabindex="0" class="pure-button pure-button-primary add-item-button"
-                                       {{#if typeof subjectType=== 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType)) || ../../../inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
+                                       {{#if typeof subjectType === 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType)) || ../../../inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
                                       title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
                                        on-click="saveObject:{{inputValueIndex}}" on-keyup="saveObject:{{inputValueIndex}}">Legg til</button>
                                 </span>
                             {{/if}}
                         {{/with}}
 
-                        {{#if nonEditable || suggested}}
-                            {{subjectTypeLabelDet(subjectType)}}
+                        {{#if ./nonEditable || ./suggested}}
+                                {{subjectTypeLabelDet(subjectType)}}
                         {{/if}}
                     </span>
                 </span>

@@ -58,7 +58,9 @@
     "select2": "git+https://github.com/select2/select2.git#4.0.2-rc.1",
     "timepicker": "^1.11.1",
     "underscore": "^1.8.3",
-    "urijs": "^1.17.0"
+    "urijs": "^1.17.0",
+    "express-livereload": "0.0.24",
+    "connect-livereload": "^0.5.4"
   },
   "devDependencies": {
     "babel-eslint": "6.0.4",
