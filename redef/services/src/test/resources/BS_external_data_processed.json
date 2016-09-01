@@ -18,6 +18,11 @@
               "@id": "http://data.deichman.no/literaryForm#fiction"
             }
           ],
+          "deichman:genre": [
+            {
+              "@id": "_:0000000"
+            }
+          ],
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
           "@type": [
@@ -51,6 +56,13 @@
           "@type": [
             "deichman:Publication"
           ]
+        },
+        {
+          "@type": [
+            "deichman:Genre"
+          ],
+          "@id": "_:0000000",
+          "deichman:prefLabel": "Biografisk"
         },
         {
           "deichman:name": "Eksempelsen, Eksempel",

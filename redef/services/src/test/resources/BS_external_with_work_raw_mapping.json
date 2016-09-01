@@ -42,6 +42,11 @@
             "@id": "_:0000000"
           }
         ],
+        "deichman:genre": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
         "@type": [
@@ -117,6 +122,13 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Unescos verdensarvliste"
+      },
+      {
+        "@type": [
+          "deichman:Genre"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Biografisk"
       },
       {
         "deichman:name": "Eksempelsen, Eksempel",

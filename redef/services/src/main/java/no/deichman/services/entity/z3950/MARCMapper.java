@@ -31,6 +31,7 @@ public class MARCMapper {
     public static final int TWENTY_TWO = 22;
     public static final int THIRTY_THREE = 33;
     public static final String SUBJECT_TYPE = "deichman:Subject";
+    public static final String GENRE_TYPE = "deichman:Genre";
     public static final String PLACE_TYPE = "deichman:Place";
 
     public MARCMapper() {
@@ -150,6 +151,11 @@ public class MARCMapper {
                 case "653":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
                         addExternalObject(graphList, a, SUBJECT_TYPE, work::addSubject);
+                    });
+                    break;
+                case "655":
+                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                        addExternalObject(graphList, a, GENRE_TYPE, work::addGenre);
                     });
                     break;
                 case "700":
