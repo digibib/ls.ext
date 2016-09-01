@@ -30,6 +30,8 @@ public class MARCMapper {
 
     public static final int TWENTY_TWO = 22;
     public static final int THIRTY_THREE = 33;
+    public static final String SUBJECT_TYPE = "deichman:Subject";
+    public static final String PLACE_TYPE = "deichman:Place";
 
     public MARCMapper() {
     }
@@ -140,10 +142,15 @@ public class MARCMapper {
                     }
                     break;
                 case "650":
-                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, "deichman:Subject", "deichman:Place", 'z');
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE, PLACE_TYPE, 'z');
                     break;
                 case "651":
-                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, "deichman:Place", "deichman:Subject", 'x');
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, PLACE_TYPE, SUBJECT_TYPE, 'x');
+                    break;
+                case "653":
+                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                        addExternalObject(graphList, a, SUBJECT_TYPE, work::addSubject);
+                    });
                     break;
                 case "700":
                     final Person[] publicationPerson = new Person[1];
@@ -221,10 +228,10 @@ public class MARCMapper {
         });
     }
 
-    private ExternalDataObject addExternalObject(Collection<Object> graphList, String a, String type, Consumer<String> addObjectFunction) {
+    private ExternalDataObject addExternalObject(Collection<Object> graphList, String prefLabel, String type, Consumer<String> addObjectFunction) {
         String objectId = UUID.randomUUID().toString();
         ExternalDataObject externalDataObject = externalObject(objectId, type);
-        externalDataObject.setPrefLabel(a);
+        externalDataObject.setPrefLabel(prefLabel);
         addObjectFunction.accept(externalDataObject.getId());
         graphList.add(externalDataObject);
         return externalDataObject;

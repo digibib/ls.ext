@@ -37,6 +37,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:mainTitle": "A example",
@@ -107,6 +110,13 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Kulturhistorie"
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Unescos verdensarvliste"
       },
       {
         "deichman:name": "Eksempelsen, Eksempel",

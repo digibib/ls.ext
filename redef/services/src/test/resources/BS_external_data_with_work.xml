@@ -83,6 +83,11 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
         </datafield>
+        <datafield tag="653" ind1=" " ind2="2">
+            <subfield code="a">Unescos verdensarvliste</subfield>
+            <subfield code="2">BS</subfield>
+            <subfield code="9">nob</subfield>
+        </datafield>
         <datafield tag="655" ind1=" " ind2="2">
             <subfield code="a">Biografisk</subfield>
             <subfield code="2">BS</subfield>
