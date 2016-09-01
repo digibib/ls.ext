@@ -18,6 +18,11 @@
               "@id": "http://data.deichman.no/literaryForm#fiction"
             }
           ],
+          "deichman:subject": [
+            {
+              "@id": "_:0000000"
+            }
+          ],
           "deichman:genre": [
             {
               "@id": "_:0000000"
@@ -56,6 +61,17 @@
           "@type": [
             "deichman:Publication"
           ]
+        },
+        {
+          "deichman:name": "Eksempelsen, Eksempel",
+          "deichman:birthYear": "1931",
+          "deichman:nationality": {
+            "@id": "http://data.deichman.no/nationality#n"
+          },
+          "@type": [
+            "deichman:Person"
+          ],
+          "@id": "_:0000000"
         },
         {
           "@type": [

@@ -68,6 +68,17 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nob</subfield>
         </datafield>
+        <datafield tag="600" ind1=" " ind2="1">
+            <subfield code="a">Haakon</subfield>
+            <subfield code="b">VII</subfield>
+            <subfield code="c">konge av Norge</subfield>
+            <subfield code="d">1872-1957</subfield>
+            <subfield code="q">Christian Frederik Carl Georg Valdemar Axel</subfield>
+            <subfield code="w">Håkon</subfield>
+            <subfield code="1">948.104092</subfield>
+            <subfield code="2">BS</subfield>
+            <subfield code="9">nob</subfield>
+        </datafield>
         <datafield tag="650" ind1=" " ind2="1">
             <subfield code="a">Kulturminnevern</subfield>
             <subfield code="q">Ta vare på gamle ting</subfield>

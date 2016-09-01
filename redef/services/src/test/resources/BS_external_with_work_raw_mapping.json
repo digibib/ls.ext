@@ -40,6 +40,12 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -86,6 +92,29 @@
         "@type": [
           "deichman:Publication"
         ]
+      },
+      {
+        "deichman:name": "Eksempelsen, Eksempel",
+        "deichman:birthYear": "1931",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#n"
+        },
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Haakon",
+        "deichman:birthYear": "1872",
+        "deichman:deathYear": "1957",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "konge av Norge",
+        "deichman:alternativeName": "Christian Frederik Carl Georg Valdemar Axel",
+        "deichman:ordinal": "VII"
       },
       {
         "@type": [

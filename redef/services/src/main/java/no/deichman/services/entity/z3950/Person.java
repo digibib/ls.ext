@@ -28,6 +28,12 @@ public class Person extends ExternalDataObject {
     @SerializedName("deichman:nationality")
     private ExternalDataObject nationality;
 
+    public Person(String id, String name) {
+        setType("deichman:Person");
+        setId(id);
+        setName(name);
+    }
+
     public final String getName() {
         return name;
     }
@@ -46,9 +52,7 @@ public class Person extends ExternalDataObject {
     }
 
     Person(String id, String name, String dates, String nationality) {
-        setType("deichman:Person");
-        setId(id);
-        this.name = name;
+        this(id, name);
         setDates(dates);
         ExternalDataObject nationality1 = new ExternalDataObject();
         nationality1.setId(nationality);

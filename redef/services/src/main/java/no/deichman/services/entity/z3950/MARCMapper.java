@@ -142,6 +142,15 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 'a').ifPresent(work::setHasSummary);
                     }
                     break;
+                case "600":
+                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                        String personId = asBlankNodeId(UUID.randomUUID().toString());
+                        Person person1 = new Person(personId, a);
+                        setPersonDataFromDataField(dataField, person1);
+                        graphList.add(person1);
+                        work.addSubject(personId);
+                    });
+                    break;
                 case "650":
                     mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE, PLACE_TYPE, 'z');
                     break;
@@ -280,14 +289,16 @@ public class MARCMapper {
     }
 
     private void setPersonDataFromDataField(DataField dataField, Person person) {
-        getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
+        getSubfieldValue(dataField, 'b').ifPresent(person::setOrdinal);
         getSubfieldValue(dataField, 'c').ifPresent(person::setSpecification);
+        getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
         getSubfieldValue(dataField, 'j')
                 .map(this::unPunctuate)
                 .map(fragment -> path("nationality", fragment))
                 .map(this::dataPrefix)
                 .map(this::externalObject)
                 .ifPresent(person::setNationality);
+        getSubfieldValue(dataField, 'q').ifPresent(person::setAlternativeName);
     }
 
     private ExternalDataObject externalObject(String id) {
@@ -339,7 +350,7 @@ public class MARCMapper {
         Map<String, String> publicationAgentLink = new HashMap<>();
         persons.setId(uuid);
         persons.setName(person);
-        publicationAgentLink.put("@id", "_:" + uuid);
+        publicationAgentLink.put("@id", asBlankNodeId(uuid));
         persons.setId(uuid);
         persons.setName(person);
         contribution.setId(UUID.randomUUID().toString());
@@ -363,7 +374,7 @@ public class MARCMapper {
 
         Map<String, String> agentLink = new HashMap<>();
         persons.setId(personUuid);
-        agentLink.put("@id", "_:" + personUuid);
+        agentLink.put("@id", asBlankNodeId(personUuid));
         persons.setId(personUuid);
         persons.setName(person);
         publicationPart.setId(UUID.randomUUID().toString());
@@ -377,6 +388,10 @@ public class MARCMapper {
         returnValue.put("publicationPart", publicationPart);
         returnValue.put("person", persons);
         return returnValue;
+    }
+
+    private String asBlankNodeId(String id) {
+        return "_:" + id;
     }
 
     private Map<String, Object> composeWork(String mainTitle) {

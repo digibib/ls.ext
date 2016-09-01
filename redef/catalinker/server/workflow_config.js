@@ -72,6 +72,14 @@ module.exports = (app) => {
             {
               rdfProperty: 'specification',
               type: 'input-string-large'
+            },
+            {
+              rdfProperty: 'alternativeName',
+              type: 'input-string'
+            },
+            {
+              rdfProperty: 'ordinal',
+              type: 'input-string'
             }
           ]
         },

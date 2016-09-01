@@ -154,6 +154,18 @@
   rdfs:domain :Person, :Serial, :Corporation, :Subject, :Genre ;
   rdfs:range xsd:string .
 
+:alternativeName a rdfs:Property ;
+  rdfs:label "Alternative name"@en ;
+  rdfs:label "Alternativt navn"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
+:ordinal a rdfs:Property ;
+  rdfs:label "Numeration"@en ;
+  rdfs:label "Ordinal"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
 # ToDo: Erstatte personTitle med :specification. Domain: Person, Corporation, Subject, Place
 :personTitle a rdfs:Property ;
   rdfs:label "Person mainTitle"@en ;
