@@ -106,7 +106,7 @@ class RegistrationFormPartTwo extends React.Component {
 
           <h4><FormattedMessage {...messages.gender} /></h4>
           <div className="select-container">
-            <select data-automation-id="gender_selection" name="gender" {...domOnlyProps(gender)}>
+            <select data-automation-id="gender_selection" name="gender" {...gender}>
               <option value="male">{this.props.intl.formatMessage({ ...messages.male })}</option>
               <option value="female">{this.props.intl.formatMessage({ ...messages.female })}</option>
             </select>
