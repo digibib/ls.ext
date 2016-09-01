@@ -309,28 +309,33 @@
             return values
           }, [])).join(' - ')
 
+        var typeMap = ractive.get('applicationData.config.typeMap')
+        var selectedIndexType
+        _.each(input.indexTypes, function (indexType) {
+          if (root.isA(typeMap[ indexType ])) {
+            selectedIndexType = indexType
+          }
+        })
+
         var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
         if (options.onlyValueSuggestions) {
           if (multiple) {
-            input.values[ index ].suggested = { source: options.source }
+            input.values[ index ].suggested = {
+              source: options.source,
+              selectedIndexType: selectedIndexType
+            }
             input.values[ index ].current.displayValue = values
           } else {
             input.suggestedValues = input.suggestedValues || []
             input.suggestedValues[ index ] = {
               value: values,
-              source: options.source
+              source: options.source,
+              selectedIndexType: selectedIndexType
             }
           }
         } else {
           input.values[ index ].current.displayValue = values
-          var typeMap = ractive.get('applicationData.config.typeMap')
           if (options.source) {
-            var selectedIndexType
-            _.each(input.indexTypes, function (indexType) {
-              if (root.isA(typeMap[ indexType ])) {
-                selectedIndexType = indexType
-              }
-            })
             input.values[ index ].current.accepted = {
               source: options.source,
               selectedIndexType: selectedIndexType
@@ -560,7 +565,7 @@
                         }
                       } else {
                         setDisplayValue(input, index, node, options)
-                        input.values[ index ].searchable = false
+                        input.values[ index ].searchable = true
                       }
                       input.values[ index ].subjectType = type
                     })

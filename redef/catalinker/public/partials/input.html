@@ -6,22 +6,15 @@
 </span>
 <span class="{{#if type != 'input-boolean'}}panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}checkbox{{/if}} {{lastInGroup ? 'last':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
         {{#each values:inputValueIndex}}
-        <span class="field {{#if (type != 'input-boolean')}}pure-u-1-1{{/if}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-            {{>type}}
-            {{#predicate === (config.ontologyUri + "#recordID") && current.value !== ""}}
-            <a data-automation-id="biblio_record_link" target="_blank"
-               href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}"
-               class="link"></a>
-            {{/}}
-            {{#predicate === (config.ontologyUri + "#publicationOf") && current.value !== ""}}
-            <a data-automation-id="work_page_link" target="_blank" href="{{current.value.replace(':8005',':8000')}}"
-               class="link"></a>
-            {{/}}
-            <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-        </span>
-        <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
-            {{>"support-for-"+type}}
-        </span>
+            {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
+                <span class="field {{#if (type != 'input-boolean')}}pure-u-1-1{{/if}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                    {{>type}}
+                    <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+                </span>
+                <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+                    {{>"support-for-"+type}}
+                </span>
+            {{/if}}
         {{/each}}
         {{#with values[0]}}
             {{>suggested-values}}

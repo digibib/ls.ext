@@ -1,8 +1,8 @@
 <span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
-{{#if nonEditable || suggested}}
+{{#if nonEditable || suggested && subInputs}}
     {{current.displayValue}}
 {{else}}
-    {{#if ../../indexTypes.length > 1 && !current.accepted && !deletable}}
+    {{#if ../../indexTypes.length > 1 && !(current.accepted || suggested) && !deletable}}
         <span class="index-type-select pure-u-1-2">
             {{#if ./current.accepted.selectedIndexType}}
             <select value="{{./current.accepted.selectedIndexType}}">
@@ -42,7 +42,7 @@
     {{else}}
         <input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}} type="search"
         on-click="{{#deletable}}unselectEntity{{/deletable}}"
-        class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted}}suggestion-source-{{./current.accepted.source}}{{/if}}"
+        class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted || ./suggested}}suggestion-source-{{./current.accepted.source || ./suggested.source}}{{/if}}"
         data-automation-id="{{dataAutomationId}}"
         on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
         on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
@@ -59,7 +59,7 @@
 
     {{/if}}
     {{#if ./searchable}}
-        <a class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
+        <a class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
     {{/if}}
 {{/if}}
 </span>
