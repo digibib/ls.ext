@@ -228,6 +228,41 @@ body {
             flex-direction: row;
           }
           }
+          .support-panel {
+            margin-left: 2px;
+            margin-right: 2px;
+            padding: 0 15px;
+            position: absolute;
+            width: 340px;
+            .prop-search-result {
+              height: 300px;
+            }
+            .support-panel-content {
+              box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+              &:before {
+                content: "";
+                position: absolute;
+                left: 0px;
+                right: 100%;
+                width: 0;
+                height: 0;
+                border-top: 32px solid transparent;
+                border-right: 16px solid white;
+                border-bottom: 32px solid transparent;
+                min-height: 66px;
+              }
+              min-height: 66px;
+              max-height: 525px;
+              .search-result-box {
+                max-height: 450px;
+                overflow-y: auto;
+              }
+            }
+            .field {
+              padding-left: 0px;
+              padding-right: 0px;
+            }
+          }
 
           .field {
             padding: 0px 12px 15px 12px;
@@ -333,6 +368,9 @@ body {
           &[type=number] {
             text-align: right;
           }
+        }
+        textarea {
+          width: 100%;
         }
         .add-new-btn-row {
           padding: 4px 13px 8px 8px;
@@ -646,37 +684,6 @@ body {
     }
     .grid-tabs {
       padding: 1em 0 0;
-    }
-    .support-panel {
-      margin-left: 2px;
-      margin-right: 2px;
-      padding: 0 15px;
-      position: absolute;
-      width: 340px;
-      .prop-search-result {
-        height: 300px;
-      }
-      .support-panel-content {
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-        &:before {
-          content: "";
-          position: absolute;
-          left: 0px;
-          right: 100%;
-          width: 0;
-          height: 0;
-          border-top: 32px solid transparent;
-          border-right: 16px solid white;
-          border-bottom: 32px solid transparent;
-          min-height: 66px;
-        }
-        min-height: 66px;
-        max-height: 525px;
-        .search-result-box {
-          max-height: 450px;
-          overflow-y: auto;
-        }
-      }
     }
   }
   .links {
