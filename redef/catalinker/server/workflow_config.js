@@ -1120,7 +1120,31 @@ module.exports = (app) => {
           enableCreateNewResource: true
         },
         {
+          resourceType: 'Person',
+          wrappedIn: '/Work',
+          predicate: 'subject',
+          enableCreateNewResource: true
+        },
+        {
+          resourceType: 'Place',
+          wrappedIn: '/Work',
+          predicate: 'subject',
+          enableCreateNewResource: true
+        },
+        {
           resourceType: 'Work',
+          wrappedIn: '/Work',
+          predicate: 'subject',
+          enableCreateNewResource: true
+        },
+        {
+          resourceType: 'Subject',
+          wrappedIn: '/Work',
+          predicate: 'subject',
+          enableCreateNewResource: true
+        },
+        {
+          resourceType: '/Work',
           wrappedIn: 'PublicationPart',
           predicate: 'publicationOf',
           enableCreateNewResource: true

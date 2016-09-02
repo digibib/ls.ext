@@ -476,7 +476,8 @@
 
       var addInput = function (input, groupIndex, inputIndex, subInputIndex) {
         inputs.push(input)
-        var forms = ractive.get(`applicationData.inputGroups.${groupIndex}.inputs.${inputIndex}.subInputs.${subInputIndex}.input.widgetOptions.enableCreateNewResource.forms`)
+        var subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
+        var forms = ractive.get(`applicationData.inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.widgetOptions.enableCreateNewResource.forms`)
         if (forms) {
           _.each(forms, function (form) {
             inputs = inputs.concat(form.inputs)
@@ -520,10 +521,12 @@
           ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
           (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
           (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain)))) {
-          if (input.belongsToCreateResourceFormOfInput &&
+          let ownerInput = inputFromInputId(input.belongsToCreateResourceFormOfInput)
+          if (ownerInput.domain &&
+            input.belongsToCreateResourceFormOfInput &&
             ((input.targetResourceIsMainEntry || false) === (options.wrapperObject && options.wrapperObject.isA('MainEntry')) || false) &&
-            (unPrefix(inputFromInputId(input.belongsToCreateResourceFormOfInput).domain) === options.wrappedIn) &&
-            (options.wrapperObject && options.wrapperObject.isA(options.wrappedIn))) {
+            (unPrefix(ownerInput.domain) === options.wrappedIn || !options.wrappedIn) &&
+            (options.wrapperObject && options.wrapperObject.isA(options.wrappedIn) || !options.wrapperObject)) {
             let inputParentOfCreateNewResourceFormKeypath = ractive.get(`inputLinks.${input.belongsToCreateResourceFormOfInput}`)
             ractive.push(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource`, root)
             skipRest = true
@@ -1063,6 +1066,8 @@
             input.inputIndex = index
             if (input.rdfProperty) {
               ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
+              ontologyInput.suggestedValuesForNewResource = []
+
               if (typeof ontologyInput === 'undefined') {
                 throw new Error(`Group "${inputGroup.id} " specified unknown property "${input.rdfProperty}"`)
               }
@@ -2386,26 +2391,37 @@
                 let prefillValuesFromExternalSources = ractive.get('applicationData.config.prefillValuesFromExternalSources')
                 _.each(prefillValuesFromExternalSources, function (suggestionSpec) {
                   var domain = suggestionSpec.resourceType
-                  _.each(event.context.graph.byType(suggestionSpec.wrappedIn || suggestionSpec.resourceType), function (node) {
-                    var wrapperObject
-                    if (suggestionSpec.predicate) {
-                      wrapperObject = node
-                      node = node.out(suggestionSpec.predicate)
-                    }
-                    updateInputsForResource({ data: {} }, null, {
-                      keepDocumentUrl: true,
-                      source: event.context.source,
-                      wrapperObject: wrapperObject,
-                      wrappedIn: suggestionSpec.wrappedIn,
-                      deferUpdate: true
-                    }, node, domain)
+                  var wrappedIn = suggestionSpec.wrappedIn
+                  var demandTopBanana = false
+                  if (wrappedIn && wrappedIn.substr(0, 1) === '/') {
+                    wrappedIn = wrappedIn.substr(1)
+                    demandTopBanana = true
+                  }
+                  _.each(event.context.graph.byType(wrappedIn || suggestionSpec.resourceType), function (node) {
+                    if (!demandTopBanana || node.isA('TopBanana')) {
+                      var wrapperObject
+                      var nodes = [ node ]
+                      if (suggestionSpec.predicate) {
+                        wrapperObject = node
+                        nodes = node.outAll(suggestionSpec.predicate)
+                      }
+                      _.each(nodes, function (node) {
+                        updateInputsForResource({ data: {} }, null, {
+                          keepDocumentUrl: true,
+                          source: event.context.source,
+                          wrapperObject: wrapperObject,
+                          wrappedIn: wrappedIn,
+                          deferUpdate: true
+                        }, node, domain)
 
-                    if (node.isA('TopBanana')) {
-                      _.each(inputsWithValueSuggestionEnabled, function (input) {
-                        if (input.suggestValueFrom.domain === domain && !wrapperObject) {
-                          input.values = input.values || [ { current: {} } ]
-                          _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
-                            input.values[ index ].current.displayValue = value.value
+                        if (node.isA('TopBanana')) {
+                          _.each(inputsWithValueSuggestionEnabled, function (input) {
+                            if (input.suggestValueFrom.domain === domain && !wrapperObject) {
+                              input.values = input.values || [ { current: {} } ]
+                              _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
+                                input.values[ index ].current.displayValue = value.value
+                              })
+                            }
                           })
                         }
                       })
@@ -2421,11 +2437,11 @@
                 event.context.suggested = null
                 let subInputs = ractive.get(grandParentOf(grandParentOf(event.keypath)))
                 _.each(subInputs, function (subInput) {
-                  if (typeof subInput.input.values[event.index.inputValueIndex].searchable === 'boolean') {
-                    subInput.input.values[event.index.inputValueIndex].searchable = true
+                  if (typeof subInput.input.values[ event.index.inputValueIndex ].searchable === 'boolean') {
+                    subInput.input.values[ event.index.inputValueIndex ].searchable = true
                   }
-                  if (typeof subInput.input.values[event.index.inputValueIndex].suggested === 'object') {
-                    subInput.input.values[event.index.inputValueIndex].suggested = null
+                  if (typeof subInput.input.values[ event.index.inputValueIndex ].suggested === 'object') {
+                    subInput.input.values[ event.index.inputValueIndex ].suggested = null
                   }
                 })
                 ractive.update()
