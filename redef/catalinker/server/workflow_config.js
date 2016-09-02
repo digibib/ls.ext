@@ -29,7 +29,7 @@ function maintenanceInputs (label, type) {
 }
 
 module.exports = (app) => {
-  app.get('/config/:mediaType(book|film|musical_score|musical_recording|game)|/config', function (request, response) {
+  app.get('/config/:mediaType(book|film|audible|musical_score|musical_recording|game)|/config', function (request, response) {
     var mediaType = request.params.mediaType
     console.log(mediaType)
     function includeOnlyFor (targetTypes, object) {
@@ -269,7 +269,7 @@ module.exports = (app) => {
           label: 'Hovedinnførsel',
           inputs: [
             includeOnlyFor(
-              'book', {
+              [ 'book', 'audible', 'musical_score' ], {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
@@ -286,7 +286,7 @@ module.exports = (app) => {
               }
             ),
             includeOnlyFor(
-              [ 'film', 'musical_recording' ], {
+              [ 'film', 'musical_recording', 'game' ], {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
@@ -449,9 +449,9 @@ module.exports = (app) => {
                 postfix: ')'
               }
             },
-            { rdfProperty: 'numberOfPages' },
-            { rdfProperty: 'illustrativeMatter' },
-            includeOnlyFor('book', {
+            includeOnlyFor([ 'book', 'musical_score' ], { rdfProperty: 'numberOfPages' }),
+            includeOnlyFor([ 'book', 'musical_score' ], { rdfProperty: 'illustrativeMatter' }),
+            includeOnlyFor([ 'book', 'musical_score' ], {
               rdfProperty: 'isbn',
               multiple: true,
               addAnotherLabel: 'Legg til et ISBN-nummer til'
@@ -472,7 +472,7 @@ module.exports = (app) => {
             ),
             { rdfProperty: 'format', multiple: true },
             includeOnlyFor(
-              [ 'film', 'musical_recording' ], {
+              [ 'film', 'musical_recording' ,'audible'], {
                 rdfProperty: 'duration',
                 type: 'input-duration'
               }
