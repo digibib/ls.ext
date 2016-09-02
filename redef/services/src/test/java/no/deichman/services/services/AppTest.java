@@ -604,6 +604,29 @@ public class AppTest {
     }
 
     @Test
+    public void event_is_searchable() throws UnirestException, InterruptedException {
+        HttpResponse<String> result1 = buildCreateRequest(baseUri + "event", "{}").asString();
+
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = baseUri + "ontology#prefLabel";
+        String o1 = "Menuette";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+        String p2 = baseUri + "ontology#specification";
+        String o2 = "Posh dance";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .add(buildLDPatch(buildPatchStatement(op, s, p2, o2, type)).get(0))
+                .build();
+
+        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+        doSearchForEvent("Menuette");
+    }
+
+
+    @Test
     public void test_resource_is_patchable() throws Exception {
         for (EntityType entityType : EntityType.values()) {
             if (entityType.equals(EntityType.PUBLICATION)) {
@@ -978,6 +1001,24 @@ public class AppTest {
 
         assertTrue("Should have found name of genre in index by now", foundSubject);
     }
+
+    private void doSearchForEvent(String event) throws UnirestException, InterruptedException {
+        boolean foundEventInIndex;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(baseUri + "search/event/_search").queryString("q", "prefLabel:" + event);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundEventInIndex = responseBody.contains(event);
+            if (!foundEventInIndex) {
+                LOG.info("Event not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundEventInIndex && attempts-- > 0);
+
+        assertTrue("Should have found event of publication in index by now", foundEventInIndex);
+    }
+
 
     private void indexWork(String workId, String title) {
         getClient().prepareIndex("search", "work", workId)

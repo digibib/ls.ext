@@ -57,6 +57,7 @@ public final class EmbeddedElasticsearchServer {
         prepareMappingOf("publication");
         prepareMappingOf("instrument");
         prepareMappingOf("compositiontype");
+        prepareMappingOf("event");
     }
 
     private void prepareMappingOf(String type) throws IOException {

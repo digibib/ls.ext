@@ -295,6 +295,28 @@ Egenskap: Katalogisere i arbeidsflyt
     Så skriver jeg inn samme tilfeldige organisasjon i feltet "Organisasjoner" og trykker enter
     Så velger jeg en organisasjon fra treffliste fra organisasjonsregisteret
 
+  Scenario: Redigere hendelse i katalogisering
+    Gitt at jeg vil opprette en hendelse
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig hendelse i feltet "Hendelser" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny hendelse"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige hendelse i feltet "Hendelser" og trykker enter
+    Så velger jeg en hendelse fra treffliste fra hendelsesregisteret
+
+  Scenario: Redigere sted i katalogisering
+    Gitt at jeg vil opprette en sted
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig sted i feltet "Steder" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt sted"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige sted i feltet "Steder" og trykker enter
+    Så velger jeg en sted fra treffliste fra stedsregisteret
+
   Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
     Gitt at det finnes et verk med forfatter
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter

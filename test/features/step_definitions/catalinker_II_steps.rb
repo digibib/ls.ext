@@ -34,7 +34,7 @@ def contains_class(class_name)
   "contains(concat(' ',normalize-space(@class),' '),' #{class_name} ')"
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)registeret$/) do |art, type_1, type_2|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT*5) {
     @browser.element(:xpath => "//a[#{contains_class('edit-resource')}]|//input[contains(concat(' ',normalize-space(@class),' '),' select-result-item-radio ')]").present?
 #    @browser.a(:class => 'edit-resource').present? || @browser.input(:class => "select-result-item-radio").present?

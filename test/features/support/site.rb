@@ -15,6 +15,7 @@ class Site
         'utgitt av' => 'publishedBy',
         'serie' => 'serial',
         'emne' => 'subject',
+        'hendelse' => 'event',
         'sjanger' => 'genre',
         'hovedtittel' => "mainTitle",
         'verkshovedtittel' => "work_maintitle",

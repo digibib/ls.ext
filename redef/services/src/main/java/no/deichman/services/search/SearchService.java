@@ -39,5 +39,8 @@ public interface SearchService {
 
     Response searchCompositionType(String query);
 
+    Response searchEvent(String query);
+
     void delete(XURI xuri);
+
 }

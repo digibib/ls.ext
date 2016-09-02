@@ -1,0 +1,11 @@
+{
+  "properties":
+  {
+    "prefLabel": {
+      "type": "string"
+    },
+    "specification": {
+      "type": "String"
+    }
+  }
+}

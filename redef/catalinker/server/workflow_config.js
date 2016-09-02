@@ -176,6 +176,42 @@ module.exports = (app) => {
           ]
         },
         {
+          id: 'create-event-form',
+          labelForCreateButton: 'Opprett ny hendelse',
+          rdfType: 'Event',
+          inputs: [
+            {
+              label: 'Foretrukken betegnelse',
+              rdfProperty: 'prefLabel',
+              displayValueSource: true,
+              type: 'input-string', 
+              preFillFromSearchField: true // value of this field should be copied from the search field above
+            },
+            {
+              label: 'Sted',
+              rdfProperty: 'place',
+              type: 'searchable-authority-dropdown',
+              indexTypes: 'place',
+              indexDocumentFields: [ 'prefLabel' ]
+            },
+            {
+              label: 'Nummer',
+              rdfProperty: 'number',
+              type: 'input-string'
+            },
+            {
+              label: 'Dato',
+              rdfProperty: 'date',
+              type: 'input-string'
+            },
+            {
+              label: 'Forklarende tilføyelse',
+              rdfProperty: 'specification',
+              type: 'input-string'
+            }
+          ]
+        },
+        {
           id: 'create-serial-form',
           labelForCreateButton: 'Opprett ny serie',
           rdfType: 'Serial',
@@ -719,7 +755,7 @@ module.exports = (app) => {
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'prefLabel', 'mainTitle', 'subTitle', 'name' ], // these are property names used to label already connected entities
-              indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place' ], // this is the name of the elasticsearch index type from which authorities are searched within
+              indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ], // this is the name of the elasticsearch index type from which authorities are searched within
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
                 enableCreateNewResource: {
@@ -742,6 +778,10 @@ module.exports = (app) => {
                     {
                       formId: 'create-place-form',
                       targetType: 'place'
+                    },
+                    {
+                      formId: 'create-event-form',
+                      targetType: 'event'
                     } ]
                 }
               }
@@ -944,6 +984,8 @@ module.exports = (app) => {
             maintenanceInputs('Personer', 'person'),
             maintenanceInputs('Organisasjoner', 'corporation'),
             maintenanceInputs('Emner', 'subject'),
+            maintenanceInputs('Steder', 'place'),
+            maintenanceInputs('Hendelser', 'event'),
             maintenanceInputs('Sjangre', 'genre'),
             maintenanceInputs('Serier', 'serial'),
             maintenanceInputs('Musikkinstrumenter', 'instrument'),
@@ -1048,6 +1090,15 @@ module.exports = (app) => {
           } ],
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         },
+        event: {
+          type: 'event',
+          selectIndexLabel: 'Hendelse',
+          queryTerms: [ {
+            field: 'prefLabel',
+            wildcard: true
+          } ],
+          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+        },
         serial: {
           type: 'serial',
           selectIndexLabel: 'Serie',
@@ -1127,6 +1178,12 @@ module.exports = (app) => {
         },
         {
           resourceType: 'Place',
+          wrappedIn: '/Work',
+          predicate: 'subject',
+          enableCreateNewResource: true
+        },
+        {
+          resourceType: 'Event',
           wrappedIn: '/Work',
           predicate: 'subject',
           enableCreateNewResource: true

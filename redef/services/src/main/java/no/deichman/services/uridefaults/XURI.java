@@ -66,7 +66,7 @@ public class XURI {
 
 
     private boolean testId(String id) {
-        String pattern = "(w|p|h|g|c|s|e|m|i|t)[a-zA-Z0-9_]+";
+        String pattern = "(w|p|h|g|c|s|e|m|i|t|v)[a-zA-Z0-9_]+";
         return id.matches(pattern);
     }
 

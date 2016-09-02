@@ -84,4 +84,8 @@ public final class BaseURI {
     public String compositionType() {
         return baseUriRoot + "compositiontype/";
     }
+
+    public String event() {
+        return baseUriRoot + "event/";
+    }
 }

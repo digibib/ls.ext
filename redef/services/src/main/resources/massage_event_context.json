@@ -1,0 +1,12 @@
+{
+  "type": "Event",
+  "@context": {
+    "specification": "deichman:specification",
+    "prefLabel": "deichman:prefLabel",
+    "Event": "deichman:Event",
+    "deichman": "__ONTOLOGY__",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph"
+  }
+}

@@ -74,6 +74,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchInstrument(query);
             case "compositiontype":
                 return getSearchService().searchCompositionType(query);
+            case "event":
+                return getSearchService().searchEvent(query);
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }

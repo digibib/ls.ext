@@ -44,6 +44,10 @@
   rdfs:label "Place"@en ;
   rdfs:label "Sted"@no .
 
+:Event a rdfs:Class ;
+  rdfs:label "Event"@en ;
+  rdfs:label "Hendelse"@no .
+
 # ToDo: Erstattes med :Series
 :Serial a rdfs:Class ;
   rdfs:label "Serial"@en ;
@@ -141,7 +145,7 @@
   rdfs:label "Preferred label"@en ;
   rdfs:label "Foretrukket betegnelse"@no ;
   rdfs:range xsd:string ;
-  rdfs:domain :Place, :Subject, :Genre, :CompositionType, :Instrument.
+  rdfs:domain :Place, :Subject, :Genre, :CompositionType, :Instrument, :Event.
 
 :altLabel a rdfs:Property ;
   rdfs:label "Alternative label"@en ;
@@ -176,7 +180,7 @@
 :specification a rdfs:Property ;
   rdfs:label "Specification"@en ;
   rdfs:label "Forklarende tilføyelse"@no ;
-  rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument;
+  rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument, :Event;
   rdfs:range xsd:string .
 
 # ToDo: Fjernes
@@ -542,6 +546,24 @@
   rdfs:domain :Work ;
   rdfs:range duo:Key ;
   duo:valuesFrom values:key .
+
+:place a rdfs:Property ;
+  rdfs:label "Place"@en ;
+  rdfs:label "Sted"@no ;
+  rdfs:domain :Event ;
+  rdfs:range :Place .
+
+:number a rdfs:Property ;
+  rdfs:label "Number"@en ;
+  rdfs:label "Nummer"@no ;
+  rdfs:domain :Event ;
+  rdfs:range xsd:string .
+
+:date a rdfs:Property ;
+  rdfs:label "Date"@en ;
+  rdfs:label "Dato"@no ;
+  rdfs:domain :Event ;
+  rdfs:range xsd:string .
 
 
 

@@ -115,6 +115,11 @@ public class SearchServiceImpl implements SearchService {
         return doSearch(query, getCompositionTypeSearchUriBuilder());
     }
 
+    @Override
+    public final Response searchEvent(String query) {
+        return doSearch(query, getEventSearchUriBuilder());
+    }
+
 
     @Override
     public final Response clearIndex() {
@@ -426,4 +431,7 @@ public class SearchServiceImpl implements SearchService {
     public final URIBuilder getCompositionTypeSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/compositiontype/_search");
     }
+
+    private URIBuilder getEventSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/event/_search");    }
 }

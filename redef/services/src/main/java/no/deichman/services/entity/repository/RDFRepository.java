@@ -34,6 +34,8 @@ public interface RDFRepository {
 
     String createMusicalCompositionType(Model inputModel) throws Exception;
 
+    String createEvent(Model inputModel) throws Exception;
+
     void createResource(Model model) throws Exception;
 
     void updateWork(String work);

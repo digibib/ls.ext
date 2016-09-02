@@ -831,6 +831,7 @@
         case 'deichman:Place':
         case 'deichman:Work':
         case 'deichman:Person':
+        case 'deichman:Event':
         case 'deichman:Corporation':
         case 'deichman:Role':
         case 'deichman:Serial':

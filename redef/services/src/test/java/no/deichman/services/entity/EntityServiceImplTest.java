@@ -84,6 +84,7 @@ public class EntityServiceImplTest {
     private String instrumentURI;
     private String compositionTypeURI;
     private String baseURI;
+    private String eventURI;
 
     @Mock
     private KohaAdapter mockKohaAdapter;
@@ -119,6 +120,7 @@ public class EntityServiceImplTest {
         genreURI = localBaseURI.genre();
         instrumentURI = localBaseURI.instrument();
         compositionTypeURI = localBaseURI.compositionType();
+        eventURI = localBaseURI.event();
     }
 
     @Test
@@ -529,6 +531,10 @@ public class EntityServiceImplTest {
             case "compositiontype":
                 resourceClass = "CompositionType";
                 resourceURI = compositionTypeURI;
+                break;
+            case "event":
+                resourceClass = "Event";
+                resourceURI = eventURI;
                 break;
             default:
                 break;

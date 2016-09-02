@@ -45,7 +45,10 @@ class UniqueURIGenerator {
                 break;
             case "CompositionType": result = baseURI.compositionType() + "t" + uniquePart;
                 break;
-            default:            throw new IllegalArgumentException("Unknown URI-type " + type);
+            case "Event": result = baseURI.event() + "v" + uniquePart;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI-type " + type);
         }
         return result;
     }
