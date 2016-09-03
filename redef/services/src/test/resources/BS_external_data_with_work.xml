@@ -84,6 +84,15 @@
             <subfield code="d">1564-1616</subfield>
             <subfield code="t">Hamlet</subfield>
         </datafield>
+        <datafield tag="600" ind1=" " ind2="1">
+            <subfield code="a">Hermansen, Peder Gunvald</subfield>
+            <subfield code="c">jurist og byoriginal</subfield>
+            <subfield code="d">1910-1993</subfield>
+            <subfield code="j">n.</subfield>
+            <subfield code="2">BS</subfield>
+            <subfield code="9">nor</subfield>
+            <subfield code="z">Oslo</subfield>
+        </datafield>
         <datafield tag="650" ind1=" " ind2="1">
             <subfield code="a">Kulturminnevern</subfield>
             <subfield code="q">Ta vare på gamle ting</subfield>

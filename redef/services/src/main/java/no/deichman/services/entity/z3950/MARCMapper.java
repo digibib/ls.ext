@@ -157,6 +157,12 @@ public class MARCMapper {
                         } else {
                             work.addSubject(personId);
                         }
+                        getSubfieldValue(dataField, 'x').ifPresent(subject -> {
+                            addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
+                        });
+                        getSubfieldValue(dataField, 'z').ifPresent(place -> {
+                            addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
+                        });
                     });
                     break;
                 case "650":
