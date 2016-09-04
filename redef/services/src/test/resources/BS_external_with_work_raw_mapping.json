@@ -106,11 +106,18 @@
         ]
       },
       {
-        "deichman:name": "Eksempelsen, Eksempel",
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Oslo"
+      },
+      {
         "deichman:birthYear": "1931",
         "deichman:nationality": {
           "@id": "http://data.deichman.no/nationality#n"
         },
+        "deichman:name": "Eksempelsen, Eksempel",
         "@type": [
           "deichman:Person"
         ],
@@ -124,9 +131,9 @@
         "deichman:prefLabel": "Fortellinger"
       },
       {
-        "deichman:name": "Haakon",
         "deichman:birthYear": "1872",
         "deichman:deathYear": "1957",
+        "deichman:name": "Haakon",
         "@type": [
           "deichman:Person"
         ],
@@ -136,9 +143,9 @@
         "deichman:ordinal": "VII"
       },
       {
-        "deichman:name": "Shakespeare, William",
         "deichman:birthYear": "1564",
         "deichman:deathYear": "1616",
+        "deichman:name": "Shakespeare, William",
         "@type": [
           "deichman:Person"
         ],
@@ -155,12 +162,12 @@
         "@id": "_:0000000"
       },
       {
-        "deichman:name": "Hermansen, Peder Gunvald",
         "deichman:birthYear": "1910",
         "deichman:deathYear": "1993",
         "deichman:nationality": {
           "@id": "http://data.deichman.no/nationality#n"
         },
+        "deichman:name": "Hermansen, Peder Gunvald",
         "@type": [
           "deichman:Person"
         ],
@@ -218,11 +225,11 @@
         "deichman:prefLabel": "Biografisk"
       },
       {
-        "deichman:name": "Eksempelsen, Eksempel",
         "deichman:birthYear": "1931",
         "deichman:nationality": {
           "@id": "http://data.deichman.no/nationality#n"
         },
+        "deichman:name": "Eksempelsen, Eksempel",
         "@type": [
           "deichman:Person"
         ],
@@ -236,12 +243,12 @@
         "@id": "_:0000000"
       },
       {
-        "deichman:name": "Dickens, Charles",
         "deichman:birthYear": "1812",
         "deichman:deathYear": "1870",
         "deichman:nationality": {
           "@id": "http://data.deichman.no/nationality#eng"
         },
+        "deichman:name": "Dickens, Charles",
         "@type": [
           "deichman:Person"
         ],
@@ -256,11 +263,36 @@
         "deichman:specification": "real name Truman Streckfus Persons"
       },
       {
+        "deichman:subdivision": "Aktivum",
+        "deichman:place": {
+          "@id": "_:0000000"
+        },
+        "deichman:name": "Norsk Rikskringkasting",
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "Et norsk statlig eid kringkastingsselskap som kringkaster innen radio, fjernsyn og nye medier."
+      },
+      {
         "deichman:agent": {
           "@id": "_:0000000"
         },
         "deichman:role": {
           "@id": "http://data.deichman.no/role#contributor"
+        },
+        "@type": [
+          "deichman:Contribution",
+          "deichman:MainEntry"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#author"
         },
         "@type": [
           "deichman:Contribution",

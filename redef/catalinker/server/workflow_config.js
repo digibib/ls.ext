@@ -133,6 +133,22 @@ module.exports = (app) => {
               // after resource is created, the value entered
               // in input marked with this is used to populate displayValue of the parent input
               preFillFromSearchField: true
+            },
+            {
+              rdfProperty: 'subdivision',
+              type: 'input-string'
+            },
+            {
+              label: 'Sted',
+              rdfProperty: 'place',
+              type: 'searchable-authority-dropdown',
+              indexTypes: 'place',
+              indexDocumentFields: [ 'prefLabel' ]
+            },
+            {
+              label: 'Forklarende tilføyelse',
+              rdfProperty: 'specification',
+              type: 'input-string'
             }
           ]
         },

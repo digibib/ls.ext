@@ -14,10 +14,7 @@ import java.util.Optional;
  * Responsibility: create a basic person object.
  */
 @SuppressWarnings("checkstyle:DesignForExtension")
-public class Person extends ExternalDataObject {
-
-    @SerializedName("deichman:name")
-    private String name;
+public class Person extends Contributor {
 
     @SerializedName("deichman:birthYear")
     private String birthYear;
@@ -33,15 +30,6 @@ public class Person extends ExternalDataObject {
         setId(id);
         setName(name);
     }
-
-    public final String getName() {
-        return name;
-    }
-
-    public final void setName(String name) {
-        this.name = name;
-    }
-
 
     Person() {
     }

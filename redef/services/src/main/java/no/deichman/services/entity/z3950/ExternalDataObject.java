@@ -9,7 +9,7 @@ import java.util.List;
  * Responsibility: provide basic object for data objects from outside LS.ext.
  */
 @SuppressWarnings("checkstyle:DesignForExtension")
-public class ExternalDataObject {
+public class ExternalDataObject implements Labeled {
     public ExternalDataObject() {
         assignType();
     }

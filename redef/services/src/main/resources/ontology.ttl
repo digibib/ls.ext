@@ -555,8 +555,8 @@
 :place a rdfs:Property ;
   rdfs:label "Place"@en ;
   rdfs:label "Sted"@no ;
-  rdfs:domain :Event ;
-  rdfs:range :Place .
+  rdfs:domain :Event, :Corporation  ;
+  rdfs:range :Place.
 
 :number a rdfs:Property ;
   rdfs:label "Number"@en ;
@@ -568,6 +568,12 @@
   rdfs:label "Date"@en ;
   rdfs:label "Dato"@no ;
   rdfs:domain :Event ;
+  rdfs:range xsd:string .
+
+:subdivision a rdfs:Property ;
+  rdfs:label "Subdivision"@en ;
+  rdfs:label "Underavdeling"@no ;
+  rdfs:domain :Corporation ;
   rdfs:range xsd:string .
 
 

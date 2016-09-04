@@ -66,11 +66,11 @@
           ]
         },
         {
-          "deichman:name": "Eksempelsen, Eksempel",
           "deichman:birthYear": "1931",
           "deichman:nationality": {
             "@id": "http://data.deichman.no/nationality#n"
           },
+          "deichman:name": "Eksempelsen, Eksempel",
           "@type": [
             "deichman:Person"
           ],
@@ -91,11 +91,11 @@
           "deichman:prefLabel": "Biografisk"
         },
         {
-          "deichman:name": "Eksempelsen, Eksempel",
           "deichman:birthYear": "1931",
           "deichman:nationality": {
             "@id": "http://data.deichman.no/nationality#n"
           },
+          "deichman:name": "Eksempelsen, Eksempel",
           "@type": [
             "deichman:Person"
           ],

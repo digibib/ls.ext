@@ -52,6 +52,7 @@ public class MARCMapper {
     private Object mapRecordToMap(org.marc4j.marc.Record r) {
 
         List<Person> persons = new ArrayList<>();
+        List<Corporation> corporations = new ArrayList<>();
         List<Contribution> contributions = new ArrayList<>();
         List<PublicationPart> publicationParts = new ArrayList<>();
         List<Work> publicationPartWorks = new ArrayList<>();
@@ -69,14 +70,14 @@ public class MARCMapper {
         graphList.add(work);
         graphList.add(publication);
 
-        for (ControlField controlField: r.getControlFields()){
-                switch (controlField.getTag()) {
-                    case "008":
-                        setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
-                        setUriObject(controlField, THIRTY_THREE, "literaryForm", work::setLiteraryForm, LiteraryForm::translate);
-                        break;
-                    default:
-                }
+        for (ControlField controlField : r.getControlFields()) {
+            switch (controlField.getTag()) {
+                case "008":
+                    setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
+                    setUriObject(controlField, THIRTY_THREE, "literaryForm", work::setLiteraryForm, LiteraryForm::translate);
+                    break;
+                default:
+            }
         }
 
         for (DataField dataField : r.getDataFields()) {
@@ -93,17 +94,36 @@ public class MARCMapper {
                     final Person[] person = new Person[1];
                     final Contribution[] workContribution = new Contribution[1];
                     getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                        Map<String, Object> workContributionMap = composeContribution(s, EntityType.WORK);
+                        Map<String, Object> workContributionMap = composeContribution(s, EntityType.WORK, new Person());
                         work.setContributor(s);
                         work.setContributor((String) workContributionMap.get("contributorLink"));
                         workContribution[0] = (Contribution) workContributionMap.get("contribution");
-                        person[0] = (Person) workContributionMap.get("person");
+                        person[0] = (Person) workContributionMap.get("contributor");
+                        setPersonDataFromDataField(dataField, person[0]);
+                        setRole(dataField, workContribution[0]);
                     });
-                    setPersonDataFromDataField(dataField, person[0]);
-                    setRole(dataField, workContribution[0]);
 
                     persons.add(person[0]);
                     contributions.add(workContribution[0]);
+                    break;
+                case "110":
+                    final Corporation[] corporation = new Corporation[1];
+                    final Contribution[] workContribution1 = new Contribution[1];
+                    getSubfieldValue(dataField, 'a').ifPresent(s -> {
+                        Map<String, Object> workContributionMap = composeContribution(s, EntityType.WORK, new Corporation());
+                        work.setContributor(s);
+                        work.setContributor((String) workContributionMap.get("contributorLink"));
+                        workContribution1[0] = (Contribution) workContributionMap.get("contribution");
+                        corporation[0] = (Corporation) workContributionMap.get("contributor");
+                    });
+                    setCorporationDataFromDataField(dataField, corporation[0]);
+                    setRole(dataField, workContribution1[0]);
+                    getSubfieldValue(dataField, 'c').ifPresent(place -> {
+                        addExternalObject(graphList, place, PLACE_TYPE, corporation[0]::setPlace);
+                    });
+
+                    corporations.add(corporation[0]);
+                    contributions.add(workContribution1[0]);
                     break;
                 case "240":
                     getSubfieldValue(dataField, 'a').ifPresent(work::setMainTitle);
@@ -208,10 +228,10 @@ public class MARCMapper {
                     } else {
                         final Contribution[] publicationContribution = new Contribution[1];
                         getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                            Map<String, Object> publicationContributionMap = composeContribution(s, EntityType.PUBLICATION);
+                            Map<String, Object> publicationContributionMap = composeContribution(s, EntityType.PUBLICATION, new Person());
                             publication.setContributor((String) publicationContributionMap.get("contributorLink"));
                             publicationContribution[0] = (Contribution) publicationContributionMap.get("contribution");
-                            publicationPerson[0] = (Person) publicationContributionMap.get("person");
+                            publicationPerson[0] = (Person) publicationContributionMap.get("contributor");
                         });
                         setRole(dataField, publicationContribution[0]);
                         setPersonDataFromDataField(dataField, publicationPerson[0]);
@@ -225,9 +245,8 @@ public class MARCMapper {
             }
         }
 
-        if (persons.size() > 0) {
-            graphList.addAll(persons);
-        }
+        graphList.addAll(persons);
+        graphList.addAll(corporations);
 
         Map<String, Object> topLevelMap = new HashMap<>();
         topLevelMap.put("@context", new ContextObject().getContext());
@@ -248,11 +267,11 @@ public class MARCMapper {
             String primarySubjectType,
             String subDivisionSubjectType,
             char subDivisionField) {
-        getSubfieldValue(dataField, 'a').ifPresent(a ->{
+        getSubfieldValue(dataField, 'a').ifPresent(a -> {
             ExternalDataObject subject = addExternalObject(graphList, a, primarySubjectType, work::addSubject);
             getSubfieldValue(dataField, 'q').ifPresent(subject::setSpecification);
         });
-        getSubfieldValue(dataField, subDivisionField).ifPresent(a ->{
+        getSubfieldValue(dataField, subDivisionField).ifPresent(a -> {
             addExternalObject(graphList, a, subDivisionSubjectType, work::addSubject);
         });
     }
@@ -315,9 +334,21 @@ public class MARCMapper {
         getSubfieldValue(dataField, 'q').ifPresent(person::setAlternativeName);
     }
 
+    private void setCorporationDataFromDataField(DataField dataField, Corporation corporation) {
+        getSubfieldValue(dataField, 'b').ifPresent(corporation::setSubdivision);
+        getSubfieldValue(dataField, 'q').ifPresent(corporation::setSpecification);
+    }
+
     private ExternalDataObject externalObject(String id) {
         ExternalDataObject externalDataObject = new ExternalDataObject();
         externalDataObject.setId(id);
+        return externalDataObject;
+    }
+
+    private ExternalDataObject toLabeledExternalObject(String prefLabel) {
+        ExternalDataObject externalDataObject = new ExternalDataObject();
+        externalDataObject.setId(asBlankNodeId(UUID.randomUUID().toString()));
+        externalDataObject.setPrefLabel(prefLabel);
         return externalDataObject;
     }
 
@@ -349,24 +380,23 @@ public class MARCMapper {
         return data;
     }
 
-    private Stream<String> getSubfieldValues(DataField dataField, Character character, String ... separators) {
+    private Stream<String> getSubfieldValues(DataField dataField, Character character, String... separators) {
         String separator = separators.length > 0 ? separators[0] : ",";
         return Arrays.stream(getSubfieldValue(dataField, character).orElse("").split(separator)).filter(StringUtils::isNotBlank);
     }
 
-    private Map<String, Object> composeContribution(String person, EntityType entityType) {
+    private Map<String, Object> composeContribution(String contributor, EntityType entityType, Contributor contributors) {
         Map<String, Object> returnValue = new HashMap<>();
 
         final String uuid = UUID.randomUUID().toString();
-        final Person persons = new Person();
         final Contribution contribution = new Contribution();
 
         Map<String, String> publicationAgentLink = new HashMap<>();
-        persons.setId(uuid);
-        persons.setName(person);
+        contributors.setId(uuid);
+        contributors.setName(contributor);
         publicationAgentLink.put("@id", asBlankNodeId(uuid));
-        persons.setId(uuid);
-        persons.setName(person);
+        contributors.setId(uuid);
+        contributors.setName(contributor);
         contribution.setId(UUID.randomUUID().toString());
         contribution.setAgent(publicationAgentLink);
         if (entityType == EntityType.WORK) {
@@ -375,7 +405,7 @@ public class MARCMapper {
 
         returnValue.put("contributorLink", contribution.getId());
         returnValue.put("contribution", contribution);
-        returnValue.put("person", persons);
+        returnValue.put("contributor", contributors);
         return returnValue;
     }
 

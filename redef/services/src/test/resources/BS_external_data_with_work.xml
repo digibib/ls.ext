@@ -33,6 +33,13 @@
             <subfield code="d">1931-</subfield>
             <subfield code="j">n.</subfield>
         </datafield>
+        <datafield tag="110" ind1=" " ind2="0">
+            <subfield code="a">Norsk Rikskringkasting</subfield>
+            <subfield code="b">Aktivum</subfield>
+            <subfield code="c">Oslo</subfield>
+            <subfield code="e">forf.</subfield>
+            <subfield code="q">Et norsk statlig eid kringkastingsselskap som kringkaster innen radio, fjernsyn og nye medier.</subfield>
+        </datafield>
         <datafield tag="240" ind1="2" ind2="0">
             <subfield code="a">A example</subfield>
             <subfield code="b">a novel</subfield>
