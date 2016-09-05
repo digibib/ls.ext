@@ -171,7 +171,8 @@ public class MARCMapper {
                             addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
                         });
                         Map<String, Object> serialIssue = new HashMap<>();
-                        serialIssue.put("inSerial", of("@id", serial.getId()));
+                        serialIssue.put("@type", "deichman:SerialIssue");
+                        serialIssue.put("serial", of("@id", serial.getId()));
                         getSubfieldValue(dataField, 'v').ifPresent(v -> {
                             serialIssue.put("issue", v);
                         });
@@ -216,6 +217,12 @@ public class MARCMapper {
                             addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
                         });
                         work.addSubject(corporationId);
+                    });
+                    getSubfieldValue(dataField, 'x').ifPresent(subject -> {
+                        addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
+                    });
+                    getSubfieldValue(dataField, 'z').ifPresent(place -> {
+                        addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
                     });
                     break;
                 case "650":
