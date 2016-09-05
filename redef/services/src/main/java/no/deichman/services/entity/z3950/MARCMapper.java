@@ -251,6 +251,12 @@ public class MARCMapper {
                     setBibliographicDataFromDataField(dataField, work1);
                     work.addSubject(workAsSubjectId);
                     graphList.add(work1);
+                    getSubfieldValue(dataField, 'x').ifPresent(subject -> {
+                        addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
+                    });
+                    getSubfieldValue(dataField, 'z').ifPresent(place -> {
+                        addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
+                    });
                     break;
                 case "650":
                     mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE, PLACE_TYPE, 'z');

@@ -73,6 +73,12 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -308,6 +314,20 @@
           "deichman:Work"
         ],
         "@id": "_:0000000"
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Kristendom"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Judea"
       },
       {
         "@type": [
