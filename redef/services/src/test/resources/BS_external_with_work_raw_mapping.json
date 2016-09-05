@@ -67,6 +67,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -274,6 +277,23 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "North America"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Spania"
+      },
+      {
+        "deichman:place": {
+          "@id": "_:0000000"
+        },
+        "deichman:date": "1982",
+        "deichman:number": "2",
+        "@id": "_:0000000",
+        "deichman:specification": "VM i fotball",
+        "deichman:prefLabel": "FIFA World Cup"
       },
       {
         "@type": [

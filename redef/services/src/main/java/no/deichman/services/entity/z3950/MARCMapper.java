@@ -225,6 +225,26 @@ public class MARCMapper {
                         addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
                     });
                     break;
+                case "611":
+                    getSubfieldValue(dataField, 'a').ifPresent(prefLabel -> {
+                        String eventId = asBlankNodeId(UUID.randomUUID().toString());
+                        Event event = new Event(eventId, prefLabel);
+                        getSubfieldValue(dataField, 'c').ifPresent(place -> {
+                            addExternalObject(graphList, place, PLACE_TYPE, event::setPlace);
+                        });
+                        getSubfieldValue(dataField, 'd').ifPresent(event::setDate);
+                        getSubfieldValue(dataField, 'n').ifPresent(event::setNumber);
+                        getSubfieldValue(dataField, 'q').ifPresent(event::setSpecification);
+                        graphList.add(event);
+                        work.addSubject(eventId);
+                    });
+                    getSubfieldValue(dataField, 'x').ifPresent(subject -> {
+                        addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
+                    });
+                    getSubfieldValue(dataField, 'z').ifPresent(place -> {
+                        addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
+                    });
+                    break;
                 case "650":
                     mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE, PLACE_TYPE, 'z');
                     break;
