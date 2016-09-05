@@ -48,6 +48,9 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:format")
     private ExternalDataObject format;
 
+    @SerializedName("deichman:illustrativeMatter")
+    private List illustrativeMatter;
+
     public final String getIsbn() {
         return isbn;
     }
@@ -151,5 +154,12 @@ public class Publication extends BibliographicObjectExternal {
 
     public Map<String, String> getPlaceOfPublication() {
         return placeOfPublication;
+    }
+
+    public void setIllustrativeMatter(ExternalDataObject illustrativeMatter) {
+        if (this.illustrativeMatter == null) {
+            this.illustrativeMatter = new ArrayList<>();
+        }
+        this.illustrativeMatter.add(illustrativeMatter);
     }
 }

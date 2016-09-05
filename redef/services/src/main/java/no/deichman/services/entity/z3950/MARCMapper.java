@@ -9,7 +9,6 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 
 /**
  * Responsibility: Map MARC21 to JSON representation.
@@ -154,6 +154,13 @@ public class MARCMapper {
                     break;
                 case "300":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setNumberOfPages);
+                    getSubfieldValue(dataField, 'b').ifPresent(b -> {
+                        stream(b.split(","))
+                                .map(fragment -> path("illustrativeMatter", fragment))
+                                .map(this::dataPrefix)
+                                .map(this::asExternalObject)
+                                .forEach(publication::setIllustrativeMatter);
+                    });
                     break;
                 case "520":
                     if (dataField.getIndicator1() == ' ') {
@@ -284,15 +291,15 @@ public class MARCMapper {
 
     private ExternalDataObject addExternalObject(Collection<Object> graphList, String prefLabel, String type, Consumer<String> addObjectFunction) {
         String objectId = UUID.randomUUID().toString();
-        ExternalDataObject externalDataObject = externalObject(objectId, type);
+        ExternalDataObject externalDataObject = asExternalObject(objectId, type);
         externalDataObject.setPrefLabel(prefLabel);
         addObjectFunction.accept(externalDataObject.getId());
         graphList.add(externalDataObject);
         return externalDataObject;
     }
 
-    private ExternalDataObject externalObject(String subjectId, String type) {
-        ExternalDataObject externalDataObject = externalObject(subjectId);
+    private ExternalDataObject asExternalObject(String subjectId, String type) {
+        ExternalDataObject externalDataObject = asExternalObject(subjectId);
         externalDataObject.setType(type);
         return externalDataObject;
     }
@@ -303,7 +310,7 @@ public class MARCMapper {
                 .map(Role::translate)
                 .map(fragment -> path("role", fragment))
                 .map(this::dataPrefix)
-                .map(this::externalObject)
+                .map(this::asExternalObject)
                 .ifPresent(contribution::setRole);
     }
 
@@ -313,7 +320,7 @@ public class MARCMapper {
                 .map(mapper)
                 .map(fragment -> path(path, fragment))
                 .map(this::dataPrefix)
-                .map(this::externalObject)
+                .map(this::asExternalObject)
                 .forEach(setterFunction);
     }
 
@@ -323,7 +330,7 @@ public class MARCMapper {
                 .map(mapper)
                 .map(fragment -> path(path, fragment))
                 .map(this::dataPrefix)
-                .map(this::externalObject)
+                .map(this::asExternalObject)
                 .ifPresent(setterFunction);
     }
 
@@ -335,7 +342,7 @@ public class MARCMapper {
                 .map(this::unPunctuate)
                 .map(fragment -> path("nationality", fragment))
                 .map(this::dataPrefix)
-                .map(this::externalObject)
+                .map(this::asExternalObject)
                 .ifPresent(person::setNationality);
         getSubfieldValue(dataField, 'q').ifPresent(person::setAlternativeName);
     }
@@ -345,7 +352,7 @@ public class MARCMapper {
         getSubfieldValue(dataField, 'q').ifPresent(corporation::setSpecification);
     }
 
-    private ExternalDataObject externalObject(String id) {
+    private ExternalDataObject asExternalObject(String id) {
         ExternalDataObject externalDataObject = new ExternalDataObject();
         externalDataObject.setId(id);
         return externalDataObject;
@@ -388,7 +395,7 @@ public class MARCMapper {
 
     private Stream<String> getSubfieldValues(DataField dataField, Character character, String... separators) {
         String separator = separators.length > 0 ? separators[0] : ",";
-        return Arrays.stream(getSubfieldValue(dataField, character).orElse("").split(separator)).filter(StringUtils::isNotBlank);
+        return stream(getSubfieldValue(dataField, character).orElse("").split(separator)).filter(StringUtils::isNotBlank);
     }
 
     private Map<String, Object> composeContribution(String contributor, EntityType entityType, Contributor contributors) {

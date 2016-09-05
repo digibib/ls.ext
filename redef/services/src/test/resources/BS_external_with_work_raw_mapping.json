@@ -101,6 +101,14 @@
         "deichman:format": {
           "@id": "http://data.deichman.no/format#Book"
         },
+        "deichman:illustrativeMatter": [
+          {
+            "@id": "http://data.deichman.no/illustrativeMatter#kol. ill."
+          },
+          {
+            "@id": "http://data.deichman.no/illustrativeMatter#fig."
+          }
+        ],
         "deichman:publicationYear": "2007",
         "deichman:partNumber": "Andre bok",
         "deichman:mainTitle": "Et eksempel",
