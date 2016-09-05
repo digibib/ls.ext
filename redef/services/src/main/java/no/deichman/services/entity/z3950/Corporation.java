@@ -17,6 +17,8 @@ public class Corporation extends Named {
 
     @SerializedName("deichman:place")
     private Map<String, String> place;
+    @SerializedName("deichman:ordinal")
+    private String ordinal;
 
     public Corporation(String id, String name) {
         setType("deichman:Corporation");
@@ -40,4 +42,7 @@ public class Corporation extends Named {
         setType("deichman:Corporation");
     }
 
+    public final void setOrdinal(String ordinal) {
+        this.ordinal = ordinal;
+    }
 }

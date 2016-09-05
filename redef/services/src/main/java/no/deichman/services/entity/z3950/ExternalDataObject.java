@@ -28,9 +28,6 @@ public class ExternalDataObject implements Labeled {
     @SerializedName("deichman:alternativeName")
     private String alternativeName;
 
-    @SerializedName("deichman:ordinal")
-    private String ordinal;
-
     @SerializedName("deichman:prefLabel")
     private String prefLabel;
 
@@ -73,10 +70,6 @@ public class ExternalDataObject implements Labeled {
 
     public final void setAlternativeName(String alternativeName) {
         this.alternativeName = alternativeName;
-    }
-
-    public final void setOrdinal(String ordinal) {
-        this.ordinal = ordinal;
     }
 
     public final String getSpecification() {

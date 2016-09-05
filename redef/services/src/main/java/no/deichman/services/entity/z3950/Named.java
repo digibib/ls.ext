@@ -24,4 +24,5 @@ public class Named extends ExternalDataObject {
     public final void setName(String name) {
         this.name = name;
     }
+
 }

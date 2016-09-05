@@ -12,6 +12,8 @@ import static com.google.common.collect.ImmutableMap.of;
 public class Serial extends Named {
     @SerializedName("deichman:publishedBy")
     private Map<String, String> publishedBy;
+    @SerializedName("deichman:ordinal")
+    private String ordinal;
 
     @Override
     protected final void assignType() {
@@ -24,5 +26,9 @@ public class Serial extends Named {
 
     public final void setPublisher(String publisherId) {
         publishedBy = of("@id", publisherId);
+    }
+
+    public final void setOrdinal(String ordinal) {
+        this.ordinal = ordinal;
     }
 }

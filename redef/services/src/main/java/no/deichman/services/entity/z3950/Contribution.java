@@ -15,6 +15,8 @@ public class Contribution extends ExternalDataObject {
 
     @SerializedName("deichman:role")
     private ExternalDataObject role;
+    @SerializedName("deichman:ordinal")
+    private String ordinal;
 
     Contribution() {}
 
@@ -39,4 +41,7 @@ public class Contribution extends ExternalDataObject {
         this.role = role;
     }
 
+    public final void setOrdinal(String ordinal) {
+        this.ordinal = ordinal;
+    }
 }

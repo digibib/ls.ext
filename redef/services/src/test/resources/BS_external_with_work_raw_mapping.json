@@ -194,14 +194,14 @@
       {
         "deichman:birthYear": "1872",
         "deichman:deathYear": "1957",
+        "deichman:ordinal": "VII",
         "deichman:name": "Haakon",
         "@type": [
           "deichman:Person"
         ],
         "@id": "_:0000000",
         "deichman:specification": "konge av Norge",
-        "deichman:alternativeName": "Christian Frederik Carl Georg Valdemar Axel",
-        "deichman:ordinal": "VII"
+        "deichman:alternativeName": "Christian Frederik Carl Georg Valdemar Axel"
       },
       {
         "deichman:birthYear": "1564",

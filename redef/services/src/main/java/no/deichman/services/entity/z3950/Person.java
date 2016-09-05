@@ -25,6 +25,9 @@ public class Person extends Named {
     @SerializedName("deichman:nationality")
     private ExternalDataObject nationality;
 
+    @SerializedName("deichman:ordinal")
+    private String ordinal;
+
     public Person(String id, String name) {
         setType("deichman:Person");
         setId(id);
@@ -91,5 +94,9 @@ public class Person extends Named {
 
     public final ExternalDataObject getNationality() {
         return nationality;
+    }
+
+    public final void setOrdinal(String ordinal) {
+        this.ordinal = ordinal;
     }
 }

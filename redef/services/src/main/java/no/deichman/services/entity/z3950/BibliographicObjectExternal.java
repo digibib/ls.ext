@@ -25,6 +25,8 @@ class BibliographicObjectExternal extends ExternalDataObject {
 
     @SerializedName("deichman:subtitle")
     private String subtitle;
+    @SerializedName("deichman:ordinal")
+    private String ordinal;
 
     public final String getMainTitle() {
         return mainTitle;
@@ -73,5 +75,9 @@ class BibliographicObjectExternal extends ExternalDataObject {
 
     public final String getPublicationYear() {
         return publicationYear;
+    }
+
+    public final void setOrdinal(String ordinal) {
+        this.ordinal = ordinal;
     }
 }
