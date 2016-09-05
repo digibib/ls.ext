@@ -157,11 +157,13 @@ class SearchResult extends React.Component {
 
     const formats = [ ...pubFormats ]
     const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, {title: result.displayTitle})
+    const missingCoverImage = '/images/no-cover.png'
+    const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, {title: result.displayTitle})
     return (
       <div className="single-entry" data-formats={formats.join(', ')}>
         <aside className="book-cover">
           <Link to={this.getResultUrl(result)} className="book-cover-item">
-            {result.image ? <img src={result.image} alt={coverAltText} /> : null}
+            {result.image ? <img src={result.image} alt={coverAltText} /> : <img src={missingCoverImage} alt={missingCoverAltText}/>}
           </Link>
         </aside>
 
@@ -285,6 +287,11 @@ const messages = defineMessages({
     id: 'SearchResult.coverImageOf',
     description: 'Used for alt text in images',
     defaultMessage: 'Cover image of: {title}'
+  },
+  missingCoverImageOf: {
+    id: 'SearchResult.missingCoverImageOf',
+    description: 'Used for placeholder cover images',
+    defaultMessage: 'Missing cover image of: {title}'
   },
   partOfSeries: {
     id: 'SearchResult.partOfSeries',

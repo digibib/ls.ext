@@ -165,6 +165,7 @@ export default {
   'SearchResult.hideStatus': 'Skjul status',
   'SearchResult.firstPublished': 'Utgitt første gang:',
   'SearchResult.coverImageOf': 'Omslagsbilde av: {title}',
+  'SearchResult.missingCoverImageOf': 'Mangler omslagsbilde av: {title}',
   'SearchResult.partOfSeries': 'Inngår i serie: ',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.searching': 'Søker...',
