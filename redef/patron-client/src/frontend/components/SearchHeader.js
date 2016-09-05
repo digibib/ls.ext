@@ -57,6 +57,7 @@ class SearchHeader extends React.Component {
               <label htmlFor="search"><img src="/images/icon-searchbar-search.svg"
                                            alt="Black Magnifying glass" /></label>
               <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+                     id="search"
                      type="search"
                      defaultValue={this.props.locationQuery.query || ''}
                      ref={e => this.searchFieldInput = e}
