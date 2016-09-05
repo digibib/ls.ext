@@ -1,0 +1,80 @@
+[
+  {
+    "@graph": [
+      {
+        "deichman:hasSummary": "Helge Fauskangers alternative oversettelse av Det nye testamentet er en ujålete gjengivelse av de originale tekstene. Tradisjonelle oversettelser pynter for mye på tekstene, ifølge forfatteren, noe som gjør dem finere enn de opprinnelig var. Fauskanger gjengir derfor Det nye testamentet i et mer radikalt bokmål som ligger tettere opp mot originalspråket. Dette gjør blant annet at oversettelsen skaper et nytt bilde av Jesus som en mer menneskelig skikkelse, en som er i sterk tvil om de gode evnene sine og om han skal bruke dem.",
+        "deichman:audience": [
+          {
+            "@id": "http://data.deichman.no/audience#adult"
+          }
+        ],
+        "deichman:literaryForm": [
+          {
+            "@id": "http://data.deichman.no/literaryForm#nonfiction"
+          }
+        ],
+        "deichman:publicationYear": "1858",
+        "deichman:partNumber": "1",
+        "deichman:partTitle": "NT",
+        "deichman:missingMainEntry": true,
+        "deichman:mainTitle": "Det Nye testamentet",
+        "deichman:subtitle": "ny oversettelse : tekstene slik de opprinnelig ble skrevet",
+        "@type": [
+          "deichman:Work",
+          "deichman:TopBanana"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:isbn": "978-82-8205-594-9",
+        "deichman:placeOfPublication": "Oslo",
+        "deichman:publisher": "Juritzen",
+        "deichman:publicationYear": "cop. 2015",
+        "deichman:numberOfPages": "677 s.",
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:publicationOf": {
+          "@id": "_:0000000"
+        },
+        "deichman:format": {
+          "@id": "http://data.deichman.no/format#Book"
+        },
+        "deichman:mainTitle": "Det Nye testamentet",
+        "deichman:subtitle": "ny oversettelse : tekstene slik de opprinnelig ble skrevet",
+        "@type": [
+          "deichman:Publication"
+        ]
+      },
+      {
+        "deichman:birthYear": "1971",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#n"
+        },
+        "deichman:name": "Fauskanger, Helge Kåre",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#translator"
+        },
+        "@type": [
+          "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      }
+    ],
+    "@context": {
+      "deichman": "http://deichman.no/ontology#",
+      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    }
+  }
+]

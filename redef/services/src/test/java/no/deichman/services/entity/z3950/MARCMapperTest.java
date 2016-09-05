@@ -31,11 +31,20 @@ public class MARCMapperTest extends MappingTester {
 
     @Test
     public void it_maps_marc_with_work() {
-        String marc = new ResourceReader().readFile("BS_external_data_with_work.xml");
+        checkMapping("BS_external_data_with_work.xml", "BS_external_with_work_raw_mapping.json");
+    }
+
+    @Test
+    public void it_maps_bible() {
+        checkMapping("BS_external_data_bible.xml", "BS_external_data_bible.json");
+    }
+
+    private void checkMapping(String marcXmlFile, String jsonFile) {
+        String marc = new ResourceReader().readFile(marcXmlFile);
         List<Object> mapping = new MARCMapper().getMapping(marc);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        assertEquals(simplifyBNodes(new ResourceReader().readFile("BS_external_with_work_raw_mapping.json")), simplifyBNodes(gson.toJson(mapping)));
-        assertThat(simplifyBNodes(new ResourceReader().readFile("BS_external_with_work_raw_mapping.json")),
+        assertEquals(simplifyBNodes(new ResourceReader().readFile(jsonFile)), simplifyBNodes(gson.toJson(mapping)));
+        assertThat(simplifyBNodes(new ResourceReader().readFile(jsonFile)),
                 SameJSONAs.sameJSONAs(simplifyBNodes(gson.toJson(mapping)))
                         .allowingExtraUnexpectedFields()
                         .allowingAnyArrayOrdering());

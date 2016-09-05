@@ -65,6 +65,7 @@
             "@id": "_:0000000"
           }
         ],
+        "deichman:partNumber": "Book 2",
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
         "@type": [

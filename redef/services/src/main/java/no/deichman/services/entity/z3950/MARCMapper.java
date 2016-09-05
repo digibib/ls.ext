@@ -125,9 +125,12 @@ public class MARCMapper {
                     corporations.add(corporation[0]);
                     contributions.add(workContribution1[0]);
                     break;
+                case "130":
+                    setWorkDataFromDataField(dataField, work);
+                    work.setMissingMainEntry(true);
+                    break;
                 case "240":
-                    getSubfieldValue(dataField, 'a').ifPresent(work::setMainTitle);
-                    getSubfieldValue(dataField, 'b').ifPresent(work::setSubtitle);
+                    setWorkDataFromDataField(dataField, work);
                     break;
                 case "245":
                     boolean standardTitleExists = r.getVariableFields("240").size() != 0;
@@ -258,6 +261,14 @@ public class MARCMapper {
         graphList.addAll(publicationPartWorks);
 
         return topLevelMap;
+    }
+
+    private void setWorkDataFromDataField(DataField dataField, Work work) {
+        getSubfieldValue(dataField, 'a').ifPresent(work::setMainTitle);
+        getSubfieldValue(dataField, 'b').ifPresent(work::setSubtitle);
+        getSubfieldValue(dataField, 'f').ifPresent(work::setPublicationYear);
+        getSubfieldValue(dataField, 'n').ifPresent(work::setPartNumber);
+        getSubfieldValue(dataField, 'p').ifPresent(work::setPartTitle);
     }
 
     private void mapPrimaryAndSubDivisionSubject(

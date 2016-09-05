@@ -32,6 +32,18 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:genre")
     private List<Map<String, String>> genres;
 
+    @SerializedName("deichman:publicationYear")
+    private String publicationYear;
+
+    @SerializedName("deichman:partNumber")
+    private String partNumber;
+
+    @SerializedName("deichman:partTitle")
+    private String partTitle;
+
+    @SerializedName("deichman:missingMainEntry")
+    private Boolean missingMainEntry;
+
     public final Map<String, String> getContributor() {
         return contributor;
     }
@@ -91,5 +103,21 @@ public class Work extends BibliographicObjectExternal {
             this.genres = new ArrayList<>();
         }
         this.genres.add(of("@id", genreId));
+    }
+
+    public void setPublicationYear(String publicationYear) {
+        this.publicationYear = publicationYear;
+    }
+
+    public void setPartNumber(String partNumber) {
+        this.partNumber = partNumber;
+    }
+
+    public void setPartTitle(String partTitle) {
+        this.partTitle = partTitle;
+    }
+
+    public void setMissingMainEntry(boolean missingMainEntry) {
+        this.missingMainEntry = missingMainEntry;
     }
 }

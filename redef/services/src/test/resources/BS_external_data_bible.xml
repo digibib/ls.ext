@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+        xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+        <leader>01179 am a2200193   4500</leader>
+        <controlfield tag="001">524020</controlfield>
+        <controlfield tag="008">                      a          00nob 2</controlfield>
+        <datafield tag="015" ind1=" " ind2=" ">
+            <subfield code="a">0377057</subfield>
+            <subfield code="b">BIBBI</subfield>
+        </datafield>
+        <datafield tag="019" ind1=" " ind2=" ">
+            <subfield code="b">l</subfield>
+        </datafield>
+        <datafield tag="020" ind1=" " ind2=" ">
+            <subfield code="a">978-82-8205-594-9</subfield>
+            <subfield code="b">ib.</subfield>
+            <subfield code="c">Nkr 369.00</subfield>
+        </datafield>
+        <datafield tag="082" ind1="3" ind2="1">
+            <subfield code="a">225.53982</subfield>
+            <subfield code="z">h</subfield>
+            <subfield code="2">5</subfield>
+        </datafield>
+        <datafield tag="090" ind1=" " ind2=" ">
+            <subfield code="c">225.53982</subfield>
+            <subfield code="d">B</subfield>
+        </datafield>
+        <datafield tag="130" ind1=" " ind2="0">
+            <subfield code="a">Bibelen</subfield>
+            <subfield code="b">Fra Gud til menneske</subfield>
+            <subfield code="f">1858</subfield>
+            <subfield code="l">Norsk</subfield>
+            <subfield code="n">1</subfield>
+            <subfield code="p">NT</subfield>
+        </datafield>
+        <datafield tag="245" ind1="0" ind2="4">
+            <subfield code="a">Det Nye testamentet</subfield>
+            <subfield code="b">ny oversettelse : tekstene slik de opprinnelig ble skrevet</subfield>
+            <subfield code="c">oversatt og kommentert av Helge K. Fauskanger</subfield>
+            <subfield code="w">Nye testamentet</subfield>
+        </datafield>
+        <datafield tag="260" ind1=" " ind2=" ">
+            <subfield code="a">Oslo</subfield>
+            <subfield code="b">Juritzen</subfield>
+            <subfield code="c">cop. 2015</subfield>
+        </datafield>
+        <datafield tag="300" ind1=" " ind2=" ">
+            <subfield code="a">677 s.</subfield>
+        </datafield>
+        <datafield tag="505" ind1=" " ind2=" ">
+            <subfield code="a">Har bibliografi, innholdsfortegnelse</subfield>
+        </datafield>
+        <datafield tag="520" ind1=" " ind2=" ">
+            <subfield code="a">Helge Fauskangers alternative oversettelse av Det nye testamentet er en ujålete gjengivelse av de originale tekstene. Tradisjonelle oversettelser pynter for mye på tekstene, ifølge forfatteren, noe som gjør dem finere enn de opprinnelig var. Fauskanger gjengir derfor Det nye testamentet i et mer radikalt bokmål som ligger tettere opp mot originalspråket. Dette gjør blant annet at oversettelsen skaper et nytt bilde av Jesus som en mer menneskelig skikkelse, en som er i sterk tvil om de gode evnene sine og om han skal bruke dem.</subfield>
+        </datafield>
+        <datafield tag="700" ind1=" " ind2="0">
+            <subfield code="a">Fauskanger, Helge Kåre</subfield>
+            <subfield code="d">1971-</subfield>
+            <subfield code="e">overs.</subfield>
+            <subfield code="j">n.</subfield>
+        </datafield>
+    </record>
+</collection>
