@@ -28,11 +28,13 @@
             <subfield code="a">839.823</subfield>
             <subfield code="2">5</subfield>
         </datafield>
+        <!-- should result in a person as main entry -->
         <datafield tag="100" ind1=" " ind2="0">
             <subfield code="a">Eksempelsen, Eksempel</subfield>
             <subfield code="d">1931-</subfield>
             <subfield code="j">n.</subfield>
         </datafield>
+        <!-- should result in a corporation as main entry -->
         <datafield tag="110" ind1=" " ind2="0">
             <subfield code="a">Norsk Rikskringkasting</subfield>
             <subfield code="b">Aktivum</subfield>
@@ -72,15 +74,17 @@
         <datafield tag="520" ind1=" " ind2=" ">
             <subfield code="a">Eksempel Eksempelsens tredje, selv-biografisk roman, sørger for tung lesing samt behov for suppe. Det er ingen tvil om at denne blir en norsk klassiker som kan måles opp mot blant annet Karsten og Petra har Lucia-fest.</subfield>
         </datafield>
+        <!-- shoudl result in person and general subject (Fortellinger) as subject -->
         <datafield tag="600" ind1=" " ind2="2">
-            <subfield code="a">Eksempelsen, Eksempel</subfield>
-            <subfield code="d">1931-</subfield>
+            <subfield code="a">Eksempelsen, Eksempel senior</subfield>
+            <subfield code="d">1899-</subfield>
             <subfield code="j">n.</subfield>
             <subfield code="x">Fortellinger</subfield>
             <subfield code="1">839.823</subfield>
             <subfield code="2">BS</subfield>
             <subfield code="9">nob</subfield>
         </datafield>
+        <!-- should result in person Haakon as subject -->
         <datafield tag="600" ind1=" " ind2="1">
             <subfield code="a">Haakon</subfield>
             <subfield code="b">VII</subfield>
@@ -92,11 +96,13 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nob</subfield>
         </datafield>
+        <!-- should result in a work titled Hamlet with contribution from Shakespeare. The work Hamlet is subject of main work. -->
         <datafield tag="600" ind1=" " ind2="1">
             <subfield code="a">Shakespeare, William</subfield>
             <subfield code="d">1564-1616</subfield>
             <subfield code="t">Hamlet</subfield>
         </datafield>
+        <!-- should result in Hermansen, Peder Gunvald as person and subject -->
         <datafield tag="600" ind1=" " ind2="1">
             <subfield code="a">Hermansen, Peder Gunvald</subfield>
             <subfield code="c">jurist og byoriginal</subfield>
@@ -106,9 +112,10 @@
             <subfield code="9">nor</subfield>
             <subfield code="z">Oslo</subfield>
         </datafield>
+        <!-- shoudl result in Exxon Subject as subject -->
         <datafield tag="610" ind1=" " ind2="2">
             <subfield code="a">Exxon</subfield>
-            <subfield code="b">Exxon Valdez</subfield>
+            <subfield code="b">Exxon Subject</subfield>
             <subfield code="c">Alaska</subfield>
             <subfield code="q">skip</subfield>
             <subfield code="x">Oil spill</subfield>
@@ -118,6 +125,7 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nob</subfield>
         </datafield>
+        <!-- shoudl result in an Event as subject -->
         <datafield tag="611" ind1=" " ind2="2">
             <subfield code="a">FIFA World Cup</subfield>
             <subfield code="c">Spania</subfield>
@@ -125,6 +133,7 @@
             <subfield code="n">2</subfield>
             <subfield code="q">VM i fotball</subfield>
         </datafield>
+        <!-- should result in a work (Bibelen), a place (Judea) and a general subject (Kristendom) as subjects -->
         <datafield tag="630" ind1=" " ind2="0">
             <subfield code="a">Bibelen</subfield>
             <subfield code="b">Fra Gud til menneske</subfield>
@@ -135,6 +144,7 @@
             <subfield code="x">Kristendom</subfield>
             <subfield code="z">Judea</subfield>
         </datafield>
+        <!-- should result in subjects Kulturminnevern and Røros -->
         <datafield tag="650" ind1=" " ind2="1">
             <subfield code="a">Kulturminnevern</subfield>
             <subfield code="q">Ta vare på gamle ting</subfield>
@@ -143,6 +153,7 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
         </datafield>
+        <!-- should result in subjects Kulturhistorie and Røros -->
         <datafield tag="651" ind1=" " ind2="2">
             <subfield code="a">Røros</subfield>
             <subfield code="x">Kulturhistorie</subfield>
@@ -150,20 +161,24 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
         </datafield>
+        <!-- should result in Unescos verdensarvliste as general subject -->
         <datafield tag="653" ind1=" " ind2="2">
             <subfield code="a">Unescos verdensarvliste</subfield>
             <subfield code="2">BS</subfield>
             <subfield code="9">nob</subfield>
         </datafield>
+        <!-- should result in genre Biografisk -->
         <datafield tag="655" ind1=" " ind2="2">
             <subfield code="a">Biografisk</subfield>
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
         </datafield>
+        <!-- should result in Jimson Jimson as person and contribution eith role illustrator -->
         <datafield tag="700" ind1=" " ind2="0">
             <subfield code="a">Jimson Jimson</subfield>
             <subfield code="e">illustr.</subfield>
         </datafield>
+        <!-- should result in a publicationPart with title "En julefortelling"  -->
         <datafield tag="700" ind1=" " ind2="2">
             <subfield code="a">Dickens, Charles</subfield>
             <subfield code="d">1812-1870</subfield>
@@ -171,6 +186,7 @@
             <subfield code="t">En julefortelling</subfield>
             <subfield code="u">julefortelling</subfield>
         </datafield>
+        <!-- should result in a basedOn relation -->
         <datafield tag="700" ind1=" " ind2=" ">
             <subfield code="a">Tom Clancford</subfield>
             <subfield code="d">1808-1899</subfield>
@@ -178,10 +194,27 @@
             <subfield code="t">Den originale julefortelling</subfield>
             <subfield code="u">julefortelling</subfield>
         </datafield>
+        <!-- should result in a contribution with default role (contributor) related to publication -->
         <datafield tag="700" ind1=" " ind2="2">
             <subfield code="a">Capote, Truman</subfield>
             <subfield code="c">real name Truman Streckfus Persons</subfield>
         </datafield>
-
+        <!-- should result in publicationPart with Exxon as agent and role author -->
+        <datafield tag="710" ind1=" " ind2="2">
+            <subfield code="a">Exxon</subfield>
+            <subfield code="b">Exxon Publicationpart</subfield>
+            <subfield code="c">Alaska</subfield>
+            <subfield code="e">forf.</subfield>
+            <subfield code="t">Sunken ships in the horizon</subfield>
+            <subfield code="q">skip</subfield>
+        </datafield>
+        <!-- should result in a contribution by Exxon with default role -->
+        <datafield tag="710" ind1=" " ind2=" ">
+            <subfield code="a">Exxon</subfield>
+            <subfield code="b">Exxon Contributor</subfield>
+            <subfield code="c">Alaska</subfield>
+            <subfield code="t">Oil, oil everywhere</subfield>
+            <subfield code="q">skip</subfield>
+        </datafield>
     </record>
 </collection>

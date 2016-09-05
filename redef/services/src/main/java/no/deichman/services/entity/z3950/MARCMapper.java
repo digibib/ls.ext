@@ -1,6 +1,5 @@
 package no.deichman.services.entity.z3950;
 
-import no.deichman.services.entity.EntityType;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.marc4j.MarcReader;
@@ -36,8 +35,14 @@ public class MARCMapper {
     public static final String PERSON_TYPE = "deichman:Person";
     public static final String PLACE_TYPE = "deichman:Place";
     private static final String CORPORATION_TYPE = "deichman:Corporation";
+    private boolean simpleIdGenerator = false;
+    private int simpleIdGeneratorCounter = 0;
 
     public MARCMapper() {
+    }
+
+    public MARCMapper(boolean simpleIdGenerator) {
+        this.simpleIdGenerator = simpleIdGenerator;
     }
 
     final List<Object> getMapping(String record) {
@@ -63,11 +68,11 @@ public class MARCMapper {
         Work work = new Work();
         work.addType("deichman:TopBanana");
 
-        String workId = UUID.randomUUID().toString();
+        String workId = newBlankNodeId();
         work.setId(workId);
 
         Publication publication = new Publication();
-        publication.setPublicationOf(workId);
+        publication.setPublicationOf(work);
 
         List<Object> graphList = new ArrayList<>();
         graphList.add(work);
@@ -94,39 +99,27 @@ public class MARCMapper {
                     getSubfieldValue(dataField, 'n').ifPresent(publication::setBinding);
                     break;
                 case "100":
-                    final Person[] person = new Person[1];
-                    final Contribution[] workContribution = new Contribution[1];
-                    getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                        Map<String, Object> workContributionMap = composeContribution(s, EntityType.WORK, new Person());
-                        work.setContributor(s);
-                        work.setContributor((String) workContributionMap.get("contributorLink"));
-                        workContribution[0] = (Contribution) workContributionMap.get("contribution");
-                        person[0] = (Person) workContributionMap.get("contributor");
-                        setPersonDataFromDataField(dataField, person[0]);
-                        setRole(dataField, workContribution[0]);
+                    getSubfieldValue(dataField, 'a').ifPresent(personName -> {
+                        Person person1 = setPersonDataFromDataField(dataField, new Person(newBlankNodeId(), personName));
+                        persons.add(person1);
+                        MainEntry mainEntryForPerson = new MainEntry(person1, newBlankNodeId());
+                        setRole(dataField, mainEntryForPerson);
+                        publication.addContributon(mainEntryForPerson);
+                        contributions.add(mainEntryForPerson);
                     });
-
-                    persons.add(person[0]);
-                    contributions.add(workContribution[0]);
                     break;
                 case "110":
-                    final Corporation[] corporation = new Corporation[1];
-                    final Contribution[] workContribution1 = new Contribution[1];
-                    getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                        Map<String, Object> workContributionMap = composeContribution(s, EntityType.WORK, new Corporation());
-                        work.setContributor(s);
-                        work.setContributor((String) workContributionMap.get("contributorLink"));
-                        workContribution1[0] = (Contribution) workContributionMap.get("contribution");
-                        corporation[0] = (Corporation) workContributionMap.get("contributor");
+                    getSubfieldValue(dataField, 'a').ifPresent(corporationName -> {
+                        Corporation corporation1 = setCorporationDataFromDataField(dataField, new Corporation(newBlankNodeId(), corporationName));
+                        getSubfieldValue(dataField, 'c').ifPresent(place -> {
+                            addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
+                        });
+                        corporations.add(corporation1);
+                        MainEntry mainEntryForCorporation = new MainEntry(corporation1, newBlankNodeId());
+                        setRole(dataField, mainEntryForCorporation);
+                        publication.addContributon(mainEntryForCorporation);
+                        contributions.add(mainEntryForCorporation);
                     });
-                    setCorporationDataFromDataField(dataField, corporation[0]);
-                    setRole(dataField, workContribution1[0]);
-                    getSubfieldValue(dataField, 'c').ifPresent(place -> {
-                        addExternalObject(graphList, place, PLACE_TYPE, corporation[0]::setPlace);
-                    });
-
-                    corporations.add(corporation[0]);
-                    contributions.add(workContribution1[0]);
                     break;
                 case "130":
                     setBibliographicDataFromDataField(dataField, work);
@@ -165,7 +158,7 @@ public class MARCMapper {
                     break;
                 case "440":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
-                        Serial serial = new Serial(a, asBlankNodeId(UUID.randomUUID().toString()));
+                        Serial serial = new Serial(a, newBlankNodeId());
                         graphList.add(serial);
                         getSubfieldValue(dataField, 'b').ifPresent(publishedBy -> {
                             addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
@@ -185,19 +178,20 @@ public class MARCMapper {
                     }
                     break;
                 case "600":
-                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
-                        String personId = asBlankNodeId(UUID.randomUUID().toString());
-                        Person person1 = new Person(personId, a);
-                        setPersonDataFromDataField(dataField, person1);
-                        graphList.add(person1);
+                    getSubfieldValue(dataField, 'a').ifPresent(personName -> {
+                        Person person1= (Person) extractNewNamed(persons, corporations, dataField, personName);
                         if (getSubfieldValue(dataField, 't').isPresent()) {
                             getSubfieldValue(dataField, 't').ifPresent(title -> {
-                                String workAsSubjectId = asBlankNodeId(UUID.randomUUID().toString());
-                                graphList.add(new Work(workAsSubjectId, title, personId));
-                                work.addSubject(workAsSubjectId);
+                                Work workAsSubject = new Work(newBlankNodeId(), title);
+                                Contribution contribution = new Contribution(person1, newBlankNodeId());
+                                setDefaultRole(contribution);
+                                workAsSubject.addContributon(contribution);
+                                contributions.add(contribution);
+                                graphList.add(workAsSubject);
+                                work.addSubject(workAsSubject);
                             });
                         } else {
-                            work.addSubject(personId);
+                            work.addSubject(person1);
                         }
                         getSubfieldValue(dataField, 'x').ifPresent(subject -> {
                             addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
@@ -209,14 +203,14 @@ public class MARCMapper {
                     break;
                 case "610":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
-                        String corporationId = asBlankNodeId(UUID.randomUUID().toString());
+                        String corporationId = newBlankNodeId();
                         Corporation corporation1 = new Corporation(corporationId, a);
                         setCorporationDataFromDataField(dataField, corporation1);
                         graphList.add(corporation1);
                         getSubfieldValue(dataField, 'c').ifPresent(place -> {
                             addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
                         });
-                        work.addSubject(corporationId);
+                        work.addSubject(corporation1);
                     });
                     getSubfieldValue(dataField, 'x').ifPresent(subject -> {
                         addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
@@ -227,7 +221,7 @@ public class MARCMapper {
                     break;
                 case "611":
                     getSubfieldValue(dataField, 'a').ifPresent(prefLabel -> {
-                        String eventId = asBlankNodeId(UUID.randomUUID().toString());
+                        String eventId = newBlankNodeId();
                         Event event = new Event(eventId, prefLabel);
                         getSubfieldValue(dataField, 'c').ifPresent(place -> {
                             addExternalObject(graphList, place, PLACE_TYPE, event::setPlace);
@@ -236,7 +230,7 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 'n').ifPresent(event::setNumber);
                         getSubfieldValue(dataField, 'q').ifPresent(event::setSpecification);
                         graphList.add(event);
-                        work.addSubject(eventId);
+                        work.addSubject(event);
                     });
                     getSubfieldValue(dataField, 'x').ifPresent(subject -> {
                         addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
@@ -246,10 +240,10 @@ public class MARCMapper {
                     });
                     break;
                 case "630":
-                    String workAsSubjectId = asBlankNodeId(UUID.randomUUID().toString());
+                    String workAsSubjectId = newBlankNodeId();
                     Work work1 = new Work(workAsSubjectId);
                     setBibliographicDataFromDataField(dataField, work1);
-                    work.addSubject(workAsSubjectId);
+                    work.addSubject(work1);
                     graphList.add(work1);
                     getSubfieldValue(dataField, 'x').ifPresent(subject -> {
                         addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
@@ -275,63 +269,41 @@ public class MARCMapper {
                     });
                     break;
                 case "700":
-                    final Named[] publicationPersonOrCorporation = new Named[1];
-                    if (getSubfieldValue(dataField, 't').isPresent()) {
-                        if (dataField.getIndicator2() == '2') {
-                            final PublicationPart[] publicationPart = new PublicationPart[1];
-                            getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                                final Work[] publicationPartWork = new Work[1];
-                                getSubfieldValue(dataField, 't').ifPresent(t -> {
-                                    Map<String, Object>[] workPartMap = new Map[1];
-                                    workPartMap[0] = composeWork(t);
-                                    publicationPartWork[0] = (Work) workPartMap[0].get("work");
-                                    publicationPartWorks.add(publicationPartWork[0]);
-
-                                    Map<String, Object> publicationContributionMap = composePublicationPart(s, publicationPartWork[0], new Person());
-                                    publication.addPublicationPart((String) publicationContributionMap.get("publicationPartLink"));
-                                    publicationPart[0] = (PublicationPart) publicationContributionMap.get("publicationPart");
-                                    publicationPersonOrCorporation[0] = (Named) publicationContributionMap.get("person");
-                                });
-                            });
-                            setRole(dataField, publicationPart[0]);
-                            if (publicationPersonOrCorporation[0] instanceof Person) {
-                                setPersonDataFromDataField(dataField, (Person) publicationPersonOrCorporation[0]);
-                            } else {
-                                setCorporationDataFromDataField(dataField, (Corporation) publicationPersonOrCorporation[0]);
-                            }
-                            graphList.add(publicationPersonOrCorporation[0]);
-                            publicationParts.add(publicationPart[0]);
-                        } else {
-                            getSubfieldValue(dataField, 'a').ifPresent(personName -> {
-                                String personId = asBlankNodeId(UUID.randomUUID().toString());
-                                Person person1 = new Person(personId, personName);
-                                getSubfieldValue(dataField, 't').ifPresent(title -> {
-                                    graphList.add(person1);
-                                    String workId1 = asBlankNodeId(UUID.randomUUID().toString());
-                                    Work work2 = new Work(workId1, title, personId);
-                                    graphList.add(work2);
-                                    WorkRelation workRelation = new WorkRelation(asBlankNodeId(UUID.randomUUID().toString()), workId1, dataPrefix(path("relationType", "basedOn")));
-                                    graphList.add(workRelation);
-                                    work.isRelatedTo(workRelation.getId());
-                                });
-                            });
-                        }
-                    } else {
-                        final Contribution[] publicationContribution = new Contribution[1];
-                        getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                            Map<String, Object> publicationContributionMap = composeContribution(s, EntityType.PUBLICATION, new Person());
-                            publication.setContributor((String) publicationContributionMap.get("contributorLink"));
-                            publicationContribution[0] = (Contribution) publicationContributionMap.get("contribution");
-                            publicationPersonOrCorporation[0] = (Person) publicationContributionMap.get("contributor");
+                case "710":
+                    if (thisIsContribution(dataField)) { // contribution
+                        getSubfieldValue(dataField, 'a').ifPresent(contributorName -> {
+                            Named named = extractNewNamed(persons, corporations, dataField, contributorName);
+                            Contribution contribution = new Contribution(named, newBlankNodeId());
+                            setRole(dataField, contribution);
+                            publication.addContributon(contribution);
+                            contributions.add(contribution);
                         });
-                        setRole(dataField, publicationContribution[0]);
-                        if (publicationPersonOrCorporation[0] instanceof Person) {
-                            setPersonDataFromDataField(dataField, (Person) publicationPersonOrCorporation[0]);
-                        } else {
-                            setCorporationDataFromDataField(dataField, (Corporation) publicationPersonOrCorporation[0]);
+                    } else {
+                        if (hasPublicationPartRelationship(dataField)) {
+                            getSubfieldValue(dataField, 'a').ifPresent(contributorName -> {
+                                Named named = extractNewNamed(persons, corporations, dataField, contributorName);
+                                PublicationPart publicationPart = new PublicationPart(named, newBlankNodeId());
+                                getSubfieldValue(dataField, 't').ifPresent(publicationPart::setMainTitle);
+                                setRole(dataField, publicationPart);
+                                publicationPart.setAgent(named);
+                                publication.addPublicationPart(publicationPart);
+                                publicationParts.add(publicationPart);
+                            });
+                        } else if (hasBasedOnRelationship(dataField)) {
+                            getSubfieldValue(dataField, 'a').ifPresent(name -> {
+                                Named named = extractNewNamed(persons, corporations, dataField, name);
+                                getSubfieldValue(dataField, 't').ifPresent(title -> {
+                                    Work work2 = new Work(newBlankNodeId(), title);
+                                    graphList.add(work2);
+                                    WorkRelation workRelation = new WorkRelation(newBlankNodeId(), work2.getId(), dataPrefix(path("relationType", "basedOn")));
+                                    graphList.add(workRelation);
+                                    work.isRelatedTo(workRelation);
+                                    Contribution contribution = new Contribution(named, newBlankNodeId());
+                                    publication.addContributon(contribution);
+                                    contributions.add(contribution);
+                                });
+                            });
                         }
-                        graphList.add(publicationPersonOrCorporation[0]);
-                        contributions.add(publicationContribution[0]);
                     }
                     break;
                 default:
@@ -353,6 +325,36 @@ public class MARCMapper {
         graphList.addAll(publicationPartWorks);
 
         return topLevelMap;
+    }
+
+    private boolean thisIsContribution(DataField dataField) {
+        return !getSubfieldValue(dataField, 't').isPresent();
+    }
+
+    private boolean hasPublicationPartRelationship(DataField dataField) {
+        return dataField.getIndicator2() == '2';
+    }
+
+    private boolean hasBasedOnRelationship(DataField dataField) {
+        return dataField.getIndicator2() != '2';
+    }
+
+    private Named extractNewNamed(List<Person> persons, List<Corporation> corporations, DataField dataField, String name) {
+        String id = newBlankNodeId();
+        String tag = dataField.getTag();
+        Named named = tag.equals("600") || tag.equals("700") ? new Person(id, name) : new Corporation(id, name);
+        if (named instanceof Person) {
+            setPersonDataFromDataField(dataField, (Person) named);
+            persons.add((Person) named);
+        } else {
+            setCorporationDataFromDataField(dataField, (Corporation) named);
+            corporations.add((Corporation) named);
+        }
+        return named;
+    }
+
+    private String newBlankNodeId() {
+        return asBlankNodeId(simpleIdGenerator ? "b"+simpleIdGeneratorCounter++ : UUID.randomUUID().toString());
     }
 
     private void setBibliographicDataFromDataField(DataField dataField, BibliographicObjectExternal bibliographicObjectExternal) {
@@ -379,17 +381,17 @@ public class MARCMapper {
         });
     }
 
-    private ExternalDataObject addExternalObject(Collection<Object> graphList, String prefLabel, String type, Consumer<String> addObjectFunction) {
-        String objectId = UUID.randomUUID().toString();
+    private ExternalDataObject addExternalObject(Collection<Object> graphList, String prefLabel, String type, Consumer<ExternalDataObject> addObjectFunction) {
+        String objectId = newBlankNodeId();
         ExternalDataObject externalDataObject = asExternalObject(objectId, type);
         externalDataObject.setPrefLabel(prefLabel);
-        addObjectFunction.accept(externalDataObject.getId());
+        addObjectFunction.accept(externalDataObject);
         graphList.add(externalDataObject);
         return externalDataObject;
     }
 
     private Named addNamed(Collection<Object> graphList, String name, String type, Consumer<String> addObjectFunction) {
-        String objectId = UUID.randomUUID().toString();
+        String objectId = newBlankNodeId();
         Named named = new Named(name, objectId);
         named.setType(type);
         addObjectFunction.accept(named.getId());
@@ -407,6 +409,14 @@ public class MARCMapper {
         getSubfieldValue(dataField, 'e', "contributor")
                 .map(this::unPunctuate)
                 .map(Role::translate)
+                .map(fragment -> path("role", fragment))
+                .map(this::dataPrefix)
+                .map(this::asExternalObject)
+                .ifPresent(contribution::setRole);
+    }
+
+    private void setDefaultRole(Contribution contribution) {
+        Optional.of("contributor")
                 .map(fragment -> path("role", fragment))
                 .map(this::dataPrefix)
                 .map(this::asExternalObject)
@@ -433,7 +443,7 @@ public class MARCMapper {
                 .ifPresent(setterFunction);
     }
 
-    private void setPersonDataFromDataField(DataField dataField, Person person) {
+    private Person setPersonDataFromDataField(DataField dataField, Person person) {
         getSubfieldValue(dataField, 'b').ifPresent(person::setOrdinal);
         getSubfieldValue(dataField, 'c').ifPresent(person::setSpecification);
         getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
@@ -444,11 +454,13 @@ public class MARCMapper {
                 .map(this::asExternalObject)
                 .ifPresent(person::setNationality);
         getSubfieldValue(dataField, 'q').ifPresent(person::setAlternativeName);
+        return person;
     }
 
-    private void setCorporationDataFromDataField(DataField dataField, Corporation corporation) {
+    private Corporation setCorporationDataFromDataField(DataField dataField, Corporation corporation) {
         getSubfieldValue(dataField, 'b').ifPresent(corporation::setSubdivision);
         getSubfieldValue(dataField, 'q').ifPresent(corporation::setSpecification);
+        return corporation;
     }
 
     private ExternalDataObject asExternalObject(String id) {
@@ -459,7 +471,7 @@ public class MARCMapper {
 
     private ExternalDataObject toLabeledExternalObject(String prefLabel) {
         ExternalDataObject externalDataObject = new ExternalDataObject();
-        externalDataObject.setId(asBlankNodeId(UUID.randomUUID().toString()));
+        externalDataObject.setId(newBlankNodeId());
         externalDataObject.setPrefLabel(prefLabel);
         return externalDataObject;
     }
@@ -497,65 +509,8 @@ public class MARCMapper {
         return stream(getSubfieldValue(dataField, character).orElse("").split(separator)).filter(StringUtils::isNotBlank);
     }
 
-    private Map<String, Object> composeContribution(String contributor, EntityType entityType, Named contributors) {
-        Map<String, Object> returnValue = new HashMap<>();
-
-        final String uuid = UUID.randomUUID().toString();
-        final Contribution contribution = new Contribution();
-
-        Map<String, String> publicationAgentLink = new HashMap<>();
-        contributors.setId(uuid);
-        contributors.setName(contributor);
-        publicationAgentLink.put("@id", asBlankNodeId(uuid));
-        contributors.setId(uuid);
-        contributors.setName(contributor);
-        contribution.setId(UUID.randomUUID().toString());
-        contribution.setAgent(publicationAgentLink);
-        if (entityType == EntityType.WORK) {
-            contribution.addType("deichman:MainEntry");
-        }
-
-        returnValue.put("contributorLink", contribution.getId());
-        returnValue.put("contribution", contribution);
-        returnValue.put("contributor", contributors);
-        return returnValue;
-    }
-
-    private Map<String, Object> composePublicationPart(String agentName, Work work, Named named) {
-        Map<String, Object> returnValue = new HashMap<>();
-
-        final String personUuid = UUID.randomUUID().toString();
-        final PublicationPart publicationPart = new PublicationPart();
-
-        Map<String, String> agentLink = new HashMap<>();
-        named.setId(personUuid);
-        agentLink.put("@id", asBlankNodeId(personUuid));
-        named.setId(personUuid);
-        named.setName(agentName);
-        publicationPart.setId(UUID.randomUUID().toString());
-        publicationPart.setAgent(agentLink);
-
-        Map<String, String> workLink = new HashMap<>();
-        workLink.put("@id", work.getId());
-        publicationPart.setPublicationOf(workLink);
-
-        returnValue.put("publicationPartLink", publicationPart.getId());
-        returnValue.put("publicationPart", publicationPart);
-        returnValue.put("person", named);
-        return returnValue;
-    }
-
     private String asBlankNodeId(String id) {
         return "_:" + id;
     }
 
-    private Map<String, Object> composeWork(String mainTitle) {
-        Map<String, Object> returnValue = new HashMap<>();
-        final Work work = new Work();
-        work.setId(UUID.randomUUID().toString());
-        work.setMainTitle(mainTitle);
-        returnValue.put("publicationPartWorkLink", work.getId());
-        returnValue.put("work", work);
-        return returnValue;
-    }
 }

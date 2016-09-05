@@ -3,14 +3,20 @@ package no.deichman.services.entity.z3950;
 import com.google.gson.annotations.SerializedName;
 import org.apache.jena.vocabulary.RDF;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.google.common.collect.ImmutableMap.of;
 
 /**
  * Responsibility: create a basic bibliographic object.
  */
 class BibliographicObjectExternal extends ExternalDataObject {
 
+    @SerializedName("deichman:contributor")
+    protected List<Map<String, String>> contributor;
     @SerializedName("deichman:publicationYear")
     private String publicationYear;
 
@@ -83,5 +89,12 @@ class BibliographicObjectExternal extends ExternalDataObject {
 
     public final void setOrdinal(String ordinal) {
         this.ordinal = ordinal;
+    }
+
+    public void addContributon(Contribution contribution) {
+        if (this.contributor == null) {
+            this.contributor = new ArrayList<>();
+        }
+        this.contributor.add(of("@id", contribution.getId()));
     }
 }

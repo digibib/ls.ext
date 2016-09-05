@@ -3,7 +3,6 @@ package no.deichman.services.entity.z3950;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +13,6 @@ import static com.google.common.collect.ImmutableMap.of;
  */
 @SuppressWarnings("checkstyle:DesignForExtension")
 public class Work extends BibliographicObjectExternal {
-    @SerializedName("deichman:contributor")
-    private Map<String, String> contributor;
-
     @SerializedName("deichman:hasSummary")
     private String summary;
 
@@ -42,16 +38,6 @@ public class Work extends BibliographicObjectExternal {
         super(workId);
     }
 
-    public final Map<String, String> getContributor() {
-        return contributor;
-    }
-
-    public final void setContributor(String contributor) {
-        Map<String, String> contributionReference = new HashMap<>();
-        contributionReference.put("@id", contributor);
-        this.contributor = contributionReference;
-    }
-
     Work() {
     }
 
@@ -60,11 +46,10 @@ public class Work extends BibliographicObjectExternal {
         this.setType("deichman:Work");
     }
 
-    Work(String id, String title, String contributor) {
+    Work(String id, String title) {
         this.setId(id);
         this.setType("Work");
         this.setMainTitle(title);
-        this.setContributor(contributor);
     }
 
     public final void setHasSummary(String summary) {
@@ -89,28 +74,28 @@ public class Work extends BibliographicObjectExternal {
         this.literaryForm.add(literaryForm);
     }
 
-    public final void addSubject(String subjectId) {
+    public final void addSubject(ExternalDataObject subject) {
         if (this.subjects == null) {
             this.subjects = new ArrayList<>();
         }
-        this.subjects.add(of("@id", subjectId));
+        this.subjects.add(of("@id", subject.getId()));
     }
 
-    public final void addGenre(String genreId) {
+    public final void addGenre(ExternalDataObject genre) {
         if (this.genres == null) {
             this.genres = new ArrayList<>();
         }
-        this.genres.add(of("@id", genreId));
+        this.genres.add(of("@id", genre.getId()));
     }
 
     public final void setMissingMainEntry(boolean missingMainEntry) {
         this.missingMainEntry = missingMainEntry;
     }
 
-    public void isRelatedTo(String workRelationId) {
+    public void isRelatedTo(WorkRelation workRelationId) {
         if (this.isRelatedTo == null) {
             this.isRelatedTo = new ArrayList<>();
         }
-        this.isRelatedTo.add(of("@id", workRelationId));
+        this.isRelatedTo.add(of("@id", workRelationId.getId()));
     }
 }

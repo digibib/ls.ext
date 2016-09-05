@@ -2,9 +2,6 @@
   {
     "@graph": [
       {
-        "deichman:contributor": {
-          "@id": "_:0000000"
-        },
         "deichman:hasSummary": "Eksempel Eksempelsens tredje, selv-biografisk roman, sørger for tung lesing samt behov for suppe. Det er ingen tvil om at denne blir en norsk klassiker som kan måles opp mot blant annet Karsten og Petra har Lucia-fest.",
         "deichman:audience": [
           {
@@ -89,6 +86,9 @@
         "deichman:isRelatedTo": [
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:partNumber": "Book 2",
@@ -108,15 +108,10 @@
         },
         "deichman:publisher": "_:0000000",
         "deichman:numberOfPages": "191 s.",
-        "deichman:contributor": [
+        "deichman:hasPublicationPart": [
           {
             "@id": "_:0000000"
           },
-          {
-            "@id": "_:0000000"
-          }
-        ],
-        "deichman:hasPublicationPart": [
           {
             "@id": "_:0000000"
           }
@@ -142,6 +137,26 @@
               "@id": "_:0000000"
             },
             "@type": "deichman:SerialIssue"
+          }
+        ],
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:publicationYear": "2007",
@@ -191,17 +206,6 @@
         "@id": "_:0000000"
       },
       {
-        "deichman:birthYear": "1931",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
-        "deichman:name": "Eksempelsen, Eksempel",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
-      },
-      {
         "@type": [
           "deichman:Subject"
         ],
@@ -209,48 +213,16 @@
         "deichman:prefLabel": "Fortellinger"
       },
       {
-        "deichman:birthYear": "1872",
-        "deichman:deathYear": "1957",
-        "deichman:ordinal": "VII",
-        "deichman:name": "Haakon",
-        "@type": [
-          "deichman:Person"
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          }
         ],
-        "@id": "_:0000000",
-        "deichman:specification": "konge av Norge",
-        "deichman:alternativeName": "Christian Frederik Carl Georg Valdemar Axel"
-      },
-      {
-        "deichman:birthYear": "1564",
-        "deichman:deathYear": "1616",
-        "deichman:name": "Shakespeare, William",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "deichman:contributor": {
-          "@id": "_:0000000"
-        },
         "deichman:mainTitle": "Hamlet",
         "@type": [
           "Work"
         ],
         "@id": "_:0000000"
-      },
-      {
-        "deichman:birthYear": "1910",
-        "deichman:deathYear": "1993",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
-        "deichman:name": "Hermansen, Peder Gunvald",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000",
-        "deichman:specification": "jurist og byoriginal"
       },
       {
         "@type": [
@@ -260,7 +232,7 @@
         "deichman:prefLabel": "Oslo"
       },
       {
-        "deichman:subdivision": "Exxon Valdez",
+        "deichman:subdivision": "Exxon Subject",
         "deichman:place": {
           "@id": "_:0000000"
         },
@@ -305,6 +277,9 @@
         },
         "deichman:date": "1982",
         "deichman:number": "2",
+        "@type": [
+          "deichman:Event"
+        ],
         "@id": "_:0000000",
         "deichman:specification": "VM i fotball",
         "deichman:prefLabel": "FIFA World Cup"
@@ -378,6 +353,96 @@
         "deichman:prefLabel": "Biografisk"
       },
       {
+        "deichman:mainTitle": "Den originale julefortelling",
+        "@type": [
+          "Work"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "@type": "deichman:WorkRelation",
+        "deichman:hasRelationType": {
+          "@id": "http://data.deichman.no/relationType#basedOn"
+        },
+        "@id": "_:0000000",
+        "deichman:work": {
+          "@id": "_:0000000"
+        }
+      },
+      {
+        "deichman:mainTitle": "Oil, oil everywhere",
+        "@type": [
+          "Work"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "@type": "deichman:WorkRelation",
+        "deichman:hasRelationType": {
+          "@id": "http://data.deichman.no/relationType#basedOn"
+        },
+        "@id": "_:0000000",
+        "deichman:work": {
+          "@id": "_:0000000"
+        }
+      },
+      {
+        "deichman:birthYear": "1931",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#n"
+        },
+        "deichman:name": "Eksempelsen, Eksempel",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:birthYear": "1899",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#n"
+        },
+        "deichman:name": "Eksempelsen, Eksempel senior",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:birthYear": "1872",
+        "deichman:deathYear": "1957",
+        "deichman:ordinal": "VII",
+        "deichman:name": "Haakon",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "konge av Norge",
+        "deichman:alternativeName": "Christian Frederik Carl Georg Valdemar Axel"
+      },
+      {
+        "deichman:birthYear": "1564",
+        "deichman:deathYear": "1616",
+        "deichman:name": "Shakespeare, William",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:birthYear": "1910",
+        "deichman:deathYear": "1993",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#n"
+        },
+        "deichman:name": "Hermansen, Peder Gunvald",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "jurist og byoriginal"
+      },
+      {
         "deichman:name": "Jimson Jimson",
         "@type": [
           "deichman:Person"
@@ -397,31 +462,16 @@
         "@id": "_:0000000"
       },
       {
+        "deichman:birthYear": "1808",
+        "deichman:deathYear": "1899",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#eng"
+        },
         "deichman:name": "Tom Clancford",
         "@type": [
           "deichman:Person"
         ],
         "@id": "_:0000000"
-      },
-      {
-        "deichman:contributor": {
-          "@id": "_:0000000"
-        },
-        "deichman:mainTitle": "Den originale julefortelling",
-        "@type": [
-          "Work"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "@type": "deichman:WorkRelation",
-        "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#basedOn"
-        },
-        "@id": "_:0000000",
-        "deichman:work": {
-          "@id": "_:0000000"
-        }
       },
       {
         "deichman:name": "Capote, Truman",
@@ -430,17 +480,6 @@
         ],
         "@id": "_:0000000",
         "deichman:specification": "real name Truman Streckfus Persons"
-      },
-      {
-        "deichman:birthYear": "1931",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
-        "deichman:name": "Eksempelsen, Eksempel",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
       },
       {
         "deichman:subdivision": "Aktivum",
@@ -453,6 +492,24 @@
         ],
         "@id": "_:0000000",
         "deichman:specification": "Et norsk statlig eid kringkastingsselskap som kringkaster innen radio, fjernsyn og nye medier."
+      },
+      {
+        "deichman:subdivision": "Exxon Publicationpart",
+        "deichman:name": "Exxon",
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "skip"
+      },
+      {
+        "deichman:subdivision": "Exxon Contributor",
+        "deichman:name": "Exxon",
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "skip"
       },
       {
         "deichman:agent": {
@@ -485,7 +542,28 @@
           "@id": "_:0000000"
         },
         "deichman:role": {
+          "@id": "http://data.deichman.no/role#contributor"
+        },
+        "@type": [
+          "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
           "@id": "http://data.deichman.no/role#illustrator"
+        },
+        "@type": [
+          "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
         },
         "@type": [
           "deichman:Contribution"
@@ -505,10 +583,17 @@
         "@id": "_:0000000"
       },
       {
-        "deichman:improperWork": false,
-        "deichman:publicationOf": {
+        "deichman:agent": {
           "@id": "_:0000000"
         },
+        "@type": [
+          "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:improperWork": false,
+        "deichman:mainTitle": "En julefortelling",
         "deichman:agent": {
           "@id": "_:0000000"
         },
@@ -521,9 +606,16 @@
         "@id": "_:0000000"
       },
       {
-        "deichman:mainTitle": "En julefortelling",
+        "deichman:improperWork": false,
+        "deichman:mainTitle": "Sunken ships in the horizon",
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#author"
+        },
         "@type": [
-          "deichman:Work"
+          "deichman:PublicationPart"
         ],
         "@id": "_:0000000"
       }

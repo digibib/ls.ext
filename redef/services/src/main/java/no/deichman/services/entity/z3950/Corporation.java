@@ -27,8 +27,8 @@ public class Corporation extends Named {
         setName(name);
     }
 
-    public final void setPlace(String placeId) {
-        this.place = of("@id", placeId);
+    public final void setPlace(ExternalDataObject place) {
+        this.place = of("@id", place.getId());
     }
 
     public void setSubdivision(String subdivision) {

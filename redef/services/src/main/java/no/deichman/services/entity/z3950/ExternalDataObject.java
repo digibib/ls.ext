@@ -15,6 +15,7 @@ public class ExternalDataObject implements Labeled {
     }
 
     public ExternalDataObject(String id, String prefLabel) {
+        this();
         setId(id);
         setPrefLabel(prefLabel);
     }
@@ -36,14 +37,6 @@ public class ExternalDataObject implements Labeled {
     @SerializedName("deichman:prefLabel")
     private String prefLabel;
 
-    public final String bNodize(String id) {
-        String value = id;
-        if (!testBNodeId(id)) {
-            value = "_:" + id;
-        }
-        return value;
-    }
-
     public final List<String> getType() {
         return type;
     }
@@ -62,7 +55,7 @@ public class ExternalDataObject implements Labeled {
     }
 
     public final void setId(String id) {
-        this.id = bNodize(id);
+        this.id = id;
     }
 
     public final String getId() {

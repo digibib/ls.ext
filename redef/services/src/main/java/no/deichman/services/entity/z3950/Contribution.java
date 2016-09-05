@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
 
+import static com.google.common.collect.ImmutableMap.of;
+
 /**
  * Responsibility: provide contribution object.
  */
@@ -15,10 +17,15 @@ public class Contribution extends ExternalDataObject {
 
     @SerializedName("deichman:role")
     private ExternalDataObject role;
-    @SerializedName("deichman:ordinal")
-    private String ordinal;
 
-    Contribution() {}
+    public Contribution(Named contributor, String id) {
+        agent = of("@id", contributor.getId());
+        this.setId(id);
+    }
+
+    public Contribution() {
+
+    }
 
     @Override
     protected void assignType() {
@@ -29,8 +36,8 @@ public class Contribution extends ExternalDataObject {
         return agent;
     }
 
-    public final void setAgent(Map<String, String> agent) {
-        this.agent = agent;
+    public final void setAgent(Named agent) {
+        this.agent = of("@id", agent.getId());
     }
 
     public final ExternalDataObject getRole() {
@@ -39,9 +46,5 @@ public class Contribution extends ExternalDataObject {
 
     public final void setRole(ExternalDataObject role) {
         this.role = role;
-    }
-
-    public final void setOrdinal(String ordinal) {
-        this.ordinal = ordinal;
     }
 }

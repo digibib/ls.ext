@@ -41,7 +41,7 @@ public class MARCMapperTest extends MappingTester {
 
     private void checkMapping(String marcXmlFile, String jsonFile) {
         String marc = new ResourceReader().readFile(marcXmlFile);
-        List<Object> mapping = new MARCMapper().getMapping(marc);
+        List<Object> mapping = new MARCMapper(true).getMapping(marc);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         assertEquals(simplifyBNodes(new ResourceReader().readFile(jsonFile)), simplifyBNodes(gson.toJson(mapping)));
         assertThat(simplifyBNodes(new ResourceReader().readFile(jsonFile)),

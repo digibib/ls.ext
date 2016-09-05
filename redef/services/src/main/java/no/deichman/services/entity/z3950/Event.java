@@ -28,8 +28,8 @@ public class Event extends ExternalDataObject {
         setType("deichman:Event");
     }
 
-    public final void setPlace(String placeId) {
-        this.place = of("@id", placeId);
+    public final void setPlace(ExternalDataObject place) {
+        this.place = of("@id", place.getId());
     }
 
     public final void setDate(String date) {

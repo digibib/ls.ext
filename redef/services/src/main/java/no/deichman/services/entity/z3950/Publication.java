@@ -36,9 +36,6 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:language")
     private String language;
 
-    @SerializedName("deichman:contributor")
-    private List<Map<String, String>> contributor;
-
     @SerializedName("deichman:hasPublicationPart")
     private List<Map<String, String>> hasPublicationPart;
 
@@ -78,8 +75,8 @@ public class Publication extends BibliographicObjectExternal {
         this.edition = edition;
     }
 
-    final void setPlaceOfPublication(String placeId) {
-        this.placeOfPublication = of("@id", placeId);
+    final void setPlaceOfPublication(ExternalDataObject placeOfPublication) {
+        this.placeOfPublication = of("@id", placeOfPublication.getId());
     }
 
     public final String getPublisher() {
@@ -106,30 +103,15 @@ public class Publication extends BibliographicObjectExternal {
         this.language = language;
     }
 
-    final List<Map<String, String>> getContributor() {
-        return contributor;
-    }
-
     final Map<String, String> getPublicationOf() {
         return this.publicationOf;
     }
 
-    final void setContributor(String publicationContributor) {
-        Map<String, String> contribution = new HashMap<>();
-        contribution.put("@id", publicationContributor);
-        if (contributor == null) {
-            contributor = new ArrayList<>();
-        }
-        contributor.add(contribution);
-    }
-
-    final void addPublicationPart(String publicationPartId) {
-        Map<String, String> publicationPart = new HashMap<>();
-        publicationPart.put("@id", publicationPartId);
+    final void addPublicationPart(PublicationPart publicationPart) {
         if (hasPublicationPart == null) {
             hasPublicationPart = new ArrayList<>();
         }
-        hasPublicationPart.add(publicationPart);
+        hasPublicationPart.add(of("@id", publicationPart.getId()));
     }
 
     Publication() {
@@ -140,10 +122,8 @@ public class Publication extends BibliographicObjectExternal {
         this.setType("deichman:Publication");
     }
 
-    final void setPublicationOf(String publicationOf) {
-        Map<String, String> map = new HashMap<>();
-        map.put("@id", this.bNodize(publicationOf));
-        this.publicationOf = map;
+    final void setPublicationOf(Work work) {
+        this.publicationOf = of("@id", work.getId());
     }
 
     public final void setFormat(ExternalDataObject format) {
@@ -172,4 +152,5 @@ public class Publication extends BibliographicObjectExternal {
         }
         this.serial.add(serial);
     }
+
 }

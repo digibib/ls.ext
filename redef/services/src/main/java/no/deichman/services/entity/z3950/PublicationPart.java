@@ -22,10 +22,11 @@ public class PublicationPart extends Contribution {
     @SerializedName("deichman:publicationOf")
     private Map<String, String> publicationOf;
 
-    @SerializedName("deichman:hasOriginalTitle")
-    private String hasOriginalTitle;
+    @SerializedName("deichman:mainTitle")
+    private String mainTitle;
 
-    PublicationPart() {
+    public PublicationPart(Named contributor, String id) {
+        super(contributor, id);
     }
 
     @Override
@@ -33,12 +34,12 @@ public class PublicationPart extends Contribution {
         this.setType("deichman:PublicationPart");
     }
 
-    public final String getHasOriginalTitle() {
-        return hasOriginalTitle;
+    public final String getMainTitle() {
+        return mainTitle;
     }
 
-    public final void setHasOriginalTitle(String hasOriginalTitle) {
-        this.hasOriginalTitle = hasOriginalTitle;
+    public final void setMainTitle(String mainTitle) {
+        this.mainTitle = mainTitle;
     }
 
     public final boolean isImproperWork() {
