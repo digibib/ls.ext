@@ -56,18 +56,17 @@ class Search extends React.Component {
         <section className="pagination-area"
                  data-automation-id="search-results-pagination">
           <nav aria-label={this.props.intl.formatMessage(messages.paginationLabel)}>
-            <ReactPaginate
-              previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
-              nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
-              breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
-              forceSelected={this.props.location.query.page - 1 || 0}
-              marginPagesDisplayed={1}
-              pageRangeDisplayed={5}
-              pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
-              clickCallback={this.handlePageClick}
-              containerClassName={'pagination'}
-              subContainerClassName={'pages pagination'}
-              activeClassName={'active'} />
+            <ReactPaginate previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
+                           nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
+                           breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
+                           forceSelected={this.props.location.query.page - 1 || 0}
+                           marginPagesDisplayed={1}
+                           pageRangeDisplayed={5}
+                           pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
+                           clickCallback={this.handlePageClick}
+                           containerClassName={'pagination'}
+                           subContainerClassName={'pages pagination'}
+                           activeClassName={'active'} />
           </nav>
         </section>
       )
