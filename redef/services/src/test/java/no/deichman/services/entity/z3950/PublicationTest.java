@@ -25,7 +25,7 @@ public class PublicationTest {
     public void can_set_all_fields() {
         Publication publication = new Publication();
         String binding = "ib.";
-        String placeOfPublication = "Oslo";
+        String placeOfPublicationId = "http://data.deichman.no/places#oslo";
         String isbn = "978-009-11-1232-1";
         String edition = "1. utgave";
         String language = "en";
@@ -40,7 +40,7 @@ public class PublicationTest {
         contributorList.add(contribution);
 
         publication.setBinding(binding);
-        publication.setPlaceOfPublication(placeOfPublication);
+        publication.setPlaceOfPublication(placeOfPublicationId);
         publication.setIsbn(isbn);
         publication.setEdition(edition);
         publication.setLanguage(language);
@@ -51,7 +51,7 @@ public class PublicationTest {
         publication.setContributor(contributor);
 
         assertEquals(binding, publication.getBinding());
-        assertEquals(placeOfPublication, publication.getPlaceOfPublication());
+        assertEquals(placeOfPublicationId, publication.getPlaceOfPublication().get("@id"));
         assertEquals(isbn, publication.getIsbn());
         assertEquals(edition, publication.getEdition());
         assertEquals(language, publication.getLanguage());

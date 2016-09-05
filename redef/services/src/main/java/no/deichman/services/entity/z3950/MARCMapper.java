@@ -32,7 +32,9 @@ public class MARCMapper {
     public static final int THIRTY_THREE = 33;
     public static final String SUBJECT_TYPE = "deichman:Subject";
     public static final String GENRE_TYPE = "deichman:Genre";
+    public static final String PERSON_TYPE = "deichman:Person";
     public static final String PLACE_TYPE = "deichman:Place";
+    private static final String CORPORATION_TYPE = "deichman:Corporation";
 
     public MARCMapper() {
     }
@@ -142,8 +144,12 @@ public class MARCMapper {
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setEdition);
                     break;
                 case "260":
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setPlaceOfPublication);
-                    getSubfieldValue(dataField, 'b').ifPresent(publication::setPublisher);
+                    getSubfieldValue(dataField, 'a').ifPresent(place -> {
+                        addExternalObject(graphList, place, PLACE_TYPE, publication::setPlaceOfPublication);
+                    });
+                    getSubfieldValue(dataField, 'b').ifPresent(publisher -> {
+                        addExternalObject(graphList, publisher, CORPORATION_TYPE, publication::setPublisher);
+                    });
                     getSubfieldValue(dataField, 'c').ifPresent(publication::setPublicationYear);
                     break;
                 case "300":

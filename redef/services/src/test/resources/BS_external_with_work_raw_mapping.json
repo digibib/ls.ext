@@ -77,8 +77,10 @@
       {
         "deichman:isbn": "000-12-345-678-9",
         "deichman:edition": "1. utg.",
-        "deichman:placeOfPublication": "Oslo",
-        "deichman:publisher": "Oktober",
+        "deichman:placeOfPublication": {
+          "@id": "_:0000000"
+        },
+        "deichman:publisher": "_:0000000",
         "deichman:numberOfPages": "191 s.",
         "deichman:contributor": [
           {
@@ -113,6 +115,20 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Oslo"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Oslo"
+      },
+      {
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Oktober"
       },
       {
         "deichman:birthYear": "1931",

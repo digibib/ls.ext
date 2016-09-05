@@ -27,8 +27,10 @@
       },
       {
         "deichman:isbn": "978-82-8205-594-9",
-        "deichman:placeOfPublication": "Oslo",
-        "deichman:publisher": "Juritzen",
+        "deichman:placeOfPublication": {
+          "@id": "_:0000000"
+        },
+        "deichman:publisher": "_:0000000",
         "deichman:numberOfPages": "677 s.",
         "deichman:contributor": [
           {
@@ -47,6 +49,20 @@
         "@type": [
           "deichman:Publication"
         ]
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Oslo"
+      },
+      {
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Juritzen"
       },
       {
         "deichman:birthYear": "1971",

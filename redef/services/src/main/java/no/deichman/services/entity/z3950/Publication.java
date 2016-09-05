@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.ImmutableMap.of;
+
 /**
  * Responsibility: provide object for publications.
  */
@@ -23,7 +25,7 @@ public class Publication extends BibliographicObjectExternal {
     private String edition;
 
     @SerializedName("deichman:placeOfPublication")
-    private String placeOfPublication;
+    private Map<String, String> placeOfPublication;
 
     @SerializedName("deichman:publisher")
     private String publisher;
@@ -70,12 +72,8 @@ public class Publication extends BibliographicObjectExternal {
         this.edition = edition;
     }
 
-    final String getPlaceOfPublication() {
-        return placeOfPublication;
-    }
-
-    final void setPlaceOfPublication(String placeOfPublication) {
-        this.placeOfPublication = placeOfPublication;
+    final void setPlaceOfPublication(String placeId) {
+        this.placeOfPublication = of("@id", placeId);
     }
 
     public final String getPublisher() {
@@ -151,4 +149,7 @@ public class Publication extends BibliographicObjectExternal {
     }
 
 
+    public Map<String, String> getPlaceOfPublication() {
+        return placeOfPublication;
+    }
 }
