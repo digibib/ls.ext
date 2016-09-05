@@ -11,8 +11,18 @@ import java.util.Map;
  */
 class BibliographicObjectExternal extends ExternalDataObject {
 
+    @SerializedName("deichman:publicationYear")
+    private String publicationYear;
+
+    @SerializedName("deichman:partNumber")
+    private String partNumber;
+
+    @SerializedName("deichman:partTitle")
+    private String partTitle;
+
     @SerializedName("deichman:mainTitle")
     private String mainTitle;
+
     @SerializedName("deichman:subtitle")
     private String subtitle;
 
@@ -49,4 +59,19 @@ class BibliographicObjectExternal extends ExternalDataObject {
         this.subtitle = subtitle;
     }
 
+    public final void setPublicationYear(String publicationYear) {
+        this.publicationYear = publicationYear;
+    }
+
+    public final void setPartNumber(String partNumber) {
+        this.partNumber = partNumber;
+    }
+
+    public final void setPartTitle(String partTitle) {
+        this.partTitle = partTitle;
+    }
+
+    public final String getPublicationYear() {
+        return publicationYear;
+    }
 }

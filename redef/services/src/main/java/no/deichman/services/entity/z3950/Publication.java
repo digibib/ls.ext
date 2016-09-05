@@ -28,9 +28,6 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:publisher")
     private String publisher;
 
-    @SerializedName("deichman:publicationYear")
-    private String publicationYear;
-
     @SerializedName("deichman:numberOfPages")
     private String numberOfPages;
 
@@ -87,14 +84,6 @@ public class Publication extends BibliographicObjectExternal {
 
     public final void setPublisher(String publisher) {
         this.publisher = publisher;
-    }
-
-    public final String getPublicationYear() {
-        return publicationYear;
-    }
-
-    public final void setPublicationYear(String publicationYear) {
-        this.publicationYear = publicationYear;
     }
 
     final String getNumberOfPages() {

@@ -126,28 +126,17 @@ public class MARCMapper {
                     contributions.add(workContribution1[0]);
                     break;
                 case "130":
-                    setWorkDataFromDataField(dataField, work);
+                    setBibliographicDataFromDataField(dataField, work);
                     work.setMissingMainEntry(true);
                     break;
                 case "240":
-                    setWorkDataFromDataField(dataField, work);
+                    setBibliographicDataFromDataField(dataField, work);
                     break;
                 case "245":
-                    boolean standardTitleExists = r.getVariableFields("240").size() != 0;
-
-                    getSubfieldValue(dataField, 'a').ifPresent(s -> {
-                        publication.setMainTitle(s);
-                        if (!standardTitleExists) {
-                            work.setMainTitle(s);
-                        }
-                    });
-
-                    getSubfieldValue(dataField, 'b').ifPresent(s -> {
-                        publication.setSubtitle(s);
-                        if (!standardTitleExists) {
-                            work.setSubtitle(s);
-                        }
-                    });
+                    setBibliographicDataFromDataField(dataField, publication);
+                    if (r.getVariableFields("240").isEmpty()) {
+                        setBibliographicDataFromDataField(dataField, work);
+                    }
                     break;
                 case "250":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setEdition);
@@ -263,12 +252,12 @@ public class MARCMapper {
         return topLevelMap;
     }
 
-    private void setWorkDataFromDataField(DataField dataField, Work work) {
-        getSubfieldValue(dataField, 'a').ifPresent(work::setMainTitle);
-        getSubfieldValue(dataField, 'b').ifPresent(work::setSubtitle);
-        getSubfieldValue(dataField, 'f').ifPresent(work::setPublicationYear);
-        getSubfieldValue(dataField, 'n').ifPresent(work::setPartNumber);
-        getSubfieldValue(dataField, 'p').ifPresent(work::setPartTitle);
+    private void setBibliographicDataFromDataField(DataField dataField, BibliographicObjectExternal bibliographicObjectExternal) {
+        getSubfieldValue(dataField, 'a').ifPresent(bibliographicObjectExternal::setMainTitle);
+        getSubfieldValue(dataField, 'b').ifPresent(bibliographicObjectExternal::setSubtitle);
+        getSubfieldValue(dataField, 'f').ifPresent(bibliographicObjectExternal::setPublicationYear);
+        getSubfieldValue(dataField, 'n').ifPresent(bibliographicObjectExternal::setPartNumber);
+        getSubfieldValue(dataField, 'p').ifPresent(bibliographicObjectExternal::setPartTitle);
     }
 
     private void mapPrimaryAndSubDivisionSubject(

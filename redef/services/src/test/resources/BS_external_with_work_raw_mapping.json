@@ -79,7 +79,6 @@
         "deichman:edition": "1. utg.",
         "deichman:placeOfPublication": "Oslo",
         "deichman:publisher": "Oktober",
-        "deichman:publicationYear": "2007",
         "deichman:numberOfPages": "191 s.",
         "deichman:contributor": [
           {
@@ -100,6 +99,8 @@
         "deichman:format": {
           "@id": "http://data.deichman.no/format#Book"
         },
+        "deichman:publicationYear": "2007",
+        "deichman:partNumber": "Andre bok",
         "deichman:mainTitle": "Et eksempel",
         "deichman:subtitle": "roman",
         "@type": [

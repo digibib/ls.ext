@@ -13,10 +13,10 @@
             "@id": "http://data.deichman.no/literaryForm#nonfiction"
           }
         ],
+        "deichman:missingMainEntry": true,
         "deichman:publicationYear": "1858",
         "deichman:partNumber": "1",
         "deichman:partTitle": "NT",
-        "deichman:missingMainEntry": true,
         "deichman:mainTitle": "Det Nye testamentet",
         "deichman:subtitle": "ny oversettelse : tekstene slik de opprinnelig ble skrevet",
         "@type": [
@@ -29,7 +29,6 @@
         "deichman:isbn": "978-82-8205-594-9",
         "deichman:placeOfPublication": "Oslo",
         "deichman:publisher": "Juritzen",
-        "deichman:publicationYear": "cop. 2015",
         "deichman:numberOfPages": "677 s.",
         "deichman:contributor": [
           {
@@ -42,6 +41,7 @@
         "deichman:format": {
           "@id": "http://data.deichman.no/format#Book"
         },
+        "deichman:publicationYear": "cop. 2015",
         "deichman:mainTitle": "Det Nye testamentet",
         "deichman:subtitle": "ny oversettelse : tekstene slik de opprinnelig ble skrevet",
         "@type": [

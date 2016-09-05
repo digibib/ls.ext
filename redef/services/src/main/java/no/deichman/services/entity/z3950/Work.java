@@ -32,15 +32,6 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:genre")
     private List<Map<String, String>> genres;
 
-    @SerializedName("deichman:publicationYear")
-    private String publicationYear;
-
-    @SerializedName("deichman:partNumber")
-    private String partNumber;
-
-    @SerializedName("deichman:partTitle")
-    private String partTitle;
-
     @SerializedName("deichman:missingMainEntry")
     private Boolean missingMainEntry;
 
@@ -91,33 +82,21 @@ public class Work extends BibliographicObjectExternal {
         this.literaryForm.add(literaryForm);
     }
 
-    public void addSubject(String subjectId) {
+    public final void addSubject(String subjectId) {
         if (this.subjects == null) {
             this.subjects = new ArrayList<>();
         }
         this.subjects.add(of("@id", subjectId));
     }
 
-    public void addGenre(String genreId) {
+    public final void addGenre(String genreId) {
         if (this.genres == null) {
             this.genres = new ArrayList<>();
         }
         this.genres.add(of("@id", genreId));
     }
 
-    public void setPublicationYear(String publicationYear) {
-        this.publicationYear = publicationYear;
-    }
-
-    public void setPartNumber(String partNumber) {
-        this.partNumber = partNumber;
-    }
-
-    public void setPartTitle(String partTitle) {
-        this.partTitle = partTitle;
-    }
-
-    public void setMissingMainEntry(boolean missingMainEntry) {
+    public final void setMissingMainEntry(boolean missingMainEntry) {
         this.missingMainEntry = missingMainEntry;
     }
 }
