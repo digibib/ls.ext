@@ -45,22 +45,23 @@ CONSTRUCT {
 }
 WHERE {
   BIND(uri("__PUBLICATIONURI__") AS ?pub)
+
   ?pub a deich:Publication ;
        deich:publicationOf ?work ;
        deich:recordID ?recordId .
 
   BIND(str(?work) AS ?workUri )
 
-  OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
-  OPTIONAL { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
+  { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
+  UNION { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
 
-  OPTIONAL {
+  UNION {
       ?p deich:publicationOf ?work .
       ?work deich:hasClassification ?classEntry .
       ?classEntry deich:hasClassificationNumber ?dewey .
   }
 
-  OPTIONAL {
+  UNION {
     ?p deich:publicationOf ?work ;
        deich:mainTitle ?norwegianMainTitle ;
        deich:language <http://lexvo.org/id/iso639-3/nob> .
@@ -72,7 +73,7 @@ WHERE {
     BIND(IF(BOUND(?norwegianPartTitle), CONCAT(?norwegianMainTitle, " — ", ?norwegianPartTitle), ?norwegianMainTitle) AS ?norwegianTitle)
   }
 
-  OPTIONAL {
+  UNION {
     ?p2 deich:publicationOf ?work ;
        deich:mainTitle ?englishMainTitle ;
        deich:language <http://lexvo.org/id/iso639-3/eng> .
@@ -84,12 +85,12 @@ WHERE {
         BIND(IF(BOUND(?englishPartTitle), CONCAT(?englishMainTitle, " — ", ?englishPartTitle), ?englishMainTitle) AS ?norwegianTitle)
   }
 
-  OPTIONAL {
+  UNION {
       ?p3 deich:publicationOf ?work ;
          deich:hasImage ?allImg .
     }
 
-  OPTIONAL {
+  UNION {
         ?p4 deich:publicationOf ?work ;
            deich:mediaType ?mediaType .
         OPTIONAL {
@@ -98,7 +99,7 @@ WHERE {
         }
       }
 
-  OPTIONAL {
+  UNION {
     {
       ?work deich:subject ?subject .
       ?subject a deich:Subject ;
@@ -115,12 +116,12 @@ WHERE {
       ?work deich:subject ?subject .
       ?subject a deich:Person ;
               deich:name ?subjectName  .
-    }
-    OPTIONAL { ?work deich:subject ?subject . ?subject deich:specification ?subjectSpec }
+    } UNION
+    { ?work deich:subject ?subject . ?subject deich:specification ?subjectSpec }
     BIND(IF(BOUND(?subjectSpec), CONCAT(?subjectName, " (", ?subjectSpec, ")"), ?subjectName) AS ?subjectLabel)
   }
 
-  OPTIONAL {
+  UNION {
       ?work deich:genre ?genre .
       ?genre a deich:Genre ;
             deich:prefLabel ?genreName  .
@@ -128,10 +129,11 @@ WHERE {
       BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
     }
 
-  OPTIONAL { ?pub deich:mainTitle ?pubMainTitle }
-  OPTIONAL { ?pub deich:partTitle ?pubPartTitle }
-  OPTIONAL { ?pub deich:hasHoldingBranch ?branch }
-  OPTIONAL {
+  UNION { ?pub deich:mainTitle ?pubMainTitle }
+  UNION { ?pub deich:partTitle ?pubPartTitle }
+  UNION { ?pub deich:hasHoldingBranch ?branch }
+  UNION {
+
              { ?pub deich:contributor ?contrib } UNION { ?work deich:contributor ?contrib }
              ?contrib a deich:Contribution ;
                       deich:agent ?contribAgent ;
@@ -149,22 +151,23 @@ WHERE {
              }
   }
 
-  OPTIONAL { ?pub deich:inSerial ?serialBnode .
+  UNION { ?pub deich:inSerial ?serialBnode .
              ?serialBnode deich:serial ?serial .
              ?serial deich:mainTitle ?seriesTitle . }
 
-  OPTIONAL { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }
-  OPTIONAL { ?contribAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?contribAgentDeathYear) }
+  UNION { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }
+  UNION { ?contribAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?contribAgentDeathYear) }
 
-  OPTIONAL { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
-  OPTIONAL { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
-  OPTIONAL { ?pub deich:format ?formatURI .
+  UNION { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
+  UNION { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
+  UNION { ?pub deich:format ?formatURI .
              ?formatURI rdfs:label ?formatNoLang .
              BIND(str(?formatNoLang) AS ?formatNo)
              FILTER(lang(?formatNoLang) = "no") }
-  OPTIONAL { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
-  OPTIONAL { ?pub deich:hasImage ?img }
-  OPTIONAL { ?pub deich:abstract ?abstract }
-  OPTIONAL { ?pub deich:ageLimit ?maybeAgeLimit }
+  UNION { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
+  UNION { ?pub deich:hasImage ?img }
+  UNION { ?pub deich:abstract ?abstract }
+  UNION { ?pub deich:ageLimit ?maybeAgeLimit
   BIND(IF(BOUND(?maybeAgeLimit), ?maybeAgeLimit, "0") AS ?ageLimit)
+  }
 }
