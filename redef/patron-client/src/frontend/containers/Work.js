@@ -11,6 +11,8 @@ import Subjects from '../components/Subjects'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ParameterActions from '../actions/ParameterActions'
+import SearchFilterBox from '../components/SearchFilterBox'
+import {toggleFilter} from '../actions/SearchFilterActions'
 
 class Work extends React.Component {
   componentWillMount () {
@@ -91,6 +93,7 @@ class Work extends React.Component {
             <aside className="work-genres show-mobile hidden-tablet hidden-desktop">
               <Genres genres={work.genres} />
             </aside>
+            <SearchFilterBox toggleFilter={toggleFilter}/>
             <div className="work-excerpt">
               <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
                 id mauris maximus porta. In

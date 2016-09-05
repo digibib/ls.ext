@@ -12,6 +12,7 @@ import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
 import SearchResultsText from '../components/SearchResultsText'
+import SearchFilterBox from '../components/SearchFilterBox'
 
 class Search extends React.Component {
   constructor (props) {
@@ -55,7 +56,7 @@ class Search extends React.Component {
                  data-automation-id="search-results-pagination">
           <ReactPaginate previousLabel={'<'}
                          nextLabel={'>'}
-                         breakLabel={<li className="break"><span>...</span></li>}
+                         breakLabel={<span>...</span>}
                          forceSelected={this.props.location.query.page - 1 || 0}
                          marginPagesDisplayed={1}
                          pageRangeDisplayed={5}
@@ -80,6 +81,7 @@ class Search extends React.Component {
                                  totalHitsPublications={this.props.totalHitsPublications}
                                  locationQuery={this.props.locationQuery}
                                  isSearching={this.props.isSearching} />
+              <SearchFilterBox filters = {this.props.filters} toggleFilter={this.props.searchFilterActions.toggleFilter}/>
             </div>
             {this.props.totalHits > 0
               ? (<div className="search-sorting patron-placeholder">
