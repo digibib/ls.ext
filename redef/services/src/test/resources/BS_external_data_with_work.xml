@@ -125,6 +125,14 @@
             <subfield code="n">2</subfield>
             <subfield code="q">VM i fotball</subfield>
         </datafield>
+        <datafield tag="630" ind1=" " ind2="0">
+            <subfield code="a">Bibelen</subfield>
+            <subfield code="b">Fra Gud til menneske</subfield>
+            <subfield code="f">1858</subfield>
+            <subfield code="l">Norsk</subfield>
+            <subfield code="n">1</subfield>
+            <subfield code="p">NT</subfield>
+        </datafield>
         <datafield tag="650" ind1=" " ind2="1">
             <subfield code="a">Kulturminnevern</subfield>
             <subfield code="q">Ta vare på gamle ting</subfield>

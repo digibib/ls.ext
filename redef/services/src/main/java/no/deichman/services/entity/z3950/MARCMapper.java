@@ -245,6 +245,13 @@ public class MARCMapper {
                         addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
                     });
                     break;
+                case "630":
+                    String workAsSubjectId = asBlankNodeId(UUID.randomUUID().toString());
+                    Work work1 = new Work(workAsSubjectId);
+                    setBibliographicDataFromDataField(dataField, work1);
+                    work.addSubject(workAsSubjectId);
+                    graphList.add(work1);
+                    break;
                 case "650":
                     mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE, PLACE_TYPE, 'z');
                     break;

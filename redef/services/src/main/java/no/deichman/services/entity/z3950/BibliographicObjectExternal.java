@@ -28,6 +28,10 @@ class BibliographicObjectExternal extends ExternalDataObject {
     @SerializedName("deichman:ordinal")
     private String ordinal;
 
+    BibliographicObjectExternal(String id) {
+        setId(id);
+    }
+
     public final String getMainTitle() {
         return mainTitle;
     }

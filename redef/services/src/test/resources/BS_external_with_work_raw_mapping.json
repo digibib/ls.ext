@@ -70,6 +70,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -294,6 +297,17 @@
         "@id": "_:0000000",
         "deichman:specification": "VM i fotball",
         "deichman:prefLabel": "FIFA World Cup"
+      },
+      {
+        "deichman:publicationYear": "1858",
+        "deichman:partNumber": "1",
+        "deichman:partTitle": "NT",
+        "deichman:mainTitle": "Bibelen",
+        "deichman:subtitle": "Fra Gud til menneske",
+        "@type": [
+          "deichman:Work"
+        ],
+        "@id": "_:0000000"
       },
       {
         "@type": [

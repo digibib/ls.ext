@@ -35,6 +35,10 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:missingMainEntry")
     private Boolean missingMainEntry;
 
+    public Work(String workId) {
+        super(workId);
+    }
+
     public final Map<String, String> getContributor() {
         return contributor;
     }
