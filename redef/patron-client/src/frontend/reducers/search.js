@@ -10,7 +10,6 @@ const initialState = {
   searchError: false,
   inputQuery: ''
 }
-
 export default function search (state = initialState, action) {
   switch (action.type) {
     case RECEIVE_SEARCH:

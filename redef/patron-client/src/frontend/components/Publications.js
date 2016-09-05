@@ -7,6 +7,9 @@ import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
 import { getId, getFragment } from '../utils/uriParser'
 import ClickableElement from './ClickableElement'
+import { getCategorizedFilters } from '../utils/filterParser'
+import Constants from '../constants/Constants'
+import ShowFilteredPublicationsLabel from '../components/ShowFilteredPublicationsLabel'
 
 class Publications extends React.Component {
   componentWillMount () {
@@ -23,36 +26,90 @@ class Publications extends React.Component {
     )
   }
 
+  isArraysIntersecting (array1, array2) {
+    return array1.some((item) => array2.includes(item))
+  }
+
+  generatePublicationRows (publicationRows) {
+    return publicationRows.map((publications, row) => {
+      const showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
+      const output = [ <div key={`row-${row}`} className="row">{publications.map(publication => (
+        <Publication
+          startReservation={this.props.startReservation}
+          key={publication.id}
+          expandSubResource={this.props.expandSubResource}
+          publication={publication}
+          open={publication === showMorePublication}
+        />
+      ))}</div> ]
+      if (showMorePublication) {
+        output.push(
+          <div className="row" key={showMorePublication.id}>
+            <PublicationInfo expandSubResource={this.props.expandSubResource}
+                             publication={showMorePublication}
+                             startReservation={this.props.startReservation} />
+          </div>
+        )
+      }
+      return output
+    })
+  }
+
   renderPublications (publications, publicationsPerRow) {
     const publicationsCopy = [ ...publications ]
+    var filteredPublications = []
+    var filteredPublicationsRest = []
+    const filters = getCategorizedFilters(this.props.locationQuery)
+    if (filters.branch || filters.language || filters.format || filters.audience) {
+      publicationsCopy.forEach(publication => {
+        var formats = filters.format
+        var languages = filters.language
+        var audiences = filters.audience
+        var branches = []
+        if (filters.branch) {
+          filters.branch.forEach((branch) => {
+            branches.push(this.props.libraries[ branch ])
+          })
+        }
+        var branchesFromPublication = []
+        for (var i = 0; i < publication.items.length; i++) {
+          branchesFromPublication.push(publication.items[ i ].branch)
+        }
+        ((formats ? this.isArraysIntersecting(formats, publication.formats) : true) && (languages ? this.isArraysIntersecting(languages, publication.languages) : true) && (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true) && (audiences ? this.isArraysIntersecting(audiences, this.props.audiences) : true))
+          ? filteredPublications.push(publication) : filteredPublicationsRest.push(publication)
+      })
+    } else {
+      filteredPublications = publicationsCopy
+    }
     const publicationRows = []
-    while (publicationsCopy.length > 0) {
-      publicationRows.push(publicationsCopy.splice(0, publicationsPerRow))
+    const publicationRestRows = []
+    while (filteredPublications.length > 0) {
+      publicationRows.push(filteredPublications.splice(0, publicationsPerRow))
+    }
+    while (filteredPublicationsRest.length > 0) {
+      publicationRestRows.push(filteredPublicationsRest.splice(0, publicationsPerRow))
     }
     return (
       <section className="work-publications" data-automation-id="work_publications">
-        {publicationRows.map((publications, row) => {
-          const showMorePublication = publications.find(publication => getId(publication.uri) === this.props.locationQuery.showMore)
-          const output = [ <div key={`row-${row}`} className="row">{publications.map(publication => (
-            <Publication
-              startReservation={this.props.startReservation}
-              key={publication.id}
-              expandSubResource={this.props.expandSubResource}
-              publication={publication}
-              open={publication === showMorePublication}
-            />
-          ))}</div> ]
-          if (showMorePublication) {
-            output.push(
-              <div className="row" key={showMorePublication.id}>
-                <PublicationInfo expandSubResource={this.props.expandSubResource}
-                                 publication={showMorePublication} />
-              </div>
-            )
+        {this.generatePublicationRows(publicationRows)}
+        {(() => {
+          if (publicationRestRows.length > 0) {
+            const mediaType = Constants.mediaTypeIcons[ publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ] ]
+            const mediaTypeOutput = this.props.intl.formatMessage({ id: publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ] })
+            let showingRestLabel = <FormattedMessage {...messages.showRestOfPublications}
+                                                     values={{ mediaType: mediaTypeOutput }} />
+            const output = []
+            const showAll = Array.isArray(this.props.locationQuery.showAllResults) ? this.props.locationQuery.showAllResults : [ this.props.locationQuery.showAllResults ]
+            if (showAll.includes(mediaType)) {
+              output.push(this.generatePublicationRows(publicationRestRows))
+              showingRestLabel =
+                <FormattedMessage {...messages.hideRestOfPublications} values={{ mediaType: mediaTypeOutput }} />
+            }
+            output.push(<ShowFilteredPublicationsLabel open={showAll.includes(mediaType)} showingRestLabel={showingRestLabel} mediaType={mediaType}
+                                                       toggleParameterValue={this.props.toggleParameterValue} />)
+            return output
           }
-          return output
-        })
-        }
+        })()}
       </section>
     )
   }
@@ -194,7 +251,9 @@ Publications.propTypes = {
   toggleParameterValue: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
   workLanguage: PropTypes.string,
-  mediaQueryValues: PropTypes.object
+  mediaQueryValues: PropTypes.object,
+  libraries: PropTypes.object,
+  audiences: PropTypes.array.isRequired
 }
 
 const messages = defineMessages({
@@ -229,6 +288,16 @@ const messages = defineMessages({
     id: 'Publications.noMediaType',
     description: 'Label for the category of publications that have no media type',
     defaultMessage: 'Uncategorized'
+  },
+  showRestOfPublications: {
+    id: 'Publications.showRest',
+    description: 'Label for showing the publications that where filtered out by the users delimiters',
+    defaultMessage: 'Show the rest of the {mediaType} publications'
+  },
+  hideRestOfPublications: {
+    id: 'Publications.hideRest',
+    description: 'Label for hiding the publications that where filtered out by the users delimiters',
+    defaultMessage: 'Hide the rest of the {mediaType} publications'
   }
 })
 

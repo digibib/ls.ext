@@ -12,7 +12,7 @@ import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ParameterActions from '../actions/ParameterActions'
 import SearchFilterBox from '../components/SearchFilterBox'
-import { toggleFilter } from '../actions/SearchFilterActions'
+import * as SearchFilterActions from '../actions/SearchFilterActions'
 
 class Work extends React.Component {
   componentWillMount () {
@@ -70,7 +70,6 @@ class Work extends React.Component {
         work.partTitle = chosenPublication.partTitle
       }
     }
-
     const { back } = this.props.location.query
     return (
       <div className="container">
@@ -93,7 +92,8 @@ class Work extends React.Component {
             <aside className="work-genres show-mobile hidden-tablet hidden-desktop">
               <Genres genres={work.genres} />
             </aside>
-            <SearchFilterBox toggleFilter={toggleFilter} />
+            <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+                             query={this.props.query} />
             <div className="work-excerpt">
               <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
                 id mauris maximus porta. In
@@ -118,6 +118,8 @@ class Work extends React.Component {
                         startReservation={this.props.reservationActions.startReservation}
                         toggleParameterValue={this.props.parameterActions.toggleParameterValue}
                         workLanguage={work.language}
+                        libraries={this.props.libraries}
+                        audiences={Array.isArray(this.props.resources[this.props.params.workId].audience) ? this.props.resources[this.props.params.workId].audience : [this.props.resources[this.props.params.workId].audience]}
           />
         </div>
       </div>
@@ -133,7 +135,11 @@ Work.propTypes = {
   params: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
-  parameterActions: PropTypes.object.isRequired
+  parameterActions: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
+  searchFilterActions: PropTypes.object.isRequired,
+  libraries: PropTypes.object.isRequired,
+  audiences: PropTypes.array
 }
 
 const messages = defineMessages({
@@ -157,7 +163,9 @@ const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     resources: state.resources.resources,
-    isRequesting: state.resources.isRequesting
+    isRequesting: state.resources.isRequesting,
+    query: state.routing.locationBeforeTransitions.query,
+    libraries: state.application.libraries
   }
 }
 
@@ -166,7 +174,8 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     resourceActions: bindActionCreators(ResourceActions, dispatch),
     reservationActions: bindActionCreators(ReservationActions, dispatch),
-    parameterActions: bindActionCreators(ParameterActions, dispatch)
+    parameterActions: bindActionCreators(ParameterActions, dispatch),
+    searchFilterActions: bindActionCreators(SearchFilterActions, dispatch)
   }
 }
 

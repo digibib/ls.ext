@@ -12,6 +12,7 @@ function setup (propOverrides) {
     startReservation: () => {},
     toggleParameterValue: () => {},
     locationQuery: {},
+    audiences: [],
     publications: [
       {
         uri: '/publication_id1',

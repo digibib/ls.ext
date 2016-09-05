@@ -40,6 +40,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
   populateLiteral(work, 'partTitle', workResource)
   populateLiteral(work, 'publicationYear', workResource)
   populateLiteral(work, 'language', workResource)
+  populateUri(work, 'audience', workResource)
   work.items = []
 
   work.contributors = {}

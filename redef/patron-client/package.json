@@ -107,6 +107,7 @@
     "express-session": "1.14.1",
     "node-mysql": "0.4.2",
     "node-uuid": "1.4.7",
+    "query-string": "^4.2.3",
     "react-responsive": "1.1.4",
     "sanitize-html": "1.13.0",
     "url-loader": "0.5.7",
