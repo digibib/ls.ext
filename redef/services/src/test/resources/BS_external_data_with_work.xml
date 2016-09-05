@@ -64,6 +64,11 @@
             <subfield code="a">191 s.</subfield>
             <subfield code="b">kol. ill.,fig.</subfield>
         </datafield>
+        <datafield tag="440" ind1=" " ind2="0">
+            <subfield code="a">Karsten og Petra-bøkene</subfield>
+            <subfield code="v">12</subfield>
+            <subfield code="b">Gyldendahl Norsk Forlag AS</subfield>
+        </datafield>
         <datafield tag="520" ind1=" " ind2=" ">
             <subfield code="a">Eksempel Eksempelsens tredje, selv-biografisk roman, sørger for tung lesing samt behov for suppe. Det er ingen tvil om at denne blir en norsk klassiker som kan måles opp mot blant annet Karsten og Petra har Lucia-fest.</subfield>
         </datafield>
@@ -100,6 +105,16 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
             <subfield code="z">Oslo</subfield>
+        </datafield>
+        <datafield tag="610" ind1=" " ind2="2">
+            <subfield code="a">Exxon</subfield>
+            <subfield code="b">Exxon Valdez</subfield>
+            <subfield code="c">Alaska</subfield>
+            <subfield code="q">skip</subfield>
+            <subfield code="0">miljøforurensing</subfield>
+            <subfield code="2">BS</subfield>
+            <subfield code="2">BS</subfield>
+            <subfield code="9">nob</subfield>
         </datafield>
         <datafield tag="650" ind1=" " ind2="1">
             <subfield code="a">Kulturminnevern</subfield>

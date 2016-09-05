@@ -238,6 +238,13 @@ module.exports = (app) => {
               type: 'input-string',
               displayValueSource: true,
               preFillFromSearchField: true
+            },
+            {
+              label: 'Utgiver',
+              rdfProperty: 'publishedBy',
+              type: 'searchable-authority-dropdown',
+              indexTypes: 'corporation',
+              indexDocumentFields: [ 'name' ]
             }
           ]
         },

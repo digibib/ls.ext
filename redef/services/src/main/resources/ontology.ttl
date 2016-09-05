@@ -396,7 +396,7 @@
 :publishedBy a rdfs:Property ;
   rdfs:label "Published by"@en ;
   rdfs:label "Utgitt av"@no ;
-  rdfs:domain :Publication ;
+  rdfs:domain :Publication, :Serial ;
   rdfs:range :Corporation, :Person .
 
 # ToDo: Erstattes med :hasSeriesEntry

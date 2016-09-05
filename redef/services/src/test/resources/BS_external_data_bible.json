@@ -58,11 +58,11 @@
         "deichman:prefLabel": "Oslo"
       },
       {
+        "deichman:name": "Juritzen",
         "@type": [
           "deichman:Corporation"
         ],
-        "@id": "_:0000000",
-        "deichman:prefLabel": "Juritzen"
+        "@id": "_:0000000"
       },
       {
         "deichman:birthYear": "1971",

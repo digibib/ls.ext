@@ -3,11 +3,19 @@ package no.deichman.services.entity.z3950;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by kristoffer on 03.09.2016.
+ * Responsibility: mapping of contributors.
  */
-public class Contributor extends ExternalDataObject {
+public class Named extends ExternalDataObject {
     @SerializedName("deichman:name")
     private String name;
+
+    public Named(String name, String id) {
+        setName(name);
+        setId(id);
+    }
+
+    public Named() {
+    }
 
     public final String getName() {
         return name;

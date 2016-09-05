@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 
@@ -148,7 +149,7 @@ public class MARCMapper {
                         addExternalObject(graphList, place, PLACE_TYPE, publication::setPlaceOfPublication);
                     });
                     getSubfieldValue(dataField, 'b').ifPresent(publisher -> {
-                        addExternalObject(graphList, publisher, CORPORATION_TYPE, publication::setPublisher);
+                        addNamed(graphList, publisher, CORPORATION_TYPE, publication::setPublisher);
                     });
                     getSubfieldValue(dataField, 'c').ifPresent(publication::setPublicationYear);
                     break;
@@ -160,6 +161,21 @@ public class MARCMapper {
                                 .map(this::dataPrefix)
                                 .map(this::asExternalObject)
                                 .forEach(publication::setIllustrativeMatter);
+                    });
+                    break;
+                case "440":
+                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                        Serial serial = new Serial(a, asBlankNodeId(UUID.randomUUID().toString()));
+                        graphList.add(serial);
+                        getSubfieldValue(dataField, 'b').ifPresent(publishedBy -> {
+                            addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
+                        });
+                        Map<String, Object> serialIssue = new HashMap<>();
+                        serialIssue.put("inSerial", of("@id", serial.getId()));
+                        getSubfieldValue(dataField, 'v').ifPresent(v -> {
+                            serialIssue.put("issue", v);
+                        });
+                        publication.setSerial(serialIssue);
                     });
                     break;
                 case "520":
@@ -188,6 +204,18 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 'z').ifPresent(place -> {
                             addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
                         });
+                    });
+                    break;
+                case "610":
+                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                        String corporationId = asBlankNodeId(UUID.randomUUID().toString());
+                        Corporation corporation1 = new Corporation(corporationId, a);
+                        setCorporationDataFromDataField(dataField, corporation1);
+                        graphList.add(corporation1);
+                        getSubfieldValue(dataField, 'c').ifPresent(place -> {
+                            addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
+                        });
+                        work.addSubject(corporationId);
                     });
                     break;
                 case "650":
@@ -298,6 +326,15 @@ public class MARCMapper {
         return externalDataObject;
     }
 
+    private Named addNamed(Collection<Object> graphList, String name, String type, Consumer<String> addObjectFunction) {
+        String objectId = UUID.randomUUID().toString();
+        Named named = new Named(name, objectId);
+        named.setType(type);
+        addObjectFunction.accept(named.getId());
+        graphList.add(named);
+        return named;
+    }
+
     private ExternalDataObject asExternalObject(String subjectId, String type) {
         ExternalDataObject externalDataObject = asExternalObject(subjectId);
         externalDataObject.setType(type);
@@ -398,7 +435,7 @@ public class MARCMapper {
         return stream(getSubfieldValue(dataField, character).orElse("").split(separator)).filter(StringUtils::isNotBlank);
     }
 
-    private Map<String, Object> composeContribution(String contributor, EntityType entityType, Contributor contributors) {
+    private Map<String, Object> composeContribution(String contributor, EntityType entityType, Named contributors) {
         Map<String, Object> returnValue = new HashMap<>();
 
         final String uuid = UUID.randomUUID().toString();

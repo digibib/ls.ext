@@ -51,6 +51,9 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:illustrativeMatter")
     private List illustrativeMatter;
 
+    @SerializedName("deichman:inSerial")
+    private List<Map<String, Object>> serial;
+
     public final String getIsbn() {
         return isbn;
     }
@@ -161,5 +164,12 @@ public class Publication extends BibliographicObjectExternal {
             this.illustrativeMatter = new ArrayList<>();
         }
         this.illustrativeMatter.add(illustrativeMatter);
+    }
+
+    public void setSerial(Map<String, Object> serial) {
+        if (this.serial == null) {
+            this.serial = new ArrayList<>();
+        }
+        this.serial.add(serial);
     }
 }

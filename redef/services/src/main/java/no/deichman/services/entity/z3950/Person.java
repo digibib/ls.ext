@@ -14,7 +14,7 @@ import java.util.Optional;
  * Responsibility: create a basic person object.
  */
 @SuppressWarnings("checkstyle:DesignForExtension")
-public class Person extends Contributor {
+public class Person extends Named {
 
     @SerializedName("deichman:birthYear")
     private String birthYear;

@@ -10,7 +10,7 @@ import static com.google.common.collect.ImmutableMap.of;
  * Responsibility: create a basic person object.
  */
 @SuppressWarnings("checkstyle:DesignForExtension")
-public class Corporation extends Contributor {
+public class Corporation extends Named {
 
     @SerializedName("deichman:subdivision")
     private String subdivision;

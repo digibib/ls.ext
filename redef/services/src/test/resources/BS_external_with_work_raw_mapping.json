@@ -58,6 +58,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -109,6 +112,14 @@
             "@id": "http://data.deichman.no/illustrativeMatter#fig."
           }
         ],
+        "deichman:inSerial": [
+          {
+            "issue": "12",
+            "inSerial": {
+              "@id": "_:0000000"
+            }
+          }
+        ],
         "deichman:publicationYear": "2007",
         "deichman:partNumber": "Andre bok",
         "deichman:mainTitle": "Et eksempel",
@@ -132,11 +143,28 @@
         "deichman:prefLabel": "Oslo"
       },
       {
+        "deichman:name": "Oktober",
         "@type": [
           "deichman:Corporation"
         ],
-        "@id": "_:0000000",
-        "deichman:prefLabel": "Oktober"
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:publishedBy": {
+          "@id": "_:0000000"
+        },
+        "deichman:name": "Karsten og Petra-bøkene",
+        "@type": [
+          "deichman:Serial"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Gyldendahl Norsk Forlag AS",
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000"
       },
       {
         "deichman:birthYear": "1931",
@@ -206,6 +234,25 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Oslo"
+      },
+      {
+        "deichman:subdivision": "Exxon Valdez",
+        "deichman:place": {
+          "@id": "_:0000000"
+        },
+        "deichman:name": "Exxon",
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "skip"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Alaska"
       },
       {
         "@type": [
