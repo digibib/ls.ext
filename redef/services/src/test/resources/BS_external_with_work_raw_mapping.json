@@ -86,6 +86,11 @@
             "@id": "_:0000000"
           }
         ],
+        "deichman:isRelatedTo": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
         "deichman:partNumber": "Book 2",
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
@@ -371,6 +376,33 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Biografisk"
+      },
+      {
+        "deichman:name": "Tom Clancford",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:contributor": {
+          "@id": "_:0000000"
+        },
+        "deichman:mainTitle": "Den originale julefortelling",
+        "@type": [
+          "Work"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "@type": "deichman:WorkRelation",
+        "deichman:hasRelationType": {
+          "@id": "http://data.deichman.no/relationType#basedOn"
+        },
+        "@id": "_:0000000",
+        "deichman:work": {
+          "@id": "_:0000000"
+        }
       },
       {
         "deichman:birthYear": "1931",

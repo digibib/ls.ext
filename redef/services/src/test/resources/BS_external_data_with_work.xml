@@ -171,6 +171,13 @@
             <subfield code="t">En julefortelling</subfield>
             <subfield code="u">julefortelling</subfield>
         </datafield>
+        <datafield tag="700" ind1=" " ind2=" ">
+            <subfield code="a">Tom Clancford</subfield>
+            <subfield code="d">1808-1899</subfield>
+            <subfield code="j">eng.</subfield>
+            <subfield code="t">Den originale julefortelling</subfield>
+            <subfield code="u">julefortelling</subfield>
+        </datafield>
         <datafield tag="700" ind1=" " ind2="2">
             <subfield code="a">Capote, Truman</subfield>
             <subfield code="c">real name Truman Streckfus Persons</subfield>

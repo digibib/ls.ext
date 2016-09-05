@@ -35,6 +35,9 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:missingMainEntry")
     private Boolean missingMainEntry;
 
+    @SerializedName("deichman:isRelatedTo")
+    private List<Map<String, String>> isRelatedTo;
+
     public Work(String workId) {
         super(workId);
     }
@@ -102,5 +105,12 @@ public class Work extends BibliographicObjectExternal {
 
     public final void setMissingMainEntry(boolean missingMainEntry) {
         this.missingMainEntry = missingMainEntry;
+    }
+
+    public void isRelatedTo(String workRelationId) {
+        if (this.isRelatedTo == null) {
+            this.isRelatedTo = new ArrayList<>();
+        }
+        this.isRelatedTo.add(of("@id", workRelationId));
     }
 }

@@ -297,6 +297,20 @@ public class MARCMapper {
                             setPersonDataFromDataField(dataField, publicationPerson[0]);
                             persons.add(publicationPerson[0]);
                             publicationParts.add(publicationPart[0]);
+                        } else {
+                            getSubfieldValue(dataField, 'a').ifPresent(personName -> {
+                                String personId = asBlankNodeId(UUID.randomUUID().toString());
+                                Person person1 = new Person(personId, personName);
+                                getSubfieldValue(dataField, 't').ifPresent(title -> {
+                                    graphList.add(person1);
+                                    String workId1 = asBlankNodeId(UUID.randomUUID().toString());
+                                    Work work2 = new Work(workId1, title, personId);
+                                    graphList.add(work2);
+                                    WorkRelation workRelation = new WorkRelation(asBlankNodeId(UUID.randomUUID().toString()), workId1, dataPrefix(path("relationType", "basedOn")));
+                                    graphList.add(workRelation);
+                                    work.isRelatedTo(workRelation.getId());
+                                });
+                            });
                         }
                     } else {
                         final Contribution[] publicationContribution = new Contribution[1];
