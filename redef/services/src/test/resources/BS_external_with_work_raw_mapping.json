@@ -378,6 +378,25 @@
         "deichman:prefLabel": "Biografisk"
       },
       {
+        "deichman:name": "Jimson Jimson",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:birthYear": "1812",
+        "deichman:deathYear": "1870",
+        "deichman:nationality": {
+          "@id": "http://data.deichman.no/nationality#eng"
+        },
+        "deichman:name": "Dickens, Charles",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
         "deichman:name": "Tom Clancford",
         "@type": [
           "deichman:Person"
@@ -405,6 +424,14 @@
         }
       },
       {
+        "deichman:name": "Capote, Truman",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000",
+        "deichman:specification": "real name Truman Streckfus Persons"
+      },
+      {
         "deichman:birthYear": "1931",
         "deichman:nationality": {
           "@id": "http://data.deichman.no/nationality#n"
@@ -414,33 +441,6 @@
           "deichman:Person"
         ],
         "@id": "_:0000000"
-      },
-      {
-        "deichman:name": "Jimson Jimson",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "deichman:birthYear": "1812",
-        "deichman:deathYear": "1870",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#eng"
-        },
-        "deichman:name": "Dickens, Charles",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000"
-      },
-      {
-        "deichman:name": "Capote, Truman",
-        "@type": [
-          "deichman:Person"
-        ],
-        "@id": "_:0000000",
-        "deichman:specification": "real name Truman Streckfus Persons"
       },
       {
         "deichman:subdivision": "Aktivum",

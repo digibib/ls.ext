@@ -275,7 +275,7 @@ public class MARCMapper {
                     });
                     break;
                 case "700":
-                    final Person[] publicationPerson = new Person[1];
+                    final Named[] publicationPersonOrCorporation = new Named[1];
                     if (getSubfieldValue(dataField, 't').isPresent()) {
                         if (dataField.getIndicator2() == '2') {
                             final PublicationPart[] publicationPart = new PublicationPart[1];
@@ -287,15 +287,19 @@ public class MARCMapper {
                                     publicationPartWork[0] = (Work) workPartMap[0].get("work");
                                     publicationPartWorks.add(publicationPartWork[0]);
 
-                                    Map<String, Object> publicationContributionMap = composePublicationPart(s, publicationPartWork[0]);
+                                    Map<String, Object> publicationContributionMap = composePublicationPart(s, publicationPartWork[0], new Person());
                                     publication.addPublicationPart((String) publicationContributionMap.get("publicationPartLink"));
                                     publicationPart[0] = (PublicationPart) publicationContributionMap.get("publicationPart");
-                                    publicationPerson[0] = (Person) publicationContributionMap.get("person");
+                                    publicationPersonOrCorporation[0] = (Named) publicationContributionMap.get("person");
                                 });
                             });
                             setRole(dataField, publicationPart[0]);
-                            setPersonDataFromDataField(dataField, publicationPerson[0]);
-                            persons.add(publicationPerson[0]);
+                            if (publicationPersonOrCorporation[0] instanceof Person) {
+                                setPersonDataFromDataField(dataField, (Person) publicationPersonOrCorporation[0]);
+                            } else {
+                                setCorporationDataFromDataField(dataField, (Corporation) publicationPersonOrCorporation[0]);
+                            }
+                            graphList.add(publicationPersonOrCorporation[0]);
                             publicationParts.add(publicationPart[0]);
                         } else {
                             getSubfieldValue(dataField, 'a').ifPresent(personName -> {
@@ -318,11 +322,15 @@ public class MARCMapper {
                             Map<String, Object> publicationContributionMap = composeContribution(s, EntityType.PUBLICATION, new Person());
                             publication.setContributor((String) publicationContributionMap.get("contributorLink"));
                             publicationContribution[0] = (Contribution) publicationContributionMap.get("contribution");
-                            publicationPerson[0] = (Person) publicationContributionMap.get("contributor");
+                            publicationPersonOrCorporation[0] = (Person) publicationContributionMap.get("contributor");
                         });
                         setRole(dataField, publicationContribution[0]);
-                        setPersonDataFromDataField(dataField, publicationPerson[0]);
-                        persons.add(publicationPerson[0]);
+                        if (publicationPersonOrCorporation[0] instanceof Person) {
+                            setPersonDataFromDataField(dataField, (Person) publicationPersonOrCorporation[0]);
+                        } else {
+                            setCorporationDataFromDataField(dataField, (Corporation) publicationPersonOrCorporation[0]);
+                        }
+                        graphList.add(publicationPersonOrCorporation[0]);
                         contributions.add(publicationContribution[0]);
                     }
                     break;
@@ -513,18 +521,17 @@ public class MARCMapper {
         return returnValue;
     }
 
-    private Map<String, Object> composePublicationPart(String person, Work work) {
+    private Map<String, Object> composePublicationPart(String agentName, Work work, Named named) {
         Map<String, Object> returnValue = new HashMap<>();
 
         final String personUuid = UUID.randomUUID().toString();
-        final Person persons = new Person();
         final PublicationPart publicationPart = new PublicationPart();
 
         Map<String, String> agentLink = new HashMap<>();
-        persons.setId(personUuid);
+        named.setId(personUuid);
         agentLink.put("@id", asBlankNodeId(personUuid));
-        persons.setId(personUuid);
-        persons.setName(person);
+        named.setId(personUuid);
+        named.setName(agentName);
         publicationPart.setId(UUID.randomUUID().toString());
         publicationPart.setAgent(agentLink);
 
@@ -534,7 +541,7 @@ public class MARCMapper {
 
         returnValue.put("publicationPartLink", publicationPart.getId());
         returnValue.put("publicationPart", publicationPart);
-        returnValue.put("person", persons);
+        returnValue.put("person", named);
         return returnValue;
     }
 

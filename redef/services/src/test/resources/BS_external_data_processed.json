@@ -109,17 +109,6 @@
           "deichman:prefLabel": "Biografisk"
         },
         {
-          "deichman:birthYear": "1931",
-          "deichman:nationality": {
-            "@id": "http://data.deichman.no/nationality#n"
-          },
-          "deichman:name": "Eksempelsen, Eksempel",
-          "@type": [
-            "deichman:Person"
-          ],
-          "@id": "_:0000000"
-        },
-        {
           "deichman:name": "Jimson Jimson",
           "@type": [
             "deichman:Person"
@@ -128,6 +117,17 @@
         },
         {
           "deichman:name": "Connie Contributor",
+          "@type": [
+            "deichman:Person"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:birthYear": "1931",
+          "deichman:nationality": {
+            "@id": "http://data.deichman.no/nationality#n"
+          },
+          "deichman:name": "Eksempelsen, Eksempel",
           "@type": [
             "deichman:Person"
           ],
