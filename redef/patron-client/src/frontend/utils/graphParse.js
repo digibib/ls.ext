@@ -80,7 +80,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateLiteral(publication, 'recordID', publicationResource, 'recordId')
     populateUris(publication, 'language', publicationResource, 'languages')
     populateUris(publication, 'format', publicationResource, 'formats')
-    populateUris(publication, 'mediaType', publicationResource, 'mediaType')
+    populateUris(publication, 'mediaType', publicationResource, 'mediaTypes')
     publication.uri = publicationResource.id
     publication.id = getId(publicationResource.id)
     populateItems(publication, 'items', publicationResource.inAll('editionOf'))
@@ -106,7 +106,7 @@ function populateItems (target, field, itemResources) {
   itemResources.forEach(itemResource => {
     const item = {
       languages: target.languages || [],
-      mediaType: target.mediaType
+      mediaType: target.mediaTypes
     }
     populateLiteral(item, 'shelfmark', itemResource)
     populateLiteral(item, 'status', itemResource)

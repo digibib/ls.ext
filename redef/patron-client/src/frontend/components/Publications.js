@@ -96,8 +96,8 @@ class Publications extends React.Component {
 
     const publicationHoldersByMediaType = {}
     this.props.publications.forEach(publication => {
-      if (publication.mediaType.length > 0) {
-        publication.mediaType.forEach(mediaTypeUri => {
+      if (publication.mediaTypes.length > 0) {
+        publication.mediaTypes.forEach(mediaTypeUri => {
           publicationHoldersByMediaType[ mediaTypeUri ] = publicationHoldersByMediaType[ mediaTypeUri ] || []
           publicationHoldersByMediaType[ mediaTypeUri ].push(this.getPublicationHolder(publication))
         })
