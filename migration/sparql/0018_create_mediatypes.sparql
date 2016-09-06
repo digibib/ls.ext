@@ -33,6 +33,7 @@ WHERE {
       (format:Microfiche              mediaType:Other)
       (format:Microfilm_reel          mediaType:Other)
       (format:Poster                  mediaType:Other)
+      (format:Map                     mediaType:Other)
     }
 }
 ;
