@@ -306,6 +306,23 @@ public class MARCMapper {
                         }
                     }
                     break;
+                case "730":
+                    if (hasPublicationPartRelationship(dataField)) {
+                        PublicationPart publicationPart = new PublicationPart(newBlankNodeId());
+                        getSubfieldValue(dataField, 'a').ifPresent(publicationPart::setMainTitle);
+                        publication.addPublicationPart(publicationPart);
+                        publicationParts.add(publicationPart);
+                    } else {
+                        if(getSubfieldValue(dataField, 'a').isPresent()) {
+                            Work basedOnWork = new Work(newBlankNodeId());
+                            setBibliographicDataFromDataField(dataField, basedOnWork);
+                            graphList.add(basedOnWork);
+                            WorkRelation workRelation = new WorkRelation(newBlankNodeId(), basedOnWork.getId(), dataPrefix(path("relationType", "basedOn")));
+                            graphList.add(workRelation);
+                            work.isRelatedTo(workRelation);
+                        };
+                    }
+                    break;
                 default:
                     //we're not interested in the content so we do nothing -- checkstyle requires default.
                     break;

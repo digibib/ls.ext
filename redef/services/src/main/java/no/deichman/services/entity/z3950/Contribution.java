@@ -27,6 +27,10 @@ public class Contribution extends ExternalDataObject {
 
     }
 
+    public Contribution(String id) {
+        super(id);
+    }
+
     @Override
     protected void assignType() {
         this.setType("deichman:Contribution");

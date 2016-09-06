@@ -216,5 +216,21 @@
             <subfield code="t">Oil, oil everywhere</subfield>
             <subfield code="q">skip</subfield>
         </datafield>
+        <!-- should result in publicationPart which is from a uniform title -->
+        <datafield tag="730" ind1=" " ind2="2">
+            <subfield code="a">Bibelen</subfield>
+            <subfield code="b">Fantasifulle påfunn</subfield>
+            <subfield code="f">1511</subfield>
+            <subfield code="n">2</subfield>
+            <subfield code="p">NT</subfield>
+        </datafield>
+        <!-- should result in a work without main entry from a uniform title -->
+        <datafield tag="730" ind1=" " ind2=" ">
+            <subfield code="a">Bibelen II </subfield>
+            <subfield code="b">Hvis Judas fikk bestemme</subfield>
+            <subfield code="f">1611</subfield>
+            <subfield code="n">3</subfield>
+            <subfield code="p">Judasevangeliet</subfield>
+        </datafield>
     </record>
 </collection>

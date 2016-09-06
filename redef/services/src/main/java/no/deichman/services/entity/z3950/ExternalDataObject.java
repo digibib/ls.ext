@@ -20,6 +20,11 @@ public class ExternalDataObject implements Labeled {
         setPrefLabel(prefLabel);
     }
 
+    public ExternalDataObject(String id) {
+        this();
+        setId(id);
+    }
+
     protected void assignType() {}
 
     @SerializedName("@type")

@@ -29,6 +29,10 @@ public class PublicationPart extends Contribution {
         super(contributor, id);
     }
 
+    public PublicationPart(String id) {
+        super(id);
+    }
+
     @Override
     protected final void assignType() {
         this.setType("deichman:PublicationPart");

@@ -89,6 +89,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:partNumber": "Book 2",
@@ -109,6 +112,9 @@
         "deichman:publisher": "_:0000000",
         "deichman:numberOfPages": "191 s.",
         "deichman:hasPublicationPart": [
+          {
+            "@id": "_:0000000"
+          },
           {
             "@id": "_:0000000"
           },
@@ -387,6 +393,27 @@
         }
       },
       {
+        "deichman:publicationYear": "1611",
+        "deichman:partNumber": "3",
+        "deichman:partTitle": "Judasevangeliet",
+        "deichman:mainTitle": "Bibelen II ",
+        "deichman:subtitle": "Hvis Judas fikk bestemme",
+        "@type": [
+          "deichman:Work"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "@type": "deichman:WorkRelation",
+        "deichman:hasRelationType": {
+          "@id": "http://data.deichman.no/relationType#basedOn"
+        },
+        "@id": "_:0000000",
+        "deichman:work": {
+          "@id": "_:0000000"
+        }
+      },
+      {
         "deichman:birthYear": "1931",
         "deichman:nationality": {
           "@id": "http://data.deichman.no/nationality#n"
@@ -614,6 +641,14 @@
         "deichman:role": {
           "@id": "http://data.deichman.no/role#author"
         },
+        "@type": [
+          "deichman:PublicationPart"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:improperWork": false,
+        "deichman:mainTitle": "Bibelen",
         "@type": [
           "deichman:PublicationPart"
         ],
