@@ -7,31 +7,10 @@ class PublicationInfo extends React.Component {
   constructor (props) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
-    this.handleReservationClick = this.handleReservationClick.bind(this)
   }
 
   handleClick () {
     this.props.expandSubResource(null, true)
-  }
-
-  handleReservationClick (event) {
-    event.preventDefault()
-    event.stopPropagation()
-    this.props.startReservation(this.props.publication.recordId)
-  }
-
-  renderButton () {
-    const { publication } = this.props
-    if (publication.items.length > 0) {
-      return (
-        <button className="black-btn" type="button" onClick={this.handleReservationClick}
-                data-automation-id={`recordId_${publication.recordId}`}>
-              <span data-automation-id="publication_order">
-                <FormattedMessage {...messages.order} />
-              </span>
-        </button>
-      )
-    }
   }
 
   renderItems (items) {
@@ -86,11 +65,6 @@ class PublicationInfo extends React.Component {
                 </li>
               </ul>
             </div>
-
-            <div className="col">
-              {this.renderButton()}
-            </div>
-
           </div>
 
           <div className="title"><h2><FormattedMessage {...messages.items} /></h2></div>
@@ -104,7 +78,6 @@ class PublicationInfo extends React.Component {
 PublicationInfo.propTypes = {
   publication: PropTypes.object.isRequired,
   expandSubResource: PropTypes.func.isRequired,
-  startReservation: PropTypes.func.isRequired,
   intl: intlShape.isRequired
 }
 
@@ -130,11 +103,6 @@ const messages = defineMessages({
   },
   binding: {
     id: 'PublicationInfo.binding', description: 'Header for the binding column', defaultMessage: 'Binding:'
-  },
-  order: {
-    id: 'PublicationInfo.order',
-    description: 'The button that allows users to order a publication',
-    defaultMessage: 'Order this publication'
   }
 })
 
