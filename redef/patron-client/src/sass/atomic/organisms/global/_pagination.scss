@@ -4,6 +4,12 @@
 
   .pagination {
     float: right;
+    .previous, .next {
+      span {
+        padding: 0;
+        margin: 0;
+      }
+    }
   }
 
   .pagination ul {
