@@ -23,6 +23,7 @@ class Patrons < IntraPage
 
   def search(query)
     form = @browser.form(:id => "searchform")
+    form.select(:id => "searchfieldstype_filter").select_value "standard"
     form.select(:id => "searchtype_filter").select_value "contain"
     form.text_field(:id => "searchmember_filter").set query
     form.submit
