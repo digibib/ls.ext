@@ -36,8 +36,11 @@ public class MARCMapper {
     public static final String PLACE_TYPE = "deichman:Place";
     private static final String CORPORATION_TYPE = "deichman:Corporation";
     public static final int THIRTY_FOUR = 34;
+    public static final int THIRTY_FIVE = 35;
+    public static final int THIRTY_SEVEN = 37;
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
+    public static final Function<String, String> NOP = s -> s;
 
     public MARCMapper() {
     }
@@ -85,6 +88,7 @@ public class MARCMapper {
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
                     setUriObject(controlField, THIRTY_THREE, "literaryForm", work::setLiteraryForm, LiteraryForm::translate);
                     setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
+                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, "language", publication::setLanguage, NOP, this::languagePrefix);
                     break;
                 default:
             }
@@ -182,7 +186,7 @@ public class MARCMapper {
                     break;
                 case "600":
                     getSubfieldValue(dataField, 'a').ifPresent(personName -> {
-                        Person person1= (Person) extractNewNamed(persons, corporations, dataField, personName);
+                        Person person1 = (Person) extractNewNamed(persons, corporations, dataField, personName);
                         if (getSubfieldValue(dataField, 't').isPresent()) {
                             getSubfieldValue(dataField, 't').ifPresent(title -> {
                                 Work workAsSubject = new Work(newBlankNodeId(), title);
@@ -316,14 +320,15 @@ public class MARCMapper {
                         publication.addPublicationPart(publicationPart);
                         publicationParts.add(publicationPart);
                     } else {
-                        if(getSubfieldValue(dataField, 'a').isPresent()) {
+                        if (getSubfieldValue(dataField, 'a').isPresent()) {
                             Work basedOnWork = new Work(newBlankNodeId());
                             setBibliographicDataFromDataField(dataField, basedOnWork);
                             graphList.add(basedOnWork);
-                            WorkRelation workRelation = new WorkRelation(newBlankNodeId(), basedOnWork.getId(), dataPrefix(path("relationType", "basedOn")));
+                            WorkRelation workRelation = new WorkRelation(newBlankNodeId(), basedOnWork.getId(),
+                                    dataPrefix(path("relationType", "basedOn")));
                             graphList.add(workRelation);
                             work.isRelatedTo(workRelation);
-                        };
+                        }
                     }
                     break;
                 case "740":
@@ -341,7 +346,8 @@ public class MARCMapper {
                     getSubfieldValue(dataField, 't').ifPresent(title -> {
                         Work followingWork = new Work(newBlankNodeId(), title);
                         graphList.add(followingWork);
-                        WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(), dataPrefix(path("relationType", tag.equals("780") ? "continuedIn" : "continuationOf")));
+                        WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(),
+                                dataPrefix(path("relationType", tag.equals("780") ? "continuedIn" : "continuationOf")));
                         graphList.add(relationToFollowing);
                         work.isRelatedTo(relationToFollowing);
                     });
@@ -394,7 +400,7 @@ public class MARCMapper {
     }
 
     private String newBlankNodeId() {
-        return asBlankNodeId(simpleIdGenerator ? "b"+simpleIdGeneratorCounter++ : UUID.randomUUID().toString());
+        return asBlankNodeId(simpleIdGenerator ? "b" + simpleIdGeneratorCounter++ : UUID.randomUUID().toString());
     }
 
     private void setBibliographicDataFromDataField(DataField dataField, BibliographicObjectExternal bibliographicObjectExternal) {
@@ -483,6 +489,18 @@ public class MARCMapper {
                 .ifPresent(setterFunction);
     }
 
+    private void setUriObject(ControlField controlField, int startPosition, int endPosition, String path,
+                              Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper,
+                              Function<String, String> prefix) {
+        getControlFieldValue(controlField, startPosition, endPosition)
+                .filter(StringUtils::isNotBlank)
+                .map(mapper)
+                .map(fragment -> path(path, fragment))
+                .map(prefix)
+                .map(this::asExternalObject)
+                .ifPresent(setterFunction);
+    }
+
     private Person setPersonDataFromDataField(DataField dataField, Person person) {
         getSubfieldValue(dataField, 'b').ifPresent(person::setOrdinal);
         getSubfieldValue(dataField, 'c').ifPresent(person::setSpecification);
@@ -509,19 +527,16 @@ public class MARCMapper {
         return externalDataObject;
     }
 
-    private ExternalDataObject toLabeledExternalObject(String prefLabel) {
-        ExternalDataObject externalDataObject = new ExternalDataObject();
-        externalDataObject.setId(newBlankNodeId());
-        externalDataObject.setPrefLabel(prefLabel);
-        return externalDataObject;
-    }
-
     private String unPunctuate(String punctuated) {
         return punctuated.replace(".", "");
     }
 
     private String dataPrefix(String unprefixed) {
         return "http://data.deichman.no/" + unprefixed;
+    }
+
+    private String languagePrefix(String unprefixed) {
+        return "http://lexvo.org/id/iso639-3/" + unprefixed;
     }
 
     private String path(String path, String fragment) {
@@ -534,6 +549,10 @@ public class MARCMapper {
 
     private Optional<String> getControlFieldValue(ControlField controlField, int position) {
         return Optional.of("" + format("%1$-39s", controlField.getData()).charAt(position));
+    }
+
+    private Optional<String> getControlFieldValue(ControlField controlField, int startPosition, int endPosition) {
+        return Optional.of("" + format("%1$-39s", controlField.getData()).substring(startPosition, endPosition + 1));
     }
 
     private Optional<String> getSubfieldValue(DataField dataField, Character character, String defaultValue) {

@@ -16,7 +16,8 @@ import static com.google.common.collect.ImmutableMap.of;
 class BibliographicObjectExternal extends ExternalDataObject {
 
     @SerializedName("deichman:contributor")
-    protected List<Map<String, String>> contributor;
+    private List<Map<String, String>> contributor;
+
     @SerializedName("deichman:publicationYear")
     private String publicationYear;
 

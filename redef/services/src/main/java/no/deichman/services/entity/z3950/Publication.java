@@ -34,7 +34,7 @@ public class Publication extends BibliographicObjectExternal {
     private String numberOfPages;
 
     @SerializedName("deichman:language")
-    private String language;
+    private ExternalDataObject language;
 
     @SerializedName("deichman:hasPublicationPart")
     private List<Map<String, String>> hasPublicationPart;
@@ -95,11 +95,7 @@ public class Publication extends BibliographicObjectExternal {
         this.numberOfPages = numberOfPages;
     }
 
-    public final String getLanguage() {
-        return language;
-    }
-
-    public final void setLanguage(String language) {
+    public final void setLanguage(ExternalDataObject language) {
         this.language = language;
     }
 
