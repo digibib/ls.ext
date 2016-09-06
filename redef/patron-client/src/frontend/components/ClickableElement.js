@@ -7,15 +7,17 @@ class ClickableElement extends React.Component {
   }
 
   handleClick (event) {
+    const { onClickAction, onClickArguments } = this.props
     event.preventDefault()
-    this.props.onClickAction.apply(this, this.props.onClickArguments)
+    onClickAction.apply(this, Array.isArray(onClickArguments) ? onClickArguments : [ onClickArguments ])
   }
 
   render () {
-    if (!this.props.children) {
+    const { children } = this.props
+    if (!children) {
       return null
-    } else if (React.isValidElement(this.props.children)) {
-      return React.cloneElement(this.props.children, { onClick: this.handleClick })
+    } else if (React.isValidElement(children)) {
+      return React.cloneElement(children, { onClick: this.handleClick })
     } else {
       throw Error('Children must have one root element')
     }
@@ -24,7 +26,7 @@ class ClickableElement extends React.Component {
 
 ClickableElement.propTypes = {
   onClickAction: PropTypes.func.isRequired,
-  onClickArguments: PropTypes.array.isRequired,
+  onClickArguments: PropTypes.any,
   children: PropTypes.node
 }
 
