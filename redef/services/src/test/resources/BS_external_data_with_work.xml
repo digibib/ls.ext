@@ -244,5 +244,9 @@
         <datafield tag="780" ind1=" " ind2="2">
             <subfield code="t">Next</subfield>
         </datafield>
+        <!-- should result in relationship to a work that precedes this-->
+        <datafield tag="785" ind1=" " ind2="2">
+            <subfield code="t">Previous</subfield>
+        </datafield>
     </record>
 </collection>

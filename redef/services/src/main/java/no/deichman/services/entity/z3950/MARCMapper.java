@@ -89,7 +89,8 @@ public class MARCMapper {
         }
 
         for (DataField dataField : r.getDataFields()) {
-            switch (dataField.getTag()) {
+            String tag = dataField.getTag();
+            switch (tag) {
                 case "019":
                     setUriObject(dataField, 'a', "audience", work::setAudience, Audience::translate);
                     setUriObject(dataField, 'b', "format", publication::setFormat, Format::translate);
@@ -334,10 +335,11 @@ public class MARCMapper {
                     }
                     break;
                 case "780":
+                case "785":
                     getSubfieldValue(dataField, 't').ifPresent(title -> {
                         Work followingWork = new Work(newBlankNodeId(), title);
                         graphList.add(followingWork);
-                        WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(), dataPrefix(path("relationType", "continuedIn")));
+                        WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(), dataPrefix(path("relationType", tag.equals("780") ? "continuedIn" : "continuationOf")));
                         graphList.add(relationToFollowing);
                         work.isRelatedTo(relationToFollowing);
                     });
