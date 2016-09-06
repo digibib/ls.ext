@@ -73,7 +73,7 @@ WHERE {
 ;
 
 
-# 4) Add media type and format for card games and board games
+# 3) Add media type and format for card games and board games
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -87,6 +87,7 @@ MODIFY
 DELETE {
   ?pub :genre <http://__HOST__/genre/g2049303700> .
   ?pub :genre <http://__HOST__/genre/g2049303800> .
+  ?pub :format format:PhysicalBody .
 }
 
 INSERT {
