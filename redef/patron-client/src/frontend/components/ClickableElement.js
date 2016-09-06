@@ -9,6 +9,7 @@ class ClickableElement extends React.Component {
   handleClick (event) {
     const { onClickAction, onClickArguments } = this.props
     event.preventDefault()
+    event.stopPropagation()
     onClickAction.apply(this, Array.isArray(onClickArguments) ? onClickArguments : [ onClickArguments ])
   }
 
