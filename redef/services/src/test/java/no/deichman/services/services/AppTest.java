@@ -36,8 +36,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -270,7 +270,7 @@ public class AppTest {
         }
     }
 
-    @Test @Ignore("TODO updated ontology")
+    @Test @Ignore("TODO")
     public void test_update_work_index_when_publication_is_updated() throws Exception {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);

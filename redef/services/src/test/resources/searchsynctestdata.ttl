@@ -15,7 +15,7 @@
     ns2:contributor [ rdf:type ns2:Contribution ;
             ns2:agent <http://127.0.0.1:__PORT__/person/h11234> ;
             ns2:role ns5:translator ] ;
-    ns2:format <http://data.deichman.no/format#Book> ;
+    ns2:format <http://data.deichman.no/format#CardGame> ;
     ns2:isbn "978-88-545-0662-6" ;
     ns2:language <http://lexvo.org/id/iso639-3/ita> ;
     ns2:mainTitle "La casa delle bugie" ;
@@ -32,7 +32,7 @@
     ns2:contributor [ rdf:type ns2:Contribution ;
             ns2:agent <http://127.0.0.1:__PORT__/person/h10834700> ;
             ns2:role ns5:author ] ;
-    ns2:format <http://data.deichman.no/format#Book> ;
+    ns2:format <http://data.deichman.no/format#CardGame> ;
     ns2:isbn "82-495-0272-8" ;
     ns2:language <http://lexvo.org/id/iso639-3/nob> ;
     ns2:mainTitle "Berlinerpoplene" ;

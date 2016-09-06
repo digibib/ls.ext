@@ -16,7 +16,6 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -374,7 +373,7 @@ public class EntityResourceTest {
         assertTrue(result.getEntity().toString().contains(labelsComparison));
     }
 
-    @Test @Ignore("TODO updated ontology")
+    @Test
     public void work_should_have_format_labels() throws Exception {
         String work = "{\n"
                 + "    \"@context\": {\n"
@@ -384,7 +383,7 @@ public class EntityResourceTest {
                 + "    \"@graph\": {\n"
                 + "        \"@id\": \"http://deichman.no/publication/work_should_have_language_labels\",\n"
                 + "        \"@type\": \"deichman:Work\"\n,"
-                + "        \"deichman:format\": \"http://data.deichman.no/format#Book\"\n"
+                + "        \"deichman:format\": \"http://data.deichman.no/format#CardGame\"\n"
                 + "    }\n"
                 + "}";
         Response createResponse = entityResource.createFromLDJSON(WORK, work);
@@ -392,15 +391,14 @@ public class EntityResourceTest {
         Response result = entityResource.get(WORK, workId);
 
         String labelsComparison = "{\n"
-                + "    \"@id\" : \"http://data.deichman.no/format#Book\",\n"
+                + "    \"@id\" : \"http://data.deichman.no/format#CardGame\",\n"
                 + "    \"@type\" : \"http://data.deichman.no/utility#Format\",\n"
-                + "    \"http://data.deichman.no/utility#code\" : \"l\",\n"
                 + "    \"rdfs:label\" : [ {\n"
                 + "      \"@language\" : \"en\",\n"
-                + "      \"@value\" : \"Book\"\n"
+                + "      \"@value\" : \"Card Game\"\n"
                 + "    }, {\n"
                 + "      \"@language\" : \"no\",\n"
-                + "      \"@value\" : \"Bok\"\n"
+                + "      \"@value\" : \"Kortspill\"\n"
                 + "    } ]\n"
                 + "  }";
         assertEquals(OK.getStatusCode(), result.getStatus());
