@@ -6,6 +6,10 @@ mediaType:Book a duo:MediaType ;
   rdfs:label "Bok"@no ;
   rdfs:label "Book"@en .
 
+mediaType:E-book a duo:MediaType ;
+  rdfs:label "E-bok"@no ;
+  rdfs:label "E-book"@en .
+
 mediaType:Audiobook a duo:MediaType ;
   rdfs:label "Lydbok"@no ;
   rdfs:label "Audiobook"@en .
@@ -13,6 +17,14 @@ mediaType:Audiobook a duo:MediaType ;
 mediaType:LanguageCourse a duo:MediaType ;
   rdfs:label "Språkkurs"@no ;
   rdfs:label "Language course"@en .
+
+mediaType:Map a duo:MediaType ;
+  rdfs:label "Kart"@no ;
+  rdfs:label "Map"@en .
+
+mediaType:Film a duo:MediaType ;
+  rdfs:label "Film"@no ;
+  rdfs:label "Film"@en .
 
 mediaType:MusicRecording a duo:MediaType ;
   rdfs:label "Musikkopptak"@no ;
@@ -22,22 +34,10 @@ mediaType:SheetMusic a duo:MediaType ;
   rdfs:label "Noter"@no ;
   rdfs:label "Sheet music"@en .
 
-mediaType:Film a duo:MediaType ;
-  rdfs:label "Film"@no ;
-  rdfs:label "Movie"@en .
-
 mediaType:Game a duo:MediaType ;
   rdfs:label "Spill"@no ;
   rdfs:label "Game"@en .
 
-mediaType:ComicBook a duo:MediaType ;
-  rdfs:label "Tegneserie"@no ;
-  rdfs:label "Comic book"@en .
-
-mediaType:Map a duo:MediaType ;
-  rdfs:label "Kart"@no ;
-  rdfs:label "Map"@en .
-
-mediaType:Periodical a duo:MediaType ;
-  rdfs:label "Periodika"@no ;
-  rdfs:label "Periodical"@en .
+mediaType:Other a duo:MediaType ;
+  rdfs:label "Andre"@no ;
+  rdfs:label "Other"@en .
