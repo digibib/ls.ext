@@ -129,9 +129,9 @@ WHERE {
     VALUES (?mediaType ?workType) {
       (mediaType:Film                 workType:Film)
       (mediaType:Game                 workType:Game)
-      (mediaType:Audiobook            workType:Book)
-      (mediaType:Book                 workType:Book)
-      (mediaType:E-book               workType:Book)
+      (mediaType:Audiobook            workType:Literature)
+      (mediaType:Book                 workType:Literature)
+      (mediaType:E-book               workType:Literature)
       (mediaType:MusicRecording       workType:Music)
       (mediaType:SheetMusic           workType:Music)
     }
