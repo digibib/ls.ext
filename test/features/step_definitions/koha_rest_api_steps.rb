@@ -209,3 +209,7 @@ Then(/^gir APIet tilbakemelding med riktige brukerrettigheter$/) do
   session["borrowernumber"].should eq(@active[:patron].borrowernumber)
   session["permissions"].sort.should eq(["borrowers", "editcatalogue", "staffaccess"].sort)
 end
+
+When(/^systemet sender ut en velkomst\-epost$/) do
+  @context[:session_api_response] = KohaRESTAPI::Messaging.new(@browser,@context,@active).send_account_details(@active[:patron].borrowernumber)
+end

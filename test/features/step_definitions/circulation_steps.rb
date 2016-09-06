@@ -253,7 +253,6 @@ end
 Then(/^vises boka i listen over bøker som skal plukkes$/) do
   holds = @site.HoldsQueue.visit.get_holds
   holds.text.should include(@context[:publication_maintitle])
-  holds.text.should include(@active[:patron].cardnumber)
 end
 
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
@@ -540,15 +539,11 @@ end
 
 Given(/^at meldingstyper er aktivert for låneren$/) do
   SVC::Preference.new(@browser).set("pref_EnhancedMessagingPreferences", "1")
-  # TODO: actually parse table. For now only activates email notice
-  step "låneren får aktivert følgende meldingstyper:", table(%{
-    |type           |dagerfør|epost|sms|sammendrag|deaktivert|
-    |forfalt        |        | 1   |   |          |          |
-    |forhåndsvarsel | 2      | 1   |   |          |          |
-    |reservert      |        | 1   |   |          |          |
-    |innlevert      |        | 1   |   |          |          |
-    |utlånt         |        | 1   |   |          |          |
-  })
+  res = KohaRESTAPI::MessagePreferences.new(@browser,@context,@active).update(
+    @active[:patron].borrowernumber,
+    hold_filled: { transports: ["email"], wants_digest: true }
+  )
+  @context[:new_messagepreferences] = JSON.parse(res)
 end
 
 When(/^låneren får aktivert følgende meldingstyper:$/) do |table|
@@ -582,23 +577,10 @@ end
 When(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
   step "at det finnes en avdeling" unless @active[:branch]
   step "jeg legger til en lånerkategori" unless @active[:patroncategory]
-  patron = Patron.new
-  patron.firstname = "Knut"
-  patron.password = "1234"
-  @site.Patrons.visit.create(
-      @active[:patroncategory].description,
-      patron.firstname,
-      patron.surname,
-      patron.userid,
-      patron.password,
-      patron.email
-  )
-  @active[:patron] = patron
-  @cleanup.push("patron #{patron.surname}" =>
-                    lambda do
-                      @site.Patrons.visit.delete(patron.firstname, patron.surname)
-                    end
-  )
+  step "at det finnes en låner med lånekort", table(%{
+    | firstname | dateenrolled | dateexpiry | dateofbirth | email         | lost  | debarred | password | flags |
+    | Knut      | 01/08/2016   | 01/01/2099 | 2010-01-01  | knut@test.com | 0     | false    | 1234     | 0     |
+  })
 end
 
 Then(/^vil låneren motta en velkomst\-epost fra biblioteket$/) do

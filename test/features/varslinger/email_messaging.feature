@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Varsling på epost
   Som en bruker
   Siden jeg liker å holde meg oppdatert
@@ -13,6 +12,7 @@ Egenskap: Varsling på epost
   Scenario: Epost ved registrering av låner
     Gitt at epost er aktivert ved brukerregistrering
     Når jeg registrerer en ny låner med gyldig epostadresse
+    Og systemet sender ut en velkomst-epost
     Så vil låneren motta en velkomst-epost fra biblioteket
 
   Scenario: Epost om reservert tittel som er klar til avhenting

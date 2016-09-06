@@ -63,6 +63,7 @@ module.exports = (app) => {
     registerPatron(patron)
     .then(json => setDefaultMessagingSettings(json))
     .then(json => setDefaultSyncStatusAndAttributes(json))
+    .then(json => sendAccountDetailsByMail(json))
     .then(json => {
       response.status(201).send({username: json.userid, categoryCode: categoryCode})
     }).catch(error => {
@@ -138,6 +139,18 @@ module.exports = (app) => {
         return patron
       } else {
         return Promise.reject({message: 'Could not set patron sync defaults', status: res.status})
+      }
+    })
+  }
+
+  function sendAccountDetailsByMail (patron) {
+    return fetch(`http://koha:8081/api/v1/messaging/patrons/${patron.borrowernumber}/accountdetails`, {
+      method: 'PUT'
+    }).then(res => {
+      if (res.status === 200) {
+        return patron
+      } else {
+        return Promise.reject({message: 'Could not send patron account details', status: res.status})
       }
     })
   }

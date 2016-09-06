@@ -49,7 +49,7 @@ class PatronDetails < IntraPage
     #the confirm function to simulate "OK" click:
     @browser.execute_script("window.confirm = function(msg){return true;}")
     @browser.button(:text => /(More|Mer)/).click
-    @browser.a(:id => "deletepatron").click
+    @browser.a(:id => "deletepatronlocal").click
     #@browser.alert.ok #works in chrome & firefox, but not phantomjs
     self
   end
