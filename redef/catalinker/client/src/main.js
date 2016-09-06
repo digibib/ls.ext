@@ -1685,14 +1685,8 @@
               tabEnabled: function (tabSelected, domainType) {
                 return tabSelected === true || (typeof ractive.get('targetUri.' + domainType) === 'string')
               },
-              nextStepEnabled: function (domainType) {
-                return true // !(domainType === 'Work')
-              },
-              readyToAddRole: function (node) {
-                return true
-              },
               spy: function (node, nmode2) {
-                console.log('spy: ' + node.keypath)
+                console.dir(node)
               },
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {
