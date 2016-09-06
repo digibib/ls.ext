@@ -115,6 +115,11 @@ format:CardGame a duo:Format ;
   rdfs:label "Kortspill"@no ;
   rdfs:label "Card Game"@en .
 
+format:Map a duo:Format ;
+  duo:code "a" ;
+  rdfs:label "Kart"@no ;
+  rdfs:label "Map"@en .
+
 format:Diapositive a duo:Format ;
   duo:code "fd" ;
   rdfs:label "Dias"@no ;

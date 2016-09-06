@@ -18,10 +18,6 @@ mediaType:LanguageCourse a duo:MediaType ;
   rdfs:label "Språkkurs"@no ;
   rdfs:label "Language course"@en .
 
-mediaType:Map a duo:MediaType ;
-  rdfs:label "Kart"@no ;
-  rdfs:label "Map"@en .
-
 mediaType:Film a duo:MediaType ;
   rdfs:label "Film"@no ;
   rdfs:label "Film"@en .
