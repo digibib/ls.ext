@@ -55,7 +55,7 @@ class Search extends React.Component {
       return (
         <section className="pagination-area"
                  data-automation-id="search-results-pagination">
-          <nav role="menu" aria-label={this.props.intl.formatMessage(messages.paginationLabel)}>
+          <nav aria-label={this.props.intl.formatMessage(messages.paginationLabel)}>
             <ReactPaginate
               previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
               nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
