@@ -229,12 +229,19 @@
   rdfs:range duo:Format ;
   duo:valuesFrom values:format .
   
-:hasMediatype a rdfs:Property ;
-  rdfs:label "Mediatype"@en ;
+:hasMediaType a rdfs:Property ;
+  rdfs:label "Media type"@en ;
   rdfs:label "Medietype"@no ;
-  rdfs:domain :Work ;
-  rdfs:range duo:Mediatype ;
+  rdfs:domain :Publication ;
+  rdfs:range duo:MediaType ;
   duo:valuesFrom values:mediaType .
+
+:hasWorkType a rdfs:Property ;
+  rdfs:label "Work type"@en ;
+  rdfs:label "Verkstype"@no ;
+  rdfs:domain :Work ;
+  rdfs:range duo:WorkType ;
+  duo:valuesFrom values:workType .
 
 :publicationOf a rdfs:Property ;
   rdfs:label "Publication of"@en ;
