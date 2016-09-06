@@ -23,7 +23,7 @@ class MediaType extends React.Component {
     const mediaType = this.props.mediaType
     return (
       <div key={mediaType.uri} className="entry-content-icon-single">
-        <img src={`/images/icon-${Constants.mediaTypeIcons[ mediaType.uri ]}.svg`} aria-hidden="true"/>
+        <img src={`/images/icon-${Constants.mediaTypeIcons[ mediaType.uri ]}.svg`} aria-hidden="true" />
         <p><strong>{this.props.intl.formatMessage({ id: mediaType.uri })}</strong></p>
         <div>{this.renderFormats(mediaType.uri, mediaType.formats)}</div>
       </div>
