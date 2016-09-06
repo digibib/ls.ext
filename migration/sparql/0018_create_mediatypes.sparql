@@ -38,6 +38,7 @@ WHERE {
 }
 ;
 
+
 # 2) Replace format with Media Type
 
 SPARQL
@@ -104,5 +105,35 @@ WHERE {
     (<http://__HOST__/genre/g2049303700>   format:BoardGame)
     (<http://__HOST__/genre/g2049303800>   format:CardGame)
   }
+}
+;
+
+
+# 4) Construct media type based on format, keep format
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+PREFIX workType: <http://data.deichman.no/workType#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  ?pub :workType ?workType
+}
+
+WHERE {
+    ?pub a :Publication ;
+         :mediaType ?mediaType  .
+
+    VALUES (?mediaType ?workType) {
+      (mediaType:Film                 workType:Film)
+      (mediaType:Game                 workType:Game)
+      (mediaType:Audiobook            workType:Book)
+      (mediaType:Book                 workType:Book)
+      (mediaType:E-book               workType:Book)
+      (mediaType:MusicRecording       workType:Music)
+      (mediaType:SheetMusic           workType:Music)
+    }
 }
 ;
