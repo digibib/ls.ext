@@ -20,18 +20,18 @@ WHERE {
       (format:Videotape               mediaType:Film)
       (format:DVD                     mediaType:Film)
       (format:Blu-ray                 mediaType:Film)
-      (format:3D_movie                mediaType:Film)
-      (format:Personal_computer_game  mediaType:Game)
-      (format:Playstation_2_game      mediaType:Game)
-      (format:Playstation_3_game      mediaType:Game)
-      (format:Playstation_4_game      mediaType:Game)
-      (format:Xbox_360_game           mediaType:Game)
-      (format:Xbox_One_game           mediaType:Game)
-      (format:Nintendo_DS_game        mediaType:Game)
-      (format:Nintendo_Wii_game       mediaType:Game)
+      (format:3DMovie                 mediaType:Film)
+      (format:PersonalComputerGame    mediaType:Game)
+      (format:Playstation2Game        mediaType:Game)
+      (format:Playstation3Game        mediaType:Game)
+      (format:Playstation4Game        mediaType:Game)
+      (format:Xbox360Game             mediaType:Game)
+      (format:XboxOneGame             mediaType:Game)
+      (format:NintendoDSGame          mediaType:Game)
+      (format:NintendoWiiGame         mediaType:Game)
       (format:Diapositive             mediaType:Other)
       (format:Microfiche              mediaType:Other)
-      (format:Microfilm_reel          mediaType:Other)
+      (format:MicrofilmReel           mediaType:Other)
       (format:Poster                  mediaType:Other)
       (format:Map                     mediaType:Other)
     }
@@ -66,36 +66,9 @@ WHERE {
       (format:Audiobook               mediaType:Audiobook)
       (format:E-book                  mediaType:E-book)
       (format:Language_course         mediaType:LanguageCourse)
-      (format:Music_recording         mediaType:MusicRecording)
-      (format:Sheet_music             mediaType:SheetMusic)
+      (format:MusicRecording          mediaType:MusicRecording)
+      (format:SheetMusic              mediaType:SheetMusic)
     }
-}
-;
-
-
-# 3) Change media type for comic books
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX mediaType: <http://data.deichman.no/mediaType#>
-PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
-
-WITH <http://deichman.no/migration>
-
-MODIFY
-
-DELETE {
-  ?pub :mediaType mediaType:Book .
-}
-
-INSERT {
-  ?pub :mediaType mediaType:ComicBook .
-}
-
-WHERE {
-  ?pub :literaryForm literaryForm:comicBook ;
-    :mediaType mediaType:Book ;
-    a :Publication .
 }
 ;
 
@@ -122,7 +95,7 @@ INSERT {
 }
 
 WHERE {
-  ?pub :format format:Physical_body ;
+  ?pub :format format:PhysicalBody ;
     :genre ?genre ;
     a :Publication .
 
