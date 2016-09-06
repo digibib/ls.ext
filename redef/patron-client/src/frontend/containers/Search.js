@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import ReactPaginate from 'react-paginate'
 import { push } from 'react-router-redux'
 import shallowEqual from 'fbjs/lib/shallowEqual'
+import { injectIntl, intlShape, defineMessages } from 'react-intl'
 
 import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
@@ -54,9 +55,10 @@ class Search extends React.Component {
       return (
         <section className="pagination-area"
                  data-automation-id="search-results-pagination">
-          <ReactPaginate previousLabel={'<'}
-                         nextLabel={'>'}
-                         breakLabel={<span>...</span>}
+          <nav role="menu" aria-label={this.props.intl.formatMessage(messages.paginationLabel)}>
+            <ReactPaginate previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
+                         nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
+                         breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
                          forceSelected={this.props.location.query.page - 1 || 0}
                          marginPagesDisplayed={1}
                          pageRangeDisplayed={5}
@@ -65,6 +67,7 @@ class Search extends React.Component {
                          containerClassName={'pagination'}
                          subContainerClassName={'pages pagination'}
                          activeClassName={'active'} />
+          </nav>
         </section>
       )
     }
@@ -137,7 +140,8 @@ Search.propTypes = {
   totalHitsPublications: PropTypes.number.isRequired,
   locationQuery: PropTypes.object.isRequired,
   resources: PropTypes.object.isRequired,
-  resourceActions: PropTypes.object.isRequired
+  resourceActions: PropTypes.object.isRequired,
+  intl: intlShape.isRequired
 }
 
 export { Search }
@@ -164,7 +168,25 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+const messages = defineMessages({
+  paginationLabel: {
+    id: 'Search.paginationLabel',
+    description: 'The ARIA label for the pagination bar',
+    defaultMessage: 'Pagination'
+  },
+  paginationNext: {
+    id: 'Search.paginationNext',
+    description: 'The ARIA label for the "next" link',
+    defaultMessage: 'Next'
+  },
+  paginationPrevious: {
+    id: 'Search.paginationPrevious',
+    description: 'The ARIA label frot the "previous" link',
+    defaultMessage: 'Previous'
+  }
+})
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search)
+)(injectIntl(Search))
