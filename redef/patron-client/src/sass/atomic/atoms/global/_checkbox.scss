@@ -1,25 +1,33 @@
 input[type="checkbox"] {
   display:none;
-}
-input[type="checkbox"] + label span:first-child {
-  display:inline-block;
-  width:19px;
-  height:19px;
-  margin:-1px 4px 0 0;
-  vertical-align:middle;
-  background:url(/images/checkbox-unchecked.png) left top no-repeat;
-  cursor:pointer;
-}
-input[type="checkbox"]:checked + label span:first-child {
-  background:url(/images/checkbox-checked.png) left top no-repeat;
-}
-
-input[type="checkbox"] + label {
-  position: relative;
-  max-width: 90%;
-
-  h2 {
+  +label {
+    position: relative;
     max-width: 90%;
+    cursor: pointer;
+    h2 {
+      max-width: 90%;
+    }
+    img {
+      width:19px;
+      height:19px;
+      margin:-1px 4px 0 0;
+      display: none;
+      vertical-align: middle;
+      &.checkbox-unchecked {
+        display: inline-block;
+      }
+    }
   }
-
+  &:checked {
+    +label {
+      img {
+        &.checkbox-checked {
+          display: inline-block;
+        }
+        &.checkbox-unchecked {
+          display: none;
+        }
+      }
+    }
+  }
 }
