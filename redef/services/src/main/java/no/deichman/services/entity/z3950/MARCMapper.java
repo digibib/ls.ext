@@ -35,6 +35,7 @@ public class MARCMapper {
     public static final String PERSON_TYPE = "deichman:Person";
     public static final String PLACE_TYPE = "deichman:Place";
     private static final String CORPORATION_TYPE = "deichman:Corporation";
+    public static final int THIRTY_FOUR = 34;
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
 
@@ -83,6 +84,7 @@ public class MARCMapper {
                 case "008":
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
                     setUriObject(controlField, THIRTY_THREE, "literaryForm", work::setLiteraryForm, LiteraryForm::translate);
+                    setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
                     break;
                 default:
             }

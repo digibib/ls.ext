@@ -34,6 +34,9 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:isRelatedTo")
     private List<Map<String, String>> isRelatedTo;
 
+    @SerializedName("deichman:biography")
+    private ExternalDataObject biography;
+
     public Work(String workId) {
         super(workId);
     }
@@ -98,4 +101,9 @@ public class Work extends BibliographicObjectExternal {
         }
         this.isRelatedTo.add(of("@id", workRelationId.getId()));
     }
+
+    public final void setBiography(ExternalDataObject biography) {
+        this.biography = biography;
+    }
+
 }

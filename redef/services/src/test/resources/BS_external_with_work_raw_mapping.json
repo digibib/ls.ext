@@ -100,6 +100,9 @@
             "@id": "_:0000000"
           }
         ],
+        "deichman:biography": {
+          "@id": "http://data.deichman.no/biography#biographicalInformation"
+        },
         "deichman:partNumber": "Book 2",
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",

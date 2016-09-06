@@ -28,6 +28,9 @@
               "@id": "_:0000000"
             }
           ],
+          "deichman:biography": {
+            "@id": "http://data.deichman.no/biography#biographicalInformation"
+          },
           "deichman:partNumber": "Andre bok",
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
