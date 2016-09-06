@@ -13,7 +13,7 @@ public final class Role {
 
     private static final Map<String, String> ROLE_MAP = ImmutableMap.<String, String>builder()
             .put("arr", "musicalArranger")
-            .put("bearb", "contributor")
+            .put("bearb", "adaptor")
             .put("bikort", "contributor")
             .put("billedred", "contributor")
             .put("biogr", "biographed")
