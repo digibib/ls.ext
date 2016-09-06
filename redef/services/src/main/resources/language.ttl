@@ -458,6 +458,10 @@ language:tgl	a	lvont:Language ;
 	rdfs:label	"Tagalog"@no ;
 	rdfs:label	"Tagalog"@en .
 
+language:tgk	a	lvont:Language ;
+	rdfs:label	"Tadsjikisk"@no ;
+	rdfs:label	"Tajik"@en .
+
 language:tam	a	lvont:Language ;
 	rdfs:label	"Tamil"@no ;
 	rdfs:label	"Tamil"@en .
