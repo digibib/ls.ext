@@ -13,7 +13,7 @@ INSERT {
 WHERE {
       ?publication :publicationOf ?work ;
                    ?p ?o .
-      VALUES ?p { :audience :literaryForm :genre :subject :workType}
+      VALUES ?p { :audience :literaryForm :genre :subject :hasWorkType}
 }
 ;
 
@@ -50,7 +50,7 @@ SPARQL
 PREFIX : <http://__HOST__/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?publication :workType ?o .}
-WHERE { ?publication :publicationOf ?work ; :workType ?o }
+WHERE { ?publication :publicationOf ?work ; :hasWorkType ?o }
 ;
 
 # 2b)

@@ -8,7 +8,7 @@ PREFIX mediaType: <http://data.deichman.no/mediaType#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  ?pub :mediaType ?mediaType
+  ?pub :hasMediaType ?mediaType
 }
 
 WHERE {
@@ -55,7 +55,7 @@ DELETE {
 }
 
 INSERT {
-  ?pub :mediaType ?mediaType
+  ?pub :hasMediaType ?mediaType
 }
 
 WHERE {
@@ -92,7 +92,7 @@ DELETE {
 }
 
 INSERT {
-  ?pub :mediaType mediaType:Game ;
+  ?pub :hasMediaType mediaType:Game ;
     :format ?format .
 }
 
@@ -119,12 +119,12 @@ PREFIX workType: <http://data.deichman.no/workType#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  ?pub :workType ?workType
+  ?pub :hasWorkType ?workType
 }
 
 WHERE {
     ?pub a :Publication ;
-         :mediaType ?mediaType  .
+         :hasMediaType ?mediaType  .
 
     VALUES (?mediaType ?workType) {
       (mediaType:Film                 workType:Film)
