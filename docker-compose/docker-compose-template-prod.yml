@@ -152,8 +152,7 @@ services:
 
   fuseki:
     container_name: fuseki
-    build:
-      context: "${LSEXTPATH}/docker-compose/dockerfiles/fuseki"
+    image: "digibib/fuseki2"
     networks:
       - backend
     volumes_from:
