@@ -49,7 +49,7 @@ WHERE { ?publication :publicationOf ?work ; :literaryForm ?o }
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
 WITH <http://deichman.no/migration>
-DELETE { ?publication :workType ?o .}
+DELETE { ?publication :hasWorkType ?o .}
 WHERE { ?publication :publicationOf ?work ; :hasWorkType ?o }
 ;
 
