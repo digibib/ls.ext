@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableMap.of;
@@ -27,7 +28,6 @@ import static java.util.Arrays.stream;
  */
 @SuppressWarnings("checkstyle:MethodLength")
 public class MARCMapper {
-
     public static final int TWENTY_TWO = 22;
     public static final int THIRTY_THREE = 33;
     public static final String SUBJECT_TYPE = "deichman:Subject";
@@ -38,6 +38,7 @@ public class MARCMapper {
     public static final int THIRTY_FOUR = 34;
     public static final int THIRTY_FIVE = 35;
     public static final int THIRTY_SEVEN = 37;
+    public static final Predicate<String> EMPTY_VALUES = s -> s != null;
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
     public static final Function<String, String> NOP = s -> s;
@@ -157,6 +158,9 @@ public class MARCMapper {
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setNumberOfPages);
                     getSubfieldValue(dataField, 'b').ifPresent(b -> {
                         stream(b.split(","))
+                                .map(this::unPunctuate)
+                                .map(IllustrativeMatter::translate)
+                                .filter(EMPTY_VALUES)
                                 .map(fragment -> path("illustrativeMatter", fragment))
                                 .map(this::dataPrefix)
                                 .map(this::asExternalObject)
@@ -495,7 +499,6 @@ public class MARCMapper {
         getControlFieldValue(controlField, startPosition, endPosition)
                 .filter(StringUtils::isNotBlank)
                 .map(mapper)
-                .map(fragment -> path(path, fragment))
                 .map(prefix)
                 .map(this::asExternalObject)
                 .ifPresent(setterFunction);
