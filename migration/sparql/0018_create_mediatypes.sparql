@@ -16,13 +16,11 @@ WHERE {
          :format ?format  .
 
     VALUES (?format ?mediaType) {
-      (format:Book                    mediaType:Book)
-      (format:E-Book                  mediaType:Book)
       (format:DAISY                   mediaType:Audiobook)
       (format:Videotape               mediaType:Film)
       (format:DVD                     mediaType:Film)
-      (format:Blu-ray_Disk            mediaType:Film)
-      (format:Blu-ray_ROM             mediaType:Game)
+      (format:Blu-ray                 mediaType:Film)
+      (format:3D_movie                mediaType:Film)
       (format:Personal_computer_game  mediaType:Game)
       (format:Playstation_2_game      mediaType:Game)
       (format:Playstation_3_game      mediaType:Game)
@@ -31,6 +29,10 @@ WHERE {
       (format:Xbox_One_game           mediaType:Game)
       (format:Nintendo_DS_game        mediaType:Game)
       (format:Nintendo_Wii_game       mediaType:Game)
+      (format:Diapositive             mediaType:Other)
+      (format:Microfiche              mediaType:Other)
+      (format:Microfilm_reel          mediaType:Other)
+      (format:Poster                  mediaType:Other)
     }
 }
 ;
@@ -59,12 +61,12 @@ WHERE {
          :format ?format  .
 
     VALUES (?format ?mediaType) {
+      (format:Book                    mediaType:Book)
       (format:Audiobook               mediaType:Audiobook)
       (format:Language_course         mediaType:LanguageCourse)
       (format:Music_recording         mediaType:MusicRecording)
       (format:Sheet_music             mediaType:SheetMusic)
       (format:Map                     mediaType:Map)
-      (format:Periodical              mediaType:Periodical)
     }
 }
 ;
