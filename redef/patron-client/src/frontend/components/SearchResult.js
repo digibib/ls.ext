@@ -169,7 +169,7 @@ class SearchResult extends React.Component {
 
           <div className="entry-content-icon">
             {result.mediaTypes.map(mediaType => {
-              return <MediaType mediaType={mediaType} />
+              return <MediaType key={mediaType.uri} mediaType={mediaType} />
             })}
           </div>
 
