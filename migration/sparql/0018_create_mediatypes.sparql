@@ -64,10 +64,10 @@ WHERE {
     VALUES (?format ?mediaType) {
       (format:Book                    mediaType:Book)
       (format:Audiobook               mediaType:Audiobook)
+      (format:E-book                  mediaType:E-book)
       (format:Language_course         mediaType:LanguageCourse)
       (format:Music_recording         mediaType:MusicRecording)
       (format:Sheet_music             mediaType:SheetMusic)
-      (format:Map                     mediaType:Map)
     }
 }
 ;

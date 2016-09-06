@@ -12,7 +12,7 @@ format:Blu-ray a duo:Format ;
   rdfs:label "Blu-ray"@no ;
   rdfs:label "Blu-ray"@en .
 
-format:3D_movie a duo:Format ;
+format:3DMovie a duo:Format ;
   duo:code "eg" ;
   rdfs:label "3D-film"@no ;
   rdfs:label "3D movie"@en .
@@ -22,7 +22,7 @@ format:Videotape a duo:Format ;
   rdfs:label "VHS"@no ;
   rdfs:label "Videotape"@en .
 
-format:Compact_Disc a duo:Format ;
+format:CompactDisc a duo:Format ;
   duo:code "dc" ;
   rdfs:label "CD"@no ;
   rdfs:label "CD"@en .
@@ -32,12 +32,12 @@ format:MP3-CD a duo:Format ;
   rdfs:label "MP3-CD"@no ;
   rdfs:label "MP3-CD"@en .
 
-format:Gramophone_record a duo:Format ;
+format:GramophoneRecord a duo:Format ;
   duo:code "da" ;
   rdfs:label "Vinylplate"@no ;
   rdfs:label "Vinyl record"@en .
 
-format:Compact_Cassette a duo:Format ;
+format:CompactCassette a duo:Format ;
   duo:code "db" ;
   rdfs:label "Kassett"@no ;
   rdfs:label "Cassette"@en .
@@ -52,12 +52,12 @@ format:DVD-ROM a duo:Format ;
   rdfs:label "DVD-ROM"@no ;
   rdfs:label "DVD-ROM"@en .
 
-format:Digi_book a duo:Format ;
+format:DigiBook a duo:Format ;
   duo:code "dd" ;
   rdfs:label "Digibok"@no ;
   rdfs:label "Digibook"@en .
 
-format:Digi_card a duo:Format ;
+format:DigiCard a duo:Format ;
   duo:code "de" ;
   rdfs:label "Digikort"@no ;
   rdfs:label "Digicard"@en .
@@ -67,42 +67,42 @@ format:DAISY a duo:Format ;
   rdfs:label "DAISY"@no ;
   rdfs:label "DAISY"@en .
 
-format:Nintendo_DS_game a duo:Format ;
+format:NintendoDSGame a duo:Format ;
   duo:code "mn" ;
   rdfs:label "Nintendo DS-spill"@no ;
   rdfs:label "Nintendo DS game"@en .
 
-format:Nintendo_Wii_game a duo:Format ;
+format:NintendoWiiGame a duo:Format ;
   duo:code "mo" ;
   rdfs:label "Nintendo Wii-spill"@no ;
   rdfs:label "Nintendo Wii game"@en .
 
-format:Personal_computer_game a duo:Format ;
+format:PersonalComputerGame a duo:Format ;
   duo:code "ma" ;
   rdfs:label "PC-spill"@no ;
   rdfs:label "PC game"@en .
 
-format:Playstation_2_game a duo:Format ;
+format:Playstation2Game a duo:Format ;
   duo:code "mb" ;
   rdfs:label "Playstation 2-spill"@no ;
   rdfs:label "Playstation 2 game"@en .
 
-format:Playstation_3_game a duo:Format ;
+format:Playstation3Game a duo:Format ;
   duo:code "mc" ;
   rdfs:label "Playstation 3-spill"@no ;
   rdfs:label "Playstation 3 game"@en .
 
-format:Playstation_4_game a duo:Format ;
+format:Playstation4Game a duo:Format ;
   duo:code "me" ;
   rdfs:label "Playstation 4-spill"@no ;
   rdfs:label "Playstation 4 game"@en .
 
-format:Xbox_One_game a duo:Format ;
+format:XboxOneGame a duo:Format ;
   duo:code "mk" ;
   rdfs:label "Xbox One-spill"@no ;
   rdfs:label "Xbox One game"@en .
 
-format:Xbox_360_game a duo:Format ;
+format:Xbox360Game a duo:Format ;
   duo:code "mj" ;
   rdfs:label "Xbox 360-spill"@no ;
   rdfs:label "Xbox 360 game"@en .
@@ -130,7 +130,7 @@ format:Microfiche a duo:Format ;
   rdfs:label "Mikrofiche"@no ;
   rdfs:label "Microfiche"@en .
 
-format:Microfilm_reel a duo:Format ;
+format:MicrofilmReel a duo:Format ;
   duo:code "ib" ;
   rdfs:label "Mikrofilm"@no ;
   rdfs:label "Microfilm reel"@en .
