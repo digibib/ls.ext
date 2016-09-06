@@ -226,11 +226,19 @@
         </datafield>
         <!-- should result in a work without main entry from a uniform title -->
         <datafield tag="730" ind1=" " ind2=" ">
-            <subfield code="a">Bibelen II </subfield>
+            <subfield code="a">Bibelen II</subfield>
             <subfield code="b">Hvis Judas fikk bestemme</subfield>
             <subfield code="f">1611</subfield>
             <subfield code="n">3</subfield>
             <subfield code="p">Judasevangeliet</subfield>
+        </datafield>
+        <!-- should result in alternative title of work -->
+        <datafield tag="740" ind1=" " ind2=" ">
+            <subfield code="a">Alt title</subfield>
+        </datafield>
+        <!-- should result in publication part-->
+        <datafield tag="740" ind1=" " ind2="2">
+            <subfield code="a">Part title</subfield>
         </datafield>
     </record>
 </collection>

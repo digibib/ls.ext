@@ -34,6 +34,9 @@ class BibliographicObjectExternal extends ExternalDataObject {
     @SerializedName("deichman:ordinal")
     private String ordinal;
 
+    @SerializedName("deichman:altTitle")
+    private List<String> altTitle;
+
     BibliographicObjectExternal(String id) {
         setId(id);
     }
@@ -96,5 +99,12 @@ class BibliographicObjectExternal extends ExternalDataObject {
             this.contributor = new ArrayList<>();
         }
         this.contributor.add(of("@id", contribution.getId()));
+    }
+
+    public void addAltTitle(String altTitle) {
+        if (this.altTitle == null) {
+            this.altTitle = new ArrayList<>();
+        }
+        this.altTitle.add(altTitle);
     }
 }

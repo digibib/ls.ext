@@ -323,6 +323,16 @@ public class MARCMapper {
                         };
                     }
                     break;
+                case "740":
+                    if (hasPublicationPartRelationship(dataField)) {
+                        PublicationPart publicationPart = new PublicationPart(newBlankNodeId());
+                        getSubfieldValue(dataField, 'a').ifPresent(publicationPart::setMainTitle);
+                        publication.addPublicationPart(publicationPart);
+                        publicationParts.add(publicationPart);
+                    } else {
+                        getSubfieldValue(dataField, 'a').ifPresent(work::addAltTitle);
+                    }
+                    break;
                 default:
                     //we're not interested in the content so we do nothing -- checkstyle requires default.
                     break;
