@@ -333,6 +333,15 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 'a').ifPresent(work::addAltTitle);
                     }
                     break;
+                case "780":
+                    getSubfieldValue(dataField, 't').ifPresent(title -> {
+                        Work followingWork = new Work(newBlankNodeId(), title);
+                        graphList.add(followingWork);
+                        WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(), dataPrefix(path("relationType", "continuedIn")));
+                        graphList.add(relationToFollowing);
+                        work.isRelatedTo(relationToFollowing);
+                    });
+                    break;
                 default:
                     //we're not interested in the content so we do nothing -- checkstyle requires default.
                     break;

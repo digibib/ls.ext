@@ -240,5 +240,9 @@
         <datafield tag="740" ind1=" " ind2="2">
             <subfield code="a">Part title</subfield>
         </datafield>
+        <!-- should result in relationship to a work that follows this-->
+        <datafield tag="780" ind1=" " ind2="2">
+            <subfield code="t">Next</subfield>
+        </datafield>
     </record>
 </collection>

@@ -92,6 +92,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:partNumber": "Book 2",
@@ -413,6 +416,23 @@
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
           "@id": "http://data.deichman.no/relationType#basedOn"
+        },
+        "@id": "_:0000000",
+        "deichman:work": {
+          "@id": "_:0000000"
+        }
+      },
+      {
+        "deichman:mainTitle": "Next",
+        "@type": [
+          "Work"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "@type": "deichman:WorkRelation",
+        "deichman:hasRelationType": {
+          "@id": "http://data.deichman.no/relationType#continuedIn"
         },
         "@id": "_:0000000",
         "deichman:work": {
