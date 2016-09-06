@@ -6,17 +6,15 @@ class MediaType extends React.Component {
   renderFormats (mediaType, maybeFormats) {
     const formats = maybeFormats || []
     const filtered = formats.filter(format => {
-      if (mediaType === 'http://data.deichman.no/mediaType#Book' && (formats.length === 1 && formats[0] === 'http://data.deichman.no/format#Book')) {
-        return false
-      } else if (mediaType === 'http://data.deichman.no/mediaType#ComicBook' && (formats.length === 1 && formats[0] === 'http://data.deichman.no/format#Book')) {
+      if (mediaType === 'http://data.deichman.no/mediaType#Book' && (formats.length === 1 && formats[ 0 ] === 'http://data.deichman.no/format#Book')) {
         return false
       } else {
-        return true
+        return !(mediaType === 'http://data.deichman.no/mediaType#ComicBook' && (formats.length === 1 && formats[ 0 ] === 'http://data.deichman.no/format#Book'))
       }
     })
     return <p>
-      {filtered.map((format, i) => {
-        return <span>{this.props.intl.formatMessage({ id: format })} &nbsp;</span>
+      {filtered.map(format => {
+        return <span key={format}>{this.props.intl.formatMessage({ id: format })} &nbsp;</span>
       })}
     </p>
   }
@@ -25,7 +23,7 @@ class MediaType extends React.Component {
     const mediaType = this.props.mediaType
     return (
       <div key={mediaType.uri} className="entry-content-icon-single">
-        <img src={`/images/icon-${Constants.mediaTypeIcons[mediaType.uri]}.svg`} />
+        <img src={`/images/icon-${Constants.mediaTypeIcons[ mediaType.uri ]}.svg`} />
         <p><strong>{this.props.intl.formatMessage({ id: mediaType.uri })}</strong></p>
         <div>{this.renderFormats(mediaType.uri, mediaType.formats)}</div>
       </div>
