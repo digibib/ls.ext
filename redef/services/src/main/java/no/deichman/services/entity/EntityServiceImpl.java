@@ -450,7 +450,15 @@ public final class EntityServiceImpl implements EntityService {
                 } else if (pred.equals(ageLimitProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_521, MarcConstants.SUBFIELD_A, String.format("Aldersgrense %s", stmt.getLiteral().getString()));
                 } else if (pred.equals(subjectProperty)) {
-                    marcRecord.addMarcField(MarcConstants.FIELD_650, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                    String[] parts = stmt.getLiteral().getString().split("__");
+                    if (parts.length == 2) {
+                        MarcField field650 = MarcRecord.newDataField(MarcConstants.FIELD_650);
+                        field650.addSubfield(MarcConstants.SUBFIELD_A, parts[0]);
+                        field650.addSubfield(MarcConstants.SUBFIELD_Q, parts[1]);
+                        marcRecord.addMarcField(field650);
+                    } else {
+                        marcRecord.addMarcField(MarcConstants.FIELD_650, MarcConstants.SUBFIELD_A, parts[0]);
+                    }
                 } else if (pred.equals(genreProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(literaryFormProperty)) {

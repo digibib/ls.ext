@@ -728,24 +728,19 @@ public class EntityServiceImplTest {
                 + "    ns2:personTitle \"forfatter\" ;\n"
                 + "    ns4:lifeSpan \"1957-\" ;\n"
                 + "    ns1:bibliofilPersonId \"10834700\" .\n"
-                + "\n"
                 + "<http://192.168.50.12:8005/person/h11234> rdf:type ns2:Person ;\n"
                 + "    ns2:name \"Falcinella, Cristina\" ;\n"
                 + "    ns2:nationality <http://data.deichman.no/nationality#ita> .\n"
-                + "\n"
                 + "<http://deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
-                + "    ns2:prefLabel \"Trondheim\" ."
-                + "\n"
+                + "    ns2:prefLabel \"Trondheim\" ;\n"
+                + "    ns2:specification \"bartebyen\" ."
                 + "<http://deichman.no/subject/e1200006> rdf:type ns2:Subject ;\n"
                 + "    ns2:prefLabel \"Popler\" ."
-                + "\n"
                 + "<http://deichman.no/genre/g1> rdf:type ns2:Genre ;\n"
                 + "    ns2:prefLabel \"Krim\" ;\n"
                 + "    ns2:specification \"spesial\" ."
-                + "\n"
                 + "<http://deichman.no/place/p1> rdf:type ns2:Place ;\n"
                 + "    ns2:prefLabel \"Oslo\" ."
-                + "\n"
                 + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en .\n"
                 + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Fiksjon\"@no, \"Fiction\"@en .\n"
                 + "<http://data.deichman.no/literaryForm#nonfiction> rdfs:label \"Fag\"@no, \"Nonfiction\"@en .\n"
@@ -813,6 +808,7 @@ public class EntityServiceImplTest {
         // Emner:
         field = MarcRecord.newDataField("650");
         field.addSubfield('a', "Trondheim");
+        field.addSubfield('q', "bartebyen");
         want.addMarcField(field);
         field = MarcRecord.newDataField("650");
         field.addSubfield('a', "Popler");
