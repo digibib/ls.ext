@@ -3215,7 +3215,7 @@
                   subs:
                     a: "Map"
                     ab: "Map"
-                    c: "Sheet_music"
+                    c: "SheetMusic"
                     da: "GramophoneRecord"
                     db: "CompactCassette"
                     dc: "CompactDisc"
