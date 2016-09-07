@@ -70,6 +70,8 @@ public final class EntityServiceImpl implements EntityService {
     private final Property mainEntryProperty;
     private final Property publicationPlaceProperty;
     private final Property literaryFormProperty;
+    private final Property literaryFormLabelProperty;
+
     private final String nonfictionResource = "http://data.deichman.no/literaryForm#nonfiction";
     private final String fictionResource = "http://data.deichman.no/literaryForm#fiction";
 
@@ -91,6 +93,7 @@ public final class EntityServiceImpl implements EntityService {
         mainEntryProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntry"));
         publicationPlaceProperty = ResourceFactory.createProperty(baseURI.ontology("publicationPlace"));
         literaryFormProperty = ResourceFactory.createProperty(baseURI.ontology("literaryForm"));
+        literaryFormLabelProperty = ResourceFactory.createProperty(baseURI.ontology("literaryFormLabel"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -439,6 +442,11 @@ public final class EntityServiceImpl implements EntityService {
                         marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.field008fiction);
                     } else if (obj.hasURI(nonfictionResource)) {
                         marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.field008nonfiction);
+                    }
+                } else if (pred.equals(literaryFormLabelProperty)) {
+                    String label = stmt.getLiteral().getString();
+                    if (!label.equals("Fag") && !label.equals("Fiksjon")) {
+                        marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                     }
                 }
             }

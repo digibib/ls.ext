@@ -354,6 +354,7 @@ public final class SPARQLQueryBuilder {
     public Query constructInformationForMARC(XURI publication) {
         String q = String.format(""
                 + "PREFIX deichman: <%1$s>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "CONSTRUCT {\n"
                 + "  ?pub deichman:mainTitle ?mainTitle ;\n"
                 + "       deichman:partTitle ?partTitle ;\n"
@@ -366,6 +367,7 @@ public final class SPARQLQueryBuilder {
                 + "       deichman:mainEntry ?mainEntryName ;\n"
                 + "       deichman:subject ?subjectLabel ;\n"
                 + "       deichman:literaryForm ?literaryForm ;\n"
+                + "       deichman:literaryFormLabel ?literaryFormLabel ;\n"
                 + "       deichman:genre ?genreLabel .\n"
                 + "}\n"
                 + "WHERE {\n"
@@ -394,7 +396,10 @@ public final class SPARQLQueryBuilder {
                 + "    ?work deichman:genre ?genre .\n"
                 + "    ?genre deichman:prefLabel ?genreLabel .\n"
                 + "  }\n"
-                + "  OPTIONAL { ?work deichman:literaryForm ?literaryForm }"
+                + "  OPTIONAL { ?work deichman:literaryForm ?literaryForm .\n"
+                + "    ?literaryForm rdfs:label ?literaryFormLabel .\n"
+                + "    FILTER(lang(?literaryFormLabel) = \"no\")\n"
+                + "  }"
                 + "}", baseURI.ontology(), publication.getUri());
         return QueryFactory.create(q);
     }

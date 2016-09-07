@@ -742,7 +742,11 @@ public class EntityServiceImplTest {
                 + "    ns2:specification \"spesial\" ."
                 + "\n"
                 + "<http://deichman.no/place/p1> rdf:type ns2:Place ;\n"
-                + "    ns2:prefLabel \"Oslo\" .";
+                + "    ns2:prefLabel \"Oslo\" ."
+                + "\n"
+                + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en .\n"
+                + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Fiksjon\"@no, \"Fiction\"@en .\n"
+                + "<http://data.deichman.no/literaryForm#nonfiction> rdfs:label \"Fag\"@no, \"Nonfiction\"@en .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
@@ -771,6 +775,10 @@ public class EntityServiceImplTest {
         // Sjanger:
         field = MarcRecord.newDataField("655");
         field.addSubfield('a', "Krim");
+        want.addMarcField(field);
+        // Literær form (som ikke er fag/fiksjon) som sjanger
+        field = MarcRecord.newDataField("655");
+        field.addSubfield('a', "Roman");
         want.addMarcField(field);
         // Emner:
         field = MarcRecord.newDataField("690");
