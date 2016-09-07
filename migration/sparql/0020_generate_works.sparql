@@ -1,6 +1,31 @@
-# 1) workAuthority for utgivelser med creator
+# 1) workAuthority for utgivelser med adaptor
 
 SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+PREFIX role: <http://data.deichman.no/role#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  ?publication migration:workAuthority ?sum .
+}
+
+WHERE {
+ { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
+    ?publication role:adaptor [duo:bibliofilAuthorityId ?id] ;
+      a :Publication .
+  }}
+}
+;
+
+
+# 2) workAuthority for utgivelser med creator
+
+SPARQL
+DEFINE sql:log-enable 2
 PREFIX : <http://__HOST__/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
@@ -14,14 +39,15 @@ INSERT {
 
 WHERE {
  { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication migration:creator [duo:bibliofilAuthorityId ?id] ;
+   ?publication migration:creator [duo:bibliofilAuthorityId ?id] ;
       a :Publication .
+    MINUS {?publication migration:workAuthority ?o .}
   }}
 }
 ;
 
 
-# 2) workAuthority for utgivelser med editor
+# 3) workAuthority for utgivelser med editor
 
 SPARQL
 DEFINE sql:log-enable 2
@@ -47,7 +73,7 @@ WHERE {
 ;
 
 
-# 3) workAuthority for utgivelser med director
+# 4) workAuthority for utgivelser med director
 
 SPARQL
 DEFINE sql:log-enable 2
@@ -73,7 +99,7 @@ WHERE {
 ;
 
 
-# 4) workAuthority for utgivelser med composer
+# 5) workAuthority for utgivelser med composer
 
 SPARQL
 DEFINE sql:log-enable 2
@@ -99,7 +125,7 @@ WHERE {
 ;
 
 
-# 5) workAuthority for utgivelser med performer
+# 6) workAuthority for utgivelser med performer
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -124,87 +150,7 @@ WHERE {
 ;
 
 
-
-# 6) workAuthority for utgivelser med illustrator
-
-SPARQL
-DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX migration: <http://migration.deichman.no/>
-PREFIX duo: <http://data.deichman.no/duo#>
-PREFIX role: <http://data.deichman.no/role#>
-
-WITH <http://deichman.no/migration>
-
-INSERT {
-  ?publication migration:workAuthority ?sum .
-}
-
-WHERE {
- { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:illustrator [duo:bibliofilAuthorityId ?id] ;
-     a :Publication .
-    MINUS {?publication migration:workAuthority ?o .}
-  }}
-}
-;
-
-
-
-# 7) workAuthority for utgivelser med corporation
-
-SPARQL
-PREFIX : <http://__HOST__/ontology#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX migration: <http://migration.deichman.no/>
-PREFIX duo: <http://data.deichman.no/duo#>
-PREFIX role: <http://data.deichman.no/role#>
-
-WITH <http://deichman.no/migration>
-
-INSERT {
-  ?publication migration:workAuthority ?sum .
-}
-
-WHERE {
- { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:publisher [duo:bibliofilAuthorityId ?id] ;
-      a :Publication .
-    MINUS {?publication migration:workAuthority ?o .}
-  }}
-}
-;
-
-
-
-# 8) workAuthority for utgivelser med contributor
-
-SPARQL
-DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX migration: <http://migration.deichman.no/>
-PREFIX duo: <http://data.deichman.no/duo#>
-PREFIX role: <http://data.deichman.no/role#>
-
-WITH <http://deichman.no/migration>
-
-INSERT {
-  ?publication migration:workAuthority ?sum .
-}
-
-WHERE {
- { SELECT SUM(xsd:int(?id)) AS ?sum ?publication WHERE {
-    ?publication role:contributor [duo:bibliofilAuthorityId ?id] ;
-     a :Publication .
-    MINUS {?publication migration:workAuthority ?o .}
-  }}
-}
-;
-
-
-# 19) Verk fra utgivelser uten originaltittel
+# 20) Verk fra utgivelser med workAuthority, uten originaltittel
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -223,17 +169,17 @@ INSERT {
 }
 
 WHERE {
-  ?publication a :Publication ;
+  ?publication migration:workAuthority ?workAuthority ;
+    a :Publication ;
     :mainTitle ?mainTitle .
   MINUS { ?publication migration:originalTitle ?originalTitle .}
-  OPTIONAL { ?publication migration:workAuthority ?workAuthority .}
   OPTIONAL { ?publication :partNumber ?partNumber .}
   OPTIONAL { ?publication :partTitle ?partTitle .}
 }
 ;
 
 
-# 20) Verk fra utgivelser med originaltittel
+# 21) Verk fra utgivelser med workAuthority og originaltittel
 
 SPARQL
 DEFINE sql:log-enable 2
@@ -253,10 +199,70 @@ INSERT {
 }
 
 WHERE {
-  ?publication 
-  migration:originalTitle ?mainTitle ;
+  ?publication migration:workAuthority ?workAuthority ;
+    migration:originalTitle ?mainTitle ;
     a :Publication .
-  OPTIONAL { ?publication migration:workAuthority ?workAuthority .}
+  OPTIONAL { ?publication migration:originalPartNumber ?partNumber .}
+  OPTIONAL { ?publication migration:originalPartTitle ?partTitle .}
+}
+;
+
+
+# 22) Verk fra utgivelser uten workAuthority og originaltittel
+
+SPARQL
+DEFINE sql:log-enable 2
+PREFIX : <http://__HOST__/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` a :Work ;
+    :mainTitle ?mainTitle ;
+    :partNumber ?partNumber ;
+    :partTitle ?partTitle .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` .
+}
+
+WHERE {
+  ?publication :mainTitle ?mainTitle ;
+    :recordID ?recordID ;
+    a :Publication .
+  MINUS { ?publication migration:originalTitle ?originalTitle .}
+  MINUS { ?publication migration:workAuthority ?workAuthority .}
+  OPTIONAL { ?publication :partNumber ?partNumber .}
+  OPTIONAL { ?publication :partTitle ?partTitle .}
+}
+;
+
+
+# 23) Verk fra utgivelser uten workAuthority, med originaltittel
+
+SPARQL
+DEFINE sql:log-enable 2
+PREFIX : <http://__HOST__/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` a :Work ;
+    :mainTitle ?mainTitle ;
+    :partNumber ?partNumber ;
+    :partTitle ?partTitle .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` .
+}
+
+WHERE {
+  ?publication migration:originalTitle ?mainTitle ;
+    :recordID ?recordID ;
+    a :Publication .
+  MINUS { ?publication migration:workAuthority ?workAuthority .}
   OPTIONAL { ?publication migration:originalPartNumber ?partNumber .}
   OPTIONAL { ?publication migration:originalPartTitle ?partTitle .}
 }
