@@ -15,7 +15,7 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 ## 0.1.2 (2016-09-07)
 
-TAG: f2231a651aa6d80fff29d7bc452bc3d4bcd080a2
+TAG: 164c30a142dc13793fe469e82a817fa206abe70e
 
 - koha:
   - added messaging route
@@ -35,6 +35,7 @@ TAG: f2231a651aa6d80fff29d7bc452bc3d4bcd080a2
   - map mediaType to MARC 337
   - map format to MARC 338
   - map work/publication adaptations to MARC 385
+  - map subject to MARC 650 (was: 690)
   - map literary form (that is not fiction/nonfiction) to MARC field 655
 - fuseki
   - use official docker hub image
