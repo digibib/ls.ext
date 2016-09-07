@@ -67,7 +67,8 @@ public final class EntityServiceImpl implements EntityService {
     private final Property ageLimitProperty;
     private final Property subjectProperty;
     private final Property genreProperty;
-    private final Property mainEntryProperty;
+    private final Property mainEntryPersonProperty;
+    private final Property mainEntryCorporationProperty;
     private final Property publicationPlaceProperty;
     private final Property literaryFormProperty;
     private final Property literaryFormLabelProperty;
@@ -91,7 +92,8 @@ public final class EntityServiceImpl implements EntityService {
         ageLimitProperty = ResourceFactory.createProperty(baseURI.ontology("ageLimit"));
         subjectProperty = ResourceFactory.createProperty(baseURI.ontology("subject"));
         genreProperty = ResourceFactory.createProperty(baseURI.ontology("genre"));
-        mainEntryProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntry"));
+        mainEntryPersonProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntryPerson"));
+        mainEntryCorporationProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntryCorporation"));
         publicationPlaceProperty = ResourceFactory.createProperty(baseURI.ontology("publicationPlace"));
         literaryFormProperty = ResourceFactory.createProperty(baseURI.ontology("literaryForm"));
         literaryFormLabelProperty = ResourceFactory.createProperty(baseURI.ontology("literaryFormLabel"));
@@ -417,8 +419,10 @@ public final class EntityServiceImpl implements EntityService {
             while (iter.hasNext()) {
                 Statement stmt = iter.nextStatement();
                 Property pred = stmt.getPredicate();
-                if (pred.equals(mainEntryProperty)) {
+                if (pred.equals(mainEntryPersonProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(mainEntryCorporationProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_110, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(publicationYearProperty)) {
                     field260.addSubfield(MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
                 } else if (pred.equals(publicationPlaceProperty)) {
