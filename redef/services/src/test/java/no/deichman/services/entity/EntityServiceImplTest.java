@@ -688,7 +688,7 @@ public class EntityServiceImplTest {
                 + "<http://192.168.50.12:8005/publication/p735933031021> rdf:type ns2:Publication ;\n"
                 + "    ns2:bibliofilPublicationID \"0626460\" ;\n"
                 + "    ns2:format <http://data.deichman.no/format#Book> ;\n"
-                + "    ns2:mediaType <http://data.deichman.no/mediaType#Book> ;\n"
+                + "    ns2:hasMediaType <http://data.deichman.no/mediaType#Book> ;\n"
                 + "    ns2:isbn \"82-495-0272-8\" ;\n"
                 + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ; ns2:partTitle \"deltittel\" ;\n"
@@ -748,8 +748,8 @@ public class EntityServiceImplTest {
                 + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en .\n"
                 + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Fiksjon\"@no, \"Fiction\"@en .\n"
                 + "<http://data.deichman.no/literaryForm#nonfiction> rdfs:label \"Fag\"@no, \"Nonfiction\"@en .\n"
-                + ""
-                + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en\n";
+                + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en .\n"
+                + "<http://data.deichman.no/mediaType#Book> rdfs:label \"Bok\"@no, \"Book\"@en .\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
@@ -782,6 +782,10 @@ public class EntityServiceImplTest {
         // Verkstype
         field = MarcRecord.newDataField("336");
         field.addSubfield('a', "Litteratur");
+        want.addMarcField(field);
+        // Medietype
+        field = MarcRecord.newDataField("337");
+        field.addSubfield('a', "Bok");
         want.addMarcField(field);
         // Sjanger:
         field = MarcRecord.newDataField("655");
