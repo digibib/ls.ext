@@ -13,9 +13,35 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.1.2 (2016-09-07)
+
+TAG: f2231a651aa6d80fff29d7bc452bc3d4bcd080a2
+
+- koha:
+  - added messaging route
+  - RFIDhub patch for HOLD_SLIP
+  - mask ssn number in Koha admin
+- patron-client:
+  - welcoming email to self registered user
+- catalinker:
+  - add mediatype audible
+  - fix subjects from external resources
+  - add Event entity
+- services:
+  - map literaryFrom fiction/nonfiction to MARC 008
+  - map language iso codes to MARC 041
+  - map corporation main entry to MARC 110
+  - map workType to MARC 336
+  - map mediaType to MARC 337
+  - map format to MARC 338
+  - map work/publication adaptations to MARC 385
+  - map literary form (that is not fiction/nonfiction) to MARC field 655
+- fuseki
+  - use official docker hub image
+
 ## 0.1.1 (2016-08-31)
 
-TAG: 39faad72aee09d6500d199a9c31694fb890fcd77
+TAG: 3482e74f4eba2b87830cb592c9b4af0cc6f16912
 
 - koha:
   - update to LinkMobility SMS provider
