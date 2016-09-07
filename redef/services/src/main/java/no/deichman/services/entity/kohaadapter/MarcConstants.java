@@ -20,8 +20,8 @@ public final class MarcConstants {
     public static final char SUBFIELD_N = 'n';
     public static final char SUBFIELD_C = 'c';
 
-    public static final String field008nonfiction = "                                 0      ";
-    public static final String field008fiction = "                                 1      ";
+    public static final String FIELD_008_NONFICTION = "                                 0      ";
+    public static final String FIELD_008_FICTION = "                                 1      ";
 
     private MarcConstants() {
     }

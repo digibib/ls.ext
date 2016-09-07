@@ -42,7 +42,6 @@ public class MarcRecord {
     }
 
     public final void addControlField(String tag, String value) {
-        MarcFactory marcFactory = MarcFactory.newInstance();
         ControlField field = marcFactory.newControlField(tag, value);
         record.addVariableField(field);
     }

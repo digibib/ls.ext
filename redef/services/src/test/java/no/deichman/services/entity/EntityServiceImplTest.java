@@ -752,7 +752,7 @@ public class EntityServiceImplTest {
         XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
         MarcRecord want = new MarcRecord();
         // fag/fiksjon:
-        want.addControlField(MarcConstants.FIELD_008, MarcConstants.field008fiction);
+        want.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_FICTION);
         // Hovedinnførsel:
         MarcField field = MarcRecord.newDataField("100");
         field.addSubfield('a', "Ragde, Anne B.");

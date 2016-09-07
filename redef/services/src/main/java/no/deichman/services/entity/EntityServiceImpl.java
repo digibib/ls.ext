@@ -439,9 +439,9 @@ public final class EntityServiceImpl implements EntityService {
                 } else if (pred.equals(literaryFormProperty)) {
                     Resource obj = stmt.getObject().asResource();
                     if (obj.hasURI(fictionResource)) {
-                        marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.field008fiction);
+                        marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_FICTION);
                     } else if (obj.hasURI(nonfictionResource)) {
-                        marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.field008nonfiction);
+                        marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_NONFICTION);
                     }
                 } else if (pred.equals(literaryFormLabelProperty)) {
                     String label = stmt.getLiteral().getString();
