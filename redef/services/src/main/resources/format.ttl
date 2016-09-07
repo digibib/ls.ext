@@ -67,6 +67,16 @@ format:DAISY a duo:Format ;
   rdfs:label "DAISY"@no ;
   rdfs:label "DAISY"@en .
 
+format:EBokBib a duo:Format ;
+  duo:code "nb" ;
+  rdfs:label "eBokBib"@no ;
+  rdfs:label "eBokBib"@en .
+
+format:ComputerFile a duo:Format ;
+  duo:code "ga" ;
+  rdfs:label "Nedlastbar fil"@no ;
+  rdfs:label "Computer file"@en .
+
 format:NintendoDSGame a duo:Format ;
   duo:code "mn" ;
   rdfs:label "Nintendo DS-spill"@no ;
