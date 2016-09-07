@@ -166,6 +166,8 @@ WHERE {
       (mediaType:ComicBook            workType:Literature)
       (mediaType:MusicRecording       workType:Music)
       (mediaType:SheetMusic           workType:Music)
+      (mediaType:LanguageCourse       workType:Other)
+      (mediaType:Other                workType:Other)
     }
 }
 ;
