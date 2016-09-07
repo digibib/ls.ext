@@ -705,7 +705,6 @@ public class EntityServiceImplTest {
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
                 + "\n"
-                + "\n"
                 + "<http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
                 + "    ns2:audience <http://data.deichman.no/audience#adult> ;\n"
                 + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
@@ -812,18 +811,16 @@ public class EntityServiceImplTest {
         field.addSubfield('a', "Roman");
         want.addMarcField(field);
         // Emner:
-        field = MarcRecord.newDataField("690");
+        field = MarcRecord.newDataField("650");
         field.addSubfield('a', "Trondheim");
         want.addMarcField(field);
-        field = MarcRecord.newDataField("690");
+        field = MarcRecord.newDataField("650");
         field.addSubfield('a', "Popler");
         want.addMarcField(field);
         // Aldersgrense:
         field = MarcRecord.newDataField("521");
         field.addSubfield('a', "Aldersgrense 75");
         want.addMarcField(field);
-
-
         MarcRecord got = service.generateMarcRecordForPublication(pub, model);
         assertTrue(got.equals(want));
     }
