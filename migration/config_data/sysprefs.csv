@@ -38,7 +38,7 @@ variable,value
 "rfidhuburl","ws://${HOST}:8899/ws"
 "SearchEngine","Zebra"
 "SessionRestrictionByIP",0
-"SMSSendDriver","NO::HTTP"
+"SMSSendDriver","NO::LinkMobilityHTTP"
 "StoreLastBorrower", "1"
 "userfidhub",1
 "virtualshelves",0
