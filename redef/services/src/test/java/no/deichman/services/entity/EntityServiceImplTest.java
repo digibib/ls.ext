@@ -689,6 +689,7 @@ public class EntityServiceImplTest {
                 + "    ns2:bibliofilPublicationID \"0626460\" ;\n"
                 + "    ns2:format <http://data.deichman.no/format#EBokBib> ;\n"
                 + "    ns2:hasMediaType <http://data.deichman.no/mediaType#Book> ;\n"
+                + "    ns2:hasFormatAdaptation <http://data.deichman.no/formatAdaptation#largePrint> ;\n"
                 + "    ns2:isbn \"82-495-0272-8\" ;\n"
                 + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ; ns2:partTitle \"deltittel\" ;\n"
@@ -707,6 +708,7 @@ public class EntityServiceImplTest {
                 + "\n"
                 + "<http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
                 + "    ns2:audience <http://data.deichman.no/audience#adult> ;\n"
+                + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
                 + "    ns2:contributor [ rdf:type ns2:Contribution,\n"
                 + "                ns2:MainEntry ;\n"
                 + "            ns2:agent <http://192.168.50.12:8005/person/h10834700> ;\n"
@@ -750,7 +752,9 @@ public class EntityServiceImplTest {
                 + "<http://data.deichman.no/literaryForm#nonfiction> rdfs:label \"Fag\"@no, \"Nonfiction\"@en .\n"
                 + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en .\n"
                 + "<http://data.deichman.no/mediaType#Book> rdfs:label \"Bok\"@no, \"Book\"@en .\n"
-                + "<http://data.deichman.no/format#EBokBib> rdfs:label \"eBokBib\"@no, \"eBokBib\"@en .\n";
+                + "<http://data.deichman.no/format#EBokBib> rdfs:label \"eBokBib\"@no, \"eBokBib\"@en .\n"
+                + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en .\n"
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> rdfs:label \"Lettlest, enkelt språk\"@no, \"Easy to read, easy language\"@en .\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
@@ -787,6 +791,13 @@ public class EntityServiceImplTest {
         // Medietype
         field = MarcRecord.newDataField("337");
         field.addSubfield('a', "Bok");
+        want.addMarcField(field);
+        // Tilrettelegging
+        field = MarcRecord.newDataField("385");
+        field.addSubfield('a', "Storskrift");
+        want.addMarcField(field);
+        field = MarcRecord.newDataField("385");
+        field.addSubfield('a', "Lettlest, enkelt språk");
         want.addMarcField(field);
         // Format
         field = MarcRecord.newDataField("338");

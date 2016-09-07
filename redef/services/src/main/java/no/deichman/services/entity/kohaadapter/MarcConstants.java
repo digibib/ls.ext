@@ -14,6 +14,7 @@ public final class MarcConstants {
     public static final String FIELD_336 = "336";
     public static final String FIELD_337 = "337";
     public static final String FIELD_338 = "338";
+    public static final String FIELD_385 = "385";
     public static final String FIELD_655 = "655";
     public static final String FIELD_690 = "690";
     static final String LEADER_TEMPLATE = "         a              ";

@@ -78,6 +78,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property workTypeProperty;
     private final Property mediaTypeProperty;
     private final Property formatLabelProperty;
+    private final Property adaptaionProperty;
 
     private final String nonfictionResource = "http://data.deichman.no/literaryForm#nonfiction";
     private final String fictionResource = "http://data.deichman.no/literaryForm#fiction";
@@ -106,6 +107,7 @@ public final class EntityServiceImpl implements EntityService {
         workTypeProperty = ResourceFactory.createProperty(baseURI.ontology("workType"));
         mediaTypeProperty = ResourceFactory.createProperty(baseURI.ontology("mediaType"));
         formatLabelProperty = ResourceFactory.createProperty(baseURI.ontology("formatLabel"));
+        adaptaionProperty = ResourceFactory.createProperty(baseURI.ontology("adaptationLabel"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -473,6 +475,8 @@ public final class EntityServiceImpl implements EntityService {
                     marcRecord.addMarcField(MarcConstants.FIELD_337, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(formatLabelProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_338, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(adaptaionProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_385, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 }
             }
         }
