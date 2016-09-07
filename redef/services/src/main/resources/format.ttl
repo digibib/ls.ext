@@ -73,7 +73,7 @@ format:EBokBib a duo:Format ;
   rdfs:label "eBokBib"@en .
 
 format:ComputerFile a duo:Format ;
-  duo:code "ga" ;
+  duo:code "na" ;
   rdfs:label "Nedlastbar fil"@no ;
   rdfs:label "Computer file"@en .
 
