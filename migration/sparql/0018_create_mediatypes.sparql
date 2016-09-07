@@ -140,7 +140,7 @@ WHERE {
 ;
 
 
-# 5) Construct media type based on format, keep format
+# 5) Construct work type based on media type
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -163,6 +163,7 @@ WHERE {
       (mediaType:Audiobook            workType:Literature)
       (mediaType:Book                 workType:Literature)
       (mediaType:E-book               workType:Literature)
+      (mediaType:ComicBook            workType:Literature)
       (mediaType:MusicRecording       workType:Music)
       (mediaType:SheetMusic           workType:Music)
     }
