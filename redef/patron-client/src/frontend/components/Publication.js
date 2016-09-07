@@ -51,14 +51,16 @@ class Publication extends React.Component {
               {formats.join(', ')}
             </span>
             </p>
-            <p>
-              <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
-                <button className="black-btn" type="button"
-                        data-automation-id={`recordId_${publication.recordId}`}>
-                  <span data-automation-id="publication_order"><FormattedMessage {...messages.reserve} /></span>
-                </button>
-              </ClickableElement>
-            </p>
+            { publication.items.length > 0 ? (
+              <p>
+                <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
+                  <button className="black-btn" type="button"
+                          data-automation-id={`recordId_${publication.recordId}`}>
+                    <span data-automation-id="publication_order"><FormattedMessage {...messages.reserve} /></span>
+                  </button>
+                </ClickableElement>
+              </p>
+            ) : null }
           </div>
           <div className="show-status">
             <strong><FormattedMessage {...messages.showStatus} /></strong>
