@@ -14,6 +14,10 @@ mediaType:Audiobook a duo:MediaType ;
   rdfs:label "Lydbok"@no ;
   rdfs:label "Audiobook"@en .
 
+mediaType:ComicBook a duo:MediaType ;
+  rdfs:label "Tegneserie"@no ;
+  rdfs:label "Comic book"@en .
+
 mediaType:LanguageCourse a duo:MediaType ;
   rdfs:label "Språkkurs"@no ;
   rdfs:label "Language course"@en .
