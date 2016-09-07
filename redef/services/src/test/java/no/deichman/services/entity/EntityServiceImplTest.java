@@ -687,7 +687,7 @@ public class EntityServiceImplTest {
                 + "\n"
                 + "<http://192.168.50.12:8005/publication/p735933031021> rdf:type ns2:Publication ;\n"
                 + "    ns2:bibliofilPublicationID \"0626460\" ;\n"
-                + "    ns2:format <http://data.deichman.no/format#Book> ;\n"
+                + "    ns2:format <http://data.deichman.no/format#EBokBib> ;\n"
                 + "    ns2:hasMediaType <http://data.deichman.no/mediaType#Book> ;\n"
                 + "    ns2:isbn \"82-495-0272-8\" ;\n"
                 + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
@@ -749,7 +749,8 @@ public class EntityServiceImplTest {
                 + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Fiksjon\"@no, \"Fiction\"@en .\n"
                 + "<http://data.deichman.no/literaryForm#nonfiction> rdfs:label \"Fag\"@no, \"Nonfiction\"@en .\n"
                 + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en .\n"
-                + "<http://data.deichman.no/mediaType#Book> rdfs:label \"Bok\"@no, \"Book\"@en .\n";
+                + "<http://data.deichman.no/mediaType#Book> rdfs:label \"Bok\"@no, \"Book\"@en .\n"
+                + "<http://data.deichman.no/format#EBokBib> rdfs:label \"eBokBib\"@no, \"eBokBib\"@en .\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
@@ -786,6 +787,10 @@ public class EntityServiceImplTest {
         // Medietype
         field = MarcRecord.newDataField("337");
         field.addSubfield('a', "Bok");
+        want.addMarcField(field);
+        // Format
+        field = MarcRecord.newDataField("338");
+        field.addSubfield('a', "eBokBib");
         want.addMarcField(field);
         // Sjanger:
         field = MarcRecord.newDataField("655");
