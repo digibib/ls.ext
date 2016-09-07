@@ -1,4 +1,33 @@
-# 1) Construct media type based on format, keep format
+# 1) Create media type for comic books
+
+SPARQL
+PREFIX : <http://__HOST__/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?pub :literaryForm literaryForm:comicBook .
+  ?pub :format format:Book .
+}
+
+INSERT {
+  ?pub :hasMediaType mediaType:ComicBook .
+}
+
+WHERE {
+  ?pub :literaryForm literaryForm:comicBook ;
+    a :Publication .
+  OPTIONAL {?pub :format format:Book .}
+}
+;
+
+
+# 2) Construct media type based on format, keep format
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -41,7 +70,7 @@ WHERE {
 ;
 
 
-# 2) Replace format with Media Type
+# 3) Replace format with Media Type
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -76,7 +105,7 @@ WHERE {
 ;
 
 
-# 3) Add media type and format for card games and board games
+# 4) Add media type and format for card games and board games
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
@@ -111,7 +140,7 @@ WHERE {
 ;
 
 
-# 4) Construct media type based on format, keep format
+# 5) Construct media type based on format, keep format
 
 SPARQL
 PREFIX : <http://__HOST__/ontology#>
