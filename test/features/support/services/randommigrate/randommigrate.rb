@@ -46,7 +46,7 @@ module RandomMigrate
       @id = generate_random_string
       @host = host
       @services = "http://services:8005"
-      @formats = %w(Audiobook Book DVD Microfiche Compact_Disc Blu-ray_Audio E-book)
+      @formats = %w(DVD Blu-ray Videotape CD-ROM DigiBook NintendoDSGame BoardGame)
       @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/jpn http://lexvo.org/id/iso639-3/swe)
       @audiences = %w(juvenile ages11To12 ages13To15 ages13To15)
       @publication_uris = []
