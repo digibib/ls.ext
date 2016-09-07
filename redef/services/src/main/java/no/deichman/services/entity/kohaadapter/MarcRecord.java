@@ -3,6 +3,7 @@ package no.deichman.services.entity.kohaadapter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.marc4j.MarcWriter;
 import org.marc4j.MarcXmlWriter;
+import org.marc4j.marc.ControlField;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 
@@ -38,6 +39,12 @@ public class MarcRecord {
         MarcField marcField = newDataField(field);
         marcField.addSubfield(subfield, value);
         addMarcField(marcField);
+    }
+
+    public final void addControlField(String tag, String value) {
+        MarcFactory marcFactory = MarcFactory.newInstance();
+        ControlField field = marcFactory.newControlField(tag, value);
+        record.addVariableField(field);
     }
 
     final String getMarcXml() {

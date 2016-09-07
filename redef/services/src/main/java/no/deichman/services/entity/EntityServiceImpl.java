@@ -69,8 +69,9 @@ public final class EntityServiceImpl implements EntityService {
     private final Property genreProperty;
     private final Property mainEntryProperty;
     private final Property publicationPlaceProperty;
-
-
+    private final Property literaryFormProperty;
+    private final String nonfictionResource = "http://data.deichman.no/literaryForm#nonfiction";
+    private final String fictionResource = "http://data.deichman.no/literaryForm#fiction";
 
     public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
         this.baseURI = baseURI;
@@ -89,6 +90,7 @@ public final class EntityServiceImpl implements EntityService {
         genreProperty = ResourceFactory.createProperty(baseURI.ontology("genre"));
         mainEntryProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntry"));
         publicationPlaceProperty = ResourceFactory.createProperty(baseURI.ontology("publicationPlace"));
+        literaryFormProperty = ResourceFactory.createProperty(baseURI.ontology("literaryForm"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -431,6 +433,13 @@ public final class EntityServiceImpl implements EntityService {
                     marcRecord.addMarcField(MarcConstants.FIELD_690, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(genreProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(literaryFormProperty)) {
+                    Resource obj = stmt.getObject().asResource();
+                    if (obj.hasURI(fictionResource)) {
+                        marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.field008fiction);
+                    } else if (obj.hasURI(nonfictionResource)) {
+                        marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.field008nonfiction);
+                    }
                 }
             }
         }

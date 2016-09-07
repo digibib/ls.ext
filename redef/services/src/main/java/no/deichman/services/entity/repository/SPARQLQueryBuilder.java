@@ -365,6 +365,7 @@ public final class SPARQLQueryBuilder {
                 + "       deichman:ageLimit ?ageLimit ;\n"
                 + "       deichman:mainEntry ?mainEntryName ;\n"
                 + "       deichman:subject ?subjectLabel ;\n"
+                + "       deichman:literaryForm ?literaryForm ;\n"
                 + "       deichman:genre ?genreLabel .\n"
                 + "}\n"
                 + "WHERE {\n"
@@ -393,6 +394,7 @@ public final class SPARQLQueryBuilder {
                 + "    ?work deichman:genre ?genre .\n"
                 + "    ?genre deichman:prefLabel ?genreLabel .\n"
                 + "  }\n"
+                + "  OPTIONAL { ?work deichman:literaryForm ?literaryForm }"
                 + "}", baseURI.ontology(), publication.getUri());
         return QueryFactory.create(q);
     }
