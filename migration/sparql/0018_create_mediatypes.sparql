@@ -17,6 +17,8 @@ WHERE {
 
     VALUES (?format ?mediaType) {
       (format:DAISY                   mediaType:Audiobook)
+      (format:EBokBib                 mediaType:E-book)
+      (format:ComputerFile            mediaType:E-book)
       (format:Videotape               mediaType:Film)
       (format:DVD                     mediaType:Film)
       (format:Blu-ray                 mediaType:Film)
