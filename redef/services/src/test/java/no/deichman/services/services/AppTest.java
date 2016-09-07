@@ -782,11 +782,11 @@ public class AppTest {
 
         String testData;
         switch (authorizedValue) {
-            case ADAPTATION_OF_PUBLICATION_FOR_PARTICULAR_USER_GROUPS:
-                testData = "<http://data.deichman.no/adaptationForParticularUserGroups#capitalLetters> <http://www.w3.org/2000/01/rdf-schema#label> \"Capital letters only\"@en .";
+            case FORMAT_ADAPTATION:
+                testData = "<http://data.deichman.no/formatAdaptation#capitalLetters> <http://www.w3.org/2000/01/rdf-schema#label> \"Capital letters only\"@en .";
                 break;
-            case ADAPTATION_OF_WORK_FOR_PARTICULAR_USER_GROUPS:
-                testData = "<http://data.deichman.no/adaptationOfWorkForParticularUserGroups#easyLanguage> <http://www.w3.org/2000/01/rdf-schema#label> \"Easy to read, easy language\"@en .";
+            case CONTENT_ADAPTATION:
+                testData = "<http://data.deichman.no/contentAdaptation#easyLanguage> <http://www.w3.org/2000/01/rdf-schema#label> \"Easy to read, easy language\"@en .";
                 break;
             case AUDIENCE:
                 testData = "<http://data.deichman.no/audience#adult> <http://www.w3.org/2000/01/rdf-schema#label> \"Adults\"@en .";

@@ -16,8 +16,8 @@ public enum AuthorizedValue {
     LITERARY_FORM("literaryForm"),
     AUDIENCE("audience"),
     BIOGRAPHY("biography"),
-    ADAPTATION_OF_PUBLICATION_FOR_PARTICULAR_USER_GROUPS("adaptationOfPublicationForParticularUserGroups"),
-    ADAPTATION_OF_WORK_FOR_PARTICULAR_USER_GROUPS("adaptationOfWorkForParticularUserGroups"),
+    FORMAT_ADAPTATION("formatAdaptation"),
+    CONTENT_ADAPTATION("contentAdaptation"),
     BINDING("binding"),
     WRITING_SYSTEM("writingSystem"),
     ILLUSTRATIVE_MATTER("illustrativeMatter"),
@@ -34,8 +34,8 @@ public enum AuthorizedValue {
             + "literaryForm|"
             + "audience|"
             + "biography|"
-            + "adaptationOfPublicationForParticularUserGroups|"
-            + "adaptationOfWorkForParticularUserGroups|"
+            + "formatAdaptation|"
+            + "contentAdaptation|"
             + "binding|"
             + "writingSystem|"
             + "illustrativeMatter|"

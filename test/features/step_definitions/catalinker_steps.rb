@@ -688,7 +688,7 @@ When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   data['numberOfPages'] = :get_prop_from_span
   data['isbn'] = :get_prop_from_span
   data['illustrativeMatter'] = :get_prop_from_span
-  data['adaptationOfPublicationForParticularUserGroups'] = :get_prop_from_span
+  data['hasFormatAdaptation'] = :get_prop_from_span
   data['binding'] = :get_prop_from_span
   data['writingSystem'] = :get_prop_from_span
 

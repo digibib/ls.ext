@@ -74,7 +74,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['numberOfPages'] = [rand(999).to_s, :add_prop]
   data['isbn'] = [generateRandomString, :add_prop]
   data['illustrativeMatter'] = [:random, :select_prop]
-  data['adaptationOfPublicationForParticularUserGroups'] = [:random, :select_prop]
+  data['hasFormatAdaptation'] = [:random, :select_prop]
   data['binding'] = [:random, :select_prop]
   data['writingSystem'] = [:first, :select_prop]
 

@@ -18,7 +18,7 @@
 :Publication a rdfs:Class ;
   rdfs:label "Publication"@en ;
   rdfs:label "Utgivelse"@no .
-  
+
 :Agent a rdfs:Class ;
   rdfs:label "Agent"@en ;
   rdfs:label "Aktør"@no .
@@ -35,7 +35,7 @@
 :Subject a rdfs:Class ;
   rdfs:label "Subject"@en ;
   rdfs:label "Emne"@no .
-  
+
 :Concept a rdfs:Class ;
   rdfs:label "Concept"@en ;
   rdfs:label "Konsept"@no .
@@ -52,7 +52,7 @@
 :Serial a rdfs:Class ;
   rdfs:label "Serial"@en ;
   rdfs:label "Serie"@no .
-  
+
 :Series a rdfs:Class ;
   rdfs:label "Series"@en ;
   rdfs:label "Serie"@no .
@@ -61,7 +61,7 @@
 :SerialIssue a rdfs:Class ;
   rdfs:label "Serial issue"@en ;
   rdfs:label "Nummer"@no .
-  
+
 :Issue a rdfs:Class ;
   rdfs:label "Issue"@en ;
   rdfs:label "Serieutgivelse"@no .
@@ -176,7 +176,7 @@
   rdfs:label "Personens tittel"@no ;
   rdfs:domain :Person ;
   rdfs:range xsd:string .
-  
+
 :specification a rdfs:Property ;
   rdfs:label "Specification"@en ;
   rdfs:label "Forklarende tilføyelse"@no ;
@@ -228,7 +228,7 @@
   rdfs:domain :Publication ;
   rdfs:range duo:Format ;
   duo:valuesFrom values:format .
-  
+
 :hasMediaType a rdfs:Property ;
   rdfs:label "Media type"@en ;
   rdfs:label "Medietype"@no ;
@@ -372,21 +372,19 @@
   rdfs:range duo:Biography ;
   duo:valuesFrom values:biography .
 
-# ToDo: Erstattes med :hasFormatAdaptation
-:adaptationOfPublicationForParticularUserGroups a rdfs:Property ;
+:hasFormatAdaptation a rdfs:Property ;
   rdfs:label "Adaptation for particular user groups"@en ;
   rdfs:label "Tilrettelegging"@no ;
   rdfs:domain :Publication ;
-  rdfs:range duo:AdaptationOfPublicationForParticularUserGroups ;
-  duo:valuesFrom values:adaptationOfPublicationForParticularUserGroups .
+  rdfs:range duo:FormatAdaptation ;
+  duo:valuesFrom values:formatAdaptation .
 
-# ToDo: Erstattes med :hasContentAdaptation
-:adaptationOfWorkForParticularUserGroups a rdfs:Property ;
+:hasContentAdaptation a rdfs:Property ;
   rdfs:label "Adaptation for particular user groups"@en ;
   rdfs:label "Tilrettelegging"@no ;
   rdfs:domain :Work ;
-  rdfs:range duo:AdaptationOfWorkForParticularUserGroups ;
-  duo:valuesFrom values:adaptationOfWorkForParticularUserGroups .
+  rdfs:range duo:ContentAdaptation ;
+  duo:valuesFrom values:contentAdaptation .
 
 :hasPlaceOfPublication a rdfs:Property ;
   rdfs:label "Place of publication"@en ;

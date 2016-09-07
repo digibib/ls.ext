@@ -184,7 +184,7 @@ module.exports = (app) => {
               label: 'Foretrukken betegnelse',
               rdfProperty: 'prefLabel',
               displayValueSource: true,
-              type: 'input-string', 
+              type: 'input-string',
               preFillFromSearchField: true // value of this field should be copied from the search field above
             },
             {
@@ -486,7 +486,7 @@ module.exports = (app) => {
               }
             ),
             includeOnlyFor('book', { rdfProperty: 'writingSystem', multiple: true }),
-            { rdfProperty: 'adaptationOfPublicationForParticularUserGroups', multiple: true },
+            { rdfProperty: 'hasFormatAdaptation', multiple: true },
             {
               id: 'publishedByInput',
               rdfProperty: 'publishedBy',
@@ -612,7 +612,7 @@ module.exports = (app) => {
             },
             { rdfProperty: 'audience', multiple: true },
             { rdfProperty: 'biography', multiple: true },
-            { rdfProperty: 'adaptationOfWorkForParticularUserGroups', multiple: true },
+            { rdfProperty: 'hascontentAdaptation', multiple: true },
             {
               label: 'Relasjon til annet verk',
               multiple: true,
