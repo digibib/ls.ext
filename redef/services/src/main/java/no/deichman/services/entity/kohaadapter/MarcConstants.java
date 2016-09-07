@@ -6,6 +6,7 @@ package no.deichman.services.entity.kohaadapter;
 public final class MarcConstants {
     public static final String FIELD_008 = "008";
     public static final String FIELD_019 = "019";
+    public static final String FIELD_041 = "041";
     public static final String FIELD_100 = "100";
     public static final String FIELD_260 = "260";
     public static final String FIELD_020 = "020";

@@ -71,6 +71,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property publicationPlaceProperty;
     private final Property literaryFormProperty;
     private final Property literaryFormLabelProperty;
+    private final Property languageProperty;
 
     private final String nonfictionResource = "http://data.deichman.no/literaryForm#nonfiction";
     private final String fictionResource = "http://data.deichman.no/literaryForm#fiction";
@@ -94,6 +95,7 @@ public final class EntityServiceImpl implements EntityService {
         publicationPlaceProperty = ResourceFactory.createProperty(baseURI.ontology("publicationPlace"));
         literaryFormProperty = ResourceFactory.createProperty(baseURI.ontology("literaryForm"));
         literaryFormLabelProperty = ResourceFactory.createProperty(baseURI.ontology("literaryFormLabel"));
+        languageProperty = ResourceFactory.createProperty(baseURI.ontology("language"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -406,6 +408,7 @@ public final class EntityServiceImpl implements EntityService {
 
         MarcField field245 = MarcRecord.newDataField(MarcConstants.FIELD_245);
         MarcField field260 = MarcRecord.newDataField(MarcConstants.FIELD_260);
+        MarcField field041 = MarcRecord.newDataField(MarcConstants.FIELD_041);
 
         Query query = new SPARQLQueryBuilder(baseURI).constructInformationForMARC(publication);
         try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
@@ -448,6 +451,10 @@ public final class EntityServiceImpl implements EntityService {
                     if (!label.equals("Fag") && !label.equals("Fiksjon")) {
                         marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                     }
+                } else if (pred.equals(languageProperty)) {
+                    String langCode = stmt.getObject().asResource().getURI();
+                    langCode = langCode.substring(langCode.length() - 3);
+                    field041.addSubfield(MarcConstants.SUBFIELD_A, langCode);
                 }
             }
         }
@@ -458,6 +465,10 @@ public final class EntityServiceImpl implements EntityService {
 
         if (field260.size() > 0) {
             marcRecord.addMarcField(field260);
+        }
+
+        if (field041.size() > 0) {
+            marcRecord.addMarcField(field041);
         }
 
         return marcRecord;

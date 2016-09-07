@@ -753,8 +753,12 @@ public class EntityServiceImplTest {
         MarcRecord want = new MarcRecord();
         // fag/fiksjon:
         want.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_FICTION);
+        // Språk
+        MarcField field = MarcRecord.newDataField("041");
+        field.addSubfield('a', "nob");
+        want.addMarcField(field);
         // Hovedinnførsel:
-        MarcField field = MarcRecord.newDataField("100");
+        field = MarcRecord.newDataField("100");
         field.addSubfield('a', "Ragde, Anne B.");
         want.addMarcField(field);
         // Tittelopplysninger:
