@@ -3292,17 +3292,15 @@
                 prefix: "http://data.deichman.no/formatAdaptation#"
                 regex_match: ".{2}"
                 regex_substitute:
-                  orig: "ta|tb|tc|td|te|tf|tg|th|tj"
+                  orig: "tc|td|te|tf|tg|th|tj"
                   subs:
-                    ta: "easyLanguage"
-                    tb: "easyContent"
                     tc: "largePrint"
                     td: "largePrint"
                     te: "braille"
                     tf: "signLanguage"
                     tg: "tactile"
                     tj: "capitalLetters"
-                regex_strip: "^(ta|tb|tc|td|te|tf|tg|tj)$"
+                regex_strip: "^(tc|td|te|tf|tg|tj)$"
           -
             s:
               predicate: "ONTOLOGY.ageLimit"
