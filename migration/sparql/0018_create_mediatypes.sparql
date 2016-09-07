@@ -171,3 +171,27 @@ WHERE {
     }
 }
 ;
+
+
+# 6) Delete redundant formats
+SPARQL
+DEFINE sql:log-enable 2
+PREFIX : <http://__HOST__/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+  ?publication :format ?o .
+}
+
+WHERE {
+      ?publication :format ?o .
+      VALUES ?o {
+            format:CombiDocument
+            format:Blu-rayROM
+            format:WiiDisc
+            format:NintendoGameCard
+      }
+}
+;
