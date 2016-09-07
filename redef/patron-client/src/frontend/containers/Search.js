@@ -192,4 +192,4 @@ const messages = defineMessages({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search)
+)(injectIntl(Search))
