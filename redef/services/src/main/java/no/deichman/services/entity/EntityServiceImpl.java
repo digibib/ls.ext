@@ -49,6 +49,8 @@ import static java.util.stream.Collectors.groupingBy;
  */
 public final class EntityServiceImpl implements EntityService {
 
+    public static final Integer THREE = 3;
+
     private static final String LANGUAGE_TTL_FILE = "language.ttl";
     private static final String AUDIENCE_TTL_FILE = "audience.ttl";
     private static final String FORMAT_TTL_FILE = "format.ttl";
@@ -457,7 +459,7 @@ public final class EntityServiceImpl implements EntityService {
                     }
                 } else if (pred.equals(languageProperty)) {
                     String langCode = stmt.getObject().asResource().getURI();
-                    langCode = langCode.substring(langCode.length() - 3);
+                    langCode = langCode.substring(langCode.length() - THREE);
                     field041.addSubfield(MarcConstants.SUBFIELD_A, langCode);
                 }
             }
