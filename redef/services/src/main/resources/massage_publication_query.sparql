@@ -92,7 +92,7 @@ WHERE {
 
   UNION {
         ?p4 deich:publicationOf ?work ;
-           deich:mediaType ?mediaType .
+           deich:hasMediaType ?mediaType .
         OPTIONAL {
           ?p4 deich:format ?mtFormatO .
           BIND(str(?mtFormatO) AS ?mtFormat)
