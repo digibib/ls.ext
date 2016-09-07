@@ -75,6 +75,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property literaryFormProperty;
     private final Property literaryFormLabelProperty;
     private final Property languageProperty;
+    private final Property workTypeProperty;
 
     private final String nonfictionResource = "http://data.deichman.no/literaryForm#nonfiction";
     private final String fictionResource = "http://data.deichman.no/literaryForm#fiction";
@@ -100,6 +101,7 @@ public final class EntityServiceImpl implements EntityService {
         literaryFormProperty = ResourceFactory.createProperty(baseURI.ontology("literaryForm"));
         literaryFormLabelProperty = ResourceFactory.createProperty(baseURI.ontology("literaryFormLabel"));
         languageProperty = ResourceFactory.createProperty(baseURI.ontology("language"));
+        workTypeProperty = ResourceFactory.createProperty(baseURI.ontology("workType"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -461,6 +463,8 @@ public final class EntityServiceImpl implements EntityService {
                     String langCode = stmt.getObject().asResource().getURI();
                     langCode = langCode.substring(langCode.length() - THREE);
                     field041.addSubfield(MarcConstants.SUBFIELD_A, langCode);
+                } else if (pred.equals(workTypeProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_336, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 }
             }
         }

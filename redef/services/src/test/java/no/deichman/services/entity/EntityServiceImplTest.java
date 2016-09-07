@@ -715,6 +715,7 @@ public class EntityServiceImplTest {
                 + "    ns2:literaryForm <http://data.deichman.no/literaryForm#fiction>,\n"
                 + "        <http://data.deichman.no/literaryForm#novel> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
+                + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> ;"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
                 + "    ns2:genre <http://deichman.no/genre/g1> ;"
                 + "    ns2:subject <http://deichman.no/subject/e1200005>, <http://deichman.no/subject/e1200006> .\n"
@@ -746,7 +747,9 @@ public class EntityServiceImplTest {
                 + "\n"
                 + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en .\n"
                 + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Fiksjon\"@no, \"Fiction\"@en .\n"
-                + "<http://data.deichman.no/literaryForm#nonfiction> rdfs:label \"Fag\"@no, \"Nonfiction\"@en .";
+                + "<http://data.deichman.no/literaryForm#nonfiction> rdfs:label \"Fag\"@no, \"Nonfiction\"@en .\n"
+                + ""
+                + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
@@ -775,6 +778,10 @@ public class EntityServiceImplTest {
         field = MarcRecord.newDataField("260");
         field.addSubfield('a', "Oslo");
         field.addSubfield('c', "2004");
+        want.addMarcField(field);
+        // Verkstype
+        field = MarcRecord.newDataField("336");
+        field.addSubfield('a', "Litteratur");
         want.addMarcField(field);
         // Sjanger:
         field = MarcRecord.newDataField("655");
