@@ -32,14 +32,7 @@ public final class SPARQLQueryBuilder {
     public static final boolean KEEP_BLANK_NODES = true;
     public static final boolean SKIP_BLANK_NODES = false;
 
-    private final BaseURI baseURI;
-
     public SPARQLQueryBuilder() {
-        baseURI = BaseURI.remote();
-    }
-
-    public SPARQLQueryBuilder(BaseURI base) {
-        baseURI = base;
     }
 
     public Query getGetResourceByIdQuery(String id) {
@@ -87,7 +80,7 @@ public final class SPARQLQueryBuilder {
                 + "    optional {\n"
                 + "           <%2$s> deichman:genre ?genre .\n"
                 + "    }\n"
-                + "}", baseURI.ontology(), xuri.getUri());
+                + "}", BaseURI.ontology(), xuri.getUri());
         return QueryFactory.create(queryString);
     }
 
@@ -105,7 +98,7 @@ public final class SPARQLQueryBuilder {
                 + "    optional { <%2$s> deichman:nationality ?nationality . \n"
                 + "                 ?nationality rdfs:label ?nationalityLabel .\n"
                 + "             }\n"
-                + "}", baseURI.ontology(), personId);
+                + "}", BaseURI.ontology(), personId);
         return QueryFactory.create(queryString);
     }
 
@@ -120,7 +113,7 @@ public final class SPARQLQueryBuilder {
                 + "    optional { <%2$s> deichman:nationality ?nationality . \n"
                 + "                 ?nationality rdfs:label ?nationalityLabel .\n"
                 + "             }\n"
-                + "}", baseURI.ontology(), corporationId);
+                + "}", BaseURI.ontology(), corporationId);
         return QueryFactory.create(queryString);
     }
 
@@ -154,7 +147,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query getItemsFromModelQuery(String id) {
-        String q = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
+        String q = "PREFIX deichman: <" + BaseURI.ontology() + ">\n"
                 + "PREFIX duo: <http://data.deichman.no/utility#>\n"
                 + "CONSTRUCT {\n"
                 + "  ?uri deichman:editionOf  <" + id + "> ;"
@@ -294,7 +287,7 @@ public final class SPARQLQueryBuilder {
                 + "      ?work a deichman:Work ;\n"
                 + "            deichman:contributor ?contrib .\n"
                 + "      ?contrib deichman:agent <%2$s> .\n"
-                + "}", baseURI.ontology(), xuri.getUri());
+                + "}", BaseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }
 
@@ -304,7 +297,7 @@ public final class SPARQLQueryBuilder {
                 + "DESCRIBE ?publication WHERE \n"
                 + "    {\n"
                 + "        ?publication deichman:publicationOf <%s>\n"
-                + "    }", baseURI.ontology(), xuri.getUri());
+                + "    }", BaseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }
 
@@ -314,7 +307,7 @@ public final class SPARQLQueryBuilder {
                 + "SELECT ?uri WHERE \n"
                 + "    {\n"
                 + "        ?uri a deichman:%s .\n"
-                + "    }", baseURI.ontology(), capitalize(type));
+                + "    }", BaseURI.ontology(), capitalize(type));
         return QueryFactory.create(q);
     }
 
@@ -324,7 +317,7 @@ public final class SPARQLQueryBuilder {
                 + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
                 + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
                 + "WHERE { ?pub :recordID \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
-                baseURI.ontology(), StringUtils.join(branches.split(","),"\",\""), recordId);
+                BaseURI.ontology(), StringUtils.join(branches.split(","),"\",\""), recordId);
         return q;
     }
 
@@ -334,7 +327,7 @@ public final class SPARQLQueryBuilder {
                         + "SELECT ?work\n"
                         + "WHERE { ?pub :recordID \"%s\" .\n"
                         + "        ?pub :publicationOf ?work }\n",
-                baseURI.ontology(), recordId);
+                BaseURI.ontology(), recordId);
         return QueryFactory.create(q);
     }
 
@@ -347,7 +340,7 @@ public final class SPARQLQueryBuilder {
                 + "  ?work a deichman:Work ;\n"
                 + "    deichman:contributor ?contrib .\n"
                 + "  ?contrib  deichman:agent <%2$s> .\n"
-                + "}", baseURI.ontology(), agent.getUri());
+                + "}", BaseURI.ontology(), agent.getUri());
         return QueryFactory.create(q);
     }
 
@@ -438,7 +431,8 @@ public final class SPARQLQueryBuilder {
                 + "  }\n"
                 + "  BIND(IF(BOUND(?mainTitleTranscribed), ?mainTitleTranscribed, ?mainTitleUntranscribed) AS ?mainTitle)\n"
                 + "  BIND(IF(BOUND(?subtitleTranscribed), ?subtitleTranscribed, ?subtitleUntranscribed) AS ?subtitle)\n"
-                + "}", baseURI.ontology(), publication.getUri());
+                + "}", BaseURI.ontology(), publication.getUri());
+
         return QueryFactory.create(q);
     }
 }

@@ -8,7 +8,6 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.update.UpdateRequest;
-import no.deichman.services.uridefaults.BaseURI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,15 +19,11 @@ public final class InMemoryRepository extends RDFRepositoryBase {
     private static final Logger LOG = LoggerFactory.getLogger(InMemoryRepository.class);
 
     public InMemoryRepository() {
-        this(BaseURI.local());
+        this(new SPARQLQueryBuilder(), new UniqueURIGenerator());
     }
 
-    public InMemoryRepository(BaseURI baseURI) {
-        this(baseURI, new SPARQLQueryBuilder(baseURI), new UniqueURIGenerator(baseURI));
-    }
-
-    private InMemoryRepository(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
-        super(baseURI, sqb, uriGenerator);
+    private InMemoryRepository(SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
+        super(sqb, uriGenerator);
         model = DatasetFactory.create();
         LOG.info("In-memory repository started.");
     }

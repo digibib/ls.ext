@@ -3,11 +3,11 @@ package no.deichman.services.ontology;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import java.io.IOException;
-import javax.ws.rs.core.Response;
-import no.deichman.services.uridefaults.BaseURI;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 import static javax.ws.rs.core.Response.Status.OK;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
@@ -27,7 +27,7 @@ public class OntologyResourceTest {
     @Before
     public void setUp() throws Exception {
         mockOntologyService = mock(OntologyService.class);
-        resource = new OntologyResource(mockOntologyService, BaseURI.local());
+        resource = new OntologyResource(mockOntologyService);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class OntologyResourceTest {
 
     @Test
     public void should_return_something_that_likely_is_turtle() throws IOException {
-        OntologyService service = new FileBasedOntologyService(BaseURI.local());
+        OntologyService service = new FileBasedOntologyService();
         when(mockOntologyService.getOntology()).thenReturn(service.getOntology());
         Response result = resource.getOntologyTurtle();
         String actual = reduceWhiteSpace(result.getEntity().toString());

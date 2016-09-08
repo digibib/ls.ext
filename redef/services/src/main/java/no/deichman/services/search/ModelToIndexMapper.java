@@ -31,15 +31,11 @@ public class ModelToIndexMapper {
     private Map<String, Object> nodeIndex;
 
     public ModelToIndexMapper(String type) {
-        this(type, BaseURI.remote());
-    }
-
-    public ModelToIndexMapper(String type, BaseURI baseURI) {
         this.type = type;
         String sparqlQueryFilename = "massage_" + type + "_query.sparql";
-        query = new ResourceReader().readFile(sparqlQueryFilename).replace("__ONTOLOGY__", baseURI.ontology());
+        query = new ResourceReader().readFile(sparqlQueryFilename).replace("__ONTOLOGY__", BaseURI.ontology());
         String contextFilename = "massage_" + type + "_context.json";
-        context = new Gson().fromJson(new ResourceReader().readFile(contextFilename).replace("__ONTOLOGY__", baseURI.ontology()), HashMap.class);
+        context = new Gson().fromJson(new ResourceReader().readFile(contextFilename).replace("__ONTOLOGY__", BaseURI.ontology()), HashMap.class);
     }
 
     public final String createIndexDocument(Model model, XURI xuri) {

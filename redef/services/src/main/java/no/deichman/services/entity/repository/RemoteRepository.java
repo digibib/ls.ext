@@ -1,6 +1,5 @@
 package no.deichman.services.entity.repository;
 
-import no.deichman.services.uridefaults.BaseURI;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.SystemDefaultHttpClient;
 import org.apache.jena.query.Query;
@@ -22,8 +21,8 @@ public final class RemoteRepository extends RDFRepositoryBase {
     private static final String TRIPLESTORE_PORT = "http://fuseki:3030";
     private final String triplestorePort;
 
-    RemoteRepository(String triplestorePort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder, BaseURI baseURI) {
-        super(baseURI, sparqlQueryBuilder, uriGenerator);
+    RemoteRepository(String triplestorePort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder) {
+        super(sparqlQueryBuilder, uriGenerator);
         this.triplestorePort = triplestorePort;
         LOG.info("Repository started with TRIPLESTORE_PORT: " + this.triplestorePort);
         HttpOp.setDefaultHttpClient(httpClient);
@@ -31,9 +30,8 @@ public final class RemoteRepository extends RDFRepositoryBase {
 
     public RemoteRepository() {
         this(TRIPLESTORE_PORT,
-                new UniqueURIGenerator(BaseURI.remote()),
-                new SPARQLQueryBuilder(BaseURI.remote()),
-                BaseURI.remote());
+                new UniqueURIGenerator(),
+                new SPARQLQueryBuilder());
     }
 
     @Override

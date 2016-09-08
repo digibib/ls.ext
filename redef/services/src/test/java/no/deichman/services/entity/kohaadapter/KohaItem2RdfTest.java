@@ -15,40 +15,18 @@ import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class KohaItem2RdfTest {
 
-    private final String itemBase = "http://deichman.no/exemplar/";
-    private final String ontologyNs = "http://deichman.no/ontology#";
+    private final String itemBase = "http://data.deichman.no/exemplar/";
     private final String duoNs = "http://data.deichman.no/utility#";
 
     @Test
     public void test_it_exists(){
         assertNotNull(new KohaItem2Rdf());
-    }
-
-    @Test
-    public void test_baseURI_can_be_set_got(){
-        BaseURI base = BaseURI.local();
-        KohaItem2Rdf m2r = new KohaItem2Rdf();
-        m2r.setBaseURI(base);
-        assertNotNull(m2r.getBaseURI());
-    }
-
-    @Test
-    public void test_default_constructor_sets_baseURI(){
-        KohaItem2Rdf m2r = new KohaItem2Rdf();
-        assertEquals(m2r.getBaseURI().getClass(), BaseURI.class);
-    }
-
-    @Test
-    public void test_overloaded_constructor_sets_baseURI(){
-        KohaItem2Rdf m2r = new KohaItem2Rdf(BaseURI.local());
-        assertEquals(m2r.getBaseURI().getClass(), BaseURI.class);
     }
 
     @Test
@@ -58,7 +36,7 @@ public class KohaItem2RdfTest {
                 "UTF-8"
         );
         JsonObject json = new Gson().fromJson(in, JsonObject.class);
-        KohaItem2Rdf m2r = new KohaItem2Rdf(BaseURI.local());
+        KohaItem2Rdf m2r = new KohaItem2Rdf();
         Model m = m2r.mapItemsToModel(json.getAsJsonArray("items"));
 
         String barcode = "03010626460038";
@@ -67,17 +45,17 @@ public class KohaItem2RdfTest {
 
         Statement barcodeStatement = createStatement(
                 createResource(s),
-                createProperty(ontologyNs + "barcode"),
+                createProperty(BaseURI.ontology("barcode")),
                 createPlainLiteral(barcode)
         );
         Statement locationStatement = createStatement(
                 createResource(s),
-                createProperty(ontologyNs + "location"),
+                createProperty(BaseURI.ontology("location")),
                 createPlainLiteral("m")
         );
         Statement branchStatement = createStatement(
                 createResource(s),
-                createProperty(ontologyNs + "branch"),
+                createProperty(BaseURI.ontology("branch")),
                 createPlainLiteral("Hovedbiblioteket")
         );
         Statement shelfmarkStatement = createStatement(
@@ -91,13 +69,13 @@ public class KohaItem2RdfTest {
 
         Statement loanedExample = createStatement(
                 createResource(sLoaned),
-                createProperty(ontologyNs + "status"),
+                createProperty(BaseURI.ontology("status")),
                 createPlainLiteral("Utlånt")
         );
 
         Statement availableStatement = createStatement(
                 createResource(s),
-                createProperty(ontologyNs + "status"),
+                createProperty(BaseURI.ontology("status")),
                 createPlainLiteral("Ledig")
         );
 
@@ -106,7 +84,7 @@ public class KohaItem2RdfTest {
         assertTrue(m.contains(branchStatement));
         assertTrue(m.contains(barcodeStatement));
         assertTrue(m.contains(locationStatement));
-        assertFalse(m.listSubjectsWithProperty(createProperty(ontologyNs + "status")).toList().contains(s));
+        assertFalse(m.listSubjectsWithProperty(createProperty(BaseURI.ontology("status"))).toList().contains(s));
         assertTrue(m.contains(shelfmarkStatement));
         assertTrue(m.contains(loanedExample));
         assertTrue(m.contains(availableStatement));

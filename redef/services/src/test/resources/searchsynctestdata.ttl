@@ -1,25 +1,25 @@
 @prefix ns1: <http://data.deichman.no/duo#> .
-@prefix ns2: <http://127.0.0.1:__PORT__/ontology#> .
-@prefix ns4: <http://192.168.50.12:8005/raw#> .
+@prefix ns2: <http://data.deichman.no/ontology#> .
+@prefix ns4: <http://data.deichman.no/raw#> .
 @prefix ns5: <http://data.deichman.no/role#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://127.0.0.1:__PORT__/publication/p594502562255> rdf:type ns2:Publication ;
+<http://data.deichman.no/publication/p594502562255> rdf:type ns2:Publication ;
     ns2:bibliofilPublicationID "1549895" ;
     ns2:contributor [ rdf:type ns2:Contribution ;
-            ns2:agent <http://127.0.0.1:__PORT__/person/h10834700> ;
+            ns2:agent <http://data.deichman.no/person/h10834700> ;
             ns2:role ns5:author ] ;
     ns2:contributor [ rdf:type ns2:Contribution ;
-            ns2:agent <http://127.0.0.1:__PORT__/person/h11234> ;
+            ns2:agent <http://data.deichman.no/person/h11234> ;
             ns2:role ns5:translator ] ;
     ns2:format <http://data.deichman.no/format#CardGame> ;
     ns2:isbn "978-88-545-0662-6" ;
     ns2:language <http://lexvo.org/id/iso639-3/ita> ;
     ns2:mainTitle "La casa delle bugie" ;
-    ns2:publicationOf <http://127.0.0.1:__PORT__/work/w4e5db3a95caa282e5968f68866774e20> ;
+    ns2:publicationOf <http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> ;
     ns2:publicationYear "2013"^^xsd:gYear ;
     ns2:recordID "3" ;
     ns2:hasImage "http://static.deichman.no/1549895/bk/1_thumb.jpg" ;
@@ -27,16 +27,16 @@
     ns4:locationSignature "Rag" ;
     ns4:statementOfResponsibility "Anne B. Ragde ; traduzione di Cristina Falcinella" .
 
-<http://127.0.0.1:__PORT__/publication/p735933031021> rdf:type ns2:Publication ;
+<http://data.deichman.no/publication/p735933031021> rdf:type ns2:Publication ;
     ns2:bibliofilPublicationID "0626460" ;
     ns2:contributor [ rdf:type ns2:Contribution ;
-            ns2:agent <http://127.0.0.1:__PORT__/person/h10834700> ;
+            ns2:agent <http://data.deichman.no/person/h10834700> ;
             ns2:role ns5:author ] ;
     ns2:format <http://data.deichman.no/format#CardGame> ;
     ns2:isbn "82-495-0272-8" ;
     ns2:language <http://lexvo.org/id/iso639-3/nob> ;
     ns2:mainTitle "Berlinerpoplene" ;
-    ns2:publicationOf <http://127.0.0.1:__PORT__/work/w4e5db3a95caa282e5968f68866774e20> ;
+    ns2:publicationOf <http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> ;
     ns2:publicationYear "2004"^^xsd:gYear ;
     ns2:recordID "11" ;
     ns2:hasImage "http://static.deichman.no/626460/kr/1_thumb.jpg" ;
@@ -46,19 +46,19 @@
     ns4:statementOfResponsibility "Anne Birkefeldt Ragde" .
 
 
-<http://127.0.0.1:__PORT__/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;
+<http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;
     ns2:audience <http://data.deichman.no/audience#adult> ;
     ns2:contributor [ rdf:type ns2:Contribution,
                 ns2:MainEntry ;
-            ns2:agent <http://127.0.0.1:__PORT__/person/h10834700> ;
+            ns2:agent <http://data.deichman.no/person/h10834700> ;
             ns2:role ns5:author ] ;
     ns2:language <http://lexvo.org/id/iso639-3/nob> ;
     ns2:literaryForm <http://data.deichman.no/literaryForm#fiction>,
         <http://data.deichman.no/literaryForm#novel> ;
     ns2:mainTitle "Berlinerpoplene" ;
-    ns2:subject <http://127.0.0.1:__PORT__/subject/e1200005> .
+    ns2:subject <http://data.deichman.no/subject/e1200005> .
 
-<http://127.0.0.1:__PORT__/person/h10834700> rdf:type ns2:Person ;
+<http://data.deichman.no/person/h10834700> rdf:type ns2:Person ;
     ns2:birthYear "1957" ;
     ns2:name "Ragde, Anne B." ;
     ns2:nationality <http://data.deichman.no/nationality#n> ;
@@ -66,9 +66,9 @@
     ns4:lifeSpan "1957-" ;
     ns1:bibliofilPersonId "10834700" .
 
-<http://127.0.0.1:__PORT__/person/h11234> rdf:type ns2:Person ;
+<http://data.deichman.no/person/h11234> rdf:type ns2:Person ;
     ns2:name "Falcinella, Cristina" ;
     ns2:nationality <http://data.deichman.no/nationality#ita> .
 
-<http://127.0.0.1:__PORT__/subject/e1200005> rdf:type ns2:Subject ;
+<http://data.deichman.no/subject/e1200005> rdf:type ns2:Subject ;
     ns2:prefLabel "Trondheim".

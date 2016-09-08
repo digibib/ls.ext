@@ -34,14 +34,9 @@ public final class KohaItem2Rdf {
     private static final String DUO_SHELFMARK = "shelfmark";
     private static final String DUO_NS = "http://data.deichman.no/utility#";
 
-    private BaseURI baseURI;
 
-    KohaItem2Rdf() {
-        this(BaseURI.remote());
-    }
+    public KohaItem2Rdf() {
 
-    public KohaItem2Rdf(BaseURI base) {
-        baseURI = base;
     }
 
     private Map<String, String> readBranchesJson() {
@@ -52,14 +47,6 @@ public final class KohaItem2Rdf {
     private String getBranch(String code) {
         Map<String, String> branches = readBranchesJson();
         return branches.containsKey(code) ? branches.get(code) : code;
-    }
-
-    public BaseURI getBaseURI() {
-        return baseURI;
-    }
-
-    public void setBaseURI(BaseURI base) {
-        baseURI = base;
     }
 
     private void safeAddTriple(Model m, String key, Resource subj, String predicate, JsonObject itemData) {
@@ -85,8 +72,8 @@ public final class KohaItem2Rdf {
 
             JsonObject itemData = item.getAsJsonObject();
 
-            Resource subject = createResource(baseURI.exemplar() + "e" + itemData.get("barcode").getAsString());
-            String ontologyNS = baseURI.ontology();
+            Resource subject = createResource(BaseURI.exemplar() + "e" + itemData.get("barcode").getAsString());
+            String ontologyNS = BaseURI.ontology();
 
             model.add(
                     createStatement(

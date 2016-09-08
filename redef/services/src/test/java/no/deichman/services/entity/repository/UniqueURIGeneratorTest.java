@@ -1,6 +1,5 @@
 package no.deichman.services.entity.repository;
 
-import no.deichman.services.uridefaults.BaseURI;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +16,7 @@ public class UniqueURIGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        uriGenerator = new UniqueURIGenerator(BaseURI.local());
+        uriGenerator = new UniqueURIGenerator();
     }
 
     @Test

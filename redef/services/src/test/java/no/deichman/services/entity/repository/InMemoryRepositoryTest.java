@@ -34,11 +34,7 @@ public class InMemoryRepositoryTest {
     public static final String A_BIBLIO_NO = "34567";
     public static final String WORK_ID = "w12340000";
     public static final String PUBLICATION_ID = "p000111000";
-    private static final BaseURI BASE_URI = BaseURI.local();
-    private static final Property NAME = createProperty(BASE_URI.ontology("name"));
-    private static final String UNRECOGNISED_TYPE_ERROR = "The type wasn't recognised";
-    private static final String PERSON = "Person";
-    private static final String PLACE = "Place";
+    private static final Property NAME = createProperty(BaseURI.ontology("name"));
     private InMemoryRepository repository;
     private Statement workHasNameStmt;
     private Statement publHasANameStmt;
@@ -46,15 +42,15 @@ public class InMemoryRepositoryTest {
     private Statement workIsAWorkStmt;
     private Statement publIsAPublicationStmt;
     private Statement publIsAPublicationOfWorkStmt;
-    private String publicationUri = BASE_URI.publication() + PUBLICATION_ID;
-    private String workUri = BASE_URI.work() + WORK_ID;
-    private String work = BASE_URI.ontology() + "Work";
-    private String publicationTypeUri = BASE_URI.ontology() + "Publication";
-    private String publicationOf = BASE_URI.ontology() + "publicationOf";
+    private String publicationUri = BaseURI.publication() + PUBLICATION_ID;
+    private String workUri = BaseURI.work() + WORK_ID;
+    private String work = BaseURI.ontology("Work");
+    private String publicationTypeUri = BaseURI.ontology("Publication");
+    private String publicationOf = BaseURI.ontology("publicationOf");
 
     @Before
     public void setup(){
-        repository = new InMemoryRepository(BASE_URI);
+        repository = new InMemoryRepository();
         workIsAWorkStmt = createStatement(createResource(workUri), type, createResource(work));
         workHasNameStmt = createStatement(createResource(workUri), NAME, createPlainLiteral("Test"));
         publIsAPublicationStmt = createStatement(createResource(publicationUri), type, createResource(publicationTypeUri));
@@ -78,17 +74,17 @@ public class InMemoryRepositoryTest {
 
     @Test
     public void test_create_publication() throws Exception{
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/ublication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://data.deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://data.deichman.no/ublication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         final Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
         assertNotNull(repository.createPublication(inputModel, A_BIBLIO_NO));
     }
 
     @Test
     public void test_publication_has_record_id() throws Exception {
-        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
+        String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://data.deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://data.deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         final Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
         String publicationId = repository.createPublication(inputModel, A_BIBLIO_NO);
-        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + BASE_URI.ontology() + "recordID> ?value .}");
+        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + BaseURI.ontology("recordID") + "> ?value .}");
         QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
         assertTrue(qexec.execAsk());
     }
@@ -155,14 +151,14 @@ public class InMemoryRepositoryTest {
 
     @Test
     public void shouldReturnThatIDisAvailable() throws Exception {
-        XURI test = new XURI("http://deichman.no/work/w00009");
+        XURI test = new XURI("http://data.deichman.no/work/w00009");
         assertFalse(repository.askIfResourceExists(test));
     }
 
     @Test
     public void shouldReturnThatIDisNotAvailable() throws Exception {
         repository = repositoryWithDataFrom("testdata.ttl");
-        XURI test = new XURI("http://deichman.no/work/w00001");
+        XURI test = new XURI("http://data.deichman.no/work/w00001");
         assertTrue(repository.askIfResourceExists(test));
     }
 

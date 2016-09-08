@@ -2,7 +2,6 @@ package no.deichman.services.ontology;
 
 import no.deichman.services.rdf.JSONLDCreator;
 import no.deichman.services.rdf.RDFModelUtil;
-import no.deichman.services.uridefaults.BaseURI;
 import org.apache.jena.riot.Lang;
 
 import javax.inject.Singleton;
@@ -27,18 +26,12 @@ import static no.deichman.services.restutils.MimeType.UTF_8;
 public final class OntologyResource {
 
     private final OntologyService ontologyService;
-    private final BaseURI baseUri;
 
-    public OntologyResource(){
-        this(BaseURI.remote());
+    public OntologyResource() {
+        this(new FileBasedOntologyService());
     }
 
-    public OntologyResource(BaseURI baseURI) {
-        this(new FileBasedOntologyService(baseURI), baseURI);
-    }
-
-    public OntologyResource(OntologyService ontologyService, BaseURI baseUri) {
-        this.baseUri = baseUri;
+    public OntologyResource(OntologyService ontologyService) {
         this.ontologyService = ontologyService;
     }
 
@@ -56,7 +49,7 @@ public final class OntologyResource {
     }
 
     private String getOntologyJsonLD() {
-        return new JSONLDCreator(baseUri).asJSONLD(ontologyService.getOntology());
+        return new JSONLDCreator().asJSONLD(ontologyService.getOntology());
     }
 
 }

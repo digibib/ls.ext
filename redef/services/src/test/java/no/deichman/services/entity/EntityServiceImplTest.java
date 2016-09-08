@@ -96,7 +96,9 @@ public class EntityServiceImplTest {
                 "UTF-8"
         );
         JsonObject json = new Gson().fromJson(in, JsonObject.class);
-        KohaItem2Rdf m2r = new KohaItem2Rdf(BaseURI.local());
+        KohaItem2Rdf m2r = new KohaItem2Rdf(
+
+        );
         Model m = m2r.mapItemsToModel(json.getAsJsonArray("items"));
 
         model.add(m);
@@ -105,22 +107,21 @@ public class EntityServiceImplTest {
 
     @Before
     public void setup() {
-        BaseURI localBaseURI = BaseURI.local();
         repository = new InMemoryRepository();
-        service = new EntityServiceImpl(localBaseURI, repository, mockKohaAdapter);
-        baseURI = localBaseURI.getBaseUriRoot();
-        ontologyURI = localBaseURI.ontology();
-        workURI = localBaseURI.work();
-        publicationURI = localBaseURI.publication();
-        personURI = localBaseURI.person();
-        placeURI = localBaseURI.place();
-        corporationURI = localBaseURI.corporation();
-        serialURI = localBaseURI.serial();
-        subjectURI = localBaseURI.subject();
-        genreURI = localBaseURI.genre();
-        instrumentURI = localBaseURI.instrument();
-        compositionTypeURI = localBaseURI.compositionType();
-        eventURI = localBaseURI.event();
+        service = new EntityServiceImpl(repository, mockKohaAdapter);
+        baseURI = BaseURI.root();
+        ontologyURI = BaseURI.ontology();
+        workURI = BaseURI.work();
+        publicationURI = BaseURI.publication();
+        personURI = BaseURI.person();
+        placeURI = BaseURI.place();
+        corporationURI = BaseURI.corporation();
+        serialURI = BaseURI.serial();
+        subjectURI = BaseURI.subject();
+        genreURI = BaseURI.genre();
+        instrumentURI = BaseURI.instrument();
+        compositionTypeURI = BaseURI.compositionType();
+        eventURI = BaseURI.event();
     }
 
     @Test
@@ -265,10 +266,10 @@ public class EntityServiceImplTest {
     @Test
     public void test_retrieve_work_items_by_id() throws Exception {
         when(mockKohaAdapter.getBiblio("626460")).thenReturn(EntityServiceImplTest.modelForBiblio());
-        EntityService myService = new EntityServiceImpl(BaseURI.local(), repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
+        EntityService myService = new EntityServiceImpl(repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter);
 
-        Model m = myService.retrieveWorkItemsByURI(new XURI("http://deichman.no/work/w0009112"));
-        Property p = createProperty("http://deichman.no/ontology#editionOf");
+        Model m = myService.retrieveWorkItemsByURI(new XURI("http://data.deichman.no/work/w0009112"));
+        Property p = createProperty("http://data.deichman.no/ontology#editionOf");
         ResIterator ni = m.listSubjectsWithProperty(p);
 
         int i = 0;
@@ -677,15 +678,15 @@ public class EntityServiceImplTest {
     @Test
     public void test_generate_full_marc_record_from_work_and_publication_info() throws Exception {
         String inputGraph = "@prefix ns1: <http://data.deichman.no/duo#> .\n"
-                + "@prefix ns2: <http://deichman.no/ontology#> .\n"
-                + "@prefix ns4: <http://192.168.50.12:8005/raw#> .\n"
+                + "@prefix ns2: <http://data.deichman.no/ontology#> .\n"
+                + "@prefix ns4: <http://data.deichman.no/raw#> .\n"
                 + "@prefix ns5: <http://data.deichman.no/role#> .\n"
                 + "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n"
                 + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
                 + "@prefix xml: <http://www.w3.org/XML/1998/namespace> .\n"
                 + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n"
                 + "\n"
-                + "<http://192.168.50.12:8005/publication/p735933031021> rdf:type ns2:Publication ;\n"
+                + "<http://data.deichman.no/publication/p735933031021> rdf:type ns2:Publication ;\n"
                 + "    ns2:bibliofilPublicationID \"0626460\" ;\n"
                 + "    ns2:format <http://data.deichman.no/format#EBokBib> ;\n"
                 + "    ns2:hasMediaType <http://data.deichman.no/mediaType#Book> ;\n"
@@ -693,7 +694,7 @@ public class EntityServiceImplTest {
                 + "    ns2:isbn \"82-495-0272-8\" ;\n"
                 + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ; ns2:partTitle \"deltittel\" ;\n"
-                + "    ns2:publicationOf <http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20> ;\n"
+                + "    ns2:publicationOf <http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> ;\n"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
                 + "    ns2:recordID \"11\" ;\n"
                 + "    ns2:hasImage \"http://static.deichman.no/626460/kr/1_thumb.jpg\" ;\n"
@@ -705,12 +706,12 @@ public class EntityServiceImplTest {
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
                 + "\n"
-                + "<http://192.168.50.12:8005/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
+                + "<http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
                 + "    ns2:audience <http://data.deichman.no/audience#adult> ;\n"
                 + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
                 + "    ns2:contributor [ rdf:type ns2:Contribution,\n"
                 + "                ns2:MainEntry ;\n"
-                + "            ns2:agent <http://192.168.50.12:8005/person/h10834700> ;\n"
+                + "            ns2:agent <http://data.deichman.no/person/h10834700> ;\n"
                 + "            ns2:role ns5:author ] ;\n"
                 + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
                 + "    ns2:literaryForm <http://data.deichman.no/literaryForm#fiction>,\n"
@@ -721,14 +722,14 @@ public class EntityServiceImplTest {
                 + "    ns2:genre <http://deichman.no/genre/g1> ;"
                 + "    ns2:subject <http://deichman.no/subject/e1200005>, <http://deichman.no/subject/e1200006> .\n"
                 + "\n"
-                + "<http://192.168.50.12:8005/person/h10834700> rdf:type ns2:Person ;\n"
+                + "<http://data.deichman.no/person/h10834700> rdf:type ns2:Person ;\n"
                 + "    ns2:birthYear \"1957\" ;\n"
                 + "    ns2:name \"Ragde, Anne B.\" ;\n"
                 + "    ns2:nationality <http://data.deichman.no/nationality#n> ;\n"
                 + "    ns2:personTitle \"forfatter\" ;\n"
                 + "    ns4:lifeSpan \"1957-\" ;\n"
                 + "    ns1:bibliofilPersonId \"10834700\" .\n"
-                + "<http://192.168.50.12:8005/person/h11234> rdf:type ns2:Person ;\n"
+                + "<http://data.deichman.no/person/h11234> rdf:type ns2:Person ;\n"
                 + "    ns2:name \"Falcinella, Cristina\" ;\n"
                 + "    ns2:nationality <http://data.deichman.no/nationality#ita> .\n"
                 + "<http://deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
@@ -751,7 +752,7 @@ public class EntityServiceImplTest {
                 + "<http://data.deichman.no/contentAdaptation#easyLanguage> rdfs:label \"Lettlest, enkelt språk\"@no, \"Easy to read, easy language\"@en .\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
-        XURI pub = new XURI("http://192.168.50.12:8005/publication/p735933031021");
+        XURI pub = new XURI("http://data.deichman.no/publication/p735933031021");
         MarcRecord want = new MarcRecord();
         // fag/fiksjon:
         want.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_FICTION);

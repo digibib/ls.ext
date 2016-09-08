@@ -31,8 +31,7 @@ public abstract class ResourceBase {
     public ResourceBase() {
     }
 
-    protected ResourceBase(BaseURI baseURI, EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
-        this.baseURI = baseURI;
+    protected ResourceBase(EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
         this.entityService = entityService;
         this.searchService = searchService;
         this.kohaAdapter = kohaAdapter;
@@ -53,14 +52,14 @@ public abstract class ResourceBase {
     protected final EntityService getEntityService() {
         if (entityService == null) {
             RDFRepository repository = getRdfRepository();
-            entityService = new EntityServiceImpl(getBaseURI(), repository, getKohaAdapter());
+            entityService = new EntityServiceImpl(repository, getKohaAdapter());
         }
         return entityService;
     }
 
     public static InMemoryRepository getInMemoryRepository() {
         if (staticInMemoryRepository == null) {
-            staticInMemoryRepository = new InMemoryRepository(BaseURI.remote());
+            staticInMemoryRepository = new InMemoryRepository();
         }
         return staticInMemoryRepository;
     }
@@ -69,7 +68,7 @@ public abstract class ResourceBase {
         RDFRepository repository;
         if (getConfig() != null && "true".equals(getConfig().getInitParameter(SERVLET_INIT_PARAM_IN_MEMORY_RDF_REPOSITORY))) {
             if (staticInMemoryRepository == null) {
-                staticInMemoryRepository = new InMemoryRepository(getBaseURI());
+                staticInMemoryRepository = new InMemoryRepository();
             }
             repository = staticInMemoryRepository;
         } else {
@@ -86,16 +85,9 @@ public abstract class ResourceBase {
         return kohaAdapter;
     }
 
-    protected final BaseURI getBaseURI() {
-        if (baseURI == null) {
-            baseURI = BaseURI.remote();
-        }
-        return baseURI;
-    }
-
     final JSONLDCreator getJsonldCreator() {
         if (jsonldCreator == null) {
-            jsonldCreator = new JSONLDCreator(getBaseURI());
+            jsonldCreator = new JSONLDCreator();
         }
         return jsonldCreator;
     }
@@ -113,7 +105,7 @@ public abstract class ResourceBase {
 
     public final SearchService getSearchService() {
         if (searchService == null) {
-            searchService = (SearchService) MonProxyFactory.monitor(new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService(), getBaseURI()));
+            searchService = (SearchService) MonProxyFactory.monitor(new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService()));
         }
         return searchService;
     }

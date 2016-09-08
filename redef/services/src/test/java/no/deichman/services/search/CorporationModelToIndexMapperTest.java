@@ -16,27 +16,26 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
  * Responsibility: unit test CorporationModelToIndexMapper.
  */
 public class CorporationModelToIndexMapperTest {
-    private BaseURI baseURI = BaseURI.local();
     @Test
     public void testModelToIndexDocument() throws Exception {
-        XURI xuri = new XURI(baseURI.getBaseUriRoot(), EntityType.CORPORATION.getPath(), "h00000121");
+        XURI xuri = new XURI(BaseURI.root(), EntityType.CORPORATION.getPath(), "h00000121");
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(xuri.getUri()),
                 RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + "Corporation")));
+                ResourceFactory.createResource(BaseURI.ontology("Corporation"))));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(xuri.getUri()),
-                ResourceFactory.createProperty(baseURI.getBaseUriRoot() + "a_prop"),
+                ResourceFactory.createProperty(BaseURI.root() + "a_prop"),
                 ResourceFactory.createPlainLiteral("a_prop_value")));
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(xuri.getUri()),
-                ResourceFactory.createProperty(baseURI.ontology() + "name"),
+                ResourceFactory.createProperty(BaseURI.ontology("name")),
                 ResourceFactory.createPlainLiteral("publisherName_value")));
 
-        String jsonDocument = new ModelToIndexMapper("corporation", BaseURI.local()).createIndexDocument(model, xuri);
+        String jsonDocument = new ModelToIndexMapper("corporation").createIndexDocument(model, xuri);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"

@@ -42,12 +42,10 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     private static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
-    private final BaseURI baseURI;
     private final SPARQLQueryBuilder sqb;
     private final UniqueURIGenerator uriGenerator;
 
-    RDFRepositoryBase(BaseURI baseURI, SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
-        this.baseURI = baseURI;
+    RDFRepositoryBase(SPARQLQueryBuilder sqb, UniqueURIGenerator uriGenerator) {
         this.sqb = sqb;
         this.uriGenerator = uriGenerator;
     }
@@ -226,7 +224,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     private Statement tempRecordIdStatement(String recordID) {
         return ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(baseURI.ontology() + "recordID"),
+                ResourceFactory.createProperty(BaseURI.ontology() + "recordID"),
                 ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
     }
 
@@ -234,7 +232,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         return ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
                 RDF.type,
-                ResourceFactory.createResource(baseURI.ontology() + clazz));
+                ResourceFactory.createResource(BaseURI.ontology() + clazz));
     }
 
     @Override

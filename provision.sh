@@ -53,7 +53,6 @@ cd "$LSEXTPATH/docker-compose"
 source docker-compose.env
 source secrets.env
 export OVERVIEW_BUILD_DIR="$LSEXTPATH/redef/overview"
-export DATA_BASEURI=http://$HOST:8005/
 
 if [ "$LSEXTPATH" = "/vagrant" ]; then
   export MOUNTPATH="/mnt"

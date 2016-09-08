@@ -25,8 +25,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class SPARQLQueryBuilderTest {
 
-    private BaseURI baseURI = BaseURI.local();
-
     private static Statement statement(String resource, String property, String literal) {
         return ResourceFactory.createStatement(
                 ResourceFactory.createResource(resource),
@@ -47,12 +45,12 @@ public class SPARQLQueryBuilderTest {
 
     @Test
     public void overloaded_constructor_exists(){
-        assertNotNull(new SPARQLQueryBuilder(BaseURI.local()));
+        assertNotNull(new SPARQLQueryBuilder());
     }
 
     @Test
     public void get_resource_by_id(){
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
         String expected = "DESCRIBE <http://example.com/a>";
         assertEquals(expected,query.toString().trim());
@@ -63,7 +61,7 @@ public class SPARQLQueryBuilderTest {
         Model m = ModelFactory.createDefaultModel();
         Statement s = getTestStatement();
         m.add(s);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String query = sqb.getUpdateWorkQueryString(m);
         String expected = "INSERT DATA {\n"
                 + "\n"
@@ -75,7 +73,7 @@ public class SPARQLQueryBuilderTest {
 
     @Test
     public void test_it_replaces_subject_but_not_if_bnode() {
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String query = sqb.getReplaceSubjectQueryString("mylovelyuri");
         String expected = "DELETE {\n"
                 + " ?s ?p ?o .\n"
@@ -96,7 +94,7 @@ public class SPARQLQueryBuilderTest {
         Statement s = getTestStatement();
         m.add(s);
         String newSubject = "http://example.com/z";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(newSubject), m);
         String query = sqb.getCreateQueryString(m);
@@ -111,7 +109,7 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_get_items_query(){
         String uri = "http://example.com/a";
-        String test = "PREFIX  deichman: <" + baseURI.ontology() + ">\n"
+        String test = "PREFIX  deichman: <" + BaseURI.ontology() + ">\n"
                 + "PREFIX  duo:  <http://data.deichman.no/utility#>\n"
                 + "\n"
                 + "CONSTRUCT \n"
@@ -132,7 +130,7 @@ public class SPARQLQueryBuilderTest {
                 + " OPTIONAL { ?uri duo:shelfmark ?shelfmark }\n"
                 + " OPTIONAL { ?uri deichman:location ?location}\n"
                 + "  }\n";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         Query query = sqb.getItemsFromModelQuery(uri);
         Query expected = QueryFactory.create(test);
         assertEquals(expected,query);
@@ -143,14 +141,14 @@ public class SPARQLQueryBuilderTest {
         XURI uri = new XURI("http://deichman.no/work/w123");
         String test = "ASK {<" + uri.getUri() + "> ?p ?o}";
         Query expected = QueryFactory.create(test);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         assertEquals(expected, sqb.checkIfResourceExists(uri));
     }
 
     @Test
     public void test_statement_exists() throws UnsupportedEncodingException{
         Statement s = getTestStatement();
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String test = "ASK {<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . }";
         Query expected = QueryFactory.create(test);
         assertEquals(expected, sqb.checkIfStatementExists(s));
@@ -162,7 +160,7 @@ public class SPARQLQueryBuilderTest {
         Statement s = statement("http://example.com/a", "http://example.com/ontology/name", "json");
         Patch patch = new Patch("add", s, null);
         patches.add(patch);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String expected = "INSERT DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "};\n";
@@ -175,7 +173,7 @@ public class SPARQLQueryBuilderTest {
         Statement s = statement("http://example.com/a", "http://example.com/ontology/name", "json");
         Patch patch = new Patch("del", s, null);
         patches.add(patch);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String expected = "DELETE DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "};\n";
@@ -194,7 +192,7 @@ public class SPARQLQueryBuilderTest {
         Statement s3 = statement("http://example.com/a", "http://example.com/ontology/cress", "false fish");
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String expected = "DELETE DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
@@ -220,7 +218,7 @@ public class SPARQLQueryBuilderTest {
         Statement s3 = statement("http://example.com/a", "http://example.com/ontology/cress", "false fish");
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String expected = "DELETE DATA {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
@@ -246,7 +244,7 @@ public class SPARQLQueryBuilderTest {
         Statement s2 = statement("_:b0", "http://example.com/ontology/test", "json");
         Patch patch2 = new Patch("add", s2, null);
         patches.add(patch2);
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String expected = "INSERT DATA {\n"
                 + "    <http://example.org/a> <http://example.org/prop#a> <_:b0> .\n"
                 + "    <_:b0> <http://example.com/ontology/name> \"json\" .\n"
@@ -285,7 +283,7 @@ public class SPARQLQueryBuilderTest {
         patches.addAll(addStatements.stream().map(s -> createPatch("add", s)).collect(Collectors.toList()));
         patches.addAll(delStatements.stream().map(s -> createPatch("del", s)).collect(Collectors.toList()));
 
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
 
 
         String actual = sqb.patch(patches).replaceAll("(\\?|_:)[A-Za-z0-9]+", "$1b0");
@@ -335,7 +333,7 @@ public class SPARQLQueryBuilderTest {
         String expected = "SELECT  ?uri\n"
                 + "WHERE\n"
                 + "  { ?uri  <http://data.deichman.no/duo#bibliofilPersonId>  \"" + personId + "\" }\n";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
 
         assertEquals("Bibliofil person resource query did not match", expected, sqb.getBibliofilPersonResource(personId).toString());
     }
@@ -346,19 +344,19 @@ public class SPARQLQueryBuilderTest {
         String expected = "SELECT  ?uri\n"
                 + "WHERE\n"
                 + "  { ?uri  <http://data.deichman.no/duo#bibliofilPlaceId>  \"" + placeId + "\" }\n";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         assertEquals("Bibliofil place of publication resource query did not match", expected, sqb.getBibliofilPlaceResource(placeId).toString());
     }
 
     @Test
     public void test_describe_publications_query() throws Exception {
         XURI xuri = new XURI("http://deichman.no/work/w123123");
-        String test = "PREFIX deichman: <" + baseURI.ontology() + ">\n"
+        String test = "PREFIX deichman: <" + BaseURI.ontology() + ">\n"
                 + "DESCRIBE ?publication WHERE \n"
                 + "    {\n"
                 + "        ?publication deichman:publicationOf <"+ xuri.getUri() +">\n"
                 + "    }";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         Query query = sqb.describeLinkedPublications(xuri);
         Query expected = QueryFactory.create(test);
         assertEquals(expected,query);
@@ -369,11 +367,11 @@ public class SPARQLQueryBuilderTest {
         String recordId = "378";
         String branches = "hutl,fmaj,fgry";
         String quotedBranches = StringUtils.join(branches.split(","),"\",\"");
-        String expected = "PREFIX : <" + baseURI.ontology() + ">\n"
+        String expected = "PREFIX : <" + BaseURI.ontology() + ">\n"
                 + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
                 + "INSERT { ?pub :hasHoldingBranch \"" + quotedBranches + "\" . }\n"
                 + "WHERE { ?pub :recordID \"" + recordId + "\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.local());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String query = sqb.updateHoldingBranches(recordId, branches);
         assertEquals(expected, query);
     }

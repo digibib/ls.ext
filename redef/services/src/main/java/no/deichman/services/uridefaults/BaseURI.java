@@ -4,88 +4,73 @@ package no.deichman.services.uridefaults;
  * Responsibility: Provide base-URIs.
  */
 public final class BaseURI {
-
-    public static final String LOCAL_BASE_URI_ROOT = "http://deichman.no/";
-
-    private final String baseUriRoot;
-
-    private BaseURI(String baseUriRoot) {
-        this.baseUriRoot = baseUriRoot;
+    private BaseURI() {
+        // checkstyle need this
     }
 
-    public static BaseURI local() {
-        return new BaseURI(LOCAL_BASE_URI_ROOT);
+    private static final String BASE_URI_ROOT = "http://data.deichman.no/";
+
+    public static String root() {
+        return BASE_URI_ROOT;
     }
 
-    public static BaseURI remote() {
-        return new BaseURI(System.getProperty("DATA_BASEURI", "http://192.168.50.12:8005/"));
+    public static String work() {
+        return BASE_URI_ROOT + "work/";
     }
 
-    public String getBaseUriRoot() {
-        return baseUriRoot;
+    public static String ontology() {
+        return BASE_URI_ROOT + "ontology#";
     }
 
-    public String work() {
-        return baseUriRoot + "work/";
+    public static String ontology(String thing) {
+        return BASE_URI_ROOT + "ontology#" + thing;
     }
 
-    public String ontology() {
-        return baseUriRoot + "ontology#";
+    public static String publication() {
+        return BASE_URI_ROOT + "publication/";
     }
 
-    public String ontology(String thing) {
-        return baseUriRoot + "ontology#" + thing;
+    public static String person() {
+        return BASE_URI_ROOT + "person/";
     }
 
-    public String publication() {
-        return baseUriRoot + "publication/";
+    public static String values() {
+        return BASE_URI_ROOT + "authorized_values/";
     }
 
-    public String person() {
-        return baseUriRoot + "person/";
+    public static String exemplar() {
+        return BASE_URI_ROOT + "exemplar/";
     }
 
-    public String values() {
-        return baseUriRoot + "authorized_values/";
+    public static String place() {
+        return BASE_URI_ROOT + "place/";
     }
 
-    public String ui() {
-        return baseUriRoot + "ui#";
+    public static String corporation() {
+        return BASE_URI_ROOT + "corporation/";
     }
 
-    public String exemplar() {
-        return baseUriRoot + "exemplar/";
+    public static String serial() {
+        return BASE_URI_ROOT + "serial/";
     }
 
-    public String place() {
-        return baseUriRoot + "place/";
+    public static String subject() {
+        return BASE_URI_ROOT + "subject/";
     }
 
-    public String corporation() {
-        return baseUriRoot + "corporation/";
+    public static String genre() {
+        return BASE_URI_ROOT + "genre/";
     }
 
-    public String serial() {
-        return baseUriRoot + "serial/";
+    public static String instrument() {
+        return BASE_URI_ROOT + "instrument/";
     }
 
-    public String subject() {
-        return baseUriRoot + "subject/";
+    public static String compositionType() {
+        return BASE_URI_ROOT + "compositiontype/";
     }
 
-    public String genre() {
-        return baseUriRoot + "genre/";
-    }
-
-    public String instrument() {
-        return baseUriRoot + "instrument/";
-    }
-
-    public String compositionType() {
-        return baseUriRoot + "compositiontype/";
-    }
-
-    public String event() {
-        return baseUriRoot + "event/";
+    public static String event() {
+        return BASE_URI_ROOT + "event/";
     }
 }

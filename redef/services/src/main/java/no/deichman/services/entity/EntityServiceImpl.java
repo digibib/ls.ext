@@ -57,7 +57,6 @@ public final class EntityServiceImpl implements EntityService {
     private static final String NATIONALITY_TTL_FILE = "nationality.ttl";
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
-    private final BaseURI baseURI;
     private final Property mainTitleProperty;
     private final Property publicationOfProperty;
     private final Property recordIdProperty;
@@ -83,31 +82,30 @@ public final class EntityServiceImpl implements EntityService {
     private final String nonfictionResource = "http://data.deichman.no/literaryForm#nonfiction";
     private final String fictionResource = "http://data.deichman.no/literaryForm#fiction";
 
-    public EntityServiceImpl(BaseURI baseURI, RDFRepository repository, KohaAdapter kohaAdapter) {
-        this.baseURI = baseURI;
+    public EntityServiceImpl(RDFRepository repository, KohaAdapter kohaAdapter) {
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
-        mainTitleProperty = ResourceFactory.createProperty(baseURI.ontology("mainTitle"));
-        publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
-        recordIdProperty = ResourceFactory.createProperty(baseURI.ontology("recordID"));
-        partTitleProperty = ResourceFactory.createProperty(baseURI.ontology("partTitle"));
-        partNumberProperty = ResourceFactory.createProperty(baseURI.ontology("partNumber"));
-        isbnProperty = ResourceFactory.createProperty(baseURI.ontology("isbn"));
-        publicationYearProperty = ResourceFactory.createProperty(baseURI.ontology("publicationYear"));
-        subtitleProperty = ResourceFactory.createProperty(baseURI.ontology("subtitle"));
-        ageLimitProperty = ResourceFactory.createProperty(baseURI.ontology("ageLimit"));
-        subjectProperty = ResourceFactory.createProperty(baseURI.ontology("subject"));
-        genreProperty = ResourceFactory.createProperty(baseURI.ontology("genre"));
-        mainEntryPersonProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntryPerson"));
-        mainEntryCorporationProperty = ResourceFactory.createProperty(baseURI.ontology("mainEntryCorporation"));
-        publicationPlaceProperty = ResourceFactory.createProperty(baseURI.ontology("publicationPlace"));
-        literaryFormProperty = ResourceFactory.createProperty(baseURI.ontology("literaryForm"));
-        literaryFormLabelProperty = ResourceFactory.createProperty(baseURI.ontology("literaryFormLabel"));
-        languageProperty = ResourceFactory.createProperty(baseURI.ontology("language"));
-        workTypeProperty = ResourceFactory.createProperty(baseURI.ontology("workType"));
-        mediaTypeProperty = ResourceFactory.createProperty(baseURI.ontology("mediaType"));
-        formatLabelProperty = ResourceFactory.createProperty(baseURI.ontology("formatLabel"));
-        adaptaionProperty = ResourceFactory.createProperty(baseURI.ontology("adaptationLabel"));
+        mainTitleProperty = ResourceFactory.createProperty(BaseURI.ontology("mainTitle"));
+        publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
+        recordIdProperty = ResourceFactory.createProperty(BaseURI.ontology("recordID"));
+        partTitleProperty = ResourceFactory.createProperty(BaseURI.ontology("partTitle"));
+        partNumberProperty = ResourceFactory.createProperty(BaseURI.ontology("partNumber"));
+        isbnProperty = ResourceFactory.createProperty(BaseURI.ontology("isbn"));
+        publicationYearProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationYear"));
+        subtitleProperty = ResourceFactory.createProperty(BaseURI.ontology("subtitle"));
+        ageLimitProperty = ResourceFactory.createProperty(BaseURI.ontology("ageLimit"));
+        subjectProperty = ResourceFactory.createProperty(BaseURI.ontology("subject"));
+        genreProperty = ResourceFactory.createProperty(BaseURI.ontology("genre"));
+        mainEntryPersonProperty = ResourceFactory.createProperty(BaseURI.ontology("mainEntryPerson"));
+        mainEntryCorporationProperty = ResourceFactory.createProperty(BaseURI.ontology("mainEntryCorporation"));
+        publicationPlaceProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationPlace"));
+        literaryFormProperty = ResourceFactory.createProperty(BaseURI.ontology("literaryForm"));
+        literaryFormLabelProperty = ResourceFactory.createProperty(BaseURI.ontology("literaryFormLabel"));
+        languageProperty = ResourceFactory.createProperty(BaseURI.ontology("language"));
+        workTypeProperty = ResourceFactory.createProperty(BaseURI.ontology("workType"));
+        mediaTypeProperty = ResourceFactory.createProperty(BaseURI.ontology("mediaType"));
+        formatLabelProperty = ResourceFactory.createProperty(BaseURI.ontology("formatLabel"));
+        adaptaionProperty = ResourceFactory.createProperty(BaseURI.ontology("adaptationLabel"));
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -178,7 +176,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private Predicate<Statement> typeStatement(String type) {
         return s ->
-                s.getPredicate().equals(RDF.type) && s.getObject().equals(ResourceFactory.createResource(baseURI.ontology() + type));
+                s.getPredicate().equals(RDF.type) && s.getObject().equals(ResourceFactory.createResource(BaseURI.ontology() + type));
     }
 
     @Override
@@ -217,7 +215,7 @@ public final class EntityServiceImpl implements EntityService {
 
     @Override
     public XURI updateHoldingBranches(String recordId, String branches) throws Exception {
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(BaseURI.remote());
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String query = sqb.updateHoldingBranches(recordId, branches);
         repository.updateResource(query);
 
@@ -235,7 +233,7 @@ public final class EntityServiceImpl implements EntityService {
 
         Model workModel = repository.retrieveWorkAndLinkedResourcesByURI(xuri);
         QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
-                "PREFIX  deichman: <" + baseURI.ontology() + "> "
+                "PREFIX  deichman: <" + BaseURI.ontology() + "> "
                         + "SELECT  * "
                         + "WHERE { ?publicationUri deichman:recordID ?biblioId }"), workModel);
         ResultSet publicationSet = queryExecution.execSelect();
@@ -247,7 +245,7 @@ public final class EntityServiceImpl implements EntityService {
 
             Model itemsForBiblio = kohaAdapter.getBiblio(biblioId);
 
-            SPARQLQueryBuilder sqb = new SPARQLQueryBuilder(baseURI);
+            SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
             Query query = sqb.getItemsFromModelQuery(publicationUri.toString());
             QueryExecution qexec = QueryExecutionFactory.create(query, itemsForBiblio);
             Model itemsModelWithBlankNodes = qexec.execConstruct();
@@ -422,7 +420,7 @@ public final class EntityServiceImpl implements EntityService {
         MarcField field260 = MarcRecord.newDataField(MarcConstants.FIELD_260);
         MarcField field041 = MarcRecord.newDataField(MarcConstants.FIELD_041);
 
-        Query query = new SPARQLQueryBuilder(baseURI).constructInformationForMARC(publication);
+        Query query = new SPARQLQueryBuilder().constructInformationForMARC(publication);
         try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
             Model pubModel = qexec.execConstruct();
             StmtIterator iter = pubModel.listStatements();

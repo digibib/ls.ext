@@ -210,7 +210,6 @@ services:
       KOHA_API_USER: "${KOHA_API_USER}"
       KOHA_API_PASS: "${KOHA_API_PASS}"
       KOHA_API_PASS_ENCRYPTED: "${KOHA_API_PASS_ENCRYPTED}"
-      DATA_BASEURI: "${DATA_BASEURI}"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
     logging:

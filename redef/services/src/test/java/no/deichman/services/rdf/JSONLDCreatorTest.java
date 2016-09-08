@@ -1,26 +1,26 @@
 package no.deichman.services.rdf;
 
+import no.deichman.services.uridefaults.BaseURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDFS;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
-import no.deichman.services.uridefaults.BaseURI;
-import org.apache.jena.riot.Lang;
 
+import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 public class JSONLDCreatorTest {
 
     @Test
     public void simple_representation_should_be_isomorphic_after_conversion() {
-        JSONLDCreator jsonldCreator = new JSONLDCreator(BaseURI.local());
+        JSONLDCreator jsonldCreator = new JSONLDCreator();
 
         String inputAsN3 = "<http://example.com/test> <http://example.com/onto/resource> <http://example.com/r/m2> .";
         Model modelBeforeJsonLDConversion = modelFrom(inputAsN3, Lang.NTRIPLES);
@@ -34,8 +34,6 @@ public class JSONLDCreatorTest {
     @Test
     public void JSONLD_contains_our_special_contexts() {
         JSONLDCreator jsonldCreator = new JSONLDCreator();
-        BaseURI baseURI = BaseURI.local();
-        jsonldCreator.setBaseURI(baseURI);
 
         String inputAsN3 = "<http://example.com/test> <http://example.com/onto/resource> <http://example.com/r/m2> .";
 
@@ -43,7 +41,7 @@ public class JSONLDCreatorTest {
         Model model = modelFrom(jsonld, Lang.JSONLD);
 
         Map<String, String> ns = model.getNsPrefixMap();
-        assertTrue(ns.get("deichman").equals(baseURI.ontology()));
+        assertTrue(ns.get("deichman").equals(BaseURI.ontology()));
         assertTrue(ns.get("rdfs").equals(RDFS.getURI()));
     }
 

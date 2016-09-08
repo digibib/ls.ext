@@ -46,7 +46,6 @@ import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
-import static no.deichman.services.uridefaults.BaseURI.remote;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 
@@ -54,21 +53,19 @@ import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
  * Responsibility: perform indexing and searching.
  */
 public class SearchServiceImpl implements SearchService {
-    public static final Property AGENT = createProperty(remote().ontology("agent"));
+    public static final Property AGENT = createProperty(BaseURI.ontology("agent"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     private final EntityService entityService;
-    private final BaseURI baseURI;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
     private ModelToIndexMapper corporationModelToIndexMapper = new ModelToIndexMapper("corporation");
     private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
 
-    public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService, BaseURI baseURI) {
+    public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
         this.entityService = entityService;
-        this.baseURI = baseURI;
         getIndexUriBuilder();
     }
 
@@ -262,7 +259,7 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
-        Property publicationOfProperty = ResourceFactory.createProperty(baseURI.ontology("publicationOf"));
+        Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
         if (pubModel.getProperty(null, publicationOfProperty) != null) {
             String workUri = pubModel.getProperty(ResourceFactory.createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
             XURI workXURI = new XURI(workUri);

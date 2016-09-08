@@ -59,8 +59,8 @@ public final class EntityResource extends ResourceBase {
     public EntityResource() {
     }
 
-    EntityResource(BaseURI baseURI, EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
-        super(baseURI, entityService, searchService, kohaAdapter);
+    EntityResource(EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
+        super(entityService, searchService, kohaAdapter);
     }
 
     @POST
@@ -125,7 +125,7 @@ public final class EntityResource extends ResourceBase {
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         Model model;
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        XURI xuri = new XURI(BaseURI.root(), type, id);
 
         if ("work".equals(type)) {
             model = getEntityService().retrieveWorkWithLinkedResources(xuri);
@@ -143,7 +143,7 @@ public final class EntityResource extends ResourceBase {
     @DELETE
     @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        XURI xuri = new XURI(BaseURI.root(), type, id);
 
         Model model = getEntityService().retrieveById(xuri);
 
@@ -151,11 +151,11 @@ public final class EntityResource extends ResourceBase {
             throw new NotFoundException();
         }
         if (xuri.getTypeAsEntityType() == PUBLICATION) {
-            String recordID = model.listObjectsOfProperty(ResourceFactory.createProperty(getBaseURI().ontology("recordID"))).next().asLiteral().getString();
+            String recordID = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordID"))).next().asLiteral().getString();
             getKohaAdapter().deleteBiblio(recordID);
             getEntityService().delete(model);
             getSearchService().delete(xuri);
-            Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(getBaseURI().ontology("publicationOf")));
+            Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("publicationOf")));
             while (sourceIterator.hasNext()) {
                 String publicationOf = sourceIterator.next().asResource().getURI();
                 getSearchService().index(new XURI(publicationOf));
@@ -172,7 +172,7 @@ public final class EntityResource extends ResourceBase {
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        XURI xuri = new XURI(BaseURI.root(), type, id);
 
         if (StringUtils.isBlank(jsonLd)) {
             throw new BadRequestException("Empty json body");
@@ -189,7 +189,7 @@ public final class EntityResource extends ResourceBase {
         }
 
         if (xuri.getTypeAsEntityType() == PUBLICATION) {
-            Property publicationOfProperty = ResourceFactory.createProperty(getBaseURI().ontology("publicationOf"));
+            Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
             if (m.getProperty(null, publicationOfProperty) != null) {
                 String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
                 XURI workXURI = new XURI(workUri);
@@ -219,14 +219,14 @@ public final class EntityResource extends ResourceBase {
     @Path("/{workId: w[a-zA-Z0-9_]+}/items")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) throws Exception {
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), EntityType.WORK.getPath(), workId);
+        XURI xuri = new XURI(BaseURI.root(), EntityType.WORK.getPath(), workId);
         return zeroOrMoreResponseFromModel(getEntityService().retrieveWorkItemsByURI(xuri));
     }
 
     @PUT
     @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
     public Response index(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        XURI xuri = new XURI(BaseURI.root(), type, id);
         getSearchService().index(xuri);
         return accepted().build();
     }
@@ -234,7 +234,7 @@ public final class EntityResource extends ResourceBase {
     @PUT
     @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/sync")
     public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        XURI xuri = new XURI(BaseURI.root(), type, id);
         getEntityService().synchronizeKoha(xuri);
         return accepted().build();
     }
@@ -242,14 +242,14 @@ public final class EntityResource extends ResourceBase {
     @GET
     @Path("{creatorId: h[a-zA-Z0-9_]+}/works")
     public Response getWorksByCreator(@PathParam("type") String type, @PathParam("creatorId") String creatorId) throws Exception {
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, creatorId);
+        XURI xuri = new XURI(BaseURI.root(), type, creatorId);
         return zeroOrMoreResponseFromModel(getEntityService().retrieveWorksByCreator(xuri));
     }
 
     @GET
     @Path("{id: (p|w|h|e)[a-zA-Z0-9_]+}/asSubjectOfWorks")
     public Response getWorksWhereUriIsSubject(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
-        XURI xuri = new XURI(getBaseURI().getBaseUriRoot(), type, id);
+        XURI xuri = new XURI(BaseURI.root(), type, id);
         return getSearchService().searchWork("work.subject.uri:\"" + xuri.getUri() + "\"");
     }
 

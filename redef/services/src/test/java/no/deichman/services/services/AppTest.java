@@ -21,6 +21,7 @@ import no.deichman.services.ontology.AuthorizedValue;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.services.search.EmbeddedElasticsearchServer;
 import no.deichman.services.testutil.PortSelector;
+import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import no.deichman.services.utils.ResourceReader;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -81,13 +82,17 @@ public class AppTest {
     private static final  String EMPTY_STRING = "";
     private static final String ADD = "ADD";
     private static final String DEL = "DEL";
-    private static String baseUri;
+    private static String appURI;
     private static App app;
 
     private static KohaSvcMock kohaSvcMock;
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
     private static int appPort;
     private static Z3950ServiceMock z3950ServiceMock;
+
+    private String resolveLocally(String uri) {
+        return uri.replaceAll(BaseURI.root(), "");
+    }
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -100,8 +105,7 @@ public class AppTest {
         System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
         System.setProperty("ELASTICSEARCH_URL", "http://localhost:9200");
 
-        baseUri = LOCALHOST + ":" + appPort + "/";
-        System.setProperty("DATA_BASEURI", baseUri);
+        appURI = LOCALHOST + ":" + appPort + "/";
         app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO, jamonAppPort, z3950Endpoint);
         app.startAsync();
 
@@ -110,7 +114,7 @@ public class AppTest {
 
     private static void setupElasticSearch() throws Exception {
         embeddedElasticsearchServer = EmbeddedElasticsearchServer.getInstance();
-        Unirest.post(baseUri + "/search/clear_index");
+        Unirest.post(appURI + "/search/clear_index");
     }
 
     @AfterClass
@@ -133,7 +137,7 @@ public class AppTest {
         return Json.createArrayBuilder()
                 .add(createObjectBuilder()
                         .add("op", "add")
-                        .add("s", resource).add("p", baseUri+"ontology#contributor")
+                        .add("s", resource).add("p", BaseURI.ontology("contributor"))
                         .add("o", createObjectBuilder()
                                 .add("value", "_:c1")
                                 .add("type", ANY_URI)))
@@ -142,17 +146,17 @@ public class AppTest {
                         .add("s", "_:c1")
                         .add("p", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
                         .add("o", createObjectBuilder()
-                                .add("value", baseUri+"ontology#Contribution")
+                                .add("value", BaseURI.ontology("Contribution"))
                                 .add("type", ANY_URI)))
                 .add(createObjectBuilder()
                         .add("op", "add").add("s", "_:c1")
-                        .add("p", baseUri+"ontology#role")
+                        .add("p", BaseURI.ontology("role"))
                         .add("o", createObjectBuilder()
                                 .add("value", "http://data.deichman.no/role#author")
                                 .add("type", ANY_URI)))
                 .add(createObjectBuilder()
                         .add("op", "add").add("s", "_:c1")
-                        .add("p", baseUri+"ontology#agent")
+                        .add("p", BaseURI.ontology("agent"))
                         .add("o", createObjectBuilder()
                                 .add("value", person)
                                 .add("type", ANY_URI)));
@@ -170,9 +174,9 @@ public class AppTest {
         return response.getHeaders().getFirst("Location");
     }
 
-    private static RequestBodyEntity buildPatchRequest(String uri, JsonArray patch) {
+    private static RequestBodyEntity buildPatchRequest(String id, JsonArray patch) {
         return Unirest
-                .patch(uri)
+                .patch(appURI + id)
                 .header("Accept", "application/ld+json")
                 .header("Content-Type", "application/ldpatch+json")
                 .body(new JsonNode(patch.toString()));
@@ -202,7 +206,7 @@ public class AppTest {
     }
 
     private static HttpResponse<String> createEmptyResource(EntityType entityType) throws UnirestException {
-        return buildCreateRequest(baseUri + entityType.getPath(), "{}").asString();
+        return buildCreateRequest(appURI + entityType.getPath(), "{}").asString();
     }
 
     private static void setUpKohaExpectation(String biblioNumber) {
@@ -224,7 +228,7 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle=" + name);
+                    .get(appURI + "search/work/_search").queryString("q", "work.mainTitle=" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
@@ -250,7 +254,7 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "work.mainTitle=" + name);
+                    .get(appURI + "search/work/_search").queryString("q", "work.mainTitle=" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
@@ -275,32 +279,32 @@ public class AppTest {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);
 
-        final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
+        final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(appURI + "work").asJson();
         assertResponse(CREATED, createWorkResponse);
         final String workUri = getLocation(createWorkResponse);
         final JsonArray addNameToWorkPatch =
-                buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Paris"));
+                buildLDPatch(buildPatchStatement("add", workUri, appURI + "ontology#mainTitle", "Paris"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
-        final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
+        final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(appURI + "publication").asJson();
 
         assertResponse(CREATED, createPublicationResponse);
         final String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
-        assertThat(publicationUri, startsWith(baseUri));
+        assertThat(publicationUri, startsWith(appURI));
 
         kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
-        final JsonArray addPublicationOfToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
+        final JsonArray addPublicationOfToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, appURI + "ontology#publicationOf", workUri, ANY_URI));
         final HttpResponse<String> patchAddPublicationOfToPublicationPatchResponse = buildPatchRequest(publicationUri, addPublicationOfToPublicationPatch).asString();
         assertResponse(Status.OK, patchAddPublicationOfToPublicationPatchResponse);
 
         kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
-        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#format", "http://data.deichman.no/format#Audiobook", ANY_URI));
+        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, appURI + "ontology#format", "http://data.deichman.no/format#Audiobook", ANY_URI));
         final HttpResponse<String> patchAddFormatToPublicationPatchResponse = buildPatchRequest(publicationUri, addFormatToPublicationPatch).asString();
         assertResponse(Status.OK, patchAddFormatToPublicationPatchResponse);
 
-        final JsonArray addNameToWorkPatch1 = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#partTitle", "Paris"));
+        final JsonArray addNameToWorkPatch1 = buildLDPatch(buildPatchStatement("add", workUri, appURI + "ontology#partTitle", "Paris"));
         final HttpResponse<String> patchAddNameToWorkPatchResponse1 = buildPatchRequest(workUri, addNameToWorkPatch1).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse1);
 
@@ -314,66 +318,66 @@ public class AppTest {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);
 
-        final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
+        final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(appURI + "publication").asJson();
 
         assertResponse(CREATED, createPublicationResponse);
         final String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
-        assertThat(publicationUri, startsWith(baseUri));
+        assertThat(publicationUri, startsWith(BaseURI.publication()));
 
-        final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(baseUri + "work").asJson();
+        final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(appURI + "work").asJson();
 
         assertResponse(CREATED, createWorkResponse);
         final String workUri = getLocation(createWorkResponse);
         assertIsUri(workUri);
-        assertThat(workUri, startsWith(baseUri));
+        assertThat(workUri, startsWith(BaseURI.work()));
 
-        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Sult"));
-        final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
+        final JsonArray addNameToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, BaseURI.ontology("mainTitle"), "Sult"));
+        final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(resolveLocally(workUri), addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
-        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#publicationYear", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
-        final HttpResponse<String> patchAddYearToWorkPatchResponse = buildPatchRequest(workUri, addYearToWorkPatch).asString();
+        final JsonArray addYearToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, BaseURI.ontology("publicationYear"), "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final HttpResponse<String> patchAddYearToWorkPatchResponse = buildPatchRequest(resolveLocally(workUri), addYearToWorkPatch).asString();
         assertResponse(Status.OK, patchAddYearToWorkPatchResponse);
 
-        final HttpResponse<JsonNode> createPersonResponse = buildEmptyCreateRequest(baseUri + "person").asJson();
+        final HttpResponse<JsonNode> createPersonResponse = buildEmptyCreateRequest(appURI + "person").asJson();
         assertResponse(CREATED, createPersonResponse);
         final String personUri = getLocation(createPersonResponse);
         assertIsUri(personUri);
-        assertThat(personUri, startsWith(baseUri));
+        assertThat(personUri, startsWith(BaseURI.person()));
 
-        final JsonArray addCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#name", "Knut Hamsun"));
-        final HttpResponse<String> patchAddCreatornameToPersonPatchResponse = buildPatchRequest(personUri, addCreatorNameToPersonPatch).asString();
+        final JsonArray addCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, BaseURI.ontology("name"), "Knut Hamsun"));
+        final HttpResponse<String> patchAddCreatornameToPersonPatchResponse = buildPatchRequest(resolveLocally(personUri), addCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchAddCreatornameToPersonPatchResponse);
 
-        final JsonArray addBirthToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#birthYear", "1923", "http://www.w3.org/2001/XMLSchema#gYear"));
-        final HttpResponse<String> patchAddBirthToPersonPatchResponse = buildPatchRequest(personUri, addBirthToPersonPatch).asString();
+        final JsonArray addBirthToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, BaseURI.ontology("birthYear"), "1923", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final HttpResponse<String> patchAddBirthToPersonPatchResponse = buildPatchRequest(resolveLocally(personUri), addBirthToPersonPatch).asString();
         assertResponse(Status.OK, patchAddBirthToPersonPatchResponse);
 
-        final JsonArray addDeathToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#deathYear", "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
-        final HttpResponse<String> patchAddDeathToPersonPatchResponse = buildPatchRequest(personUri, addDeathToPersonPatch).asString();
+        final JsonArray addDeathToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, BaseURI.ontology("deathYear"), "2015", "http://www.w3.org/2001/XMLSchema#gYear"));
+        final HttpResponse<String> patchAddDeathToPersonPatchResponse = buildPatchRequest(resolveLocally(personUri), addDeathToPersonPatch).asString();
         assertResponse(Status.OK, patchAddDeathToPersonPatchResponse);
 
         final JsonArray addCreatorToWorkPatch = buildContributorPatchStatement(workUri, personUri).build();
-        final HttpResponse<String> patchAddCreatorToWorkPatchResponse = buildPatchRequest(workUri, addCreatorToWorkPatch).asString();
+        final HttpResponse<String> patchAddCreatorToWorkPatchResponse = buildPatchRequest(resolveLocally(workUri), addCreatorToWorkPatch).asString();
         assertResponse(Status.OK, patchAddCreatorToWorkPatchResponse);
 
-        final JsonArray workIntoPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
+        final JsonArray workIntoPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, BaseURI.ontology("publicationOf"), workUri, ANY_URI));
 
-        final HttpResponse<String> patchWorkIntoPublicationResponse = buildPatchRequest(publicationUri, workIntoPublicationPatch).asString();
+        final HttpResponse<String> patchWorkIntoPublicationResponse = buildPatchRequest(resolveLocally(publicationUri), workIntoPublicationPatch).asString();
         assertResponse(Status.OK, patchWorkIntoPublicationResponse);
 
         kohaSvcMock.addCreateNewBiblioExpectation(SECOND_BIBLIO_ID);
 
-        final HttpResponse<JsonNode> createSecondPublicationResponse = buildEmptyCreateRequest(baseUri + "publication").asJson();
+        final HttpResponse<JsonNode> createSecondPublicationResponse = buildEmptyCreateRequest(appURI + "publication").asJson();
         assertResponse(CREATED, createSecondPublicationResponse);
         final String secondPublicationUri = getLocation(createSecondPublicationResponse);
 
-        final JsonArray workIntoSecondPublicationPatch = buildLDPatch(buildPatchStatement("add", secondPublicationUri, baseUri + "ontology#publicationOf", workUri, ANY_URI));
-        final HttpResponse<String> patchWorkIntoSecondPublicationResponse = buildPatchRequest(secondPublicationUri, workIntoSecondPublicationPatch).asString();
+        final JsonArray workIntoSecondPublicationPatch = buildLDPatch(buildPatchStatement("add", secondPublicationUri, BaseURI.ontology("publicationOf"), workUri, ANY_URI));
+        final HttpResponse<String> patchWorkIntoSecondPublicationResponse = buildPatchRequest(resolveLocally(secondPublicationUri), workIntoSecondPublicationPatch).asString();
         assertResponse(Status.OK, patchWorkIntoSecondPublicationResponse);
 
-        final HttpResponse<JsonNode> getWorkWithTwoPublications = buildGetRequest(workUri).asJson();
+        final HttpResponse<JsonNode> getWorkWithTwoPublications = buildGetRequest(resolveLocally(workUri)).asJson();
 
         assertResponse(Status.OK, getWorkWithTwoPublications);
         final JsonNode workWith2Publications = getWorkWithTwoPublications.getBody();
@@ -383,7 +387,7 @@ public class AppTest {
 
         final QueryExecution workWith2PublicationsCount = QueryExecutionFactory.create(
                 QueryFactory.create(
-                        "PREFIX deichman: <" + baseUri + "ontology#>"
+                        "PREFIX deichman: <" + BaseURI.ontology() + ">"
                                 + "SELECT (COUNT (?publication) AS ?noOfPublications) { "
                                 + "<" + workUri + "> a deichman:Work ."
                                 + "?publication a deichman:Publication ."
@@ -394,20 +398,20 @@ public class AppTest {
                 equalTo(2));
 
         //Change the work title and search for it again.
-        final JsonArray delTitleToWorkPatch = buildLDPatch(buildPatchStatement("del", workUri, baseUri + "ontology#mainTitle", "Sult"));
-        final HttpResponse<String> patchDelTitleToWorkPatchResponse = buildPatchRequest(workUri, delTitleToWorkPatch).asString();
+        final JsonArray delTitleToWorkPatch = buildLDPatch(buildPatchStatement("del", workUri, BaseURI.ontology("mainTitle"), "Sult"));
+        final HttpResponse<String> patchDelTitleToWorkPatchResponse = buildPatchRequest(resolveLocally(workUri), delTitleToWorkPatch).asString();
         assertResponse(Status.OK, patchDelTitleToWorkPatchResponse);
-        final JsonArray addNewTitleToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, baseUri + "ontology#mainTitle", "Metthet"));
-        final HttpResponse<String> patchAddNewTitleToWorkPatchResponse = buildPatchRequest(workUri, addNewTitleToWorkPatch).asString();
+        final JsonArray addNewTitleToWorkPatch = buildLDPatch(buildPatchStatement("add", workUri, BaseURI.ontology("mainTitle"), "Metthet"));
+        final HttpResponse<String> patchAddNewTitleToWorkPatchResponse = buildPatchRequest(resolveLocally(workUri), addNewTitleToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNewTitleToWorkPatchResponse);
         doSearchForWorks("Metthet");
 
         //Change the person name and search for it again.
-        final JsonArray delCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("del", personUri, baseUri + "ontology#name", "Knut Hamsun"));
-        final HttpResponse<String> patchDelCreatorNameToPersonPatchResponse = buildPatchRequest(personUri, delCreatorNameToPersonPatch).asString();
+        final JsonArray delCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("del", personUri, BaseURI.ontology("name"), "Knut Hamsun"));
+        final HttpResponse<String> patchDelCreatorNameToPersonPatchResponse = buildPatchRequest(resolveLocally(personUri), delCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchDelCreatorNameToPersonPatchResponse);
-        final JsonArray addNewCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, baseUri + "ontology#name", "George Orwell"));
-        final HttpResponse<String> patchAddNewCreatorNameToPersonPatchResponse = buildPatchRequest(personUri, addNewCreatorNameToPersonPatch).asString();
+        final JsonArray addNewCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, BaseURI.ontology("name"), "George Orwell"));
+        final HttpResponse<String> patchAddNewCreatorNameToPersonPatchResponse = buildPatchRequest(resolveLocally(personUri), addNewCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchAddNewCreatorNameToPersonPatchResponse);
         doSearchForPersons("Orwell");
 
@@ -416,10 +420,10 @@ public class AppTest {
         // delete publication
         kohaSvcMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, "{\"items\":[]}");
         kohaSvcMock.addDeleteBibloExpectation(FIRST_BIBLIO_ID);
-        assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(publicationUri).getStatus());
+        assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(resolveLocally(publicationUri)).getStatus());
 
         // delete work
-        assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(workUri).getStatus());
+        assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(resolveLocally(workUri)).getStatus());
     }
 
     @Test
@@ -429,13 +433,13 @@ public class AppTest {
                 + "<__BASEURI__externalPerson/p1234> <http://data.deichman.no/duo#bibliofilPersonId> \"1234\" .\n"
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birthYear> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
 
-        input = input.replace("__BASEURI__", baseUri);
+        input = input.replace("__BASEURI__", appURI);
 
         String duplicateInput = "<__BASEURI__externalPerson/p1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Person> .\n"
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#name> \"Kim Kimsen\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
                 + "<__BASEURI__externalPerson/p1234> <http://data.deichman.no/duo#bibliofilPersonId> \"1234\" .\n"
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birthYear> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
-        duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
+        duplicateInput = duplicateInput.replace("__BASEURI__", appURI);
 
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
@@ -443,8 +447,8 @@ public class AppTest {
         Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
         String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
 
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "person", body).asString();
-        HttpResponse<String> result2 = buildCreateRequest(baseUri + "person", body2).asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "person", body).asString();
+        HttpResponse<String> result2 = buildCreateRequest(appURI + "person", body2).asString();
 
         assertResponse(Status.CONFLICT, result2);
         String location1 = getLocation(result1);
@@ -459,13 +463,13 @@ public class AppTest {
                 + "<__BASEURI__externalPlace/g1234> <http://data.deichman.no/duo#bibliofilPlaceId> \"1234\" .\n"
                 + "<__BASEURI__externalPlace/g1234> <__BASEURI__ontology#specification> \"Norge\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
 
-        input = input.replace("__BASEURI__", baseUri);
+        input = input.replace("__BASEURI__", appURI);
 
         String duplicateInput = "<__BASEURI__externalPlace/g1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Place> .\n"
                 + "<__BASEURI__externalPlace/g1234> <__BASEURI__ontology#prefLabel> \"Oslo\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n"
                 + "<__BASEURI__externalPlace/g1234> <http://data.deichman.no/duo#bibliofilPlaceId> \"1234\" .\n"
                 + "<__BASEURI__externalPlace/g1234> <__BASEURI__ontology#specification> \"Norge\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
-        duplicateInput = duplicateInput.replace("__BASEURI__", baseUri);
+        duplicateInput = duplicateInput.replace("__BASEURI__", appURI);
 
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
@@ -473,8 +477,8 @@ public class AppTest {
         Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
         String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
 
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "place", body).asString();
-        HttpResponse<String> result2 = buildCreateRequest(baseUri + "place", body2).asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "place", body).asString();
+        HttpResponse<String> result2 = buildCreateRequest(appURI + "place", body2).asString();
 
         assertResponse(Status.CONFLICT, result2);
         String location1 = getLocation(result1);
@@ -484,35 +488,35 @@ public class AppTest {
 
     @Test
     public void place_is_patched() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "place", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "place", "{}").asString();
         String op = "ADD";
         String s = getLocation(result1);
-        String p = baseUri + "ontology#prefLabel";
+        String p = BaseURI.ontology("prefLabel");
         String o = "Oslo";
         String type = "http://www.w3.org/2001/XMLSchema#string";
         JsonArray body = buildLDPatch(buildPatchStatement(op, s, p, o, type));
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
     }
 
 
     @Test
     public void place_is_deleted() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "place", "{}").asString();
-        HttpResponse<String> result2 = buildDeleteRequest(getLocation(result1));
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "place", "{}").asString();
+        HttpResponse<String> result2 = buildDeleteRequest(resolveLocally(getLocation(result1)));
         assertEquals(Status.NO_CONTENT.getStatusCode(), result2.getStatus());
     }
 
     @Test
     public void place_is_searchable() throws UnirestException, InterruptedException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "place", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "place", "{}").asString();
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#prefLabel";
+        String p1 = BaseURI.ontology("prefLabel");
         String o1 = "Oslo";
         String type = "http://www.w3.org/2001/XMLSchema#string";
-        String p2 = baseUri + "ontology#specification";
+        String p2 = BaseURI.ontology("specification");
         String o2 = "Norway";
 
         JsonArray body = Json.createArrayBuilder()
@@ -520,21 +524,21 @@ public class AppTest {
                 .add(buildLDPatch(buildPatchStatement(op, s, p2, o2, type)).get(0))
                 .build();
 
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
         doSearchForPlace("Oslo");
     }
 
     @Test
     public void compositiontype_is_searchable() throws UnirestException, InterruptedException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "compositiontype", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "compositiontype", "{}").asString();
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#prefLabel";
+        String p1 = BaseURI.ontology("prefLabel");
         String o1 = "Menuette";
         String type = "http://www.w3.org/2001/XMLSchema#string";
-        String p2 = baseUri + "ontology#specification";
+        String p2 = BaseURI.ontology("ontology#specification");
         String o2 = "Posh dance";
 
         JsonArray body = Json.createArrayBuilder()
@@ -542,18 +546,18 @@ public class AppTest {
                 .add(buildLDPatch(buildPatchStatement(op, s, p2, o2, type)).get(0))
                 .build();
 
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
         doSearchForCompositionType("Menuette");
     }
 
     @Test
     public void serial_is_searchable() throws UnirestException, InterruptedException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "serial", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "serial", "{}").asString();
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#name";
+        String p1 = BaseURI.ontology("name");
         String o1 = "Morgan Kane";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
@@ -561,18 +565,18 @@ public class AppTest {
                 .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
                 .build();
 
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
         doSearchForSerial("Morgan Kane");
     }
 
     @Test
     public void subject_is_searchable() throws UnirestException, InterruptedException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "subject", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "subject", "{}").asString();
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#prefLabel";
+        String p1 = BaseURI.ontology("prefLabel");
         String o1 = "Knitting";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
@@ -580,18 +584,18 @@ public class AppTest {
                 .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
                 .build();
 
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
         doSearchForSubject("Knitting");
     }
 
     @Test
     public void genre_is_searchable() throws UnirestException, InterruptedException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "genre", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "genre", "{}").asString();
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#prefLabel";
+        String p1 = BaseURI.ontology("prefLabel");
         String o1 = "Romance";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
@@ -599,21 +603,21 @@ public class AppTest {
                 .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
                 .build();
 
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
         doSearchForGenre("Romance");
     }
 
     @Test
     public void event_is_searchable() throws UnirestException, InterruptedException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "event", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "event", "{}").asString();
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#prefLabel";
+        String p1 = BaseURI.ontology("prefLabel");
         String o1 = "Menuette";
         String type = "http://www.w3.org/2001/XMLSchema#string";
-        String p2 = baseUri + "ontology#specification";
+        String p2 = BaseURI.ontology("specification");
         String o2 = "Posh dance";
 
         JsonArray body = Json.createArrayBuilder()
@@ -621,7 +625,7 @@ public class AppTest {
                 .add(buildLDPatch(buildPatchStatement(op, s, p2, o2, type)).get(0))
                 .build();
 
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
         doSearchForEvent("Menuette");
     }
@@ -635,9 +639,9 @@ public class AppTest {
             }
             HttpResponse<String> createResult = createEmptyResource(entityType);
             XURI location = new XURI(getLocation(createResult));
-            HttpResponse<String> addResult = buildPatchRequest(location.getUri(), createSimplePatch(ADD, location)).asString();
+            HttpResponse<String> addResult = buildPatchRequest(resolveLocally(location.getUri()), createSimplePatch(ADD, location)).asString();
             assertEquals("expected OK when creating " + entityType + " but got " + addResult.getStatus(), Status.OK.getStatusCode(), addResult.getStatus());
-            HttpResponse<String> delResult = buildPatchRequest(location.getUri(), createSimplePatch(DEL, location)).asString();
+            HttpResponse<String> delResult = buildPatchRequest(resolveLocally(location.getUri()), createSimplePatch(DEL, location)).asString();
             assertEquals(Status.OK.getStatusCode(), delResult.getStatus());
         }
     }
@@ -649,7 +653,7 @@ public class AppTest {
         }
 
         String s = xuri.getUri();
-        String p1 = baseUri + "ontology#prefLabel";
+        String p1 = BaseURI.ontology("prefLabel");
         String o1 = "TestTestTest";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
@@ -676,40 +680,40 @@ public class AppTest {
 
     @Test
     public void test_patching_with_bnodes() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "place", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "place", "{}").asString();
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#place";
+        String p1 = BaseURI.ontology("place");
         String o1 = "_:b0";
         String type = ANY_URI;
-        String p2 = baseUri + "ontology#prefLabel";
+        String p2 = BaseURI.ontology("prefLabel");
         String o2 = "Norway";
 
         JsonArray body = Json.createArrayBuilder()
                 .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
                 .add(buildLDPatch(buildPatchStatement(op, o1, p2, o2)).get(0))
                 .build();
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
 
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
     }
 
     @Test
     public void test_deletion_of_bnodes() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "place", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "place", "{}").asString();
         String op = ADD;
         String s = getLocation(result1);
-        String p1 = baseUri + "ontology#place";
+        String p1 = BaseURI.ontology("PLACE");
         String o1 = "_:b0";
         String type = ANY_URI;
-        String p2 = baseUri + "ontology#prefLabel";
+        String p2 = BaseURI.ontology("prefLabel");
         String o2 = "Norway";
 
         JsonArray addBody = Json.createArrayBuilder()
                 .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
                 .add(buildLDPatch(buildPatchStatement(op, o1, p2, o2)).get(0))
                 .build();
-        HttpResponse<String> result2 = buildPatchRequest(s, addBody).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), addBody).asString();
 
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
 
@@ -717,47 +721,47 @@ public class AppTest {
                 .add(buildLDPatch(buildPatchStatement(DEL, s, p1, o1, type)).get(0))
                 .add(buildLDPatch(buildPatchStatement(DEL, o1, p2, o2)).get(0))
                 .build();
-        HttpResponse<String> result3 = buildPatchRequest(s, delBody).asString();
+        HttpResponse<String> result3 = buildPatchRequest(resolveLocally(s), delBody).asString();
 
         assertEquals(Status.OK.getStatusCode(), result3.getStatus());
     }
 
     private HttpResponse<String> buildDeleteRequest(String location) throws UnirestException {
         return Unirest
-                .delete(location).asString();
+                .delete(appURI + location).asString();
     }
 
     @Test
     public void serial_resource_can_be_created() throws UnirestException {
         String input = "<__BASEURI__serial/s1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Serial> .\n"
                 + "<__BASEURI__serial/s1234> <__BASEURI__ontology#name> \"Serial name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
-        input = input.replace("__BASEURI__", baseUri);
+        input = input.replace("__BASEURI__", appURI);
 
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
 
-        HttpResponse<String> result = buildCreateRequest(baseUri + "serial", body).asString();
+        HttpResponse<String> result = buildCreateRequest(appURI + "serial", body).asString();
 
         assertResponse(CREATED, result);
     }
 
     @Test
     public void corporation_is_patched() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "corporation", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "corporation", "{}").asString();
         String op = "ADD";
         String s = getLocation(result1);
-        String p = baseUri + "ontology#name";
+        String p = BaseURI.ontology("name");
         String o = "Acme Publishing Norway";
         String type = "http://www.w3.org/2001/XMLSchema#string";
         JsonArray body = buildLDPatch(buildPatchStatement(op, s, p, o, type));
-        HttpResponse<String> result2 = buildPatchRequest(s, body).asString();
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
         assertEquals(Status.OK.getStatusCode(), result2.getStatus());
     }
 
     @Test
     public void place_of_corporation_is_deleted() throws UnirestException {
-        HttpResponse<String> result1 = buildCreateRequest(baseUri + "corporation", "{}").asString();
-        HttpResponse<String> result2 = buildDeleteRequest(getLocation(result1));
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "corporation", "{}").asString();
+        HttpResponse<String> result2 = buildDeleteRequest(resolveLocally(getLocation(result1)));
         assertEquals(Status.NO_CONTENT.getStatusCode(), result2.getStatus());
     }
 
@@ -766,7 +770,7 @@ public class AppTest {
 
         for (AuthorizedValue authorizedValue : AuthorizedValue.values()) {
             HttpRequest authorizedValueRequest = Unirest
-                    .get(baseUri + "authorized_values/" + authorizedValue.getPath())
+                    .get(appURI + "authorized_values/" + authorizedValue.getPath())
                     .header("Accept", LD_JSON);
             HttpResponse<?> authorizedValueResponse = authorizedValueRequest.asString();
             System.out.println("Testing authorized value: " + authorizedValue.getPath());
@@ -842,14 +846,14 @@ public class AppTest {
     @Test
     public void get_ontology() throws Exception {
         HttpRequest request = Unirest
-                .get(baseUri + "ontology")
+                .get(appURI + "ontology")
                 .header("Accept", LD_JSON);
         HttpResponse<?> response = request.asString();
         assertResponse(Status.OK, response);
 
         Model ontology = RDFModelUtil.modelFrom(response.getBody().toString(), Lang.JSONLD);
         Statement workStatement = createStatement(
-                createResource(baseUri + "ontology#Work"),
+                createResource(BaseURI.ontology("Work")),
                 RDFS.label,
                 createLangLiteral("Verk", "no")
         );
@@ -868,7 +872,7 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/work/_search").queryString("q", "mainTitle=" + name);
+                    .get(appURI + "search/work/_search").queryString("q", "mainTitle=" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
@@ -891,7 +895,7 @@ public class AppTest {
         int attempts = TEN_TIMES;
         do {
             HttpRequest request = Unirest
-                    .get(baseUri + "search/person/_search").queryString("q", "name:" + name);
+                    .get(appURI + "search/person/_search").queryString("q", "name:" + name);
             HttpResponse<?> response = request.asJson();
             assertResponse(Status.OK, response);
             String responseBody = response.getBody().toString();
@@ -908,7 +912,7 @@ public class AppTest {
         boolean foundPlaceInIndex;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/place/_search").queryString("q", "prefLabel:" + place);
+            HttpRequest request = Unirest.get(appURI + "search/place/_search").queryString("q", "prefLabel:" + place);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundPlaceInIndex = responseBody.contains(place);
@@ -925,7 +929,7 @@ public class AppTest {
         boolean foundCompositionTypeInIndex;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/compositiontype/_search").queryString("q", "prefLabel:" + compositionType);
+            HttpRequest request = Unirest.get(appURI + "search/compositiontype/_search").queryString("q", "prefLabel:" + compositionType);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundCompositionTypeInIndex = responseBody.contains(compositionType);
@@ -942,7 +946,7 @@ public class AppTest {
         boolean foundSerial;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/serial/_search").queryString("q", "name:" + name);
+            HttpRequest request = Unirest.get(appURI + "search/serial/_search").queryString("q", "name:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSerial = responseBody.contains(name);
@@ -959,7 +963,7 @@ public class AppTest {
         boolean foundPublication;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/publication/_search").queryString("q", "recordId:" + recordId);
+            HttpRequest request = Unirest.get(appURI + "search/publication/_search").queryString("q", "recordId:" + recordId);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundPublication = responseBody.contains(recordId);
@@ -976,7 +980,7 @@ public class AppTest {
         boolean foundSubject;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/subject/_search").queryString("q", "prefLabel:" + name);
+            HttpRequest request = Unirest.get(appURI + "search/subject/_search").queryString("q", "prefLabel:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSubject = responseBody.contains(name);
@@ -993,7 +997,7 @@ public class AppTest {
         boolean foundSubject;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/genre/_search").queryString("q", "prefLabel:" + name);
+            HttpRequest request = Unirest.get(appURI + "search/genre/_search").queryString("q", "prefLabel:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSubject = responseBody.contains(name);
@@ -1010,7 +1014,7 @@ public class AppTest {
         boolean foundEventInIndex;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(baseUri + "search/event/_search").queryString("q", "prefLabel:" + event);
+            HttpRequest request = Unirest.get(appURI + "search/event/_search").queryString("q", "prefLabel:" + event);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundEventInIndex = responseBody.contains(event);
@@ -1045,20 +1049,20 @@ public class AppTest {
     @Test
     public void when_get_elasticsearch_work_without_query_parameter_should_get_bad_request_response() throws Exception {
         HttpRequest request = Unirest
-                .get(baseUri + "search/work/_search");
+                .get(appURI + "search/work/_search");
         HttpResponse<?> response = request.asString();
         assertResponse(Status.BAD_REQUEST, response);
     }
 
     private GetRequest buildGetItemsRequest(String workUri) {
         return Unirest
-                .get(workUri + "/items")
+                .get(appURI + workUri + "/items")
                 .header("Accept", "application/ld+json");
     }
 
     private GetRequest buildGetRequest(String workUri) {
         return Unirest
-                .get(workUri)
+                .get(appURI + workUri)
                 .header("Accept", "application/ld+json");
     }
 
@@ -1075,53 +1079,52 @@ public class AppTest {
         String partNumber = "Part 1";
         String isbn = "978-3-16-148410-0";
         String publicationYear = "2016";
-        String ontologyURI = baseUri + "ontology#";
 
         setupExpectationForMarcXmlSentToKoha(creator, publicationTitle, partTitle, partNumber, isbn, publicationYear);
         kohaSvcMock.addLoginExpectation();
 
-        String personUri = createPersonInRdfStore(creator, ontologyURI);
-        String workUri = createWorkInRdfStore(workTitle, ontologyURI, personUri);
+        String personUri = createPersonInRdfStore(creator, BaseURI.ontology());
+        String workUri = createWorkInRdfStore(workTitle, BaseURI.ontology(), personUri);
 
         String publicationTriples = ""
-                + "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "publicationOf> <__WORKURI__> .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
+                + "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + BaseURI.ontology("Publication") + "> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("mainTitle") +"> \"" + publicationTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partTitle") +"> \"" + partTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationOf") +"> <__WORKURI__> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partNumber") +"> \"" + partNumber + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("isbn") +"> \"" + isbn + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationYear") +"> \"" + publicationYear + "\" .\n";
 
-        HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
+        HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(appURI + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
         assertNotNull(getLocation(createpublicationResponse));
     }
 
     private String createWorkInRdfStore(String workTitle, String ontologyURI, String personUri) throws UnirestException {
         String workTriples = ""
-                + "<http://host/work/w1> <" + ontologyURI + "mainTitle> \"" + workTitle + "\" .\n"
-                + "<http://host/work/w1> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
-                + "<http://host/work/w1> <" + ontologyURI + "contributor> _:b1 .\n"
+                + "<http://data.deichman.no/work/w1> <" + ontologyURI + "mainTitle> \"" + workTitle + "\" .\n"
+                + "<http://data.deichman.no/work/w1> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
+                + "<http://data.deichman.no/work/w1> <" + ontologyURI + "contributor> _:b1 .\n"
                 + "_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Contribution> .\n"
                 + "_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "MainEntry> .\n"
                 + "_:b1  <" + ontologyURI + "role> <http://data.deichman.no/role#author> .\n"
                 + "_:b1  <" + ontologyURI + "agent> <__CREATORURI__> .\n";
-        HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(baseUri + "work", workTriples.replace("__CREATORURI__", personUri)).asJson();
+        HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(appURI + "work", workTriples.replace("__CREATORURI__", personUri)).asJson();
         return getLocation(createworkResponse);
     }
 
     private String createPersonInRdfStore(String person, String ontologyURI) throws UnirestException {
         String personTriples = ""
-                + "<http://host/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
-                + "<http://host/person/h1> <" + ontologyURI + "name> \"" + person + "\" .";
-        HttpResponse<JsonNode> createPersonResponse = buildCreateRequestNtriples(baseUri + "person", personTriples).asJson();
+                + "<http://data.deichman.no/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Person> .\n"
+                + "<http://data.deichman.no/person/h1> <" + ontologyURI + "name> \"" + person + "\" .";
+        HttpResponse<JsonNode> createPersonResponse = buildCreateRequestNtriples(appURI + "person", personTriples).asJson();
         return getLocation(createPersonResponse);
     }
 
     private String createSubjectInRdfStore(String subject, String ontologyURI) throws UnirestException {
         String subjectTriples = ""
-                + "<http://host/subject/s1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Subject> .\n"
-                + "<http://host/subject/s1> <" + ontologyURI + "prefLabel> \"" + subject + "\" .";
-        HttpResponse<JsonNode> createSubjectResponse = buildCreateRequestNtriples(baseUri + "subject", subjectTriples).asJson();
+                + "<http://data.deichman.no/subject/s1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Subject> .\n"
+                + "<http://data.deichman.no/subject/s1> <" + ontologyURI + "prefLabel> \"" + subject + "\" .";
+        HttpResponse<JsonNode> createSubjectResponse = buildCreateRequestNtriples(appURI + "subject", subjectTriples).asJson();
         return getLocation(createSubjectResponse);
     }
 
@@ -1166,17 +1169,17 @@ public class AppTest {
                 + "</record>\n";
         String resp = "{ \"marcxml\": \"" + StringEscapeUtils.escapeJava(expected) + "\"}";
 
-        HttpResponse<String> response = buildEmptyCreateRequest(baseUri + "publication").asString();
+        HttpResponse<String> response = buildEmptyCreateRequest(appURI + "publication").asString();
         String location = getLocation(response);
 
-        final HttpResponse<JsonNode> getPublication = buildGetRequest(location).asJson();
+        final HttpResponse<JsonNode> getPublication = buildGetRequest(resolveLocally(location)).asJson();
 
         Model model = RDFModelUtil.modelFrom(getPublication.getBody().toString(), Lang.JSONLD);
         final String[] recordId = new String[1];
-        model.listObjectsOfProperty(createProperty(baseUri + "ontology#recordID")).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
+        model.listObjectsOfProperty(createProperty(BaseURI.ontology("recordID"))).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
 
         kohaSvcMock.addGetBiblioExpectation(recordId[0], resp);
-        HttpResponse<String> result = Unirest.get(baseUri + "marc/" + recordId[0]).asString();
+        HttpResponse<String> result = Unirest.get(appURI + "marc/" + recordId[0]).asString();
         assertEquals(expected, result.getBody());
     }
 
@@ -1184,7 +1187,7 @@ public class AppTest {
     public void when_index_is_cleared_search_returns_nothing() throws Exception {
         indexWork("101", "Lord of the rings");
         doSearchForWorks("Lord");
-        HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
+        HttpResponse<String> response = Unirest.post(appURI + "search/clear_index").asString();
         assertEquals(HTTP_OK, response.getStatus());
         doSearchForWorks("Lord", SHOULD_NOT_FIND);
         indexWork("102", "Lucky Luke");
@@ -1195,23 +1198,22 @@ public class AppTest {
     public void when_index_is_cleared_and_reindexed_works_are_found() throws Exception {
         indexWork("101", "Lord of the rings");
         doSearchForWorks("Lord");
-        HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
+        HttpResponse<String> response = Unirest.post(appURI + "search/clear_index").asString();
         assertEquals(HTTP_OK, response.getStatus());
         doSearchForWorks("Lord", SHOULD_NOT_FIND);
-        String ontologyURI = baseUri + "ontology#";
 
-        String personUri = createPersonInRdfStore("Morris", ontologyURI);
-        createWorkInRdfStore("Lucky Luke", ontologyURI, personUri);
-        Unirest.post(baseUri + "search/work/reindex_all").asString();
+        String personUri = createPersonInRdfStore("Morris", BaseURI.ontology());
+        createWorkInRdfStore("Lucky Luke", BaseURI.ontology(), personUri);
+        Unirest.post(appURI + "search/work/reindex_all").asString();
         doSearchForWorks("Lucky");
     }
 
     @Test
     public void when_index_is_cleared_and_reindexed_subjects_are_found() throws Exception {
-        createSubjectInRdfStore("Hekling", baseUri + "ontology#");
-        HttpResponse<String> response = Unirest.post(baseUri + "search/clear_index").asString();
+        createSubjectInRdfStore("Hekling", BaseURI.ontology());
+        HttpResponse<String> response = Unirest.post(appURI + "search/clear_index").asString();
         assertEquals(HTTP_OK, response.getStatus());
-        Unirest.post(baseUri + "search/subject/reindex_all").asString();
+        Unirest.post(appURI + "search/subject/reindex_all").asString();
         doSearchForSubject("Hekling");
     }
 
@@ -1224,32 +1226,31 @@ public class AppTest {
         String partNumber = "Part 1";
         String isbn = "978-3-16-148410-0";
         String publicationYear = "2016";
-        String ontologyURI = baseUri + "ontology#";
 
         kohaSvcMock.addLoginExpectation();
         setupExpectationForMarcXmlSentToKoha(creator, publicationTitle, partTitle, partNumber, isbn, publicationYear);
 
-        String personUri = createPersonInRdfStore(creator, ontologyURI);
-        String workUri = createWorkInRdfStore(workTitle, ontologyURI, personUri);
+        String personUri = createPersonInRdfStore(creator, BaseURI.ontology());
+        String workUri = createWorkInRdfStore(workTitle, BaseURI.ontology(), personUri);
         String publicationTriples = ""
-                + "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + ontologyURI + "Publication> .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "mainTitle> \"" + publicationTitle + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "partTitle> \"" + partTitle + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "publicationOf> <" + workUri + "> .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "partNumber> \"" + partNumber + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "isbn> \"" + isbn + "\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "hasHoldingBranch> \"hutl\" .\n"
-                + "<http://host/publication/p1> <" + ontologyURI + "publicationYear> \"" + publicationYear + "\" .\n";
+                + "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + BaseURI.ontology("Publication") + "> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("mainTitle") + "> \"" + publicationTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partTitle") + "> \"" + partTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationOf") + "> <" + workUri + "> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partNumber") + "> \"" + partNumber + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("isbn") + "> \"" + isbn + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("hasHoldingBranch") + "> \"hutl\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationYear") + "> \"" + publicationYear + "\" .\n";
 
-        HttpResponse<JsonNode> createPublicationResponse = buildCreateRequestNtriples(baseUri + "publication", publicationTriples).asJson();
+        HttpResponse<JsonNode> createPublicationResponse = buildCreateRequestNtriples(appURI + "publication", publicationTriples).asJson();
         assertResponse(CREATED, createPublicationResponse);
 
-        HttpResponse<String> stringHttpResponse = Unirest.put(workUri + "/index").asString();
+        HttpResponse<String> stringHttpResponse = Unirest.put(appURI + resolveLocally(workUri) + "/index").asString();
         assertNotNull(stringHttpResponse);
 
         doSearchForWorksWithHoldingbranch("Hunger", "hutl");
 
-        stringHttpResponse = Unirest.post(baseUri + "search/work/reindex")
+        stringHttpResponse = Unirest.post(appURI + "search/work/reindex")
                 .queryString("recordId", FIRST_BIBLIO_ID)
                 .queryString("branches", "fgry").asString();
         assertNotNull(stringHttpResponse);
@@ -1265,12 +1266,12 @@ public class AppTest {
         String data = new ResourceReader().readFile("searchsynctestdata.ttl").replaceAll("__PORT__", String.valueOf(appPort));
         repo.createResource(RDFModelUtil.modelFrom(data, Lang.TTL));
 
-        String workUri = "http://127.0.0.1:" + appPort + "/work/w4e5db3a95caa282e5968f68866774e20";
-        String pubUri1 = "http://127.0.0.1:" + appPort + "/publication/p594502562255";
-        String pubUri2 = "http://127.0.0.1:" + appPort + "/publication/p735933031021";
-        String persUri1 = "http://127.0.0.1:" + appPort + "/person/h10834700";
-        String persUri2 = "http://127.0.0.1:" + appPort + "/person/h11234";
-        String subjUri = "http://127.0.0.1:" + appPort + "/subject/e1200005";
+        String workUri = "http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20";
+        String pubUri1 = "http://data.deichman.no/publication/p594502562255";
+        String pubUri2 = "http://data.deichman.no/publication/p735933031021";
+        String persUri1 = "http://data.deichman.no/person/h10834700";
+        String persUri2 =  "http://data.deichman.no/person/h11234";
+        String subjUri = "http://data.deichman.no/subject/e1200005";
 
         // 1 ) Verify that resources exist in triplestore:
 
@@ -1293,9 +1294,9 @@ public class AppTest {
         // 3) Patch work, and verify that work and its publications getByIsbn indexed within 2 seconds:
 
         buildPatchRequest(
-                workUri,
+                resolveLocally(workUri),
                 buildLDPatch(
-                        buildPatchStatement("add", workUri, baseUri + "ontology#partTitle", "æøå"))).asString();
+                        buildPatchStatement("add", workUri, BaseURI.ontology("partTitle"), "æøå"))).asString();
 
         assertTrue(resourceIsIndexedWithinNumSeconds(workUri, 2));
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 2));
@@ -1304,19 +1305,19 @@ public class AppTest {
         // 4) Patch publication, and verify that publication and work getByIsbn reindexed within 2 seconds:
 
         buildPatchRequest(
-                pubUri1,
+                resolveLocally(pubUri1),
                 buildLDPatch(
-                        buildPatchStatement("add", pubUri1, baseUri + "ontology#hasHoldingBranch", "branch_xyz123"))).asString();
+                        buildPatchStatement("add", pubUri1, BaseURI.ontology("hasHoldingBranch"), "branch_xyz123"))).asString();
 
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "branch_xyz123", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "branch_xyz123", 2));
 
         // 5) Patch person, and verify that work and publications getByIsbn reindexed within few seconds
         buildPatchRequest(
-                persUri1,
+                resolveLocally(persUri1),
                 buildLDPatch(
-                        buildPatchStatement("del", persUri1, baseUri + "ontology#name", "Ragde, Anne B."),
-                        buildPatchStatement("add", persUri1, baseUri + "ontology#name", "Zappa, Frank"))).asString();
+                        buildPatchStatement("del", persUri1, BaseURI.ontology("name"), "Ragde, Anne B."),
+                        buildPatchStatement("add", persUri1, BaseURI.ontology("name"), "Zappa, Frank"))).asString();
 
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Zappa, Frank", 2));
@@ -1329,7 +1330,7 @@ public class AppTest {
     public void test_z3950_resource_is_retrieved_and_mapped() throws UnirestException {
         z3950ServiceMock.getSingleMarcRecordExpectation();
 
-        String url = baseUri + "/datasource/bibbi/isbn/912312312312";
+        String url = appURI + "/datasource/bibbi/isbn/912312312312";
 
         HttpResponse<String> result = Unirest.get(url).asString();
 

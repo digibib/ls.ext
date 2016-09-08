@@ -1,7 +1,6 @@
 package no.deichman.services.search;
 
 import no.deichman.services.rdf.RDFModelUtil;
-import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -51,7 +50,7 @@ public class ModelToIndexMapperTest {
                 + "    \"rdfs\" : \"http://www.w3.org/2000/01/rdf-schema#\""
                 + "  }"
                 + "}", Lang.JSONLD);
-        ModelToIndexMapper modelToIndexMapper = new ModelToIndexMapper("work", BaseURI.local());
+        ModelToIndexMapper modelToIndexMapper = new ModelToIndexMapper("work");
         Class<?> clazz = modelToIndexMapper.getClass();
         Field field = clazz.getDeclaredField("context");
         field.setAccessible(true);

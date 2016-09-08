@@ -12,10 +12,9 @@ import java.util.function.Predicate;
 class UniqueURIGenerator {
 
     private static final int NO_OF_DIGITS = 12;
-    private BaseURI baseURI;
 
-    UniqueURIGenerator(BaseURI baseURI) {
-        this.baseURI = baseURI;
+    UniqueURIGenerator() {
+
     }
 
     private String getRandom() {
@@ -25,27 +24,27 @@ class UniqueURIGenerator {
     private String buildUri(String type, String uniquePart) {
         String result;
         switch (type) {
-            case "Work":        result = baseURI.work() + "w" + uniquePart;
+            case "Work":        result = BaseURI.work() + "w" + uniquePart;
                 break;
-            case "Publication": result = baseURI.publication() + "p" + uniquePart;
+            case "Publication": result = BaseURI.publication() + "p" + uniquePart;
                 break;
-            case "Person": result = baseURI.person() + "h" + uniquePart;
+            case "Person": result = BaseURI.person() + "h" + uniquePart;
                 break;
-            case "Place": result = baseURI.place() + "g" + uniquePart;
+            case "Place": result = BaseURI.place() + "g" + uniquePart;
                 break;
-            case "Corporation": result = baseURI.corporation() + "c" + uniquePart;
+            case "Corporation": result = BaseURI.corporation() + "c" + uniquePart;
                 break;
-            case "Serial": result = baseURI.serial() + "s" + uniquePart;
+            case "Serial": result = BaseURI.serial() + "s" + uniquePart;
                 break;
-            case "Subject": result = baseURI.subject() + "e" + uniquePart;
+            case "Subject": result = BaseURI.subject() + "e" + uniquePart;
                 break;
-            case "Genre": result = baseURI.genre() + "m" + uniquePart;
+            case "Genre": result = BaseURI.genre() + "m" + uniquePart;
                 break;
-            case "Instrument": result = baseURI.instrument() + "i" + uniquePart;
+            case "Instrument": result = BaseURI.instrument() + "i" + uniquePart;
                 break;
-            case "CompositionType": result = baseURI.compositionType() + "t" + uniquePart;
+            case "CompositionType": result = BaseURI.compositionType() + "t" + uniquePart;
                 break;
-            case "Event": result = baseURI.event() + "v" + uniquePart;
+            case "Event": result = BaseURI.event() + "v" + uniquePart;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI-type " + type);

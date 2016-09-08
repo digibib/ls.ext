@@ -1,14 +1,15 @@
 package no.deichman.services.ontology;
 
+import no.deichman.services.uridefaults.BaseURI;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import no.deichman.services.uridefaults.BaseURI;
-import org.apache.commons.io.IOUtils;
-import org.apache.jena.riot.Lang;
 
 import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 
@@ -23,10 +24,10 @@ public final class FileBasedOntologyService implements OntologyService {
 
     private static String ontologyFromFile; /* We use static for caching */
 
-    public FileBasedOntologyService(BaseURI baseUri) {
+    public FileBasedOntologyService() {
         Map<String, String> tempMap = new HashMap<>();
-        tempMap.put("__BASE_URI_ONTOLOGY__", baseUri.ontology());
-        tempMap.put("__BASE_URI_VALUES__", baseUri.values());
+        tempMap.put("__BASE_URI_ONTOLOGY__", BaseURI.ontology());
+        tempMap.put("__BASE_URI_VALUES__", BaseURI.values());
         baseUriReplacementMap = Collections.unmodifiableMap(tempMap);
     }
 

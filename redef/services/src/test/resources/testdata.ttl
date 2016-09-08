@@ -1,4 +1,4 @@
-@prefix deichman: <http://deichman.no/ontology#> .
+@prefix deichman: <http://data.deichman.no/ontology#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix bibo: <http://purl.org/ontology/bibo/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -7,30 +7,30 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://deichman.no/work/w00001> a deichman:Work ;
+<http://data.deichman.no/work/w00001> a deichman:Work ;
   dcterms:identifier "work_00001" ;
   rdfs:label "Sult" ;
   dcterms:mainTitle "Sult"@no ;
   deichman:contributor _:c1 ;
   dcterms:date "1890"^^xsd:gYear ;
-  deichman:hasEdition <http://deichman.no/edition/edition_00001>, <http://deichman.no/edition/edition_00002> .
+  deichman:hasEdition <http://data.deichman.no/edition/edition_00001>, <http://data.deichman.no/edition/edition_00002> .
 
 _:c1 a deichman:Contribution ;
-   deichman:agent <http://deichman.no/person/h12321011> ;
+   deichman:agent <http://data.deichman.no/person/h12321011> ;
    deichman:role <http://data.deichman.no/role#author> .
 
-<http://deichman.no/edition/edition_00001> a deichman:Edition ;
+<http://data.deichman.no/edition/edition_00001> a deichman:Edition ;
   bibo:isbn "82-05-27748-6" ;
   deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
   deichman:placement "magasinet" ;
   deichman:status "På hylla" .
 
-<http://deichman.no/edition/edition_00002> a deichman:Edition ;
+<http://data.deichman.no/edition/edition_00002> a deichman:Edition ;
   bibo:isbn "82-05-27748-6" ;
-  deichman:location <http://deichman.no/department/d_00001> ;
-  deichman:status <http://deichman.no/status/available> .
+  deichman:location <http://data.deichman.no/department/d_00001> ;
+  deichman:status <http://data.deichman.no/status/available> .
 
-<http://deichman.no/person/h12321011> a foaf:Person ;
+<http://data.deichman.no/person/h12321011> a foaf:Person ;
   rdfs:label "Knut Hamsun" ;
   foaf:name "Knut Hamsun" ;
   foaf:givenName "Knut" ;
@@ -39,31 +39,31 @@ _:c1 a deichman:Contribution ;
   dbpedia-owl:deathDate "1952-02-19"^^xsd:gDate ;
   owl:sameAs <http://dbpedia.org/page/Knut_Hamsun> .
 
-<http://deichman.no/department/d_00001> a deichman:Department ;
+<http://data.deichman.no/department/d_00001> a deichman:Department ;
   foaf:name "Voksenavdelingen, Hovedbiblioteket"@no .
 
-<http://deichman.no/status/available> a deichman:Status ;
+<http://data.deichman.no/status/available> a deichman:Status ;
   rdfs:label "På hylla"@no .
 
-<http://deichman.no/work/work_00002> a deichman:Work ;
+<http://data.deichman.no/work/work_00002> a deichman:Work ;
   dcterms:identifier "work_00002" ;
   rdfs:label "Trist som faen" ;
   dcterms:mainTitle "Trist som faen"@no ;
   deichman:contributor _:c2 ;
   dcterms:date "1999"^^xsd:gYear ;
-  deichman:hasEdition <http://deichman.no/edition/edition_00003> .
+  deichman:hasEdition <http://data.deichman.no/edition/edition_00003> .
 
  _:c2 a deichman:Contribution ;
-    deichman:agent <http://deichman.no/person/person_00002> ;
+    deichman:agent <http://data.deichman.no/person/person_00002> ;
     deichman:role <http://data.deichman.no/role#author> .
 
-<http://deichman.no/edition/edition_00003> a deichman:Edition ;
+<http://data.deichman.no/edition/edition_00003> a deichman:Edition ;
   bibo:isbn "82-05-26285-3" ;
   deichman:location "Voksenavdelingen, Hovedbiblioteket" ;
   deichman:placement "magasinet" ;
   deichman:status "På hylla" .
 
-<http://deichman.no/person/person_00002> a foaf:Person ;
+<http://data.deichman.no/person/person_00002> a foaf:Person ;
   rdfs:label "Ari Behn" ;
   foaf:name "Ari Behn" ;
   foaf:givenName "Ari" ;
@@ -71,13 +71,13 @@ _:c1 a deichman:Contribution ;
   dbpedia-owl:birthDate "1972-09-30"^^xsd:gDate ;
   owl:sameAs <http://dbpedia.org/page/Ari_Behn> .
 
-<http://deichman.no/department/d_00001> a deichman:Department ;
+<http://data.deichman.no/department/d_00001> a deichman:Department ;
   foaf:name "Voksenavdelingen, Hovedbiblioteket"@no .
 
-<http://deichman.no/status/available> a deichman:Status ;
+<http://data.deichman.no/status/available> a deichman:Status ;
   rdfs:label "På hylla"@no .
 
-<http://deichman.no/work/work_00003> a deichman:Work ;
+<http://data.deichman.no/work/work_00003> a deichman:Work ;
   dcterms:identifier "work_00003" ;
   rdfs:label "A minimalist analysis trousers" ;
   dcterms:mainTitle "A minimalist analysis of trousers"@en ;
@@ -85,40 +85,40 @@ _:c1 a deichman:Contribution ;
   dcterms:date "2004"^^xsd:gYear .
 
  _:c3 a deichman:Contribution ;
-    deichman:agent <http://deichman.no/person/person_00003> ;
+    deichman:agent <http://data.deichman.no/person/person_00003> ;
     deichman:role <http://data.deichman.no/role#author> .
 
-<http://deichman.no/person/person_00003> a foaf:Person ;
+<http://data.deichman.no/person/person_00003> a foaf:Person ;
   rdfs:label "Stephen Tubs" ;
   foaf:name "Stephen Tubs" ;
   foaf:givenName "Stephen" ;
   foaf:familyName "Tubs" ;
   dbpedia-owl:birthDate "1967-02-17"^^xsd:gDate .
 
-<http://deichman.no/work/work_00004> a deichman:Work ;
+<http://data.deichman.no/work/work_00004> a deichman:Work ;
   dcterms:identifier "work_00004" ;
   rdfs:label "Berlinerpoplene" ;
   dcterms:mainTitle "Berlinerpoplene"@no ;
   deichman:contributor _:c4 ;
   dcterms:date "2004"^^xsd:gYear ;
-  deichman:hasEdition <http://deichman.no/edition/edition_00004> .
+  deichman:hasEdition <http://data.deichman.no/edition/edition_00004> .
 
  _:c4 a deichman:Contribution ;
-    deichman:agent <http://deichman.no/person/person_00004> ;
+    deichman:agent <http://data.deichman.no/person/person_00004> ;
     deichman:role <http://data.deichman.no/role#author> .
 
-<http://deichman.no/person/person_00004> a foaf:Person ;
+<http://data.deichman.no/person/person_00004> a foaf:Person ;
   rdfs:label "Anne B. Ragde" ;
   foaf:name "Anne B. Ragde" ;
   foaf:givenName "Anne B." ;
   foaf:familyName "Ragde" ;
   dbpedia-owl:birthDate "1957-12-03"^^xsd:gDate .
 
-<http://deichman.no/edition/edition_00004> a deichman:Edition ;
+<http://data.deichman.no/edition/edition_00004> a deichman:Edition ;
   bibo:isbn "82-05-26285-3" ;
   deichman:biblio "626460" .
 
-<http://deichman.no/work/w0009112> a deichman:Work ;
+<http://data.deichman.no/work/w0009112> a deichman:Work ;
   rdfs:label "Berlinerpoplene" ;
   dcterms:mainTitle "Berlinerpoplene"@no ;
   deichman:contributor _:c5 ;
@@ -126,9 +126,9 @@ _:c1 a deichman:Contribution ;
   dcterms:identifier "w0009112" .
 
  _:c5 a deichman:Contribution ;
-    deichman:agent <http://deichman.no/person/person_00004> ;
+    deichman:agent <http://data.deichman.no/person/person_00004> ;
     deichman:role <http://data.deichman.no/role#author> .
 
-<http://deichman.no/publication/publication_TEST_KOHA_ITEMS_LINK> a deichman:Publication ;
+<http://data.deichman.no/publication/publication_TEST_KOHA_ITEMS_LINK> a deichman:Publication ;
   deichman:recordID "626460" ;
-  deichman:publicationOf <http://deichman.no/work/w0009112> .
+  deichman:publicationOf <http://data.deichman.no/work/w0009112> .

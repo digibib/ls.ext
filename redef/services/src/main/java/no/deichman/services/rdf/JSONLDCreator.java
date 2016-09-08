@@ -22,13 +22,7 @@ import java.util.Map;
  */
 public final class JSONLDCreator {
 
-    private BaseURI baseURI;
-
     public JSONLDCreator() {}
-
-    public JSONLDCreator(BaseURI base){
-        baseURI = base;
-    }
 
     public String asJSONLD(Model model) {
         StringWriter sw = new StringWriter();
@@ -36,15 +30,12 @@ public final class JSONLDCreator {
         RDFDataMgr.write(sw, model, Lang.JSONLD);
 
         final Map<String, Object> ctx = new HashMap<>();
-        DefaultPrefixes defaultPrefixes = new DefaultPrefixes(this.baseURI.ontology());
+        DefaultPrefixes defaultPrefixes = new DefaultPrefixes(BaseURI.ontology());
         ctx.put("@context", defaultPrefixes.getAll());
 
         return asJSONLD(model, ctx);
     }
 
-    public void setBaseURI(BaseURI base) {
-        baseURI = base;
-    }
 
     public String asJSONLD(Model model, Map<String, Object> context) {
         StringWriter sw = new StringWriter();
