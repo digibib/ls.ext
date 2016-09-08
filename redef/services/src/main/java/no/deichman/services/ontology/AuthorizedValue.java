@@ -25,7 +25,8 @@ public enum AuthorizedValue {
     MEDIA_TYPE("mediaType"),
     RELATION_TYPE("relationType"),
     DEWEY_EDITION("classificationSource"),
-    MUSICAL_KEY("key");
+    MUSICAL_KEY("key"),
+    WORK_TYPE("workType");
 
     public static final String ALL_TYPES_PATTERN = "("
             + "language|"
@@ -43,7 +44,8 @@ public enum AuthorizedValue {
             + "mediaType|"
             + "relationType|"
             + "classificationSource|"
-            + "key)";
+            + "key|"
+            + "workType)";
 
     private final String path;
 

@@ -830,6 +830,9 @@ public class AppTest {
             case MUSICAL_KEY:
                 testData = "<http://data.deichman.no/key#cb_major> <http://www.w3.org/2000/01/rdf-schema#label> \"C♭-dur\"@no .";
                 break;
+            case WORK_TYPE:
+                testData = "<http://data.deichman.no/workType#Literature> <http://www.w3.org/2000/01/rdf-schema#label> \"Litteratur\"@no .";
+                break;
             default:
                 throw new Exception("Couldn't find test data for authorized value: " + authorizedValue.getPath());
         }

@@ -28,7 +28,8 @@ public class AuthorizedValueTest {
             "mediaType",
             "relationType",
             "classificationSource",
-            "key"));
+            "key",
+            "workType"));
 
     @Test
     public void test_all_types_pattern_is_available() {
