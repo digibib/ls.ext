@@ -8,7 +8,7 @@ class RegPublication < CatalinkerPage
   end
 
   def get_record_id
-    self.get_prop("http://#{ENV['HOST']}:8005/ontology#recordID")
+    self.get_prop("http://data.deichman.no/ontology#recordID")
   end
 
   def get_link

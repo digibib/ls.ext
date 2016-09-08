@@ -24,7 +24,7 @@ end
 
 When(/^jeg legger inn forfatternavnet på startsida$/) do
   @site.WorkFlow.visit
-  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
+  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']/input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end
@@ -56,11 +56,11 @@ When(/^velger verket fra lista tilkoplet forfatteren$/) do
 end
 
 When(/^verifiserer at verkets basisopplysninger uten endringer er korrekte$/) do
-  @browser.text_field(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#mainTitle_0").value.should eq @context[:work_maintitle]
+  @browser.text_field(:data_automation_id => "Work_http://data.deichman.no/ontology#mainTitle_0").value.should eq @context[:work_maintitle]
 end
 
 When(/^verifiserer verkets tilleggsopplysninger uten endringer er korrekte$/) do
-  @browser.select(:data_automation_id => "Work_http://#{ENV['HOST']}:8005/ontology#language_0").selected_options.include? @context[:work_language]
+  @browser.select(:data_automation_id => "Work_http://data.deichman.no/ontology#language_0").selected_options.include? @context[:work_language]
 end
 
 When(/^legger inn opplysningene om utgivelsen$/) do
@@ -84,7 +84,7 @@ end
 def workflow_batch_add_props(domain, data)
   data.each do |fragment, (value, method)|
     begin
-      predicate = "http://#{ENV['HOST']}:8005/ontology##{fragment}"
+      predicate = "http://data.deichman.no/ontology##{fragment}"
       textualValue = value;
       if value.eql?(:random) && method.eql?(:select_prop)
         choices = @site.WorkFlow.get_available_select_choices(domain, predicate)
@@ -185,7 +185,7 @@ end
 
 
 When(/^at jeg skriver inn sted i feltet for utgivelsessted og trykker enter$/) do
-  data_automation_id = "Publication_http://#{ENV['HOST']}:8005/ontology#hasPlaceOfPublication_0"
+  data_automation_id = "Publication_http://data.deichman.no/ontology#hasPlaceOfPublication_0"
   publication_place_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
   publication_place_field.click
   publication_place_field.set(@context[:placeofpublication_place])
@@ -225,7 +225,7 @@ When(/^velger jeg første (.*) i listen som dukker opp$/) do |concept|
 end
 
 When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
-  data_automation_id = "Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0"
+  data_automation_id = "Contribution_http://data.deichman.no/ontology#agent_0"
   person_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
   person_name_field.set(@context[:person_name])
   person_name_field.send_keys :enter
@@ -241,8 +241,8 @@ When(/^velger radioknappen for "([^"]*)" for å velge "([^"]*)"$/) do |value, la
 end
 
 When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
-  data_automation_id_1 = "Contribution_http://#{ENV['HOST']}:8005/ontology#role_0"
-  data_automation_id_2 = "PublicationPart_http://#{ENV['HOST']}:8005/ontology#role_0"
+  data_automation_id_1 = "Contribution_http://data.deichman.no/ontology#role_0"
+  data_automation_id_2 = "PublicationPart_http://data.deichman.no/ontology#role_0"
   role_select_field = @browser.text_fields(:xpath => "//span[@data-automation-id='#{data_automation_id_1}' or @data-automation-id='#{data_automation_id_2}']//input[@type='search'][not(@disabled)]").find(&:visible?)
   role_select_field.click
   role_select_field.set(role_name)
@@ -263,13 +263,13 @@ When(/^trykker jeg på knappen for legge til mer$/) do
 end
 
 When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, role_name, association|
-  data_automation_id_agent = "Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0"
+  data_automation_id_agent = "Contribution_http://data.deichman.no/ontology#agent_0"
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{@context[:person_name]}']")
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     name.exists?
   }
   name.should exist
-  data_automation_id_role = "Contribution_http://#{ENV['HOST']}:8005/ontology#role_0"
+  data_automation_id_role = "Contribution_http://data.deichman.no/ontology#role_0"
   role_span = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_role}']//span[normalize-space()='#{@site.translate(role_name)}']")
   role_span.should exist
 
@@ -289,7 +289,7 @@ When(/^fjerner jeg hovedinnførselen$/) do
 end
 
 When(/^at jeg skriver inn serie i feltet for serie og trykker enter$/) do
-  data_automation_id = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#serial_0"
+  data_automation_id = "SerialIssue_http://data.deichman.no/ontology#serial_0"
   serial_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
   serial_field.click
   serial_field.set(@context[:serial_name])
@@ -299,21 +299,21 @@ end
 
 When(/^jeg kan legge inn seriens navn$/) do
   @context[:serial_name] = generateRandomString
-  @site.RegSerial.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:serial_name])
+  @site.RegSerial.add_prop("http://data.deichman.no/ontology#name", @context[:serial_name])
 end
 
 When(/^jeg kan legge inn emnets navn$/) do
   @context[:subject_name] = generateRandomString
-  @site.RegSubject.add_prop("http://#{ENV['HOST']}:8005/ontology#prefLabel", @context[:subject_name])
+  @site.RegSubject.add_prop("http://data.deichman.no/ontology#prefLabel", @context[:subject_name])
 end
 
 When(/^jeg kan legge inn organisasjonens navn$/) do
   @context[:corporation_name] = generateRandomString
-  @site.RegCorporation.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:corporation_name])
+  @site.RegCorporation.add_prop("http://data.deichman.no/ontology#name", @context[:corporation_name])
 end
 
 When(/^skriver jeg inn "([^"]*)" som utgivelsens nummer i serien$/) do |issue|
-  data_automation_id = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
+  data_automation_id = "SerialIssue_http://data.deichman.no/ontology#issue_0"
   issue_field = @browser.text_field(:data_automation_id => data_automation_id)
   issue_field.focus()
   issue_field.set(issue)
@@ -326,27 +326,27 @@ When(/^velger jeg den første serien i listen som dukker opp$/) do
 end
 
 When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
-  data_automation_id_serial = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#serial_0"
+  data_automation_id_serial = "SerialIssue_http://data.deichman.no/ontology#serial_0"
   wait_for {
     @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']").present?
   }
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']")
   name.should exist
-  data_automation_id_issue = "SerialIssue_http://#{ENV['HOST']}:8005/ontology#issue_0"
+  data_automation_id_issue = "SerialIssue_http://data.deichman.no/ontology#issue_0"
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']").present?
   }
 end
 
 When(/^jeg velger emnetype "([^"]*)" emne$/) do |subject_type|
-  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+  data_automation_id = "Work_http://data.deichman.no/ontology#subject_0"
   subject_type_select = @browser.select(:xpath => "//span[@data-automation-id='#{data_automation_id}']//select[not(@disabled)]")
   subject_type_select.select(subject_type)
   sleep 1
 end
 
 When(/^jeg legger inn emnet i søkefelt for emne og trykker enter$/) do
-  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+  data_automation_id = "Work_http://data.deichman.no/ontology#subject_0"
   subject_search_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search'][not(@disabled)]")
   subject_search_field.set(@context[:subject_name])
   subject_search_field.send_keys :enter
@@ -359,7 +359,7 @@ When(/^velger første emne i trefflisten$/) do
 end
 
 When(/^sjekker jeg at emnet er listet opp på verket$/) do
-  data_automation_id = "Work_http://#{ENV['HOST']}:8005/ontology#subject_0"
+  data_automation_id = "Work_http://data.deichman.no/ontology#subject_0"
   subject_field = @browser.span(:xpath => "//*[@data-automation-id='#{data_automation_id}']//li/span[@class='value']")
   subject_field.text.should eq @context[:subject_name]
 end
@@ -386,7 +386,7 @@ end
 
 When(/^jeg legger inn et nytt navn$/) do
   @context[:person_name] = generateRandomString
-  creator_name_field = @browser.text_field(:xpath => "//*[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0' or @data-automation-id='PublicationPart_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
+  creator_name_field = @browser.text_field(:xpath => "//*[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0' or @data-automation-id='PublicationPart_http://data.deichman.no/ontology#agent_0']/input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end
@@ -398,15 +398,15 @@ When(/^trykker jeg på knappen for å legge til ny$/) do
 end
 
 When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalitet$/) do |nationality|
-  data_automation_id = "Person_http://#{ENV['HOST']}:8005/ontology#birthYear_0"
+  data_automation_id = "Person_http://data.deichman.no/ontology#birthYear_0"
   @context[:person_birthyear] = (1000 + rand(1015)).to_s
   @browser.text_field(:data_automation_id => data_automation_id).set(@context[:person_birthyear])
 
-  data_automation_id = "Person_http://#{ENV['HOST']}:8005/ontology#deathYear_0"
+  data_automation_id = "Person_http://data.deichman.no/ontology#deathYear_0"
   @context[:person_deathyear] = (1000 + rand(1015)).to_s
   @browser.text_field(:data_automation_id => data_automation_id).set(@context[:person_deathyear])
 
-  @browser.span(:data_automation_id => "Person_http://#{ENV['HOST']}:8005/ontology#nationality_0").text_field().set(nationality)
+  @browser.span(:data_automation_id => "Person_http://data.deichman.no/ontology#nationality_0").text_field().set(nationality)
   @browser.ul(:class => "select2-results__options").lis().first.click
 
 end
@@ -491,7 +491,7 @@ When(/^Sjekker jeg at det vises treff fra preferert ekstern kilde$/) do
 end
 
 When(/^setter jeg markøren i forfatterfeltet og trykker enter$/) do
-  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://#{ENV['HOST']}:8005/ontology#agent_0']/input")
+  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']/input")
   creator_name_field.send_keys :enter
 end
 
@@ -502,7 +502,7 @@ end
 
 
 When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal knyttes til (.*) og velger det første forslaget$/) do |predicate, domain|
-  data_automation_id = "#{@site.translate(domain)}_http://#{ENV['HOST']}:8005/ontology##{@site.translate(predicate)}_0"
+  data_automation_id = "#{@site.translate(domain)}_http://data.deichman.no/ontology##{@site.translate(predicate)}_0"
   element = @browser.element(:data_automation_id => data_automation_id)
   element_type = element.tag_name
   if element_type === 'span' # this is a pre selected value
@@ -543,7 +543,7 @@ When(/^trykker jeg på den (første|andre|tredje|fjerde|femte|sjette) trekanten 
 end
 
 When(/^noterer jeg ned navnet på personen$/) do
-  data_automation_id = "Person_http://#{ENV['HOST']}:8005/ontology#name_0"
+  data_automation_id = "Person_http://data.deichman.no/ontology#name_0"
   name_field = @browser.text_field(:xpath => "//span[@class='support-panel']//input[@data-automation-id='#{data_automation_id}']")
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     name_field.present?
@@ -602,7 +602,7 @@ When(/^klikker jeg utenfor sprettopp\-skjemaet$/) do
 end
 
 When(/^husker (.*)et på (.*)(en|et) jeg nettopp opprettet$/) do |field, domain, article|
-  data_automation_id = "#{@site.translate(domain)}_http://#{ENV['HOST']}:8005/ontology##{@site.translate(field)}_0"
+  data_automation_id = "#{@site.translate(domain)}_http://data.deichman.no/ontology##{@site.translate(field)}_0"
   @context["#{@site.translate(domain).downcase}_#{@site.translate(field).downcase}".to_sym] = @browser.input(:data_automation_id => data_automation_id).value
 end
 

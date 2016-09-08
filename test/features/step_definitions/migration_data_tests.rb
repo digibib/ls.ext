@@ -12,17 +12,17 @@ end
 
 When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel og forfatter$/) do
   publication_name = generateRandomString
-  ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
-              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
-              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_name}\" ."
+  ntriples = "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Publication> .
+              <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#publicationOf> <#{@context[:work_identifier]}> .
+              <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#mainTitle> \"#{publication_name}\" ."
   post_publication_ntriples publication_name, ntriples
 end
 
 When(/^jeg migrerer en utgivelse med tilknyttet verk som har tittel, forfatter og items$/) do
   publication_title = generateRandomString
-  ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://#{ENV['HOST']}:8005/ontology#Publication> .
-              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#publicationOf> <#{@context[:work_identifier]}> .
-              <http://host/publication/p1> <http://#{ENV['HOST']}:8005/ontology#mainTitle> \"#{publication_title}\" ."
+  ntriples = "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Publication> .
+              <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#publicationOf> <#{@context[:work_identifier]}> .
+              <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#mainTitle> \"#{publication_title}\" ."
   post_publication_ntriples publication_title, ntriples
 end
 

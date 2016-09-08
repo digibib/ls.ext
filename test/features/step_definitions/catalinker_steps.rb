@@ -58,7 +58,7 @@ end
 
 Given(/^at det finnes et verk med biblio-kobling$/) do
   step "at det finnes et verk"
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#biblio", @context[:biblio])
+  @site.RegWork.add_prop("http://data.deichman.no/ontology#biblio", @context[:biblio])
   step "grensesnittet viser at endringene er lagret"
 end
 
@@ -110,7 +110,7 @@ Given(/^at jeg ser på et lagret verk med biblio\-koblinger$/) do
   step "at det finnes et eksemplar av en bok registrert i Koha"
   step "at jeg er i katalogiseringsgrensesnittet"
   step "at jeg ser på et lagret verk"
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#biblio", @context[:biblio])
+  @site.RegWork.add_prop("http://data.deichman.no/ontology#biblio", @context[:biblio])
 end
 
 Given(/^at det finnes en utgivelse$/) do
@@ -216,7 +216,7 @@ When(/^når jeg endrer årstall for førsteutgave til verket$/) do
 end
 
 When(/^jeg legger til en inn alternativ tittel på det nye verket$/) do
-  predicate = "http://#{ENV['HOST']}:8005/ontology#mainTitle"
+  predicate = "http://data.deichman.no/ontology#mainTitle"
   @context[:alt_title] = generateRandomString
   @browser.div(:class => predicate).button.click
   @site.RegWork.add_prop(predicate, @context[:alt_title], 1)
@@ -232,25 +232,25 @@ end
 
 When(/^jeg forsøker å registrere ett nytt verk$/) do
   @context[:work_maintitle] = generateRandomString
-  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
+  @site.RegWork.add_prop_skip_wait("http://data.deichman.no/ontology#mainTitle", @context[:work_maintitle])
 end
 
 When(/^jeg velger språk for tittelen$/) do
-  predicate = "http://#{ENV['HOST']}:8005/ontology#mainTitle"
+  predicate = "http://data.deichman.no/ontology#mainTitle"
   @context[:title_lang] = "no"
   @browser.div(:class => predicate).select.select_value(@context[:title_lang])
 end
 
 When(/^jeg legger til et årstall for førsteutgave av nye verket$/) do
   @context[:work_publicationyear] = (rand(1015)+1000).to_s
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:work_publicationyear])
+  @site.RegWork.add_prop("http://data.deichman.no/ontology#publicationYear", @context[:work_publicationyear])
 end
 
 When(/^jeg sletter eksisterende forfatter på verket$/) do
   tries = 3
   begin
     deletables = @browser.inputs(:class => 'deletable').size
-    @browser.inputs(:data_automation_id => "http://#{ENV['HOST']}:8005/ontology#creator"+"_0").first.click
+    @browser.inputs(:data_automation_id => "http://data.deichman.no/ontology#creator"+"_0").first.click
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.inputs(:class => 'deletable').size == deletables - 1 } #Allow some time for the UI to update after clicking the red X
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
@@ -268,7 +268,7 @@ When(/^jeg sletter eksisterende forfatter på verket$/) do
   statements.push(
     RDF::Statement.new(
         RDF::URI.new(@context[:work_identifier]),
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#contributor"),
+        RDF::URI.new("http://data.deichman.no/ontology#contributor"),
         bnode
       )
     )
@@ -276,27 +276,27 @@ When(/^jeg sletter eksisterende forfatter på verket$/) do
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#Contribution"),
+        RDF::URI.new("http://data.deichman.no/ontology#Contribution"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#MainEntry"),
+        RDF::URI.new("http://data.deichman.no/ontology#MainEntry"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#agent"),
+        RDF::URI.new("http://data.deichman.no/ontology#agent"),
         RDF::URI.new(@context[:person_identifier])
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#role"),
+        RDF::URI.new("http://data.deichman.no/ontology#role"),
         RDF::URI.new("http://data.deichman.no/role#author")
       )
     )
@@ -311,7 +311,7 @@ end
 When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
   tries = 3
   begin
-    @site.RegWork.search_resource("http://#{ENV['HOST']}:8005/ontology#creator", @context[:person_name])
+    @site.RegWork.search_resource("http://data.deichman.no/ontology#creator", @context[:person_name])
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => @context[:person_identifier]) }
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
@@ -333,7 +333,7 @@ When(/^velger person fra en treffliste$/) do
   statements.push(
     RDF::Statement.new(
         RDF::URI.new(@context[:work_identifier]),
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#contributor"),
+        RDF::URI.new("http://data.deichman.no/ontology#contributor"),
         bnode
       )
     )
@@ -341,27 +341,27 @@ When(/^velger person fra en treffliste$/) do
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#Contribution"),
+        RDF::URI.new("http://data.deichman.no/ontology#Contribution"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
         RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#MainEntry"),
+        RDF::URI.new("http://data.deichman.no/ontology#MainEntry"),
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#agent"),
+        RDF::URI.new("http://data.deichman.no/ontology#agent"),
         RDF::URI.new(@context[:person_identifier])
       )
     )
   statements.push(
     RDF::Statement.new(
         bnode,
-        RDF::URI.new("http://#{ENV['HOST']}:8005/ontology#role"),
+        RDF::URI.new("http://data.deichman.no/ontology#role"),
         RDF::URI.new("http://data.deichman.no/role#author")
       )
     )
@@ -370,7 +370,7 @@ end
 
 When(/^jeg legger inn "(.*?)" i feltet for førsteutgave av verket$/) do |arg1|
   @context[:work_publicationyear] = arg1
-  @site.RegWork.add_prop_skip_wait("http://#{ENV['HOST']}:8005/ontology#publicationYear", @context[:work_publicationyear])
+  @site.RegWork.add_prop_skip_wait("http://data.deichman.no/ontology#publicationYear", @context[:work_publicationyear])
 end
 
 When(/^jeg legger til et eksemplar av utgivelsen$/) do
@@ -438,7 +438,7 @@ end
 
 Then(/^jeg kan legge til tittel for det nye verket$/) do
   @context[:work_maintitle] = generateRandomString
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
+  @site.RegWork.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:work_maintitle])
 end
 
 Then(/^jeg kan dikte opp en verkstittel$/) do
@@ -446,28 +446,28 @@ Then(/^jeg kan dikte opp en verkstittel$/) do
 end
 
 Then(/^jeg kan legge til tittelen for det nye verket$/) do
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:work_maintitle])
+  @site.RegWork.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:work_maintitle])
 end
 
 Then(/^jeg kan legge til undertittel for det nye verket$/) do
   @context[:work_subtitle] = generateRandomString
-  @site.RegWork.add_prop("http://#{ENV['HOST']}:8005/ontology#subtitle", @context[:work_subtitle])
+  @site.RegWork.add_prop("http://data.deichman.no/ontology#subtitle", @context[:work_subtitle])
 end
 
 Then(/^jeg kan legge til språk for det nye verket$/) do
   @context[:work_lang] = "http://lexvo.org/id/iso639-3/nob"
   @context[:work_lang_label] = "Norsk (bokmål)"
-  @site.RegWork.select_prop("http://#{ENV['HOST']}:8005/ontology#language", @context[:work_lang_label])
+  @site.RegWork.select_prop("http://data.deichman.no/ontology#language", @context[:work_lang_label])
 end
 
 Then(/^jeg kan legge til tittel for den nye utgivelsen$/) do
   @context[:publication_maintitle] = generateRandomString
-  @site.RegPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
+  @site.RegPublication.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:publication_maintitle])
 end
 
 Then(/^jeg kan legge til tittel med tre ledd for utgivelsen$/) do
   @context[:publication_maintitle] = [generateRandomString, generateRandomString, generateRandomString].join(' ')
-  @site.RegPublication.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
+  @site.RegPublication.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:publication_maintitle])
 end
 
 Then(/^grensesnittet viser at endringene er lagret$/) do
@@ -499,22 +499,22 @@ When(/^jeg registrerer inn opplysninger om utgivelsen$/) do
   end
 
   @context[:publication_identifier] = @site.RegPublication.get_link
-  @context[:publication_format] = ['Bok', 'CD', 'DVD', 'CD-ROM', 'DVD-ROM'].sample
+  @context[:publication_format] = ['CD', 'DVD', 'Kassett', 'Blu-ray'].sample
   @context[:publication_format_label] = @context[:publication_format]
   @context[:publication_language] = ['Engelsk', 'Norsk (bokmål)', 'Finsk', 'Baskisk', 'Grønlandsk'].sample
   @context[:publication_language_label] = @context[:publication_language]
   @context[:publication_maintitle] = generateRandomString
   step "får utgivelsen tildelt en post-ID i Koha"
 
-  page.select_prop("http://#{ENV['HOST']}:8005/ontology#format", @context[:publication_format])
-  page.select_prop("http://#{ENV['HOST']}:8005/ontology#language", @context[:publication_language])
-  page.add_prop("http://#{ENV['HOST']}:8005/ontology#mainTitle", @context[:publication_maintitle])
+  page.select_prop("http://data.deichman.no/ontology#format", @context[:publication_format])
+  page.select_prop("http://data.deichman.no/ontology#language", @context[:publication_language])
+  page.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:publication_maintitle])
 end
 
 
 When(/^jeg knytter utgivelsen til verket$/) do
   page = @site.RegPublication
-  page.add_prop("http://#{ENV['HOST']}:8005/ontology#publicationOf", @context[:work_identifier])
+  page.add_prop("http://data.deichman.no/ontology#publicationOf", @context[:work_identifier])
 end
 
 Given(/^et verk med en utgivelse og et eksemplar$/) do
@@ -583,28 +583,28 @@ end
 
 When(/^jeg kan legge inn navn fødselsår og dødsår for personen$/) do
   @context[:person_name] = generateRandomString
-  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:person_name])
+  @site.RegPerson.add_prop("http://data.deichman.no/ontology#name", @context[:person_name])
 
   @context[:person_birthyear] = (1000 + rand(1015)).to_s
-  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#birthYear", @context[:person_birthyear])
+  @site.RegPerson.add_prop("http://data.deichman.no/ontology#birthYear", @context[:person_birthyear])
 
   @context[:person_deathyear] = (1000 + rand(1015)).to_s
-  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#deathYear", @context[:person_deathyear])
+  @site.RegPerson.add_prop("http://data.deichman.no/ontology#deathYear", @context[:person_deathyear])
 end
 
 When(/^jeg kan legge inn stedsnavn og land$/) do
   @context[:placeofpublication_place] = generateRandomString
-  @site.RegPlace.add_prop("http://#{ENV['HOST']}:8005/ontology#prefLabel", @context[:placeofpublication_place])
+  @site.RegPlace.add_prop("http://data.deichman.no/ontology#prefLabel", @context[:placeofpublication_place])
   @context[:placeofpublication_country] = generateRandomString
-  @site.RegPlace.add_prop("http://#{ENV['HOST']}:8005/ontology#specification", @context[:placeofpublication_country])
+  @site.RegPlace.add_prop("http://data.deichman.no/ontology#specification", @context[:placeofpublication_country])
 end
 
 When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do
   @context[:person_title] = generateRandomString
-  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#personTitle", @context[:person_title])
+  @site.RegPerson.add_prop("http://data.deichman.no/ontology#personTitle", @context[:person_title])
 
   @context[:person_nationality] = ['Norge', 'England', 'Færøyene'].sample
-  @site.RegPerson.select_prop("http://#{ENV['HOST']}:8005/ontology#nationality", @context[:person_nationality])
+  @site.RegPerson.select_prop("http://data.deichman.no/ontology#nationality", @context[:person_nationality])
 end
 
 
@@ -646,7 +646,7 @@ end
 When(/^når jeg endrer navnet på personen$/) do
   @context[:person_name] = generateRandomString
   @context[:work_creator] = @context[:person_name]
-  @site.RegPerson.add_prop("http://#{ENV['HOST']}:8005/ontology#name", @context[:person_name])
+  @site.RegPerson.add_prop("http://data.deichman.no/ontology#name", @context[:person_name])
   step "grensesnittet viser at endringene er lagret"
 end
 
@@ -701,7 +701,7 @@ def batch_verify_props(page_object, domain, data, locate_by = 'locate_by_fragmen
   data.each do |id, method|
     if locate_by == :locate_by_fragment
       symbol = "#{domain.downcase}_#{id.downcase}".to_sym # e.g. :publication_format
-      inputLocator = "http://#{ENV['HOST']}:8005/ontology##{id}"
+      inputLocator = "http://data.deichman.no/ontology##{id}"
     else
       symbol = id
       inputLocator = id

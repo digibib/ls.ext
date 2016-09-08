@@ -27,12 +27,12 @@ module RandomMigrate
     end
 
     def to_ntriples()
-      ntriples = "<#{@type}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology##{@type.capitalize}> .\n"
+      ntriples = "<#{@type}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology##{@type.capitalize}> .\n"
       @literals.each do |predicate, value|
-        ntriples << "<#{@type}> <#{@host}/ontology##{predicate}> \"#{value}\" .\n"
+        ntriples << "<#{@type}> <http://data.deichman.no/ontology##{predicate}> \"#{value}\" .\n"
       end
       @authorized_values.each do |predicate, value|
-        ntriples << "<#{@type}> <#{@host}/ontology##{predicate}> <#{value}> .\n"
+        ntriples << "<#{@type}> <http://data.deichman.no/ontology##{predicate}> <#{value}> .\n"
       end
       @raw.each do |raw|
         ntriples << "#{raw}\n"
@@ -58,32 +58,32 @@ module RandomMigrate
 
     def generate_person()
       person_name = generate_random_string
-      ntriples = "<http://host/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Person> .
-                  <http://host/person/h1> <#{@host}/ontology#name> \"#{person_name}\" ."
+      ntriples = "<http://host/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Person> .
+                  <http://host/person/h1> <http://data.deichman.no/ontology#name> \"#{person_name}\" ."
       return person_name, ntriples
     end
 
     def generate_work(person_uri, prefix = '')
       work_title = generate_random_string
       work_part_title = generate_random_string
-      ntriples = "<http://host/work/w1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Work> .
-                  <http://host/work/w1> <#{@host}/ontology#mainTitle> \"#{prefix} #{work_title}\" .
-                  <http://host/work/w1> <#{@host}/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
-                  <http://host/work/w1> <#{@host}/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
-                  <http://host/work/w1> <#{@host}/ontology#contributor> _:c1 .
-                  _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Contribution> .
-                  _:c1 <#{@host}/ontology#agent> <#{person_uri}> .
-                  _:c1 <#{@host}/ontology#role> <http://data.deichman.no/role#author> ."
+      ntriples = "<http://host/work/w1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Work> .
+                  <http://host/work/w1> <http://data.deichman.no/ontology#mainTitle> \"#{prefix} #{work_title}\" .
+                  <http://host/work/w1> <http://data.deichman.no/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
+                  <http://host/work/w1> <http://data.deichman.no/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
+                  <http://host/work/w1> <http://data.deichman.no/ontology#contributor> _:c1 .
+                  _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Contribution> .
+                  _:c1 <http://data.deichman.no/ontology#agent> <#{person_uri}> .
+                  _:c1 <http://data.deichman.no/ontology#role> <http://data.deichman.no/role#author> ."
       return work_title, ntriples
     end
 
     def generate_publication(work_uri, language = nil, prefix = nil)
       publication_title = generate_random_string
-      ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <#{@host}/ontology#Publication> .
-                  <http://host/publication/p1> <#{@host}/ontology#publicationOf> <#{work_uri}> .
-                  <http://host/publication/p1> <#{@host}/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
-                  <http://host/publication/p1> <#{@host}/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <http://host/publication/p1> <#{@host}/ontology#language> <#{language || @languages.sample}> ."
+      ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Publication> .
+                  <http://host/publication/p1> <http://data.deichman.no/ontology#publicationOf> <#{work_uri}> .
+                  <http://host/publication/p1> <http://data.deichman.no/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
+                  <http://host/publication/p1> <http://data.deichman.no/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
+                  <http://host/publication/p1> <http://data.deichman.no/ontology#language> <#{language || @languages.sample}> ."
       return publication_title, ntriples
     end
 

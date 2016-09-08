@@ -6,7 +6,7 @@ require_relative '../support/context_structs.rb'
 Given(/^at jeg har en ontologi som beskriver (verk|utgivelse)$/) do | resource_name |
   client = ServicesAPIClient.new()
   class_statement = RDF::Statement::new(
-    RDF::URI.new("http://#{host}:#{port(:services)}/ontology##{Resource.type_from_name(resource_name)}"),
+    RDF::URI.new("http://data.deichman.no/ontology##{Resource.type_from_name(resource_name)}"),
     RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
     RDF::URI.new("http://www.w3.org/2000/01/rdf-schema#Class")
       )
@@ -32,7 +32,7 @@ Then(/^viser APIet at (verk|utgivelse)(?:et|n) finnes$/) do | resource_name |
   stmt = RDF::Statement::new(
       RDF::URI.new(resource_to_look_for.uri),
       RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-      RDF::URI.new("http://#{host}:#{port(:services)}/ontology##{Resource.type_from_name(resource_name)}")
+      RDF::URI.new("http://data.deichman.no/ontology##{Resource.type_from_name(resource_name)}")
   )
   client.get_resource(resource_to_look_for.uri).has_statement?(stmt).should be true
 end
