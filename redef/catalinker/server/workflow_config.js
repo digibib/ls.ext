@@ -612,7 +612,7 @@ module.exports = (app) => {
             },
             { rdfProperty: 'audience', multiple: true },
             { rdfProperty: 'biography', multiple: true },
-            { rdfProperty: 'hascontentAdaptation', multiple: true },
+            { rdfProperty: 'hasContentAdaptation', multiple: true },
             {
               label: 'Relasjon til annet verk',
               multiple: true,
