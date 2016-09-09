@@ -20,17 +20,15 @@ class App extends React.Component {
     return (
       <div>
         <ModalRoot />
-        <div className="outer-container">
-          <SearchHeader locationQuery={this.props.location.query}
-                        dispatch={this.props.dispatch}
-                        locale={this.props.locale}
-                        isLoggedIn={this.props.isLoggedIn}
-                        logout={this.props.loginActions.logout}
-                        showLoginDialog={this.props.loginActions.showLoginDialog}
-                        requireLoginBeforeAction={this.props.loginActions.requireLoginBeforeAction}
-          />
-          {this.props.children}
-        </div>
+        <SearchHeader locationQuery={this.props.location.query}
+                      dispatch={this.props.dispatch}
+                      locale={this.props.locale}
+                      isLoggedIn={this.props.isLoggedIn}
+                      logout={this.props.loginActions.logout}
+                      showLoginDialog={this.props.loginActions.showLoginDialog}
+                      requireLoginBeforeAction={this.props.loginActions.requireLoginBeforeAction}
+        />
+        {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
       </div>
     )
