@@ -96,7 +96,7 @@
       return (
         <div>
 
-            <header>
+            <header className="wrapper">
 
               <div className="logo">
                 <Link to="/">
@@ -124,22 +124,27 @@
             </nav>
           </MediaQuery>
 
-          <section className="search-container">
+          <section className="wrapper">
             <div className="search-box">
               <form onSubmit={this.handleSearch}>
-                <label htmlFor="search"><img src="/images/icon-searchbar-search.svg"
-                                             alt="Black Magnifying glass" /></label>
-                <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-                       id="search"
-                       type="search"
-                       defaultValue={this.props.locationQuery.query || ''}
-                       ref={e => this.searchFieldInput = e}
-                       data-automation-id="search_input_field"
-                />
-                <button onClick={this.handleSearch} type="button" className="search-submit"
-                        data-automation-id="search_button">
-                  <FormattedMessage {...messages.search} />
-                </button>
+                <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>
+                <div className="search-field-wrapper">
+                  <div className="search-field">
+                    <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+                           id="search"
+                           type="search"
+                           defaultValue={this.props.locationQuery.query || ''}
+                           ref={e => this.searchFieldInput = e}
+                           data-automation-id="search_input_field"
+                    />
+                  </div>
+                  <div className="search-button">
+                    <button onClick={this.handleSearch} type="button" className="search-submit"
+                            data-automation-id="search_button">
+                      <FormattedMessage {...messages.search} />
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
           </section>
@@ -191,6 +196,11 @@
       id: 'SearchHeader.searchInputPlaceholder',
       description: 'Placeholder for the search field',
       defaultMessage: 'Search for something...'
+    },
+    searchLabel: {
+      id: 'SearchHeader.searchLabel',
+      description: 'Label for the main search bar',
+      defaultMessage: 'Search the collections'
     },
     search: {
       id: 'SearchHeader.search',

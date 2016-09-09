@@ -2,12 +2,8 @@
 // ==========================================================================
 header {
   @include container;
-  padding: gutter(12);
-
   .logo {
     @include span(5);
-    margin-bottom: rhythm(2);
-    margin-top: rhythm(4);
     @include breakpoint($medium) {
       @include span(3);
     }
@@ -15,11 +11,16 @@ header {
 
   .primary-menu {
     @include span(7 last);
+    @include breakpoint($medium) {
+      @include span(9 last);
+    }
   }
 
   .mobile-menu-toggle {
     @include span(7 last);
-    margin-top: rhythm(4);
+    @include breakpoint($medium) {
+      @include span(9 last);
+    }
   }
 
 }

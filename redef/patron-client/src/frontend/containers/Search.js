@@ -76,7 +76,7 @@ class Search extends React.Component {
 
   render () {
     return (
-      <div className="container">
+      <div className="wrapper">
         <div className="row">
           {this.props.locationQuery.query
             ? (<div className="search-results-footer">

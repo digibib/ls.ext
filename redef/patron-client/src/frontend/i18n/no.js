@@ -150,6 +150,7 @@ export default {
   'SearchHeader.contactUs': 'Kontakt oss',
   'SearchHeader.english': 'Engelsk',
   'SearchHeader.norwegian': 'Norsk',
+  'SearchHeader.searchLabel': 'Søk i samlingene',
   'SearchHeader.searchInputPlaceholder': 'Søk på noe da...',
   'SearchHeader.search': 'Søk',
   'SearchHeader.logout': 'Logg ut',
