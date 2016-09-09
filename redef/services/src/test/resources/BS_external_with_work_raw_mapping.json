@@ -109,6 +109,14 @@
         "deichman:biography": {
           "@id": "http://data.deichman.no/biography#biographicalInformation"
         },
+        "deichman:contentAdaption": [
+          {
+            "@id": "http://data.deichman.no/contentAdaption#easyLanguage"
+          },
+          {
+            "@id": "http://data.deichman.no/contentAdaption#easyContent"
+          }
+        ],
         "deichman:partNumber": "Book 2",
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
@@ -171,6 +179,26 @@
         "deichman:hasMediaType": {
           "@id": "http://data.deichman.no/mediaType#Book"
         },
+        "deichman:formatAdaption": [
+          {
+            "@id": "http://data.deichman.no/formatAdaption#largePrint"
+          },
+          {
+            "@id": "http://data.deichman.no/formatAdaption#largePrint"
+          },
+          {
+            "@id": "http://data.deichman.no/formatAdaption#braille"
+          },
+          {
+            "@id": "http://data.deichman.no/formatAdaption#signLanguage"
+          },
+          {
+            "@id": "http://data.deichman.no/formatAdaption#tactile"
+          },
+          {
+            "@id": "http://data.deichman.no/formatAdaption#capitalLetters"
+          }
+        ],
         "deichman:contributor": [
           {
             "@id": "_:0000000"

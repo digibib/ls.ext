@@ -105,6 +105,8 @@ public class MARCMapper {
                     setUriObject(dataField, 'b', "format", publication::setFormat, Format::translate);
                     setUriObject(dataField, 'b', "mediaType", publication::setMediaType, MediaType::translate);
                     setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", work::addLiteraryForm, LiteraryForm::translate);
+                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaption", work::addContentAdaption, ContentAdaption::translate);
+                    setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaption", publication::addFormatAdaption, FormatAdaption::translate);
                     break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);

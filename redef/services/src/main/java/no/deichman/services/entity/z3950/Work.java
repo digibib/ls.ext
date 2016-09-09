@@ -37,6 +37,9 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:biography")
     private ExternalDataObject biography;
 
+    @SerializedName("deichman:contentAdaption")
+    private List<ExternalDataObject> contentAdaption;
+
     public Work(String workId) {
         super(workId);
     }
@@ -106,4 +109,10 @@ public class Work extends BibliographicObjectExternal {
         this.biography = biography;
     }
 
+    public void addContentAdaption(ExternalDataObject contentAdaption) {
+        if (this.contentAdaption == null) {
+            this.contentAdaption = new ArrayList<>();
+        }
+        this.contentAdaption.add(contentAdaption);
+    }
 }

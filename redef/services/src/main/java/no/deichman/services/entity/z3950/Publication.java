@@ -54,6 +54,9 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:hasMediaType")
     private ExternalDataObject mediaType;
 
+    @SerializedName("deichman:formatAdaption")
+    private List<ExternalDataObject> formatAdaption;
+
     public final String getIsbn() {
         return isbn;
     }
@@ -159,4 +162,10 @@ public class Publication extends BibliographicObjectExternal {
         this.serial.add(serial);
     }
 
+    public void addFormatAdaption(ExternalDataObject formatAdaption) {
+        if (this.formatAdaption == null) {
+            this.formatAdaption = new ArrayList<>();
+        }
+        this.formatAdaption.add(formatAdaption);
+    }
 }
