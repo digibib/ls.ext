@@ -356,6 +356,13 @@
   rdfs:range duo:LiteraryForm ;
   duo:valuesFrom values:literaryForm .
 
+:fictionNonfiction a rdfs:Property;
+  rdfs:label "Fag / fiksjon"@no ;
+  rdfs:label "Fiction / Nonfiction"@en ;
+  rdfs:domain :Work ;
+  rdfs:range duo:fictionNonfiction ;
+  duo:valuesFrom values:FictionNonfiction .
+
 # ToDo: Erstattes med :hasAudience
 :audience a rdfs:Property;
   rdfs:label "Målgruppe"@no ;
