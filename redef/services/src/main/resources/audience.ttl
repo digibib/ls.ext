@@ -11,11 +11,11 @@ audience:juvenile a duo:Audience ;
   rdfs:label "Juvenile"@en .
 audience:ages0To2 a duo:Audience ;
   duo:code "aa" ;
-  rdfs:label "0–2 år"@no ;
+  rdfs:label "0-2 år"@no ;
   rdfs:label "0-2 years"@en .
 audience:ages3To5 a duo:Audience ;
   duo:code "a" ;
-  rdfs:label "3–5 år"@no ;
+  rdfs:label "3-5 år"@no ;
   rdfs:label "3-5 years"@en .
 audience:ages6To8 a duo:Audience ;
   duo:code "b" ;
