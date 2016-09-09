@@ -37,7 +37,6 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -274,7 +273,7 @@ public class AppTest {
         }
     }
 
-    @Test @Ignore("TODO")
+    @Test
     public void test_update_work_index_when_publication_is_updated() throws Exception {
         kohaSvcMock.addLoginExpectation();
         kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);
@@ -283,8 +282,8 @@ public class AppTest {
         assertResponse(CREATED, createWorkResponse);
         final String workUri = getLocation(createWorkResponse);
         final JsonArray addNameToWorkPatch =
-                buildLDPatch(buildPatchStatement("add", workUri, appURI + "ontology#mainTitle", "Paris"));
-        final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(workUri, addNameToWorkPatch).asString();
+                buildLDPatch(buildPatchStatement("add", workUri, BaseURI.ontology("mainTitle"), "Paris"));
+        final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(resolveLocally(workUri), addNameToWorkPatch).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
 
         final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(appURI + "publication").asJson();
@@ -292,20 +291,20 @@ public class AppTest {
         assertResponse(CREATED, createPublicationResponse);
         final String publicationUri = getLocation(createPublicationResponse);
         assertIsUri(publicationUri);
-        assertThat(publicationUri, startsWith(appURI));
+        assertThat(publicationUri, startsWith(BaseURI.publication()));
 
         kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
-        final JsonArray addPublicationOfToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, appURI + "ontology#publicationOf", workUri, ANY_URI));
-        final HttpResponse<String> patchAddPublicationOfToPublicationPatchResponse = buildPatchRequest(publicationUri, addPublicationOfToPublicationPatch).asString();
+        final JsonArray addPublicationOfToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, BaseURI.ontology("publicationOf"), workUri, ANY_URI));
+        final HttpResponse<String> patchAddPublicationOfToPublicationPatchResponse = buildPatchRequest(resolveLocally(publicationUri), addPublicationOfToPublicationPatch).asString();
         assertResponse(Status.OK, patchAddPublicationOfToPublicationPatchResponse);
 
         kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
-        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, appURI + "ontology#format", "http://data.deichman.no/format#Audiobook", ANY_URI));
-        final HttpResponse<String> patchAddFormatToPublicationPatchResponse = buildPatchRequest(publicationUri, addFormatToPublicationPatch).asString();
+        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, BaseURI.ontology("format"), "http://data.deichman.no/format#Audiobook", ANY_URI));
+        final HttpResponse<String> patchAddFormatToPublicationPatchResponse = buildPatchRequest(resolveLocally(publicationUri), addFormatToPublicationPatch).asString();
         assertResponse(Status.OK, patchAddFormatToPublicationPatchResponse);
 
-        final JsonArray addNameToWorkPatch1 = buildLDPatch(buildPatchStatement("add", workUri, appURI + "ontology#partTitle", "Paris"));
-        final HttpResponse<String> patchAddNameToWorkPatchResponse1 = buildPatchRequest(workUri, addNameToWorkPatch1).asString();
+        final JsonArray addNameToWorkPatch1 = buildLDPatch(buildPatchStatement("add", workUri, BaseURI.ontology("partTitle"), "Paris"));
+        final HttpResponse<String> patchAddNameToWorkPatchResponse1 = buildPatchRequest(resolveLocally(workUri), addNameToWorkPatch1).asString();
         assertResponse(Status.OK, patchAddNameToWorkPatchResponse1);
 
 
