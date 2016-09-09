@@ -111,7 +111,7 @@ public class MARCMapper {
                     break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
-                    getSubfieldValue(dataField, 'n').ifPresent(publication::setBinding);
+                    setUriObject(dataField, 'b', "binding", publication::setBinding, Binding::translate);
                     break;
                 case "100":
                     getSubfieldValue(dataField, 'a').ifPresent(personName -> {
@@ -484,6 +484,7 @@ public class MARCMapper {
     private void setUriObject(DataField dataField, char subField, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
         getSubfieldValues(dataField, subField)
                 .map(String::toLowerCase)
+                .map(this::unPunctuate)
                 .map(mapper)
                 .filter(StringUtils::isNotBlank)
                 .map(fragment -> path(path, fragment))

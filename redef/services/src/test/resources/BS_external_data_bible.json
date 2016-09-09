@@ -27,6 +27,9 @@
       },
       {
         "deichman:isbn": "978-82-8205-594-9",
+        "deichman:binding": {
+          "@id": "http://data.deichman.no/binding#innbundet"
+        },
         "deichman:placeOfPublication": {
           "@id": "_:0000000"
         },

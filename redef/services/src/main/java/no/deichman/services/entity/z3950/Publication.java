@@ -19,7 +19,7 @@ public class Publication extends BibliographicObjectExternal {
     private String isbn;
 
     @SerializedName("deichman:binding")
-    private String binding;
+    private ExternalDataObject binding;
 
     @SerializedName("deichman:edition")
     private String edition;
@@ -68,11 +68,7 @@ public class Publication extends BibliographicObjectExternal {
         this.isbn = isbn;
     }
 
-    final String getBinding() {
-        return binding;
-    }
-
-    final void setBinding(String binding) {
+    final void setBinding(ExternalDataObject binding) {
         this.binding = binding;
     }
 
@@ -174,6 +170,10 @@ public class Publication extends BibliographicObjectExternal {
 
 
     public void setAgeLimit(String ageLimit) {
-        this.ageLimit = Integer.parseInt(ageLimit);
+        try {
+            this.ageLimit = Integer.parseInt(ageLimit);
+        } catch (NumberFormatException e) {
+            // ignore
+        }
     }
 }
