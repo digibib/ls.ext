@@ -110,6 +110,70 @@
   rdfs:label "Classification source"@en ;
   rdfs:label "Klassifikasjonskilde"@no .
 
+duo:Format a rdfs:Class ;
+  rdfs:label "Format"@en ;
+  rdfs:label "Format"@no .
+
+duo:MediaType a rdfs:Class ;
+  rdfs:label "Media type"@en ;
+  rdfs:label "Medietype"@no .
+
+duo:WorkType a rdfs:Class ;
+  rdfs:label "Work type"@en ;
+  rdfs:label "Verkstype"@no .
+
+duo:LiteraryForm a rdfs:Class ;
+  rdfs:label "Literary form"@en ;
+  rdfs:label "Litterær form"@no .
+
+duo:ContentAdaptation a rdfs:Class ;
+  rdfs:label "Content adaptation"@en ;
+  rdfs:label "Tilrettelagt innhold"@no .
+
+duo:FormatAdaptation a rdfs:Class ;
+  rdfs:label "Format adaptation"@en ;
+  rdfs:label "Tilrettelagt format"@no .
+
+duo:Audience a rdfs:Class ;
+  rdfs:label "Audience"@en ;
+  rdfs:label "Målgruppe"@no .
+
+duo:WritingSystem a rdfs:Class ;
+  rdfs:label "Writing system"@en ;
+  rdfs:label "Skriftsystem"@no .
+
+duo:Nationality a rdfs:Class ;
+  rdfs:label "Nationality"@en ;
+  rdfs:label "Nasjonalitet"@no .
+
+duo:FictionNonfiction a rdfs:Class ;
+  rdfs:label "Fiction / Nonfiction"@en ;
+  rdfs:label "Fag / fiksjon"@no .
+
+duo:Binding a rdfs:Class ;
+  rdfs:label "Binding"@en ;
+  rdfs:label "Innbinding"@no .
+
+duo:ClassificationSource a rdfs:Class ;
+  rdfs:label "Classification source"@en ;
+  rdfs:label "Klassifikasjonskilde"@no .
+
+duo:Role a rdfs:Class ;
+  rdfs:label "Role"@en ;
+  rdfs:label "Rolle"@no .
+
+duo:Key a rdfs:Class ;
+  rdfs:label "Key"@en ;
+  rdfs:label "Toneart"@no .
+
+duo:IllustrativeMatter a rdfs:Class ;
+  rdfs:label "Illustrative matter"@en ;
+  rdfs:label "Illustrasjonsmateriale"@no .
+
+duo:Biography a rdfs:Class ;
+  rdfs:label "Biography"@en ;
+  rdfs:label "Biografisk innhold"@no .
+
 :hasNumberOfPerformers a rdfs:Property ;
   rdfs:label "Performers"@en ;
   rdfs:label "Antall"@no ;
@@ -360,8 +424,8 @@
   rdfs:label "Fag / fiksjon"@no ;
   rdfs:label "Fiction / Nonfiction"@en ;
   rdfs:domain :Work ;
-  rdfs:range duo:fictionNonfiction ;
-  duo:valuesFrom values:FictionNonfiction .
+  rdfs:range duo:FictionNonfiction ;
+  duo:valuesFrom values:fictionNonfiction .
 
 # ToDo: Erstattes med :hasAudience
 :audience a rdfs:Property;
@@ -380,15 +444,15 @@
   duo:valuesFrom values:biography .
 
 :hasFormatAdaptation a rdfs:Property ;
-  rdfs:label "Adaptation for particular user groups"@en ;
-  rdfs:label "Tilrettelegging"@no ;
+  rdfs:label "Format adaptation"@en ;
+  rdfs:label "Tilrettelagt format"@no ;
   rdfs:domain :Publication ;
   rdfs:range duo:FormatAdaptation ;
   duo:valuesFrom values:formatAdaptation .
 
 :hasContentAdaptation a rdfs:Property ;
-  rdfs:label "Adaptation for particular user groups"@en ;
-  rdfs:label "Tilrettelegging"@no ;
+  rdfs:label "Content adaptation"@en ;
+  rdfs:label "Tilrettelagt innhold"@no ;
   rdfs:domain :Work ;
   rdfs:range duo:ContentAdaptation ;
   duo:valuesFrom values:contentAdaptation .
