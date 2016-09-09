@@ -1,14 +1,6 @@
 @prefix literaryForm: <http://data.deichman.no/literaryForm#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-literaryForm:nonfiction a duo:LiteraryForm ;
-  duo:code "0" ;
-  rdfs:label "Fag"@no ;
-  rdfs:label "Nonfiction"@en .
-literaryForm:fiction a duo:LiteraryForm ;
-  duo:code "1" ;
-  rdfs:label "Fiksjon"@no ;
-  rdfs:label "Fiction"@en .
 literaryForm:novel a duo:LiteraryForm ;
   duo:code "r" ;
   rdfs:label "Roman"@no ;
