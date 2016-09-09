@@ -52,14 +52,27 @@ WHERE {
 
   BIND(str(?work) AS ?workUri )
 
-  { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
-  UNION { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
+  # 1. Information from publication:
 
-  UNION {
-      ?p deich:publicationOf ?work .
-      ?work deich:hasClassification ?classEntry .
-      ?classEntry deich:hasClassificationNumber ?dewey .
-  }
+  { ?pub deich:mainTitle ?pubMainTitle }
+  UNION { ?pub deich:partTitle ?pubPartTitle }
+  UNION { ?pub deich:hasHoldingBranch ?branch }
+  UNION { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
+  UNION { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
+  UNION { ?pub deich:format ?formatURI .
+          ?formatURI rdfs:label ?formatNoLang .
+          BIND(str(?formatNoLang) AS ?formatNo)
+          FILTER(lang(?formatNoLang) = "no") }
+  UNION { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
+  UNION { ?pub deich:hasImage ?img }
+  UNION { ?pub deich:abstract ?abstract }
+  UNION { ?pub deich:ageLimit ?maybeAgeLimit . BIND(IF(BOUND(?maybeAgeLimit), ?maybeAgeLimit, "0") AS ?ageLimit) }
+
+  UNION { ?pub deich:inSerial ?serialBnode .
+          ?serialBnode deich:serial ?serial .
+          ?serial deich:mainTitle ?seriesTitle . }
+
+  # 2. Information from other publications:
 
   UNION {
     ?p deich:publicationOf ?work ;
@@ -99,6 +112,15 @@ WHERE {
         }
       }
 
+  # 3. Information from work:
+
+  UNION { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
+  UNION { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
+  UNION {
+      ?work deich:hasClassification ?classEntry .
+      ?classEntry deich:hasClassificationNumber ?dewey .
+  }
+
   UNION {
     {
       ?work deich:subject ?subject .
@@ -129,45 +151,27 @@ WHERE {
       BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
     }
 
-  UNION { ?pub deich:mainTitle ?pubMainTitle }
-  UNION { ?pub deich:partTitle ?pubPartTitle }
-  UNION { ?pub deich:hasHoldingBranch ?branch }
-  UNION {
+  # 4. Information from contributions on both publication and work:
 
-             { ?pub deich:contributor ?contrib } UNION { ?work deich:contributor ?contrib }
-             ?contrib a deich:Contribution ;
-                      deich:agent ?contribAgent ;
-                      deich:role ?contribRoleURI .
-             ?contribAgent deich:name ?contribAgentName .
-             BIND(str(?contribRoleURI) AS ?contribRole)
-             OPTIONAL {
-                ?contrib a deich:MainEntry .
-                BIND(true as ?mainEntry) .
-                ?contribAgent deich:name ?mainEntryName .
-                OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
-                  BIND(str(?nationLabelLang) AS ?nationLabel)
-                  FILTER(lang(?nationLabelLang) = "no")
-                }
+    UNION {
+      { ?pub deich:contributor ?contrib } UNION { ?work deich:contributor ?contrib }
+        ?contrib a deich:Contribution ;
+            deich:agent ?contribAgent ;
+            deich:role ?contribRoleURI .
+        ?contribAgent deich:name ?contribAgentName .
+         BIND(str(?contribRoleURI) AS ?contribRole)
+         OPTIONAL {
+           ?contrib a deich:MainEntry .
+           BIND(true as ?mainEntry) .
+           ?contribAgent deich:name ?mainEntryName .
+           OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
+             BIND(str(?nationLabelLang) AS ?nationLabel)
+             FILTER(lang(?nationLabelLang) = "no")
              }
-  }
-
-  UNION { ?pub deich:inSerial ?serialBnode .
-             ?serialBnode deich:serial ?serial .
-             ?serial deich:mainTitle ?seriesTitle . }
+           }
+    }
 
   UNION { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }
   UNION { ?contribAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?contribAgentDeathYear) }
 
-  UNION { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
-  UNION { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
-  UNION { ?pub deich:format ?formatURI .
-             ?formatURI rdfs:label ?formatNoLang .
-             BIND(str(?formatNoLang) AS ?formatNo)
-             FILTER(lang(?formatNoLang) = "no") }
-  UNION { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
-  UNION { ?pub deich:hasImage ?img }
-  UNION { ?pub deich:abstract ?abstract }
-  UNION { ?pub deich:ageLimit ?maybeAgeLimit
-  BIND(IF(BOUND(?maybeAgeLimit), ?maybeAgeLimit, "0") AS ?ageLimit)
-  }
 }
