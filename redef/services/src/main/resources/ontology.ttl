@@ -325,7 +325,7 @@
 :partNumber a rdfs:Property ;
   rdfs:label "Part number"@en ;
   rdfs:label "Delnummer"@no ;
-  rdfs:domain :Publication, :Work, :WorkRelation ;
+  rdfs:domain :Publication, :Work, :WorkRelation, :PublicationPart ;
   rdfs:range xsd:string .
 
 :edition a rdfs:Property ;

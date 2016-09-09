@@ -921,8 +921,8 @@ module.exports = (app) => {
                     }
                   },
                   {
-                    label: 'Skal ikke vises som verk',
-                    rdfProperty: 'improperWork'
+                    label: 'Del nummer',
+                    rdfProperty: 'partNumber'
                   },
                   // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
                   {
@@ -938,6 +938,10 @@ module.exports = (app) => {
                     widgetOptions: {
                       isRangeEnd: true,
                     }
+                  },
+                  {
+                    label: 'Skal ikke vises som verk',
+                    rdfProperty: 'improperWork'
                   }
                 ]
               },

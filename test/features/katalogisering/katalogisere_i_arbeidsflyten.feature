@@ -81,6 +81,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
+    Og jeg skriver verdien "1" for "Del nummer"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
     Og jeg trykker på "Legg til"-knappen
