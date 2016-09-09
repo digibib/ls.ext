@@ -19,9 +19,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Splitter.fixedLength;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import static java.util.stream.StreamSupport.stream;
 
 /**
  * Responsibility: Map MARC21 to JSON representation.
@@ -87,7 +89,7 @@ public class MARCMapper {
             switch (controlField.getTag()) {
                 case "008":
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
-                    setUriObject(controlField, THIRTY_THREE, "literaryForm", work::setLiteraryForm, LiteraryForm::translate);
+                    setUriObject(controlField, THIRTY_THREE, "literaryForm", work::addLiteraryForm, LiteraryForm::translate);
                     setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
                     setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, "language", publication::addLanguage, NOP, this::languagePrefix);
                     break;
@@ -102,6 +104,7 @@ public class MARCMapper {
                     setUriObject(dataField, 'a', "audience", work::setAudience, Audience::translate);
                     setUriObject(dataField, 'b', "format", publication::setFormat, Format::translate);
                     setUriObject(dataField, 'b', "mediaType", publication::setMediaType, MediaType::translate);
+                    setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", work::addLiteraryForm, LiteraryForm::translate);
                     break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
@@ -458,6 +461,7 @@ public class MARCMapper {
 
     private void setRole(DataField dataField, Contribution contribution) {
         getSubfieldValue(dataField, 'e', "contributor")
+                .map(String::toLowerCase)
                 .map(this::unPunctuate)
                 .map(Role::translate)
                 .map(fragment -> path("role", fragment))
@@ -476,6 +480,19 @@ public class MARCMapper {
 
     private void setUriObject(DataField dataField, char subField, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
         getSubfieldValues(dataField, subField)
+                .map(String::toLowerCase)
+                .map(mapper)
+                .filter(StringUtils::isNotBlank)
+                .map(fragment -> path(path, fragment))
+                .map(this::dataPrefix)
+                .map(this::asExternalObject)
+                .forEach(setterFunction);
+    }
+
+    private void setUriObjectFixedValueWidth(DataField dataField, char subField, int valueWidth,
+                                             String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
+        getFixedWidthSubfieldValues(dataField, subField, valueWidth)
+                .map(String::toLowerCase)
                 .map(mapper)
                 .filter(StringUtils::isNotBlank)
                 .map(fragment -> path(path, fragment))
@@ -486,6 +503,7 @@ public class MARCMapper {
 
     private void setUriObject(ControlField controlField, int position, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
         getControlFieldValue(controlField, position)
+                .map(String::toLowerCase)
                 .filter(StringUtils::isNotBlank)
                 .map(mapper)
                 .map(fragment -> path(path, fragment))
@@ -498,6 +516,7 @@ public class MARCMapper {
                               Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper,
                               Function<String, String> prefix) {
         getControlFieldValue(controlField, startPosition, endPosition)
+                .map(String::toLowerCase)
                 .filter(StringUtils::isNotBlank)
                 .map(mapper)
                 .map(prefix)
@@ -571,6 +590,11 @@ public class MARCMapper {
         String separator = separators.length > 0 ? separators[0] : ",";
         return stream(getSubfieldValue(dataField, character).orElse("").split(separator)).filter(StringUtils::isNotBlank);
     }
+
+    private Stream<String> getFixedWidthSubfieldValues(DataField dataField, Character character, int valueWidth) {
+        return stream(fixedLength(valueWidth).split(getSubfieldValue(dataField, character).orElse("")).spliterator(), false).filter(StringUtils::isNotBlank);
+    }
+
 
     private String asBlankNodeId(String id) {
         return "_:" + id;

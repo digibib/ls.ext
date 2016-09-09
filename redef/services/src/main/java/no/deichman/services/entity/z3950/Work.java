@@ -70,7 +70,7 @@ public class Work extends BibliographicObjectExternal {
         this.audience.add(audience);
     }
 
-    public final void setLiteraryForm(ExternalDataObject literaryForm) {
+    public final void addLiteraryForm(ExternalDataObject literaryForm) {
         if (this.literaryForm == null) {
             this.literaryForm = new ArrayList<>();
         }

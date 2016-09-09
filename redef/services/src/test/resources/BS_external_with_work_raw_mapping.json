@@ -20,6 +20,12 @@
         "deichman:literaryForm": [
           {
             "@id": "http://data.deichman.no/literaryForm#fiction"
+          },
+          {
+            "@id": "http://data.deichman.no/literaryForm#anthology"
+          },
+          {
+            "@id": "http://data.deichman.no/literaryForm#shortStory"
           }
         ],
         "deichman:subject": [
