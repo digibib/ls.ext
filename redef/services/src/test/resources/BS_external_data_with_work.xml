@@ -26,6 +26,12 @@
         <datafield tag="035" ind1=" " ind2=" ">
             <subfield code="a">0250080</subfield>
         </datafield>
+        <!-- should result in two extra languages for publication and two for work plus one subtitles -->
+        <datafield tag="041" ind1=" " ind2=" ">
+            <subfield code="a">danswe</subfield>
+            <subfield code="b">eng</subfield>
+            <subfield code="h">armaze</subfield>
+        </datafield>
         <datafield tag="082" ind1="3" ind2="1">
             <subfield code="a">839.823</subfield>
             <subfield code="2">5</subfield>

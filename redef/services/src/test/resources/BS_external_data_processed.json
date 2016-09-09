@@ -53,11 +53,6 @@
           },
           "deichman:publisher": "_:0000000",
           "deichman:numberOfPages": "191 s.",
-          "deichman:language": [
-            {
-              "@id": "http://lexvo.org/id/iso639-3/nob"
-            }
-          ],
           "deichman:publicationOf": {
             "@id": "_:0000000"
           },
@@ -79,6 +74,11 @@
           "deichman:partNumber": "Andre bok",
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
+          "deichman:language": [
+            {
+              "@id": "http://lexvo.org/id/iso639-3/nob"
+            }
+          ],
           "@type": [
             "deichman:Publication"
           ]

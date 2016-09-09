@@ -35,11 +35,6 @@
         },
         "deichman:publisher": "_:0000000",
         "deichman:numberOfPages": "677 s.",
-        "deichman:language": [
-          {
-            "@id": "http://lexvo.org/id/iso639-3/nob"
-          }
-        ],
         "deichman:publicationOf": {
           "@id": "_:0000000"
         },
@@ -54,6 +49,11 @@
         "deichman:publicationYear": "cop. 2015",
         "deichman:mainTitle": "Det Nye testamentet",
         "deichman:subtitle": "ny oversettelse : tekstene slik de opprinnelig ble skrevet",
+        "deichman:language": [
+          {
+            "@id": "http://lexvo.org/id/iso639-3/nob"
+          }
+        ],
         "@type": [
           "deichman:Publication"
         ]

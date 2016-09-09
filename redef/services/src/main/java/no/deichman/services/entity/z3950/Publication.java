@@ -33,9 +33,6 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:numberOfPages")
     private String numberOfPages;
 
-    @SerializedName("deichman:language")
-    private List<ExternalDataObject> language;
-
     @SerializedName("deichman:hasPublicationPart")
     private List<Map<String, String>> hasPublicationPart;
 
@@ -59,6 +56,9 @@ public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:ageLimit")
     private Integer ageLimit;
+    
+    @SerializedName("deichman:hasSubtitles")
+    private List<ExternalDataObject> hasSubtitles;
 
     public final String getIsbn() {
         return isbn;
@@ -98,13 +98,6 @@ public class Publication extends BibliographicObjectExternal {
 
     final void setNumberOfPages(String numberOfPages) {
         this.numberOfPages = numberOfPages;
-    }
-
-    public final void addLanguage(ExternalDataObject language) {
-        if (this.language == null) {
-            this.language = new ArrayList<>();
-        }
-        this.language.add(language);
     }
 
     final Map<String, String> getPublicationOf() {
@@ -168,12 +161,18 @@ public class Publication extends BibliographicObjectExternal {
         this.formatAdaption.add(formatAdaption);
     }
 
-
     public void setAgeLimit(String ageLimit) {
         try {
             this.ageLimit = Integer.parseInt(ageLimit);
         } catch (NumberFormatException e) {
             // ignore
         }
+    }
+
+    public void addSubTitles(ExternalDataObject subTitles) {
+        if (this.hasSubtitles == null) {
+            this.hasSubtitles = new ArrayList<>();
+        }
+        this.hasSubtitles.add(subTitles);
     }
 }

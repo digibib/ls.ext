@@ -37,6 +37,8 @@ class BibliographicObjectExternal extends ExternalDataObject {
 
     @SerializedName("deichman:altTitle")
     private List<String> altTitle;
+    @SerializedName("deichman:language")
+    private List<ExternalDataObject> language;
 
     BibliographicObjectExternal(String id) {
         setId(id);
@@ -107,5 +109,12 @@ class BibliographicObjectExternal extends ExternalDataObject {
             this.altTitle = new ArrayList<>();
         }
         this.altTitle.add(altTitle);
+    }
+
+    public final void addLanguage(ExternalDataObject language) {
+        if (this.language == null) {
+            this.language = new ArrayList<>();
+        }
+        this.language.add(language);
     }
 }

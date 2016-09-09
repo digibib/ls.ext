@@ -41,6 +41,8 @@ public class MARCMapper {
     public static final int THIRTY_FIVE = 35;
     public static final int THIRTY_SEVEN = 37;
     public static final Predicate<String> EMPTY_VALUES = s -> s != null;
+    public static final boolean WRAP = true;
+    public static final int THREE = 3;
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
     public static final Function<String, String> NOP = s -> s;
@@ -91,7 +93,7 @@ public class MARCMapper {
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
                     setUriObject(controlField, THIRTY_THREE, "literaryForm", work::addLiteraryForm, LiteraryForm::translate);
                     setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
-                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, "language", publication::addLanguage, NOP, this::languagePrefix);
+                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, publication::addLanguage, NOP, this::languagePrefix);
                     break;
                 default:
             }
@@ -104,14 +106,19 @@ public class MARCMapper {
                     setUriObject(dataField, 'a', "audience", work::setAudience, Audience::translate);
                     setUriObject(dataField, 'b', "format", publication::setFormat, Format::translate);
                     setUriObject(dataField, 'b', "mediaType", publication::setMediaType, MediaType::translate);
-                    setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", work::addLiteraryForm, LiteraryForm::translate);
-                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaption", work::addContentAdaption, ContentAdaption::translate);
-                    setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaption", publication::addFormatAdaption, FormatAdaption::translate);
+                    setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", work::addLiteraryForm, LiteraryForm::translate, WRAP);
+                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaption", work::addContentAdaption, ContentAdaption::translate, WRAP);
+                    setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaption", publication::addFormatAdaption, FormatAdaption::translate, WRAP);
                     getSubfieldValue(dataField, 's').ifPresent(publication::setAgeLimit);
                     break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
                     setUriObject(dataField, 'b', "binding", publication::setBinding, Binding::translate);
+                    break;
+                case "041":
+                    setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
+                    setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
+                    setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
                     break;
                 case "100":
                     getSubfieldValue(dataField, 'a').ifPresent(personName -> {
@@ -494,13 +501,23 @@ public class MARCMapper {
     }
 
     private void setUriObjectFixedValueWidth(DataField dataField, char subField, int valueWidth,
-                                             String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
+                                             String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper, boolean wrap) {
         getFixedWidthSubfieldValues(dataField, subField, valueWidth)
                 .map(String::toLowerCase)
                 .map(mapper)
                 .filter(StringUtils::isNotBlank)
-                .map(fragment -> path(path, fragment))
-                .map(this::dataPrefix)
+                .map(fragment -> wrap ? path(path, fragment) : fragment)
+                .map(s -> wrap ? dataPrefix(s) : s)
+                .map(this::asExternalObject)
+                .forEach(setterFunction);
+    }
+
+    private void setUriObjectFixedValueWidth(DataField dataField, char subField, int valueWidth,
+                                             Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
+        getFixedWidthSubfieldValues(dataField, subField, valueWidth)
+                .map(String::toLowerCase)
+                .map(mapper)
+                .filter(StringUtils::isNotBlank)
                 .map(this::asExternalObject)
                 .forEach(setterFunction);
     }
@@ -516,7 +533,7 @@ public class MARCMapper {
                 .ifPresent(setterFunction);
     }
 
-    private void setUriObject(ControlField controlField, int startPosition, int endPosition, String path,
+    private void setUriObject(ControlField controlField, int startPosition, int endPosition,
                               Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper,
                               Function<String, String> prefix) {
         getControlFieldValue(controlField, startPosition, endPosition)
