@@ -1,138 +1,212 @@
-import React, { PropTypes } from 'react'
-import { Link } from 'react-router'
-import { push } from 'react-router-redux'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+  import React, { PropTypes } from 'react'
+  import { Link } from 'react-router'
+  import { push } from 'react-router-redux'
+  import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+  import MediaQuery from 'react-responsive'
 
-class SearchHeader extends React.Component {
-  constructor (props) {
-    super(props)
-    this.handleSearch = this.handleSearch.bind(this)
-    this.handleLoginClick = this.handleLoginClick.bind(this)
-  }
+  class SearchHeader extends React.Component {
+    constructor (props) {
+      super(props)
+      this.handleSearch = this.handleSearch.bind(this)
+      this.handleLoginClick = this.handleLoginClick.bind(this)
+      this.toggleMobileNav = this.toggleMobileNav.bind(this)
+      this.state = {
+        mobileNavVisible: false
+      }
+    }
 
-  componentDidUpdate () {
-    this.searchFieldInput.value = this.props.locationQuery.query || ''
-  }
+    componentDidUpdate () {
+      this.searchFieldInput.value = this.props.locationQuery.query || ''
+    }
 
-  handleSearch (event) {
-    event.preventDefault()
-    this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
-  }
+    handleSearch (event) {
+      event.preventDefault()
+      this.setState({mobileNavVisible: false})
+      this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
+    }
 
-  handleLoginClick (event) {
-    event.preventDefault()
-    this.props.showLoginDialog()
-  }
+    handleLoginClick (event) {
+      event.preventDefault()
+      this.setState({mobileNavVisible: false})
+      this.props.showLoginDialog()
+    }
 
-  render () {
-    return (
-      <div>
-        <header className="row">
-          <div className="container">
-            <div className="logo">
-              <Link to="/">
-                <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
-              </Link>
+    toggleMobileNav () {
+      if (!this.state.mobileNavVisible) {
+        this.setState({mobileNavVisible: true})
+      } else {
+        this.setState({mobileNavVisible: false})
+      }
+    }
+
+    /**
+     * Links used in the menu and the mobile menu
+     */
+    loginLink () {
+      if (this.props.isLoggedIn) {
+        return [
+          <li key={1} data-automation-id="logout_element" onClick={this.props.logout}>
+            <Link to="/">
+              <FormattedMessage {...messages.logout} /> <span>&raquo;</span>
+            </Link>
+          </li>
+        ]
+      } else {
+        return [
+          <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick}>
+            <Link to="/">
+              <FormattedMessage {...messages.logIn} /> <span>&raquo;</span>
+            </Link>
+          </li>
+        ]
+      }
+    }
+
+    profileLink () {
+      return [
+        <li key={3}>
+          <Link to="/profile"><FormattedMessage {...messages.myProfile} /> <span>&raquo;</span></Link>
+        </li>
+      ]
+    }
+
+    /**
+     * Renders the menu, and/or the mobile menu
+     */
+    renderNavigationLinks () {
+      return (
+        <ul>
+          {this.loginLink()}
+          {this.profileLink()}
+        </ul>
+      )
+    }
+
+    renderMobileNavigationLinks () {
+      return (
+        <ul>
+          {this.loginLink()}
+          {this.profileLink()}
+        </ul>
+      )
+    }
+
+    render () {
+      let mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
+      return (
+        <div>
+
+            <header>
+
+              <div className="logo">
+                <Link to="/">
+                  <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
+                </Link>
+              </div>
+
+              <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
+                <div className="mobile-menu-toggle">
+                  <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars" onClick={this.toggleMobileNav} />
+                </div>
+              </MediaQuery>
+
+              <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
+                <nav className="primary-menu">
+                  {this.renderNavigationLinks()}
+                </nav>
+              </MediaQuery>
+
+            </header>
+
+          <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
+            <nav className={mobileNavClass}>
+              {this.renderMobileNavigationLinks()}
+            </nav>
+          </MediaQuery>
+
+          <section className="search-container">
+            <div className="search-box">
+              <form onSubmit={this.handleSearch}>
+                <label htmlFor="search"><img src="/images/icon-searchbar-search.svg"
+                                             alt="Black Magnifying glass" /></label>
+                <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+                       id="search"
+                       type="search"
+                       defaultValue={this.props.locationQuery.query || ''}
+                       ref={e => this.searchFieldInput = e}
+                       data-automation-id="search_input_field"
+                />
+                <button onClick={this.handleSearch} type="button" className="search-submit"
+                        data-automation-id="search_button">
+                  <FormattedMessage {...messages.search} />
+                </button>
+              </form>
             </div>
-            <button type="button" className="btn-mobile">
-              <Link to="/">
-                <img src="/images/btn-mobile.svg" alt="3 black bars" />
-              </Link>
-            </button>
-            <div className="primary-menu">
-              <ul>
-                <li><Link to="/profile"><FormattedMessage {...messages.myProfile} /></Link></li>
-                {this.props.isLoggedIn
-                  ? <li data-automation-id="logout_element" onClick={this.props.logout}>
-                  <FormattedMessage {...messages.logout} /></li>
-                  : <li data-automation-id="login_element" onClick={this.handleLoginClick}>
-                  <FormattedMessage {...messages.logIn} /></li>}
-              </ul>
-            </div>
-          </div>
-        </header>
-        <section className="search-container">
-          <div className="search-box">
-            <form onSubmit={this.handleSearch}>
-              <label htmlFor="search"><img src="/images/icon-searchbar-search.svg"
-                                           alt="Black Magnifying glass" /></label>
-              <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-                     id="search"
-                     type="search"
-                     defaultValue={this.props.locationQuery.query || ''}
-                     ref={e => this.searchFieldInput = e}
-                     data-automation-id="search_input_field"
-              />
-              <button onClick={this.handleSearch} type="button" className="search-submit"
-                      data-automation-id="search_button">
-                <FormattedMessage {...messages.search} />
-              </button>
-            </form>
-          </div>
-        </section>
-      </div>
-    )
+          </section>
+
+        </div>
+      )
+    }
   }
-}
 
-SearchHeader.propTypes = {
-  locationQuery: PropTypes.object.isRequired,
-  requireLoginBeforeAction: PropTypes.func.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  locale: PropTypes.string.isRequired,
-  showLoginDialog: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired,
-  logout: PropTypes.func.isRequired,
-  mediaQueryValues: PropTypes.object,
-  intl: intlShape.isRequired
-}
-
-const messages = defineMessages({
-  logoAlt: {
-    id: 'SearchHeader.logoAlt',
-    description: 'Alt text for the logo',
-    defaultMessage: 'Black logo with text'
-  },
-  myProfile: {
-    id: 'SearchHeader.myProfile',
-    description: 'Label for the link to go to the user profile',
-    defaultMessage: 'My profile'
-  },
-  myLoans: {
-    id: 'SearchHeader.myLoans',
-    description: 'Label for the link to go to the users loans',
-    defaultMessage: 'My loans'
-  },
-  more: {
-    id: 'SearchHeader.more',
-    description: 'Label for the link to show more',
-    defaultMessage: 'More'
-  },
-  contactUs: {
-    id: 'SearchHeader.contactUs',
-    description: 'Label for the link to go to the contact page',
-    defaultMessage: 'Contact us'
-  },
-  searchInputPlaceholder: {
-    id: 'SearchHeader.searchInputPlaceholder',
-    description: 'Placeholder for the search field',
-    defaultMessage: 'Search for something...'
-  },
-  search: {
-    id: 'SearchHeader.search',
-    description: 'Label on search button',
-    defaultMessage: 'Search'
-  },
-  logout: {
-    id: 'SearchHeader.logout',
-    description: 'Shown when logged in',
-    defaultMessage: 'Log out'
-  },
-  logIn: {
-    id: 'SearchHeader.logIn',
-    description: 'Shown when logged out',
-    defaultMessage: 'Log in'
+  SearchHeader.propTypes = {
+    locationQuery: PropTypes.object.isRequired,
+    requireLoginBeforeAction: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    locale: PropTypes.string.isRequired,
+    showLoginDialog: PropTypes.func.isRequired,
+    isLoggedIn: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired,
+    mediaQueryValues: PropTypes.object,
+    intl: intlShape.isRequired
   }
-})
 
-export default injectIntl(SearchHeader)
+  const messages = defineMessages({
+    logoAlt: {
+      id: 'SearchHeader.logoAlt',
+      description: 'Alt text for the logo',
+      defaultMessage: 'Black logo with text'
+    },
+    myProfile: {
+      id: 'SearchHeader.myProfile',
+      description: 'Label for the link to go to the user profile',
+      defaultMessage: 'My profile'
+    },
+    myLoans: {
+      id: 'SearchHeader.myLoans',
+      description: 'Label for the link to go to the users loans',
+      defaultMessage: 'My loans'
+    },
+    more: {
+      id: 'SearchHeader.more',
+      description: 'Label for the link to show more',
+      defaultMessage: 'More'
+    },
+    contactUs: {
+      id: 'SearchHeader.contactUs',
+      description: 'Label for the link to go to the contact page',
+      defaultMessage: 'Contact us'
+    },
+    searchInputPlaceholder: {
+      id: 'SearchHeader.searchInputPlaceholder',
+      description: 'Placeholder for the search field',
+      defaultMessage: 'Search for something...'
+    },
+    search: {
+      id: 'SearchHeader.search',
+      description: 'Label on search button',
+      defaultMessage: 'Search'
+    },
+    logout: {
+      id: 'Navigation.logout',
+      description: 'Shown when logged in',
+      defaultMessage: 'Log out'
+    },
+    logIn: {
+      id: 'Navigation.logIn',
+      description: 'Shown when logged out',
+      defaultMessage: 'Log in'
+    }
+  })
+
+  export default injectIntl(SearchHeader)
