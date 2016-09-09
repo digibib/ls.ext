@@ -1,33 +1,52 @@
 .primary-menu {
-  display: none;
-
-  @include span(8 of 12);
-  float: right;
   text-align: right;
 
   li {
     display: inline-block;
     padding: rhythm(2);
-  }
-
-  @include breakpoint($medium){
-    display: block;
+    span:last-child {
+      display: none;
+    }
   }
 }
 
 // MOBILE NAV
-.btn-mobile {
-
+.btn-mobile-toggle {
   float: right;
-  width: 45px;
-  margin-top: rhythm(3);
-
-  button {
-    border: none;
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+.primary-mobile-menu {
+  transition: max-height 0.5s;
+  max-height: 250px;
+  overflow: hidden;
+  &.collapsed {
+    max-height: 0;
   }
-
-  @include breakpoint($medium){
-    display: none;
+  ul {
+    border-top: 2px solid $blackColor;
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li {
+      width: 100%;
+      a {
+        padding: rhythm(3) rhythm(6);
+        border-bottom: 1px solid $darkGreyColor;
+        display: block;
+        color: $blackColor;
+        text-decoration: none;
+        &:hover {
+          background-color: #767676;
+          color: $white;
+        }
+      }
+    }
+    span:last-child {
+      float:right;
+    }
   }
 }
 

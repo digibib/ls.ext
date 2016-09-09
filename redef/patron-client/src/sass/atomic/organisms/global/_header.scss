@@ -1,13 +1,25 @@
 // ORGANISM: Global Header
 // ==========================================================================
+header {
+  @include container;
+  padding: gutter(12);
 
-.logo {
-  @include span(5 of 12);
-  margin-bottom: rhythm(2);
-  margin-top: rhythm(4);
+  .logo {
+    @include span(5);
+    margin-bottom: rhythm(2);
+    margin-top: rhythm(4);
+    @include breakpoint($medium) {
+      @include span(3);
+    }
+  }
 
-  @include breakpoint($medium){
-    @include span(3 of 12);
+  .primary-menu {
+    @include span(7 last);
+  }
+
+  .mobile-menu-toggle {
+    @include span(7 last);
+    margin-top: rhythm(4);
   }
 
 }
