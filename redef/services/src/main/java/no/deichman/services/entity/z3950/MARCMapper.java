@@ -107,6 +107,7 @@ public class MARCMapper {
                     setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", work::addLiteraryForm, LiteraryForm::translate);
                     setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaption", work::addContentAdaption, ContentAdaption::translate);
                     setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaption", publication::addFormatAdaption, FormatAdaption::translate);
+                    getSubfieldValue(dataField, 's').ifPresent(publication::setAgeLimit);
                     break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);

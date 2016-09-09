@@ -57,6 +57,9 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:formatAdaption")
     private List<ExternalDataObject> formatAdaption;
 
+    @SerializedName("deichman:ageLimit")
+    private Integer ageLimit;
+
     public final String getIsbn() {
         return isbn;
     }
@@ -167,5 +170,10 @@ public class Publication extends BibliographicObjectExternal {
             this.formatAdaption = new ArrayList<>();
         }
         this.formatAdaption.add(formatAdaption);
+    }
+
+
+    public void setAgeLimit(String ageLimit) {
+        this.ageLimit = Integer.parseInt(ageLimit);
     }
 }

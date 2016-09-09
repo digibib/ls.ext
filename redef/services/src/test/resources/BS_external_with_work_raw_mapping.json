@@ -199,6 +199,7 @@
             "@id": "http://data.deichman.no/formatAdaption#capitalLetters"
           }
         ],
+        "deichman:ageLimit": 18,
         "deichman:contributor": [
           {
             "@id": "_:0000000"
