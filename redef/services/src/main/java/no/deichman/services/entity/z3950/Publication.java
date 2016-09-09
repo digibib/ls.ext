@@ -34,7 +34,7 @@ public class Publication extends BibliographicObjectExternal {
     private String numberOfPages;
 
     @SerializedName("deichman:language")
-    private ExternalDataObject language;
+    private List<ExternalDataObject> language;
 
     @SerializedName("deichman:hasPublicationPart")
     private List<Map<String, String>> hasPublicationPart;
@@ -50,6 +50,9 @@ public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:inSerial")
     private List<Map<String, Object>> serial;
+
+    @SerializedName("deichman:hasMediaType")
+    private ExternalDataObject mediaType;
 
     public final String getIsbn() {
         return isbn;
@@ -95,8 +98,11 @@ public class Publication extends BibliographicObjectExternal {
         this.numberOfPages = numberOfPages;
     }
 
-    public final void setLanguage(ExternalDataObject language) {
-        this.language = language;
+    public final void addLanguage(ExternalDataObject language) {
+        if (this.language == null) {
+            this.language = new ArrayList<>();
+        }
+        this.language.add(language);
     }
 
     final Map<String, String> getPublicationOf() {
@@ -124,6 +130,10 @@ public class Publication extends BibliographicObjectExternal {
 
     public final void setFormat(ExternalDataObject format) {
         this.format = format;
+    }
+
+    public final void setMediaType(ExternalDataObject mediaType) {
+        this.mediaType = mediaType;
     }
 
     public final ExternalDataObject getFormat() {

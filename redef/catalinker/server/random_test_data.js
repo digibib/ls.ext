@@ -36,12 +36,12 @@ module.exports = (app) => {
                       '@id': '_:N0d3f253e2e624cf49c45d545fbf5a41f'
                     }
                   ],
-                  'deichman:format': {
-                    '@id': 'http://data.deichman.no/format#Book'
+                  'deichman:hasMediaType': {
+                    '@id': 'http://data.deichman.no/mediaType#Book'
                   },
                   'deichman:isbn': request.params[1],
                   'deichman:language': {
-                    '@id': 'http://lexvo.org/id/iso639-3/nob'
+                    '@id': 'http://lexvo.org/id/iso639-3/swe'
                   },
                   'deichman:literaryForm': [
                     {

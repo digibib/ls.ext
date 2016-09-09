@@ -89,7 +89,7 @@ public class MARCMapper {
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
                     setUriObject(controlField, THIRTY_THREE, "literaryForm", work::setLiteraryForm, LiteraryForm::translate);
                     setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
-                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, "language", publication::setLanguage, NOP, this::languagePrefix);
+                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, "language", publication::addLanguage, NOP, this::languagePrefix);
                     break;
                 default:
             }
@@ -101,6 +101,7 @@ public class MARCMapper {
                 case "019":
                     setUriObject(dataField, 'a', "audience", work::setAudience, Audience::translate);
                     setUriObject(dataField, 'b', "format", publication::setFormat, Format::translate);
+                    setUriObject(dataField, 'b', "mediaType", publication::setMediaType, MediaType::translate);
                     break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
@@ -475,8 +476,8 @@ public class MARCMapper {
 
     private void setUriObject(DataField dataField, char subField, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
         getSubfieldValues(dataField, subField)
-                .filter(StringUtils::isNotBlank)
                 .map(mapper)
+                .filter(StringUtils::isNotBlank)
                 .map(fragment -> path(path, fragment))
                 .map(this::dataPrefix)
                 .map(this::asExternalObject)

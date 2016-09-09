@@ -7,7 +7,7 @@
         decorator="multi:{select2:[{{#if !multiple || input.isSubInput}}'singleSelect'{{/if}}], detectChange:[], handleAddNewBySelect2:[]}"
         value="{{./current.value}}"
         data-automation-id="{{dataAutomationId || ../../dataAutomationId}}"
-        multiple {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
+        multiple="multiple" {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
     {{#each predefinedValues[../../fragment]}}
     <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["label"])}}</option>
     {{/each}}

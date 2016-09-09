@@ -2131,9 +2131,9 @@
                 }
                 var newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get('targetUri.' + newResourceType))) {
+                  var inputs = allInputs()
                   _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
                     _.each(newResourceType.prefillValuesFromResource[ copyFromType ], function (fragment) {
-                      var inputs = allInputs()
                       var sourceInput = _.find(inputs, function (input) {
                         return (input.fragment === fragment && unPrefix(input.domain) === copyFromType)
                       })
@@ -2142,8 +2142,23 @@
                           return (input.fragment === fragment && unPrefix(input.domain) === newResourceType.type)
                         })
                         if (targetInput) {
-                          targetInput.values = deepClone(sourceInput.values)
                           targetInput.datatypes = sourceInput.datatypes
+                          if (targetInput.type === 'select-predefined-value') {
+                            sourceInput.values[0].current.value = _.union(sourceInput.values[0].current.value, targetInput.values[0].current.value)
+                          } else {
+                            _.each(sourceInput.values, function (sourceValue) {
+                              if (!_.some(targetInput.values, function (targetValue) {
+                                  return targetValue.current.value === sourceValue.current.value
+                                })) {
+                                targetInput.values = targetInput.values || []
+                                if (targetInput.values.length === 1 && targetInput.values[ 0 ].current.value === '' || targetInput.values[ 0 ].current.value === null) {
+                                  targetInput.values[ 0 ] = deepClone(sourceValue)
+                                } else {
+                                  targetInput.values.push(deepClone(sourceValue))
+                                }
+                              }
+                            })
+                        }
                         }
                       }
                     })

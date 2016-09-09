@@ -487,13 +487,17 @@ module.exports = (app) => {
                 rdfProperty: 'binding'
               }
             ),
-            { rdfProperty: 'language' },
+            {
+              rdfProperty: 'language',
+              multiple: true
+            },
             includeOnlyFor(
               'film', {
                 rdfProperty: 'hasSubtitles'
               }
             ),
             { rdfProperty: 'format', multiple: true },
+            { rdfProperty: 'hasMediaType' },
             includeOnlyFor(
               [ 'film', 'musical_recording' ,'audible'], {
                 rdfProperty: 'duration',

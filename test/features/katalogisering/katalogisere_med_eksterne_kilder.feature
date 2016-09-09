@@ -29,6 +29,7 @@ Egenskap: katalogisere med eksterne kilder
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
     Og jeg venter litt
+    Og jeg venter litt
     Så åpner jeg listen med eksterne forslag fra andre kilder for utgivelsesår som skal knyttes til utgivelsen og velger det første forslaget
     Og jeg venter litt
     Og jeg venter litt
@@ -38,7 +39,8 @@ Egenskap: katalogisere med eksterne kilder
     Så åpner jeg listen med eksterne forslag fra andre kilder for sidetall som skal knyttes til utgivelsen og velger det første forslaget
     Så sjekker jeg at verdien for "Sidetall" nå er "208"
     Så åpner jeg listen med eksterne forslag fra andre kilder for language som skal knyttes til utgivelsen og velger det første forslaget
-    Så sjekker jeg at "Norsk (bokmål)" er blant verdiene som er valgt for Språk
+    Og jeg venter litt
+    Så sjekker jeg at "Svensk" er blant verdiene som er valgt for Språk
     Så trykker jeg på "Neste steg: Verksopplysninger"-knappen
     Så trykker jeg på "Neste steg: Beskriv verket"-knappen
     Så trykker jeg på "Neste steg: Beskriv deler"-knappen

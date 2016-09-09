@@ -123,9 +123,11 @@
         },
         "deichman:publisher": "_:0000000",
         "deichman:numberOfPages": "191 s.",
-        "deichman:language": {
-          "@id": "http://lexvo.org/id/iso639-3/nob"
-        },
+        "deichman:language": [
+          {
+            "@id": "http://lexvo.org/id/iso639-3/nob"
+          }
+        ],
         "deichman:hasPublicationPart": [
           {
             "@id": "_:0000000"
@@ -142,9 +144,6 @@
         ],
         "deichman:publicationOf": {
           "@id": "_:0000000"
-        },
-        "deichman:format": {
-          "@id": "http://data.deichman.no/format#Book"
         },
         "deichman:illustrativeMatter": [
           {
@@ -163,6 +162,9 @@
             "@type": "deichman:SerialIssue"
           }
         ],
+        "deichman:hasMediaType": {
+          "@id": "http://data.deichman.no/mediaType#Book"
+        },
         "deichman:contributor": [
           {
             "@id": "_:0000000"

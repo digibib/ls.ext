@@ -68,6 +68,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data = Hash.new
   data['publicationYear'] = [(1000 + rand(1015)).to_s, :add_prop]
   data['format'] = [:random, :select_prop]
+  data['language'] = [:random, :select_prop]
   data['partTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
   data['edition'] = [generateRandomString, :add_prop]
@@ -553,7 +554,7 @@ end
 
 When(/^sjekker jeg at "([^"]*)" er blant verdiene som er valgt for (.*)$/) do |value, parameter_label|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
-    @browser.span(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//ul/li[@class='select2-selection__choice']/span[normalize-space()='#{value}']").present?
+    @browser.li(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//ul/li[@class='select2-selection__choice'][@title='#{value}']").present?
   }
 end
 
