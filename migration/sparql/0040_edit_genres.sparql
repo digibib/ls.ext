@@ -1,7 +1,7 @@
 # 1) Gjør sjanger tegneserie med undersjanger om til litterær form + sjanger
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX raw: <http://data.deichman.no/raw#>
 PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
 
@@ -15,8 +15,8 @@ DELETE {
 
 INSERT {
 	?work :literaryForm literaryForm:comicBook ;
-		:genre `IRI(CONCAT(STR("http://__HOST__/genre/g"), MD5(?subdivision)))` .
-	`IRI(CONCAT(STR("http://__HOST__/genre/g"), MD5(?subdivision)))` a :Genre ;
+		:genre `IRI(CONCAT(STR("http://data.deichman.no/genre/g"), MD5(?subdivision)))` .
+	`IRI(CONCAT(STR("http://data.deichman.no/genre/g"), MD5(?subdivision)))` a :Genre ;
 		:prefLabel ?subdivision .
 }
 
@@ -33,7 +33,7 @@ WHERE {
 # 2) Gjør sjanger Filmer med undersjanger om til medietype + sjanger
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX raw: <http://data.deichman.no/raw#>
 PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
 
@@ -47,8 +47,8 @@ DELETE {
 
 INSERT {
 	?work :literaryForm literaryForm:comicBook ;
-		:genre `IRI(CONCAT(STR("http://__HOST__/genre/g"), MD5(?subdivision)))` .
-	`IRI(CONCAT(STR("http://__HOST__/genre/g"), MD5(?subdivision)))` a :Genre ;
+		:genre `IRI(CONCAT(STR("http://data.deichman.no/genre/g"), MD5(?subdivision)))` .
+	`IRI(CONCAT(STR("http://data.deichman.no/genre/g"), MD5(?subdivision)))` a :Genre ;
 		:prefLabel ?subdivision .
 }
 

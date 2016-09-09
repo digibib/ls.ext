@@ -1,6 +1,6 @@
 # Knytt utgivelsessted til allerede eksisterende stedsressurs
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX raw: <http://data.deichman.no/raw#>
 
 WITH <http://deichman.no/migration>
@@ -19,7 +19,7 @@ WHERE {
 
 # Knytt utgivelsessted med kjente, vanlige forkortelser til allerede eksisterende stedsressurs
 #SPARQL
-#PREFIX : <http://__HOST__/ontology#>
+#PREFIX : <http://data.deichman.no/ontology#>
 #PREFIX raw: <http://data.deichman.no/raw#>
 #
 #WITH <http://deichman.no/migration>

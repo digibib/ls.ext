@@ -1,7 +1,7 @@
 # 1) workAuthority for utgivelser med adaptor
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -26,7 +26,7 @@ WHERE {
 
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -51,7 +51,7 @@ WHERE {
 
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -77,7 +77,7 @@ WHERE {
 
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -103,7 +103,7 @@ WHERE {
 
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -128,7 +128,7 @@ WHERE {
 # 6) workAuthority for utgivelser med performer
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -153,7 +153,7 @@ WHERE {
 # 20) Verk fra utgivelser med workAuthority, uten originaltittel
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -161,11 +161,11 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` a :Work ;
+  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` .
 }
 
 WHERE {
@@ -183,7 +183,7 @@ WHERE {
 
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -191,11 +191,11 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` a :Work ;
+  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(LCASE(CONCAT(STR(?workAuthority), ?mainTitle, ?partNumber, ?partTitle)))))` .
 }
 
 WHERE {
@@ -212,7 +212,7 @@ WHERE {
 
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -220,11 +220,11 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` a :Work ;
+  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` .
 }
 
 WHERE {
@@ -243,7 +243,7 @@ WHERE {
 
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
@@ -251,11 +251,11 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` a :Work ;
+  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://__HOST__/work/w"), MD5(?recordID)))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` .
 }
 
 WHERE {
@@ -272,7 +272,7 @@ WHERE {
 # Remove duplicate mainTitle and partTitle from work (result of lowecasing titles for generating work uris)
 ;
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 INSERT { ?work :keepMainTitle ?mainTitle }
 WHERE {
@@ -285,7 +285,7 @@ WHERE {
 
 ;
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 INSERT { ?work :keepPartTitle ?partTitle }
 WHERE {
@@ -297,21 +297,21 @@ WHERE {
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?work :mainTitle ?mainTitle }
 WHERE { ?work a :Work ; :mainTitle ?mainTitle }
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?work :partTitle ?partTitle }
 WHERE { ?work a :Work ; :partTitle ?partTitle }
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?work :keepMainTitle ?mainTitle }
 INSERT { ?work :mainTitle ?mainTitle }
@@ -319,7 +319,7 @@ WHERE { ?work :keepMainTitle ?mainTitle }
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?work :keepPartTitle ?partTitle  }
 INSERT { ?work :partTitle ?partTitle }

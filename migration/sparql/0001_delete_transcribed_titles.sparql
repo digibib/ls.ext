@@ -1,7 +1,7 @@
 # 1) Slett transkriberte tittler fra DFB-poster, slik at bare den i originaltegnsett gjenstår.
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX raw: <http://data.deichman.no/raw#>
 
@@ -27,7 +27,7 @@ WHERE {
 # 2) Slett transkriberte subtittler fra DFB-poster, slik at bare den i originaltegnsett gjenstår.
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX raw: <http://data.deichman.no/raw#>
 

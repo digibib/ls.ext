@@ -1,7 +1,7 @@
 # Legg til role:author på utgivelser som har mainEntry uten rolle
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX role: <http://data.deichman.no/role#>
 

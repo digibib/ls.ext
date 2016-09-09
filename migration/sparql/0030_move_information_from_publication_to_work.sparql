@@ -1,6 +1,6 @@
 # 1) Legg til informasjon fra publication på verk:
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX role: <http://data.deichman.no/role#>
 
@@ -19,35 +19,35 @@ WHERE {
 
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?publication :genre ?o .}
 WHERE { ?publication :publicationOf ?work ; :genre ?o }
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?publication :subject ?o .}
 WHERE { ?publication :publicationOf ?work ; :subject ?o }
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?publication :audience ?o .}
 WHERE { ?publication :publicationOf ?work ; :audience ?o }
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?publication :literaryForm ?o .}
 WHERE { ?publication :publicationOf ?work ; :literaryForm ?o }
 ;
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?publication :hasWorkType ?o .}
 WHERE { ?publication :publicationOf ?work ; :hasWorkType ?o }
@@ -56,7 +56,7 @@ WHERE { ?publication :publicationOf ?work ; :hasWorkType ?o }
 # 2b)
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 
 WITH <http://deichman.no/migration>

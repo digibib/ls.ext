@@ -1,7 +1,7 @@
 # 1) Create media type for comic books
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX format: <http://data.deichman.no/format#>
 PREFIX mediaType: <http://data.deichman.no/mediaType#>
 PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
@@ -30,7 +30,7 @@ WHERE {
 # 2) Construct media type based on format, keep format
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX format: <http://data.deichman.no/format#>
 PREFIX mediaType: <http://data.deichman.no/mediaType#>
 
@@ -73,13 +73,13 @@ WHERE {
 # 3) Replace format with Media Type
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX format: <http://data.deichman.no/format#>
 PREFIX mediaType: <http://data.deichman.no/mediaType#>
 
 WITH <http://deichman.no/migration>
 
-MODIFY 
+MODIFY
 
 DELETE {
   ?pub :format ?format .
@@ -108,7 +108,7 @@ WHERE {
 # 4) Add media type and format for card games and board games
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX mediaType: <http://data.deichman.no/mediaType#>
 PREFIX format: <http://data.deichman.no/format#>
 
@@ -117,8 +117,8 @@ WITH <http://deichman.no/migration>
 MODIFY
 
 DELETE {
-  ?pub :genre <http://__HOST__/genre/g2049303700> .
-  ?pub :genre <http://__HOST__/genre/g2049303800> .
+  ?pub :genre <http://data.deichman.no/genre/g2049303700> .
+  ?pub :genre <http://data.deichman.no/genre/g2049303800> .
   ?pub :format format:PhysicalBody .
 }
 
@@ -133,8 +133,8 @@ WHERE {
     a :Publication .
 
   VALUES (?genre  ?format) {
-    (<http://__HOST__/genre/g2049303700>   format:BoardGame)
-    (<http://__HOST__/genre/g2049303800>   format:CardGame)
+    (<http://data.deichman.no/genre/g2049303700>   format:BoardGame)
+    (<http://data.deichman.no/genre/g2049303800>   format:CardGame)
   }
 }
 ;
@@ -143,7 +143,7 @@ WHERE {
 # 5) Construct work type based on media type
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX mediaType: <http://data.deichman.no/mediaType#>
 PREFIX workType: <http://data.deichman.no/workType#>
 
@@ -176,7 +176,7 @@ WHERE {
 # 6) Delete redundant formats
 SPARQL
 DEFINE sql:log-enable 2
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX format: <http://data.deichman.no/format#>
 
 WITH <http://deichman.no/migration>

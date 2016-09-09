@@ -1,7 +1,7 @@
 # 1) Konstruer emner for motiv i kunsten
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 
 WITH <http://deichman.no/migration>
@@ -14,14 +14,14 @@ DELETE {
 
 INSERT {
 
-    ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i kunsten")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i kunsten")))))` :prefLabel `CONCAT(STR(?label), " i kunsten")` ;
+    ?pub :subject `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i kunsten")))))` .
+    `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i kunsten")))))` :prefLabel `CONCAT(STR(?label), " i kunsten")` ;
     a :Subject .
 } WHERE {
     ?aut migration:specification "Motiv" ;
         migration:subdivision "Kunst" ;
         migration:mainLabel ?label .
-    ?pub :subject <http://__HOST__/subject/s25fd40aa38e2dade45f2cef549cd1efa> ;
+    ?pub :subject <http://data.deichman.no/subject/s25fd40aa38e2dade45f2cef549cd1efa> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
         a :Publication .
@@ -34,7 +34,7 @@ INSERT {
 # 2) Konstruer emner for tema i litteraturen
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 
 WITH <http://deichman.no/migration>
@@ -46,14 +46,14 @@ DELETE {
 }
 
 INSERT {
-    ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i litteraturen")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i litteraturen")))))` :prefLabel `CONCAT(STR(?label), " i litteraturen")` ;
+    ?pub :subject `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i litteraturen")))))` .
+    `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i litteraturen")))))` :prefLabel `CONCAT(STR(?label), " i litteraturen")` ;
     a :Subject .
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Litteratur" ;
         migration:mainLabel ?label .
-    ?pub :subject <http://__HOST__/subject/sc4a76e14eeb35d88fa9f97ff9d2be9c0> ;
+    ?pub :subject <http://data.deichman.no/subject/sc4a76e14eeb35d88fa9f97ff9d2be9c0> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
         a :Publication .
@@ -66,7 +66,7 @@ INSERT {
 # 3) Konstruer emner for tema i barnelitteraturen
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 
 WITH <http://deichman.no/migration>
@@ -78,14 +78,14 @@ DELETE {
 }
 
 INSERT {
-    ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i barnelitteraturen")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i barnelitteraturen")))))` :prefLabel `CONCAT(STR(?label), " i barnelitteraturen")` ;
+    ?pub :subject `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i barnelitteraturen")))))` .
+    `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i barnelitteraturen")))))` :prefLabel `CONCAT(STR(?label), " i barnelitteraturen")` ;
     a :Subject .
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Barnelitteratur" ;
         migration:mainLabel ?label .
-    ?pub :subject <http://__HOST__/subject/sf00b6852e4a3a5858afdb394e75504fb> ;
+    ?pub :subject <http://data.deichman.no/subject/sf00b6852e4a3a5858afdb394e75504fb> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
         a :Publication .
@@ -98,7 +98,7 @@ INSERT {
 # 4) Konstruer emner for tema i film
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 
 WITH <http://deichman.no/migration>
@@ -110,14 +110,14 @@ DELETE {
 }
 
 INSERT {
-    ?pub :subject `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i film")))))` .
-    `IRI(CONCAT(STR("http://__HOST__/subject/s"), STR(MD5(CONCAT(STR(?label), " i film")))))` :prefLabel `CONCAT(STR(?label), " i film")` ;
+    ?pub :subject `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i film")))))` .
+    `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(CONCAT(STR(?label), " i film")))))` :prefLabel `CONCAT(STR(?label), " i film")` ;
     a :Subject .
 } WHERE {
     ?aut migration:specification "Tema" ;
         migration:subdivision "Film" ;
         migration:mainLabel ?label .
-    ?pub :subject <http://__HOST__/subject/sbae9023301664a3ea829a63c67d6f882> ;
+    ?pub :subject <http://data.deichman.no/subject/sbae9023301664a3ea829a63c67d6f882> ;
         migration:subjectAuthority ?aut ;
         :subject ?sub ;
         a :Publication .
@@ -130,7 +130,7 @@ INSERT {
 # 5) Create places with specification from subdivisions
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 
 WITH <http://deichman.no/migration>
@@ -138,11 +138,11 @@ WITH <http://deichman.no/migration>
 MODIFY
 
 DELETE {
-    ?doc :subject `IRI(CONCAT("http://__HOST__/subject/s", MD5(?label)))` ;
-        :subject `IRI(CONCAT("http://__HOST__/subject/s", MD5(?spec)))` .
+    ?doc :subject `IRI(CONCAT("http://data.deichman.no/subject/s", MD5(?label)))` ;
+        :subject `IRI(CONCAT("http://data.deichman.no/subject/s", MD5(?spec)))` .
 }
 
-INSERT { ?doc :subject `IRI(CONCAT("http://__HOST__/place/g", MD5(CONCAT(?label, "_", ?spec))))` . }
+INSERT { ?doc :subject `IRI(CONCAT("http://data.deichman.no/place/g", MD5(CONCAT(?label, "_", ?spec))))` . }
 
 WHERE {
     ?geoSubAuth migration:specification ?spec ;
@@ -161,7 +161,7 @@ WHERE {
 # 6) Update places with specification registered as concepts
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
 
@@ -170,7 +170,7 @@ WITH <http://deichman.no/migration>
 MODIFY
 
 DELETE { ?doc :subject ?subject . }
-INSERT { ?doc :subject `iri(CONCAT("http://__HOST__/place/g", MD5(CONCAT(?label, "_", ?spec))))` . }
+INSERT { ?doc :subject `iri(CONCAT("http://data.deichman.no/place/g", MD5(CONCAT(?label, "_", ?spec))))` . }
 
 WHERE {
     ?geoSubAuth migration:specification ?spec ;
@@ -191,7 +191,7 @@ WHERE {
 # 7) Update other places registered as concepts
 
 SPARQL
-PREFIX : <http://__HOST__/ontology#>
+PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
 PREFIX duo: <http://data.deichman.no/duo#>
 
@@ -200,7 +200,7 @@ WITH <http://deichman.no/migration>
 MODIFY
 
 DELETE { ?doc :subject ?subject . }
-INSERT { ?doc :subject `iri(CONCAT("http://__HOST__/place/g", MD5(?label)))` . }
+INSERT { ?doc :subject `iri(CONCAT("http://data.deichman.no/place/g", MD5(?label)))` . }
 
 WHERE {
     ?geoAuth a migration:SubjectAuthorityM651 ;
