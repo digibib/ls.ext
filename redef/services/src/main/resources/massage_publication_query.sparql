@@ -44,15 +44,12 @@ CONSTRUCT {
                deich:deathYear ?contribAgentDeathYear .
 }
 WHERE {
-  <__PUBLICATIONURI__> a deich:Publication ;
-       deich:publicationOf ?work ;
-       deich:recordID ?recordId .
-
-  BIND(str(?work) AS ?workUri )
-
   # 1. Information from publication:
 
-  { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
+        { <__PUBLICATIONURI__> deich:recordID ?recordId ;
+            deich:publicationOf ?work .
+            BIND(str(?work) AS ?workUri ) }
+  UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO . BIND(str(?languageO) AS ?language) }
@@ -112,12 +109,9 @@ WHERE {
 
   # 3. Information from work:
 
-  UNION { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
-  UNION { ?work deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
-  UNION {
-      ?work deich:hasClassification ?classEntry .
-      ?classEntry deich:hasClassificationNumber ?dewey .
-  }
+  UNION { ?work a deich:Work ; deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
+  UNION { ?work a deich:Work ; deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
+  UNION { ?work a deich:Work ; deich:hasClassification ?classEntry . ?classEntry deich:hasClassificationNumber ?dewey .   }
 
   UNION {
     {
