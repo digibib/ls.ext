@@ -354,6 +354,7 @@ public final class SPARQLQueryBuilder {
     public Query constructInformationForMARC(XURI publication) {
         String q = String.format(""
                 + "PREFIX deichman: <%1$s>\n"
+                + "PREFIX raw: <http://data.deichman.no/raw#>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "CONSTRUCT {\n"
                 + "  ?pub deichman:mainTitle ?mainTitle ;\n"
@@ -379,9 +380,11 @@ public final class SPARQLQueryBuilder {
                 + "}\n"
                 + "WHERE {\n"
                 + "  BIND(<%2$s> AS ?pub)\n"
-                + "  ?pub deichman:mainTitle ?mainTitle .\n"
-                + "  { ?pub deichman:subtitle ?subtitle }\n"
-                + "  UNION { ?pub deichman:partTitle ?partTitle }\n"
+                + "  ?pub deichman:mainTitle ?mainTitleUntranscribed .\n"
+                + "  OPTIONAL { ?pub deichman:subtitle ?subtitleUntranscribed }\n"
+                + "  OPTIONAL { ?pub raw:transcribedTitle ?mainTitleTranscribed }\n"
+                + "  OPTIONAL { ?pub raw:transcribedSubtitle ?subtitleTranscribed }\n"
+                + "  { ?pub deichman:partTitle ?partTitle }\n"
                 + "  UNION { ?pub deichman:partNumber ?partNumber }\n"
                 + "  UNION { ?pub deichman:isbn ?isbn }\n"
                 + "  UNION { ?pub deichman:publicationYear ?publicationYear }\n"
@@ -432,7 +435,9 @@ public final class SPARQLQueryBuilder {
                 + "  UNION { ?work deichman:literaryForm ?literaryForm .\n"
                 + "    ?literaryForm rdfs:label ?literaryFormLabel .\n"
                 + "    FILTER(lang(?literaryFormLabel) = \"no\")\n"
-                + "  }"
+                + "  }\n"
+                + "  BIND(IF(BOUND(?mainTitleTranscribed), ?mainTitleTranscribed, ?mainTitleUntranscribed) AS ?mainTitle)\n"
+                + "  BIND(IF(BOUND(?subtitleTranscribed), ?subtitleTranscribed, ?subtitleUntranscribed) AS ?subtitle)\n"
                 + "}", baseURI.ontology(), publication.getUri());
         return QueryFactory.create(q);
     }
