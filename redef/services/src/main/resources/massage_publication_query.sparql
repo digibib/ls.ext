@@ -3,7 +3,7 @@ PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
 
 CONSTRUCT {
-        ?pub a deich:Publication ;
+        <__PUBLICATIONURI__>a deich:Publication ;
                deich:mainTitle ?pubMainTitle ;
                deich:partTitle ?pubPartTitle ;
                deich:norwegianTitle ?norwegianTitle ;
@@ -44,9 +44,7 @@ CONSTRUCT {
                deich:deathYear ?contribAgentDeathYear .
 }
 WHERE {
-  BIND(uri("__PUBLICATIONURI__") AS ?pub)
-
-  ?pub a deich:Publication ;
+  <__PUBLICATIONURI__> a deich:Publication ;
        deich:publicationOf ?work ;
        deich:recordID ?recordId .
 
@@ -54,21 +52,21 @@ WHERE {
 
   # 1. Information from publication:
 
-  { ?pub deich:mainTitle ?pubMainTitle }
-  UNION { ?pub deich:partTitle ?pubPartTitle }
-  UNION { ?pub deich:hasHoldingBranch ?branch }
-  UNION { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
-  UNION { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
-  UNION { ?pub deich:format ?formatURI .
+  { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
+  UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
+  UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
+  UNION { <__PUBLICATIONURI__> deich:language ?languageO . BIND(str(?languageO) AS ?language) }
+  UNION { <__PUBLICATIONURI__> deich:format ?formatO . BIND(str(?formatO) AS ?format) }
+  UNION { <__PUBLICATIONURI__> deich:format ?formatURI .
           ?formatURI rdfs:label ?formatNoLang .
           BIND(str(?formatNoLang) AS ?formatNo)
           FILTER(lang(?formatNoLang) = "no") }
-  UNION { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
-  UNION { ?pub deich:hasImage ?img }
-  UNION { ?pub deich:abstract ?abstract }
-  UNION { ?pub deich:ageLimit ?maybeAgeLimit . BIND(IF(BOUND(?maybeAgeLimit), ?maybeAgeLimit, "0") AS ?ageLimit) }
+  UNION { <__PUBLICATIONURI__> deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
+  UNION { <__PUBLICATIONURI__> deich:hasImage ?img }
+  UNION { <__PUBLICATIONURI__> deich:abstract ?abstract }
+  UNION { <__PUBLICATIONURI__> deich:ageLimit ?maybeAgeLimit . BIND(IF(BOUND(?maybeAgeLimit), ?maybeAgeLimit, "0") AS ?ageLimit) }
 
-  UNION { ?pub deich:inSerial ?serialBnode .
+  UNION { <__PUBLICATIONURI__> deich:inSerial ?serialBnode .
           ?serialBnode deich:serial ?serial .
           ?serial deich:mainTitle ?seriesTitle . }
 
@@ -154,7 +152,7 @@ WHERE {
   # 4. Information from contributions on both publication and work:
 
     UNION {
-      { ?pub deich:contributor ?contrib } UNION { ?work deich:contributor ?contrib }
+      { <__PUBLICATIONURI__> deich:contributor ?contrib } UNION { ?work deich:contributor ?contrib }
         ?contrib a deich:Contribution ;
             deich:agent ?contribAgent ;
             deich:role ?contribRoleURI .
