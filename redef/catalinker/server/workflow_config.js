@@ -594,6 +594,10 @@ module.exports = (app) => {
                   }
                 ]
               }
+            },
+            {
+              rdfProperty: 'specification',
+              type: 'input-string-large'
             }
           ],
           nextStep: {

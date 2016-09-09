@@ -180,7 +180,7 @@
 :specification a rdfs:Property ;
   rdfs:label "Specification"@en ;
   rdfs:label "Forklarende tilføyelse"@no ;
-  rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument, :Event;
+  rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument, :Event, :Publication ;
   rdfs:range xsd:string .
 
 # ToDo: Fjernes
