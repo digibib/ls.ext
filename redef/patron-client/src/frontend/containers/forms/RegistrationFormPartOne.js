@@ -1,6 +1,7 @@
-import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
+import React, { PropTypes, createElement } from 'react'
+import { reduxForm, Field } from 'redux-form'
 import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
@@ -9,12 +10,14 @@ import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
-import domOnlyProps from '../../utils/domOnlyProps'
 
 class RegistrationFormPartOne extends React.Component {
   constructor (props) {
     super(props)
     this.handleCancel = this.handleCancel.bind(this)
+    this.renderInput = this.renderInput.bind(this)
+    this.renderField = this.renderField.bind(this)
+    this.renderFieldWithContainerTagAndOptionalHeader = this.renderFieldWithContainerTagAndOptionalHeader.bind(this)
   }
 
   handleCancel (event) {
@@ -66,9 +69,34 @@ class RegistrationFormPartOne extends React.Component {
     )
   }
 
+  renderFieldWithContainerTagAndOptionalHeader (tag, className, fieldName, fieldType, additionalHeaderTag, additionalHeaderMessage) {
+    let formattedHeaderMessage
+    if (additionalHeaderTag && additionalHeaderMessage) {
+      formattedHeaderMessage = <FormattedMessage {...messages[ additionalHeaderMessage ]} />
+    }
+    return createElement(tag, { className: className },
+      additionalHeaderTag && additionalHeaderMessage ? createElement(additionalHeaderTag, {}, formattedHeaderMessage) : null,
+      this.renderField(fieldName, fieldType))
+  }
+
+  renderField (name, type) {
+    return <Field name={name} type={type} id={name} component={this.renderInput} />
+  }
+
+  renderInput (field) {
+    return (
+      <div>
+        <h4><FormattedMessage {...messages[ field.name ]} /></h4>
+        <input {...field.input} type={field.type} name={field.name} id={field.name} />
+        <label htmlFor={field.name}><FormattedMessage {...messages[ field.name ]} /></label>
+        { this.getValidator(field) }
+      </div>
+    )
+  }
+
   getValidator (field) {
-    if (field.touched && field.error) {
-      return <div style={{ color: 'red' }}><ValidationMessage message={field.error} /></div>
+    if (field.meta.touched && field.meta.error) {
+      return <div style={{ color: 'red' }}><ValidationMessage message={field.meta.error} /></div>
     } else {
       return <div>&nbsp;</div>
     }
@@ -83,50 +111,20 @@ class RegistrationFormPartOne extends React.Component {
   }
 
   render () {
-    const {
-      fields: {
-        firstName, lastName, day, month, year, ssn
-      }, submitting
-    } = this.props
+    const { submitting } = this.props
+
     return (
       <form onSubmit={this.props.handleSubmit(this.props.registrationActions.checkForExistingUser)}>
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
-          <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
-          <span className="display-inline">
-                  <h4><FormattedMessage {...messages.firstName} /></h4>
-                  <input name="firstname" type="text" id="firstname" {...domOnlyProps(firstName)} />
-                  <label htmlFor="name"><FormattedMessage {...messages.firstName} /></label>
-            {this.getValidator(firstName)}
-                </span>
-          <span className="display-inline">
-                  <h4><FormattedMessage {...messages.lastName} /></h4>
-                  <input name="lastname" type="text" id="lastname" {...domOnlyProps(lastName)} />
-                  <label htmlFor="lastname"><FormattedMessage {...messages.lastName} /></label>
-            {this.getValidator(lastName)}
-                </span>
+          {this.renderFieldWithContainerTagAndOptionalHeader('span', 'display-inline', 'firstName', 'text', 'h1', 'registerAsLoaner')}
+          {this.renderFieldWithContainerTagAndOptionalHeader('span', 'display-inline', 'lastName', 'text')}
         </fieldset>
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.personInfoLegend} /></legend>
           <div className="date-of-birth">
-            <h2><FormattedMessage {...messages.birthdate} /></h2>
-            <div className="item">
-              <h4><FormattedMessage {...messages.day} /></h4>
-              <input name="day" type="number" id="day" {...domOnlyProps(day)} />
-              <label htmlFor="day"><FormattedMessage {...messages.day} /></label>
-              {this.getValidator(day)}
-            </div>
-            <div className="item">
-              <h4><FormattedMessage {...messages.month} /></h4>
-              <input name="month" type="number" id="month" {...domOnlyProps(month)} />
-              <label htmlFor="month"><FormattedMessage {...messages.month} /></label>
-              {this.getValidator(month)}
-            </div>
-            <div className="item">
-              <h4><FormattedMessage {...messages.year} /></h4>
-              <input name="year" type="number" id="year" {...domOnlyProps(year)} />
-              <label htmlFor="year"><FormattedMessage {...messages.year} /></label>
-              {this.getValidator(year)}
-            </div>
+            {this.renderFieldWithContainerTagAndOptionalHeader('div', 'item', 'day', 'number', 'h2', 'birthdate')}
+            {this.renderFieldWithContainerTagAndOptionalHeader('div', 'item', 'month', 'number')}
+            {this.renderFieldWithContainerTagAndOptionalHeader('div', 'item', 'year', 'number')}
           </div>
           <div className="ssn-info">
             <h3><a onClick={this.props.registrationActions.showSSNInfo}
@@ -134,16 +132,9 @@ class RegistrationFormPartOne extends React.Component {
             </h3>
             {this.props.showSSNInfo ? this.renderSSNInfo() : ''}
           </div>
-          <span className="display-inline">
-                  <h2><FormattedMessage {...messages.ssnHeader} /></h2>
-                  <h4><FormattedMessage {...messages.ssnSpec} /></h4>
-                  <input name="ssn" type="text" id="ssn" {...domOnlyProps(ssn)} />
-                  <label htmlFor="ssn"><FormattedMessage {...messages.ssnLabel} /></label>
-            {this.getValidator(ssn)}
-                </span>
+          {this.renderFieldWithContainerTagAndOptionalHeader('span', 'display-inline', 'ssn', 'number', 'h2', 'ssnHeader')}
           {this.props.isCheckingForExistingUser ? this.renderCheckingForExistingUser() : ''}
           {/* TODO: also handle all fields empty */}
-
           <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
                   data-automation-id="check_existing_user_button">
             <FormattedMessage {...messages.checkForExistingUser} />
@@ -239,7 +230,7 @@ const messages = defineMessages({
     description: 'Header for input field social security number',
     defaultMessage: 'ID-number'
   },
-  ssnSpec: {
+  ssn: {
     id: 'RegistrationFormPartOne.ssnSpec',
     description: 'Specification of social security number',
     defaultMessage: 'Personnr./D-nr./DUF-nr'
@@ -265,7 +256,7 @@ RegistrationFormPartOne.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
   registrationActions: PropTypes.object.isRequired,
-  fields: PropTypes.object.isRequired,
+  fields: PropTypes.object,
   handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
   asyncValidating: PropTypes.oneOfType([
@@ -294,7 +285,8 @@ function mapStateToProps (state) {
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess,
     checkForExistingUserFailure: state.registration.checkForExistingUserFailure,
     registrationError: state.registration.registrationError,
-    initialValues: {}
+    initialValues: {},
+    fields: state.form.registrationPartOne ? state.form.registrationPartOne : {}
   }
 }
 
@@ -306,17 +298,21 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const intlRegistrationFormPartOne = injectIntl(RegistrationFormPartOne)
-export { intlRegistrationFormPartOne as RegistrationFormPartOne }
+let intlRegistrationFormPartOne = injectIntl(RegistrationFormPartOne)
 
-export default reduxForm(
+intlRegistrationFormPartOne = reduxForm(
   {
     form: 'registrationPartOne',
-    fields: Object.keys(fields),
     asyncValidate,
     asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
     validate: validator(fields)
-  },
+  })(intlRegistrationFormPartOne)
+
+intlRegistrationFormPartOne = connect(
   mapStateToProps,
   mapDispatchToProps
 )(intlRegistrationFormPartOne)
+
+export { intlRegistrationFormPartOne as RegistrationFormPartOne }
+
+export default intlRegistrationFormPartOne

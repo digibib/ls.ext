@@ -153,10 +153,13 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const intlRegistrationModal = injectIntl(RegistrationModal)
-export { intlRegistrationModal as RegistrationModal }
+let intlRegistrationModal = injectIntl(RegistrationModal)
 
-export default connect(
+intlRegistrationModal = connect(
   mapStateToProps,
   mapDispatchToProps
 )(intlRegistrationModal)
+
+export { intlRegistrationModal as RegistrationModal }
+
+export default intlRegistrationModal

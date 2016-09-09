@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
+import { reduxForm, Field } from 'redux-form'
 import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
@@ -10,7 +11,6 @@ import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartTwo'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
-import domOnlyProps from '../../utils/domOnlyProps'
 
 class RegistrationFormPartTwo extends React.Component {
   constructor (props) {
@@ -20,6 +20,7 @@ class RegistrationFormPartTwo extends React.Component {
     this.handleAcceptTerms = this.handleAcceptTerms.bind(this)
     this.handleRegistration = this.handleRegistration.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.renderInput = this.renderInput.bind(this)
   }
 
   handleCheckForExistingUser () {
@@ -44,11 +45,20 @@ class RegistrationFormPartTwo extends React.Component {
   }
 
   getValidator (field) {
-    if (field.touched && field.error) {
-      return <div style={{ color: 'red' }}><ValidationMessage message={field.error} /></div>
+    if (field.meta.touched && field.meta.error) {
+      return <div style={{ color: 'red' }}><ValidationMessage message={field.meta.error} /></div>
     } else {
       return <div>&nbsp;</div>
     }
+  }
+
+  renderInput (field) {
+    return (
+      <div>
+        <input {...field.input} type={field.type} />
+        { this.getValidator(field) }
+      </div>
+    )
   }
 
   hasInvalidFormFields () {
@@ -60,53 +70,73 @@ class RegistrationFormPartTwo extends React.Component {
   }
 
   render () {
-    const {
-      fields: {
-        email, mobile, address, zipcode, city, country, gender, pin, repeatPin, library, acceptTerms
-      }, submitting
-    } = this.props
+    const { submitting } = this.props
     return (
-      <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
+     <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
         <fieldset>
           <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
           <span className="display-inline">
           <h4><FormattedMessage {...messages.email} /></h4>
-          <input name="email" type="text" id="email" {...domOnlyProps(email)} />
+            <Field
+              name="email"
+              type="text"
+              id="email"
+              component={this.renderInput}
+            />
           <label htmlFor="email"><FormattedMessage {...messages.email} /></label>
-            {this.getValidator(email)}
         </span>
           <span className="display-inline">
           <h4><FormattedMessage {...messages.mobile} /></h4>
-          <input name="mobile" type="text" id="mobile" {...domOnlyProps(mobile)} />
+            <Field
+              name="mobile"
+              type="text"
+              id="mobile"
+              component={this.renderInput}
+            />
           <label htmlFor="mobile"><FormattedMessage {...messages.mobile} /></label>
-            {this.getValidator(mobile)}
         </span>
           <address>
             <h4><FormattedMessage {...messages.address} /></h4>
-            <input name="address" type="text" id="address" {...domOnlyProps(address)} />
+            <Field
+              name="address"
+              type="text"
+              id="address"
+              component={this.renderInput}
+            />
             <label htmlFor="address"><FormattedMessage {...messages.address} /></label>
-            {this.getValidator(address)}
             <span className="display-inline">
             <h4><FormattedMessage {...messages.zipcode} /></h4>
-            <input name="zipcode" type="text" id="zipcode" {...domOnlyProps(zipcode)} />
+              <Field
+                name="zipcode"
+                type="text"
+                id="zipcode"
+                component={this.renderInput}
+              />
             <label htmlFor="zipcode"><FormattedMessage {...messages.zipcode} /></label>
-              {this.getValidator(zipcode)}
           </span>
             <span className="display-inline">
             <h4><FormattedMessage {...messages.city} /></h4>
-            <input name="city" type="text" id="city" {...domOnlyProps(city)} />
+              <Field
+                name="city"
+                type="text"
+                id="city"
+                component={this.renderInput}
+              />
             <label htmlFor="city"><FormattedMessage {...messages.city} /></label>
-              {this.getValidator(city)}
           </span>
             <h4><FormattedMessage {...messages.country} /></h4>
             <label htmlFor="country"><FormattedMessage {...messages.country} /></label>
-            <input name="country" type="text" id="country" {...domOnlyProps(country)} />
-            {this.getValidator(country)}
+            <Field
+              name="country"
+              type="text"
+              id="country"
+              component={this.renderInput}
+            />
           </address>
 
           <h4><FormattedMessage {...messages.gender} /></h4>
           <div className="select-container">
-            <select data-automation-id="gender_selection" name="gender" {...gender}>
+            <select data-automation-id="gender_selection" name="gender" >
               <option value="male">{this.props.intl.formatMessage({ ...messages.male })}</option>
               <option value="female">{this.props.intl.formatMessage({ ...messages.female })}</option>
             </select>
@@ -117,23 +147,39 @@ class RegistrationFormPartTwo extends React.Component {
         <fieldset>
           <legend><FormattedMessage {...messages.personSettingsLegend} /></legend>
           <h2><FormattedMessage {...messages.choosePin} /></h2>
-          <input data-automation-id="choose_pin" name="pin" type="password" id="pin" {...domOnlyProps(pin)} />
+          <Field
+            data-automation-id="choose_pin"
+            name="pin"
+            type="password"
+            id="pin"
+            component={this.renderInput}
+          />
           <label htmlFor="pin"><FormattedMessage {...messages.choosePin} /></label>
-          <input data-automation-id="repeat_pin" name="repeatPin" type="password" id="repeatPin" {...domOnlyProps(repeatPin)} />
+          <Field
+            data-automation-id="repeat_pin"
+            name="repeatPin"
+            type="password"
+            id="repeatPin"
+            component={this.renderInput}
+          />
           <label htmlFor="repeatPin"><FormattedMessage {...messages.repeatPin} /></label>
-          {this.getValidator(pin)}
-          {this.getValidator(repeatPin)}
           <h2><FormattedMessage {...messages.chooseBranch} /></h2>
           <div className="select-container">
-            <Libraries libraries={this.props.libraries} selectProps={library} />
+            <Libraries libraries={this.props.libraries} />
           </div>
           <div className="terms_and_conditions">
-            <input data-automation-id="accept_terms" onClick={this.handleAcceptTerms} id="acceptTerms" type="checkbox" {...domOnlyProps(acceptTerms)} />
+            <Field
+              name="acceptTerms"
+              data-automation-id="accept_terms"
+              onClick={this.handleAcceptTerms}
+              id="acceptTerms"
+              type="checkbox"
+              component={this.renderInput}
+            />
             <label htmlFor="acceptTerms"><span>{/* Helper for checkbox styling */}</span></label>
-              <a href="/terms" title="termslink" target="_blank">
-                <FormattedMessage {...messages.acceptTermsLink} />
-              </a>
-              {this.getValidator(acceptTerms)}
+            <a href="/terms" title="termslink" target="_blank">
+              <FormattedMessage {...messages.acceptTermsLink} />
+            </a>
           </div>
           <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
                   data-automation-id="register_button">
@@ -282,7 +328,8 @@ function mapStateToProps (state) {
     acceptTerms: state.registration.acceptTerms,
     initialValues: {
       library: Object.keys(state.application.libraries)[ 0 ] // Makes sure this field has a value even if it is not touched,
-    }
+    },
+    fields: state.form.registrationPartTwo ? state.form.registrationPartTwo : {}
   }
 }
 
@@ -294,17 +341,21 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const intlRegistrationFormPartTwo = injectIntl(RegistrationFormPartTwo)
-export { intlRegistrationFormPartTwo as RegistrationFormPartTwo }
+let intlRegistrationFormPartTwo = injectIntl(RegistrationFormPartTwo)
 
-export default reduxForm(
+intlRegistrationFormPartTwo = reduxForm(
   {
     form: 'registrationPartTwo',
-    fields: Object.keys(fields),
     asyncValidate,
     asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
     validate: validator(fields)
-  },
+  })(intlRegistrationFormPartTwo)
+
+intlRegistrationFormPartTwo = connect(
   mapStateToProps,
   mapDispatchToProps
 )(intlRegistrationFormPartTwo)
+
+export { intlRegistrationFormPartTwo as RegistrationFormPartTwo }
+
+export default intlRegistrationFormPartTwo

@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react'
 
 import ClickableElement from '../components/ClickableElement'
 
-const ShowFilteredPublicationsLabel = ({ open, showingRestLabel, toggleParameterValue, mediaType }) => {
-  return (
+const ShowFilteredPublicationsLabel = ({ open, showingRestLabel, toggleParameterValue, mediaType }) => (
     <ClickableElement onClickAction={toggleParameterValue} onClickArguments={[ 'showAllResults', mediaType ]}>
       <div>
         <p style={{ fontSize: '1.1em', marginBottom: '0', color: 'red', textAlign: 'center', fontWeight: 'bolder' }}>{showingRestLabel}</p>
@@ -12,9 +11,8 @@ const ShowFilteredPublicationsLabel = ({ open, showingRestLabel, toggleParameter
       </div>
     </ClickableElement>
   )
-}
 
-ShowFilteredPublicationsLabel.PropTypes = {
+ShowFilteredPublicationsLabel.propTypes = {
   showingRestLabel: PropTypes.object.isRequired,
   toggleParameterValue: PropTypes.func.isRequired,
   mediaType: PropTypes.string.isRequired,

@@ -57,22 +57,22 @@ class Publications extends React.Component {
 
   renderPublications (publications, publicationsPerRow) {
     const publicationsCopy = [ ...publications ]
-    var filteredPublications = []
-    var filteredPublicationsRest = []
+    let filteredPublications = []
+    let filteredPublicationsRest = []
     const filters = getCategorizedFilters(this.props.locationQuery)
     if (filters.branch || filters.language || filters.format || filters.audience) {
       publicationsCopy.forEach(publication => {
-        var formats = filters.format
-        var languages = filters.language
-        var audiences = filters.audience
-        var branches = []
+        const formats = filters.format
+        const languages = filters.language
+        const audiences = filters.audience
+        let branches = []
         if (filters.branch) {
           filters.branch.forEach((branch) => {
             branches.push(this.props.libraries[ branch ])
           })
         }
-        var branchesFromPublication = []
-        for (var i = 0; i < publication.items.length; i++) {
+        let branchesFromPublication = []
+        for (let i = 0; i < publication.items.length; i++) {
           branchesFromPublication.push(publication.items[ i ].branch)
         }
         ((formats ? this.isArraysIntersecting(formats, publication.formats) : true) && (languages ? this.isArraysIntersecting(languages, publication.languages) : true) && (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true) && (audiences ? this.isArraysIntersecting(audiences, this.props.audiences) : true))
@@ -94,8 +94,16 @@ class Publications extends React.Component {
         {this.generatePublicationRows(publicationRows)}
         {(() => {
           if (publicationRestRows.length > 0) {
-            const mediaType = Constants.mediaTypeIcons[ publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ] ]
-            const mediaTypeOutput = this.props.intl.formatMessage({ id: publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ] })
+            console.log('restrows', publicationRestRows[ 0 ])
+            let mediaType
+            let mediaTypeOutput
+            if (publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ]) {
+              mediaType = Constants.mediaTypeIcons[ publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ] ]
+              mediaTypeOutput = this.props.intl.formatMessage({ id: publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ] })
+            } else {
+              mediaType = 'uncategorized'
+              mediaTypeOutput = this.props.intl.formatMessage({ id: messages.noMediaType.id })
+            }
             let showingRestLabel = <FormattedMessage {...messages.showRestOfPublications}
                                                      values={{ mediaType: mediaTypeOutput }} />
             const output = []
@@ -105,8 +113,10 @@ class Publications extends React.Component {
               showingRestLabel =
                 <FormattedMessage {...messages.hideRestOfPublications} values={{ mediaType: mediaTypeOutput }} />
             }
-            output.push(<ShowFilteredPublicationsLabel open={showAll.includes(mediaType)} showingRestLabel={showingRestLabel} mediaType={mediaType}
-                                                       toggleParameterValue={this.props.toggleParameterValue} />)
+            output.push(<ShowFilteredPublicationsLabel
+              open={showAll.includes(mediaType)}
+              showingRestLabel={showingRestLabel} mediaType={mediaType}
+              toggleParameterValue={this.props.toggleParameterValue} />)
             return output
           }
         })()}

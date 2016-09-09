@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, reset } from 'redux-form'
+import { reduxForm, reset, Field } from 'redux-form'
 import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import domOnlyProps from '../../utils/domOnlyProps'
 
 import * as ProfileActions from '../../actions/ProfileActions'
 
@@ -10,20 +10,11 @@ class ChangePinForm extends React.Component {
   constructor (props) {
     super(props)
     this.handleChangePin = this.handleChangePin.bind(this)
+    this.renderInput = this.renderInput.bind(this)
   }
 
   handleChangePin () {
-    this.props.profileActions.changePassword(
-      this.currentPinField.value,
-      this.pinField.value,
-      reset('changePin')
-    )
-  }
-
-  getValidator (field) {
-    if (field && field.touched && field.error) {
-      return <div style={{ color: 'red' }}>{this.props.intl.formatMessage(field.error)}</div>
-    }
+    this.props.profileActions.changePasswordFromForm(reset('changePin'))
   }
 
   hasInvalidFormFields () {
@@ -39,11 +30,29 @@ class ChangePinForm extends React.Component {
     }
   }
 
+  renderField (name) {
+    return <Field name={name} component={this.renderInput} />
+  }
+
+  renderInput (field) {
+    return (
+      <div>
+        <h2><FormattedMessage {...messages[ field.name ]} /></h2>
+        <input {...field.input} id={field.name} name={field.name} type="password" />
+        <label htmlFor={field.name}><FormattedMessage {...messages[ field.name ]} /></label>
+        { this.getValidator(field) }
+      </div>
+    )
+  }
+
+  getValidator (field) {
+    if (field && field.meta.touched && field.meta.error) {
+      return <div style={{ color: 'red' }}>{this.props.intl.formatMessage(field.meta.error)}</div>
+    }
+  }
+
   render () {
     const {
-      fields: {
-        currentPin, newPin, repeatPin
-      },
       submitting,
       handleSubmit,
       changePasswordSuccess
@@ -62,22 +71,10 @@ class ChangePinForm extends React.Component {
             </div>
 
             <div className="change-pin-fields">
-              <h2><FormattedMessage {...messages.currentPin} /></h2>
-              <input type="password" name="current-pin" id="current-pin"
-                     ref={e => this.currentPinField = e} {...domOnlyProps(currentPin)} />
-              <label htmlFor="current-pin"> <FormattedMessage {...messages.currentPin} /></label>
+              {this.renderField('currentPin')}
               {this.renderError()}
-              {this.getValidator(currentPin)}
-              <h2><FormattedMessage {...messages.newPin} /></h2>
-              <input type="password" name="new-pin" id="new-pin"
-                     ref={e => this.pinField = e} {...domOnlyProps(newPin)} />
-              <label htmlFor="new-pin"><FormattedMessage {...messages.repeatPin} /></label>
-              {this.getValidator(newPin)}
-              <h2><FormattedMessage {...messages.repeatPin} /></h2>
-              <input type="password" name="repeat-pin" id="repeat-pin"
-                     ref={e => this.repeatPinField = e} {...domOnlyProps(repeatPin)} />
-              <label htmlFor="repeat-pin"><FormattedMessage {...messages.repeatPin} /></label>
-              {this.getValidator(repeatPin)}
+              {this.renderField('newPin')}
+              {this.renderField('repeatPin')}
             </div>
           </section>
           <footer>
@@ -165,7 +162,8 @@ function mapStateToProps (state) {
   return {
     changePasswordError: state.profile.changePasswordError,
     changePasswordSuccess: state.profile.changePasswordSuccess,
-    initialValues: {}
+    initialValues: {},
+    fields: state.form.changePin ? state.form.changePin : {}
   }
 }
 
@@ -176,8 +174,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const intlChangePinForm = injectIntl(ChangePinForm)
-export { intlChangePinForm as ChangePinForm }
+let intlChangePinForm = injectIntl(ChangePinForm)
 
 const validate = (values, props) => {
   const errors = {}
@@ -196,12 +193,18 @@ const validate = (values, props) => {
   return errors
 }
 
-export default reduxForm(
+intlChangePinForm = reduxForm(
   {
     form: 'changePin',
-    fields: [ 'currentPin', 'repeatPin', 'newPin' ],
     validate
-  },
+  }
+)(intlChangePinForm)
+
+intlChangePinForm = connect(
   mapStateToProps,
   mapDispatchToProps
 )(intlChangePinForm)
+
+export { intlChangePinForm as ChangePinForm }
+
+export default intlChangePinForm

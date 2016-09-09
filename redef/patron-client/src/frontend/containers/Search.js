@@ -56,17 +56,18 @@ class Search extends React.Component {
         <section className="pagination-area"
                  data-automation-id="search-results-pagination">
           <nav aria-label={this.props.intl.formatMessage(messages.paginationLabel)}>
-            <ReactPaginate previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
-                           nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
-                           breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
-                           forceSelected={this.props.location.query.page - 1 || 0}
-                           marginPagesDisplayed={1}
-                           pageRangeDisplayed={5}
-                           pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
-                           clickCallback={this.handlePageClick}
-                           containerClassName={'pagination'}
-                           subContainerClassName={'pages pagination'}
-                           activeClassName={'active'} />
+            <ReactPaginate
+              previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
+              nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
+              breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
+              forceSelected={this.props.location.query.page - 1 || 0}
+              marginPagesDisplayed={1}
+              pageRangeDisplayed={5}
+              pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
+              clickCallback={this.handlePageClick}
+              containerClassName={'pagination'}
+              subContainerClassName={'pages pagination'}
+              activeClassName={'active'} />
           </nav>
         </section>
       )
@@ -79,13 +80,12 @@ class Search extends React.Component {
         <div className="row">
           {this.props.locationQuery.query
             ? (<div className="search-results-header">
-              <SearchResultsText totalHits={this.props.totalHits}
-                                 totalHitsPublications={this.props.totalHitsPublications}
-                                 locationQuery={this.props.locationQuery}
-                                 isSearching={this.props.isSearching} />
-              <SearchFilterBox query={this.props.locationQuery}
-                               toggleFilter={this.props.searchFilterActions.toggleFilter} />
-            </div>
+            <SearchResultsText totalHits={this.props.totalHits}
+                               totalHitsPublications={this.props.totalHitsPublications}
+                               locationQuery={this.props.locationQuery}
+                               isSearching={this.props.isSearching} />
+            <SearchFilterBox query={this.props.locationQuery}
+                             toggleFilter={this.props.searchFilterActions.toggleFilter} />
             {this.props.totalHits > 0
               ? (<div className="search-sorting patron-placeholder">
               <p>Sorter treff på</p>

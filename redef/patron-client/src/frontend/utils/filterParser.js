@@ -4,7 +4,7 @@ import Constants from '../constants/Constants'
 
 export function getCategorizedFilters (query) {
   const filters = getFiltersFromQuery(query)
-  var categorizedFilters = []
+  let categorizedFilters = []
   filters.forEach(filter => {
     const filterType = filter.id.split('_')[ 0 ]
     if (categorizedFilters[ filterType ]) {
@@ -17,7 +17,7 @@ export function getCategorizedFilters (query) {
 }
 
 export function getFiltersFromQuery (query) {
-  var paramsToUse
+  let paramsToUse
   if (query.back) {
     const back = query.back
     const backQuery = back.split('?')[ 1 ]
@@ -30,7 +30,7 @@ export function getFiltersFromQuery (query) {
 }
 
 export function parseFilters (filters) {
-  var parsedFilters = []
+  let parsedFilters = []
   if (filters) {
     if (!Array.isArray(filters)) {
       filters = [ filters ]

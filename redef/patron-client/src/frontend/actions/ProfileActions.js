@@ -255,6 +255,14 @@ export function changePasswordSuccess () {
   }
 }
 
+export function changePasswordFromForm (successAction) {
+  return (dispatch, getState) => {
+    const {changePin: {values: {currentPin, newPin}}} = getState().form
+    console.log('pins', currentPin, newPin)
+    dispatch(changePassword(currentPin, newPin, successAction))
+  }
+}
+
 export function changePassword (currentPassword, newPassword, successAction) {
   const url = '/api/v1/profile/settings/password'
   return dispatch => {

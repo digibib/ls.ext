@@ -43,17 +43,19 @@ export function postRegistrationSuccess (username, password, categoryCode) {
 }
 
 export function checkForExistingUser () {
+  console.log('checkforexistinguser')
   const url = '/api/v1/checkforexistinguser'
   return (dispatch, getState) => {
-    const { registrationPartOne: { firstName, lastName, day, month, year, ssn } } = getState().form
+    const { registrationPartOne: { values: { firstName, lastName, day, month, year, ssn } } } = getState().form
     const registrationInfo = {
-      firstName: firstName.value,
-      lastName: lastName.value,
-      day: day.value,
-      month: month.value,
-      year: year.value,
-      ssn: ssn.value
+      firstName: firstName,
+      lastName: lastName,
+      day: day,
+      month: month,
+      year: year,
+      ssn: ssn
     }
+    console.log('info', registrationInfo)
     dispatch(requestCheckForExistingUser())
     return fetch(url, {
       method: 'POST',
@@ -64,6 +66,7 @@ export function checkForExistingUser () {
       body: JSON.stringify(registrationInfo)
     })
       .then(response => {
+        console.log('status', response.status)
         if (response.status === 200) {
           return response.json()
         } else if (response.status === 403) {
@@ -73,6 +76,7 @@ export function checkForExistingUser () {
         }
       })
       .then(json => {
+        console.log('json', json)
         if (json.localdb) {
           dispatch(checkForExistingUserFailure({error: 'userExistsInLocalDB'}))
         } else if (json.centraldb) {
@@ -83,13 +87,17 @@ export function checkForExistingUser () {
           dispatch(checkForExistingUserSuccess())
         }
       })
-      .catch(error => dispatch(checkForExistingUserFailure(error)))
+      .catch(error => {
+        console.log('existingUserFailure:', error)
+        dispatch(checkForExistingUserFailure(error))
+      })
   }
 }
 
 export function checkForExistingUserSuccess () {
   return dispatch => {
     dispatch(showModal(ModalComponents.REGISTRATION, { checkForExistingUser: true }))
+    console.log('dispatched showmodal')
     dispatch({ type: types.CHECK_FOR_EXISTING_USER_SUCCESS })
   }
 }
@@ -117,26 +125,26 @@ export function postRegistration (successAction) {
   const url = '/api/v1/registration'
   return (dispatch, getState) => {
     const {
-      registrationPartOne: { firstName, lastName, day, month, year, ssn },
-      registrationPartTwo: { email, mobile, address, zipcode, city, country, /* gender, */ pin, repeatPin, library }
+      registrationPartOne: { values: { firstName, lastName, day, month, year, ssn } },
+      registrationPartTwo: { values: { email, mobile, address, zipcode, city, country, /* gender, */ pin, repeatPin, library } }
     } = getState().form
     const registrationInfo = {
-      firstName: firstName.value,
-      lastName: lastName.value,
-      day: day.value,
-      month: month.value,
-      year: year.value,
-      ssn: ssn.value,
-      email: email.value,
-      mobile: mobile.value,
-      address: address.value,
-      zipcode: zipcode.value,
-      city: city.value,
-      country: country.value,
+      firstName: firstName,
+      lastName: lastName,
+      day: day,
+      month: month,
+      year: year,
+      ssn: ssn,
+      email: email,
+      mobile: mobile,
+      address: address,
+      zipcode: zipcode,
+      city: city,
+      country: country,
       /* gender: gender.value, */
-      pin: pin.value,
-      repeatPin: repeatPin.value,
-      library: library.value
+      pin: pin,
+      repeatPin: repeatPin,
+      library: library
     }
     dispatch(requestPostRegistration())
     return fetch(url, {
