@@ -8,7 +8,7 @@ format:DVD a duo:Format ;
   rdfs:label "DVD"@en .
 
 format:Blu-ray a duo:Format ;
-  duo:code "eg" ;
+  duo:code "ef" ;
   rdfs:label "Blu-ray"@no ;
   rdfs:label "Blu-ray"@en .
 
