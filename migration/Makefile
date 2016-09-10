@@ -103,8 +103,6 @@ out/done.messing_with_migrated_catalogue: out/done.migrate_catalogue_to_koha
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
 	@echo "-- Populating zebra queue"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
-	@echo "-- Starting Zebra indexer"
-	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
 	@touch out/done.messing_with_migrated_catalogue
 	@echo "-- Starting Cron"
 	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start cron'
@@ -246,8 +244,10 @@ ifdef MIGRATE_PATRONS
 	@echo "-- Setting userid=cardid"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL;"'
 	@echo "OK Done migrating loands and holds\n"
-	@touch out/done.migrate_loans
 endif
+	@echo "-- Starting Zebra indexer"
+	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
+	@touch out/done.migrate_loans
 
 ifdef MIGRATE_PATRONS
 NOCIRC=false
