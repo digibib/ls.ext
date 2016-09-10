@@ -256,7 +256,7 @@ NOCIRC=true
 endif
 verify:
 	@echo "   Verifying migration"
-	@$(MIGRATION_RUN_CMD) "verify -h=data.deichman.no -nocirc=$(NOCIRC)"
+	@$(MIGRATION_RUN_CMD) "verify -nocirc=$(NOCIRC)"
 
 reindex:
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
