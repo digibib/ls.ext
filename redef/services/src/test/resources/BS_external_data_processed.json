@@ -34,6 +34,11 @@
           "deichman:biography": {
             "@id": "http://data.deichman.no/biography#biographicalInformation"
           },
+          "deichman:hasClassification": [
+            {
+              "@id": "_:0000000"
+            }
+          ],
           "deichman:partNumber": "Andre bok",
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
@@ -82,6 +87,13 @@
           "@type": [
             "deichman:Publication"
           ]
+        },
+        {
+          "deichman:hasClassificationNumber": "839.823",
+          "deichman:hasClassificationSource": {
+            "@id": "http://data.deichman.no/classification#ddk5"
+          },
+          "@id": "_:0000000"
         },
         {
           "@type": [

@@ -117,6 +117,11 @@
             "@id": "http://data.deichman.no/contentAdaption#easyContent"
           }
         ],
+        "deichman:hasClassification": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
         "deichman:partNumber": "Book 2",
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
@@ -249,6 +254,13 @@
         "@type": [
           "deichman:Publication"
         ]
+      },
+      {
+        "deichman:hasClassificationNumber": "839.823",
+        "deichman:hasClassificationSource": {
+          "@id": "http://data.deichman.no/classification#ddk5"
+        },
+        "@id": "_:0000000"
       },
       {
         "@type": [

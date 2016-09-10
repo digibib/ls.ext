@@ -120,6 +120,14 @@ public class MARCMapper {
                     setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
                     setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
                     break;
+                case "082":
+                    getSubfieldValue(dataField, 'a').ifPresent(classificationNumber -> {
+                        Classification classification = new Classification(newBlankNodeId(), classificationNumber);
+                        setUriObject(dataField, '2', "classification", classification::setClassificationSource, ClassificationSource::translate);
+                        work.addClassification(classification);
+                        graphList.add(classification);
+                    });
+                    break;
                 case "100":
                     getSubfieldValue(dataField, 'a').ifPresent(personName -> {
                         Person person1 = setPersonDataFromDataField(dataField, new Person(newBlankNodeId(), personName));
