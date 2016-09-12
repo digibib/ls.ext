@@ -1,6 +1,7 @@
 .search-box {
   background: $greyColor;
   padding: rhythm(2);
+  border-bottom: 1px solid $mediumGreyColor;
   form {
     label {
       display: none;
@@ -11,7 +12,7 @@
       background: $white;
       border-width: 1px;
       border-style: solid;
-      border-color: #cacaca;
+      border-color: $mediumGreyColor;
       border-radius: 4px 4px;
       padding-right: 2px;
     }
@@ -52,6 +53,7 @@
   }
   .search-box {
     padding: 0 rhythm(2) rhythm(2);
+    border-bottom: none;
     form {
       label {
         position: relative;
