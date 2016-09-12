@@ -99,12 +99,6 @@ services:
     volumes:
       - "/var/lib/koha/${KOHA_INSTANCE}"
 
-  memcached:
-    container_name: memcached
-    image: "memcached:1.4.25"
-    networks:
-      - backend
-
   rfidhub:
     container_name: rfidhub
     image: "digibib/rfidhub:6d220f73e0a4a6671ed729c5e276d42edefb19f9"

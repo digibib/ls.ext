@@ -101,12 +101,6 @@ services:
     volumes:
       - "/var/lib/state"
 
-  memcached:
-    container_name: memcached
-    image: "memcached:1.4.25"
-    networks:
-      - backend
-
   smtp:
     container_name: mailrelay
     image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
