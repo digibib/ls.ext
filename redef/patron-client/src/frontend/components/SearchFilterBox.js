@@ -24,6 +24,10 @@ const getFilters = (url) => {
     return parseFilters(filters)
 }
 
+const hasFilters = (url) => {
+    return true;
+}
+
 const parseFilters = (filters) => {
     var parsedFilters = []
     if(filters){
@@ -45,17 +49,25 @@ const parseFilters = (filters) => {
     return parsedFilters
 }
 
-const SearchFilterBox = ({toggleFilter, url}) => (
-    <div>
-        <ul style={{padding: "0"}}>
-            {
-                getFilters(window.location.href).filter((filter) => filter.active).map((filter) => {
-                    return (<SearchFilterBoxItem key={filter.id} filter={filter} toggleFilter={toggleFilter}/>)
-                })
-            }
-        </ul>
-    </div>
-)
+const SearchFilterBox = ({toggleFilter, url}) => {
+    const filters = getFilters(window.location.href);
+    if( filters.length > 0 ) {
+        return (
+            <div className="search-results-active-filters">
+                Aktive filtre:
+                <ul>
+                    {
+                        filters.filter((filter) => filter.active).map((filter) => {
+                            return (<SearchFilterBoxItem key={filter.id} filter={filter} toggleFilter={toggleFilter}/>)
+                        })
+                    }
+                </ul>
+            </div>
+        )
+    } else {
+        return null
+    }
+}
 
 SearchFilterBox.propTypes = {
     toggleFilter: PropTypes.func.isRequired
