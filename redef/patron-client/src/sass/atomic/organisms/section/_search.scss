@@ -47,7 +47,10 @@
   }
 }
 @include breakpoint($small) {
-   .search-box {
+  .search-box-wrapper {
+    @include wrapper-container;
+  }
+  .search-box {
     padding: 0 rhythm(2) rhythm(2);
     form {
       label {
