@@ -49,12 +49,12 @@ module SVC
 
       #delete book items
       @browser.execute_script("window.confirm = function(msg){return true;}")
-      @browser.button(:text => "Edit").click
+      @browser.button(:text => /(Edit|Rediger)/).click
       @browser.a(:id => "deleteallitems").click
 
       #delete book record
       @browser.execute_script("window.confirm = function(msg){return true;}")
-      @browser.button(:text => "Edit").click
+      @browser.button(:text => /(Edit|Rediger)/).click
       @browser.a(:id => "deletebiblio").click
     end
 

@@ -401,7 +401,7 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
 
                       # delete all book items
                       @browser.execute_script("window.confirm = function(msg){return true;}")
-                      @browser.button(:text => "Edit").click
+                      @browser.button(:text => /(Edit|Rediger)/).click
                       @browser.a(:id => "deleteallitems").click
 
                       # TODO: deletion of biblio will be handled by services?

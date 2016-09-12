@@ -404,7 +404,7 @@ end
 
 When(/^velger å redigere eksemplaret$/) do
   @browser.link(:text => 'Add/Edit items').click
-  @browser.link(:text => 'Edit').click
+  @browser.link(:text => /(Edit|Rediger)/).click
 end
 
 When(/^jeg endrer status til "(.*?)"$/) do |status|
