@@ -810,7 +810,7 @@ public class AppTest {
                 testData = "<http://lexvo.org/id/iso639-3/afr> <http://www.w3.org/2000/01/rdf-schema#label> \"Afrikaans\"@en .";
                 break;
             case LITERARY_FORM:
-                testData = "<http://data.deichman.no/literaryForm#nonfiction> <http://www.w3.org/2000/01/rdf-schema#label> \"Nonfiction\"@en .";
+                testData = "<http://data.deichman.no/literaryForm#poem> <http://www.w3.org/2000/01/rdf-schema#label> \"Poem\"@en .";
                 break;
             case MEDIA_TYPE:
                 testData = "<http://data.deichman.no/mediaType#Book> <http://www.w3.org/2000/01/rdf-schema#label> \"Book\"@en .";
@@ -835,6 +835,9 @@ public class AppTest {
                 break;
             case WORK_TYPE:
                 testData = "<http://data.deichman.no/workType#Literature> <http://www.w3.org/2000/01/rdf-schema#label> \"Litteratur\"@no .";
+                break;
+            case FICTION_NONFICTION:
+                testData = "<http://data.deichman.no/fictionNonfiction#nonfiction> <http://www.w3.org/2000/01/rdf-schema#label> \"Fag\"@no .";
                 break;
             default:
                 throw new Exception("Couldn't find test data for authorized value: " + authorizedValue.getPath());

@@ -946,7 +946,7 @@
         if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
           currentInput.subjectType = currentInput.subjectTypes[ 0 ]
         }
-        _.each(compoundInput.subInputs.inputs, function (subInput) {
+        _.each(_.compact(compoundInput.subInputs.inputs), function (subInput) {
           if (!subInput.rdfProperty) {
             throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
           }

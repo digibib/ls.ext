@@ -29,6 +29,9 @@ body {
   }
   .pure-button:focus {
     background-color: rgb(0, 112, 216);
+    outline: auto 2px Highlight;
+    outline: auto 5px -webkit-focus-ring-color;
+    outline-offset: 2px;
   }
   .select2-container {
     .select2-selection {

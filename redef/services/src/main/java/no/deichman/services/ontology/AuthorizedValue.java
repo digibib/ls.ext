@@ -26,7 +26,8 @@ public enum AuthorizedValue {
     RELATION_TYPE("relationType"),
     DEWEY_EDITION("classificationSource"),
     MUSICAL_KEY("key"),
-    WORK_TYPE("workType");
+    WORK_TYPE("workType"),
+    FICTION_NONFICTION("fictionNonfiction");
 
     public static final String ALL_TYPES_PATTERN = "("
             + "language|"
@@ -45,7 +46,8 @@ public enum AuthorizedValue {
             + "relationType|"
             + "classificationSource|"
             + "key|"
-            + "workType)";
+            + "workType|"
+            + "fictionNonfiction)";
 
     private final String path;
 

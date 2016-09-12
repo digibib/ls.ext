@@ -206,8 +206,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny serie"-knappen
     Så trykker jeg på "Opprett"-knappen
-    Så trykker jeg på "Neste steg: Verksopplysninger"-knappen
-    Så trykker jeg på "Neste steg: Beskriv verket"-knappen
+    Så trykker jeg på "Neste steg: Beskriv verk"-knappen
+    Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff

@@ -484,7 +484,7 @@ module.exports = (app) => {
               rdfProperty: 'hasEan'
             }),
             includeOnlyFor(
-              'book', {
+              ['book', 'musical_score'], {
                 rdfProperty: 'binding'
               }
             ),
@@ -494,7 +494,8 @@ module.exports = (app) => {
             },
             includeOnlyFor(
               'film', {
-                rdfProperty: 'hasSubtitles'
+                rdfProperty: 'hasSubtitles',
+                multiple: 'true'
               }
             ),
             { rdfProperty: 'format', multiple: true },
@@ -513,7 +514,7 @@ module.exports = (app) => {
                 }
               }
             ),
-            includeOnlyFor('book', { rdfProperty: 'writingSystem', multiple: true }),
+            includeOnlyFor(['book', 'musical_score'], { rdfProperty: 'writingSystem', multiple: true }),
             { rdfProperty: 'hasFormatAdaptation', multiple: true },
             {
               id: 'publishedByInput',
@@ -604,7 +605,7 @@ module.exports = (app) => {
             }
           ],
           nextStep: {
-            buttonLabel: 'Neste steg: Verksopplysninger'
+            buttonLabel: 'Neste steg: Beskriv verk'
           },
           deleteResource: {
             buttonLabel: 'Slett utgivelsen',
@@ -637,15 +638,18 @@ module.exports = (app) => {
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'publicationYear' },
             { rdfProperty: 'language', multiple: true },
-            {
+            includeOnlyFor(['book', 'audible'], {
               rdfProperty: 'literaryForm',
               multiple: true,
               headlinePart: {
                 order: 45
               }
-            },
+            }),
+            includeOnlyFor(['book', 'audible', 'film'], {
+              rdfProperty: 'fictionNonfiction',
+            }),
             { rdfProperty: 'audience', multiple: true },
-            { rdfProperty: 'biography', multiple: true },
+            includeOnlyFor(['book', 'audible', 'film'], { rdfProperty: 'biography', multiple: true }),
             { rdfProperty: 'hasContentAdaptation', multiple: true },
             {
               label: 'Relasjon til annet verk',
@@ -701,7 +705,7 @@ module.exports = (app) => {
             },
           ],
           nextStep: {
-            buttonLabel: 'Neste steg: Beskriv verket'
+            buttonLabel: 'Neste steg: Emneopplysninger'
           },
           deleteResource: {
             buttonLabel: 'Slett verket',
@@ -722,12 +726,13 @@ module.exports = (app) => {
           rdfType: 'Work',
           label: 'Emneopplysninger',
           inputs: [
-            includeOnlyFor('musical_score', {
+            includeOnlyFor(['musical_score', 'musical_recording'], {
               rdfProperty: 'hasCompositionType',
+              id: 'compositionTypeInput',
               type: 'searchable-with-result-in-side-panel',
               nameProperties: [ 'prefLabel' ],
               indexTypes: [ 'compositiontype' ],
-              labelForCreateButton: 'Opprett ny kompodisjonstype',
+              labelForCreateButton: 'Opprett ny kompoisjonstype',
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [
@@ -743,7 +748,7 @@ module.exports = (app) => {
               rdfProperty: 'inKey',
               multiple: true
             }),
-            includeOnlyFor('musical_score', {
+            includeOnlyFor(['musical_score', 'musical_recording'], {
               label: 'Besetning',
               multiple: true,
               addAnotherLabel: 'Legg til et instrument til',
@@ -754,6 +759,7 @@ module.exports = (app) => {
                   {
                     label: 'Instrument',
                     rdfProperty: 'hasInstrument',
+                    id: 'instrumentInput',
                     indexTypes: [ 'instrument' ],
                     type: 'searchable-with-result-in-side-panel',
                     nameProperties: [ 'prefLabel' ],
@@ -932,20 +938,20 @@ module.exports = (app) => {
                     rdfProperty: 'partNumber'
                   },
                   // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
-                  {
+                  includeOnlyFor(['book', 'musical_score'], {
                     label: 'Sidetall',
                     id: 'startsAtPageInput',
                     rdfProperty: 'startsAtPage',
                     widgetOptions: {
                       isRangeStart: true,
                     }
-                  },
-                  {
+                  }),
+                  includeOnlyFor(['book', 'musical_score'], {
                     rdfProperty: 'endsAtPage',
                     widgetOptions: {
                       isRangeEnd: true,
                     }
-                  },
+                  }),
                   {
                     label: 'Skal ikke vises som verk',
                     rdfProperty: 'improperWork'

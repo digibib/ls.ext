@@ -5,7 +5,7 @@ data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}"
 {{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled=disabled{{/if}}/>
 <span class="legend">
-    {{#current.value}}
+    {{#current.value && !../../searchForValueSuggestions.hitsFromPreferredSource.length > 0}}
     <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Trykk Enter for å søke.</span>
     {{/}}
 </span>

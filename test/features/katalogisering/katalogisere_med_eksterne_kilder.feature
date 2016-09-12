@@ -41,8 +41,8 @@ Egenskap: katalogisere med eksterne kilder
     Så åpner jeg listen med eksterne forslag fra andre kilder for language som skal knyttes til utgivelsen og velger det første forslaget
     Og jeg venter litt
     Så sjekker jeg at "Svensk" er blant verdiene som er valgt for Språk
-    Så trykker jeg på "Neste steg: Verksopplysninger"-knappen
-    Så trykker jeg på "Neste steg: Beskriv verket"-knappen
+    Så trykker jeg på "Neste steg: Beskriv verk"-knappen
+    Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
     Så trykker jeg på "Neste steg: Beskriv deler"-knappen
     Så trykker jeg på "Neste steg: Biinnførsler"-knappen
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget

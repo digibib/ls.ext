@@ -29,7 +29,8 @@ public class AuthorizedValueTest {
             "relationType",
             "classificationSource",
             "key",
-            "workType"));
+            "workType",
+            "fictionNonfiction"));
 
     @Test
     public void test_all_types_pattern_is_available() {

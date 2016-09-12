@@ -91,7 +91,7 @@ public class MARCMapper {
             switch (controlField.getTag()) {
                 case "008":
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
-                    setUriObject(controlField, THIRTY_THREE, "literaryForm", work::addLiteraryForm, LiteraryForm::translate);
+                    setUriObject(controlField, THIRTY_THREE, "fictionNonfiction", work::setFictionNonfiction, FictionNonfiction::translate);
                     setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
                     setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, publication::addLanguage, NOP, this::languagePrefix);
                     break;

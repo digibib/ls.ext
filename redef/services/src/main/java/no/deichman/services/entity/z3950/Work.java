@@ -38,10 +38,13 @@ public class Work extends BibliographicObjectExternal {
     private ExternalDataObject biography;
 
     @SerializedName("deichman:contentAdaption")
-    private List<ExternalDataObject> contentAdaption;
+    private List<Map<String, String>> contentAdaption;
 
     @SerializedName("deichman:hasClassification")
     private List<Map<String, String>> classifications;
+
+    @SerializedName("deichman:fictionNonfiction")
+    private ExternalDataObject fictionNonfiction;
 
     public Work(String workId) {
         super(workId);
@@ -116,7 +119,7 @@ public class Work extends BibliographicObjectExternal {
         if (this.contentAdaption == null) {
             this.contentAdaption = new ArrayList<>();
         }
-        this.contentAdaption.add(contentAdaption);
+        this.contentAdaption.add(of("@id", contentAdaption.getId()));
     }
 
     public void addClassification(Classification classification) {
@@ -124,5 +127,9 @@ public class Work extends BibliographicObjectExternal {
             this.classifications = new ArrayList<>();
         }
         this.classifications.add(of("@id", classification.getId()));
+    }
+
+    public final void setFictionNonfiction(ExternalDataObject fictionNonfiction) {
+        this.fictionNonfiction = fictionNonfiction;
     }
 }
