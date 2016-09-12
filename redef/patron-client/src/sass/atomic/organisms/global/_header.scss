@@ -1,6 +1,7 @@
 // ORGANISM: Global Header
 // ==========================================================================
 header {
+  border-bottom: 3px solid $blackColor;
   @include container;
   .logo {
     @include span(5);
@@ -22,5 +23,9 @@ header {
       @include span(9 last);
     }
   }
-
+}
+@include breakpoint($small) {
+  header {
+    border-bottom: none;
+  }
 }
