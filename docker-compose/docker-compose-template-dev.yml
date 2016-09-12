@@ -105,6 +105,23 @@ services:
     networks:
       - backend
 
+  rfidhub:
+    container_name: rfidhub
+    image: "digibib/rfidhub:6d220f73e0a4a6671ed729c5e276d42edefb19f9"
+    networks:
+      - backend
+    depends_on:
+      - sip
+    ports:
+      - "6006:6006"
+      - "8899:8899"
+    environment:
+      SIP_SERVER: sip:6002
+      SIP_CONNS: 10
+      TCP_PORT: 6006
+    logging:
+      driver: "journald"
+
   smtp:
     container_name: mailrelay
     image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
