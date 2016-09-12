@@ -124,7 +124,7 @@
             </nav>
           </MediaQuery>
 
-          <section className="wrapper">
+          <section className="search-box-wrapper">
             <div className="search-box">
               <form onSubmit={this.handleSearch}>
                 <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>
