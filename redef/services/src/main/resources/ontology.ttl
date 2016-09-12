@@ -521,12 +521,6 @@
   rdfs:domain :Work ;
   rdfs:range xsd:string .
 
-:hasSummary a rdfs:Property ;
-  rdfs:label "Summary"@en ;
-  rdfs:label "Sammendrag"@no ;
-  rdfs:domain :Work ;
-  rdfs:range xsd:string .
-
 :hasCompositionType a rdfs:Property ;
   rdfs:label "Composition type"@en ;
   rdfs:label "Komposisjonstype"@no ;
