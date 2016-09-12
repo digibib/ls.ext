@@ -66,6 +66,9 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:locationSignature")
     private String locationSignature;
 
+    @SerializedName("deichman:locationFormat")
+    private String locationFormat;
+
     public final String getIsbn() {
         return isbn;
     }
@@ -188,5 +191,9 @@ public class Publication extends BibliographicObjectExternal {
 
     public void locationSignature(String locationSignature) {
         this.locationSignature = locationSignature;
+    }
+
+    public void locationFormat(String locationFormat) {
+        this.locationFormat = locationFormat;
     }
 }

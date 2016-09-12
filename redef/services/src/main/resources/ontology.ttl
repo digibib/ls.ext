@@ -653,6 +653,12 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
+:locationFormat a rdfs:Property ;
+  rdfs:label "Location format"@en ;
+  rdfs:label "Hyllesignatur format"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
 
 
 

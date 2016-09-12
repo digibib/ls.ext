@@ -223,6 +223,7 @@
         ],
         "deichman:locationClassNumber": "338.09481",
         "deichman:locationSignature": "N",
+        "deichman:locationFormat": "q",
         "deichman:contributor": [
           {
             "@id": "_:0000000"

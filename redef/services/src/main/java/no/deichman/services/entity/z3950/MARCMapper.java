@@ -129,6 +129,7 @@ public class MARCMapper {
                     });
                     break;
                 case "090":
+                    getSubfieldValue(dataField, 'b').ifPresent(publication::locationFormat);
                     getSubfieldValue(dataField, 'c').ifPresent(publication::locationClassNumber);
                     getSubfieldValue(dataField, 'd').ifPresent(publication::locationSignature);
                     break;
