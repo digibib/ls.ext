@@ -138,7 +138,7 @@ public class MARCMapper {
                         persons.add(person1);
                         MainEntry mainEntryForPerson = new MainEntry(person1, newBlankNodeId());
                         setRole(dataField, mainEntryForPerson);
-                        publication.addContributon(mainEntryForPerson);
+                        work.addContributon(mainEntryForPerson);
                         contributions.add(mainEntryForPerson);
                     });
                     break;
@@ -561,12 +561,12 @@ public class MARCMapper {
         getSubfieldValue(dataField, 'b').ifPresent(person::setOrdinal);
         getSubfieldValue(dataField, 'c').ifPresent(person::setSpecification);
         getSubfieldValue(dataField, 'd').ifPresent(person::setDates);
-        getSubfieldValue(dataField, 'j')
+        getSubfieldValues(dataField, 'j', "-")
                 .map(this::unPunctuate)
                 .map(fragment -> path("nationality", fragment))
                 .map(this::dataPrefix)
                 .map(this::asExternalObject)
-                .ifPresent(person::setNationality);
+                .forEach(person::addNationality);
         getSubfieldValue(dataField, 'q').ifPresent(person::setAlternativeName);
         return person;
     }

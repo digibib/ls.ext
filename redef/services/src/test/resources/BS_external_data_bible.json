@@ -88,9 +88,11 @@
       },
       {
         "deichman:birthYear": "1971",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#n"
+          }
+        ],
         "deichman:name": "Fauskanger, Helge Kåre",
         "@type": [
           "deichman:Person"

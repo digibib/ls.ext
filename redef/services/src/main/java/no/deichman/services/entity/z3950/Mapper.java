@@ -8,7 +8,7 @@ public final class Mapper {
     public Result map(String sourceName, String recordSet) throws Exception {
         Target target = Target.valueOf(sourceName.toUpperCase());
         Result result = new Result();
-        MARCMapper marcMapper = new MARCMapper();
+        MARCMapper marcMapper = new MARCMapper(true);
         result.setSource(target.getDatabaseName());
 
         if (target.getDataFormat().contains("marc")) {

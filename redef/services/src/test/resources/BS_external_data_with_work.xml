@@ -46,7 +46,7 @@
         <datafield tag="100" ind1=" " ind2="0">
             <subfield code="a">Eksempelsen, Eksempel</subfield>
             <subfield code="d">1931-</subfield>
-            <subfield code="j">n.</subfield>
+            <subfield code="j">n.-nam.</subfield>
         </datafield>
         <!-- should result in a corporation as main entry -->
         <datafield tag="110" ind1=" " ind2="0">

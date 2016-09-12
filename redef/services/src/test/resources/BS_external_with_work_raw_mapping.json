@@ -122,6 +122,11 @@
             "@id": "_:0000000"
           }
         ],
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
         "deichman:partNumber": "Book 2",
         "deichman:mainTitle": "A example",
         "deichman:subtitle": "a novel",
@@ -219,9 +224,6 @@
         "deichman:locationClassNumber": "338.09481",
         "deichman:locationSignature": "N",
         "deichman:contributor": [
-          {
-            "@id": "_:0000000"
-          },
           {
             "@id": "_:0000000"
           },
@@ -540,9 +542,14 @@
       },
       {
         "deichman:birthYear": "1931",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#n"
+          },
+          {
+            "@id": "http://data.deichman.no/nationality#nam"
+          }
+        ],
         "deichman:name": "Eksempelsen, Eksempel",
         "@type": [
           "deichman:Person"
@@ -551,9 +558,11 @@
       },
       {
         "deichman:birthYear": "1899",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#n"
+          }
+        ],
         "deichman:name": "Eksempelsen, Eksempel senior",
         "@type": [
           "deichman:Person"
@@ -584,9 +593,11 @@
       {
         "deichman:birthYear": "1910",
         "deichman:deathYear": "1993",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#n"
-        },
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#n"
+          }
+        ],
         "deichman:name": "Hermansen, Peder Gunvald",
         "@type": [
           "deichman:Person"
@@ -604,9 +615,11 @@
       {
         "deichman:birthYear": "1812",
         "deichman:deathYear": "1870",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#eng"
-        },
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#eng"
+          }
+        ],
         "deichman:name": "Dickens, Charles",
         "@type": [
           "deichman:Person"
@@ -616,9 +629,11 @@
       {
         "deichman:birthYear": "1808",
         "deichman:deathYear": "1899",
-        "deichman:nationality": {
-          "@id": "http://data.deichman.no/nationality#eng"
-        },
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#eng"
+          }
+        ],
         "deichman:name": "Tom Clancford",
         "@type": [
           "deichman:Person"

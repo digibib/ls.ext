@@ -64,7 +64,8 @@ module.exports = (app) => {
               rdfProperty: 'deathYear'
             },
             {
-              rdfProperty: 'nationality'
+              rdfProperty: 'nationality',
+              multiple: true
             },
             {
               rdfProperty: 'gender'

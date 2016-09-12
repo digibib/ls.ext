@@ -3,12 +3,15 @@ package no.deichman.services.entity.z3950;
 import com.google.gson.annotations.SerializedName;
 import org.apache.jena.vocabulary.RDF;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.google.common.collect.ImmutableMap.of;
 
 /**
  * Responsibility: create a basic person object.
@@ -23,7 +26,7 @@ public class Person extends Named {
     private String deathYear;
 
     @SerializedName("deichman:nationality")
-    private ExternalDataObject nationality;
+    private List<Map<String, String>> nationality;
 
     @SerializedName("deichman:ordinal")
     private String ordinal;
@@ -47,7 +50,7 @@ public class Person extends Named {
         setDates(dates);
         ExternalDataObject nationality1 = new ExternalDataObject();
         nationality1.setId(nationality);
-        setNationality(nationality1);
+        addNationality(nationality1);
     }
 
     final Map<String, String> getPersonMap() {
@@ -88,12 +91,11 @@ public class Person extends Named {
         this.deathYear = deathYear;
     }
 
-    public final void setNationality(ExternalDataObject nationality) {
-        this.nationality = nationality;
-    }
-
-    public final ExternalDataObject getNationality() {
-        return nationality;
+    public final void addNationality(ExternalDataObject nationality) {
+        if (this.nationality == null) {
+            this.nationality = new ArrayList<>();
+        }
+        this.nationality.add(of("@id", nationality.getId()));
     }
 
     public final void setOrdinal(String ordinal) {
