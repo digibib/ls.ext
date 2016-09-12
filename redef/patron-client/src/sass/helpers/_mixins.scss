@@ -1,3 +1,13 @@
+@mixin wrapper-container() {
+  padding: gutter(12);
+  @include breakpoint($small) {
+    @include container(800px);
+  }
+  @include breakpoint($medium) {
+    @include container(1200px);
+  }
+}
+
 @mixin createListGallery($totalNumberOfColumns, $numberOfColsPrRow, $m:4) {
   @include gallery(($totalNumberOfColumns / $numberOfColsPrRow) of $totalNumberOfColumns);
   &:nth-child(#{"n+"}#{$numberOfColsPrRow + 1}) {margin-top: rhythm($m);}

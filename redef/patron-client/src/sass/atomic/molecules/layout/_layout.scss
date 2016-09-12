@@ -1,11 +1,5 @@
 .wrapper {
-  padding: gutter(12);
-  @include breakpoint($small) {
-    @include container(800px);
-  }
-  @include breakpoint($medium) {
-    @include container(1200px);
-  }
+ @include wrapper-container;
 }
 .container {
   float: left;
