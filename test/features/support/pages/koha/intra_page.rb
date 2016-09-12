@@ -25,17 +25,6 @@ class IntraPage < PageRoot
     @site.SelectBranch.visit.select_branch(branch_code)
   end
 
-  def checkin(barcode)
-    @browser.a(:href => "#checkin_search").click
-    @browser.text_field(:id => "ret_barcode").set barcode
-    @browser.form(:action => "/cgi-bin/koha/circ/returns.pl").submit
-    # todo -- where do we end up?
-  end
-
-  def confirm_checkin
-    @browser.button(class: 'approve').click
-  end
-
   def search_patrons(patron_query)
     @browser.a(:href => "#patron_search").click
     @browser.text_field(:id => "searchmember").set patron_query

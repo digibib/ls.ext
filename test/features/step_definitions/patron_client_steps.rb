@@ -115,7 +115,8 @@ When(/^jeg låner \"(.*?)\" ut til \"(.*?)$/) do |barcode, patron|
   @active[:item] = barcode
   @cleanup.push("utlån #{barcode}" =>
                     lambda do
-                      @site.Home.visit.select_branch().checkin(barcode)
+                      @site.Home.visit.select_branch()
+                      @site.Checkin.visit.checkin(barcode)
                     end
   )
 end

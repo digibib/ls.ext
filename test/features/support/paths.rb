@@ -48,6 +48,7 @@ module Paths
 
       :select_branch => "/cgi-bin/koha/circ/selectbranchprinter.pl",
       :checkout => "/cgi-bin/koha/circ/circulation.pl",
+      :returns => "/cgi-bin/koha/circ/returns.pl",
       :holdsqueue => "/cgi-bin/koha/circ/view_holdsqueue.pl",
       :reserve => "/cgi-bin/koha/reserve/request.pl?biblionumber=",
       :pendingreserves => "/cgi-bin/koha/circ/pendingreserves.pl",

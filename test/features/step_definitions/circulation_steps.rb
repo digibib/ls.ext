@@ -101,7 +101,8 @@ When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
   end
   @cleanup.push("utlån #{barcode}" =>
                     lambda do
-                      @site.Home.visit.select_branch().checkin(@context[:first_available_exemplar_barcode] || book.items.first.barcode)
+                      @site.Home.visit.select_branch()
+                      @site.Checkin.visit.checkin(@context[:first_available_exemplar_barcode] || book.items.first.barcode)
                     end
   )
 end
@@ -109,7 +110,8 @@ end
 
 
 When(/^boka blir registrert innlevert$/) do
-  @site.Home.visit.select_branch().checkin(@active[:book].items.first.barcode)
+  @site.Home.visit.select_branch()
+  @site.Checkin.visit.checkin(@active[:book].items.first.barcode)
 end
 
 When(/^låneren reserverer boka$/) do
@@ -233,7 +235,7 @@ When(/^boka sjekkes inn på låners henteavdeling$/) do
       @active[:book].items.first.barcode :
       @context[:item_barcode]
   @site.SelectBranch.visit.select_branch(@active[:patron].branch.code)
-  @site.IntraPage.checkin(barcode)
+  @site.Checkin.visit.checkin(barcode)
 end
 
 When(/^det bekreftes at boka skal holdes av$/) do
@@ -615,8 +617,8 @@ When(/^jeg er på den opprettede filialen$/) do
 end
 
 When(/^jeg leverer inn eksemplaret$/) do
-  @site.IntraPage.checkin(@context[:first_available_exemplar_barcode])
-  @site.IntraPage.confirm_checkin
+  @site.Checkin.visit.checkin(@context[:first_available_exemplar_barcode])
+  @site.Checkin.confirm_checkin
 end
 
 When(/^jeg låner ut boka$/) do
