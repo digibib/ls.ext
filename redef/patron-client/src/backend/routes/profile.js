@@ -237,6 +237,16 @@ module.exports = (app) => {
       })
   })
 
+
+  app.put('/api/v1/profile/settings/history', jsonParser, (request, response) => {
+    request.session.saveHistory = request.body.saveHistory === 'true'
+    response.sendStatus(200)
+  })
+
+  app.get('/api/v1/profile/settings/history', (request, response) => {
+    response.status(200).send({saveHistory: request.session.saveHistory === undefined ? true : request.session.saveHistory})
+  })
+
   function parsePatron (patron) {
     return {
       borrowerNumber: patron.borrowernumber || '',

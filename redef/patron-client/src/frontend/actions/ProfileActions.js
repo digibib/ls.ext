@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import Errors from '../constants/Errors'
+import { action, errorAction } from './GenericActions'
 
 export function requestProfileSettings () {
   return {
@@ -291,10 +292,61 @@ export function changePassword (currentPassword, newPassword, successAction) {
   }
 }
 
+export function changeHistorySettingFromForm (successAction) {
+  return (dispatch, getState) => {
+    const { changeHistorySetting: { history } } = getState().form
+    dispatch(changeHistorySetting(history, successAction))
+  }
+}
+
+export function fetchHistorySetting () {
+  return (dispatch) => {
+    const url = '/api/v1/profile/settings/history'
+    dispatch(action(types.REQUEST_HISTORY_SETTING))
+    return fetch(url, {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(json => dispatch(action(types.RECEIVE_HISTORY_SETTING, { history: json.saveHistory })))
+      .catch(error => dispatch(errorAction(types.HISTORY_SETTING_FAILURE, error)))
+  }
+}
+
+export function changeHistorySetting (historySetting, successAction) {
+  const url = '/api/v1/profile/settings/history'
+  return dispatch => {
+    dispatch(action(types.REQUEST_CHANGE_HISTORY_SETTING))
+    return fetch(url, {
+      method: 'put',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ saveHistory: historySetting.value })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          dispatch(action(types.CHANGE_HISTORY_SETTING_SUCCESS))
+          if (successAction) {
+            dispatch(successAction)
+          } else {
+            throw Error(Errors.profile.GENERIC_CHANGE_HISTORY_SETTING_ERROR)
+          }
+        }
+      })
+      .catch(error => dispatch(errorAction(types.CHANGE_HISTORY_SETTING_FAILURE, error)))
+  }
+}
+
 export function fetchAllProfileData () {
   return dispatch => {
     dispatch(fetchProfileInfo())
     dispatch(fetchProfileLoans())
     dispatch(fetchProfileSettings())
+    dispatch(fetchHistorySetting())
   }
 }

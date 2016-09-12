@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
 import ChangePin from './forms/ChangePinForm'
+import ChangeHistorySetting from './forms/ChangeHistorySettingForm'
 
 class UserSettings extends React.Component {
   constructor (props) {
@@ -53,10 +54,8 @@ class UserSettings extends React.Component {
         <section className="user-reminders">
           <div className="reminders col">
             <h2><FormattedMessage {...messages.reminderOfDueDate} /></h2>
-
             <ul>
               <li>
-
                 <input data-automation-id="UserSettings_reminderOfDueDateSms"
                        type="checkbox" name="user-settings-sms-reminder" id="user-settings-sms-reminder"
                        ref={e => this.reminderOfDueDateSmsCheckbox = e}
@@ -65,7 +64,6 @@ class UserSettings extends React.Component {
                   <FormattedMessage {...messages.bySms} /></label>
               </li>
               <li>
-
                 <input data-automation-id="UserSettings_reminderOfDueDateEmail"
                        type="checkbox" name="user-settings-reminder-email"
                        id="user-settings-reminder-email"
@@ -74,20 +72,7 @@ class UserSettings extends React.Component {
                 <label
                   htmlFor="user-settings-reminder-email"><span />
                   <FormattedMessage {...messages.byEmail} /></label>
-
               </li>
-              {/* <li className="patron-placeholder">
-
-               <input data-automation-id="??"
-               type="checkbox" name="user-settings-reminder-dont-send"
-               id="user-settings-reminder-dont-send"
-               ref={e => this.reminderOfDueDateEmailCheckbox = e}
-               defaultChecked={settings.alerts.reminderOfDueDate.email} />
-               <label
-               htmlFor="user-settings-reminder-email"><span></span>
-               <span>Nei, ikke send</span></label>
-
-               </li> */}
             </ul>
           </div>
 
@@ -95,7 +80,6 @@ class UserSettings extends React.Component {
             <h2><FormattedMessage {...messages.reminderOfPickup} /></h2>
             <ul>
               <li>
-
                 <input data-automation-id="UserSettings_reminderOfPickupSms"
                        type="checkbox" name="user-settings-delivery-reminder-sms"
                        id="user-settings-delivery-reminder-sms"
@@ -145,6 +129,7 @@ class UserSettings extends React.Component {
         </footer>
 
         <ChangePin />
+        <ChangeHistorySetting/>
       </div>
     )
   }

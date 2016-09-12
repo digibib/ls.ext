@@ -12,7 +12,14 @@ import {
   PROFILE_SETTINGS_FAILURE,
   REQUEST_CHANGE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
-  CHANGE_PASSWORD_FAILURE
+  CHANGE_PASSWORD_FAILURE,
+  REQUEST_CHANGE_HISTORY_SETTING,
+  CHANGE_HISTORY_SETTING_SUCCESS,
+  CHANGE_HISTORY_SETTING_FAILURE,
+  REQUEST_HISTORY_SETTING,
+  RECEIVE_HISTORY_SETTING,
+  HISTORY_SETTING_FAILURE
+
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -31,7 +38,13 @@ const initialState = {
   settings: {},
   isRequestingChangePassword: false,
   changePasswordError: null,
-  changePasswordSuccess: false
+  changePasswordSuccess: false,
+  isRequestingHistorySetting: false,
+  history: null,
+  historySettingSuccess: false,
+  isRequestingChangeHistorySetting: false,
+  changeHistorySettingError: null,
+  changeHistorySettingSuccess: false
 }
 
 export default function profile (state = initialState, action) {
@@ -78,6 +91,44 @@ export default function profile (state = initialState, action) {
         changePasswordError: action.payload,
         isRequestingChangePassword: false,
         changePasswordSuccess: false
+      }
+    case REQUEST_CHANGE_HISTORY_SETTING:
+      return {
+        ...state, /* changeHistorySettingError: null, */
+        isRequestingChangeHistorySetting: true,
+        changeHistorySettingSuccess: false
+      }
+    case CHANGE_HISTORY_SETTING_SUCCESS:
+      return {
+        ...state,
+        changeHistorySettingError: null,
+        isRequestingChangeHistorySetting: false,
+        changeHistorySettingSuccess: true
+      }
+    case CHANGE_HISTORY_SETTING_FAILURE:
+      return {
+        ...state,
+        changeHistorySettingError: action.payload,
+        isRequestingChangeHistorySetting: false,
+        changeHistorySettingSuccess: false
+      }
+    case REQUEST_HISTORY_SETTING:
+      return {
+        ...state, /* historySettingError: null, */
+        isRequestingHistorySetting: true,
+      }
+    case RECEIVE_HISTORY_SETTING:
+      return {
+        ...state,
+        historySettingError: null,
+        isRequestingHistorySetting: false,
+        history: action.payload.history
+      }
+    case HISTORY_SETTING_FAILURE:
+      return {
+        ...state,
+        historySettingError: action.payload,
+        isRequestingHistorySetting: false,
       }
     case LOCATION_CHANGE:
       return {

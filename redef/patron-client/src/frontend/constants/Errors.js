@@ -11,6 +11,7 @@ export default {
   },
   profile: {
     CURRENT_PIN_NOT_CORRRECT: 'currentPinNotCorrect',
-    GENERIC_CHANGE_PIN_ERROR: 'genericChangePinError'
+    GENERIC_CHANGE_PIN_ERROR: 'genericChangePinError',
+    GENERIC_CHANGE_HISTORY_SETTING_ERROR: 'genericChangeHistorySettingError'
   }
 }
