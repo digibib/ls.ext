@@ -92,7 +92,7 @@
     }
 
     render () {
-      let mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
+      const mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
       return (
         <div>
 
