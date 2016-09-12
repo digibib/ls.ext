@@ -13,15 +13,15 @@ class ChangeHistorySettingForm extends React.Component {
   }
 
   renderError () {
-    const { changePasswordError } = this.props
-    if (changePasswordError) {
-      return messages[ changePasswordError.message ]
-        ? <div style={{ color: 'red' }}><FormattedMessage {...messages[ changePasswordError.message ]} /></div>
+    const { changeHistorySettingError } = this.props
+    if (changeHistorySettingError) {
+      return messages[ changeHistorySettingError.message ]
+        ? <div style={{ color: 'red' }}><FormattedMessage {...messages[ changeHistorySettingError.message ]} /></div>
         : <div style={{ color: 'red' }}><FormattedMessage {...messages.genericChangePasswordError} /></div>
     }
   }
 
-  handleChangeHistorySetting() {
+  handleChangeHistorySetting () {
     this.props.profileActions.changeHistorySettingFromForm(this.props.profileActions.fetchHistorySetting)
   }
 
@@ -44,13 +44,17 @@ class ChangeHistorySettingForm extends React.Component {
 
           <section className="change-history-setting">
             <div className="change-history-setting-fields">
-              <input {...domOnlyProps(history)} type="radio" value="true" checked={history.value == 'true'} /><br />
-              <input {...domOnlyProps(history)} type="radio" value="false" checked={history.value == 'false'} /><br />
+              <input {...domOnlyProps(history)} type="radio" value="true" checked={history.value === 'true'}
+                     id="yesOption" />
+              <label htmlFor="yesOption"><FormattedMessage {...messages.yesOption} /></label><br />
+              <input {...domOnlyProps(history)} type="radio" value="false" checked={history.value === 'false'}
+                     id="noOption" />
+              <label htmlFor="noOption"><FormattedMessage {...messages.noOption} /></label><br />
             </div>
           </section>
           <footer>
             <button className="black-btn" type="submit" disabled={submitting}>
-              <FormattedMessage {...messages.changeHistorySetting} /><br /></button>
+              <FormattedMessage {...messages.save} /><br /></button>
             {changeHistorySettingSuccess
               ? <div style={{ color: 'green' }}><FormattedMessage {...messages.changeHistorySettingSuccess} />
             </div> : null}
@@ -91,6 +95,11 @@ const messages = defineMessages({
     id: 'ChangeHistorySettingForm.changeHistorySettingSuccess',
     description: 'Message changing the history setting is successful',
     defaultMessage: 'The setting was successfully changed'
+  },
+  save: {
+    id: 'ChangeHistorySettingForm.save',
+    description: 'The label of the save button',
+    defaultMessage: 'Save'
   }
 })
 
