@@ -36,6 +36,12 @@
             <subfield code="a">839.823</subfield>
             <subfield code="2">5</subfield>
         </datafield>
+        <!-- should result in locationFormat, locationClassNumber and locationSignature -->
+        <datafield tag="090" ind1=" " ind2=" ">
+            <subfield code="b">q</subfield>
+            <subfield code="c">338.09481</subfield>
+            <subfield code="d">N</subfield>
+        </datafield>
         <!-- should result in a person as main entry -->
         <datafield tag="100" ind1=" " ind2="0">
             <subfield code="a">Eksempelsen, Eksempel</subfield>

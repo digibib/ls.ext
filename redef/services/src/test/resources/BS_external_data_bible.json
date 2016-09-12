@@ -46,6 +46,8 @@
         "deichman:hasMediaType": {
           "@id": "http://data.deichman.no/mediaType#Book"
         },
+        "deichman:locationClassNumber": "225.53982",
+        "deichman:locationSignature": "B",
         "deichman:contributor": [
           {
             "@id": "_:0000000"

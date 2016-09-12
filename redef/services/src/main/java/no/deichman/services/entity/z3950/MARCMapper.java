@@ -128,6 +128,10 @@ public class MARCMapper {
                         graphList.add(classification);
                     });
                     break;
+                case "090":
+                    getSubfieldValue(dataField, 'c').ifPresent(publication::locationClassNumber);
+                    getSubfieldValue(dataField, 'd').ifPresent(publication::locationSignature);
+                    break;
                 case "100":
                     getSubfieldValue(dataField, 'a').ifPresent(personName -> {
                         Person person1 = setPersonDataFromDataField(dataField, new Person(newBlankNodeId(), personName));

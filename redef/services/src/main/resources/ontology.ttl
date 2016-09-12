@@ -583,6 +583,18 @@
   rdfs:domain :Corporation ;
   rdfs:range xsd:string .
 
+:locationClassNumber a rdfs:Property ;
+  rdfs:label "Location class number"@en ;
+  rdfs:label "Hyllesignatur klassenummer"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
+:locationSignature a rdfs:Property ;
+  rdfs:label "Location signature"@en ;
+  rdfs:label "Hyllesignatur oppstilling"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
 
 
 

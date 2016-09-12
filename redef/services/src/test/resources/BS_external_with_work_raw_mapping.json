@@ -216,6 +216,8 @@
             "@id": "http://lexvo.org/id/iso639-3/eng"
           }
         ],
+        "deichman:locationClassNumber": "338.09481",
+        "deichman:locationSignature": "N",
         "deichman:contributor": [
           {
             "@id": "_:0000000"

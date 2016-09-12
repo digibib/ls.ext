@@ -60,6 +60,12 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:hasSubtitles")
     private List<ExternalDataObject> hasSubtitles;
 
+    @SerializedName("deichman:locationClassNumber")
+    private String locationClassNumber;
+
+    @SerializedName("deichman:locationSignature")
+    private String locationSignature;
+
     public final String getIsbn() {
         return isbn;
     }
@@ -174,5 +180,13 @@ public class Publication extends BibliographicObjectExternal {
             this.hasSubtitles = new ArrayList<>();
         }
         this.hasSubtitles.add(subTitles);
+    }
+
+    public void locationClassNumber(String locationClassNumber) {
+        this.locationClassNumber = locationClassNumber;
+    }
+
+    public void locationSignature(String locationSignature) {
+        this.locationSignature = locationSignature;
     }
 }
