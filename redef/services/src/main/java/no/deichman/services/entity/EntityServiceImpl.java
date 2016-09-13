@@ -78,9 +78,10 @@ public final class EntityServiceImpl implements EntityService {
     private final Property mediaTypeProperty;
     private final Property formatLabelProperty;
     private final Property adaptaionProperty;
+    private final Property fictionNonFictionProperty;
 
-    private final String nonfictionResource = "http://data.deichman.no/literaryForm#nonfiction";
-    private final String fictionResource = "http://data.deichman.no/literaryForm#fiction";
+    private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
+    private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
 
     public EntityServiceImpl(RDFRepository repository, KohaAdapter kohaAdapter) {
         this.repository = repository;
@@ -106,6 +107,8 @@ public final class EntityServiceImpl implements EntityService {
         mediaTypeProperty = ResourceFactory.createProperty(BaseURI.ontology("mediaType"));
         formatLabelProperty = ResourceFactory.createProperty(BaseURI.ontology("formatLabel"));
         adaptaionProperty = ResourceFactory.createProperty(BaseURI.ontology("adaptationLabel"));
+        fictionNonFictionProperty = ResourceFactory.createProperty(BaseURI.ontology("fictionNonfiction"));
+
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
@@ -459,7 +462,7 @@ public final class EntityServiceImpl implements EntityService {
                     }
                 } else if (pred.equals(genreProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
-                } else if (pred.equals(literaryFormProperty)) {
+                } else if (pred.equals(fictionNonFictionProperty)) {
                     Resource obj = stmt.getObject().asResource();
                     if (obj.hasURI(fictionResource)) {
                         marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_FICTION);
@@ -468,9 +471,7 @@ public final class EntityServiceImpl implements EntityService {
                     }
                 } else if (pred.equals(literaryFormLabelProperty)) {
                     String label = stmt.getLiteral().getString();
-                    if (!label.equals("Fag") && !label.equals("Fiksjon")) {
-                        marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
-                    }
+                    marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(languageProperty)) {
                     String langCode = stmt.getObject().asResource().getURI();
                     langCode = langCode.substring(langCode.length() - THREE);

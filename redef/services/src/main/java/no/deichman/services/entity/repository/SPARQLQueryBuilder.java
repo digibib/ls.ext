@@ -369,7 +369,8 @@ public final class SPARQLQueryBuilder {
                 + "       deichman:literaryFormLabel ?literaryFormLabel ;\n"
                 + "       deichman:adaptationLabel ?formatAdaptationLabel ;\n"
                 + "       deichman:adaptationLabel ?contentAdaptationLabel ;\n"
-                + "       deichman:genre ?genreLabel .\n"
+                + "       deichman:genre ?genreLabel ;"
+                + "       deichman:fictionNonfiction ?fictionNonfiction .\n"
                 + "}\n"
                 + "WHERE {\n"
                 + "  BIND(<%2$s> AS ?pub)\n"
@@ -430,6 +431,7 @@ public final class SPARQLQueryBuilder {
                 + "    ?literaryForm rdfs:label ?literaryFormLabel .\n"
                 + "    FILTER(lang(?literaryFormLabel) = \"no\")\n"
                 + "  }\n"
+                + "  UNION { ?work deichman:fictionNonfiction ?fictionNonfiction }"
                 + "  BIND(IF(BOUND(?mainTitleTranscribed), ?mainTitleTranscribed, ?mainTitleUntranscribed) AS ?mainTitle)\n"
                 + "  BIND(IF(BOUND(?subtitleTranscribed), ?subtitleTranscribed, ?subtitleUntranscribed) AS ?subtitle)\n"
                 + "}", BaseURI.ontology(), publication.getUri());
