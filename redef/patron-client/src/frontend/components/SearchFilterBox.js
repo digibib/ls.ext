@@ -18,6 +18,8 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
         }
       </ul>
     </div>)
+  } else {
+    return null
   }
 }
 

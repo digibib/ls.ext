@@ -36,7 +36,7 @@ describe('components', () => {
   describe('SearchFilterBox', () => {
     it('should render empty if no filters', () => {
       const { node } = setup({ query: {test: 'invalid_query'} })
-      expect(node.getAttribute('data-automation-id')).toBe(null)
+      expect(node).toBe(null)
     })
 
     it('should render filters', () => {
