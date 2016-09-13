@@ -1,6 +1,4 @@
-/**
- * Created by Nikolai on 05/09/16.
- */
+/* eslint-disable */
 import React, {PropTypes} from 'react'
 import {injectIntl, intlShape} from 'react-intl'
 import ClickableElement from '../components/ClickableElement'

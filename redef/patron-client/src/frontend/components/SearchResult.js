@@ -24,7 +24,8 @@ class SearchResult extends React.Component {
       return (
         <div data-automation-id="work_contributors"> {contributors.map(contribution => (
           <p
-            key={contribution.agent.relativeUri}><strong>{this.props.intl.formatMessage({ id: contribution.role })}: </strong><Link
+            key={contribution.agent.relativeUri}>
+            <strong>{this.props.intl.formatMessage({ id: contribution.role })}: </strong><Link
             to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></p>
         ))}
         </div>
@@ -67,11 +68,12 @@ class SearchResult extends React.Component {
       return (
         <p data-automation-id="work_subjects">
           <strong><FormattedMessage {...messages.subjects} /></strong><br />
-            {result.subject.map((subject, i) => (
-              <span key={subject}>
-                <Link to={this.subjectSearchLink(subject)}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
+          {result.subject.map((subject, i) => (
+            <span key={subject}>
+                <Link
+                  to={this.subjectSearchLink(subject)}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
                 </span>
-            ))}
+          ))}
         </p>
       )
     }
@@ -82,11 +84,11 @@ class SearchResult extends React.Component {
       return (
         <p data-automation-id="work_genres">
           <strong><FormattedMessage {...messages.genres} /></strong><br />
-            {result.genre.map((genre, i) => (
-              <span key={genre}>
+          {result.genre.map((genre, i) => (
+            <span key={genre}>
                 <Link to={this.genreSearchLink(genre)}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
                 </span>
-            ))}
+          ))}
         </p>
       )
     }
@@ -96,11 +98,11 @@ class SearchResult extends React.Component {
     return (
       <div data-automation-id="publication_series">
         <strong><FormattedMessage {...messages.partOfSeries} /></strong>
-          {series.map((serie, i) => (
-            <span key={serie}>
+        {series.map((serie, i) => (
+          <span key={serie}>
               <Link to={this.seriesSearchLink(serie)}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
             </span>
-          ))}
+        ))}
       </div>
     )
   }
@@ -121,9 +123,9 @@ class SearchResult extends React.Component {
           <div className="items-by-branch">
             <h1>{el.branch}</h1>
             <Items items={el.items} />
-            <p style={{clear: 'both'}} />
+            <p style={{ clear: 'both' }} />
           </div>
-          )
+        )
       })
     }
   }
@@ -156,14 +158,15 @@ class SearchResult extends React.Component {
     })
 
     const formats = [ ...pubFormats ]
-    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, {title: result.displayTitle})
+    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: result.displayTitle })
     const missingCoverImage = '/images/no-cover.png'
-    const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, {title: result.displayTitle})
+    const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
     return (
       <div className="single-entry" data-formats={formats.join(', ')}>
         <aside className="book-cover">
           <Link to={this.getResultUrl(result)} className="book-cover-item">
-            {result.image ? <img src={result.image} alt={coverAltText} /> : <img src={missingCoverImage} alt={missingCoverAltText}/>}
+            {result.image ? <img src={result.image} alt={coverAltText} />
+              : <img src={missingCoverImage} alt={missingCoverAltText} />}
           </Link>
         </aside>
 
@@ -189,15 +192,15 @@ class SearchResult extends React.Component {
 
           {firstPublishedYear
             ? <div>
-                <p><strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span></p>
-              </div>
+            <p><strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span></p>
+          </div>
             : null
           }
 
           {result.publication.abstract
-           ? <div>
-               <p>{result.publication.abstract}</p>
-            </div>
+            ? <div>
+            <p>{result.publication.abstract}</p>
+          </div>
             : null
           }
 
