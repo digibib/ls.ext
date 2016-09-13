@@ -3,7 +3,7 @@ PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
 
 CONSTRUCT {
-        <__PUBLICATIONURI__>a deich:Publication ;
+        <__PUBLICATIONURI__> a deich:Publication ;
                deich:mainTitle ?pubMainTitle ;
                deich:partTitle ?pubPartTitle ;
                deich:norwegianTitle ?norwegianTitle ;
@@ -109,33 +109,47 @@ WHERE {
 
   # 3. Information from work:
 
-  UNION { ?work a deich:Work ; deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
-  UNION { ?work a deich:Work ; deich:publicationYear ?workYear . BIND(str(?workYear) AS ?workPublicationYear) }
-  UNION { ?work a deich:Work ; deich:hasClassification ?classEntry . ?classEntry deich:hasClassificationNumber ?dewey .   }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:audience ?audienceO .
+           BIND(str(?audienceO) AS ?audience) }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+          ?work a deich:Work ; deich:publicationYear ?workYear .
+          BIND(str(?workYear) AS ?workPublicationYear) }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+          ?work a deich:Work ; deich:hasClassification ?classEntry .
+          ?classEntry deich:hasClassificationNumber ?dewey . }
 
   UNION {
     {
+      <__PUBLICATIONURI__> deich:publicationOf ?work .
       ?work deich:subject ?subject .
       ?subject a deich:Subject ;
               deich:prefLabel ?subjectName  .
     } UNION {
+      <__PUBLICATIONURI__> deich:publicationOf ?work .
       ?work deich:subject ?subject .
             ?subject a deich:Place ;
                     deich:prefLabel ?subjectName  .
     } UNION {
+      <__PUBLICATIONURI__> deich:publicationOf ?work .
       ?work deich:subject ?subject .
       ?subject a deich:Work ;
               deich:mainTitle ?subjectName  .
     } UNION {
+      <__PUBLICATIONURI__> deich:publicationOf ?work .
       ?work deich:subject ?subject .
       ?subject a deich:Person ;
               deich:name ?subjectName  .
-    } UNION
-    { ?work deich:subject ?subject . ?subject deich:specification ?subjectSpec }
+    } UNION {
+    <__PUBLICATIONURI__> deich:publicationOf ?work .
+    ?work deich:subject ?subject .
+    ?subject deich:specification ?subjectSpec
+    }
     BIND(IF(BOUND(?subjectSpec), CONCAT(?subjectName, " (", ?subjectSpec, ")"), ?subjectName) AS ?subjectLabel)
   }
 
   UNION {
+      <__PUBLICATIONURI__> deich:publicationOf ?work .
       ?work deich:genre ?genre .
       ?genre a deich:Genre ;
             deich:prefLabel ?genreName  .
