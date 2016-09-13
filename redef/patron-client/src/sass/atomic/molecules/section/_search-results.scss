@@ -4,8 +4,8 @@
   @include border-top;
   padding-top: rhythm(2);
 
-  @include breakpoint($small){
-    margin-top: 25px;
+  @include breakpoint($small) {
+    margin-top: rhythm(5);
     @include span(9 of 12);
     margin-right: 0;
   }
@@ -15,25 +15,50 @@
 .search-results-header {
   @include container;
   border-bottom: 1px solid $mediumGreyColor;
-  .search-results-number {
-    @include span(6);
-    @include breakpoint($small){
-      @include span(12 last);
+
+  .search-results-summary {
+    @include span(12);
+    @include container;
+    font-size: rhythm(3);
+
+    .search-results-number {
+      @include span(3);
+      @include breakpoint($small) {
+        @include span(8);
+      }
     }
+
+    .search-sorting-placeholder {
+      @include span(9 last);
+      @include breakpoint($small) {
+        @include span(4 last);
+      }
+
+      text-align: right;
+      p {
+        margin: 0;
+      }
+      span {
+        font-weight: bold;
+      }
+    }
+
   }
+
   .active-filters {
     @include span(12);
-    @include breakpoint($small){
+    @include breakpoint($small) {
       @include span(12 last);
     }
   }
+
 }
 
 .search-sorting {
   @include span(6 of 12);
   float: right;
 
-  @include breakpoint($small){
+  @include breakpoint($small) {
     @include span(3 of 12);
     float: right;
   }

@@ -53,6 +53,7 @@
 @include breakpoint($small) {
   .search-box-wrapper {
     @include wrapper-container;
+    padding-bottom: 0;
   }
   .search-box {
     padding: 0 rhythm(2) rhythm(2);
