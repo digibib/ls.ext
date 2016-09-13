@@ -92,8 +92,6 @@ class Work extends React.Component {
             <aside className="work-genres show-mobile hidden-tablet hidden-desktop">
               <Genres genres={work.genres} />
             </aside>
-            <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
-                             query={this.props.query} />
             <div className="work-excerpt">
               <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
                 id mauris maximus porta. In
@@ -112,6 +110,8 @@ class Work extends React.Component {
               <Genres genres={work.genres} />
             </aside>
           </article>
+          <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+                           query={this.props.query} />
           <Publications locationQuery={this.props.location.query}
                         expandSubResource={this.props.resourceActions.expandSubResource}
                         publications={work.publications}
