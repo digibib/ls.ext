@@ -435,10 +435,14 @@ body {
             display: inline-block;
             height: 15px;
           }
+          .more-info {
+            cursor: help;
+            text-decoration: underline;
+          }
           position: absolute;
           font-size: 0.7em;
           font-style: italic;
-          padding: 4px 9px 3px 0;
+          padding: 4px 9px 6px 0;
           background-color: yellow;
           margin: 4px 10px 0 0;
           border: 1px grey solid;

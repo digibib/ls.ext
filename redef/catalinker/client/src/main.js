@@ -359,7 +359,11 @@
     }
 
     function isAdvancedQuery (queryString) {
-      return /[:\+\-^()´"*]/.test(queryString)
+      return /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString)
+    }
+
+    function advancedSearchCharacters () {
+      return ":\+\-^()´\"*"
     }
 
     function updateBrowserLocationWithUri (type, resourceUri) {
@@ -1745,6 +1749,7 @@
                 })
               },
               isAdvancedQuery: isAdvancedQuery,
+              advancedSearchCharacters: advancedSearchCharacters,
               valueOfInputById: function (inputId, valueIndex) {
                 var keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
                 return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)

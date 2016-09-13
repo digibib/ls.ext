@@ -49,7 +49,9 @@
         value="{{./current.displayValue}}"/>
         <span class="legend">
             {{#if isAdvancedQuery(./current.displayValue)}}
-                <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Du bruker nå avansert søk. Trykk Enter for å søke.</span>
+                <span class="advanced-search-legend pure-u-7-24">
+                    <span class="ui-icon ui-icon-info"/>Du bruker nå <span class="more-info"
+                                                                           title="Søk som inneholder et av disse tegnene {{advancedSearchCharacters()}}. Du kan også bruke AND, OR og NOT.">avansert søk</span>. Trykk Enter for å søke.</span>
             {{else}}
                 {{#if config.search[./current.accepted.selectedIndexType || ../../selectedIndexType].legend}}
                         <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
