@@ -1,10 +1,6 @@
 @prefix biography: <http://data.deichman.no/biography#> .
 @prefix duo: <http://data.deichman.no/utility#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-biography:biographicalContent a duo:Biography ;
-  duo:code "1" ;
-  rdfs:label "Biografisk innhold"@no ;
-  rdfs:label "Biographical content"@en .
 biography:autobiography a duo:Biography ;
   duo:code "a" ;
   rdfs:label "Selvbiografi"@no ;
@@ -17,7 +13,7 @@ biography:collectiveBiography a duo:Biography ;
   duo:code "c" ;
   rdfs:label "Samlingsbiografi"@no ;
   rdfs:label "Collective biography"@en .
-biography:biographicalInformation a duo:Biography ;
+biography:biographicalContent a duo:Biography ;
   duo:code "d" ;
-  rdfs:label "Inneholder biografisk informasjon"@no ;
-  rdfs:label "Contains biographical information"@en .
+  rdfs:label "Biografisk innhold"@no ;
+  rdfs:label "Biographical content"@en .

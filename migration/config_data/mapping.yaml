@@ -3148,27 +3148,18 @@
                 m: "gothic"
                 u: "unknown"
                 z: "burmese"
-        literaryForm:
-          predicate: "ONTOLOGY.literaryForm"
+        fictionNonfiction:
+          predicate: "ONTOLOGY.fictionNonfiction"
           object:
             datatype: "uri"
-            prefix: "http://data.deichman.no/literaryForm#"
+            prefix: "http://data.deichman.no/fictionNonfiction#"
             substr_length: 1
             substr_offset: 33
             regex_substitute:
-              orig: "0|1|r|n|d|s|t|a|l|p|b"
+              orig: "0|1"
               subs:
                 '0': "nonfiction"
                 '1': "fiction"
-                r: "novel"
-                n: "shortStory"
-                d: "poem"
-                s: "drama"
-                t: "comicBook"
-                a: "anthology"
-                l: "textBook"
-                p: "pointingBook"
-                b: "pictureBook"
         biography:
           predicate: "ONTOLOGY.biography"
           object:
@@ -3183,7 +3174,7 @@
                 a: "autobiography"
                 b: "singleBiograpy"
                 c: "collectiveBiography"
-                d: "biographicalInformation"
+                d: "biographicalContent"
     -
       '019':
         subfields:
