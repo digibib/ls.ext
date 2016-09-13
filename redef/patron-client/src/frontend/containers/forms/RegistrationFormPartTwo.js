@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, createElement } from 'react'
 import { reduxForm, Field } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -6,7 +6,6 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as ModalActions from '../../actions/ModalActions'
-import Libraries from '../../components/Libraries'
 import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartTwo'
 import validator from '../../../common/validation/validator'
@@ -21,6 +20,12 @@ class RegistrationFormPartTwo extends React.Component {
     this.handleRegistration = this.handleRegistration.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
     this.renderInput = this.renderInput.bind(this)
+    this.renderField = this.renderField.bind(this)
+    this.renderFieldWithContainerTagAndOptionalHeader = this.renderFieldWithContainerTagAndOptionalHeader.bind(this)
+    this.renderTermsAndConditions = this.renderTermsAndConditions.bind(this)
+    this.renderSelectField = this.renderSelectField.bind(this)
+    this.renderLibraryOptions = this.renderLibraryOptions.bind(this)
+    this.renderLibraryField = this.renderLibraryField.bind(this)
   }
 
   handleCheckForExistingUser () {
@@ -52,11 +57,87 @@ class RegistrationFormPartTwo extends React.Component {
     }
   }
 
-  renderInput (field) {
+  renderFieldWithContainerTagAndOptionalHeader (containerTag, containerProps, fieldName, fieldType, component, additionalHeaderTag, additionalHeaderMessage) {
+    let formattedHeaderMessage
+    if (additionalHeaderTag && additionalHeaderMessage) {
+      formattedHeaderMessage = <FormattedMessage {...messages[ additionalHeaderMessage ]} />
+    }
+    return createElement(containerTag, containerProps,
+      additionalHeaderTag && additionalHeaderMessage ? createElement(additionalHeaderTag, {}, formattedHeaderMessage) : null,
+      this.renderField(fieldName, fieldType, component))
+  }
+
+  renderField (name, type, component) {
+    return <Field name={name} type={type} id={name} component={component} />
+  }
+
+  renderLibraryOptions () {
+    const branchOptions = []
+    const libraries = this.props.libraries
+    Object.keys(libraries).forEach(branchCode => {
+      const branchName = libraries[ branchCode ]
+      branchOptions.push(
+        <option key={branchCode} value={branchCode}>
+          {branchName}
+        </option>
+      )
+    })
+    return branchOptions
+  }
+
+  renderSelectField (name, options, headerTag) {
+    const formattedHeaderMsg = <FormattedMessage {...messages[ name ]} />
+    const header = createElement(headerTag, {}, formattedHeaderMsg)
     return (
       <div>
-        <input {...field.input} type={field.type} />
+        {header}
+        <div className="select-container">
+          <Field name={name} component="select">
+            {options.map(option => <option
+              value={option}>{this.props.intl.formatMessage({ ...messages[ option ] })}</option>)}
+          </Field>
+        </div>
+      </div>
+    )
+  }
+
+  renderLibraryField (name, headerTag) {
+    const formattedHeaderMsg = <FormattedMessage {...messages[ name ]} />
+    const header = createElement(headerTag, {}, formattedHeaderMsg)
+    return (
+      <div>
+        {header}
+        <div className="select-container">
+          <Field name={name} component="select">
+            {this.renderLibraryOptions()}
+          </Field>
+        </div>
+      </div>
+    )
+  }
+
+  renderInput (field) {
+    console.log('fieldname', field.name)
+    return (
+      <div>
+        <h4><FormattedMessage {...messages[ field.name ]} /></h4>
+        <input {...field.input} type={field.type} name={field.name} id={field.name} />
+        <label htmlFor={field.name}><FormattedMessage {...messages[ field.name ]} /></label>
         { this.getValidator(field) }
+      </div>
+    )
+  }
+
+  renderTermsAndConditions (field) {
+    return (
+      <div className="terms_and_conditions">
+        <input data-automation-id="accept_terms" onClick={this.handleAcceptTerms} id={field.name} {...field.input}
+               type={field.type} />
+        <label htmlFor={field.name}><span>{/* Helper for checkbox styling */}</span></label>
+        <a href="/terms" title="termslink" target="_blank">
+          <FormattedMessage {...messages.acceptTermsLink} />
+        </a>
+        {this.getValidator(field)}
       </div>
     )
   }
@@ -72,115 +153,27 @@ class RegistrationFormPartTwo extends React.Component {
   render () {
     const { submitting } = this.props
     return (
-     <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
+      <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
         <fieldset>
           <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
-          <span className="display-inline">
-          <h4><FormattedMessage {...messages.email} /></h4>
-            <Field
-              name="email"
-              type="text"
-              id="email"
-              component={this.renderInput}
-            />
-          <label htmlFor="email"><FormattedMessage {...messages.email} /></label>
-        </span>
-          <span className="display-inline">
-          <h4><FormattedMessage {...messages.mobile} /></h4>
-            <Field
-              name="mobile"
-              type="text"
-              id="mobile"
-              component={this.renderInput}
-            />
-          <label htmlFor="mobile"><FormattedMessage {...messages.mobile} /></label>
-        </span>
+          {this.renderFieldWithContainerTagAndOptionalHeader('span', { className: 'display-inline' }, 'email', 'email', this.renderInput)}
+          {this.renderFieldWithContainerTagAndOptionalHeader('span', { className: 'display-inline' }, 'mobile', 'number', this.renderInput)}
           <address>
-            <h4><FormattedMessage {...messages.address} /></h4>
-            <Field
-              name="address"
-              type="text"
-              id="address"
-              component={this.renderInput}
-            />
-            <label htmlFor="address"><FormattedMessage {...messages.address} /></label>
-            <span className="display-inline">
-            <h4><FormattedMessage {...messages.zipcode} /></h4>
-              <Field
-                name="zipcode"
-                type="text"
-                id="zipcode"
-                component={this.renderInput}
-              />
-            <label htmlFor="zipcode"><FormattedMessage {...messages.zipcode} /></label>
-          </span>
-            <span className="display-inline">
-            <h4><FormattedMessage {...messages.city} /></h4>
-              <Field
-                name="city"
-                type="text"
-                id="city"
-                component={this.renderInput}
-              />
-            <label htmlFor="city"><FormattedMessage {...messages.city} /></label>
-          </span>
-            <h4><FormattedMessage {...messages.country} /></h4>
-            <label htmlFor="country"><FormattedMessage {...messages.country} /></label>
-            <Field
-              name="country"
-              type="text"
-              id="country"
-              component={this.renderInput}
-            />
+            {this.renderField('address', 'text', this.renderInput)}
+            {this.renderFieldWithContainerTagAndOptionalHeader('span', { className: 'display-inline' }, 'zipcode', 'number', this.renderInput)}
+            {this.renderFieldWithContainerTagAndOptionalHeader('span', { className: 'display-inline' }, 'city', 'text', this.renderInput)}
+            {this.renderField('country', 'text', this.renderInput)}
           </address>
-
-          <h4><FormattedMessage {...messages.gender} /></h4>
-          <div className="select-container">
-            <select data-automation-id="gender_selection" name="gender" >
-              <option value="male">{this.props.intl.formatMessage({ ...messages.male })}</option>
-              <option value="female">{this.props.intl.formatMessage({ ...messages.female })}</option>
-            </select>
-          </div>
+          {this.renderSelectField('gender', ['male', 'female'], 'h4')}
 
         </fieldset>
 
         <fieldset>
           <legend><FormattedMessage {...messages.personSettingsLegend} /></legend>
-          <h2><FormattedMessage {...messages.choosePin} /></h2>
-          <Field
-            data-automation-id="choose_pin"
-            name="pin"
-            type="password"
-            id="pin"
-            component={this.renderInput}
-          />
-          <label htmlFor="pin"><FormattedMessage {...messages.choosePin} /></label>
-          <Field
-            data-automation-id="repeat_pin"
-            name="repeatPin"
-            type="password"
-            id="repeatPin"
-            component={this.renderInput}
-          />
-          <label htmlFor="repeatPin"><FormattedMessage {...messages.repeatPin} /></label>
-          <h2><FormattedMessage {...messages.chooseBranch} /></h2>
-          <div className="select-container">
-            <Libraries libraries={this.props.libraries} />
-          </div>
-          <div className="terms_and_conditions">
-            <Field
-              name="acceptTerms"
-              data-automation-id="accept_terms"
-              onClick={this.handleAcceptTerms}
-              id="acceptTerms"
-              type="checkbox"
-              component={this.renderInput}
-            />
-            <label htmlFor="acceptTerms"><span>{/* Helper for checkbox styling */}</span></label>
-            <a href="/terms" title="termslink" target="_blank">
-              <FormattedMessage {...messages.acceptTermsLink} />
-            </a>
-          </div>
+          {this.renderFieldWithContainerTagAndOptionalHeader('div', {}, 'pin', 'password', this.renderInput, 'h2', 'choosePin')}
+          {this.renderField('repeatPin', 'password', this.renderInput)}
+          {this.renderLibraryField('chooseBranch', 'h2')}
+          {this.renderField('acceptTerms', 'checkbox', this.renderTermsAndConditions)}
           <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
                   data-automation-id="register_button">
             <FormattedMessage {...messages.register} />
