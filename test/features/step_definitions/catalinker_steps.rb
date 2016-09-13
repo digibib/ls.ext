@@ -389,11 +389,16 @@ When(/^jeg oppretter et eksemplar av utgivelsen$/) do
     @browser.button(:text => "Ny").click
   end
   @browser.link(:id => "newitem").click
-  @browser.select_list(:id => /^tag_952_subfield_y_[0-9]+$/).select(@context[:defaults][:item_type][:desc])
-  @browser.text_field(:id => /^tag_952_subfield_p_[0-9]+$/).set(@context[:item_barcode])
-  @browser.text_field(:id => /^tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' % [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
+
+  # Updated to use Select2
+  @browser.div(:id => /^(s2id_)*tag_952_subfield_y_[0-9]+$/, :class => "select2-container").link.click # click to activate select box
+  @browser.div(:xpath => "//div[@class='select2-result-label' and text() = '#{@context[:defaults][:item_type][:desc]}']").click # select element
+
+  @browser.text_field(:id => /^(s2id_)*tag_952_subfield_p_[0-9]+$/).set(@context[:item_barcode])
+  @browser.text_field(:id => /^(s2id_)*tag_952_subfield_o_[0-9]+$/).set('%d%d%d %s%s%s' % [rand(10), rand(10), rand(10), ('A'..'Z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0], ('a'..'z').to_a.shuffle[0]])
   @browser.button(:name => "add_submit").click
   record_id = @context[:publication_recordid]
+
 
   @cleanup.push("delete items of biblio ##{record_id}" =>
                     lambda do

@@ -36,7 +36,7 @@ Given(/^at materialet ikke er til utlån$/) do
   step "velger å redigere eksemplaret"
 
   # Not for loan is $952_7
-  s = @browser.select_list(:id => /^tag_952_subfield_7_[0-9]+$/)
+  s = @browser.select_list(:id => /^s2id_tag_952_subfield_7_[0-9]+$/)
   s.select_value @context[:authorised_value]
   @browser.button(:value => "Save changes").click
   step "systemet viser at eksemplaret ikke er til utlån"
