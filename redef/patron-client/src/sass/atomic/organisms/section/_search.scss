@@ -10,11 +10,10 @@
       @include container;
       border: 1px solid $greyColor;
       background: $white;
-      border-width: 1px;
+      border-width: 1px 0 1px 1px;
       border-style: solid;
       border-color: $mediumGreyColor;
       border-radius: 4px 4px;
-      padding-right: 2px;
     }
     .search-field {
       @include span(9);
@@ -26,7 +25,7 @@
   input {
     border: none;
     color: $darkGreyColor;
-    font-size: 1.64em;
+    font-size: rhythm(4);
     padding: rhythm(0.5) rhythm(0.5) rhythm(0.5) 1.15em;
     background-image: url('/images/icon-searchbar-search.svg');
     background-repeat: no-repeat;
@@ -34,9 +33,9 @@
     width: 100%;
   }
   button {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    background: $blackColor;
+    margin-top: -1px;
+    margin-bottom: -1px;
+    background: $redColor;
     text-transform: uppercase;
     color: $white;
     font-size: rhythm(4);
@@ -45,6 +44,10 @@
     padding: rhythm(0.5);
     border-radius: 2px;
     letter-spacing: rhythm(0.2);
+    border-style: solid;
+    border-color: $redColor;
+    border-width: 1px;
+    border-radius: 0px 4px 4px 0px;
   }
 }
 @include breakpoint($small) {
@@ -63,8 +66,7 @@
         color: $darkGreyColor;
         display: inline;
       }
-      .search-field-wrapper {
-        border-width: 1px 0 1px 1px;
+      .search-field-wrapper {   
         padding-right: none;
       }
       .search-field {
@@ -80,15 +82,9 @@
       background-position: 1em center;
     }
     button {
-      margin-top: -1px;
-      margin-bottom: -1px;
-      background: $redColor;
       font-weight: bold;
       padding: rhythm(1);
-      border-style: solid;
-      border-color: $redColor;
-      border-width: 1px;
-      border-radius: 0px 4px 4px 0px;
+      
     }
   }
 }

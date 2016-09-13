@@ -1,7 +1,9 @@
 .filters {
+
   @include span(12 of 12);
 
   @include breakpoint($small){
+    margin-top: 25px;
     @include border-top;
   }
 

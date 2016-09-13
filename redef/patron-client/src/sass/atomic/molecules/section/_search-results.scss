@@ -1,10 +1,11 @@
 .search-results {
-  
+
   @include span(12 of 12);
   @include border-top;
   padding-top: rhythm(2);
 
   @include breakpoint($small){
+    margin-top: 25px;
     @include span(9 of 12);
     margin-right: 0;
   }
