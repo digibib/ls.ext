@@ -6,9 +6,10 @@ import { reduxForm, Field } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl'
 import { bindActionCreators } from 'redux'
+
+import FormInputFieldPlain from '../../components/FormInputFieldPlain'
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as LoginActions from '../../actions/LoginActions'
-
 import * as ModalActions from '../../actions/ModalActions'
 
 class LoginForm extends React.Component {
@@ -16,8 +17,6 @@ class LoginForm extends React.Component {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
     this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
-    this.renderField = this.renderField.bind(this)
-    this.renderInput = this.renderInput.bind(this)
   }
 
   handleLogin (event) {
@@ -34,26 +33,14 @@ class LoginForm extends React.Component {
     this.props.registrationActions.startRegistration()
   }
 
-  renderInput (field) {
-    return (
-      <div>
-        <h2><FormattedMessage {...this.props.messages[field.name]} /></h2>
-        <input {...field.input} type={field.type} />
-      </div>
-    )
-  }
-
-  renderField (name, type) {
-    return <Field name={name} type={type} id={name} component={this.renderInput} />
-  }
-
   render () {
     return (
       <div data-automation-id="login_modal">
         <form onSubmit={this.handleLogin}>
           <h1>Logg inn for å reservere</h1>
-          {this.renderField('username', 'text')}
-          {this.renderField('password', 'password')}
+          <FormInputFieldPlain name="username" type="text" message={...this.props.messages.username} headerType="h2"/>
+          <FormInputFieldPlain name="password" type="password" message={...this.props.messages.password}  headerType="h2"/>
+
           <p>Glemt PIN-kode?</p>
           <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}
                   onClick={this.handleLogin}

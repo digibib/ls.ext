@@ -117,7 +117,6 @@ class RegistrationFormPartTwo extends React.Component {
   }
 
   renderInput (field) {
-    console.log('fieldname', field.name)
     return (
       <div>
         <h4><FormattedMessage {...messages[ field.name ]} /></h4>

@@ -4,13 +4,13 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
+import FormInputField from '../../components/FormInputField'
 import * as ProfileActions from '../../actions/ProfileActions'
 
 class ChangePinForm extends React.Component {
   constructor (props) {
     super(props)
     this.handleChangePin = this.handleChangePin.bind(this)
-    this.renderInput = this.renderInput.bind(this)
   }
 
   handleChangePin () {
@@ -28,21 +28,6 @@ class ChangePinForm extends React.Component {
         ? <div style={{ color: 'red' }}><FormattedMessage {...messages[ changePasswordError.message ]} /></div>
         : <div style={{ color: 'red' }}><FormattedMessage {...messages.genericChangePasswordError} /></div>
     }
-  }
-
-  renderField (name) {
-    return <Field name={name} component={this.renderInput} />
-  }
-
-  renderInput (field) {
-    return (
-      <div>
-        <h2><FormattedMessage {...messages[ field.name ]} /></h2>
-        <input {...field.input} id={field.name} name={field.name} type="password" />
-        <label htmlFor={field.name}><FormattedMessage {...messages[ field.name ]} /></label>
-        { this.getValidator(field) }
-      </div>
-    )
   }
 
   getValidator (field) {
@@ -71,10 +56,13 @@ class ChangePinForm extends React.Component {
             </div>
 
             <div className="change-pin-fields">
-              {this.renderField('currentPin')}
+              <FormInputField name="currentPin" type="password" message={...messages.currentPin} headerType='h2'
+                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true} />
               {this.renderError()}
-              {this.renderField('newPin')}
-              {this.renderField('repeatPin')}
+              <FormInputField name="newPin" type="password" message={...messages.newPin} headerType='h2'
+                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true} />
+              <FormInputField name="repeatPin" type="password" message={...messages.repeatPin} headerType='h2'
+                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true} />
             </div>
           </section>
           <footer>

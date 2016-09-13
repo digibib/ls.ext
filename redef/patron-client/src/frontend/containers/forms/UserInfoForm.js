@@ -11,15 +11,13 @@ import validator from '../../../common/validation/validator'
 import fields from '../../../common/forms/userInfoForm'
 import ValidationMessage from '../../components/ValidationMessage'
 import asyncValidate from '../../utils/asyncValidate'
+import FormInputFieldWithTopLabelContainer from '../../components/FormInputFieldWithTopLabelContainer'
 
 class UserInfoForm extends React.Component {
   constructor (props) {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChangeClick = this.handleChangeClick.bind(this)
-    this.renderInput = this.renderInput.bind(this)
-    this.renderField = this.renderField.bind(this)
-    this.renderFieldWithContainerTag = this.renderFieldWithContainerTag.bind(this)
   }
 
   handleSubmit () {
@@ -33,25 +31,6 @@ class UserInfoForm extends React.Component {
     this.props.loginActions.requireLoginBeforeAction(ParameterActions.toggleParameter('edit'))
   }
 
-  renderFieldWithContainerTag (tag, elementProperties, fieldName, fieldType) {
-    return createElement(tag, elementProperties, this.renderField(fieldName, fieldType))
-  }
-
-  renderField (name, type) {
-    return <Field name={name} type={type} id={name} component={this.renderInput} />
-  }
-
-  renderInput (field) {
-    return (
-      <div>
-        <h2><FormattedMessage {...messages[ field.name ]} /></h2>
-        <label htmlFor="postal"><FormattedMessage {...messages[ field.name ]} /></label>
-        <input {...field.input} type={field.type} placeholder={this.props.intl.formatMessage(messages[ field.name ])} />
-        { this.getValidator(field) }
-      </div>
-    )
-  }
-
   getValidator (field) {
     if (field.meta.touched && field.meta.error) {
       return <div style={{ color: 'red' }}><ValidationMessage message={field.meta.error} /></div>
@@ -63,26 +42,44 @@ class UserInfoForm extends React.Component {
       <form name="change-user-details" id="change-user-details">
         <div className="address col">
           <address typeof="schema:PostalAddress">
-            {this.renderFieldWithContainerTag('span', { property: 'schema:streetAddress' }, 'address', 'text')}
+            <FormInputFieldWithTopLabelContainer fieldName="address" fieldType="text" fieldHeaderType="h2"
+                                                 fieldMessage={...messages.address} containerTag="span"
+                                                 getFieldValidator={this.getValidator}
+                                                 containerProps={{ property: 'schema:streetAddress' }} />
             <br />
-            {this.renderFieldWithContainerTag('span', {
-              property: 'schema:postalCode',
-              className: 'display-inline'
-            }, 'zipcode', 'text')}
-            {this.renderFieldWithContainerTag('span', {
-              property: 'schema:addressLocality',
-              className: 'display-inline'
-            }, 'city', 'text')}
+            <FormInputFieldWithTopLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h2"
+                                                 fieldMessage={...messages.zipcode} containerTag="span"
+                                                 getFieldValidator={this.getValidator} containerProps={{
+                                                    property: 'schema:postalCode',
+                                                    className: 'display-inline'
+                                                  }
+            } />
+            <FormInputFieldWithTopLabelContainer fieldName="city" fieldType="text" fieldHeaderType="h2"
+                                                 fieldMessage={...messages.city} containerTag="span"
+                                                 getFieldValidator={this.getValidator} containerProps={{
+                                                    property: 'schema:addressLocality',
+                                                    className: 'display-inline'
+                                                  }
+            } />
             <br />
-            {this.renderFieldWithContainerTag('span', { property: 'schema:addressCountry' }, 'country', 'text')}
+            <FormInputFieldWithTopLabelContainer fieldName="country" fieldType="text" fieldHeaderType="h2"
+                                                 fieldMessage={...messages.country} containerTag="span"
+                                                 getFieldValidator={this.getValidator}
+                                                 containerProps={{ property: 'schema:addressCountry' }} />
             <br />
           </address>
         </div>
 
         <div className="col">
-          {this.renderFieldWithContainerTag('div', { className: 'cell-phone' }, 'mobile', 'number')}
-          {this.renderFieldWithContainerTag('div', { className: 'phone' }, 'telephone', 'number')}
-          {this.renderFieldWithContainerTag('div', { className: 'email' }, 'email', 'email')}
+          <FormInputFieldWithTopLabelContainer fieldName="mobile" fieldType="number" fieldHeaderType="h2"
+                                               fieldMessage={...messages.mobile} containerTag="div"
+                                               getFieldValidator={this.getValidator} containerProps={{ className: 'cell-phone' }} />
+          <FormInputFieldWithTopLabelContainer fieldName="telephone" fieldType="number" fieldHeaderType="h2"
+                                               fieldMessage={...messages.telephone} containerTag="div"
+                                               getFieldValidator={this.getValidator} containerProps={{ className: 'phone' }} />
+          <FormInputFieldWithTopLabelContainer fieldName="email" fieldType="email" fieldHeaderType="h2"
+                                               fieldMessage={...messages.email} containerTag="div"
+                                               getFieldValidator={this.getValidator} containerProps={{ className: 'email' }} />
         </div>
       </form>
     )

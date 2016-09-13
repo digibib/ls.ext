@@ -15,9 +15,6 @@ class RegistrationFormPartOne extends React.Component {
   constructor (props) {
     super(props)
     this.handleCancel = this.handleCancel.bind(this)
-    this.renderInput = this.renderInput.bind(this)
-    this.renderField = this.renderField.bind(this)
-    this.renderFieldWithContainerTagAndOptionalHeader = this.renderFieldWithContainerTagAndOptionalHeader.bind(this)
   }
 
   handleCancel (event) {
@@ -69,7 +66,7 @@ class RegistrationFormPartOne extends React.Component {
     )
   }
 
-  renderFieldWithContainerTagAndOptionalHeader (tag, className, fieldName, fieldType, additionalHeaderTag, additionalHeaderMessage) {
+  /*renderFieldWithContainerTagAndOptionalHeader (tag, className, fieldName, fieldType, additionalHeaderTag, additionalHeaderMessage) {
     let formattedHeaderMessage
     if (additionalHeaderTag && additionalHeaderMessage) {
       formattedHeaderMessage = <FormattedMessage {...messages[ additionalHeaderMessage ]} />
@@ -92,7 +89,7 @@ class RegistrationFormPartOne extends React.Component {
         { this.getValidator(field) }
       </div>
     )
-  }
+  }*/
 
   getValidator (field) {
     if (field.meta.touched && field.meta.error) {
