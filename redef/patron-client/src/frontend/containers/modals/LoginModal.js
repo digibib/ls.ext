@@ -9,7 +9,7 @@ import LoginForm from '../forms/LoginForm'
 class LoginModal extends React.Component {
   constructor (props) {
     super(props)
-    this.renderError = this.renderError.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
   }
 
   renderError () {
@@ -100,14 +100,11 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-let intlLogin = injectIntl(LoginModal)
+const intlLogin = injectIntl(LoginModal)
+export { intlLogin as Login }
 
-intlLogin = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(intlLogin)
-
-export { intlLogin as Login }
-
-export default intlLogin
 

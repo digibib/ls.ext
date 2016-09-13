@@ -144,8 +144,8 @@ Search.propTypes = {
   intl: intlShape.isRequired
 }
 
-const i18nSearch = injectIntl(Search)
-export { i18nSearch as Search }
+const intlSearch = injectIntl(Search)
+export { intlSearch as Search }
 
 function mapStateToProps (state) {
   return {
