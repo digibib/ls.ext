@@ -10,7 +10,7 @@ class SearchResultsText extends React.Component {
       return <p data-automation-id="is_searching"><FormattedMessage {...messages.searching} /></p>
     } else {
       return (
-        <p>
+        <div className="search-results-number">
           <MediaQuery query="(min-width: 668px)" values={{...this.props.mediaQueryValues}}>
             <FormattedHTMLMessage {...messages.totalHits}
               values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
@@ -19,7 +19,7 @@ class SearchResultsText extends React.Component {
             <FormattedHTMLMessage {...messages.totalHitsMobile}
               values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
           </MediaQuery>
-        </p>
+        </div>
       )
     }
   }

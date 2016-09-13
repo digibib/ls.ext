@@ -79,15 +79,13 @@ class Search extends React.Component {
       <div className="wrapper">
         <div className="row">
           {this.props.locationQuery.query
-            ? (<div className="search-results-footer">
-            <div className="search-results-number">
+            ? (<div className="search-results-header">
               <SearchResultsText totalHits={this.props.totalHits}
                                  totalHitsPublications={this.props.totalHitsPublications}
                                  locationQuery={this.props.locationQuery}
                                  isSearching={this.props.isSearching} />
               <SearchFilterBox query={this.props.locationQuery}
                                toggleFilter={this.props.searchFilterActions.toggleFilter} />
-            </div>
             {this.props.totalHits > 0
               ? (<div className="search-sorting patron-placeholder">
               <p>Sorter treff på</p>

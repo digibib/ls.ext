@@ -53,8 +53,8 @@ const SearchFilterBox = ({toggleFilter, url}) => {
     const filters = getFilters(window.location.href);
     if( filters.length > 0 ) {
         return (
-            <div className="search-results-active-filters">
-                Aktive filtre:
+            <div className="active-filters">
+                <div className="label">Avgrenset til:</div>
                 <ul>
                     {
                         filters.filter((filter) => filter.active).map((filter) => {
