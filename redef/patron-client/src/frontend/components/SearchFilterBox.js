@@ -18,7 +18,6 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
   } else {
     return null
   }
-  else return null
 }
 
 const messages = defineMessages({
