@@ -701,6 +701,7 @@ public class EntityServiceImplTest {
                 + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
                 + "    ns2:subtitle \"roman\" ;\n"
                 + "    ns2:ageLimit \"75\" ;\n"
+                + "    ns2:abstract \"abc\";\n"
                 + "    ns2:hasPlaceOfPublication <http://deichman.no/place/p1> ;"
                 + "    ns4:locationSignature \"Rag\" ;\n"
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
@@ -795,6 +796,10 @@ public class EntityServiceImplTest {
         // Format
         field = MarcRecord.newDataField("338");
         field.addSubfield('a', "eBokBib");
+        want.addMarcField(field);
+        // Sammendrag
+        field = MarcRecord.newDataField("520");
+        field.addSubfield('a', "abc");
         want.addMarcField(field);
         // Sjanger:
         field = MarcRecord.newDataField("655");

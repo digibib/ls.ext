@@ -79,6 +79,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property formatLabelProperty;
     private final Property adaptaionProperty;
     private final Property fictionNonFictionProperty;
+    private final Property abstractProperty;
 
     private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
     private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
@@ -108,6 +109,7 @@ public final class EntityServiceImpl implements EntityService {
         formatLabelProperty = ResourceFactory.createProperty(BaseURI.ontology("formatLabel"));
         adaptaionProperty = ResourceFactory.createProperty(BaseURI.ontology("adaptationLabel"));
         fictionNonFictionProperty = ResourceFactory.createProperty(BaseURI.ontology("fictionNonfiction"));
+        abstractProperty = ResourceFactory.createProperty(BaseURI.ontology("abstract"));
 
     }
 
@@ -484,6 +486,8 @@ public final class EntityServiceImpl implements EntityService {
                     marcRecord.addMarcField(MarcConstants.FIELD_338, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(adaptaionProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_385, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(abstractProperty)) {
+                    marcRecord.addMarcField(MarcConstants.FIELD_520, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 }
             }
         }
