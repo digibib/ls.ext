@@ -114,7 +114,10 @@ services:
       SIP_CONNS: 10
       TCP_PORT: 6006
     logging:
-      driver: "journald"
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
 
   smtp:
     container_name: mailrelay
