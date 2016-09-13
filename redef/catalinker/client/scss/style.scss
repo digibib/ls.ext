@@ -371,6 +371,9 @@ body {
           &[type=number] {
             text-align: right;
           }
+          &:invalid {
+            outline: auto 5px red;
+          }
         }
         textarea {
           width: 100%;

@@ -2301,9 +2301,13 @@
                 ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
               },
               fetchValueSuggestions: function (event) {
-                var searchValue = event.context.current.value
+                var searchValue = event.context.current.value.replace(/[ -]/g, '')
                 if (searchValue && searchValue !== '') {
                   var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
+                  if (searchExternalSourceInput.searchForValueSuggestions.pattern &&
+                    !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
+                    return
+                  }
                   searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource = []
                   searchExternalSourceInput.searchForValueSuggestions.valuesFromPreferredSource = []
                   _.each(allInputs(), function (input) {
@@ -2356,7 +2360,18 @@
                         _.values(resultStat.itemsFromOtherSources), function (memo, value) {
                           return memo + value
                         }, 0) === 0) {
-                      window.alert('Ingen treff i eksterne kilder')
+                      $('#search-suggestion-result-dialog').dialog({
+                        modal: true,
+                        width: 450,
+                        buttons: [
+                          {
+                            text: 'Ok',
+                            click: function () {
+                              $(this).dialog('close')
+                            }
+                          }
+                        ]
+                      })
                     }
                   })
                 }

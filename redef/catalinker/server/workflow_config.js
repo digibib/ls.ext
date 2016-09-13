@@ -298,6 +298,8 @@ module.exports = (app) => {
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
                   label: 'ISBN',
+                  pattern: '^[ 0-9\-]+[xX]?\s*$',
+                  patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
                   parameterName: 'isbn',
                   automationId: 'searchValueSuggestions',
                   showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
@@ -315,6 +317,8 @@ module.exports = (app) => {
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
                   label: 'EAN',
+                  pattern: '^ *([0-9]{13})?\s*$',
+                  patternMismatchMessage: 'Dette ser ikke ut som et gyldig EAN-nummer',
                   parameterName: 'ean',
                   automationId: 'searchEanValueSuggestions',
                   showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created

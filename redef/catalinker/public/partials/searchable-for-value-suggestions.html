@@ -1,13 +1,18 @@
 <input autofocus {{#disabled}} disabled="true" {{/}}
+{{#with searchForValueSuggestions.pattern}}pattern="{{this}}"{{/with}}
 class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}} simple-searchable"
 on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}"
 {{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled=disabled{{/if}}/>
 <span class="legend">
-    {{#current.value && !../../searchForValueSuggestions.hitsFromPreferredSource.length > 0}}
-    <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Trykk Enter for å søke.</span>
-    {{/}}
+    {{#if current.value && !../../searchForValueSuggestions.hitsFromPreferredSource.length > 0 }}
+        {{#if !searchForValueSuggestions.pattern || RegExp(searchForValueSuggestions.pattern).test(current.value) }}
+            <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Trykk Enter for å søke.</span>
+        {{else}}
+            <span class="advanced-search-legend"><span class="ui-icon ui-icon-alert"/>{{searchForValueSuggestions.patternMismatchMessage || 'Formatet på søketeksten er ikke gyldig.'}}</span>
+        {{/if}}
+    {{/if}}
 </span>
 <div class="external-source-results">
     {{#each searchForValueSuggestions.hitsFromPreferredSource}}
@@ -28,4 +33,10 @@ value="{{current.value}}"
         </ul>
     </span>
     {{/each}}
+</div>
+
+<div style="display: none;">
+    <div id="search-suggestion-result-dialog">
+        <h3>Ingen treff i eksterne kilder</h3>
+    </div>
 </div>
