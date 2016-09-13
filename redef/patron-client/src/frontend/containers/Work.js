@@ -72,8 +72,7 @@ class Work extends React.Component {
     }
     const { back } = this.props.location.query
     return (
-      <div className="container">
-        <div className="row">
+      <div className="wrapper">
           {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
             ? (
             <header className="back-to-results">
@@ -110,8 +109,10 @@ class Work extends React.Component {
               <Genres genres={work.genres} />
             </aside>
           </article>
-          <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
-                           query={this.props.query} />
+          <div className="work-active-filters">
+            <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+                             query={this.props.query} />
+          </div>
           <Publications locationQuery={this.props.location.query}
                         expandSubResource={this.props.resourceActions.expandSubResource}
                         publications={work.publications}
@@ -121,7 +122,6 @@ class Work extends React.Component {
                         libraries={this.props.libraries}
                         audiences={Array.isArray(this.props.resources[this.props.params.workId].audience) ? this.props.resources[this.props.params.workId].audience : [this.props.resources[this.props.params.workId].audience]}
           />
-        </div>
       </div>
     )
   }

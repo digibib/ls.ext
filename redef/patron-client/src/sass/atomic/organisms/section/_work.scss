@@ -1,9 +1,13 @@
 .work-entry {
   @include span(12 of 12);
+  @include container;
   margin-top: rhythm(2);
 
   h1 {
     color: $redColor;
   }
 
+}
+.work-active-filters {
+  @include span(12);
 }
