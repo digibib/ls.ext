@@ -1,7 +1,6 @@
 
 # Variables
 # =========
-
 ifdef NOVAGRANT
 HOST ?= localhost
 else
@@ -61,6 +60,7 @@ out/done.massage_input_data:
 	@touch out/done.massage_input_data
 
 out/done.setup_koha: out/done.massage_input_data
+ifndef NOKOHA
 	@echo "   Setting up Koha"
 	@echo "-- Populating branches"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/branches.sql'
@@ -77,9 +77,11 @@ out/done.setup_koha: out/done.massage_input_data
 	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems, items, issues and reserves"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;TRUNCATE TABLE reserves;SET foreign_key_checks=1;"'
 	@echo "OK Done setting up Koha\n"
+endif
 	@touch out/done.setup_koha
 
 out/done.migrate_catalogue_to_koha: out/done.setup_koha
+ifndef NOKOHA
 	@echo "   Migration catalogue with items into Koha"
 	@echo "-- Stopping Cron"
 	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop cron'
@@ -91,10 +93,12 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 	@sudo docker run --net=dockercompose_backend --rm -v dockercompose_koha_state:/data -v $(shell pwd)/out:/out busybox cp /out/catalogue.mrc /data/
 	@echo "-- Importing to Koha with bulkmarcimport"
 	@sudo docker exec koha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
-	@touch out/done.migrate_catalogue_to_koha
 	@echo "OK Done importing catalogue into Koha\n"
+endif
+	@touch out/done.migrate_catalogue_to_koha
 
 out/done.messing_with_migrated_catalogue: out/done.migrate_catalogue_to_koha
+ifndef NOKOHA
 	@echo "   Messing with the migrated catalogue in Koha"
 	@echo "-- Updating biblionumbers (so that biblionumber=tittelnummer)"
 	@cp sql/*.sql out/
@@ -103,10 +107,11 @@ out/done.messing_with_migrated_catalogue: out/done.migrate_catalogue_to_koha
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
 	@echo "-- Populating zebra queue"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
-	@touch out/done.messing_with_migrated_catalogue
 	@echo "-- Starting Cron"
 	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start cron'
 	@echo "OK Done messing with catalogue\n"
+endif
+	@touch out/done.messing_with_migrated_catalogue
 
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
@@ -167,6 +172,7 @@ virtuoso: out/done.convert_catalogue_to_nt
 	@echo "OK Imported RDF to Virtuoso\n"
 
 out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
+ifndef NOKOHA
 	@echo "   Syncing Koha and Fuseki"
 	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
@@ -178,6 +184,7 @@ out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
 	@$(MIGRATION_RUN_CMD) 'curl -s -w "   %{time_total}s\n" -X POST -H "Content-Type: application/sparql-update" -d @/out/images.sparql fuseki:3030/ds/update'
 	@echo "OK Done syncing.\n"
 	@touch out/done.koha_fuseki_sync
+endif
 	@echo "-- Starting indexing resources in Elasticsearch..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
 	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
