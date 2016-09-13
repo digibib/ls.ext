@@ -3,7 +3,7 @@
   @include span(12 of 12);
 
   @include breakpoint($small){
-    margin-top: 25px;
+    margin-top: rhythm(5);
     @include border-top;
   }
 
@@ -32,16 +32,14 @@
       .limit-filters-open {
         @include span(1.2 of 12);
         float: right;
-        margin-top: rhythm(2);
+        margin-top: rhythm(5);
       }
     }
   }
-
-
   .limit-filters-header {
     display: none;
 
-    @include breakpoint($small){
+    @include breakpoint($small) {
       display: block;
       text-transform: uppercase;
       font-size: 0.8em;
