@@ -363,7 +363,7 @@
     }
 
     function advancedSearchCharacters () {
-      return ":\+\-^()´\"*"
+      return ':+-^()´"*'
     }
 
     function updateBrowserLocationWithUri (type, resourceUri) {
