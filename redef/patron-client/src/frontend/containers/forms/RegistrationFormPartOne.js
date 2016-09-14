@@ -277,8 +277,6 @@ RegistrationFormPartOne.propTypes = {
 
 function mapStateToProps (state) {
   return {
-    isLoggedIn: state.application.isLoggedIn,
-    loginError: state.application.loginError,
     libraries: state.application.libraries,
     showSSNInfo: state.registration.showSSNInfo,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,

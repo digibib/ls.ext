@@ -76,7 +76,7 @@ class RegistrationFormPartTwo extends React.Component {
                                                   containerProps={{ className: 'display-inline' }} formName={formName}
                                                   getFieldValidator={this.getValidator} />
 
-          <FormInputFieldWithBottomLabelContainer fieldName="mobile" fieldType="number" fieldHeaderType="h4"
+          <FormInputFieldWithBottomLabelContainer fieldName="mobile" fieldType="text" fieldHeaderType="h4"
                                                   fieldMessage={messages.mobile} containerTag="span"
                                                   containerProps={{ className: 'display-inline' }} formName={formName}
                                                   getFieldValidator={this.getValidator} />
@@ -84,7 +84,7 @@ class RegistrationFormPartTwo extends React.Component {
             <FormInputField name="address" type="text" message={messages.address} isLabelOverInput={false}
                             hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="number" fieldHeaderType="h4"
+            <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h4"
                                                     fieldMessage={messages.zipcode} containerTag="span"
                                                     containerProps={{ className: 'display-inline' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
@@ -259,8 +259,6 @@ RegistrationFormPartTwo.propTypes = {
 
 function mapStateToProps (state) {
   return {
-    isLoggedIn: state.application.isLoggedIn,
-    loginError: state.application.loginError,
     libraries: state.application.libraries,
     showSSNInfo: state.registration.showSSNInfo,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
@@ -285,8 +283,8 @@ const intlRegistrationFormPartTwo = injectIntl(RegistrationFormPartTwo)
 export { intlRegistrationFormPartTwo as RegistrationFormPartTwo }
 
 export default connect(
-  mapDispatchToProps,
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(reduxForm({
   form: formName,
   asyncValidate,

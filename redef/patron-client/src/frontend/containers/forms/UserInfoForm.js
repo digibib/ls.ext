@@ -179,8 +179,8 @@ const intlUserInfoForm = injectIntl(UserInfoForm)
 export { intlUserInfoForm as UserInfoForm }
 
 export default connect(
-  mapDispatchToProps,
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(reduxForm({
   form: formName,
   asyncValidate,
