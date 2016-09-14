@@ -1,28 +1,48 @@
 .filters {
-
-  @include span(12 of 12);
-
-  @include breakpoint($small){
-    margin-top: rhythm(5);
-    @include border-top;
-  }
-
-
-  @include breakpoint($small){
-     @include span(3 of 12);
-  }
+  @include span(12);
+  @include container();
 
   .limit-filters {
     display: none;
   }
 
-  @include breakpoint($lt-small){
+  .limit-filters-header {
+    display: none;
+  }
+
+}
+
+@include breakpoint($small) {
+
+  .filters {
+    @include span(3);
+    @include border-top;
+    margin-top: rhythm(5);
+
+    .limit-filters-header {
+      @include span(12 of 12);
+      display: block;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      color: $darkGreyColor;
+      padding-bottom: rhythm(2);
+      margin-top: rhythm(-5);
+    }
+
+  }
+
+}
+
+@include breakpoint($lt-small) {
+
+  .filters {
+
     .limit-filters {
+      @include span(12 of 12);
+      @include border-bottom;
       display: block;
       color: $redColor;
-      @include span(12 of 12);
       margin-bottom: rhythm(2);
-      @include border-bottom;
 
       span {
         @include span(10 of 12);
@@ -34,20 +54,9 @@
         float: right;
         margin-top: rhythm(5);
       }
-    }
-  }
-  .limit-filters-header {
-    display: none;
 
-    @include breakpoint($small) {
-      display: block;
-      text-transform: uppercase;
-      font-size: 0.8em;
-      color: $darkGreyColor;
-      @include span(12 of 12);
-      padding-bottom: rhythm(2);
-      margin-top: rhythm(-5);
     }
+
   }
 
 }
