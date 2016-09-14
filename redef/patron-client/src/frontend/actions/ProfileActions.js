@@ -294,7 +294,7 @@ export function changePassword (currentPassword, newPassword, successAction) {
 
 export function changeHistorySettingFromForm (successAction) {
   return (dispatch, getState) => {
-    const { changeHistorySetting: { history } } = getState().form
+    const { changeHistorySetting: { values: { history } }} = getState().form
     dispatch(changeHistorySetting(history, successAction))
   }
 }
@@ -326,7 +326,7 @@ export function changeHistorySetting (historySetting, successAction) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ saveHistory: historySetting.value })
+      body: JSON.stringify({ saveHistory: historySetting })
     })
       .then(response => {
         if (response.status === 200) {

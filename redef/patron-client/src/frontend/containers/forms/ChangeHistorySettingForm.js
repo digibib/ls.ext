@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, reset } from 'redux-form'
+import { reduxForm, reset, Field } from 'redux-form'
 import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import domOnlyProps from '../../utils/domOnlyProps'
 
@@ -26,14 +27,7 @@ class ChangeHistorySettingForm extends React.Component {
   }
 
   render () {
-    const {
-      fields: {
-        history
-      },
-      submitting,
-      handleSubmit,
-      changeHistorySettingSuccess
-    } = this.props
+    const { submitting, handleSubmit, changeHistorySettingSuccess } = this.props
     return (
       <div className="change-history-setting-container">
         <form onSubmit={handleSubmit(this.handleChangeHistorySetting)}>
@@ -44,11 +38,9 @@ class ChangeHistorySettingForm extends React.Component {
 
           <section className="change-history-setting">
             <div className="change-history-setting-fields">
-              <input {...domOnlyProps(history)} type="radio" value="true" checked={history.value === 'true'}
-                     id="yesOption" />
+              <Field name="history" component="input" type="radio" value="true" id="yesOption" />
               <label htmlFor="yesOption"><FormattedMessage {...messages.yesOption} /></label><br />
-              <input {...domOnlyProps(history)} type="radio" value="false" checked={history.value === 'false'}
-                     id="noOption" />
+              <Field name="history" component="input" type="radio" value="false" id="noOption" />
               <label htmlFor="noOption"><FormattedMessage {...messages.noOption} /></label><br />
             </div>
           </section>
@@ -118,6 +110,7 @@ function mapStateToProps (state) {
   return {
     changeHistorySettingError: state.profile.changeHistorySettingError,
     changeHistorySettingSuccess: state.profile.changeHistorySettingSuccess,
+    isRequestingHistorySetting: state.profile.isRequestingHistorySetting,
     initialValues: { history: String(state.profile.history) }
   }
 }
@@ -132,11 +125,7 @@ function mapDispatchToProps (dispatch) {
 const intlChangeHistorySettingForm = injectIntl(ChangeHistorySettingForm)
 export { intlChangeHistorySettingForm as ChangeHistorySettingForm }
 
-export default reduxForm(
-  {
-    form: 'changeHistorySetting',
-    fields: [ 'history' ]
-  },
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(intlChangeHistorySettingForm)
+)(reduxForm({ form: 'changeHistorySetting' })(intlChangeHistorySettingForm))

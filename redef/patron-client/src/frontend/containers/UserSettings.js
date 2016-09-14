@@ -129,7 +129,7 @@ class UserSettings extends React.Component {
         </footer>
 
         <ChangePin />
-        <ChangeHistorySetting/>
+        <ChangeHistorySetting />
       </div>
     )
   }
