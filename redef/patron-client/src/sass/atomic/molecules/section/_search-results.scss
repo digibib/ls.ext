@@ -6,12 +6,12 @@
 
 .search-results-header {
   @include container;
-  border-bottom: 1px solid $mediumGreyColor;
 
   .search-results-summary {
     @include span(12);
     @include container;
     font-size: rhythm(3);
+    margin: rhythm(2) 0;
 
     .search-results-number {
       @include span(3);
@@ -84,6 +84,7 @@
   }
 
   .search-results-header {
+    border-bottom: 1px solid $mediumGreyColor;
 
     .search-results-summary {
 

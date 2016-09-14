@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchFilter from './SearchFilter'
 
@@ -12,12 +13,15 @@ class SearchFilters extends React.Component {
     return <div data-automation-id="empty" />
   }
 
-  handleFiltersOpenClick () {
+  handleFiltersOpenClick (event) {
+    event.preventDefault()
+    event.stopPropagation()
     this.props.toggleAllFiltersVisibility()
   }
 
   render () {
     const groupedFilters = {}
+    const buttonClass = (this.props.locationQuery.hideFilters === null) ? 'filters-hidden' : 'filters-visible';
     if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
         const aggregation = filter.id.split('_')[0]
@@ -28,16 +32,18 @@ class SearchFilters extends React.Component {
       return (
         <aside className="filters">
           <div className="limit-filters">
+            <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
             {this.props.locationQuery.hideFilters === null
-              ? (<span className="limit-filters-text"><p>Vis filter</p></span>)
-              : (<span className="limit-filters-text"><p>Skjul filter</p></span>)}
-            {this.props.locationQuery.hideFilters === null
-              ? (<button onClick={this.handleFiltersOpenClick} className="limit-filters-open" type="button">
+              ? (<span>Vis filter</span>)
+              : (<span>Skjul filter</span>)}
+            </Link>
+            {/*this.props.locationQuery.hideFilters === null
+              ? (<button className="limit-filters-open" type="button">
               <img src="/images/btn-limit-filter-open.svg" alt="Red arrow pointing down" />
             </button>)
-              : (<button onClick={this.handleFiltersOpenClick} className="limit-filters-open" type="button">
+              : (<button className="limit-filters-open" type="button">
               <img src="/images/btn-limit-filter-close.svg" alt="Red arrow pointing up" />
-            </button>)}
+            </button>)*/}
           </div>
 
           <header className="limit-filters-header">
