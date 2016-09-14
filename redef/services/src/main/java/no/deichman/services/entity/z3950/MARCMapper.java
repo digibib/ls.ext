@@ -483,7 +483,7 @@ public class MARCMapper {
     }
 
     private void setRole(DataField dataField, Contribution contribution) {
-        getSubfieldValue(dataField, 'e', "contributor")
+        getSubfieldValue(dataField, 'e', "author")
                 .map(String::toLowerCase)
                 .map(this::unPunctuate)
                 .map(Role::translate)
@@ -494,7 +494,7 @@ public class MARCMapper {
     }
 
     private void setDefaultRole(Contribution contribution) {
-        Optional.of("contributor")
+        Optional.of("author")
                 .map(fragment -> path("role", fragment))
                 .map(this::dataPrefix)
                 .map(this::asExternalObject)
