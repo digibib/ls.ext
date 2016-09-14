@@ -260,8 +260,8 @@ end
 Given(/^at det er aktivert en standard sirkulasjonsregel$/) do
   steps %Q{
     Og at det finnes følgende sirkulasjonsregler
-      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds | renewalsallowed | renewalperiod |
-      | *            | *        | 10          | 10          | 10              | 1            | 2               | 10            |
+      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | holds_per_record | onshelfholds | renewalsallowed | renewalperiod |
+      | *            | *        | 10          | 10          | 10              | 10               | 1            | 2               | 10            |
     }
 end
 
@@ -271,8 +271,8 @@ Given(/^at låneren har et antall lån som( ikke)? er under maksgrense for antal
   patron = @active[:patron]
   if maxloans
     step "at det finnes følgende sirkulasjonsregler", table(%{
-      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | onshelfholds |
-      | *            | *        | 1           | 1           | 1               | 1            |
+      | categorycode | itemtype | maxissueqty | issuelength | reservesallowed | holds_per_record | onshelfholds |
+      | *            | *        | 1           | 1           | 1               | 1                | 1            |
       })
   else
     step "at det er aktivert en standard sirkulasjonsregel"
