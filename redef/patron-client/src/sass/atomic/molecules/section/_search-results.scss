@@ -1,15 +1,7 @@
 .search-results {
-
   @include span(12 of 12);
   @include border-top;
   padding-top: rhythm(2);
-
-  @include breakpoint($small) {
-    margin-top: rhythm(5);
-    @include span(9 of 12);
-    margin-right: 0;
-  }
-
 }
 
 .search-results-header {
@@ -23,33 +15,26 @@
 
     .search-results-number {
       @include span(3);
-      @include breakpoint($small) {
-        @include span(8);
-      }
     }
 
     .search-sorting-placeholder {
       @include span(9 last);
-      @include breakpoint($small) {
-        @include span(4 last);
-      }
-
       text-align: right;
+
       p {
         margin: 0;
       }
+
       span {
         font-weight: bold;
       }
+
     }
 
   }
 
   .active-filters {
     @include span(12);
-    @include breakpoint($small) {
-      @include span(12 last);
-    }
   }
 
 }
@@ -58,17 +43,13 @@
   @include span(6 of 12);
   float: right;
 
-  @include breakpoint($small) {
-    @include span(3 of 12);
-    float: right;
-  }
-
   p {
     color: $darkGreyColor;
     text-transform: uppercase;
     font-size: 0.8em;
     margin-bottom: 5px;
   }
+
 }
 
 .search-sorting-select-box {
@@ -92,5 +73,39 @@
     -o-appearance:none;
   }
 
+}
+
+@include breakpoint($small) {
+
+  .search-results {
+    margin-top: rhythm(5);
+    @include span(9 of 12);
+    margin-right: 0;
+  }
+
+  .search-results-header {
+
+    .search-results-summary {
+
+      .search-results-number {
+          @include span(8);
+      }
+
+      .search-sorting-placeholder {
+        @include span(4 last);
+      }
+
+    }
+
+    .active-filters {
+      @include span(12 last);
+    }
+
+  }
+
+  .search-sorting {
+    @include span(3 of 12);
+    float: right;
+  }
 
 }
