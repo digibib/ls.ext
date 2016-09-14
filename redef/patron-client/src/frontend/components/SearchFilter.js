@@ -74,7 +74,8 @@ class SearchFilter extends React.Component {
       return this.renderEmpty()
     }
     return (
-      <div data-automation-id={`filter_${this.props.aggregation}`}>
+      <div className="filter-group"
+           data-automation-id={`filter_${this.props.aggregation}`}>
         <header className="filterTitle">
           <h1>{this.renderTitle()}</h1>
           <button onClick={this.handleCollapse} className="single-filter-close" type="button">
@@ -84,7 +85,7 @@ class SearchFilter extends React.Component {
           </button>
         </header>
         {this.isCollapsed() ? null
-          : [ <section key="searchfilter_header">
+          : [ <section className="filter-list" key="searchfilter_header">
           <ul className="searchfilters">{this.renderFilters()}</ul>
         </section>,
           <footer key="searchfilter_footer">{this.renderShowMore()}</footer> ]}

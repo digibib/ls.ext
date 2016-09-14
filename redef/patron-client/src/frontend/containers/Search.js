@@ -77,7 +77,6 @@ class Search extends React.Component {
   render () {
     return (
       <div className="wrapper">
-        <div className="row">
           {this.props.locationQuery.query
             ? (<div className="search-results-header">
                 <div className="search-results-summary">
@@ -125,7 +124,6 @@ class Search extends React.Component {
             /> ]
             : null}
           {this.renderPagination()}
-        </div>
       </div>
     )
   }

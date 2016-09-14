@@ -21,7 +21,7 @@ class SearchFilters extends React.Component {
 
   render () {
     const groupedFilters = {}
-    const buttonClass = (this.props.locationQuery.hideFilters === null) ? 'filters-hidden' : 'filters-visible';
+    const buttonClass = (this.props.locationQuery.hideFilters === null) ? 'filters-hidden' : 'filters-visible'
     if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
         const aggregation = filter.id.split('_')[0]
@@ -37,20 +37,14 @@ class SearchFilters extends React.Component {
               ? (<span>Vis filter</span>)
               : (<span>Skjul filter</span>)}
             </Link>
-            {/*this.props.locationQuery.hideFilters === null
-              ? (<button className="limit-filters-open" type="button">
-              <img src="/images/btn-limit-filter-open.svg" alt="Red arrow pointing down" />
-            </button>)
-              : (<button className="limit-filters-open" type="button">
-              <img src="/images/btn-limit-filter-close.svg" alt="Red arrow pointing up" />
-            </button>)*/}
           </div>
 
           <header className="limit-filters-header">
             <FormattedMessage {...messages.limit} />
           </header>
 
-          <section data-automation-id="search_filters">
+          <section className="filter-wrapper"
+                   data-automation-id="search_filters">
             {this.props.locationQuery.hideFilters === null ? null : Object.keys(groupedFilters).map(aggregation => {
               const filtersByAggregation = groupedFilters[ aggregation ]
               return (

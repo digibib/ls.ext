@@ -1,56 +1,69 @@
 .filterTitle {
-
-  border-top: 1px solid #ddd;
+  @include container;
+  border-bottom: none;
 
   h1 {
-    @include span(10 of 12);
-    font-size: 1.5em;
+    @include span(10);
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 1.1em;
+    font-weight: normal;
+    line-height: rhythm(4);
   }
 
   .single-filter-close {
-    @include span(1.5 of 12);
-    float: right;
+    @include span(2 last);
+    cursor: pointer;
+    margin-top: 0.2em;
+  }
 
-    @include breakpoint($small) {
-      @include span(2 of 12);
-      margin-right: 0;
-      margin-top: rhythm(1);
+  img {
+    max-height: 2em;
+  }
+
+}
+
+.filter-list {
+  @include span(12);
+  @include container;
+
+  .searchfilters {
+    @include span(12);
+    @include container;
+    list-style-type: none;
+    padding-left: 0;
+    margin: rhythm(1) 0 0;
+    padding: 0;
+
+    label {
+      @include span(12);
+      @include container;
+
+      .checkbox-wrapper {
+        @include span(1);
+        margin-top: rhythm(1.5);
+        line-height: rhythm(4);
+      }
+
+      h2 {
+        @include span(11 last);
+        margin-top: rhythm(1.5);
+        overflow: hidden;
+        line-height: rhythm(4);
+      }
+
     }
 
   }
-}
 
-.filter_label {
-  font-size: 1em;
-  font-weight: normal;
-  display: inline-block;
-  margin-right: 4px;
-  margin-bottom: 0;
-  @include regularFont;
-}
-
-.searchfilters {
-  list-style-type: none;
-  display: inline-block;
-  padding-left: 0;
-  margin-top: rhythm(-4);
-
-  input[type="checkbox"] {
-    border: 1px solid $blackColor;
-    border-radius: 2px;
-    margin-right: rhythm(1.5);
-    padding: rhythm(1.2);
-
-    /*    -moz-appearance:none;
-        -webkit-appearance:none;
-        -o-appearance:none;*/
-
+  .filter_label {
+    @include regularFont;
+    font-size: 1em;
+    font-weight: normal;
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 0;
   }
-
-}
-
-label {
-  @extend %is-vishidden;
 }
 
 .show-all, .show-less, .show-more {
@@ -59,3 +72,38 @@ label {
   font-size: 0.8em;
 }
 
+@include breakpoint($small) {
+
+  .filterTitle {
+
+    h1 {
+      @include span(9);
+    }
+
+    .single-filter-close {
+      @include span(3 last);
+    }
+
+  }
+
+  .filter-list {
+
+    .searchfilters {
+
+      label {
+
+        .checkbox-wrapper {
+          @include span(2);
+        }
+
+        h2 {
+          @include span(10 last);
+        }
+
+      }
+
+    }
+
+  }
+
+}
