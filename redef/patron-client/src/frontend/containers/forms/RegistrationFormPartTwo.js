@@ -83,7 +83,7 @@ class RegistrationFormPartTwo extends React.Component {
             <FormInputField name="address" type="text" message={messages.address}
                             hasLabel headerType="h4" formName={formName} getValidator={this.getValidator} />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="number" fieldHeaderType="h4"
+            <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h4"
                                                     fieldMessage={messages.zipcode} containerTag="span"
                                                     containerProps={{ className: 'display-inline' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
