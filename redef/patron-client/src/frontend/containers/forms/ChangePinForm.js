@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, reset, Field } from 'redux-form'
+import { reduxForm, reset } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
@@ -7,10 +7,13 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import FormInputField from '../../components/FormInputField'
 import * as ProfileActions from '../../actions/ProfileActions'
 
+const formName = 'changePin'
+
 class ChangePinForm extends React.Component {
   constructor (props) {
     super(props)
     this.handleChangePin = this.handleChangePin.bind(this)
+    this.getValidator = this.getValidator.bind(this)
   }
 
   handleChangePin () {
@@ -56,13 +59,16 @@ class ChangePinForm extends React.Component {
             </div>
 
             <div className="change-pin-fields">
-              <FormInputField name="currentPin" type="password" message={...messages.currentPin} headerType='h2'
-                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true} />
+              <FormInputField name="currentPin" type="password" message={messages.currentPin} headerType="h2"
+                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel="hasLabel"
+                              formName={formName} />
               {this.renderError()}
-              <FormInputField name="newPin" type="password" message={...messages.newPin} headerType='h2'
-                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true} />
-              <FormInputField name="repeatPin" type="password" message={...messages.repeatPin} headerType='h2'
-                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true} />
+              <FormInputField name="newPin" type="password" message={messages.newPin} headerType="h2"
+                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel="hasLabel"
+                              formName={formName} />
+              <FormInputField name="repeatPin" type="password" message={messages.repeatPin} headerType="h2"
+                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel="hasLabel"
+                              formName={formName} />
             </div>
           </section>
           <footer>
@@ -183,7 +189,7 @@ const validate = (values, props) => {
 
 intlChangePinForm = reduxForm(
   {
-    form: 'changePin',
+    form: formName,
     validate
   }
 )(intlChangePinForm)

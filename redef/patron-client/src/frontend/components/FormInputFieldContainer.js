@@ -5,15 +5,15 @@ import FormInputField from './FormInputField'
 
 const FormInputFieldContainer = ({
   fieldName, fieldType, hasFieldLabel, fieldHeaderType, isFieldHeaderOverLabel, fieldMessage, getFieldValidator,
-  containerTag, containerProps, headerTag, headerMessage
+  containerTag, containerProps, headerTag, headerMessage, formName, placeholder
 }) => {
   let formattedHeaderMessage
   if (headerTag && headerMessage) {
-    formattedHeaderMessage = <FormattedMessage {headerMessage} />
+    formattedHeaderMessage = <FormattedMessage {...headerMessage} />
   }
-  const inputField = <FormInputField name={fieldName} type={fieldType} message={fieldMessage}
-                                     getValidator={getFieldValidator} hasLabel={hasFieldLabel}
-                                     isLabelOverInput={isFieldHeaderOverLabel} headerType={fieldHeaderType}/>
+  const inputField = <FormInputField name={fieldName} type={fieldType} message={fieldMessage} formName={formName}
+                                     getValidator={getFieldValidator} hasLabel={hasFieldLabel} placeholder={placeholder}
+                                     isLabelOverInput={isFieldHeaderOverLabel} headerType={fieldHeaderType} />
 
   return createElement(containerTag, containerProps,
     headerTag && headerMessage ? createElement(headerTag, {}, formattedHeaderMessage) : null,
@@ -31,7 +31,10 @@ FormInputFieldContainer.propTypes = {
   containerTag: PropTypes.string.isRequired,
   containerProps: PropTypes.object.isRequired,
   headerTag: PropTypes.string,
-  headerMessage: PropTypes.string
+  headerMessage: PropTypes.object,
+  formName: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
+  placeholder: PropTypes.object
 }
 
 export default injectIntl(FormInputFieldContainer)

@@ -1,7 +1,7 @@
-import React, { PropTypes, createElement } from 'react'
+import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
-import { reduxForm, Field } from 'redux-form'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { reduxForm } from 'redux-form'
+import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
 
 import * as ParameterActions from '../../actions/ParameterActions'
@@ -12,6 +12,8 @@ import fields from '../../../common/forms/userInfoForm'
 import ValidationMessage from '../../components/ValidationMessage'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputFieldWithTopLabelContainer from '../../components/FormInputFieldWithTopLabelContainer'
+
+const formName = 'userInfo'
 
 class UserInfoForm extends React.Component {
   constructor (props) {
@@ -43,43 +45,51 @@ class UserInfoForm extends React.Component {
         <div className="address col">
           <address typeof="schema:PostalAddress">
             <FormInputFieldWithTopLabelContainer fieldName="address" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={...messages.address} containerTag="span"
-                                                 getFieldValidator={this.getValidator}
-                                                 containerProps={{ property: 'schema:streetAddress' }} />
+                                                 fieldMessage={messages.address} containerTag="span"
+                                                 getFieldValidator={this.getValidator} formName={formName}
+                                                 containerProps={{ property: 'schema:streetAddress' }}
+                                                 placeholder={messages.address} />
             <br />
             <FormInputFieldWithTopLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={...messages.zipcode} containerTag="span"
+                                                 fieldMessage={messages.zipcode} containerTag="span"
                                                  getFieldValidator={this.getValidator} containerProps={{
-                                                    property: 'schema:postalCode',
-                                                    className: 'display-inline'
-                                                  }
-            } />
+                                                   property: 'schema:postalCode',
+                                                   className: 'display-inline'
+                                                 }} formName={formName} placeholder={messages.zipcode} />
+
             <FormInputFieldWithTopLabelContainer fieldName="city" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={...messages.city} containerTag="span"
+                                                 fieldMessage={messages.city} containerTag="span"
                                                  getFieldValidator={this.getValidator} containerProps={{
-                                                    property: 'schema:addressLocality',
-                                                    className: 'display-inline'
-                                                  }
-            } />
+                                                   property: 'schema:addressLocality',
+                                                   className: 'display-inline'
+                                                 }} formName={formName} placeholder={messages.city} />
+
             <br />
             <FormInputFieldWithTopLabelContainer fieldName="country" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={...messages.country} containerTag="span"
-                                                 getFieldValidator={this.getValidator}
-                                                 containerProps={{ property: 'schema:addressCountry' }} />
+                                                 fieldMessage={messages.country} containerTag="span"
+                                                 getFieldValidator={this.getValidator} formName={formName}
+                                                 containerProps={{ property: 'schema:addressCountry' }}
+                                                 placeholder={messages.country} />
             <br />
           </address>
         </div>
 
         <div className="col">
           <FormInputFieldWithTopLabelContainer fieldName="mobile" fieldType="number" fieldHeaderType="h2"
-                                               fieldMessage={...messages.mobile} containerTag="div"
-                                               getFieldValidator={this.getValidator} containerProps={{ className: 'cell-phone' }} />
+                                               fieldMessage={messages.mobile} containerTag="div" formName={formName}
+                                               getFieldValidator={this.getValidator}
+                                               containerProps={{ className: 'cell-phone' }}
+                                               placeholder={messages.mobile} />
+
           <FormInputFieldWithTopLabelContainer fieldName="telephone" fieldType="number" fieldHeaderType="h2"
-                                               fieldMessage={...messages.telephone} containerTag="div"
-                                               getFieldValidator={this.getValidator} containerProps={{ className: 'phone' }} />
+                                               fieldMessage={messages.telephone} containerTag="div" formName={formName}
+                                               getFieldValidator={this.getValidator} placeholder={messages.telephone}
+                                               containerProps={{ className: 'phone' }} />
+
           <FormInputFieldWithTopLabelContainer fieldName="email" fieldType="email" fieldHeaderType="h2"
-                                               fieldMessage={...messages.email} containerTag="div"
-                                               getFieldValidator={this.getValidator} containerProps={{ className: 'email' }} />
+                                               fieldMessage={messages.email} containerTag="div" formName={formName}
+                                               getFieldValidator={this.getValidator} placeholder={messages.email}
+                                               containerProps={{ className: 'email' }} />
         </div>
       </form>
     )
@@ -169,7 +179,7 @@ let intlUserInfoForm = injectIntl(UserInfoForm)
 
 intlUserInfoForm = reduxForm(
   {
-    form: 'userInfo',
+    form: formName,
     asyncValidate,
     asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
     validate: validator(fields)

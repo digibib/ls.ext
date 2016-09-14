@@ -2,7 +2,7 @@
  * Created by Nikolai on 12/09/16.
  */
 import React, { PropTypes } from 'react'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl'
 import { bindActionCreators } from 'redux'
@@ -11,6 +11,8 @@ import FormInputFieldPlain from '../../components/FormInputFieldPlain'
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as LoginActions from '../../actions/LoginActions'
 import * as ModalActions from '../../actions/ModalActions'
+
+const formName = 'loginForm'
 
 class LoginForm extends React.Component {
   constructor (props) {
@@ -38,8 +40,10 @@ class LoginForm extends React.Component {
       <div data-automation-id="login_modal">
         <form onSubmit={this.handleLogin}>
           <h1>Logg inn for å reservere</h1>
-          <FormInputFieldPlain name="username" type="text" message={...this.props.messages.username} headerType="h2"/>
-          <FormInputFieldPlain name="password" type="password" message={...this.props.messages.password}  headerType="h2"/>
+          <FormInputFieldPlain name="username" type="text" message={this.props.messages.username} headerType="h2"
+                               formName={formName} />
+          <FormInputFieldPlain name="password" type="password" message={this.props.messages.password} headerType="h2"
+                               formName={formName} />
 
           <p>Glemt PIN-kode?</p>
           <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}
@@ -86,7 +90,7 @@ function mapDispatchToProps (dispatch) {
 export const intlLoginForm = injectIntl(LoginForm)
 
 export const reduxIntlLoginForm = reduxForm({
-  form: 'loginForm'
+  form: formName
 })(intlLoginForm)
 
 export const connectedIntlLoginForm = connect(mapStateToProps, mapDispatchToProps)(reduxIntlLoginForm)
