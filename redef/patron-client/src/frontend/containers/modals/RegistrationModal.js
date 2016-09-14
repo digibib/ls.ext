@@ -78,7 +78,7 @@ class RegistrationModal extends React.Component {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   button: {
     id: 'RegistrationModal.button',
     description: 'The button to exit the modal dialog',

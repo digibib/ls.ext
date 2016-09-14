@@ -266,7 +266,7 @@ Publications.propTypes = {
   audiences: PropTypes.array.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   title: {
     id: 'Publications.title', description: 'Title of the publication', defaultMessage: 'title'
   },

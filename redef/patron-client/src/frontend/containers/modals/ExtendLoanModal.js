@@ -75,7 +75,7 @@ class ExtendLoanModal extends React.Component {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   button: {
     id: 'ExtendLoanModal.button',
     description: 'The button to exit the modal dialog',

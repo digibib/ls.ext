@@ -56,7 +56,7 @@ MyPage.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   loansAndReservations: {
     id: 'MyPage.loansAndReservations',
     description: 'The label on the loans and reservations tab',

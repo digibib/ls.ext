@@ -41,7 +41,7 @@ class LoginModal extends React.Component {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   username: {
     id: 'Login.username',
     description: 'The label over the username field',

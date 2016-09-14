@@ -165,7 +165,7 @@
     intl: intlShape.isRequired
   }
 
-  const messages = defineMessages({
+  export const messages = defineMessages({
     logoAlt: {
       id: 'SearchHeader.logoAlt',
       description: 'Alt text for the logo',

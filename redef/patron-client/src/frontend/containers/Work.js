@@ -167,7 +167,7 @@ Work.propTypes = {
   audiences: PropTypes.array
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   noWork: {
     id: 'Work.noWork',
     description: 'When no work was found',

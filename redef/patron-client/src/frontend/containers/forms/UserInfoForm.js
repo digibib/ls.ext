@@ -90,7 +90,7 @@ UserInfoForm.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   address: {
     id: 'UserInfoForm.address',
     description: 'The label for the address',

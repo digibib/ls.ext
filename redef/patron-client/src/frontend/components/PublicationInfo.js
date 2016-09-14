@@ -81,7 +81,7 @@ PublicationInfo.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   about: {
     id: 'PublicationInfo.about',
     description: 'Heading for the publication info',

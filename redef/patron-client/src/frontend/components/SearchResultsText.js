@@ -33,7 +33,7 @@ SearchResultsText.propTypes = {
   mediaQueryValues: PropTypes.object
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   searching: {
     id: 'SearchResultsText.searching',
     description: 'Shown while a search is performed',

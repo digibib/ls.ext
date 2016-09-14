@@ -237,7 +237,7 @@ SearchResult.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   originalTitle: {
     id: 'SearchResult.originalTitle',
     description: 'The label for the original title',

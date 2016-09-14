@@ -33,7 +33,7 @@ Subjects.propTypes = {
   subjects: PropTypes.array.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   subjects: {
     id: 'Subjects.subjects',
     description: 'The text displayed to identify subjects',

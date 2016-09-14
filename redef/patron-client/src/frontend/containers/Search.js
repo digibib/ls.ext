@@ -172,7 +172,7 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   paginationLabel: {
     id: 'Search.paginationLabel',
     description: 'The ARIA label for the pagination bar',

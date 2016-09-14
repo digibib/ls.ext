@@ -146,7 +146,7 @@ class RegistrationFormPartOne extends React.Component {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   genericRegistrationError: {
     id: 'RegistrationFormPartOne.genericRegistrationError',
     description: 'Error message when registering',

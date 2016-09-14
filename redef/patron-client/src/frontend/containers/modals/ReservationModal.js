@@ -94,7 +94,7 @@ ReservationModal.propTypes = {
   message: PropTypes.string
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   choosePickupLocation: {
     id: 'ReservationModal.choosePickupLocation',
     description: 'The label for choosing pickup location:',

@@ -103,7 +103,7 @@ Person.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   noPerson: {
     id: 'Person.noPerson',
     description: 'When no person was found',

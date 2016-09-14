@@ -116,7 +116,7 @@ class RegistrationFormPartTwo extends React.Component {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   email: {
     id: 'RegistrationFormPartTwo.email',
     description: 'Label for the email field',

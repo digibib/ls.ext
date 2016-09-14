@@ -104,7 +104,7 @@ SearchFilter.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   showMore: {
     id: 'SearchFilter.showMore',
     description: 'Shown when too many filters',

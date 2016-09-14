@@ -20,7 +20,7 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   titleSearch: {
     id: 'SearchFilterBox.title.search',
     description: 'title text for the SearchFilterItemBox on the search page',

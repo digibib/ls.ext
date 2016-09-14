@@ -206,7 +206,7 @@ UserLoans.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   title: {
     id: 'UserLoans.title',
     description: 'The label of the item title',

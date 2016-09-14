@@ -158,7 +158,7 @@ UserSettings.propTypes = {
   settingsError: PropTypes.object
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   alerts: {
     id: 'UserSettings.alerts',
     description: 'The alerts header',

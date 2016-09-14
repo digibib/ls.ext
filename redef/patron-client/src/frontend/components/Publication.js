@@ -82,7 +82,7 @@ Publication.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   available: {
     id: 'Publication.available',
     description: 'The text displayed when the publication is available',

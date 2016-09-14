@@ -44,7 +44,7 @@ SearchResults.propTypes = {
   page: PropTypes.number.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   searchError: {
     id: 'SearchResults.searchError',
     description: 'A message to display when the search fails',

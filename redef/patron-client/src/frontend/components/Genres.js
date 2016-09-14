@@ -33,7 +33,7 @@ Genres.propTypes = {
   genres: PropTypes.array.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   genre: {
     id: 'Genres.genre',
     description: 'The text displayed to identify genres',

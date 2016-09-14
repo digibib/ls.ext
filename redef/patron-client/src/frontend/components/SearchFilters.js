@@ -79,7 +79,7 @@ SearchFilters.propTypes = {
 
 SearchFilters.defaultProps = { filters: [] }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   limit: {
     id: 'SearchFilters.limit',
     description: 'The header of the filter groups',

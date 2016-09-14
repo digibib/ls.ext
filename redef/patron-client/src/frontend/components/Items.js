@@ -37,7 +37,7 @@ Items.propTypes = {
   items: PropTypes.array.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   count: {
     id: 'Items.count', description: 'Count of item', defaultMessage: 'count'
   },

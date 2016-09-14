@@ -41,7 +41,7 @@ Footer.propTypes = {
   intl: intlShape.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   contactUs: {
     id: 'Footer.contactUs',
     description: 'Label for the contact us link',

@@ -85,7 +85,7 @@ class ChangePinForm extends React.Component {
   }
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   changePin: {
     id: 'ChangePinForm.changePin',
     description: 'The change PIN code header and button text',
