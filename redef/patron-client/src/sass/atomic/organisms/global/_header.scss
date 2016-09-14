@@ -1,31 +1,55 @@
 // ORGANISM: Global Header
 // ==========================================================================
 header {
-  border-bottom: 3px solid $blackColor;
   @include container;
+  border-bottom: 3px solid $blackColor;
+
   .logo {
     @include span(5);
-    @include breakpoint($medium) {
-      @include span(3);
-    }
+    padding: rhythm(2);
   }
 
   .primary-menu {
     @include span(7 last);
-    @include breakpoint($medium) {
-      @include span(9 last);
-    }
+    padding: rhythm(2);
   }
 
   .mobile-menu-toggle {
     @include span(7 last);
-    @include breakpoint($medium) {
-      @include span(9 last);
-    }
+    padding: rhythm(2);
   }
+
 }
+
 @include breakpoint($small) {
+
   header {
     border-bottom: none;
+
+    &.wrapper {
+      padding-bottom: 0;
+    }
+
   }
+
+}
+
+@include breakpoint($medium) {
+
+    header {
+
+      .logo {
+        @include span(3);
+      }
+
+      .primary-menu {
+        @include span(9 last);
+      }
+
+      .mobile-menu-toggle {
+        @include span(9 last);
+      }
+
+    }
+
 }
