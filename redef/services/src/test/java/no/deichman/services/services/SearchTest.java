@@ -28,11 +28,12 @@ public class SearchTest {
     private static final int THREE = 3;
     private static final int TEN_TIMES = 10;
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
-    private static String elasticSearchUrl = "http://localhost:9200";
+    private static String elasticSearchUrl;
 
     @BeforeClass
     public static void setup() throws Exception {
         setupElasticSearch();
+        elasticSearchUrl =  "http://localhost:" + EmbeddedElasticsearchServer.getPort();
         populateSearchIndex();
     }
 
@@ -48,9 +49,7 @@ public class SearchTest {
     private static String generateWorkJson(String title, String creator) {
         JsonObject json = new JsonObject();
         if (title != null) {
-            JsonObject jsonObject = new JsonObject();
-            json.add("mainTitle", jsonObject);
-            jsonObject.addProperty("default", title);
+            json.addProperty("mainTitle", title);
         }
         if (creator != null) {
             JsonObject name = new JsonObject();

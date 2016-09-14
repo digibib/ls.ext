@@ -1,5 +1,6 @@
 package no.deichman.services.services.search;
 
+import no.deichman.services.testutil.PortSelector;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
@@ -21,6 +22,7 @@ public final class EmbeddedElasticsearchServer {
     private static EmbeddedElasticsearchServer server;
     private final Node node;
     private final String dataDirectory;
+    private static int port;
 
     private EmbeddedElasticsearchServer() throws Exception {
         this(DEFAULT_DATA_DIRECTORY);
@@ -28,9 +30,11 @@ public final class EmbeddedElasticsearchServer {
 
     private EmbeddedElasticsearchServer(String dataDirectory) throws Exception {
         this.dataDirectory = dataDirectory;
+        this.port = PortSelector.randomFree();
         new File(dataDirectory).mkdirs();
         Settings.Builder elasticsearchSettings;
         elasticsearchSettings = Settings.settingsBuilder()
+                .put("http.port", Integer.toString(port))
                 .put("http.enabled", "true")
                 .put("path.home", ".")
                 .put("path.data", dataDirectory)
@@ -73,6 +77,10 @@ public final class EmbeddedElasticsearchServer {
         }
 
         return server;
+    }
+
+    public static Integer getPort() {
+        return port;
     }
 
     public Client getClient() {

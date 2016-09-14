@@ -102,13 +102,13 @@ public class AppTest {
         z3950ServiceMock = new Z3950ServiceMock();
         String z3950Endpoint = LOCALHOST + ":" + z3950ServiceMock.getPort();
         System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
-        System.setProperty("ELASTICSEARCH_URL", "http://localhost:9200");
+
+        setupElasticSearch();
+        System.setProperty("ELASTICSEARCH_URL", "http://localhost:"+embeddedElasticsearchServer.getPort());
 
         appURI = LOCALHOST + ":" + appPort + "/";
         app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO, jamonAppPort, z3950Endpoint);
         app.startAsync();
-
-        setupElasticSearch();
     }
 
     private static void setupElasticSearch() throws Exception {
