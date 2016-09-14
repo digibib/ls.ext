@@ -168,8 +168,6 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-let intlChangePinForm = injectIntl(ChangePinForm)
-
 const validate = (values, props) => {
   const errors = {}
   if (!values.currentPin) {
@@ -187,18 +185,10 @@ const validate = (values, props) => {
   return errors
 }
 
-intlChangePinForm = reduxForm(
-  {
-    form: formName,
-    validate
-  }
-)(intlChangePinForm)
-
-intlChangePinForm = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(intlChangePinForm)
-
+const intlChangePinForm = injectIntl(ChangePinForm)
 export { intlChangePinForm as ChangePinForm }
 
-export default intlChangePinForm
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(reduxForm({ form: formName, validate })(intlChangePinForm))

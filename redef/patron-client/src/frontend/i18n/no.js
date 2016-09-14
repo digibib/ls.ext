@@ -76,7 +76,7 @@ export default {
   'Publications.copies': 'eksemplarer',
   'Publications.noPublications': 'Ingen publikasjoner',
   'Publications.numberOfPublications': 'Utgivelser ({numberOfPublications})',
-  'Publications.noMediaType': 'Ikke kategoriserte ',
+  'Publications.noMediaType': 'Ukategoriserte ',
   'Publications.showRest': 'Vis resten av {mediaType}utgivelsene',
   'Publications.hideRest': 'Skjul resten av {mediaType}utgivelsene',
   'RegistrationFormPartOne.checkForExistingUser': 'Sjekk',

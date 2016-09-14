@@ -87,12 +87,11 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-export const intlLoginForm = injectIntl(LoginForm)
+const intlLoginForm = injectIntl(LoginForm)
 
-export const reduxIntlLoginForm = reduxForm({
-  form: formName
-})(intlLoginForm)
+export { intlLoginForm as LoginForm }
 
-export const connectedIntlLoginForm = connect(mapStateToProps, mapDispatchToProps)(reduxIntlLoginForm)
-
-export default connectedIntlLoginForm
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(reduxForm({ form: formName })(intlLoginForm))

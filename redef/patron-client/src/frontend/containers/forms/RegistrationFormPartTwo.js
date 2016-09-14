@@ -281,21 +281,15 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
-let intlRegistrationFormPartTwo = injectIntl(RegistrationFormPartTwo)
-
-intlRegistrationFormPartTwo = reduxForm(
-  {
-    form: formName,
-    asyncValidate,
-    asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
-    validate: validator(fields)
-  })(intlRegistrationFormPartTwo)
-
-intlRegistrationFormPartTwo = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(intlRegistrationFormPartTwo)
-
+const intlRegistrationFormPartTwo = injectIntl(RegistrationFormPartTwo)
 export { intlRegistrationFormPartTwo as RegistrationFormPartTwo }
 
-export default intlRegistrationFormPartTwo
+export default connect(
+  mapDispatchToProps,
+  mapStateToProps
+)(reduxForm({
+  form: formName,
+  asyncValidate,
+  asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
+  validate: validator(fields)
+})(intlRegistrationFormPartTwo))
