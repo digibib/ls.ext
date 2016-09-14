@@ -52,6 +52,13 @@ settings:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/sysprefs.sql'
 	@echo "-- Loading column visibility settings"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/columns.sql'
+	@echo "-- Importing static libraries"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/static_libraries.sql'
+	@echo "-- Importing static categories"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/static_categories.sql'
+	@echo "-- Importing static users"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/static_users.sql'
+	@echo "OK Done setting up Koha\n"
 
 out/done.massage_input_data:
 	@echo "   Massaging and transforming input data (Bibliofil exports)"
@@ -66,6 +73,7 @@ ifndef NOKOHA
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/branches.sql'
 	@echo "-- Populating itemtypes"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/itypes.sql'
+	@echo "   Populating Koha with static configuration data"
 	@cp config_data/* out/
 	@cp sql/*.sql out/
 	@echo "-- Populating authorized values"
@@ -76,7 +84,6 @@ ifndef NOKOHA
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup_age_restriction.sql'
 	@echo "-- Truncating tables: zebraqueue, biblio, bibliotiems, items, issues and reserves"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE zebraqueue;TRUNCATE TABLE biblioitems;TRUNCATE TABLE biblio;TRUNCATE TABLE items;TRUNCATE TABLE issues;TRUNCATE TABLE reserves;SET foreign_key_checks=1;"'
-	@echo "OK Done setting up Koha\n"
 endif
 	@touch out/done.setup_koha
 
@@ -210,8 +217,8 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
 	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences, borrower_sync"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;TRUNCATE TABLE borrower_sync;SET foreign_key_checks=1;"'
-	@echo "-- Recreating API user (since we just truncated borrowers table)"
-	@sudo docker exec services bash -c "/entrypoint.sh & PID=\$$! && sleep 4 && kill \$$PID" > /dev/null 2>&1
+	@echo "-- Recreating static data (since we just truncated borrowers table and more)"
+	$(MAKE) settings
 	@echo "-- Importing patrons to Koha"
 	@cp sql/*.sql out/
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
