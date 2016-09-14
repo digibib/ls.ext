@@ -1,4 +1,5 @@
 @mixin wrapper-container() {
+  @include container();
   padding: gutter(12);
   @include breakpoint($small) {
     @include container(800px);
