@@ -1,5 +1,6 @@
 .search-results {
   @include span(12 of 12);
+  @include container;
   @include border-top;
   padding-top: rhythm(2);
 }
@@ -78,8 +79,9 @@
 @include breakpoint($small) {
 
   .search-results {
-    margin-top: rhythm(5);
     @include span(9 of 12);
+    margin-top: rhythm(5);
+    padding-top: rhythm(4);
     margin-right: 0;
   }
 

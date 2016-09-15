@@ -69,7 +69,7 @@ const messages = defineMessages({
     id: 'Items.numberOfCopies', description: 'The number of copies', defaultMessage: 'Copies ({numberOfCopies})'
   },
   mediaType: {
-    id: 'Items.mediaType', description: 'MediaType of item', defaultMessage: 'media type'
+    id: 'Items.mediaType', description: 'MediaType of item', defaultMessage: 'type'
   }
 })
 

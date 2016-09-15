@@ -58,11 +58,17 @@
 }
 
 @mixin border-bottom {
-   border-bottom: 3px solid #212121;
+   border-bottom: 2px solid #212121;
+   @include breakpoint($small) {
+    border-bottom: 3px solid #212121;
+   }
 }
 
 @mixin border-top {
-  border-top: 3px solid #212121;
+  border-top: 2px solid #212121;
+  @include breakpoint($small) {
+    border-top: 3px solid #212121;
+  }
 }
 
 @mixin border {

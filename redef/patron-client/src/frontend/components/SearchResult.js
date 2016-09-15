@@ -22,31 +22,36 @@ class SearchResult extends React.Component {
   renderContributors (contributors) {
     if (contributors.length > 0) {
       return (
-        <div data-automation-id="work_contributors"> {contributors.map(contribution => (
-          <p
-            key={contribution.agent.relativeUri}>
-            <strong>{this.props.intl.formatMessage({ id: contribution.role })}: </strong><Link
-            to={contribution.agent.relativeUri}> {contribution.agent.name} </Link></p>
+        <p data-automation-id="work_contributors">{contributors.map(contribution => (
+          <span key={contribution.agent.relativeUri}>
+            {/* <strong>{this.props.intl.formatMessage({ id: contribution.role })}</strong> */}
+            <strong>Av</strong>
+            <Link to={contribution.agent.relativeUri}> {contribution.agent.name} </Link>
+          </span>
         ))}
-        </div>
+        </p>
       )
     }
   }
 
   renderDisplayTitle (result) {
     return (
-      <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
-        <span className="workTitle" data-automation-id="work-title">{result.displayTitle}</span>
-      </Link>
+      <h1 className="workTitle" data-automation-id="work-title">
+        <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
+          {result.displayTitle}
+        </Link>
+      </h1>
     )
   }
 
   renderOriginalTitle (publication) {
     if (publication.originalTitle) {
       return (
-        <p data-automation-id="work_originaltitle">
-          <FormattedMessage {...messages.originalTitle} /> {publication.originalTitle}
-        </p>
+        <div className="original-title">
+          <p data-automation-id="work_originaltitle">
+            <FormattedMessage {...messages.originalTitle} /> {publication.originalTitle}
+          </p>
+        </div>
       )
     }
   }
@@ -66,7 +71,7 @@ class SearchResult extends React.Component {
   renderSubjects (result) {
     if (result.subject) {
       return (
-        <p data-automation-id="work_subjects">
+        <p className="subjects" data-automation-id="work_subjects">
           <strong><FormattedMessage {...messages.subjects} /></strong><br />
           {result.subject.map((subject, i) => (
             <span key={subject}>
@@ -82,7 +87,7 @@ class SearchResult extends React.Component {
   renderGenres (result) {
     if (result.genre) {
       return (
-        <p data-automation-id="work_genres">
+        <p className="genres" data-automation-id="work_genres">
           <strong><FormattedMessage {...messages.genres} /></strong><br />
           {result.genre.map((genre, i) => (
             <span key={genre}>
@@ -178,41 +183,28 @@ class SearchResult extends React.Component {
             })}
           </div>
 
-          <h1>
-            {this.renderDisplayTitle(result)}
-          </h1>
-
-          <div className="contributors">
-            {this.renderContributors(result.publication.contributors)}
-          </div>
-
-          <div>
-            {this.renderOriginalTitle(result.publication)}
-          </div>
-
+          {this.renderDisplayTitle(result)}
+          {this.renderContributors(result.publication.contributors)}
+          {this.renderOriginalTitle(result.publication)}
           {firstPublishedYear
-            ? <div>
-            <p><strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span></p>
-          </div>
+            ? <p>
+              <strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span>
+            </p>
             : null
           }
 
-          {result.publication.summary
-            ? <div>
-            <p>{result.publication.summary}</p>
-          </div>
+          {result.publication.abstract
+            ? <p className="abstract">{result.publication.abstract}</p>
             : null
           }
 
-          <div>
-            {this.renderSubjects(result.publication)}
-          </div>
-
-          <div>
-            {this.renderGenres(result.publication)}
-          </div>
-
+          {this.renderSubjects(result.publication)}
+          {this.renderGenres(result.publication)}
         </article>
+
+        <aside className="entry-link">
+          <a href={this.getResultUrl(result)} alt={result.displayTitle}><div className="caret"></div></a>
+        </aside>
 
         {this.shouldShowStatus()
           ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}>
@@ -274,12 +266,12 @@ const messages = defineMessages({
   showStatus: {
     id: 'SearchResult.showStatus',
     description: 'Shown when the status is hidden',
-    defaultMessage: 'Show status'
+    defaultMessage: 'Where can you find this'
   },
   hideStatus: {
     id: 'SearchResult.hideStatus',
     description: 'Shown when the status is shown',
-    defaultMessage: 'Hide status'
+    defaultMessage: 'Hide availability'
   },
   firstPublished: {
     id: 'SearchResult.firstPublished',
