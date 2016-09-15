@@ -22,43 +22,49 @@
         </div>
         <ul class="grid-tabs pure-g" id="workflow-tabs">
             {{#each inputGroups:groupIndex}}
-            <li class="grid-tab pure-u">
-                <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link {{#tabEnabled(tabSelected,domain)}}{{else}}disabled{{/}}"
-                   id="{{tabId}}-tab"
-                   data-toggle="tab" role="tab" on-click="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}">{{tabLabel}}</a>
-            </li>
+                {{#if checkRequiredInputValueForShow(.)}}
+                    <li class="grid-tab pure-u">
+                        <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link {{#tabEnabled(tabSelected,domain)}}{{else}}disabled{{/}}"
+                           id="{{tabId}}-tab"
+                           data-toggle="tab" role="tab" on-click="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}">{{tabLabel}}</a>
+                    </li>
+                {{/if}}
             {{/each}}
         </ul>
         <div class="grid-content tab-content">
             <div class="inner-content">
                 {{#each inputGroups}}
-                <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected' : ''}} pure-g">
-                    {{#each inputs}}
-                    {{#visible}}
-                    {{>input}}
-                    {{/visible}}
-                    {{/each}}
-                    <div class="pure-u-1-1">
-                    {{#nextStep}}
-                    <div class="pure-g">
-                        <div class="pure-u-1-2">
-                            <button class="pure-button pure-button-primary next-step-button"
-                                    {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled" title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="nextStep:{{.}}">{{buttonLabel}}
-                            </button>
+                    {{#if checkRequiredInputValueForShow(.)}}
+                        <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected' : ''}} pure-g">
+                            {{#each inputs}}
+                            {{#visible}}
+                            {{>input}}
+                            {{/visible}}
+                            {{/each}}
+                            <div class="pure-u-1-1">
+                            {{#nextStep}}
+                                {{#if checkRequiredInputValueForShow(.)}}
+                                    <div class="pure-g">
+                                        <div class="pure-u-1-2">
+                                            <button class="pure-button pure-button-primary next-step-button"
+                                                    {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled" title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="nextStep:{{.}}">{{buttonLabel}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            {{/nextStep}}
+                            {{#deleteResource}}
+                            <div class="pure-g">
+                                <div class="pure-u-1-2">
+                                    <button class="pure-button pure-button-primary next-step-button"
+                                            {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled" title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="deleteResource:{{.}}">{{buttonLabel}}
+                                    </button>
+                                </div>
+                            </div>
+                            {{/deleteResource}}
+                            </div>
                         </div>
-                    </div>
-                    {{/nextStep}}
-                    {{#deleteResource}}
-                    <div class="pure-g">
-                        <div class="pure-u-1-2">
-                            <button class="pure-button pure-button-primary next-step-button"
-                                    {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled" title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="deleteResource:{{.}}">{{buttonLabel}}
-                            </button>
-                        </div>
-                    </div>
-                    {{/deleteResource}}
-                    </div>
-                </div>
+                    {{/if}}
                 {{/each}}
             </div>
             <div class="pure-g links">

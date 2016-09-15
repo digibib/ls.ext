@@ -57,6 +57,7 @@ Egenskap: katalogisere med eksterne kilder
     Så noterer jeg ned navnet på personen
     Så trykker jeg på "Opprett"-knappen
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Oversetter" knyttet til "utgivelsen"
     Og jeg trykker på "Bruk forslag"-knappen
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
@@ -65,6 +66,7 @@ Egenskap: katalogisere med eksterne kilder
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"
 
     

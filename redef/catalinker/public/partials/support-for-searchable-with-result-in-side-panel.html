@@ -72,12 +72,14 @@
     <div class="support-panel-content">
     <div class="search-result pure-u-1">
         {{#each inputs}}
-            <span data-uri-escaped-label="{{encodeURI(./label)}}">{{./label}}:</span>
-            {{#each values}}
-                <span class="field pure-u-1-1">
-                    {{>type}}
-                </span>
-            {{/each}}
+            {{#if !(type === 'hidden-url-query-value')}}
+                <span data-uri-escaped-label="{{encodeURI(./label)}}">{{./label}}:</span>
+                {{#each values}}
+                    <span class="field pure-u-1-1">
+                        {{>type}}
+                    </span>
+                {{/each}}
+            {{/if}}
         {{/each}}
         {{#if widgetOptions.enableCreateNewResource.showInputs === (inputValueIndex || 0)}}
             <span class="pure-u-1-1">

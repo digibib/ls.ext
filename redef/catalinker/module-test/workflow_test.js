@@ -29,11 +29,7 @@ describe("Catalinker", function () {
       sinon.stub(axios, "get", function (path) {
 
         switch (path) {
-        case "/config/book":
-        case "/config/film":
-        case "/config/musical_score":
-        case "/config/musical_recording":
-        case "/config/game":
+        case "/config":
           return Promise.resolve({data: {
             kohaOpacUri: "http://koha.deichman.no",
             kohaIntraUri: "http://koha.deichman.no",
@@ -120,22 +116,13 @@ describe("Catalinker", function () {
 
       it("har riktig side-tittel", function (done) {
         //console.log(document.body.innerHTML);
-        expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering av utgivelse");
+        expect(document.querySelector("h2[data-automation-id='page-heading']").innerHTML).to.equal("Katalogisering og vedlikehold av samlingen");
         done();
       });
       it("populerer med utvalgte faner fra /config", function (done) {
         var tabs = document.querySelectorAll(".grid-tabs li");
-        expect(tabs.length).to.equal(1);
-        expect(tabs[0].children[0].id).to.equal("confirm-person-tab");
-        expect(tabs[0].children[0].innerHTML).to.equal("Bekreft person");
-        done();
-      });
-      it("populerer faner med gruppert innhold fra ontologi", function (done) {
-        var tabContent = document.querySelectorAll(".inner-content div.grid-panel");
-        expect(tabContent.length).to.equal(1);
-        expect(tabContent[0].querySelector(".label").innerHTML).to.equal("Opphavsperson");
-        expect(tabContent[0].querySelector("input").getAttribute("data-automation-id")).to.equal("Work_http://192.168.50.12:7000/ontology#creator_0");
-        expect(tabContent[0].querySelector("button.next-step-button").innerHTML).to.equal("Bekreft verk");
+        expect(tabs.length).to.equal(2);
+        expect(tabs[0].children[0].id).to.equal("tab0");
         done();
       });
     });

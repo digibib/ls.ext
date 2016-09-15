@@ -29,13 +29,7 @@ function maintenanceInputs (label, type) {
 }
 
 module.exports = (app) => {
-  app.get('/config/:mediaType(book|film|audible|musical_score|musical_recording|game)|/config', function (request, response) {
-    var mediaType = request.params.mediaType
-    console.log(mediaType)
-    function includeOnlyFor (targetTypes, object) {
-      return (_.isArray(targetTypes) && _.contains(targetTypes, mediaType) || targetTypes === mediaType) ? object : null
-    }
-
+  app.get('/config', function (request, response) {
     var config =
     {
       kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
@@ -150,6 +144,33 @@ module.exports = (app) => {
               label: 'Forklarende tilføyelse',
               rdfProperty: 'specification',
               type: 'input-string'
+            }
+          ]
+        },
+        {
+          id: 'create-main-work-form',
+          labelForCreateButton: 'Opprett nytt verk',
+          rdfType: 'Work',
+          inputs: [
+            {
+              label: 'Hovedtittel',
+              rdfProperty: 'mainTitle',
+              type: 'input-string',
+              // input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true // value of this field should be copied from the search field above
+            },
+            {
+              label: 'Undertittel',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'subtitle'
+            },
+            {
+              rdfProperty: 'hasWorkType',
+              type: 'hidden-url-query-value',
+              widgetOptions: {
+                queryParameter: 'hasWorkType',
+                prefix: 'http://data.deichman.no/workType#'
+              }
             }
           ]
         },
@@ -292,44 +313,48 @@ module.exports = (app) => {
           rdfType: 'Work',
           label: 'Hovedinnførsel',
           inputs: [
-            includeOnlyFor(
-              [ 'book', 'audible', 'musical_score' ], {
-                // this is an input type used to search for a main resource, e.g. Work. The rendered input field
-                // will not be tied to a particular subject and predicate
-                searchForValueSuggestions: {
-                  label: 'ISBN',
-                  pattern: '^[ 0-9\-]+[xX]?\s*$',
-                  patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
-                  parameterName: 'isbn',
-                  automationId: 'searchValueSuggestions',
-                  showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-                  sources: [ 'bibbi', 'loc' ],
-                  preferredSource: {
-                    id: 'bibbi',
-                    name: 'Biblioteksentralen'
-                  }
+            {
+              includeOnlyWhen: {
+                hasMediaType: [ 'Book', 'Audiobook', 'SheetMusic' ]
+              },
+              // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+              // will not be tied to a particular subject and predicate
+              searchForValueSuggestions: {
+                label: 'ISBN',
+                pattern: '^[ 0-9\-]+[xX]?\s*$',
+                patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
+                parameterName: 'isbn',
+                automationId: 'searchValueSuggestions',
+                showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+                sources: [ 'bibbi', 'loc' ],
+                preferredSource: {
+                  id: 'bibbi',
+                  name: 'Biblioteksentralen'
                 }
               }
-            ),
-            includeOnlyFor(
-              [ 'film', 'musical_recording', 'game' ], {
-                // this is an input type used to search for a main resource, e.g. Work. The rendered input field
-                // will not be tied to a particular subject and predicate
-                searchForValueSuggestions: {
-                  label: 'EAN',
-                  pattern: '^ *([0-9]{13})?\s*$',
-                  patternMismatchMessage: 'Dette ser ikke ut som et gyldig EAN-nummer',
-                  parameterName: 'ean',
-                  automationId: 'searchEanValueSuggestions',
-                  showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-                  sources: [ 'bibbi' ],
-                  preferredSource: {
-                    id: 'bibbi',
-                    name: 'Biblioteksentralen'
-                  }
+            }
+            ,
+            {
+              includeOnlyWhen: {
+                hasMediaType: [ 'Film', 'MusicRecording', 'Game' ]
+              },
+              // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+              // will not be tied to a particular subject and predicate
+              searchForValueSuggestions: {
+                label: 'EAN',
+                pattern: '^ *([0-9]{13})?\s*$',
+                patternMismatchMessage: 'Dette ser ikke ut som et gyldig EAN-nummer',
+                parameterName: 'ean',
+                automationId: 'searchEanValueSuggestions',
+                showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+                sources: [ 'bibbi' ],
+                preferredSource: {
+                  id: 'bibbi',
+                  name: 'Biblioteksentralen'
                 }
               }
-            ),
+            }
+            ,
             {
               label: "Verket har ikke hovedansvarlig",
               id: 'missingMainEntry',
@@ -409,7 +434,7 @@ module.exports = (app) => {
                 // make it possible to create a work resource if necessary,
                 enableCreateNewResource: {
                   formRefs: [ {
-                    formId: 'create-work-form',
+                    formId: 'create-main-work-form',
                     targetType: 'work'
                   } ],
                   useAfterCreation: true
@@ -422,6 +447,7 @@ module.exports = (app) => {
             }
           ],
           nextStep: {
+            showOnlyWhenInputHasValue: 'mediaTypeInput',
             buttonLabel: 'Neste steg: Beskrivelse',
             disabledUnless: {
               presentTargetUri: 'Work',
@@ -443,6 +469,7 @@ module.exports = (app) => {
           id: 'describe-publication',
           rdfType: 'Publication',
           label: 'Beskriv utgivelse',
+          showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             { rdfProperty: 'publicationOf', type: 'entity' },
             {
@@ -477,48 +504,57 @@ module.exports = (app) => {
                 postfix: ')'
               }
             },
-            includeOnlyFor([ 'book', 'musical_score' ], { rdfProperty: 'numberOfPages' }),
-            includeOnlyFor([ 'book', 'musical_score' ], { rdfProperty: 'illustrativeMatter' }),
-            includeOnlyFor([ 'book', 'musical_score' ], {
+            { includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] }, rdfProperty: 'numberOfPages' },
+            { includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter' },
+            {
+              includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] },
               rdfProperty: 'isbn',
               multiple: true,
               addAnotherLabel: 'Legg til et ISBN-nummer til'
-            }),
-            includeOnlyFor([ 'film', 'musical_recording' ], {
+            },
+            {
+              includeOnlyWhen: { hasMediaType: [ 'Film', 'MusicRecording' ] },
               rdfProperty: 'hasEan'
-            }),
-            includeOnlyFor(
-              ['book', 'musical_score'], {
-                rdfProperty: 'binding'
-              }
-            ),
+            },
+            {
+              includeOnlyWhen: {
+                hasMediaType: [ 'Book', 'SheetMusic' ]
+              },
+              rdfProperty: 'binding'
+            }
+            ,
             {
               rdfProperty: 'language',
               multiple: true
             },
-            includeOnlyFor(
-              'film', {
-                rdfProperty: 'hasSubtitles',
-                multiple: 'true'
-              }
-            ),
+            {
+              includeOnlyWhen: {
+                hasMediaType: 'Film'
+              },
+              rdfProperty: 'hasSubtitles',
+              multiple: 'true'
+            }
+            ,
             { rdfProperty: 'format', multiple: true },
             { rdfProperty: 'hasMediaType' },
-            includeOnlyFor(
-              [ 'film', 'musical_recording' ,'audible'], {
-                rdfProperty: 'duration',
-                type: 'input-duration'
+            {
+              includeOnlyWhen: {
+                hasMediaType: [ 'Film', 'MusicRecording', 'Audiobook' ]
+              },
+              rdfProperty: 'duration',
+              type: 'input-duration'
+            }
+            ,
+            {
+              includeOnlyWhen: {
+                hasMediaType: [ 'Film', 'Game' ]
+              },
+              rdfProperty: 'ageLimit',
+              widgetOptions: {
+                short: true
               }
-            ),
-            includeOnlyFor(
-              [ 'film', 'game' ], {
-                rdfProperty: 'ageLimit',
-                widgetOptions: {
-                  short: true
-                }
-              }
-            ),
-            includeOnlyFor(['book', 'musical_score'], { rdfProperty: 'writingSystem', multiple: true }),
+            },
+            { includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] }, rdfProperty: 'writingSystem', multiple: true },
             { rdfProperty: 'hasFormatAdaptation', multiple: true },
             {
               id: 'publishedByInput',
@@ -601,16 +637,26 @@ module.exports = (app) => {
                 ]
               }
             },
-            { rdfProperty: 'locationFormat'},
-            { rdfProperty: 'locationClassNumber'},
-            { rdfProperty: 'locationSignature'},
+            { rdfProperty: 'locationFormat' },
+            { rdfProperty: 'locationClassNumber' },
+            { rdfProperty: 'locationSignature' },
             {
               rdfProperty: 'specification',
               type: 'input-string-large'
+            },
+            {
+              rdfProperty: 'hasMediaType',
+              id: 'mediaTypeInput',
+              type: 'hidden-url-query-value',
+              widgetOptions: {
+                queryParameter: 'hasMediaType',
+                prefix: 'http://data.deichman.no/mediaType#'
+              }
             }
           ],
           nextStep: {
-            buttonLabel: 'Neste steg: Beskriv verk'
+            buttonLabel: 'Neste steg: Beskriv verk',
+            showOnlyWhenInputHasValue: 'mediaTypeInput'
           },
           deleteResource: {
             buttonLabel: 'Slett utgivelsen',
@@ -643,18 +689,20 @@ module.exports = (app) => {
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'publicationYear' },
             { rdfProperty: 'language', multiple: true },
-            includeOnlyFor(['book', 'audible'], {
+            {
+              includeOnlyWhen: { hasWorkType: 'Literature' },
               rdfProperty: 'literaryForm',
               multiple: true,
               headlinePart: {
                 order: 45
               }
-            }),
-            includeOnlyFor(['book', 'audible', 'film'], {
+            },
+            {
+              includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] },
               rdfProperty: 'fictionNonfiction',
-            }),
+            },
             { rdfProperty: 'audience', multiple: true },
-            includeOnlyFor(['book', 'audible', 'film'], { rdfProperty: 'biography', multiple: true }),
+            { includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] }, rdfProperty: 'biography', multiple: true },
             { rdfProperty: 'hasContentAdaptation', multiple: true },
             {
               label: 'Relasjon til annet verk',
@@ -708,9 +756,19 @@ module.exports = (app) => {
               rdfProperty: 'hasSummary',
               type: 'input-string-large'
             },
+            {
+              rdfProperty: 'hasWorkType',
+              type: 'hidden-url-query-value',
+              id: 'workTypeInput',
+              widgetOptions: {
+                queryParameter: 'hasWorkType',
+                prefix: 'http://data.deichman.no/workType#'
+              }
+            }
           ],
           nextStep: {
-            buttonLabel: 'Neste steg: Emneopplysninger'
+            buttonLabel: 'Neste steg: Emneopplysninger',
+            showOnlyWhenInputHasValue: 'mediaTypeInput'
           },
           deleteResource: {
             buttonLabel: 'Slett verket',
@@ -731,7 +789,8 @@ module.exports = (app) => {
           rdfType: 'Work',
           label: 'Emneopplysninger',
           inputs: [
-            includeOnlyFor(['musical_score', 'musical_recording'], {
+            {
+              includeOnlyWhen: { hasWorkType: 'Music' },
               rdfProperty: 'hasCompositionType',
               id: 'compositionTypeInput',
               type: 'searchable-with-result-in-side-panel',
@@ -748,12 +807,14 @@ module.exports = (app) => {
                   ]
                 }
               }
-            }),
-            includeOnlyFor([ 'musical_score', 'musical_recording' ], {
+            },
+            {
+              includeOnlyWhen: { hasWorkType: 'Music' },
               rdfProperty: 'inKey',
               multiple: true
-            }),
-            includeOnlyFor(['musical_score', 'musical_recording'], {
+            },
+            {
+              includeOnlyWhen: { hasWorkType: 'Music' },
               label: 'Besetning',
               multiple: true,
               addAnotherLabel: 'Legg til et instrument til',
@@ -790,7 +851,7 @@ module.exports = (app) => {
                 ]
               },
               subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
-            }),
+            },
             {
               rdfProperty: 'subject',
               id: 'subjectInput',
@@ -873,6 +934,7 @@ module.exports = (app) => {
             }
           ],
           nextStep: {
+            showOnlyWhenInputHasValue: 'mediaTypeInput',
             buttonLabel: 'Neste steg: Beskriv deler'
           }
         },
@@ -880,6 +942,7 @@ module.exports = (app) => {
           id: 'collection-of-works',
           rdfType: 'Publication',
           label: 'Beskriv deler',
+          showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             {
               label: 'Verk som inngår i samling',
@@ -943,20 +1006,22 @@ module.exports = (app) => {
                     rdfProperty: 'partNumber'
                   },
                   // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
-                  includeOnlyFor(['book', 'musical_score'], {
+                  {
+                    includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] },
                     label: 'Sidetall',
                     id: 'startsAtPageInput',
                     rdfProperty: 'startsAtPage',
                     widgetOptions: {
                       isRangeStart: true,
                     }
-                  }),
-                  includeOnlyFor(['book', 'musical_score'], {
+                  },
+                  {
+                    includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] },
                     rdfProperty: 'endsAtPage',
                     widgetOptions: {
                       isRangeEnd: true,
                     }
-                  }),
+                  },
                   {
                     label: 'Skal ikke vises som verk',
                     rdfProperty: 'improperWork'
@@ -968,7 +1033,8 @@ module.exports = (app) => {
             }
           ],
           nextStep: {
-            buttonLabel: 'Neste steg: Biinnførsler'
+            buttonLabel: 'Neste steg: Biinnførsler',
+            showOnlyWhenInputHasValue: 'mediaTypeInput'
           }
         },
         {
@@ -1023,6 +1089,7 @@ module.exports = (app) => {
           ],
           nextStep: {
             buttonLabel: 'Avslutt registrering av utgivelsen',
+            showOnlyWhenInputHasValue: 'mediaTypeInput',
             restart: true
           }
         }
@@ -1255,7 +1322,7 @@ module.exports = (app) => {
           predicate: 'publicationOf',
           enableCreateNewResource: true
         }
-        ]
+      ]
     }
     response.json(config)
   })

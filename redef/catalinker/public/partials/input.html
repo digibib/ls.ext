@@ -1,4 +1,4 @@
-{{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty))}}
+{{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
 <span class="input-panel pure-u-1-1 prop-input" intro='slideIn' outro='slideOut'>
 <span {{#if (type === 'input-boolean')}}class='panel-part pure-u-1-2 for-checkbox'{{/if}}>
 <span class="{{#if (type != 'input-boolean')}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}pure-u-2-3{{/if}} label {{firstInGroup ? 'first':''}} {{(type == 'input-boolean') ? 'for-checkbox' : 'panel-part'}}"

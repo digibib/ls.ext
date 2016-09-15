@@ -107,8 +107,10 @@
       })
       window.sessionStorage.setItem('suggestionData', JSON.stringify(suggestionData))
       window.sessionStorage.setItem('acceptedData', JSON.stringify(acceptedData))
-      var suggestedValueSearchInput = getSuggestedValuesSearchInput()
-      window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
+      let suggestedValueSearchInput = getSuggestedValuesSearchInput()
+      if (suggestedValueSearchInput) {
+        window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
+      }
     }
 
     function inputHasOpenForm (input) {
@@ -233,7 +235,7 @@
     }
 
     function propertyName (predicate) {
-      return _.last(predicate.split('#'))
+      return typeof predicate === 'string' ? _.last(predicate.split('#')) : predicate
     }
 
     function setMultiValues (values, input, index, options) {
@@ -407,6 +409,14 @@
       history.replaceState('', '', URI.build(oldUri))
     }
 
+    function updateBrowserLocationWithQueryParameter (parameter, value) {
+      var oldUri = URI.parse(document.location.href)
+      var queryParameters = URI.parseQuery(oldUri.query)
+      queryParameters[ parameter ] = value
+      oldUri.query = URI.buildQuery(queryParameters)
+      history.replaceState('', '', URI.build(oldUri))
+    }
+
     function loadLabelsForAuthorizedValues (values, input, index, root) {
       var promises = []
       if (input.nameProperties) {
@@ -457,19 +467,29 @@
 
     function allGroupInputs (handleInput, options) {
       options = options || {}
+      var abort = false
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           if (input.subInputs) {
             _.each(input.subInputs, function (subInput, subInputIndex) {
-              handleInput(subInput.input, groupIndex, inputIndex, subInputIndex)
+              if (handleInput(subInput.input, groupIndex, inputIndex, subInputIndex)) {
+                abort = true
+              }
             })
             if (options.handleInputGroups) {
-              handleInput(input, groupIndex, inputIndex)
+              if (handleInput(input, groupIndex, inputIndex)) {
+                abort = true
+              }
             }
           } else {
-            handleInput(input, groupIndex, inputIndex)
+            if (handleInput(input, groupIndex, inputIndex)) {
+              abort = true
+            }
           }
         })
+        if (abort) {
+          return
+        }
       })
     }
 
@@ -505,7 +525,16 @@
       return inputs
     }
 
-    function inputFromInputId (inputId) {
+  function withPublicationOfWorkInput (handler) {
+    var publicationOfInput = _.find(allInputs(), function (input) {
+      return (input.fragment === 'publicationOf' && input.domain === 'deichman:Publication' && input.type === 'entity')
+    })
+    if (publicationOfInput) {
+      handler(publicationOfInput)
+    }
+  }
+
+  function inputFromInputId (inputId) {
       let keypath = ractive.get(`inputLinks.${inputId}`)
       return ractive.get(keypath)
     }
@@ -605,6 +634,10 @@
                       }
                     })
                   }
+                } else if (input.type === 'hidden-url-query-value') {
+                  _.each(root.outAll(propertyName(predicate)), function (value) {
+                    setIdValue(value.id, input, 0)
+                  })
                 } else {
                   _.each(root.getAll(propertyName(predicate)), function (value, index) {
                     if (!options.onlyValueSuggestions) {
@@ -702,12 +735,10 @@
           }
         })
       })
-      var publicationOfInput = _.find(ractive.get('inputs'), function (input) {
-        return (input.fragment === 'publicationOf')
-      })
-      if (publicationOfInput) {
+      withPublicationOfWorkInput(function (publicationOfInput) {
         inputsToSave.push(publicationOfInput)
-      }
+      })
+
       saveInputs(inputsToSave, resourceType).then(function (resourceUri) {
         ractive.set('targetUri.' + resourceType, resourceUri)
         updateBrowserLocationWithUri(resourceType, resourceUri)
@@ -769,7 +800,7 @@
       if (prop.type) {
         input.type = prop.type
       }
-      input.visible = prop.type !== 'entity'
+      input.visible = (prop.type !== 'entity' && prop.type !== 'hidden-url-query-value')
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
       }
@@ -798,6 +829,9 @@
       }
       if (prop.showOnlyWhen) {
         input.showOnlyWhen = prop.showOnlyWhen
+      }
+      if (prop.includeOnlyWhen) {
+        input.includeOnlyWhen = prop.includeOnlyWhen
       }
     }
 
@@ -950,7 +984,7 @@
         if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
           currentInput.subjectType = currentInput.subjectTypes[ 0 ]
         }
-        _.each(_.compact(compoundInput.subInputs.inputs), function (subInput) {
+        _.each(compoundInput.subInputs.inputs, function (subInput) {
           if (!subInput.rdfProperty) {
             throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
           }
@@ -1032,7 +1066,7 @@
 
       function createInputsForGroup (inputGroup) {
         var groupInputs = []
-        _.each(_.compact(inputGroup.inputs), function (input, index) {
+        _.each(inputGroup.inputs, function (input, index) {
           var ontologyInput
           if (input.searchMainResource) {
             groupInputs.push({
@@ -1065,7 +1099,8 @@
               dataAutomationId: input.searchForValueSuggestions.automationId,
               searchForValueSuggestions: input.searchForValueSuggestions,
               inputIndex: index,
-              id: input.id
+              id: input.id,
+              includeOnlyWhen: input.includeOnlyWhen
             })
           } else {
             input.inputIndex = index
@@ -1117,6 +1152,7 @@
         group.tabId = inputGroup.id
         group.tabSelected = false
         group.domain = inputGroup.rdfType
+        group.showOnlyWhenInputHasValue = inputGroup.showOnlyWhenInputHasValue
 
         if (inputGroup.nextStep) {
           group.nextStep = inputGroup.nextStep
@@ -1340,9 +1376,10 @@
         })[ 'label' ])
       },
 
-      init: function (template) {
-        var query = URI.parseQuery(URI.parse(document.location.href).query)
-        template = '/templates/' + (query.template || template || 'menu') + '.html'
+      init: function (options) {
+        options = options || {}
+        let query = URI.parseQuery(URI.parse(document.location.href).query)
+        let template = '/templates/' + (query.template || options.template || 'menu') + '.html'
         var partials = [
           'input',
           'input-string',
@@ -1754,6 +1791,13 @@
                 var keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
                 return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
               },
+              checkRequiredInputValueForShow: function (showOnlyWhenInputHasValueSpec) {
+                  if (!(showOnlyWhenInputHasValueSpec && showOnlyWhenInputHasValueSpec.showOnlyWhenInputHasValue)) {
+                    return true
+                  } else {
+                    return valueOfInputByInputId(showOnlyWhenInputHasValueSpec.showOnlyWhenInputHasValue, 0)
+                }
+              },
               valueOrderOfInputById: function (inputId, valueIndex) {
                 if (inputId) {
                   let keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
@@ -1770,6 +1814,25 @@
                 } else {
                   return valueIndex + 1
                 }
+              },
+              checkShouldInclude: function (input) {
+                var shouldInclude = true
+                if (input.includeOnlyWhen) {
+                  _.each(_.keys(input.includeOnlyWhen), function (property) {
+                    let includeWhenValues = _.flatten([input.includeOnlyWhen[property]])
+                    allGroupInputs(function (input1) {
+                      if (input1.fragment === property &&
+                        !_.contains(includeWhenValues, _.flatten([
+                          propertyName(URI.parseQuery(document.location.href)[property] ||
+                            input1.values[0].current.value)
+                        ])[0])) {
+                        shouldInclude = false
+                        return true
+                      }
+                    })
+                  })
+                }
+                return shouldInclude
               }
             },
             decorators: {
@@ -2054,12 +2117,23 @@
                 var uri = event.context.uri
                 var template = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
                 if (template) {
-                  fetchExistingResource(uri)
-                  updateBrowserLocationWithTemplate(template)
-                  if (uri.indexOf('publication') !== -1) {
-                    updateBrowserLocationWithTab(1)
-                  }
-                  Main.init()
+                  fetchExistingResource(uri).then(function () {
+                    let initOptions = { presetValues: {} }
+                    updateBrowserLocationWithTemplate(template)
+                    allGroupInputs(function (input) {
+                      if (input.type === 'hidden-url-query-value' &&
+                        typeof input.values[ 0 ].current.value === 'string' &&
+                        input.values[ 0 ].current.value !== '') {
+                        let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
+                        initOptions.presetValues[ input.widgetOptions.queryParameter ] = shortValue
+                        updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
+                      }
+                    })
+                    if (uri.indexOf('publication') !== -1) {
+                      updateBrowserLocationWithTab(1)
+                    }
+                    Main.init(initOptions)
+                  })
                 } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
                   var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
                   var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
@@ -2149,7 +2223,7 @@
                         if (targetInput) {
                           targetInput.datatypes = sourceInput.datatypes
                           if (targetInput.type === 'select-predefined-value') {
-                            sourceInput.values[0].current.value = _.union(sourceInput.values[0].current.value, targetInput.values[0].current.value)
+                            sourceInput.values[ 0 ].current.value = _.union(sourceInput.values[ 0 ].current.value, targetInput.values[ 0 ].current.value)
                           } else {
                             _.each(sourceInput.values, function (sourceValue) {
                               if (!_.some(targetInput.values, function (targetValue) {
@@ -2163,7 +2237,7 @@
                                 }
                               }
                             })
-                        }
+                          }
                         }
                       }
                     })
@@ -2210,7 +2284,7 @@
                   _.each(event.context.inputs, function (input) {
                     if (input.preFillFromSearchField) {
                       input.values[ 0 ].current.value = searchTerm
-                    } else {
+                    } else if (input.type !== 'hidden-url-query-value') {
                       input.values = emptyValues(input.type === 'select-predefined-value')
                     }
                   })
@@ -2304,8 +2378,7 @@
                 var searchValue = event.context.current.value.replace(/[ -]/g, '')
                 if (searchValue && searchValue !== '') {
                   var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
-                  if (searchExternalSourceInput.searchForValueSuggestions.pattern &&
-                    !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
+                  if (searchExternalSourceInput.searchForValueSuggestions.pattern && !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
                     return
                   }
                   searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource = []
@@ -2553,18 +2626,16 @@
           }, { init: false })
 
           ractive.observe('targetUri.Work', function (newValue, oldValue, keypath) {
-            _.each(allInputs(), function (input, inputIndex) {
-              if (input.predicate && input.predicate.indexOf('#publicationOf') !== -1 && input.domain === 'deichman:Publication') {
-                input.values = [
-                  {
-                    current: {
-                      value: newValue
-                    }
+            withPublicationOfWorkInput(function (input) {
+              input.values = [
+                {
+                  current: {
+                    value: newValue
                   }
-                ]
-              }
+                }
+              ]
+              ractive.update()
             })
-            ractive.update()
           }, { init: false })
 
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
@@ -2638,17 +2709,14 @@
         }
 
         function loadWorkOfPublication () {
-          var publicationOfInput = _.find(ractive.get('inputs'), function (input) {
-            return (input.fragment === 'publicationOf')
-          })
-          if (publicationOfInput) {
-            var workUri = publicationOfInput.values[ 0 ].current.value
+          withPublicationOfWorkInput(function (publicationOfInput) {
+            var workUri = _.flatten([publicationOfInput.values[ 0 ].current.value])[0]
             if (workUri) {
               return fetchExistingResource(workUri).then(function () {
                 ractive.set('targetUri.Work', workUri)
               })
             }
-          }
+          })
         }
 
         var loadResourceOfQuery = function (applicationData) {
@@ -2772,7 +2840,29 @@
           return applicationData
         }
 
-        return axios.get(`/config/${URI.parseQuery(URI.parse(document.location.href).query).mediaType || 'book'}`)
+        let initValuesFromQuery = function (applicationData) {
+          _.each(allInputs(), function (input) {
+            if (input.type === 'hidden-url-query-value' &&
+              input.widgetOptions && input.widgetOptions.queryParameter &&
+              ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])) {
+              let queryValue = (input.widgetOptions.prefix || '') + ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])
+              if (queryValue) {
+                input.values = [ {
+                  current: {
+                    value: queryValue
+                  },
+                  old: {
+                    value: undefined
+                  }
+                } ]
+              }
+            ractive.update()
+            }
+          })
+          return applicationData
+        }
+
+        return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
           .then(loadPartials)
@@ -2785,6 +2875,7 @@
           .then(initHeadlineParts)
           .then(initInputLinks)
           .then(initInputInterDependencies)
+          .then(initValuesFromQuery)
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)
         // })
