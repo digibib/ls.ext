@@ -2387,6 +2387,82 @@
       '693':
         subfields:
           -
+            'a':
+              predicate: "MIGRATION.genreMain"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.Genre"
+    -
+      '693':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.splitGenre1"
+              object:
+                datatype: "uri"
+                regex_match: "([\\w\\W]+), "
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        regex_match: "([\\w\\W]+), "
+                class: "MIGRATION.Genre"
+    -
+      '693':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.splitGenre2"
+              object:
+                datatype: "uri"
+                regex_match: ", ([\\w\\W]+)"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        regex_match: ", ([\\w\\W]+)"
+                class: "MIGRATION.Genre"
+    -
+      '693':
+        subfields:
+          -
+            'x':
+              predicate: "MIGRATION.genreSub"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.Genre"
+    -
+      '693':
+        subfields:
+          -
             '3':
               predicate: "MIGRATION.genreAuthority"
               object:
