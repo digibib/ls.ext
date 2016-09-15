@@ -1839,7 +1839,6 @@
               predicate: "ONTOLOGY.genre"
               object:
                 datatype: "uri"
-                regex_match: "(\\w\\W+), "
                 md5: true
                 prefix: "http://data.deichman.no/genre/g"
               relation:
@@ -1849,7 +1848,6 @@
                       predicate: "ONTOLOGY.prefLabel"
                       object:
                         datatype: "literal"
-                        regex_match: "(\\w\\W+), "
                 class: "ONTOLOGY.Genre"
     -
       '655':
@@ -1859,7 +1857,7 @@
               predicate: "ONTOLOGY.genre"
               object:
                 datatype: "uri"
-                regex_match: ", (\\w\\W+)"
+                regex_match: "([\\w\\W]+), "
                 md5: true
                 prefix: "http://data.deichman.no/genre/g"
               relation:
@@ -1869,7 +1867,27 @@
                       predicate: "ONTOLOGY.prefLabel"
                       object:
                         datatype: "literal"
-                        regex_match: ", (\\w\\W+)"
+                        regex_match: "([\\w\\W]+), "
+                class: "ONTOLOGY.Genre"
+    -
+      '655':
+        subfields:
+          -
+            'a':
+              predicate: "ONTOLOGY.genre"
+              object:
+                datatype: "uri"
+                regex_match: ", ([\\w\\W]+)"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        regex_match: ", ([\\w\\W]+)"
                 class: "ONTOLOGY.Genre"
     -
       '655':
