@@ -685,7 +685,6 @@ public class EntityServiceImplTest {
                 + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
                 + "@prefix xml: <http://www.w3.org/XML/1998/namespace> .\n"
                 + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n"
-                + "\n"
                 + "<http://data.deichman.no/publication/p735933031021> rdf:type ns2:Publication ;\n"
                 + "    ns2:bibliofilPublicationID \"0626460\" ;\n"
                 + "    ns2:format <http://data.deichman.no/format#EBokBib> ;\n"
@@ -706,7 +705,6 @@ public class EntityServiceImplTest {
                 + "    ns4:locationSignature \"Rag\" ;\n"
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
-                + "\n"
                 + "<http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
                 + "    ns2:audience <http://data.deichman.no/audience#adult> ;\n"
                 + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
@@ -722,7 +720,6 @@ public class EntityServiceImplTest {
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
                 + "    ns2:genre <http://deichman.no/genre/g1> ;"
                 + "    ns2:subject <http://deichman.no/subject/e1200005>, <http://deichman.no/subject/e1200006> .\n"
-                + "\n"
                 + "<http://data.deichman.no/person/h10834700> rdf:type ns2:Person ;\n"
                 + "    ns2:birthYear \"1957\" ;\n"
                 + "    ns2:name \"Ragde, Anne B.\" ;\n"
@@ -748,8 +745,8 @@ public class EntityServiceImplTest {
                 + "<http://data.deichman.no/mediaType#Book> rdfs:label \"Bok\"@no, \"Book\"@en .\n"
                 + "<http://data.deichman.no/format#EBokBib> rdfs:label \"eBokBib\"@no, \"eBokBib\"@en .\n"
                 + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en .\n"
-                + "<http://data.deichman.no/contentAdaptation#easyLanguage> rdfs:label \"Lettlest, enkelt språk\"@no, \"Easy to read, easy language\"@en .\n";
-
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> rdfs:label \"Lettlest, enkelt språk\"@no, \"Easy to read, easy language\"@en .\n"
+                + "<http://data.deichman.no/audience#adult> rdfs:label \"Adult\"@en, \"Voksne\"@no .\n";
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://data.deichman.no/publication/p735933031021");
         MarcRecord want = new MarcRecord();
@@ -792,6 +789,10 @@ public class EntityServiceImplTest {
         want.addMarcField(field);
         field = MarcRecord.newDataField("385");
         field.addSubfield('a', "Lettlest, enkelt språk");
+        want.addMarcField(field);
+        // Målgruppe
+        field = MarcRecord.newDataField("385");
+        field.addSubfield('a', "Voksne");
         want.addMarcField(field);
         // Format
         field = MarcRecord.newDataField("338");

@@ -81,6 +81,7 @@ public final class EntityServiceImpl implements EntityService {
     private final Property adaptaionProperty;
     private final Property fictionNonFictionProperty;
     private final Property abstractProperty;
+    private final Property audienceProperty;
 
     private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
     private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
@@ -111,6 +112,7 @@ public final class EntityServiceImpl implements EntityService {
         adaptaionProperty = ResourceFactory.createProperty(BaseURI.ontology("adaptationLabel"));
         fictionNonFictionProperty = ResourceFactory.createProperty(BaseURI.ontology("fictionNonfiction"));
         abstractProperty = ResourceFactory.createProperty(BaseURI.ontology("abstract"));
+        audienceProperty = ResourceFactory.createProperty(BaseURI.ontology("audience"));
 
     }
 
@@ -478,7 +480,6 @@ public final class EntityServiceImpl implements EntityService {
                         marcRecord.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_NONFICTION);
                     }
                 } else if (pred.equals(literaryFormLabelProperty)) {
-                    String label = stmt.getLiteral().getString();
                     marcRecord.addMarcField(MarcConstants.FIELD_655, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(languageProperty)) {
                     String langCode = stmt.getObject().asResource().getURI();
@@ -490,7 +491,7 @@ public final class EntityServiceImpl implements EntityService {
                     marcRecord.addMarcField(MarcConstants.FIELD_337, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(formatLabelProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_338, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
-                } else if (pred.equals(adaptaionProperty)) {
+                } else if (pred.equals(adaptaionProperty) || pred.equals(audienceProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_385, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(abstractProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_520, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
