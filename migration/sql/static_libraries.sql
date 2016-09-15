@@ -2,12 +2,12 @@ INSERT IGNORE INTO branches
   (branchcode, branchname)
 VALUES
   ("api", "Internt API"),
-  ("hbib","Hovedbiblioteket")
+  ("hbib","Hovedbiblioteket"),
   ("fbje","Bjerke"),
   ("fbjo","Bjørnholt"),
   ("fbol","Bøler"),
   ("ffur","Furuset"),
-  ("fgab","Biblo ),Tøyen"
+  ("fgab","Biblo Tøyen"),
   ("fgam","Tøyen"),
   ("fgry","Grünerløkka"),
   ("fhol","Holmlia"),
