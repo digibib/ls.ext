@@ -1832,6 +1832,68 @@
                       object:
                         datatype: "literal"
     -
+      '655':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.genreAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://data.deichman.no/genreAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "MIGRATION.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.GenreAuthorityM655"
+    -
       '658':
         subfields:
           -
@@ -2245,6 +2307,68 @@
                       predicate: "ONTOLOGY.specification"
                       object:
                         datatype: "literal"
+    -
+      '693':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.genreAuthority"
+              object:
+                datatype: "uri"
+                prefix: "http://data.deichman.no/juvenileGenreAuthority/x"
+              relation:
+                subfields:
+                  -
+                    '0':
+                      predicate: "MIGRATION.qualifier"
+                      object:
+                        datatype: "literal"
+                  -
+                    '1':
+                      predicate: "MIGRATION.classificationNotation"
+                      object:
+                        datatype: "literal"
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    '4':
+                      predicate: "MIGRATION.classificationEdition"
+                      object:
+                        datatype: "literal"
+                  -
+                    '6':
+                      predicate: "MIGRATION.classifiationDetails"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.mainLabel"
+                      object:
+                        datatype: "literal"
+                  -
+                    q:
+                      predicate: "MIGRATION.specification"
+                      object:
+                        datatype: "literal"
+                  -
+                    x:
+                      predicate: "MIGRATION.subdivision"
+                      object:
+                        datatype: "literal"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
+                      object:
+                        datatype: "literal"
+                  -
+                    z:
+                      predicate: "MIGRATION.geoSubdivision"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.GenreAuthorityM693"
     -
       '694':
         subfields:
