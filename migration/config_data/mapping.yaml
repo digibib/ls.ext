@@ -1836,7 +1836,7 @@
         subfields:
           -
             'a':
-              predicate: "ONTOLOGY.genre"
+              predicate: "MIGRATION.genreMain"
               object:
                 datatype: "uri"
                 md5: true
@@ -1848,13 +1848,13 @@
                       predicate: "ONTOLOGY.prefLabel"
                       object:
                         datatype: "literal"
-                class: "ONTOLOGY.Genre"
+                class: "MIGRATION.Genre"
     -
       '655':
         subfields:
           -
             'a':
-              predicate: "ONTOLOGY.genre"
+              predicate: "MIGRATION.splitGenre1"
               object:
                 datatype: "uri"
                 regex_match: "([\\w\\W]+), "
@@ -1868,13 +1868,13 @@
                       object:
                         datatype: "literal"
                         regex_match: "([\\w\\W]+), "
-                class: "ONTOLOGY.Genre"
+                class: "MIGRATION.Genre"
     -
       '655':
         subfields:
           -
             'a':
-              predicate: "ONTOLOGY.genre"
+              predicate: "MIGRATION.splitGenre2"
               object:
                 datatype: "uri"
                 regex_match: ", ([\\w\\W]+)"
@@ -1888,13 +1888,13 @@
                       object:
                         datatype: "literal"
                         regex_match: ", ([\\w\\W]+)"
-                class: "ONTOLOGY.Genre"
+                class: "MIGRATION.Genre"
     -
       '655':
         subfields:
           -
             'x':
-              predicate: "ONTOLOGY.genre"
+              predicate: "MIGRATION.genreSub"
               object:
                 datatype: "uri"
                 md5: true
@@ -1906,7 +1906,7 @@
                       predicate: "ONTOLOGY.prefLabel"
                       object:
                         datatype: "literal"
-                class: "ONTOLOGY.Genre"
+                class: "MIGRATION.Genre"
     -
       '655':
         subfields:
