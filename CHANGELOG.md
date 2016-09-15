@@ -13,6 +13,33 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.1.3 (2016-09-15)
+
+TAG:  4887b74abce1bc99f5d46f857c5038f1fb66dfa1
+KOHA: f4185d1853c5969d4c71bfee2c583eb1bc658005
+
+- koha:
+  - patch SIP server to add pickup number to holds
+  - add bug 14695: multi item reserve in admin
+  - rfid-patch to print pickup slip when local hold found
+  - messaging API: send email on registration
+- patron-client:
+  - Add info to publications on work page
+  - style and interaction fixes for impaired
+  - fixes for mobile view
+  - mobile menu
+  - work page layout
+- services:
+  - indexing optimatlizations
+  - static base uri: data.deichman.no
+  - many new mappings to marc in Koha
+  - language and mediatype
+- catalinker:
+  - add part number to publication part
+  - pattern check for ISBN and EAN search
+- rfidhub:
+  - stability patches
+
 ## 0.1.2 (2016-09-07)
 
 TAG: 164c30a142dc13793fe469e82a817fa206abe70e
