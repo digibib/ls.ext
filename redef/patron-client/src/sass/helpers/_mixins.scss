@@ -70,15 +70,18 @@
 }
 
 @mixin boldFont {
-  font-family: 'poppins-bold', Arial, sans-serif;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 400;
 }
 
 @mixin semiBoldFont {
-  font-family: 'poppins-semibold', Arial, sans-serif;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
 }
 
 @mixin regularFont {
-  font-family: 'poppins-regular', Arial, sans-serif;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 700;
 }
 
 @mixin regularFontSize {
