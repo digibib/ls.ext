@@ -2,22 +2,25 @@ INSERT IGNORE INTO branches
   (branchcode, branchname)
 VALUES
   ("api", "Internt API"),
-  ("ftor","Torshov"),
+  ("hbib","Hovedbiblioteket")
+  ("fbje","Bjerke"),
+  ("fbjo","Bjørnholt"),
   ("fbol","Bøler"),
   ("ffur","Furuset"),
-  ("froa","Røa"),
-  ("fsme","Smestad"),
-  ("flam","Lambertseter"),
-  ("hutl","Hovedbiblioteket"),
+  ("fgab","Biblo ),Tøyen"
+  ("fgam","Tøyen"),
   ("fgry","Grünerløkka"),
-  ("fopp","Oppsal"),
-  ("fbje","Bjerke"),
-  ("frmm","Rommen"),
   ("fhol","Holmlia"),
+  ("flam","Lambertseter"),
+  ("fmaj","Majorstuen"),
   ("fnor","Nordtvet"),
   ("fnyd","Nydalen"),
-  ("fbjo","Bjørnholt"),
+  ("fopp","Oppsal"),
+  ("frik","Rikshospitalet"),
+  ("frmm","Rommen"),
+  ("froa","Røa"),
   ("from","Romsås"),
-  ("fgam","Gamle Oslo"),
+  ("fsme","Smestad"),
   ("fsto","Stovner"),
-  ("fmaj","Majorstua");
+  ("ftor","Torshov"),
+  ("hsko","Skoletjenesten");

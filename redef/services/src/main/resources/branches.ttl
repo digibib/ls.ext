@@ -1,63 +1,25 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-<dfb> rdfs:label 'Det Flerspråklige Bibliotek'@no, 'Det Flerspråklige Bibliotek'@en .
-<dfbs> rdfs:label 'Det Flerspråklige Bibliotek Referanse'@no, 'Det Flerspråklige Bibliotek Referanse'@en .
-<fbje> rdfs:label 'Bjerke'@no, 'Bjerke'@en .
-<fbjh> rdfs:label 'Bjerke, lokalhistorie'@no, 'Bjerke, lokalhistorie'@en .
-<fbji> rdfs:label 'Bjerke, innvandrerlitteratur'@no, 'Bjerke, innvandrerlitteratur'@en .
-<fbjl> rdfs:label 'Bjørnholt læremidler'@no, 'Bjørnholt læremidler'@en .
-<fbjo> rdfs:label 'Bjørnholt'@no, 'Bjørnholt'@en .
-<fbju> rdfs:label 'Bjørnholt ungdomsskole'@no, 'Bjørnholt ungdomsskole'@en .
-<fbli> rdfs:label 'vet ikke'@no, 'vet ikke'@en .
-<fbol> rdfs:label 'Bøler'@no, 'Bøler'@en .
-<fboa> rdfs:label 'Bøler, Automater'@no, 'Bøler, Automater'@en .
-<fdum> rdfs:label 'dummy'@no, 'dummy'@en .
-<ffur> rdfs:label 'Furuset'@no, 'Furuset'@en .
-<ffua> rdfs:label 'Furuset, Automater'@no, 'Furuset, Automater'@en .
-<fgam> rdfs:label 'Gamle Oslo'@no, 'Gamle Oslo'@en .
-<fgaa> rdfs:label 'Gamle Oslo, Automater'@no, 'Gamle Oslo, Automater'@en .
-<fgry> rdfs:label 'Grünerløkka'@no, 'Grünerløkka'@en .
-<fgyi> rdfs:label 'Grünerløkka innvandrerlitteratur'@no, 'Grünerløkka innvandrerlitteratur'@en .
-<fgra> rdfs:label 'Grünerløkka, Automater 1.etg'@no, 'Grünerløkka, Automater 1.etg'@en .
-<fgrb> rdfs:label 'Grünerløkka, Automater 2.etg'@no, 'Grünerløkka, Automater 2.etg'@en .
-<fhol> rdfs:label 'Holmlia'@no, 'Holmlia'@en .
-<fhoa> rdfs:label 'Holmlia, Automater'@no, 'Holmlia, Automater'@en .
-<flam> rdfs:label 'Lambertseter'@no, 'Lambertseter'@en .
-<flaa> rdfs:label 'Lambertseter, Automater'@no, 'Lambertseter, Automater'@en .
-<flan> rdfs:label 'Lambertseter, Nattautomat'@no, 'Lambertseter, Nattautomat'@en .
-<fmaj> rdfs:label 'Majorstua'@no, 'Majorstua'@en .
-<fmaa> rdfs:label 'Majorstua, Automater'@no, 'Majorstua, Automater'@en .
-<fnor> rdfs:label 'Nordtvet'@no, 'Nordtvet'@en .
-<fnyd> rdfs:label 'Nydalen'@no, 'Nydalen'@en .
-<fnya> rdfs:label 'Nydalen, Automater'@no, 'Nydalen, Automater'@en .
-<fnyl> rdfs:label 'Nydalen, læremidler'@no, 'Nydalen, læremidler'@en .
-<fopp> rdfs:label 'Oppsal'@no, 'Oppsal'@en .
-<fopa> rdfs:label 'Oppsal, Automater'@no, 'Oppsal, Automater'@en .
-<frik> rdfs:label 'Rikshospitalet'@no, 'Rikshospitalet'@en .
-<frmm> rdfs:label 'Rommen'@no, 'Rommen'@en .
-<frma> rdfs:label 'Rommen, Automater'@no, 'Rommen, Automater'@en .
-<froa> rdfs:label 'Røa'@no, 'Røa'@en .
-<frob> rdfs:label 'Røa, Automater'@no, 'Røa, Automater'@en .
-<from> rdfs:label 'Romsås'@no, 'Romsås'@en .
-<fsme> rdfs:label 'Smestad'@no, 'Smestad'@en .
-<fsor> rdfs:label 'Sørkedalen nærbibliotek'@no, 'Sørkedalen nærbibliotek'@en .
-<fsto> rdfs:label 'Stovner'@no, 'Stovner'@en .
-<fsta> rdfs:label 'Stovner, Automater'@no, 'Stovner, Automater'@en .
-<ftoi> rdfs:label 'Torshov innvandrerlitteratur'@no, 'Torshov innvandrerlitteratur'@en .
-<ftoa> rdfs:label 'Torshov, Automater'@no, 'Torshov, Automater'@en .
-<ftor> rdfs:label 'Torshov'@no, 'Torshov'@en .
-<fxxx> rdfs:label 'Midlertidig filial X'@no, 'Midlertidig filial X'@en .
-<hbar> rdfs:label 'Barneavdelingen (Hovedutlånet)'@no, 'Barneavdelingen (Hovedutlånet)'@en .
-<hbbr> rdfs:label 'Barneavdelingen spesialsamling'@no, 'Barneavdelingen spesialsamling'@en .
-<hsko> rdfs:label 'Skoleavdelingen'@no, 'Skoleavdelingen'@en .
-<hutl> rdfs:label 'Hovedbiblioteket'@no, 'Hovedbiblioteket'@en .
-<hvkr> rdfs:label 'Katalogavdeling referanse'@no, 'Katalogavdeling referanse'@en .
-<hvlr> rdfs:label 'Stjernesamling, lesesalen'@no, 'Stjernesamling, lesesalen'@en .
-<hvmu> rdfs:label 'Musikkavdelingen (Hovedbiblioteket)'@no, 'Musikkavdelingen (Hovedbiblioteket)'@en .
-<hvma> rdfs:label 'Musikkavdelingen, Automater (Hovedbiblioteket)'@no, 'Musikkavdelingen, Automater (Hovedbiblioteket)'@en .
-<hvur> rdfs:label 'Spesialsamling, fjernlån'@no, 'Spesialsamling, fjernlån'@en .
-<hvua> rdfs:label 'Hovedbiblioteket, Automater'@no, 'Hovedbiblioteket, Automater'@en .
-<idep> rdfs:label 'DFB, fjernlån'@no, 'DFB, fjernlån'@en .
-<info> rdfs:label 'Brosjyrelager'@no, 'Brosjyrelager'@en .
-<mpmi> rdfs:label 'MappaMi'@no, 'MappaMi'@en .
-<ebib> rdfs:label 'eBokBib'@no, 'eBokBib'@en .
-<ukjent> rdfs:label 'ukjent avdeling'@no, 'ukjent avdeling'@en .
+<api>    rdfs:label "Internt API"@no, "Internt API"@en .
+<hbib>   rdfs:label "Hovedbiblioteket"@no, "Hovedbiblioteket"@en .
+<fbje>   rdfs:label "Bjerke"@no, "Bjerke"@en .
+<fbjo>   rdfs:label "Bjørnholt"@no, "Bjørnholt"@en .
+<fbol>   rdfs:label "Bøler"@no, "Bøler"@en .
+<ffur>   rdfs:label "Furuset"@no, "Furuset"@en .
+<fgab>   rdfs:label "Biblo Tøyen"@no, "Biblo Tøyen"@en .
+<fgam>   rdfs:label "Tøyen"@no, "Tøyen"@en .
+<fgry>   rdfs:label "Grünerløkka"@no, "Grünerløkka"@en .
+<fhol>   rdfs:label "Holmlia"@no, "Holmlia"@en .
+<flam>   rdfs:label "Lambertseter"@no, "Lambertseter"@en .
+<fmaj>   rdfs:label "Majorstuen"@no, "Majorstuen"@en .
+<fnor>   rdfs:label "Nordtvet"@no, "Nordtvet"@en .
+<fnyd>   rdfs:label "Nydalen"@no, "Nydalen"@en .
+<fopp>   rdfs:label "Oppsal"@no, "Oppsal"@en .
+<frik>   rdfs:label "Rikshospitalet"@no, "Rikshospitalet"@en .
+<frmm>   rdfs:label "Rommen"@no, "Rommen"@en .
+<froa>   rdfs:label "Røa"@no, "Røa"@en .
+<from>   rdfs:label "Romsås"@no, "Romsås"@en .
+<fsme>   rdfs:label "Smestad"@no, "Smestad"@en .
+<fsto>   rdfs:label "Stovner"@no, "Stovner"@en .
+<ftor>   rdfs:label "Torshov"@no, "Torshov"@en .
+<hsko>   rdfs:label "Skoletjenesten"@no, "Skoletjenesten"@en .
+<ukjent> rdfs:label "Ukjent avdeling"@no, "Ukjent avdeling"@en .
