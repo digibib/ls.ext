@@ -2,54 +2,91 @@ const fs = require('fs')
 const path = require('path')
 const process = require("process")
 require('babel-register')
+require('ignore-styles')
+require('node-browser-environment')()
+require('localstorage-polyfill')
 
-const startPathComponents = `${__dirname}/../src/frontend/components`
-const startPathContainers = `${__dirname}/../src/frontend/containers`
+const startPath = `${__dirname}/../src/frontend`
+// exclude main.js, Root.js, index.js and filterParser.js because of issues
+// with localStorages setItem() and getItem() causing errors.
+// These files do not have messages anyway
+const ignoredFiles = [
+  path.join(__dirname, '/../src/frontend/routes/index.js'),
+  path.join(__dirname, '/../src/frontend/store/index.js'),
+  path.join(__dirname, '/../src/frontend/main.js'),
+  path.join(__dirname, '/../src/frontend/utils/filterParser.js'),
+  path.join(__dirname, '/../src/frontend/containers/Root.js')
+]
 
-loopThroughDirectories([ startPathComponents, startPathContainers ])
-
-function loopThroughDirectories (sourcePaths) {
-  sourcePaths.forEach(sourcePath => {
-    // Loop through all the files in the directory
-    fs.readdir(sourcePath, function (err, files) {
-      if (err) {
-        console.error("Could not list the directory.", err)
-        process.exit(1)
-      }
-      let messagesFromFiles = {}
-      files.forEach(function (file, index) {
-        const filePath = path.join(sourcePath, file)
-
-        fs.stat(filePath, function (error, stat) {
-          if (error) {
-            console.error("Error stating file.", error)
-            return
-          }
-
-          if (stat.isFile()) {
-            console.log("'%s' is a file.", filePath)
-            const fileParts = filePath.split('.')
-            const fileEnding = fileParts[ fileParts.length - 1 ]
-            const fileParts2 = filePath.split('/')
-            const fileName = fileParts2[ fileParts2.length - 1 ]
-            if (fileEnding === 'js' && fileName !== 'main.js')getMessagesFromFile(filePath, fileName)
-          }
-          else if (stat.isDirectory()) {
-            console.log("'%s' is a directory.", filePath)
-            loopThroughDirectories([ filePath ])
-          }
-        })
+const getFiles = (directory, done) => {
+  var results = [];
+  fs.readdir(directory, (err, list) => {
+    if (err) return done(err);
+    var pending = list.length;
+    if (!pending) return done(null, results);
+    list.forEach((file) => {
+      file = path.resolve(directory, file);
+      fs.stat(file, (err, stat) => {
+        if (stat && stat.isDirectory()) {
+          return getFiles(file, (err, res) => {
+            results = results.concat(res);
+            if (!--pending) return done(null, results);
+          });
+        } else {
+          results.push(file);
+          if (!--pending) return done(null, results);
+        }
       })
     })
   })
 }
 
-function getMessagesFromFile (filePath, fileName) {
-  try {
-    console.log('getting messages from', fileName)
-    const file = require(filePath)
-    console.log(fileName, file.messages ? 'has messages' : 'does not have messages', '\n')
-  } catch (e) {
-    console.log('error occured:', e)
+const parseFile = (filePath) => {
+  const file = require(filePath)
+  if (file.messages) {
+    let messagesFromFiles = {}
+    Object.keys(file.messages).forEach(key => {
+      const id = file.messages[ key ].id
+      messagesFromFiles[ id ] = filePath
+    })
+    return messagesFromFiles
   }
+}
+
+const compareTranslations = (messages) => {
+  const norwegianMessages = require(path.join(__dirname, '../src/frontend/i18n/no.js')).default
+  const englishKeys = Object.keys(messages)
+  let norCopy = JSON.parse(JSON.stringify(norwegianMessages))
+  let engCopy = JSON.parse(JSON.stringify(messages))
+  englishKeys.forEach(key => {
+    if (norwegianMessages[ key ]) {
+      delete norCopy[ key ]
+      delete engCopy[ key ]
+    }
+  })
+  if (norCopy != {})console.log('Unused norwegian translations in i18n: \n', norCopy, '\n')
+  if (engCopy != {})console.log('Messages missing norwegian translation in i18n: \n', engCopy)
+  return norCopy == {} && engCopy == {}
+}
+
+module.exports.validate = () => {
+  console.log('validate')
+  return getFiles(startPath, (err, res) => {
+    console.log('getFiles')
+    let messages = {}
+    res.forEach(filePath => {
+      const fileParts = filePath.split('/')
+      const fileName = fileParts[ fileParts.length - 1 ]
+      const fileEnding = fileName.split('.')[ 1 ]
+
+      // Process only .js files
+      if (fileEnding === 'js' && !ignoredFiles.includes(filePath)) {
+        const parsedMessages = parseFile(filePath)
+        if (parsedMessages)Object.keys(parsedMessages).forEach(key => {
+          messages[ key ] = parsedMessages[ key ]
+        })
+      }
+    })
+    return compareTranslations(messages)
+  })
 }
