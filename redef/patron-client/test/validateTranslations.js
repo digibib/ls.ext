@@ -1,12 +1,12 @@
 const fs = require('fs')
 const path = require('path')
-const process = require("process")
 require('babel-register')
 require('ignore-styles')
 require('node-browser-environment')()
 require('localstorage-polyfill')
 
 const startPath = `${__dirname}/../src/frontend`
+
 // exclude main.js, Root.js, index.js and filterParser.js because of issues
 // with localStorages setItem() and getItem() causing errors.
 // These files do not have messages anyway
@@ -18,23 +18,30 @@ const ignoredFiles = [
   path.join(__dirname, '/../src/frontend/containers/Root.js')
 ]
 
+module.exports.hasUntranslatedMessages = null
+
 const getFiles = (directory, done) => {
-  var results = [];
+  let results = []
   fs.readdir(directory, (err, list) => {
-    if (err) return done(err);
-    var pending = list.length;
-    if (!pending) return done(null, results);
+    if (err) {
+      return console.log(err)
+    }
+    let pending = list.length
+    if (!pending) return done(results)
     list.forEach((file) => {
-      file = path.resolve(directory, file);
+      file = path.resolve(directory, file)
       fs.stat(file, (err, stat) => {
+        if (err) {
+          console.log(err)
+        }
         if (stat && stat.isDirectory()) {
-          return getFiles(file, (err, res) => {
-            results = results.concat(res);
-            if (!--pending) return done(null, results);
-          });
+          return getFiles(file, (res) => {
+            results = results.concat(res)
+            if (!--pending) done(results)
+          })
         } else {
-          results.push(file);
-          if (!--pending) return done(null, results);
+          results.push(file)
+          if (!--pending) done(results)
         }
       })
     })
@@ -64,15 +71,13 @@ const compareTranslations = (messages) => {
       delete engCopy[ key ]
     }
   })
-  if (norCopy != {})console.log('Unused norwegian translations in i18n: \n', norCopy, '\n')
-  if (engCopy != {})console.log('Messages missing norwegian translation in i18n: \n', engCopy)
-  return norCopy == {} && engCopy == {}
+  if (norCopy !== {})console.log('Unused norwegian translations in i18n: \n', norCopy, '\n')
+  if (engCopy !== {})console.log('Messages missing norwegian translation in i18n: \n', engCopy)
+  module.exports.hasUntranslatedMessages = norCopy === {} && engCopy === {}
 }
 
 module.exports.validate = () => {
-  console.log('validate')
-  return getFiles(startPath, (err, res) => {
-    console.log('getFiles')
+  getFiles(startPath, (res) => {
     let messages = {}
     res.forEach(filePath => {
       const fileParts = filePath.split('/')
@@ -82,11 +87,14 @@ module.exports.validate = () => {
       // Process only .js files
       if (fileEnding === 'js' && !ignoredFiles.includes(filePath)) {
         const parsedMessages = parseFile(filePath)
-        if (parsedMessages)Object.keys(parsedMessages).forEach(key => {
-          messages[ key ] = parsedMessages[ key ]
-        })
+        if (parsedMessages) {
+          Object.keys(parsedMessages).forEach(key => {
+            messages[ key ] = parsedMessages[ key ]
+          })
+        }
       }
     })
-    return compareTranslations(messages)
+    compareTranslations(messages)
   })
 }
+
