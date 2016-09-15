@@ -392,7 +392,7 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     private void updatePublicationWithWork(XURI workXURI, XURI publication) {
-        Model work = repository.retrieveWorkAndLinkedResourcesByURI(workXURI);
+        Model work = retrieveWorkWithLinkedResources(workXURI);
         updatePublicationInKoha(publication, work);
     }
 
