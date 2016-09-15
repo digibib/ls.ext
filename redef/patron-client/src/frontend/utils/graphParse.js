@@ -81,7 +81,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateLiteral(publication, 'recordID', publicationResource, 'recordId')
     populateUris(publication, 'language', publicationResource, 'languages')
     populateUris(publication, 'format', publicationResource, 'formats')
-    populateUris(publication, 'mediaType', publicationResource, 'mediaTypes')
+    populateUris(publication, 'hasMediaType', publicationResource, 'mediaTypes')
     publication.uri = publicationResource.id
     publication.id = getId(publicationResource.id)
     populateItems(publication, 'items', publicationResource.inAll('editionOf'))
