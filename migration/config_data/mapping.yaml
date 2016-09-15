@@ -208,7 +208,7 @@
               predicate: "MIGRATION.creator"
               object:
                 datatype: "uri"
-                prefix: "http://data.deichman.no/corporation/x"
+                prefix: "http://data.deichman.no/corporation/c"
               relation:
                 subfields:
                   -
@@ -259,7 +259,7 @@
             '3':
               object:
                 datatype: "uri"
-                prefix: "http://data.deichman.no/corporation/x"
+                prefix: "http://data.deichman.no/corporation/c"
               conditions:
                 subfield:
                   e:
@@ -326,7 +326,7 @@
               predicate: "ONTOLOGY.mainEntry"
               object:
                 datatype: "uri"
-                prefix: "http://data.deichman.no/corporation/x"
+                prefix: "http://data.deichman.no/corporation/c"
           -
             e:
               predicate: "MIGRATION.mainEntryRole"
@@ -1079,7 +1079,7 @@
               predicate: "ONTOLOGY.subject"
               object:
                 datatype: "uri"
-                prefix: "http://data.deichman.no/corporation/x"
+                prefix: "http://data.deichman.no/corporation/c"
               relation:
                 subfields:
                   -
@@ -1146,7 +1146,7 @@
                       predicate: "MIGRATION.creator"
                       object:
                         datatype: "uri"
-                        prefix: "http://data.deichman.no/corporation/x"
+                        prefix: "http://data.deichman.no/corporation/c"
                   -
                     t:
                       predicate: "ONTOLOGY.mainTitle"
@@ -2625,7 +2625,7 @@
             '3':
               object:
                 datatype: "uri"
-                prefix: "http://data.deichman.no/corporation/x"
+                prefix: "http://data.deichman.no/corporation/c"
               conditions:
                 subfield:
                   e:
@@ -2734,7 +2734,7 @@
             '3':
               object:
                 datatype: "uri"
-                prefix: "http://data.deichman.no/corporation/x"
+                prefix: "http://data.deichman.no/corporation/c"
               conditions:
                 subfield:
                   e:
@@ -2771,7 +2771,7 @@
                       predicate: "MIGRATION.creator"
                       object:
                         datatype: "uri"
-                        prefix: "http://data.deichman.no/corporation/x"
+                        prefix: "http://data.deichman.no/corporation/c"
                   -
                     t:
                       predicate: "ONTOLOGY.mainTitle"
