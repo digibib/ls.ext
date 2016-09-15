@@ -12,7 +12,7 @@ variable,value
 "borrowerRelationship","far|mor"
 "BorrowersTitles","herr|fru|frøken"
 "BorrowerUnwantedField","title|initials|othernames|streetnumber|state|mobile|fax|emailpro|phonepro|B_streetnumber|B_streettype|B_address|B_address2|B_city|B_state|B_zipcode|B_country|B_email|B_phone|borrowernotes|opacnote|contactnote|altcontactfirstname|altcontactsurname|altcontactaddress1|altcontactaddress2|altcontactaddress3|altcontactstate|altcontactzipcode|altcontactcountry|altcontactphone"
-"CalendarFirstDayOfWeek",1,"0|1|2|3|4|5|6"
+"CalendarFirstDayOfWeek",1
 "CurrencyFormat","FR"
 "dateformat","dmydot"
 "DefaultLanguageField008","nor"
@@ -27,7 +27,7 @@ variable,value
 "IntranetUserJS","$(document).ready(function(){\r\n    if ($(\'div#aai_fnr\')[0]) {\r\n		$(\'div#aai_fnr\')[0].innerHTML = $(\'div#aai_fnr\')[0].innerHTML.replace(/\\d/g\,\'*\');\r\n    }\r\n})\r\n"
 "KohaAdminEmailAddress","digibib2@gmail.com"
 "MaxFine","100"
-"NoIssuesChargeGuarantees"
+"NoIssuesChargeGuarantees",""
 "noItemTypeImages",1
 "NorwegianPatronDBEnable",1
 "NorwegianPatronDBEndpoint","${NLVENDORURL}"
@@ -44,3 +44,4 @@ variable,value
 "userfidhub",1
 "virtualshelves",0
 "WhenLostChargeReplacementFee",0
+"OpacRenewalAllowed",1
