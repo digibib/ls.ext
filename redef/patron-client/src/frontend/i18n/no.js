@@ -242,7 +242,7 @@ export default {
   'ValidationMessage.termsMustBeAccepted': 'Brukervilkårene må godkjennes',
   'ValidationMessage.illegalCharacters': 'Feltet inneholder ulovlige karakterer',
   'ValidationMessage.genericFieldError': 'Feltet inneholder feil',
-  'ValidationMessage.emailOrMobileRequired': 'Enten epost eller telefonnummer må fylles ut',
+  'ValidationMessage.emailOrMobileRequired': 'Enten epost eller mobilnummer må fylles ut',
   'Work.noWork': 'Inget verk',
   'Work.firstTimePublished': 'Første gang utgitt:',
   'Work.workInformation': 'Verksinformasjon'

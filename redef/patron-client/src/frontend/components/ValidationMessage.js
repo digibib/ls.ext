@@ -67,7 +67,7 @@ const messages = defineMessages({
   emailOrMobileRequired: {
     id: 'ValidationMessage.emailOrMobileRequired',
     description: 'Displayed if neither email or phone number is entered',
-    defaultMessage: 'Either email or phone number is required'
+    defaultMessage: 'Either email or mobile number is required'
   }
 })
 
