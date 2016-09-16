@@ -1835,82 +1835,6 @@
       '655':
         subfields:
           -
-            'a':
-              predicate: "MIGRATION.genreMain"
-              object:
-                datatype: "uri"
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'a':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                class: "MIGRATION.Genre"
-    -
-      '655':
-        subfields:
-          -
-            'a':
-              predicate: "MIGRATION.splitGenre1"
-              object:
-                datatype: "uri"
-                regex_match: "([\\w\\W]+), "
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'a':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                        regex_match: "([\\w\\W]+), "
-                class: "MIGRATION.Genre"
-    -
-      '655':
-        subfields:
-          -
-            'a':
-              predicate: "MIGRATION.splitGenre2"
-              object:
-                datatype: "uri"
-                regex_match: ", ([\\w\\W]+)"
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'a':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                        regex_match: ", ([\\w\\W]+)"
-                class: "MIGRATION.Genre"
-    -
-      '655':
-        subfields:
-          -
-            'x':
-              predicate: "MIGRATION.genreSub"
-              object:
-                datatype: "uri"
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'x':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                class: "MIGRATION.Genre"
-    -
-      '655':
-        subfields:
-          -
             '3':
               predicate: "MIGRATION.genreAuthority"
               object:
@@ -1969,6 +1893,129 @@
                       object:
                         datatype: "literal"
                 class: "MIGRATION.GenreAuthorityM655"
+    -
+      '655':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.genreSplit"
+              object:
+                datatype: "uri"
+                prefix: "http://migration.deichman.no/genreSplit/g"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.genreSplitMain"
+                      object:
+                        datatype: "uri"
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                  -
+                    a:
+                      predicate: "MIGRATION.genreSplit1"
+                      object:
+                        datatype: "uri"
+                        regex_match: "([\\w\\W]+), "
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                  -
+                    a:
+                      predicate: "MIGRATION.genreSplit2"
+                      object:
+                        datatype: "uri"
+                        regex_match: ", ([\\w\\W]+)"
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                  -
+                    x:
+                      predicate: "MIGRATION.genreSplitSub"
+                      object:
+                        datatype: "uri"
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                class: "MIGRATION.GenreSplit"
+    -
+      '655':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.genreSplitMain"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Genre"
+    -
+      '655':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.genreSplit1"
+              object:
+                datatype: "uri"
+                regex_match: "([\\w\\W]+), "
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        regex_match: "([\\w\\W]+), "
+                class: "ONTOLOGY.Genre"
+    -
+      '655':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.genreSplit2"
+              object:
+                datatype: "uri"
+                regex_match: ", ([\\w\\W]+)"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        regex_match: ", ([\\w\\W]+)"
+                class: "ONTOLOGY.Genre"
+    -
+      '655':
+        subfields:
+          -
+            'x':
+              predicate: "MIGRATION.genreSplitSub"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Genre"
     -
       '658':
         subfields:
@@ -2387,82 +2434,6 @@
       '693':
         subfields:
           -
-            'a':
-              predicate: "MIGRATION.genreMain"
-              object:
-                datatype: "uri"
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'a':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                class: "MIGRATION.Genre"
-    -
-      '693':
-        subfields:
-          -
-            'a':
-              predicate: "MIGRATION.splitGenre1"
-              object:
-                datatype: "uri"
-                regex_match: "([\\w\\W]+), "
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'a':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                        regex_match: "([\\w\\W]+), "
-                class: "MIGRATION.Genre"
-    -
-      '693':
-        subfields:
-          -
-            'a':
-              predicate: "MIGRATION.splitGenre2"
-              object:
-                datatype: "uri"
-                regex_match: ", ([\\w\\W]+)"
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'a':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                        regex_match: ", ([\\w\\W]+)"
-                class: "MIGRATION.Genre"
-    -
-      '693':
-        subfields:
-          -
-            'x':
-              predicate: "MIGRATION.genreSub"
-              object:
-                datatype: "uri"
-                md5: true
-                prefix: "http://data.deichman.no/genre/g"
-              relation:
-                subfields:
-                  -
-                    'x':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                class: "MIGRATION.Genre"
-    -
-      '693':
-        subfields:
-          -
             '3':
               predicate: "MIGRATION.genreAuthority"
               object:
@@ -2521,6 +2492,129 @@
                       object:
                         datatype: "literal"
                 class: "MIGRATION.GenreAuthorityM693"
+    -
+      '693':
+        subfields:
+          -
+            '3':
+              predicate: "MIGRATION.genreSplit"
+              object:
+                datatype: "uri"
+                prefix: "http://migration.deichman.no/genreSplit/g"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "DUO.bibliofilAuthorityId"
+                      object:
+                        datatype: "literal"
+                  -
+                    a:
+                      predicate: "MIGRATION.genreSplitMain"
+                      object:
+                        datatype: "uri"
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                  -
+                    a:
+                      predicate: "MIGRATION.genreSplit1"
+                      object:
+                        datatype: "uri"
+                        regex_match: "([\\w\\W]+), "
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                  -
+                    a:
+                      predicate: "MIGRATION.genreSplit2"
+                      object:
+                        datatype: "uri"
+                        regex_match: ", ([\\w\\W]+)"
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                  -
+                    x:
+                      predicate: "MIGRATION.genreSplitSub"
+                      object:
+                        datatype: "uri"
+                        md5: true
+                        prefix: "http://data.deichman.no/genre/g"
+                class: "MIGRATION.GenreSplit"
+    -
+      '693':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.genreSplitMain"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Genre"
+    -
+      '693':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.genreSplit1"
+              object:
+                datatype: "uri"
+                regex_match: "([\\w\\W]+), "
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        regex_match: "([\\w\\W]+), "
+                class: "ONTOLOGY.Genre"
+    -
+      '693':
+        subfields:
+          -
+            'a':
+              predicate: "MIGRATION.genreSplit2"
+              object:
+                datatype: "uri"
+                regex_match: ", ([\\w\\W]+)"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'a':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                        regex_match: ", ([\\w\\W]+)"
+                class: "ONTOLOGY.Genre"
+    -
+      '693':
+        subfields:
+          -
+            'x':
+              predicate: "MIGRATION.genreSplitSub"
+              object:
+                datatype: "uri"
+                md5: true
+                prefix: "http://data.deichman.no/genre/g"
+              relation:
+                subfields:
+                  -
+                    'x':
+                      predicate: "ONTOLOGY.prefLabel"
+                      object:
+                        datatype: "literal"
+                class: "ONTOLOGY.Genre"
     -
       '694':
         subfields:
