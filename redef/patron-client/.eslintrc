@@ -10,6 +10,7 @@
         "ignoreRefs": true
       }
     ],
+    "prefer-template": 1,
     "react/jsx-indent-props": 0,
     "react/jsx-indent": 0,
     "no-return-assign": 0,
