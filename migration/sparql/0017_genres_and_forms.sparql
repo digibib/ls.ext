@@ -1,0 +1,21 @@
+# 1) Remove split statements from publications
+
+SPARQL
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX : <http://data.deichman.no/ontology#>
+
+WITH <http://deichman.no/migration>
+
+delete {
+  ?doc ?p ?o
+} where {
+  ?doc a :Publication ;
+    ?p ?o .
+  values ?p {
+    migration:genreSplit1
+    migration:genreSplit2
+    migration:genreSplitMain
+    migration:genreSplitSub
+  }
+}
+;
