@@ -314,8 +314,9 @@ module.exports = (app) => {
           label: 'Hovedinnførsel',
           inputs: [
             {
+              id: 'isbnInput',
               includeOnlyWhen: {
-                hasMediaType: [ 'Book', 'Audiobook', 'SheetMusic' ]
+                hasMediaType: [ 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ]
               },
               // this is an input type used to search for a main resource, e.g. Work. The rendered input field
               // will not be tied to a particular subject and predicate
@@ -504,21 +505,21 @@ module.exports = (app) => {
                 postfix: ')'
               }
             },
-            { includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] }, rdfProperty: 'numberOfPages' },
-            { includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter' },
+            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] }, rdfProperty: 'numberOfPages' },
+            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter' },
             {
-              includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] },
+              includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
               rdfProperty: 'isbn',
               multiple: true,
               addAnotherLabel: 'Legg til et ISBN-nummer til'
             },
             {
-              includeOnlyWhen: { hasMediaType: [ 'Film', 'MusicRecording' ] },
+              includeOnlyWhen: { hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Game' ] },
               rdfProperty: 'hasEan'
             },
             {
               includeOnlyWhen: {
-                hasMediaType: [ 'Book', 'SheetMusic' ]
+                hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'LanguageCourse', 'ComicBook', ]
               },
               rdfProperty: 'binding'
             }
@@ -539,7 +540,7 @@ module.exports = (app) => {
             { rdfProperty: 'hasMediaType' },
             {
               includeOnlyWhen: {
-                hasMediaType: [ 'Film', 'MusicRecording', 'Audiobook' ]
+                hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Audiobook', 'LanguageCourse' ]
               },
               rdfProperty: 'duration',
               type: 'input-duration'
@@ -547,14 +548,14 @@ module.exports = (app) => {
             ,
             {
               includeOnlyWhen: {
-                hasMediaType: [ 'Film', 'Game' ]
+                hasMediaType: [ 'Other', 'Film', 'Game' ]
               },
               rdfProperty: 'ageLimit',
               widgetOptions: {
                 short: true
               }
             },
-            { includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] }, rdfProperty: 'writingSystem', multiple: true },
+            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'E-bok', 'ComicBook', 'SheetMusic' ] }, rdfProperty: 'writingSystem', multiple: true },
             { rdfProperty: 'hasFormatAdaptation', multiple: true },
             {
               id: 'publishedByInput',
@@ -698,11 +699,11 @@ module.exports = (app) => {
               }
             },
             {
-              includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] },
+              includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
               rdfProperty: 'fictionNonfiction',
             },
             { rdfProperty: 'audience', multiple: true },
-            { includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] }, rdfProperty: 'biography', multiple: true },
+            { includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] }, rdfProperty: 'biography', multiple: true },
             { rdfProperty: 'hasContentAdaptation', multiple: true },
             {
               label: 'Relasjon til annet verk',
@@ -1007,7 +1008,7 @@ module.exports = (app) => {
                   },
                   // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
                   {
-                    includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] },
+                    includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook' ] },
                     label: 'Sidetall',
                     id: 'startsAtPageInput',
                     rdfProperty: 'startsAtPage',
@@ -1016,7 +1017,7 @@ module.exports = (app) => {
                     }
                   },
                   {
-                    includeOnlyWhen: { hasMediaType: [ 'Book', 'SheetMusic' ] },
+                    includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook' ] },
                     rdfProperty: 'endsAtPage',
                     widgetOptions: {
                       isRangeEnd: true,
