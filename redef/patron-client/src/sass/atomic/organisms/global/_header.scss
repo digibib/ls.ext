@@ -2,7 +2,7 @@
 // ==========================================================================
 header {
   @include container;
-  border-bottom: 3px solid $blackColor;
+  @include border-bottom;
 
   .logo {
     @include span(5);
@@ -11,7 +11,7 @@ header {
 
   .primary-menu {
     @include span(7 last);
-    padding: rhythm(2);
+    padding: rhythm(1);
   }
 
   .mobile-menu-toggle {
