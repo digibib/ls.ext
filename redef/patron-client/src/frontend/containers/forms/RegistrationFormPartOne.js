@@ -11,6 +11,7 @@ import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputFieldWithBottomLabelContainer from '../../components/FormInputFieldWithBottomLabelContainer'
+import formRequirements from '../../../common/forms/registrationPartOne'
 
 const formName = 'registrationPartOne'
 
@@ -69,9 +70,23 @@ class RegistrationFormPartOne extends React.Component {
     )
   }
 
+  renderContinueAndCancelButtons (submitting) {
+    return (
+      <div>
+        <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
+                data-automation-id="check_existing_user_button">
+          <FormattedMessage {...messages.checkForExistingUser} />
+        </button>
+
+        <h3><a onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a></h3>
+      </div>
+    )
+  }
+
   getValidator (field) {
+    console.log('getValidator', field.meta.touched, field.meta.error)
     if (field.meta.touched && field.meta.error) {
-      return <div style={{ color: 'red' }}><ValidationMessage message={field.meta.error} /></div>
+      return <div style={{ color: 'red', fontSize: '12px' }}><ValidationMessage message={field.meta.error} /></div>
     } else {
       return <div>&nbsp;</div>
     }
@@ -105,18 +120,18 @@ class RegistrationFormPartOne extends React.Component {
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.personInfoLegend} /></legend>
           <div className="date-of-birth">
-            <FormInputFieldWithBottomLabelContainer fieldName="day" fieldType="number" fieldHeaderType="h4"
+            <FormInputFieldWithBottomLabelContainer fieldName="day" fieldType="text" fieldHeaderType="h4"
                                                     fieldMessage={messages.day} containerTag="div"
                                                     containerProps={{ className: 'item' }} formName={formName}
                                                     getFieldValidator={this.getValidator} headerTag="h2"
                                                     headerMessage={messages.birthdate} />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="month" fieldType="number" fieldHeaderType="h4"
+            <FormInputFieldWithBottomLabelContainer fieldName="month" fieldType="text" fieldHeaderType="h4"
                                                     fieldMessage={messages.month} containerTag="div"
                                                     containerProps={{ className: 'item' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="year" fieldType="number" fieldHeaderType="h4"
+            <FormInputFieldWithBottomLabelContainer fieldName="year" fieldType="text" fieldHeaderType="h4"
                                                     fieldMessage={messages.year} containerTag="div"
                                                     containerProps={{ className: 'item' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
@@ -127,7 +142,7 @@ class RegistrationFormPartOne extends React.Component {
             </h3>
             {this.props.showSSNInfo ? this.renderSSNInfo() : ''}
           </div>
-          <FormInputFieldWithBottomLabelContainer fieldName="ssn" fieldType="number" fieldHeaderType="h4"
+          <FormInputFieldWithBottomLabelContainer fieldName="ssn" fieldType="text" fieldHeaderType="h4"
                                                   fieldMessage={messages.ssn} containerTag="span"
                                                   containerProps={{ className: 'display-inline' }} formName={formName}
                                                   getFieldValidator={this.getValidator} headerTag="h2"
@@ -135,12 +150,7 @@ class RegistrationFormPartOne extends React.Component {
 
           {this.props.isCheckingForExistingUser ? this.renderCheckingForExistingUser() : ''}
           {/* TODO: also handle all fields empty */}
-          <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
-                  data-automation-id="check_existing_user_button">
-            <FormattedMessage {...messages.checkForExistingUser} />
-          </button>
-
-          <h3><a onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a></h3>
+          {this.props.checkForExistingUserSuccess ? null : this.renderContinueAndCancelButtons(submitting)}
         </fieldset>
         {this.props.checkForExistingUserSuccess ? this.renderCheckForExistingUserSuccess() : ''}
         {this.props.checkForExistingUserFailure ? this.renderCheckForExistingUserError(this.props.registrationError) : ''}
@@ -158,7 +168,7 @@ const messages = defineMessages({
   checkForExistingUser: {
     id: 'RegistrationFormPartOne.checkForExistingUser',
     description: 'The user validation button in registration form',
-    defaultMessage: 'Validate'
+    defaultMessage: 'Continue'
   },
   checkingForExistingUser: {
     id: 'RegistrationFormPartOne.checkingForExistingUser',
@@ -228,7 +238,7 @@ const messages = defineMessages({
   ssnHeader: {
     id: 'RegistrationFormPartOne.ssnHeader',
     description: 'Header for input field social security number',
-    defaultMessage: 'ID-number'
+    defaultMessage: 'Social security number'
   },
   ssn: {
     id: 'RegistrationFormPartOne.ssnSpec',
@@ -306,5 +316,5 @@ export default connect(
   form: formName,
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
-  validate: validator(fields)
+  validate: validator(formRequirements, fields)
 })(intlRegistrationFormPartOne))

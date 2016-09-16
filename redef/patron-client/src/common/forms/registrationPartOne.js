@@ -1,26 +1,26 @@
 module.exports = {
   firstName: {
-    required: true,
+    required: false,
     asyncValidation: true
   },
   lastName: {
-    required: true,
+    required: false,
     asyncValidation: true
   },
   day: {
-    required: true,
+    required: false,
     asyncValidation: true
   },
   month: {
-    required: true,
+    required: false,
     asyncValidation: true
   },
   year: {
-    required: true,
+    required: false,
     asyncValidation: true
   },
   ssn: {
-    required: true,
+    required: false,
     asyncValidation: true
   }
 }

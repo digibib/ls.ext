@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
+import { bindActionCreators, combineReducers } from 'redux'
 import { reduxForm } from 'redux-form'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
@@ -7,11 +7,12 @@ import { connect } from 'react-redux'
 import * as ParameterActions from '../../actions/ParameterActions'
 import * as ProfileActions from '../../actions/ProfileActions'
 import * as LoginActions from '../../actions/LoginActions'
-import validator from '../../../common/validation/validator'
 import fields from '../../../common/forms/userInfoForm'
 import ValidationMessage from '../../components/ValidationMessage'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputFieldWithTopLabelContainer from '../../components/FormInputFieldWithTopLabelContainer'
+import validate from '../../../common/validation/validator'
+import formRequirements from '../../../common/forms/userInfoForm'
 
 const formName = 'userInfo'
 
@@ -35,7 +36,7 @@ class UserInfoForm extends React.Component {
 
   getValidator (field) {
     if (field.meta.touched && field.meta.error) {
-      return <div style={{ color: 'red' }}><ValidationMessage message={field.meta.error} /></div>
+      return <div style={{ color: 'red', fontSize: '12px' }}><ValidationMessage message={field.meta.error} /></div>
     }
   }
 
@@ -63,18 +64,16 @@ class UserInfoForm extends React.Component {
                                                    property: 'schema:addressLocality',
                                                    className: 'display-inline'
                                                  }} formName={formName} placeholder={messages.city} />
-
-            <br />
-            <FormInputFieldWithTopLabelContainer fieldName="country" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={messages.country} containerTag="span"
-                                                 getFieldValidator={this.getValidator} formName={formName}
-                                                 containerProps={{ property: 'schema:addressCountry' }}
-                                                 placeholder={messages.country} />
             <br />
           </address>
         </div>
 
         <div className="col">
+          <FormInputFieldWithTopLabelContainer fieldName="email" fieldType="email" fieldHeaderType="h2"
+                                               fieldMessage={messages.email} containerTag="div" formName={formName}
+                                               getFieldValidator={this.getValidator} placeholder={messages.email}
+                                               containerProps={{ className: 'email' }} />
+
           <FormInputFieldWithTopLabelContainer fieldName="mobile" fieldType="text" fieldHeaderType="h2"
                                                fieldMessage={messages.mobile} containerTag="div" formName={formName}
                                                getFieldValidator={this.getValidator}
@@ -85,11 +84,6 @@ class UserInfoForm extends React.Component {
                                                fieldMessage={messages.telephone} containerTag="div" formName={formName}
                                                getFieldValidator={this.getValidator} placeholder={messages.telephone}
                                                containerProps={{ className: 'phone' }} />
-
-          <FormInputFieldWithTopLabelContainer fieldName="email" fieldType="email" fieldHeaderType="h2"
-                                               fieldMessage={messages.email} containerTag="div" formName={formName}
-                                               getFieldValidator={this.getValidator} placeholder={messages.email}
-                                               containerProps={{ className: 'email' }} />
         </div>
       </form>
     )
@@ -183,7 +177,7 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: formName,
+  validate: validate(formRequirements, fields),
   asyncValidate,
-  asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
-  validate: validator(fields)
+  asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation)
 })(intlUserInfoForm))

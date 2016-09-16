@@ -11,10 +11,6 @@ module.exports = {
     required: true,
     asyncValidation: true
   },
-  country: {
-    required: true,
-    asyncValidation: true
-  },
   mobile: {
     required: false,
     asyncValidation: true

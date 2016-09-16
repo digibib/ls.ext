@@ -63,6 +63,11 @@ const messages = defineMessages({
     id: 'ValidationMessage.genericFieldError',
     description: 'Displayed when no other errors match',
     defaultMessage: 'Field input generated validation error'
+  },
+  emailOrMobileRequired: {
+    id: 'ValidationMessage.emailOrMobileRequired',
+    description: 'Displayed if neither email or phone number is entered',
+    defaultMessage: 'Either email or phone number is required'
   }
 })
 

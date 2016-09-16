@@ -14,7 +14,6 @@ import FormInputFieldWithBottomLabelContainer from '../../components/FormInputFi
 import FormInputField from '../../components/FormInputField'
 import FormInputFieldTermsAndConditions from '../../components/FormInputFieldTermsAndConditions'
 import FormSelectFieldLibrary from '../../components/FormSelectFieldLibrary'
-import FormSelectFieldGender from '../../components/FormSelectFieldGender'
 
 const formName = 'registrationPartTwo'
 
@@ -51,7 +50,7 @@ class RegistrationFormPartTwo extends React.Component {
 
   getValidator (field) {
     if (field.meta.touched && field.meta.error) {
-      return <div style={{ color: 'red' }}><ValidationMessage message={field.meta.error} /></div>
+      return <div style={{ color: 'red', fontSize: '12px' }}><ValidationMessage message={field.meta.error} /></div>
     } else {
       return <div>&nbsp;</div>
     }
@@ -81,10 +80,10 @@ class RegistrationFormPartTwo extends React.Component {
                                                   containerProps={{ className: 'display-inline' }} formName={formName}
                                                   getFieldValidator={this.getValidator} />
           <address>
-            <FormInputField name="address" type="text" message={messages.address} isLabelOverInput=""
-                            hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
+            <FormInputField name="address" type="text" message={messages.address}
+                            hasLabel headerType="h4" formName={formName} getValidator={this.getValidator} />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h4"
+            <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="number" fieldHeaderType="h4"
                                                     fieldMessage={messages.zipcode} containerTag="span"
                                                     containerProps={{ className: 'display-inline' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
@@ -94,12 +93,12 @@ class RegistrationFormPartTwo extends React.Component {
                                                     containerProps={{ className: 'display-inline' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
 
-            <FormInputField name="country" type="text" message={messages.country} isLabelOverInput=""
+            <FormInputField name="country" type="text" message={messages.country} isLabelOverInput={false}
                             hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
 
           </address>
           <FormSelectFieldGender message={messages.gender} headerTag="h4" options={[ 'male', 'female' ]}
-                                 optionMessages={{ male: messages.male, female: messages.female }} name="gender" />
+                                 optionMessages={{ male: messages.male, female: messages.female }} />
         </fieldset>
 
         <fieldset>
@@ -110,8 +109,8 @@ class RegistrationFormPartTwo extends React.Component {
                                                   headerMessage={messages.choosePin}
                                                   getFieldValidator={this.getValidator} headerTag="h2" />
 
-          <FormInputField name="repeatPin" type="password" message={messages.repeatPin} isLabelOverInput=""
-                          hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
+          <FormInputField name="repeatPin" type="password" message={messages.repeatPin}
+                          hasLabel headerType="h4" formName={formName} getValidator={this.getValidator} />
 
           <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} headerTag="h2"
                                   name="chooseBranch" />
@@ -186,12 +185,12 @@ const messages = defineMessages({
   choosePin: {
     id: 'RegistrationFormPartTwo.choosePin',
     description: 'Label for choosing pin field',
-    defaultMessage: 'Velg deg en pin kode'
+    defaultMessage: 'Choose PIN, 4 digits'
   },
   repeatPin: {
     id: 'RegistrationFormPartTwo.repeatPin',
     description: 'Label for repeating chosen pin field',
-    defaultMessage: 'Bekreft PIN'
+    defaultMessage: 'Confirm PIN'
   },
   register: {
     id: 'RegistrationFormPartTwo.register',
@@ -221,7 +220,7 @@ const messages = defineMessages({
   chooseBranch: {
     id: 'RegistrationFormPartTwo.chooseBranch',
     description: 'Choose home branch label',
-    defaultMessage: 'Choose Your Home Branch'
+    defaultMessage: 'Choose Your Home Library'
   },
   acceptTermsLink: {
     id: 'RegistrationFormPartTwo.acceptTermsLink',

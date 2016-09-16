@@ -28,14 +28,17 @@ class ChangePinForm extends React.Component {
     const { changePasswordError } = this.props
     if (changePasswordError) {
       return messages[ changePasswordError.message ]
-        ? <div style={{ color: 'red' }}><FormattedMessage {...messages[ changePasswordError.message ]} /></div>
-        : <div style={{ color: 'red' }}><FormattedMessage {...messages.genericChangePasswordError} /></div>
+        ? <div style={{ color: 'red', fontSize: '12px' }}>
+        <FormattedMessage {...messages[ changePasswordError.message ]} /></div>
+        : <div style={{ color: 'red', fontSize: '12px' }}><FormattedMessage {...messages.genericChangePasswordError} />
+      </div>
     }
   }
 
   getValidator (field) {
+    console.log(field.meta)
     if (field && field.meta.touched && field.meta.error) {
-      return <div style={{ color: 'red' }}>{this.props.intl.formatMessage(field.meta.error)}</div>
+      return <div style={{ color: 'red', fontSize: '12px' }}>{this.props.intl.formatMessage(field.meta.error)}</div>
     }
   }
 
