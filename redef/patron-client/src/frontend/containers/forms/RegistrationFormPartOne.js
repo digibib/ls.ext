@@ -236,7 +236,7 @@ const messages = defineMessages({
   ssnHeader: {
     id: 'RegistrationFormPartOne.ssnHeader',
     description: 'Header for input field social security number',
-    defaultMessage: 'Social security number'
+    defaultMessage: 'ID-number'
   },
   ssn: {
     id: 'RegistrationFormPartOne.ssnSpec',

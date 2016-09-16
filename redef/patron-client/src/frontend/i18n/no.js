@@ -93,7 +93,7 @@ export default {
   'RegistrationFormPartOne.day': 'Dag',
   'RegistrationFormPartOne.month': 'Måned',
   'RegistrationFormPartOne.year': 'År',
-  'RegistrationFormPartOne.ssn': 'Personnummer',
+  'RegistrationFormPartOne.ssn': 'ID-nummer',
   'RegistrationFormPartOne.ssnLabel': 'Personnr./D-nr./DUF-nr.',
   'RegistrationFormPartOne.ssnHeader': 'Personnummer',
   'RegistrationFormPartOne.ssnSpec': 'Personnr./D-nr./DUF-nr',
@@ -243,6 +243,9 @@ export default {
   'ValidationMessage.illegalCharacters': 'Feltet inneholder ulovlige karakterer',
   'ValidationMessage.genericFieldError': 'Feltet inneholder feil',
   'ValidationMessage.emailOrMobileRequired': 'Enten epost eller mobilnummer må fylles ut',
+  'ValidationMessage.invalidZipcode': 'Ugyldig postnr, må være 4 siffer',
+  'ValidationMessage.invalidCity': 'Ugyldig poststed, må være 2 eller flere tegn, kun norske',
+  'ValidationMessage.invalidPhoneNumber': 'Ugyldig telefonnummer, bare norske nummer er gyldige',
   'Work.noWork': 'Inget verk',
   'Work.firstTimePublished': 'Første gang utgitt:',
   'Work.workInformation': 'Verksinformasjon'

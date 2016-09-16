@@ -94,7 +94,8 @@ class RegistrationFormPartTwo extends React.Component {
                                                     getFieldValidator={this.getValidator} />
 
           </address>
-          <FormSelectFieldGender message={messages.gender} headerTag="h4" options={[ 'male', 'female' ]}
+          <FormSelectFieldGender name="selectGender" message={messages.gender} headerTag="h4"
+                                 options={[ 'male', 'female' ]}
                                  optionMessages={{ male: messages.male, female: messages.female }} />
         </fieldset>
 
