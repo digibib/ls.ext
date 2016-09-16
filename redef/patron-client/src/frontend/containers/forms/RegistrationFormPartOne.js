@@ -11,7 +11,6 @@ import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputFieldWithBottomLabelContainer from '../../components/FormInputFieldWithBottomLabelContainer'
-import formRequirements from '../../../common/forms/registrationPartOne'
 
 const formName = 'registrationPartOne'
 
@@ -315,5 +314,5 @@ export default connect(
   form: formName,
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
-  validate: validator(formRequirements, fields)
+  validate: validator(fields)
 })(intlRegistrationFormPartOne))

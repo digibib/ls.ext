@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { bindActionCreators, combineReducers } from 'redux'
+import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import { connect } from 'react-redux'
@@ -12,7 +12,6 @@ import ValidationMessage from '../../components/ValidationMessage'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputFieldWithTopLabelContainer from '../../components/FormInputFieldWithTopLabelContainer'
 import validate from '../../../common/validation/validator'
-import formRequirements from '../../../common/forms/userInfoForm'
 
 const formName = 'userInfo'
 
@@ -177,7 +176,7 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: formName,
-  validate: validate(formRequirements, fields),
+  validate: validate(fields),
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation)
 })(intlUserInfoForm))

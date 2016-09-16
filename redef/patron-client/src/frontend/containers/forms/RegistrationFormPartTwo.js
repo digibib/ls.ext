@@ -93,9 +93,6 @@ class RegistrationFormPartTwo extends React.Component {
                                                     containerProps={{ className: 'display-inline' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
 
-            <FormInputField name="country" type="text" message={messages.country} isLabelOverInput={false}
-                            hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
-
           </address>
           <FormSelectFieldGender message={messages.gender} headerTag="h4" options={[ 'male', 'female' ]}
                                  optionMessages={{ male: messages.male, female: messages.female }} />
