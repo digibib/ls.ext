@@ -28,8 +28,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
     Og velger verket fra lista tilkoplet forfatteren
     Og jeg venter litt
-    Så frisker jeg opp nettleseren
-    Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og legger inn opplysningene om utgivelsen
@@ -142,9 +140,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at det finnes et verk med forfatter
     Når jeg legger inn forfatternavnet på startsida
     Og velger verket fra lista tilkoplet forfatteren
-    Så frisker jeg opp nettleseren
-    Og jeg venter litt
-    Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg venter litt
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter

@@ -36,7 +36,7 @@
                                 {{# widgetOptions.showSelectItem}}
                                     <span class="search-result-work-selector pure-u-2-24">
                                         <input class="select-work-radio" type="radio" checked="{{isChecked}}"
-                                               on-click="setResourceAndWorkResource:{{items[itemIndex]}},{{origin}},'Person'"/>
+                                               on-click="selectSearchableItem:{{origin}},{{items[itemIndex].name}},{subItem: true}"/>
                                     </span>
                                 {{/}}
                             </div>

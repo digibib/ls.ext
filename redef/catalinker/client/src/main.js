@@ -525,16 +525,16 @@
       return inputs
     }
 
-  function withPublicationOfWorkInput (handler) {
-    var publicationOfInput = _.find(allInputs(), function (input) {
-      return (input.fragment === 'publicationOf' && input.domain === 'deichman:Publication' && input.type === 'entity')
-    })
-    if (publicationOfInput) {
-      handler(publicationOfInput)
+    function withPublicationOfWorkInput (handler) {
+      var publicationOfInput = _.find(allInputs(), function (input) {
+        return (input.fragment === 'publicationOf' && input.domain === 'deichman:Publication' && input.type === 'entity')
+      })
+      if (publicationOfInput) {
+        handler(publicationOfInput)
+      }
     }
-  }
 
-  function inputFromInputId (inputId) {
+    function inputFromInputId (inputId) {
       let keypath = ractive.get(`inputLinks.${inputId}`)
       return ractive.get(keypath)
     }
@@ -1792,10 +1792,10 @@
                 return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
               },
               checkRequiredInputValueForShow: function (showOnlyWhenInputHasValueSpec) {
-                  if (!(showOnlyWhenInputHasValueSpec && showOnlyWhenInputHasValueSpec.showOnlyWhenInputHasValue)) {
-                    return true
-                  } else {
-                    return valueOfInputByInputId(showOnlyWhenInputHasValueSpec.showOnlyWhenInputHasValue, 0)
+                if (!(showOnlyWhenInputHasValueSpec && showOnlyWhenInputHasValueSpec.showOnlyWhenInputHasValue)) {
+                  return true
+                } else {
+                  return valueOfInputByInputId(showOnlyWhenInputHasValueSpec.showOnlyWhenInputHasValue, 0)
                 }
               },
               valueOrderOfInputById: function (inputId, valueIndex) {
@@ -1819,13 +1819,12 @@
                 var shouldInclude = true
                 if (input.includeOnlyWhen) {
                   _.each(_.keys(input.includeOnlyWhen), function (property) {
-                    let includeWhenValues = _.flatten([input.includeOnlyWhen[property]])
+                    let includeWhenValues = _.flatten([ input.includeOnlyWhen[ property ] ])
                     allGroupInputs(function (input1) {
-                      if (input1.fragment === property &&
-                        !_.contains(includeWhenValues, _.flatten([
-                          propertyName(URI.parseQuery(document.location.href)[property] ||
-                            input1.values[0].current.value)
-                        ])[0])) {
+                      if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
+                          propertyName(URI.parseQuery(document.location.href)[ property ] ||
+                            input1.values[ 0 ].current.value)
+                        ])[ 0 ])) {
                         shouldInclude = false
                         return true
                       }
@@ -2110,7 +2109,8 @@
                   loadWorksAsSubject(origin)
                 }
               },
-              selectSearchableItem: function (event, origin, displayValue) {
+              selectSearchableItem: function (event, origin, displayValue, options) {
+                options = options || {}
                 ractive.set(origin + '.searchResult', null)
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
@@ -2140,7 +2140,7 @@
                   unloadResourceForDomain(rdfType)
                   fetchExistingResource(uri)
                   ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
-                } else if (input.isMainEntry) {
+                } else if (input.isMainEntry || options.subItem) {
                   fetchExistingResource(uri)
                 } else {
                   ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
@@ -2160,24 +2160,6 @@
                   ractive.set(origin + '.searchResult', null)
                   ractive.update()
                 }
-              },
-              openResourceWithTemplate (event, uri, template) {
-                fetchExistingResource(uri)
-                updateBrowserLocationWithTemplate(template)
-                Main.init()
-              },
-              selectWorkResource: function (event) {
-                var uri = event.context.uri
-                unloadResourceForDomain('Publication')
-                fetchExistingResource(uri)
-              },
-              setResourceAndWorkResource: function (event, mainItem, origin, domainType) {
-                ractive.fire('selectSearchableItem', {
-                  context: {
-                    uri: mainItem.uri
-                  }
-                }, origin, mainItem.name)
-                ractive.fire('selectWorkResource', { context: event.context })
               },
               unselectEntity: function (event) {
                 ractive.set(event.keypath + '.searchResult', null)
@@ -2710,7 +2692,7 @@
 
         function loadWorkOfPublication () {
           withPublicationOfWorkInput(function (publicationOfInput) {
-            var workUri = _.flatten([publicationOfInput.values[ 0 ].current.value])[0]
+            var workUri = _.flatten([ publicationOfInput.values[ 0 ].current.value ])[ 0 ]
             if (workUri) {
               return fetchExistingResource(workUri).then(function () {
                 ractive.set('targetUri.Work', workUri)
@@ -2856,7 +2838,7 @@
                   }
                 } ]
               }
-            ractive.update()
+              ractive.update()
             }
           })
           return applicationData
