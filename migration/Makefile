@@ -256,8 +256,7 @@ ifdef MIGRATE_PATRONS
 	@echo "-- Setting reserves.found to NULL when not found"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE reserves SET found=NULL WHERE found=\"\""'
 	@echo "-- Setting userid=cardid"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL;"'
-	@echo "OK Done migrating loands and holds\n"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL AND categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\");"'	@echo "OK Done migrating loands and holds\n"
 endif
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
