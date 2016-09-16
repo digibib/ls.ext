@@ -13,6 +13,16 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.1.4 (2016-09-16) Bugfix release
+
+TAG:  81c564256c71a44b9db92e3c54ecd211e712624d
+KOHA: 41274c52ef38821de6740a61baf3c68a1155855f
+
+- koha:
+  - fix included rfid javascript on checkin and checkout
+- catalinker:
+  - handle all media types and work types
+
 ## 0.1.3 (2016-09-15)
 
 TAG:  4887b74abce1bc99f5d46f857c5038f1fb66dfa1
