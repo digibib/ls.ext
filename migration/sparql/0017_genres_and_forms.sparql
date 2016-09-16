@@ -53,7 +53,7 @@ WHERE {
   ?genreSplitSub :prefLabel ?label .
   ?publication migration:genreSplit ?genreSplit ;
     :genre ?genre .
-  ?genre duo:bibliofilAuthorityId ?id .  
+  ?genre duo:bibliofilAuthorityId ?id .
 }
 ;
 
@@ -71,12 +71,12 @@ MODIFY
 
 DELETE {
  ?publication :genre ?genre ;
-  migration:genreSplit ?genreSplit . 
+  migration:genreSplit ?genreSplit .
 }
 
 INSERT {
   ?publication migration:form ?genreSplit1 ;
-    migration:nationOfOrigin ?label .  
+    migration:nationOfOrigin ?label .
 }
 
 WHERE {
