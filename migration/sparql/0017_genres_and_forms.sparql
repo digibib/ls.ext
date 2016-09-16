@@ -6,16 +6,53 @@ PREFIX : <http://data.deichman.no/ontology#>
 
 WITH <http://deichman.no/migration>
 
-delete {
-  ?doc ?p ?o
-} where {
-  ?doc a :Publication ;
+DELETE {
+  ?publication ?p ?o
+} WHERE {
+  ?publication a :Publication ;
     ?p ?o .
-  values ?p {
+  VALUES ?p {
     migration:genreSplit1
     migration:genreSplit2
     migration:genreSplitMain
     migration:genreSplitSub
   }
+}
+;
+
+
+# 2) Biography genres with subdivision
+
+SPARQL
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
+PREFIX duo: <http://data.deichman.no/duo#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?publication :genre ?genre ;
+    migration:genreSplit ?genreSplit .
+}
+
+INSERT {
+  ?publication :literaryForm literaryForm:biography ;
+    :subject `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(STR(?label)))))` .
+  `IRI(CONCAT(STR("http://data.deichman.no/subject/s"), STR(MD5(STR(?label)))))` a :Subject ;
+    :prefLabel ?label .
+}
+
+WHERE {
+  ?genreSplit migration:genreSplitMain <http://data.deichman.no/genre/gf9e7a1a0a6912af8c1227f268ce80be1> ;
+    migration:genreSplitSub ?genreSplitSub ;
+    duo:bibliofilAuthorityId ?id ;
+    a migration:GenreSplit .
+  ?genreSplitSub :prefLabel ?label .
+  ?publication migration:genreSplit ?genreSplit ;
+    :genre ?genre .
+  ?genre duo:bibliofilAuthorityId ?id .  
 }
 ;

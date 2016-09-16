@@ -43,3 +43,6 @@ literaryForm:dictionary a duo:LiteraryForm ;
 literaryForm:referenceWork a duo:LiteraryForm ;
   rdfs:label "Oppslagsverk"@no ;
   rdfs:label "Reference Work"@en .
+literaryForm:biography a duo:LiteraryForm ;
+  rdfs:label "Biografi"@no ;
+  rdfs:label "Biography"@en .
