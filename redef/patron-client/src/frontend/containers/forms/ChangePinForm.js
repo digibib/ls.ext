@@ -36,6 +36,7 @@ class ChangePinForm extends React.Component {
   }
 
   getValidator (field) {
+    console.log(field.meta)
     if (field && field.meta.touched && field.meta.error) {
       return <div style={{ color: 'red', fontSize: '12px' }}>{this.props.intl.formatMessage(field.meta.error)}</div>
     }

@@ -11,6 +11,7 @@ import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputFieldWithBottomLabelContainer from '../../components/FormInputFieldWithBottomLabelContainer'
+import formRequirements from '../../../common/forms/registrationPartOne'
 
 const formName = 'registrationPartOne'
 
@@ -83,6 +84,7 @@ class RegistrationFormPartOne extends React.Component {
   }
 
   getValidator (field) {
+    console.log('getValidator', field.meta.touched, field.meta.error)
     if (field.meta.touched && field.meta.error) {
       return <div style={{ color: 'red', fontSize: '12px' }}><ValidationMessage message={field.meta.error} /></div>
     } else {
@@ -236,7 +238,7 @@ const messages = defineMessages({
   ssnHeader: {
     id: 'RegistrationFormPartOne.ssnHeader',
     description: 'Header for input field social security number',
-    defaultMessage: 'ID-number'
+    defaultMessage: 'Social security number'
   },
   ssn: {
     id: 'RegistrationFormPartOne.ssnSpec',
@@ -314,5 +316,5 @@ export default connect(
   form: formName,
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
-  validate: validator(fields)
+  validate: validator(formRequirements, fields)
 })(intlRegistrationFormPartOne))
