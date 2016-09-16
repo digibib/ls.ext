@@ -56,3 +56,70 @@ WHERE {
   ?genre duo:bibliofilAuthorityId ?id .  
 }
 ;
+
+
+#3) Form + country of origin split
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+ ?publication :genre ?genre ;
+  migration:genreSplit ?genreSplit . 
+}
+
+INSERT {
+  ?publication migration:form ?genreSplit1 ;
+    migration:nationOfOrigin ?label .  
+}
+
+WHERE {
+  ?genreSplit migration:genreSplit1 ?genreSplit1 ;
+    migration:genreSplit2 ?genreSplit2 ;
+    duo:bibliofilAuthorityId ?id ;
+    a migration:GenreSplit .
+  ?genre duo:bibliofilAuthorityId ?id .
+  ?publication migration:genreSplit ?genreSplit ;
+    :genre ?genre .
+  ?genreSplit2 :prefLabel ?label .
+}
+;
+
+
+# 3b) Construct literaryForms from 3)
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX genre: <http://data.deichman.no/genre/>
+PREFIX literaryForm: <http://data.deichman.no/literaryForm#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?pub migration:form ?old .
+}
+
+INSERT {
+  ?pub :literaryForm ?form .
+}
+
+WHERE {
+    ?pub a :Publication ;
+         migration:form ?old  .
+
+    VALUES (?old ?form) {
+      (genre:g8485f1b48ceda0998652c91ebe113ec7         literaryForm:comicBook)
+      (genre:gc22bb0ade4c6cf956780a73f4fe2ae82         literaryForm:movie)
+      (genre:g00bbd6c64086b4e701f8fb04c4e0b6fd         literaryForm:animatedMovie)
+    }
+}
+;
