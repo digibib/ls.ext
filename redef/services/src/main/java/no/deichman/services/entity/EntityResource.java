@@ -158,7 +158,11 @@ public final class EntityResource extends ResourceBase {
             Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("publicationOf")));
             while (sourceIterator.hasNext()) {
                 String publicationOf = sourceIterator.next().asResource().getURI();
-                getSearchService().index(new XURI(publicationOf));
+                try {
+                    getSearchService().index(new XURI(publicationOf));
+                } catch (RuntimeException e) {
+                    // Will fail if massaged model is empty, but that shouldn't cause this delete request to fail
+                }
             }
         } else {
             getEntityService().delete(model);
