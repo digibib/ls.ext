@@ -732,9 +732,8 @@ public class AppTest {
 
     @Test
     public void serial_resource_can_be_created() throws UnirestException {
-        String input = "<__BASEURI__serial/s1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <__BASEURI__ontology#Serial> .\n"
-                + "<__BASEURI__serial/s1234> <__BASEURI__ontology#name> \"Serial name\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
-        input = input.replace("__BASEURI__", appURI);
+        String input = "<http://data.deichman.no/serial/s1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Serial> .\n"
+                + "<http://data.deichman.no/serial/s1234> <http://data.deichman.no/ontology#name> \"Serial name\" .\n";
 
         Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
