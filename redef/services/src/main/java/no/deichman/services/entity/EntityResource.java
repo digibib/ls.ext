@@ -195,7 +195,12 @@ public final class EntityResource extends ResourceBase {
                 xuri = new XURI(workUri);
             }
         }
-        getSearchService().index(xuri);
+        try {
+            getSearchService().index(xuri);
+        } catch (RuntimeException e) {
+            // If the resource is new and empty, search indexing will fail, but we
+            // should not care about that here.
+        }
 
         return ok().entity(getJsonldCreator().asJSONLD(m)).build();
     }
