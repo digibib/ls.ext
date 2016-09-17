@@ -53,7 +53,7 @@ public class ModelToIndexMapper {
     }
 
     private Model massageModel(Model model, XURI xuri) {
-        QueryExecution queryExecution = QueryExecutionFactory.create(query.replace("__" + type.toUpperCase() + "URI__", xuri.getUri()), model);
+        QueryExecution queryExecution = QueryExecutionFactory.create(query.replaceAll("__" + type.toUpperCase() + "URI__", xuri.getUri()), model);
         return queryExecution.execConstruct();
     }
 

@@ -3,7 +3,7 @@ PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
 
 CONSTRUCT {
-       ?work a deich:Work ;
+ <__WORKURI__> a deich:Work ;
                deich:mainTitle ?mainTitle ;
                deich:partTitle ?partTitle ;
                deich:publicationYear ?publicationYear ;
@@ -38,65 +38,68 @@ CONSTRUCT {
       ?subject deich:name ?subjectName .
 }
 WHERE {
-  BIND(uri("__WORKURI__") AS ?work)
-  ?work a deich:Work .
-
-  OPTIONAL { ?work deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
-  OPTIONAL { ?work deich:partTitle ?partTitleO . BIND(str(?partTitleO) as ?partTitle) }
-  OPTIONAL { ?work deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
-  OPTIONAL { ?work deich:audience ?audienceO . BIND(str(?audienceO) AS ?audience) }
-
-  OPTIONAL {
-    {
-      ?work deich:subject ?subject .
-      ?subject a deich:Subject ;
-              deich:prefLabel ?subjectName  .
-    } UNION {
-      ?work deich:subject ?subject .
-      ?subject a deich:Work ;
-              deich:mainTitle ?subjectName  .
-    } UNION {
-      ?work deich:subject ?subject .
-      ?subject a deich:Person ;
-              deich:name ?subjectName  .
-    }
-  }
-
-  OPTIONAL {
-    ?work deich:contributor ?workContrib .
-    ?workContrib a deich:Contribution ;
+  # 1) Information from work:
+        { <__WORKURI__> a deich:Work . }
+        { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
+  UNION { <__WORKURI__> deich:partTitle ?partTitleO . BIND(str(?partTitleO) as ?partTitle) }
+  UNION { <__WORKURI__> deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
+  UNION { <__WORKURI__> deich:subject ?subject .
+            ?subject a deich:Subject ;
+            deich:prefLabel ?subjectName  . }
+  UNION { <__WORKURI__> deich:subject ?subject .
+            ?subject a deich:Work ;
+             deich:mainTitle ?subjectName  . }
+  UNION { <__WORKURI__> deich:subject ?subject .
+            ?subject a deich:Person ;
+            deich:name ?subjectName  . }
+  UNION { <__WORKURI__> deich:contributor ?workContrib .
+          ?workContrib a deich:Contribution ;
              deich:agent ?agent ;
              deich:role ?roleURI .
-             OPTIONAL {
-                 ?workContrib a deich:MainEntry.
-                 BIND(true as ?mainEntry) .
-             }
-    ?agent deich:name ?name .
-    BIND(str(?roleURI) AS ?role)
+          OPTIONAL {
+               ?workContrib a deich:MainEntry.
+               BIND(true as ?mainEntry) .
+           }
+          ?agent deich:name ?name .
+          BIND(str(?roleURI) AS ?role)
+          OPTIONAL { ?agent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
+          OPTIONAL { ?agent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
   }
-  OPTIONAL { ?agent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
-  OPTIONAL { ?agent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
-
-  OPTIONAL {
-    ?pub a deich:Publication ;
-         deich:publicationOf ?work .
-    OPTIONAL { ?pub deich:mainTitle ?pubMainTitle }
-    OPTIONAL { ?pub deich:partTitle ?pubPartTitle }
-    OPTIONAL { ?pub deich:hasHoldingBranch ?branch }
-    OPTIONAL { ?pub deich:contributor ?pubContrib .
-               ?pubContrib a deich:Contribution ;
-                            deich:agent ?pubAgent ;
-                            deich:role ?pubRoleURI .
-               ?pubAgent deich:name ?pubAgentName .
-               BIND(str(?pubRoleURI) AS ?pubRole)
-    }
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> .
+          <__WORKURI__> deich:audience ?audienceO .
+          BIND(str(?audienceO) AS ?audience) }
+  # 2) Information from publications:
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> ;
+             deich:mainTitle ?pubMainTitle }
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> ;
+             deich:partTitle ?pubPartTitle }
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> ;
+             deich:hasHoldingBranch ?branch }
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> ;
+             deich:contributor ?pubContrib .
+           ?pubContrib a deich:Contribution ;
+              deich:agent ?pubAgent ;
+              deich:role ?pubRoleURI .
+            ?pubAgent deich:name ?pubAgentName .
+            BIND(str(?pubRoleURI) AS ?pubRole)
+            OPTIONAL { ?pubAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?pubAgentBirthYear) }
+            OPTIONAL { ?pubAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?pubAgentDeathYear) }
   }
-  OPTIONAL { ?pubAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?pubAgentBirthYear) }
-  OPTIONAL { ?pubAgent deich:deathYear ?pDeathYearO . BIND(str(?pDeathYearO) AS ?pubAgentDeathYear) }
-
-  OPTIONAL { ?pub deich:language ?languageO . BIND(str(?languageO) AS ?language) }
-  OPTIONAL { ?pub deich:format ?formatO . BIND(str(?formatO) AS ?format) }
-  OPTIONAL { ?pub deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
-  OPTIONAL { ?pub deich:hasImage ?img }
-
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> ;
+             deich:language ?languageO . BIND(str(?languageO) AS ?language) }
+  UNION { ?pub a deich:Publication ;
+            deich:publicationOf <__WORKURI__> ;
+            deich:format ?formatO . BIND(str(?formatO) AS ?format) }
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> ;
+             deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
+  UNION { ?pub a deich:Publication ;
+             deich:publicationOf <__WORKURI__> ;
+             deich:hasImage ?img }
 }
