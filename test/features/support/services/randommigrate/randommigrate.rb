@@ -58,20 +58,21 @@ module RandomMigrate
 
     def generate_person()
       person_name = generate_random_string
-      ntriples = "<http://host/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Person> .
-                  <http://host/person/h1> <http://data.deichman.no/ontology#name> \"#{person_name}\" ."
+      ntriples = "<http://data.deichman.no/person/h1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Person> .
+                  <http://data.deichman.no/person/h1> <http://data.deichman.no/ontology#name> \"#{person_name}\" ."
       return person_name, ntriples
     end
 
     def generate_work(person_uri, prefix = '')
       work_title = generate_random_string
       work_part_title = generate_random_string
-      ntriples = "<http://host/work/w1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Work> .
-                  <http://host/work/w1> <http://data.deichman.no/ontology#mainTitle> \"#{prefix} #{work_title}\" .
-                  <http://host/work/w1> <http://data.deichman.no/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
-                  <http://host/work/w1> <http://data.deichman.no/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
-                  <http://host/work/w1> <http://data.deichman.no/ontology#contributor> _:c1 .
+      ntriples = "<http://data.deichman.no/work/w1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Work> .
+                  <http://data.deichman.no/work/w1> <http://data.deichman.no/ontology#mainTitle> \"#{prefix} #{work_title}\" .
+                  <http://data.deichman.no/work/w1> <http://data.deichman.no/ontology#partTitle> \"#{prefix} #{work_part_title}\" .
+                  <http://data.deichman.no/work/w1> <http://data.deichman.no/ontology#audience> <http://data.deichman.no/audience##{@audiences.sample}> .
+                  <http://data.deichman.no/work/w1> <http://data.deichman.no/ontology#contributor> _:c1 .
                   _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Contribution> .
+                  _:c1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#MainEntry> .
                   _:c1 <http://data.deichman.no/ontology#agent> <#{person_uri}> .
                   _:c1 <http://data.deichman.no/ontology#role> <http://data.deichman.no/role#author> ."
       return work_title, ntriples
@@ -79,11 +80,11 @@ module RandomMigrate
 
     def generate_publication(work_uri, language = nil, prefix = nil)
       publication_title = generate_random_string
-      ntriples = "<http://host/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Publication> .
-                  <http://host/publication/p1> <http://data.deichman.no/ontology#publicationOf> <#{work_uri}> .
-                  <http://host/publication/p1> <http://data.deichman.no/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
-                  <http://host/publication/p1> <http://data.deichman.no/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <http://host/publication/p1> <http://data.deichman.no/ontology#language> <#{language || @languages.sample}> ."
+      ntriples = "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Publication> .
+                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#publicationOf> <#{work_uri}> .
+                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
+                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
+                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#language> <#{language || @languages.sample}> ."
       return publication_title, ntriples
     end
 
@@ -149,7 +150,7 @@ module RandomMigrate
       person_uri = post_ntriples 'person', generate_person[1]
       work_uri = post_ntriples('work', generate_work(person_uri)[1])
 
-      publication_1 = Entity.new('http://host/publication/p1', @services)
+      publication_1 = Entity.new('http://data.deichman.no/publication/p1', @services)
       publication_1.add_authorized('publicationOf', work_uri)
       publication_1.add_literal('mainTitle', "pubprefix0#{@id} #{@id}nob")
       publication_1.add_literal('publicationYear', '1900')
@@ -158,7 +159,7 @@ module RandomMigrate
       publication_1.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_1.to_ntriples)
 
-      publication_2 = Entity.new('http://host/publication/p2', @services)
+      publication_2 = Entity.new('http://data.deichman.no/publication/p2', @services)
       publication_2.add_authorized('publicationOf', work_uri)
       publication_2.add_literal('mainTitle', "pubprefix0#{@id} #{@id}eng")
       publication_2.add_literal('publicationYear', '1900')
@@ -167,7 +168,7 @@ module RandomMigrate
       publication_2.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_2.to_ntriples)
 
-      publication_3 = Entity.new('http://host/publication/p3', @services)
+      publication_3 = Entity.new('http://data.deichman.no/publication/p3', @services)
       publication_3.add_authorized('publicationOf', work_uri)
       publication_3.add_literal('mainTitle', "pubprefix1#{@id} #{@id}eng")
       publication_3.add_literal('publicationYear', '2000')
@@ -176,7 +177,7 @@ module RandomMigrate
       publication_3.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_3.to_ntriples)
 
-      publication_4 = Entity.new('http://host/publication/p4', @services)
+      publication_4 = Entity.new('http://data.deichman.no/publication/p4', @services)
       publication_4.add_authorized('publicationOf', work_uri)
       publication_4.add_literal('mainTitle', "pubprefix1#{@id} #{@id}dan")
       publication_4.add_literal('publicationYear', '1900')
@@ -185,7 +186,7 @@ module RandomMigrate
       publication_4.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_4.to_ntriples)
 
-      publication_5 = Entity.new('http://host/publication/p5', @services)
+      publication_5 = Entity.new('http://data.deichman.no/publication/p5', @services)
       publication_5.add_authorized('publicationOf', work_uri)
       publication_5.add_literal('mainTitle', "pubprefix0#{@id} #{@id}cze")
       publication_5.add_literal('publicationYear', '1900')
@@ -194,7 +195,7 @@ module RandomMigrate
       publication_5.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_5.to_ntriples)
 
-      publication_6 = Entity.new('http://host/publication/p6', @services)
+      publication_6 = Entity.new('http://data.deichman.no/publication/p6', @services)
       publication_6.add_authorized('publicationOf', work_uri)
       publication_6.add_literal('mainTitle', "pubprefix1#{@id} #{@id}cze")
       publication_6.add_literal('publicationYear', '1900')
@@ -203,7 +204,7 @@ module RandomMigrate
       publication_6.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_6.to_ntriples)
 
-      publication_7 = Entity.new('http://host/publication/p7', @services)
+      publication_7 = Entity.new('http://data.deichman.no/publication/p7', @services)
       publication_7.add_authorized('publicationOf', work_uri)
       publication_7.add_literal('mainTitle', "pubprefix2#{@id} #{@id}cze")
       publication_7.add_literal('publicationYear', '2000')
@@ -212,7 +213,7 @@ module RandomMigrate
       publication_7.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_7.to_ntriples)
 
-      publication_8 = Entity.new('http://host/publication/p8', @services)
+      publication_8 = Entity.new('http://data.deichman.no/publication/p8', @services)
       publication_8.add_authorized('publicationOf', work_uri)
       publication_8.add_literal('mainTitle', "pubprefix3#{@id} #{@id}cze")
       publication_8.add_literal('publicationYear', '2000')
@@ -221,7 +222,7 @@ module RandomMigrate
       publication_8.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_8.to_ntriples)
 
-      publication_9 = Entity.new('http://host/publication/p9', @services)
+      publication_9 = Entity.new('http://data.deichman.no/publication/p9', @services)
       publication_9.add_authorized('publicationOf', work_uri)
       publication_9.add_literal('mainTitle', "pubprefix0#{@id} #{@id}swe")
       publication_9.add_authorized('language', 'http://lexvo.org/id/iso639-3/swe')
@@ -229,7 +230,7 @@ module RandomMigrate
       publication_9.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_9.to_ntriples)
 
-      publication_10 = Entity.new('http://host/publication/p10', @services)
+      publication_10 = Entity.new('http://data.deichman.no/publication/p10', @services)
       publication_10.add_authorized('publicationOf', work_uri)
       publication_10.add_literal('mainTitle', "pubprefix1#{@id} #{@id}swe")
       publication_10.add_authorized('language', 'http://lexvo.org/id/iso639-3/swe')
@@ -237,7 +238,7 @@ module RandomMigrate
       publication_10.add_authorized('mediaType', 'http://data.deichman.no/mediaType#MusicRecording')
       @publication_uris << post_ntriples('publication', publication_10.to_ntriples)
 
-      publication_11 = Entity.new('http://host/publication/p11', @services)
+      publication_11 = Entity.new('http://data.deichman.no/publication/p11', @services)
       publication_11.add_authorized('publicationOf', work_uri)
       publication_11.add_literal('mainTitle', "pubprefix2#{@id} #{@id}nob")
       publication_11.add_literal('publicationYear', '1900')
