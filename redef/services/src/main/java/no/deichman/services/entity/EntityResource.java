@@ -192,14 +192,10 @@ public final class EntityResource extends ResourceBase {
             Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
             if (m.getProperty(null, publicationOfProperty) != null) {
                 String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
-                XURI workXURI = new XURI(workUri);
-
-                getSearchService().index(workXURI);
-                getSearchService().index(xuri);
+                xuri = new XURI(workUri);
             }
-        } else {
-            getSearchService().index(xuri);
         }
+        getSearchService().index(xuri);
 
         return ok().entity(getJsonldCreator().asJSONLD(m)).build();
     }
