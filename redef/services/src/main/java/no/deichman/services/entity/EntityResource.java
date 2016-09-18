@@ -35,6 +35,7 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static javax.ws.rs.core.Response.accepted;
 import static javax.ws.rs.core.Response.noContent;
@@ -241,6 +242,24 @@ public final class EntityResource extends ResourceBase {
     public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         getEntityService().synchronizeKoha(xuri);
+        return accepted().build();
+    }
+
+    @PUT
+    @Path("/sync_all")
+    public Response syncAll(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
+        if (!type.equals("publication")) {
+            throw new BadRequestException("can only sync all on publication");
+        }
+        CompletableFuture.runAsync(() -> {
+            getEntityService().retrieveAllWorkUris(type, uri ->  {
+                try {
+                    getEntityService().synchronizeKoha(new XURI(uri));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        });
         return accepted().build();
     }
 
