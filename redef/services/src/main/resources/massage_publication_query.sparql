@@ -90,7 +90,7 @@ WHERE {
                deich:partTitle ?englishPartTitle ;
                deich:language <http://lexvo.org/id/iso639-3/eng> .
         }
-        BIND(IF(BOUND(?englishPartTitle), CONCAT(?englishMainTitle, " — ", ?englishPartTitle), ?englishMainTitle) AS ?norwegianTitle)
+        BIND(IF(BOUND(?englishPartTitle), CONCAT(?englishMainTitle, " — ", ?englishPartTitle), ?englishMainTitle) AS ?englishTitle)
   }
 
   UNION {
