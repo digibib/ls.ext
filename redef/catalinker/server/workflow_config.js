@@ -199,7 +199,7 @@ module.exports = (app) => {
           rdfType: 'Place',
           inputs: [
             {
-              label: 'Foretrukken betegnelse',
+              label: 'Navn',
               rdfProperty: 'prefLabel',
               displayValueSource: true,
               type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
@@ -219,7 +219,7 @@ module.exports = (app) => {
           rdfType: 'Event',
           inputs: [
             {
-              label: 'Foretrukken betegnelse',
+              label: 'Navn',
               rdfProperty: 'prefLabel',
               displayValueSource: true,
               type: 'input-string',
@@ -276,7 +276,7 @@ module.exports = (app) => {
           rdfType: 'Instrument',
           inputs: [
             {
-              label: 'Foretrukken betegnelse',
+              label: 'Navn',
               rdfProperty: 'prefLabel',
               type: 'input-string',
               preFillFromSearchField: true
@@ -294,7 +294,7 @@ module.exports = (app) => {
           rdfType: 'CompositionType',
           inputs: [
             {
-              label: 'Foretrukken betegnelse',
+              label: 'Navn',
               rdfProperty: 'prefLabel',
               type: 'input-string',
               preFillFromSearchField: true
@@ -522,7 +522,7 @@ module.exports = (app) => {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
               rdfProperty: 'isbn',
               multiple: true,
-              addAnotherLabel: 'Legg til et ISBN-nummer til'
+              addAnotherLabel: 'Legg til nytt ISBN'
             },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Game' ] },
@@ -621,7 +621,7 @@ module.exports = (app) => {
             {
               label: 'Serie',
               multiple: true,
-              addAnotherLabel: 'Legg til en serie til',
+              addAnotherLabel: 'Legg til ny serie',
               subjects: [ 'Publication' ],
               subInputs: {
                 rdfProperty: 'inSerial',
@@ -657,7 +657,7 @@ module.exports = (app) => {
             { rdfProperty: 'locationClassNumber' },
             { rdfProperty: 'locationSignature' },
             {
-              rdfProperty: 'specification',
+              rdfProperty: 'description',
               type: 'input-string-large'
             },
             {

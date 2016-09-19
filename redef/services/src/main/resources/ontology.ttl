@@ -659,6 +659,7 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
-
-
-
+:description a rdfs:Property ;
+  rdfs:label "Description"@en ;
+  rdfs:label "Beskrivelse"@no ;
+  rdfs:range xsd:string .
