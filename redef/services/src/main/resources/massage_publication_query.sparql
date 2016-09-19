@@ -31,7 +31,10 @@ CONSTRUCT {
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
                deich:dewey ?dewey ;
-               deich:nationality ?nationLabel .
+               deich:nationality ?nationLabel ;
+               deich:title ?pubMainTitle ;
+               deich:title ?pubPartTitle ;
+               deich:title ?pubSubtitle .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -51,6 +54,7 @@ WHERE {
             BIND(str(?work) AS ?workUri ) }
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
+  UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO . BIND(str(?languageO) AS ?language) }
   UNION { <__PUBLICATIONURI__> deich:format ?formatO . BIND(str(?formatO) AS ?format) }

@@ -45,6 +45,9 @@
     "contributorNames": {
       "type": "string"
     },
+    "title": {
+      "type": "string"
+    },
     "mainTitle": {
       "type": "string"
     },
