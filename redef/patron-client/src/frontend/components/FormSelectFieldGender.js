@@ -11,8 +11,8 @@ class FormSelectFieldGender extends React.Component {
         {header}
         <div className="select-container">
           <Field name={this.props.name} component="select" data-automation-id="gender_selection">
-            {this.props.options.map(option => <option
-              value={option}>{this.props.intl.formatMessage({ ...this.props.optionMessages[ option ] })}</option>)}
+            {this.props.options.map(option => <option key={option}
+                                                      value={option}>{this.props.intl.formatMessage({ ...this.props.optionMessages[ option ] })}</option>)}
           </Field>
         </div>
       </div>

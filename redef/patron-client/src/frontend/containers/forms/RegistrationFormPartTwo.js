@@ -82,7 +82,7 @@ class RegistrationFormPartTwo extends React.Component {
                                                   getFieldValidator={this.getValidator} />
           <address>
             <FormInputField name="address" type="text" message={messages.address} isLabelOverInput={false}
-                            hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
+                            hasLabel={true} headerType="h4" formName={formName} getValidator={this.getValidator} />
 
             <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h4"
                                                     fieldMessage={messages.zipcode} containerTag="span"
@@ -95,11 +95,11 @@ class RegistrationFormPartTwo extends React.Component {
                                                     getFieldValidator={this.getValidator} />
 
             <FormInputField name="country" type="text" message={messages.country} isLabelOverInput={false}
-                            hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
+                            hasLabel={true} headerType="h4" formName={formName} getValidator={this.getValidator} />
 
           </address>
           <FormSelectFieldGender message={messages.gender} headerTag="h4" options={[ 'male', 'female' ]}
-                                 optionMessages={{ male: messages.male, female: messages.female }} />
+                                 optionMessages={{ male: messages.male, female: messages.female }} name="gender" />
         </fieldset>
 
         <fieldset>
@@ -111,7 +111,7 @@ class RegistrationFormPartTwo extends React.Component {
                                                   getFieldValidator={this.getValidator} headerTag="h2" />
 
           <FormInputField name="repeatPin" type="password" message={messages.repeatPin} isLabelOverInput={false}
-                          hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
+                          hasLabel={true} headerType="h4" formName={formName} getValidator={this.getValidator} />
 
           <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} headerTag="h2"
                                   name="chooseBranch" />
