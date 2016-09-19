@@ -6,6 +6,7 @@ module.exports = {
   },
   ssn: ssn => {
     if (!/^\d{11,12}$/.test(ssn) || !validateSSN(ssn.toString())) {
+      console.log('invalid SSN')
       return 'invalidSSN'
     }
   },
@@ -125,8 +126,12 @@ function validateDUFNumber (ssn) {
 
   let temp = 0
   for (let i = 9; i >= 0; i--) {
-    temp = multipliers
+    temp += multipliers[ i ] * d_digits[ i ]
   }
+
+  temp = temp % 11
+
+  return temp === control
 }
 
 function validateSNumber (ssn) {

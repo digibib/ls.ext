@@ -83,6 +83,11 @@ const messages = defineMessages({
     id: 'ValidationMessage.invalidPhoneNumber',
     description: 'Displayed if an invalid phone number is entered',
     defaultMessage: 'Invalid phone number, only norwegian numbers allowed'
+  },
+  invalidSSN: {
+    id: 'ValidationMessage.invalidSSN',
+    description: '',
+    defaultMessage: 'Invalid ID-number'
   }
 })
 
