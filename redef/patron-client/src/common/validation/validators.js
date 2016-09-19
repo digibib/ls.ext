@@ -5,7 +5,7 @@ module.exports = {
     }
   },
   ssn: ssn => {
-    if (!validateSSN(ssn)) {
+    if (!/^\d{11,12}$/.test(ssn) || !validateSSN(ssn.toString())) {
       return 'invalidSSN'
     }
   },
@@ -73,20 +73,60 @@ function validateSSN (ssn) {
 }
 
 function validateFNumber (ssn) {
-  const stringSSN = ssn.toString()
-  if (parseInt(stringSSN.charAt(0)) > 3) {
+  if (parseInt(ssn.charAt(0)) > 3) {
     return false
-  } else if (parseInt(stringSSN.charAt(2)) > 1) {
+  } else if (parseInt(ssn.charAt(2)) > 1) {
     return false
+  } else {
+    return isValidFNumberChecksum(ssn)
   }
 }
 
-function validateDNumber (ssn) {
+function isValidFNumberChecksum (ssn) {
+  let digits = []
+  for (let i = 0; i < ssn.length; i++) {
+    digits.push(parseInt(ssn.charAt(i)))
+  }
+  const ctrl = (3 * digits[ 0 ] + 7 * digits[ 1 ] + 6 * digits[ 2 ] + digits[ 3 ] + 8 * digits[ 4 ]
+    + 9 * digits[ 5 ] + 4 * digits[ 6 ] + 5 * digits[ 7 ] + 2 * digits[ 8 ] ) % 11
+  let controlDigit1 = 0
+  if (ctrl !== 0) {
+    controlDigit1 = 11 - ctrl
+  }
+  if (controlDigit1 === 10) {
+    return false
+  }
+  const ctrl2 = (5 * digits[ 0 ] + 4 * digits[ 1 ] + 3 * digits[ 2 ] + 2 * digits[ 3 ] + 7 * digits[ 4 ]
+    + 6 * digits[ 5 ] + 5 * digits[ 6 ] + 4 * digits[ 7 ] + 3 * digits[ 8 ] + 2 * controlDigit1) % 11
+  let controlDigit2 = 0
+  if (ctrl2 !== 0) {
+    controlDigit2 = 11 - ctrl
+  }
+  if (controlDigit2 === 10) {
+    return false
+  }
+  return controlDigit1 === digits[ 9 ] && controlDigit2 === digits[ 10 ]
+}
 
+function validateDNumber (ssn) {
+  if (parseInt(ssn.charAt(0)) > 7 || parseInt(ssn.charAt(0) < 4)) {
+    return false
+  } else if (parseInt(ssn.charAt(2)) > 1) {
+    return false
+  } else {
+    return isValidFNumberChecksum(ssn)
+  }
 }
 
 function validateDUFNumber (ssn) {
+  const control = parseInt(ssn.substring(10))
+  const d_digits = ssn.substring(0, 10)
+  const multipliers = [ 4, 6, 3, 2, 7, 5, 4, 6, 3, 2 ]
 
+  let temp = 0
+  for (let i = 9; i >= 0; i--) {
+    temp = multipliers
+  }
 }
 
 function validateSNumber (ssn) {
