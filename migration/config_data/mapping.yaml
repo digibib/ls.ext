@@ -3750,7 +3750,7 @@
                 regex_split: "(\\w{3})"
                 lowercase: true
             b:
-              predicate: "ONTOLOGY.subTitles"
+              predicate: "ONTOLOGY.hasSubtitles"
               object:
                 datatype: "uri"
                 regex_strip: "[\\W]+"
