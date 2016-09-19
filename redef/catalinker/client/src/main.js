@@ -23,6 +23,7 @@
 
     Ractive.DEBUG = false
     var ractive
+    var titleRactive
     var supportPanelLeftEdge
     var supportPanelWidth
     require('jquery-ui/dialog')
@@ -833,6 +834,9 @@
       if (prop.includeOnlyWhen) {
         input.includeOnlyWhen = prop.includeOnlyWhen
       }
+      if (prop.isTitleSource) {
+        input.isTitleSource = prop.isTitleSource
+      }
     }
 
     var lastFoundOrActualLast = function (lastIndexOfVisible, numberOfInputs) {
@@ -1012,7 +1016,8 @@
               id: subInput.id,
               required: subInput.required,
               searchable: type === 'searchable-with-result-in-side-panel',
-              showOnlyWhen: subInput.showOnlyWhen
+              showOnlyWhen: subInput.showOnlyWhen,
+              isTitleSource: subInput.isTitleSource
             }),
             parentInput: currentInput
           }
@@ -1084,7 +1089,8 @@
               showOnlyWhen: input.showOnlyWhen,
               dataAutomationId: input.searchMainResource.automationId,
               inputIndex: index,
-              id: input.id
+              id: input.id,
+              isTitleSource: input.isTitleSource
             })
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
@@ -1100,7 +1106,8 @@
               searchForValueSuggestions: input.searchForValueSuggestions,
               inputIndex: index,
               id: input.id,
-              includeOnlyWhen: input.includeOnlyWhen
+              includeOnlyWhen: input.includeOnlyWhen,
+              isTitleSource: input.isTitleSource
             })
           } else {
             input.inputIndex = index
@@ -1672,6 +1679,12 @@
               teardown: function () {}
             }
           }
+
+          titleRactive = new Ractive({
+            el: 'title',
+            template: '{{title.1 || title.2 || title.3 || "Katalogisering"}}',
+            data: applicationData
+          })
 
           // Initialize ractive component from template
           ractive = new Ractive({
@@ -2844,6 +2857,21 @@
           return applicationData
         }
 
+        let initTitle= function (applicationData) {
+          allGroupInputs(function (input) {
+            let titleSource = input.isTitleSource
+            if (titleSource) {
+              let keypath = ractive.get(`inputLinks.${input.id}`)
+              ractive.observe(`${keypath}.values.0.current.value`, function (newValue) {
+                let title = `${newValue || ''}${titleSource.qualifier || ''}`
+                if (typeof newValue === 'string' && newValue !== '')
+                titleRactive.set(`title.${titleSource.priority}`, title)
+              })
+            }
+          })
+          return applicationData
+        }
+
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
@@ -2857,6 +2885,7 @@
           .then(initHeadlineParts)
           .then(initInputLinks)
           .then(initInputInterDependencies)
+          .then(initTitle)
           .then(initValuesFromQuery)
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)

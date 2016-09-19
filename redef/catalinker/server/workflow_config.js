@@ -420,6 +420,10 @@ module.exports = (app) => {
               // this is an input type used to search for a main resource, e.g. Work. The rendered input field
               // will not be tied to a particular subject and predicate
               id: 'searchMainResourceInput',
+              isTitleSource: {
+                priority: 3,
+                qualifier: ' - verk'
+              },
               searchMainResource: {
                 label: 'Søk etter eksisterende verk',
                 indexType: 'work',
@@ -476,6 +480,10 @@ module.exports = (app) => {
             {
               rdfProperty: 'mainTitle',
               id: 'publicationMainTitle',
+              isTitleSource: {
+                priority: 1,
+                qualifier: ' - utgivelse'
+              },
               headlinePart: {
                 order: 20,
                 styleClass: 'title'
@@ -505,7 +513,10 @@ module.exports = (app) => {
                 postfix: ')'
               }
             },
-            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] }, rdfProperty: 'numberOfPages' },
+            {
+              includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] },
+              rdfProperty: 'numberOfPages'
+            },
             { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter' },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
@@ -555,7 +566,11 @@ module.exports = (app) => {
                 short: true
               }
             },
-            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'E-bok', 'ComicBook', 'SheetMusic' ] }, rdfProperty: 'writingSystem', multiple: true },
+            {
+              includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'E-bok', 'ComicBook', 'SheetMusic' ] },
+              rdfProperty: 'writingSystem',
+              multiple: true
+            },
             { rdfProperty: 'hasFormatAdaptation', multiple: true },
             {
               id: 'publishedByInput',
@@ -683,6 +698,10 @@ module.exports = (app) => {
             {
               id: 'workMainTitle',
               rdfProperty: 'mainTitle',
+              isTitleSource: {
+                priority: 2,
+                qualifier: ' - verk'
+              },
               multiple: true
             },
             { rdfProperty: 'subtitle' },
@@ -703,7 +722,11 @@ module.exports = (app) => {
               rdfProperty: 'fictionNonfiction',
             },
             { rdfProperty: 'audience', multiple: true },
-            { includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] }, rdfProperty: 'biography', multiple: true },
+            {
+              includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
+              rdfProperty: 'biography',
+              multiple: true
+            },
             { rdfProperty: 'hasContentAdaptation', multiple: true },
             {
               label: 'Relasjon til annet verk',
