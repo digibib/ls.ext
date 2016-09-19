@@ -62,7 +62,6 @@ WHERE {
       (format:Diapositive             mediaType:Other)
       (format:Microfiche              mediaType:Other)
       (format:MicrofilmReel           mediaType:Other)
-      (format:Poster                  mediaType:Other)
       (format:Map                     mediaType:Other)
     }
 }
