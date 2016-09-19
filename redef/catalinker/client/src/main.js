@@ -2864,8 +2864,9 @@
               let keypath = ractive.get(`inputLinks.${input.id}`)
               ractive.observe(`${keypath}.values.0.current.value`, function (newValue) {
                 let title = `${newValue || ''}${titleSource.qualifier || ''}`
-                if (typeof newValue === 'string' && newValue !== '')
+                if (typeof newValue === 'string' && newValue !== '') {
                   titleRactive.set(`title.${titleSource.priority}`, title)
+                }
               })
             }
           })
