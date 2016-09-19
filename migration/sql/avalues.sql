@@ -5,7 +5,7 @@
 --
 
 LOCK TABLES `authorised_values` WRITE;
-DELETE FROM authorised_values WHERE category IN ("WITHDRAWN", "LOST", "NOT_LOAN", "RESTRICTED", "DAMAGED");
+DELETE FROM authorised_values WHERE category IN ("WITHDRAWN", "LOST", "NOT_LOAN", "RESTRICTED", "DAMAGED", "DOORACCESS");
 /*!40000 ALTER TABLE `authorised_values` DISABLE KEYS */;
 
 LOAD DATA LOCAL INFILE '/out/avalues.csv'
