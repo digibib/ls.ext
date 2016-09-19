@@ -16,16 +16,19 @@ class FormInputField extends React.Component {
 
   renderField (field) {
     const formattedHeaderMessage = <FormattedMessage {...this.props.message} />
-    const header = createElement(this.props.headerType, {}, formattedHeaderMessage)
+    const header = (this.props.headerType !== '') ? createElement(this.props.headerType, {}, formattedHeaderMessage) : ''
     return (
-      <div>
+      <div className="form-item">
         {header}
         {this.props.hasLabel && this.props.isLabelOverInput
           ? <label htmlFor={field.name}><FormattedMessage {...this.props.message} /></label> : null}
         <input placeholder={this.props.placeholder ? this.props.intl.formatMessage(this.props.placeholder) : null}
-               data-automation-id={`${this.props.formName}_${field.name}`} {...field.input} type={field.type}
-               name={field.name} id={field.name} />
-        {this.props.hasLabel && !this.props.isLabelOverInput
+               data-automation-id={`${this.props.formName}_${field.name}`} {...field.input}
+               type={field.type}
+               name={field.name}
+               id={field.name}
+        />
+        {this.props.hasLabel !== '' && this.props.isLabelOverInput === ''
           ? <label htmlFor={field.name}><FormattedMessage {...this.props.message} /></label> : null}
         { this.props.getValidator ? this.props.getValidator(field) : null}
       </div>

@@ -7,7 +7,7 @@ class FormSelectFieldGender extends React.Component {
     const formattedHeaderMsg = <FormattedMessage {...this.props.message} />
     const header = createElement(this.props.headerTag, {}, formattedHeaderMsg)
     return (
-      <div>
+      <div className="form-item">
         {header}
         <div className="select-container">
           <Field name={this.props.name} component="select" data-automation-id="gender_selection">
