@@ -2857,7 +2857,7 @@
           return applicationData
         }
 
-        let initTitle= function (applicationData) {
+        let initTitle = function (applicationData) {
           allGroupInputs(function (input) {
             let titleSource = input.isTitleSource
             if (titleSource) {
@@ -2865,7 +2865,7 @@
               ractive.observe(`${keypath}.values.0.current.value`, function (newValue) {
                 let title = `${newValue || ''}${titleSource.qualifier || ''}`
                 if (typeof newValue === 'string' && newValue !== '')
-                titleRactive.set(`title.${titleSource.priority}`, title)
+                  titleRactive.set(`title.${titleSource.priority}`, title)
               })
             }
           })
