@@ -13,7 +13,7 @@ ValidationMessage.propTypes = {
   message: PropTypes.string.isRequired
 }
 
-const messages = defineMessages({
+export const messages = defineMessages({
   required: {
     id: 'ValidationMessage.required',
     description: 'Displayed below a field when not filled out',
@@ -86,7 +86,7 @@ const messages = defineMessages({
   },
   invalidSSN: {
     id: 'ValidationMessage.invalidSSN',
-    description: '',
+    description: 'Displayed if entered ID-number is not valid',
     defaultMessage: 'Invalid ID-number'
   }
 })

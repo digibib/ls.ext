@@ -95,7 +95,7 @@ export default {
   'RegistrationFormPartOne.year': 'År',
   'RegistrationFormPartOne.ssn': 'ID-nummer',
   'RegistrationFormPartOne.ssnLabel': 'Personnr./D-nr./DUF-nr.',
-  'RegistrationFormPartOne.ssnHeader': 'Personnummer',
+  'RegistrationFormPartOne.ssnHeader': 'ID-nummer',
   'RegistrationFormPartOne.ssnSpec': 'Personnr./D-nr./DUF-nr',
   'RegistrationFormPartOne.ssnLink': 'Hvorfor må du fylle inn fødselsdato og ID-nummer?',
   'RegistrationFormPartOne.ssnInfo': 'Fødselsdatoen bestemmer hva du kan låne av oss. Id-nummeret forteller oss hvem du er. Begge deler er nyttige for hvordan vi utvikler samlingen vår.',
@@ -246,6 +246,7 @@ export default {
   'ValidationMessage.invalidZipcode': 'Ugyldig postnr, må være 4 siffer',
   'ValidationMessage.invalidCity': 'Ugyldig poststed, må være 2 eller flere tegn, kun norske',
   'ValidationMessage.invalidPhoneNumber': 'Ugyldig telefonnummer, bare norske nummer er gyldige',
+  'ValidationMessage.invalidSSN': 'Ugyldig ID-nummer',
   'Work.noWork': 'Inget verk',
   'Work.firstTimePublished': 'Første gang utgitt:',
   'Work.workInformation': 'Verksinformasjon'
