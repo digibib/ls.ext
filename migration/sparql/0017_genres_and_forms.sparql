@@ -123,6 +123,7 @@ WHERE {
       (genre:g89509789182bc7afe48d315f93e341b6         literaryForm:televisionSeries)
       (genre:g81baf70b3a80d10106e42b69ab6f6144         literaryForm:shortStory)
       (genre:g93341cf23c67289f4646abeeded6a9d8         literaryForm:shortFilm)
+      (genre:g3e07a0ff81ac73bad74b53c29380c9cb         literaryForm:poetry)
     }
 }
 ;
@@ -155,6 +156,8 @@ WHERE {
       (genre:g0a15256825b1da3e6957a7be856da85c         genre:g12161100)
       (genre:g612d9660fee4280d8884399d83051931         genre:g12557900)
       (genre:g0f21d4e5a7cf29a1ece03d5c32bbc923         genre:g13003700)
+      (genre:ga778c7237fbff6e342574fe7bbcac62b         genre:g15868000)
+      (genre:g8d8cc2364ee5b8456db9d2327f4d2e83         genre:g15868000)
     }
 }
 ;
