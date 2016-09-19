@@ -23,9 +23,9 @@ const FormInputFieldContainer = ({
 FormInputFieldContainer.propTypes = {
   fieldName: PropTypes.string.isRequired,
   fieldType: PropTypes.string.isRequired,
-  hasFieldLabel: PropTypes.string.isRequired,
+  hasFieldLabel: PropTypes.bool,
   fieldHeaderType: PropTypes.string.isRequired,
-  isFieldHeaderOverLabel: PropTypes.string.isRequired,
+  isFieldHeaderOverLabel: PropTypes.bool,
   fieldMessage: PropTypes.object.isRequired,
   getFieldValidator: PropTypes.func,
   containerTag: PropTypes.string.isRequired,

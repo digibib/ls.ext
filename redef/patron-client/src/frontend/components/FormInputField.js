@@ -20,12 +20,12 @@ class FormInputField extends React.Component {
     return (
       <div>
         {header}
-        {this.props.hasLabel !== '' && this.props.isLabelOverInput !== ''
+        {this.props.hasLabel && this.props.isLabelOverInput
           ? <label htmlFor={field.name}><FormattedMessage {...this.props.message} /></label> : null}
         <input placeholder={this.props.placeholder ? this.props.intl.formatMessage(this.props.placeholder) : null}
                data-automation-id={`${this.props.formName}_${field.name}`} {...field.input} type={field.type}
                name={field.name} id={field.name} />
-        {this.props.hasLabel !== '' && this.props.isLabelOverInput === ''
+        {this.props.hasLabel && !this.props.isLabelOverInput
           ? <label htmlFor={field.name}><FormattedMessage {...this.props.message} /></label> : null}
         { this.props.getValidator ? this.props.getValidator(field) : null}
       </div>
@@ -39,8 +39,8 @@ FormInputField.propTypes = {
   message: PropTypes.object.isRequired,
   getValidator: PropTypes.func,
   intl: intlShape.isRequired,
-  isLabelOverInput: PropTypes.string.isRequired,
-  hasLabel: PropTypes.string.isRequired,
+  isLabelOverInput: PropTypes.bool,
+  hasLabel: PropTypes.bool,
   headerType: PropTypes.string.isRequired,
   formName: PropTypes.string.isRequired,
   placeholder: PropTypes.object
