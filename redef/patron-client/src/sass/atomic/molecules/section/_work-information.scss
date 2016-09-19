@@ -1,32 +1,48 @@
 .work-information {
-  @include span(7 of 12);
-  min-height: 160px; // Pushes genre/subject in place
+  @include span(12);
+  @include container;
 
   h1 {
-    margin-top: 0;
+    @include span(12);
+    font-size: rhythm(3);
+    margin: 0;
   }
 
-  @include breakpoint($small){
-     @include span(7 of 12);
-     @include push(2 of 12);
-  }
-
-  @include breakpoint($medium){
-    @include push(1.5 of 12);
-  }
-
-}
-
-.work-excerpt {
-  @include span(12 of 12);
-
-  @include breakpoint($small){
-     @include span(7 of 12);
-     @include push(2 of 12);
-  }
-
-  @include breakpoint($medium){
-    @include push(1.5 of 12);
+  h2 {
+    @include span(12);
+    font-size: rhythm(2);
+    margin: 0;
+    font-weight: bold;
   }
 
 }
+
+@include breakpoint($small) {
+
+}
+
+// .work-information {
+// //  min-height: 160px; // Pushes genre/subject in place
+
+//      @include span(7 of 12);
+//      @include push(2 of 12);
+//   }
+
+//   @include breakpoint($medium){
+//     @include push(1.5 of 12);
+//   }
+
+
+// .work-excerpt {
+//   @include span(12 of 12);
+
+//   @include breakpoint($small){
+//      @include span(7 of 12);
+//      @include push(2 of 12);
+//   }
+
+//   @include breakpoint($medium){
+//     @include push(1.5 of 12);
+//   }
+
+// }

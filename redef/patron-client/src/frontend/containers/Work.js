@@ -33,9 +33,13 @@ class Work extends React.Component {
 
   renderTitle (work) {
     let title = work.mainTitle
-    if (work.partTitle) {
-      title += ` — ${work.partTitle}`
-    }
+    /* Removing this, as its supposed to be on a seperate line with seperate styling
+      keeping for reference for now. */
+    /*
+      if (work.partTitle) {
+        title += ` — ${work.partTitle}`
+      }
+    */
     return title
   }
 
@@ -51,7 +55,16 @@ class Work extends React.Component {
     return <span data-automation-id="work_date" />
   }
 
+  renderPartTitle (work) {
+    if(work.partTitle) {
+      return (
+        <h2>{work.partTitle}</h2>
+      )
+    }
+  }
+
   render () {
+
     // TODO Better renderEmpty and showing something while it loads the resource.
     if (this.props.isRequesting) {
       return this.renderEmpty()
@@ -67,61 +80,75 @@ class Work extends React.Component {
       const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
       if (chosenPublication) {
         work.mainTitle = chosenPublication.mainTitle
-        work.partTitle = chosenPublication.partTitle
+        //work.partTitle = chosenPublication.partTitle
+        work.partTitle = 'This is the part title'
       }
     }
     const { back } = this.props.location.query
     return (
       <div className="wrapper">
+        <article className="work-entry">
           {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
             ? (
             <header className="back-to-results">
-              <Link to={this.props.location.query.back} alt="Back to search page">Tilbake til søkeresultat</Link>
+              <Link to={this.props.location.query.back} alt="Back to search page">
+                <i className="icon-angle-double-left" />Tilbake til søkeresultat
+              </Link>
             </header>
           ) : ''}
-          <article className="work-entry">
-            <section className="work-information">
-              <h1 data-automation-id="work_title">{this.renderTitle(work)}</h1>
-              <Contributors contributors={work.contributors} />
-              {this.renderYear(work)}
-            </section>
-            <aside className="work-subjects show-mobile hidden-tablet hidden-desktop">
-              <Subjects subjects={work.subjects} />
-            </aside>
-            <aside className="work-genres show-mobile hidden-tablet hidden-desktop">
-              <Genres genres={work.genres} />
-            </aside>
-            <div className="work-excerpt">
-              <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
-                id mauris maximus porta. In
-                dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur nunc est vitae purus.
-                Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices, sapien in volutpat vehicula, lacus
-                nunc pretium leo, quis dignissim arcu nisl vitae velit. Aliquam sit amet nisl non tortor elementum
-                consequat. Morbi id nulla ac quam luctus posuere nec a risus. Aenean congue quam tortor, a volutpat
-                quam mollis nec. Nullam metus ex, efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel
-                accumsan odio, venenatis fringilla ex.</p>
-              <button className="white-btn-checkmark patron-placeholder" type="button">Min huskeliste</button>
-            </div>
-            <aside className="work-subjects hidden-mobile show-desktop">
-              <Subjects subjects={work.subjects} />
-            </aside>
-            <aside className="work-genres hidden-mobile show-desktop">
-              <Genres genres={work.genres} />
-            </aside>
-          </article>
-          <div className="work-active-filters">
-            <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
-                             query={this.props.query} />
+
+          <section className="work-information">
+            <h1 data-automation-id="work_title">{this.renderTitle(work)}</h1>
+            {this.renderPartTitle(work)}
+            <Contributors contributors={work.contributors} />
+            {this.renderYear(work)}
+          </section>
+
+          <aside className="work-subjects show-mobile hidden-tablet hidden-desktop">
+            <Subjects subjects={work.subjects} />
+          </aside>
+
+          <aside className="work-genres show-mobile hidden-tablet hidden-desktop">
+            <Genres genres={work.genres} />
+          </aside>
+
+          <div className="work-excerpt">
+            <p className="patron-placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
+              id mauris maximus porta. In
+              dignissim, metus in elementum ultrices, erat velit gravida turpis, id efficitur nunc est vitae purus.
+              Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices, sapien in volutpat vehicula, lacus
+              nunc pretium leo, quis dignissim arcu nisl vitae velit. Aliquam sit amet nisl non tortor elementum
+              consequat. Morbi id nulla ac quam luctus posuere nec a risus. Aenean congue quam tortor, a volutpat
+              quam mollis nec. Nullam metus ex, efficitur vitae tortor vitae, imperdiet semper nisl. Mauris vel
+              accumsan odio, venenatis fringilla ex.</p>
+            <button className="white-btn-checkmark patron-placeholder" type="button">Min huskeliste</button>
           </div>
-          <Publications locationQuery={this.props.location.query}
-                        expandSubResource={this.props.resourceActions.expandSubResource}
-                        publications={work.publications}
-                        startReservation={this.props.reservationActions.startReservation}
-                        toggleParameterValue={this.props.parameterActions.toggleParameterValue}
-                        workLanguage={work.language}
-                        libraries={this.props.libraries}
-                        audiences={Array.isArray(this.props.resources[this.props.params.workId].audience) ? this.props.resources[this.props.params.workId].audience : [this.props.resources[this.props.params.workId].audience]}
-          />
+
+          <aside className="work-subjects hidden-mobile show-desktop">
+            <Subjects subjects={work.subjects} />
+          </aside>
+
+          <aside className="work-genres hidden-mobile show-desktop">
+            <Genres genres={work.genres} />
+          </aside>
+
+        </article>
+
+        <div className="work-active-filters">
+          <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+                           query={this.props.query} />
+        </div>
+
+        <Publications locationQuery={this.props.location.query}
+                      expandSubResource={this.props.resourceActions.expandSubResource}
+                      publications={work.publications}
+                      startReservation={this.props.reservationActions.startReservation}
+                      toggleParameterValue={this.props.parameterActions.toggleParameterValue}
+                      workLanguage={work.language}
+                      libraries={this.props.libraries}
+                      audiences={Array.isArray(this.props.resources[this.props.params.workId].audience) ? this.props.resources[this.props.params.workId].audience : [this.props.resources[this.props.params.workId].audience]}
+        />
+
       </div>
     )
   }

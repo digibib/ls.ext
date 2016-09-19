@@ -1,10 +1,22 @@
 .work-entry {
-  @include span(12 of 12);
+  @include span(12);
   @include container;
-  margin-top: rhythm(2);
 
-  h1 {
-    color: $redColor;
+  header {
+    @include span(12);
+    border: none;
+
+    a {
+      width: 100%;
+      padding: rhythm(2) rhythm(2) rhythm(2) 0;
+      display: inline-block;
+      font-size: rhythm(2.5);
+    }
+
+  }
+
+  .work-information {
+    @include span(12);
   }
 
 }
