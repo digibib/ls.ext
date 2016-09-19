@@ -46,3 +46,15 @@ literaryForm:referenceWork a duo:LiteraryForm ;
 literaryForm:biography a duo:LiteraryForm ;
   rdfs:label "Biografi"@no ;
   rdfs:label "Biography"@en .
+literaryForm:featureFilm a duo:LiteraryForm ;
+  rdfs:label "Spillefilm"@no ;
+  rdfs:label "Feature film"@en .
+literaryForm:animatedFilm a duo:LiteraryForm ;
+  rdfs:label "Animasjonsfilm"@no ;
+  rdfs:label "Animated film"@en .
+literaryForm:televisionSeries a duo:LiteraryForm ;
+  rdfs:label "TV-serie"@no ;
+  rdfs:label "TV series"@en .
+literaryForm:shortFilm a duo:LiteraryForm ;
+  rdfs:label "Kortfilm"@no ;
+  rdfs:label "Short film"@en .
