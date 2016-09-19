@@ -1,4 +1,3 @@
-import '../../public/dist/styles/master-old.css'
 import '../../public/dist/styles/main.css'
 import React from 'react'
 import ReactDOM from 'react-dom'

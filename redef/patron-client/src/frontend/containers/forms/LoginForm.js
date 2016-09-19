@@ -6,8 +6,9 @@ import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl'
 import { bindActionCreators } from 'redux'
+import { Link } from 'react-router'
 
-import FormInputFieldPlain from '../../components/FormInputFieldPlain'
+import FormInputField from '../../components/FormInputField'
 import * as RegistrationActions from '../../actions/RegistrationActions'
 import * as LoginActions from '../../actions/LoginActions'
 import * as ModalActions from '../../actions/ModalActions'
@@ -35,24 +36,53 @@ class LoginForm extends React.Component {
     this.props.registrationActions.startRegistration()
   }
 
+  closeModal () {
+    ModalActions.hideModal()
+  }
+
   render () {
     return (
       <div data-automation-id="login_modal">
+
+        <button className="close-modal-button" onClick={this.props.modalActions.hideModal}>
+          <i className="icon-cancel" />
+        </button>
+
         <form onSubmit={this.handleLogin}>
           <h1>Logg inn for å reservere</h1>
-          <FormInputFieldPlain name="username" type="text" message={this.props.messages.username} headerType="h2"
-                               formName={formName} />
-          <FormInputFieldPlain name="password" type="password" message={this.props.messages.password} headerType="h2"
-                               formName={formName} />
-
-          <p>Glemt PIN-kode?</p>
-          <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}
-                  onClick={this.handleLogin}
-                  data-automation-id="login_button">
-            <FormattedMessage {...this.props.messages.logIn} />
-          </button>
-          <h3>Er du ikke registrert? <a data-automation-id="registration_link" onClick={this.handleRegistrationClick}
-                                        title="register">Registrer deg</a></h3>
+          <FormInputField name="username"
+                          type="text"
+                          message={this.props.messages.username}
+                          headerType=""
+                          isLabelOverInput="true"
+                          hasLabel="hasLabel"
+                          formName={formName}
+          />
+          <FormInputField name="password"
+                          type="password"
+                          message={this.props.messages.password}
+                          headerType=""
+                          isLabelOverInput="true"
+                          hasLabel="hasLabel"
+                          formName={formName}
+          />
+          <p className="forgot-pin">
+            <Link to="#">Glemt PIN-kode?</Link>
+          </p>
+          <p>
+            <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}
+                    onClick={this.handleLogin}
+                    data-automation-id="login_button">
+              <FormattedMessage {...this.props.messages.logIn} />
+            </button>
+            <Link to="#" className="cancel-link" onClick={this.props.modalActions.hideModal}>
+              Avbryt
+            </Link>
+          </p>
+          <p>
+            Er du ikke registrert? <br />
+            <a data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer deg</a>
+          </p>
         </form>
       </div>
     )

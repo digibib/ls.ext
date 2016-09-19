@@ -1,25 +1,23 @@
 .modal-overlay {
+  @include wrapper-container;
+  min-width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(255, 255, 255, 0.9);
   overflow: scroll;
 }
 
-.default-modal {
-  position: absolute;
-  top: 100px;
-  bottom: 100px;
-  left: 100px;
-  right: 100px;
+.modal-content {
+  @include span(10);
+  @include push(1);
+  margin-top: rhythm(5);
   border-radius: 0;
-  background: #fff;
-  overflow: auto;
+  overflow: visible;
   -webkit-overflow-scrolling: touch;
   outline: none;
-  padding: 20px;
 }
 
 .patron-placeholder {

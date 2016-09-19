@@ -33,15 +33,10 @@ class LoginModal extends React.Component {
 
   render () {
     return (
-      <div>
-        <header>
-          {this.renderError()}
-        </header>
-        <section className="login-modal">
-          <LoginForm successAction={this.props.successAction} messages={messages} />
-        </section>
-      </div>
-
+      <section className="login-modal">
+        {this.renderError()}
+        <LoginForm successAction={this.props.successAction} messages={messages} />
+      </section>
     )
   }
 }
