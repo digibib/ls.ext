@@ -35,9 +35,14 @@ body {
   }
   .select2-container {
     .select2-selection {
+      li {
+        margin-bottom: -3px;
+      }
       background-image: url("/images/arrow_down_solid.svg");
       background-repeat: no-repeat;
-      background-position: 291px 10px;
+      background-position: 99% 6px;
+      padding-top: 1px;
+      height: 36px;
       ul {
         li {
           span.suggestion-source {
@@ -367,7 +372,15 @@ body {
 
         }
         input {
-          height: 26px;
+          padding-left: 6px;
+          &:not([type=search]) {
+            height: 36px;
+            padding: 6px;
+          }
+          &[type=search] {
+            height: 28px;
+            padding-right: 16px;
+          }
           &[type=number] {
             text-align: right;
           }
@@ -379,7 +392,7 @@ body {
           width: 100%;
         }
         .add-new-btn-row {
-          padding: 4px 13px 8px 8px;
+          padding: 19px 0px 8px 8px;
           a, button, span {
             float: right;
             width: auto;
