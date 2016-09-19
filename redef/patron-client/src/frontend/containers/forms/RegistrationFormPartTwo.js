@@ -81,8 +81,8 @@ class RegistrationFormPartTwo extends React.Component {
                                                   containerProps={{ className: 'display-inline' }} formName={formName}
                                                   getFieldValidator={this.getValidator} />
           <address>
-            <FormInputField name="address" type="text" message={messages.address} isLabelOverInput={false}
-                            hasLabel={true} headerType="h4" formName={formName} getValidator={this.getValidator} />
+            <FormInputField name="address" type="text" message={messages.address} isLabelOverInput=""
+                            hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
 
             <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h4"
                                                     fieldMessage={messages.zipcode} containerTag="span"
@@ -94,8 +94,8 @@ class RegistrationFormPartTwo extends React.Component {
                                                     containerProps={{ className: 'display-inline' }} formName={formName}
                                                     getFieldValidator={this.getValidator} />
 
-            <FormInputField name="country" type="text" message={messages.country} isLabelOverInput={false}
-                            hasLabel={true} headerType="h4" formName={formName} getValidator={this.getValidator} />
+            <FormInputField name="country" type="text" message={messages.country} isLabelOverInput=""
+                            hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
 
           </address>
           <FormSelectFieldGender message={messages.gender} headerTag="h4" options={[ 'male', 'female' ]}
@@ -110,8 +110,8 @@ class RegistrationFormPartTwo extends React.Component {
                                                   headerMessage={messages.choosePin}
                                                   getFieldValidator={this.getValidator} headerTag="h2" />
 
-          <FormInputField name="repeatPin" type="password" message={messages.repeatPin} isLabelOverInput={false}
-                          hasLabel={true} headerType="h4" formName={formName} getValidator={this.getValidator} />
+          <FormInputField name="repeatPin" type="password" message={messages.repeatPin} isLabelOverInput=""
+                          hasLabel="hasLabel" headerType="h4" formName={formName} getValidator={this.getValidator} />
 
           <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} headerTag="h2"
                                   name="chooseBranch" />

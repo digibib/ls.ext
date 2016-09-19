@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react'
 import FormInputField from './FormInputField'
 
 const FormInputFieldPlain = ({ name, message, type, headerType, formName }) =>
-  <FormInputField name={name} type={type} message={message} isLabelOverInput={false} hasLabel={false}
+  <FormInputField name={name} type={type} message={message} isLabelOverInput="" hasLabel=""
                   headerType={headerType} formName={formName} />
 
 FormInputFieldPlain.propTypes = {

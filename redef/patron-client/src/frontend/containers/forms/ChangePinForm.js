@@ -60,14 +60,14 @@ class ChangePinForm extends React.Component {
 
             <div className="change-pin-fields">
               <FormInputField name="currentPin" type="password" message={messages.currentPin} headerType="h2"
-                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true}
+                              getValidator={this.getValidator} isLabelOverInput="" hasLabel="hasLabel"
                               formName={formName} />
               {this.renderError()}
               <FormInputField name="newPin" type="password" message={messages.newPin} headerType="h2"
-                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true}
+                              getValidator={this.getValidator} isLabelOverInput="" hasLabel="hasLabel"
                               formName={formName} />
               <FormInputField name="repeatPin" type="password" message={messages.repeatPin} headerType="h2"
-                              getValidator={this.getValidator} isLabelOverInput={false} hasLabel={true}
+                              getValidator={this.getValidator} isLabelOverInput="" hasLabel="hasLabel"
                               formName={formName} />
             </div>
           </section>

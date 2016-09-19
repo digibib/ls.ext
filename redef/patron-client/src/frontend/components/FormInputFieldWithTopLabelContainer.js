@@ -4,9 +4,10 @@ import FormInputFieldContainer from './FormInputFieldContainer'
 
 const FormInputFieldWithTopLabelContainer =
   ({ fieldName, fieldType, fieldHeaderType, fieldMessage, containerTag, containerProps, getFieldValidator, headerTag, headerMessage, formName, placeholder }) =>
-    <FormInputFieldContainer fieldName={fieldName} fieldType={fieldType} hasFieldLabel={true}
+    <FormInputFieldContainer fieldName={fieldName} fieldType={fieldType} hasFieldLabel="hasFieldLabel"
                              fieldHeaderType={fieldHeaderType} placeholder={placeholder}
-                             isFieldHeaderOverLabel={true} fieldMessage={fieldMessage} containerTag={containerTag}
+                             isFieldHeaderOverLabel="isFieldHeaderOverLabel" fieldMessage={fieldMessage}
+                             containerTag={containerTag}
                              containerProps={containerProps}
                              getFieldValidator={getFieldValidator} headerMessage={headerMessage}
                              headerTag={headerTag} formName={formName} />
