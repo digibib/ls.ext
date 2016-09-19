@@ -123,12 +123,24 @@ public final class KohaAdapterImpl implements KohaAdapter {
             login();
         }
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.delete();
+        Response response = invocationBuilder.delete();
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = invocationBuilder.delete();
+        }
+        return response;
     }
 
     private Response requestNewRecord(MarcRecord marcRecord) {
         String url = kohaPort + "/api/v1/biblios";
-        return sendMarcRecord("POST", url, marcRecord);
+        Response response = sendMarcRecord("POST", url, marcRecord);
+        if (response.getStatus() == FORBIDDEN.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = sendMarcRecord("POST", url, marcRecord);
+        }
+        return response;
     }
 
     @Override
