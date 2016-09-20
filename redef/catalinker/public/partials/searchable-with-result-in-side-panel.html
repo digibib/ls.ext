@@ -40,28 +40,29 @@
             </span>
         </div>
     {{else}}
-        <input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}} type="search"
-        on-click="{{#deletable}}unselectEntity{{/deletable}}"
-        class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted || ./suggested}}suggestion-source-{{./current.accepted.source || ./suggested.source}}{{/if}}"
-        data-automation-id="{{dataAutomationId}}"
-        on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
-        on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
-        value="{{./current.displayValue}}"/>
-        <span class="legend">
-            {{#if isAdvancedQuery(./current.displayValue)}}
-                <span class="advanced-search-legend pure-u-7-24">
-                    <span class="ui-icon ui-icon-info"/>Du bruker nå <span class="more-info"
-                                                                           title="Søk som inneholder et av disse tegnene {{advancedSearchCharacters()}}. Du kan også bruke AND, OR og NOT.">avansert søk</span>. Trykk Enter for å søke.</span>
-            {{else}}
-                {{#if config.search[./current.accepted.selectedIndexType || ../../selectedIndexType].legend}}
-                        <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
+        <span {{#if nonEditable}}style="display:none;" {{/if}}>
+            <input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}} type="search"
+            on-click="{{#deletable}}unselectEntity{{/deletable}}"
+            class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted || ./suggested}}suggestion-source-{{./current.accepted.source || ./suggested.source}}{{/if}}"
+            data-automation-id="{{dataAutomationId}}"
+            on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
+            on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
+            value="{{./current.displayValue}}"/>
+            <span class="legend">
+                {{#if isAdvancedQuery(./current.displayValue)}}
+                    <span class="advanced-search-legend pure-u-7-24">
+                        <span class="ui-icon ui-icon-info"/>Du bruker nå <span class="more-info"
+                                                                               title="Søk som inneholder et av disse tegnene {{advancedSearchCharacters()}}. Du kan også bruke AND, OR og NOT.">avansert søk</span>. Trykk Enter for å søke.</span>
+                {{else}}
+                    {{#if config.search[./current.accepted.selectedIndexType || ../../selectedIndexType].legend}}
+                            <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
+                    {{/if}}
                 {{/if}}
-            {{/if}}
+            </span>
         </span>
-
     {{/if}}
     {{#if ./searchable}}
-        <a class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
+        <a {{#if nonEditable}}style="display:none;" {{/if}} class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
     {{/if}}
 {{/if}}
 </span>

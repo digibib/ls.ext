@@ -643,7 +643,11 @@
                 } else {
                   _.each(root.getAll(propertyName(predicate)), function (value, index) {
                     if (!options.onlyValueSuggestions) {
-                      setSingleValue(value, input, (input.isSubInput ? rootIndex : index) + (offset))
+                      let valueIndex = input.isSubInput ? rootIndex : index
+                      setSingleValue(value, input, (valueIndex) + (offset))
+                      if (input.isSubInput) {
+                        input.values[ valueIndex ].nonEditable = true
+                      }
                     } else {
                       input.suggestedValues = input.suggestedValues || []
                       input.suggestedValues.push({
@@ -1911,7 +1915,7 @@
                 var mainInput = ractive.get(event.keypath)
                 visitInputs(mainInput, function (input, index) {
                   var length = input.values.length
-                  input.values[ length ] = emptyValues(false, input.type === 'searchable-with-result-in-side-panel')[ 0 ]
+                  input.values[ length ] = emptyValues(true, input.type === 'searchable-with-result-in-side-panel')[ 0 ]
                   if (index === 0) {
                     input.values[ length ].subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
                       ? mainInput.subjectTypes[ 0 ]
