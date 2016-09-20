@@ -58,6 +58,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"genre\": [\"Krim (spesial)\"],\n"
             + "    \"dewey\": \"929.209484213\", \n"
             + "    \"litform\": \"Roman\",\n"
+            + "    \"isbn\": \"978-88-545-0662-6\",\n"
             + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
 

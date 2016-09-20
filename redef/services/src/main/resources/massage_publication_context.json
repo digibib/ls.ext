@@ -100,6 +100,7 @@
     "nationality": "deichman:nationality",
     "title": "deichman:title",
     "litform": "deichman:litform",
-    "subtitles": "deichman:subtitles"
+    "subtitles": "deichman:subtitles",
+    "isbn": "deichman:isbn"
   }
 }

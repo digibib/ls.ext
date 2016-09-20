@@ -2,6 +2,11 @@
   "settings": {
     "analysis": {
       "filter": {
+        "isbn_clean_filter": {
+          "type": "pattern_replace",
+          "pattern": "-",
+          "replacement": ""
+        },
         "litform_synonym_filter": {
           "type": "synonym",
           "synonyms": [
@@ -222,6 +227,13 @@
           "filter": [
             "lowercase",
             "litform_synonym_filter"
+          ]
+        },
+        "isbn_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "isbn_clean_filter"
           ]
         }
       }

@@ -38,7 +38,8 @@ CONSTRUCT {
                deich:title ?pubPartTitle ;
                deich:title ?pubSubtitle ;
                deich:litform ?litform ;
-               deich:subtitles ?subtitles .
+               deich:subtitles ?subtitles ;
+               deich:isbn ?isbn .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -60,6 +61,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
   UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
+  UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO .
           BIND(str(?languageO) AS ?language) .
           BIND(afn:substr(?language, 29) AS ?langCode) }
