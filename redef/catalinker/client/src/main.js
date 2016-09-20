@@ -578,12 +578,13 @@
               var mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
               if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
                 if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
-                  var values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
+                  var index = 0
+                  let values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
                   promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
                 } else if (input.type === 'searchable-with-result-in-side-panel') {
                   if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                     _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
-                      var index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
+                      index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
                       setIdValue(node.id, input, index)
                       if (!options.onlyValueSuggestions) {
                         setDisplayValue(input, index, node, options)
@@ -653,12 +654,12 @@
                   })
                 }
                 if (input.isSubInput) {
+                  input.values[ index ] = input.values[ index ] || {}
                   if (input.subInputIndex == 0) {
-                    input.values[ rootIndex ].nonEditable = true
+                    input.values[ index ].nonEditable = true
                   }
                   input.values = input.values || []
-                  input.values[ rootIndex ] = input.values[ rootIndex ] || {}
-                  input.values[ rootIndex ].subjectType = type
+                  input.values[ index ].subjectType = type
                   input.parentInput.allowAddNewButton = true
                 }
                 rootIndex++
