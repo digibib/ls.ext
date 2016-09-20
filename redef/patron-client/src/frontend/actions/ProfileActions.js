@@ -159,7 +159,6 @@ export function postProfileInfo (successAction) {
       mobile: mobile,
       email: email
     }
-    debugger
     dispatch(requestPostProfileInfo())
     return fetch(url, {
       method: 'POST',
@@ -169,6 +168,7 @@ export function postProfileInfo (successAction) {
       },
       body: JSON.stringify(profileInfo)
     })
+
       .then(response => {
         if (response.status === 200) {
           dispatch(postProfileInfoSuccess())
