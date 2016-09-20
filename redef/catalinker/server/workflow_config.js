@@ -190,6 +190,9 @@ module.exports = (app) => {
               label: 'Undertittel',
               type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
               rdfProperty: 'subtitle'
+            },
+            {
+              rdfProperty: 'hasWorkType'
             }
           ]
         },
@@ -884,7 +887,7 @@ module.exports = (app) => {
               type: 'searchable-with-result-in-side-panel',
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
-              nameProperties: [ 'prefLabel', 'mainTitle', 'subTitle', 'name' ], // these are property names used to label already connected entities
+              nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name' ], // these are property names used to label already connected entities
               indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ], // this is the name of the elasticsearch index type from which authorities are searched within
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
@@ -1013,7 +1016,7 @@ module.exports = (app) => {
                     id: 'publicationPartWorkInput',
                     rdfProperty: 'publicationOf',
                     type: 'searchable-with-result-in-side-panel',
-                    nameProperties: [ 'mainTitle', 'subTitle' ], // these are property names used to label already connected entities
+                    nameProperties: [ 'mainTitle', 'subtitle' ], // these are property names used to label already connected entities
                     indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
                     indexDocumentFields: [ 'mainTitle' ],
                     widgetOptions: {
@@ -1184,7 +1187,7 @@ module.exports = (app) => {
             field: 'mainTitle',
             wildcard: true
           } ],
-          resultItemLabelProperties: [ 'mainTitle', 'subTitle' ],
+          resultItemLabelProperties: [ 'mainTitle', 'partTitle' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
         },
@@ -1194,11 +1197,10 @@ module.exports = (app) => {
           queryTerms: [
             { field: 'mainTitle', wildcard: true },
             { field: 'partTitle', wildcard: true },
-            { field: 'subtitle', wildcard: true },
             { field: 'publicationYear' }
           ],
           legend: 'Søk etter tittel og/eller utgivelsesår',
-          resultItemLabelProperties: [ 'mainTitle', 'subTitle', 'publicationYear' ],
+          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler',
           subItemsExpandTooltip: 'Vis/skjul utgivelser'
@@ -1254,11 +1256,11 @@ module.exports = (app) => {
           queryTerms: [
             { field: 'recordId' },
             { field: 'mainTitle', wildcard: true },
-            { field: 'subTitle', wildcard: true },
+            { field: 'subtitle', wildcard: true },
             { field: 'mainEntryName', wildcard: true }
           ],
           legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
-          resultItemLabelProperties: [ 'creator', 'mainTitle', 'subTitle', 'publicationYear', 'recordId' ],
+          resultItemLabelProperties: [ 'creator', 'mainTitle', 'subtitle', 'publicationYear', 'recordId' ],
           itemHandler: 'publicationItemHandler'
         },
         instrument: {
