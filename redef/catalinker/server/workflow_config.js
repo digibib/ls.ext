@@ -657,7 +657,7 @@ module.exports = (app) => {
             { rdfProperty: 'locationClassNumber' },
             { rdfProperty: 'locationSignature' },
             {
-              rdfProperty: 'description',
+              rdfProperty: 'hasDescription',
               type: 'input-string-large'
             },
             {

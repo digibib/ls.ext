@@ -840,7 +840,7 @@
         subfields:
           -
             a:
-              predicate: "RAW.description"
+              predicate: "ONTOLOGY:hasDescription"
               object:
                 datatype: "literal"
     -
@@ -874,7 +874,7 @@
         subfields:
           -
             a:
-              predicate: "ONTOLOGY.abstract"
+              predicate: "ONTOLOGY.hasSummary"
               object:
                 datatype: "literal"
     -
