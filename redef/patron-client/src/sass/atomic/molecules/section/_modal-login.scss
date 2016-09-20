@@ -85,72 +85,102 @@
 
 @include breakpoint($small) {
 
-  .login-modal {
+  .login-modal-wrapper {
 
-    label {
-      @include span(6);
-      @include push(3);
-    }
-
-    input {
-      @include span(6);
-      @include push(3);
-      font-size: rhythm(3);
-    }
-
-    p {
-      @include span(6);
-      @include push(3);
+    .modal-content {
+      @include span(8);
+      @include push(2);
     }
 
   }
+
+  // Keeping for reference
+  // .login-modal {
+
+  //   label {
+  //     @include span(6);
+  //     @include push(3);
+  //   }
+
+  //   input {
+  //     @include span(6);
+  //     @include push(3);
+  //     font-size: rhythm(3);
+  //   }
+
+  //   p {
+  //     @include span(6);
+  //     @include push(3);
+  //   }
+
+  // }
 
 }
 
 @include breakpoint($medium) {
 
-  .login-modal {
+  .login-modal-wrapper {
 
-    label {
-      @include span(4);
-      @include push(4);
-    }
-
-    input {
-      @include span(4);
-      @include push(4);
-      font-size: rhythm(3);
-    }
-
-    p {
-      @include span(4);
-      @include push(4);
+    .modal-content {
+      @include span(6);
+      @include push(3);
     }
 
   }
+
+  // Keeping for reference
+  // .login-modal {
+
+  //   label {
+  //     @include span(4);
+  //     @include push(4);
+  //   }
+
+  //   input {
+  //     @include span(4);
+  //     @include push(4);
+  //     font-size: rhythm(3);
+  //   }
+
+  //   p {
+  //     @include span(4);
+  //     @include push(4);
+  //   }
+
+  // }
 
 }
 
 @include breakpoint($large) {
 
-  .login-modal {
+  .login-modal-wrapper {
 
-    label {
-      @include span(2);
-      @include push(5);
-    }
-
-    input {
-      @include span(2);
-      @include push(5);
-      font-size: rhythm(3);
-    }
-
-    p {
-      @include span(2);
-      @include push(5);
+    .modal-content {
+      @include span(4);
+      @include push(4);
     }
 
   }
+
+  // Keeping for reference
+  // .login-modal {
+
+  //   label {
+  //     @include span(2);
+  //     @include push(5);
+  //   }
+
+  //   input {
+  //     @include span(2);
+  //     @include push(5);
+  //     font-size: rhythm(3);
+  //   }
+
+  //   p {
+  //     @include span(2);
+  //     @include push(5);
+  //   }
+
+  // }
 
 }
