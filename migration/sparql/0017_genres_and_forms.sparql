@@ -129,7 +129,7 @@ WHERE {
 ;
 
 
-# 5) Add correct genre from split genres)
+# 5) Add correct genre from split genres
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
@@ -159,5 +159,47 @@ WHERE {
       (genre:ga778c7237fbff6e342574fe7bbcac62b         genre:g15868000)
       (genre:g8d8cc2364ee5b8456db9d2327f4d2e83         genre:g15868000)
     }
+}
+;
+
+
+# 6) Add genres from subdivisions 
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX genre: <http://data.deichman.no/genre/>
+PREFIX duo: <http://data.deichman.no/duo#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?doc :genre ?genre .
+  ?genre ?p ?o .
+}
+
+INSERT {
+  ?doc :genre ?splitSub .
+}
+
+WHERE {
+  ?split migration:genreSplitMain ?splitMain ;
+    migration:genreSplitSub ?splitSub ;
+    duo:bibliofilAuthorityId ?id ;
+    a migration:GenreSplit .
+  ?genre duo:bibliofilAuthorityId ?id ;
+    a :Genre ;
+    ?p ?o .
+  ?doc :genre ?genre ;
+    a :Publication .
+
+  VALUES ?splitMain {
+    genre:ge0b8be8ffba2e9d06835d2f508501be8
+    genre:g00bbd6c64086b4e701f8fb04c4e0b6fd
+    genre:ge0b8be8ffba2e9d06835d2f508501be8
+    genre:g8485f1b48ceda0998652c91ebe113ec7
+  }
 }
 ;

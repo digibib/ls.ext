@@ -1997,6 +1997,7 @@
                       object:
                         datatype: "literal"
                         regex_match: ", ([\\w\\W]+)"
+                        lowercase: true
                 class: "ONTOLOGY.Genre"
     -
       '655':
@@ -2609,6 +2610,7 @@
                       predicate: "ONTOLOGY.prefLabel"
                       object:
                         datatype: "literal"
+                        lowercase: true
                         regex_match: ", ([\\w\\W]+)"
                 class: "ONTOLOGY.Genre"
     -
