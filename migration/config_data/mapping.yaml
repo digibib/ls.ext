@@ -840,7 +840,7 @@
         subfields:
           -
             a:
-              predicate: "ONTOLOGY:hasDescription"
+              predicate: "ONTOLOGY.hasDescription"
               object:
                 datatype: "literal"
     -
