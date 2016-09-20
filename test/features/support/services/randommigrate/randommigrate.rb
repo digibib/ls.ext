@@ -156,7 +156,7 @@ module RandomMigrate
       publication_1.add_literal('publicationYear', '1900')
       publication_1.add_authorized('language', 'http://lexvo.org/id/iso639-3/nob')
       publication_1.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_1.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_1.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_1.to_ntriples)
 
       publication_2 = Entity.new('http://data.deichman.no/publication/p2', @services)
@@ -165,7 +165,7 @@ module RandomMigrate
       publication_2.add_literal('publicationYear', '1900')
       publication_2.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
       publication_2.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_2.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_2.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_2.to_ntriples)
 
       publication_3 = Entity.new('http://data.deichman.no/publication/p3', @services)
@@ -174,7 +174,7 @@ module RandomMigrate
       publication_3.add_literal('publicationYear', '2000')
       publication_3.add_authorized('language', 'http://lexvo.org/id/iso639-3/eng')
       publication_3.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_3.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_3.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_3.to_ntriples)
 
       publication_4 = Entity.new('http://data.deichman.no/publication/p4', @services)
@@ -183,7 +183,7 @@ module RandomMigrate
       publication_4.add_literal('publicationYear', '1900')
       publication_4.add_authorized('language', 'http://lexvo.org/id/iso639-3/dan')
       publication_4.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_4.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_4.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_4.to_ntriples)
 
       publication_5 = Entity.new('http://data.deichman.no/publication/p5', @services)
@@ -192,7 +192,7 @@ module RandomMigrate
       publication_5.add_literal('publicationYear', '1900')
       publication_5.add_authorized('language', 'http://lexvo.org/id/iso639-3/cze')
       publication_5.add_authorized('format', 'http://data.deichman.no/format#Microfiche')
-      publication_5.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_5.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_5.to_ntriples)
 
       publication_6 = Entity.new('http://data.deichman.no/publication/p6', @services)
@@ -201,7 +201,7 @@ module RandomMigrate
       publication_6.add_literal('publicationYear', '1900')
       publication_6.add_authorized('language', 'http://lexvo.org/id/iso639-3/cze')
       publication_6.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_6.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_6.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_6.to_ntriples)
 
       publication_7 = Entity.new('http://data.deichman.no/publication/p7', @services)
@@ -210,7 +210,7 @@ module RandomMigrate
       publication_7.add_literal('publicationYear', '2000')
       publication_7.add_authorized('language', 'http://lexvo.org/id/iso639-3/cze')
       publication_7.add_authorized('format', 'http://data.deichman.no/format#Microfiche')
-      publication_7.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_7.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_7.to_ntriples)
 
       publication_8 = Entity.new('http://data.deichman.no/publication/p8', @services)
@@ -219,7 +219,7 @@ module RandomMigrate
       publication_8.add_literal('publicationYear', '2000')
       publication_8.add_authorized('language', 'http://lexvo.org/id/iso639-3/cze')
       publication_8.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_8.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_8.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_8.to_ntriples)
 
       publication_9 = Entity.new('http://data.deichman.no/publication/p9', @services)
@@ -227,7 +227,7 @@ module RandomMigrate
       publication_9.add_literal('mainTitle', "pubprefix0#{@id} #{@id}swe")
       publication_9.add_authorized('language', 'http://lexvo.org/id/iso639-3/swe')
       publication_9.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_9.add_authorized('mediaType', 'http://data.deichman.no/mediaType#Book')
+      publication_9.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_9.to_ntriples)
 
       publication_10 = Entity.new('http://data.deichman.no/publication/p10', @services)
@@ -235,7 +235,7 @@ module RandomMigrate
       publication_10.add_literal('mainTitle', "pubprefix1#{@id} #{@id}swe")
       publication_10.add_authorized('language', 'http://lexvo.org/id/iso639-3/swe')
       publication_10.add_authorized('format', 'http://data.deichman.no/format#DVD')
-      publication_10.add_authorized('mediaType', 'http://data.deichman.no/mediaType#MusicRecording')
+      publication_10.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#MusicRecording')
       @publication_uris << post_ntriples('publication', publication_10.to_ntriples)
 
       publication_11 = Entity.new('http://data.deichman.no/publication/p11', @services)
