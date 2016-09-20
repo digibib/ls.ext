@@ -190,6 +190,9 @@
       "type": "string",
       "index": "no"
     },
+    "compType": {
+      "type": "string"
+    },
     "imagesFromAllPublications": {
       "type": "string",
       "index": "no"

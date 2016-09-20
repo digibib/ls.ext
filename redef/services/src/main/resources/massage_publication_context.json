@@ -101,6 +101,7 @@
     "title": "deichman:title",
     "litform": "deichman:litform",
     "subtitles": "deichman:subtitles",
-    "isbn": "deichman:isbn"
+    "isbn": "deichman:isbn",
+    "compType": "deichman:compType"
   }
 }

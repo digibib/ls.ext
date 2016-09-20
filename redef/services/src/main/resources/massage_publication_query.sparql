@@ -39,7 +39,8 @@ CONSTRUCT {
                deich:title ?pubSubtitle ;
                deich:litform ?litform ;
                deich:subtitles ?subtitles ;
-               deich:isbn ?isbn .
+               deich:isbn ?isbn ;
+               deich:compType ?compTypeLabel .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -123,7 +124,9 @@ WHERE {
       }
 
   # 3. Information from work:
-
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:hasCompositionType ?compType .
+           ?compType deich:prefLabel ?compTypeLabel . }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:audience ?audienceO .
            BIND(str(?audienceO) AS ?audience) }
