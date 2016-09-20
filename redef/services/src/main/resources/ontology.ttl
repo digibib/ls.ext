@@ -229,8 +229,8 @@ duo:Biography a rdfs:Class ;
   rdfs:range xsd:string .
 
 :ordinal a rdfs:Property ;
-  rdfs:label "Numeration"@en ;
-  rdfs:label "Ordinal"@no ;
+  rdfs:label "Ordinal"@en ;
+  rdfs:label "Ordenstall"@no ;
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 

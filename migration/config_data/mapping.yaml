@@ -430,7 +430,7 @@
                       predicate: "ONTOLOGY.specification"
                       object:
                         datatype: "literal"
-                class: "RAW.Event"
+                class: "ONTOLOGY.Event"
     -
       '111':
         subfields:
@@ -1295,7 +1295,7 @@
                       predicate: "ONTOLOGY.specification"
                       object:
                         datatype: "literal"
-                class: "RAW.Event"
+                class: "ONTOLOGY.Event"
     -
       '611':
         subfields:
@@ -3219,7 +3219,7 @@
                       predicate: "ONTOLOGY.specification"
                       object:
                         datatype: "literal"
-                class: "RAW.Event"
+                class: "ONTOLOGY.Event"
     -
       '711':
         subfields:

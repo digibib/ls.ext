@@ -234,7 +234,7 @@ module.exports = (app) => {
             },
             {
               label: 'Nummer',
-              rdfProperty: 'number',
+              rdfProperty: 'ordinal',
               type: 'input-string'
             },
             {
