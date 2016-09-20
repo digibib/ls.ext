@@ -96,7 +96,7 @@
 
 :CompositionType a rdfs:Class ;
   rdfs:label "Musical composition type"@en ;
-  rdfs:label "Koompissjonstype"@no .
+  rdfs:label "Komposisjonstype"@no .
 
 :Instrumentation a rdfs:Class ;
   rdfs:label "Instrumentation"@en ;

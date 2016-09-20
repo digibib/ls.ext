@@ -1747,12 +1747,12 @@
         subfields:
           -
             '3':
-              predicate: "MIGRATION.musicGenre"
+              predicate: "ONTOLOGY.hasCompositionType"
               object:
                 datatype: "uri"
-                prefix: "http://data.deichman.no/musicGenre/x"
+                prefix: "http://data.deichman.no/compositionType/c"
               relation:
-                class: "MIGRATION.MusicGenre"
+                class: "ONTOLOGY.CompositionType"
                 subfields:
                   -
                     '3':
@@ -2020,14 +2020,28 @@
       '658':
         subfields:
           -
-            'a':
+            a:
               predicate: "MIGRATION.musicalStaff"
               object:
-                datatype: "literal"
-                combinestring: "\n"
+                combinestring: "_"
+                datatype: "uri"
+                prefix: "http://data.deichman.no/musicalStaff/m"
                 combine:
                   - "a"
                   - "b"
+                urlize: true
+              relation:
+                subfields:
+                  -
+                    "a":
+                      predicate: "MIGRATION.musicalInstrument"
+                      object:
+                        datatype: "literal"
+                  -
+                    "b":
+                      predicate: "MIGRATION.numberOfPerformers"
+                      object:
+                        datatype: "literal"
     -
       '690':
         subfields:
